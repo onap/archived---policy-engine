@@ -62,7 +62,30 @@
 			<url>http://www.soapui.org/repository/maven2/</url>
 			<name>SoapUI plugin</name>
 		</repository>
+		<repository>
+			<id>ecomp-releases</id>
+			<name>OpenECOMP Release Repository</name>
+			<url>${nexusproxy}/content/repositories/releases/</url>
+		</repository>
+		<repository>
+			<id>ecomp-staging</id>
+			<name>OpenECOMP Staging Repository</name>
+			<url>${nexusproxy}/content/repositories/staging/</url>
+		</repository>
 	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>ecomp-releases</id>
+			<name>OpenECOMP Release Repository</name>
+			<url>${nexusproxy}/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>ecomp-snapshots</id>
+			<name>OpenECOMP Snapshot Repository</name>
+			<url>${nexusproxy}/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencies>
 
