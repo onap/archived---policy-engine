@@ -1,0 +1,1 @@
+* * * * * . ${{POLICY_HOME}}/etc/profile.d/env.sh; monitor.sh </dev/null > /dev/null 2>&1

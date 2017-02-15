@@ -1,0 +1,40 @@
+#scribble-pad {
+/* 	margin-left:auto;
+	margin-right:auto;  
+	height: 475px;
+	width: 475px;*/
+	background:url(https://www.ibm.com/developerworks/mydeveloperworks/blogs/bobleah/resource/stickynote.jpg) no-repeat center center;
+	background-size: 110% 110%;
+}  
+
+
+
+#scribble {
+      white-space: pre-wrap;       /* css-3 */
+      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+      white-space: -pre-wrap;      /* Opera 4-6 */
+      white-space: -o-pre-wrap;    /* Opera 7 */
+      word-wrap: break-word;       /* Internet Explorer 5.5+ */
+      max-width: 300px;
+      padding: 120px 100px 100px 75px;
+      color: #486891;
+      border-color: #ff0000 #0000ff;
+      border-color: transparent;
+      background-color:rgba(0, 0, 0, 0);
+      font-family:  Arial,sans-serif;
+      font-size: 120%;
+      font-style: italic; 
+      font-weight:bold; 
+      line-height: 1.5em;       
+}
+
+#scribble:focus {
+outline-width: 0;
+}
+.c-link {
+      color: #486891;
+      font-family:  Arial,sans-serif;
+      font-size: 95%;
+      font-weight:bold; 
+      text-decoration: none;         
+}

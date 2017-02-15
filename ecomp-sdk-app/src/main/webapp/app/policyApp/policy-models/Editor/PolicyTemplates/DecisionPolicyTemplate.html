@@ -1,0 +1,130 @@
+<!--
+  ============LICENSE_START=======================================================
+  ECOMP Policy Engine
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+  -->
+
+<div ng-app= "abs" ng-controller= "decisionPolicyController" >
+<div class="modal__content">
+      <div>
+            <label>Policy Name:<sup><b>*</b></sup></label><br>
+            <input type="text" class="form-control" ng-disabled ="temp.policy.readOnly" ng-readonly="temp.policy.editPolicy" ng-model="temp.policy.policyName"  style="width:800px;"/>
+      </div>
+      <br/>
+      <div>
+             <label>Description:</label><br>
+             <input type="text" class="form-control" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.policyDescription" style="width:800px;"/>
+      </div>
+      <br/>
+      <div class="fn-ebz-container" >
+            <label>Ecomp Name:<sup><b>*</b></sup></label><br>
+            <select class="form-field" style="width:400px;" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.ecompName"  ng-options="option for option in ecompNameDictionaryDatas track by option"></select>
+      </div>
+      <br/>
+       <div class="fn-ebz-container" >
+            <label>Rule Provider:<sup><b>*</b></sup></label><br>
+               <select class="form-field" style="width:400px;" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.ruleProvider"  ng-init="providerListener(temp.policy.ruleProvider);"  ng-click="providerListener(temp.policy.ruleProvider);">
+            	<option>Custom</option>
+                <option>AAF</option>
+               </select>
+        </div>
+      <br/>
+        <div ng-if="temp.policy.ruleProvider == 'Custom'" class="fn-ebz-container" >
+            <label>Component Attributes:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default" ng-disabled ="temp.policy.readOnly"  ng-click="addNewChoice()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>
+    			
+    			<div  data-ng-repeat="choice in temp.policy.attributes" class="form-horizontal" >
+        			<div  class="fn-ebz-container">
+            			<select  class="form-field" ng-disabled ="temp.policy.readOnly" ng-model="choice.option" ng-options="option for option in attributeDictionaryDatas track by option" >
+            			<option value="">{{choice.option}}</option></select>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<input type="text" class="form-field" ng-disabled ="temp.policy.readOnly" ng-model= "choice.number" placeholder="Attribute Value" />
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default" ng-show="$last" ng-disabled ="temp.policy.readOnly" ng-click="removeChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		</div>
+        	</form>	
+		</div> 
+		 <br/>
+        <div ng-if="temp.policy.ruleProvider == 'Custom'" class="fn-ebz-container" >
+            <label>Settings Attributes:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default"  ng-disabled ="temp.policy.readOnly" ng-click="addNewSettingsChoice()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>
+    			
+    			<div  data-ng-repeat="settingschoice in temp.policy.settings" class="form-horizontal" >
+        			<div  class="fn-ebz-container">
+            			<select  class="form-field" ng-disabled ="temp.policy.readOnly" ng-model="settingschoice.option" ng-options="option for option in settingsDictionaryDatas track by option" >
+            			<option value="">{{settingschoice.option}}</option></select>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<input type="text" class="form-field" ng-disabled ="temp.policy.readOnly" ng-model= "settingschoice.number" placeholder="Settings Value" />
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default" ng-show="$last" ng-disabled ="temp.policy.readOnly" ng-click="removeSettingsChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		</div>
+        	</form>	
+		</div> 
+        <br/>
+        	<div ng-if="temp.policy.ruleProvider == 'Custom'" class="fn-ebz-container" >
+               <label>Decision Rule Algorithms:<sup><b>*</b></sup></label><br>
+                <form method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default" ng-disabled ="temp.policy.readOnly" ng-click="addNewRuleAlgorithm()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>
+    			<div data-ng-repeat="ruleAlgorithmschoice in temp.policy.ruleAlgorithmschoices" class="form-horizontal" >
+    				<div class="fn-ebz-container ">
+           				 <label ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmLabels" name="dynamicRuleAlgorithmLabels" >{{ruleAlgorithmschoice.id}}</label>
+        			</div>
+        			<div class="fn-ebz-container">
+           				 <select class="form-field" id="mySelect"  ng-disabled ="temp.policy.readOnly" ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmField1" ng-options="option for option in attributeDictionaryDatas track by option" name="dynamicRuleAlgorithmField1" >
+           				 <option value="">{{ruleAlgorithmschoice.dynamicRuleAlgorithmField1}}</option></select>
+        			</div>
+        			<div class="fn-ebz-container ">
+            			<select type="text" class="form-field" ng-disabled ="temp.policy.readOnly" ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmCombo" ng-options="option for option in functionDefinitionDatas track by option" name="dynamicRuleAlgorithmCombo"></select>
+        			</div>
+        			<div class="fn-ebz-container">
+            			<input type="text" class="form-field" ng-disabled ="temp.policy.readOnly" ng-model= "ruleAlgorithmschoice.dynamicRuleAlgorithmField2" name="dynamicRuleAlgorithmField2"/>
+        			</div>
+        			<div class="fn-ebz-container">
+            			<button type="button" class="btn btn-default" ng-disabled ="temp.policy.readOnly" ng-click="removeRuleAlgorithm()"><i class="fa fa-minus"></i></button>
+        			</div>
+    			</div>
+			</form>
+			</div>
+			<br/>  
+         <br/>
+         </div>
+        <div class="modal__footer">
+            <button class="button button--primary button--small" herf="javascript:void(0)" ng-disabled ="temp.policy.readOnly" ng-click="validatePolicy(temp.policy);">Validate</button>
+            <button class="btn btn-success" herf="javascript:void(0)" ng-disabled ="temp.policy.readOnly" ng-click="saveDecisionPolicy(temp);">Save</button>
+            <button class="btn btn-default" data-dismiss="modal" ng-disabled="temp.inprocess">Close</button>
+        </div>
+</div>

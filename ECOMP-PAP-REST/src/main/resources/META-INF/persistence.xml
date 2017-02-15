@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============LICENSE_START=======================================================
+  ECOMP-PAP-REST
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+  -->
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="XACML-PAP-REST">
+		<class>org.openecomp.policy.rest.jpa.PolicyEntity</class>
+		<class>org.openecomp.policy.rest.jpa.ConfigurationDataEntity</class>		
+		<class>org.openecomp.policy.rest.jpa.PolicyDBDaoEntity</class>
+		<class>org.openecomp.policy.rest.jpa.GroupEntity</class>
+		<class>org.openecomp.policy.rest.jpa.PdpEntity</class>
+		<class>org.openecomp.policy.rest.jpa.ActionBodyEntity</class>
+		<class>org.openecomp.policy.rest.jpa.DatabaseLockEntity</class>
+		<class>org.openecomp.policy.rest.jpa.PolicyVersion</class>
+		<class>org.openecomp.policy.rest.jpa.PolicyScore</class>
+		<class>org.openecomp.policy.rest.jpa.FunctionDefinition</class>
+		<class>org.openecomp.policy.rest.jpa.Attribute</class>
+		<class>org.openecomp.policy.rest.jpa.Category</class>
+		<class>org.openecomp.policy.rest.jpa.ConstraintType</class>
+		<class>org.openecomp.policy.rest.jpa.ConstraintValue</class>
+		<class>org.openecomp.policy.rest.jpa.Datatype</class>
+		<class>org.openecomp.policy.rest.jpa.FunctionArgument</class>
+		<class>org.openecomp.policy.rest.jpa.UserInfo</class>
+		<class>org.openecomp.policy.rest.jpa.ActionPolicyDict</class>
+		<class>org.openecomp.policy.rest.jpa.DecisionSettings</class>
+		<class>org.openecomp.policy.rest.jpa.MicroServiceModels</class>
+		<class>org.openecomp.policy.rest.jpa.BRMSParamTemplate</class>
+		<class>org.openecomp.policy.rest.jpa.PolicyEditorScopes</class>
+		<!-- unique to PolicyEngineUtils - will be audited from PAP -->
+		<class>org.openecomp.policy.jpa.BackUpMonitorEntity</class>
+		<!-- unique to integrity-monitor - will be audited from PAP -->
+		<class>org.openecomp.policy.common.im.jpa.StateManagementEntity</class>
+		<class>org.openecomp.policy.common.im.jpa.ForwardProgressEntity</class>
+		<class>org.openecomp.policy.common.im.jpa.ResourceRegistrationEntity</class>
+		<!-- unique to integrity-audit - will be audited from PAP -->
+		<class>org.openecomp.policy.common.ia.jpa.IntegrityAuditEntity</class>
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
+		<shared-cache-mode>NONE</shared-cache-mode>
+		<properties>
+	<!--	The properties defined below are the default settings to be used when someone initially
+				wants to start working with the XACML-PAP-ADMIN web gui. They are not intended for production
+				use.
+				
+				They are setup to drop and create the tables and then load an initial set of data into the database
+				every time the application is deployed. So if you add anything to the dictionaries or PIP
+				configuration, they will get lost upon each deployment. It uses an H2 database engine configured
+				for a local file so you don't have to setup you're own SQL database environment to start.
+				
+				Instead of modifying this file directly, please refer to the xacml.admin.properties file for
+				customizing the application settings.
+				
+			 -->
+	<!--     <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+			<property name="javax.persistence.schema-generation.create-source" value="metadata-then-script"/>
+			<property name="javax.persistence.schema-generation.create-script-source" value="META-INF/views.sql" />
+			<property name="javax.persistence.schema-generation.drop-source" value="script"/>
+			<property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/drop.sql" />
+			<property name="javax.persistence.sql-load-script-source" value="META-INF/data.sql" />-->
+			
+			
+			
+		<!-- 	These properties should be set in the xacml.admin.properties file, so they can be re-used by non-JPA
+			database functionality.	 -->
+		<!-- 	
+			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:h2:file:sql/xacml"/>
+			<property name="javax.persistence.jdbc.user" value="sa"/>
+			<property name="javax.persistence.jdbc.password" value=""/>
+ 			-->
+		</properties>
+	</persistence-unit>
+
+<persistence-unit name="auditPapPU">
+		<!-- This is the persistence unit used by IntegrityAudit to determine
+		which classes to audit.  All the PAP classes are also included in 
+		XACML-PAP-ADMIN, so they will be audited there rather than having a
+		duplicate audit run from the XACL-PAP-REST node -->
+		<!-- unique to PolicyEngineUtils - will be audited from PAP -->
+		<class>org.openecomp.policy.jpa.BackUpMonitorEntity</class>
+		<!-- unique to integrity-monitor - will be audited from PAP -->
+		<class>org.openecomp.policy.common.im.jpa.StateManagementEntity</class>
+		<class>org.openecomp.policy.common.im.jpa.ForwardProgressEntity</class>
+		<class>org.openecomp.policy.common.im.jpa.ResourceRegistrationEntity</class>
+		<!-- unique to integrity-audit - will be audited from PAP -->
+		<class>org.openecomp.policy.common.ia.jpa.IntegrityAuditEntity</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<shared-cache-mode>NONE</shared-cache-mode>
+	</persistence-unit>
+
+	<persistence-unit name="testPapPU" transaction-type="RESOURCE_LOCAL">
+	<!-- This tests all the classes that will be audited in the XACML-PAP-REST and the XACML-PAP_ADMIN -->
+		<!-- XACML-PAP-REST -->
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>org.openecomp.policy.rest.jpa.PolicyEntity</class>
+		<class>org.openecomp.policy.rest.jpa.ConfigurationDataEntity</class>		
+		<class>org.openecomp.policy.rest.jpa.PolicyDBDaoEntity</class>
+		<class>org.openecomp.policy.rest.jpa.GroupEntity</class>
+		<class>org.openecomp.policy.rest.jpa.PdpEntity</class>
+		<class>org.openecomp.policy.rest.jpa.ActionBodyEntity</class>
+		<class>org.openecomp.policy.rest.jpa.DatabaseLockEntity</class>
+		<class>org.openecomp.policy.rest.jpa.PolicyVersion</class>
+		<class>org.openecomp.policy.rest.jpa.PolicyScore</class>
+		<class>org.openecomp.policy.rest.jpa.FunctionDefinition</class>
+		<class>org.openecomp.policy.rest.jpa.Attribute</class>
+		<class>org.openecomp.policy.rest.jpa.Category</class>
+		<class>org.openecomp.policy.rest.jpa.ConstraintType</class>
+		<class>org.openecomp.policy.rest.jpa.ConstraintValue</class>
+		<class>org.openecomp.policy.rest.jpa.Datatype</class>
+		<class>org.openecomp.policy.rest.jpa.FunctionArgument</class>
+		<class>org.openecomp.policy.rest.jpa.UserInfo</class>
+		<class>org.openecomp.policy.rest.jpa.ActionPolicyDict</class>
+		<class>org.openecomp.policy.rest.jpa.DecisionSettings</class>
+		<class>org.openecomp.policy.rest.jpa.MicroServiceModels</class>
+		<!-- unique to XACML-PAP-ADMIN -->
+		<class>org.openecomp.policy.rest.jpa.ActionList</class>
+		<class>org.openecomp.policy.rest.jpa.AddressGroup</class>
+		<class>org.openecomp.policy.rest.jpa.AttributeAssignment</class>
+		<class>org.openecomp.policy.rest.jpa.BRMSParamTemplate</class>
+		<class>org.openecomp.policy.rest.jpa.ClosedLoopD2Services</class>
+		<class>org.openecomp.policy.rest.jpa.ClosedLoopSite</class>
+		<class>org.openecomp.policy.rest.jpa.DCAEUsers</class>
+		<class>org.openecomp.policy.rest.jpa.DCAEuuid</class>
+		<class>org.openecomp.policy.rest.jpa.DescriptiveScope</class>
+		<class>org.openecomp.policy.rest.jpa.EcompName</class>
+		<class>org.openecomp.policy.rest.jpa.EnforcingType</class>
+		<class>org.openecomp.policy.rest.jpa.GlobalRoleSettings</class>
+		<class>org.openecomp.policy.rest.jpa.GroupPolicyScopeList</class>
+		<class>org.openecomp.policy.rest.jpa.GroupServiceList</class>
+		<class>org.openecomp.policy.rest.jpa.MicroServiceConfigName</class>
+		<class>org.openecomp.policy.rest.jpa.MicroServiceLocation</class>
+		<class>org.openecomp.policy.rest.jpa.Obadvice</class>
+		<class>org.openecomp.policy.rest.jpa.ObadviceExpression</class>
+		<class>org.openecomp.policy.rest.jpa.PEPOptions</class>
+		<class>org.openecomp.policy.rest.jpa.PIPConfigParam</class>
+		<class>org.openecomp.policy.rest.jpa.PIPConfiguration</class>
+		<class>org.openecomp.policy.rest.jpa.PIPResolver</class>
+		<class>org.openecomp.policy.rest.jpa.PIPResolverParam</class>
+		<class>org.openecomp.policy.rest.jpa.PIPType</class>	
+		<class>org.openecomp.policy.rest.jpa.PolicyAlgorithms</class>
+		<class>org.openecomp.policy.rest.jpa.PolicyManagement</class>
+		<class>org.openecomp.policy.rest.jpa.PolicyScopeService</class>
+		<class>org.openecomp.policy.rest.jpa.PolicyScopeType</class>
+		<class>org.openecomp.policy.rest.jpa.PolicyScopeResource</class>
+		<class>org.openecomp.policy.rest.jpa.PolicyScopeClosedLoop</class>
+		<class>org.openecomp.policy.rest.jpa.PortList</class>
+		<class>org.openecomp.policy.rest.jpa.PREFIXLIST</class>
+		<class>org.openecomp.policy.rest.jpa.ProtocolList</class>
+		<class>org.openecomp.policy.rest.jpa.RemoteCatalogValues</class>
+		<class>org.openecomp.policy.rest.jpa.PolicyRoles</class>
+		<class>org.openecomp.policy.rest.jpa.RuleAlgorithms</class>
+		<class>org.openecomp.policy.rest.jpa.SecurityZone</class>
+		<class>org.openecomp.policy.rest.jpa.ServiceList</class>
+		<class>org.openecomp.policy.rest.jpa.SystemLogDB</class>
+		<class>org.openecomp.policy.rest.jpa.TermList</class>
+		<class>org.openecomp.policy.rest.jpa.VarbindDictionary</class>
+		<class>org.openecomp.policy.rest.jpa.VMType</class>
+		<class>org.openecomp.policy.rest.jpa.VNFType</class>
+		<class>org.openecomp.policy.rest.jpa.VSCLAction</class>
+		<class>org.openecomp.policy.rest.jpa.Zone</class>
+		<!-- unique to PolicyEngineUtils -->
+		<class>org.openecomp.policy.jpa.BackUpMonitorEntity</class>
+		<!-- unique to integrity-monitor -->
+		<class>org.openecomp.policy.common.im.jpa.StateManagementEntity</class>
+		<class>org.openecomp.policy.common.im.jpa.ForwardProgressEntity</class>
+		<class>org.openecomp.policy.common.im.jpa.ResourceRegistrationEntity</class>
+		<!-- unique to integrity-audit -->
+		<class>org.openecomp.policy.common.ia.jpa.IntegrityAuditEntity</class>
+		
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
+		<shared-cache-mode>NONE</shared-cache-mode>	        
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:file:./sql/xacmlTest"/> <!-- ;MODE=MySQL"/> -->
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="javax.persistence.schema-generation.scripts.action" value="drop-and-create"/>
+            <property name="javax.persistence.schema-generation.scripts.create-target" value="./src/main/resources/META-INF/generatedCreate.ddl"/>
+            <property name="javax.persistence.schema-generation.scripts.drop-target" value="./src/main/resources/META-INF/generatedDrop.ddl"/>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+			<property name="javax.persistence.schema-generation.create-source" value="metadata-then-script"/>
+			<property name="javax.persistence.schema-generation.drop-source" value="script"/>
+			<property name="javax.persistence.schema-generation.drop-script-source" value="META-INF/drop.ddl" />
+        </properties>
+    </persistence-unit>	
+</persistence>

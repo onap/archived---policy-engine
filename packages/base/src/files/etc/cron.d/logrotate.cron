@@ -1,0 +1,1 @@
+5 1 * * * /usr/sbin/logrotate -s ${{POLICY_HOME}}/var/logrotate.status ${{POLICY_HOME}}/etc/logrotate.d/monitor.conf

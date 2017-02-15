@@ -1,0 +1,350 @@
+<!--
+  ============LICENSE_START=======================================================
+  ECOMP Policy Engine
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+  -->
+
+<div ng-app= "abs" ng-controller= "clFaultController">
+<div class="modal__content">
+      <div class ="form-group">
+            <label>Policy Name:<sup><b>*</b></sup> </label><br>
+            <input type="text" class="form-control" ng-disabled ="temp.policy.readOnly" ng-readonly="temp.policy.editPolicy" ng-model="temp.policy.policyName"  style="width:800px;"/>
+      </div>
+      <div class ="form-group">
+             <label>Description:</label><br>
+             <input type="text" class="form-control" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.policyDescription" style="width:800px;"/>
+      </div>
+      <div class ="form-group">
+            <label>Ecomp Name:<sup><b>*</b></sup></label><br>
+            <select class="form-control" style="width:800px;" ng-disabled ="temp.policy.readOnly"  ng-model="temp.policy.ecompName" ng-options="option for option in ecompNameDictionaryDatas track by option"></select>
+      </div>
+      </br>
+      <div class="fn-ebz-container" >
+    		<label>Risk Type:<sup><b>*</b></sup></label>
+			<div>
+				<select class="form-field"  style="width:450px;" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.riskType"  ng-options="option for option in riskTypeDictionaryDatas track by option"></select>
+			</div>
+			<p><span ng-show="validateRiskType" style="color:red">Risk Type Field shouldn't be Empty</span></p>
+    	</div> 
+    	 <div class="fn-ebz-container" >
+    		<label>Risk Level:<sup><b>*</b></sup></label>
+			<div>
+				<select class="form-field"  style="width:450px;" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.riskLevel"  ng-options="option for option in riskLevelDatas track by option"></select>
+			</div>
+			<p><span ng-show="validateRiskLevel" style="color:red">Risk Level Field shouldn't be Empty</span></p>
+    	</div> 
+    	 <div class="fn-ebz-container" >
+    		<label>Guard:<sup><b>*</b></sup></label>
+			<div>
+				<select class="form-field"  style="width:450px;" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.guard"  ng-options="option for option in guardDatas track by option"></select>
+			</div>
+			<p><span ng-show="validateGuard" style="color:red">Guard Field shouldn't be Empty</span></p>
+   		</div> 
+        <div class ="fn-ebz-container">
+    	<label>Time to Live Date:<sup><b>*</b></sup></label>
+    	<div>
+  			<input type="date" name="ttlDate" class="date" ng-model="temp.policy.ttlDate"/>
+		</div>
+    	</div>
+      <div>
+            <label>D2/Virtualized Services(s):<sup><b>*</b></sup></label><br>
+            <input type="checkbox"  ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.trinity" > Hosted Voice (Trinity)</input>
+            <input type="checkbox"  ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.vUSP" > vUSP</input>
+            <input type="checkbox"  ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.mcr" > MCR</input>
+            <input type="checkbox"  ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.gamma" > Gamma</input>
+            <input type="checkbox"  ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.vDNS" > vDNS</input>
+       </div>
+        <br/>
+        <div class="fn-ebz-container" >
+            <label>Vnf Type:<sup><b>*</b></sup></label><br>
+            <select class="form-field" style="width:400px;" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.vnfType" ng-options="option for option in vnfTypeDictionaryDatas  track by option">
+            <option value="">{{temp.policy.jsonBodyData.vnfType}}</option></select>
+      </div>
+        <div class="fn-ebz-container" >
+              <label>Policy Status:<sup><b>*</b></sup></label><BR>
+                <select class="form-field" ng-disabled ="temp.policy.readOnly" ng-init="init(temp.policy.jsonBodyData);" ng-model="temp.policy.jsonBodyData.closedLoopPolicyStatus">
+                    <option value="Active">Active</option>
+                    <option>InActive</option>
+                </select>
+        </div>
+         <br/>
+         <fieldset style="width:140%;">
+            <div class="fn-ebz-container" >
+            <label>Trigger Signature:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-disabled ="temp.policy.readOnly"  ng-click="addTriggerButton()"><i class="fa fa-plus"></i></button>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-disabled ="temp.policy.readOnly"  ng-click="removeTriggerButton()"><i class="fa fa-minus"></i></button>
+        			</div>
+    			</div>	
+    			<div  data-ng-repeat="choice in temp.policy.traptriggerSignatures" class="form-horizontal" >
+        			  <div class="fn-ebz-container ">
+                            <label ng-model="choice.label" name="label" >{{choice.id}}</label>
+                      </div>
+                      <div class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-disabled ="temp.policy.readOnly"  ng-click="addTrapTriggerButton(choice.id)"><i class="fa fa-plus"></i></button>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-disabled ="temp.policy.readOnly"  ng-click="removeTrapTriggerButton(choice.id)"><i class="fa fa-minus"></i></button>
+        			</div>
+        			<div  data-ng-repeat="choice in temp.policy.triggerTrapSignatures[choice.id]" class="form-horizontal" >
+        			  <div class="fn-ebz-container ">
+                            <label ng-model="choice.label" name="label" >{{choice.id}}</label>
+                        </div>
+                        <div class="fn-ebz-container">
+                         	 <select class="form-field" ng-disabled ="temp.policy.readOnly"  ng-model="choice.notBox" name="notBox" ><option>NOT</option></select>
+                        </div>
+                        <div class="fn-ebz-container">
+                           <select class="form-field" ng-disabled ="temp.policy.readOnly"  ng-model="choice.trigger1" ng-options="option for option in varbindDictionaryDatas track by option">
+                           <option value="">{{choice.trigger1}}</option></select>
+                        </div>
+                        <div class="fn-ebz-container ">
+                          <select  class="form-field" ng-disabled ="temp.policy.readOnly"  ng-model="choice.operatorBox" name="operatorBox"><option>AND</option><option>OR</option></select>
+                        </div>
+                        <div class="fn-ebz-container">
+                            <select class="form-field" ng-disabled ="temp.policy.readOnly"  ng-model="choice.trigger2" ng-options="option for option in varbindDictionaryDatas track by option">
+                            <option value="">{{choice.trigger2}}</option></select>
+                        </div>
+        		</div>
+                </div>                            			
+        	</form>	
+		</div> 
+		</br>
+		<div class="fn-ebz-container" >
+            <label>Connect Traps:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default"  ng-disabled ="temp.policy.readOnly"  ng-click="addTriggerConnectButton()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>	
+    			<div  data-ng-repeat="choice in temp.policy.connecttriggerSignatures" class="form-horizontal" >
+        			  <div class="fn-ebz-container ">
+                            <label ng-model="choice.label" name="label" >{{choice.id}}</label>
+                        </div>
+                        <div class="fn-ebz-container">
+                         	<select class="form-field" ng-disabled ="temp.policy.readOnly"  ng-model="choice.notBox" name="notBox" ><option>NOT</option></select>
+                        </div>
+                        <div class="fn-ebz-container">
+                           <select  ng-disabled ="temp.policy.readOnly"   ng-model="choice.connectTrap1" ng-options="option for option in connectTriggerTrapsList track by option">
+                           <option value="">{{choice.connectTrap1}}</option></select>
+                        </div>
+                        <div class="fn-ebz-container ">
+                           <input type="text"  ng-disabled ="temp.policy.readOnly"  ng-model="choice.trapCount1"  name="trapCount1"/>
+                        </div>
+                        <div class="fn-ebz-container">
+                            <select  class="form-field" ng-disabled ="temp.policy.readOnly" ng-model="choice.operatorBox" name="operatorBox"><option>AND</option><option>OR</option></select>
+                        </div>
+                        <div class="fn-ebz-container">
+                           <select  ng-disabled ="temp.policy.readOnly"   ng-model="choice.connectTrap2" ng-options="option for option in connectTriggerTrapsList track by option">
+                           <option value="">{{choice.connectTrap2}}</option></select>
+                        </div>
+                        <div class="fn-ebz-container ">
+                           <input type="text"  ng-disabled ="temp.policy.readOnly"  ng-model="choice.trapCount2"  name="trapCount1"/>
+                        </div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default" ng-show="$last" ng-disabled ="temp.policy.readOnly"  ng-click="removeTriggerConnectButton()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		</div>
+        	</form>	
+		</div> 
+		</br>
+		<div class="fn-ebz-container" >
+            <label>Clear TimeOut:<sup><b>*</b></sup> </label><br>
+            <input type="text" ng-disabled="triggerdisabled" ng-model="temp.policy.clearTimeOut"  style="width:200px;"/>
+      	</div>
+      	<div class="fn-ebz-container" >
+            <label>Trap Max Age:<sup><b>*</b></sup></label><br>
+            <input type="text" ng-disabled="triggerdisabled" ng-model="temp.policy.trapMaxAge" ng-init="temp.policy.jsonBodyData.trapMaxAge='300'" value="300" style="width:200px;"/>
+      	</div>
+       </fieldset>  
+         <br/>
+          <form>
+      <fieldset style="width:140%;">
+         <div>
+               <label>VSCL Action:<sup><b>*</b></sup></label><br>
+                <div class="fn-ebz-container" >
+            		<label>vPRO Actions:<sup><b>*</b></sup></label><br>
+            		<select class="form-field" style="width:400px;" ng-disabled ="temp.policy.readOnly"  ng-model="temp.policy.jsonBodyData.actions" ng-options="option for option in vsclActionDictionaryDatas  track by option">
+            		 <option value="">{{temp.policy.jsonBodyData.actions}}</option></select></select>
+      			</div>
+      			 <div class="fn-ebz-container" >
+            		<label>Time Interval:<sup><b>*</b></sup> </label><br>
+            		<input type="text" ng-disabled ="temp.policy.readOnly"  ng-model="temp.policy.jsonBodyData.timeInterval"  style="width:200px;"/>
+      			</div>
+      			<div class="fn-ebz-container" >
+            		<label>App-C TimeOut:<sup><b>*</b></sup></label><br>
+            		<input type="text" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.timeOutvPRO"  style="width:200px;"/>
+      			</div>
+      			</br>
+      			<div class="fn-ebz-container" >
+            		<label>TimeOut for Ruby:<sup><b>*</b></sup></label><br>
+            		<input type="text" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.timeOutRuby"  style="width:200px;"/>
+      			</div>
+      			<div class="fn-ebz-container" >
+            		<label>Number of Retries:<sup><b>*</b></sup></label><br>
+            		<input type="text" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.retrys"  style="width:200px;"/>
+      			</div>
+      			<div class="fn-ebz-container" >
+            		<label>Aging Window:<sup><b>*</b></sup> </label><br>
+            		<input type="text" class="fn-ebz-text" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.agingWindow"  style="width:200px;"/>
+      			</div>
+      			</br>
+      			<div>
+             		<label>Text to Include in UEB messages for AOTS ticket and Geo Link:</label><br>
+             		<input type="text" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.geoLink" style="width:500px;"/>
+      			</div>
+      			<div class="fn-ebz-container" >
+             		<label>Email Address:</label><br>
+             		<input type="text"  ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.emailAddress" style="width:500px;"/>
+      			</div>
+         </div>
+          </fieldset>     
+    		</form>
+         <br/>
+           <form>
+      <fieldset style="width:140%;">
+         <div>
+               <label>PEP:<sup><b>*</b></sup></label><br>
+             <div class="fn-ebz-container" >
+            	<label>PEP Options:<sup><b>*</b></sup></label><br>
+            	<select class="form-field" style="width:400px;" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.pepName" ng-options="option for option in pepOptionsDictionaryDatas  track by option" ng-change = "getPepActionValues(temp.policy.jsonBodyData.pepName)">
+            	<option value="">{{temp.policy.jsonBodyData.pepName}}</option></select></select></select>
+      		</div>
+      		 <div class="fn-ebz-container" >
+            	<label>Actions:<sup><b>*</b></sup></label><br>
+            	<select class="form-field" style="width:400px;" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.jsonBodyData.pepAction" ng-options="option for option in pepActionDictionaryDatas  track by option">
+            	<option value="">{{temp.policy.jsonBodyData.pepAction}}</option></select></select></select>
+      		</div>
+         </div>
+         </fieldset>     
+    </form>
+         <br/>
+           <form>
+      <fieldset style="width:140%;">
+         <div class="fn-ebz-container" >
+            <label><sup><b></b></sup>Verification Signature:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-disabled ="temp.policy.readOnly"  ng-click="addVerFaultButton()"><i class="fa fa-plus"></i></button>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-disabled ="temp.policy.readOnly"  ng-click="removeVerFaultButton()"><i class="fa fa-minus"></i></button>
+        			</div>
+    			</div>	
+    			<div  data-ng-repeat="choice in temp.policy.faulttriggerSignatures" class="form-horizontal" >
+        			  <div class="fn-ebz-container ">
+                            <label ng-model="choice.label" name="label" >{{choice.id}}</label>
+                      </div>
+                      <div class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-disabled ="temp.policy.readOnly"  ng-click="addVerTriggerButton(choice.id)"><i class="fa fa-plus"></i></button>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-disabled ="temp.policy.readOnly"  ng-click="removeVerTriggerButton(choice.id)"><i class="fa fa-minus"></i></button>
+        			</div>
+        			<div  data-ng-repeat="choice in temp.policy.triggerfaultSignatures[choice.id]" class="form-horizontal" >
+        			  <div class="fn-ebz-container ">
+                            <label ng-model="choice.label" name="label" >{{choice.id}}</label>
+                        </div>
+                        <div class="fn-ebz-container">
+                         	 <select class="form-field" ng-disabled ="temp.policy.readOnly"  ng-model="choice.notBox" name="notBox" ><option>NOT</option></select>
+                        </div>
+                        <div class="fn-ebz-container">
+                           <select class="form-field" ng-disabled ="temp.policy.readOnly"  ng-model="choice.trigger1" ng-options="option for option in varbindDictionaryDatas track by option">
+                           <option value="">{{choice.trigger1}}</option></select>
+                        </div>
+                        <div class="fn-ebz-container ">
+                          <select  class="form-field" ng-disabled ="temp.policy.readOnly"  ng-model="choice.operatorBox" name="operatorBox"><option>AND</option><option>OR</option></select>
+                        </div>
+                        <div class="fn-ebz-container">
+                            <select class="form-field" ng-disabled ="temp.policy.readOnly"  ng-model="choice.trigger2" ng-options="option for option in varbindDictionaryDatas track by option">
+                            <option value="">{{choice.trigger2}}</option></select>
+                        </div>
+        		</div>
+                </div>                          		
+        	</form>	
+		</div> 
+		</br>
+		<div class="fn-ebz-container" >
+            <label>Connect All Faults:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default"  ng-disabled ="temp.policy.readOnly"  ng-click="addFaultConnectButton()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>	
+    			<div  data-ng-repeat="choice in temp.policy.connectVerificationSignatures" class="form-horizontal" >
+        			  <div class="fn-ebz-container ">
+                            <label ng-model="choice.label" name="label" >{{choice.id}}</label>
+                        </div>
+                        <div class="fn-ebz-container">
+                         	<select class="form-field" ng-disabled ="temp.policy.readOnly"  ng-model="choice.notBox" name="notBox" ><option>NOT</option></select>
+                        </div>
+                        <div class="fn-ebz-container">
+                           <select  ng-disabled ="temp.policy.readOnly"   ng-model="choice.connectTrap1" ng-options="option for option in connectTriggerFaultsList track by option">
+                           <option value="">{{choice.connectTrap1}}</option></select>
+                        </div>
+                        <div class="fn-ebz-container ">
+                           <input type="text"  ng-disabled ="temp.policy.readOnly"  ng-model="choice.trapCount1"  name="trapCount1"/>
+                        </div>
+                        <div class="fn-ebz-container">
+                            <select  class="form-field" ng-disabled ="temp.policy.readOnly" ng-model="choice.operatorBox" name="operatorBox"><option>AND</option><option>OR</option></select>
+                        </div>
+                        <div class="fn-ebz-container">
+                           <select  ng-disabled ="temp.policy.readOnly"   ng-model="choice.connectTrap2" ng-options="option for option in connectTriggerFaultsList track by option">
+                           <option value="">{{choice.connectTrap2}}</option></select>
+                        </div>
+                        <div class="fn-ebz-container ">
+                           <input type="text"  ng-disabled ="temp.policy.readOnly"  ng-model="choice.trapCount2"  name="trapCount1"/>
+                        </div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default" ng-show="$last" ng-disabled ="temp.policy.readOnly"  ng-click="removeFaultConnectButton()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		</div>
+        	</form>	
+		</div> 
+		</br>
+		<div class="fn-ebz-container" >
+            <label>Clear TimeOut:<sup><b>*</b></sup></label><br>
+            <input type="text" ng-disabled="verificationdisabled" ng-disabled ="temp.policy.readOnly" ng-model="temp.policy.verificationclearTimeOut"  style="width:200px;"/>
+      	</div>
+         </fieldset>     
+    </form>
+         <br/>
+            <form>
+      <fieldset style="width:140%;">
+         <div>
+            <label>Additional Conditions: If current VM status in A&AI is in Maintenance then the Control Loop will not execute the Action and shall<sup><b>*</b></sup></label><br>
+            <p>          
+          		<input type = "radio" ng-disabled ="temp.policy.readOnly" ng-model= "temp.policy.jsonBodyData.conditions" name = "radSize" id = "sizeSmall" value = "SEND" checked = "checked" /><label for = "sizeSmall">DCAE should send event notification</label>
+          		<input type = "radio" ng-disabled ="temp.policy.readOnly" ng-model= "temp.policy.jsonBodyData.conditions" name = "radSize" id = "sizeMed"  value = "NOTSEND" /><label for = "sizeMed">DCAE should not send event notification</label>
+         	</p>
+         </div>
+         </fieldset>     
+    </form>
+         <br/>
+         </div>
+        <div class="modal__footer">
+            <button class="button button--primary button--small" herf="javascript:void(0)" ng-disabled ="temp.policy.readOnly" ng-click="validatePolicy(temp.policy);">Validate</button>
+            <button class="btn btn-success" herf="javascript:void(0)" ng-disabled ="temp.policy.readOnly" ng-click="saveFaultPolicy(temp);">Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="temp.inprocess">Close</button>
+        </div>
+</div>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+svg {
+  padding: 10px 0 0 10px;
+}
+
+.arc {
+  stroke: #fff;
+}
+
+        .slice text {
+            font-size: 16pt;
+            font-family: Arial;
+        }   
+</style>
+<body>
+<script src="../../d3/js/d3.js"></script>
+
+<script>
+
+var radius = 74,
+    padding = 10;
+
+var width = 200,
+    height = 200;
+
+var outerRadius = height / 2 - 20,
+    innerRadius = outerRadius / 3,
+    cornerRadius = 10;
+//var color = d3.scale.ordinal()
+  //  .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+  var color = d3.scale.category10();
+  var dataURL = "data/speedometer3.csv";
+
+
+</script>
+<script src="js/donut.min.js"></script>

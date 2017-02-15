@@ -1,0 +1,91 @@
+#!/bin/bash
+
+function update_monitor() {
+	COMPONENT=$1
+	STATUS=$2
+	if [[ -f ${POLICY_HOME}/etc/monitor/monitor.cfg ]]; then
+		/bin/sed -i.bak \
+			-e "s/^${COMPONENT}=.*/${COMPONENT}=${STATUS}/g" \
+			${POLICY_HOME}/etc/monitor/monitor.cfg	
+	fi
+}
+
+# unmonitored stop, does not change monitor status (immutable)
+function um_stop() {
+	cd ${TOMCAT_BASE}/bin/
+	${TOMCAT_BASE}/bin/catalina.sh stop -force
+	
+	# make sure ..
+	pid=$(pgrep -f -u ${POLICY_USER} "${TOMCAT_RUNNING}" 2> /dev/null)
+	RETVAL=$?
+	if [[ ${RETVAL} == 0 ]]; then
+		pkill -u ${POLICY_USER} -f "${TOMCAT_RUNNING}" -KILL
+		RETVAL=$?
+	fi
+}
+
+function stop() {
+	um_stop
+	update_monitor ${{COMPONENT_TYPE}} off
+}
+
+# unmonitored start, does not change monitor status (immutable)
+function um_start() {
+	cd ${TOMCAT_BASE}/bin/
+	${TOMCAT_BASE}/bin/catalina.sh start
+	RETVAL=$?
+}
+
+function start() {
+	um_start
+	if [[ ${RETVAL} != 0 ]]; then
+		update_monitor ${{COMPONENT_TYPE}} off
+	else
+		update_monitor ${{COMPONENT_TYPE}} on
+	fi
+}
+
+TOMCAT_BASE=${POLICY_HOME}/servers/${{COMPONENT_TYPE}}
+TOMCAT_RUNNING="^$JAVA_HOME/bin/java .* -Dcatalina.base=${TOMCAT_BASE} .* start$"
+
+PWD_ENTER=${PWD}
+RETVAL=0
+
+. ${POLICY_HOME}/etc/profile.d/env.sh
+
+case "$1" in
+    status)
+        pid=$(pgrep -f -u ${POLICY_USER} "${TOMCAT_RUNNING}" 2> /dev/null)
+        RETVAL=$?
+        if [ $RETVAL -eq 0 ]; then
+                echo "running with pid ${pid}"
+        else
+                echo "stopped"
+        fi
+        ;;
+	restart)
+	    stop
+        sleep 2
+        start
+        ;;
+	start)
+        start
+        ;;
+	umstart)
+        um_start
+        ;;        
+	stop)
+        stop
+        ;;  
+	umstop)
+        um_stop
+        ;;               
+    *)
+        cd ${TOMCAT_BASE}/bin/
+        ${TOMCAT_BASE}/bin/catalina.sh "$@"
+        RETVAL=$?
+        ;;
+esac
+
+cd ${PWD_ENTER}
+exit ${RETVAL}

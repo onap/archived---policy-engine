@@ -1,0 +1,132 @@
+[
+    {
+        "serviceTypePolicyName": "Registration Failure(Trinity)",
+        "verticaMetrics": "DATETIMEUTC\n VNFC_NAME\n BW_SIP_STATS_REGISTER_RESPONSE_CODE_VALUE \nBW_SIP_STATS_REGISTER_RESPONSE_INS \n BW_SIP_STATS_REGISTER_RESPONSE_OUTS",
+        "attributes": {
+            "Onset&abatement anomaly detection": {
+                "PtileLimit": "Percentile value used by anomaly detection model",
+                "Threshold": "initial value for the quantile at percentile(PtileLimit) used by the anomaly detection model",
+                "Window": "Number of weeks anomaly detection model keeps in memory to estimate Threshold",
+                "Training": "Number of historical weeks anomaly detection model needs for training ",
+                "FractionSamplePerDay": "This corresponds to the minimum number of samples per day to be used in the daily percentile computation when updating the distribution tail crossing model. When there are less samples than that threshold, the model is not updated with these samples. "
+            },
+            "Onset signature trigger": {
+                "ConsecutiveInterval": "Number of consecutive intervals normalized metric must trigger the anomaly detection model before resulting in an action",
+                "RetryTimer": "Minimum interval between policy triggers"
+            },
+            "Abatement signature trigger": {
+                "Consecutiveinterval": "Number of consecutive intervals normalized metric does not trigger the anomaly detection model after onset signature was triggered"
+            },
+            "Onset & abatement UEB notification": {
+                "OnsetMessage": "Value of field OnSetMessage sent by Analytics Engine published on UEB",
+                "AbatementMessage": "Value of field AbatementMessage sent by Analytics Engine published on UEB",
+                "PolicyName": "Value of field PolicyName sent by Analytics Engine published on UEB"
+            }
+        },
+        "policyDescription": "Policy to detect instances where SIP registration rate exceeds a normal level over a number of consecutive sampling periods. \n Notes \n (1) Vertica metrics normalized and combined in a SIP registration failure probability per Site and per VM. \n (2) Anomaly detection model operates on SIP registration failure probability. \n (3) Anomaly detection consists of an estimated distribution percentile threshold crossing. \n (4) Actions: Send email and/or UEB notification"
+    },
+    {
+        "serviceTypePolicyName": "International Fraud(Trinity)",
+        "verticaMetrics": "INTERVAL_START_TS\n CUSTOMER\n A_SITE\n A_SBG\n BW\n Z_COUNTRY\n CALL_COUNT\n MINUTES_OF_USE",
+        "attributes": {
+            "Onset&abatement anomaly detection": {
+                "PtileLimit": "Percentile value used by anomaly detection model",
+                "Threshold": "initial value for the quantile at percentile(PtileLimit) used by the anomaly detection model",
+                "Window": "Number of weeks anomaly detection model keeps in memory to estimate Threshold",
+                "Training": "Number of historical weeks anomaly detection model needs for training ",
+                "FractionSamplePerDay": "This corresponds to the minimum number of samples per day to be used in the daily percentile computation when updating the distribution tail crossing model. When there are less samples than that threshold, the model is not updated with these samples. "
+            },
+            "Onset signature trigger": {
+                "ConsecutiveInterval": "Number of consecutive intervals normalized metric must trigger the anomaly detection model before resulting in an action",
+                "RetryTimer": "Minimum interval between policy triggers"
+            },
+            "Abatement signature trigger": {
+                "Consecutiveinterval": "Number of consecutive intervals normalized metric does not trigger the anomaly detection model after onset signature was triggered"
+            },
+            "Onset & abatement UEB notification ": {
+                "OnsetMessage": "Value of field OnSetMessage sent by Analytics Engine published on UEB",
+                "AbatementMessage": "Value of field AbatementMessage sent by Analytics Engine published on UEB",
+                "PolicyName": "Value of field PolicyName sent by Analytics Engine published on UEB"
+            }
+        },
+        "policyDescription": "Policy to detect instances where count of calls towards an international destination exceeds a normal level over a number of consecutive sampling periods. \n Notes \n (1) Vertica metrics normalized and combined in a SIP registration failure probability per Customer, per Site and per VM. \n (2) Anomaly detection model operates on counts towards an international destination. \n (3) Anomaly detection consists of an estimated distribution percentile threshold crossing. \n (4) Actions: Send email and/or UEB notification"
+    },
+    {
+        "serviceTypePolicyName": "No dial tone(Trinity)",
+        "verticaMetrics": "INTERVAL_START_TS\n SUM(CALLS_ATTEMPTED)\n SUM(NO_ANSWER_OR_VOICE_MAIL)\n A_SITE or A_SBG or BW or CUSTOMER",
+        "attributes": {
+            "Onset&abatement anomaly detection": {
+                "PtileLimit": "Percentile value used by anomaly detection model",
+                "Threshold": "initial value for the quantile at percentile(PtileLimit) used by the anomaly detection model",
+                "Window": "Number of weeks anomaly detection model keeps in memory to estimate Threshold",
+                "Training": "Number of historical weeks anomaly detection model needs for training ",
+                "FractionSamplePerDay": "This corresponds to the minimum number of samples per day to be used in the daily percentile computation when updating the distribution tail crossing model. When there are less samples than that threshold, the model is not updated with these samples. "
+            },
+            "Onset signature trigger": {
+                "ConsecutiveInterval": "Number of consecutive intervals normalized metric must trigger the anomaly detection model before resulting in an action",
+                "RetryTimer": "Minimum interval between policy triggers"
+            },
+            "Abatement signature trigger": {
+                "Consecutiveinterval": "Number of consecutive intervals normalized metric does not trigger the anomaly detection model after onset signature was triggered"
+            },
+            "Onset & abatement UEB notification ": {
+                "OnsetMessage": "Value of field OnSetMessage sent by Analytics Engine published on UEB",
+                "AbatementMessage": "Value of field AbatementMessage sent by Analytics Engine published on UEB",
+                "PolicyName": "Value of field PolicyName sent by Analytics Engine published on UEB"
+            }
+        },
+        "policyDescription": "Policy to detect ? \n Notes:\n (1) Actions: Send email and/or UEB notification"
+    },
+    {
+        "serviceTypePolicyName": "Call storm(Trinity)",
+        "verticaMetrics": "",
+        "attributes": {
+            "Onset&abatement anomaly detection": {
+                "SeasonLength": "Metric seasonality (5min sampling period with 7 days seasonality: 7*288) used by Holt-Winters model",
+                "TrainLength": "Training length (5min sampling period with 7 days seasonality and 5 cycles training: 7*288*5) used by Holt-Winters",
+                "Alpha": "Smoothing parameter (range 0-1, default 0.2)",
+                "Beta": "Trend parameter (range 0-1, default 0) ",
+                "Gamma": "Seasonality (range 0-1, default 0.05)",
+                "Deviation Threshold": "Approximately a limit on the factor by how much current value has deviated compared to expected variance"
+            },
+            "Onset signature trigger": {
+                "RetryTimer": "Minimum interval between policy triggers"
+            },
+            "Abatement signature trigger": {
+                "Hw-Timeout": "Maximum time for an HealthCheck response (measured from the time a positive App-C response was received)",
+                "OnSetMessage": "Value of field Message sent by Analytics Engine published on UEB "
+            },
+            "Onset & abatement UEB notification ": {
+                "AbatementMessage": "Value of field AbatementMessage sent by Analytics Engine published on UEB",
+                "PolicyName": "Value of field PolicyName sent by Analytics Engine published on UEB"
+            }
+        },
+        "policyDescription": "Policy to detect instances where count of Formatted table ? exceeds a predicted level. \n Notes \n (1) Vertica metrics normalized and combined in ? per Customer, per Site and per VM. \n (2) Anomaly detection model operates on ? \n (3) Anomaly detection consists of detecting deviations from Holt-Winters predictions. \n (4) Actions: Send email and/or UEB notification"
+    },
+    {
+        "serviceTypePolicyName": "Registration storm(Trinity)",
+        "verticaMetrics": "",
+        "attributes": {
+            "Onset&abatement anomaly detection": {
+                "SeasonLength": "Metric seasonality (5min sampling period with 7 days seasonality: 7*288) used by Holt-Winters model",
+                "TrainLength": "Training length (5min sampling period with 7 days seasonality and 5 cycles training: 7*288*5) used by Holt-Winters",
+                "Alpha": "Smoothing parameter (range 0-1, default 0.2)",
+                "Beta": "Trend parameter (range 0-1, default 0) ",
+                "Gamma": "Seasonality (range 0-1, default 0.05)",
+                "Deviation Threshold": "Approximately a limit on the factor by how much current value has deviated compared to expected variance"
+            },
+            "Onset signature trigger": {
+                "RetryTimer": "Minimum interval between policy triggers"
+            },
+            "Abatement signature trigger": {
+                "Hw-Timeout": "Maximum time for an HealthCheck response (measured from the time a positive App-C response was received)",
+                "OnSetMessage": "Value of field Message sent by Analytics Engine published on UEB "
+            },
+            "Onset & abatement UEB notification ": {
+                "AbatementMessage": "Value of field AbatementMessage sent by Analytics Engine published on UEB",
+                "PolicyName": "Value of field PolicyName sent by Analytics Engine published on UEB"
+            }
+        },
+        "policyDescription": "Policy to detect instances where count of Formatted table ? exceeds a predicted level. \n Notes \n (1) Vertica metrics normalized and combined in ? per Customer, per Site and per VM. \n (2) Anomaly detection model operates on ? \n (3) Anomaly detection consists of detecting deviations from Holt-Winters predictions. \n (4) Actions: Send email and/or UEB notification"
+    }
+]

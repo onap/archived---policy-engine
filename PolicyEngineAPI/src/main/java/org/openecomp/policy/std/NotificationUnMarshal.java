@@ -1,0 +1,69 @@
+/*-
+ * ============LICENSE_START=======================================================
+ * PolicyEngineAPI
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */
+
+package org.openecomp.policy.std;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.openecomp.policy.api.LoadedPolicy;
+import org.openecomp.policy.api.RemovedPolicy;
+import org.openecomp.policy.api.UpdateType;
+import org.openecomp.policy.std.StdLoadedPolicy;
+import org.openecomp.policy.std.StdPDPNotification;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class NotificationUnMarshal {
+	private static StdPDPNotification notification;
+	
+	public static StdPDPNotification notificationJSON(String json) throws Exception{
+		ObjectMapper mapper = new ObjectMapper();
+		notification = mapper.readValue(json, StdPDPNotification.class);
+		if(notification!=null){
+			if(notification.getLoadedPolicies()!=null){
+				Collection<StdLoadedPolicy> stdLoadedPolicies = new ArrayList<StdLoadedPolicy>();
+				for(LoadedPolicy loadedPolicy: notification.getLoadedPolicies()){
+					StdLoadedPolicy stdLoadedPolicy = (StdLoadedPolicy) loadedPolicy;
+					if(notification.getRemovedPolicies()!=null){
+						Boolean updated = false;
+						for(RemovedPolicy removedPolicy: notification.getRemovedPolicies()){
+							String regex = ".(\\d)*.xml";
+							if(removedPolicy.getPolicyName().replaceAll(regex, "").equals(stdLoadedPolicy.getPolicyName().replaceAll(regex, ""))){
+								updated  = true;
+								break;
+							}
+						}
+						if(updated){
+							stdLoadedPolicy.setUpdateType(UpdateType.UPDATE);
+						}else{
+							stdLoadedPolicy.setUpdateType(UpdateType.NEW);
+						}
+					}else{
+						stdLoadedPolicy.setUpdateType(UpdateType.NEW);
+					}
+					stdLoadedPolicies.add(stdLoadedPolicy);
+				}
+				notification.setLoadedPolicies(stdLoadedPolicies);
+			}
+		}
+		return notification;
+	}
+}

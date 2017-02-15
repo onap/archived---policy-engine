@@ -1,0 +1,68 @@
+<!--
+  ============LICENSE_START=======================================================
+  ECOMP Policy Engine
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+  -->
+
+<style>
+	.center {
+		margin: auto;
+		width: 60%;
+		border: 3px solid #73AD21;
+		padding: 10px;
+	}
+</style>
+<div ng-app style="margin-bottom: 20px; width: 100%">
+	<div class="pageTitle">
+		<h3><b>Auto Push</b></h3>
+	</div>
+	
+	<div class="fn-ebz-container" style= "margin-left: 45%;">
+		<button  ng-click="pushPoliciesButton();" ng-hide="isDisabled">
+			<combo  type="submit"  att-button btn-type="primary" size="small" >Push Policies</combo>
+		</button>
+		<div ng-show ="isDisabled" class="ion-locked" style="clear: left; float: left">
+  		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4><b>Policies</b></h4>
+					<!--  <input type="text" ng-model="filterPolicy" ng-change="filterPolicyData()" placeholder="Policy Search..." /> -->
+					<img id="mySpinner" src="/ecomp/app/policyApp/images/loading_bar.gif" ng-show="loading"/>
+				</div>
+				<div class="panel-body">
+					<div id="grid1" style="width: 100%; height: 400px;" ui-grid="gridOptions" ui-grid-tree-view  ui-grid-pagination ui-grid-selection ui-grid-resize-columns class="grid"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4><b>PDP Groups</b></h4>
+					<!-- <input type="text" ng-model="filterPdpGroup" ng-init="getPDPData();" ng-change="filterPDPGroupData()" placeholder="PDP Group Search..." /> -->
+				</div>
+				<div class="panel-body">
+					<div style="width: 100%; height: 400px;" ui-grid="pushTabPDPGrid" ui-grid-pagination ui-grid-selection ui-grid-resize-columns class="grid"> <pre>{{selectedRows}}</pre></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+

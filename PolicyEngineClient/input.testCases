@@ -1,0 +1,419 @@
+[
+{
+  "id": 1,
+  "testCaseDescription": "test GetConfig String Not valid",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "fail",
+  "ConfigName": null,
+   "configAttributes": null,
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 2,
+  "testCaseDescription": "test Get ConfigString Valid JSON",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "JSON",
+  "ConfigName": null,
+   "configAttributes": null,
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 3,
+  "testCaseDescription": "test Get ConfigString Valid XML",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "XML",
+  "ConfigName": null,
+   "configAttributes": null,
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 4,
+  "testCaseDescription": "test Get ConfigString Valid properties",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "Properties",
+  "ConfigName": null,
+   "configAttributes": null,
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 5,
+  "testCaseDescription": "test Get ConfigString Valid other",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "Other",
+  "ConfigName": null,
+   "configAttributes": null,
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 6,
+  "testCaseDescription": "test GetConfig String String Fail",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": null,
+  "ConfigName": null,
+   "configAttributes": null,
+  "expectedResult":[
+  		"org.openecomp.policy.api.PolicyConfigException: No eCOMPComponentName given.",
+ 	 ]
+},
+{
+  "id": 7,
+  "testCaseDescription": "test GetConfig String String Fail1",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": null,
+  "ConfigName": null,
+   "configAttributes": null,
+  "expectedResult":[
+  	"org.openecomp.policy.api.PolicyConfigException: No eCOMPComponentName given."
+  
+ 	 ]
+},
+{
+  "id": 8,
+  "testCaseDescription": "test GetConfig String String Valid ",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "fail",
+  "ConfigName": "fail",
+   "configAttributes": null,
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 9,
+  "testCaseDescription": "test GetConfig String String Valid JSON",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "JSON",
+  "ConfigName": "JSONconfig",
+   "configAttributes": null,
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 10,
+  "testCaseDescription": "test GetConfig String String Valid XML",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "XML",
+  "ConfigName": "XMLconfig",
+   "configAttributes": null,
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 11,
+  "testCaseDescription": "test GetConfig String String Valid properties",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "Properties",
+  "ConfigName": "PropConfig",
+   "configAttributes": null,
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 12,
+  "testCaseDescription": "test GetConfig String String Valid other",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "Other",
+  "ConfigName": "OtherConfig",
+   "configAttributes": null,
+  "expectedResult":[
+		"Policy Name: null Policy version: null - not_found",
+		]
+},
+{
+  "id": 13,
+  "testCaseDescription": "test GetConfig String String String fail",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": null,
+  "ConfigName": null,
+   "configAttributes": null,
+  "expectedResult":[
+  	"org.openecomp.policy.api.PolicyConfigException: No eCOMPComponentName given."
+  	]
+},
+{
+  "id": 14,
+  "testCaseDescription": "test GetConfig String String String fail1",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": null,
+  "ConfigName": "testFail",
+   "configAttributes": [
+		{
+			"key": "TestValue",
+			"value": "Fail",
+			},
+		],
+  "expectedResult":[
+  		"org.openecomp.policy.api.PolicyConfigException: No eCOMPComponentName given.",
+  		]
+},
+{
+  "id": 15,
+  "testCaseDescription": "test GetConfig String String String fail2",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "TestFail",
+  "ConfigName": null,
+   "configAttributes": [
+		{
+			"key": "TestValue",
+			"value": "Fail",
+			},
+		],
+  "expectedResult":[
+		"Policy Name: null Policy version: null - not_found",
+		]
+},
+{
+  "id": 16,
+  "testCaseDescription": "test GetConfig String String String fail3",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "TestFail",
+  "ConfigName": "configFail",
+   "configAttributes": null,
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 17,
+  "testCaseDescription": "test GetConfig String String String fail4",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "TestFail",
+  "ConfigName": "configFail",
+   "configAttributes": [
+		{
+			"key": "",
+			"value": "",
+		},
+	],
+  "expectedResult":[
+  		"org.openecomp.policy.api.PolicyConfigException: Cannot have an empty Key",
+
+ 	 ]
+},
+{
+  "id": 18,
+  "testCaseDescription": "test GetConfig String String String Valid",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "TestFail",
+  "ConfigName": "configFail",
+   "configAttributes": [
+		{
+			"key": "Action:com.test.fail",
+			"value": "Value",
+			},
+	],
+  "expectedResult":[
+		"Policy Name: null Policy version: null - not_found",
+		]
+},
+{
+  "id": 19,
+  "testCaseDescription": "test GetConfig String String String Valid JSON",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "JSON",
+  "ConfigName": "JSONconfig",
+   "configAttributes": [
+	{
+		"key": "Resource.com:test:resource:json",
+		"value":"Test",
+	},
+	{
+		"key": "Action.com:test:action:json",
+		"value":"TestJSON",
+	},
+	{
+		"key": "Subject.com:test:subject:json",
+		"value":"TestSubject",
+	}
+   ],
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 20,
+  "testCaseDescription": "test GetConfig String String String Valid XML",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "XML",
+  "ConfigName": "XMLconfig",
+   "configAttributes": [
+	{
+		"key": "Resource.com:test:resource:json",
+		"value":"Test",
+	},
+	{
+		"key": "Action.com:test:action:json",
+		"value":"TestJSON",
+	},
+	{
+		"key": "Subject.com:test:subject:json",
+		"value":"TestSubject",
+	}
+   ],
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 21,
+  "testCaseDescription": "test GetConfig String String String Valid properties",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "Properties",
+  "ConfigName": "PropConfig",
+   "configAttributes": [
+	{
+		"key": "Resource.com:test:resource:json",
+		"value":"Test",
+	},
+	{
+		"key": "Action.com:test:action:json",
+		"value":"TestJSON",
+	},
+	{
+		"key": "Subject.com:test:subject:json",
+		"value":"TestSubject",
+	}
+   ],
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 22,
+  "testCaseDescription": "test GetConfig String String String Valid other",
+  "testFor": "getConfig",
+  "PDP_URLConfigFile":  "config.properties"
+  "ECOMPName": "Other",
+  "ConfigName": "OtherConfig",
+   "configAttributes": [
+	{
+		"key": "Resource.com:test:resource:json",
+		"value":"Test",
+	},
+	{
+		"key": "Action.com:test:action:json",
+		"value":"TestJSON",
+	},
+	{
+		"key": "Subject.com:test:subject:json",
+		"value":"TestSubject",
+	}
+   ],
+  "expectedResult":[
+  		"Policy Name: null Policy version: null - not_found",
+ 	 ]
+},
+{
+  "id": 23,
+  "testCaseDescription": "test SendEvent Fail",
+  "testFor": "getAction",
+  "PDP_URLConfigFile":  "config.properties",
+  "eventAttributes": null,
+ "expectedResult":[
+ 		"org.openecomp.policy.api.PolicyEventException: No EventAttributes Given.",
+ ]
+},
+{
+  "id": 24,
+  "testCaseDescription": "test SendEvent Fail null",
+  "testFor": "getAction", 
+  "PDP_URLConfigFile":  "config.properties",
+  "eventAttributes": [
+    {
+      "key": "",
+      "value": ""
+    },
+  ],
+ "expectedResult":[
+ 		"org.openecomp.policy.api.PolicyEventException: Cannot have an empty Key",
+ 		
+ ]
+},
+{
+  "id": 25,
+  "testCaseDescription": "test SendEvent Not Valid",
+  "testFor": "getAction",
+  "PDP_URLConfigFile":  "config.properties",
+  "eventAttributes": [
+    {
+      "key": "Action.fail",
+      "value": "Value"
+    },
+  ],
+ "expectedResult":[
+ 	"Decision not a Permit. : no_action",
+ ]
+},
+{
+  "id": 26,
+  "testCaseDescription": "test SendEvent Action Advised",
+  "testFor": "getAction",
+  "PDP_URLConfigFile":  "config.properties",
+  "eventAttributes": [
+    {
+      "key": "Key",
+      "value": "Value"
+    },
+	 {
+      "key": "cpu",
+      "value": "80"
+    },
+  ],
+ "expectedResult":[
+ 	"Decision not a Permit. : no_action",
+ ]
+},
+{
+  "id": 27,
+  "testCaseDescription": "test SendEvent Action Taken",
+  "testFor": "getAction",
+  "PDP_URLConfigFile":  "config.properties",
+  "eventAttributes": [
+      {
+      "key": "Key",
+      "value": "Value"
+    },
+	 {
+      "key": "cpu",
+      "value": "91"
+    },
+  ],
+ "expectedResult":[
+ 	"Decision not a Permit. : no_action",
+ ]
+},
+]

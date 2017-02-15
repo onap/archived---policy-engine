@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="content-type" content="text/html; charset=UTF8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link href="../../d3/css/nv.d3.css" rel="stylesheet" type="text/css">
+<style>
+	 body { 
+	overflow-y:scroll; 
+	} 
+ text { 
+	font: 12px sans-serif; 
+ } 
+ svg { 
+  display: block;
+ } 
+ #chart461 svg { 
+ height: 420px; 
+ width:  700px; 
+ min-width: 100px; 
+ min-height: 100px; 
+ } 
+ tr.z-row-over > td.z-row-inner, tr.z-row-over > .z-cell { background-color: rgb(255, 255, 255); } 
+.nodatadiv {
+	display: table-cell;
+	width: 700px;
+	height:370px;
+	text-align:center;
+	vertical-align: middle;
+}
+.nodatainner {
+	padding: 10px;
+}
+ </style> 
+<body> 
+<div align="center"><H3></H3></div><div id="chart461"> <svg></svg> </div> 
+<script src="../../d3/js/d3.v3.min.js"></script>
+<script src="../../d3/js/nv.d3.min.js"></script> 
+<script src="../../d3/js/tooltip.js"></script> 
+<script src="../../d3/js/utils.js"></script> 
+<script src="../../d3/js/models/axis.min.js"></script> 
+<script src="../../d3/js/models/multiChart.js"></script> 
+<script> 
+historicalBarChart = [ 
+ { "type":"bar", "key": "AP_CPU", "yAxis": "1", "values": [{ "x":1388552400000 , "y":10}, { "x":1391230800000 , "y":4}, { "x":1393650000000 , "y":4}, { "x":1396324800000 , "y":12}, { "x":1398916800000 , "y":3.27}, { "x":1401595200000 , "y":6.07}, { "x":1404187200000 , "y":8.93}, { "x":1406865600000 , "y":11.61}, { "x":1409544000000 , "y":18.66}, { "x":1412136000000 , "y":19.04}, { "x":1414814400000 , "y":17.5}, { "x":1417410000000 , "y":15.73}, { "x":1420088400000 , "y":9.62333333333333}, { "x":1422766800000 , "y":14.29}, { "x":1425186000000 , "y":16.1166666666667} ] } , 
+ { "type":"bar", "key": "ROUTER_CPU", "yAxis": "1", "values": [{ "x":1388552400000 , "y":7}, { "x":1391230800000 , "y":7}, { "x":1393650000000 , "y":5}, { "x":1396324800000 , "y":6}, { "x":1398916800000 , "y":5}, { "x":1401595200000 , "y":6}, { "x":1404187200000 , "y":7}, { "x":1406865600000 , "y":7}, { "x":1409544000000 , "y":8.03}, { "x":1412136000000 , "y":9}, { "x":1414814400000 , "y":9}, { "x":1417410000000 , "y":8.78}, { "x":1420088400000 , "y":3.01}, { "x":1422766800000 , "y":2}, { "x":1425186000000 , "y":3.63333333333333} ] } , 
+ { "type":"bar", "key": "SCTP_CPU", "yAxis": "1", "values": [{ "x":1388552400000 , "y":8}, { "x":1391230800000 , "y":10}, { "x":1393650000000 , "y":10}, { "x":1396324800000 , "y":9}, { "x":1398916800000 , "y":9.58}, { "x":1401595200000 , "y":11.83}, { "x":1404187200000 , "y":14.36}, { "x":1406865600000 , "y":15.94}, { "x":1409544000000 , "y":24.55}, { "x":1412136000000 , "y":25.35}, { "x":1414814400000 , "y":23.63}, { "x":1417410000000 , "y":21.43}, { "x":1420088400000 , "y":12.5766666666667}, { "x":1422766800000 , "y":24.4}, { "x":1425186000000 , "y":24.5833333333333} ] } , 
+ { "type":"bar", "key": "DP_CPU", "yAxis": "1", "values": [{ "x":1388552400000 , "y":2}, { "x":1391230800000 , "y":9}, { "x":1393650000000 , "y":4}, { "x":1396324800000 , "y":8}, { "x":1398916800000 , "y":2.98}, { "x":1401595200000 , "y":5.84}, { "x":1404187200000 , "y":8.47}, { "x":1406865600000 , "y":10.8}, { "x":1409544000000 , "y":18.33}, { "x":1412136000000 , "y":18.37}, { "x":1414814400000 , "y":16.92}, { "x":1417410000000 , "y":15.18}, { "x":1420088400000 , "y":9.31}, { "x":1422766800000 , "y":13.41}, { "x":1425186000000 , "y":12.4} ] } 
+]; 
+var chart; 
+nv.addGraph(function() { 
+ chart = nv.models.multiBarChart() 
+           .margin({top: 30, right: 60, bottom: 50, left: 100}) 
+			.showLegend(true) 
+            .reduceXTicks(false) 
+           .forceY([0, 34.0])
+			.showControls(true) 
+  			.stacked(false)
+  			.logScale(false)
+  				.legendPos('top')
+           .color(d3.scale.category10().range()); 
+  chart.xAxis
+	.tickValues([1388552400000,1391230800000,1393650000000,1396324800000,1398916800000,1401595200000,1404187200000,1406865600000,1409544000000,1412136000000,1414814400000,1417410000000,1420088400000,1422766800000])
+             .staggerLabels(false) 
+			.showMaxMin(false) 
+  			.rotateLabels(90) 
+               .axisLabel('Timestamp')
+        .tickFormat(function(d) { 
+         return d3.time.format('%b %y')(new Date(d)) }); 
+  chart.yAxis
+			.logScale(false)
+               .axisLabel('') 
+        .tickFormat(d3.format(',.1f')); 
+ d3.select('#chart461 svg') 
+  .datum(historicalBarChart) 
+  .transition().duration(1000) 
+  .call(chart); 
+nv.utils.windowResize(chart.update); 
+return chart; 
+}); 
+function redraw() { 
+	d3.select('#chart461 svg') 
+		.datum(historicalBarChart) 
+		.transition().duration(500) 
+		.call(chart); 
+} 
+
+ setInterval(function () { 
+ redraw(); 
+ }, 1500) 
+if(historicalBarChart.length <= 0 ) {
+	document.getElementById("chart461").innerHTML = "<div id='noData'><b>No Data Available</b></div>";
+	document.getElementById("chart461").className="nodatadiv";
+	document.getElementById("nodata").className="nodatainner";
+}
+</script> </body></html>

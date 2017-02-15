@@ -1,0 +1,164 @@
+/*-
+ * ============LICENSE_START=======================================================
+ * PolicyEngineAPI
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */
+
+package org.openecomp.policy.std.test;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import org.junit.*;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.openecomp.policy.api.NotificationScheme;
+import org.openecomp.policy.api.PDPNotification;
+import org.openecomp.policy.std.ManualClientEndUEB;
+import org.openecomp.policy.std.NotificationUnMarshal;
+import org.openecomp.policy.std.StdPDPNotification;
+
+import static org.junit.Assert.*;
+
+/**
+ * The class <code>ManualClientEndUEBTest</code> contains tests for the class <code>{@link ManualClientEndUEB}</code>.
+ *
+ * @generatedBy CodePro at 6/1/16 1:40 PM
+ * @version $Revision: 1.0 $
+ */
+public class ManualClientEndUEBTest {
+	
+	String resultJson = "{'test':'testing'}";
+	String json = "{\"test\":\"testing\"}";
+	StdPDPNotification notification = new StdPDPNotification();
+	ManualClientEndUEB mockManualClient = null;
+	/**
+	 * Perform pre-test initialization.
+	 *
+	 * @throws Exception
+	 *         if the initialization fails for some reason
+	 *
+	 * @generatedBy CodePro at 6/1/16 1:40 PM
+	 */
+	@Before
+	public void setUp()
+		throws Exception {
+		String url = "http://test.com";
+		String uniqueID = "test";
+		List<String> uebURLList = new LinkedList<String>();
+		uebURLList.add(url);
+				
+	}
+	/**
+	 * Run the ManualClientEndUEB() constructor test.
+	 *
+	 * @generatedBy CodePro at 6/1/16 1:40 PM
+	 */
+	@Test
+	public void testManualClientEndUEB_1()
+		throws Exception {
+		ManualClientEndUEB result = new ManualClientEndUEB();
+		assertNotNull(result);
+		// add additional test code here
+	}
+
+	/**
+	 * Run the void createTopic(String,String,List<String>) method test.
+	 *
+	 * @throws Exception
+	 *
+	 * @generatedBy CodePro at 6/1/16 1:40 PM
+	 */
+	@Test
+	public void testCreateTopic_1()
+		throws Exception {
+		String url = "http://test.com";
+		String uniqueID = "test";
+		List<String> uebURLList = new LinkedList<String>();
+		uebURLList.add(url);
+
+		ManualClientEndUEB.createTopic(url, uniqueID, uebURLList);
+
+	}
+
+	/**
+	 * Run the PDPNotification result(NotificationScheme) method test.
+	 *
+	 * @throws Exception
+	 *
+	 * @generatedBy CodePro at 6/1/16 1:40 PM
+	 */
+	@Test
+	public void testResult_1()
+		throws Exception {
+		NotificationScheme scheme = NotificationScheme.AUTO_ALL_NOTIFICATIONS;
+
+		PDPNotification result = ManualClientEndUEB.result(scheme);
+
+		assertNull(result);
+	}
+
+
+	/**
+	 * Run the void start(String,List<String>,String) method test.
+	 *
+	 * @throws Exception
+	 *
+	 * @generatedBy CodePro at 6/1/16 1:40 PM
+	 */
+	@Test
+	public void testStart_1()
+		throws Exception {
+		String url = "http://test.com";
+		List<String> uebURLList = new LinkedList<String>();
+		String uniqueID = "test";
+		uebURLList.add(url);
+
+		ManualClientEndUEB.start(url, uebURLList, uniqueID);
+
+		// add additional test code here
+		// An unexpected exception was thrown in user code while executing this test:
+		//    java.lang.NoClassDefFoundError: Could not initialize class org.openecomp.policy.std.ManualClientEndUEB
+	}
+
+
+	/**
+	 * Perform post-test clean-up.
+	 *
+	 * @throws Exception
+	 *         if the clean-up fails for some reason
+	 *
+	 * @generatedBy CodePro at 6/1/16 1:40 PM
+	 */
+	@After
+	public void tearDown()
+		throws Exception {
+		// Add additional tear down code here
+	}
+
+	/**
+	 * Launch the test.
+	 *
+	 * @param args the command line arguments
+	 *
+	 * @generatedBy CodePro at 6/1/16 1:40 PM
+	 */
+	public static void main(String[] args) {
+		new org.junit.runner.JUnitCore().run(ManualClientEndUEBTest.class);
+	}
+}

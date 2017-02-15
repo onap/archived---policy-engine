@@ -1,0 +1,131 @@
+#!/bin/bash
+#
+# init script for a Java application
+#
+
+function update_monitor() {
+	COMPONENT=$1
+	STATUS=$2
+	if [[ -f ${POLICY_HOME}/etc/monitor/monitor.cfg ]]; then
+		/bin/sed -i.bak \
+			-e "s/^${COMPONENT}=.*/${COMPONENT}=${STATUS}/g" \
+			${POLICY_HOME}/etc/monitor/monitor.cfg	
+	fi
+}
+
+# unmonitored start, does not change monitor status (immutable)
+function um_start() {
+	JMX_JAVA_OPTS="-Dcom.sun.management.jmxremote"
+	JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote.port=${LOGPARSER_JMX_PORT}"
+	JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote.ssl=false" 
+	JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote.authenticate=false"
+	JVM_JAVA_OPTS="-Xms${LOGPARSER_X_MS_MB}M -Xmx${LOGPARSER_X_MX_MB}M"
+
+	JAVA_OPTS="${JAVA_OPTS} ${JMX_JAVA_OPTS} ${JVM_JAVA_OPTS}"
+	
+	# Redirects default and error output to a log file
+	cd ${POLICY_HOME}/servers/${COMPONENT}/bin
+	nohup $JAVA_HOME/bin/java -jar ${JAVA_OPTS} ${SERVICE} ${SERVER} ${LOGTYPE} >> ${POLICY_HOME}/servers/${COMPONENT}/logs/stdout 2>&1 &
+RETVAL=$?
+	RETVAL=$?	
+}
+
+# Starts the application
+function start() {
+	um_start
+	if [[ ${RETVAL} != 0 ]]; then
+		update_monitor ${COMPONENT} off
+	else
+		update_monitor ${COMPONENT} on
+	fi
+}
+
+# unmonitored stop, does not change monitor status (immutable)
+function um_stop() {
+	# Kills the application process
+	pkill -u ${POLICY_USER} -f "${SERVICE} ${SERVER} ${LOGTYPE}" -TERM
+	RETVAL=$?
+	if [[ ${RETVAL} != 0 ]]; then
+		sleep 2
+		pkill -u ${POLICY_USER} -f "${SERVICE} ${SERVER} ${LOGTYPE}" -KILL
+		RETVAL=$?
+    fi	
+}
+
+# Stops the application
+function stop() {
+	um_stop
+    update_monitor ${COMPONENT} off	
+}
+
+# Show the application status
+function status() {
+	# check status
+	pid=$(pgrep -f -u ${POLICY_USER} "${SERVICE} ${SERVER} ${LOGTYPE}" 2> /dev/null)
+	RETVAL=$?
+	
+	# If the PID was returned means the application is running
+	if [ ${RETVAL} -eq 0 ] ; then
+		echo "running with pid ${pid}"
+	else
+		echo "stopped"
+	fi
+}
+
+# Main logic, a simple case to call functions
+
+# determine if this is a paplp or pdplp component
+COMPONENT=$(basename $0)
+
+CONF_FILE="${POLICY_HOME}/servers/${COMPONENT}/bin/parserlog.properties"
+SERVICE="${POLICY_HOME}/servers/${COMPONENT}/bin/logparser.jar"
+
+# read properties
+shopt -s extglob
+configfile="dos_or_unix" # set the actual path name of your (DOS or Unix) config file
+while IFS='= ' read lhs rhs
+do
+    if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+        rhs="${rhs%%\#*}"    # Del in line right comments
+       	 rhs="${rhs%%*( )}"   # Del trailing spaces
+        rhs="${rhs%\"*}"     # Del opening string quotes 
+       	 rhs="${rhs#\"*}"     # Del closing string quotes
+       	 if [[ $lhs != *"."* ]]; then
+       	 	declare $lhs="$rhs"
+       	 fi
+   fi
+done < "${CONF_FILE}"
+if [ $? -ne 0 ]; then
+	echo "error: cannot source configuration ${CONF_FILE}"
+	exit 1
+fi
+
+case "$1" in
+    status)
+        status
+        ;;
+	restart)
+		stop
+        sleep 2
+        start
+        ;;
+	start)
+        start
+        ;;
+	umstart)
+        um_start
+        ;;            
+	stop)
+		stop
+        ;;    
+	umstop)
+        um_stop
+        ;;            
+    *)
+        echo "Usage: $0 {start|stop|umstart|umstop|restart|status}"
+        RETVAL=1
+        ;;
+esac
+
+exit ${RETVAL}
+

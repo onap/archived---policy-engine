@@ -1,0 +1,176 @@
+<!--
+  ============LICENSE_START=======================================================
+  ECOMP Policy Engine
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+  -->
+
+<script type="text/ng-template" id="add_fwTermList_popup.html">
+    <div class="modal__informative font-showcase" style="width:800px;">
+        <div class="modal__header">
+            <h2 class="font-showcase-font-name" style="width: 500px;">{{label}}</h2>
+        </div>
+        <div class="divider-container"><hr> </div>
+        <div class="modal__content">
+            <div class="fn-ebz-container" >
+                <label>Rule Name:<sup><b>*</b></sup></label><br>
+                <input type="text" ng-model="editTermList.termName" style="width:500px;" />
+            </div>
+            <div class="fn-ebz-container" >
+                <label>Rule Description:<sup><b>*</b></sup></label><br>
+                <input type="text" ng-model="editTermList.termDescription" style="width:500px;"/>
+            </div>
+			</br>
+			<div class="fn-ebz-container" >
+            <label>From-Zone:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default"  ng-click="addFromZoneNewChoice()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>
+    			<div  data-ng-repeat="choice in fromZonechoices" class="form-horizontal" >		
+        			<div  class="fn-ebz-container">
+            			<select  class="form-field"  ng-model="choice.option" ng-options="option for option in zoneDictionaryDatas track by option">
+						<option value = "">{{choice.option}}</option></select>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-show="$last" ng-click="removeFromZoneChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		</div>
+        	</form>	
+			</div> 
+			</br>
+			<div class="fn-ebz-container" >
+            <label>To-Zone:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default"  ng-click="addToZoneNewChoice()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>
+    			<div  data-ng-repeat="choice in toZonechoices" class="form-horizontal" >		
+        			<div  class="fn-ebz-container">
+            			<select  class="form-field"  ng-model="choice.option" ng-options="option for option in zoneDictionaryDatas track by option"><option value = "">{{choice.option}}</option></select>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-show="$last" ng-click="removeToZoneChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		</div>
+        	</form>	
+			</div> 
+			</br>
+			<div class="fn-ebz-container" >
+            <label>Source-List:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default"  ng-click="addSourceListNewChoice()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>
+    			<div  data-ng-repeat="choice in sourceListchoices" class="form-horizontal" >		
+        			<div  class="fn-ebz-container">
+            			<select  class="form-field"  ng-model="choice.option" ng-options="option for option in addressGroupDictionaryDatas track by option"><option value = "">{{choice.option}}</option></select>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-show="$last" ng-click="removeSourceListChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		</div>
+        	</form>	
+		</div> 
+		</br>
+		<div class="fn-ebz-container" >
+            <label>Destination-List:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default"  ng-click="addDListNewChoice()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>
+    			<div  data-ng-repeat="choice in destinationListchoices" class="form-horizontal" >		
+        			<div  class="fn-ebz-container">
+            			<select  class="form-field"  ng-model="choice.option" ng-options="option for option in prefixListDictionaryDatas track by option"><option value = "">{{choice.option}}</option></select>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-show="$last" ng-click="removeDlistChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		</div>
+        	</form>	
+		</div> 
+		</br>
+		<div class="fn-ebz-container" >
+            <label>Source-Services:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default"  ng-click="addSourceServiceNewChoice()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>
+    			<div  data-ng-repeat="choice in sourceServicechoices" class="form-horizontal" >		
+        			<div  class="fn-ebz-container">
+            			<select  class="form-field"  ng-model="choice.option" ng-options="option for option in serviceListDictionaryDatas track by option" ng-options="option for option in serviceGroupDictionaryDatas track by option"><option value = "">{{choice.option}}</option></select>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-show="$last" ng-click="removeSourceServiceChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		</div>
+        	</form>	
+		</div> 
+		</br>
+		<div class="fn-ebz-container" >
+            <label>Destination-Services:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default"  ng-click="addDServicesNewChoice()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>
+    			<div  data-ng-repeat="choice in destinationServicechoices" class="form-horizontal" >		
+        			<div  class="fn-ebz-container">
+            			<select  class="form-field"  ng-model="choice.option" ng-options="option for option in serviceListDictionaryDatas track by option" ng-options="option for option in serviceGroupDictionaryDatas track by option"><option value = "">{{choice.option}}</option></select>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-show="$last" ng-click="removeDServicesChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		</div>
+        	</form>	
+		</div> 
+		</br>
+		<div class="fn-ebz-container" >
+            <label>Action-List:</label><br>
+             <form  method="post" class="form-horizontal" >
+    			<div class="form-group">
+        			<div class="col-xs-1">
+            			<button type="button" class="btn btn-default"  ng-click="addActionListNewChoice()"><i class="fa fa-plus"></i></button>
+        			</div>
+    			</div>
+    			<div  data-ng-repeat="choice in actionListchoices" class="form-horizontal" >		
+        			<div  class="fn-ebz-container">
+            			<select  class="form-field"  ng-model="choice.option" ng-options="option for option in actionListDictionaryDatas track by option"><option value = "">{{choice.option}}</option></select>
+        			</div>
+        			<div  class="fn-ebz-container">
+            			<button type="button" class="btn btn-default"  ng-show="$last" ng-click="removeActionListChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		</div>
+        	</form>	
+		</div> 
+        </div>
+        <div class="modal__footer">
+            <button class="btn btn-success" herf="javascript:void(0)" ng-click="saveTermName(editTermList);">Save</button>
+            <button class="btn btn-default" herf="javascript:void(0)" ng-click="close()">Close</button>
+        </div>
+    </div>
+</script>

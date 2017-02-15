@@ -1,0 +1,34 @@
+<!--
+  ============LICENSE_START=======================================================
+  ECOMP Policy Engine
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+  -->
+
+<ol class="breadcrumb mb0">
+    <li>
+        <a href="" ng-click="fileNavigator.goTo(-1)">
+            <i class="glyphicon glyphicon-folder-open mr2"></i>
+        </a>
+    </li>
+    <li ng-repeat="(key, dir) in fileNavigator.currentPath track by key" ng-class="{'active':$last}" class="animated fast fadeIn">
+        <a href="" ng-show="!$last" ng-click="fileNavigator.goTo(key)">
+            <i class="glyphicon glyphicon-folder-open mr2"></i> {{dir}}
+        </a>
+        <span ng-show="$last"><i class="glyphicon glyphicon-folder-open mr2"></i>  {{dir}}</span>
+    </li>
+    <li><button class="btn btn-primary btn-xs" ng-click="fileNavigator.upDir()">&crarr;</button></li>
+</ol>
