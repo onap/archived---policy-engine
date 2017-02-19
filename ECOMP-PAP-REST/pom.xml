@@ -192,12 +192,12 @@
 			<artifactId>mockito-core</artifactId>
 			<version>1.9.5</version>
 		</dependency>     
-		<dependency>
+		<!--  PLD WHICH VERSION?>dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.0.1</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-mock</artifactId>
