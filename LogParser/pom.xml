@@ -28,7 +28,7 @@
 		<artifactId>PolicyEngineSuite</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<groupId>org.openecomp.policy.engine</groupId>
+
 	<artifactId>LogParser</artifactId>
 	
 	<dependencies>

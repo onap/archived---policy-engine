@@ -24,7 +24,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.openecomp.policy.engine</groupId>
+
 	<artifactId>ECOMP-PDP</artifactId>
 	<description>ECOMP-PDP</description>
 	<packaging>jar</packaging>

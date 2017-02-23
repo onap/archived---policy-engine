@@ -29,7 +29,7 @@
 		<artifactId>PolicyEngineSuite</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<groupId>org.openecomp.policy.engine</groupId>
+
 	<artifactId>ECOMP-XACML</artifactId>
 	<packaging>jar</packaging>
 	<dependencies>
