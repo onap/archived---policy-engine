@@ -25,6 +25,7 @@
 
 package org.openecomp.policy.controlloop;
 
+import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
@@ -522,17 +523,45 @@ rule "BRMSParamvFWDemoPolicy.EVENT.MANAGER.AAINQF199RESPONSE"
 			serviceItemModelVersion = $aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).serviceInstance.personaModelVersion;
 			serviceItemModelNameVersionId = $aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).extraProperties.extraProperty.get(4).propertyValue;
 			//
+			// Find the index for base vf module and non-base vf module
+			//
+			int baseIndex = -1;
+			int nonBaseIndex = -1;
+			List<AAINQF199InventoryResponseItem> inventoryItems = $aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems;
+			for (AAINQF199InventoryResponseItem m : inventoryItems) {
+				if (m.vfModule != null && m.vfModule.isBaseVfModule == true) {
+					baseIndex = inventoryItems.indexOf(m);
+				} else if (m.vfModule != null && m.vfModule.isBaseVfModule == false && m.vfModule.orchestrationStatus == null) {
+					nonBaseIndex = inventoryItems.indexOf(m);
+				}
+				//
+				if (baseIndex != -1 && nonBaseIndex != -1) {
+					break;
+				}
+			}
+			//
+			// Report the error if either base vf module or non-base vf module is not found
+			//
+			if (baseIndex == -1 || nonBaseIndex == -1) {
+				System.err.println("Either base or non-base vf module is not found from AAI response.");
+				retract($aainqf199RequestWrapper);
+				retract($aainqf199ResponseWrapper);
+				retract($manager);
+				retract($event);
+				return;
+			}
+			//
 			// This comes from the base module
 			//
-			vfModuleItemVfModuleName = 			$aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(1).vfModule.vfModuleName;
+			vfModuleItemVfModuleName = 			$aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(baseIndex).vfModule.vfModuleName;
 			vfModuleItemVfModuleName = vfModuleItemVfModuleName.replace("Vfmodule", "vDNS");
 			//
 			// vfModuleItem - NOT the base module
 			//
-			vfModuleItemPersonaModelId = 		$aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(2).vfModule.personaModelId;
-			vfModuleItemPersonaModelVersion = 	$aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(2).vfModule.personaModelVersion;
-			vfModuleItemModelName = 				$aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(2).extraProperties.extraProperty.get(0).propertyValue;
-			vfModuleItemModelNameVersionId = 	$aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(2).extraProperties.extraProperty.get(4).propertyValue;
+			vfModuleItemPersonaModelId = 		$aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(nonBaseIndex).vfModule.personaModelId;
+			vfModuleItemPersonaModelVersion = 	$aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(nonBaseIndex).vfModule.personaModelVersion;
+			vfModuleItemModelName = 			$aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(nonBaseIndex).extraProperties.extraProperty.get(0).propertyValue;
+			vfModuleItemModelNameVersionId = 	$aainqf199ResponseWrapper.aainqf199response.inventoryResponseItems.get(0).items.inventoryResponseItems.get(0).items.inventoryResponseItems.get(nonBaseIndex).extraProperties.extraProperty.get(4).propertyValue;
 			//
 			// tenantItem
 			//
@@ -1105,8 +1134,8 @@ rule "Params"
 		params.setAaiURL("null");
 		params.setMsoPassword("null");
 		params.setClosedLoopControlName("CL-FRWL-LOW-TRAFFIC-SIG-d925ed73-8231-4d02-9545-db4e101f88f8");
-		params.setAaiUsername("null");
 		params.setMsoURL("null");
+		params.setAaiUsername("null");
 		params.setActor("APPC");
 		params.setMsoUsername("null");
 		params.setAaiNamedQueryUUID("null");
