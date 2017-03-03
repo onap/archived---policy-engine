@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:a1c91d9b-b5d2-4b04-b3a9-afcac74a8161" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:34928b05-b0f6-4974-8458-f4d34a2a1764" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
     <Description>Micro Service vFirewall Demo Policy@CreatedBy:demo@CreatedBy:@ModifiedBy:demo@ModifiedBy:</Description>
     <Target>
         <AnyOf>
@@ -49,7 +49,7 @@
             </AllOf>
         </AnyOf>
     </Target>
-    <Rule RuleId="urn:com:xacml:rule:id:2af7b2a1-6427-4765-ac5f-0d5e3c7d059f" Effect="Permit">
+    <Rule RuleId="urn:com:xacml:rule:id:063161de-0534-4989-bd01-42f784daf21e" Effect="Permit">
         <Target>
             <AnyOf>
                 <AllOf>
