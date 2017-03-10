@@ -4,7 +4,7 @@
 
 	<groupId>org.openecomp.policy.engine</groupId>
 	<artifactId>PolicyEngineSuite</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<name>ECOMP Policy Engine</name>
 
@@ -30,7 +30,7 @@
 		<sonar.jacoco.itReportPath>/opt/app/policy/it-results/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
 		<sonar.projectVersion>${project.version}</sonar.projectVersion>
-		<common-modules.version>[1.0.0-SNAPSHOT]</common-modules.version>
+		<common-modules.version>1.0.0</common-modules.version>
 		<nexusproxy>https://nexus.openecomp.org</nexusproxy>
 	</properties>
 
