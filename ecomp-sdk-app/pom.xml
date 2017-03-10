@@ -24,7 +24,7 @@
 	<parent>
 		<groupId>org.openecomp.policy.engine</groupId>
 		<artifactId>PolicyEngineSuite</artifactId>
-		<version>1.0.0</version>
+		<version>1.1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>ecomp-sdk-app</artifactId>
@@ -32,7 +32,7 @@
 
 	<properties>
 		<encoding>UTF-8</encoding>
-		<epsdk.version>1.0.0</epsdk.version>
+		<epsdk.version>1.1.0-SNAPSHOT</epsdk.version>
 		<springframework.version>4.2.0.RELEASE</springframework.version>
 		<hibernate.version>4.3.11.Final</hibernate.version>
 		<skipassembly>true</skipassembly>
