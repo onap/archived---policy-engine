@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:f8ba1b97-fea0-431b-9c5b-8f0fa572b337" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
-    <Description>BRMSParamvFWDemoPolicy@CreatedBy:demo@CreatedBy:@ModifiedBy:demo@ModifiedBy:</Description>
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:256f4712-a965-4817-a851-a71bdeb9fb49" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
+    <Description>BRMSParam vFW Demo Policy@CreatedBy:@CreatedBy:@ModifiedBy:@ModifiedBy:</Description>
     <Target>
         <AnyOf>
             <AllOf>
@@ -37,7 +37,7 @@
             </AllOf>
         </AnyOf>
     </Target>
-    <Rule RuleId="urn:com:xacml:rule:id:9a371467-7775-47de-afa7-e1dbcdaf6594" Effect="Permit">
+    <Rule RuleId="urn:com:xacml:rule:id:8cdb88aa-448b-4ed1-bce5-6a037651e73c" Effect="Permit">
         <Target>
             <AnyOf>
                 <AllOf>

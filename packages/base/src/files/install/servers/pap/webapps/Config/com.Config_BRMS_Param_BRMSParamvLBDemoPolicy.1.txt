@@ -1051,7 +1051,7 @@ rule "BRMSParamvLBDemoPolicy.MSO.RESPONSE"
 		//
 		// The operation can either be succeeded or failed
 		// 
-		if($response.request.requestStatus.requestState.equals("Completed")) {
+		if($response.request.requestStatus.requestState.equals("COMPLETE")) {
 			$operationWrapper.operation.outcome = "SUCCESS";
 			$manager.setControlLoopResult("SUCCESS");
 			notification.history.add($operationWrapper.operation);
