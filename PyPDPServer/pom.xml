@@ -46,7 +46,6 @@
 		<sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</sonar.jacoco.reportPath>
 		<sonar.jacoco.itReportPath>/opt/app/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
-		<nexusproxy>https://nexus.openecomp.org</nexusproxy>
 		<springboot.version>1.3.3.RELEASE</springboot.version>
 	</properties>
 
@@ -55,17 +54,8 @@
 			<id>spring-releases</id>
 			<url>https://repo.spring.io/libs-release</url>
 		</repository>
-		<repository>
-			<id>ecomp-releases</id>
-			<name>OpenECOMP Release Repository</name>
-			<url>${nexusproxy}/content/repositories/releases/</url>
-		</repository>
-		<repository>
-			<id>ecomp-staging</id>
-			<name>OpenECOMP Staging Repository</name>
-			<url>${nexusproxy}/content/repositories/staging/</url>
-		</repository>
 	</repositories>
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>spring-releases</id>
@@ -73,19 +63,6 @@
 		</pluginRepository>
 	</pluginRepositories>
 
-	<distributionManagement>
-		<repository>
-			<id>ecomp-releases</id>
-			<name>OpenECOMP Release Repository</name>
-			<url>${nexusproxy}/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>ecomp-snapshots</id>
-			<name>OpenECOMP Snapshot Repository</name>
-			<url>${nexusproxy}/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
-	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

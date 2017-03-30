@@ -73,6 +73,11 @@
 			<name>OpenECOMP Staging Repository</name>
 			<url>${nexusproxy}/content/repositories/staging/</url>
 		</repository>
+		<repository>
+			<id>ecomp-snapshots</id>
+			<name>OpenECOMP Snapshots Repository</name>
+			<url>${nexusproxy}/content/repositories/snapshots/</url>
+		</repository>
 	</repositories>
 
 	<distributionManagement>
