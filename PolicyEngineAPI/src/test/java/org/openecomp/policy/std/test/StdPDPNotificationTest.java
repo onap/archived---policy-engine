@@ -64,9 +64,9 @@ public class StdPDPNotificationTest {
 	public void testGetLoadedPolicies_1()
 		throws Exception {
 		StdPDPNotification fixture = new StdPDPNotification();
-		fixture.setRemovedPolicies(new LinkedList());
+		fixture.setRemovedPolicies(new LinkedList<StdRemovedPolicy>());
 		fixture.setNotificationType(NotificationType.BOTH);
-		fixture.setLoadedPolicies(new LinkedList());
+		fixture.setLoadedPolicies(new LinkedList<StdLoadedPolicy>());
 
 		Collection<LoadedPolicy> result = fixture.getLoadedPolicies();
 
@@ -86,9 +86,9 @@ public class StdPDPNotificationTest {
 	public void testGetLoadedPolicies_2()
 		throws Exception {
 		StdPDPNotification fixture = new StdPDPNotification();
-		fixture.setRemovedPolicies(new LinkedList());
+		fixture.setRemovedPolicies(new LinkedList<StdRemovedPolicy>());
 		fixture.setNotificationType(NotificationType.BOTH);
-		fixture.setLoadedPolicies(new LinkedList());
+		fixture.setLoadedPolicies(new LinkedList<StdLoadedPolicy>());
 
 		Collection<LoadedPolicy> result = fixture.getLoadedPolicies();
 
@@ -108,7 +108,7 @@ public class StdPDPNotificationTest {
 	public void testGetLoadedPolicies_3()
 		throws Exception {
 		StdPDPNotification fixture = new StdPDPNotification();
-		fixture.setRemovedPolicies(new LinkedList());
+		fixture.setRemovedPolicies(new LinkedList<StdRemovedPolicy>());
 		fixture.setNotificationType(NotificationType.BOTH);
 		fixture.setLoadedPolicies(null);
 
@@ -129,9 +129,9 @@ public class StdPDPNotificationTest {
 	public void testGetNotificationType_1()
 		throws Exception {
 		StdPDPNotification fixture = new StdPDPNotification();
-		fixture.setRemovedPolicies(new LinkedList());
+		fixture.setRemovedPolicies(new LinkedList<StdRemovedPolicy>());
 		fixture.setNotificationType(NotificationType.BOTH);
-		fixture.setLoadedPolicies(new LinkedList());
+		fixture.setLoadedPolicies(new LinkedList<StdLoadedPolicy>());
 
 		NotificationType result = fixture.getNotificationType();
 
@@ -153,9 +153,9 @@ public class StdPDPNotificationTest {
 	public void testGetRemovedPolicies_1()
 		throws Exception {
 		StdPDPNotification fixture = new StdPDPNotification();
-		fixture.setRemovedPolicies(new LinkedList());
+		fixture.setRemovedPolicies(new LinkedList<StdRemovedPolicy>());
 		fixture.setNotificationType(NotificationType.BOTH);
-		fixture.setLoadedPolicies(new LinkedList());
+		fixture.setLoadedPolicies(new LinkedList<StdLoadedPolicy>());
 
 		Collection<RemovedPolicy> result = fixture.getRemovedPolicies();
 
@@ -175,9 +175,9 @@ public class StdPDPNotificationTest {
 	public void testGetRemovedPolicies_2()
 		throws Exception {
 		StdPDPNotification fixture = new StdPDPNotification();
-		fixture.setRemovedPolicies(new LinkedList());
+		fixture.setRemovedPolicies(new LinkedList<StdRemovedPolicy>());
 		fixture.setNotificationType(NotificationType.BOTH);
-		fixture.setLoadedPolicies(new LinkedList());
+		fixture.setLoadedPolicies(new LinkedList<StdLoadedPolicy>());
 
 		Collection<RemovedPolicy> result = fixture.getRemovedPolicies();
 
@@ -199,7 +199,7 @@ public class StdPDPNotificationTest {
 		StdPDPNotification fixture = new StdPDPNotification();
 		fixture.setRemovedPolicies(null);
 		fixture.setNotificationType(NotificationType.BOTH);
-		fixture.setLoadedPolicies(new LinkedList());
+		fixture.setLoadedPolicies(new LinkedList<StdLoadedPolicy>());
 
 		Collection<RemovedPolicy> result = fixture.getRemovedPolicies();
 
@@ -218,9 +218,9 @@ public class StdPDPNotificationTest {
 	public void testSetNotificationType_1()
 		throws Exception {
 		StdPDPNotification fixture = new StdPDPNotification();
-		fixture.setRemovedPolicies(new LinkedList());
+		fixture.setRemovedPolicies(new LinkedList<StdRemovedPolicy>());
 		fixture.setNotificationType(NotificationType.BOTH);
-		fixture.setLoadedPolicies(new LinkedList());
+		fixture.setLoadedPolicies(new LinkedList<StdLoadedPolicy>());
 		NotificationType notificationType = NotificationType.BOTH;
 
 		fixture.setNotificationType(notificationType);
@@ -239,10 +239,10 @@ public class StdPDPNotificationTest {
 	public void testSetRemovedPolicies_1()
 		throws Exception {
 		StdPDPNotification fixture = new StdPDPNotification();
-		fixture.setRemovedPolicies(new LinkedList());
+		fixture.setRemovedPolicies(new LinkedList<StdRemovedPolicy>());
 		fixture.setNotificationType(NotificationType.BOTH);
-		fixture.setLoadedPolicies(new LinkedList());
-		Collection<StdRemovedPolicy> removedPolicies = new LinkedList();
+		fixture.setLoadedPolicies(new LinkedList<StdLoadedPolicy>());
+		Collection<StdRemovedPolicy> removedPolicies = new LinkedList<StdRemovedPolicy>();
 
 		fixture.setRemovedPolicies(removedPolicies);
 
@@ -260,10 +260,10 @@ public class StdPDPNotificationTest {
 	public void testSetUpdatedPolicies_1()
 		throws Exception {
 		StdPDPNotification fixture = new StdPDPNotification();
-		fixture.setRemovedPolicies(new LinkedList());
+		fixture.setRemovedPolicies(new LinkedList<StdRemovedPolicy>());
 		fixture.setNotificationType(NotificationType.BOTH);
-		fixture.setLoadedPolicies(new LinkedList());
-		Collection<StdLoadedPolicy> updatedPolicies = new LinkedList();
+		fixture.setLoadedPolicies(new LinkedList<StdLoadedPolicy>());
+		Collection<StdLoadedPolicy> updatedPolicies = new LinkedList<StdLoadedPolicy>();
 
 		fixture.setLoadedPolicies(updatedPolicies);
 

@@ -22,17 +22,21 @@ package org.openecomp.policy.pdp.rest.notifications;
 
 import java.util.HashMap;
 
+import org.openecomp.policy.api.LoadedPolicy;
+import org.openecomp.policy.api.UpdateType;
+
 /**
  * Updated is the POJO which consists of any new or Updated Policy information.
  * It must hold the Policy Name, version Number, Matches. 
  * 
- * @version 0.1
+ * @version 0.2
  *
  */
-public class Updated {
+public class Updated implements LoadedPolicy{
 	private String policyName = null;
 	private String versionNo = null;
 	private HashMap<String,String> matches = null;
+	private UpdateType updateType = null;
 	
 	public String getPolicyName() {
 		return policyName;
@@ -57,5 +61,14 @@ public class Updated {
 	public void setMatches(HashMap<String,String> matches) {
 		this.matches = matches;
 	}
+	
+	@Override
+    public UpdateType getUpdateType() {
+        return this.updateType;
+    }
+    
+    public void setUpdateType(UpdateType updateType){
+        this.updateType = updateType;
+    }
 
 }

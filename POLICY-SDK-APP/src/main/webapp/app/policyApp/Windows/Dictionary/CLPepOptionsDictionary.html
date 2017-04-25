@@ -1,0 +1,75 @@
+<!--/*-
+ * ============LICENSE_START=======================================================
+ * ECOMP Policy Engine
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */-->
+<script type="text/ng-template" id="add_PEPOptions_popup.html">
+<div class="modal" tabindex="-1">
+		 <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+        <div class="modal-header">
+            <h2 class="font-showcase-font-name" style="color: #157bb2">{{label}}</h2>
+        </div>
+		<form name="formdata" ng-submit="saveCLPepOptions(editPEPOptions);" novalidate>
+        <div class="modal-body">
+			<div class="form-group row">
+            <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.pepName.$invalid && !formdata.pepName.$pristine }">
+                <label>PEP Name:<sup><b>*</b></sup></label><br>
+                <input type="text" name="pepName" ng-model="editPEPOptions.pepName" class="form-control" required/>
+				<p ng-show="formdata.pepName.$invalid && !formdata.pepName.$pristine" class="help-block">PEP Name is required.</p>
+            </div>
+			</div>
+            <div class="form-group row">
+            <div class="form-group col-sm-6">
+                <label>Description:</label><br>
+                <input type="text"  ng-model="editPEPOptions.description" class="form-control"/>
+            </div>
+			</div>
+           <div class="form-group row">
+           <div class="form-group col-sm-4">
+            	<label>Actions:</label><br>
+            	<button type="button" class="btn btn-secondary btn-small"  ng-click="addNewChoice()"><i class="fa fa-plus"></i></button>
+        	</div>
+    		</div>
+			<div class="form-group row">
+			<div class="form-group">
+    			<div  data-ng-repeat="choice in choices">
+					<div class="form-group row">		
+        			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
+            			<input type="text" class="form-control"  ng-model= "choice.option" name="option" required/>
+						<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">Action Key is required.</p>
+        			</div>
+        			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.number.$invalid && !formdata.number.$pristine }">
+            			<input type="text" class="form-control"  ng-model= "choice.number" name="number" required/>
+						<p ng-show="formdata.number.$invalid && !formdata.number.$pristine" class="help-block">Action value is required.</p>
+        			</div>
+        			<div  class="form-group col-sm-1">
+            			<button type="button" class="btn btn-secondary btn-small"  ng-show="$last" ng-click="removeChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+        			</div>
+			</div>	
+			</div> 
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" type="submit" ng-disabled="formdata.$invalid">Save</button>
+            <button class="btn btn-default"  type="button" ng-click="close()">Close</button>
+        </div>
+	</form>
+    </div>
+	</div>
+</div>
+</script>

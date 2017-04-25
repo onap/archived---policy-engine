@@ -101,7 +101,7 @@ public class MatchStore {
 		}
 	}
 	
-	//TODO Logic changes for Requested Policies notifications.. 
+	//Logic changes for Requested Policies notifications.. 
 	public static PDPNotification checkMatch(PDPNotification oldNotification) {
 		boolean removed = false, updated = false;
 		if(oldNotification==null){

@@ -44,12 +44,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openecomp.policy.rest.XacmlAdminAuthorization;
 
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 
 @Entity
 @Table(name="ActionPolicyDict")
-//@NamedQuery(name="ActionPolicyDict.findAll", query="SELECT e FROM ActionPolicyDict e ")
 @NamedQueries({
 	@NamedQuery(name="ActionPolicyDict.findAll", query="SELECT e FROM ActionPolicyDict e")
 })
@@ -144,8 +141,7 @@ public class ActionPolicyDict implements Serializable {
 			this.userModifiedBy =XacmlAdminAuthorization.getUserId();;
 		} catch (Exception e) {
 			logger.error("Exception caused While adding Modified by Role"+e);
-			// TODO:EELF Cleanup - Remove logger
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "ActionPolicyDict", "Exception caused While adding Modified by Role");
+			//PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "ActionPolicyDict", "Exception caused While adding Modified by Role");
 		}
 	}
 	public int getId() {

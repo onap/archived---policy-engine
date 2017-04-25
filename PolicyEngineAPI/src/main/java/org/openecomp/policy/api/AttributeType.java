@@ -20,6 +20,8 @@
 
 package org.openecomp.policy.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * Enumeration of the Attribute Types that is used as a part of
  * {@link org.openecomp.policy.api.PolicyParameters}.
@@ -63,4 +65,14 @@ public enum AttributeType {
 	public String toString() {
 		return this.name;
 	}
+	
+	@JsonCreator
+    public static AttributeType create (String value) {
+        for(AttributeType type: values()){
+            if(type.toString().equalsIgnoreCase(value)){
+                return type;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
 }
