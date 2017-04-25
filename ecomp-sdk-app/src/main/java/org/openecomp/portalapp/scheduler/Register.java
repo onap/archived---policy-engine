@@ -1,6 +1,6 @@
 /*-
  * ================================================================================
- * eCOMP Portal SDK
+ * ECOMP Portal SDK
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property
  * ================================================================================
@@ -31,21 +31,17 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 @Component
-@DependsOn({"logRegistry", "systemProperties"})
+@DependsOn({ "logRegistry", "systemProperties" })
 public class Register implements Registerable {
 
 	EELFLoggerDelegate logger = EELFLoggerDelegate.getLogger(Register.class);
 
-
 	private List<Trigger> scheduleTriggers = new ArrayList<Trigger>();
 	Trigger trigger[] = new Trigger[1];
 
-	
 	@Autowired
 	private LogRegistry logRegistry;
-	
 
-	
 	@Override
 	public Trigger[] getTriggers() {
 		return getScheduleTriggers().toArray(trigger);
@@ -53,19 +49,17 @@ public class Register implements Registerable {
 
 	@Override
 	public void registerTriggers() {
-		// if the property value is not available; the cron will not be added and can be ignored. its safe to ignore the exceptions
+		// if the property value is not available; the cron will not be added
+		// and can be ignored. its safe to ignore the exceptions
 		try {
-			if(SystemProperties.getProperty(SystemProperties.LOG_CRON) != null)
+			if (SystemProperties.getProperty(SystemProperties.LOG_CRON) != null)
 				getScheduleTriggers().add(logRegistry.getTrigger());
-			
-		} catch(IllegalStateException ies) {
+		} catch (IllegalStateException ies) {
 			logger.info(EELFLoggerDelegate.debugLogger, ("Log Cron not available"));
 		}
-		
-		
+
 	}
-	
-	
+
 	public List<Trigger> getScheduleTriggers() {
 		return scheduleTriggers;
 	}
@@ -73,10 +67,5 @@ public class Register implements Registerable {
 	public void setScheduleTriggers(List<Trigger> scheduleTriggers) {
 		this.scheduleTriggers = scheduleTriggers;
 	}
-	
-	
-
-	
-	
 
 }

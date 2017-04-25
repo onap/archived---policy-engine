@@ -25,12 +25,14 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
 public class TestRunner {
+	private static Result results;
+
 	public static void main(String[] args) {
 		Result result = JUnitCore.runClasses(PDPTest.class);
 		for(Failure failure: result.getFailures()) {
 			System.out.println("Failed Test: " + failure.toString());
 		}
-		Result results = null;
+		results = null;
 		if(result.wasSuccessful()) {
 			System.out.println("Test Results... ");
 			System.out.println("Stats:  \nRun Time: " + (results.getRunTime()+result.getRunTime()) + "\nTotal Tests:" + results.getRunCount()+ result.getRunCount()

@@ -45,14 +45,13 @@
 		<module>ECOMP-PDP</module>
 		<module>ECOMP-PDP-REST</module>
 		<module>ECOMP-PAP-REST</module>
-		<module>ECOMP-TEST</module>
 		<module>LogParser</module>
 		<module>PolicyEngineClient</module>
 		<module>PolicyEngineUtils</module>
 		<module>PolicyEngineAPI</module>
-		<module>PyPDPServer</module>
 		<module>BRMSGateway</module>
-		<module>ecomp-sdk-app</module>
+		<module>POLICY-SDK-APP</module>
+		<module>ECOMP-SDK-APP</module>
 		<module>packages</module>
 	</modules>
 

@@ -34,15 +34,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 import org.openecomp.policy.pap.xacml.rest.util.JsonMessage;
-import org.openecomp.policy.rest.dao.AttributeDao;
-import org.openecomp.policy.rest.dao.CategoryDao;
-import org.openecomp.policy.rest.dao.EcompNameDao;
-import org.openecomp.policy.rest.dao.UserInfoDao;
+import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.Attribute;
 import org.openecomp.policy.rest.jpa.Category;
 import org.openecomp.policy.rest.jpa.Datatype;
 import org.openecomp.policy.rest.jpa.EcompName;
 import org.openecomp.policy.rest.jpa.UserInfo;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -57,35 +55,32 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class DictionaryController {
 	
-	private static final Log logger	= LogFactory.getLog(DictionaryController.class);
+	private static final Log LOGGER	= LogFactory.getLog(DictionaryController.class);
 
-	@Autowired
-	AttributeDao attributeDao;
-
-	@Autowired
-	EcompNameDao ecompNameDao;
+	private static CommonClassDao commonClassDao;
 	
 	@Autowired
-	UserInfoDao userInfoDao;
+	public DictionaryController(CommonClassDao commonClassDao){
+		DictionaryController.commonClassDao = commonClassDao;
+	}
 	
-	@Autowired
-	CategoryDao categoryDao;
+	public DictionaryController(){}
+	
+	public UserInfo getUserInfo(String loginId){
+		UserInfo name = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
+		return name;	
+	}
 	
 	
 	public Category getCategory(){
-		for (int i = 0; i < categoryDao.getCategoryListData().size() ; i++) {
-			Category value = categoryDao.getCategoryListData().get(i);
+		List<Object> list = commonClassDao.getData(Category.class);
+		for (int i = 0; i < list.size() ; i++) {
+			Category value = (Category) list.get(i);
 			if (value.getShortName().equals("resource")) {
 				return value;
 			}
 		}
 		return null;	
-	}
-	
-	
-	public UserInfo getUserInfo(String loginId){
-		UserInfo name = userInfoDao.getUserInfoByLoginId(loginId);
-		return name;	
 	}
 
 	@RequestMapping(value={"/get_AttributeDatabyAttributeName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -94,13 +89,13 @@ public class DictionaryController {
 			System.out.println();
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("attributeDictionaryDatas", mapper.writeValueAsString(attributeDao.getAttributeData()));
+			model.put("attributeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(Attribute.class, "xacmlId")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
 	}
 	
@@ -111,26 +106,60 @@ public class DictionaryController {
 			System.out.println();
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("attributeDictionaryDatas", mapper.writeValueAsString(attributeDao.getData()));
+			model.put("attributeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(Attribute.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+            response.addHeader("successMapKey", "success"); 
+            response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
 	
-	@RequestMapping(value={"/attribute_dictionary/save_attribute.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/attribute_dictionary/save_attribute"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
 			boolean duplicateflag = false;
+            boolean isFakeUpdate = false;
+            boolean fromAPI = false;
+            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+                fromAPI = true;
+            }
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			Attribute attributeData = (Attribute)mapper.readValue(root.get("attributeDictionaryData").toString(), Attribute.class);
-			AttributeValues attributeValueData = (AttributeValues)mapper.readValue(root.get("attributeDictionaryData").toString(), AttributeValues.class);
-			String userId = root.get("loginId").textValue();
+            Attribute attributeData = null;
+            AttributeValues attributeValueData = null;
+            String userId = null;
+            if (fromAPI) {
+                //JsonNode json = root.get("dictionaryFields");
+                attributeData = (Attribute)mapper.readValue(root.get("dictionaryFields").toString(), Attribute.class);
+                attributeValueData = (AttributeValues)mapper.readValue(root.get("dictionaryFields").toString(), AttributeValues.class);
+                userId = "API";
+                
+                //check if update operation or create, get id for data to be updated and update attributeData
+                if (request.getParameter("operation").equals("update")) {
+                	List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(attributeData.getXacmlId(), "xacmlId", Attribute.class);
+                	int id = 0;
+                	Attribute data = (Attribute) duplicateData.get(0);
+                	id = data.getId();
+                	if(id==0){
+                		isFakeUpdate=true;
+                		attributeData.setId(1);
+                	} else {
+                		attributeData.setId(id);
+                	}
+                	attributeData.setUserCreatedBy(this.getUserInfo(userId));
+                }
+            } else {
+            	attributeData = (Attribute)mapper.readValue(root.get("attributeDictionaryData").toString(), Attribute.class);
+            	attributeValueData = (AttributeValues)mapper.readValue(root.get("attributeDictionaryData").toString(), AttributeValues.class);
+            	userId = root.get("userid").textValue();
+            }
 			String userValue = "";
 			int counter = 0;
 			if(attributeValueData.getUserDataTypeValues().size() > 0){
@@ -163,38 +192,51 @@ public class DictionaryController {
 				attributeData.setDatatypeBean(a);
 			}
 			if(attributeData.getId() == 0){
-				CheckDictionaryDuplicateEntries entry = new CheckDictionaryDuplicateEntries();
-				List<Object> duplicateData =  entry.CheckDuplicateEntry(attributeData.getXacmlId(), "xacmlId", Attribute.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(attributeData.getXacmlId(), "xacmlId", Attribute.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
 					attributeData.setCategoryBean(this.getCategory());
 					attributeData.setUserCreatedBy(this.getUserInfo(userId));
 					attributeData.setUserModifiedBy(this.getUserInfo(userId));
-					attributeDao.Save(attributeData);
+					commonClassDao.save(attributeData);
 				}
 			}else{
-				attributeData.setUserModifiedBy(this.getUserInfo(userId));
-				attributeDao.update(attributeData); 
+				if(!isFakeUpdate) {
+					attributeData.setUserModifiedBy(this.getUserInfo(userId));
+					commonClassDao.update(attributeData); 
+				}
 			} 
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-
-			PrintWriter out = response.getWriter();
-			String responseString = "";
-			if(duplicateflag){
-				responseString = "Duplicate";
-			}else{
-				responseString = mapper.writeValueAsString(this.attributeDao.getData());
-			}
-			JSONObject j = new JSONObject("{attributeDictionaryDatas: " + responseString + "}");
-
-			out.write(j.toString());
-
-			return null;
-		}
-		catch (Exception e){
+            String responseString = null;
+            if(duplicateflag) {
+                responseString = "Duplicate";
+            } else {
+                responseString = mapper.writeValueAsString(commonClassDao.getData(Attribute.class));
+            }
+            
+            if (fromAPI) {
+                if (responseString!=null && !responseString.equals("Duplicate")) {
+                    if(isFakeUpdate) {
+                        responseString = "Exists";
+                    } else {
+                        responseString = "Success";
+                    }
+                }
+                ModelAndView result = new ModelAndView();
+                result.setViewName(responseString);
+                return result;
+            } else {
+                response.setCharacterEncoding("UTF-8");
+                response.setContentType("application / json");
+                request.setCharacterEncoding("UTF-8");
+ 
+                PrintWriter out = response.getWriter();
+                JSONObject j = new JSONObject("{attributeDictionaryDatas: " + responseString + "}");
+                out.write(j.toString());
+                return null;
+            }
+        }catch (Exception e){
+        	LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -203,28 +245,26 @@ public class DictionaryController {
 		return null;
 	}
 
-	@RequestMapping(value={"/attribute_dictionary/remove_attribute.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/attribute_dictionary/remove_attribute"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView removeAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			Attribute attributeData = (Attribute)mapper.readValue(root.get("data").toString(), Attribute.class);
-			attributeDao.delete(attributeData);
+			commonClassDao.delete(attributeData);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(this.attributeDao.getData());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(Attribute.class));
 			JSONObject j = new JSONObject("{attributeDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-
 			return null;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -236,82 +276,120 @@ public class DictionaryController {
 	//EcompName Dictionary
 	@RequestMapping(value={"/get_EcompNameDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getEcompNameDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
-		logger.info("get_EcompNameDataByName is called");
+		LOGGER.info("get_EcompNameDataByName is called");
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("ecompNameDictionaryDatas", mapper.writeValueAsString(ecompNameDao.getEcompNameDataByName()));
+			model.put("ecompNameDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(EcompName.class, "ecompName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
 	}
 	
 	@RequestMapping(value={"/get_EcompNameData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getEcompNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
-		logger.info("get_EcompNameData is called");
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("ecompNameDictionaryDatas", mapper.writeValueAsString(ecompNameDao.getEcompName()));
+			model.put("ecompNameDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(EcompName.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+            response.addHeader("successMapKey", "success"); 
+            response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
-			logger.error("ERROR While callinge DAO: " + e.getMessage());
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
 
-	@RequestMapping(value={"/ecomp_dictionary/save_ecompName.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/ecomp_dictionary/save_ecompName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveEcompDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
 			boolean duplicateflag = false;
-			System.out.println("DictionaryController:  saveEcompDictionary() is called");
-			logger.debug("DictionaryController:  saveEcompDictionary() is called");
+			boolean isFakeUpdate = false;
+			boolean fromAPI = false;
+			if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+				fromAPI = true;
+			}
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			EcompName ecompData = (EcompName)mapper.readValue(root.get("ecompNameDictionaryData").toString(), EcompName.class);
-			String userId = root.get("loginId").textValue();
-			System.out.println("the userId from the ecomp portal is: " + userId);
+			EcompName ecompData;
+			String userId = null;
+			if (fromAPI) {
+				ecompData = (EcompName)mapper.readValue(root.get("dictionaryFields").toString(), EcompName.class);
+				userId = "API";
+
+				//check if update operation or create, get id for data to be updated
+				if (request.getParameter("operation").equals("update")) {
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ecompData.getEcompName(), "ecompName", EcompName.class);
+					int id = 0;
+					EcompName data = (EcompName) duplicateData.get(0);
+					id = data.getId();
+					if(id==0){
+						isFakeUpdate=true;
+						ecompData.setId(1);
+					} else {
+						ecompData.setId(id);
+					}
+					ecompData.setUserCreatedBy(this.getUserInfo(userId));
+				}
+			} else {
+				ecompData = (EcompName)mapper.readValue(root.get("ecompNameDictionaryData").toString(), EcompName.class);
+				userId = root.get("userid").textValue();
+			}
 			if(ecompData.getId() == 0){
-				CheckDictionaryDuplicateEntries entry = new CheckDictionaryDuplicateEntries();
-				List<Object> duplicateData =  entry.CheckDuplicateEntry(ecompData.getEcompName(), "ecompName", EcompName.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ecompData.getEcompName(), "ecompName", EcompName.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
 					ecompData.setUserCreatedBy(getUserInfo(userId));
 					ecompData.setUserModifiedBy(getUserInfo(userId));
-					System.out.println("DictionaryController:  got the user info now about to call Save() method on ecompNamedao");
-					ecompNameDao.Save(ecompData);
+					commonClassDao.save(ecompData);
 				}
 			}else{
-				ecompData.setUserModifiedBy(this.getUserInfo(userId));
-				ecompNameDao.update(ecompData); 
+				if(!isFakeUpdate){
+					ecompData.setUserModifiedBy(this.getUserInfo(userId));
+					commonClassDao.update(ecompData);
+				}
 			} 
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-
-			PrintWriter out = response.getWriter();
-			String responseString = "";
-			if(duplicateflag){
+			String responseString = null;
+			if(duplicateflag) {
 				responseString = "Duplicate";
-			}else{
-				responseString = mapper.writeValueAsString(this.ecompNameDao.getEcompName());
+			} else {
+				responseString = mapper.writeValueAsString(commonClassDao.getData(EcompName.class));
 			}
-			JSONObject j = new JSONObject("{ecompNameDictionaryDatas: " + responseString + "}");
+			if (fromAPI) {
+				if (responseString!=null && !responseString.equals("Duplicate")) {
+					if(isFakeUpdate){
+						responseString = "Exists";
+					} else {
+						responseString = "Success";
+					}
+				}
 
-			out.write(j.toString());
+				ModelAndView result = new ModelAndView();
+				result.setViewName(responseString);
+				return result;
+			} else {
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("application / json");
+				request.setCharacterEncoding("UTF-8");
 
-			return null;
-		}
-		catch (Exception e){
+				PrintWriter out = response.getWriter();
+				JSONObject j = new JSONObject("{ecompNameDictionaryDatas: " + responseString + "}");
+				out.write(j.toString());
+				return null;
+			}
+		}catch (Exception e){
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -320,28 +398,28 @@ public class DictionaryController {
 		return null;
 	}
 
-	@RequestMapping(value={"/ecomp_dictionary/remove_ecomp.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/ecomp_dictionary/remove_ecomp"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView removeEcompDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			EcompName ecompData = (EcompName)mapper.readValue(root.get("data").toString(), EcompName.class);
-			ecompNameDao.delete(ecompData);
+			commonClassDao.delete(ecompData);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
 
-			String responseString = mapper.writeValueAsString(this.ecompNameDao.getEcompName());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(EcompName.class));
 			JSONObject j = new JSONObject("{ecompNameDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
 
 			return null;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();

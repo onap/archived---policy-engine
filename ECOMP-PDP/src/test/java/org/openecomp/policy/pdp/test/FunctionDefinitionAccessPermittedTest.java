@@ -35,7 +35,6 @@ import java.util.List;
 import javax.xml.namespace.NamespaceContext;
 
 import org.junit.Ignore;
-import org.junit.Test;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.XACML3;
@@ -47,7 +46,7 @@ import com.att.research.xacmlatt.pdp.policy.FunctionArgument;
 import com.att.research.xacmlatt.pdp.policy.FunctionArgumentAttributeValue;
 import com.att.research.xacmlatt.pdp.std.StdEvaluationContext;
 import com.att.research.xacmlatt.pdp.std.StdFunctions;
-import com.att.research.xacmlatt.pdp.std.functions.*;
+import com.att.research.xacmlatt.pdp.std.functions.FunctionDefinitionAccessPermitted;
 
 /**
  * Test of PDP Functions (See XACML core spec section A.3)

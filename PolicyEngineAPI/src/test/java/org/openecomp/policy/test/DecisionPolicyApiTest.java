@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.openecomp.policy.api.AttributeType;
@@ -34,9 +32,9 @@ import org.openecomp.policy.api.PolicyClass;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
 import org.openecomp.policy.api.PolicyParameters;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.std.StdPolicyChangeResponse;
-
-import org.openecomp.policy.common.logging.flexlogger.*; 
 
 import junit.framework.TestCase;
 

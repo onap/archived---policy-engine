@@ -17,11 +17,4 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
-/**
- * 
- */
-/**
- *
- */
 package org.openecomp.policy.pap.xacml.rest.model;

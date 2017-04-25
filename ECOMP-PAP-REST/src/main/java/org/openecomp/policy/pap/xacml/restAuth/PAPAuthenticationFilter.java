@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
 
 /**
  * Servlet Filter implementation class PAPAuthenticationFilter
@@ -95,8 +94,9 @@ public class PAPAuthenticationFilter implements Filter {
 						logger.info("Request comes from Ecomp Portal");
 						//Spring dispatcher servlet is at the end of the filter chain at /pap/ecomp/ path
 						System.out.println("New Request URI: " + url);
-						//request.getRequestDispatcher(url).forward(request, alteredResponse);
 						filter.doFilter(request, response);
+						/*url = url.substring(url.indexOf("/pap/")+4);
+						request.getRequestDispatcher(url).forward(request, response);*/
 					}
 					
 				}

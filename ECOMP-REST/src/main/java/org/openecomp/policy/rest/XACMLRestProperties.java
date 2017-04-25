@@ -310,16 +310,27 @@ public class XACMLRestProperties extends XACMLProperties {
 	/*
 	 * Value for Notification Option
 	 */
-	public static final String PROP_NOTIFICATION_TYPE = "xacml.notification.type";
-	
+	public static final String PROP_NOTIFICATION_TYPE = "NOTIFICATION_TYPE";
 	/*
-	 * Value for Notification Servers
+	 * Value for Notification DMaaP servers
 	 */
-	public static final String PROP_NOTIFICATION_UEB_CLUSTER = "xacml.ueb.cluster";	
+	public static final String PROP_NOTIFICATION_SERVERS = "NOTIFICATION_SERVERS";	
 	/*
 	 * Value for Notification Delay
 	 */
-	public static final String PROP_NOTIFICATION_DELAY= "xacml.rest.notification.delay";
+	public static final String PROP_NOTIFICATION_DELAY= "NOTIFICATION_DELAY";
+	/*
+	 * Value for Notification Topic
+	 */
+	public static final String PROP_NOTIFICATION_TOPIC= "NOTIFICATION_TOPIC";	
+	/*
+	 * Value for Notification Topic
+	 */
+	public static final String PROP_UEB_API_KEY= "UEB_API_KEY";	
+	/*
+	 * Value for Notification Topic
+	 */
+	public static final String PROP_UEB_API_SECRET= "UEB_API_SECRET";	
 	/*
 	 * Closedloop Fault Policy Template Version
 	 */
@@ -439,5 +450,11 @@ public class XACMLRestProperties extends XACMLProperties {
 	 * The maxium Level displayed on the UI for Micro Services
 	 */
 	public static final String PROP_MODEL_LEVEL = "xacml.model.level";
+	
+	/*
+	 * Value for Incoming Notification tries
+	 * 
+	 * */
+	public static final String PROP_PAP_INCOMINGNOTIFICATION_TRIES = "xacml.rest.pap.incomingnotification.tries";
 	
 }

@@ -1,0 +1,11 @@
+rule "B to C"
+      agenda-group "B to C"
+      auto-focus true       
+  when
+      State(name == "B", state == State.FINISHED )      
+      c : State(name == "C", state == State.NOTRUN )
+  then
+      System.out.println(c.getName() + " finished" );
+      c.setState( State.FINISHED );
+      kcontext.getKnowledgeRuntime().getAgenda().getAgendaGroup( "B to D" ).setFocus();
+end

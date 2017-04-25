@@ -137,7 +137,6 @@ public class StdPDPPIPConfig implements PDPPIPConfig, Serializable {
 	@JsonIgnore
 	public boolean isConfigured() {
 		//
-		// TODO
 		// Also include this in the JSON I/O if it is a data field rather than calculated
 		//
 		return true;

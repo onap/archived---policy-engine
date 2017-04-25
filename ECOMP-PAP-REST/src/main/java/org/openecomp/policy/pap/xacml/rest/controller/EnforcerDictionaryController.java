@@ -21,7 +21,9 @@
 package org.openecomp.policy.pap.xacml.rest.controller;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 import org.openecomp.policy.pap.xacml.rest.util.JsonMessage;
-import org.openecomp.policy.rest.dao.EnforcerPolicyDao;
+import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.EnforcingType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -45,14 +47,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class EnforcerDictionaryController {
 
 	@Autowired
-	EnforcerPolicyDao enforcerPolicyDao;
+	CommonClassDao commonClassDao;
 
 	@RequestMapping(value={"/get_EnforcerTypeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getEnforcerDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("enforcerDictionaryDatas", mapper.writeValueAsString(enforcerPolicyDao.getEnforcingTypeData()));
+			List<Object> list = commonClassDao.getData(EnforcingType.class);
+			List<String> dictList = new ArrayList<String>();
+			for(int i = 0; i < list.size(); i++){
+				EnforcingType dict = (EnforcingType) list.get(i);
+				dictList.add(dict.getEnforcingType());
+			}
+			model.put("enforcerDictionaryDatas", mapper.writeValueAsString(dictList));
 			org.openecomp.policy.pap.xacml.rest.util.JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -62,7 +70,7 @@ public class EnforcerDictionaryController {
 		}
 	}
 	
-	@RequestMapping(value={"/enforcer_dictionary/save_enforcerType.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/enforcer_dictionary/save_enforcerType"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -70,16 +78,16 @@ public class EnforcerDictionaryController {
 			JsonNode root = mapper.readTree(request.getReader());
 			EnforcingType enforcingType = (EnforcingType)mapper.readValue(root.get("enforcerDictionaryData").toString(), EnforcingType.class);
 			if(enforcingType.getId() == 0){
-				enforcerPolicyDao.Save(enforcingType);
+				commonClassDao.save(enforcingType);
 			}else{
-				enforcerPolicyDao.update(enforcingType); 
+				commonClassDao.update(enforcingType); 
 			} 
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
-			String responseString = mapper.writeValueAsString(this.enforcerPolicyDao.getEnforcingTypeData());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(EnforcingType.class));
 			JSONObject j = new JSONObject("{enforcerDictionaryDatas: " + responseString + "}");
 
 			out.write(j.toString());
@@ -95,21 +103,21 @@ public class EnforcerDictionaryController {
 		return null;
 	}
 
-	@RequestMapping(value={"/enforcer_dictionary/remove_enforcer.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/enforcer_dictionary/remove_enforcer"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView removeEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			EnforcingType enforcingType = (EnforcingType)mapper.readValue(root.get("data").toString(), EnforcingType.class);
-			enforcerPolicyDao.delete(enforcingType);
+			commonClassDao.delete(enforcingType);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
 
-			String responseString = mapper.writeValueAsString(this.enforcerPolicyDao.getEnforcingTypeData());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(EnforcingType.class));
 			JSONObject j = new JSONObject("{enforcerDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
 
