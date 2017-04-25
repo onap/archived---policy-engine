@@ -115,9 +115,4 @@ public class FunctionDefinitionCustomRegexpMatch<I> extends FunctionDefinitionBa
 		}
 
 	}
-
-
-	
-	
-
 }

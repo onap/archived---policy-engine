@@ -20,13 +20,15 @@
 
 package org.openecomp.policy.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * Enumeration of the Policy Config Types that is used as a part of
  * {@link org.openecomp.policy.api.PolicyParameters}.
  * 
  * @version 0.1
  */
-public enum PolicyConfigType {
+public enum PolicyConfigType{
 	/**
 	 * Indicates Base Config Policy. 
 	 */
@@ -52,6 +54,14 @@ public enum PolicyConfigType {
 	 */
 	BRMS_PARAM("BRMS_Param"),
 	/**
+	 * Indicates GOC (Graph Oriented DB) Config Policy.  
+	 */
+	GOC("GOC"),
+	/**
+	 * Indicates GOC HighLand Park event processing Policy. 
+	 */
+	HighlandPark("GOCHP"),
+	/**
 	 * Indicates DCAE Micro Service based Policy. 
 	 */
 	MicroService("MS")
@@ -59,8 +69,8 @@ public enum PolicyConfigType {
 	
 	private String name;
 	
-	private PolicyConfigType(String typeName){
-		this.name = typeName;
+	private PolicyConfigType(String name){
+		this.name = name;
 	}
 	
 	/**
@@ -68,6 +78,16 @@ public enum PolicyConfigType {
 	 * @return the <code>String</code> of the Type for this <code>PolicyClass</code>
 	 */
 	public String toString() {
-		return this.name;
+		return name;
 	}
+	
+	@JsonCreator
+    public static PolicyConfigType create (String value) {
+        for(PolicyConfigType type: values()){
+            if(type.toString().equals(value) || type.equals(PolicyConfigType.valueOf(value))){
+                return type;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
 }

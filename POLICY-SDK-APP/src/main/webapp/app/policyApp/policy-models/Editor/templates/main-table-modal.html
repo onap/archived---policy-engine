@@ -1,0 +1,46 @@
+<table class="table table-condensed table-modal-condensed mb0">
+    <thead>
+        <tr>
+            <th>
+                <a href="" ng-click="order('model.name')">
+                    Name
+                    <span class="sortorder" ng-show="predicate[1] === 'model.name'" ng-class="{reverse:reverse}"></span>
+                </a>
+            </th>
+            <th class="text-right"></th>
+        </tr>
+    </thead>
+    <tbody class="file-item">
+        <tr ng-show="policyNavigator.requesting">
+            <td colspan="2">
+                <div ng-include="config.tplPath + '/spinner.html'"></div>
+            </td>
+        </tr>
+        <tr ng-show="!policyNavigator.requesting && !policyNavigator.listHasFolders() && !policyNavigator.error">
+            <td colspan="2">
+                No Sub Scopes in Scope...
+            </td>
+            <td class="text-right">
+                <button class="btn btn-sm btn-default" ng-click="policyNavigator.upDir()">Go back</button>
+            </td>
+        </tr>
+        <tr ng-show="!policyNavigator.requesting && policyNavigator.error">
+            <td colspan="2">
+                {{ policyNavigator.error }}
+            </td>
+        </tr>
+        <tr ng-repeat="item in policyNavigator.fileList | orderBy:predicate:reverse" ng-show="!policyNavigator.requesting && item.model.type === 'dir'">
+            <td>
+                <a href="" ng-click="policyNavigator.folderClick(item)" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)">
+                    <i class="glyphicon glyphicon-folder-close"></i>
+                    {{item.model.name | strLimit : 32}}
+                </a>
+            </td>
+            <td class="text-right">
+                <button class="btn btn-sm btn-default" ng-click="select(item, temp)">
+                    <i class="glyphicon glyphicon-hand-up"></i> Select this
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

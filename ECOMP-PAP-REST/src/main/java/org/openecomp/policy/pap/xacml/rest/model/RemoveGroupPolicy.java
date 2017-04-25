@@ -24,13 +24,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.openecomp.policy.pap.xacml.rest.model.PDPPolicyContainer;
-
-import com.att.research.xacml.api.pap.PDPGroup;
-import com.att.research.xacml.api.pap.PDPPolicy;
-
 import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
 import org.openecomp.policy.xacml.std.pap.StdPDPGroup;
+
+import com.att.research.xacml.api.pap.PDPPolicy;
 
 public class RemoveGroupPolicy {
 

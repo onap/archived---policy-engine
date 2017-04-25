@@ -20,7 +20,8 @@
 
 package org.openecomp.policy.pap.ia;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -32,79 +33,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openecomp.policy.jpa.BackUpMonitorEntity;
-import org.openecomp.policy.rest.jpa.ActionBodyEntity;
-import org.openecomp.policy.rest.jpa.ActionList;
-import org.openecomp.policy.rest.jpa.ActionPolicyDict;
-import org.openecomp.policy.rest.jpa.AddressGroup;
-import org.openecomp.policy.rest.jpa.Attribute;
-import org.openecomp.policy.rest.jpa.AttributeAssignment;
-import org.openecomp.policy.rest.jpa.BRMSParamTemplate;
-import org.openecomp.policy.rest.jpa.Category;
-import org.openecomp.policy.rest.jpa.ClosedLoopD2Services;
-import org.openecomp.policy.rest.jpa.ClosedLoopSite;
-import org.openecomp.policy.rest.jpa.ConfigurationDataEntity;
-import org.openecomp.policy.rest.jpa.ConstraintType;
-import org.openecomp.policy.rest.jpa.ConstraintValue;
-import org.openecomp.policy.rest.jpa.DCAEUsers;
-import org.openecomp.policy.rest.jpa.DCAEuuid;
-import org.openecomp.policy.rest.jpa.DatabaseLockEntity;
-import org.openecomp.policy.rest.jpa.Datatype;
-import org.openecomp.policy.rest.jpa.DecisionSettings;
-import org.openecomp.policy.rest.jpa.DescriptiveScope;
-import org.openecomp.policy.rest.jpa.EcompName;
-import org.openecomp.policy.rest.jpa.EnforcingType;
-import org.openecomp.policy.rest.jpa.FunctionArgument;
-import org.openecomp.policy.rest.jpa.FunctionDefinition;
-import org.openecomp.policy.rest.jpa.GlobalRoleSettings;
-import org.openecomp.policy.rest.jpa.GroupEntity;
-import org.openecomp.policy.rest.jpa.GroupPolicyScopeList;
-import org.openecomp.policy.rest.jpa.GroupServiceList;
-import org.openecomp.policy.rest.jpa.MicroServiceConfigName;
-import org.openecomp.policy.rest.jpa.MicroServiceLocation;
-import org.openecomp.policy.rest.jpa.MicroServiceModels;
-import org.openecomp.policy.rest.jpa.Obadvice;
-import org.openecomp.policy.rest.jpa.ObadviceExpression;
-import org.openecomp.policy.rest.jpa.PEPOptions;
-import org.openecomp.policy.rest.jpa.PIPConfigParam;
-import org.openecomp.policy.rest.jpa.PIPConfiguration;
-import org.openecomp.policy.rest.jpa.PIPResolver;
-import org.openecomp.policy.rest.jpa.PIPResolverParam;
-import org.openecomp.policy.rest.jpa.PIPType;
-import org.openecomp.policy.rest.jpa.PREFIXLIST;
-import org.openecomp.policy.rest.jpa.PdpEntity;
-import org.openecomp.policy.rest.jpa.PolicyAlgorithms;
-import org.openecomp.policy.rest.jpa.PolicyDBDaoEntity;
-import org.openecomp.policy.rest.jpa.PolicyEntity;
-import org.openecomp.policy.rest.jpa.PolicyManagement;
-import org.openecomp.policy.rest.jpa.PolicyRoles;
-import org.openecomp.policy.rest.jpa.PolicyScopeClosedLoop;
-import org.openecomp.policy.rest.jpa.PolicyScopeResource;
-import org.openecomp.policy.rest.jpa.PolicyScopeService;
-import org.openecomp.policy.rest.jpa.PolicyScopeType;
-import org.openecomp.policy.rest.jpa.PolicyScore;
-import org.openecomp.policy.rest.jpa.PolicyVersion;
-import org.openecomp.policy.rest.jpa.PortList;
-import org.openecomp.policy.rest.jpa.ProtocolList;
-import org.openecomp.policy.rest.jpa.RemoteCatalogValues;
-import org.openecomp.policy.rest.jpa.RuleAlgorithms;
-import org.openecomp.policy.rest.jpa.SecurityZone;
-import org.openecomp.policy.rest.jpa.ServiceList;
-import org.openecomp.policy.rest.jpa.SystemLogDB;
-import org.openecomp.policy.rest.jpa.TermList;
-import org.openecomp.policy.rest.jpa.UserInfo;
-import org.openecomp.policy.rest.jpa.VMType;
-import org.openecomp.policy.rest.jpa.VNFType;
-import org.openecomp.policy.rest.jpa.VSCLAction;
-import org.openecomp.policy.rest.jpa.VarbindDictionary;
-import org.openecomp.policy.rest.jpa.Zone;
-
 import org.openecomp.policy.common.ia.DbAudit;
 import org.openecomp.policy.common.ia.DbDAO;
 import org.openecomp.policy.common.ia.IntegrityAuditProperties;
@@ -112,8 +47,7 @@ import org.openecomp.policy.common.ia.jpa.IntegrityAuditEntity;
 import org.openecomp.policy.common.im.jpa.ForwardProgressEntity;
 import org.openecomp.policy.common.im.jpa.ResourceRegistrationEntity;
 import org.openecomp.policy.common.im.jpa.StateManagementEntity;
-
-import org.apache.commons.lang3.SerializationUtils;
+import org.openecomp.policy.jpa.BackUpMonitorEntity;
 
 @Ignore
 public class DbAuditCompareEntriesTest {

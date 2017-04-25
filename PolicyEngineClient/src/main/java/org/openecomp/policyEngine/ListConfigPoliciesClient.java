@@ -20,26 +20,15 @@
 
 package org.openecomp.policyEngine;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.openecomp.policy.api.ConfigRequestParameters;
 import org.openecomp.policy.api.PolicyConfigException;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
-import org.w3c.dom.Document;
 
 public class ListConfigPoliciesClient {
 	public static void main(String[] args) {

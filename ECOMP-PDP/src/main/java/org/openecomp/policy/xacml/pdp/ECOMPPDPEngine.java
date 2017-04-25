@@ -37,23 +37,19 @@ public class ECOMPPDPEngine extends ATTPDPEngine {
 	public ECOMPPDPEngine(EvaluationContextFactory evaluationContextFactoryIn, Decision defaultDecisionIn,
 			ScopeResolver scopeResolverIn, Properties properties) {
 		super(evaluationContextFactoryIn, defaultDecisionIn, scopeResolverIn, properties);
-		// TODO Auto-generated constructor stub
 	}
 
 	public ECOMPPDPEngine(EvaluationContextFactory evaluationContextFactoryIn, Decision defaultDecisionIn,
 			ScopeResolver scopeResolverIn) {
 		super(evaluationContextFactoryIn, defaultDecisionIn, scopeResolverIn);
-		// TODO Auto-generated constructor stub
 	}
 
 	public ECOMPPDPEngine(EvaluationContextFactory evaluationContextFactoryIn, ScopeResolver scopeResolverIn) {
 		super(evaluationContextFactoryIn, scopeResolverIn);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Response decide(Request pepRequest) throws PDPException {
-		// TODO Auto-generated method stub
 		Response response = super.decide(pepRequest);
 		
 		FindAction findAction = new FindAction();

@@ -20,14 +20,13 @@
 
 package org.openecomp.policy.api;
 
-import java.util.Map;
 import java.util.UUID;
 
 public class DictionaryParameters {
 	
 	private DictionaryType dictionaryType;
 	private String dictionary;
-	private Map<AttributeType, Map<String,String>> dictionaryFields;
+	private String dictionaryJson;
 	private UUID requestID;
 	
 	
@@ -58,14 +57,14 @@ public class DictionaryParameters {
 	/**
 	 * @return the dictionaryFields
 	 */
-	public Map<AttributeType, Map<String,String>> getDictionaryFields() {
-		return dictionaryFields;
+	public String getDictionaryJson() {
+		return dictionaryJson;
 	}
 	/**
 	 * @param dictionaryFields the dictionaryFields to set
 	 */
-	public void setDictionaryFields(Map<AttributeType, Map<String,String>> dictionaryFields) {
-		this.dictionaryFields = dictionaryFields;
+	public void setDictionaryJson(String dictionaryJson) {
+		this.dictionaryJson = dictionaryJson;
 	}
 	/**
 	 * @return the requestID

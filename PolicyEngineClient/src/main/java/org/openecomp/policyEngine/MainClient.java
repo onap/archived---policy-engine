@@ -38,10 +38,8 @@ import org.openecomp.policy.api.LoadedPolicy;
 import org.openecomp.policy.api.NotificationScheme;
 import org.openecomp.policy.api.PolicyConfig;
 import org.openecomp.policy.api.PolicyConfigException;
-import org.openecomp.policy.api.PolicyConfigStatus;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
-import org.openecomp.policy.api.PolicyType;
 import org.openecomp.policy.api.RemovedPolicy;
 import org.w3c.dom.Document;
 
@@ -50,8 +48,6 @@ public class MainClient {
 		PolicyEngine policyEngine;
 		try {
 			policyEngine = new PolicyEngine("config.properties");
-			String eCOMPComponentName = ".*" ;
-			String configName = ".*" ;
 			Map<String, String> configAttributes = new HashMap<String,String>();
 			configAttributes.put("java", "java");
 			configAttributes.put("peach", "Tar");
@@ -65,6 +61,7 @@ public class MainClient {
 			
 			// Config Example 
 			try {
+				@SuppressWarnings("deprecation")
 				Collection<PolicyConfig> policyConfigs = policyEngine.getConfigByPolicyName(".*");//(eCOMPComponentName, configName, configAttributes);
 				if(policyConfigs!=null && !policyConfigs.isEmpty()){
 					for(PolicyConfig policyConfig: policyConfigs){
@@ -72,50 +69,11 @@ public class MainClient {
 						System.out.println("Config Status: " + policyConfig.getPolicyConfigStatus());
 						System.out.println("Policy Name: "+ policyConfig.getPolicyName());
 						System.out.println("policy Version: " + policyConfig.getPolicyVersion());
-						/*System.out.println("policy Type: " + policyConfig.getType().toString());
-						System.out.println("Matching Conditions: " +  policyConfig.getMatchingConditions());
-						System.out.println("Body is : ");
-						if(policyConfig.getPolicyConfigStatus().equals(PolicyConfigStatus.CONFIG_RETRIEVED)){
-							if(policyConfig.getType().equals(PolicyType.OTHER)){
-								System.out.println(policyConfig.toOther());
-							}else if(policyConfig.getType().equals(PolicyType.JSON)){
-								System.out.println(policyConfig.toJSON().toString());
-							}else if(policyConfig.getType().equals(PolicyType.PROPERTIES)){
-								System.out.println(policyConfig.toProperties().toString());
-							}else if(policyConfig.getType().equals(PolicyType.XML)){
-								try {
-									printDocument(policyConfig.toXML(), System.out);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						}*/
 					}
 				}
 			} catch (PolicyConfigException e) {
 				e.printStackTrace();
 			}
-			// Action example
-			/*try{
-				Collection<PolicyResponse> policyResponses = org.openecomp.policyEngine.sendEvent(eventAttributes);
-				if(policyResponses!=null && !policyResponses.isEmpty()){
-					for(PolicyResponse policyResponse: policyResponses){
-						System.out.println(policyResponse.getPolicyResponseMessage() + " : " + policyResponse.getPolicyResponseStatus());
-						System.out.println(policyResponse.getActionAdvised());
-						System.out.println(policyResponse.getActionTaken());
-						System.out.println(policyResponse.getRequestAttributes());
-					}
-				}
-			}catch (PolicyEventException e){
-				e.printStackTrace();
-			}*/
-			/*// Decision example
-			try{
-				PolicyDecision policyDecision = org.openecomp.policyEngine.getDecision(eCOMPComponentName, decisionAttributes);
-				System.out.println(policyDecision.toString());
-			} catch(PolicyDecisionException e){
-				e.printStackTrace();
-			}*/
 			
 			// Manual Notifications.. 
 			policyEngine.setScheme(NotificationScheme.MANUAL_ALL_NOTIFICATIONS);

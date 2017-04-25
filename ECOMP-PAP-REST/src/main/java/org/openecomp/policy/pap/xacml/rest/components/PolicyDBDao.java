@@ -22,6 +22,7 @@ package org.openecomp.policy.pap.xacml.rest.components;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -68,14 +69,18 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
-import org.openecomp.policy.pap.xacml.rest.adapters.PolicyRestAdapter;
 import org.openecomp.policy.rest.XACMLRestProperties;
+import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 import org.openecomp.policy.rest.jpa.ActionBodyEntity;
 import org.openecomp.policy.rest.jpa.ConfigurationDataEntity;
 import org.openecomp.policy.rest.jpa.DatabaseLockEntity;
@@ -85,31 +90,20 @@ import org.openecomp.policy.rest.jpa.PolicyDBDaoEntity;
 import org.openecomp.policy.rest.jpa.PolicyEntity;
 import org.openecomp.policy.rest.jpa.PolicyVersion;
 import org.openecomp.policy.rest.util.Webapps;
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
-
-import org.xml.sax.InputSource;
-
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.openecomp.policy.xacml.api.pap.EcompPDP;
 import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
 import org.openecomp.policy.xacml.api.pap.PAPPolicyEngine;
-
-import com.att.research.xacml.api.pap.PAPEngine;
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDP;
-//import com.att.research.xacml.api.pap.PDPGroup;
-import com.att.research.xacml.api.pap.PDPPolicy;
 import org.openecomp.policy.xacml.std.pap.StdPDPGroup;
 import org.openecomp.policy.xacml.std.pap.StdPDPPolicy;
 import org.openecomp.policy.xacml.util.XACMLPolicyScanner;
 import org.openecomp.policy.xacml.util.XACMLPolicyWriter;
-import com.att.research.xacml.util.XACMLProperties;
-
 import org.w3c.dom.Document;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.xml.sax.InputSource;
+
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.api.pap.PDP;
+import com.att.research.xacml.api.pap.PDPPolicy;
+import com.att.research.xacml.util.XACMLProperties;
 
 public class PolicyDBDao {
 	private static final Logger logger	= FlexLogger.getLogger(PolicyDBDao.class);		
@@ -117,13 +111,13 @@ public class PolicyDBDao {
 	private EntityManagerFactory emf;
 	private static PolicyDBDao currentInstance = null;
 	private PAPPolicyEngine papEngine;
-	
+
 	public static final String JSON_CONFIG = "JSON";
 	public static final String XML_CONFIG = "XML";
 	public static final String PROPERTIES_CONFIG = "PROPERTIES";
 	public static final String OTHER_CONFIG = "OTHER";
 	public static final String AUDIT_USER = "audit";
-	
+
 	/**
 	 * Get an instance of a PolicyDBDao. It creates one if it does not exist.
 	 * Only one instance is allowed to be created per server.
@@ -142,7 +136,7 @@ public class PolicyDBDao {
 		}
 		return currentInstance;
 	}
-	
+
 	/**
 	 * Gets the current instance of PolicyDBDao. 
 	 * @return The instance of PolicyDBDao or throws exception if the given instance is null.
@@ -161,14 +155,12 @@ public class PolicyDBDao {
 	private PolicyDBDao(EntityManagerFactory emf){
 		logger.debug("PolicyDBDao(EntityManagerFactory emf) as PolicyDBDao("+emf+") called");
 		this.emf = emf;
-		
+
 		//not needed in this release
 		if(!register()){
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("This server's PolicyDBDao instance could not be registered and may not reveive updates");
 			PolicyLogger.error("This server's PolicyDBDao instance could not be registered and may not reveive updates");
 		}
-		
+
 		otherServers = getRemotePolicyDBDaoList();
 		if(logger.isDebugEnabled()){
 			logger.debug("Number of remote PolicyDBDao instances: "+otherServers.size());
@@ -176,42 +168,40 @@ public class PolicyDBDao {
 		if(otherServers.size() < 1){
 			logger.warn("List of PolicyDBDao servers is empty or could not be retrieved");
 		}
-		//otherServers = new LinkedList();		
-		//otherServers.add((Object)"http://localhost:8071/pap/");		
 	}
-	
+
 	//not static because we are going to be using the instance's emf
 	//waitTime in ms to wait for lock, or -1 to wait forever (no)
 	private void startTransactionSynced(EntityManager entityMgr,int waitTime){
 		logger.debug("\n\nstartTransactionSynced(EntityManager entityMgr,int waitTime) as "
 				+ "\n   startTransactionSynced("+entityMgr+","+waitTime+") called\n\n");
 		DatabaseLockEntity lock = null;		
-		
+
 		entityMgr.setProperty("javax.persistence.query.timeout", waitTime);
 		entityMgr.getTransaction().begin();
-		
+
+		if(logger.isDebugEnabled()){
+			Map<String,Object> properties = entityMgr.getProperties();
+			logger.debug("\n\nstartTransactionSynced():"
+					+ "\n   entityManager.getProperties() = " + properties 
+					+ "\n\n");
+		}
+		try{
 			if(logger.isDebugEnabled()){
-				Map<String,Object> properties = entityMgr.getProperties();
 				logger.debug("\n\nstartTransactionSynced():"
-						+ "\n   entityManager.getProperties() = " + properties 
+						+ "\n   ATTEMPT to get the DB lock"
 						+ "\n\n");
 			}
-			try{
-				if(logger.isDebugEnabled()){
-					logger.debug("\n\nstartTransactionSynced():"
-							+ "\n   ATTEMPT to get the DB lock"
-							+ "\n\n");
-				}
-				lock = entityMgr.find(DatabaseLockEntity.class, 1, LockModeType.PESSIMISTIC_WRITE);
-				if(logger.isDebugEnabled()){
-					logger.debug("\n\nstartTransactionSynced():"
-							+ "\n   GOT the DB lock"
-							+ "\n\n");
-				}
-			} catch(Exception e){
-				System.out.println("Could not get lock entity");
-				e.printStackTrace();
+			lock = entityMgr.find(DatabaseLockEntity.class, 1, LockModeType.PESSIMISTIC_WRITE);
+			if(logger.isDebugEnabled()){
+				logger.debug("\n\nstartTransactionSynced():"
+						+ "\n   GOT the DB lock"
+						+ "\n\n");
 			}
+		} catch(Exception e){
+			System.out.println("Could not get lock entity");
+			e.printStackTrace();
+		}
 		if(lock == null){
 			throw new IllegalStateException("The lock row does not exist in the table. Please create a primary key with value = 1.");	
 		}
@@ -229,31 +219,29 @@ public class PolicyDBDao {
 		try{						
 			Query getPolicyDBDaoEntityQuery = em.createNamedQuery("PolicyDBDaoEntity.findAll");			
 			policyDBDaoEntityList = getPolicyDBDaoEntityQuery.getResultList();
-			
+
 		} catch(Exception e){
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Caught Exception on: getPolicyDBDaoEntityQuery.getResultList()",e);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Exception querying for other registered PolicyDBDaos");
 			logger.warn("List of remote PolicyDBDaos will be empty");
 		}
 		try{
-		em.getTransaction().commit();
+			em.getTransaction().commit();
 		} catch(Exception e){
 			try{
 				em.getTransaction().rollback();
 			} catch(Exception e2){
-				
+
 			}
 		}
 		em.close();
 		return policyDBDaoEntityList;
 	}
-	
+
 	public PolicyDBDaoTransaction getNewTransaction(){
 		logger.debug("getNewTransaction() as getNewTransaction() called");
 		return (PolicyDBDaoTransaction)(new PolicyDBDaoTransactionInstance());
 	}
-	
+
 	/*
 	 * Because the normal transactions are not used in audits, we can use the same transaction
 	 * mechanism to get a transaction and obtain the emlock and the DB lock.  We just need to
@@ -268,8 +256,8 @@ public class PolicyDBDao {
 		int auditTimeoutMs = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_TIMEOUT)); 
 		return (PolicyDBDaoTransaction)(new PolicyDBDaoTransactionInstance(auditTimeoutMs, auditWaitMs));
 	}
-	
-	
+
+
 	/**
 	 * Checks if two strings are equal. Null strings ARE allowed.
 	 * @param one A String or null to compare
@@ -285,7 +273,7 @@ public class PolicyDBDao {
 		}
 		return one.equals(two);
 	}
-	
+
 	/**
 	 * Computes the scope in dotted format based on an absolute path and a path that divides the scope.
 	 * @param fullPath An absolute path including scope folders and other folders(does not have to be absolute, must just contain scope and other folders before)
@@ -344,7 +332,7 @@ public class PolicyDBDao {
 		//if there is no comma, for some reason there is no username and password, so don't try to cut them off
 		return urlUserPass;
 	}
-	
+
 	private static String encryptPassword(String password) throws Exception{
 		Cipher cipher = Cipher.getInstance("AES");		
 		cipher.init(Cipher.ENCRYPT_MODE, aesKey());
@@ -352,7 +340,7 @@ public class PolicyDBDao {
 		System.out.println(encryption);
 		return new String(Base64.getMimeEncoder().encode(encryption),"UTF-8");
 	}
-	
+
 	private static String decryptPassword(String encryptedPassword) throws Exception{
 		Cipher cipher = Cipher.getInstance("AES");
 		cipher.init(Cipher.DECRYPT_MODE, aesKey());
@@ -386,8 +374,6 @@ public class PolicyDBDao {
 					em.getTransaction().commit();
 					em.close();					
 				} catch(Exception e2){
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("COULD NOT CREATE DATABASELOCK ROW.  WILL TRY ONE MORE TIME \n\n Exception: \n" + e2);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "COULD NOT CREATE DATABASELOCK ROW.  WILL TRY ONE MORE TIME");
 					e2.printStackTrace();
 				}
@@ -396,10 +382,7 @@ public class PolicyDBDao {
 				try{
 					startTransactionSynced(em, 1000);
 				} catch(Exception e3){
-					//still not working
 					String msg = "DATABASE LOCKING NOT WORKING. CONCURRENCY CONTROL NOT WORKING";
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error(msg);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e3, "PolicyDBDao", msg);
 					throw new IllegalStateException("msg" + "\n" + e3);
 				}
@@ -410,56 +393,35 @@ public class PolicyDBDao {
 		Query getPolicyDBDaoEntityQuery = em.createQuery("SELECT e FROM PolicyDBDaoEntity e WHERE e.policyDBDaoUrl=:url");
 		getPolicyDBDaoEntityQuery.setParameter("url", url[0]);
 		if(foundPolicyDBDaoEntity == null){
-			//em.getTransaction().begin();
 			PolicyDBDaoEntity newPolicyDBDaoEntity = new PolicyDBDaoEntity();
 			em.persist(newPolicyDBDaoEntity);
 			newPolicyDBDaoEntity.setPolicyDBDaoUrl(url[0]);
 			newPolicyDBDaoEntity.setDescription("PAP server at "+url[0]);
 			newPolicyDBDaoEntity.setUsername(url[1]);
 			try{
-			newPolicyDBDaoEntity.setPassword(encryptPassword(url[2]));
+				newPolicyDBDaoEntity.setPassword(encryptPassword(url[2]));
 			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Could not encrypt PAP password",e);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not encrypt PAP password");
 			}
-			/*
 			try{
 				em.getTransaction().commit();
-			} catch(RollbackException e){
-				logger.error("Caught RollbackException during PolicyDBDao Registration on: em.getTransaction().commit()",e);
-				em.close();
-				return false;
-			} catch(Exception e2){
-				logger.error("Caught Exception during PolicyDBDao Registration on: em.getTransaction().commit()",e2);
-				em.close();
-				return false;
-			}
-			*/
-			try{
-				em.getTransaction().commit();
-				} catch(Exception e){
-					try{
-						em.getTransaction().rollback();
-					} catch(Exception e2){
-						//TODO:EELF Cleanup - Remove logger
-						//logger.error("Could not add new PolicyDBDao to the database",e);
-						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Could not add new PolicyDBDao to the database");
-					}
+			} catch(Exception e){
+				try{
+					em.getTransaction().rollback();
+				} catch(Exception e2){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Could not add new PolicyDBDao to the database");
 				}
+			}
 		} else {
-			//em.getTransaction().begin();
 			//just want to update in order to change modified date
 			String encryptedPassword = null;
 			try{
-			encryptedPassword = encryptPassword(url[2]);
+				encryptedPassword = encryptPassword(url[2]);
 			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Could not encrypt PAP password",e);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not encrypt PAP password");
 			}
 			if(url[1] != null && !stringEquals(url[1], foundPolicyDBDaoEntity.getUsername())){
-			foundPolicyDBDaoEntity.setUsername(url[1]);
+				foundPolicyDBDaoEntity.setUsername(url[1]);
 			}
 			if(encryptedPassword != null && !stringEquals(encryptedPassword, foundPolicyDBDaoEntity.getPassword())){
 				foundPolicyDBDaoEntity.setPassword(encryptedPassword);
@@ -467,28 +429,13 @@ public class PolicyDBDao {
 			foundPolicyDBDaoEntity.preUpdate();
 			try{
 				em.getTransaction().commit();
-				} catch(Exception e){
-					try{
-						em.getTransaction().rollback();
-					} catch(Exception e2){
-						//TODO:EELF Cleanup - Remove logger
-						//logger.error("Could not update PolicyDBDao in the database",e);
-						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Could not update PolicyDBDao in the database");
-					}
+			} catch(Exception e){
+				try{
+					em.getTransaction().rollback();
+				} catch(Exception e2){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Could not update PolicyDBDao in the database");
 				}
-			/*
-			try{
-				em.getTransaction().commit();
-			} catch(RollbackException e){
-				logger.error("Caught RollbackException during PolicyDBDao Registration on: em.getTransaction().commit()",e);
-				em.close();
-				return false;
-			} catch(Exception e2){
-				logger.error("Caught Exception during PolicyDBDao Registration on: em.getTransaction().commit()",e2);
-				em.getTransaction().rollback();
-				return false;
 			}
-			*/
 		}
 		em.close();
 		logger.debug("\nPolicyDBDao.register(). Success!!\n");
@@ -500,12 +447,12 @@ public class PolicyDBDao {
 	public void notifyOthers(long entityId, String entityType, String newGroupId){
 		logger.debug("notifyOthers(long entityId, String entityType, long newGroupId) as notifyOthers("+entityId+","+entityType+","+newGroupId+") called");		
 		LinkedList<Thread> notifyThreads = new LinkedList<Thread>();
-		
+
 		//we're going to run notiftions in parellel threads to speed things up
 		for(Object obj : otherServers){
 
 			Thread newNotifyThread = new Thread(new NotifyOtherThread(obj, entityId, entityType, newGroupId));
-			
+
 			newNotifyThread.start();
 
 			notifyThreads.add(newNotifyThread);
@@ -520,7 +467,7 @@ public class PolicyDBDao {
 			}
 		}
 
-		
+
 	}
 
 	private class NotifyOtherThread implements Runnable {
@@ -542,7 +489,7 @@ public class PolicyDBDao {
 			String username = dbdEntity.getUsername();
 			String password;
 			try{
-			password = decryptPassword(dbdEntity.getPassword());
+				password = decryptPassword(dbdEntity.getPassword());
 			} catch(Exception e){
 				//if we can't decrypt, might as well try it anyway
 				password = dbdEntity.getPassword();
@@ -551,8 +498,6 @@ public class PolicyDBDao {
 			String encoding = encoder.encodeToString((username+":"+password).getBytes(StandardCharsets.UTF_8));
 			HttpURLConnection connection = null;
 			UUID requestID = UUID.randomUUID();
-			//loggingContext.setRequestID(requestID.toString());
-			//loggingContext.transactionStarted();
 			URL url;
 			try {
 				String papUrl = getPapUrlUserPass()[0];
@@ -575,7 +520,7 @@ public class PolicyDBDao {
 					return;
 				}
 				if(newGroupId == null){
-				url = new URL(((String)o)+"?policydbdaourl="+papUrl+"&entityid="+entityId+"&entitytype="+entityType);
+					url = new URL(((String)o)+"?policydbdaourl="+papUrl+"&entityid="+entityId+"&entitytype="+entityType);
 				} else {
 					url = new URL(((String)o)+"?policydbdaourl="+papUrl+"&entityid="+entityId+"&entitytype="+entityType+"&extradata="+newGroupId);
 				}
@@ -596,45 +541,45 @@ public class PolicyDBDao {
 			//
 			// Setup our method and headers
 			//
-	        try {
+			try {
 				connection.setRequestMethod("PUT");
 			} catch (ProtocolException e) {
 				//why would this error ever occur?
 				logger.warn("Caught ProtocolException on connection.setRequestMethod(\"PUT\");",e);			
 				return;
 			}
-	        connection.setRequestProperty("Authorization", "Basic " + encoding);
+			connection.setRequestProperty("Authorization", "Basic " + encoding);
 			connection.setRequestProperty("Accept", "text/x-java-properties");
-	        connection.setRequestProperty("Content-Type", "text/x-java-properties");	  	        	        
-	        connection.setRequestProperty("requestID", requestID.toString());
-	        int readTimeout;
-	        try{
-	        	readTimeout = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_NOTIFY_TIMEOUT));
-	        	
-	        } catch(Exception e){
-	        	logger.error("xacml.rest.pap.notify.timeoutms property not set, using a default.");
-	        	readTimeout = 10000;
-	        }
-	        connection.setReadTimeout(readTimeout);
-	        connection.setConnectTimeout(readTimeout);
-	        connection.setUseCaches(false);
-	        //
-	        // Adding this in. It seems the HttpUrlConnection class does NOT
-	        // properly forward our headers for POST re-direction. It does so
-	        // for a GET re-direction.
-	        //
-	        // So we need to handle this ourselves.
-	        //
-	        connection.setInstanceFollowRedirects(false);
+			connection.setRequestProperty("Content-Type", "text/x-java-properties");	  	        	        
+			connection.setRequestProperty("requestID", requestID.toString());
+			int readTimeout;
+			try{
+				readTimeout = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_NOTIFY_TIMEOUT));
+
+			} catch(Exception e){
+				logger.error("xacml.rest.pap.notify.timeoutms property not set, using a default.");
+				readTimeout = 10000;
+			}
+			connection.setReadTimeout(readTimeout);
+			connection.setConnectTimeout(readTimeout);
+			connection.setUseCaches(false);
+			//
+			// Adding this in. It seems the HttpUrlConnection class does NOT
+			// properly forward our headers for POST re-direction. It does so
+			// for a GET re-direction.
+			//
+			// So we need to handle this ourselves.
+			//
+			connection.setInstanceFollowRedirects(false);
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
-	        try {
+			try {
 				connection.connect();
 			} catch (Exception e) {
 				logger.warn("Caught exception on: connection.connect()",e);
 				return;
 			}
-	        try {
+			try {
 				if (connection.getResponseCode() == 200) {
 					logger.info("Received response 200 from pap server on notify");
 					//notified = true;
@@ -644,12 +589,12 @@ public class PolicyDBDao {
 			} catch (Exception e) {
 				logger.warn("Caught Exception on: connection.getResponseCode() ", e);
 			}
-			
-			
+
+
 			connection.disconnect();
 		}
 	}
-	
+
 	private static String getElementFromXMLString(String element, String xml) {
 		InputSource source = new InputSource(new StringReader(xml));
 
@@ -661,14 +606,14 @@ public class PolicyDBDao {
 
 			XPathFactory xpathFactory = XPathFactory.newInstance();
 			XPath xpath = xpathFactory.newXPath();
-			
+
 			if (element.endsWith("/")){
 				element = element.substring(0, element.length() -1);
 			}
 
 			description = xpath.evaluate("/Policy" + element + "/text()", document);		
 		}catch(Exception e){
-			
+
 		}
 
 
@@ -686,20 +631,19 @@ public class PolicyDBDao {
 
 			XPathFactory xpathFactory = XPathFactory.newInstance();
 			XPath xpath = xpathFactory.newXPath();
-			
+
 
 			description = xpath.evaluate(expression, document);		
 		}catch(Exception e){
-			
+
 		}
 
 
 		System.out.println("description_" + description);
 		return description;
 	}
-	
+
 	private static String getDescriptionFromXacml(String xacmlData){
-		//FIXME completely untested. Probably not a good idea to use. UPDATE: kind of tested
 		String openTag = "<Description>";
 		String closeTag = "</Description>";
 		int descIndex = xacmlData.indexOf(openTag);
@@ -707,39 +651,72 @@ public class PolicyDBDao {
 		String desc = xacmlData.substring(descIndex+openTag.length(),endDescIndex);
 		return desc;
 	}
+	
 	private final String POLICY_NOTIFICATION = "policy";
 	private final String PDP_NOTIFICATION = "pdp";
 	private final String GROUP_NOTIFICATION = "group";
 	public void handleIncomingHttpNotification(String url, String entityId, String entityType, String extraData, XACMLPapServlet xacmlPapServlet){
 		logger.info("DBDao url: " + url + " has reported an update on "+entityType+" entity "+entityId);		
 		PolicyDBDaoTransaction transaction = this.getNewTransaction();
+		//although its named retries, this is the total number of tries
+		int retries;
+		try{
+			retries = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_INCOMINGNOTIFICATION_TRIES));
+
+		} catch(Exception e){
+			logger.error("xacml.rest.pap.incomingnotification.tries property not set, using a default of 3.");
+			retries = 3;
+		}
+		//if someone sets it to some dumb value, we need to make sure it will try at least once
+		if(retries < 1){
+			retries = 1;
+		}
+		int pauseBetweenRetries = 1000;
 		switch(entityType){	
-		
+
 		case POLICY_NOTIFICATION:
-			try{
-			handleIncomingPolicyChange(url, entityId,extraData);
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught exception on handleIncomingPolicyChange("+url+", "+entityId+", "+extraData+")",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught exception on handleIncomingPolicyChange("+url+", "+entityId+", "+extraData+")");
+			for(int i=0; i<retries;i++){
+				try{
+					handleIncomingPolicyChange(url, entityId,extraData);
+					break;
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught exception on handleIncomingPolicyChange("+url+", "+entityId+", "+extraData+")");
+				}
+				try{
+					Thread.sleep(pauseBetweenRetries);
+				}catch(InterruptedException ie){
+					break;
+				}
 			}
 			break;
 		case PDP_NOTIFICATION:
-			try{
-			handleIncomingPdpChange(url, entityId, transaction);
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught exception on handleIncomingPdpChange("+url+", "+entityId+", "+transaction+")",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught exception on handleIncomingPdpChange("+url+", "+entityId+", "+transaction+")");
+			for(int i=0; i<retries;i++){
+				try{
+					handleIncomingPdpChange(url, entityId, transaction);
+					break;
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught exception on handleIncomingPdpChange("+url+", "+entityId+", "+transaction+")");
+				}
+				try{
+					Thread.sleep(pauseBetweenRetries);
+				}catch(InterruptedException ie){
+					break;
+				}
 			}
 			break;
 		case GROUP_NOTIFICATION:
-			try{
-			handleIncomingGroupChange(url, entityId, extraData, transaction, xacmlPapServlet);
-			}catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught exception on handleIncomingGroupChange("+url+", "+entityId+", "+extraData+", "+transaction+", "+xacmlPapServlet+")",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught exception on handleIncomingGroupChange("+url+", "+entityId+", "+extraData+", "+transaction+", "+xacmlPapServlet+")");
+			for(int i=0; i<retries;i++){
+				try{
+					handleIncomingGroupChange(url, entityId, extraData, transaction, xacmlPapServlet);
+					break;
+				}catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught exception on handleIncomingGroupChange("+url+", "+entityId+", "+extraData+", "+transaction+", "+xacmlPapServlet+")");
+				}
+				try{
+					Thread.sleep(pauseBetweenRetries);
+				}catch(InterruptedException ie){
+					break;
+				}
 			}
 			break;		
 		}
@@ -747,7 +724,6 @@ public class PolicyDBDao {
 		transaction.rollbackTransaction();
 	}
 	private void handleIncomingGroupChange(String url, String groupId, String extraData,PolicyDBDaoTransaction transaction,XACMLPapServlet xacmlPapServlet) throws PAPException{
-				
 		GroupEntity groupRecord = null;
 		long groupIdLong = -1;
 		try{
@@ -756,10 +732,8 @@ public class PolicyDBDao {
 			throw new IllegalArgumentException("groupId "+groupId+" cannot be parsed into a long");
 		}
 		try{
-				groupRecord = transaction.getGroup(groupIdLong);
+			groupRecord = transaction.getGroup(groupIdLong);
 		} catch(Exception e){
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Caught Exception trying to get pdp group record with transaction.getGroup("+groupIdLong+");",e);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get pdp group record with transaction.getGroup("+groupIdLong+");");
 			throw new PAPException("Could not get local group "+groupIdLong);
 		}
@@ -773,7 +747,6 @@ public class PolicyDBDao {
 			localGroup = papEngine.getGroup(groupRecord.getGroupId());
 		} catch (Exception e) {
 			logger.warn("Caught PAPException trying to get local pdp group with papEngine.getGroup("+groupId+");",e);
-			//throw new PAPException("Could not get local group "+groupId);
 		}
 		if(localGroup == null && extraData != null){
 			//here we can try to load an old group id from the extraData
@@ -786,21 +759,15 @@ public class PolicyDBDao {
 		if(localGroup != null && groupRecord.isDeleted()){
 			EcompPDPGroup newLocalGroup = null;
 			if(extraData != null){
-			try {
-				newLocalGroup = papEngine.getGroup(extraData);
-			} catch (PAPException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught PAPException trying to get new pdp group with papEngine.getGroup("+extraData+");",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to get new pdp group with papEngine.getGroup("+extraData+");");
-				//throw new PAPException("Could not get new local group "+newGroupId);
-				
-			}
+				try {
+					newLocalGroup = papEngine.getGroup(extraData);
+				} catch (PAPException e) {
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to get new pdp group with papEngine.getGroup("+extraData+");");
+				}
 			}
 			try {
 				papEngine.removeGroup(localGroup, newLocalGroup);
 			} catch (NullPointerException | PAPException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught PAPException trying to get remove pdp group with papEngine.removeGroup("+localGroup+", "+newLocalGroup+");",e);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to get remove pdp group with papEngine.removeGroup("+localGroup+", "+newLocalGroup+");");
 				throw new PAPException("Could not remove group "+groupId);
 			}
@@ -810,19 +777,14 @@ public class PolicyDBDao {
 			try {
 				papEngine.newGroup(groupRecord.getgroupName(), groupRecord.getDescription());
 			} catch (NullPointerException | PAPException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught PAPException trying to create pdp group with papEngine.newGroup(groupRecord.getgroupName(), groupRecord.getDescription());",e);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to create pdp group with papEngine.newGroup(groupRecord.getgroupName(), groupRecord.getDescription());");
 				throw new PAPException("Could not create group "+groupRecord);
 			}
 			try {
 				localGroup = papEngine.getGroup(groupRecord.getGroupId());
 			} catch (PAPException e1) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught PAPException trying to get pdp group we just created with papEngine.getGroup(groupRecord.getGroupId());\nAny PDPs or policies in the new group may not have been added",e1);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Caught PAPException trying to get pdp group we just created with papEngine.getGroup(groupRecord.getGroupId());\nAny PDPs or policies in the new group may not have been added");
 				return;
-				//throw new PAPException("Could not get group "+groupRecord);
 			}
 			//add possible pdps to group
 			List<?> pdpsInGroup = transaction.getPdpsInGroup(Long.parseLong(groupRecord.getGroupId()));
@@ -831,8 +793,6 @@ public class PolicyDBDao {
 				try {
 					papEngine.newPDP(pdp.getPdpId(), localGroup, pdp.getPdpName(), pdp.getDescription(), pdp.getJmxPort());
 				} catch (NullPointerException | PAPException e) {
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("Caught PAPException trying to get create pdp with papEngine.newPDP(pdp.getPdpId(), localGroup, pdp.getPdpName(), pdp.getDescription(), pdp.getJmxPort());",e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to get create pdp with papEngine.newPDP(pdp.getPdpId(), localGroup, pdp.getPdpName(), pdp.getDescription(), pdp.getJmxPort());");
 					throw new PAPException("Could not create pdp "+pdp);
 				}
@@ -855,8 +815,6 @@ public class PolicyDBDao {
 					papEngine.SetDefaultGroup(localGroup);
 					return;
 				} catch (PAPException e) {
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("Caught PAPException trying to set default group with papEngine.SetDefaultGroup("+localGroupClone+");",e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to set default group with papEngine.SetDefaultGroup("+localGroupClone+");");
 					throw new PAPException("Could not set default group to "+localGroupClone);
 				}				
@@ -877,16 +835,14 @@ public class PolicyDBDao {
 			}
 			if(needToUpdate){
 				try {
-					
+
 					papEngine.updateGroup(localGroupClone);
 				} catch (PAPException e) {
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("Caught PAPException trying to update group with papEngine.updateGroup("+localGroupClone+");",e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to update group with papEngine.updateGroup("+localGroupClone+");");
 					throw new PAPException("Could not update group "+localGroupClone);
 				}
 			}				
-			
+
 		}
 		//call command that corresponds to the change that was made
 	}
@@ -916,8 +872,7 @@ public class PolicyDBDao {
 					try {
 						policyStream.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						PolicyLogger.error(e.getMessage());
 					}
 				}
 			}
@@ -927,22 +882,40 @@ public class PolicyDBDao {
 			group.setPolicies(newPolicySet);
 		}
 		return didUpdate;
-		
+
 	}
 	private String removeExtensionAndVersionFromPolicyName(String originalPolicyName){
-		String policyName = originalPolicyName;
-		try{
-			policyName = removeFileExtension(policyName);
-			policyName = policyName.substring(0,policyName.lastIndexOf('.'));
-			if(isNullOrEmpty(policyName)){
-				throw new Exception();
-			}
-		} catch(Exception e){
-			policyName = originalPolicyName;
-		}
-		return policyName;
-	}
-	
+        return getPolicyNameAndVersionFromPolicyFileName(originalPolicyName)[0];
+    }
+
+    /**
+     * Splits apart the policy name and version from a policy file path
+     * @param originalPolicyName: a policy file name ex: Config_policy.2.xml
+     * @return An array [0]: The policy name, [1]: the policy version, as a string
+     */
+    private String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName){
+        String policyName = originalPolicyName;
+        String[] nameAndVersion = new String[2];
+        try{
+            policyName = removeFileExtension(policyName);
+            nameAndVersion[0] = policyName.substring(0,policyName.lastIndexOf('.'));
+            if(isNullOrEmpty(nameAndVersion[0])){
+                throw new Exception();
+            }
+        } catch(Exception e){
+            nameAndVersion[0] = originalPolicyName;         
+        }
+        try{
+            nameAndVersion[1] = policyName.substring(policyName.lastIndexOf('.')+1);
+            if(isNullOrEmpty(nameAndVersion[1])){
+                throw new Exception();
+            }
+        } catch(Exception e){
+            nameAndVersion[1] = "1";
+        }
+        return nameAndVersion;
+    }
+    
 	private void handleIncomingPdpChange(String url, String pdpId, PolicyDBDaoTransaction transaction) throws PAPException{
 		//get pdp
 		long pdpIdLong = -1;
@@ -953,10 +926,8 @@ public class PolicyDBDao {
 		}
 		PdpEntity pdpRecord = null;
 		try{
-		pdpRecord = transaction.getPdp(pdpIdLong);
+			pdpRecord = transaction.getPdp(pdpIdLong);
 		}catch(Exception e){
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Caught Exception trying to get pdp record with transaction.getPdp("+pdpIdLong+");",e);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get pdp record with transaction.getPdp("+pdpIdLong+");");
 			throw new PAPException("Could not get local pdp "+pdpIdLong);
 		}
@@ -973,8 +944,6 @@ public class PolicyDBDao {
 			try {
 				papEngine.removePDP((EcompPDP) localPdp);
 			} catch (PAPException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught PAPException trying to get remove pdp with papEngine.removePDP("+localPdp+");",e);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to get remove pdp with papEngine.removePDP("+localPdp+");");
 				throw new PAPException("Could not remove pdp "+pdpId);
 			}
@@ -982,21 +951,16 @@ public class PolicyDBDao {
 		else if(localPdp == null){
 			//add new pdp
 			//get group
-			
 			EcompPDPGroup localGroup = null;
 			try {
 				localGroup = papEngine.getGroup(pdpRecord.getGroup().getGroupId());
 			} catch (PAPException e1) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught PAPException trying to get local group to add pdp to with papEngine.getGroup(pdpRecord.getGroup().getGroupId());",e1);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Caught PAPException trying to get local group to add pdp to with papEngine.getGroup(pdpRecord.getGroup().getGroupId());");
 				throw new PAPException("Could not get local group");
 			}			
 			try {
 				papEngine.newPDP(pdpRecord.getPdpId(), localGroup, pdpRecord.getPdpName(), pdpRecord.getDescription(), pdpRecord.getJmxPort());
 			} catch (NullPointerException | PAPException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught PAPException trying to create pdp with papEngine.newPDP("+pdpRecord.getPdpId()+", "+localGroup+", "+pdpRecord.getPdpName()+", "+pdpRecord.getDescription()+", "+pdpRecord.getJmxPort()+");",e);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to create pdp with papEngine.newPDP("+pdpRecord.getPdpId()+", "+localGroup+", "+pdpRecord.getPdpName()+", "+pdpRecord.getDescription()+", "+pdpRecord.getJmxPort()+");");
 				throw new PAPException("Could not create pdp "+pdpRecord);
 			}
@@ -1012,33 +976,28 @@ public class PolicyDBDao {
 				needToUpdate = true;
 			}
 			String localPdpGroupId = null;
-					try{
-			localPdpGroupId = papEngine.getPDPGroup((EcompPDP) localPdp).getId();
-					} catch(PAPException e){
-						//could be null or something, just warn at this point
-						logger.warn("Caught PAPException trying to get id of local group that pdp is in with localPdpGroupId = papEngine.getPDPGroup(localPdp).getId();",e);
-						//throw new PAPException("Could not get local group");
-					}
-					if(!stringEquals(localPdpGroupId,pdpRecord.getGroup().getGroupId())){
-						EcompPDPGroup newPdpGroup = null;
-						try{
-						newPdpGroup = papEngine.getGroup(pdpRecord.getGroup().getGroupId());
-						}catch(PAPException e){
-							//ok, now we have an issue. Time to stop things
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("Caught PAPException trying to get id of local group to move pdp to with papEngine.getGroup(pdpRecord.getGroup().getGroupId());",e);
-							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to get id of local group to move pdp to with papEngine.getGroup(pdpRecord.getGroup().getGroupId());");
-							throw new PAPException("Could not get local group");
-						}
-						try{
-						papEngine.movePDP((EcompPDP) localPdp, newPdpGroup);
-						}catch(PAPException e){
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("Caught PAPException trying to move pdp with papEngine.movePDP(localPdp, newPdpGroup);",e);
-							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to move pdp with papEngine.movePDP(localPdp, newPdpGroup);");
-							throw new PAPException("Could not move pdp "+localPdp);
-						}
-					}
+			try{
+				localPdpGroupId = papEngine.getPDPGroup((EcompPDP) localPdp).getId();
+			} catch(PAPException e){
+				//could be null or something, just warn at this point
+				logger.warn("Caught PAPException trying to get id of local group that pdp is in with localPdpGroupId = papEngine.getPDPGroup(localPdp).getId();",e);
+			}
+			if(!stringEquals(localPdpGroupId,pdpRecord.getGroup().getGroupId())){
+				EcompPDPGroup newPdpGroup = null;
+				try{
+					newPdpGroup = papEngine.getGroup(pdpRecord.getGroup().getGroupId());
+				}catch(PAPException e){
+					//ok, now we have an issue. Time to stop things
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to get id of local group to move pdp to with papEngine.getGroup(pdpRecord.getGroup().getGroupId());");
+					throw new PAPException("Could not get local group");
+				}
+				try{
+					papEngine.movePDP((EcompPDP) localPdp, newPdpGroup);
+				}catch(PAPException e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to move pdp with papEngine.movePDP(localPdp, newPdpGroup);");
+					throw new PAPException("Could not move pdp "+localPdp);
+				}
+			}
 			if(((PdpEntity) localPdp).getJmxPort() != pdpRecord.getJmxPort()){
 				((PdpEntity) localPdp).setJmxPort(pdpRecord.getJmxPort());
 				needToUpdate = true;
@@ -1047,8 +1006,6 @@ public class PolicyDBDao {
 				try {
 					papEngine.updatePDP((EcompPDP) localPdp);
 				} catch (PAPException e) {
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("Caught PAPException trying to update pdp with papEngine.updatePdp("+localPdp+");",e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to update pdp with papEngine.updatePdp("+localPdp+");");
 					throw new PAPException("Could not update pdp "+localPdp);
 				}
@@ -1061,16 +1018,16 @@ public class PolicyDBDao {
 		EntityManager em = emf.createEntityManager();
 		Query getPolicyEntityQuery = em.createNamedQuery("PolicyEntity.FindById");
 		getPolicyEntityQuery.setParameter("id", Long.valueOf(policyId));
-		
+
 		@SuppressWarnings("unchecked")
 		List<PolicyEntity> policies = getPolicyEntityQuery.getResultList();
 		PolicyEntity policy = null;
 		if (policies.size() > 0){
 			policy = policies.get(0);
 		}
-		
+
 		String policyRepo = buildPolicyScopeDirectory(policy);
-		
+
 		Path policyPath = Paths.get(policyRepo);
 		String action = "unknown action";
 		try {
@@ -1080,19 +1037,19 @@ public class PolicyDBDao {
 				action = "delete";
 				Path newPath = Paths.get(policyPath.toString(), policy.getPolicyName());
 				Files.deleteIfExists(newPath);
-				
+
 				Path subFile = null;
-				
+
 				if (policy.getConfigurationData()!= null){
 					subFile = getPolicySubFile(policy.getConfigurationData().getConfigurationName(), "Config");
 				}else if(policy.getActionBodyEntity()!= null){
 					subFile = getPolicySubFile(policy.getActionBodyEntity().getActionBodyName(), "Action");
 				}
-				
+
 				if(subFile != null){
 					Files.deleteIfExists(subFile);
 				}
-				
+
 			}else{
 				logger.debug("Updating/Creating Policy: " + policy.getPolicyName());
 				action = "update";
@@ -1102,215 +1059,240 @@ public class PolicyDBDao {
 				if(!isNullOrEmpty(oldPathString)){
 					try{
 						String[] scopeName = getScopeAndNameAndType(oldPathString);
-					Path oldPath = Paths.get(buildPolicyScopeDirectory(scopeName[0]),scopeName[1]);
-					Files.delete(oldPath.toAbsolutePath());
+						Path oldPath = Paths.get(buildPolicyScopeDirectory(scopeName[0]),scopeName[1]);
+						Files.delete(oldPath.toAbsolutePath());
 					}catch(Exception e){
-						//TODO:EELF Cleanup - Remove logger
-						//logger.error("Could not delete the old policy before rename: "+oldPathString,e);
 						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy before rename: "+oldPathString);
 					}
 				}
 				Object policyData = XACMLPolicyScanner.readPolicy(IOUtils.toInputStream(policy.getPolicyData()));
 				XACMLPolicyWriter.writePolicyFile(newPath, (PolicyType) policyData);		
-				
+
 				if (policy.getConfigurationData()!= null){
 					if(!isNullOrEmpty(oldPathString)){
 						try{						
-						String[] oldPolicyScopeName = getScopeAndNameAndType(oldPathString);
-						String oldConfigFileName = getConfigFile(oldPolicyScopeName[1],oldPolicyScopeName[0],policy.getConfigurationData().getConfigType());
-						Path oldConfigFilePath = getPolicySubFile(oldConfigFileName, "Config");
-						logger.debug("Trying to delete: "+oldConfigFilePath.toString());
-						Files.delete(oldConfigFilePath);						
+							String[] oldPolicyScopeName = getScopeAndNameAndType(oldPathString);
+							String oldConfigFileName = getConfigFile(oldPolicyScopeName[1],policy.getConfigurationData().getConfigType());
+							Path oldConfigFilePath = getPolicySubFile(oldConfigFileName, "Config");
+							logger.debug("Trying to delete: "+oldConfigFilePath.toString());
+							Files.delete(oldConfigFilePath);						
 						}catch(Exception e){
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("Could not delete the old policy config before rename for policy: "+oldPathString,e);
 							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy config before rename for policy: "+oldPathString);
 						}
 					}
 					writePolicySubFile(policy, "Config");
-					
+
 				}else if(policy.getActionBodyEntity()!= null){
 					if(!isNullOrEmpty(oldPathString)){
 						try{						
-						String[] oldPolicyScopeName = getScopeAndNameAndType(oldPathString);
-						String oldActionFileName = getConfigFile(oldPolicyScopeName[1],oldPolicyScopeName[0],ConfigPolicy.JSON_CONFIG);
-						Path oldActionFilePath = getPolicySubFile(oldActionFileName, "Action");
-						logger.debug("Trying to delete: "+oldActionFilePath.toString());
-						Files.delete(oldActionFilePath);						
+							String[] oldPolicyScopeName = getScopeAndNameAndType(oldPathString);
+							String oldActionFileName = getConfigFile(oldPolicyScopeName[1],ConfigPolicy.JSON_CONFIG);
+							Path oldActionFilePath = getPolicySubFile(oldActionFileName, "Action");
+							logger.debug("Trying to delete: "+oldActionFilePath.toString());
+							Files.delete(oldActionFilePath);						
 						}catch(Exception e){
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("Could not delete the old policy action body before rename for policy: "+oldPathString,e);
 							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy action body before rename for policy: "+oldPathString);
 						}
 					}
 					writePolicySubFile(policy, "Action");
 				}
-					
+
 			}
 		} catch (IOException e1) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Error occurred while performing [" + action + "] of Policy File: " +  policy.getPolicyName(), e1);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Error occurred while performing [" + action + "] of Policy File: " +  policy.getPolicyName());
 		}	
 	}
-	
-	//FIXME error correcting and logs
+
 	private void createGroupsFromDatabase(){
 		//get list of groups
 		boolean foundDefault = false;
 		//need to avoid infinite loop, just in case
 		boolean alreadyRunAdd = false;
 		while(!foundDefault){			
-		
-		EntityManager em = emf.createEntityManager();
-		Query getGroups = em.createQuery("SELECT g FROM GroupEntity g WHERE g.deleted=:deleted");
-		getGroups.setParameter("deleted", false);
-		List<?> groups = getGroups.getResultList();
-		em.close();
-		//make a folder for each group in pdps folders
-		Path pdpsPath = Paths.get("pdps");
-		try {
-			FileUtils.forceDelete(pdpsPath.toFile());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			FileUtils.forceMkdir(pdpsPath.toFile());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Properties propertyFileProperties = new Properties();
-		String groupList = "";
-		String defaultGroup = "";
-		for(Object o : groups){
-			GroupEntity group = (GroupEntity)o;
-			Path groupPath = Paths.get(pdpsPath.toString(), group.getGroupId());
-			try {
-				FileUtils.forceMkdir(groupPath.toFile());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Properties policyProperties = new Properties();
-			String rootPolicies = "";
-			for(PolicyEntity policy : group.getPolicies()){
-				Path newPolicyPath = Paths.get(groupPath.toString(),getPdpPolicyName(policy.getPolicyName(),policy.getScope()));
-				File newPolicyFile = newPolicyPath.toFile();
+
+			EntityManager em = emf.createEntityManager();
+			Query getGroups = em.createQuery("SELECT g FROM GroupEntity g WHERE g.deleted=:deleted");
+			getGroups.setParameter("deleted", false);
+			List<?> groups = getGroups.getResultList();
+			em.close();
+			//make a folder for each group in pdps folders
+			Path pdpsPath = Paths.get(XACMLProperties.getProperty("xacml.pap.pdps"));
+			if(!pdpsPath.toFile().exists()){
 				try {
-					newPolicyFile.createNewFile();
+					FileUtils.forceMkdir(pdpsPath.toFile());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not make the new pdps folder; one does not exist");
+				}
+			}
+			Properties propertyFileProperties = new Properties();
+			String groupList = "";
+			String defaultGroup = "";
+			HashSet<String> currentGroupPaths = new HashSet<String>();
+			for(Object o : groups){
+				GroupEntity group = (GroupEntity)o;
+				Path groupPath = Paths.get(pdpsPath.toString(), group.getGroupId());
+	            currentGroupPaths.add(groupPath.getFileName().toString());
+	            if(groupPath.toFile().exists()){
+	                try {
+	                    FileUtils.forceDelete(Paths.get(groupPath.toString(), "xacml.policy.properties").toFile());
+	                } catch (IOException e) {
+	                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete old xacml.policy.properties file");
+	                }
+	                File[] xmlFiles = groupPath.toFile().listFiles(new FileFilter(){
+	     
+	                    @Override
+	                    public boolean accept(File pathname) {
+	                        return pathname.toString().endsWith(".xml");
+	                    }
+	                    
+	                });
+	                for(File deleteMe : xmlFiles){
+	                    try {
+	                        FileUtils.forceDelete(deleteMe);
+	                    } catch (IOException e) {
+	                        PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete one of the policy files that we are going to replace: "+deleteMe.toString());
+	                    }
+	                }
+	            } else {
+				try {
+					FileUtils.forceMkdir(groupPath.toFile());
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				try {
-					FileOutputStream policyFileStream = new FileOutputStream(newPolicyFile);
+			}
+				Properties policyProperties = new Properties();
+				String rootPolicies = "";
+				for(PolicyEntity policy : group.getPolicies()){
+					Path newPolicyPath = Paths.get(groupPath.toString(),getPdpPolicyName(policy.getPolicyName(),policy.getScope()));
+					File newPolicyFile = newPolicyPath.toFile();
+					try {
+						newPolicyFile.createNewFile();
+					} catch (IOException e) {
+						PolicyLogger.error(e.getMessage());
+					}
+					try {
+						FileOutputStream policyFileStream = new FileOutputStream(newPolicyFile);
 						policyFileStream.write(policy.getPolicyData().getBytes("UTF-8"));
-					policyFileStream.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+						policyFileStream.close();
+					} catch (IOException e) {
+						PolicyLogger.error(e.getMessage());
+					}
+					policyProperties.setProperty(getPdpPolicyName(policy.getPolicyName(),policy.getScope())+".name",removeExtensionAndVersionFromPolicyName(policy.getPolicyName()));
+					rootPolicies += ",".concat(getPdpPolicyName(policy.getPolicyName(),policy.getScope()));
 				}
-				policyProperties.setProperty(getPdpPolicyName(policy.getPolicyName(),policy.getScope())+".name",removeExtensionAndVersionFromPolicyName(policy.getPolicyName()));
-				rootPolicies += ",".concat(getPdpPolicyName(policy.getPolicyName(),policy.getScope()));
+				Path xacmlPolicyPropertiesPath = Paths.get(groupPath.toString(),"xacml.policy.properties");
+				File xacmlPolicyPropertiesFile = xacmlPolicyPropertiesPath.toFile();
+				if(rootPolicies.length() > 0){
+					rootPolicies = rootPolicies.substring(1);
+				}
+				policyProperties.setProperty("xacml.referencedPolicies", "");
+				policyProperties.setProperty("xacml.rootPolicies", rootPolicies);
+
+				try {
+					xacmlPolicyPropertiesFile.createNewFile();
+				} catch (IOException e) {
+					PolicyLogger.error(e.getMessage());
+				}
+				try {
+					FileOutputStream xacmlPolicyPropertiesFileStream = new FileOutputStream(xacmlPolicyPropertiesFile);
+					policyProperties.store(xacmlPolicyPropertiesFileStream, "");
+					xacmlPolicyPropertiesFileStream.close();
+				} catch (IOException e) {
+					PolicyLogger.error(e.getMessage());
+				}
+
+				em = emf.createEntityManager();
+				Query getPdpsQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.groupEntity=:group AND p.deleted=:deleted");
+				getPdpsQuery.setParameter("group", group);
+				getPdpsQuery.setParameter("deleted", false);
+				List<?> pdps = getPdpsQuery.getResultList();
+				em.close();			
+				String pdpLine = "";
+				for(Object o2 : pdps){
+					PdpEntity pdp = (PdpEntity)o2;
+					pdpLine += ",".concat(pdp.getPdpId());
+					propertyFileProperties.setProperty(pdp.getPdpId()+".description",pdp.getDescription());
+					propertyFileProperties.setProperty(pdp.getPdpId()+".jmxport",String.valueOf(pdp.getJmxPort()));
+					propertyFileProperties.setProperty(pdp.getPdpId()+".name",pdp.getPdpName());
+				}
+				if(pdpLine.length() > 0){
+					pdpLine = pdpLine.substring(1);
+				}
+				propertyFileProperties.setProperty(group.getGroupId()+".description", group.getDescription());
+				propertyFileProperties.setProperty(group.getGroupId()+".name", group.getgroupName());
+				propertyFileProperties.setProperty(group.getGroupId()+".pdps",pdpLine);
+				groupList += ",".concat(group.getGroupId());
+				if(group.isDefaultGroup()){
+					defaultGroup = group.getGroupId();
+					foundDefault = true;
+				}
 			}
-			Path xacmlPolicyPropertiesPath = Paths.get(groupPath.toString(),"xacml.policy.properties");
-			File xacmlPolicyPropertiesFile = xacmlPolicyPropertiesPath.toFile();
-			if(rootPolicies.length() > 0){
-				rootPolicies = rootPolicies.substring(1);
+	        //check the list of directories in the pdps folder and make sure none should be deleted
+	        File[] filesInPdpsFolder = pdpsPath.toFile().listFiles(new FileFilter(){
+	            @Override
+	            public boolean accept(File pathname) {
+	                return pathname.isDirectory();
+	            }
+	        });
+	        for(File f : filesInPdpsFolder){
+	            if(f.isDirectory()){
+	                if(!currentGroupPaths.contains(f.toPath().getFileName().toString())){
+	                    try {
+	                        FileUtils.forceDelete(f);
+	                    } catch (IOException e) {
+	                        PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete pdp group folder, which has been deleted from the database");
+	                    }
+	                }
+	            }
+	        }
+			if(!foundDefault && !alreadyRunAdd){
+				alreadyRunAdd = true;
+				//add default group to db
+				try{
+					em = emf.createEntityManager();
+					em.getTransaction().begin();
+					GroupEntity newDefaultGroup = new GroupEntity();
+					em.persist(newDefaultGroup);
+					newDefaultGroup.setDescription("The default group where new PDP's are put.");
+					newDefaultGroup.setGroupId("default");
+					newDefaultGroup.setGroupName("default");
+					newDefaultGroup.setDefaultGroup(true);
+					newDefaultGroup.setCreatedBy("automaticallyAdded");
+					newDefaultGroup.setModifiedBy("automaticallyAdded");
+					em.flush();
+					em.getTransaction().commit();		
+					continue;
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not add a new default group to the database");
+				}
 			}
-			policyProperties.setProperty("xacml.referencedPolicies", "");
-			policyProperties.setProperty("xacml.rootPolicies", rootPolicies);
-			
+
+			Path xacmlPropertiesPath = Paths.get(pdpsPath.toString(),"xacml.properties");
+			File xacmlPropertiesFile = xacmlPropertiesPath.toFile();
+			if(groupList.length()>0){
+				groupList = groupList.substring(1);
+			}
+			propertyFileProperties.setProperty("xacml.pap.groups",groupList);
+			propertyFileProperties.setProperty("xacml.pap.groups.default",defaultGroup);
+	        try {
+	            FileUtils.forceDelete(xacmlPropertiesFile);
+	        } catch (IOException e) {
+	            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old xacml.properties file");
+	        }
 			try {
-				xacmlPolicyPropertiesFile.createNewFile();
+				xacmlPropertiesFile.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				PolicyLogger.error(e.getMessage());
 			}
 			try {
-				FileOutputStream xacmlPolicyPropertiesFileStream = new FileOutputStream(xacmlPolicyPropertiesFile);
-				//xacmlPolicyPropertiesFileStream.write(xacmlPolicyProperties.getBytes("UTF-8"));
-				policyProperties.store(xacmlPolicyPropertiesFileStream, "");
-				xacmlPolicyPropertiesFileStream.close();
+				FileOutputStream xacmlPropertiesFileStream = new FileOutputStream(xacmlPropertiesFile);
+				propertyFileProperties.store(xacmlPropertiesFileStream, "");
+				xacmlPropertiesFileStream.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				PolicyLogger.error(e.getMessage());
 			}
-			
-			em = emf.createEntityManager();
-			Query getPdpsQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.groupEntity=:group AND p.deleted=:deleted");
-			getPdpsQuery.setParameter("group", group);
-			getPdpsQuery.setParameter("deleted", false);
-			List<?> pdps = getPdpsQuery.getResultList();
-			em.close();			
-			String pdpLine = "";
-			for(Object o2 : pdps){
-				PdpEntity pdp = (PdpEntity)o2;
-				pdpLine += ",".concat(pdp.getPdpId());
-				propertyFileProperties.setProperty(pdp.getPdpId()+".description",pdp.getDescription());
-				propertyFileProperties.setProperty(pdp.getPdpId()+".jmxport",String.valueOf(pdp.getJmxPort()));
-				propertyFileProperties.setProperty(pdp.getPdpId()+".name",pdp.getPdpName());
-			}
-			if(pdpLine.length() > 0){
-				pdpLine = pdpLine.substring(1);
-			}
-			propertyFileProperties.setProperty(group.getGroupId()+".description", group.getDescription());
-			propertyFileProperties.setProperty(group.getGroupId()+".name", group.getgroupName());
-			propertyFileProperties.setProperty(group.getGroupId()+".pdps",pdpLine);
-			groupList += ",".concat(group.getGroupId());
-			if(group.isDefaultGroup()){
-				defaultGroup = group.getGroupId();
-				foundDefault = true;
-			}
-		}
-		if(!foundDefault && !alreadyRunAdd){
-			alreadyRunAdd = true;
-			//add default group to db
-			try{
-			em = emf.createEntityManager();
-			em.getTransaction().begin();
-			GroupEntity newDefaultGroup = new GroupEntity();
-			em.persist(newDefaultGroup);
-			newDefaultGroup.setDescription("The default group where new PDP's are put.");
-			newDefaultGroup.setGroupId("default");
-			newDefaultGroup.setGroupName("default");
-			newDefaultGroup.setDefaultGroup(true);
-			newDefaultGroup.setCreatedBy("automaticallyAdded");
-			newDefaultGroup.setModifiedBy("automaticallyAdded");
-			em.flush();
-			em.getTransaction().commit();		
-			continue;
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Could not add a new default group to the database",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not add a new default group to the database");
-			}
-		}
-		
-		Path xacmlPropertiesPath = Paths.get(pdpsPath.toString(),"xacml.properties");
-		File xacmlPropertiesFile = xacmlPropertiesPath.toFile();
-		if(groupList.length()>0){
-			groupList = groupList.substring(1);
-		}
-		propertyFileProperties.setProperty("xacml.pap.groups",groupList);
-		propertyFileProperties.setProperty("xacml.pap.groups.default",defaultGroup);
-		try {
-			xacmlPropertiesFile.createNewFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			FileOutputStream xacmlPropertiesFileStream = new FileOutputStream(xacmlPropertiesFile);
-			//xacmlPropertiesFileStream.write(fileContents.getBytes("UTF-8"));
-			propertyFileProperties.store(xacmlPropertiesFileStream, "");
-			xacmlPropertiesFileStream.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//if we get this far down, something went wrong and we don't want to get stuck in the loop
-		foundDefault = true;
+			//if we get this far down, something went wrong and we don't want to get stuck in the loop
+			foundDefault = true;
 		}
 		//put policies in group folder
 		//create xacml.policy.properties in each folder with list of policies in that folder
@@ -1318,8 +1300,6 @@ public class PolicyDBDao {
 		//create xacml.properties with list of groups and pdps and other info
 	}
 
-	
-	//FIXME error checking and logging
 	private String getPdpPolicyName(String name, String scope){
 		String finalName = "";
 		finalName += scope;
@@ -1331,28 +1311,22 @@ public class PolicyDBDao {
 	private String removeFileExtension(String fileName){
 		return fileName.substring(0, fileName.lastIndexOf('.'));
 	}
-	
+
 	private String buildPolicyScopeDirectory(PolicyEntity policy){
 		String repo = buildPolicyDirectory();
 
 		String policyScope = policy.getScope();
 		if(policyScope == null){
 			policyScope = "";
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("buildPolicyScopeDirectory("+policy+") computed null policyScope. Using blank.");
 			PolicyLogger.error("buildPolicyScopeDirectory("+policy+") computed null policyScope. Using blank.");
 		} else {
 			policyScope = policyScope.replace(".", FileSystems.getDefault().getSeparator());	
 		}
 		if(policyScope == null){
 			policyScope = "";
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("buildPolicyScopeDirectory("+policy+") computed null policyScope. Using blank.");
 			PolicyLogger.error("buildPolicyScopeDirectory("+policy+") computed null policyScope. Using blank.");
 		}
 		if(repo == null){
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("buildPolicyScopeDirectory("+policy+") received null repo. Using blank.");
 			PolicyLogger.error("buildPolicyScopeDirectory("+policy+") received null repo. Using blank.");
 			repo = "";
 		}
@@ -1360,8 +1334,6 @@ public class PolicyDBDao {
 		if(returnPath !=  null){
 			return returnPath.toString();
 		} else {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("buildPolicyScopeDirectory("+policy+") computed null path");
 			PolicyLogger.error("buildPolicyScopeDirectory("+policy+") received null repo. Using blank.");
 			return "";
 		}
@@ -1372,25 +1344,20 @@ public class PolicyDBDao {
 		String repo = buildPolicyDirectory();		
 		policyScope = policyScope.replace(".", FileSystems.getDefault().getSeparator());
 		return repo + FileSystems.getDefault().getSeparator() + policyScope;
-		
+
 	}
-	
+
 	private static String buildPolicyDirectory(){
 		Path workspacePath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE), getDefaultWorkspace());
 		Path repositoryPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_REPOSITORY));
 		Path gitPath = Paths.get(workspacePath.toString(), repositoryPath.getFileName().toString());
-		
-    	/*
-    	 * Getting and Setting the parent path for Admin Console use when reading the policy files
-    	 */
-    	//domain chosen by the client to store the policy action files 
-    	//String domain = policy.getDomainDir();
-    	    	   
-    	
-    		
-    	//getting the fullpath of the gitPath and convert to string
-    	String policyDir = gitPath.toAbsolutePath().toString();
-    	
+
+		/*
+		 * Getting and Setting the parent path for Admin Console use when reading the policy files
+		 */
+		//getting the fullpath of the gitPath and convert to string
+		String policyDir = gitPath.toAbsolutePath().toString();
+
 
 		if(policyDir.contains("\\")){
 			policyDir = policyDir.replace("XACML-PAP-REST", "XACML-PAP-ADMIN");
@@ -1399,32 +1366,32 @@ public class PolicyDBDao {
 				policyDir = policyDir.replace("pap", "console");
 			}
 		}
-    	logger.debug("policyDir: " + policyDir);
+		logger.debug("policyDir: " + policyDir);
 		return policyDir;
 	}
-	
+
 	private Path getPolicySubFile(String filename, String subFileType){
 		logger.debug("getPolicySubFile(" + filename + ", " + subFileType + ")");
 		Path filePath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS).toString(), subFileType);
 		File file = null;
-		
+
 		filename = FilenameUtils.removeExtension(filename);
-		
+
 		for(File tmpFile : filePath.toFile().listFiles()){
 			if (FilenameUtils.removeExtension(tmpFile.getName()).equals(filename)){
 				file = tmpFile;
 			}
 		}
-		
+
 		Path finalPath = null;
 		if (file!= null){
 			finalPath = Paths.get(file.getAbsolutePath());
 		}
-		
+
 		logger.debug("end of getPolicySubFile: " + finalPath);
 		return finalPath;	
 	}
-		
+
 	private boolean writePolicySubFile(PolicyEntity policy, String policyType){
 		logger.info("writePolicySubFile with policyName[" + policy.getPolicyName() + "] and policyType[" + policyType + "]");
 		String type = null;
@@ -1434,10 +1401,10 @@ public class PolicyDBDao {
 			type = "Config";
 			subTypeName = FilenameUtils.removeExtension(policy.getConfigurationData().getConfigurationName());
 			subTypeBody = policy.getConfigurationData().getConfigBody();
-			
+
 			String configType = policy.getConfigurationData().getConfigType();
-			
-			
+
+
 			if (configType != null) {
 				if (configType.equals(JSON_CONFIG)) {
 					subTypeName = subTypeName + ".json";
@@ -1452,13 +1419,13 @@ public class PolicyDBDao {
 					subTypeName = subTypeName + ".txt";
 				}
 			}
-			
+
 		}else if (policyType.equalsIgnoreCase("action")){
 			type = "Action";
 			subTypeName = policy.getActionBodyEntity().getActionBodyName();
 			subTypeBody = policy.getActionBodyEntity().getActionBody();
-			
-			
+
+
 		}
 		Path filePath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS).toString(), type);
 
@@ -1466,28 +1433,26 @@ public class PolicyDBDao {
 			subTypeBody = "";
 		}
 		boolean success = false;
-			try {
-				Files.deleteIfExists(Paths.get(filePath.toString(), subTypeName));
-				File file = Paths.get(filePath.toString(),subTypeName).toFile();
-				file.createNewFile();
-				FileWriter fileWriter = new FileWriter(file, false); // false to overwrite
-				fileWriter.write(subTypeBody);
-				fileWriter.close();
-				success = true;
+		try {
+			Files.deleteIfExists(Paths.get(filePath.toString(), subTypeName));
+			File file = Paths.get(filePath.toString(),subTypeName).toFile();
+			file.createNewFile();
+			FileWriter fileWriter = new FileWriter(file, false); // false to overwrite
+			fileWriter.write(subTypeBody);
+			fileWriter.close();
+			success = true;
 
-			} catch (Exception e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Exception occured while creating Configuration File for Policy : " + policy.getPolicyName(), e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Exception occured while creating Configuration File for Policy : " + policy.getPolicyName());
-			}					
-		
+		} catch (Exception e) {
+			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Exception occured while creating Configuration File for Policy : " + policy.getPolicyName());
+		}					
+
 		return success;
-		
+
 	}
-	
+
 	private String getPolicySubType(String filename){
 		String type = null;
-	
+
 		if (filename != null) {
 			if (FilenameUtils.getExtension(filename).equalsIgnoreCase("json")) {
 				type = ConfigPolicy.JSON_CONFIG;
@@ -1502,36 +1467,34 @@ public class PolicyDBDao {
 				type = ConfigPolicy.OTHER_CONFIG;
 			}
 		}
-			
+
 		return type;
-		
+
 	}
-	
-	
+
+
 	private  void convertFileToDBEntry(Path path){
 		logger.info("convertFileToDBEntry");
-		
+
 		if(path.toString().contains(".git")){
 			return;
 		}
-		
+
 		String filename = path.getFileName().toString();
 		if (filename.contains(".svnignore")){
 			return;
 		}
 
 		String[] scopeAndName = getScopeAndNameAndType(path.toString());
-		
+
 		if(scopeAndName == null){
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("convertFileToDBEntry error: getScopeAndNameAndType(" + path.toString() + " is null!");
 			PolicyLogger.error("convertFileToDBEntry error: getScopeAndNameAndType(" + path.toString() + " is null!");
 			return;
 		}
 
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		
+
 		PolicyEntity policy = new PolicyEntity();
 		em.persist(policy);
 		String policyScope = scopeAndName[0];
@@ -1548,18 +1511,16 @@ public class PolicyDBDao {
 			//we want the last index +1 because we don't want the dot
 			version = Integer.parseInt(newName.substring(newName.lastIndexOf(".")+1)); 
 		} catch(Exception e){
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Could not get the policy version number from "+newName);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not get the policy version number from "+newName);
 		}
 		newName = newScope + File.separator + newName.substring(0, newName.lastIndexOf("."));	
 
 		Query query = em.createNamedQuery("PolicyVersion.findByPolicyName");
 		query.setParameter("pname", newName);
-		
+
 		List<?> result = query.getResultList();
 		PolicyVersion versionEntity = null;
-		
+
 		if (!result.isEmpty()) {
 			logger.info("Result is not empty");
 			versionEntity = (PolicyVersion) result.get(0);
@@ -1570,7 +1531,7 @@ public class PolicyDBDao {
 			logger.info("result is empty");
 			Calendar calendar = Calendar.getInstance();
 			Timestamp createdDate = new Timestamp(calendar.getTime().getTime());
-			
+
 			versionEntity = new PolicyVersion();
 			em.persist(versionEntity);
 			versionEntity.setPolicyName(newName);
@@ -1581,21 +1542,19 @@ public class PolicyDBDao {
 			versionEntity.setCreatedDate(createdDate);
 			versionEntity.setModifiedDate(createdDate);
 		}
-		
-		
+
+
 		try {
 			String policyContent = new String(Files.readAllBytes(path));
 			policy.setDescription(getElementFromXMLString("/Description", policyContent));
 			policy.setPolicyData(policyContent);
 		} catch (IOException e1) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("convertFileToDBEntry error settingPolicyData: " + e1.getMessage());
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "convertFileToDBEntry error settingPolicyData");
 			em.getTransaction().rollback();
 			em.close();
 			return;
 		}
-		
+
 		if((scopeAndName[2].equalsIgnoreCase("Config"))){
 			String scopeName = scopeAndName[0] + "." + scopeAndName[1];
 			Path subFilePath = getPolicySubFile(scopeName, scopeAndName[2]);
@@ -1610,10 +1569,8 @@ public class PolicyDBDao {
 				configData.setCreatedBy(AUDIT_USER);
 				configData.setModifiedBy(AUDIT_USER);
 				policy.setConfigurationData(configData);
-				
+
 			} catch (Exception e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("convertFileToDBEntry error for Config policy: " + e.getMessage());
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "convertFileToDBEntry error for Config policy");
 				em.getTransaction().rollback();
 				em.close();
@@ -1631,10 +1588,8 @@ public class PolicyDBDao {
 				actionBody.setCreatedBy(AUDIT_USER);
 				actionBody.setModifiedBy(AUDIT_USER);
 				policy.setActionBodyEntity(actionBody);
-				
+
 			} catch (Exception e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("convertFileToDBEntry error for Action policy: " + e.getMessage());
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "convertFileToDBEntry error for Action policy");
 				em.getTransaction().rollback();
 				em.close();
@@ -1645,7 +1600,7 @@ public class PolicyDBDao {
 		em.getTransaction().commit();
 		em.close();
 	}
-	
+
 	private void deleteAllPolicyTables(){
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
@@ -1659,9 +1614,9 @@ public class PolicyDBDao {
 		deletePolicyVersionEntityTableUpdate.executeUpdate();
 		em.getTransaction().commit();
 		em.close();
-		
+
 	}
-		
+
 	public void auditLocalDatabase(PAPPolicyEngine papEngine2){
 		logger.debug("PolicyDBDao.auditLocalDatabase() is called");
 		Path webappsPath = Paths.get(buildPolicyDirectory());
@@ -1672,13 +1627,11 @@ public class PolicyDBDao {
 			Files.walk(webappsPath).filter(Files::isRegularFile).forEach(this::convertFileToDBEntry);
 			auditGroups(papEngine2);
 		} catch(Exception e){
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("auditLocalDatabase() error: " + e.getMessage());
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "auditLocalDatabase() error");
 			e.printStackTrace();
 		}		
 	}
-	
+
 	/**
 	 * Audits and loads the local file system to match the database version.
 	 */
@@ -1700,8 +1653,6 @@ public class PolicyDBDao {
 			Path repoWithScope = Paths.get(webappsPath.toString(), XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DOMAIN));
 			Files.createDirectories(repoWithScope);
 		} catch (IOException e2) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Error occurred while creating / clearing Config and Policy filesystem directories", e2);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Error occurred while creating / clearing Config and Policy filesystem directories");
 		}
 
@@ -1739,14 +1690,12 @@ public class PolicyDBDao {
 					XACMLPolicyWriter.writePolicyFile(newPath, (PolicyType) policyData);		
 				}
 			} catch (Exception e1) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Error occurred while creating Policy File: " + name, e1);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Error occurred while creating Policy File: " + name);
 			}		
 		}	
 		createGroupsFromDatabase();
 	}
-	
+
 	public void deleteAllGroupTables(){
 		logger.debug("PolicyDBDao.deleteAllGroupTables() called");
 		EntityManager em = emf.createEntityManager();
@@ -1754,95 +1703,89 @@ public class PolicyDBDao {
 
 		Query deletePdpEntityEntityTableUpdate = em.createNamedQuery("PdpEntity.deleteAll");
 		deletePdpEntityEntityTableUpdate.executeUpdate();
-		
+
 		Query deleteGroupEntityTableUpdate = em.createNamedQuery("GroupEntity.deleteAll");
 		deleteGroupEntityTableUpdate.executeUpdate();
-		
+
 		em.getTransaction().commit();
 		em.close();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void auditGroups(PAPPolicyEngine papEngine2){
 		logger.debug("PolicyDBDao.auditGroups() called");
-		
+
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		final String AUDIT_STR = "Audit";
 		try{
 
 			Set<EcompPDPGroup> groups = papEngine2.getEcompPDPGroups();
-			
+
 			for (EcompPDPGroup grp : groups){
 				try{
-				GroupEntity groupEntity = new GroupEntity();
-				em.persist(groupEntity);
-				groupEntity.setGroupName(grp.getName());
-				groupEntity.setDescription(grp.getDescription());
-				groupEntity.setDefaultGroup(grp.isDefaultGroup());
-				groupEntity.setCreatedBy(AUDIT_STR);
-				groupEntity.setGroupId(createNewPDPGroupId(grp.getId()));
-				groupEntity.setModifiedBy(AUDIT_STR);
-				Set<EcompPDP> pdps =  grp.getEcompPdps();				
-				
-				for(EcompPDP pdp : pdps){
-					PdpEntity pdpEntity = new PdpEntity();
-					em.persist(pdpEntity);
-					pdpEntity.setGroup(groupEntity);
-					pdpEntity.setJmxPort(pdp.getJmxPort());
-					pdpEntity.setPdpId(pdp.getId());
-					pdpEntity.setPdpName(pdp.getName());
-					pdpEntity.setModifiedBy(AUDIT_STR);
-					pdpEntity.setCreatedBy(AUDIT_STR);
-					
-				}
-				
-				Set<PDPPolicy> policies = grp.getPolicies();
-				
-				for(PDPPolicy policy : policies){
-					try{
-					String[] stringArray = getNameScopeAndVersionFromPdpPolicy(policy.getId());
-					List<PolicyEntity> policyEntityList;
-					Query getPolicyEntitiesQuery = em.createNamedQuery("PolicyEntity.findByNameAndScope");
-					getPolicyEntitiesQuery.setParameter("name", stringArray[0]);
-					getPolicyEntitiesQuery.setParameter("scope", stringArray[1]);
-					
-					policyEntityList = getPolicyEntitiesQuery.getResultList();
-					PolicyEntity policyEntity = null;
-					if(policyEntityList.size() < 1){
-						policyEntity = addPolicyThatOnlyExistsInPdpGroup(policy.getId(),Paths.get("pdps",grp.getId(),policy.getId()),em);
-					} else {
-						policyEntity = policyEntityList.get(0);
+					GroupEntity groupEntity = new GroupEntity();
+					em.persist(groupEntity);
+					groupEntity.setGroupName(grp.getName());
+					groupEntity.setDescription(grp.getDescription());
+					groupEntity.setDefaultGroup(grp.isDefaultGroup());
+					groupEntity.setCreatedBy(AUDIT_STR);
+					groupEntity.setGroupId(createNewPDPGroupId(grp.getId()));
+					groupEntity.setModifiedBy(AUDIT_STR);
+					Set<EcompPDP> pdps =  grp.getEcompPdps();				
+
+					for(EcompPDP pdp : pdps){
+						PdpEntity pdpEntity = new PdpEntity();
+						em.persist(pdpEntity);
+						pdpEntity.setGroup(groupEntity);
+						pdpEntity.setJmxPort(pdp.getJmxPort());
+						pdpEntity.setPdpId(pdp.getId());
+						pdpEntity.setPdpName(pdp.getName());
+						pdpEntity.setModifiedBy(AUDIT_STR);
+						pdpEntity.setCreatedBy(AUDIT_STR);
+
 					}
-					if(policyEntity != null){
-						groupEntity.addPolicyToGroup(policyEntity);
+
+					Set<PDPPolicy> policies = grp.getPolicies();
+
+					for(PDPPolicy policy : policies){
+						try{
+							String[] stringArray = getNameScopeAndVersionFromPdpPolicy(policy.getId());
+							List<PolicyEntity> policyEntityList;
+							Query getPolicyEntitiesQuery = em.createNamedQuery("PolicyEntity.findByNameAndScope");
+							getPolicyEntitiesQuery.setParameter("name", stringArray[0]);
+							getPolicyEntitiesQuery.setParameter("scope", stringArray[1]);
+
+							policyEntityList = getPolicyEntitiesQuery.getResultList();
+							PolicyEntity policyEntity = null;
+							if(policyEntityList.size() < 1){
+								policyEntity = addPolicyThatOnlyExistsInPdpGroup(policy.getId(),Paths.get(XACMLProperties.getProperty("xacml.pap.pdps"),grp.getId(),policy.getId()),em);
+							} else {
+								policyEntity = policyEntityList.get(0);
+							}
+							if(policyEntity != null){
+								groupEntity.addPolicyToGroup(policyEntity);
+							}
+						}catch(Exception e2){
+							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Exception auditGroups inner catch");
+						}
 					}
-					}catch(Exception e2){
-						//TODO:EELF Cleanup - Remove logger
-						//logger.error("ERROR: " + e2);
-						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Exception auditGroups inner catch");
-					}
-				}
 				}catch(Exception e1){
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("ERROR: " + e1);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Exception auditGroups middle catch");
 				}
 			}
 		}catch(Exception e){
 			em.getTransaction().rollback();
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("ERROR: " + e);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Exception auditGroups outer catch");
 			em.close();
 			return;
 		}
-		
+
 		em.getTransaction().commit();
 		em.close();
-		
+
 	}
-	
+
 	private PolicyEntity addPolicyThatOnlyExistsInPdpGroup(String polId, Path path,EntityManager em){
 		String filename = path.getFileName().toString();
 		if (filename.contains(".svnignore")){
@@ -1850,15 +1793,12 @@ public class PolicyDBDao {
 		}
 
 		String[] scopeAndName = getNameScopeAndVersionFromPdpPolicy(polId);
-		
+
 		if(scopeAndName == null){
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("convertFileToDBEntry error: getScopeAndNameAndType(" + polId.toString() + " is null!");
 			PolicyLogger.error("convertFileToDBEntry error: getScopeAndNameAndType(" + polId.toString() + " is null!");
 			return null;
 		}
 
-		
 		PolicyEntity policy = new PolicyEntity();
 		em.persist(policy);
 		String policyScope = scopeAndName[1];
@@ -1868,39 +1808,31 @@ public class PolicyDBDao {
 		policy.setCreatedBy(AUDIT_USER);
 		policy.setModifiedBy(AUDIT_USER);
 		policy.setDeleted(true);
-		
+
 		try {
 			String policyContent = new String(Files.readAllBytes(path));
 			policy.setDescription(getElementFromXMLString("/Description", policyContent));
 			policy.setPolicyData(policyContent);
 			em.flush();
-			//em.getTransaction().commit();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("convertFileToDBEntry error settingPolicyData: " + e1.getMessage());
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "convertFileToDBEntry error settingPolicyData");
 			return null;
 		}
-		//em.close();
 		return policy;
 	}
-	
-	private String getConfigFile(String filename, String scope, PolicyRestAdapter policy){
+
+	private String getConfigFile(String filename, PolicyRestAdapter policy){
 		if(policy == null){
-			return getConfigFile(filename, scope, (String)null);
+			return getConfigFile(filename, (String)null);
 		}
-		return getConfigFile(filename, scope, policy.getConfigType());
+		return getConfigFile(filename, policy.getConfigType());
 	}
 	//copied from ConfigPolicy.java and modified
 	// Here we are adding the extension for the configurations file based on the
 	// config type selection for saving.
-	private String getConfigFile(String filename, String scope, String configType) {
-		logger.debug("getConfigFile(String filename, String scope, String configType) as getConfigFile("+filename+", "+scope+", "+configType+") called");
+	private String getConfigFile(String filename, String configType) {
+		logger.debug("getConfigFile(String filename, String scope, String configType) as getConfigFile("+filename+", "+configType+") called");
 		filename = FilenameUtils.removeExtension(filename);
-//		if (filename.endsWith(".xml")) {
-//			filename = filename.substring(0, filename.length() - 4);
-//		}
 		String id = configType;
 
 		if (id != null) {
@@ -1917,9 +1849,9 @@ public class PolicyDBDao {
 				filename = filename + ".txt";
 			}
 		}
-		return scope + "." + filename;
+		return filename;
 	}
-	
+
 	/**
 	 * Constructs the file name of a policy.
 	 * @param policy The name of a policy (ex: mypolicy1)
@@ -1939,7 +1871,7 @@ public class PolicyDBDao {
 		String concats =  namePrefix + "_" +policy.getPolicyName() + ".xml";
 		return concats;
 	}
-	
+
 	private String stripPolicyName(String policyFileName){
 		String policyName = policyFileName;
 		try{
@@ -1950,17 +1882,16 @@ public class PolicyDBDao {
 		}
 		return policyName;
 	}
-	//FIXME error check, logs
+	
 	private String[] getNameScopeAndVersionFromPdpPolicy(String fileName){
 		String[] splitByDots = fileName.split("\\.");
 		if(splitByDots.length < 3){
-			//throw something
+			//should we throw something
 			return null;
 		}
 		String policyName = splitByDots[splitByDots.length-3];
 		String version = splitByDots[splitByDots.length-2];
 		//policy names now include version
-		policyName += "."+version +".xml";
 		String scope = "";
 		for(int i=0;i<splitByDots.length-3;i++){
 			scope += ".".concat(splitByDots[i]);
@@ -1970,12 +1901,12 @@ public class PolicyDBDao {
 			scope = scope.substring(1);
 		}
 		String[] returnArray = new String[3];
-		returnArray[0] = policyName;
+		returnArray[0] = policyName + "." + version + ".xml";
 		returnArray[2] = version;
 		returnArray[1] = scope;
 		return returnArray;
 	}
-	
+
 	/**
 	 * Constructs the complete repository path based on the properties files
 	 * @return The repository path
@@ -1988,7 +1919,7 @@ public class PolicyDBDao {
 		logger.debug("after gitPath: " + gitPath);
 		return gitPath.toString();
 	}
-	
+
 	//copied from StdEngine.java
 	public static String createNewPDPGroupId(String name) {
 		String id = name;
@@ -2010,7 +1941,7 @@ public class PolicyDBDao {
 
 		return id;
 	}
-	
+
 	/**
 	 * Checks if any of the given strings are empty or null
 	 * @param strings One or more Strings (or nulls) to check if they are null or empty
@@ -2027,16 +1958,16 @@ public class PolicyDBDao {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Computes the scope, name, and type of a policy based on its file path
 	 * @param path The file path of the policy (including the xml policy file)
-	 * @return A string array of size 3. 1: the scope of the policy  2: the name of the policy (Config_mypol.xml) 3: the type (Config). Or, null if the path can not be parsed.
+	 * @return A string array of size 3. 1: the scope of the policy 2: the name of the policy (Config_mypol.xml) 3: the type (Config). Or, null if the path can not be parsed.
 	 */
 	private static String[] getScopeAndNameAndType(String path){
 		logger.debug("getScopeAndNameAndType(String path) as getScopeAndNameAndType("+path+") called");
 		if(path == null){
-			
+
 		}
 		String gitPath  = getGitPath();
 
@@ -2064,7 +1995,7 @@ public class PolicyDBDao {
 			return null;
 		}
 		String scopeAndName = path.substring(path.indexOf(gitPath)+gitPath.length());
-	
+
 		logger.debug("scopeAndName: " + scopeAndName);
 		String policyType = null;
 		String[] policyTypes = {"Config_","Action_","Decision_"};
@@ -2116,7 +2047,7 @@ public class PolicyDBDao {
 		return returnArray;
 	}
 
-	
+
 	private class PolicyDBDaoTransactionInstance implements PolicyDBDaoTransaction {
 		private EntityManager em;
 		private final Object emLock = new Object();
@@ -2126,7 +2057,7 @@ public class PolicyDBDao {
 		String newGroupId;
 		private boolean operationRun = false;
 		private final Thread transactionTimer;
-		
+
 		private PolicyDBDaoTransactionInstance(){
 			//call the constructor with arguments
 			this(Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_TIMEOUT)),
@@ -2137,8 +2068,8 @@ public class PolicyDBDao {
 		private PolicyDBDaoTransactionInstance(int transactionTimeout, int transactionWaitTime){
 			if(logger.isDebugEnabled()){
 				logger.debug("\n\nPolicyDBDaoTransactionInstance() as PolicyDBDaoTransactionInstance() called:"
-					+ "\n   transactionTimeout = " + transactionTimeout
-					+ "\n   transactionWaitTime = " + transactionWaitTime + "\n\n");
+						+ "\n   transactionTimeout = " + transactionTimeout
+						+ "\n   transactionWaitTime = " + transactionWaitTime + "\n\n");
 			}
 			this.em = emf.createEntityManager();
 			policyId = -1;
@@ -2187,12 +2118,12 @@ public class PolicyDBDao {
 					}
 					rollbackTransaction();					
 				}
-				
+
 			}
-			
+
 			transactionTimer = new Thread(new TransactionTimer(transactionTimeout),"transactionTimerThread");
 			transactionTimer.start();
-			
+
 
 		}
 
@@ -2201,14 +2132,10 @@ public class PolicyDBDao {
 		}
 		private void checkBeforeOperationRun(boolean justCheckOpen){
 			if(!isTransactionOpen()){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("There is no transaction currently open");
 				PolicyLogger.error("There is no transaction currently open");
 				throw new IllegalStateException("There is no transaction currently open");
 			}
 			if(operationRun && !justCheckOpen){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("An operation has already been performed and the current transaction should be committed");
 				PolicyLogger.error("An operation has already been performed and the current transaction should be committed");
 				throw new IllegalStateException("An operation has already been performed and the current transaction should be committed");
 			}
@@ -2220,9 +2147,8 @@ public class PolicyDBDao {
 				logger.debug("commitTransaction() as commitTransaction() called");
 				if(!isTransactionOpen()){
 					logger.warn("There is no open transaction to commit");
-					//throw new IllegalStateException("There is no open transaction to commit");
 					try{
-					em.close();
+						em.close();
 					} catch(Exception e){
 						e.printStackTrace();
 					}
@@ -2231,29 +2157,22 @@ public class PolicyDBDao {
 				try{
 					em.getTransaction().commit();
 				} catch(RollbackException e){
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("Caught RollbackException on em.getTransaction().commit()",e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught RollbackException on em.getTransaction().commit()");
 					throw new PersistenceException("The commit failed. Message:\n"+e.getMessage());
 				}
 				em.close();
-				//FIXME need to revisit
+				// need to revisit
 				if(policyId >= 0){
-					
 					if(newGroupId != null){
 						try{
 							notifyOthers(policyId,POLICY_NOTIFICATION,newGroupId);
 						} catch(Exception e){
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("Caught Exception on notifyOthers("+policyId+","+POLICY_NOTIFICATION+","+newGroupId+")",e);
 							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on notifyOthers("+policyId+","+POLICY_NOTIFICATION+","+newGroupId+")");
 						}
 					} else {
 						try{
 							notifyOthers(policyId,POLICY_NOTIFICATION);
 						} catch(Exception e){
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("Caught Exception on notifyOthers("+policyId+","+POLICY_NOTIFICATION+")",e);
 							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on notifyOthers("+policyId+","+POLICY_NOTIFICATION+")");
 						}
 					}
@@ -2261,21 +2180,17 @@ public class PolicyDBDao {
 				if(groupId >= 0){
 					//we don't want commit to fail just because this does
 					if(newGroupId != null){
-					try{
-						notifyOthers(groupId,GROUP_NOTIFICATION,newGroupId);
-					} catch(Exception e){
-						//TODO:EELF Cleanup - Remove logger
-						//logger.error("Caught Exception on notifyOthers("+groupId+","+GROUP_NOTIFICATION+","+newGroupId+")",e);
-						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on notifyOthers("+groupId+","+GROUP_NOTIFICATION+","+newGroupId+")");
-					}
+						try{
+							notifyOthers(groupId,GROUP_NOTIFICATION,newGroupId);
+						} catch(Exception e){
+							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on notifyOthers("+groupId+","+GROUP_NOTIFICATION+","+newGroupId+")");
+						}
 					} else {
-					try{
-						notifyOthers(groupId,GROUP_NOTIFICATION);
-					} catch(Exception e){
-						//TODO:EELF Cleanup - Remove logger
-						//logger.error("Caught Exception on notifyOthers("+groupId+","+GROUP_NOTIFICATION+")",e);	
-						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on notifyOthers("+groupId+","+GROUP_NOTIFICATION+")");
-					}
+						try{
+							notifyOthers(groupId,GROUP_NOTIFICATION);
+						} catch(Exception e){
+							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on notifyOthers("+groupId+","+GROUP_NOTIFICATION+")");
+						}
 					}
 				}
 				if(pdpId >= 0){
@@ -2283,8 +2198,6 @@ public class PolicyDBDao {
 					try{
 						notifyOthers(pdpId,PDP_NOTIFICATION);
 					} catch(Exception e){
-						//TODO:EELF Cleanup - Remove logger
-						//logger.error("Caught Exception on notifyOthers("+pdpId+","+PDP_NOTIFICATION+")",e);
 						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on notifyOthers("+pdpId+","+PDP_NOTIFICATION+")");
 					}
 				}
@@ -2293,7 +2206,7 @@ public class PolicyDBDao {
 				transactionTimer.interrupt();
 			}
 		}
-		
+
 		@Override
 		public void rollbackTransaction() {
 			logger.debug("rollbackTransaction() as rollbackTransaction() called");
@@ -2301,17 +2214,13 @@ public class PolicyDBDao {
 				if(isTransactionOpen()){	
 
 					try{
-					em.getTransaction().rollback();					
+						em.getTransaction().rollback();					
 					} catch(Exception e){
-						//TODO:EELF Cleanup - Remove logger
-						//logger.error("Could not rollback transaction");
 						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not rollback transaction");
 					}
 					try{
 						em.close();
 					}catch(Exception e){
-						//TODO:EELF Cleanup - Remove logger
-						//logger.error("Could not close EntityManager");
 						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not close EntityManager");
 					}
 
@@ -2335,239 +2244,211 @@ public class PolicyDBDao {
 			logger.debug("createPolicy(PolicyRestAdapter policy, String username, String policyScope, String policyName, String policyDataString) as createPolicy("+policy+", "+username+", "+policyScope+", "+policyName+", "+policyDataString+") called");
 			synchronized(emLock){
 				checkBeforeOperationRun();
-			//em.getTransaction().begin();
-			//FIXME if the policy is already found but deleted, when we update it should we reset the created by and version number?
-			Query createPolicyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");			
-			createPolicyQuery.setParameter("scope", policyScope);
-			createPolicyQuery.setParameter("policyName", policyName);
-			//createPolicyQuery.setParameter("deleted", false);
-			List<?> createPolicyQueryList = createPolicyQuery.getResultList();
-			PolicyEntity newPolicyEntity;
-			boolean update;
-			if(createPolicyQueryList.size() < 1){
-				newPolicyEntity = new PolicyEntity();
-				update = false;
-			} else if(createPolicyQueryList.size() > 1){
-				//something went wrong
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one policy with the same scope, name, and deleted status were found in the database");
-				PolicyLogger.error("Somehow, more than one policy with the same scope, name, and deleted status were found in the database");
-				throw new PersistenceException("Somehow, more than one policy with the same scope, name, and deleted status were found in the database");
-			} else {
-				newPolicyEntity = (PolicyEntity)createPolicyQueryList.get(0);
-				update = true;
-			}			
-			
-			ActionBodyEntity newActionBodyEntity = null;
-			if(policy.getPolicyType().equals("Action")){
-				boolean abupdate = false;
-				if(newPolicyEntity.getActionBodyEntity() == null){
-					newActionBodyEntity = new ActionBodyEntity();
-				}else{
-					newActionBodyEntity = em.find(ActionBodyEntity.class, newPolicyEntity.getActionBodyEntity().getActionBodyId());
-					abupdate = true;
+				String configName = policyName;
+				if(policyName.contains("Config_")){
+					policyName = policyName.replace(".Config_", ":Config_");
+				}else if(policyName.contains("Action_")){
+					policyName = policyName.replace(".Action_", ":Action_");
+				}else if(policyName.contains("Decision_")){
+					policyName = policyName.replace(".Decision_", ":Decision_");
 				}
-
-				if(newActionBodyEntity != null){
-					if(!abupdate){
-						em.persist(newActionBodyEntity);
-					}
-					//build the file path
-					//trim the .xml off the end
-					String policyNameClean = FilenameUtils.removeExtension(policyName);
-					String actionBodyName = policyScope + "." + policyNameClean + ".json";
-					Path actionBodyPath = Paths.get(Webapps.getActionHome(), actionBodyName);
-					if(logger.isDebugEnabled()){
-						logger.debug("\nPolicyDBDao.createPolicy"
-								+ "\n   actionBodyPath = " + actionBodyPath);
-					}
-					//get the action body
-					String actionBodyString = null;
-					String actionBodyPathStr = null;
-					InputStream fileContentStream = null;
-
-					if (Files.exists(actionBodyPath)) {
-						try {
-							actionBodyPathStr = (actionBodyPath != null ? actionBodyPath.toString() : null);
-							fileContentStream = new FileInputStream(actionBodyPathStr);
-							actionBodyString = IOUtils.toString(fileContentStream);
-							if(logger.isDebugEnabled()){
-								logger.debug("\nPolicyDBDao.createPolicy"
-										+ "\n   actionBodyPathStr = " + actionBodyPathStr
-										+ "\n   actionBodyString = " + actionBodyString);
-							}
-						} catch (FileNotFoundException e) {
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("Caught FileNotFoundException on new actionBodyPathStr FileInputStream("+actionBodyPathStr+")",e);
-							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught FileNotFoundException on new actionBodyPathStr FileInputStream("+actionBodyPathStr+")");
-							throw new IllegalArgumentException("The actionBodyPathStr file path " + actionBodyPathStr + " does not exist" 
-									+ "\nEXCEPTION: " + e);
-						} catch(IOException e2){
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("Caught IOException on actionBodyPath newIOUtils.toString("+fileContentStream+")",e2);
-							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Caught IOException on actionBodyPath newIOUtils.toString("+fileContentStream+")");
-							throw new IllegalArgumentException("The actionBodyPath file path cannot be read" + fileContentStream 
-									+ "\nEXCEPTION: " + e2);
-						} finally {
-							IOUtils.closeQuietly(fileContentStream);
-						}
-						
-						if(actionBodyString == null){
-							throw new IllegalArgumentException("The file path (" + actionBodyPathStr + ") cannot be read");
-						}
-					
-					} else {
-						actionBodyString = "{}";
-					}
-
-					newActionBodyEntity.setActionBody(actionBodyString);
-					newActionBodyEntity.setActionBodyName(actionBodyName);
-					newActionBodyEntity.setModifiedBy("PolicyDBDao.createPolicy()");
-					newActionBodyEntity.setDeleted(false);
-					if(!abupdate){
-						newActionBodyEntity.setCreatedBy("PolicyDBDao.createPolicy()");
-					}
-					if(logger.isDebugEnabled()){
-						logger.debug("\nPolicyDBDao.createPolicy"
-								+ "\n   newActionBodyEntity.getActionBody() = " + newActionBodyEntity.getActionBody()
-								+ "\n   newActionBodyEntity.getActionBodyName() = " + newActionBodyEntity.getActionBodyName()
-								+ "\n   newActionBodyEntity.getModifiedBy() = " + newActionBodyEntity.getModifiedBy()
-								+ "\n   newActionBodyEntity.getCreatedBy() = " + newActionBodyEntity.getCreatedBy()
-								+ "\n   newActionBodyEntity.isDeleted() = " + newActionBodyEntity.isDeleted()
-								+ "\n   FLUSHING to DB");
-					}
-					//push the actionBodyEntity to the DB
-					em.flush();
-				}else{
-					//newActionBodyEntity == null
-					//We have a actionBody in the policy but we found no actionBody in the DB
-					String msg = "\n\nPolicyDBDao.createPolicy - Incoming Action policy had an "
-							+ "actionBody, but it could not be found in the DB for update."
-							+ "\n  policyScope = " + policyScope
-							+ "\n  policyName = " + policyName + "\n\n";
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error(msg);
-					PolicyLogger.error("PolicyDBDao.createPolicy - Incoming Action policy had an actionBody, but it could not be found in the DB for update: policyName = " + policyName);
-					throw new IllegalArgumentException(msg);
-				}
-			}
-
-			ConfigurationDataEntity newConfigurationDataEntity;
-			if(policy.getPolicyType().equals("Config")){
-				boolean configUpdate;
-				if(newPolicyEntity.getConfigurationData() == null){
-					newConfigurationDataEntity = new ConfigurationDataEntity();
-					configUpdate = false;
+				policyName = policyName.split(":")[1];
+				Query createPolicyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");			
+				createPolicyQuery.setParameter("scope", policyScope);
+				createPolicyQuery.setParameter("policyName", policyName);
+				List<?> createPolicyQueryList = createPolicyQuery.getResultList();
+				PolicyEntity newPolicyEntity;
+				boolean update;
+				if(createPolicyQueryList.size() < 1){
+					newPolicyEntity = new PolicyEntity();
+					update = false;
+				} else if(createPolicyQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one policy with the same scope, name, and deleted status were found in the database");
+					throw new PersistenceException("Somehow, more than one policy with the same scope, name, and deleted status were found in the database");
 				} else {
-					newConfigurationDataEntity = em.find(ConfigurationDataEntity.class, newPolicyEntity.getConfigurationData().getConfigurationDataId());
-					configUpdate = true;
-				}
+					newPolicyEntity = (PolicyEntity)createPolicyQueryList.get(0);
+					update = true;
+				}			
 
-				if(newConfigurationDataEntity != null){
-					if(!configUpdate){
-						em.persist(newConfigurationDataEntity);
+				ActionBodyEntity newActionBodyEntity = null;
+				if(policy.getPolicyType().equals("Action")){
+					boolean abupdate = false;
+					if(newPolicyEntity.getActionBodyEntity() == null){
+						newActionBodyEntity = new ActionBodyEntity();
+					}else{
+						newActionBodyEntity = em.find(ActionBodyEntity.class, newPolicyEntity.getActionBodyEntity().getActionBodyId());
+						abupdate = true;
 					}
-					//ConfigPolicy configPolicy = (ConfigPolicy)policy;
-					if(!stringEquals(newConfigurationDataEntity.getConfigurationName(),getConfigFile(policyName,policyScope,policy))){
-						newConfigurationDataEntity.setConfigurationName(getConfigFile(policyName,policyScope,policy));
-					}
-					if(newConfigurationDataEntity.getConfigType() == null || !newConfigurationDataEntity.getConfigType().equals(policy.getConfigType())){
-						newConfigurationDataEntity.setConfigType(policy.getConfigType());
-					}
-					if(!configUpdate){
-						newConfigurationDataEntity.setCreatedBy(username);
-					}
-					if(newConfigurationDataEntity.getModifiedBy() == null || !newConfigurationDataEntity.getModifiedBy().equals(username)){
-						newConfigurationDataEntity.setModifiedBy(username);
-					}					
-					if(newConfigurationDataEntity.getDescription() == null || !newConfigurationDataEntity.getDescription().equals("")){
-						newConfigurationDataEntity.setDescription("");
-					}
-					if(newConfigurationDataEntity.getConfigBody() == null || newConfigurationDataEntity.getConfigBody().isEmpty() ||
-							(!newConfigurationDataEntity.getConfigBody().equals(policy.getConfigBodyData()))){
-						//hopefully one of these won't be null
-						if(policy.getConfigBodyData() == null){
-							newConfigurationDataEntity.setConfigBody(policy.getJsonBody());
-						}else{
-							newConfigurationDataEntity.setConfigBody(policy.getConfigBodyData());
+
+					if(newActionBodyEntity != null){
+						if(!abupdate){
+							em.persist(newActionBodyEntity);
 						}
-					}
-					if(newConfigurationDataEntity.isDeleted() == true){
-						newConfigurationDataEntity.setDeleted(false);
-					}
+						//build the file path
+						//trim the .xml off the end
+						String policyNameClean = FilenameUtils.removeExtension(configName);
+						String actionBodyName =  policyNameClean + ".json";
+						Path actionBodyPath = Paths.get(Webapps.getActionHome(), actionBodyName);
+						if(logger.isDebugEnabled()){
+							logger.debug("\nPolicyDBDao.createPolicy"
+									+ "\n   actionBodyPath = " + actionBodyPath);
+						}
+						//get the action body
+						String actionBodyString = null;
+						String actionBodyPathStr = null;
+						InputStream fileContentStream = null;
 
-					em.flush();
-				}else{//newConfigurationDataEntity == null
-					//We have a configurationData body in the policy but we found no configurationData body
-					//in the DB
-					String msg = "\n\nPolicyDBDao.createPolicy - Incoming Config policy had a "
-							+ "configurationData body, but it could not be found in the DB for update."
-							+ "\n  policyScope = " + policyScope
-							+ "\n  policyName = " + policyName + "\n\n";
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error(msg);
-					PolicyLogger.error("PolicyDBDao.createPolicy - Incoming Config policy had a configurationData body, but it could not be found in the DB for update: policyName = " + policyName);
-					throw new IllegalArgumentException(msg);
+						if (Files.exists(actionBodyPath)) {
+							try {
+								actionBodyPathStr = (actionBodyPath != null ? actionBodyPath.toString() : null);
+								fileContentStream = new FileInputStream(actionBodyPathStr);
+								actionBodyString = IOUtils.toString(fileContentStream);
+								if(logger.isDebugEnabled()){
+									logger.debug("\nPolicyDBDao.createPolicy"
+											+ "\n   actionBodyPathStr = " + actionBodyPathStr
+											+ "\n   actionBodyString = " + actionBodyString);
+								}
+							} catch (FileNotFoundException e) {
+								PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught FileNotFoundException on new actionBodyPathStr FileInputStream("+actionBodyPathStr+")");
+								throw new IllegalArgumentException("The actionBodyPathStr file path " + actionBodyPathStr + " does not exist" 
+										+ "\nEXCEPTION: " + e);
+							} catch(IOException e2){
+								PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Caught IOException on actionBodyPath newIOUtils.toString("+fileContentStream+")");
+								throw new IllegalArgumentException("The actionBodyPath file path cannot be read" + fileContentStream 
+										+ "\nEXCEPTION: " + e2);
+							} finally {
+								IOUtils.closeQuietly(fileContentStream);
+							}
+
+							if(actionBodyString == null){
+								throw new IllegalArgumentException("The file path (" + actionBodyPathStr + ") cannot be read");
+							}
+						} else {
+							actionBodyString = "{}";
+						}
+
+						newActionBodyEntity.setActionBody(actionBodyString);
+						newActionBodyEntity.setActionBodyName(actionBodyName);
+						newActionBodyEntity.setModifiedBy("PolicyDBDao.createPolicy()");
+						newActionBodyEntity.setDeleted(false);
+						if(!abupdate){
+							newActionBodyEntity.setCreatedBy("PolicyDBDao.createPolicy()");
+						}
+						if(logger.isDebugEnabled()){
+							logger.debug("\nPolicyDBDao.createPolicy"
+									+ "\n   newActionBodyEntity.getActionBody() = " + newActionBodyEntity.getActionBody()
+									+ "\n   newActionBodyEntity.getActionBodyName() = " + newActionBodyEntity.getActionBodyName()
+									+ "\n   newActionBodyEntity.getModifiedBy() = " + newActionBodyEntity.getModifiedBy()
+									+ "\n   newActionBodyEntity.getCreatedBy() = " + newActionBodyEntity.getCreatedBy()
+									+ "\n   newActionBodyEntity.isDeleted() = " + newActionBodyEntity.isDeleted()
+									+ "\n   FLUSHING to DB");
+						}
+						//push the actionBodyEntity to the DB
+						em.flush();
+					}else{
+						//newActionBodyEntity == null
+						//We have a actionBody in the policy but we found no actionBody in the DB
+						String msg = "\n\nPolicyDBDao.createPolicy - Incoming Action policy had an "
+								+ "actionBody, but it could not be found in the DB for update."
+								+ "\n  policyScope = " + policyScope
+								+ "\n  policyName = " + policyName + "\n\n";
+						PolicyLogger.error("PolicyDBDao.createPolicy - Incoming Action policy had an actionBody, but it could not be found in the DB for update: policyName = " + policyName);
+						throw new IllegalArgumentException(msg);
+					}
 				}
 
-			} else {
-				newConfigurationDataEntity = null;
-			}
-			if(!update){
-				em.persist(newPolicyEntity);
-			}
-			
-			policyId = newPolicyEntity.getPolicyId();
-			//policy version is now part of policy name
-			/*
-			if(update){
-				try{
-					String versionString = evaluateXPath("Policy/@Version", policyDataString);
-					int versionNum = Integer.parseInt(versionString);
-					if(versionNum < 1){
-						throw new NumberFormatException();
-					}
-					newPolicyEntity.setPolicyVersion(versionNum);
-				} catch(Exception e){
-					if(newPolicyEntity.isDeleted()){
-						newPolicyEntity.resetPolicyVersion();
+				ConfigurationDataEntity newConfigurationDataEntity;
+				if(policy.getPolicyType().equals("Config")){
+					boolean configUpdate;
+					if(newPolicyEntity.getConfigurationData() == null){
+						newConfigurationDataEntity = new ConfigurationDataEntity();
+						configUpdate = false;
 					} else {
-						newPolicyEntity.advancePolicyVersion();
+						newConfigurationDataEntity = em.find(ConfigurationDataEntity.class, newPolicyEntity.getConfigurationData().getConfigurationDataId());
+						configUpdate = true;
 					}
-				}
-				
 
-			}
-			*/
-			if(!stringEquals(newPolicyEntity.getPolicyName(),policyName)){
-				newPolicyEntity.setPolicyName(policyName);
-			}
-			if(!stringEquals(newPolicyEntity.getCreatedBy(),username)){
-				newPolicyEntity.setCreatedBy(username);
-			}
-			if(!stringEquals(newPolicyEntity.getDescription(),policy.getPolicyDescription())){
-				newPolicyEntity.setDescription(policy.getPolicyDescription());
-			}
-			if(!stringEquals(newPolicyEntity.getModifiedBy(),username)){
-				newPolicyEntity.setModifiedBy(username);
-			}
-			if(!stringEquals(newPolicyEntity.getPolicyData(),policyDataString)){
-				newPolicyEntity.setPolicyData(policyDataString);
-			}
-			if(!stringEquals(newPolicyEntity.getScope(),policyScope)){
-				newPolicyEntity.setScope(policyScope);
-			}
-			if(newPolicyEntity.isDeleted() == true){
-				newPolicyEntity.setDeleted(false);
-			}
-			newPolicyEntity.setConfigurationData(newConfigurationDataEntity);
-			newPolicyEntity.setActionBodyEntity(newActionBodyEntity);
-			
-			
+					if(newConfigurationDataEntity != null){
+						if(!configUpdate){
+							em.persist(newConfigurationDataEntity);
+						}
+						if(!stringEquals(newConfigurationDataEntity.getConfigurationName(),getConfigFile(configName,policy))){
+							newConfigurationDataEntity.setConfigurationName(getConfigFile(configName,policy));
+						}
+						if(newConfigurationDataEntity.getConfigType() == null || !newConfigurationDataEntity.getConfigType().equals(policy.getConfigType())){
+							newConfigurationDataEntity.setConfigType(policy.getConfigType());
+						}
+						if(!configUpdate){
+							newConfigurationDataEntity.setCreatedBy(username);
+						}
+						if(newConfigurationDataEntity.getModifiedBy() == null || !newConfigurationDataEntity.getModifiedBy().equals(username)){
+							newConfigurationDataEntity.setModifiedBy(username);
+						}					
+						if(newConfigurationDataEntity.getDescription() == null || !newConfigurationDataEntity.getDescription().equals("")){
+							newConfigurationDataEntity.setDescription("");
+						}
+						if(newConfigurationDataEntity.getConfigBody() == null || newConfigurationDataEntity.getConfigBody().isEmpty() ||
+								(!newConfigurationDataEntity.getConfigBody().equals(policy.getConfigBodyData()))){
+							//hopefully one of these won't be null
+							if(policy.getConfigBodyData() == null || policy.getConfigBodyData().isEmpty()){
+								newConfigurationDataEntity.setConfigBody(policy.getJsonBody());
+							}else{
+								newConfigurationDataEntity.setConfigBody(policy.getConfigBodyData());
+							}
+						}
+						if(newConfigurationDataEntity.isDeleted() == true){
+							newConfigurationDataEntity.setDeleted(false);
+						}
+
+						em.flush();
+					}else{
+						//We have a configurationData body in the policy but we found no configurationData body in the DB
+						String msg = "\n\nPolicyDBDao.createPolicy - Incoming Config policy had a "
+								+ "configurationData body, but it could not be found in the DB for update."
+								+ "\n  policyScope = " + policyScope
+								+ "\n  policyName = " + policyName + "\n\n";
+						PolicyLogger.error("PolicyDBDao.createPolicy - Incoming Config policy had a configurationData body, but it could not be found in the DB for update: policyName = " + policyName);
+						throw new IllegalArgumentException(msg);
+					}
+
+				} else {
+					newConfigurationDataEntity = null;
+				}
+				if(!update){
+					em.persist(newPolicyEntity);
+				}
+
+				policyId = newPolicyEntity.getPolicyId();
+
+				if(!stringEquals(newPolicyEntity.getPolicyName(),policyName)){
+					newPolicyEntity.setPolicyName(policyName);
+				}
+				if(!stringEquals(newPolicyEntity.getCreatedBy(),username)){
+					newPolicyEntity.setCreatedBy(username);
+				}
+				if(!stringEquals(newPolicyEntity.getDescription(),policy.getPolicyDescription())){
+					newPolicyEntity.setDescription(policy.getPolicyDescription());
+				}
+				if(!stringEquals(newPolicyEntity.getModifiedBy(),username)){
+					newPolicyEntity.setModifiedBy(username);
+				}
+				if(!stringEquals(newPolicyEntity.getPolicyData(),policyDataString)){
+					newPolicyEntity.setPolicyData(policyDataString);
+				}
+				if(!stringEquals(newPolicyEntity.getScope(),policyScope)){
+					newPolicyEntity.setScope(policyScope);
+				}
+				if(newPolicyEntity.isDeleted() == true){
+					newPolicyEntity.setDeleted(false);
+				}
+				newPolicyEntity.setConfigurationData(newConfigurationDataEntity);
+				newPolicyEntity.setActionBodyEntity(newActionBodyEntity);
+
+
 				em.flush();
 				this.policyId = newPolicyEntity.getPolicyId();
 			}
-			
+
 			return;
 		}
 
@@ -2586,7 +2467,7 @@ public class PolicyDBDao {
 
 			synchronized(emLock){
 				checkBeforeOperationRun(true);
-			//check if group exists
+				//check if group exists
 				String policyId;
 				Query policyQuery;
 				if(!isNullOrEmpty(policyName,scope)){
@@ -2599,45 +2480,36 @@ public class PolicyDBDao {
 					policyQuery = em.createNamedQuery("PolicyEntity.FindById");
 					policyQuery.setParameter("id", policyId);
 				}
-			List<?> policyQueryList;
-			try{
-				policyQueryList = policyQuery.getResultList();
-			}catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception trying to get policy with policyQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get policy with policyQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to get policy "+policyId);
-			}
-			if(policyQueryList.size() < 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Policy does not exist with id "+policyId);
-				PolicyLogger.error("Policy does not exist with id "+policyId);
-				throw new PersistenceException("Group policy is being added to does not exist with id "+policyId);
-			} else if(policyQueryList.size() > 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one policy with the id "+policyId+" were found in the database");
-				PolicyLogger.error("Somehow, more than one policy with the id "+policyId+" were found in the database");
-				throw new PersistenceException("Somehow, more than one policy with the id "+policyId+" were found in the database");
-			}
+				List<?> policyQueryList;
+				try{
+					policyQueryList = policyQuery.getResultList();
+				}catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get policy with policyQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to get policy "+policyId);
+				}
+				if(policyQueryList.size() < 1){
+					PolicyLogger.error("Policy does not exist with id "+policyId);
+					throw new PersistenceException("Group policy is being added to does not exist with id "+policyId);
+				} else if(policyQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one policy with the id "+policyId+" were found in the database");
+					throw new PersistenceException("Somehow, more than one policy with the id "+policyId+" were found in the database");
+				}
 				return (PolicyEntity)policyQueryList.get(0);
 			}
 		}
-		
+
 		@Override
 		public void renamePolicy(String oldPath, String newPath,String username){
 			String[] oldPolicy = getScopeAndNameAndType(oldPath);
 			String[] newPolicy = getScopeAndNameAndType(newPath);
 			if(oldPolicy == null || newPolicy == null){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Could not parse one or more of the path names: "
-						//+oldPath+", "+newPath);
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW+"Could not parse one or more of the path names: "
 						+oldPath+", "+newPath);
 				throw new IllegalArgumentException("Could not parse one or more of the path names");
 			}
 			synchronized (emLock) {
 				checkBeforeOperationRun();
-				
+
 				PolicyEntity existingPolicy;
 				boolean existingPolicyDeleted = false;
 				List<?> groups = null;
@@ -2651,15 +2523,14 @@ public class PolicyDBDao {
 					throw new IllegalArgumentException("The policy named "+existingPolicy.getPolicyName()+" already exists, cannot rename policy: "+newPolicy);
 				} else if(existingPolicy != null && existingPolicy.isDeleted()){
 					try{
-					Query getGroups = em.createQuery("SELECT g FROM GroupEntity g JOIN g.policies p WHERE p.policyId=:pid");
+						Query getGroups = em.createQuery("SELECT g FROM GroupEntity g JOIN g.policies p WHERE p.policyId=:pid");
 
-					getGroups.setParameter("pid", existingPolicy.getPolicyId());
-					groups = getGroups.getResultList();
+						getGroups.setParameter("pid", existingPolicy.getPolicyId());
+						groups = getGroups.getResultList();
 					}catch(Exception e){
 						groups = new LinkedList<GroupEntity>();
 					}
 					for(Object o : groups){
-						
 						GroupEntity group = (GroupEntity)o;
 						group.removePolicyFromGroup(existingPolicy);
 					}
@@ -2669,8 +2540,8 @@ public class PolicyDBDao {
 						logger.error("Error while removing the policy from groups: "+existingPolicy.getPolicyName());
 					}
 					try{
-					em.remove(existingPolicy);
-					em.flush();
+						em.remove(existingPolicy);
+						em.flush();
 					}catch(Exception e){
 						logger.error("Could not remove the existing deleted policy: "+existingPolicy.getPolicyName());
 					}
@@ -2678,78 +2549,70 @@ public class PolicyDBDao {
 					//create the new policy
 					//for each of the groups, add the new policy
 				}
-				
-			PolicyEntity policyToRename;
-			try{
-			policyToRename = getPolicy(oldPolicy[1],oldPolicy[0]);
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Could not get policy record to rename: "
-					//+oldPolicy[1],e);
-				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "PolicyDBDao", "Could not get policy record to rename: "
-					+oldPolicy[1]);
-				throw new PersistenceException("Could not get policy record to rename");
-			}
-			String policyDataString = null;
-			InputStream fileContentStream = null;
-			String policyFilePath = Paths.get(oldPath).toAbsolutePath().toString();
-			//I want to try the old path first, then if it doesn't work, try the new path
-			for(int i=0;i<2;i++){
-			try {
-				fileContentStream = new FileInputStream(policyFilePath);
-				policyDataString = IOUtils.toString(fileContentStream);
-			} catch (FileNotFoundException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught FileNotFoundException on new FileInputStream("+policyFilePath+")",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught FileNotFoundException on new FileInputStream("+policyFilePath+")");
-				//if we can't find the oldPath, we'll try the new path
-				if(i == 0){
-					policyFilePath = Paths.get(newPath).toAbsolutePath().toString();
-					continue;
+
+				PolicyEntity policyToRename;
+				try{
+					policyToRename = getPolicy(oldPolicy[1],oldPolicy[0]);
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "PolicyDBDao", "Could not get policy record to rename: "
+							+oldPolicy[1]);
+					throw new PersistenceException("Could not get policy record to rename");
 				}
-				throw new IllegalArgumentException("The file path does not exist");
-			} catch(IOException e2){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught IOException on newIOUtils.toString("+fileContentStream+")",e2);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Caught IOException on newIOUtils.toString("+fileContentStream+")");
-				throw new IllegalArgumentException("The file path cannot be read");
-			} finally {
-				IOUtils.closeQuietly(fileContentStream);
-			}
-			if(policyDataString == null){
-				throw new IllegalArgumentException("The file path cannot be read");
-			}
-			//escape the loop
-			i=2;
-			}
-			policyToRename.setPolicyName(newPolicy[1]);
-			policyToRename.setPolicyData(policyDataString);
-			policyToRename.setScope(newPolicy[0]);
-			policyToRename.setModifiedBy(username);
-			if(policyToRename.getConfigurationData() != null){
-				//String configType = getPolicySubType(policyToRename.getConfigurationData().getConfigurationName());
-				String configType = policyToRename.getConfigurationData().getConfigType();
-				policyToRename.getConfigurationData().setConfigurationName(getConfigFile(newPolicy[1], newPolicy[0], configType));
-				policyToRename.getConfigurationData().setModifiedBy(username);
-			}
-			if(policyToRename.getActionBodyEntity() != null){
-				String newActionName = newPolicy[0]+"."+removeFileExtension(newPolicy[1])+".json";
-				policyToRename.getActionBodyEntity().setActionBodyName(newActionName);
-				policyToRename.getActionBodyEntity().setModifiedBy(username);
-			}
-			if(existingPolicyDeleted){
-				for(Object o : groups){
-					
-					GroupEntity group = (GroupEntity)o;
-					group.addPolicyToGroup(policyToRename);
+				String policyDataString = null;
+				InputStream fileContentStream = null;
+				String policyFilePath = Paths.get(oldPath).toAbsolutePath().toString();
+				//I want to try the old path first, then if it doesn't work, try the new path
+				for(int i=0;i<2;i++){
+					try {
+						fileContentStream = new FileInputStream(policyFilePath);
+						policyDataString = IOUtils.toString(fileContentStream);
+					} catch (FileNotFoundException e) {
+						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught FileNotFoundException on new FileInputStream("+policyFilePath+")");
+						//if we can't find the oldPath, we'll try the new path
+						if(i == 0){
+							policyFilePath = Paths.get(newPath).toAbsolutePath().toString();
+							continue;
+						}
+						throw new IllegalArgumentException("The file path does not exist");
+					} catch(IOException e2){
+						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Caught IOException on newIOUtils.toString("+fileContentStream+")");
+						throw new IllegalArgumentException("The file path cannot be read");
+					} finally {
+						IOUtils.closeQuietly(fileContentStream);
+					}
+					if(policyDataString == null){
+						throw new IllegalArgumentException("The file path cannot be read");
+					}
+					//escape the loop
+					i=2;
 				}
-			}
-			em.flush();
-			this.policyId = policyToRename.getPolicyId();
-			this.newGroupId = oldPath;
+				policyToRename.setPolicyName(newPolicy[1]);
+				policyToRename.setPolicyData(policyDataString);
+				policyToRename.setScope(newPolicy[0]);
+				policyToRename.setModifiedBy(username);
+				if(policyToRename.getConfigurationData() != null){
+					String configType = policyToRename.getConfigurationData().getConfigType();
+					policyToRename.getConfigurationData().setConfigurationName(getConfigFile(newPolicy[1], configType));
+					policyToRename.getConfigurationData().setModifiedBy(username);
+				}
+				if(policyToRename.getActionBodyEntity() != null){
+					String newActionName = newPolicy[0]+"."+removeFileExtension(newPolicy[1])+".json";
+					policyToRename.getActionBodyEntity().setActionBodyName(newActionName);
+					policyToRename.getActionBodyEntity().setModifiedBy(username);
+				}
+				if(existingPolicyDeleted){
+					for(Object o : groups){
+
+						GroupEntity group = (GroupEntity)o;
+						group.addPolicyToGroup(policyToRename);
+					}
+				}
+				em.flush();
+				this.policyId = policyToRename.getPolicyId();
+				this.newGroupId = oldPath;
 			}
 		}
-		
+
 		@Override
 		public GroupEntity getGroup(long groupKey){
 			logger.debug("getGroup(int groupKey) as getGroup("+groupKey+") called");
@@ -2758,33 +2621,27 @@ public class PolicyDBDao {
 			}
 			synchronized(emLock){
 				checkBeforeOperationRun(true);
-			//check if group exists
-			Query groupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupKey=:groupKey");
-			groupQuery.setParameter("groupKey", groupKey);			
-			List<?> groupQueryList;
-			try{
-				groupQueryList = groupQuery.getResultList();
-			}catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception trying to get group with groupQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get group with groupQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to get group "+groupKey);
-			}
-			if(groupQueryList.size() < 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Group does not exist with groupKey "+groupKey);
-				PolicyLogger.error("Group does not exist with groupKey "+groupKey);
-				throw new PersistenceException("Group does not exist with groupKey "+groupKey);
-			} else if(groupQueryList.size() > 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one group with the groupKey "+groupKey+" were found in the database");
-				PolicyLogger.error("Somehow, more than one group with the groupKey "+groupKey+" were found in the database");
-				throw new PersistenceException("Somehow, more than one group with the groupKey "+groupKey+" were found in the database");
-			}
+				//check if group exists
+				Query groupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupKey=:groupKey");
+				groupQuery.setParameter("groupKey", groupKey);			
+				List<?> groupQueryList;
+				try{
+					groupQueryList = groupQuery.getResultList();
+				}catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get group with groupQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to get group "+groupKey);
+				}
+				if(groupQueryList.size() < 1){
+					PolicyLogger.error("Group does not exist with groupKey "+groupKey);
+					throw new PersistenceException("Group does not exist with groupKey "+groupKey);
+				} else if(groupQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one group with the groupKey "+groupKey+" were found in the database");
+					throw new PersistenceException("Somehow, more than one group with the groupKey "+groupKey+" were found in the database");
+				}
 				return (GroupEntity)groupQueryList.get(0);
 			}
 		}
-		
+
 		@Override
 		public GroupEntity getGroup(String groupId){
 			logger.debug("getGroup(String groupId) as getGroup("+groupId+") called");
@@ -2793,29 +2650,23 @@ public class PolicyDBDao {
 			}
 			synchronized(emLock){
 				checkBeforeOperationRun(true);
-			//check if group exists
-			Query groupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId");
-			groupQuery.setParameter("groupId", groupId);			
-			List<?> groupQueryList;
-			try{
-				groupQueryList = groupQuery.getResultList();
-			}catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception trying to get group with groupQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get group with groupQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to get group "+groupId);
-			}
-			if(groupQueryList.size() < 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Group does not exist with id "+groupId);
-				PolicyLogger.error("Group does not exist with id "+groupId);
-				throw new PersistenceException("Group does not exist with id "+groupId);
-			} else if(groupQueryList.size() > 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one group with the id "+groupId+" were found in the database");
-				PolicyLogger.error("Somehow, more than one group with the id "+groupId+" were found in the database");
-				throw new PersistenceException("Somehow, more than one group with the id "+groupId+" were found in the database");
-			}
+				//check if group exists
+				Query groupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId");
+				groupQuery.setParameter("groupId", groupId);			
+				List<?> groupQueryList;
+				try{
+					groupQueryList = groupQuery.getResultList();
+				}catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get group with groupQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to get group "+groupId);
+				}
+				if(groupQueryList.size() < 1){
+					PolicyLogger.error("Group does not exist with id "+groupId);
+					throw new PersistenceException("Group does not exist with id "+groupId);
+				} else if(groupQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one group with the id "+groupId+" were found in the database");
+					throw new PersistenceException("Somehow, more than one group with the id "+groupId+" were found in the database");
+				}
 				return (GroupEntity)groupQueryList.get(0);
 			}
 		}
@@ -2840,51 +2691,37 @@ public class PolicyDBDao {
 			}
 			synchronized(emLock){
 				checkBeforeOperationRun(true);
-			//check if group exists
-			Query pdpQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.pdpKey=:pdpKey");
-			pdpQuery.setParameter("pdpKey", pdpKey);			
-			List<?> pdpQueryList;
-			try{
-				pdpQueryList = pdpQuery.getResultList();
-			}catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception trying to get pdp with pdpQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get pdp with pdpQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to get pdp "+pdpKey);
-			}
-			if(pdpQueryList.size() < 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Pdp does not exist with pdpKey "+pdpKey);
-				PolicyLogger.error("Pdp does not exist with pdpKey "+pdpKey);
-				throw new PersistenceException("Pdp does not exist with pdpKey "+pdpKey);
-			} else if(pdpQueryList.size() > 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one pdp with the pdpKey "+pdpKey+" were found in the database");
-				PolicyLogger.error("Somehow, more than one pdp with the pdpKey "+pdpKey+" were found in the database");
-				throw new PersistenceException("Somehow, more than one pdp with the pdpKey "+pdpKey+" were found in the database");
-			}
+				//check if group exists
+				Query pdpQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.pdpKey=:pdpKey");
+				pdpQuery.setParameter("pdpKey", pdpKey);			
+				List<?> pdpQueryList;
+				try{
+					pdpQueryList = pdpQuery.getResultList();
+				}catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get pdp with pdpQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to get pdp "+pdpKey);
+				}
+				if(pdpQueryList.size() < 1){
+					PolicyLogger.error("Pdp does not exist with pdpKey "+pdpKey);
+					throw new PersistenceException("Pdp does not exist with pdpKey "+pdpKey);
+				} else if(pdpQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one pdp with the pdpKey "+pdpKey+" were found in the database");
+					throw new PersistenceException("Somehow, more than one pdp with the pdpKey "+pdpKey+" were found in the database");
+				}
 				return (PdpEntity)pdpQueryList.get(0);
 			}
 		}
 		
-		//FIXME: maybe this should be boolean
 		public void deletePolicy(String policyToDeletes){
 			synchronized(emLock){
-//			if(isTransactionOpen()){
-//				logger.error("A transaction is already open which has not been committed");
-//				throw new IllegalStateException("A transaction is already open which has not been committed");				
-//			}
 				checkBeforeOperationRun();
-			logger.debug("deletePolicy(String policyToDeletes) as deletePolicy("+policyToDeletes+") called");
-			String[] scopeNameAndType = getScopeAndNameAndType(policyToDeletes);
-			if(scopeNameAndType == null){
-				throw new IllegalArgumentException("Could not parse file path");
-			}
-			String realScope = scopeNameAndType[0];
-			String realName = scopeNameAndType[1];
-//				if(isTransactionOpen()){
-//					throw new IllegalStateException("A transaction is already open which has not been committed");
-//				}
+				logger.debug("deletePolicy(String policyToDeletes) as deletePolicy("+policyToDeletes+") called");
+				String[] scopeNameAndType = getScopeAndNameAndType(policyToDeletes);
+				if(scopeNameAndType == null){
+					throw new IllegalArgumentException("Could not parse file path");
+				}
+				String realScope = scopeNameAndType[0];
+				String realName = scopeNameAndType[1];
 				Query deletePolicyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName AND p.deleted=:deleted");			
 				deletePolicyQuery.setParameter("scope",realScope);
 				deletePolicyQuery.setParameter("policyName", realName);
@@ -2894,12 +2731,9 @@ public class PolicyDBDao {
 					logger.warn("The policy being deleted could not be found.");
 					return;
 				} else if(deletePolicyQueryList.size() > 1){
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("Somehow, more than one policy with the same scope, name, and deleted status were found in the database");
 					PolicyLogger.error("Somehow, more than one policy with the same scope, name, and deleted status were found in the database");
 					throw new PersistenceException("Somehow, more than one policy with the same scope, name, and deleted status were found in the database");
 				} else {
-					//em.getTransaction().begin();
 					PolicyEntity policyToDelete = (PolicyEntity)deletePolicyQueryList.get(0);
 					policyToDelete.setDeleted(true);
 					if(policyToDelete.getConfigurationData() != null){
@@ -2914,21 +2748,21 @@ public class PolicyDBDao {
 							abe.setDeleted(true);
 						}
 					}
-					
+
 					em.flush();
 					this.policyId = policyToDelete.getPolicyId();
-		
+
 				}
 			}
 
 		}
-		
+
 
 		@Override
 		public boolean isTransactionOpen() {
 			logger.debug("isTransactionOpen() as isTransactionOpen() called");
 			synchronized(emLock){
-			return em.isOpen() && em.getTransaction().isActive();	
+				return em.isOpen() && em.getTransaction().isActive();	
 			}
 		}
 
@@ -2938,9 +2772,6 @@ public class PolicyDBDao {
 			String[] oldPolicyData = getScopeAndNameAndType(oldPolicyPath);
 			String[] newPolicyData = getScopeAndNameAndType(newPolicyPath);
 			if(oldPolicyData == null || newPolicyData == null){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Could not parse one or more of the path names: "
-						//+oldPolicyPath+", "+newPolicyPath);
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW+"Could not parse one or more of the path names: "
 						+oldPolicyPath+", "+newPolicyPath);
 				throw new IllegalArgumentException("Could not parse the oldPolicyPath or newPolicyPath");
@@ -2949,12 +2780,9 @@ public class PolicyDBDao {
 			try{
 				oldPolicy = getPolicy(oldPolicyData[1],oldPolicyData[0]);
 			}catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Could not get policy record to clone: "
-						//+oldPolicyData[1],e);
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "PolicyDBDao", "Could not get policy record to clone: "
 						+oldPolicyData[1]);
-					throw new PersistenceException("Could not get policy record to clone");
+				throw new PersistenceException("Could not get policy record to clone");
 			}
 			ConfigurationDataEntity clonedConfig = null;
 			if(oldPolicy.getConfigurationData() != null){
@@ -2963,7 +2791,7 @@ public class PolicyDBDao {
 				clonedConfig.setConfigBody(oldPolicy.getConfigurationData().getConfigBody());
 				clonedConfig.setConfigType(oldPolicy.getConfigurationData().getConfigType());
 				clonedConfig.setCreatedBy(username);
-				clonedConfig.setConfigurationName(getConfigFile(newPolicyData[1], newPolicyData[0], oldPolicy.getConfigurationData().getConfigType()));
+				clonedConfig.setConfigurationName(getConfigFile(newPolicyData[1], oldPolicy.getConfigurationData().getConfigType()));
 				clonedConfig.setDescription(oldPolicy.getConfigurationData().getDescription());
 				clonedConfig.setModifiedBy(username);
 				em.flush();
@@ -2978,10 +2806,10 @@ public class PolicyDBDao {
 				clonedAction.setModifiedBy(username);
 				em.flush();
 			}			
-			
-			
+
+
 		}
-		
+
 		@Override
 		public void createPolicy(String filePath, String username) {
 			logger.debug("createPolicy(String filePath, String username) as createPolicy("+filePath+","+username+") called");
@@ -3001,8 +2829,6 @@ public class PolicyDBDao {
 				policyName = stripPolicyName(policyName);
 			}catch(IllegalArgumentException e){
 				if(scopeAndName[2].equals("Config")){
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error(e.getMessage());
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Exception calling stripPolicyName with policy name: "+policyName);
 					throw new IllegalArgumentException(e.getMessage(),e);
 				} else {
@@ -3016,13 +2842,9 @@ public class PolicyDBDao {
 				fileContentStream = new FileInputStream(filePath);
 				policyDataString = IOUtils.toString(fileContentStream);
 			} catch (FileNotFoundException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught FileNotFoundException on new FileInputStream("+filePath+")",e);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught FileNotFoundException on new FileInputStream("+filePath+")");
 				throw new IllegalArgumentException("The file path does not exist");
 			} catch(IOException e2){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught IOException on newIOUtils.toString("+fileContentStream+")",e2);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Caught IOException on newIOUtils.toString("+fileContentStream+")");
 				throw new IllegalArgumentException("The file path cannot be read");
 			} finally {
@@ -3032,10 +2854,10 @@ public class PolicyDBDao {
 				throw new IllegalArgumentException("The file path cannot be read");
 			}
 			try{
-			String policyDescription = getElementFromXMLString("/Description", policyDataString);
-			if(policyDescription != null){
-				policy.setPolicyDescription(policyDescription);
-			}
+				String policyDescription = getElementFromXMLString("/Description", policyDataString);
+				if(policyDescription != null){
+					policy.setPolicyDescription(policyDescription);
+				}
 			} catch(Exception e){
 				logger.warn("Could not get description from the policy file");
 			}
@@ -3043,13 +2865,11 @@ public class PolicyDBDao {
 				//this method is not used for config, since there is no way to get config info (could be modified to)
 				String configPath;
 				try{
-				configPath = evaluateXPath("/Policy/Rule/AdviceExpressions/AdviceExpression[contains(@AdviceId,'ID')]/AttributeAssignmentExpression[@AttributeId='URLID']/AttributeValue/text()", policyDataString);
-				if(configPath == null){
-					throw new NullPointerException("configPath is null");
-				}
+					configPath = evaluateXPath("/Policy/Rule/AdviceExpressions/AdviceExpression[contains(@AdviceId,'ID')]/AttributeAssignmentExpression[@AttributeId='URLID']/AttributeValue/text()", policyDataString);
+					if(configPath == null){
+						throw new NullPointerException("configPath is null");
+					}
 				} catch(Exception e){
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("Could not get config file path from policy file",e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not get config file path from policy file");
 					throw new IllegalArgumentException("Could not get config file path from policy file");
 				}
@@ -3063,6 +2883,7 @@ public class PolicyDBDao {
 			}
 			createPolicy(policy,username,scopeAndName[0],scopeAndName[1],policyDataString);			
 		}
+		
 		private String processConfigPath(String configPath){
 			String webappsPath = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS);
 			if(webappsPath == null){
@@ -3072,7 +2893,7 @@ public class PolicyDBDao {
 			configPath = configPath.replace("$URL", webappsPath);
 			//make sure the correct slashes are in
 			try{
-			configPath = Paths.get(configPath).toString();
+				configPath = Paths.get(configPath).toString();
 			} catch(InvalidPathException e){
 				logger.error("Invalid config path: "+configPath);
 				throw new IllegalArgumentException("Invalid config path: "+configPath);
@@ -3099,12 +2920,11 @@ public class PolicyDBDao {
 			}
 			return configDataString;
 		}
-		
+
 		@Override
 		public void createPolicy(Policy policy, String username){
 			logger.debug("createPolicy(PolicyRestAdapter policy, String username) as createPolicy("+policy+","+username+") called");
-			String policyScope = computeScope(policy.policyAdapter.getParentPath(),policy.policyAdapter.getUserGitPath());
-			
+			String policyScope = policy.policyAdapter.getDomainDir().replace(File.separator, ".");
 			//Does not need to be XACMLPolicyWriterWithPapNotify since it is already in the PAP
 			//and this transaction is intercepted up stream.
 			InputStream policyXmlStream = XACMLPolicyWriter.getXmlAsInputStream((PolicyType)policy.getCorrectPolicyDataObject());
@@ -3113,8 +2933,6 @@ public class PolicyDBDao {
 				policyDataString = IOUtils.toString(policyXmlStream);
 			} catch (IOException e) {
 				policyDataString = "could not read";
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught IOException on IOUtils.toString("+policyXmlStream+")",e);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught IOException on IOUtils.toString("+policyXmlStream+")");
 				throw new IllegalArgumentException("Cannot parse the policy xml from the PolicyRestAdapter.");
 			}
@@ -3125,10 +2943,10 @@ public class PolicyDBDao {
 			} else if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Action")) {
 				configPath = evaluateXPath("/Policy/Rule/ObligationExpressions/ObligationExpression[contains(@ObligationId, " +policy.policyAdapter.getActionAttribute()+ ")]/AttributeAssignmentExpression[@AttributeId='body']/AttributeValue/text()", policyDataString);
 			}
-			
+
 			String prefix = null;
 			if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Config")) {
-				
+
 				prefix = configPath.substring(configPath.indexOf(policyScope+".")+policyScope.concat(".").length(), configPath.indexOf(policy.policyAdapter.getPolicyName()));
 				if(isNullOrEmpty(policy.policyAdapter.getConfigBodyData())){
 					String configData = "";
@@ -3145,25 +2963,18 @@ public class PolicyDBDao {
 					}
 					policy.policyAdapter.setConfigBodyData(configData);
 				}
-				
 			} else if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Action")) {
-				
 				prefix = "Action_";
-				
 			} else if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Decision")) {
-				
 				prefix = "Decision_";
 			}
-			
+
 			if(!(policy.policyAdapter.getData() instanceof PolicyType)){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("The data field is not an instance of PolicyType");
 				PolicyLogger.error("The data field is not an instance of PolicyType");
 				throw new IllegalArgumentException("The data field is not an instance of PolicyType");
 			}
-			String finalName = prefix+policy.policyAdapter.getPolicyName()+"."+((PolicyType)policy.policyAdapter.getData()).getVersion()+".xml";
+			String finalName = policyScope + "." + prefix+policy.policyAdapter.getPolicyName()+"."+((PolicyType)policy.policyAdapter.getData()).getVersion()+".xml";
 			if(policy.policyAdapter.getConfigType() == null || policy.policyAdapter.getConfigType().equals("")){
-				//we need to make it
 				//get the config file extension
 				String ext = "";
 				if (configPath != null) {
@@ -3171,7 +2982,7 @@ public class PolicyDBDao {
 						ext = configPath.substring(configPath.lastIndexOf('.'), configPath.length());;
 					}
 				}
-				
+
 				if(ext.contains("txt")){
 					policy.policyAdapter.setConfigType(OTHER_CONFIG);
 				} else if(ext.contains("json")){
@@ -3187,9 +2998,9 @@ public class PolicyDBDao {
 				}
 			}
 			createPolicy(policy.policyAdapter, username, policyScope,finalName,policyDataString);
-			
+
 		}
-		
+
 		@Override
 		public void close(){
 			synchronized(emLock){
@@ -3210,11 +3021,6 @@ public class PolicyDBDao {
 		@Override
 		public void createGroup(String groupId, String groupName, String groupDescription, String username) {
 			logger.debug("deletePolicy(String policyToDeletes) as createGroup("+groupId+", "+groupName+", "+groupDescription+") called");
-//			if(isTransactionOpen()){
-//				logger.error("A transaction is already open which has not been committed");
-//				throw new IllegalStateException("A transaction is already open which has not been committed");				
-//			}			
-			//parameter check
 			if(isNullOrEmpty(groupId, groupName, username)){
 				throw new IllegalArgumentException("groupId, groupName, and username must not be null or empty");
 			}
@@ -3224,47 +3030,36 @@ public class PolicyDBDao {
 
 			synchronized(emLock){
 				checkBeforeOperationRun();
-			Query checkGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
-			checkGroupQuery.setParameter("groupId", groupId);
-			checkGroupQuery.setParameter("deleted", false);
-			List<?> checkGroupQueryList;
-			try{
-				checkGroupQueryList = checkGroupQuery.getResultList();
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception on checkGroupQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on checkGroupQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to check for existing group");
-			}
-			if(checkGroupQueryList.size() > 0){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("The group being added already exists with id "+groupId);
-				PolicyLogger.error("The group being added already exists with id "+groupId);
-				throw new PersistenceException("The group being added already exists with id "+groupId);
-			}
-			//em.getTransaction().begin();
-			GroupEntity newGroup = new GroupEntity();
-			em.persist(newGroup);
-			newGroup.setCreatedBy(username);
-			newGroup.setModifiedBy(username);
-			newGroup.setGroupName(groupName);
-			newGroup.setGroupId(groupId);
-			newGroup.setDescription(groupDescription);
-			
-			em.flush();
-			this.groupId = newGroup.getGroupKey();
+				Query checkGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
+				checkGroupQuery.setParameter("groupId", groupId);
+				checkGroupQuery.setParameter("deleted", false);
+				List<?> checkGroupQueryList;
+				try{
+					checkGroupQueryList = checkGroupQuery.getResultList();
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on checkGroupQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to check for existing group");
+				}
+				if(checkGroupQueryList.size() > 0){
+					PolicyLogger.error("The group being added already exists with id "+groupId);
+					throw new PersistenceException("The group being added already exists with id "+groupId);
+				}
+				GroupEntity newGroup = new GroupEntity();
+				em.persist(newGroup);
+				newGroup.setCreatedBy(username);
+				newGroup.setModifiedBy(username);
+				newGroup.setGroupName(groupName);
+				newGroup.setGroupId(groupId);
+				newGroup.setDescription(groupDescription);
+
+				em.flush();
+				this.groupId = newGroup.getGroupKey();
 			}
 		}
 
 		@Override
 		public void updateGroup(EcompPDPGroup group, String username){
 			logger.debug("updateGroup(PDPGroup group) as updateGroup("+group+","+username+") called");
-//			if(isTransactionOpen()){
-//				logger.error("A transaction is already open which has not been committed");
-//				throw new IllegalStateException("A transaction is already open which has not been committed");				
-//			}			
-			
-			//parameter check
 			if(group == null){
 				throw new IllegalArgumentException("PDPGroup group must not be null");
 			}
@@ -3274,103 +3069,86 @@ public class PolicyDBDao {
 
 			synchronized(emLock){
 				checkBeforeOperationRun();
-			Query getGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
-			getGroupQuery.setParameter("groupId", group.getId());
-			getGroupQuery.setParameter("deleted", false);
-			List<?> getGroupQueryList;
-			try{
-				getGroupQueryList = getGroupQuery.getResultList();
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception on getGroupQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on getGroupQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to get group "+group.getId()+" for editing");
-			}
-			if(getGroupQueryList.size() < 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("The group cannot be found to update with id "+group.getId());
-				PolicyLogger.error("The group cannot be found to update with id "+group.getId());
-				throw new PersistenceException("The group cannot be found to update with id "+group.getId());
-			} else if(getGroupQueryList.size() > 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
-				PolicyLogger.error("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
-				throw new PersistenceException("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
-			}
-			//em.getTransaction().begin();
-			GroupEntity groupToUpdate = (GroupEntity)getGroupQueryList.get(0);
-			if(!stringEquals(groupToUpdate.getModifiedBy(), username)){
-				groupToUpdate.setModifiedBy(username);
-			}
-			if(group.getDescription() != null && !stringEquals(group.getDescription(),groupToUpdate.getDescription())){
-				groupToUpdate.setDescription(group.getDescription());
-			}
-			//let's find out what policies have been deleted
-			StdPDPGroup oldGroup = null;
-			try {
-				oldGroup = (StdPDPGroup) papEngine.getGroup(group.getId());
-			} catch (PAPException e1) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("We cannot get the group from the papEngine to delete policies",e1);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "We cannot get the group from the papEngine to delete policies");
-			}
-			if(oldGroup == null){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("We cannot get the group from the papEngine to delete policies");
-				PolicyLogger.error("We cannot get the group from the papEngine to delete policies");
-			} else {
-
-				Set<String> newPolicySet = new HashSet<String>(group.getPolicies().size());
-				//a multiple of n runtime is faster than n^2, so I am using a hashset to do the comparison
-				for(PDPPolicy pol: group.getPolicies()){
-					newPolicySet.add(pol.getId());
+				Query getGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
+				getGroupQuery.setParameter("groupId", group.getId());
+				getGroupQuery.setParameter("deleted", false);
+				List<?> getGroupQueryList;
+				try{
+					getGroupQueryList = getGroupQuery.getResultList();
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on getGroupQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to get group "+group.getId()+" for editing");
 				}
-				for(PDPPolicy pol : oldGroup.getPolicies()){
-					//should be fast since getPolicies uses a HashSet in StdPDPGroup
-					if(!newPolicySet.contains(pol.getId())){
-						String[] scopeAndName = getNameScopeAndVersionFromPdpPolicy(pol.getId());
-						PolicyEntity policyToDelete;
-						try{
-						policyToDelete = getPolicy(scopeAndName[0],scopeAndName[1]);
-						}catch(Exception e){
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("Could not get policy to remove: "+pol.getId(),e);
-							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not get policy to remove: "+pol.getId());
-							throw new PersistenceException("Could not get policy to remove: "+pol.getId());
-						}
-						groupToUpdate.getPolicies().remove(policyToDelete);
+				if(getGroupQueryList.size() < 1){
+					PolicyLogger.error("The group cannot be found to update with id "+group.getId());
+					throw new PersistenceException("The group cannot be found to update with id "+group.getId());
+				} else if(getGroupQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
+					throw new PersistenceException("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
+				}
+				GroupEntity groupToUpdate = (GroupEntity)getGroupQueryList.get(0);
+				if(!stringEquals(groupToUpdate.getModifiedBy(), username)){
+					groupToUpdate.setModifiedBy(username);
+				}
+				if(group.getDescription() != null && !stringEquals(group.getDescription(),groupToUpdate.getDescription())){
+					groupToUpdate.setDescription(group.getDescription());
+				}
+				//let's find out what policies have been deleted
+				StdPDPGroup oldGroup = null;
+				try {
+					oldGroup = (StdPDPGroup) papEngine.getGroup(group.getId());
+				} catch (PAPException e1) {
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "We cannot get the group from the papEngine to delete policies");
+				}
+				if(oldGroup == null){
+					PolicyLogger.error("We cannot get the group from the papEngine to delete policies");
+				} else {
 
+					Set<String> newPolicySet = new HashSet<String>(group.getPolicies().size());
+					//a multiple of n runtime is faster than n^2, so I am using a hashset to do the comparison
+					for(PDPPolicy pol: group.getPolicies()){
+						newPolicySet.add(pol.getId());
+					}
+					for(PDPPolicy pol : oldGroup.getPolicies()){
+						//should be fast since getPolicies uses a HashSet in StdPDPGroup
+						if(!newPolicySet.contains(pol.getId())){
+							String[] scopeAndName = getNameScopeAndVersionFromPdpPolicy(pol.getId());
+							PolicyEntity policyToDelete;
+							try{
+								policyToDelete = getPolicy(scopeAndName[0],scopeAndName[1]);
+							}catch(Exception e){
+								PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not get policy to remove: "+pol.getId());
+								throw new PersistenceException("Could not get policy to remove: "+pol.getId());
+							}
+							groupToUpdate.getPolicies().remove(policyToDelete);
+
+						}
 					}
 				}
-			}
-			if(group.getName() != null && !stringEquals(group.getName(),groupToUpdate.getgroupName())){
-				//we need to check if the new id exists in the database
-				String newGroupId = createNewPDPGroupId(group.getName());
-				Query checkGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
-				checkGroupQuery.setParameter("groupId", newGroupId);
-				checkGroupQuery.setParameter("deleted", false);
-				List<?> checkGroupQueryList;
-				try{
-					checkGroupQueryList = checkGroupQuery.getResultList();
-				} catch(Exception e){
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("Caught Exception on checkGroupQuery.getResultList()",e);
-					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on checkGroupQuery.getResultList()");
-					throw new PersistenceException("Query failed trying to check for existing group");
+				if(group.getName() != null && !stringEquals(group.getName(),groupToUpdate.getgroupName())){
+					//we need to check if the new id exists in the database
+					String newGroupId = createNewPDPGroupId(group.getName());
+					Query checkGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
+					checkGroupQuery.setParameter("groupId", newGroupId);
+					checkGroupQuery.setParameter("deleted", false);
+					List<?> checkGroupQueryList;
+					try{
+						checkGroupQueryList = checkGroupQuery.getResultList();
+					} catch(Exception e){
+						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on checkGroupQuery.getResultList()");
+						throw new PersistenceException("Query failed trying to check for existing group");
+					}
+					if(checkGroupQueryList.size() != 0){
+						PolicyLogger.error("The new group name already exists, group id "+newGroupId);
+						throw new PersistenceException("The new group name already exists, group id "+newGroupId);
+					}
+					groupToUpdate.setGroupId(newGroupId);
+					groupToUpdate.setGroupName(group.getName());
+					this.newGroupId = group.getId();
 				}
-				if(checkGroupQueryList.size() != 0){
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("The new group name already exists, group id "+newGroupId);
-					PolicyLogger.error("The new group name already exists, group id "+newGroupId);
-					throw new PersistenceException("The new group name already exists, group id "+newGroupId);
-				}
-				groupToUpdate.setGroupId(newGroupId);
-				groupToUpdate.setGroupName(group.getName());
-				this.newGroupId = group.getId();
-			}
-			
-			em.flush();
-			this.groupId = groupToUpdate.getGroupKey();
+
+				em.flush();
+				this.groupId = groupToUpdate.getGroupKey();
 			}
 		}
 
@@ -3383,76 +3161,60 @@ public class PolicyDBDao {
 			if(!(pdpDescription instanceof String)){
 				pdpDescription = "";
 			}
-//			if(isTransactionOpen()){
-//				logger.error("A transaction is already open which has not been committed");
-//				throw new IllegalStateException("A transaction is already open which has not been committed");				
-//			}	
-
 			synchronized(emLock){
 				checkBeforeOperationRun();
-			Query checkGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
-			checkGroupQuery.setParameter("groupId", groupID);
-			checkGroupQuery.setParameter("deleted", false);
-			List<?> checkGroupQueryList;
-			try{
-				checkGroupQueryList = checkGroupQuery.getResultList();
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception trying to check for existing group on checkGroupQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check for existing group on checkGroupQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to check for existing group");
-			}
-			if(checkGroupQueryList.size() != 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("The group does not exist");
-				PolicyLogger.error("The group does not exist");
-				throw new PersistenceException("The group does not exist");
-			}
-			Query checkDuplicateQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.pdpId=:pdpId AND p.deleted=:deleted");
-			checkDuplicateQuery.setParameter("pdpId", pdpID);
-			checkDuplicateQuery.setParameter("deleted", false);
-			List<?> checkDuplicateList;
-			try{
-				checkDuplicateList = checkDuplicateQuery.getResultList();
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception trying to check for duplicate PDP "+pdpID+" on checkDuplicateQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check for duplicate PDP "+pdpID+" on checkDuplicateQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to check for duplicate PDP "+pdpID);
-			}
-			PdpEntity newPdp;
-			if(checkDuplicateList.size() > 0){
-				logger.warn("PDP already exists with id "+pdpID);				
-				newPdp = (PdpEntity)checkDuplicateList.get(0);
-			} else {
-				newPdp = new PdpEntity();
-		em.persist(newPdp);
-			}			
+				Query checkGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
+				checkGroupQuery.setParameter("groupId", groupID);
+				checkGroupQuery.setParameter("deleted", false);
+				List<?> checkGroupQueryList;
+				try{
+					checkGroupQueryList = checkGroupQuery.getResultList();
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check for existing group on checkGroupQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to check for existing group");
+				}
+				if(checkGroupQueryList.size() != 1){
+					PolicyLogger.error("The group does not exist");
+					throw new PersistenceException("The group does not exist");
+				}
+				Query checkDuplicateQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.pdpId=:pdpId AND p.deleted=:deleted");
+				checkDuplicateQuery.setParameter("pdpId", pdpID);
+				checkDuplicateQuery.setParameter("deleted", false);
+				List<?> checkDuplicateList;
+				try{
+					checkDuplicateList = checkDuplicateQuery.getResultList();
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check for duplicate PDP "+pdpID+" on checkDuplicateQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to check for duplicate PDP "+pdpID);
+				}
+				PdpEntity newPdp;
+				if(checkDuplicateList.size() > 0){
+					logger.warn("PDP already exists with id "+pdpID);				
+					newPdp = (PdpEntity)checkDuplicateList.get(0);
+				} else {
+					newPdp = new PdpEntity();
+					em.persist(newPdp);
+				}			
 
-			newPdp.setCreatedBy(username);
-			newPdp.setDeleted(false);
-			newPdp.setDescription(pdpDescription);
-			newPdp.setGroup((GroupEntity)checkGroupQueryList.get(0));
-			newPdp.setJmxPort(pdpJmxPort);
-			newPdp.setModifiedBy(username);
-			newPdp.setPdpId(pdpID);
-			newPdp.setPdpName(pdpName);
-			
-			em.flush();
-			this.pdpId = newPdp.getPdpKey();
+				newPdp.setCreatedBy(username);
+				newPdp.setDeleted(false);
+				newPdp.setDescription(pdpDescription);
+				newPdp.setGroup((GroupEntity)checkGroupQueryList.get(0));
+				newPdp.setJmxPort(pdpJmxPort);
+				newPdp.setModifiedBy(username);
+				newPdp.setPdpId(pdpID);
+				newPdp.setPdpName(pdpName);
+
+				em.flush();
+				this.pdpId = newPdp.getPdpKey();
 
 			}
 		}
 
-		
+
 		@Override
 		public void updatePdp(EcompPDP pdp, String username){
 			logger.debug("updatePdp(PDP pdp, String username) as updatePdp("+pdp+","+username+") called");
-//			if(isTransactionOpen()){
-//				logger.error("A transaction is already open which has not been committed");
-//				throw new IllegalStateException("A transaction is already open which has not been committed");				
-//			}
-			//parameter check
 			if(pdp == null){
 				throw new IllegalArgumentException("PDP pdp must not be null");
 			}
@@ -3462,187 +3224,150 @@ public class PolicyDBDao {
 
 			synchronized(emLock){
 				checkBeforeOperationRun();
-			Query getPdpQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.pdpId=:pdpId AND p.deleted=:deleted");
-			getPdpQuery.setParameter("pdpId", pdp.getId());
-			getPdpQuery.setParameter("deleted", false);
-			List<?> getPdpQueryList;
-			try{
-				getPdpQueryList = getPdpQuery.getResultList();
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception on getPdpQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on getPdpQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to get PDP "+pdp.getId());
-			}
-			if(getPdpQueryList.size() < 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("The pdp cannot be found to update with id "+pdp.getId());
-				PolicyLogger.error("The pdp cannot be found to update with id "+pdp.getId());
-				throw new PersistenceException("The pdp cannot be found to update with id "+pdp.getId());
-			} else if(getPdpQueryList.size() > 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one pdp with the same id "+pdp.getId()+" and deleted status were found in the database");
-				PolicyLogger.error("Somehow, more than one pdp with the same id "+pdp.getId()+" and deleted status were found in the database");
-				throw new PersistenceException("Somehow, more than one pdp with the same id "+pdp.getId()+" and deleted status were found in the database");
-			}
-			//em.getTransaction().begin();
-			PdpEntity pdpToUpdate = (PdpEntity)getPdpQueryList.get(0);
-			if(!stringEquals(pdpToUpdate.getModifiedBy(), username)){
-				pdpToUpdate.setModifiedBy(username);
-			}
-			if(pdp.getDescription() != null && !stringEquals(pdp.getDescription(),pdpToUpdate.getDescription())){
-				pdpToUpdate.setDescription(pdp.getDescription());
-			}
-			if(pdp.getName() != null && !stringEquals(pdp.getName(),pdpToUpdate.getPdpName())){
-				pdpToUpdate.setPdpName(pdp.getName());
-			}
-			if(pdp.getJmxPort() != null && !pdp.getJmxPort().equals(pdpToUpdate.getJmxPort())){
-				pdpToUpdate.setJmxPort(pdp.getJmxPort());
-			}
-			
-			em.flush();
-			this.pdpId = pdpToUpdate.getPdpKey();
+				Query getPdpQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.pdpId=:pdpId AND p.deleted=:deleted");
+				getPdpQuery.setParameter("pdpId", pdp.getId());
+				getPdpQuery.setParameter("deleted", false);
+				List<?> getPdpQueryList;
+				try{
+					getPdpQueryList = getPdpQuery.getResultList();
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on getPdpQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to get PDP "+pdp.getId());
+				}
+				if(getPdpQueryList.size() < 1){
+					PolicyLogger.error("The pdp cannot be found to update with id "+pdp.getId());
+					throw new PersistenceException("The pdp cannot be found to update with id "+pdp.getId());
+				} else if(getPdpQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one pdp with the same id "+pdp.getId()+" and deleted status were found in the database");
+					throw new PersistenceException("Somehow, more than one pdp with the same id "+pdp.getId()+" and deleted status were found in the database");
+				}
+				PdpEntity pdpToUpdate = (PdpEntity)getPdpQueryList.get(0);
+				if(!stringEquals(pdpToUpdate.getModifiedBy(), username)){
+					pdpToUpdate.setModifiedBy(username);
+				}
+				if(pdp.getDescription() != null && !stringEquals(pdp.getDescription(),pdpToUpdate.getDescription())){
+					pdpToUpdate.setDescription(pdp.getDescription());
+				}
+				if(pdp.getName() != null && !stringEquals(pdp.getName(),pdpToUpdate.getPdpName())){
+					pdpToUpdate.setPdpName(pdp.getName());
+				}
+				if(pdp.getJmxPort() != null && !pdp.getJmxPort().equals(pdpToUpdate.getJmxPort())){
+					pdpToUpdate.setJmxPort(pdp.getJmxPort());
+				}
+
+				em.flush();
+				this.pdpId = pdpToUpdate.getPdpKey();
 			}
 		}
-		
+
 		@Override
 		public void movePdp(EcompPDP pdp, EcompPDPGroup group, String username){
 			logger.debug("movePdp(PDP pdp, PDPGroup group, String username) as movePdp("+pdp+","+group+","+username+") called");
-//			if(isTransactionOpen()){
-//				logger.error("A transaction is already open which has not been committed");
-//				throw new IllegalStateException("A transaction is already open which has not been committed");
-//			}
 			if(pdp == null || group == null){
 				throw new IllegalArgumentException("PDP pdp and PDPGroup group must not be null");
 			}
 			if(isNullOrEmpty(username,pdp.getId(),group.getId())){
 				throw new IllegalArgumentException("pdp.getId(), group.getId(), and username must not be null or empty");
 			}
-			
+
 			synchronized(emLock){
 				checkBeforeOperationRun();
-			//check if pdp exists
-			Query getPdpQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.pdpId=:pdpId AND p.deleted=:deleted");
-			getPdpQuery.setParameter("pdpId", pdp.getId());
-			getPdpQuery.setParameter("deleted", false);
-			List<?> getPdpQueryList;
-			try{
-				getPdpQueryList = getPdpQuery.getResultList();
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception on getPdpQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on getPdpQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to get pdp to move with id "+pdp.getId());
-			}
-			if(getPdpQueryList.size() < 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("The pdp cannot be found to move with id "+pdp.getId());
-				PolicyLogger.error("The pdp cannot be found to move with id "+pdp.getId());
-				throw new PersistenceException("The pdp cannot be found to move with id "+pdp.getId());
-			} else if(getPdpQueryList.size() > 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one pdp with the same id "+pdp.getId()+" and deleted status were found in the database");
-				PolicyLogger.error("Somehow, more than one pdp with the same id "+pdp.getId()+" and deleted status were found in the database");
-				throw new PersistenceException("Somehow, more than one pdp with the same id "+pdp.getId()+" and deleted status were found in the database");
-			}
-			
-			//check if new group exists
-			Query checkGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
-			checkGroupQuery.setParameter("groupId", group.getId());
-			checkGroupQuery.setParameter("deleted", false);
-			List<?> checkGroupQueryList;
-			try{
-				checkGroupQueryList = checkGroupQuery.getResultList();
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception trying to get group on checkGroupQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get group on checkGroupQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to get new group "+group.getId());
-			}
-			if(checkGroupQueryList.size() != 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("The group "+group.getId()+" does not exist");
-				PolicyLogger.error("The group "+group.getId()+" does not exist");
-				throw new PersistenceException("The group "+group.getId()+" does not exist");
-			}
-			GroupEntity groupToMoveInto = (GroupEntity)checkGroupQueryList.get(0);
-			//move it
-			//em.getTransaction().begin();
-			PdpEntity pdpToUpdate = (PdpEntity)getPdpQueryList.get(0);
-			pdpToUpdate.setGroup(groupToMoveInto);
-			if(!stringEquals(pdpToUpdate.getModifiedBy(), username)){
-				pdpToUpdate.setModifiedBy(username);
-			}
-			
-			em.flush();
-			this.pdpId = pdpToUpdate.getPdpKey();
+				//check if pdp exists
+				Query getPdpQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.pdpId=:pdpId AND p.deleted=:deleted");
+				getPdpQuery.setParameter("pdpId", pdp.getId());
+				getPdpQuery.setParameter("deleted", false);
+				List<?> getPdpQueryList;
+				try{
+					getPdpQueryList = getPdpQuery.getResultList();
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on getPdpQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to get pdp to move with id "+pdp.getId());
+				}
+				if(getPdpQueryList.size() < 1){
+					PolicyLogger.error("The pdp cannot be found to move with id "+pdp.getId());
+					throw new PersistenceException("The pdp cannot be found to move with id "+pdp.getId());
+				} else if(getPdpQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one pdp with the same id "+pdp.getId()+" and deleted status were found in the database");
+					throw new PersistenceException("Somehow, more than one pdp with the same id "+pdp.getId()+" and deleted status were found in the database");
+				}
+
+				//check if new group exists
+				Query checkGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
+				checkGroupQuery.setParameter("groupId", group.getId());
+				checkGroupQuery.setParameter("deleted", false);
+				List<?> checkGroupQueryList;
+				try{
+					checkGroupQueryList = checkGroupQuery.getResultList();
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get group on checkGroupQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to get new group "+group.getId());
+				}
+				if(checkGroupQueryList.size() != 1){
+					PolicyLogger.error("The group "+group.getId()+" does not exist");
+					throw new PersistenceException("The group "+group.getId()+" does not exist");
+				}
+				GroupEntity groupToMoveInto = (GroupEntity)checkGroupQueryList.get(0);
+				PdpEntity pdpToUpdate = (PdpEntity)getPdpQueryList.get(0);
+				pdpToUpdate.setGroup(groupToMoveInto);
+				if(!stringEquals(pdpToUpdate.getModifiedBy(), username)){
+					pdpToUpdate.setModifiedBy(username);
+				}
+
+				em.flush();
+				this.pdpId = pdpToUpdate.getPdpKey();
 			}
 		}
-		
+
 		@Override
 		public void changeDefaultGroup(EcompPDPGroup group, String username){
 			logger.debug("changeDefaultGroup(PDPGroup group, String username) as changeDefaultGroup("+group+","+username+") called");
-//			if(isTransactionOpen()){
-//				logger.error("A transaction is already open which has not been committed");
-//				throw new IllegalStateException("A transaction is already open which has not been committed");
-//			}
-			//parameter check
 			if(group == null){
 				throw new IllegalArgumentException("PDPGroup group must not be null");
 			}
 			if(isNullOrEmpty(group.getId(),username)){
 				throw new IllegalArgumentException("group.getId() and username must not be null or empty");
 			}
-			
+
 			synchronized(emLock){
 				checkBeforeOperationRun();
-			Query getGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
-			getGroupQuery.setParameter("groupId", group.getId());
-			getGroupQuery.setParameter("deleted", false);
-			List<?> getGroupQueryList;
-			try{
-				getGroupQueryList = getGroupQuery.getResultList();
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception on getGroupQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on getGroupQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to get group "+group.getId());
-			}
-			if(getGroupQueryList.size() < 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("The group cannot be found to set default with id "+group.getId());
-				PolicyLogger.error("The group cannot be found to set default with id "+group.getId());				
-				throw new PersistenceException("The group cannot be found to set default with id "+group.getId());
-			} else if(getGroupQueryList.size() > 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
-				PolicyLogger.error("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
-				throw new PersistenceException("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
-			}
-			//em.getTransaction().begin();
-			GroupEntity newDefaultGroup = (GroupEntity)getGroupQueryList.get(0);
-			newDefaultGroup.setDefaultGroup(true);
-			if(!stringEquals(newDefaultGroup.getModifiedBy(), username)){
-				newDefaultGroup.setModifiedBy(username);
-			}
-			
-			em.flush();
-			this.groupId = newDefaultGroup.getGroupKey();
-			Query setAllGroupsNotDefault = em.createQuery("UPDATE GroupEntity g SET g.defaultGroup=:defaultGroup WHERE g.deleted=:deleted AND g.groupKey<>:groupKey");
-			//not going to set modified by for all groups
-			setAllGroupsNotDefault.setParameter("defaultGroup", false);
-			setAllGroupsNotDefault.setParameter("deleted", false);
-			setAllGroupsNotDefault.setParameter("groupKey", newDefaultGroup.getGroupKey());
-			try{
-				logger.info("set " + setAllGroupsNotDefault.executeUpdate() + " groups as not default");
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception on setAllGroupsNotDefault.executeUpdate()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on setAllGroupsNotDefault.executeUpdate()");
-				throw new PersistenceException("Could not set all other groups default to false");
-			}
-			
-			em.flush();
+				Query getGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
+				getGroupQuery.setParameter("groupId", group.getId());
+				getGroupQuery.setParameter("deleted", false);
+				List<?> getGroupQueryList;
+				try{
+					getGroupQueryList = getGroupQuery.getResultList();
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on getGroupQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to get group "+group.getId());
+				}
+				if(getGroupQueryList.size() < 1){
+					PolicyLogger.error("The group cannot be found to set default with id "+group.getId());				
+					throw new PersistenceException("The group cannot be found to set default with id "+group.getId());
+				} else if(getGroupQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
+					throw new PersistenceException("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
+				}
+				GroupEntity newDefaultGroup = (GroupEntity)getGroupQueryList.get(0);
+				newDefaultGroup.setDefaultGroup(true);
+				if(!stringEquals(newDefaultGroup.getModifiedBy(), username)){
+					newDefaultGroup.setModifiedBy(username);
+				}
+
+				em.flush();
+				this.groupId = newDefaultGroup.getGroupKey();
+				Query setAllGroupsNotDefault = em.createQuery("UPDATE GroupEntity g SET g.defaultGroup=:defaultGroup WHERE g.deleted=:deleted AND g.groupKey<>:groupKey");
+				//not going to set modified by for all groups
+				setAllGroupsNotDefault.setParameter("defaultGroup", false);
+				setAllGroupsNotDefault.setParameter("deleted", false);
+				setAllGroupsNotDefault.setParameter("groupKey", newDefaultGroup.getGroupKey());
+				try{
+					logger.info("set " + setAllGroupsNotDefault.executeUpdate() + " groups as not default");
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception on setAllGroupsNotDefault.executeUpdate()");
+					throw new PersistenceException("Could not set all other groups default to false");
+				}
+
+				em.flush();
 			}
 		}
 
@@ -3650,10 +3375,6 @@ public class PolicyDBDao {
 		@Override
 		public void deleteGroup(EcompPDPGroup group, EcompPDPGroup moveToGroup, String username) throws PAPException {
 			logger.debug("deleteGroup(PDPGroup group, PDPGroup moveToGroup, String username) as deleteGroup("+group+", "+moveToGroup+","+username+") called");
-//			if(isTransactionOpen()){
-//				logger.error("A transaction is already open which has not been committed");
-//				throw new IllegalStateException("A transaction is already open which has not been committed");				
-//			}
 			if(group == null){
 				throw new IllegalArgumentException("PDPGroup group cannot be null");
 			}
@@ -3662,35 +3383,29 @@ public class PolicyDBDao {
 			}
 
 			if(group.isDefaultGroup()){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("The default group "+group.getId()+" was attempted to be deleted. It cannot be.");
 				PolicyLogger.error("The default group "+group.getId()+" was attempted to be deleted. It cannot be.");
 				throw new PAPException("You cannot delete the default group.");
 			}
 			synchronized(emLock){
 				checkBeforeOperationRun();
-			Query deleteGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
-			deleteGroupQuery.setParameter("groupId", group.getId());
-			deleteGroupQuery.setParameter("deleted", false);
-			List<?> deleteGroupQueryList;
-			try{
-				deleteGroupQueryList = deleteGroupQuery.getResultList();
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception trying to check if group exists deleteGroupQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check if group exists deleteGroupQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to check if group exists");
-			}
-			if(deleteGroupQueryList.size() < 1){
-				logger.warn("The group could not be found with id " + group.getId());
-				return;
-			} else if(deleteGroupQueryList.size() > 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one group with the id "+group.getId()+" were found in the database that are not deleted");
-				PolicyLogger.error("Somehow, more than one group with the id "+group.getId()+" were found in the database that are not deleted");
-				throw new PersistenceException("Somehow, more than one group with the id "+group.getId()+" were found in the database that are not deleted");
-			}				
-				
+				Query deleteGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
+				deleteGroupQuery.setParameter("groupId", group.getId());
+				deleteGroupQuery.setParameter("deleted", false);
+				List<?> deleteGroupQueryList;
+				try{
+					deleteGroupQueryList = deleteGroupQuery.getResultList();
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check if group exists deleteGroupQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to check if group exists");
+				}
+				if(deleteGroupQueryList.size() < 1){
+					logger.warn("The group could not be found with id " + group.getId());
+					return;
+				} else if(deleteGroupQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one group with the id "+group.getId()+" were found in the database that are not deleted");
+					throw new PersistenceException("Somehow, more than one group with the id "+group.getId()+" were found in the database that are not deleted");
+				}				
+
 				Query pdpsInGroupQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.groupEntity=:group and p.deleted=:deleted");
 				pdpsInGroupQuery.setParameter("group", ((GroupEntity)deleteGroupQueryList.get(0)));
 				pdpsInGroupQuery.setParameter("deleted", false);
@@ -3698,12 +3413,9 @@ public class PolicyDBDao {
 				try{
 					pdpsInGroupList = pdpsInGroupQuery.getResultList();
 				} catch(Exception e){
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("Caught Exception trying to get PDPs in group on pdpsInGroupQuery.getResultList()",e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to get PDPs in group on pdpsInGroupQuery.getResultList()");
 					throw new PersistenceException("Query failed trying to get PDPs in group");
 				}
-				//em.getTransaction().begin();
 				if(pdpsInGroupList.size() > 0){
 					if(moveToGroup != null){
 						Query checkMoveToGroupQuery = em.createQuery("SELECT o FROM GroupEntity o WHERE o.groupId=:groupId AND o.deleted=:deleted");
@@ -3713,19 +3425,13 @@ public class PolicyDBDao {
 						try{
 							checkMoveToGroupList = checkMoveToGroupQuery.getResultList();
 						} catch(Exception e){
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("Caught Exception trying to check if group exists checkMoveToGroupQuery.getResultList()",e);
 							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check if group exists checkMoveToGroupQuery.getResultList()");
 							throw new PersistenceException("Query failed trying to check if group exists");
 						}
 						if(checkMoveToGroupList.size() < 1){
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("The group could not be found with id " + moveToGroup.getId());
 							PolicyLogger.error("The group could not be found with id " + moveToGroup.getId());
 							throw new PersistenceException("The group could not be found with id " + moveToGroup.getId());
 						} else if(checkMoveToGroupList.size() > 1){
-							//TODO:EELF Cleanup - Remove logger
-							//logger.error("Somehow, more than one group with the id "+moveToGroup.getId()+" were found in the database that are not deleted");
 							PolicyLogger.error("Somehow, more than one group with the id "+moveToGroup.getId()+" were found in the database that are not deleted");
 							throw new PersistenceException("Somehow, more than one group with the id "+moveToGroup.getId()+" were found in the database that are not deleted");
 						} else {
@@ -3737,113 +3443,95 @@ public class PolicyDBDao {
 									pdp.setModifiedBy(username);
 								}
 								try{
-									
-								em.flush();
-								this.newGroupId = newGroup.getGroupId();
+
+									em.flush();
+									this.newGroupId = newGroup.getGroupId();
 								} catch(PersistenceException e){
-									//TODO:EELF Cleanup - Remove logger
-									//logger.error("Caught PersistenceException trying to set pdp group to null on em.flush()",e);
 									PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PersistenceException trying to set pdp group to null on em.flush()");
 									throw new PersistenceException("Query failed trying to set pdp group to ");
 								}
 							}
 						}
 					} else {
-						//TODO:EELF Cleanup - Remove logger
-						//logger.error("Group "+group.getId()+" is trying to be delted with PDPs. No group was provided to move them to");
 						PolicyLogger.error("Group "+group.getId()+" is trying to be delted with PDPs. No group was provided to move them to");
 						throw new PAPException("Group has PDPs. Must provide a group for them to move to");
 					}
 				} 
-				
+
 				//delete group here
-								
 				GroupEntity groupToDelete = (GroupEntity)deleteGroupQueryList.get(0);
 				groupToDelete.setDeleted(true);
 				if(!stringEquals(groupToDelete.getModifiedBy(), username)){
 					groupToDelete.setModifiedBy(username);
 				}
-				
-				//try{
-								
 				em.flush();
 				this.groupId = groupToDelete.getGroupKey();
-				//return;
-				//} catch(PersistenceException pe){
-					//logger.error("Database error while marking policy or config as deleted");					
-					//throw new PersistenceException("Database error while marking policy or config as deleted");
-				//}	
 			}
-			}
+		}
 
 		@Override
 		public void addPolicyToGroup(String groupID, String policyID, String username) {
 			logger.debug("addPolicyToGroup(String groupID, String policyID, String username) as addPolicyToGroup("+groupID+", "+policyID+","+username+") called");
-//			if(isTransactionOpen()){
-//				logger.error("A transaction is already open which has not been committed");
-//				throw new IllegalStateException("A transaction is already open which has not been committed");				
-//			}
 			if(isNullOrEmpty(groupID, policyID, username)){
 				throw new IllegalArgumentException("groupID, policyID, and username must not be null or empty");
 			}
 			synchronized(emLock){
 				checkBeforeOperationRun();
-			//check if group exists
-			Query groupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
-			groupQuery.setParameter("groupId", groupID);
-			groupQuery.setParameter("deleted", false);
-			List<?> groupQueryList;
-			try{
-				groupQueryList = groupQuery.getResultList();
-			}catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception trying to check if group exists groupQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check if group exists groupQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to check if group "+groupID+" exists");
-			}
-			if(groupQueryList.size() < 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Group policy is being added to does not exist with id "+groupID);
-				PolicyLogger.error("Group policy is being added to does not exist with id "+groupID);
-				throw new PersistenceException("Group policy is being added to does not exist with id "+groupID);
-			} else if(groupQueryList.size() > 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one group with the id "+groupID+" were found in the database that are not deleted");
-				PolicyLogger.error("Somehow, more than one group with the id "+groupID+" were found in the database that are not deleted");
-				throw new PersistenceException("Somehow, more than one group with the id "+groupID+" were found in the database that are not deleted");
-			}
-			//we need to convert the form of the policy id that is used groups into the form that is used 
-			//for the database. (com.Config_mypol.1.xml) to (Config_mypol.xml)
-			String[] policyNameScopeAndVersion = getNameScopeAndVersionFromPdpPolicy(policyID);			
-			Query policyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.policyName=:policyName AND p.scope=:scope AND p.deleted=:deleted");
-			policyQuery.setParameter("policyName", policyNameScopeAndVersion[0]);
-			policyQuery.setParameter("scope", policyNameScopeAndVersion[1]);			
-			policyQuery.setParameter("deleted", false);
-			List<?> policyQueryList;
-			try{
-				policyQueryList = policyQuery.getResultList();
-			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Caught Exception trying to check if policy exists policyQuery.getResultList()",e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check if policy exists policyQuery.getResultList()");
-				throw new PersistenceException("Query failed trying to check if policy "+policyNameScopeAndVersion[0]+" exists");
-			}
-			if(policyQueryList.size() < 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Policy being added to the group does not exist with policy id "+policyNameScopeAndVersion[0]);
-				PolicyLogger.error("Policy being added to the group does not exist with policy id "+policyNameScopeAndVersion[0]);
-				throw new PersistenceException("Policy being added to the group does not exist with policy id "+policyNameScopeAndVersion[0]);				
-			} else if(policyQueryList.size() > 1){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Somehow, more than one policy with the id "+policyNameScopeAndVersion[0]+" were found in the database that are not deleted");
-				PolicyLogger.error("Somehow, more than one policy with the id "+policyNameScopeAndVersion[0]+" were found in the database that are not deleted");
-				throw new PersistenceException("Somehow, more than one group with the id "+policyNameScopeAndVersion[0]+" were found in the database that are not deleted");
-			}
-			//em.getTransaction().begin();
-			GroupEntity group = (GroupEntity)groupQueryList.get(0);
-			PolicyEntity policy = (PolicyEntity)policyQueryList.get(0);
-			group.addPolicyToGroup(policy);
-			em.flush();
+				//check if group exists
+				Query groupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
+				groupQuery.setParameter("groupId", groupID);
+				groupQuery.setParameter("deleted", false);
+				List<?> groupQueryList;
+				try{
+					groupQueryList = groupQuery.getResultList();
+				}catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check if group exists groupQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to check if group "+groupID+" exists");
+				}
+				if(groupQueryList.size() < 1){
+					PolicyLogger.error("Group policy is being added to does not exist with id "+groupID);
+					throw new PersistenceException("Group policy is being added to does not exist with id "+groupID);
+				} else if(groupQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one group with the id "+groupID+" were found in the database that are not deleted");
+					throw new PersistenceException("Somehow, more than one group with the id "+groupID+" were found in the database that are not deleted");
+				}
+				//we need to convert the form of the policy id that is used groups into the form that is used 
+				//for the database. (com.Config_mypol.1.xml) to (Config_mypol.xml)
+				String[] policyNameScopeAndVersion = getNameScopeAndVersionFromPdpPolicy(policyID);			
+				Query policyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.policyName=:policyName AND p.scope=:scope AND p.deleted=:deleted");
+				policyQuery.setParameter("policyName", policyNameScopeAndVersion[0]);
+				policyQuery.setParameter("scope", policyNameScopeAndVersion[1]);			
+				policyQuery.setParameter("deleted", false);
+				List<?> policyQueryList;
+				try{
+					policyQueryList = policyQuery.getResultList();
+				} catch(Exception e){
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check if policy exists policyQuery.getResultList()");
+					throw new PersistenceException("Query failed trying to check if policy "+policyNameScopeAndVersion[0]+" exists");
+				}
+				if(policyQueryList.size() < 1){
+					PolicyLogger.error("Policy being added to the group does not exist with policy id "+policyNameScopeAndVersion[0]);
+					throw new PersistenceException("Policy being added to the group does not exist with policy id "+policyNameScopeAndVersion[0]);				
+				} else if(policyQueryList.size() > 1){
+					PolicyLogger.error("Somehow, more than one policy with the id "+policyNameScopeAndVersion[0]+" were found in the database that are not deleted");
+					throw new PersistenceException("Somehow, more than one group with the id "+policyNameScopeAndVersion[0]+" were found in the database that are not deleted");
+				}
+				GroupEntity group = (GroupEntity)groupQueryList.get(0);
+				PolicyEntity policy = (PolicyEntity)policyQueryList.get(0);
+	            Iterator<PolicyEntity> policyIt = group.getPolicies().iterator();
+	            String policyName = getPolicyNameAndVersionFromPolicyFileName(policy.getPolicyName())[0];
+	            try{
+	            while(policyIt.hasNext()){
+	                PolicyEntity pol = policyIt.next();
+	                if(getPolicyNameAndVersionFromPolicyFileName(pol.getPolicyName())[0].equals(policyName)){
+	                    policyIt.remove();
+	                }
+	            }
+	            }catch(Exception e){
+	                PolicyLogger.error("Could not delete old versions for policy "+policy.getPolicyName()+", ID: "+policy.getPolicyId());
+	            }
+				group.addPolicyToGroup(policy);
+				em.flush();
 			}
 		}
 
@@ -3851,10 +3539,6 @@ public class PolicyDBDao {
 		@Override
 		public void removePdpFromGroup(String pdpID, String username) {
 			logger.debug("removePdpFromGroup(String pdpID, String username) as removePdpFromGroup("+pdpID+","+username+") called");
-//			if(isTransactionOpen()){
-//				logger.error("A transaction is already open which has not been committed");
-//				throw new IllegalStateException("A transaction is already open which has not been committed");				
-//			}
 			if(isNullOrEmpty(pdpID,username)){
 				throw new IllegalArgumentException("pdpID and username must not be null or empty");
 			}
@@ -3867,47 +3551,43 @@ public class PolicyDBDao {
 				try{
 					pdpList = pdpQuery.getResultList();
 				} catch(Exception e){
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("Caught Exception trying to check if pdp exists  pdpQuery.getResultList()",e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check if pdp exists  pdpQuery.getResultList()");
 					throw new PersistenceException("Query failed trying to check if pdp "+pdpID+" exists");
 				}
 				if(pdpList.size() > 1){
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error("Somehow, more than one pdp with the id "+pdpID+" were found in the database that are not deleted");
 					PolicyLogger.error("Somehow, more than one pdp with the id "+pdpID+" were found in the database that are not deleted");
 					throw new PersistenceException("Somehow, more than one pdp with the id "+pdpID+" were found in the database that are not deleted");
 				} else if(pdpList.size() < 1){
-					//logger.warn("Pdp being removed does not exist with id "+pdpID);
 					PolicyLogger.error("Pdp being removed does not exist with id "+pdpID);
 					return;
 				}
-				//em.getTransaction().begin();
 				PdpEntity pdp = (PdpEntity)pdpList.get(0);
 				pdp.setGroup(null);
 				if(!stringEquals(pdp.getModifiedBy(),username)){
 					pdp.setModifiedBy(username);
 				}
 				pdp.setDeleted(true);
-				
+
 				em.flush();
 				this.pdpId = pdp.getPdpKey();
 			}
 		}
 	}
 
-				
-	
+
+
 	private static String getDefaultWorkspace(){
 		return "admin";
 	}
-	
+
 	private PolicyDBDao(){
-		
+
 	}
+	
 	public static PolicyDBDaoTestClass getPolicyDBDaoTestClass(){
 		return new PolicyDBDao().new PolicyDBDaoTestClass();
 	}
+	
 	final class PolicyDBDaoTestClass {
 		String[] getScopeAndNameAndType(final String path){
 			return PolicyDBDao.getScopeAndNameAndType(path);
@@ -3916,7 +3596,7 @@ public class PolicyDBDao {
 			return PolicyDBDao.getGitPath();
 		}
 		String getConfigFile(String filename, String scope, PolicyRestAdapter policy){
-			return PolicyDBDao.this.getConfigFile(filename, scope, policy);
+			return PolicyDBDao.this.getConfigFile(filename, policy);
 		}
 		String computeScope(String fullPath, String pathToExclude){
 			return PolicyDBDao.computeScope(fullPath, pathToExclude);
@@ -3930,7 +3610,9 @@ public class PolicyDBDao {
 		String getDescriptionFromXacml(String xacmlData){
 			return PolicyDBDao.getDescriptionFromXacml(xacmlData);
 		}
-		
+        String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName){
+            return PolicyDBDao.this.getPolicyNameAndVersionFromPolicyFileName(originalPolicyName);
+        }
 	}
-	
+
 }

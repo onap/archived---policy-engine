@@ -90,8 +90,15 @@ public class XACMLPolicyScanner {
 		try (InputStream is = Files.newInputStream(filename)) {
 			this.policyObject = XACMLPolicyScanner.readPolicy(is);
 		} catch (IOException e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Failed to read policy", e);
+			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyScanner", "Failed to read policy");
+		}
+		this.callback = callback;
+	}
+	
+	public XACMLPolicyScanner(InputStream filename, Callback callback) {
+		try (InputStream is = filename) {
+			this.policyObject = XACMLPolicyScanner.readPolicy(is);
+		} catch (IOException e) {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyScanner", "Failed to read policy");
 		}
 		this.callback = callback;
@@ -155,8 +162,6 @@ public class XACMLPolicyScanner {
 		} else if (this.policyObject instanceof PolicySetType) {
 			this.scanPolicySet(null, (PolicySetType) this.policyObject);
 		} else {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Unknown class type: " + this.policyObject.getClass().getCanonicalName());
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW + "Unknown class type: " + this.policyObject.getClass().getCanonicalName());
 		}
 		if (this.callback != null) {
@@ -518,8 +523,6 @@ public class XACMLPolicyScanner {
 		try (InputStream is = Files.newInputStream(policy)) {
 			data = XACMLPolicyScanner.readPolicy(is);
 		} catch (IOException e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Failed to read policy", e);
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyScanner", "Failed to read policy");
 			throw e;
 		}
@@ -545,8 +548,6 @@ public class XACMLPolicyScanner {
 				version = ((PolicyType)data).getVersion();
 			} else {
 				if (data != null) {
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Expecting a PolicySet/Policy/Rule object. Got: " + data.getClass().getCanonicalName());
 					PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Expecting a PolicySet/Policy/Rule object. Got: " + data.getClass().getCanonicalName());
 				}
 				return null;
@@ -557,8 +558,6 @@ public class XACMLPolicyScanner {
 				logger.warn("No version set in policy");
 			}
 		} catch (NumberFormatException e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid version contained in policy: " + version);
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyScanner", "Invalid version contained in policy: " + version);
 			return null;
 		}
@@ -577,8 +576,6 @@ public class XACMLPolicyScanner {
 		} else if (data instanceof PolicyType) {
 			return ((PolicyType)data).getPolicyId();
 		} else {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Expecting a PolicySet/Policy/Rule object. Got: " + data.getClass().getCanonicalName());
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Expecting a PolicySet/Policy/Rule object. Got: " + data.getClass().getCanonicalName());
 			return null;
 		}
@@ -711,8 +708,6 @@ public class XACMLPolicyScanner {
 				}
 			}
 		} catch (Exception e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID + e.getMessage());
 			PolicyLogger.error(MessageCodes.ERROR_SCHEMA_INVALID, e, "XACMLPolicyScanner", "Exception in readPolicy");
 		}
 		return null;

@@ -63,7 +63,7 @@ public class StdLoadedPolicyTest {
 		fixture.setPolicyName("");
 		fixture.setVersionNo("");
 		fixture.setUpdateType(UpdateType.NEW);
-		fixture.setMatches(new Hashtable());
+		fixture.setMatches(new Hashtable<String, String>());
 
 		Map<String, String> result = fixture.getMatches();
 
@@ -86,7 +86,7 @@ public class StdLoadedPolicyTest {
 		fixture.setPolicyName("");
 		fixture.setVersionNo("");
 		fixture.setUpdateType(UpdateType.NEW);
-		fixture.setMatches(new Hashtable());
+		fixture.setMatches(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyName();
 
@@ -108,7 +108,7 @@ public class StdLoadedPolicyTest {
 		fixture.setPolicyName((String) null);
 		fixture.setVersionNo("");
 		fixture.setUpdateType(UpdateType.NEW);
-		fixture.setMatches(new Hashtable());
+		fixture.setMatches(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyName();
 
@@ -130,7 +130,7 @@ public class StdLoadedPolicyTest {
 		fixture.setPolicyName("");
 		fixture.setVersionNo("");
 		fixture.setUpdateType(UpdateType.NEW);
-		fixture.setMatches(new Hashtable());
+		fixture.setMatches(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyName();
 
@@ -152,7 +152,7 @@ public class StdLoadedPolicyTest {
 		fixture.setPolicyName("");
 		fixture.setVersionNo("");
 		fixture.setUpdateType(UpdateType.NEW);
-		fixture.setMatches(new Hashtable());
+		fixture.setMatches(new Hashtable<String, String>());
 
 		UpdateType result = fixture.getUpdateType();
 
@@ -177,7 +177,7 @@ public class StdLoadedPolicyTest {
 		fixture.setPolicyName("");
 		fixture.setVersionNo("");
 		fixture.setUpdateType(UpdateType.NEW);
-		fixture.setMatches(new Hashtable());
+		fixture.setMatches(new Hashtable<String, String>());
 
 		String result = fixture.getVersionNo();
 
@@ -199,8 +199,8 @@ public class StdLoadedPolicyTest {
 		fixture.setPolicyName("");
 		fixture.setVersionNo("");
 		fixture.setUpdateType(UpdateType.NEW);
-		fixture.setMatches(new Hashtable());
-		Map<String, String> matches = new Hashtable();
+		fixture.setMatches(new Hashtable<String, String>());
+		Map<String, String> matches = new Hashtable<String, String>();
 
 		fixture.setMatches(matches);
 
@@ -221,7 +221,7 @@ public class StdLoadedPolicyTest {
 		fixture.setPolicyName("");
 		fixture.setVersionNo("");
 		fixture.setUpdateType(UpdateType.NEW);
-		fixture.setMatches(new Hashtable());
+		fixture.setMatches(new Hashtable<String, String>());
 		String policyName = "";
 
 		fixture.setPolicyName(policyName);
@@ -243,7 +243,7 @@ public class StdLoadedPolicyTest {
 		fixture.setPolicyName("");
 		fixture.setVersionNo("");
 		fixture.setUpdateType(UpdateType.NEW);
-		fixture.setMatches(new Hashtable());
+		fixture.setMatches(new Hashtable<String, String>());
 		UpdateType updateType = UpdateType.NEW;
 
 		fixture.setUpdateType(updateType);
@@ -265,7 +265,7 @@ public class StdLoadedPolicyTest {
 		fixture.setPolicyName("");
 		fixture.setVersionNo("");
 		fixture.setUpdateType(UpdateType.NEW);
-		fixture.setMatches(new Hashtable());
+		fixture.setMatches(new Hashtable<String, String>());
 		String versionNo = "";
 
 		fixture.setVersionNo(versionNo);

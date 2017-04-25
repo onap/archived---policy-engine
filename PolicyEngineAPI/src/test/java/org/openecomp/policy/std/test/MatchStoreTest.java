@@ -20,17 +20,19 @@
 
 package org.openecomp.policy.std.test;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Map;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.openecomp.policy.api.PDPNotification;
 import org.openecomp.policy.std.MatchStore;
 import org.openecomp.policy.std.Matches;
 import org.openecomp.policy.std.StdPDPNotification;
-
-import static org.junit.Assert.*;
 
 /**
  * The class <code>MatchStoreTest</code> contains tests for the class <code>{@link MatchStore}</code>.
@@ -467,7 +469,7 @@ public class MatchStoreTest {
 	public void testStoreMatch_4()
 		throws Exception {
 		Matches newMatch = new Matches();
-		newMatch.setConfigAttributes(new Hashtable());
+		newMatch.setConfigAttributes(new Hashtable<String, String>());
 		newMatch.setConfigName("");
 		newMatch.setEcompName("");
 
@@ -489,7 +491,7 @@ public class MatchStoreTest {
 	public void testStoreMatch_5()
 		throws Exception {
 		Matches newMatch = new Matches();
-		newMatch.setConfigAttributes(new Hashtable());
+		newMatch.setConfigAttributes(new Hashtable<String, String>());
 		newMatch.setConfigName("");
 		newMatch.setEcompName("");
 
@@ -511,7 +513,7 @@ public class MatchStoreTest {
 	public void testStoreMatch_6()
 		throws Exception {
 		Matches newMatch = new Matches();
-		newMatch.setConfigAttributes(new Hashtable());
+		newMatch.setConfigAttributes(new Hashtable<String, String>());
 		newMatch.setConfigName("");
 		newMatch.setEcompName("");
 
@@ -533,7 +535,7 @@ public class MatchStoreTest {
 	public void testStoreMatch_7()
 		throws Exception {
 		Matches newMatch = new Matches();
-		newMatch.setConfigAttributes(new Hashtable());
+		newMatch.setConfigAttributes(new Hashtable<String, String>());
 		newMatch.setConfigName("");
 		newMatch.setEcompName("");
 
@@ -596,7 +598,7 @@ public class MatchStoreTest {
 	public void testStoreMatch_10()
 		throws Exception {
 		Matches newMatch = new Matches();
-		newMatch.setConfigAttributes(new Hashtable());
+		newMatch.setConfigAttributes(new Hashtable<String, String>());
 		newMatch.setConfigName("");
 		newMatch.setEcompName("");
 
@@ -618,7 +620,7 @@ public class MatchStoreTest {
 	public void testStoreMatch_11()
 		throws Exception {
 		Matches newMatch = new Matches();
-		newMatch.setConfigAttributes(new Hashtable());
+		newMatch.setConfigAttributes(new Hashtable<String, String>());
 		newMatch.setConfigName("");
 		newMatch.setEcompName("");
 
@@ -640,7 +642,7 @@ public class MatchStoreTest {
 	public void testStoreMatch_12()
 		throws Exception {
 		Matches newMatch = new Matches();
-		newMatch.setConfigAttributes(new Hashtable());
+		newMatch.setConfigAttributes(new Hashtable<String, String>());
 		newMatch.setConfigName("");
 		newMatch.setEcompName("");
 
@@ -662,7 +664,7 @@ public class MatchStoreTest {
 	public void testStoreMatch_13()
 		throws Exception {
 		Matches newMatch = new Matches();
-		newMatch.setConfigAttributes(new Hashtable());
+		newMatch.setConfigAttributes(new Hashtable<String, String>());
 		newMatch.setConfigName("");
 		newMatch.setEcompName("");
 
@@ -684,7 +686,7 @@ public class MatchStoreTest {
 	public void testStoreMatch_14()
 		throws Exception {
 		Matches newMatch = new Matches();
-		newMatch.setConfigAttributes(new Hashtable());
+		newMatch.setConfigAttributes(new Hashtable<String, String>());
 		newMatch.setConfigName("");
 		newMatch.setEcompName("");
 

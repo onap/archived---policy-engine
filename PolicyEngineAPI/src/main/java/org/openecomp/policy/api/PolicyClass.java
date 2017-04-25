@@ -20,6 +20,8 @@
 
 package org.openecomp.policy.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * Enumeration of the Policy Types that is used as a part of
  * {@link org.openecomp.policy.api.PolicyParameters}.
@@ -53,4 +55,13 @@ public enum PolicyClass {
 	public String toString() {
 		return this.name;
 	}
+	@JsonCreator
+    public static PolicyClass create (String value) {
+        for(PolicyClass type: values()){
+            if(type.toString().equals(value) || type.equals(PolicyClass.valueOf(value))){
+                return type;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
 }
