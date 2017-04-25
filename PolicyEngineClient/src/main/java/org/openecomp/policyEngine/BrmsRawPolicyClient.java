@@ -22,31 +22,18 @@ package org.openecomp.policyEngine;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-
 import org.openecomp.policy.api.AttributeType;
 import org.openecomp.policy.api.PolicyChangeResponse;
-import org.openecomp.policy.api.PolicyClass;
 import org.openecomp.policy.api.PolicyConfigType;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyParameters;

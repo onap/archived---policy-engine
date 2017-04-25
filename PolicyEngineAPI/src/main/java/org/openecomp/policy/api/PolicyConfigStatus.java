@@ -20,6 +20,8 @@
 
 package org.openecomp.policy.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * Enumeration of PolicyConfigStatus that can be returned as a part of 
  * {@link org.openecomp.policy.api.PolicyConfig}.
@@ -65,4 +67,13 @@ public enum PolicyConfigStatus {
 	public String toString(){
 		return this.name;
 	}
+	@JsonCreator
+    public static PolicyConfigStatus create (String value) {
+        for(PolicyConfigStatus type: values()){
+            if(type.toString().equals(value) || type.equals(PolicyConfigStatus.valueOf(value))){
+                return type;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
 }

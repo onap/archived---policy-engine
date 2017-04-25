@@ -39,12 +39,15 @@ import java.util.Iterator;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.openecomp.policy.pdp.rest.PapUrlResolver;
-import org.openecomp.policy.rest.XACMLRestProperties;
+import org.openecomp.policy.api.NotificationType;
+import org.openecomp.policy.api.RemovedPolicy;
+import org.openecomp.policy.api.UpdateType;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
-
+import org.openecomp.policy.pdp.rest.PapUrlResolver;
+import org.openecomp.policy.rest.XACMLRestProperties;
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
+
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.api.pap.PDPStatus;
 import com.att.research.xacml.util.XACMLProperties;
@@ -64,7 +67,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  *
  */
 public class NotificationController {
-	private static final Logger logger = FlexLogger.getLogger(NotificationController.class);
+	private static final Logger LOGGER = FlexLogger.getLogger(NotificationController.class);
 	private static Notification record = new Notification();
 	private PDPStatus oldStatus = null;
 	private Removed removed = null;
@@ -89,14 +92,14 @@ public class NotificationController {
 			oldStatus = newStatus;
 		}
 		// Debugging purpose only.
-		logger.debug("old config Status :" + oldStatus.getStatus());
-		logger.debug("new config Status :" + newStatus.getStatus());
+		LOGGER.debug("old config Status :" + oldStatus.getStatus());
+		LOGGER.debug("new config Status :" + newStatus.getStatus());
 
 		// Depending on the above condition taking the Change as an Update.
 		if (oldStatus.getStatus().toString() != newStatus.getStatus().toString()) {
-			logger.info("There is an Update to the PDP");
-			logger.debug(oldStatus.getLoadedPolicies());
-			logger.debug(newStatus.getLoadedPolicies());
+			LOGGER.info("There is an Update to the PDP");
+			LOGGER.debug(oldStatus.getLoadedPolicies());
+			LOGGER.debug(newStatus.getLoadedPolicies());
 			// Check if there is an Update/additions in the policy.
 			for (PDPPolicy newPolicy : newStatus.getLoadedPolicies()) {
 				boolean change = true;
@@ -143,15 +146,16 @@ public class NotificationController {
 			// Call the Notification Server..
 			notification.setRemovedPolicies(removedPolicies);
 			notification.setLoadedPolicies(updatedPolicies);
+			notification = setUpdateTypes(updated, removed, notification);
 			ObjectWriter om = new ObjectMapper().writer();
 			try {
 				notificationJSON = om.writeValueAsString(notification);
-				logger.info(notificationJSON);
+				LOGGER.info(notificationJSON);
 				// NotificationServer Method here.
 				propNotificationType = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TYPE);
 				pdpURL = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_ID);
-				if (propNotificationType!=null && propNotificationType.equals("ueb") && !manualThreadStarted) {
-					logger.debug("Starting  Thread to accept UEB notfications.");
+				if (("ueb".equals(propNotificationType)||"dmaap".equals(propNotificationType)) && !manualThreadStarted) {
+					LOGGER.debug("Starting  Thread to accept UEB or DMAAP notfications.");
 					this.registerMaunualNotificationRunnable = new ManualNotificationUpdateThread();
 					this.manualNotificationThread = new Thread(this.registerMaunualNotificationRunnable);
 					this.manualNotificationThread.start();
@@ -162,15 +166,15 @@ public class NotificationController {
 				try{
 					notificationJSON= record(notification);
 				}catch(Exception e){
-					logger.error(e);
-					// TODO:EELF Cleanup - Remove logger
+					LOGGER.error(e);
+					// TODO:EELF Cleanup - Remove LOGGER
 					//PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "");
 				}
 				NotificationServer.setUpdate(notificationJSON);
 				ManualNotificationUpdateThread.setUpdate(notificationJSON);
 			} catch (JsonProcessingException e) {
-				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage());
-				// TODO:EELF Cleanup - Remove logger
+				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage());
+				// TODO:EELF Cleanup - Remove LOGGER
 				//PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "");
 			}
 		}
@@ -178,7 +182,12 @@ public class NotificationController {
 	
 	public static void sendNotification(){
 		if(notificationFlag){
-			NotificationServer.sendNotification(notificationJSON, propNotificationType, pdpURL);
+			try {
+				NotificationServer.sendNotification(notificationJSON, propNotificationType, pdpURL);
+			} catch (Exception e) {
+				LOGGER.info(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in sending the Event Notification: "+ e.getMessage());
+				e.printStackTrace();
+			}
 			notificationFlag = false;
 		}
 	}
@@ -186,9 +195,9 @@ public class NotificationController {
 	private void sendremove(PDPPolicy oldPolicy) {
 		removed = new Removed();
 		// Want to know what is removed ?
-		// logger.info("The Policy removed is: " + oldPolicy.getId());
-		// logger.info("The version no. is: " + oldPolicy.getVersion());
-		logger.info("Policy removed: " + oldPolicy.getId()+ " with version number: " + oldPolicy.getVersion());
+		// LOGGER.info("The Policy removed is: " + oldPolicy.getId());
+		// LOGGER.info("The version no. is: " + oldPolicy.getVersion());
+		LOGGER.info("Policy removed: " + oldPolicy.getId()+ " with version number: " + oldPolicy.getVersion());
 		removed.setPolicyName(oldPolicy.getId());
 		removed.setVersionNo(oldPolicy.getVersion());
 		removeFile(oldPolicy);
@@ -197,12 +206,13 @@ public class NotificationController {
 	private void sendUpdate(PDPPolicy newPolicy,HashMap<String, PolicyDef> policyContainer) {
 		updated = new Updated();
 		// Want to know what is new ?
-		logger.info("The new Policy is: " + newPolicy.getId());
-		logger.info("The version no. is: " + newPolicy.getVersion());
+		LOGGER.info("The new Policy is: " + newPolicy.getId());
+		LOGGER.info("The version no. is: " + newPolicy.getVersion());
 		updated.setPolicyName(newPolicy.getId());
 		updated.setVersionNo(newPolicy.getVersion());
+		updated.setUpdateType(UpdateType.NEW);
 		// If the policy is of Config type then retrieve its matches.
-		if (newPolicy.getName().startsWith("Config")) {
+		if (newPolicy.getName().contains(".Config_")) {
 			// Take a Configuration copy to PDP webapps. 
 			final String urlStart = "attributeId=URLID,expression";
 			final String urlEnd = "}}},{";
@@ -223,19 +233,19 @@ public class NotificationController {
 					HashMap<String, String> matchValues = new HashMap<String, String>();
 					while (matches.hasNext()) {
 						Match match = matches.next();
-						logger.info("Attribute Value is: "+ match.getAttributeValue().getValue().toString());
+						LOGGER.info("Attribute Value is: "+ match.getAttributeValue().getValue().toString());
 						String[] result = match.getAttributeRetrievalBase().toString().split("attributeId=");
 						result[1] = result[1].replaceAll("}", "");
 						if (!result[1].equals("urn:oasis:names:tc:xacml:1.0:subject:subject-id")) {
-							logger.info("Attribute id is: " + result[1]);
+							LOGGER.info("Attribute id is: " + result[1]);
 						}
 						matchValues.put(result[1], match.getAttributeValue().getValue().toString());
-						logger.info("Match is : "+ result[1]+ " , "	+ match.getAttributeValue().getValue().toString());
+						LOGGER.info("Match is : "+ result[1]+ " , "	+ match.getAttributeValue().getValue().toString());
 					}
 					updated.setMatches(matchValues);
 				}
 			}
-		}else if(newPolicy.getName().startsWith("Action")){
+		}else if(newPolicy.getName().contains(".Action_")){
 			// Take Configuration copy to PDP Webapps.
 			// Action policies have .json as extension. 
 			String urlString = "$URL/Action/" + newPolicy.getId().substring(0, newPolicy.getId().lastIndexOf(".")) + ".json";
@@ -244,7 +254,7 @@ public class NotificationController {
 	}
 
 	// Adding this for Recording the changes to serve Polling requests..
-	public static String record(Notification notification) throws Exception {
+	private static String record(Notification notification) throws Exception {
 		// Initialization with updates.
 		if (record.getRemovedPolicies() == null	|| record.getLoadedPolicies() == null) {
 			record.setRemovedPolicies(notification.getRemovedPolicies());
@@ -317,13 +327,43 @@ public class NotificationController {
 		try {
 			json = om.writeValueAsString(record);
 		} catch (JsonProcessingException e) {
-			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage());
-			// TODO:EELF Cleanup - Remove logger
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage());
+			// TODO:EELF Cleanup - Remove LOGGER
 			//PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "");
 		}
-		logger.info(json);
+		LOGGER.info(json);
 		return json;
 	}
+	
+	private static Notification setUpdateTypes(boolean updated, boolean removed, Notification notification) {
+        if(notification!=null){
+            if(updated && removed){
+                notification.setNotificationType(NotificationType.BOTH);
+                if(notification.getLoadedPolicies()!=null){
+                    HashSet<Updated> updatedPolicies = new HashSet<Updated>(); 
+                    for(Updated oldUpdatedPolicy: notification.getLoadedPolicies()){
+                        Updated updatePolicy = oldUpdatedPolicy;
+                        if(notification.getRemovedPolicies()!=null){
+                            for(RemovedPolicy removedPolicy: notification.getRemovedPolicies()){
+                                String regex = ".(\\d)*.xml";
+                                if(removedPolicy.getPolicyName().replaceAll(regex, "").equals(oldUpdatedPolicy.getPolicyName().replaceAll(regex, ""))){
+                                    updatePolicy.setUpdateType(UpdateType.UPDATE);
+                                    break;
+                                }
+                            }
+                        }
+                        updatedPolicies.add(updatePolicy);
+                    }
+                    notification.setLoadedPolicies(updatedPolicies);
+                }
+            }else if(updated){
+                notification.setNotificationType(NotificationType.UPDATE);
+            }else if(removed){
+                notification.setNotificationType(NotificationType.REMOVE);
+            }
+        }
+        return notification;
+    }
 	
 	private void removeFile(PDPPolicy oldPolicy) {
 		try{
@@ -346,8 +386,8 @@ public class NotificationController {
 				}
 			}
 		}catch(Exception e){
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Couldn't remove the policy/config file " + oldPolicy.getName());
-			// TODO:EELF Cleanup - Remove logger
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Couldn't remove the policy/config file " + oldPolicy.getName());
+			// TODO:EELF Cleanup - Remove LOGGER
 			//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Couldn't remove the policy file " + oldPolicy.getName());
 		}
 	}
@@ -358,7 +398,7 @@ public class NotificationController {
 			try {
 				Files.createDirectories(configLocation);
 			} catch (IOException e) {
-				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW +"Failed to create config directory: " + configLocation.toAbsolutePath().toString(), e);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW +"Failed to create config directory: " + configLocation.toAbsolutePath().toString(), e);
 			}
 		}
 		PapUrlResolver papUrls = PapUrlResolver.getInstance();
@@ -370,7 +410,7 @@ public class NotificationController {
 			String fileLocation = configLocation.toString() + File.separator + fileName;
 			try {
 				URL papURL = new URL(papAddress);
-				logger.info("Calling " +papAddress + " for Configuration Copy.");
+				LOGGER.info("Calling " +papAddress + " for Configuration Copy.");
 				URLConnection urlConnection = papURL.openConnection();
 				File file= new File(fileLocation);
 				try (InputStream is = urlConnection.getInputStream();
@@ -379,11 +419,11 @@ public class NotificationController {
 					break;
 				}
 			} catch (MalformedURLException e) {
-				logger.error(e + e.getMessage());
+				LOGGER.error(e + e.getMessage());
 			} catch(FileNotFoundException e){
-				logger.error(e + e.getMessage());
+				LOGGER.error(e + e.getMessage());
 			} catch (IOException e) {
-				logger.error(e + e.getMessage());
+				LOGGER.error(e + e.getMessage());
 			}
 			papUrls.getNext();
 		}

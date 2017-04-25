@@ -1,0 +1,142 @@
+<div ng-controller="actionPolicyController">
+	<form>
+		<div class="well">
+			<div class="form-group row">
+				<div class="form-group col-sm-6">
+					<label>Policy Name:<sup><b>*</b></sup></label> <input type="text"
+						class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-readonly="temp.policy.editPolicy"
+						ng-model="temp.policy.policyName" required pattern="\S+"
+						title="Enter the Policy Name without any spaces" />
+				</div>
+				<div class="form-group col-sm-6">
+					<label>Description:</label> <input type="text" class="form-control"
+						ng-disabled="temp.policy.readOnly"
+						ng-model="temp.policy.policyDescription" />
+				</div>
+			</div>
+			<div class="well">
+				<div class="form-group row">
+					<div class="form-group col-sm-2">
+						<label>Component Attributes:</label><br>
+						<button type="button" class="btn btn-default"
+							ng-disabled="temp.policy.readOnly" ng-click="addNewChoice()">
+							<i class="fa fa-plus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div data-ng-repeat="choice in temp.policy.attributes">
+						<div class="form-group row" style="margin-left: 2%">
+							<div class="form-group col-sm-3">
+								<select class="form-control" ng-disabled="temp.policy.readOnly"
+									ng-model="choice.key"
+									ng-options="option for option in attributeDictionaryDatas track by option">
+									<option value="">{{choice.key}}</option>
+								</select>
+							</div>
+							<div class="form-group col-sm-3">
+								<input type="text" class="form-control"
+									ng-disabled="temp.policy.readOnly" ng-model="choice.value"
+									placeholder="Attribute Value" />
+							</div>
+							<div class="form-group col-sm-1">
+								<button type="button" class="btn btn-default" ng-show="$last"
+									ng-disabled="temp.policy.readOnly" ng-click="removeChoice()">
+									<i class="fa fa-minus"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="well">
+				<label>Rule Algorithms:<sup><b>*</b></sup></label><br>
+				<div class="form-group row">
+					<div class="form-group col-sm-1">
+						<button type="button" class="btn btn-default"
+							ng-disabled="temp.policy.readOnly"
+							ng-click="addNewRuleAlgorithm()">
+							<i class="fa fa-plus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div
+						data-ng-repeat="ruleAlgorithmschoice in temp.policy.ruleAlgorithmschoices">
+						<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-1">
+							<label ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmLabels"
+								ng-disabled="temp.policy.readOnly"
+								name="dynamicRuleAlgorithmLabels">{{ruleAlgorithmschoice.id}}</label>
+						</div>
+						<div class="form-group col-sm-3">
+							<select type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmField1"
+								ng-options="option for option in attributeDictionaryDatas track by option"
+								name="dynamicRuleAlgorithmField1">
+								<option value="">{{ruleAlgorithmschoice.dynamicRuleAlgorithmField1}}</option>
+							</select>
+						</div>
+						<div class="form-group col-sm-3">
+							<select type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmCombo"
+								ng-options="option for option in functionDefinitionDatas"
+								name="dynamicRuleAlgorithmCombo">
+								<option value="">{{ruleAlgorithmschoice.dynamicRuleAlgorithmCombo}}</option>
+							</select>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmField2"
+								name="dynamicRuleAlgorithmField2" />
+						</div>
+						<div class="form-group col-sm-1">
+							<button type="button" class="btn btn-default" ng-show="$last"
+								ng-disabled="temp.policy.readOnly"
+								ng-click="removeRuleAlgorithm()">
+								<i class="fa fa-minus"></i>
+							</button>
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="well">
+				<div class="form-group row">
+					<div class="form-group col-sm-6">
+						<label>Action Performer:<sup><b>*</b></sup></label><BR> <select
+							class="form-control" ng-disabled="temp.policy.readOnly"
+							ng-model="temp.policy.actionPerformer">
+							<option>PEP</option>
+							<option>PDP</option>
+						</select>
+					</div>
+					<div class="form-group col-sm-6">
+						<label>Action Attribute:<sup><b>*</b></sup></label><br> <select
+							class="form-control"
+							ng-disabled="temp.policy.readOnly"
+							ng-model="temp.policy.actionAttributeValue"
+							ng-options="option for option in actionPolicyDictionaryDatas track by option"></select>
+					</div>
+				</div>
+			</div>
+			<div id="validate" style="width: 70%"></div>
+			<br>
+			<div class="modal-footer">
+				<button class="btn btn-primary" herf="javascript:void(0)"
+					ng-disabled="temp.policy.readOnly"
+					ng-click="validatePolicy(temp.policy);">Validate</button>
+				<button class="btn btn-success" ng-disabled="savebutton"
+					herf="javascript:void(0)" ng-disabled="temp.policy.readOnly"
+					ng-click="saveActionPolicy(temp);">Save</button>
+				<button class="btn btn-default" data-dismiss="modal"
+					ng-disabled="temp.inprocess" ng-model="finalPath"
+					ng-controller="FileManagerCtrl"
+					ng-click="closefunction(finalPath);">Close</button>
+			</div>
+	</form>
+</div>

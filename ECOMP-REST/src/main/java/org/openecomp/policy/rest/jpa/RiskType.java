@@ -41,14 +41,9 @@ import javax.persistence.TemporalType;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openecomp.policy.rest.XacmlAdminAuthorization;
-import org.openecomp.policy.rest.jpa.UserInfo;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.rest.XacmlAdminAuthorization;
 
 
 @Entity
@@ -103,7 +98,7 @@ public class RiskType implements Serializable {
 		this.userModifiedBy = userModifiedBy;
 	}
 
-	private static Log logger = LogFactory.getLog(RiskType.class);
+	private static Log LOGGER = LogFactory.getLog(RiskType.class);
 	
 	public RiskType() {
 		
@@ -130,8 +125,7 @@ public class RiskType implements Serializable {
 		try {
 			this.userModifiedBy =XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
-			logger.error("Exception caused While adding Modified by Role"+e);
-			// TODO:EELF Cleanup - Remove logger
+			LOGGER.error("Exception caused While adding Modified by Role"+e);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "RiskType", "Exception caused While adding Modified by Role");
 		}
 	}

@@ -40,7 +40,7 @@ public class UserInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(name="loginId", nullable=false, length=45)
+	@Column(name="loginid", nullable=false, length=45)
 	private String userLoginId;
 	
 	@Column(name = "name", nullable = false, unique = true)

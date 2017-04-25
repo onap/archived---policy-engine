@@ -21,29 +21,15 @@
 package org.openecomp.policy.rest.jpa;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openecomp.policy.rest.XacmlAdminAuthorization;
-
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 
 
 @Entity
@@ -145,14 +131,9 @@ public class FirewallDictionaryList implements Serializable {
 		this.userModifiedBy = userModifiedBy;
 	}*/
 
-	private static Log logger = LogFactory.getLog(FirewallDictionaryList.class);
-	
 	public FirewallDictionaryList() {
 		
 	}
-	
-	private static final Log auditLogger = LogFactory
-			.getLog("auditLogger");
 	
 	public FirewallDictionaryList(String string, String userid) {
 		this(domain);
@@ -175,8 +156,6 @@ public class FirewallDictionaryList implements Serializable {
 		try {
 			this.userModifiedBy =XacmlAdminAuthorization.getUserId();;
 		} catch (Exception e) {
-			logger.error("Exception caused While adding Modified by Role"+e);
-			// TODO:EELF Cleanup - Remove logger
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "TermList", "Exception caused While adding Modified by Role");
 		}
 		auditLogger.debug("Updated Term Name: "+this.parentItemName+" by "+this.userModifiedBy);

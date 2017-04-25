@@ -63,8 +63,6 @@ public class DecisionPolicyClient {
 	        attributes.put(AttributeType.SETTINGS, settingsMap);
 	        policyParameters.setAttributes(attributes);
 
-	        //Set the Rule Algorithm... These are Optional
-	        Map<String, Map<String,Map<String,String>>> ruleAlgorithm = new HashMap<String, Map<String,Map<String,String>>>();
 	        
 			List<String> dynamicRuleAlgorithmLabels = new LinkedList<String>();
 			List<String> dynamicRuleAlgorithmFunctions = new LinkedList<String>();

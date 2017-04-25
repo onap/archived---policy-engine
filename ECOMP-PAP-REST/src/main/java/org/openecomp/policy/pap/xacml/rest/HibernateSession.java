@@ -25,12 +25,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 
 public class HibernateSession{
+	
+	private static final Logger LOGGER	= FlexLogger.getLogger(HibernateSession.class);
 	private static SessionFactory xacmlsessionFactory;
-
-
+	
 	static {
 		try {
 			Configuration configuration= new Configuration();
@@ -45,14 +47,18 @@ public class HibernateSession{
 			configuration.setProperty("hibernate.c3p0.max_size", "200");
 			configuration.setProperty("hibernate.c3p0.timeout", "3600");
 			configuration.setProperty("hibernate.c3p0.idle_test_period", "3600");
+			configuration.setProperty("hibernate.cache.use.query_cache", "false");
+			configuration.setProperty("hibernate.cache.use_second_level_cache", "false");
 			
 			StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
 			xacmlsessionFactory = configuration.configure("/hibernate.cfg.xml").buildSessionFactory(builder.build());
 			
 		} catch (Throwable ex) {
+			LOGGER.error("Exception Occured While Creating Hiberante Session Factory"+ex);
 			throw new ExceptionInInitializerError(ex);
 		}
 	}
+	
 	public static Session getSessionFactory() throws HibernateException {
 		return xacmlsessionFactory.openSession();
 	}

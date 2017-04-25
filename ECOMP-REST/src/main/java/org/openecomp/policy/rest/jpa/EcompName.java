@@ -39,16 +39,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openecomp.policy.rest.XacmlAdminAuthorization;
-import org.openecomp.policy.rest.jpa.UserInfo;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.rest.XacmlAdminAuthorization;
 
 
 @Entity
@@ -102,8 +95,6 @@ public class EcompName implements Serializable {
 	public void setUserModifiedBy(UserInfo userModifiedBy) {
 		this.userModifiedBy = userModifiedBy;
 	}
-
-	private static Log logger = LogFactory.getLog(EcompName.class);
 	
 	public EcompName() {
 		
@@ -130,8 +121,6 @@ public class EcompName implements Serializable {
 		try {
 			this.userModifiedBy =XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
-			logger.error("Exception caused While adding Modified by Role"+e);
-			// TODO:EELF Cleanup - Remove logger
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "EcompName", "Exception caused While adding Modified by Role");
 		}
 	}

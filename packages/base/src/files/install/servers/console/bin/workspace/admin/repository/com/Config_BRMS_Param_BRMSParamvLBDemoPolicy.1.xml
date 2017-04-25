@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:ace93d23-7a21-450a-87b4-5ff11e01d4b1" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
-    <Description>BRMSParam vLB Demo Policy@CreatedBy:@CreatedBy:@ModifiedBy:@ModifiedBy:</Description>
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:299d86c4-bae4-4720-9e09-2f7e09cb69c9" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
+    <Description>vLB Demo Policy@CreatedBy:demo@CreatedBy:@ModifiedBy:demo@ModifiedBy:</Description>
     <Target>
         <AnyOf>
             <AllOf>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">com.Config_BRMS_Param_BRMSParamvLBDemoPolicy.1.xml</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="PolicyName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
             </AllOf>
             <AllOf>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DROOLS</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ECOMPName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">BRMS_PARAM_RULE</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ConfigName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SampleRiskType</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="RiskType" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">1</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="RiskLevel" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">False</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="guard" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">NA</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="TTLDate" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
             </AllOf>
         </AnyOf>
     </Target>
-    <Rule RuleId="urn:com:xacml:rule:id:9d472f3a-bab1-4bee-8bfc-0ee1b4e11ad6" Effect="Permit">
+    <Rule RuleId="urn:com:xacml:rule:id:f8535f6d-e171-498f-a6fc-3399e91bb1d0" Effect="Permit">
         <Target>
             <AnyOf>
                 <AllOf>

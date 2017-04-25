@@ -28,7 +28,6 @@ import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,16 +37,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.json.Json;
 import javax.json.JsonArray;
-import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.json.JsonString;
-import javax.json.JsonValue;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -64,33 +62,25 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openecomp.policy.pap.xacml.rest.adapters.PolicyRestAdapter;
-import org.openecomp.policy.rest.XACMLRestProperties;
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
+import org.openecomp.policy.rest.XACMLRestProperties;
+import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
+import org.openecomp.policy.rest.jpa.PolicyEntity;
 
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.diff.JsonDiff;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger; 
 
 public class FirewallConfigPolicy extends Policy {
-	/**
-	 * Config Fields
-	 */
-	private static final Logger logger = FlexLogger.getLogger(FirewallConfigPolicy.class);
 
-	public static final String JSON_CONFIG = "JSON";
-	public static final String XML_CONFIG = "XML";
-	public static final String PROPERTIES_CONFIG = "PROPERTIES";
-	public static final String OTHER_CONFIG = "OTHER";
+	private static final Logger LOGGER = FlexLogger.getLogger(FirewallConfigPolicy.class);
 	
 	/*
 	 * These are the parameters needed for DB access from the PAP
@@ -111,79 +101,17 @@ public class FirewallConfigPolicy extends Policy {
 	}
 	
 	// Saving the Configurations file at server location for config policy.
-	protected void saveConfigurations(String policyName, String prevPolicyName, String jsonBody) {
-		final Path gitPath = Paths.get(policyAdapter.getUserGitPath().toString());
-		String policyDir = policyAdapter.getParentPath().toString();
-		int startIndex = policyDir.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-		policyDir = policyDir.substring(startIndex, policyDir.length());
-		logger.info("print the main domain value"+policyDir);
-		String path = policyDir.replace('\\', '.');
-		if(path.contains("/")){
-			path = policyDir.replace('/', '.');
-			logger.info("print the path:" +path);
-		}
-		
-		try {
-			String configFileName = getConfigFile(policyName);
-			
-			File file;
-			if(CONFIG_HOME.contains("\\"))
-			{
-			 file = new File(CONFIG_HOME + "\\" + path + "."+ configFileName);
+	protected void saveConfigurations(String policyName, String jsonBody) {
+		try{
+			if(policyName.endsWith(".xml")){
+				policyName = policyName.replace(".xml", "");
 			}
-			else
-			{
-			 file = new File(CONFIG_HOME + "/" + path + "."+ configFileName);
-			}
-			
-			// if file doesnt exists, then create it
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-			
-			//Getting the previous policy Config Json file to be used for updating the dictionary tables
-			if (policyAdapter.isEditPolicy()) {
-				
-				String prevConfigFileName = getConfigFile(prevPolicyName);
-				
-				File oldFile;
-				if(CONFIG_HOME.contains("\\"))
-				{
-					oldFile = new File(CONFIG_HOME + "\\" + path + "."+ prevConfigFileName);
-				}
-				else
-				{
-					oldFile = new File(CONFIG_HOME + "/" + path + "."+ prevConfigFileName);
-				}
-				
-				String filepath = oldFile.toString();
-				
-				String prevJsonBody = readFile(filepath, StandardCharsets.UTF_8);
-				policyAdapter.setPrevJsonBody(prevJsonBody);
-			}
-
-
-			File configHomeDir = new File(CONFIG_HOME);
-			File[] listOfFiles = configHomeDir.listFiles();
-			if (listOfFiles != null){
-				for(File eachFile : listOfFiles){
-					if(eachFile.isFile()){
-						String fileNameWithoutExtension = FilenameUtils.removeExtension(eachFile.getName());
-						String configFileNameWithoutExtension = FilenameUtils.removeExtension(configFileName);
-						if (fileNameWithoutExtension.equals(configFileNameWithoutExtension)){
-							//delete the file
-							eachFile.delete();
-						}
-					}
-				}
-			}
-
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			FileWriter fw = new FileWriter(CONFIG_HOME + File.separator + policyName + ".json");
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(jsonBody);
 			bw.close();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Configuration is succesfully saved");
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Configuration is succesfully saved");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -197,19 +125,6 @@ public class FirewallConfigPolicy extends Policy {
 		return new String(encoded, encoding);
 		
 	}
-
-	// Here we are adding the extension for the configurations file based on the
-	// config type selection for saving.
-	private String getConfigFile(String filename) {
-		filename = FilenameUtils.removeExtension(filename);
-		if (filename.endsWith(".json")) {
-			filename = filename.substring(0, filename.length() - 4);
-		}
-
-		filename=filename+".json";
-		return filename;
-	}
-	
 	
 	// Validations for Config form
 	public boolean validateConfigForm() {
@@ -222,52 +137,46 @@ public class FirewallConfigPolicy extends Policy {
 
 	@Override
 	public Map<String, String> savePolicies() throws Exception {
-		
+
 		Map<String, String> successMap = new HashMap<String,String>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
 		}
-		
+
 		if(!isPreparedToSave()){
 			prepareToSave();
 		}
-		
+
 		// Until here we prepared the data and here calling the method to create xml.
 		Path newPolicyPath = null;
-		newPolicyPath = Paths.get(policyAdapter.getParentPath().toString(), policyName);
+		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 		Boolean dbIsUpdated = false;
-		if (policyAdapter.getApiflag().equalsIgnoreCase("admin")){
-			dbIsUpdated = true;
-		} else {
+		if (policyAdapter.getApiflag() != null && policyAdapter.getApiflag().equalsIgnoreCase("admin")){
 			if (policyAdapter.isEditPolicy()) {
 				dbIsUpdated = updateFirewallDictionaryData(policyAdapter.getJsonBody(), policyAdapter.getPrevJsonBody());
 			} else {
 				dbIsUpdated = insertFirewallDicionaryData(policyAdapter.getJsonBody());
 			}
-		}
-		
-		if(dbIsUpdated) {
-			successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject() );	
 		} else {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Failed to Update the Database Dictionary Tables.");
+			dbIsUpdated = true;
+		}
+
+		if(dbIsUpdated) {
+			successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());	
+		} else {
 			PolicyLogger.error("Failed to Update the Database Dictionary Tables.");
-			
+
 			//remove the new json file 
 			String jsonBody = policyAdapter.getPrevJsonBody();
 			if (jsonBody!=null){
-				saveConfigurations(policyName, "", jsonBody);
+				saveConfigurations(policyName, jsonBody);
 			} else {
-				saveConfigurations(policyName, "", "");
+				saveConfigurations(policyName, "");
 			}
 			successMap.put("fwdberror", "DB UPDATE");
 		}
-
-		if (successMap.containsKey("success")) {
-			Path finalPolicyPath = getFinalPolicyPath();
-			policyAdapter.setFinalPolicyPath(finalPolicyPath.toString());
-		}
+	
 		return successMap;		
 	}
 
@@ -283,12 +192,7 @@ public class FirewallConfigPolicy extends Policy {
 		
 		int version = 0;
 		String policyID = policyAdapter.getPolicyID();
-
-		if (policyAdapter.isEditPolicy()) {
-			version = policyAdapter.getHighestVersion() + 1;
-		} else {
-			version = 1;
-		}
+		version = policyAdapter.getHighestVersion();
 		
 		// Create the Instance for pojo, PolicyType object is used in marshalling.
 		if (policyAdapter.getPolicyType().equals("Config")) {
@@ -299,31 +203,33 @@ public class FirewallConfigPolicy extends Policy {
 			policyConfig.setTarget(new TargetType());
 			policyAdapter.setData(policyConfig);
 		}
-
+		policyName = policyAdapter.getNewFileName();
+		
+		//String oldPolicyName = policyName.replace(".xml", "");
+		String scope = policyName.substring(0, policyName.indexOf("."));
+		String dbPolicyName = policyName.substring(policyName.indexOf(".")+1).replace(".xml", "");
+		
+		int oldversion = Integer.parseInt(dbPolicyName.substring(dbPolicyName.lastIndexOf(".")+1));
+		dbPolicyName = dbPolicyName.substring(0, dbPolicyName.lastIndexOf(".")+1);
+		//String scope = oldPolicyName.substring(0, oldPolicyName.lastIndexOf("."));
+		//scope = scope.substring(0, scope.lastIndexOf("."));
+		if(oldversion > 1){
+			oldversion = oldversion - 1; 
+			dbPolicyName = dbPolicyName + oldversion + ".xml";
+		}
+		EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
+		Query createPolicyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");			
+		createPolicyQuery.setParameter("scope", scope);
+		createPolicyQuery.setParameter("policyName", dbPolicyName);
+		List<?> createPolicyQueryList = createPolicyQuery.getResultList();
+		if(!createPolicyQueryList.isEmpty()){
+			PolicyEntity entitydata = (PolicyEntity) createPolicyQueryList.get(0);
+			policyAdapter.setPrevJsonBody(entitydata.getConfigurationData().getConfigBody());
+		}
+		em.close();
 		if (policyAdapter.getData() != null) {
-	
-			// Save off everything
-			// making ready all the required elements to generate the action policy xml.
-			// Get the uniqueness for policy name.
-			String prevPolicyName = null;
-			if(policyAdapter.isEditPolicy()){
-				prevPolicyName = "Config_FW_" + policyAdapter.getPolicyName() + "." + policyAdapter.getHighestVersion() + ".xml";
-			}
-
-			Path newFile = getNextFilename(Paths.get(policyAdapter.getParentPath().toString()),
-					(policyAdapter.getPolicyType() + "_FW"), policyAdapter.getPolicyName(), version);
-
-			if (newFile == null) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Policy already Exists, cannot create the policy.");
-				PolicyLogger.error("Policy already Exists, cannot create the policy.");
-				setPolicyExists(true);
-				return false;
-			}
-			policyName = newFile.getFileName().toString();
-
 			String jsonBody = policyAdapter.getJsonBody();
-			saveConfigurations(policyName, prevPolicyName, jsonBody);
+			saveConfigurations(policyName, jsonBody);
 			
 			// Make sure the filename ends with an extension
 			if (policyName.endsWith(".xml") == false) {
@@ -337,10 +243,7 @@ public class FirewallConfigPolicy extends Policy {
 			configPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
 
 			AllOfType allOfOne = new AllOfType();
-			File policyFilePath = new File(policyAdapter.getParentPath().toString(), policyName);
-			String policyDir = policyFilePath.getParentFile().getName();
-			String fileName = FilenameUtils.removeExtension(policyName);
-			fileName = policyDir + "." + fileName + ".xml";
+			String fileName = policyAdapter.getNewFileName();
 			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
 			if ((name == null) || (name.equals(""))) {
 				name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
@@ -391,8 +294,6 @@ public class FirewallConfigPolicy extends Policy {
 			try {
 				accessURI = new URI(ACTION_ID);
 			} catch (URISyntaxException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getStackTrace());
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "FirewallConfigPolicy", "Exception creating ACCESS URI");
 			}
 			accessAttributeDesignator.setCategory(CATEGORY_ACTION);
@@ -414,8 +315,6 @@ public class FirewallConfigPolicy extends Policy {
 			try {
 				configURI = new URI(RESOURCE_ID);
 			} catch (URISyntaxException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getStackTrace());
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "FirewallConfigPolicy", "Exception creating Config URI");
 			}
 			
@@ -441,8 +340,6 @@ public class FirewallConfigPolicy extends Policy {
 			policyAdapter.setPolicyData(configPolicy);
 
 		} else {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
 			PolicyLogger.error("Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
 		}
 		setPreparedToSave(true);
@@ -470,23 +367,13 @@ public class FirewallConfigPolicy extends Policy {
 		
 		// For Config file Url if configurations are provided.
 		//URL ID Assignment
-		final Path gitPath = Paths.get(policyAdapter.getUserGitPath().toString());
 		AttributeAssignmentExpressionType assignment2 = new AttributeAssignmentExpressionType();
 		assignment2.setAttributeId("URLID");
 		assignment2.setCategory(CATEGORY_RESOURCE);
 		assignment2.setIssuer("");
 		AttributeValueType AttributeValue = new AttributeValueType();
-		AttributeValue.setDataType(URI_DATATYPE);
-		String policyDir1 = policyAdapter.getParentPath().toString();
-		int startIndex1 = policyDir1.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-		policyDir1 = policyDir1.substring(startIndex1, policyDir1.length());
-		logger.info("print the main domain value"+policyDir1);
-		String path = policyDir1.replace('\\', '.');
-		if(path.contains("/")){
-			path = policyDir1.replace('/', '.');
-			logger.info("print the path:" +path);
-		}		
-		String content = CONFIG_URL + "/Config/" + path + "." + getConfigFile(policyName);
+		AttributeValue.setDataType(URI_DATATYPE);	
+		String content = CONFIG_URL + "/Config/" + policyName + ".json";
 
 		AttributeValue.getContent().add(content);
 		assignment2.setExpression(new ObjectFactory().createAttributeValue(AttributeValue));
@@ -499,31 +386,12 @@ public class FirewallConfigPolicy extends Policy {
 		assignment3.setIssuer("");
 		AttributeValueType attributeValue3 = new AttributeValueType();
 		attributeValue3.setDataType(STRING_DATATYPE);
-		String policyDir = policyAdapter.getParentPath().toString();
-		int startIndex = policyDir.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-		policyDir = policyDir.substring(startIndex, policyDir.length());
-		StringTokenizer tokenizer = null;
-		StringBuffer buffer = new StringBuffer();
-		if (policyDir.contains("\\")) {
-			tokenizer = new StringTokenizer(policyDir, "\\");
-		} else {
-			tokenizer = new StringTokenizer(policyDir, "/");
-			}
-		if (tokenizer != null) {
-			while (tokenizer.hasMoreElements()) {
-				String value = tokenizer.nextToken();
-				buffer.append(value);
-				buffer.append(".");
-			}
-		}
 		fileName = FilenameUtils.removeExtension(fileName);
-		fileName = buffer.toString() + fileName + ".xml";
-		System.out.println(fileName);
+		fileName = fileName + ".xml";
 		String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
 		if ((name == null) || (name.equals(""))) {
 			name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
 		}
-		System.out.println(name);
 		attributeValue3.getContent().add(name);
 		assignment3.setExpression(new ObjectFactory().createAttributeValue(attributeValue3));
 		advice.getAttributeAssignmentExpression().add(assignment3);
@@ -541,7 +409,7 @@ public class FirewallConfigPolicy extends Policy {
 		
 		//Ecomp Name Assignment
 		AttributeAssignmentExpressionType assignment5 = new AttributeAssignmentExpressionType();
-		assignment5.setAttributeId("matching:" + this.ECOMPID);
+		assignment5.setAttributeId("matching:" + ECOMPID);
 		assignment5.setCategory(CATEGORY_RESOURCE);
 		assignment5.setIssuer("");
 		AttributeValueType configNameAttributeValue5 = new AttributeValueType();
@@ -551,7 +419,7 @@ public class FirewallConfigPolicy extends Policy {
 		
 		//Config Name Assignment
 		AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
-		assignment6.setAttributeId("matching:" + this.CONFIGID);
+		assignment6.setAttributeId("matching:" + CONFIGID);
 		assignment6.setCategory(CATEGORY_RESOURCE);
 		assignment6.setIssuer("");
 		AttributeValueType configNameAttributeValue6 = new AttributeValueType();
@@ -608,9 +476,6 @@ public class FirewallConfigPolicy extends Policy {
 		assignment10.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue10));
 
 		advice.getAttributeAssignmentExpression().add(assignment10);
-		
-		int index = 0;
-
 		advices.getAdviceExpression().add(advice);
 		return advices;
 	}
@@ -628,7 +493,6 @@ public class FirewallConfigPolicy extends Policy {
 			JsonArray firewallRules = null;
 			JsonArray serviceGroup = null;
 			JsonArray addressGroup = null;
-			String securityZone=null;
 			
 			Connection con = null;
 			Statement st = null;
@@ -652,34 +516,8 @@ public class FirewallConfigPolicy extends Policy {
 				firewallRules = json.getJsonArray("firewallRuleList");
 				serviceGroup = json.getJsonArray("serviceGroups");
 				addressGroup = json.getJsonArray("addressGroups");	
-				securityZone=json.getString("primaryParentZoneId").toString();
 				
-				logger.info("Parent child: securityZone from JSON: "+securityZone);
 				String insertQuery = null;
-				
-				//Inserting childPolicy and its parent to the FWChildToParent DB table
-				if(securityZone!=null){
-					//Its a child Policy. 
-					//Retrieve the parent name from the securityZone Id
-					String retrieveParentQuery= "select parent from fwparent where securityZone='";
-					
-					retrieveParentQuery=retrieveParentQuery+securityZone+"';";
-					logger.info("Parent child: Query to retrieve parent "+retrieveParentQuery);
-					rs = st.executeQuery(retrieveParentQuery);
-					
-					String parent=null;
-					if(rs.next()){
-						parent = rs.getString("parent");
-					}
-					rs.close();
-					
-					
-					String insertQueryChildTable="INSERT INTO FWChildToParent(child, parent) VALUES ('";
-					insertQueryChildTable=insertQueryChildTable+policyAdapter.getPolicyName()+"','"+parent+"');";
-					logger.info("Parent child: Insert child and parent to DB: "+insertQueryChildTable);
-					st.executeUpdate(insertQueryChildTable);
-					
-				}
 				
 				/*
 				 * Inserting firewallRuleList data into the Terms, SecurityZone, and Action tables
@@ -707,9 +545,7 @@ public class FirewallConfigPolicy extends Policy {
 						actionID = rs.getInt("ID");
 					}
 					rs.close();
-					
-					int i = 0;
-					for(JsonValue jsonValue : firewallRules) {
+					for(int i = 0;i<firewallRules.size();i++) {
 						
 						//increment ID Primary Keys
 						termID = termID + 1;
@@ -738,8 +574,8 @@ public class FirewallConfigPolicy extends Policy {
 						JsonArray fromZoneArray = ruleListobj.getJsonArray("fromZones");
 						String fromZoneString = null;
 						
-						int fromZoneIndex = 0;
-						for (JsonValue fromZoneJsonValue : fromZoneArray) {
+						
+						for (int fromZoneIndex = 0;fromZoneIndex<fromZoneArray.size(); fromZoneIndex++) {
 							String value = fromZoneArray.get(fromZoneIndex).toString();
 							value = value.replace("\"", "");
 							
@@ -750,17 +586,13 @@ public class FirewallConfigPolicy extends Policy {
 								fromZoneString = value;
 							}
 							
-							fromZoneIndex++;
-							
 						}
 						String fromZoneInsert = "'"+fromZoneString+"'";
 						
 						//getting toZone Array field from the firewallRulesList
 						JsonArray toZoneArray = ruleListobj.getJsonArray("toZones");
 						String toZoneString = null;
-						
-						int toZoneIndex = 0;
-						for (JsonValue toZoneJsonValue : toZoneArray) {
+						for (int toZoneIndex = 0; toZoneIndex<toZoneArray.size(); toZoneIndex++) {
 							String value = toZoneArray.get(toZoneIndex).toString();
 							value = value.replace("\"", "");
 							
@@ -771,17 +603,13 @@ public class FirewallConfigPolicy extends Policy {
 								toZoneString = value;
 							}
 							
-							toZoneIndex++;
-							
 						}
 						String toZoneInsert = "'"+toZoneString+"'";
 						
 						//getting sourceList Array fields from the firewallRulesList
 						JsonArray srcListArray = ruleListobj.getJsonArray("sourceList");
 						String srcListString = null;
-						
-						int srcListIndex = 0;
-						for (JsonValue srcListJsonValue : srcListArray) {
+						for (int srcListIndex = 0; srcListIndex< srcListArray.size(); srcListIndex++) {
 							JsonObject srcListObj = srcListArray.getJsonObject(srcListIndex);
 							String type = srcListObj.get("type").toString().replace("\"", "");
 							
@@ -805,17 +633,13 @@ public class FirewallConfigPolicy extends Policy {
 								srcListString = value;
 							}
 							
-							srcListIndex++;
-							
 						}
 						String srcListInsert = "'"+srcListString+"'";
 						
 						//getting destinationList Array fields from the firewallRulesList
 						JsonArray destListArray = ruleListobj.getJsonArray("destinationList");
 						String destListString = null;
-						
-						int destListIndex = 0;
-						for (JsonValue destListJsonValue : destListArray) {
+						for (int destListIndex = 0; destListIndex <destListArray.size(); destListIndex++) {
 							JsonObject destListObj = destListArray.getJsonObject(destListIndex);
 							String type = destListObj.get("type").toString().replace("\"", "");
 							
@@ -837,17 +661,13 @@ public class FirewallConfigPolicy extends Policy {
 							} else {
 								destListString = value;
 							}
-							
-							destListIndex++;
 						}
 						String destListInsert = "'"+destListString+"'";
 						
 						//getting destServices Array fields from the firewallRulesList
 						JsonArray destServicesArray = ruleListobj.getJsonArray("destServices");
 						String destPortListString = null;
-						
-						int destPortListIndex = 0;
-						for (JsonValue destListJsonValue : destServicesArray) {
+						for (int destPortListIndex = 0; destPortListIndex < destServicesArray.size(); destPortListIndex++) {
 							JsonObject destServicesObj = destServicesArray.getJsonObject(destPortListIndex);
 							String type = destServicesObj.get("type").toString().replace("\"", "");
 							
@@ -869,8 +689,6 @@ public class FirewallConfigPolicy extends Policy {
 							} else {
 								destPortListString = value;
 							}
-							
-							destPortListIndex++;
 						}
 						String destPortListInsert = "'"+destPortListString+"'";					
 						
@@ -889,8 +707,6 @@ public class FirewallConfigPolicy extends Policy {
 						st.addBatch(actionSql);
 						
 						st.executeBatch();
-						
-						i++;
 					}
 					
 				}
@@ -929,9 +745,7 @@ public class FirewallConfigPolicy extends Policy {
 						portID = rs.getInt("ID");
 					}
 					rs.close();
-					
-					int i = 0;
-					for(JsonValue jsonValue : serviceGroup) {
+					for(int i = 0; i < serviceGroup.size() ; i++) {
 						
 						/*
 						 * Populate ArrayLists with values from the JSON
@@ -965,9 +779,7 @@ public class FirewallConfigPolicy extends Policy {
 							serviceListID = serviceListID + 1;
 
 							String name = null;
-							
-							int membersIndex = 0;
-							for (JsonValue membersValue : membersArray) {
+							for (int membersIndex = 0; membersIndex< membersArray.size(); membersIndex++) {
 								JsonObject membersObj = membersArray.getJsonObject(membersIndex);
 								//String value = membersObj.get("name").toString();
 								String type = membersObj.get("type").toString().replace("\"", "");
@@ -990,8 +802,6 @@ public class FirewallConfigPolicy extends Policy {
 								} else {
 									name = value;
 								}
-								
-								membersIndex++;
 							}
 							String nameInsert = "'"+name+"'";		
 							
@@ -1034,11 +844,7 @@ public class FirewallConfigPolicy extends Policy {
 							
 							st.executeBatch();
 
-						}		
-						
-						
-						
-						i++;
+						}
 					}
 				}
 				
@@ -1060,11 +866,7 @@ public class FirewallConfigPolicy extends Policy {
 						addressID = rs.getInt("ID");
 					}
 					rs.close();
-					
-					
-					int i = 0;
-					for(JsonValue jsonValue : addressGroup) {
-						
+					for(int i = 0; i < addressGroup.size(); i++) {
 						/*
 						 * Populate ArrayLists with values from the JSON
 						 */
@@ -1082,9 +884,7 @@ public class FirewallConfigPolicy extends Policy {
 						
 						String prefixIP = null;
 						String type = null;
-						
-						int membersIndex = 0;
-						for (JsonValue membersValue : membersArray) {
+						for (int membersIndex = 0; membersIndex < membersArray.size(); membersIndex++) {
 							JsonObject membersObj = membersArray.getJsonObject(membersIndex);
 							//String value = membersObj.get("value").toString();
 							type = membersObj.get("type").toString().replace("\"", "");
@@ -1107,8 +907,6 @@ public class FirewallConfigPolicy extends Policy {
 							} else {
 								prefixIP = value;
 							}
-							
-							membersIndex++;
 						}
 						String prefixList = "'"+prefixIP+"'";
 						
@@ -1135,8 +933,6 @@ public class FirewallConfigPolicy extends Policy {
 						
 						//Execute the queries to Insert data
 			            st.executeUpdate(insertQuery);
-						
-						i++;
 					}
 					
 				}
@@ -1169,15 +965,11 @@ public class FirewallConfigPolicy extends Policy {
 				st.executeBatch();
 				
 			} catch (ClassNotFoundException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(e.getMessage());
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FirewallConfigPolicy", "Exception building Firewall queries ");
 				System.out.println(e.getMessage());
 				return false;
 	
 			} catch (SQLException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(e.getMessage());
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FirewallConfigPolicy", "Exception executing Firewall queries");
 				System.out.println(e.getMessage());
 				return false;
@@ -1246,8 +1038,8 @@ public class FirewallConfigPolicy extends Policy {
 				
 				JsonNode jsonDiff = createPatch(jsonBody, prevJsonBody);
 				
-				int i = 0;
-				for (JsonNode node : jsonDiff) {
+				
+				for (int i = 0; i<jsonDiff.size(); i++) {
 					//String path = jsonDiff.get(i).asText();
 					String jsonpatch = jsonDiff.get(i).toString();
 					
@@ -1278,13 +1070,10 @@ public class FirewallConfigPolicy extends Policy {
 						}
 						rs.close();
 						
-						String insertQuery = null;
-						
 						/*
 						 * Inserting firewallRuleList data into the Terms, SecurityZone, and Action tables
 						 */
-						int ri = 0;
-						for(JsonValue jsonValue : firewallRules) {
+						for(int ri = 0; ri < firewallRules.size(); ri++) {
 							
 							//increment ID Primary Keys
 							termID = termID + 1;
@@ -1313,8 +1102,7 @@ public class FirewallConfigPolicy extends Policy {
 							JsonArray fromZoneArray = ruleListobj.getJsonArray("fromZones");
 							String fromZoneString = null;
 							
-							int fromZoneIndex = 0;
-							for (JsonValue fromZoneJsonValue : fromZoneArray) {
+							for (int fromZoneIndex = 0; fromZoneIndex<fromZoneArray.size() ; fromZoneIndex++) {
 								String value = fromZoneArray.get(fromZoneIndex).toString();
 								value = value.replace("\"", "");
 								
@@ -1325,8 +1113,6 @@ public class FirewallConfigPolicy extends Policy {
 									fromZoneString = value;
 								}
 								
-								fromZoneIndex++;
-								
 							}
 							String fromZoneInsert = "'"+fromZoneString+"'";
 							
@@ -1334,8 +1120,8 @@ public class FirewallConfigPolicy extends Policy {
 							JsonArray toZoneArray = ruleListobj.getJsonArray("toZones");
 							String toZoneString = null;
 							
-							int toZoneIndex = 0;
-							for (JsonValue toZoneJsonValue : toZoneArray) {
+							
+							for (int toZoneIndex = 0; toZoneIndex < toZoneArray.size(); toZoneIndex++) {
 								String value = toZoneArray.get(toZoneIndex).toString();
 								value = value.replace("\"", "");
 								
@@ -1346,16 +1132,12 @@ public class FirewallConfigPolicy extends Policy {
 									toZoneString = value;
 								}
 								
-								toZoneIndex++;
-								
 							}
 							String toZoneInsert = "'"+toZoneString+"'";
 							//getting sourceList Array fields from the firewallRulesList
 							JsonArray srcListArray = ruleListobj.getJsonArray("sourceList");
 							String srcListString = null;
-							
-							int srcListIndex = 0;
-							for (JsonValue srcListJsonValue : srcListArray) {
+							for (int srcListIndex = 0; srcListIndex<srcListArray.size(); srcListIndex++) {
 								JsonObject srcListObj = srcListArray.getJsonObject(srcListIndex);
 								String type = srcListObj.get("type").toString().replace("\"", "");
 								
@@ -1379,17 +1161,13 @@ public class FirewallConfigPolicy extends Policy {
 									srcListString = value;
 								}
 								
-								srcListIndex++;
-								
 							}
 							String srcListInsert = "'"+srcListString+"'";
 							
 							//getting destinationList Array fields from the firewallRulesList
 							JsonArray destListArray = ruleListobj.getJsonArray("destinationList");
 							String destListString = null;
-							
-							int destListIndex = 0;
-							for (JsonValue destListJsonValue : destListArray) {
+							for (int destListIndex = 0; destListIndex<destListArray.size(); destListIndex ++) {
 								JsonObject destListObj = destListArray.getJsonObject(destListIndex);
 								String type = destListObj.get("type").toString().replace("\"", "");
 								
@@ -1411,17 +1189,13 @@ public class FirewallConfigPolicy extends Policy {
 								} else {
 									destListString = value;
 								}
-								
-								destListIndex++;
 							}
 							String destListInsert = "'"+destListString+"'";
 							
 							//getting destServices Array fields from the firewallRulesList
 							JsonArray destServicesArray = ruleListobj.getJsonArray("destServices");
 							String destPortListString = null;
-							
-							int destPortListIndex = 0;
-							for (JsonValue destListJsonValue : destServicesArray) {
+							for (int destPortListIndex = 0; destPortListIndex < destServicesArray.size(); destPortListIndex++) {
 								JsonObject destServicesObj = destServicesArray.getJsonObject(destPortListIndex);
 								String type = destServicesObj.get("type").toString().replace("\"", "");
 								
@@ -1443,8 +1217,6 @@ public class FirewallConfigPolicy extends Policy {
 								} else {
 									destPortListString = value;
 								}
-								
-								destPortListIndex++;
 							}
 							String destPortListInsert = "'"+destPortListString+"'";					
 							
@@ -1471,10 +1243,7 @@ public class FirewallConfigPolicy extends Policy {
 								actionSql = actionSql.replace('"', '\'');
 								st.addBatch(actionSql);
 							}
-
 							st.executeBatch();
-							
-							ri++;
 						}
 						
 					}
@@ -1515,9 +1284,7 @@ public class FirewallConfigPolicy extends Policy {
 						/*
 						 * Inserting serviceGroups data into the ServiceGroup, ServiceList, ProtocolList, and PortList tables
 						 */
-						int si = 0;
-						for(JsonValue jsonValue : serviceGroup) {
-							
+						for(int si = 0; si < serviceGroup.size(); si++) {
 							/*
 							 * Populate ArrayLists with values from the JSON
 							 */
@@ -1552,10 +1319,8 @@ public class FirewallConfigPolicy extends Policy {
 								rs.close();
 								//increment ID Primary Keys
 								serviceListID = serviceListID + 1;
-								
 								String name = null;
-								int membersIndex = 0;
-								for (JsonValue membersValue : membersArray) {
+								for (int membersIndex = 0; membersIndex < membersArray.size(); membersIndex++) {
 									JsonObject membersObj = membersArray.getJsonObject(membersIndex);
 									String type = membersObj.get("type").toString().replace("\"", "");
 									
@@ -1577,8 +1342,6 @@ public class FirewallConfigPolicy extends Policy {
 									} else {
 										name = value;
 									}
-									
-									membersIndex++;
 								}
 								String nameInsert = "'"+name+"'";		
 								
@@ -1640,15 +1403,9 @@ public class FirewallConfigPolicy extends Policy {
 									st.addBatch(portSql);
 								}
 								rs.close();
-								
 								st.executeBatch();
-
-							}		
-							
-							
-				            si++;
+							}
 						}
-						
 					}
 					
 					if (path.contains("addressGroups")) {
@@ -1671,9 +1428,7 @@ public class FirewallConfigPolicy extends Policy {
 						rs.close();
 						
 						String insertQuery = null;
-						
-						int ai = 0;
-						for(JsonValue jsonValue : addressGroup) {
+						for(int ai=0; ai < addressGroup.size() ; ai++) {
 							
 							/*
 							 * Populate ArrayLists with values from the JSON
@@ -1692,8 +1447,7 @@ public class FirewallConfigPolicy extends Policy {
 							
 							String prefixIP = null;
 							String type = null;
-							int membersIndex = 0;
-							for (JsonValue membersValue : membersArray) {
+							for (int membersIndex=0; membersIndex < membersArray.size(); membersIndex++) {
 								JsonObject membersObj = membersArray.getJsonObject(membersIndex);
 								type = membersObj.get("type").toString().replace("\"", "");
 								
@@ -1715,8 +1469,6 @@ public class FirewallConfigPolicy extends Policy {
 								} else {
 									prefixIP = value;
 								}
-								
-								membersIndex++;
 							}
 							String prefixList = "'"+prefixIP+"'";
 							
@@ -1753,20 +1505,13 @@ public class FirewallConfigPolicy extends Policy {
 											+ "VALUES("+prefixID+","+addressGroupName+","+prefixList+","+description+")";
 								
 							}
-			
-							
 							//Replace double quote with single quote
 							insertQuery = insertQuery.replace('"', '\'');
 							
 							//Execute the queries to Insert data
 				            st.executeUpdate(insertQuery);
-							
-							ai++;
-						}
-						
+						}						
 					}
-						
-					i++;	
 				}
 				
 				/*
@@ -1797,15 +1542,11 @@ public class FirewallConfigPolicy extends Policy {
 				st.executeBatch();
 				
 			} catch (ClassNotFoundException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(e.getMessage());
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FirewallConfigPolicy", "Exception building Firewall queries");
 				System.out.println(e.getMessage());
 				return false;
 	
 			} catch (SQLException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(e.getMessage());
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FirewallConfigPolicy", "Exception executing Firewall queries");
 				System.out.println(e.getMessage());
 				return false;

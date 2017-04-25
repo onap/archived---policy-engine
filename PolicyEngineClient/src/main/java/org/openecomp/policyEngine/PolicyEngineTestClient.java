@@ -67,6 +67,7 @@ public class PolicyEngineTestClient {
 	 * @return
 	 */
 
+	@SuppressWarnings("deprecation")
 	public static ArrayList<String> getConfig(PolicyEngine policyEngine,
 			String eCOMPComponentName, String configName,
 			Map<String, String> configAttributes) {
@@ -117,6 +118,7 @@ public class PolicyEngineTestClient {
 		// Decision example
 		try {
 			UUID requestID = UUID.randomUUID();
+			@SuppressWarnings("deprecation")
 			DecisionResponse policyDecision = policyEngine.getDecision(
 					eCOMPComponentName, decisionAttributes, requestID);
 			resultReceived.add(policyDecision.getDecision().toString());
@@ -140,6 +142,7 @@ public class PolicyEngineTestClient {
 		ArrayList<String> resultReceived = new ArrayList<String>();
 		try {
 			UUID requestID = UUID.randomUUID();
+			@SuppressWarnings("deprecation")
 			Collection<PolicyResponse> policyResponses = policyEngine
 					.sendEvent(eventAttributes, requestID);
 			if (policyResponses != null && !policyResponses.isEmpty()) {

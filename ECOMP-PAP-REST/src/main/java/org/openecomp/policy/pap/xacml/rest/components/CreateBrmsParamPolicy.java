@@ -26,7 +26,6 @@ import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,14 +34,26 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.Matcher; 
+
+import org.apache.commons.io.FilenameUtils;
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.pap.xacml.rest.controller.BRMSDictionaryController;
+import org.openecomp.policy.rest.XACMLRestProperties;
+import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
+
+import com.att.research.xacml.std.IdentifierImpl;
+import com.att.research.xacml.util.XACMLProperties;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -56,26 +67,11 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
-import org.apache.commons.io.FilenameUtils;
-import org.openecomp.policy.pap.xacml.rest.adapters.PolicyRestAdapter;
-import org.openecomp.policy.rest.XACMLRestProperties;
-
-import com.att.research.xacml.std.IdentifierImpl;
-import com.att.research.xacml.util.XACMLProperties;
-
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger; 
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType; 
 
 public class CreateBrmsParamPolicy extends Policy {
-	/**
-	 * Config Fields
-	 */
-	private static final Logger logger = FlexLogger
-			.getLogger(CreateBrmsParamPolicy.class);
+	
+	private static final Logger LOGGER = FlexLogger.getLogger(CreateBrmsParamPolicy.class);
 
 	/*
 	 * These are the parameters needed for DB access from the PAP
@@ -95,16 +91,14 @@ public class CreateBrmsParamPolicy extends Policy {
 
 	}
 	
-	public String expandConfigBody(String ruleContents,  
-										Map<String, String> brmsParamBody
-										  ) { 
+	public String expandConfigBody(String ruleContents, Map<String, String> brmsParamBody) { 
 			 
 			Set<String> keySet= new HashSet<String>();
 			
 			Map<String,String> copyMap=new HashMap<>();
 			copyMap.putAll(brmsParamBody);
-			copyMap.put("policyName", policyAdapter.getPolicyName());
-			copyMap.put("policyScope", policyAdapter.getPolicyScope());
+			copyMap.put("policyName", policyName.substring(0, policyName.replace(".xml", "").lastIndexOf(".")));
+			copyMap.put("policyScope", policyAdapter.getDomainDir());
 			copyMap.put("policyVersion",policyAdapter.getHighestVersion().toString());
 			
 			//Finding all the keys in the Map data-structure.
@@ -127,90 +121,11 @@ public class CreateBrmsParamPolicy extends Policy {
 				}
 				ruleContents=m.replaceAll(finalInput);
 			}
-			System.out.println(ruleContents);
 			return ruleContents; 
 	} 
 			 
-	// Saving the Configurations file at server location for config policy.
-	protected void saveConfigurations(String policyName, String prevPolicyName,
-			String ruleBody) {
-		final Path gitPath = Paths.get(policyAdapter.getUserGitPath()
-				.toString());
-		String policyDir = policyAdapter.getParentPath().toString();
-		int startIndex = policyDir.indexOf(gitPath.toString())
-				+ gitPath.toString().length() + 1;
-		policyDir = policyDir.substring(startIndex, policyDir.length());
-		logger.info("print the main domain value" + policyDir);
-		String path = policyDir.replace('\\', '.');
-		if (path.contains("/")) {
-			path = policyDir.replace('/', '.');
-			logger.info("print the path:" + path);
-		}
 
-		
-			String configFileName = getConfigFile(policyName);
-        try{
-			// Getting the previous policy Config Json file to be used for
-			// updating the dictionary tables
-			if (policyAdapter.isEditPolicy()) {
-
-				String prevConfigFileName = getConfigFile(prevPolicyName);
-
-				File oldFile;
-				if (CONFIG_HOME.contains("\\")) {
-					oldFile = new File(CONFIG_HOME + "\\" + path + "."
-							+ prevConfigFileName);
-				} else {
-					oldFile = new File(CONFIG_HOME + "/" + path + "."
-							+ prevConfigFileName);
-				}
-
-				String filepath = oldFile.toString();
-
-				String prevJsonBody = readFile(filepath, StandardCharsets.UTF_8);
-				policyAdapter.setPrevJsonBody(prevJsonBody);
-			}
-
-			File configHomeDir = new File(CONFIG_HOME);
-			File[] listOfFiles = configHomeDir.listFiles();
-			if (listOfFiles != null) {
-				for (File eachFile : listOfFiles) {
-					if (eachFile.isFile()) {
-						String fileNameWithoutExtension = FilenameUtils
-								.removeExtension(eachFile.getName());
-						String configFileNameWithoutExtension = FilenameUtils
-								.removeExtension(configFileName);
-						if (fileNameWithoutExtension
-								.equals(configFileNameWithoutExtension)) {
-							// delete the file
-							eachFile.delete();
-						}
-					}
-				}
-			}
-        }
-        catch(IOException e){
-        	
-        }
-			try {
-				
-				if (policyName.endsWith(".xml")) {
-					policyName = policyName.substring(0,
-							policyName.lastIndexOf(".xml"));
-				}
-				PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator
-						+ path + "." + policyName + ".txt");
-				String expandedBody=expandConfigBody(ruleBody,policyAdapter.getBrmsParamBody());
-				out.println(expandedBody);
-				out.close();
-
-			} catch (Exception e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "CreateBrmsParamPolicy", "Exception saving configuration file");
-			}
-	}
-
+    
 	// Utility to read json data from the existing file to a string
 	static String readFile(String path, Charset encoding) throws IOException {
 
@@ -218,6 +133,27 @@ public class CreateBrmsParamPolicy extends Policy {
 		return new String(encoded, encoding);
 
 	}
+	
+	// Saving the Configurations file at server location for config policy.
+	protected void saveConfigurations(String policyName, String ruleBody) {
+		try {
+			if (policyName.endsWith(".xml")) {
+				policyName = policyName.substring(0,
+						policyName.lastIndexOf(".xml"));
+			}
+			PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName + ".txt");
+			String expandedBody=expandConfigBody(ruleBody,policyAdapter.getBrmsParamBody());
+			out.println(expandedBody);
+			policyAdapter.setJsonBody(expandedBody);
+			policyAdapter.setConfigBodyData(expandedBody);
+			out.close();
+			
+
+		} catch (Exception e) {
+			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "CreateBrmsParamPolicy", "Exception saving configuration file");
+		}
+	}
+
 
 	// Here we are adding the extension for the configurations file based on the
 	// config type selection for saving.
@@ -255,29 +191,16 @@ public class CreateBrmsParamPolicy extends Policy {
 		// Until here we prepared the data and here calling the method to create
 		// xml.
 		Path newPolicyPath = null;
-		newPolicyPath = Paths.get(policyAdapter.getParentPath().toString(),
-				policyName);
+		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 		
 		Boolean dbIsUpdated = true;
 
 		successMap = new HashMap<String, String>();
 		if (dbIsUpdated) {
-			successMap = createPolicy(newPolicyPath,
-					getCorrectPolicyDataObject());
+			successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
 		} else {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Failed to Update the Database Dictionary Tables.");
 			PolicyLogger.error("Failed to Update the Database Dictionary Tables.");
-
-			// remove the new json file
-			String jsonBody = policyAdapter.getPrevJsonBody();
-			saveConfigurations(policyName, "", jsonBody);
 			successMap.put("error", "DB UPDATE");
-		}
-
-		if (successMap.containsKey("success")) {
-			Path finalPolicyPath = getFinalPolicyPath();
-			policyAdapter.setFinalPolicyPath(finalPolicyPath.toString());
 		}
 		return successMap;
 	}
@@ -313,22 +236,17 @@ public class CreateBrmsParamPolicy extends Policy {
 			}
 			rs.close();
 		}catch (ClassNotFoundException e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(e.getMessage());
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "CreateBrmsParamPolicy", "Exception querying BRMSParamTemplate");
-			System.out.println(e.getMessage());
-
 		} catch (SQLException e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(e.getMessage());
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "CreateBrmsParamPolicy", "Exception querying BRMSParamTemplate");
-			System.out.println(e.getMessage());
 		} finally {
 			try{
 				if (con!=null) con.close();
 				if (rs!=null) rs.close();
 				if (st!=null) st.close();
-			} catch (Exception ex){}
+			} catch (Exception ex){
+				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, ex, "CreateBrmsParamPolicy", "Exception querying BRMSParamTemplate");
+			}
 		}
 		return ruleTemplate;
 		
@@ -421,8 +339,6 @@ public class CreateBrmsParamPolicy extends Policy {
 					}
 				}
 			} catch (Exception e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "CreateBrmsParamPolicy", "Exception parsing file in findType");
 			}
 		}
@@ -443,13 +359,7 @@ public class CreateBrmsParamPolicy extends Policy {
 
 		int version = 0;
 		String policyID = policyAdapter.getPolicyID();
-
-		if (policyAdapter.isEditPolicy()) {
-			// version = Integer.parseInt(policyAdapter.getVersion()) + 1;
-			version = policyAdapter.getHighestVersion() + 1;
-		} else {
-			version = 1;
-		}
+		version = policyAdapter.getHighestVersion();
 
 		// Create the Instance for pojo, PolicyType object is used in
 		// marshalling.
@@ -462,33 +372,9 @@ public class CreateBrmsParamPolicy extends Policy {
 			policyAdapter.setData(policyConfig);
 		}
 
-		if (policyAdapter.getData() != null) {
-
-			// Save off everything
-			// making ready all the required elements to generate the action
-			// policy xml.
-			// Get the uniqueness for policy name.
-			String prevPolicyName = null;
-			if (policyAdapter.isEditPolicy()) {
-				prevPolicyName = "Config_BRMS_Param_" + policyAdapter.getPolicyName()
-						+ "." + policyAdapter.getHighestVersion() + ".xml";
-			}
-
-			Path newFile = getNextFilename(
-					Paths.get(policyAdapter.getParentPath().toString()),
-					(policyAdapter.getPolicyType() + "_BRMS_Param"),
-					policyAdapter.getPolicyName(), version);
-
-			if (newFile == null) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Policy already Exists, cannot create the policy.");
-				PolicyLogger.error("Policy already Exists, cannot create the policy.");
-				setPolicyExists(true);
-				return false;			
-			}
-			policyName = newFile.getFileName().toString();
-			
-				
+		policyName = policyAdapter.getNewFileName();
+		
+		if (policyAdapter.getData() != null) {	
 			Map<String,String> ruleAndUIValue= policyAdapter.getBrmsParamBody();
 			String tempateValue= ruleAndUIValue.get("templateName");
 			String valueFromDictionary= getValueFromDictionary(tempateValue);
@@ -504,7 +390,7 @@ public class CreateBrmsParamPolicy extends Policy {
 					body = "/* Autogenerated Code Please Don't change/remove this comment section. This is for the UI purpose. \n\t " +
 								"<$%BRMSParamTemplate=" + tempateValue + "%$> \n */ \n";
 					body = body +  valueFromDictionary + "\n";
-					generatedRule = "rule \"Params\" \n\tsalience 1000 \n\twhen\n\tthen\n\t\tParams params = new Params();";
+					generatedRule = "rule \"" +policyName.substring(0, policyName.replace(".xml", "").lastIndexOf(".")) +".Params\" \n\tsalience 1000 \n\twhen\n\tthen\n\t\tParams params = new Params();";
 					
 					//We first read the map data structure(ruleAndUIValue) received from the PAP-ADMIN
 					//We ignore if the key is "templateName as we are interested only in the UI fields and its value. 
@@ -537,22 +423,18 @@ public class CreateBrmsParamPolicy extends Policy {
 					
 					generatedRule = generatedRule
 							+ "\n\t\tinsert(params);\nend";
-					logger.info("New rule generated with :" + generatedRule);
+					LOGGER.info("New rule generated with :" + generatedRule);
 					body = body + generatedRule;
 				} catch (Exception e) {
-					//TODO:EELF Cleanup - Remove logger
-					//logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "CreateBrmsParamPolicy", "Exception saving policy");
 				}
 			}
 			catch (Exception e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "CreateBrmsParamPolicy", "Exception saving policy");
 			}
 			
-			saveConfigurations(policyName,prevPolicyName,body);
-
+			saveConfigurations(policyName,body);
+			
 			// Make sure the filename ends with an extension
 			if (policyName.endsWith(".xml") == false) {
 				policyName = policyName + ".xml";
@@ -562,17 +444,12 @@ public class CreateBrmsParamPolicy extends Policy {
 
 			configPolicy.setDescription(policyAdapter.getPolicyDescription());
 
-			configPolicy.setRuleCombiningAlgId(policyAdapter
-					.getRuleCombiningAlgId());
+			configPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
 
 			AllOfType allOfOne = new AllOfType();
-			File policyFilePath = new File(policyAdapter.getParentPath()
-					.toString(), policyName);
-			String policyDir = policyFilePath.getParentFile().getName();
-			String fileName = FilenameUtils.removeExtension(policyName);
-			fileName = policyDir + "." + fileName + ".xml";
-			String name = fileName.substring(fileName.lastIndexOf("\\") + 1,
-					fileName.length());
+
+			String fileName = policyAdapter.getNewFileName();
+			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
 			if ((name == null) || (name.equals(""))) {
 				name = fileName.substring(fileName.lastIndexOf("/") + 1,
 						fileName.length());
@@ -583,22 +460,16 @@ public class CreateBrmsParamPolicy extends Policy {
 			AllOfType allOf = new AllOfType();
 
 			// Match for ECOMPName
-			allOf.getMatch().add(
-					createMatch("ECOMPName", policyAdapter.getEcompName()));
-			allOf.getMatch().add(
-					createMatch("ConfigName", policyAdapter.getConfigName()));
+			allOf.getMatch().add(createMatch("ECOMPName", policyAdapter.getEcompName()));
+			allOf.getMatch().add(createMatch("ConfigName", policyAdapter.getConfigName()));
 			// Match for riskType
-			allOf.getMatch().add(
-					createDynamicMatch("RiskType", policyAdapter.getRiskType()));
+			allOf.getMatch().add(createDynamicMatch("RiskType", policyAdapter.getRiskType()));
 			// Match for riskLevel
-			allOf.getMatch().add(
-					createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
+			allOf.getMatch().add(createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
 			// Match for riskguard
-			allOf.getMatch().add(
-					createDynamicMatch("guard", policyAdapter.getGuard()));
+			allOf.getMatch().add(createDynamicMatch("guard", policyAdapter.getGuard()));
 			// Match for ttlDate
-			allOf.getMatch().add(
-					createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
+			allOf.getMatch().add(createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
 			AnyOfType anyOf = new AnyOfType();
 			anyOf.getAllOf().add(allOfOne);
 			anyOf.getAllOf().add(allOf);
@@ -628,9 +499,6 @@ public class CreateBrmsParamPolicy extends Policy {
 			try {
 				accessURI = new URI(ACTION_ID);
 			} catch (URISyntaxException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE
-						//+ e.getStackTrace());
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "CreateBrmsParamPolicy", "Exception creating ACCESS URI");
 			}
 			accessAttributeDesignator.setCategory(CATEGORY_ACTION);
@@ -653,16 +521,12 @@ public class CreateBrmsParamPolicy extends Policy {
 			try {
 				configURI = new URI(RESOURCE_ID);
 			} catch (URISyntaxException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE
-						//+ e.getStackTrace());
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "CreateBrmsParamPolicy", "Exception creating Config URI");
 			}
 
 			configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
 			configAttributeDesignator.setDataType(STRING_DATATYPE);
-			configAttributeDesignator.setAttributeId(new IdentifierImpl(
-					configURI).stringValue());
+			configAttributeDesignator.setAttributeId(new IdentifierImpl(configURI).stringValue());
 			configMatch.setAttributeDesignator(configAttributeDesignator);
 			configMatch.setMatchId(FUNCTION_STRING_EQUAL_IGNORE);
 
@@ -684,9 +548,6 @@ public class CreateBrmsParamPolicy extends Policy {
 			policyAdapter.setPolicyData(configPolicy);
 
 		} else {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Unsupported data object."
-					//+ policyAdapter.getData().getClass().getCanonicalName());
 			PolicyLogger.error("Unsupported data object."
 					+ policyAdapter.getData().getClass().getCanonicalName());
 		}
@@ -717,26 +578,14 @@ public class CreateBrmsParamPolicy extends Policy {
 
 		// For Config file Url if configurations are provided.
 		// URL ID Assignment
-		final Path gitPath = Paths.get(policyAdapter.getUserGitPath()
-				.toString());
 		AttributeAssignmentExpressionType assignment2 = new AttributeAssignmentExpressionType();
 		assignment2.setAttributeId("URLID");
 		assignment2.setCategory(CATEGORY_RESOURCE);
 		assignment2.setIssuer("");
 		AttributeValueType AttributeValue = new AttributeValueType();
 		AttributeValue.setDataType(URI_DATATYPE);
-		String policyDir1 = policyAdapter.getParentPath().toString();
-		int startIndex1 = policyDir1.indexOf(gitPath.toString())
-				+ gitPath.toString().length() + 1;
-		policyDir1 = policyDir1.substring(startIndex1, policyDir1.length());
-		logger.info("print the main domain value" + policyDir1);
-		String path = policyDir1.replace('\\', '.');
-		if (path.contains("/")) {
-			path = policyDir1.replace('/', '.');
-			logger.info("print the path:" + path);
-		}
-		String content = CONFIG_URL + "/Config/" + path + "."
-				+ getConfigFile(policyName);
+
+		String content = CONFIG_URL + "/Config/"+ getConfigFile(policyName);
 
 		AttributeValue.getContent().add(content);
 		assignment2.setExpression(new ObjectFactory()
@@ -750,34 +599,14 @@ public class CreateBrmsParamPolicy extends Policy {
 		assignment3.setIssuer("");
 		AttributeValueType attributeValue3 = new AttributeValueType();
 		attributeValue3.setDataType(STRING_DATATYPE);
-		String policyDir = policyAdapter.getParentPath().toString();
-		int startIndex = policyDir.indexOf(gitPath.toString())
-				+ gitPath.toString().length() + 1;
-		policyDir = policyDir.substring(startIndex, policyDir.length());
-		StringTokenizer tokenizer = null;
-		StringBuffer buffer = new StringBuffer();
-		if (policyDir.contains("\\")) {
-			tokenizer = new StringTokenizer(policyDir, "\\");
-		} else {
-			tokenizer = new StringTokenizer(policyDir, "/");
-		}
-		if (tokenizer != null) {
-			while (tokenizer.hasMoreElements()) {
-				String value = tokenizer.nextToken();
-				buffer.append(value);
-				buffer.append(".");
-			}
-		}
 		fileName = FilenameUtils.removeExtension(fileName);
-		fileName = buffer.toString() + fileName + ".xml";
-		System.out.println(fileName);
+		fileName = fileName + ".xml";
 		String name = fileName.substring(fileName.lastIndexOf("\\") + 1,
 				fileName.length());
 		if ((name == null) || (name.equals(""))) {
 			name = fileName.substring(fileName.lastIndexOf("/") + 1,
 					fileName.length());
 		}
-		System.out.println(name);
 		attributeValue3.getContent().add(name);
 		assignment3.setExpression(new ObjectFactory()
 				.createAttributeValue(attributeValue3));
@@ -797,7 +626,7 @@ public class CreateBrmsParamPolicy extends Policy {
 
 		// Ecomp Name Assignment
 		AttributeAssignmentExpressionType assignment5 = new AttributeAssignmentExpressionType();
-		assignment5.setAttributeId("matching:" + this.ECOMPID);
+		assignment5.setAttributeId("matching:" + ECOMPID);
 		assignment5.setCategory(CATEGORY_RESOURCE);
 		assignment5.setIssuer("");
 		AttributeValueType configNameAttributeValue5 = new AttributeValueType();
@@ -810,7 +639,7 @@ public class CreateBrmsParamPolicy extends Policy {
 		
 		//Config Name Assignment
 		AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
-		assignment6.setAttributeId("matching:" + this.CONFIGID);
+		assignment6.setAttributeId("matching:" +CONFIGID);
 		assignment6.setCategory(CATEGORY_RESOURCE);
 		assignment6.setIssuer("");
 		AttributeValueType configNameAttributeValue6 = new AttributeValueType();
@@ -818,22 +647,31 @@ public class CreateBrmsParamPolicy extends Policy {
 		configNameAttributeValue6.getContent().add(policyAdapter.getConfigName());
 		assignment6.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue6));
 		advice.getAttributeAssignmentExpression().add(assignment6);
-		
+        // Adding Controller Information. 
+        if(policyAdapter.getBrmsController()!=null){
+            BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
+            advice.getAttributeAssignmentExpression().add(
+                        createResponseAttributes("controller:"+ policyAdapter.getBrmsController(), 
+                                brmsDicitonaryController.getControllerDataByID(policyAdapter.getBrmsController()).getController()));
+        }
+        
+        // Adding Dependencies. 
+        if(policyAdapter.getBrmsDependency()!=null){
+            BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
+            ArrayList<String> dependencies = new ArrayList<String>();
+            StringBuilder key = new StringBuilder();
+            for(String dependencyName: policyAdapter.getBrmsDependency()){
+                dependencies.add(brmsDicitonaryController.getDependencyDataByID(dependencyName).getDependency());
+                key.append(dependencyName + ",");
+            }
+            advice.getAttributeAssignmentExpression().add(
+                        createResponseAttributes("dependencies:"+key.toString(), dependencies.toString()));
+        }
+        
+        // Dynamic Field Config Attributes. 
 		Map<String, String> dynamicFieldConfigAttributes = policyAdapter.getDynamicFieldConfigAttributes();
 		for (String keyField : dynamicFieldConfigAttributes.keySet()) {
-			String key = keyField;
-			String value = dynamicFieldConfigAttributes.get(key);
-			AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
-			assignment7.setAttributeId("key:" + key);
-			assignment7.setCategory(CATEGORY_RESOURCE);
-			assignment7.setIssuer("");
-
-			AttributeValueType configNameAttributeValue7 = new AttributeValueType();
-			configNameAttributeValue7.setDataType(STRING_DATATYPE);
-			configNameAttributeValue7.getContent().add(value);
-			assignment7.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue7));
-
-			advice.getAttributeAssignmentExpression().add(assignment7);
+			advice.getAttributeAssignmentExpression().add(createResponseAttributes("key:"+keyField, dynamicFieldConfigAttributes.get(keyField)));
 		}
 		
 		//Risk Attributes
@@ -893,4 +731,16 @@ public class CreateBrmsParamPolicy extends Policy {
 	public Object getCorrectPolicyDataObject() {		
 		return policyAdapter.getData();
 	}
+	
+    private AttributeAssignmentExpressionType  createResponseAttributes(String key, String value){
+        AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
+        assignment7.setAttributeId(key);
+        assignment7.setCategory(CATEGORY_RESOURCE);
+        assignment7.setIssuer("");
+        AttributeValueType configNameAttributeValue7 = new AttributeValueType();
+        configNameAttributeValue7.setDataType(STRING_DATATYPE);
+        configNameAttributeValue7.getContent().add(value);
+        assignment7.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue7));
+        return assignment7;
+    }
 }

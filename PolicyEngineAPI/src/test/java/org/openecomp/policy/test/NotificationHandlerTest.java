@@ -20,10 +20,9 @@
 
 package org.openecomp.policy.test;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
 import org.openecomp.policy.api.NotificationHandler;
-
-import static org.junit.Assert.*;
 
 /**
  * The class <code>NotificationHandlerTest</code> contains tests for the class <code>{@link NotificationHandler}</code>.
