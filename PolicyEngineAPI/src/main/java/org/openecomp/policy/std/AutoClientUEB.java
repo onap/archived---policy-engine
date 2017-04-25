@@ -31,33 +31,42 @@ import org.openecomp.policy.api.NotificationScheme;
 import org.openecomp.policy.api.NotificationType;
 import org.openecomp.policy.api.PDPNotification;
 import org.openecomp.policy.std.StdPDPNotification;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 
+import com.att.nsa.cambria.client.CambriaClientBuilders;
 import com.att.nsa.cambria.client.CambriaClientFactory;
 import com.att.nsa.cambria.client.CambriaConsumer;
-import org.openecomp.policy.common.logging.flexlogger.*; 
+import com.att.nsa.cambria.client.CambriaClientBuilders.ConsumerBuilder;
 /**
  * Create a UEB Consumer to receive policy update notification.
  * 
  * 
  *
  */
+@SuppressWarnings("deprecation")
 public class AutoClientUEB implements Runnable  {
 	private static StdPDPNotification notification = null;
 	private static NotificationScheme scheme = null;
 	private static NotificationHandler handler = null;
+	private static String topic = null;
 	private static String url = null;
 	private static boolean status = false; 
 	private static Logger logger = FlexLogger.getLogger(AutoClientUEB.class.getName());
 	private static String notficatioinType = null;
 	private static CambriaConsumer CConsumer = null;
-//	private volatile boolean stop = false;
+	private static String apiKey = null;
+	private static String apiSecret = null;
 	private static List<String> uebURLList = null; 
 	public volatile boolean isRunning = false;
     
 
-	public AutoClientUEB(String url, List<String> uebURLList) {
+	public AutoClientUEB(String url, List<String> uebURLList, String apiKey, String apiSecret) {
 	       AutoClientUEB.url = url;
 	       AutoClientUEB.uebURLList = uebURLList;
+	       AutoClientUEB.apiKey = apiKey;
+	       AutoClientUEB.apiKey = apiKey;
 	}
 
 	public void setAuto(NotificationScheme scheme,
@@ -89,7 +98,7 @@ public class AutoClientUEB implements Runnable  {
 	public synchronized void terminate() {
 		this.isRunning = false;
 	}
-	@SuppressWarnings("deprecation")
+	
 	@Override
 	public void run() {
 		synchronized(this) {
@@ -97,27 +106,35 @@ public class AutoClientUEB implements Runnable  {
 		}
 		String group =  UUID.randomUUID ().toString ();
 		String id = "0";
-		String topic = null;
+		//String topic = null;
 		// Stop and Start needs to be done.
 		if (scheme != null && handler!=null) {
 			if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) || scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) {
-				//Check if the Notification Type is UEB t				if (notficationType.equals("ueb")){
 				URL aURL;
 				try {
-					aURL = new URL(AutoClientUEB.url);
+					aURL = new URL(AutoClientUEB.topic);
 					topic = aURL.getHost() + aURL.getPort();
 				} catch (MalformedURLException e) {
 					topic = AutoClientUEB.url.replace("[:/]", "");
 				}
-					
+				
 				//TODO  create a loop to listen for messages from UEB cluster
+					
 				try {
-					CConsumer = CambriaClientFactory.createConsumer ( null, uebURLList, topic, group, id, 15*1000, 1000 );
+					//CConsumer = CambriaClientFactory.createConsumer ( null, uebURLList, topic, group, id, 15*1000, 1000 );
+					ConsumerBuilder builder = new CambriaClientBuilders.ConsumerBuilder();
+					builder.knownAs(group, id)
+					.usingHosts(uebURLList)
+					.onTopic(topic)
+					.waitAtServer(15*1000)
+					.receivingAtMost(1000)
+					.authenticatedBy(apiKey, apiSecret);
+					
+					 CConsumer = builder.build();
+					
 				} catch (MalformedURLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (GeneralSecurityException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				while (this.isRunning() )
@@ -131,11 +148,11 @@ public class AutoClientUEB implements Runnable  {
 						}
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						logger.debug("Error in processing UEB message");
+						logger.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Error in processing UEB message" + e.getMessage());
 					}
 
 				}
-				logger.debug("Stopping UEB Consuer loop will not logger fetch messages from the cluser");
+				logger.debug("Stopping UEB Consumer loop will not logger fetch messages from the cluster");
 			}
 		}
 	}

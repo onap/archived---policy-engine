@@ -20,6 +20,7 @@
 
 package org.openecomp.policy.api;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,8 @@ public class PolicyParameters {
 	private List<String> dynamicRuleAlgorithmField2;
 	private String priority;
 	private RuleProvider ruleProvider;
+	private String controllerName;
+	private ArrayList<String> dependencyNames;
 	private Date TTLDate;
 	private boolean guard = false;
 	private String riskLevel = "5";
@@ -203,7 +206,9 @@ public class PolicyParameters {
 	 * @param policyConfigType the {@link org.openecomp.policy.api.PolicyConfigType} Enum format of the Config Type
 	 */
 	public void setPolicyConfigType(PolicyConfigType policyConfigType) {
-		setPolicyClass(PolicyClass.Config);
+		if(policyConfigType!=null){
+	        setPolicyClass(PolicyClass.Config);
+	    }
 		this.policyConfigType = policyConfigType;
 	}
 
@@ -444,7 +449,7 @@ public class PolicyParameters {
 	/**
 	 * Sets the riskType field of the Policy Parameters. 
 	 * 
-	 * @param guard the <code>String</code> format of the riskType value
+	 * @param riskType the <code>String</code> format of the riskType value
 	 */
 	public void setRiskType(String riskType){
 		this.riskType = riskType;
@@ -493,5 +498,51 @@ public class PolicyParameters {
 	 */
 	public Date getTtlDate(){
 		return TTLDate;
+	}
+	
+	/**
+	 * Gets the Controller Name for your policy. 
+	 *  
+	 * @return String format of the controller Name. 
+	 */
+	public String getControllerName() {
+        return controllerName;
+    }
+	
+	/**
+	 * Sets Controller Name for your policy. 
+	 * 
+	 * @param controllerName to identify the controller information for your policy. 
+	 */
+    public void setControllerName(String controllerName) {
+        this.controllerName = controllerName;
+    }
+    
+    /**
+     * Gets Dependency Names for your policy. 
+     * 
+     * @return ArrayList of String(s) format of dependency names.
+     */
+    public ArrayList<String> getDependencyNames() {
+        return dependencyNames;
+    }
+
+    /**
+     * Sets Dependency that your policy is dependent on. 
+     * 
+     * @param dependencyNames ArrayList of String(s). 
+     */
+    public void setDependencyNames(ArrayList<String> dependencyNames) {
+        this.dependencyNames = dependencyNames;
+    }
+	
+	public String toString() {
+		return "PolicyParameters [ policyName=" + policyName + ", policyDescription=" + policyDescription + ", ecompName="+ ecompName 
+				+ ", configName=" + configName + ", attributes=" + attributes + ", configBody=" + configBody 
+				+ ",dynamicRuleAlgorithmLabels=" + dynamicRuleAlgorithmLabels + ",dynamicRuleAlgorithmFunctions=" + dynamicRuleAlgorithmFunctions 
+				+ ",dynamicRuleAlgorithmField1=" + dynamicRuleAlgorithmField1 + ",dynamicRuleAlgorithmField2=" + dynamicRuleAlgorithmField2 
+				+ ", actionPerformer=" + actionPerformer + ", actionAttribute=" + actionAttribute + ", priority=" + priority  
+				+ ", ruleProvider= " + ruleProvider + ", riskLevel= " + riskLevel + ", riskType= " + riskType
+				+ "]";
 	}
 }

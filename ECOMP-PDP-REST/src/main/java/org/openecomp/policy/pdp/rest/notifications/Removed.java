@@ -20,15 +20,17 @@
 
 package org.openecomp.policy.pdp.rest.notifications;
 
+import org.openecomp.policy.api.RemovedPolicy;
+
 
 /**
  * Removal is the POJO for removal updates of the Policy. 
  *  It must have the Policy removed and its Version number. 
  * 
- * @version 0.1
+ * @version 0.2
  *
  */
-public class Removed {
+public class Removed implements RemovedPolicy{
 	
 	private String policyName = null;
 	private String versionNo = null;

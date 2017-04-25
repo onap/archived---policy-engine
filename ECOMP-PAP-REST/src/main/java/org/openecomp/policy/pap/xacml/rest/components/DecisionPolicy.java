@@ -50,9 +50,11 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 
-import org.apache.commons.io.FilenameUtils;
-import org.openecomp.policy.pap.xacml.rest.adapters.PolicyRestAdapter;
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
 import org.openecomp.policy.pap.xacml.rest.util.JPAUtils;
+import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 import org.openecomp.policy.rest.jpa.Datatype;
 import org.openecomp.policy.rest.jpa.DecisionSettings;
 import org.openecomp.policy.rest.jpa.FunctionDefinition;
@@ -60,48 +62,15 @@ import org.openecomp.policy.xacml.std.pip.engines.aaf.AAFEngine;
 
 import com.att.research.xacml.std.IdentifierImpl;
 
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
-import org.openecomp.policy.common.logging.flexlogger.Logger;
-
 public class DecisionPolicy extends Policy {
 
-	/**
-	 * Config Fields
-	 */
-	private static final Logger logger = FlexLogger.getLogger(ConfigPolicy.class);
-
-	public static final String JSON_CONFIG = "JSON";
-	public static final String XML_CONFIG = "XML";
-	public static final String PROPERTIES_CONFIG = "PROPERTIES";
-	public static final String OTHER_CONFIG = "OTHER";
-	
-	public static final String PDP_ACTION = "PDP";
-	public static final String PEP_ACTION = "PEP";
-	public static final String TYPE_ACTION = "REST";
-
-	public static final String GET_METHOD = "GET";
-	public static final String PUT_METHOD = "PUT";
-	public static final String POST_METHOD = "POST";
-
-	public static final String PERFORMER_ATTRIBUTEID = "performer";
-	public static final String TYPE_ATTRIBUTEID = "type";
-	public static final String METHOD_ATTRIBUTEID = "method";
-	public static final String HEADERS_ATTRIBUTEID = "headers";
-	public static final String URL_ATTRIBUTEID = "url";
-	public static final String BODY_ATTRIBUTEID = "body";
-	
 	public static final String FUNCTION_NOT = "urn:oasis:names:tc:xacml:1.0:function:not";
-	
 	private static final String AAFProvider = "AAF";
-	//private static final String CustomProvider = "Custom";
 	
 	List<String> dynamicLabelRuleAlgorithms = new LinkedList<String>();
 	List<String> dynamicFieldComboRuleAlgorithms = new LinkedList<String>();
 	List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<String>();
 	List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<String>();
-	//List<Object> dynamicVariableList = new LinkedList<Object>();
 	List<String> dataTypeList = new LinkedList<String>();
 	
 	protected Map<String, String> dropDownMap = new HashMap<String, String>();
@@ -117,13 +86,13 @@ public class DecisionPolicy extends Policy {
 	
 	@Override
 	public Map<String, String> savePolicies() throws Exception {
-		
+
 		Map<String, String> successMap = new HashMap<String,String>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
 		}
-		
+
 		if(!isPreparedToSave()){
 			//Prep and configure the policy for saving
 			prepareToSave();
@@ -131,12 +100,9 @@ public class DecisionPolicy extends Policy {
 
 		// Until here we prepared the data and here calling the method to create xml.
 		Path newPolicyPath = null;
-		newPolicyPath = Paths.get(policyAdapter.getParentPath().toString(), policyName);
-		successMap = createPolicy(newPolicyPath, getCorrectPolicyDataObject());		
-		if (successMap.containsKey("success")) {
-			Path finalPolicyPath = getFinalPolicyPath();
-			policyAdapter.setFinalPolicyPath(finalPolicyPath.toString());
-		}
+		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
+
+		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());	
 		return successMap;		
 	}
 	
@@ -152,12 +118,7 @@ public class DecisionPolicy extends Policy {
 		
 		int version = 0;
 		String policyID = policyAdapter.getPolicyID();
-		
-		if (policyAdapter.isEditPolicy()) {
-			version = policyAdapter.getHighestVersion() + 1;
-		} else {
-			version = 1;
-		}
+		version = policyAdapter.getHighestVersion();
 		
 		// Create the Instance for pojo, PolicyType object is used in marshalling.
 		if (policyAdapter.getPolicyType().equals("Decision")) {
@@ -168,45 +129,16 @@ public class DecisionPolicy extends Policy {
 			policyConfig.setTarget(new TargetType());
 			policyAdapter.setData(policyConfig);
 		}
+		policyName = policyAdapter.getNewFileName();
 		
 		if (policyAdapter.getData() != null) {
-			
-			// Save off everything
-			// making ready all the required elements to generate the action policy xml.
-			// Get the uniqueness for policy name.
-			Path newFile = getNextFilename(Paths.get(policyAdapter.getParentPath().toString()), policyAdapter.getPolicyType(), policyAdapter.getPolicyName(), version);
-			if (newFile == null) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("File already exists, cannot create the policy.");
-				PolicyLogger.error("File already exists, cannot create the policy.");
-				setPolicyExists(true);
-				return false;
-			}
-			policyName = newFile.getFileName().toString();
-			
-			// Make sure the filename ends with an extension
-			if (policyName.endsWith(".xml") == false) {
-				policyName = policyName + ".xml";
-			}
-			
 			PolicyType decisionPolicy = (PolicyType)  policyAdapter.getData();
 			
 			decisionPolicy.setDescription(policyAdapter.getPolicyDescription());
 			
 			decisionPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
 			AllOfType allOfOne = new AllOfType();
-			final Path gitPath = Paths.get(policyAdapter.getUserGitPath().toString());
-			String policyDir = policyAdapter.getParentPath().toString();
-			int startIndex = policyDir.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-			policyDir = policyDir.substring(startIndex, policyDir.length());
-			logger.info("print the main domain value "+policyDir);
-			String path = policyDir.replace('\\', '.');
-			if(path.contains("/")){
-				path = policyDir.replace('/', '.');
-				logger.info("print the path:" +path);
-			}
-			String fileName = FilenameUtils.removeExtension(policyName);
-			fileName = path + "." + fileName + ".xml";
+			String fileName = policyAdapter.getNewFileName();
 			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
 			if ((name == null) || (name.equals(""))) {
 				name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
@@ -219,7 +151,7 @@ public class DecisionPolicy extends Policy {
 			allOf.getMatch().add(createMatch("ECOMPName", (policyAdapter.getEcompName())));
 			
 			Map<String, String> dynamicFieldComponentAttributes = policyAdapter.getDynamicFieldConfigAttributes();
-			if(policyAdapter.getProviderComboBox()!=null && policyAdapter.getProviderComboBox().equals(AAFProvider)){
+			if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFProvider)){
 				dynamicFieldComponentAttributes = new HashMap<String,String>();
 			}
 			
@@ -267,7 +199,7 @@ public class DecisionPolicy extends Policy {
 	private DecisionSettings findDecisionSettingsBySettingId(String settingId) {
 		DecisionSettings decisionSetting = null;
 		
-		EntityManager em = policyAdapter.getEntityManagerFactory().createEntityManager();
+		EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
 		Query getDecisionSettings = em.createNamedQuery("DecisionSettings.findAll");
 		List<?> decisionSettingsList = getDecisionSettings.getResultList();
 		
@@ -306,8 +238,6 @@ public class DecisionPolicy extends Policy {
 		try {
 			accessURI = new URI(ACTION_ID);
 		} catch (URISyntaxException e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getStackTrace());
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "DecisionPolicy", "Exception creating ACCESS URI");
 		}
 		accessAttributeDesignator.setCategory(CATEGORY_ACTION);
@@ -322,7 +252,7 @@ public class DecisionPolicy extends Policy {
 		dynamicFieldTwoRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField2();
 		dropDownMap = createDropDownMap();
 		
-		if(policyAdapter.getProviderComboBox()!=null && policyAdapter.getProviderComboBox().equals(AAFProvider)){
+		if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFProvider)){
 			// Values for AAF Provider are here for XML Creation. 
 			ConditionType condition = new ConditionType();
 			ApplyType decisionApply = new ApplyType();
@@ -429,8 +359,6 @@ public class DecisionPolicy extends Policy {
 			policyAdapter.setPolicyData(decisionPolicy);
 			
 		} else {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Unsupported data object."+ policyAdapter.getData().getClass().getCanonicalName());
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Unsupported data object."+ policyAdapter.getData().getClass().getCanonicalName());
 		}
 
@@ -589,9 +517,8 @@ public class DecisionPolicy extends Policy {
 	private Map<String,String> createDropDownMap(){
 		JPAUtils jpaUtils = null;
 		try {
-			jpaUtils = JPAUtils.getJPAUtilsInstance(policyAdapter.getEntityManagerFactory());
+			jpaUtils = JPAUtils.getJPAUtilsInstance(XACMLPapServlet.getEmf());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
@@ -627,7 +554,5 @@ public class DecisionPolicy extends Policy {
 	public Object getCorrectPolicyDataObject() {
 		return policyAdapter.getData();
 	}
-
-
-
+	
 }

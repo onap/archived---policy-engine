@@ -21,19 +21,15 @@
 package org.openecomp.policy.pap.xacml.rest.components;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
-import org.openecomp.policy.pap.xacml.rest.adapters.PolicyRestAdapter;
 import org.openecomp.policy.rest.jpa.GroupEntity;
 import org.openecomp.policy.rest.jpa.PdpEntity;
 import org.openecomp.policy.xacml.api.pap.EcompPDP;
 import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
 
 import com.att.research.xacml.api.pap.PAPException;
-//import com.att.research.xacml.api.pap.PDP;
-//import com.att.research.xacml.api.pap.PDPGroup;
 
 public interface PolicyDBDaoTransaction {
 

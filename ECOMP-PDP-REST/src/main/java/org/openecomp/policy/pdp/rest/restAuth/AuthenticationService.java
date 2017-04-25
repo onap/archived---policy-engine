@@ -23,11 +23,8 @@ package org.openecomp.policy.pdp.rest.restAuth;
 import java.util.Base64;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openecomp.policy.rest.XACMLRestProperties;
 
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import com.att.research.xacml.util.XACMLProperties;
 
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
@@ -36,7 +33,6 @@ import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 public class AuthenticationService {
 	private String pdpID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_USERID);
 	private String pdpPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_PASS);
-	private static final Log logger = LogFactory.getLog(AuthenticationService.class);
 	
 	public boolean authenticate(String authCredentials) {
 
@@ -49,8 +45,6 @@ public class AuthenticationService {
 			byte[] decodedBytes = Base64.getDecoder().decode(encodedUserPassword);
 			usernameAndPassword = new String(decodedBytes, "UTF-8");
 		} catch (Exception e) {
-			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
-			// TODO:EELF Cleanup - Remove logger
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "");
 			return false;
 		}
@@ -58,12 +52,8 @@ public class AuthenticationService {
 			final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
 			final String username = tokenizer.nextToken();
 			final String password = tokenizer.nextToken();
-
-			boolean authenticationStatus = pdpID.equals(username)	&& pdpPass.equals(password);
-			return authenticationStatus;
+			return pdpID.equals(username) && pdpPass.equals(password);
 		}catch (Exception e){
-			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
-			// TODO:EELF Cleanup - Remove logger
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "");
 			return false;
 		}

@@ -39,16 +39,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openecomp.policy.rest.XacmlAdminAuthorization;
-
-import com.att.research.xacml.api.Identifier;
-import com.att.research.xacml.std.IdentifierImpl;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.rest.XacmlAdminAuthorization;
 
 
 @Entity
@@ -115,8 +108,7 @@ public class DecisionSettings implements Serializable {
 	public void setUserModifiedBy(UserInfo userModifiedBy) {
 		this.userModifiedBy = userModifiedBy;
 	}
-
-	private static Log logger = LogFactory.getLog(DecisionSettings.class);
+	
 	public DecisionSettings() {
 	}
 	
@@ -139,7 +131,7 @@ public class DecisionSettings implements Serializable {
 	}
 	
 	public String setDecisionSettings(){
-		return this.xacmlId = xacmlId;
+		return this.xacmlId;
 	}
 	@PrePersist
 	public void	prePersist() {
@@ -154,8 +146,6 @@ public class DecisionSettings implements Serializable {
 		try {
 			this.userModifiedBy = XacmlAdminAuthorization.getUserId();;
 		} catch (Exception e) {
-			logger.error("Exception caused While adding Modified by Role"+e);
-			// TODO:EELF Cleanup - Remove logger
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "DecisionSettings", "Exception caused While adding Modified by Role");
 		}
 	}

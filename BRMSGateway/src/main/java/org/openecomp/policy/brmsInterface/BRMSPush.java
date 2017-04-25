@@ -22,29 +22,41 @@ package org.openecomp.policy.brmsInterface;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DeploymentRepository;
 import org.apache.maven.model.DistributionManagement;
-import org.apache.maven.model.Exclusion;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
@@ -54,175 +66,256 @@ import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.Invoker;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.WriterFactory;
+import org.eclipse.persistence.config.PersistenceUnitProperties;
+import org.openecomp.policy.api.PEDependency;
+import org.openecomp.policy.api.PolicyException;
+import org.openecomp.policy.brmsInterface.jpa.BRMSGroupInfo;
+import org.openecomp.policy.brmsInterface.jpa.BRMSPolicyInfo;
+import org.openecomp.policy.brmsInterface.jpa.DependencyInfo;
+import org.openecomp.policy.common.im.AdministrativeStateException;
+import org.openecomp.policy.common.im.IntegrityMonitor;
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.utils.BackUpHandler;
 import org.openecomp.policy.utils.BackUpMonitor;
+import org.openecomp.policy.utils.BusPublisher;
 import org.openecomp.policy.utils.PolicyUtils;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.sonatype.nexus.client.NexusClient;
 import org.sonatype.nexus.client.NexusClientException;
 import org.sonatype.nexus.client.NexusConnectionException;
 import org.sonatype.nexus.client.rest.NexusRestClient;
 import org.sonatype.nexus.rest.model.NexusArtifact;
 
-//import org.apache.log4j.Logger;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
-import org.openecomp.policy.common.logging.flexlogger.Logger;
-import org.openecomp.policy.common.im.AdministrativeStateException;
-import org.openecomp.policy.common.im.IntegrityMonitor;
 import com.att.nsa.cambria.client.CambriaBatchingPublisher;
 import com.att.nsa.cambria.client.CambriaClientBuilders;
 import com.att.nsa.cambria.client.CambriaClientBuilders.PublisherBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
-
-
 /**
  * BRMSPush: Application responsible to push policies to the BRMS PDP Policy Repository (PR). 
  * Mavenize and push policy to PR
  * 
- * @version 0.4 
+ * @version 0.9 
  */
 @SuppressWarnings("deprecation")
 public class BRMSPush {
-
-	
-	private static final Logger logger = FlexLogger.getLogger(BRMSPush.class.getName());
-	private static final String projectsLocation = "RuleProjects";
-	private static final String goals[] = {"clean", "deploy"};
+	private static final Logger LOGGER = FlexLogger.getLogger(BRMSPush.class.getName());
+	private static final String PROJECTSLOCATION = "RuleProjects";
+	private static final String GOALS[] = {"clean", "deploy"};
+	private static final String DEFAULT_VERSION = "1.0.0-SNAPSHOT";
+	private static final String DEPENDENCY_FILE = "dependency.json";
 
 	private static Map<String, String> modifiedGroups = new HashMap<String, String>();
 	private static IntegrityMonitor im;
 	private static BackUpMonitor bm;
-	private static  String resourceName = null;
-	private List<String> groupIDs = null; 
-	private List<String> artifactIDs= null; //"test"
-	private Map<String,Integer> names= null; // "Rules"
+	private static String resourceName = null;
 	private String defaultName = null;
-	private String repID = null; // "ecomp_policy-3rd-party"
-	private String repName = null; // "d2policy-snapshots"
+	private String repID = null; 
+	private String repName = null;
 	private String repURL= null; 
 	private String repUserName = null;
-	private ArrayList<ControllerPOJO> controllers; 
-	private HashMap<String,String> versions = new HashMap<String, String>();
 	private String repPassword = null;
 	private String policyKeyID = null;
-	private List<File> matchingList = null;
 	private boolean createFlag = false;
 	private String uebList = null;
+	private List<String> dmaapList = null;
 	private String pubTopic = null;
 	private PublisherBuilder pubBuilder = null;
-	private Long uebDelay = Long.parseLong("5000");
-	private static String brmsdependencyversion = null;
+	protected BusPublisher publisher = null;
+	private Long uebDelay = Long.parseLong("20");
+	private Long dmaapDelay = Long.parseLong("5000");
+	private String notificationType = null;
+	private ArrayList<ControllerPOJO> controllers;
+	private HashMap<String, ArrayList<Object>> groupMap = new HashMap<String, ArrayList<Object>>();
+	private Map<String, String> policyMap = new HashMap<String,String>();
+	private String brmsdependencyversion;
+	private EntityManager em;
 
-	public BRMSPush(String propertiesFile, BackUpHandler handler) throws Exception{
+	public BRMSPush(String propertiesFile, BackUpHandler handler) throws PolicyException{
 		Properties config = new Properties();
 		Path file = Paths.get(propertiesFile);
 		if(Files.notExists(file)){
-			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Config File doesn't Exist in the specified Path " + file.toString());
-			throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE+"Config File doesn't Exist in the specified Path " + file.toString());
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Config File doesn't Exist in the specified Path " + file.toString());
+			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE+"Config File doesn't Exist in the specified Path " + file.toString());
 		}else{
 			if(file.toString().endsWith(".properties")){
-				InputStream in;
-				in = new FileInputStream(file.toFile());
-				config.load(in);
 				// Grab the Properties. 
-				defaultName = config.getProperty("defaultName").replaceAll(" ", "");
-				if(defaultName==null){
-					logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "defaultName property is missing from the property file ");
-					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "defaultName property is missing from the property file");
-				}
-				repID = config.getProperty("repositoryID").replaceAll(" ", "");
-				if(repID==null){
-					logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryID property is missing from the property file ");
-					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryID property is missing from the property file ");
-				}
-				repName = config.getProperty("repositoryName").replaceAll(" ", "");
-				if(repName==null){
-					logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryName property is missing from the property file ");
-					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryName property is missing from the property file ");
-				}
-				repURL = config.getProperty("repositoryURL").replaceAll(" ", "");
-				if(repURL==null){
-					logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryURL property is missing from the property file ");
-					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryURL property is missing from the property file ");
-				}
-				repUserName = config.getProperty("repositoryUsername").trim();
-				repPassword = config.getProperty("repositoryPassword").trim();
-				if(repUserName==null || repPassword==null){
-					logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "repostoryUserName and respositoryPassword properties are required.");
-					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "repostoryUserName and respositoryPassword properties are required.");
-				}
-				policyKeyID = config.getProperty("policyKeyID").replaceAll(" ", "");
-				if(policyKeyID==null){
-					logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "policyKeyID property is missing from the property file ");
-					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "policyKeyID property is missing from the property file ");
-				}
-				brmsdependencyversion = config.getProperty("brms.dependency.version").replaceAll(" ", "");
-				if(brmsdependencyversion==null){
-					logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "brmsdependencyversion property is missing from the property file ");
-					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "brmsdependencyversion property is missing from the property file ");
-				}
-				readGroups(config);
-				logger.info("Trying to set up IntegrityMonitor");
-				try {
-					logger.info("Trying to set up IntegrityMonitor");
-					resourceName = config.getProperty("RESOURCE_NAME").replaceAll(" ", "");;
-					if(resourceName==null){
-						logger.warn("RESOURCE_NAME is missing setting default value. ");
-						resourceName = "brmsgw_pdp01";
-					}
-					im = IntegrityMonitor.getInstance(resourceName, config);
-				} catch (Exception e) {
-					logger.error("Error starting Integerity Monitor: " + e);
-				}
-				logger.info("Trying to set up BackUpMonitor");
-				try {
-					bm = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), resourceName, config, handler);
-				} catch (Exception e) {
-					logger.error("Error starting BackUpMonitor: " + e);
-				}
-				// Setting up the Publisher for UEB
-				uebList = config.getProperty("UEB_URL").trim();
-				pubTopic = config.getProperty("UEB_TOPIC").trim();
-				String apiKey = config.getProperty("UEB_API_KEY");
-				String apiSecret = config.getProperty("UEB_API_SECRET");
-				if(uebList==null || pubTopic==null){
-					logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "UEB properties are missing from the property file ");
-					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "UEB properties are missing from the property file ");
-				} 
-				pubBuilder = new CambriaClientBuilders.PublisherBuilder();
-				pubBuilder.usingHosts(uebList)
-				.onTopic(pubTopic);
-				if(apiKey!=null && !apiKey.isEmpty() && 
-						apiSecret!=null && !apiSecret.isEmpty()) {
-					apiKey= apiKey.trim();
-					apiSecret = apiSecret.trim();
-					pubBuilder.authenticatedBy(apiKey, apiSecret);
-				}
-				String uDelay = config.getProperty("UEB_DELAY");
-				if(uDelay!=null && !uDelay.isEmpty()){
-					uDelay = uDelay.trim();
-					try{
-						uebDelay = Long.parseLong(uDelay);
-					}catch (NumberFormatException e){
-						logger.error("UEB_DELAY not a long format number" + e);
-					}
-				}
+				setProperty(file, config, handler);
 			}
 		}
+	}
+
+	private void setProperty(Path file, Properties config, BackUpHandler handler) throws PolicyException{
+		InputStream in;
+		try {
+			in = new FileInputStream(file.toFile());
+			config.load(in);
+		} catch (IOException e) {
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Data/File Read Error while reading from the property file.");
+			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "Data/File Read Error while reading from the property file.");
+		}
+		LOGGER.info("Trying to set up IntegrityMonitor");
+		try {
+			LOGGER.info("Trying to set up IntegrityMonitor");
+			resourceName = config.getProperty("RESOURCE_NAME");
+			if(resourceName==null){
+				LOGGER.warn("RESOURCE_NAME is missing setting default value. ");
+				resourceName = "brmsgw_pdp01";
+			}
+			resourceName = resourceName.trim();
+			im = IntegrityMonitor.getInstance(resourceName, config);
+		} catch (Exception e) {
+			LOGGER.error("Error starting Integerity Monitor: " + e);
+		}
+		LOGGER.info("Trying to set up BackUpMonitor");
+		try {
+			bm = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), resourceName, config, handler);
+		} catch (Exception e) {
+			LOGGER.error("Error starting BackUpMonitor: " + e);
+		}
+		config.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistenceBRMS.xml");
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("BRMSGW", config);
+		em = emf.createEntityManager();
+		defaultName = config.getProperty("defaultName");
+		if(defaultName==null){
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "defaultName property is missing from the property file ");
+			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "defaultName property is missing from the property file");
+		}
+		defaultName = defaultName.trim();
+		repID = config.getProperty("repositoryID");
+		if(repID==null){
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryID property is missing from the property file ");
+			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryID property is missing from the property file ");
+		}
+		repID = repID.trim();
+		repName = config.getProperty("repositoryName");
+		if(repName==null){
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryName property is missing from the property file ");
+			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryName property is missing from the property file ");
+		}
+		repName = repName.trim();
+		repURL = config.getProperty("repositoryURL");
+		if(repURL==null){
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryURL property is missing from the property file ");
+			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryURL property is missing from the property file ");
+		}
+		repURL = repURL.trim();
+		repUserName = config.getProperty("repositoryUsername");
+		repPassword = config.getProperty("repositoryPassword");
+		if(repUserName==null || repPassword==null){
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "repostoryUserName and respositoryPassword properties are required.");
+			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "repostoryUserName and respositoryPassword properties are required.");
+		}
+		repUserName = repUserName.trim();
+		repPassword = repPassword.trim();
+		policyKeyID = config.getProperty("policyKeyID");
+		if(policyKeyID==null){
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "policyKeyID property is missing from the property file ");
+			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "policyKeyID property is missing from the property file ");
+		}
+		policyKeyID = policyKeyID.trim();
+		brmsdependencyversion = config.getProperty("brms.dependency.version");
+		if(brmsdependencyversion==null){
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "brmsdependencyversion property is missing from the property file, Using default Version.");
+			brmsdependencyversion = DEFAULT_VERSION;
+		}
+		brmsdependencyversion = brmsdependencyversion.trim();
+		readGroups(config);
+		
+		// Setup Publisher
+		notificationType = config.getProperty("NOTIFICATION_TYPE");
+		if("dmaap".equalsIgnoreCase(notificationType)){
+			
+			LOGGER.info("Notification Type being used is DMaaP... creating instance of BusPublisher.");
+			// Setting up the Publisher for DMaaP MR
+			String dmaapServers = config.getProperty("NOTIFICATION_SERVERS");
+			pubTopic = config.getProperty("NOTIFICATION_TOPIC");
+			String aafLogin = config.getProperty("CLIENT_ID").trim();
+			String aafPassword = config.getProperty("CLIENT_KEY").trim();
+			
+			if(dmaapServers==null || pubTopic==null){
+				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
+				throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
+			}
+			
+			dmaapServers = dmaapServers.trim();
+			pubTopic = pubTopic.trim();
+			
+			if(dmaapServers.contains(",")) {
+				dmaapList = new ArrayList<String>(Arrays.asList(dmaapServers.split("\\s*,\\s*")));
+			} else {
+				dmaapList = new ArrayList<String>();
+				dmaapList.add(dmaapServers);
+			}
+			
+			this.publisher = 
+					new BusPublisher.DmaapPublisherWrapper(this.dmaapList, 
+							                               this.pubTopic, 
+							                               aafLogin, 
+							                               aafPassword);
+			
+
+			String dDelay = config.getProperty("NOTIFICATION_DELAY");
+			if(dDelay!=null && !dDelay.isEmpty()){
+				dDelay = dDelay.trim();
+				try{
+					dmaapDelay = Long.parseLong(dDelay);
+				}catch (NumberFormatException e){
+					LOGGER.error("DMAAP_DELAY not a long format number" + e);
+				}
+			}
+			LOGGER.info("DMAAP BusPublisher is created.");
+			
+		} else {
+			LOGGER.info("Notification Type being used is UEB... creating instance of PublisherBuilder.");
+			// Setting up the Publisher for UEB
+			uebList = config.getProperty("NOTIFICATION_SERVERS");
+			pubTopic = config.getProperty("NOTIFICATION_TOPIC");
+			String apiKey = config.getProperty("UEB_API_KEY");
+			String apiSecret = config.getProperty("UEB_API_SECRET");
+			if(uebList==null || pubTopic==null){
+				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "UEB properties are missing from the property file ");
+				throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "UEB properties are missing from the property file ");
+			}
+			uebList = uebList.trim();
+			pubTopic = pubTopic.trim();
+			pubBuilder = new CambriaClientBuilders.PublisherBuilder();
+			pubBuilder.usingHosts(uebList).onTopic(pubTopic);
+			if(apiKey!=null && !apiKey.isEmpty() && 
+					apiSecret!=null && !apiSecret.isEmpty()) {
+				apiKey= apiKey.trim();
+				apiSecret = apiSecret.trim();
+				pubBuilder.authenticatedBy(apiKey, apiSecret);
+			}
+			String uDelay = config.getProperty("NOTIFICATION_DELAY");
+			if(uDelay!=null && !uDelay.isEmpty()){
+				uDelay = uDelay.trim();
+				try{
+					uebDelay = Long.parseLong(uDelay);
+				}catch (NumberFormatException e){
+					LOGGER.error("UEB_DELAY not a long format number" + e);
+				}
+			}
+			LOGGER.info("UEB PublisherBuilder is created.");
+
+		}
+
 	}
 
 	/**
 	 * Will Initialize the variables required for BRMSPush. 
 	 */
-	public void initiate() {
+	public void initiate(boolean flag) {
 		modifiedGroups =  new HashMap<String, String>();
 		controllers = new ArrayList<ControllerPOJO>();
 		try {
 			bm.updateNotification();
 		} catch (Exception e) {
-			logger.error("Error while updating Notification: "  + e.getMessage());
+			LOGGER.error("Error while updating Notification: "  + e.getMessage());
 		}
+		if(flag) syncGroupInfo();
 	}
 
 	/**
@@ -230,15 +323,16 @@ public class BRMSPush {
 	 */
 	public void addRule(String name, String rule, Map<String, String> responseAttributes) {
 		// 1 check the response Attributes and determine if this belongs to any projects. 
-		// 2 if not create folder // new File("Projects\\test").mkdirs();
+		// 2 if not create folder
 		// 3 create pom. 
 		// 4 copy the rule. 
 		// 5 store the groups that have been updated. 
 		String kSessionName=null;
 		String selectedName = null;
-
 		if(!responseAttributes.isEmpty()){
 			// Pick selected Value
+			String userControllerName = null;
+			ArrayList<PEDependency> userDependencies = new ArrayList<PEDependency>();
 			for(String key: responseAttributes.keySet()){
 				if(key.equals(policyKeyID)){
 					selectedName = responseAttributes.get(key);
@@ -247,27 +341,296 @@ public class BRMSPush {
 				else if (key.equals("kSessionName")){
 					kSessionName=responseAttributes.get(key);
 				}
-			}
+				// Check User Specific values.
+                if (key.equals("$controller:")) {
+                    try {
+                        PEDependency dependency = PolicyUtils.jsonStringToObject(responseAttributes.get(key), PEDependency.class);
+                        userControllerName = key.replaceFirst("$controller:",""); 
+                        addToGroup(userControllerName, dependency);
+                    } catch (Exception e) {
+                        LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Error while resolving Controller: " + e);
+                    }
 
+                }
+                else if(key.equals("$dependency$")){
+                    String value = responseAttributes.get(key);
+                    if(value.startsWith("[") && value.endsWith("]")){
+                        value = value.substring(1, value.length()-1).trim();
+                        List<String> dependencyStrings = Arrays.asList(value.split("},{"));
+                        for(String dependencyString: dependencyStrings){
+                            try {
+                                userDependencies.add(PolicyUtils.jsonStringToObject(dependencyString, PEDependency.class));
+                            } catch (Exception e) {
+                                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Error while resolving Dependencies: " + e);
+                            }
+                        }
+                    }
+                }
+			}
+			if(userControllerName!=null){
+				// Adding custom dependencies here. 
+                ArrayList<Object> values = groupMap.get(userControllerName);
+                values.add(userDependencies);
+                groupMap.put(userControllerName, values);
+                selectedName = userControllerName;
+            }
 		}
 		// If no Match then pick Default. 
 		if(selectedName==null){
 			selectedName = defaultName;
 		}
-		if(names.containsKey(selectedName)){
+		if (groupMap.containsKey(selectedName)) {
 			//If the key is not got as parameters set by the user, setting the default value for kSessionName as closedLoop
 			if(kSessionName==null){
 				if(selectedName==defaultName){
 					kSessionName="closedloop";
 				}else{
-					kSessionName= selectedName;
+					kSessionName= "closedloop-" + selectedName;
 				}
 			}
 			// create directories if missing.
-			createProject(projectsLocation+File.separator+getArtifactID(selectedName)+File.separator+"src"+File.separator+"main"+File.separator+"resources",kSessionName);
-			copyDataToFile(projectsLocation+File.separator+getArtifactID(selectedName)+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"rules"+File.separator+name+".drl", rule);
-			addModifiedGroup(selectedName, "update"); // Will check for Create Later after generating the Pom. 
+			manageProject(selectedName, kSessionName, name, rule);
+            addModifiedGroup(selectedName, "update"); // Will check for Create Later after generating the Pom.
 		}
+	}
+
+	private void syncGroupInfo() {
+		// Sync DB to JMemory.
+		EntityTransaction et = em.getTransaction();
+		et.begin();
+		Query query = em.createQuery("select b from BRMSGroupInfo AS b");
+		List<?> bList = query.getResultList();
+		if(bList.size()!=groupMap.size()){
+			for(Object value : bList){
+				BRMSGroupInfo brmsGroupInfo = (BRMSGroupInfo) value;
+				PEDependency dependency = new PEDependency();
+				dependency.setArtifactId(brmsGroupInfo.getArtifactId());
+				dependency.setGroupId(brmsGroupInfo.getGroupId());
+				dependency.setVersion(brmsGroupInfo.getVersion());
+				ArrayList<Object> values = new ArrayList<Object>();
+				values.add(dependency);
+				groupMap.put(brmsGroupInfo.getControllerName(), values);
+			}
+		}
+		query = em.createQuery("select g from BRMSPolicyInfo AS g");
+		bList = query.getResultList();
+		if(bList.size()!=policyMap.size()){
+			for(Object value: bList){
+				BRMSPolicyInfo brmsPolicyInfo = (BRMSPolicyInfo) value;
+				policyMap.put(brmsPolicyInfo.getPolicyName(), brmsPolicyInfo.getControllerName().getControllerName());
+			}
+		}
+		et.commit();
+		LOGGER.info("Updated Local Memory values with values from database.");
+	}
+
+	private void manageProject(String selectedName, String kSessionName, String name, String rule) {
+		// Check if the Project is in Sync. If not get the latest Version. 
+		syncProject(selectedName);
+		createProject(PROJECTSLOCATION + File.separator
+				+ getArtifactID(selectedName) + File.separator + "src"
+				+ File.separator + "main" + File.separator + "resources",
+				kSessionName);
+		copyDataToFile(
+				PROJECTSLOCATION + File.separator
+				+ getArtifactID(selectedName) + File.separator
+				+ "src" + File.separator + "main" + File.separator
+				+ "resources" + File.separator + "rules"
+				+ File.separator + name + ".drl", rule);
+		addToPolicy(name,selectedName);
+	}
+
+	private void addToPolicy(String policyName, String controllerName) {
+		policyMap.put(policyName, controllerName);
+		EntityTransaction et = em.getTransaction();
+		et.begin();
+		Query query = em.createQuery("select b from BRMSPolicyInfo as b where b.policyName = :pn");
+		query.setParameter("pn", policyName);
+		List<?> pList = query.getResultList();
+		boolean createFlag = false;
+		BRMSPolicyInfo brmsPolicyInfo = new BRMSPolicyInfo();
+		if(pList.size()>0){
+			// Already exists. 
+			brmsPolicyInfo = (BRMSPolicyInfo) pList.get(0);
+			if(!brmsPolicyInfo.getControllerName().getControllerName().equals(controllerName)){
+				createFlag = true;
+			}
+		}else{
+			createFlag = true;
+		}
+		if(createFlag){
+			query = em.createQuery("select b from BRMSGroupInfo as b where b.controllerName = :cn");
+			query.setParameter("cn", controllerName);
+			List<?> bList = query.getResultList();
+			BRMSGroupInfo brmsGroupInfo = new BRMSGroupInfo();
+			if(bList.size()>0){
+				brmsGroupInfo = (BRMSGroupInfo) bList.get(0);
+			}
+			brmsPolicyInfo.setPolicyName(policyName);
+			brmsPolicyInfo.setControllerName(brmsGroupInfo);
+			em.persist(brmsPolicyInfo);
+			em.flush();
+		}
+		et.commit();
+	}
+
+	private void syncProject(String selectedName) {
+		boolean projectExists = checkProject(selectedName);
+		if(projectExists){
+			String version = null;
+			version = getVersion(selectedName);
+			if(version==null){
+				LOGGER.error("Error getting local version for the given Controller Name:"+ selectedName+" going with Default value");
+				version = "0.1.0";
+			}
+			String nextVersion = incrementVersion(version);
+			boolean outOfSync = checkRemoteSync(selectedName, nextVersion);
+			if(!outOfSync){
+				return;
+			}
+		}
+		// We are out of Sync or Project is not Present. 
+		downloadProject(selectedName);
+	}
+
+	private void downloadProject(String selectedName) {
+		NexusArtifact artifact = getLatestArtifactFromNexus(selectedName);
+		if(artifact==null) return;
+		String dirName = getDirectoryName(selectedName);
+		URL website;
+		String fileName = "rule.jar";
+		try {
+			website = new URL(artifact.getResourceURI());
+			ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+		    FileOutputStream fos = new FileOutputStream(fileName);
+		    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+		    fos.close();
+		    extractJar(fileName, dirName);
+		    new File(fileName).delete();
+		} catch (IOException e) {
+			LOGGER.error("Error while downloading the project to File System. " + e.getMessage());
+		}
+	}
+
+	private void extractJar(String jarFileName, String artifactId) throws IOException{
+		JarFile jar = new JarFile(jarFileName);
+		Enumeration<?> enumEntries = jar.entries();
+		while (enumEntries.hasMoreElements()) {
+			JarEntry file = (JarEntry) enumEntries.nextElement();
+		    File f = null;
+		    String fileName = file.getName().substring(file.getName().lastIndexOf("/")+1);
+		    if(file.getName().endsWith(".drl")){
+		    	String path = PROJECTSLOCATION+ File.separator + artifactId + File.separator + "src"+ 
+				    	File.separator+ "main" + File.separator + "resources" + File.separator+ "rules"; 
+		    	new File(path).mkdirs();
+		    	f = new File(path + File.separator + fileName);
+		    }else if(file.getName().endsWith("pom.xml")){
+		    	String path = PROJECTSLOCATION+ File.separator + artifactId; 
+		    	new File(path).mkdirs();
+		    	f = new File(path + File.separator + fileName);
+		    }else if(file.getName().endsWith("kmodule.xml")){
+		    	String path = PROJECTSLOCATION+ File.separator + artifactId + File.separator + "src"+ 
+				    	File.separator+ "main" + File.separator + "resources" + File.separator+ "META-INF"; 
+		    	new File(path).mkdirs();
+		    	f = new File(path + File.separator + fileName);
+		    }
+		    if(f!=null){
+		    	InputStream is = jar.getInputStream(file);
+			    FileOutputStream fos = new FileOutputStream(f);
+			    while (is.available() > 0) {
+			        fos.write(is.read());
+			    }
+			    fos.close();
+			    is.close();
+			    f=null;
+			    LOGGER.info(fileName + " Created..");
+		    }
+		}
+		jar.close();
+	}
+
+	private NexusArtifact getLatestArtifactFromNexus(String selectedName) {
+		List<NexusArtifact> artifacts = getArtifactFromNexus(selectedName, null);
+		int bigNum = 0;
+        int smallNum = 0;
+        NexusArtifact result = null;
+        for (NexusArtifact artifact : artifacts) {
+            int majorVal = Integer.parseInt(artifact.getVersion().substring(0, artifact.getVersion().indexOf(".")));
+            int minorVal = Integer.parseInt(artifact.getVersion().substring(artifact.getVersion().indexOf(".")+1,artifact.getVersion().lastIndexOf(".")));
+            if(majorVal>bigNum){
+                bigNum = majorVal;
+                smallNum = minorVal;
+            }
+            if((bigNum==majorVal)&&(minorVal>smallNum)){
+                smallNum = minorVal;
+            }
+            if(bigNum==majorVal && minorVal==smallNum){
+                result = artifact;
+            }
+        }
+        return result;
+	}
+
+	private boolean checkRemoteSync(String selectedName, String version) {
+		List<NexusArtifact> artifacts = getArtifactFromNexus(selectedName, version);
+		return (artifacts.size()==0) ? false: true;
+	}
+
+	private List<NexusArtifact> getArtifactFromNexus(String selectedName, String version) {
+		final NexusClient client = new NexusRestClient();
+		try {
+			client.connect(repURL.substring(0, repURL.indexOf(repURL.split(":[0-9]+\\/nexus")[1])), repUserName, repPassword);
+			final NexusArtifact template = new NexusArtifact();
+	        template.setGroupId(getGroupID(selectedName));
+	        template.setArtifactId(getArtifactID(selectedName));
+			if(version!=null){
+				template.setVersion(version);
+			}
+			return client.searchByGAV(template);	
+		} catch (NexusClientException | NexusConnectionException | NullPointerException e) {
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Connection to remote Nexus has failed. " +e.getMessage());
+		} finally {
+			try {
+				client.disconnect();
+			} catch (NexusClientException | NexusConnectionException e) {
+				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "failed to disconnect Connection from Nexus." +e.getMessage());
+			}
+		}
+		return new ArrayList<NexusArtifact>();
+	}
+
+	private void setVersion(String selectedName) {
+		String newVersion = "0.1.0";
+		createFlag = false;
+		NexusArtifact artifact = getLatestArtifactFromNexus(selectedName);
+		if(artifact!=null){
+			newVersion = incrementVersion(artifact.getVersion());
+		}
+		if(newVersion.equals("0.1.0")){
+			createFlag = true;
+		}
+		setVersion(newVersion, selectedName);
+        LOGGER.info("Controller: " + selectedName + "is on version: " + newVersion);
+	}
+
+	private String incrementVersion(String version) {
+		int majorVal = Integer.parseInt(version.substring(0, version.indexOf(".")));
+		int minorVal = Integer.parseInt(version.substring(version.indexOf(".")+1,version.lastIndexOf(".")));
+		if (minorVal >= 9) {
+            majorVal += 1;
+            minorVal = 0;
+        } else {
+            minorVal += 1;
+        }
+		return majorVal + "." + minorVal + version.substring(version.lastIndexOf("."));
+	}
+
+	private boolean checkProject(String selectedName) {
+		return new File(PROJECTSLOCATION + File.separator + getDirectoryName(selectedName)).exists();
+	}
+
+	private String getDirectoryName(String selectedName) {
+		return getArtifactID(selectedName);
 	}
 
 	/**
@@ -281,27 +644,28 @@ public class BRMSPush {
 		try {
 			im.startTransaction();
 		} catch (AdministrativeStateException e) {
-			logger.error("Error while starting Transaction " + e);
+			LOGGER.error("Error while starting Transaction " + e);
 		} catch (Exception e) {
-			logger.error("Error while starting Transaction " + e);
+			LOGGER.error("Error while starting Transaction " + e);
 		}
 		if(!modifiedGroups.isEmpty()){
 			Boolean flag = false;
 			for(String group: modifiedGroups.keySet()){
 				try{
 					InvocationRequest request = new DefaultInvocationRequest();
+					setVersion(group);
 					createPom(group);
-					request.setPomFile(new File(projectsLocation+File.separator+getArtifactID(group)+File.separator+"pom.xml"));
-					request.setGoals(Arrays.asList(goals));
+					request.setPomFile(new File(PROJECTSLOCATION+File.separator+getArtifactID(group)+File.separator+"pom.xml"));
+					request.setGoals(Arrays.asList(GOALS));
 					Invoker invoker = new DefaultInvoker();
 					InvocationResult result = invoker.execute(request);
 					if(result.getExecutionException()!=null){
-						logger.error(result.getExecutionException());
+						LOGGER.error(result.getExecutionException());
 					}else if(result.getExitCode()!=0){
-						logger.error("Maven Invocation failure..!");
+						LOGGER.error("Maven Invocation failure..!");
 					}
 					if(result.getExitCode()==0){
-						logger.info("Build Completed..!");
+						LOGGER.info("Build Completed..!");
 						if (createFlag) {
                             addNotification(group, "create");
                         }else{
@@ -310,59 +674,64 @@ public class BRMSPush {
                         flag = true;
 					}
 				}catch(Exception e){
-					logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Maven Invocation issue for "+getArtifactID(group) + e.getMessage());
+					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Maven Invocation issue for "+getArtifactID(group) + e.getMessage());
 				}
 			}
 			if(flag){
 				sendNotification(controllers);
 	        }
 		}
-		im.endTransaction();
+		if(im!=null){
+			im.endTransaction();
+		}
 	}
 
 	/**
 	 * Removes a Rule from Rule Projects. 
 	 */
 	public void removeRule(String name){
-		File file = new File(projectsLocation);
-		matchingList = new ArrayList<File>();
-		searchFile(file,name);
-		for(File matchingFile: matchingList){
-			if(matchingFile.delete()){
-				logger.info("Deleted File.. " + matchingFile.getAbsolutePath());
-				String groupName = getName(matchingFile.toString());
-				String ruleFolder= projectsLocation+File.separator+getArtifactID(groupName)+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"rules";
-				if(new File(ruleFolder).listFiles().length==0){
-					removedRuleModifiedGroup(groupName);
-				}else{
-					addModifiedGroup(groupName, "update"); // This is an update in terms of PDPD. 
-				}
-			}
+		String controllerName = getGroupName(name);
+		if(controllerName==null){
+			LOGGER.info("Error finding the controllerName for the given Policy: " + name);
+			return;
+		}
+		syncProject(controllerName);
+		getNameAndSetRemove(controllerName, name);
+	}
+
+	private String getGroupName(String name) {
+		if(policyMap.containsKey(name)){
+			return policyMap.get(name);
+		}else{
+			syncGroupInfo();
+			return (policyMap.containsKey(name)) ? policyMap.get(name):null;
 		}
 	}
 
 	private void addModifiedGroup(String controllerName, String operation) {
-		 modifiedGroups.put(controllerName, operation);
-	}
+        if(controllerName!=null){
+            modifiedGroups.put(controllerName, operation);
+        }
+    }
 
 	private void addNotification(String controllerName, String operation) {
-		ControllerPOJO controllerPOJO = new ControllerPOJO();
-		controllerPOJO.setName(controllerName);
-		controllerPOJO.setOperation(operation);
-		HashMap<String, String> drools = new HashMap<String, String>();
-		drools.put("groupId", getGroupID(controllerName));
-		drools.put("artifactId", getArtifactID(controllerName));
-		drools.put("version", versions.get(controllerName));
-		controllerPOJO.setDrools(drools);
-		controllers.add(controllerPOJO);
-		try {
-			logger.debug("Notification added: "
-					+ PolicyUtils.objectToJsonString(controllerPOJO));
-		} catch (JsonProcessingException e) {
-			logger.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID
-					+ "Json Processing Error " + e);
-		}
-	}
+        ControllerPOJO controllerPOJO = new ControllerPOJO();
+        controllerPOJO.setName(controllerName);
+        controllerPOJO.setOperation(operation);
+        HashMap<String, String> drools = new HashMap<String, String>();
+        drools.put("groupId", getGroupID(controllerName));
+        drools.put("artifactId", getArtifactID(controllerName));
+        drools.put("version", getVersion(controllerName));
+        controllerPOJO.setDrools(drools);
+        controllers.add(controllerPOJO);
+        try {
+        	LOGGER.debug("Notification added: "
+        			+ PolicyUtils.objectToJsonString(controllerPOJO));
+        } catch (JsonProcessingException e) {
+        	LOGGER.error(MessageCodes.ERROR_SCHEMA_INVALID
+        			+ "Json Processing Error " + e);
+        }
+    }
 
 	private void removedRuleModifiedGroup(String controllerName){
 		// This will be sending Notification to PDPD directly to Lock
@@ -377,53 +746,55 @@ public class BRMSPush {
 	private void sendNotification(List<ControllerPOJO> controllers){
 		NotificationPOJO notification = new NotificationPOJO();
 		String requestId = UUID.randomUUID().toString();
-		logger.info("Generating notification RequestID : " + requestId);
+		LOGGER.info("Generating notification RequestID : " + requestId);
 		notification.setRequestID(requestId);
 		notification.setEntity("controller");
 		notification.setControllers(controllers);
 		try {
 			String notificationJson = PolicyUtils.objectToJsonString(notification);
-			logger.info("Sending Notification :\n" + notificationJson);
+			LOGGER.info("Sending Notification :\n" + notificationJson);
 			sendMessage(notificationJson);
-		} catch (IOException | GeneralSecurityException | InterruptedException e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while sending notification to PDP-D " + e.getMessage());
+		} catch (Exception e) {
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while sending notification to PDP-D " + e.getMessage());
 		}
 	}
 
 	private void sendMessage(String message) throws IOException, GeneralSecurityException, InterruptedException {
-		// Sending Message through UEB interface.
-		CambriaBatchingPublisher pub = pubBuilder.build();
-		pub.send( "MyPartitionKey", message);
-		logger.debug("Message Published on UEB :" + uebList + "for Topic: " + pubTopic);
-		Thread.sleep(uebDelay);
-		pub.close();
-	}
-
-	private void searchFile(File file, String name) {
-		if(file.isDirectory()){
-			logger.info("Searching Directory..." + file.getAbsolutePath());
-			if(file.canRead()){
-				for(File temp: file.listFiles()){
-					if(temp.isDirectory()){
-						// Recursive search. 
-						searchFile(temp, name);
-					}else{
-						if(temp.getName().equals(name+".drl")){
-							matchingList.add(temp);
-						}
-					}
-				}
+		
+		if("dmaap".equalsIgnoreCase(notificationType)) {
+			// Sending Message through DMaaP Message Router
+			LOGGER.debug("DMAAP Publishing Message");
+			
+			publisher.send( "MyPartitionKey", message);
+			
+			LOGGER.debug("Message Published on DMaaP :" + dmaapList.get(0) + "for Topic: " + pubTopic);
+			
+			Thread.sleep(dmaapDelay);
+			publisher.close();
+		} else {
+			// Sending Message through UEB interface.
+			LOGGER.debug("UEB Publishing Message");
+			
+			CambriaBatchingPublisher pub = pubBuilder.build();
+			pub.send( "MyPartitionKey", message);
+			
+			final List<?> stuck = pub.close ( uebDelay, TimeUnit.SECONDS );
+			if ( stuck.size () > 0 ) {
+				LOGGER.error ( stuck.size() + " messages unsent" );
+			}else {
+				LOGGER.debug ( "Clean exit; Message Published on UEB : " + uebList + "for Topic: " + pubTopic );
 			}
 		}
+
 	}
 
-	private void createPom(String name){
-		Model model = new Model();
-		model.setModelVersion("4.0.0");
-		model.setGroupId(getGroupID(name));
-		model.setArtifactId(getArtifactID(name));
-		model.setVersion(incrementVersion(name));
-		model.setName(name);
+	private void createPom(String name) {
+        Model model = new Model();
+        model.setModelVersion("4.0.0");
+        model.setGroupId(getGroupID(name));
+        model.setArtifactId(getArtifactID(name));
+        model.setVersion(getVersion(name));
+        model.setName(name);
 		DistributionManagement distributionManagement = new DistributionManagement();
 		DeploymentRepository repository = new DeploymentRepository();
 		repository.setId(repID);
@@ -433,7 +804,62 @@ public class BRMSPush {
 		model.setDistributionManagement(distributionManagement);
 		// Depenendency Mangement goes here. 
 		List<Dependency> dependencyList= new ArrayList<Dependency>();
-
+		if(groupMap.get(name).size()>1){
+			@SuppressWarnings("unchecked")
+            ArrayList<PEDependency> dependencies = (ArrayList<PEDependency>) groupMap.get(name).get(1);
+            for(PEDependency dependency: dependencies){
+                dependencyList.add(dependency.getDependency());
+            }
+		}else{
+			// Add Default dependencies. 
+			dependencyList = getDependencies(name);
+        }
+		model.setDependencies(dependencyList);
+		Writer writer = null;
+		try{
+			writer = WriterFactory.newXmlWriter(new File(PROJECTSLOCATION
+					+ File.separator + getArtifactID(name) + File.separator
+					+ "pom.xml"));
+			MavenXpp3Writer pomWriter = new MavenXpp3Writer();
+			pomWriter.write(writer, model);
+		}catch(Exception e){
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
+					+ "Error while creating POM for " + getArtifactID(name)
+					+ e.getMessage());
+		}finally{
+			IOUtil.close(writer);
+		}
+	}
+	
+	private List<Dependency> getDependencies(String controllerName) {
+		// Read the Dependency Information from property file. 
+		Path file = Paths.get(DEPENDENCY_FILE);
+		if(!Files.notExists(file)){
+			try {
+				String dependencyJSON = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
+				DependencyInfo dependencyInfo = PolicyUtils.jsonStringToObject(dependencyJSON, DependencyInfo.class);
+				String controller = "default";
+				if(dependencyInfo.getDependencies().containsKey(controllerName)){
+					controller = controllerName;
+				}
+				List<Dependency> dependencyList = new ArrayList<Dependency>();
+				for(PEDependency dependency: dependencyInfo.getDependencies().get(controller)){
+					dependencyList.add(dependency.getDependency());
+				}
+				return dependencyList;
+			} catch (IOException| NullPointerException e) {
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
+						+ "Error while getting dependecy Information for controller: " + controllerName
+						+ e.getMessage());
+			}
+		}
+		return defaultDependencies(controllerName);
+	}
+	
+	// Default Dependency Section. Can be changed as required. 
+	public List<Dependency> defaultDependencies(String controllerName) {
+		
+		List<Dependency> dependencyList = new ArrayList<Dependency>();
 		String version= StringEscapeUtils.escapeJava(brmsdependencyversion);
 
 		Dependency demoDependency = new Dependency();
@@ -477,20 +903,7 @@ public class BRMSPush {
 		trafficgeneratorDependency.setArtifactId("trafficgenerator");
 		trafficgeneratorDependency.setVersion(version);	
 		dependencyList.add(trafficgeneratorDependency);
-
-
-		model.setDependencies(dependencyList);
-
-		Writer writer = null;
-		try{
-			writer = WriterFactory.newXmlWriter(new File(projectsLocation+File.separator+getArtifactID(name)+File.separator+"pom.xml"));
-			MavenXpp3Writer pomWriter = new MavenXpp3Writer();
-			pomWriter.write(writer, model);
-		}catch(Exception e){
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Error while creating POM for " + getArtifactID(name) + e.getMessage());
-		}finally{
-			IOUtil.close(writer);
-		}
+		return dependencyList;
 	}
 
 	private void createProject(String path,String ksessionName){
@@ -511,11 +924,11 @@ public class BRMSPush {
 		try{
 			FileUtils.writeStringToFile(new File(file), rule);
 		} catch (Exception e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Error while creating Rule for " + file + e.getMessage());
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Error while creating Rule for " + file + e.getMessage());
 		}
 	}
 
-	private void readGroups(Properties config) throws Exception{
+	private void readGroups(Properties config) throws PolicyException{
 		String[] groupNames = null;
 		if(config.getProperty("groupNames").contains(",")){
 			groupNames = config.getProperty("groupNames").replaceAll(" ", "").split(",");
@@ -523,102 +936,91 @@ public class BRMSPush {
 			groupNames = new String[]{config.getProperty("groupNames").replaceAll(" ", "")};
 		}
 		if(groupNames==null || groupNames.length==0){
-			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "groupNames property is missing or empty from the property file ");
-			throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "groupNames property is missing or empty from the property file ");
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "groupNames property is missing or empty from the property file ");
+			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "groupNames property is missing or empty from the property file ");
 		}
-		names = new HashMap<String, Integer>();
-		groupIDs = new ArrayList<String>();
-		artifactIDs = new ArrayList<String>();
+		groupMap = new HashMap<String, ArrayList<Object>>();
 		for(int counter=0; counter < groupNames.length ;counter++){
 			String name = groupNames[counter];
 			String groupID = config.getProperty(name+".groupID");
 			if(groupID==null){
-				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + name+".groupID property is missing from the property file ");
-				throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + name+".groupID property is missing from the property file ");
+				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + name+".groupID property is missing from the property file ");
+				throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + name+".groupID property is missing from the property file ");
 			}
 			String artifactID = config.getProperty(name+".artifactID");
 			if(artifactID==null){
-				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + name+".artifactID property is missing from the property file ");
-				throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + name+".artifactID property is missing from the property file ");
+				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + name+".artifactID property is missing from the property file ");
+				throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + name+".artifactID property is missing from the property file ");
 			}
-			// Add to list if we got all 
-			names.put(name, counter);
-			groupIDs.add(groupID);
-			artifactIDs.add(artifactID);
+			PEDependency dependency = new PEDependency();
+			dependency.setArtifactId(artifactID);
+			dependency.setGroupId(groupID);
+			// Add to list if we got all
+			addToGroup(name,dependency);
 		}
 	}
 
-	private String getGroupID(String name){
-		return groupIDs.get(names.get(name));
+	private void addToGroup(String name, PEDependency dependency) {
+		ArrayList<Object> values = new ArrayList<Object>();
+        values.add(dependency);
+		groupMap.put(name, values);
+		EntityTransaction et = em.getTransaction();
+		et.begin();
+		Query query = em.createQuery("select b from BRMSGroupInfo as b where b.controllerName = :cn");
+		query.setParameter("cn", name);
+		List<?> groupList = query.getResultList();
+		BRMSGroupInfo brmsGroupInfo = null;
+		if(groupList.size()>0){
+			LOGGER.info("Controller name already Existing in DB. Will be updating the DB Values" + name);
+			brmsGroupInfo = (BRMSGroupInfo) groupList.get(0);
+		}
+		if(brmsGroupInfo==null){
+			brmsGroupInfo = new BRMSGroupInfo();
+		}
+		brmsGroupInfo.setControllerName(name);
+		brmsGroupInfo.setGroupId(dependency.getGroupId());
+		brmsGroupInfo.setArtifactId(dependency.getArtifactId());
+		brmsGroupInfo.setVersion(dependency.getVersion());
+		em.persist(brmsGroupInfo);
+		em.flush();
+		et.commit();
 	}
 
 	private String getArtifactID(String name){
-		return artifactIDs.get(names.get(name));
-	}
+        return ((PEDependency) groupMap.get(name).get(0)).getArtifactId();
+    }
+    
+    private String getGroupID(String name){
+        return ((PEDependency) groupMap.get(name).get(0)).getGroupId();
+    }
+    
+    private String getVersion(String name){
+        return ((PEDependency) groupMap.get(name).get(0)).getVersion();
+    }
 
-	private String getName(String filePath){
-		filePath = filePath.replaceFirst(projectsLocation, "").substring(1);
-		String artifactName = filePath.substring(0, filePath.indexOf(File.separator));
-		for(String name : names.keySet()){
-			if(artifactName.equals(getArtifactID(name))){
-				return name;
-			}
-		}
-		// If not found return default
-		return defaultName;
-	}
-
-	private String incrementVersion(String name) {
-		final NexusClient client = new NexusRestClient();
-		String newVersion = "0.1.0";
-		createFlag = false;
-		try {
-			client.connect(repURL.substring(0, repURL.indexOf(repURL.split(":[0-9]+\\/nexus")[1])), repUserName, repPassword);
-			final NexusArtifact template = new NexusArtifact();
-			template.setGroupId(getGroupID(name));
-			template.setArtifactId(getArtifactID(name));
-			final List<NexusArtifact> artifacts = client.searchByGAV(template);
-			int bigMajor = 0;
-			int bigMinor = 0;
-			for(NexusArtifact artifact : artifacts){
-				String version = artifact.getVersion();
-				int majorVal = Integer.parseInt(version.substring(0, version.indexOf(".")));
-				int minorVal = Integer.parseInt(version.substring(version.indexOf(".")+1,version.lastIndexOf(".")));
-				if(majorVal > bigMajor){
-					bigMajor = majorVal;
-					bigMinor = minorVal;
-				}else if((bigMajor==majorVal) && (minorVal > bigMinor)){
-					bigMinor = minorVal;
-				}
-			}
-			if(bigMinor>=9){
-				bigMajor = bigMajor+1;
-				bigMinor = 0;
-			}else{
-				bigMinor = bigMinor+1;
-			}
-			if(artifacts.isEmpty()){
-				// This is new artifact.
-				newVersion = "0.1.0";
-			}else{
-				newVersion =  bigMajor + "." + bigMinor + artifacts.get(0).getVersion().substring(artifacts.get(0).getVersion().lastIndexOf("."));
-			}
-		} catch (NexusClientException | NexusConnectionException | NullPointerException e) {
-			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "version number increment failed will be using default version " +e.getMessage());
-		} finally {
-			try {
-				client.disconnect();
-			} catch (NexusClientException | NexusConnectionException e) {
-				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "failed to disconnect Connection from Nexus." +e.getMessage());
-			}
-		}
-		if(newVersion.equals("0.1.0")){
-			createFlag = true;
-		}
-		versions.put(name, newVersion);
-		logger.info("Controller: " + name + "is on version: "+ newVersion);
-		return newVersion;
-	}
+    private void getNameAndSetRemove(String controllerName, String policyName) {
+        String artifactName = getArtifactID(controllerName);
+        String ruleFolder= PROJECTSLOCATION + File.separator
+                + artifactName + File.separator + "src"
+                + File.separator + "main" + File.separator
+                + "resources" + File.separator + "rules";
+        File file = new File(ruleFolder+File.separator+ policyName +".drl");
+        if(file.delete()){
+    		LOGGER.info("Deleted File.. " + file.getAbsolutePath());
+        }
+        if(new File(ruleFolder).listFiles().length == 0) {
+            removedRuleModifiedGroup(controllerName);
+        } else {
+            // This is an update in terms of PDPD.
+            addModifiedGroup(controllerName, "update");
+        }
+    }
+	
+	private void setVersion(String newVersion, String controllerName) {
+        PEDependency userController = (PEDependency) groupMap.get(controllerName).get(0);
+        userController.setVersion(newVersion);
+        groupMap.get(controllerName).set(0, userController);
+    }
 
 	// Return BackUpMonitor 
 	public static BackUpMonitor getBackUpMonitor(){

@@ -1,0 +1,198 @@
+<!--/*-
+ * ============LICENSE_START=======================================================
+ * ECOMP Policy Engine
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */-->
+<script type="text/ng-template" id="add_fwTermList_popup.html">
+<div class="modal" tabindex="-1">
+		 <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+        <div class="modal-header">
+            <h2 class="font-showcase-font-name" style="color: #157bb2">{{label}}</h2>
+        </div>
+		<form name="formdata" ng-submit="saveTermName(editTermList);" novalidate>
+        <div class="modal-body">
+			<div class="form-group row">
+            <div class="form-group col-sm-6"  ng-class="{ 'has-error' : formdata.termName.$invalid && !formdata.termName.$pristine }">
+                <label>Rule Name:<sup><b>*</b></sup></label><br>
+                <input type="text" ng-model="editTermList.termName" class="form-control" name= "termName"  required/>
+				<p ng-show="formdata.termName.$invalid && !formdata.termName.$pristine" class="help-block">Rule Name is required.</p>
+            </div>
+            <div class="form-group col-sm-6" >
+                <label>Rule Description:<sup><b>*</b></sup></label><br>
+                <input type="text" ng-model="editTermList.termDescription" class="form-control"/>
+            </div>
+			</div>
+			<div class="form-group row">
+            <div class="form-group col-sm-6">
+                <label>From-Zone:</label><br>
+                <button type="button" class="btn btn-secondary btn-small"  ng-click="addFromZoneNewChoice()"><i class="fa fa-plus"></i></button>
+            </div>
+			</div>
+			<div class="form-group row">
+			<div class="form-group">
+    			<div  data-ng-repeat="choice in fromZonechoices">
+					<div class="form-group row">		
+        			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
+            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in zoneDictionaryDatas track by option" name= "option"  required>
+						<option value = "">{{choice.option}}</option></select>
+						<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">From-Zone is required.</p>
+        			</div>
+        			<div  class="form-group col-sm-1">
+            			<button type="button" class="btn btn-secondary btn-small"  ng-show="$last" ng-click="removeFromZoneChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+					</div>
+        		</div>
+			</div>
+			</div> 
+			<div class="form-group row">
+            <div class="form-group col-sm-6">
+                 <label>To-Zone:</label><br>
+                 <button type="button" class="btn btn-secondary btn-small"  ng-click="addToZoneNewChoice()"><i class="fa fa-plus"></i></button>
+            </div>
+			</div>
+			<div class="form-group row">
+			<div class="form-group">
+    			<div  data-ng-repeat="choice in toZonechoices">	
+					<div class="form-group row">		
+        			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
+            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in zoneDictionaryDatas track by option"><option value = "" name= "option"  required>{{choice.option}}</option></select>
+						<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">To-Zone is required.</p>
+        			</div>
+        			<div  class="form-group col-sm-1">
+            			<button type="button" class="btn btn-secondary btn-small"  ng-show="$last" ng-click="removeToZoneChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+					</div>
+        		</div>
+			</div>
+			</div> 
+			<div class="form-group row">
+            <div class="form-group col-sm-6">
+                  <label>Source-List:</label><br>
+                 <button type="button" class="btn btn-secondary btn-small"  ng-click="addSourceListNewChoice()"><i class="fa fa-plus"></i></button>
+            </div>
+			</div>
+			<div class="form-group row">
+			<div class="form-group">
+    			<div  data-ng-repeat="choice in sourceListchoices">	
+					<div class="form-group row">	
+        			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
+            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in addressGroupDictionaryDatas track by option"><option value = "" name= "option"  required>{{choice.option}}</option></select>
+						<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">Source-List is required.</p>
+        			</div>
+        			<div  class="form-group col-sm-1">
+            			<button type="button" class="btn btn-secondary btn-small"  ng-show="$last" ng-click="removeSourceListChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+					</div>
+        		</div>
+		</div>
+		</div> 
+		<div class="form-group row">
+            <div class="form-group col-sm-6">
+                  <label>Destination-List:</label><br>
+                 <button type="button" class="btn btn-secondary btn-small"  ng-click="addDListNewChoice()"><i class="fa fa-plus"></i></button>
+            </div>
+		</div>
+		<div class="form-group row">
+			<div class="form-group">
+    			<div  data-ng-repeat="choice in destinationListchoices">
+					<div class="form-group row">		
+        			<div class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
+            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in prefixListDictionaryDatas track by option"><option value = "" name= "option"  required>{{choice.option}}</option></select>
+						<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">Destination-List is required.</p>
+        			</div>
+        			<div  class="form-group col-sm-1">
+            			<button type="button" class="btn btn-secondary btn-small"  ng-show="$last" ng-click="removeDlistChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+					</div>
+        		</div>
+			</div>
+		</div> 
+		<div class="form-group row">
+            <div class="form-group col-sm-6">
+                 <label>Source-Services:</label><br>
+                 <button type="button" class="btn btn-secondary btn-small"  ng-click="addSourceServiceNewChoice()"><i class="fa fa-plus"></i></button>
+            </div>
+		</div>
+		<div class="form-group row">
+			<div class="form-group">
+    			<div  data-ng-repeat="choice in sourceServicechoices">	
+					<div class="form-group row">		
+        			<div class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
+            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in serviceListDictionaryDatas track by option" ng-options="option for option in serviceGroupDictionaryDatas track by option"><option value = "" name= "option"  required>{{choice.option}}</option></select>
+        				<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">Source-Services is required.</p>
+					</div>
+        			<div  class="form-group col-sm-1">
+            			<button type="button" class="btn btn-secondary btn-small"  ng-show="$last" ng-click="removeSourceServiceChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+					</div>
+        		</div>
+		</div> 
+		</div>
+		<div class="form-group row">
+            <div class="form-group col-sm-6">
+                 <label>Destination-Services:</label><br>
+                 <button type="button" class="btn btn-secondary btn-small"  ng-click="addDServicesNewChoice()"><i class="fa fa-plus"></i></button>
+            </div>
+		</div>
+		<div class="form-group row">
+			<div class="form-group">
+    			<div  data-ng-repeat="choice in destinationServicechoices">	
+					<div class="form-group row">	
+        			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
+            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in serviceListDictionaryDatas track by option" ng-options="option for option in serviceGroupDictionaryDatas track by option" name= "option"  required><option value = "">{{choice.option}}</option></select>
+        				<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">Destination-Services is required.</p>
+					</div>
+        			<div class="form-group col-sm-1">
+            			<button type="button" class="btn btn-secondary btn-small"  ng-show="$last" ng-click="removeDServicesChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+					</div>
+        		</div>
+			</div>
+		</div> 
+		</br>
+		<div class="form-group row">
+            <div class="form-group col-sm-6">
+                 <label>Action-List:</label><br>
+                 <button type="button" class="btn btn-secondary btn-small"  ng-click="addActionListNewChoice()"><i class="fa fa-plus"></i></button>
+            </div>
+		</div>
+		<div class="form-group row">
+			<div class="form-group">
+    			<div  data-ng-repeat="choice in actionListchoices">	
+					<div class="form-group row">	
+        			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
+            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in actionListDictionaryDatas track by option" name= "option"  required><option value = "">{{choice.option}}</option></select>
+        				<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">Action-List is required.</p>
+					</div>
+        			<div  class="form-group col-sm-1">
+            			<button type="button" class="btn btn-secondary btn-small"  ng-show="$last" ng-click="removeActionListChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+					</div>
+        		</div>
+			</div>
+		</div> 
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" type="submit" ng-disabled="formdata.$invalid">Save</button>
+            <button class="btn btn-default"  type="button" ng-click="close()">Close</button>
+		</div>
+		</form>
+    </div>
+			</div>
+</div>
+</script>

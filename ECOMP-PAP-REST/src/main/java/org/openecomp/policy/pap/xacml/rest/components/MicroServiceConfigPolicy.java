@@ -21,17 +21,35 @@
 package org.openecomp.policy.pap.xacml.rest.components;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.Map.Entry;
 
-import javax.json.stream.JsonGenerationException;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.rest.XACMLRestProperties;
+import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
+
+import com.att.research.xacml.std.IdentifierImpl;
+import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Splitter;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -45,27 +63,21 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openecomp.policy.pap.xacml.rest.adapters.PolicyRestAdapter;
-
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
-import com.att.research.xacml.std.IdentifierImpl;
-
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger; 
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType; 
 
 public class MicroServiceConfigPolicy extends Policy {
 	
-	/**
-	 * Config Fields
-	 */
-	private static final Logger logger = FlexLogger.getLogger(ConfigPolicy.class);
+	private static final Logger LOGGER = FlexLogger.getLogger(MicroServiceConfigPolicy.class);
+	
+    /*
+     * These are the parameters needed for DB access from the PAP
+     */
+    private static String papDbDriver = null;
+    private static String papDbUrl = null;
+    private static String papDbUser = null;
+    private static String papDbPassword = null;
+    private static Map<String, String> mapAttribute = new HashMap<String,String>();
+    private static Map<String, String> matchMap = new HashMap<String,String>();
 
 	public MicroServiceConfigPolicy() {
 		super();
@@ -76,56 +88,30 @@ public class MicroServiceConfigPolicy extends Policy {
 	}
 
 	//save configuration of the policy based on the policyname
-	private void saveConfigurations(String policyName, String prevPolicyName, String jsonBody) {
-		String domain = getParentPathSubScopeDir();
-		String path = domain.replace('\\', '.');
-		if(path.contains("/")){
-			path = domain.replace('/', '.');
-			logger.info("print the path:" +path);
-		}
+	private void saveConfigurations(String policyName, String jsonBody) {
 		try {
-			String body = null;
-			try {
-				body = jsonBody;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			System.out.println(body);
 			if(policyName.endsWith(".xml")){
-				policyName	 = policyName.substring(0, policyName.lastIndexOf(".xml"));	
+				policyName = policyName.replace(".xml", "");
 			}
-			PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator+path + "."+ policyName +".json");
-			out.println(body);
+			PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName +".json");
+			out.println(jsonBody);
 			out.close();
-
-		} catch (JsonGenerationException e) {
+		} catch (Exception e) {
+			LOGGER.error("Exception Occured While writing Configuration data"+e);
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		} 
 	}
 	
-	//getting the policy name and setting to configuration on adding .json
-	private String getConfigFile(String filename) {
-		filename = FilenameUtils.removeExtension(filename);
-		if (filename.endsWith(".xml")) {
-			filename = filename.substring(0, filename.length() - 4);
-		}
-		filename = filename +".json";
-		return filename;
-	}
 	
 	@Override
 	public Map<String, String> savePolicies() throws Exception {
-		
+
 		Map<String, String> successMap = new HashMap<String,String>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
 		}
-		
+
 		if(!isPreparedToSave()){
 			//Prep and configure the policy for saving
 			prepareToSave();
@@ -133,12 +119,10 @@ public class MicroServiceConfigPolicy extends Policy {
 
 		// Until here we prepared the data and here calling the method to create xml.
 		Path newPolicyPath = null;
-		newPolicyPath = Paths.get(policyAdapter.getParentPath().toString(), policyName);
-		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject() );		
-		if (successMap.containsKey("success")) {
-			Path finalPolicyPath = getFinalPolicyPath();
-			policyAdapter.setFinalPolicyPath(finalPolicyPath.toString());
-		}
+		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
+
+		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());	
+	
 		return successMap;		
 	}
 	
@@ -154,12 +138,7 @@ public class MicroServiceConfigPolicy extends Policy {
 		
 		int version = 0;
 		String policyID = policyAdapter.getPolicyID();
-
-		if (policyAdapter.isEditPolicy()) {
-			version = policyAdapter.getHighestVersion() + 1;
-		} else {
-			version = 1;
-		}
+		version = policyAdapter.getHighestVersion();
 		
 		// Create the Instance for pojo, PolicyType object is used in marshalling.
 		if (policyAdapter.getPolicyType().equals("Config")) {
@@ -170,33 +149,11 @@ public class MicroServiceConfigPolicy extends Policy {
 			policyConfig.setTarget(new TargetType());
 			policyAdapter.setData(policyConfig);
 		}
-		
+		policyName = policyAdapter.getNewFileName();
 		if (policyAdapter.getData() != null) {
-			
-			// Save off everything
-			// making ready all the required elements to generate the action policy xml.
-			// Get the uniqueness for policy name.
-			String prevPolicyName = null;
-			if(policyAdapter.isEditPolicy()){
-				prevPolicyName = "Config_MS_" + policyAdapter.getPolicyName() + "." + policyAdapter.getHighestVersion() + ".xml";
-			}
-			
-			Path newFile = this.getNextLoopFilename(Paths.get(policyAdapter.getParentPath()), policyAdapter.getPolicyType(), 
-					policyAdapter.getConfigPolicyType(), policyAdapter.getPolicyName(), version);
-			
-			if (newFile == null) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Policy already Exists, cannot create the policy.");
-				PolicyLogger.error("Policy already Exists, cannot create the policy.");
-				setPolicyExists(true);
-				return false;
-			}
-			
-			policyName = newFile.getFileName().toString();
-			
 			// Save the Configurations file with the policy name with extention based on selection.
 			String jsonBody = policyAdapter.getJsonBody();
-			saveConfigurations(policyName, prevPolicyName, jsonBody);
+			saveConfigurations(policyName, jsonBody);
 			
 			// Make sure the filename ends with an extension
 			if (policyName.endsWith(".xml") == false) {
@@ -211,23 +168,35 @@ public class MicroServiceConfigPolicy extends Policy {
 			configPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
 			
 			AllOfType allOfOne = new AllOfType();
-			final Path gitPath = Paths.get(policyAdapter.getUserGitPath().toString());
-			String policyDir = policyAdapter.getParentPath().toString();
-			int startIndex = policyDir.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-			policyDir = policyDir.substring(startIndex, policyDir.length());
-			logger.info("print the main domain value "+policyDir);
-			String path = policyDir.replace('\\', '.');
-			if(path.contains("/")){
-				path = policyDir.replace('/', '.');
-				logger.info("print the path:" +path);
-			}
-			String fileName = FilenameUtils.removeExtension(policyName);
-			fileName = path + "." + fileName + ".xml";
+			String fileName = policyAdapter.getNewFileName();
 			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
 			if ((name == null) || (name.equals(""))) {
 				name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
 			}
 			
+            //setup values for pulling out matching attributes
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(policyAdapter.getJsonBody());
+            String matching = null;
+            
+            if (policyAdapter.getTtlDate()==null){
+                policyAdapter.setTtlDate("NA");
+            }
+            if (policyAdapter.getServiceType().contains("-v")){
+                matching = getValueFromDictionary(policyAdapter.getServiceType());
+            } else {
+                String jsonVersion  = StringUtils.replaceEach(rootNode.get("version").toString(), new String[]{"\""}, new String[]{""});
+                matching = getValueFromDictionary(policyAdapter.getServiceType() + "-v" + jsonVersion);
+            }
+            
+            matchMap = new HashMap<String,String>();
+            if (matching != null && !matching.isEmpty()){
+                matchMap = Splitter.on(",").withKeyValueSeparator("=").split(matching);
+                if(policyAdapter.getJsonBody() != null){
+                    pullMatchValue(rootNode);           
+                }
+            }
+            
 			// Match for policyName
 			allOfOne.getMatch().add(createMatch("PolicyName", name));
 			
@@ -235,14 +204,26 @@ public class MicroServiceConfigPolicy extends Policy {
 		
 			// Adding the matches to AllOfType element Match for Ecomp
 			allOf.getMatch().add(createMatch("ECOMPName", policyAdapter.getEcompName()));
-			// Match for ConfigName
-			allOf.getMatch().add(createMatch("ConfigName", policyAdapter.getConfigName()));
-			// Match for Service
-			allOf.getMatch().add(createDynamicMatch("service", policyAdapter.getServiceType()));
-			// Match for uuid
-			allOf.getMatch().add(createDynamicMatch("uuid", policyAdapter.getUuid()));
-			// Match for location
-			allOf.getMatch().add(createDynamicMatch("location", policyAdapter.getLocation()));
+			if (matchMap==null || matchMap.isEmpty()){
+				// Match for ConfigName
+				allOf.getMatch().add(createMatch("ConfigName", policyAdapter.getConfigName()));
+				// Match for Service
+				allOf.getMatch().add(createDynamicMatch("service", policyAdapter.getServiceType()));
+				// Match for uuid
+				allOf.getMatch().add(createDynamicMatch("uuid", policyAdapter.getUuid()));
+				// Match for location
+				allOf.getMatch().add(createDynamicMatch("location", policyAdapter.getLocation()));
+			}else {
+				for (Entry<String, String> matchValue : matchMap.entrySet()){
+					String value = matchValue.getValue();
+					String key = matchValue.getKey().trim();
+					if (value.contains("matching-true")){
+						if (mapAttribute.containsKey(key)){
+							allOf.getMatch().add(createDynamicMatch(key, mapAttribute.get(key)));
+						}
+					}
+				}
+			}
 			// Match for riskType
 			allOf.getMatch().add(
 					createDynamicMatch("RiskType", policyAdapter.getRiskType()));
@@ -285,8 +266,6 @@ public class MicroServiceConfigPolicy extends Policy {
 			try {
 				accessURI = new URI(ACTION_ID);
 			} catch (URISyntaxException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getStackTrace());
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "MicroServiceConfigPolicy", "Exception creating ACCESS URI");
 			}
 			accessAttributeDesignator.setCategory(CATEGORY_ACTION);
@@ -306,8 +285,6 @@ public class MicroServiceConfigPolicy extends Policy {
 			try {
 				configURI = new URI(RESOURCE_ID);
 			} catch (URISyntaxException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getStackTrace());
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "MicroServiceConfigPolicy", "Exception creating Config URI");
 			}
 			configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
@@ -332,14 +309,80 @@ public class MicroServiceConfigPolicy extends Policy {
 			policyAdapter.setPolicyData(configPolicy);
 
 		} else {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
 			PolicyLogger.error("Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
 		}
 		setPreparedToSave(true);
 		return true;
 	}
 	
+    private void pullMatchValue(JsonNode rootNode) {
+        Iterator<Map.Entry<String, JsonNode>> fieldsIterator = rootNode.fields();
+        String newValue = null;
+           while (fieldsIterator.hasNext()) {
+               Map.Entry<String, JsonNode> field = fieldsIterator.next();
+               final String key = field.getKey();
+               final JsonNode value = field.getValue();
+               if (value.isContainerNode() && !value.isArray()) {
+                   pullMatchValue(value); // RECURSIVE CALL
+               } else {
+                   newValue = StringUtils.replaceEach(value.toString(), new String[]{"[", "]", "\""}, new String[]{"", "", ""});
+                   mapAttribute.put(key, newValue);
+               }
+           }
+       
+   }
+
+   private String getValueFromDictionary(String service){
+       
+       Connection con = null;
+       Statement st = null;
+       ResultSet rs = null;
+       
+       String modelName = service.split("-v")[0];
+       String modelVersion = service.split("-v")[1];
+       
+       
+       /*
+        * Retrieve the property values for db access from the xacml.pap.properties
+        */
+       papDbDriver = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_DRIVER);
+       papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
+       papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
+       papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
+       
+       String ruleTemplate=null;
+       
+       try {
+           //Get DB Connection
+           Class.forName(papDbDriver);
+           con = DriverManager.getConnection(papDbUrl,papDbUser,papDbPassword);
+           st = con.createStatement();
+   
+           String queryString = "Select * from MicroServiceModels where modelName=\""  + modelName
+                   + "\" AND version=\"" + modelVersion+"\"";
+
+           
+           rs = st.executeQuery(queryString);
+           if(rs.next()){
+               ruleTemplate=rs.getString("annotation");
+           }
+           rs.close();
+       }catch (ClassNotFoundException e) {
+           PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "MicroServiceModels", "Exception querying MicroServiceModels");
+       } catch (SQLException e) {
+           PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "MicroServiceModels", "Exception querying MicroServiceModels");
+       } finally {
+           try{
+               if (con!=null) con.close();
+               if (rs!=null) rs.close();
+               if (st!=null) st.close();
+           } catch (Exception ex){
+        	   LOGGER.error("Exception Occured While Closing the Database Connection"+ex);
+           }
+       }
+       return ruleTemplate;
+       
+   }
 	// Data required for Advice part is setting here.
 	private AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
 		AdviceExpressionsType advices = new AdviceExpressionsType();
@@ -358,7 +401,6 @@ public class MicroServiceConfigPolicy extends Policy {
 		assignment1.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue));
 
 		advice.getAttributeAssignmentExpression().add(assignment1);
-		final Path gitPath = Paths.get(policyAdapter.getUserGitPath().toString());
 		// For Config file Url if configurations are provided.
 		AttributeAssignmentExpressionType assignment2 = new AttributeAssignmentExpressionType();
 		assignment2.setAttributeId("URLID");
@@ -367,17 +409,13 @@ public class MicroServiceConfigPolicy extends Policy {
 
 		AttributeValueType AttributeValue = new AttributeValueType();
 		AttributeValue.setDataType(URI_DATATYPE);
-		String policyDir1 = policyAdapter.getParentPath().toString();
-		int startIndex1 = policyDir1.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-		policyDir1 = policyDir1.substring(startIndex1, policyDir1.length());
-		logger.info("print the main domain value"+policyDir1);
-		String path = policyDir1.replace('\\', '.');
-		if(path.contains("/")){
-			path = policyDir1.replace('/', '.');
-			logger.info("print the path:" +path);
+		String configName;
+		if(policyName.endsWith(".xml")){
+			configName = policyName.replace(".xml", "");
+		}else{
+			configName = policyName;
 		}
-		String content = CONFIG_URL +"/Config/" + path + "." + getConfigFile(policyName);
-		System.out.println("URL value :" + content);
+		String content = CONFIG_URL +"/Config/" + configName + ".json";
 		AttributeValue.getContent().add(content);
 		assignment2.setExpression(new ObjectFactory().createAttributeValue(AttributeValue));
 
@@ -389,25 +427,8 @@ public class MicroServiceConfigPolicy extends Policy {
 
 		AttributeValueType attributeValue3 = new AttributeValueType();
 		attributeValue3.setDataType(STRING_DATATYPE);
-		String policyDir = policyAdapter.getParentPath().toString();
-		int startIndex = policyDir.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-		policyDir = policyDir.substring(startIndex, policyDir.length());
-		StringTokenizer tokenizer = null;
-		StringBuffer buffer = new StringBuffer();
-		if (policyDir.contains("\\")) {
-			tokenizer = new StringTokenizer(policyDir, "\\");
-		} else {
-			tokenizer = new StringTokenizer(policyDir, "/");
-		}
-		if (tokenizer != null) {
-			while (tokenizer.hasMoreElements()) {
-				String value = tokenizer.nextToken();
-				buffer.append(value);
-				buffer.append(".");
-			}
-		}
 		fileName = FilenameUtils.removeExtension(fileName);
-		fileName = buffer.toString() + fileName + ".xml";
+		fileName = fileName + ".xml";
 		String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
 		if ((name == null) || (name.equals(""))) {
 			name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
@@ -429,7 +450,7 @@ public class MicroServiceConfigPolicy extends Policy {
 		advice.getAttributeAssignmentExpression().add(assignment4);
 
 		AttributeAssignmentExpressionType assignment5 = new AttributeAssignmentExpressionType();
-		assignment5.setAttributeId("matching:" + this.ECOMPID);
+		assignment5.setAttributeId("matching:" + ECOMPID);
 		assignment5.setCategory(CATEGORY_RESOURCE);
 		assignment5.setIssuer("");
 
@@ -440,53 +461,78 @@ public class MicroServiceConfigPolicy extends Policy {
 
 		advice.getAttributeAssignmentExpression().add(assignment5);
 
-		AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
-		assignment6.setAttributeId("matching:" + this.CONFIGID);
-		assignment6.setCategory(CATEGORY_RESOURCE);
-		assignment6.setIssuer("");
-
-		AttributeValueType configNameAttributeValue6 = new AttributeValueType();
-		configNameAttributeValue6.setDataType(STRING_DATATYPE);
-		configNameAttributeValue6.getContent().add(policyAdapter.getConfigName());
-		assignment6.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue6));
-
-		advice.getAttributeAssignmentExpression().add(assignment6);
-		AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
-		assignment7.setAttributeId("matching:service");
-		assignment7.setCategory(CATEGORY_RESOURCE);
-		assignment7.setIssuer("");
-
-		AttributeValueType configNameAttributeValue7 = new AttributeValueType();
-		configNameAttributeValue7.setDataType(STRING_DATATYPE);
-		configNameAttributeValue7.getContent().add(policyAdapter.getServiceType());
-		assignment7.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue7));
-
-		advice.getAttributeAssignmentExpression().add(assignment7);
-		
-		AttributeAssignmentExpressionType assignment8 = new AttributeAssignmentExpressionType();
-		assignment8.setAttributeId("matching:uuid");
-		assignment8.setCategory(CATEGORY_RESOURCE);
-		assignment8.setIssuer("");
-
-		AttributeValueType configNameAttributeValue8 = new AttributeValueType();
-		configNameAttributeValue8.setDataType(STRING_DATATYPE);
-		configNameAttributeValue8.getContent().add(policyAdapter.getUuid());
-		assignment8.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue8));
-
-		advice.getAttributeAssignmentExpression().add(assignment8);
+        AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
+        assignment7.setAttributeId("matching:service");
+        assignment7.setCategory(CATEGORY_RESOURCE);
+        assignment7.setIssuer("");
+ 
+        AttributeValueType configNameAttributeValue7 = new AttributeValueType();
+        configNameAttributeValue7.setDataType(STRING_DATATYPE);
+        configNameAttributeValue7.getContent().add(policyAdapter.getServiceType());
+        assignment7.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue7));
+ 
+        advice.getAttributeAssignmentExpression().add(assignment7);
         
-		AttributeAssignmentExpressionType assignment9 = new AttributeAssignmentExpressionType();
-		assignment9.setAttributeId("matching:Location");
-		assignment9.setCategory(CATEGORY_RESOURCE);
-		assignment9.setIssuer("");
+        if (matchMap==null || matchMap.isEmpty()){
+        	AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
+        	assignment6.setAttributeId("matching:" + CONFIGID);
+        	assignment6.setCategory(CATEGORY_RESOURCE);
+        	assignment6.setIssuer("");
 
-		AttributeValueType configNameAttributeValue9 = new AttributeValueType();
-		configNameAttributeValue9.setDataType(STRING_DATATYPE);
-		configNameAttributeValue9.getContent().add(policyAdapter.getLocation());
-		assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
+        	AttributeValueType configNameAttributeValue6 = new AttributeValueType();
+        	configNameAttributeValue6.setDataType(STRING_DATATYPE);
+        	configNameAttributeValue6.getContent().add(policyAdapter.getConfigName());
+        	assignment6.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue6));
 
-		advice.getAttributeAssignmentExpression().add(assignment9);
-		
+        	advice.getAttributeAssignmentExpression().add(assignment6);
+
+
+        	AttributeAssignmentExpressionType assignment8 = new AttributeAssignmentExpressionType();
+        	assignment8.setAttributeId("matching:uuid");
+        	assignment8.setCategory(CATEGORY_RESOURCE);
+        	assignment8.setIssuer("");
+
+        	AttributeValueType configNameAttributeValue8 = new AttributeValueType();
+        	configNameAttributeValue8.setDataType(STRING_DATATYPE);
+        	configNameAttributeValue8.getContent().add(policyAdapter.getUuid());
+        	assignment8.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue8));
+
+        	advice.getAttributeAssignmentExpression().add(assignment8);
+
+        	AttributeAssignmentExpressionType assignment9 = new AttributeAssignmentExpressionType();
+        	assignment9.setAttributeId("matching:Location");
+        	assignment9.setCategory(CATEGORY_RESOURCE);
+        	assignment9.setIssuer("");
+
+        	AttributeValueType configNameAttributeValue9 = new AttributeValueType();
+        	configNameAttributeValue9.setDataType(STRING_DATATYPE);
+        	configNameAttributeValue9.getContent().add(policyAdapter.getLocation());
+        	assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
+
+        	advice.getAttributeAssignmentExpression().add(assignment9);
+        } else {
+            for (Entry<String, String> matchValue : matchMap.entrySet()){
+                String value = matchValue.getValue();
+                String key = matchValue.getKey().trim();
+                if (value.contains("matching-true")){
+                    if (mapAttribute.containsKey(key)){
+                        AttributeAssignmentExpressionType assignment9 = new AttributeAssignmentExpressionType();
+                        assignment9.setAttributeId("matching:" + key);
+                        assignment9.setCategory(CATEGORY_RESOURCE);
+                        assignment9.setIssuer("");
+                
+                        AttributeValueType configNameAttributeValue9 = new AttributeValueType();
+                        configNameAttributeValue9.setDataType(STRING_DATATYPE);
+                        configNameAttributeValue9.getContent().add(mapAttribute.get(key));
+                        assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
+                
+                        advice.getAttributeAssignmentExpression().add(assignment9);
+ 
+                    }
+                }
+            }
+        }
+        
 		AttributeAssignmentExpressionType assignment10 = new AttributeAssignmentExpressionType();
 		assignment10.setAttributeId("Priority");
 		assignment10.setCategory(CATEGORY_RESOURCE);
@@ -531,7 +577,7 @@ public class MicroServiceConfigPolicy extends Policy {
 
 		AttributeValueType configNameAttributeValue13 = new AttributeValueType();
 		configNameAttributeValue13.setDataType(STRING_DATATYPE);
-		configNameAttributeValue13.getContent().add(policyAdapter.getRiskLevel());
+		configNameAttributeValue13.getContent().add(policyAdapter.getGuard());
 		assignment13.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue13));
 
 		advice.getAttributeAssignmentExpression().add(assignment13);
@@ -556,6 +602,4 @@ public class MicroServiceConfigPolicy extends Policy {
 	public Object getCorrectPolicyDataObject() {
 		return policyAdapter.getPolicyData();
 	}	
-
-
 }

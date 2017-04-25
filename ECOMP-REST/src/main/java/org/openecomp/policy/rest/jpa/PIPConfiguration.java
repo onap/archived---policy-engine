@@ -51,20 +51,15 @@ import javax.persistence.Transient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
+
 import com.att.research.xacml.api.pip.PIPException;
 import com.att.research.xacml.std.pip.engines.StdConfigurableEngine;
-import com.att.research.xacml.std.pip.engines.csv.CSVEngine;
-import com.att.research.xacml.std.pip.engines.csv.HyperCSVEngine;
-import com.att.research.xacml.std.pip.engines.jdbc.JDBCEngine;
-import com.att.research.xacml.std.pip.engines.ldap.LDAPEngine;
 import com.att.research.xacml.util.XACMLProperties;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 
 
 /**
@@ -358,15 +353,12 @@ public class PIPConfiguration implements Serializable {
 			PIPConfiguration configuration;
 			try {
 				String user = "super-admin";
-				//TODO
-				//String user = ((XacmlAdminUI)UI.getCurrent()).getUserid();
 				configuration = new PIPConfiguration(id, properties, user);
 				configuration.setCreatedBy(user);
 				configuration.setModifiedBy(user);
 				configurations.add(configuration);
 			} catch (PIPException e) {
 				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Import failed: " + e.getLocalizedMessage());
-				// TODO:EELF Cleanup - Remove logger
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PIPConfiguration", "Import failed");
 			}
 		}
@@ -385,7 +377,6 @@ public class PIPConfiguration implements Serializable {
 				this.id = Integer.parseInt(id);
 			} catch (NumberFormatException e) {
 				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Convert id to integer failed: " + id);
-				// TODO:EELF Cleanup - Remove logger
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PIPConfiguration", "Convert id to integer failed");
 			}
 		}
@@ -396,30 +387,6 @@ public class PIPConfiguration implements Serializable {
 		if (this.classname == null) {
 			throw new PIPException("PIP Engine defined without a classname");
 		}
-		//
-		// These classes we know for sure require resolvers.
-		//
-		//TODO: Commented out due to JPAUtils class & As of now we are not using PIP. So, it will not impact any Errors
-		/*if (this.classname.equals(JDBCEngine.class.getCanonicalName())) {
-			this.setRequiresResolvers(true);
-			this.setPiptype(JPAUtils.getPIPType(PIPType.TYPE_SQL));
-		} else if (this.classname.equals(LDAPEngine.class.getCanonicalName())) {
-			this.setRequiresResolvers(true);
-			this.setPiptype(JPAUtils.getPIPType(PIPType.TYPE_LDAP));
-		} else if (this.classname.equals(HyperCSVEngine.class.getCanonicalName())) {
-			this.setRequiresResolvers(true);
-			this.setPiptype(JPAUtils.getPIPType(PIPType.TYPE_HYPERCSV));
-		} else if (this.classname.equals(CSVEngine.class.getCanonicalName())) {
-			this.setRequiresResolvers(true);
-			this.setPiptype(JPAUtils.getPIPType(PIPType.TYPE_CSV));
-		} else {
-			//
-			// Assume it does not require resolvers for now, if we encounter
-			// one then we will change it. The user can always change it via the gui.
-			// 
-			this.setRequiresResolvers(false);
-			this.setPiptype(JPAUtils.getPIPType(PIPType.TYPE_CUSTOM));
-		}*/
 		//
 		// Go through each property
 		//
@@ -450,8 +417,6 @@ public class PIPConfiguration implements Serializable {
 																		properties.getProperty(name.toString()),
 																		properties,"super-admin"
 																		);
-				//TODO: replace with UserId
-				//((XacmlAdminUI)UI.getCurrent()).getUserid()
 				for (PIPResolver resolver : resolvers) {
 					this.addPipresolver(resolver);
 				}

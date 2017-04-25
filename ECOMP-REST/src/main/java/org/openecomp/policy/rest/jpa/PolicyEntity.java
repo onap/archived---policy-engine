@@ -29,7 +29,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
@@ -37,11 +36,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -56,13 +53,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
  */
 @Entity
 //Add a non-unique index and a constraint that says the combo of policyName and scopeId must be unique
-@Table(name="PolicyEntity", indexes = {@Index(name="scope", columnList="scope", unique=false),
-		@Index(name="policyName", columnList="policyName", unique=false)},
-		uniqueConstraints=@UniqueConstraint(columnNames={"policyName", "scope"}))
-
-//Using a sequence generator because the value is available as soon as the
-//the object is persisted.  That is, you don't have to flush/commit to the DB.
-//@SequenceGenerator(name="seqPolicy", initialValue=1, allocationSize=1)
+@Table(name="PolicyEntity")
 
 @NamedQueries({
 	@NamedQuery(name="PolicyEntity.findAll", query="SELECT e FROM PolicyEntity e "),
@@ -76,7 +67,6 @@ public class PolicyEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seqPolicy")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column (name="policyId")
 	@JsonBackReference
@@ -102,12 +92,12 @@ public class PolicyEntity implements Serializable {
 	private String policyData = "NoData";
 
 	@OneToOne(optional=true, orphanRemoval=true)
-	@JoinColumn(name="configurationDataId", referencedColumnName="configurationDataId")
+	@JoinColumn(name="configurationDataId")
 	@JsonManagedReference
 	private ConfigurationDataEntity configurationDataEntity;
 	
 	@OneToOne(optional=true, orphanRemoval=true)
-	@JoinColumn(name="actionBodyId", referencedColumnName="actionBodyId")
+	@JoinColumn(name="actionBodyId")
 	@JsonManagedReference
 	private ActionBodyEntity actionBodyEntity;
 	

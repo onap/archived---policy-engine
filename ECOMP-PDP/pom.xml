@@ -24,14 +24,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-
 	<artifactId>ECOMP-PDP</artifactId>
 	<description>ECOMP-PDP</description>
 	<packaging>jar</packaging>
 	<parent>
 		<groupId>org.openecomp.policy.engine</groupId>
 		<artifactId>PolicyEngineSuite</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<dependencies>
 		<dependency>
@@ -40,14 +39,29 @@
 			<artifactId>ECOMP-REST</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.json</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.5</version>
+			<version>1.10</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-			<version>1.1.3</version>
+			<version>1.2</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.servlet</groupId>
@@ -58,28 +72,14 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>14.0.1</version>
+			<version>18.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-			<version>4.3.1</version>
-		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 		</dependency>
-		<dependency>
-			<groupId>org.glassfish</groupId>
-			<artifactId>javax.json</artifactId>
-			<version>1.0.4</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-client</artifactId>
@@ -89,7 +89,7 @@
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-core</artifactId>
 			<version>1.18</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>com.att.research.xacml</groupId>
 			<artifactId>xacml-pdp</artifactId>

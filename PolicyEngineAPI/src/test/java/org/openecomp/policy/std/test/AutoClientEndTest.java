@@ -277,7 +277,7 @@ public class AutoClientEndTest {
 	public void setUp()
 		throws Exception {
 		// add set up code here
-		StdPolicyEngine policyEngine = new StdPolicyEngine("Test/config_pass.properties");
+		StdPolicyEngine policyEngine = new StdPolicyEngine("Test/config_pass.properties", (String) null);
 		
 		NotificationHandler handler = policyEngine.getNotificationHandler();
 		AutoClientEnd.setAuto(NotificationScheme.AUTO_ALL_NOTIFICATIONS, handler);
