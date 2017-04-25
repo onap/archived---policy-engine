@@ -1,0 +1,90 @@
+<!--/*-
+ * ============LICENSE_START=======================================================
+ * ECOMP Policy Engine
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */-->
+<script type="text/ng-template" id="add_Attribute_popup.html">
+<div class="modal" tabindex="-1">
+		 <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+	<div class="modal-header ng-scope in">
+		<h2 class="font-showcase-font-name" style="color: #157bb2">{{label}}</h2>
+	</div>
+	<form name="formdata" ng-submit="saveAttributeName(editAttributeName);" novalidate>
+	<div class="modal-body ng-scope ng-isolate-scope in">
+		<div class="form-group row">
+			<div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.xacmlId.$invalid && !formdata.xacmlId.$pristine }">
+				<label>Attribute Name:<sup><b>*</b></sup></label><br> 
+				<input class="form-control" type="text" ng-model="editAttributeName.xacmlId" name="xacmlId" required />
+					<p ng-show="formdata.xacmlId.$invalid && !formdata.xacmlId.$pristine" class="help-block">Attribute Name is required.</p>
+			</div>
+			<div class="form-group col-sm-2" ng-class="{ 'has-error' : formdata.datatypeBean.shortName.$invalid && !formdata.datatypeBean.shortName.$pristine }">
+				<label>Data Type:<sup><b>*</b></sup></label><BR> 
+				<select class="form-control" ng-model="editAttributeName.datatypeBean.shortName" name="datatypeBean.shortName" required>
+					<option>string</option>
+					<option>integer</option>
+					<option>boolean</option>
+					<option>double</option>
+					<option>user</option>
+				</select>
+				<p ng-show="formdata.datatypeBean.shortName.$invalid && !formdata.datatypeBean.shortName.$pristine" class="help-block">Data Type is required.</p>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="form-group col-sm-6">
+				<label>Description:</label><br> 
+				<input type="text" ng-model="editAttributeName.description" class="form-control" />
+			</div>
+			<div class="form-group col-sm-2">
+				<label>Priority:</label><BR>
+	 			<select class="form-control" ng-model="editAttributeName.priority">
+					<option></option>
+					<option>High</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="form-group col-sm-4">
+					<label>  Attribute Values:</label><br>
+					<button type="button" class="btn btn-secondary btn-small" ng-click="addNewChoice()"><i class="fa fa-plus"></i></button>
+			</div>
+		</div>
+		<div class="form-group">
+				<div data-ng-repeat="choice in attributes">
+					<div class="form-group row">
+						<div class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.attributeValues.$invalid && !formdata.attributeValues.$pristine }">
+							<input type="text" class="form-control" ng-model="choice.attributeValues" maxlength="30" name="attributeValues" required />
+							<p ng-show="formdata.attributeValues.$invalid && !formdata.attributeValues.$pristine" class="help-block">Attribute Value is required.</p>
+						</div>
+						<div class="form-group col-sm-1">
+							<button type="button" class="btn btn-secondary btn-small" ng-show="$last" ng-click="removeChoice()"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-success" type="submit" ng-disabled="formdata.$invalid">Save</button>
+		<button type="button" class="btn btn-default"  ng-click="$dismiss('cancel')">Close</button>
+	</div>
+	</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</script>

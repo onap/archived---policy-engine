@@ -1,0 +1,173 @@
+/*-
+ * ============LICENSE_START=======================================================
+ * ECOMP Policy Engine
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */
+
+package org.openecomp.policy.controller;
+
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.bind.JAXBElement;
+
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
+
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
+import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
+import org.openecomp.policy.rest.jpa.PolicyEntity;
+
+public class CreateBRMSRawController{
+
+	private static final Logger logger = FlexLogger.getLogger(CreateBRMSRawController.class);
+
+	protected PolicyRestAdapter policyAdapter = null;
+	private ArrayList<Object> attributeList;
+
+	
+	@SuppressWarnings("unchecked")
+	public void prePopulateBRMSRawPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
+		attributeList = new ArrayList<Object>();
+		if (policyAdapter.getPolicyData() instanceof PolicyType) {
+			PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
+			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
+			// policy name value is the policy name without any prefix and
+			// Extensions.
+			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("BRMS_Raw_") + 9);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Prepopulating form data for BRMS RAW Policy selected:" + policyAdapter.getPolicyName());
+			}
+			policyAdapter.setPolicyName(policyNameValue);
+			String description = "";
+			try{
+				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
+			}catch(Exception e){
+				description = policy.getDescription();
+			}
+			policyAdapter.setPolicyDescription(description);
+			// Set Attributes. 
+			AdviceExpressionsType expressionTypes = ((RuleType)policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().get(0)).getAdviceExpressions();
+			for( AdviceExpressionType adviceExpression: expressionTypes.getAdviceExpression()){
+				for(AttributeAssignmentExpressionType attributeAssignment: adviceExpression.getAttributeAssignmentExpression()){
+					if(attributeAssignment.getAttributeId().startsWith("key:")){
+						Map<String, String> attribute = new HashMap<String, String>();
+						String key = attributeAssignment.getAttributeId().replace("key:", "");
+						attribute.put("key", key);
+						JAXBElement<AttributeValueType> attributevalue = (JAXBElement<AttributeValueType>) attributeAssignment.getExpression();
+						String value = (String) attributevalue.getValue().getContent().get(0);
+						attribute.put("value", value);
+						attributeList.add(attribute);
+					}else if(attributeAssignment.getAttributeId().startsWith("dependencies:")){
+                        ArrayList<String> dependencies = new ArrayList<String>(Arrays.asList(attributeAssignment.getAttributeId().replace("dependencies:", "").split(",")));
+                        if(dependencies.contains("")){
+                            dependencies.remove("");
+                        }
+                        policyAdapter.setBrmsDependency(dependencies);
+                    }else if(attributeAssignment.getAttributeId().startsWith("controller:")){
+                        policyAdapter.setBrmsController(attributeAssignment.getAttributeId().replace("controller:", ""));
+					}
+				}
+				policyAdapter.setAttributes(attributeList);
+			}
+			// Get the target data under policy.
+			policyAdapter.setConfigBodyData(entity.getConfigurationData().getConfigBody());
+			TargetType target = policy.getTarget();
+			if (target != null) {
+				// Under target we have AnyOFType
+				List<AnyOfType> anyOfList = target.getAnyOf();
+				if (anyOfList != null) {
+					Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
+					while (iterAnyOf.hasNext()) {
+						AnyOfType anyOf = iterAnyOf.next();
+						// Under AnyOFType we have AllOFType
+						List<AllOfType> allOfList = anyOf.getAllOf();
+						if (allOfList != null) {
+							Iterator<AllOfType> iterAllOf = allOfList.iterator();
+							int index = 0;
+							while (iterAllOf.hasNext()) {
+								AllOfType allOf = iterAllOf.next();
+								// Under AllOFType we have Match
+								List<MatchType> matchList = allOf.getMatch();
+								if (matchList != null) {
+									Iterator<MatchType> iterMatch = matchList.iterator();
+									while (iterMatch.hasNext()) {
+										MatchType match = iterMatch.next();
+										//
+										// Under the match we have attributevalue and
+										// attributeDesignator. So,finally down to the actual attribute.
+										//
+										AttributeValueType attributeValue = match.getAttributeValue();
+										String value = (String) attributeValue.getContent().get(0);
+
+										if (index ==  3){
+											policyAdapter.setRiskType(value);
+										}
+
+										if (index ==  4){
+											policyAdapter.setRiskLevel(value);
+										}
+										
+										if (index ==  5){
+											policyAdapter.setGuard(value);
+										}
+										if (index == 6 && !value.contains("NA")){
+											String newDate = convertDate(value, true);
+											policyAdapter.setTtlDate(newDate);
+										}
+
+										index++;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		} 
+	}
+
+	private String convertDate(String dateTTL, boolean portalType) {
+		String formateDate = null;
+		String[] date;
+		String[] parts;
+		
+		if (portalType){
+			parts = dateTTL.split("-");
+			formateDate = parts[2] + "-" + parts[1] + "-" + parts[0] + "T05:00:00.000Z";
+		} else {
+			date  = dateTTL.split("T");
+			parts = date[0].split("-");
+			formateDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+		}
+		return formateDate;
+	}
+}

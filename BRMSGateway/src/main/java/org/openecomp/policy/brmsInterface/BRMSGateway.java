@@ -41,7 +41,7 @@ import org.openecomp.policy.xacml.api.XACMLErrorConstants;
  * @version 0.1
  */
 public class BRMSGateway {
-//	private static final Logger logger = Logger.getLogger(BRMSGateway.class.getName());
+	
 	private static final Logger logger = FlexLogger.getLogger(BRMSGateway.class);
 	private static final String configFile = "config.properties";
 	

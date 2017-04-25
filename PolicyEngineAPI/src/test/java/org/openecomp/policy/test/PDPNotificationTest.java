@@ -20,12 +20,9 @@
 
 package org.openecomp.policy.test;
 
-import java.util.Collection;
-
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
 import org.openecomp.policy.api.PDPNotification;
-
-import static org.junit.Assert.*;
 
 /**
  * The class <code>PDPNotificationTest</code> contains tests for the class <code>{@link PDPNotification}</code>.

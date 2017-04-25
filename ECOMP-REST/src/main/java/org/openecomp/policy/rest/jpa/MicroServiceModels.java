@@ -31,7 +31,6 @@
 package org.openecomp.policy.rest.jpa;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,10 +47,6 @@ import javax.persistence.Table;
  * 
  * @version: 0.1
  */
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.openecomp.policy.rest.jpa.UserInfo;
 
 
 @Entity
@@ -86,6 +81,12 @@ public class MicroServiceModels implements Serializable{
 	
 	@Column (name="version", nullable=false, length=2000)
 	private String version;
+	
+	@Column (name="enumValues", nullable=false, length=2000)
+	private String enumValues;
+	
+	@Column (name="annotation", nullable=false, length=2000)
+	private String annotation;
 	
 	public String getSub_attributes() {
 		return sub_attributes;
@@ -168,5 +169,21 @@ public class MicroServiceModels implements Serializable{
 	
 	public void setModelName(String modelName){
 		this.modelName = modelName;
+	}
+	
+	public String getEnumValues() {
+		return enumValues;
+	}
+
+	public void setEnumValues(String enumValues) {
+		this.enumValues = enumValues;
+	}
+	
+	public String getAnnotation() {
+		return annotation;
+	}
+
+	public void setAnnotation(String annotation) {
+		this.annotation = annotation;
 	}
 }

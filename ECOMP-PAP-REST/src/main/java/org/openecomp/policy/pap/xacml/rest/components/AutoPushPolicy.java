@@ -28,21 +28,16 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
-
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
 import org.openecomp.policy.xacml.api.pap.PAPPolicyEngine;
-
-import com.att.research.xacml.api.pap.PAPEngine;
-import com.att.research.xacml.api.pap.PDPPolicy;
 import org.openecomp.policy.xacml.std.pap.StdPDPGroup;
 import org.openecomp.policy.xacml.std.pap.StdPDPPolicy;
+
+import com.att.research.xacml.api.pap.PDPPolicy;
 /**
  * Auto Push Policy based on the property file properties. 
  * 
@@ -50,7 +45,7 @@ import org.openecomp.policy.xacml.std.pap.StdPDPPolicy;
  */
 public class AutoPushPolicy {
 	
-	private static final Logger logger = FlexLogger.getLogger(AutoPushPolicy.class);
+	private static final Logger LOGGER = FlexLogger.getLogger(AutoPushPolicy.class);
 	
 	private String filePath = null;
 	private Properties properties;
@@ -94,8 +89,8 @@ public class AutoPushPolicy {
 			if(policyId.contains("\\")){
 				policyId = policyId.replace("\\", ".");
 			}
-			logger.info("Policy ID : " + policyId);
-			logger.info("Policy Name : " + policyName);
+			LOGGER.info("Policy ID : " + policyId);
+			LOGGER.info("Policy Name : " + policyName);
 			// Read in Groups 
 			for(EcompPDPGroup pdpGroup: papEngine.getEcompPDPGroups()){
 				String groupName = pdpGroup.getName();
@@ -121,8 +116,6 @@ public class AutoPushPolicy {
 				}
 			}
 		} catch (Exception e) {
-			//TODO:EELF Cleanup - Remove logger
- 			//logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while processing the auto push for " + policyToCreateUpdate +"\n " + e.getMessage());
  			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "AutoPushPolicy", "Error while processing the auto push for " + policyToCreateUpdate);
 		}
 		return changedGroups;
@@ -133,15 +126,13 @@ public class AutoPushPolicy {
 			properties.load(new FileInputStream(propFile));
 			oldModified = propFile.lastModified();
 		} catch (Exception e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while loading in the auto push properties file. " + propFile.toString());
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "AutoPushPolicy", "Error while loading in the auto push properties file.");
 		}
 	}
 	
 	private StdPDPGroup addToGroup(String policyId, String policyName, String policyToCreateUpdate, StdPDPGroup pdpGroup) throws Exception{
 		// Add to group. Send Notification. 
-		StdPDPPolicy policy = new StdPDPPolicy(policyId, true, policyName, Paths.get(policyToCreateUpdate).toUri());
+		StdPDPPolicy policy = new StdPDPPolicy(policyId, true, policyName, null);
 		//Get the current policies from the Group and Add the new one
         Set<PDPPolicy> currentPoliciesInGroup = pdpGroup.getPolicies();
         Set<PDPPolicy> policies = new HashSet<PDPPolicy>();
@@ -156,7 +147,7 @@ public class AutoPushPolicy {
 			for (PDPPolicy existingPolicy : currentPoliciesInGroup) {
 				if (existingPolicy.getId().equals(selPolicy.getId())) {
 					pdpGroup.removePolicyFromGroup(existingPolicy);
-					logger.debug("Removing policy: " + existingPolicy);
+					LOGGER.debug("Removing policy: " + existingPolicy);
 					break;
 				}
 			}

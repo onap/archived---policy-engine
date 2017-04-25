@@ -1,0 +1,187 @@
+<style>
+body {
+	padding-top: 50px;
+}
+
+.dropdown.dropdown-lg .dropdown-menu {
+	margin-top: -1px;
+	padding: 6px 20px;
+}
+
+.input-group-btn .btn-group {
+	display: flex !important;
+}
+
+.btn-group .btn {
+	border-radius: 0;
+	margin-left: -1px;
+}
+
+.btn-group .btn:last-child {
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+.btn-group .form-horizontal .btn[type="submit"] {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+.form-horizontal .form-group {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.form-group .form-control:last-child {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+@media screen and (min-width: 768px) {
+	#adv-search {
+		width: 550px;
+		margin: 0 auto;
+	}
+	.dropdown.dropdown-lg {
+		position: static !important;
+	}
+	.dropdown.dropdown-lg .dropdown-menu {
+		min-width: 550px;
+	}
+}
+</style>
+<nav class="navbar navbar-light bg-faded">
+	<div class="form-group row">
+		<div class="form-group col-sm-8" style="margin-top: 2%">
+			<div class="container">
+				<div class="row">
+					<div class="input-group">
+						<div class="input-group" id="adv-search">
+							<input type="text" class="form-control"
+								placeholder="{{'search'}}..." ng-model="search.query" />
+							<div class="input-group-btn">
+								<div class="btn-group" role="group">
+									<div class="dropdown dropdown-lg">
+										<button type="button" class="btn btn-default dropdown-toggle"
+											data-toggle="dropdown" aria-expanded="false">
+											<span class="caret"></span>
+										</button>
+										<div class="dropdown-menu dropdown-menu-right" role="menu">
+											<form class="form-horizontal" role="form">
+												<div class="form-group row">
+													<div class="form-group col-sm-4">
+														<label for="filter">Policy Type:</label> <select
+															class="form-control" ng-model="search.policyType">
+															<option>action</option>
+															<option>config</option>
+															<option>closedLoop</option>
+															<option>decision</option>
+															<option>all</option>
+														</select>
+													</div>
+													<div class="form-group col-sm-8">
+														<label for="filter">Descriptive Type:</label> <select
+															class="form-control" ng-model="search.descriptiveScope"
+															ng-options="option for option in descriptiveScopeDictionaryDatas track by option"></select>
+													</div>
+												</div>
+												<div ng-if="search.policyType == 'closedLoop'">
+													<div class="form-group row">
+														<div class="form-group col-sm-6">
+															<label>ClosedLoop Policy Type:</label><BR> <select
+																class="form-control"
+																ng-model="search.closedLooppolicyType">
+																<option>Config_Fault</option>
+																<option>Config_PM</option>
+															</select>
+														</div>
+														<div class="form-group col-sm-6">
+															<label>Ecomp Name:</label><BR> <select
+																class="form-control" ng-model="search.ecompName"
+																ng-options="option for option in ecompNameDictionaryDatas track by option"></select>
+														</div>
+													</div>
+													<div class="form-group row">
+														<div class="form-group col-sm-6">
+															<label>D2 Service:</label><BR> <select
+																class="form-control" ng-model="search.d2Service">
+																<option>Hosted Voice(Trinity)</option>
+																<option>vUSP</option>
+																<option>MCR</option>
+																<option>Gamma</option>
+																<option>vDNS</option>
+															</select>
+														</div>
+														<div class="form-group col-sm-6">
+															<label>Bind Text Search to:</label><BR> <select
+																class="form-control" ng-model="search.bindTextSearch">
+																<option>Email Address</option>
+																<option>Trigger Signature</option>
+																<option>Connect All Traps</option>
+																<option>Verification Signature</option>
+																<option>Connect All Faults</option>
+																<option>Onset Message</option>
+																<option>Policy Name</option>
+																<option>Abatement Message</option>
+																<option>Geo Link</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group row">
+														<div class="form-group col-sm-6"
+															ng-if="search.closedLooppolicyType == 'Config_Fault'">
+															<label>VNF Type:</label><BR> <select
+																class="form-control" ng-model="search.vnfType"
+																ng-options="option for option in vnfTypeDictionaryDatas track by option"></select>
+														</div>
+														<div class="form-group col-sm-6"
+															ng-if="search.closedLooppolicyType == 'Config_Fault'">
+															<label>Policy Status:</label><BR> <select
+																class="form-control" ng-model="search.policyStatus">
+																<option>Active</option>
+																<option>InActive</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group row">
+														<div class="form-group col-sm-6"
+															ng-if="search.closedLooppolicyType == 'Config_Fault'">
+															<label>vPRO Action:</label><BR> <select
+																class="form-control" ng-model="search.vproAction"
+																ng-options="option for option in vsclActionDictionaryDatas track by option"></select>
+														</div>
+														<div class="form-group col-sm-6"
+															ng-if="search.closedLooppolicyType == 'Config_PM'">
+															<label>Service Type:</label><BR> <select
+																class="form-control" ng-model="search.serviceType">
+																<option>Registration Failure(Trinity)</option>
+																<option>International Fraud(Trinity)</option>
+																<option>No Dial Tone(Trinity)</option>
+																<option>Call Storm(Trinity)</option>
+																<option>Registration Storm(Trinity)</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+									<button type="button" class="btn btn-primary"
+										ng-click="search(search);">
+										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-4" style="margin-top: 2%" align="right">
+			<div class="btn-group">
+  				<button class="btn btn-secondary" type="button" onClick="window.location='policy#/Editor';">Editor</button>
+				<button class="btn btn-primary" type="button" onClick="window.location='policy#/policy_SearchFilter';">Filter</button>
+			</div>
+		</div>
+	</div>
+</nav>

@@ -1801,27 +1801,27 @@ public class FunctionDefinitionStringConversionTest {
 		short[] addrShorts= {123, 134, 156, 255 };
 		short[] addrMaskShorts= {255, 255, 255, 255 };
 		try {
-			attrString1 = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123"));
-			attrStringFull = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123/10.11.121.123:123-456"));
-			attrStringMissingElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123"));
-			attrStringTooManyElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123.222"));
-			attrStringIllegalElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123"));
-			attrStringOutOfOrder = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123:123-456/10.11.12.123"));
+			attrString1 = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255"));
+			attrStringFull = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255/255.255.255.255:123-456"));
+			attrStringMissingElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.255"));
+			attrStringTooManyElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.255.111.222"));
+			attrStringIllegalElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.256.255"));
+			attrStringOutOfOrder = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.256.255:123-456/255.255.255.255"));
 
-			attrStringMask = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123/10.11.12.123"));
-			attrStringMissingMaskElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123/10.11.12.123"));
-			attrStringTooManyMaskElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123/10.11.12.123.222"));
-			attrStringIllegalMaskElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.255/10.11.123.255"));
-			attrStringMaskNoValue = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.156/"));
+			attrStringMask = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255/255.255.255.255"));
+			attrStringMissingMaskElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255/123.134.255"));
+			attrStringTooManyMaskElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255/122.134.155.111.222"));
+			attrStringIllegalMaskElement = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255/123.134.256.255"));
+			attrStringMaskNoValue = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255/"));
 			// optional mask
 			// "/" with no mask (fail)
 
-			attrStringMinusPort = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123:-123"));
-			attrStringPortMinus = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123:123-"));
-			attrStringPortPort = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123:1234567-432"));
-			attrStringNoPort = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123:"));
-			attrStringBadPort = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123:12.34"));
-			attrStringTooManyPorts = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("10.11.12.123:-123-456"));
+			attrStringMinusPort = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255:-123"));
+			attrStringPortMinus = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255:123-"));
+			attrStringPortPort = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255:1234567-432"));
+			attrStringNoPort = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255:"));
+			attrStringBadPort = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255:12.34"));
+			attrStringTooManyPorts = new FunctionArgumentAttributeValue(DataTypes.DT_STRING.createAttributeValue("123.134.156.255:-123-456"));
 
 
 			
@@ -1868,7 +1868,7 @@ public class FunctionDefinitionStringConversionTest {
 		arguments.add(attrStringMissingElement);
 		res = fd.evaluate(null, arguments);
 		assertFalse(res.isOk());
-		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"10.11.12.123\": invalid address", res.getStatus().getStatusMessage());
+		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"123.134.255\": invalid address", res.getStatus().getStatusMessage());
 		assertEquals("urn:oasis:names:tc:xacml:1.0:status:syntax-error", res.getStatus().getStatusCode().getStatusCodeValue().stringValue());
 		
 		// too many elements
@@ -1876,7 +1876,7 @@ public class FunctionDefinitionStringConversionTest {
 		arguments.add(attrStringTooManyElement);
 		res = fd.evaluate(null, arguments);
 		assertFalse(res.isOk());
-		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"10.11.12.123.222\": invalid address", res.getStatus().getStatusMessage());
+		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"123.134.255.111.222\": invalid address", res.getStatus().getStatusMessage());
 		assertEquals("urn:oasis:names:tc:xacml:1.0:status:syntax-error", res.getStatus().getStatusCode().getStatusCodeValue().stringValue());
 		
 		// illegal element
@@ -1884,7 +1884,7 @@ public class FunctionDefinitionStringConversionTest {
 		arguments.add(attrStringIllegalElement);
 		res = fd.evaluate(null, arguments);
 		assertFalse(res.isOk());
-		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"10.11.123.255\": invalid octet: \"256", res.getStatus().getStatusMessage());
+		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"123.134.256.255\": invalid octet: \"256", res.getStatus().getStatusMessage());
 		assertEquals("urn:oasis:names:tc:xacml:1.0:status:syntax-error", res.getStatus().getStatusCode().getStatusCodeValue().stringValue());
 		
 		// Out of order
@@ -1892,7 +1892,7 @@ public class FunctionDefinitionStringConversionTest {
 		arguments.add(attrStringOutOfOrder);
 		res = fd.evaluate(null, arguments);
 		assertFalse(res.isOk());
-		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"10.11.12.123:123-456/10.11.12.123\": out of order components", res.getStatus().getStatusMessage());
+		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"123.134.256.255:123-456/255.255.255.255\": out of order components", res.getStatus().getStatusMessage());
 		assertEquals("urn:oasis:names:tc:xacml:1.0:status:syntax-error", res.getStatus().getStatusCode().getStatusCodeValue().stringValue());
 		
 		
@@ -1913,7 +1913,7 @@ public class FunctionDefinitionStringConversionTest {
 		arguments.add(attrStringMissingMaskElement);
 		res = fd.evaluate(null, arguments);
 		assertFalse(res.isOk());
-		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"10.11.12.123\": invalid address", res.getStatus().getStatusMessage());
+		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"123.134.255\": invalid address", res.getStatus().getStatusMessage());
 		assertEquals("urn:oasis:names:tc:xacml:1.0:status:syntax-error", res.getStatus().getStatusCode().getStatusCodeValue().stringValue());
 		
 		// too many mask elements
@@ -1921,7 +1921,7 @@ public class FunctionDefinitionStringConversionTest {
 		arguments.add(attrStringTooManyMaskElement);
 		res = fd.evaluate(null, arguments);
 		assertFalse(res.isOk());
-		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"10.11.12.123.222\": invalid address", res.getStatus().getStatusMessage());
+		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"122.134.155.111.222\": invalid address", res.getStatus().getStatusMessage());
 		assertEquals("urn:oasis:names:tc:xacml:1.0:status:syntax-error", res.getStatus().getStatusCode().getStatusCodeValue().stringValue());
 		
 		// illegal Mask element
@@ -1929,7 +1929,7 @@ public class FunctionDefinitionStringConversionTest {
 		arguments.add(attrStringIllegalMaskElement);
 		res = fd.evaluate(null, arguments);
 		assertFalse(res.isOk());
-		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"10.11.12.123\": invalid octet: \"256", res.getStatus().getStatusMessage());
+		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"123.134.256.255\": invalid octet: \"256", res.getStatus().getStatusMessage());
 		assertEquals("urn:oasis:names:tc:xacml:1.0:status:syntax-error", res.getStatus().getStatusCode().getStatusCodeValue().stringValue());
 		
 		//mask indicator without value
@@ -1980,7 +1980,7 @@ public class FunctionDefinitionStringConversionTest {
 		arguments.add(attrStringNoPort);
 		res = fd.evaluate(null, arguments);
 		assertFalse(res.isOk());
-		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"10.11.12.123:\": no portrange given after ':'", res.getStatus().getStatusMessage());
+		assertEquals("function:ipAddress-from-string Invalid IPv4 address string \"123.134.156.255:\": no portrange given after ':'", res.getStatus().getStatusMessage());
 		assertEquals("urn:oasis:names:tc:xacml:1.0:status:syntax-error", res.getStatus().getStatusCode().getStatusCodeValue().stringValue());
 		
 		
@@ -2264,7 +2264,7 @@ public class FunctionDefinitionStringConversionTest {
 		FunctionArgumentAttributeValue attrObj1 = null;
 		FunctionArgumentAttributeValue attrObjV6 = null;
 		FunctionArgumentAttributeValue attrStringBadType = null;
-		String objValueString = "10.11.12.123";
+		String objValueString = "123.145.255.255";
 		String objValueStringV6 = "[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]";
 		try {
 			attrObj1 = new FunctionArgumentAttributeValue(DataTypes.DT_IPADDRESS.createAttributeValue(objValueString));

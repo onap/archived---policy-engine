@@ -22,14 +22,16 @@ package org.openecomp.policy.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.rest.jpa.UserInfo;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 
 import com.att.research.xacml.api.DataTypeException;
 import com.att.research.xacml.api.Decision;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import com.att.research.xacml.api.pdp.PDPEngine;
 import com.att.research.xacml.api.pdp.PDPEngineFactory;
 import com.att.research.xacml.api.pdp.PDPException;
@@ -40,8 +42,7 @@ import com.att.research.xacml.std.annotations.XACMLResource;
 import com.att.research.xacml.std.annotations.XACMLSubject;
 import com.att.research.xacml.util.FactoryException;
 
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+
 
 public class XacmlAdminAuthorization {
 	private static Log logger	= LogFactory.getLog(XacmlAdminAuthorization.class);
@@ -160,13 +161,11 @@ public class XacmlAdminAuthorization {
 			pdpEngineFactory	= PDPEngineFactory.newInstance();
 			if (pdpEngineFactory == null) {
 				logger.error("Failed to create PDP Engine Factory");
-				// TODO:EELF Cleanup - Remove logger
 				PolicyLogger.error("Failed to create PDP Engine Factory");
 			}
 			this.pdpEngine = pdpEngineFactory.newEngine();
 		} catch (FactoryException e) {
 			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Exception create PDP Engine: " + e.getLocalizedMessage());
-			// TODO:EELF Cleanup - Remove logger
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XacmlAdminAuthorization", "Exception create PDP Engine");
 		}
 	}
@@ -182,13 +181,11 @@ public class XacmlAdminAuthorization {
 			request = RequestParser.parseRequest(new AuthorizationRequest(userid, action.toString(), resource.toString()));
 		} catch (IllegalArgumentException | IllegalAccessException | DataTypeException e) {
 			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create request: " + e.getLocalizedMessage());
-			// TODO:EELF Cleanup - Remove logger
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XacmlAdminAuthorization", "Failed to create request");
 			return false;
 		}
 		if (request == null) {
 			logger.error("Failed to parse request.");
-			// TODO:EELF Cleanup - Remove logger
 			PolicyLogger.error("Failed to parse request");
 			return false;
 		}
@@ -200,7 +197,6 @@ public class XacmlAdminAuthorization {
 			Response response = this.pdpEngine.decide(request);
 			if (response == null) {
 				logger.error("Null response from PDP decide");
-				// TODO:EELF Cleanup - Remove logger
 				PolicyLogger.error("Null response from PDP decide");
 			}
 			//
@@ -215,7 +211,6 @@ public class XacmlAdminAuthorization {
 			}
 		} catch (PDPException e) {
 			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "PDP Decide failed: " + e.getLocalizedMessage());
-			// TODO:EELF Cleanup - Remove logger
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XacmlAdminAuthorization", "PDP Decide failed");
 		}
 		return false;

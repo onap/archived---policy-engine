@@ -31,6 +31,7 @@ import java.util.UUID;
 public class DeletePolicyParameters {
 	
 	private String policyName;
+	private String policyType;
 	private String policyComponent;
 	private DeletePolicyCondition deleteCondition;
 	private String pdpGroup;
@@ -54,6 +55,18 @@ public class DeletePolicyParameters {
 	 */
 	public String getPolicyComponent() {
 		return policyComponent;
+	}
+	/**
+	 * @return the policyType
+	 */
+	public String getPolicyType() {
+		return policyType;
+	}
+	/**
+	 * @param policyType the policyType to set
+	 */
+	public void setPolicyType(String policyType) {
+		this.policyType = policyType;
 	}
 	/**
 	 * @param policyComponent the policyComponent to set
