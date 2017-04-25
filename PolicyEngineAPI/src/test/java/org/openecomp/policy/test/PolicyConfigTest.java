@@ -20,17 +20,9 @@
 
 package org.openecomp.policy.test;
 
-import java.util.Map;
-import java.util.Properties;
-
-import javax.json.JsonObject;
-
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
 import org.openecomp.policy.api.PolicyConfig;
-
-import static org.junit.Assert.*;
-
-import org.w3c.dom.Document;
 
 /**
  * The class <code>PolicyConfigTest</code> contains tests for the class <code>{@link PolicyConfig}</code>.

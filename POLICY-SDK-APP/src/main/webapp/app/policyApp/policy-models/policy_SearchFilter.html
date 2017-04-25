@@ -1,0 +1,38 @@
+<!--/*-
+ * ============LICENSE_START=======================================================
+ * ECOMP Policy Engine
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */-->
+<style>
+ .content-container {
+ 	width:98%;
+ }
+</style>
+<div id="page-content">
+	<div ng-include="config.tplPath + '/searchNavbar.html'"></div>
+   <div>
+        <div class="row">
+              <div ng-include="config.tplPath + '/current-folder-breadcrumb.html'" ng-show="config.breadcrumb"></div>
+              <div ng-include="config.tplPath + '/main-table.html'" class="main-navigation clearfix"></div>
+        </div>
+    </div>
+   
+    <div ng-include="config.tplPath + '/item-context-menu.html'"></div>
+    <div ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/PolicyTypeTemplate.html'"></div>
+    <div ng-include="'app/policyApp/policy-models/Editor/templates/modals.html'"></div>
+    <div ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/DescribePolicyTemplate.html'"></div>
+ </div>   

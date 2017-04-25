@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:c220802a-70ee-4ca8-9f1e-f8a515650381" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:72391d2a-44b9-4a4b-a143-5145f93afaef" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
     <Description>Micro Service vLoadBalancer Demo Policy@CreatedBy:demo@CreatedBy:@ModifiedBy:demo@ModifiedBy:</Description>
     <Target>
         <AnyOf>
             <AllOf>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">com.Config_MS_vLoadBalancer.1.xml</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="PolicyName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
             </AllOf>
             <AllOf>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DCAE</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ECOMPName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SampleConfigName</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ConfigName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">TcaMetrics-v1.0.0.5</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="service" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/services/cdap-tca-hi-lo/instances/demo/configuration/metricsPerFunctionalRole/vLoadBalancer</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="uuid" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SampleServiceLocation</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="location" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SampleRiskType</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="RiskType" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">1</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="RiskLevel" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">False</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="guard" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="com.att.labs.ecomp.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">NA</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="TTLDate" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
             </AllOf>
         </AnyOf>
     </Target>
-    <Rule RuleId="urn:com:xacml:rule:id:fca27dab-6c09-4541-8136-328abaec2656" Effect="Permit">
+    <Rule RuleId="urn:com:xacml:rule:id:c4c6109d-91e3-4f43-a3b5-4c6788ce69aa" Effect="Permit">
         <Target>
             <AnyOf>
                 <AllOf>

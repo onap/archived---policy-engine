@@ -65,7 +65,7 @@ public class EventRequestParametersTest {
 	@Test
 	public void testEventRequestParameters_2()
 		throws Exception {
-		Map<String, String> eventAttributes = new Hashtable();
+		Map<String, String> eventAttributes = new Hashtable<String, String>();
 		UUID requestID = UUID.randomUUID();
 
 		EventRequestParameters result = new EventRequestParameters(eventAttributes, requestID);
@@ -84,7 +84,7 @@ public class EventRequestParametersTest {
 	@Test
 	public void testGetEventAttributes_1()
 		throws Exception {
-		EventRequestParameters fixture = new EventRequestParameters(new Hashtable(), UUID.randomUUID());
+		EventRequestParameters fixture = new EventRequestParameters(new Hashtable<String, String>(), UUID.randomUUID());
 
 		Map<String, String> result = fixture.getEventAttributes();
 
@@ -103,7 +103,7 @@ public class EventRequestParametersTest {
 	@Test
 	public void testGetRequestID_1()
 		throws Exception {
-		EventRequestParameters fixture = new EventRequestParameters(new Hashtable(), UUID.fromString("5b15376d-569b-4772-ac75-9362043f6a6c"));
+		EventRequestParameters fixture = new EventRequestParameters(new Hashtable<String, String>(), UUID.fromString("5b15376d-569b-4772-ac75-9362043f6a6c"));
 
 		UUID result = fixture.getRequestID();
 
@@ -126,8 +126,8 @@ public class EventRequestParametersTest {
 	@Test
 	public void testSetEventAttributes_1()
 		throws Exception {
-		EventRequestParameters fixture = new EventRequestParameters(new Hashtable(), UUID.randomUUID());
-		Map<String, String> eventAttributes = new Hashtable();
+		EventRequestParameters fixture = new EventRequestParameters(new Hashtable<String, String>(), UUID.randomUUID());
+		Map<String, String> eventAttributes = new Hashtable<String, String>();
 
 		fixture.setEventAttributes(eventAttributes);
 
@@ -144,7 +144,7 @@ public class EventRequestParametersTest {
 	@Test
 	public void testSetRequestID_1()
 		throws Exception {
-		EventRequestParameters fixture = new EventRequestParameters(new Hashtable(), UUID.randomUUID());
+		EventRequestParameters fixture = new EventRequestParameters(new Hashtable<String, String>(), UUID.randomUUID());
 		UUID requestID = UUID.randomUUID();
 
 		fixture.setRequestID(requestID);

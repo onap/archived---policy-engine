@@ -29,8 +29,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.openecomp.policy.api.PolicyConfig;
@@ -39,8 +37,8 @@ import org.openecomp.policy.api.PolicyConfigStatus;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
 import org.openecomp.policy.api.PolicyType;
-
-import org.openecomp.policy.common.logging.flexlogger.*; 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger; 
 
 public class GetConfigStringStringMapTest {
 
@@ -61,6 +59,7 @@ public class GetConfigStringStringMapTest {
 		logger.info("Loaded.. PolicyEngine");
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringMapFail() {
 		eCOMPComponentName = null;
@@ -74,6 +73,7 @@ public class GetConfigStringStringMapTest {
 		assertNull(policyConfig);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringMapFail1() {
 		eCOMPComponentName = null;
@@ -87,6 +87,7 @@ public class GetConfigStringStringMapTest {
 		assertNull(policyConfig);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringMapFail2() {
 		eCOMPComponentName = "TestFail";
@@ -100,6 +101,7 @@ public class GetConfigStringStringMapTest {
 		assertNull(policyConfig);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringMapFail3() {
 		eCOMPComponentName = "TestFail";
@@ -113,6 +115,7 @@ public class GetConfigStringStringMapTest {
 		assertNull(policyConfig);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringMapfail4() {
 		eCOMPComponentName = "TestFail";
@@ -127,6 +130,7 @@ public class GetConfigStringStringMapTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringMapNotValid() {
 		eCOMPComponentName = "TestFail";
 		configName = "configFail";
@@ -150,6 +154,7 @@ public class GetConfigStringStringMapTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringMapValidJSON() {
 		eCOMPComponentName = "JSON";
 		configName = "JSONconfig";
@@ -175,6 +180,7 @@ public class GetConfigStringStringMapTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringMapValidXML() {
 		eCOMPComponentName = "XML";
 		configName = "XMLconfig";
@@ -200,6 +206,7 @@ public class GetConfigStringStringMapTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringMapValidProperties() {
 		eCOMPComponentName = "Properties";
 		configName = "PropConfig" ;
@@ -225,6 +232,7 @@ public class GetConfigStringStringMapTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringMapValidOther() {
 		eCOMPComponentName = "Other";
 		configName = "OtherConfig" ;

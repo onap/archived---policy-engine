@@ -32,25 +32,16 @@ package org.openecomp.policy.rest.jpa;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
-import com.att.research.xacml.api.Identifier;
 
 /**
   * The persistent class for the system log database table.
@@ -93,7 +84,6 @@ public class SystemLogDB implements Serializable {
 	
 	public SystemLogDB(int id, String system, String description, String remote,
 			String type, String logtype) {
-		// TODO Auto-generated constructor stub
 		this.id = id;
 		this.system = system;
 		this.description = description;

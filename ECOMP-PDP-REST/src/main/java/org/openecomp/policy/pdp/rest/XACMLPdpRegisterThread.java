@@ -46,7 +46,7 @@ import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.common.logging.flexlogger.*; 
 
 public class XACMLPdpRegisterThread implements Runnable {
-	private static final Logger logger	= FlexLogger.getLogger(XACMLPdpRegisterThread.class);
+	private static final Logger LOGGER	= FlexLogger.getLogger(XACMLPdpRegisterThread.class);
 	private static final Logger auditLogger = FlexLogger.getLogger("auditLogger");
 	private ECOMPLoggingContext baseLoggingContext = null;
 	
@@ -87,7 +87,7 @@ public class XACMLPdpRegisterThread implements Runnable {
 		try {
 			seconds = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_REGISTER_SLEEP));
 		} catch (NumberFormatException e) {
-			logger.error( XACMLErrorConstants.ERROR_SYSTEM_ERROR +"REGISTER_SLEEP: ", e);
+			LOGGER.error( XACMLErrorConstants.ERROR_SYSTEM_ERROR +"REGISTER_SLEEP: ", e);
 			seconds = 5;
 		}
 		if (seconds < 5) {
@@ -97,7 +97,7 @@ public class XACMLPdpRegisterThread implements Runnable {
 		try {
 			retries = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_REGISTER_RETRIES));
 		} catch (NumberFormatException e) {
-			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +" REGISTER_SLEEP: ", e);
+			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +" REGISTER_SLEEP: ", e);
 			retries = -1;
 		}
 		*/
@@ -109,9 +109,7 @@ public class XACMLPdpRegisterThread implements Runnable {
 		try(InputStream pipFile = Files.newInputStream(XACMLPdpLoader.getPIPConfig())){
 			tempPipConfigProperties.load(pipFile);
 		} catch(Exception e){
-			logger.error("Failed to open PIP property file", e);
-			// TODO:EELF Cleanup - Remove logger
-			//PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "XACMLPdpRegisterThread", "Failed to open PIP property file");
+			LOGGER.error("Failed to open PIP property file", e);
 		}
 		while(papUrls.hasMoreUrls()){
 			String papID = papUrls.getUserId();
@@ -135,7 +133,7 @@ public class XACMLPdpRegisterThread implements Runnable {
 				//String[] papUrls = papUrlList.split(",");
 				//PapUrlResolver.setPapUrls(papUrls);
 				URL url = new URL(papUrls.getUrl());
-				logger.info("Registering with " + url.toString());
+				LOGGER.info("Registering with " + url.toString());
 				//PolicyLogger.info("new transaction (request) ID and update to logging context in XACMLPdpRegisterThread");
 				boolean finished = false;
 				while (! finished) {
@@ -181,42 +179,31 @@ public class XACMLPdpRegisterThread implements Runnable {
 		    				tempPipConfigProperties.store(os, "");
 		    			}
 		    		} catch (Exception e) {
-		    			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Failed to send property file", e);
-		    			// TODO:EELF Cleanup - Remove logger
-		    			//PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to send property file");
+		    			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Failed to send property file", e);
 		    		}
 		            //
 		            // Do the connect
 		            //
 		            connection.connect();
 		            if (connection.getResponseCode() == 204) {
-		            	logger.info("Success. We are configured correctly.");
-		            	// TODO:EELF Cleanup - Remove logger
-		            	//PolicyLogger.info("Success. We are configured correctly.");
+		            	LOGGER.info("Success. We are configured correctly.");
 		            	loggingContext.transactionEnded();
-		     //       	auditLogger.info("Success. We are configured correctly.");
-		            	// TODO:EELF Cleanup - Remove logger
 		            	PolicyLogger.audit("Success. We are configured correctly.");
 		            	papUrls.registered();
 		            	finished = true;
 		            	registered = true;		            	
 		            } else if (connection.getResponseCode() == 200) {
-		            	logger.info("Success. We have a new configuration.");
-		            	// TODO:EELF Cleanup - Remove logger
-		            	//PolicyLogger.info("Success. We have a new configuration.");
+		            	LOGGER.info("Success. We have a new configuration.");
 		            	loggingContext.transactionEnded();
-		            	// TODO:EELF Cleanup - Remove logger
-		            	//auditLogger.info("Success. We have a new configuration.");
 		            	PolicyLogger.audit("Success. We have a new configuration.");
 		            	papUrls.registered();
 		            	Properties properties = new Properties();
 		            	properties.load(connection.getInputStream());		            	
-		            	logger.info("New properties: " + properties.toString());
+		            	LOGGER.info("New properties: " + properties.toString());
 		            	//
 		            	// Queue it
 		            	//
-		            	// The incoming properties does NOT include urls		            	
-		            	//FIXME: problem here is that we need the properties to be filled in BEFORE this thread continues and registers with another pap
+		            	// The incoming properties does NOT include urls		            
 		            	Properties returnedPolicyProperties = XACMLProperties.getPolicyProperties(properties, false);
 		            	tempRootPoliciesProperty = new String(returnedPolicyProperties.getProperty(XACMLProperties.PROP_ROOTPOLICIES));
 		            	tempReferencedPoliciesProperty = new String(returnedPolicyProperties.getProperty(XACMLProperties.PROP_REFERENCEDPOLICIES));		            	
@@ -227,7 +214,6 @@ public class XACMLPdpRegisterThread implements Runnable {
 		            	InputStream threadSafeReturnedPipPropertiesIs = new ByteArrayInputStream(threadSafeReturnedPipPropertiesOs.toByteArray());
 		            	threadSafeReturnedPipProperties.load(threadSafeReturnedPipPropertiesIs);
 		            	tempPipConfigProperties = threadSafeReturnedPipProperties;
-		            	//FIXME: how will pipproperties respond to threading?
 
 		            	PutRequest req = new PutRequest(returnedPolicyProperties,returnedPipProperties);
 		            	XACMLPdpServlet.queue.offer(req);
@@ -242,42 +228,28 @@ public class XACMLPdpRegisterThread implements Runnable {
 		            	//
 		            	String newLocation = connection.getHeaderField("Location");
 		            	if (newLocation == null || newLocation.isEmpty()) {
-		            		logger.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Did not receive a valid re-direction location");
-		            		// TODO:EELF Cleanup - Remove logger
-		            		//PolicyLogger.warn(MessageCodes.ERROR_SYSTEM_ERROR, "Did not receive a valid re-direction location");
+		            		LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Did not receive a valid re-direction location");
 			            	loggingContext.transactionEnded();
 			            	auditLogger.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Did not receive a valid re-direction location");
-			            	// TODO:EELF Cleanup - Remove logger
 			            	PolicyLogger.audit("Transaction Failed - See Error.log");
 		            		finished = true;
 		            	} else {
-		            		//FIXME: how to handle this
-		            		logger.info("New Location: " + newLocation);
-		            		// TODO:EELF Cleanup - Remove logger
-		            		//PolicyLogger.info("New Location: " + newLocation);
+		            		LOGGER.info("New Location: " + newLocation);
 		            		url = new URL(newLocation);
 		            	}
 		            } else {
-		            	logger.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Failed: " + connection.getResponseCode() + "  message: " + connection.getResponseMessage());
-		            	// TODO:EELF Cleanup - Remove logger
-		            	//PolicyLogger.warn(MessageCodes.ERROR_SYSTEM_ERROR, "Failed: " + connection.getResponseCode() + "  message: " + connection.getResponseMessage());
+		            	LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Failed: " + connection.getResponseCode() + "  message: " + connection.getResponseMessage());
 		            	loggingContext.transactionEnded();
 		            	auditLogger.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Failed: " + connection.getResponseCode() + "  message: " + connection.getResponseMessage());
-		            	// TODO:EELF Cleanup - Remove logger
 		            	PolicyLogger.audit("Transaction Failed - See Error.log");
 		            	finished = true;
 		            	papUrls.failed();
 		            }
 				}
 			} catch (Exception e) {
-				logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
-				// TODO:EELF Cleanup - Remove logger
-				//PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "");
+				LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 				PolicyLogger.audit("Transaction Failed - See Error.log");
             	loggingContext.transactionEnded();
-            	// TODO:EELF look at this error going to audit.  decide what to do.
-            	//auditLogger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);	
-            	// TODO:EELF Cleanup - Remove logger
 				papUrls.failed();
 			} finally {
 				// cleanup the connection
@@ -296,38 +268,18 @@ public class XACMLPdpRegisterThread implements Runnable {
 						}
 
 					} catch (IOException ex) {
-						logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Failed to close connection: " + ex, ex);
-						// TODO:EELF Cleanup - Remove logger
-						//PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, ex, "Failed to close connection");
+						LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Failed to close connection: " + ex, ex);
 					}
 					connection.disconnect();
 				}
 			}
-			//
-			// Wait a little while to try again
-			//
-			/*
-			try {
-				if (registered == false) {
-					if (retries > 0) {
-						retries--;
-					} else if (retries == 0) {
-						break;
-					}
-					Thread.sleep(seconds * 1000);
-				}
-			} catch (InterruptedException e) {
-				interrupted = true;
-				this.terminate();
-			}
-			*/
-			//end of hasMoreUrls while loop
+
 			papUrls.getNext();
 		}
 		synchronized(this) {
 			this.isRunning = false;
 		}
-		logger.info("Thread exiting...(registered=" + registered + ", interrupted=" + interrupted + ", isRunning=" + this.isRunning() + ", retries=" + "0" + ")");
+		LOGGER.info("Thread exiting...(registered=" + registered + ", interrupted=" + interrupted + ", isRunning=" + this.isRunning() + ", retries=" + "0" + ")");
 	}
 
 }

@@ -1,0 +1,69 @@
+<!--/*-
+ * ============LICENSE_START=======================================================
+ * ECOMP Policy Engine
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */-->
+<script type="text/ng-template" id="add_fwTag_popup.html">
+<div class="modal" tabindex="-1">
+		 <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+        <div class="modal-header">
+            <h2 class="font-showcase-font-name" style="color: #157bb2">{{label}}</h2>
+        </div>
+		<form name="formdata" ng-submit="saveFWTag(editFWTag);" novalidate>
+        <div class="modal-body">
+			<div class="form-group row">
+            <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.fwTagName.$invalid && !formdata.fwTagName.$pristine }">
+                <label>Tag Name:<sup><b>*</b></sup></label><br>
+                <input type="text" ng-model="editFWTag.fwTagName" class="form-control" name= "fwTagName"  required/>
+				<p ng-show="formdata.fwTagName.$invalid && !formdata.fwTagName.$pristine" class="help-block">Tag Name is required.</p>
+            </div>
+            <div class="form-group col-sm-6">
+                <label>Description:</label><br>
+                <input type="text"  ng-model="editFWTag.description" class="form-control"/>
+            </div>
+			</div>
+			<div class="form-group row">
+            <div class="form-group col-sm-4">
+            	<label>Values:</label><br>
+            	<button type="button" class="btn btn-secondary btn-small"  ng-click="addNewChoice()"><i class="fa fa-plus"></i></button>
+        	</div>
+    		</div>
+      		<div class="form-group row">
+			<div class="form-group">
+    			<div  data-ng-repeat="choice in choices">
+					<div class="form-group row">
+        			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.tags.$invalid && !formdata.tags.$pristine }">
+            			 <input type="text" class="form-control" ng-model="choice.tags" maxlength="30" name= "tags"  required/>
+						 <p ng-show="formdata.tags.$invalid && !formdata.tags.$pristine" class="help-block">Values is required.</p>
+        			</div>
+        			<div  class="form-group col-sm-1">
+            			<button type="button" class="btn btn-secondary btn-small" ng-show="$last" ng-click="removeChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+        		    </div>
+				</div>
+			</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" type="submit" ng-disabled="formdata.$invalid">Save</button>
+            <button class="btn btn-default" herf="javascript:void(0)" ng-click="close()">Close</button>
+        </div>
+		</form>
+    </div>
+			</div>
+</div>
+</script>

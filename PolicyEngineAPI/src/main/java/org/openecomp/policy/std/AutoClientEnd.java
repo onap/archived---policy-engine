@@ -122,7 +122,7 @@ public class AutoClientEnd {
 	
 	private static void changeURL(){
 		// Change the PDP if it is not Up. 
-		StdPolicyEngine.rotateList();
+		StdPolicyEngine.rotatePDPList();
 		start(StdPolicyEngine.getPDPURL());
 	}
 

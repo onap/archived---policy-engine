@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ============LICENSE_START=======================================================
+  PolicyEngineAPI
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+  -->
+
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:03e0d98f-90e4-4457-bd78-3ddec62e27d5" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+    <Description>Test Policies for the ProtoType PolicyEngineAPI</Description>
+    <Target/>
+	<VariableDefinition VariableId="ResetVM">
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+            <Description>Check if the CPU Utilization or Memory reach the threshold values. </Description>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than">
+                <Description>CPU</Description>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="com:att:labs:ecomp:resource:vm:cpu" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="true"/>
+                </Apply>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">95</AttributeValue>
+            </Apply>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than">
+                <Description>Memory</Description>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="com:att:labs:ecomp:resource:vm:memory" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="true"/>
+                </Apply>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">95</AttributeValue>
+            </Apply>
+        </Apply>
+    </VariableDefinition>
+    <VariableDefinition VariableId="SpinOffVM">
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+            <Description>Spinoff if the VM if CPU or memory value reaches the threshold</Description>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than">
+                <Description>CPU</Description>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="com:att:labs:ecomp:resource:vm:cpu" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="true"/>
+                </Apply>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">90</AttributeValue>
+            </Apply>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than">
+                <Description>Memory</Description>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="com:att:labs:ecomp:resource:vm:memory" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="true"/>
+                </Apply>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">90</AttributeValue>
+            </Apply>
+        </Apply>
+    </VariableDefinition>
+	<Rule RuleId="urn:com:xacml:rule:id:2a815211-f387-47ee-9b15-4b6a0f15b31f" Effect="Permit">
+        <Description>Json Test</Description>
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">JSON</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_json.json</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+	<Rule RuleId="urn:com:xacml:rule:id:2a815212-f387-47ee-9b15-4b6a0f15b31f" Effect="Permit">
+        <Description>Json + Config test</Description>
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">JSON</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">JSONconfig</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_json.json</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+	<Rule RuleId="urn:com:xacml:rule:id:2a815211-f387-47ee-9b15-4bfa0f15f568" Effect="Permit">
+        <Description>XML test</Description>
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">XML</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_xml.xml</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+	<Rule RuleId="urn:com:xacml:rule:id:2a815212-f387-47ee-9b15-4bfa0f15f568" Effect="Permit">
+        <Description>XML + Config test</Description>
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">XML</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">XMLConfig</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_xml.xml</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+	<Rule RuleId="urn:com:xacml:rule:id:2a815211-f387-47ee-9b15-4b6a5287f3af" Effect="Permit">
+        <Description>Properties Test</Description>
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Properties</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_prop.properties</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+	<Rule RuleId="urn:com:xacml:rule:id:2a815212-f387-47ee-9b15-4b6a5287f3af" Effect="Permit">
+        <Description>Properties + Config Test</Description>
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Properties</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">PropConfig</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_prop.properties</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+	<Rule RuleId="urn:com:xacml:rule:id:2a815211-f387-47ee-9b15-4b7a5287f3af" Effect="Permit">
+        <Description>Other Test</Description>
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Other</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_other.txt</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+	<Rule RuleId="urn:com:xacml:rule:id:2a815212-f387-47ee-9b15-4b8a5287f3af" Effect="Permit">
+        <Description>Other + Config Test</Description>
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Other</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">OtherConfig</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_other.txt</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+    <Rule RuleId="urn:com:xacml:rule:id:786aded3-49c4-43da-9e16-77be6b522f04" Effect="Permit">
+        <Description> JSON + Attributes </Description>
+		<Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">JSON</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">JSONconfig</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">TestSubject</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Subject.com:test:subject:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">TestJSON</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Action.com:test:action:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Test</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Resource.com:test:resource:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_json.json</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+    <Rule RuleId="urn:com:xacml:rule:id:6311eb9c-ec15-43d5-9f16-17c14b300e6d" Effect="Permit">
+        <Description> XML + Attributes </Description>
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">XML</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">XMLConfig</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">TestSubject</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Subject.com:test:subject:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">TestJSON</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Action.com:test:action:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Test</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Resource.com:test:resource:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_xml.xml</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+    <Rule RuleId="urn:com:xacml:rule:id:1148b345-4836-4853-96fc-84c1d37f4dbd" Effect="Permit">
+        <Description> Prop + Attributes </Description>
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Properties</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">PropConfig</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">TestSubject</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Subject.com:test:subject:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">TestJSON</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Action.com:test:action:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Test</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Resource.com:test:resource:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_prop.properties</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+	<Rule RuleId="urn:com:xacml:rule:id:786aded3-49c4-43da-9e16-77b86b522f04" Effect="Permit">
+        <Description> Other + Attributes </Description>
+		<Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Other</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Otherconfig</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">TestSubject</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Subject.com:test:subject:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">TestJSON</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Action.com:test:action:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+					<Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Test</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="Resource.com:test:resource:json" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.labs.ecomp.advice.config" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.key" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.advice.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:5443/config/test_other.txt</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+	<!-- <Rule RuleId="urn:com:xacml:rule:id:a5b3007a-853a-47f0-a4c2-56912b47d74a" Effect="Permit">
+        <Description>test if this is working </Description>
+        
+    </Rule> -->
+    <Rule RuleId="urn:com:xacml:rule:id:596bb33b-c0ab-4840-9f8f-aebb0b603f37" Effect="Permit">
+        <Description>Permit to RESET VM if the values reach the threshold settings.</Description>
+        <Target>
+			<AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Restart</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+				</AllOf>
+			</AnyOf>
+		</Target>
+        <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+                <Description>Restart VM if this condition is met</Description>
+                <VariableReference VariableId="ResetVM"/>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+            </Apply>
+        </Condition>
+        <ObligationExpressions>
+            <ObligationExpression ObligationId="com.att.labs.ecomp.obligation" FulfillOn="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.obligation.restart" Category="urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Restart</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.obligation.server" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="com:att:labs:ecomp:resource:server:name" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                </AttributeAssignmentExpression>
+            </ObligationExpression>
+        </ObligationExpressions>
+    </Rule>
+	<Rule RuleId="urn:com:xacml:rule:id:596db34b-c0ab-4841-9f9d-aedb07603f39" Effect="Permit">
+        <Description>Permit to SpinOff VM if the values reach the threshold settings.</Description>
+        <Target>
+			<AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SpinOff</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+				</AllOf>
+			</AnyOf>
+		</Target>
+        <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+                <Description>SpinOff VM if this condition is met</Description>
+                <VariableReference VariableId="SpinOffVM"/>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+            </Apply>
+        </Condition>
+        <ObligationExpressions>
+            <ObligationExpression ObligationId="com.att.labs.ecomp.obligation" FulfillOn="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.obligation.spinoff" Category="urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SpinOff</AttributeValue>
+                </AttributeAssignmentExpression>
+				<AttributeAssignmentExpression AttributeId="performer" Category="urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">PDPAction</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="type" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">REST</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="com.att.labs.ecomp.obligation.server" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="com:att:labs:ecomp:resource:server:name" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                </AttributeAssignmentExpression>
+				<AttributeAssignmentExpression AttributeId="method" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+                </AttributeAssignmentExpression>
+				<AttributeAssignmentExpression AttributeId="URL" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8635/RESTjson/PDP/VM/$com.att.labs.ecomp.obligation.spinoff/$com.att.labs.ecomp.obligation.server</AttributeValue>
+                </AttributeAssignmentExpression>
+            </ObligationExpression>
+        </ObligationExpressions>
+    </Rule>
+	<Rule RuleId="urn:com:xacml:rule:id:c2430bab-c2a1-4686-b885-67f8036a1e52" Effect="Deny">
+        <Description>Deny all the other requests.</Description>
+        <Target/>
+    </Rule>
+</Policy>

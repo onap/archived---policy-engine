@@ -80,7 +80,7 @@ public interface EcompPAPPolicy {
     public String getDeleteCondition();
     public String getDictionaryType();
     public String getDictionary();
-    public Map<String, String> getDictionaryFields();
+    public String getDictionaryFields();
     
 	public String getRiskLevel();
 	public String getGuard();

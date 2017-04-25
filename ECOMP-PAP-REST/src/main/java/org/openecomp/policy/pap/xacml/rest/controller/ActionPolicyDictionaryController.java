@@ -31,9 +31,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.util.JsonMessage;
-import org.openecomp.policy.rest.dao.ActionPolicyDictDao;
-import org.openecomp.policy.rest.dao.UserInfoDao;
+import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.ActionPolicyDict;
 import org.openecomp.policy.rest.jpa.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,29 +50,34 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class ActionPolicyDictionaryController {
 
-	@Autowired
-	ActionPolicyDictDao actionPolicyDictDao;
+	private static final Logger LOGGER  = FlexLogger.getLogger(ActionPolicyDictionaryController.class);
+
+	private static CommonClassDao commonClassDao;
 	
 	@Autowired
-	UserInfoDao userInfoDao;
-	
-	public UserInfo getUserInfo(String loginId){
-		UserInfo name = userInfoDao.getUserInfoByLoginId(loginId);
-		return name;	
+	public ActionPolicyDictionaryController(CommonClassDao commonClassDao){
+		ActionPolicyDictionaryController.commonClassDao = commonClassDao;
 	}
 	
+	public ActionPolicyDictionaryController(){}
+
+	public UserInfo getUserInfo(String loginId){
+		UserInfo name = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
+		return name;	
+	}
+
 	@RequestMapping(value={"/get_ActionPolicyDictDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getActionEntitybyName(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("actionPolicyDictionaryDatas", mapper.writeValueAsString(actionPolicyDictDao.getActionDictDataByName()));
+			model.put("actionPolicyDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(ActionPolicyDict.class, "attributeName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 	}
 
@@ -80,26 +86,61 @@ public class ActionPolicyDictionaryController {
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("actionPolicyDictionaryDatas", mapper.writeValueAsString(actionPolicyDictDao.getActionDictData()));
+			model.put("actionPolicyDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ActionPolicyDict.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+			response.addHeader("successMapKey", "success"); 
+			response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
-	
-	@RequestMapping(value={"/action_dictionary/save_ActionDict.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+
+	@RequestMapping(value={"/action_dictionary/save_ActionDict"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
 			boolean duplicateflag = false;
+			boolean isFakeUpdate = false;
+			boolean fromAPI = false;
+
+			if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+				fromAPI = true;
+			}
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			ActionPolicyDict actionPolicyDict = (ActionPolicyDict)mapper.readValue(root.get("actionPolicyDictionaryData").toString(), ActionPolicyDict.class);
-			ActionAdapter adapter = mapper.readValue(root.get("actionPolicyDictionaryData").toString(), ActionAdapter.class);
-			String userId = root.get("loginId").textValue();
+			ActionPolicyDict actionPolicyDict = null;
+			ActionAdapter adapter = null;
+			String userId = null;
+
+			if(fromAPI) {
+				actionPolicyDict = (ActionPolicyDict)mapper.readValue(root.get("dictionaryFields").toString(), ActionPolicyDict.class);
+				adapter = (ActionAdapter)mapper.readValue(root.get("dictionaryFields").toString(), ActionAdapter.class);
+				userId = "API";
+
+				//check if update operation or create, get id for data to be updated and update attributeData
+				if (request.getParameter("operation").equals("update")) {
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionPolicyDict.getAttributeName(), "attributeName", ActionPolicyDict.class);
+					int id = 0;
+					ActionPolicyDict data = (ActionPolicyDict) duplicateData.get(0);
+					id = data.getId();
+					if(id==0){
+						isFakeUpdate=true;
+						actionPolicyDict.setId(1);
+					} else {
+						actionPolicyDict.setId(id);
+					}
+					actionPolicyDict.setUserCreatedBy(this.getUserInfo(userId));
+				}
+			} else {
+				actionPolicyDict = (ActionPolicyDict)mapper.readValue(root.get("actionPolicyDictionaryData").toString(), ActionPolicyDict.class);
+				adapter = mapper.readValue(root.get("actionPolicyDictionaryData").toString(), ActionAdapter.class);
+				userId = root.get("userid").textValue();
+			}
 			String header = "";
 			int counter = 0;
 			if(adapter.getHeaders().size() > 0){
@@ -118,37 +159,54 @@ public class ActionPolicyDictionaryController {
 			}
 			actionPolicyDict.setHeader(header);
 			if(actionPolicyDict.getId() == 0){
-				CheckDictionaryDuplicateEntries entry = new CheckDictionaryDuplicateEntries();
-				List<Object> duplicateData =  entry.CheckDuplicateEntry(actionPolicyDict.getAttributeName(), "attributeName", ActionPolicyDict.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionPolicyDict.getAttributeName(), "attributeName", ActionPolicyDict.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
 					actionPolicyDict.setUserCreatedBy(this.getUserInfo(userId));
 					actionPolicyDict.setUserModifiedBy(this.getUserInfo(userId));
-					actionPolicyDictDao.Save(actionPolicyDict);
+					commonClassDao.save(actionPolicyDict);
 				}
 			}else{
-				actionPolicyDict.setUserModifiedBy(this.getUserInfo(userId));
-				actionPolicyDictDao.update(actionPolicyDict); 
+				if(!isFakeUpdate) {
+					actionPolicyDict.setUserModifiedBy(this.getUserInfo(userId));
+					commonClassDao.update(actionPolicyDict); 
+				}
 			} 
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
 
-			PrintWriter out = response.getWriter();
-			String responseString = "";
-			if(duplicateflag){
+			String responseString = null;
+			if(duplicateflag) {
 				responseString = "Duplicate";
-			}else{
-				responseString = mapper.writeValueAsString(this.actionPolicyDictDao.getActionDictData());
-			}	 
-			JSONObject j = new JSONObject("{actionPolicyDictionaryDatas: " + responseString + "}");
+			} else {
+				responseString = mapper.writeValueAsString(commonClassDao.getData(ActionPolicyDict.class));
+			}
 
-			out.write(j.toString());
+			if (fromAPI) {
+				if (responseString!=null && !responseString.equals("Duplicate")) {
+					if(isFakeUpdate) {
+						responseString = "Exists";
+					} else {
+						responseString = "Success";
+					}   
+				}
 
-			return null;
+				ModelAndView result = new ModelAndView();
+				result.setViewName(responseString);
+				return result;
+			} else {
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("application / json");
+				request.setCharacterEncoding("UTF-8"); 
+
+				PrintWriter out = response.getWriter();
+				JSONObject j = new JSONObject("{actionPolicyDictionaryDatas: " + responseString + "}");
+				out.write(j.toString());
+
+				return null;
+			}
 		}
 		catch (Exception e){
+			LOGGER.error(e.getMessage());
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -157,28 +215,28 @@ public class ActionPolicyDictionaryController {
 		return null;
 	}
 
-	@RequestMapping(value={"/action_dictionary/remove_actionPolicyDict.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/action_dictionary/remove_actionPolicyDict"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView removeActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			ActionPolicyDict actionPolicyDict = (ActionPolicyDict)mapper.readValue(root.get("data").toString(), ActionPolicyDict.class);
-			actionPolicyDictDao.delete(actionPolicyDict);
+			commonClassDao.delete(actionPolicyDict);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
 
-			String responseString = mapper.writeValueAsString(this.actionPolicyDictDao.getActionDictData());
+			String responseString = mapper.writeValueAsString(ActionPolicyDictionaryController.commonClassDao.getData(ActionPolicyDict.class));
 			JSONObject j = new JSONObject("{actionPolicyDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
 
 			return null;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			LOGGER.error(e.getMessage());
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();

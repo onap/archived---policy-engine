@@ -58,19 +58,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		Map<String, String> result = fixture.getActionAdvised();
 
@@ -93,19 +93,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		Map<String, String> result = fixture.getActionTaken();
 
@@ -128,19 +128,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		Map<String, String> result = fixture.getMatchingConditions();
 
@@ -163,19 +163,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyConfigMessage();
 
@@ -197,19 +197,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		PolicyConfigStatus result = fixture.getPolicyConfigStatus();
 
@@ -234,19 +234,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		PolicyDecision result = fixture.getDecision();
 
@@ -271,19 +271,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyName();
 
@@ -305,19 +305,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName((String) null);
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyName();
 
@@ -339,19 +339,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyName();
 
@@ -373,19 +373,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyResponseMessage();
 
@@ -407,19 +407,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		PolicyResponseStatus result = fixture.getPolicyResponseStatus();
 
@@ -444,19 +444,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyVersion();
 
@@ -478,19 +478,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		Map<String, String> result = fixture.getRequestAttributes();
 
@@ -513,19 +513,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		Map<String, String> result = fixture.getResponseAttributes();
 
@@ -548,19 +548,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		PolicyType result = fixture.getType();
 
@@ -585,20 +585,20 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
-		Map<String, String> actionAdvised = new Hashtable();
+		fixture.setActionTaken(new Hashtable<String, String>());
+		Map<String, String> actionAdvised = new Hashtable<String, String>();
 
 		fixture.setActionAdvised(actionAdvised);
 
@@ -619,20 +619,20 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
-		Map<String, String> actionTaken = new Hashtable();
+		fixture.setActionTaken(new Hashtable<String, String>());
+		Map<String, String> actionTaken = new Hashtable<String, String>();
 
 		fixture.setActionTaken(actionTaken);
 
@@ -653,19 +653,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		String configStatus = "";
 
 		fixture.setConfigStatus(configStatus);
@@ -687,19 +687,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		Document document = null;
 
 		fixture.setDocument(document);
@@ -721,19 +721,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		JsonObject jsonObject = null;
 
 		fixture.setJsonObject(jsonObject);
@@ -755,20 +755,20 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
-		Map<String, String> matchingConditions = new Hashtable();
+		fixture.setActionTaken(new Hashtable<String, String>());
+		Map<String, String> matchingConditions = new Hashtable<String, String>();
 
 		fixture.setMatchingConditions(matchingConditions);
 
@@ -789,19 +789,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		String other = "";
 
 		fixture.setOther(other);
@@ -823,19 +823,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		PolicyConfigStatus policyConfigStatus = PolicyConfigStatus.CONFIG_NOT_FOUND;
 
 		fixture.setPolicyConfigStatus(policyConfigStatus);
@@ -857,19 +857,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		String configStatus = "";
 		PolicyConfigStatus policyConfigStatus = PolicyConfigStatus.CONFIG_NOT_FOUND;
 
@@ -892,19 +892,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		PolicyDecision policyDecision = PolicyDecision.DENY;
 
 		fixture.setDecision(policyDecision);
@@ -926,19 +926,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		String policyName = "";
 
 		fixture.setPolicyName(policyName);
@@ -960,19 +960,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		String policyResponseMessage = "";
 
 		fixture.setPolicyResponseMessage(policyResponseMessage);
@@ -994,19 +994,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		PolicyResponseStatus policyResponseStatus = PolicyResponseStatus.ACTION_ADVISED;
 
 		fixture.setPolicyResponseStatus(policyResponseStatus);
@@ -1028,19 +1028,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		String policyResponseMessage = "";
 		PolicyResponseStatus policyResponseStatus = PolicyResponseStatus.ACTION_ADVISED;
 
@@ -1063,19 +1063,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		PolicyType policyType = PolicyType.JSON;
 
 		fixture.setPolicyType(policyType);
@@ -1097,19 +1097,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		String policyVersion = "";
 
 		fixture.setPolicyVersion(policyVersion);
@@ -1131,19 +1131,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		Properties properties = new Properties();
 
 		fixture.setProperties(properties);
@@ -1165,20 +1165,20 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
-		Map<String, String> requestAttributes = new Hashtable();
+		fixture.setActionTaken(new Hashtable<String, String>());
+		Map<String, String> requestAttributes = new Hashtable<String, String>();
 
 		fixture.setRequestAttributes(requestAttributes);
 
@@ -1199,20 +1199,20 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
-		Map<String, String> responseAttributes = new Hashtable();
+		fixture.setActionTaken(new Hashtable<String, String>());
+		Map<String, String> responseAttributes = new Hashtable<String, String>();
 
 		fixture.setResposneAttributes(responseAttributes);
 
@@ -1233,19 +1233,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		String message = "";
 		PolicyResponseStatus policyResponseStatus = PolicyResponseStatus.ACTION_ADVISED;
 		PolicyConfigStatus policyConfigStatus = PolicyConfigStatus.CONFIG_NOT_FOUND;
@@ -1269,19 +1269,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		JsonObject result = fixture.toJSON();
 
@@ -1303,19 +1303,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		String result = fixture.toOther();
 
@@ -1337,19 +1337,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		Properties result = fixture.toProperties();
 
@@ -1372,19 +1372,19 @@ public class StdStatusTest {
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setPolicyName("");
 		fixture.setPolicyType(PolicyType.JSON);
-		fixture.setResposneAttributes(new Hashtable());
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setResposneAttributes(new Hashtable<String, String>());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		fixture.setStatus("", PolicyResponseStatus.ACTION_ADVISED, PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setJsonObject((JsonObject) null);
 		fixture.setDocument((Document) null);
 		fixture.setProperties(new Properties());
-		fixture.setRequestAttributes(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
-		fixture.setActionAdvised(new Hashtable());
+		fixture.setActionAdvised(new Hashtable<String, String>());
 		fixture.setOther("");
 		fixture.setDecision(PolicyDecision.DENY);
 		fixture.setDetails("");
-		fixture.setActionTaken(new Hashtable());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		Document result = fixture.toXML();
 

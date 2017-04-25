@@ -27,8 +27,6 @@ import static org.junit.Assert.fail;
 
 import java.util.Collection;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.openecomp.policy.api.PolicyConfig;
@@ -37,8 +35,8 @@ import org.openecomp.policy.api.PolicyConfigStatus;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
 import org.openecomp.policy.api.PolicyType;
-
-import org.openecomp.policy.common.logging.flexlogger.*; 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger; 
 
 public class GetConfigStringStringTest {
 	
@@ -58,6 +56,7 @@ public class GetConfigStringStringTest {
 		logger.info("Loaded.. PolicyEngine");
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringFail() {
 		eCOMPComponentName = null;
@@ -70,6 +69,7 @@ public class GetConfigStringStringTest {
 		assertNull(policyConfig);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringFail1() {
 		eCOMPComponentName = null;
@@ -82,6 +82,7 @@ public class GetConfigStringStringTest {
 		assertNull(policyConfig);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringFail2() {
 		eCOMPComponentName = "";
@@ -95,6 +96,7 @@ public class GetConfigStringStringTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringNotvalid() {
 		eCOMPComponentName = "fail";
 		configName = "fail";
@@ -117,6 +119,7 @@ public class GetConfigStringStringTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringValidJSON() {
 		eCOMPComponentName = "JSON";
 		configName = "JSONconfig";
@@ -139,6 +142,7 @@ public class GetConfigStringStringTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringValidXML() {
 		eCOMPComponentName = "XML";
 		configName = "XMLconfig";
@@ -161,6 +165,7 @@ public class GetConfigStringStringTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringValidProperties() {
 		eCOMPComponentName = "Properties";
 		configName = "PropConfig" ; 
@@ -183,6 +188,7 @@ public class GetConfigStringStringTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringValidOther() {
 		eCOMPComponentName = "Other";
 		configName = "OtherConfig" ; 

@@ -20,10 +20,9 @@
 
 package org.openecomp.policy.test;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
 import org.openecomp.policy.api.RemovedPolicy;
-
-import static org.junit.Assert.*;
 
 /**
  * The class <code>RemovedPolicyTest</code> contains tests for the class <code>{@link RemovedPolicy}</code>.

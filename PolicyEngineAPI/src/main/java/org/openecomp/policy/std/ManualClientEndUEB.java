@@ -22,36 +22,33 @@ package org.openecomp.policy.std;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
 
-//import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.openecomp.policy.api.NotificationScheme;
 import org.openecomp.policy.api.NotificationType;
 import org.openecomp.policy.api.PDPNotification;
-import org.openecomp.policy.std.StdPDPNotification;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 
 import com.att.nsa.cambria.client.CambriaClientFactory;
 import com.att.nsa.cambria.client.CambriaConsumer;
-import com.att.nsa.cambria.client.CambriaPublisher;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import org.openecomp.policy.common.logging.flexlogger.*; 
+import com.att.nsa.cambria.client.CambriaPublisher; 
 
 
+@SuppressWarnings("deprecation")
 public class ManualClientEndUEB {
 	private static StdPDPNotification notification = null;
 	private static String resultJson = null;
 	private static Logger logger = FlexLogger.getLogger(ManualClientEndUEB.class.getName());
 	private static CambriaConsumer CConsumer = null;
+	@SuppressWarnings("unused")
 	private static List<String> uebURLList = null; 
+	@SuppressWarnings("unused")
 	private static boolean messageNotReceived = false;
+	@SuppressWarnings("unused")
 	private static String url = null;
 	private static String uniquID = null;
 	private static String topic = null;
@@ -94,10 +91,8 @@ public class ManualClientEndUEB {
 		try {
 			pub = CambriaClientFactory.createSimplePublisher(null, UEBlist, pubTopic);
 		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (GeneralSecurityException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
         final JSONObject msg1 = new JSONObject (); 
@@ -107,7 +102,6 @@ public class ManualClientEndUEB {
         try {
 			pub.send ( "MyPartitionKey", msg1.toString () );
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
         pub.close (); 
@@ -142,10 +136,8 @@ public class ManualClientEndUEB {
 		try {
 			CConsumer = CambriaClientFactory.createConsumer ( null, uebURLList, topic + uniquID, "clientGroup", id, 15*1000, 1000 );
 		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (GeneralSecurityException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}		
 		int count = 1;

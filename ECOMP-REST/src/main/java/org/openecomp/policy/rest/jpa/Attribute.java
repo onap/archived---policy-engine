@@ -46,13 +46,8 @@ import javax.persistence.Transient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openecomp.policy.rest.XacmlAdminAuthorization;
-import org.openecomp.policy.rest.jpa.UserInfo;
 
-import com.att.research.xacml.api.Identifier;
-import com.att.research.xacml.std.IdentifierImpl;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * The persistent class for the Attribute database table.
@@ -156,7 +151,7 @@ public class Attribute implements Serializable {
 		this.userModifiedBy = userModifiedBy;
 	}
 
-	private static Log logger = LogFactory.getLog(Attribute.class);
+	private static Log LOGGER = LogFactory.getLog(Attribute.class);
 	public Attribute() {
 	}
 	
@@ -194,9 +189,7 @@ public class Attribute implements Serializable {
 		try {
 			this.userModifiedBy = XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
-			logger.error("Exception caused While adding Modified by Role"+e);
-			// TODO:EELF Cleanup - Remove logger
-			//PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "Attribute", "Exception caused While adding Modified by Role");
+			LOGGER.error("Exception caused While adding Modified by Role"+e);
 		}
 	}
 
