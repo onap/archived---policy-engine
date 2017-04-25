@@ -20,12 +20,9 @@
 
 package org.openecomp.policy.test;
 
-import java.util.Map;
-
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
 import org.openecomp.policy.api.LoadedPolicy;
-
-import static org.junit.Assert.*;
 
 /**
  * The class <code>LoadedPolicyTest</code> contains tests for the class <code>{@link LoadedPolicy}</code>.

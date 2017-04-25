@@ -20,23 +20,22 @@
 
 package org.openecomp.policy.pap.xacml.rest.model;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.util.PolicyContainer;
 import org.openecomp.policy.pap.xacml.rest.util.PolicyItemSetChangeNotifier;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger;
-
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
+import org.openecomp.policy.xacml.std.pap.StdPDPPolicy;
+
 import com.att.research.xacml.api.pap.PDP;
 import com.att.research.xacml.api.pap.PDPGroup;
 import com.att.research.xacml.api.pap.PDPPolicy;
-import org.openecomp.policy.xacml.std.pap.StdPDPPolicy;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

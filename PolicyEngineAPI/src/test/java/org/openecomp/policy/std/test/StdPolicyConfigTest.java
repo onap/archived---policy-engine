@@ -55,14 +55,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		Map<String, String> result = fixture.getMatchingConditions();
 
@@ -84,14 +84,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyConfigMessage();
 
@@ -112,14 +112,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		PolicyConfigStatus result = fixture.getPolicyConfigStatus();
 
@@ -143,14 +143,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyName();
 
@@ -171,14 +171,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName((String) null);
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyName();
 
@@ -199,14 +199,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyName();
 
@@ -227,14 +227,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyVersion();
 
@@ -255,14 +255,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		Map<String, String> result = fixture.getResponseAttributes();
 
@@ -284,14 +284,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		PolicyType result = fixture.getType();
 
@@ -315,14 +315,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		String configStatus = "";
 
 		fixture.setConfigStatus(configStatus);
@@ -343,14 +343,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		String configStatus = "";
 		PolicyConfigStatus policyConfigStatus = PolicyConfigStatus.CONFIG_NOT_FOUND;
 
@@ -372,14 +372,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		Document document = null;
 
 		fixture.setDocument(document);
@@ -400,14 +400,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		JsonObject jsonObject = null;
 
 		fixture.setJsonObject(jsonObject);
@@ -428,15 +428,15 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
-		Map<String, String> matchingConditions = new Hashtable();
+		fixture.setMatchingConditions(new Hashtable<String, String>());
+		Map<String, String> matchingConditions = new Hashtable<String, String>();
 
 		fixture.setMatchingConditions(matchingConditions);
 
@@ -456,14 +456,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		String other = "";
 
 		fixture.setOther(other);
@@ -484,14 +484,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		PolicyConfigStatus policyConfigStatus = PolicyConfigStatus.CONFIG_NOT_FOUND;
 
 		fixture.setPolicyConfigStatus(policyConfigStatus);
@@ -512,14 +512,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		String policyName = "";
 
 		fixture.setPolicyName(policyName);
@@ -540,14 +540,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		PolicyType policyType = PolicyType.JSON;
 
 		fixture.setPolicyType(policyType);
@@ -568,14 +568,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		String policyVersion = "";
 
 		fixture.setPolicyVersion(policyVersion);
@@ -596,14 +596,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 		Properties properties = new Properties();
 
 		fixture.setProperties(properties);
@@ -624,15 +624,15 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
-		Map<String, String> responseAttributes = new Hashtable();
+		fixture.setMatchingConditions(new Hashtable<String, String>());
+		Map<String, String> responseAttributes = new Hashtable<String, String>();
 
 		fixture.setResponseAttributes(responseAttributes);
 
@@ -652,14 +652,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		JsonObject result = fixture.toJSON();
 
@@ -680,14 +680,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		String result = fixture.toOther();
 
@@ -708,14 +708,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		Properties result = fixture.toProperties();
 
@@ -737,14 +737,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("test");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		String result = fixture.toString();
 
@@ -765,14 +765,14 @@ public class StdPolicyConfigTest {
 		StdPolicyConfig fixture = new StdPolicyConfig();
 		fixture.setConfigStatus("", PolicyConfigStatus.CONFIG_NOT_FOUND);
 		fixture.setDocument((Document) null);
-		fixture.setResponseAttributes(new Hashtable());
+		fixture.setResponseAttributes(new Hashtable<String, String>());
 		fixture.setPolicyVersion("");
 		fixture.setOther("");
 		fixture.setPolicyType(PolicyType.JSON);
 		fixture.setPolicyName("");
 		fixture.setProperties(new Properties());
 		fixture.setJsonObject((JsonObject) null);
-		fixture.setMatchingConditions(new Hashtable());
+		fixture.setMatchingConditions(new Hashtable<String, String>());
 
 		Document result = fixture.toXML();
 

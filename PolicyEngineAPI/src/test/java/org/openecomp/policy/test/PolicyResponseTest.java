@@ -20,12 +20,9 @@
 
 package org.openecomp.policy.test;
 
-import java.util.Map;
-
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
 import org.openecomp.policy.api.PolicyResponse;
-
-import static org.junit.Assert.*;
 
 /**
  * The class <code>PolicyResponseTest</code> contains tests for the class <code>{@link PolicyResponse}</code>.

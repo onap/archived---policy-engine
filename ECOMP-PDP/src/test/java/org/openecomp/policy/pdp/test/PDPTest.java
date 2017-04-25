@@ -20,19 +20,13 @@
 
 package org.openecomp.policy.pdp.test;
 
-//import static org.junit.Assert.assertNotNull;
+
 import static org.junit.Assert.assertNull;
 //import static org.junit.Assert.fail;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.junit.Test;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger; 
+import org.junit.Test; 
 
 public class PDPTest {
-
-	private static final Logger logger = FlexLogger.getLogger(PDPTest.class);
 		
 	@Test
 	public void testDummy() {

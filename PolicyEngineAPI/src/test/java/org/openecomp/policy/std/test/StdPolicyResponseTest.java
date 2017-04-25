@@ -48,9 +48,9 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		Map<String, String> result = fixture.getActionAdvised();
 
@@ -71,9 +71,9 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		Map<String, String> result = fixture.getActionTaken();
 
@@ -94,9 +94,9 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		String result = fixture.getPolicyResponseMessage();
 
@@ -116,9 +116,9 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		PolicyResponseStatus result = fixture.getPolicyResponseStatus();
 
@@ -141,9 +141,9 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		Map<String, String> result = fixture.getRequestAttributes();
 
@@ -164,10 +164,10 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
-		Map<String, String> actionAdvised = new Hashtable();
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
+		Map<String, String> actionAdvised = new Hashtable<String, String>();
 
 		fixture.setActionAdvised(actionAdvised);
 
@@ -186,10 +186,10 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
-		Map<String, String> actionTaken = new Hashtable();
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
+		Map<String, String> actionTaken = new Hashtable<String, String>();
 
 		fixture.setActionTaken(actionTaken);
 
@@ -208,9 +208,9 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		String policyResponseMessage = "";
 
 		fixture.setPolicyResponseMessage(policyResponseMessage);
@@ -230,9 +230,9 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		PolicyResponseStatus policyResponseStatus = PolicyResponseStatus.ACTION_ADVISED;
 
 		fixture.setPolicyResponseStatus(policyResponseStatus);
@@ -252,9 +252,9 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
 		String policyResponseMessage = "";
 		PolicyResponseStatus policyResponseStatus = PolicyResponseStatus.ACTION_ADVISED;
 
@@ -275,10 +275,10 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
-		Map<String, String> requestAttributes = new Hashtable();
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
+		Map<String, String> requestAttributes = new Hashtable<String, String>();
 
 		fixture.setRequestAttributes(requestAttributes);
 
@@ -297,9 +297,9 @@ public class StdPolicyResponseTest {
 		throws Exception {
 		StdPolicyResponse fixture = new StdPolicyResponse();
 		fixture.setPolicyResponseStatus("", PolicyResponseStatus.ACTION_ADVISED);
-		fixture.setRequestAttributes(new Hashtable());
-		fixture.setActionAdvised(new Hashtable());
-		fixture.setActionTaken(new Hashtable());
+		fixture.setRequestAttributes(new Hashtable<String, String>());
+		fixture.setActionAdvised(new Hashtable<String, String>());
+		fixture.setActionTaken(new Hashtable<String, String>());
 
 		String result = fixture.toString();
 

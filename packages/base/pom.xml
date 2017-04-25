@@ -26,10 +26,9 @@
 	<parent>
 		<groupId>org.openecomp.policy.engine</groupId>
 		<artifactId>packages</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.openecomp.policy.engine</groupId>
 	<artifactId>base</artifactId>
 	<packaging>pom</packaging>
 
@@ -42,27 +41,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
-					<execution>
-						<id>copy-pypdp</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/pypdp/webapps</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.openecomp.policy.engine</groupId>
-									<artifactId>PyPDPServer</artifactId>
-									<version>${project.version}</version>
-									<type>war</type>
-									<destFileName>PyPDPServer.war</destFileName>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
 					<execution>
 						<id>copy-pdp</id>
 						<phase>prepare-package</phase>
@@ -118,7 +96,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.openecomp.policy.engine</groupId>
-									<artifactId>ecomp-sdk-app</artifactId>
+									<artifactId>ECOMP-SDK-APP</artifactId>
 									<version>${project.version}</version>
 									<type>war</type>
 									<destFileName>ecomp.war</destFileName>
@@ -226,7 +204,6 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.5.0</version>
 						<executions>
 							<execution>
 								<id>create-version-file</id>

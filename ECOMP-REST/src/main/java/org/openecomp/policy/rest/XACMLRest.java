@@ -34,7 +34,6 @@ import org.apache.commons.logging.LogFactory;
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import com.att.research.xacml.util.XACMLProperties;
 
 
@@ -76,6 +75,7 @@ public class XACMLRest {
 			// Look for system override
 			//
 			String xacmlPropertiesName = System.getProperty(XACMLProperties.XACML_PROPERTIES_NAME);
+			logger.info("\n\n" + xacmlPropertiesName + "\n" + XACMLProperties.XACML_PROPERTIES_NAME);
 			if (xacmlPropertiesName == null) {
 				//
 				// Set it to our servlet default
@@ -139,8 +139,6 @@ public class XACMLRest {
 				XACMLProperties.getProperties().putAll(pipProperties);
 			}
 		} catch (IOException e) {
-			//logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to put init properties into Xacml properties", e);
-			// TODO:EELF Cleanup - Remove logger
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Failed to put init properties into Xacml properties");
 		}
 		//
@@ -150,8 +148,6 @@ public class XACMLRest {
 			try {
 				logger.debug(XACMLProperties.getProperties().toString());				
 			} catch (IOException e) {
-				//logger.error( XACMLErrorConstants.ERROR_PROCESS_FLOW + "Cannot dump properties", e);
-				// TODO:EELF Cleanup - Remove logger
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Cannot dump properties");
 			}
 		}

@@ -852,9 +852,9 @@ public class RequestCategoryTest {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
 	    			"\"DataType\"	: \"urn:oasis:names:tc:xacml:2.0:data-type:ipAddress\", " +
-	    			"\"Value\"	: \"10.221.43.58:12345\" " +
+	    			"\"Value\"	: \"121.221.43.58:12345\" " +
 					"}] } ] }}");
-			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=10.221.43.58:12345-12345}],includeInResults=false}]}}]}", request.toString());
+			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=121.221.43.58:12345-12345}],includeInResults=false}]}}]}", request.toString());
 		} catch (Exception e) {
 			fail ("Failed convert from JSON to object: " + e);
 		}
@@ -1053,9 +1053,9 @@ public class RequestCategoryTest {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
 	    			"\"DataType\"	: \"ipAddress\", " +
-	    			"\"Value\"	: \"10.221.43.58:12345\" " +
+	    			"\"Value\"	: \"121.221.43.58:12345\" " +
 					"}] } ] }}");
-			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=10.221.43.58:12345-12345}],includeInResults=false}]}}]}", request.toString());
+			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=121.221.43.58:12345-12345}],includeInResults=false}]}}]}", request.toString());
 		} catch (Exception e) {
 			fail ("Failed convert from JSON to object: " + e);
 		}
@@ -1241,9 +1241,9 @@ public class RequestCategoryTest {
 		try {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
-	    			"\"Value\"	: \"10.221.43.58:12345\" " +
+	    			"\"Value\"	: \"121.221.43.58:12345\" " +
 					"}] } ] }}");
-			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=10.221.43.58:12345}],includeInResults=false}]}}]}", request.toString());
+			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=121.221.43.58:12345}],includeInResults=false}]}}]}", request.toString());
 		} catch (Exception e) {
 			fail ("Failed convert from JSON to object: " + e);
 		}
@@ -2594,9 +2594,9 @@ public class RequestCategoryTest {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
 	    			"\"DataType\"	: \"urn:oasis:names:tc:xacml:2.0:data-type:ipAddress\", " +
-	    			"\"Value\"	: [ \"10.221.43.58:12345\",\"10.221.43.58:12345\",\"10.221.43.58:12345\" ] " +
+	    			"\"Value\"	: [ \"121.221.43.58:12345\",\"121.221.43.58:12345\",\"121.221.43.58:12345\" ] " +
 					"}] } ] }}");
-			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=10.221.43.58:12345-12345}{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=10.221.43.58:12345-12345}{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=10.221.43.58:12345-12345}],includeInResults=false}]}}]}", request.toString());
+			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=121.221.43.58:12345-12345}{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=121.221.43.58:12345-12345}{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=121.221.43.58:12345-12345}],includeInResults=false}]}}]}", request.toString());
 		} catch (Exception e) {
 			fail ("Failed convert from JSON to object: " + e);
 		}
@@ -2604,9 +2604,9 @@ public class RequestCategoryTest {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
 	    			"\"DataType\"	: \"ipAddress\", " +
-	    			"\"Value\"	: [ \"10.221.43.58:12345\",\"10.221.43.58:12345\",\"10.221.43.58:12345\" ] " +
+	    			"\"Value\"	: [ \"121.221.43.58:12345\",\"121.221.43.58:12345\",\"121.221.43.58:12345\" ] " +
 					"}] } ] }}");
-			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=10.221.43.58:12345-12345}{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=10.221.43.58:12345-12345}{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=10.221.43.58:12345-12345}],includeInResults=false}]}}]}", request.toString());
+			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=121.221.43.58:12345-12345}{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=121.221.43.58:12345-12345}{dataTypeId=urn:oasis:names:tc:xacml:2.0:data-type:ipAddress,value=121.221.43.58:12345-12345}],includeInResults=false}]}}]}", request.toString());
 		} catch (Exception e) {
 			fail ("Failed convert from JSON to object: " + e);
 		}
@@ -2614,19 +2614,7 @@ public class RequestCategoryTest {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
 	    			"\"DataType\"	: \"urn:oasis:names:tc:xacml:2.0:data-type:ipAddress\", " +
-	    			"\"Value\"	: [ \"10.221.43.58:12345\",\"not an ip address\",\"10.221.43.58:12345\" ] " +
-					"}] } ] }}");
-			fail("Operation should throw exception");
-		} catch (JSONStructureException e) {
-			// correct response
-		} catch (Exception e) {
-			fail ("Failed convert from JSON to object: " + e);
-		}
-		try {
-			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
-	    			"\"Id\" : \"document-id\", " +
-	    			"\"DataType\"	: \"urn:oasis:names:tc:xacml:2.0:data-type:ipAddress\", " +
-	    			"\"Value\"	: [ \"10.221.43.58:12345\",true,\"10.221.43.58:12345\" ] " +
+	    			"\"Value\"	: [ \"121.221.43.58:12345\",\"not an ip address\",\"121.221.43.58:12345\" ] " +
 					"}] } ] }}");
 			fail("Operation should throw exception");
 		} catch (JSONStructureException e) {
@@ -2638,7 +2626,7 @@ public class RequestCategoryTest {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
 	    			"\"DataType\"	: \"urn:oasis:names:tc:xacml:2.0:data-type:ipAddress\", " +
-	    			"\"Value\"	: [ \"10.221.43.58:12345\",1111,\"10.221.43.58:12345\" ] " +
+	    			"\"Value\"	: [ \"121.221.43.58:12345\",true,\"121.221.43.58:12345\" ] " +
 					"}] } ] }}");
 			fail("Operation should throw exception");
 		} catch (JSONStructureException e) {
@@ -2650,7 +2638,19 @@ public class RequestCategoryTest {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
 	    			"\"DataType\"	: \"urn:oasis:names:tc:xacml:2.0:data-type:ipAddress\", " +
-	    			"\"Value\"	: [ \"10.221.43.58:12345\",11.22,\"10.221.43.58:12345\" ] " +
+	    			"\"Value\"	: [ \"121.221.43.58:12345\",1111,\"121.221.43.58:12345\" ] " +
+					"}] } ] }}");
+			fail("Operation should throw exception");
+		} catch (JSONStructureException e) {
+			// correct response
+		} catch (Exception e) {
+			fail ("Failed convert from JSON to object: " + e);
+		}
+		try {
+			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
+	    			"\"Id\" : \"document-id\", " +
+	    			"\"DataType\"	: \"urn:oasis:names:tc:xacml:2.0:data-type:ipAddress\", " +
+	    			"\"Value\"	: [ \"121.221.43.58:12345\",11.22,\"121.221.43.58:12345\" ] " +
 					"}] } ] }}");
 			fail("Operation should throw exception");
 		} catch (JSONStructureException e) {
@@ -3534,9 +3534,9 @@ public class RequestCategoryTest {
 		try {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
-	    			"\"Value\"	: [ \"10.221.43.58:12345\",\"10.221.43.58:12345\",\"10.221.43.58:12345\" ] " +
+	    			"\"Value\"	: [ \"121.221.43.58:12345\",\"121.221.43.58:12345\",\"121.221.43.58:12345\" ] " +
 					"}] } ] }}");
-			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=10.221.43.58:12345}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=10.221.43.58:12345}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=10.221.43.58:12345}],includeInResults=false}]}}]}", request.toString());
+			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=121.221.43.58:12345}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=121.221.43.58:12345}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=121.221.43.58:12345}],includeInResults=false}]}}]}", request.toString());
 		} catch (Exception e) {
 			fail ("Failed convert from JSON to object: " + e);
 		}
@@ -3544,9 +3544,9 @@ public class RequestCategoryTest {
 		try {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
-	    			"\"Value\"	: [ \"10.221.43.58:12345\",true,\"10.221.43.58:12345\" ] " +
+	    			"\"Value\"	: [ \"121.221.43.58:12345\",true,\"121.221.43.58:12345\" ] " +
 					"}] } ] }}");
-			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=10.221.43.58:12345}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=true}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=10.221.43.58:12345}],includeInResults=false}]}}]}", request.toString());
+			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=121.221.43.58:12345}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=true}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=121.221.43.58:12345}],includeInResults=false}]}}]}", request.toString());
 		} catch (Exception e) {
 			fail ("Failed convert from JSON to object: " + e);
 		}
@@ -3554,9 +3554,9 @@ public class RequestCategoryTest {
 		try {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
-	    			"\"Value\"	: [ \"10.221.43.58:12345\",1111,\"10.221.43.58:12345\" ] " +
+	    			"\"Value\"	: [ \"121.221.43.58:12345\",1111,\"121.221.43.58:12345\" ] " +
 					"}] } ] }}");
-			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=10.221.43.58:12345}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=1111}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=10.221.43.58:12345}],includeInResults=false}]}}]}", request.toString());
+			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=121.221.43.58:12345}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=1111}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=121.221.43.58:12345}],includeInResults=false}]}}]}", request.toString());
 		} catch (Exception e) {
 			fail ("Failed convert from JSON to object: " + e);
 		}
@@ -3564,9 +3564,9 @@ public class RequestCategoryTest {
 		try {
 			request = JSONRequest.load("{\"Request\" : {\"Category\": [{\"CategoryId\" : \"custom-category\", \"Attribute\" : [{" +
 	    			"\"Id\" : \"document-id\", " +
-	    			"\"Value\"	: [ \"10.221.43.58:12345\",11.22,\"10.221.43.58:12345\" ] " +
+	    			"\"Value\"	: [ \"121.221.43.58:12345\",11.22,\"121.221.43.58:12345\" ] " +
 					"}] } ] }}");
-			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=10.221.43.58:12345}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=11.22}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=10.221.43.58:12345}],includeInResults=false}]}}]}", request.toString());
+			assertEquals("{returnPolicyIdList=false,combinedDecision=false,requestAttributes=[{super={category=custom-category,attributes=[{attributeId=document-id,category=custom-category,values=[{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=121.221.43.58:12345}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=11.22}{dataTypeId=http://www.w3.org/2001/XMLSchema#string,value=121.221.43.58:12345}],includeInResults=false}]}}]}", request.toString());
 		} catch (Exception e) {
 			fail ("Failed convert from JSON to object: " + e);
 		}
@@ -4165,10 +4165,4 @@ public class RequestCategoryTest {
 		}
 		
 	}
-	
-
-	
-//TODO - Shorthand for CategoryId ????
-	
-	
 }

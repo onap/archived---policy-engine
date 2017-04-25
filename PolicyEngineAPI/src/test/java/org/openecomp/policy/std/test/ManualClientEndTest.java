@@ -94,7 +94,6 @@ public class ManualClientEndTest {
 	@Test
 	public void testOnMessage()
 		throws Exception {
-		ManualClientEnd fixture = new ManualClientEnd();
 		ManualClientEnd mockclient = Mockito.mock(ManualClientEnd.class);
 		String message = "";
 		Session mockSession = Mockito.mock(Session.class);

@@ -50,7 +50,7 @@ public class XACMLPdpPolicyFinderFactory extends PolicyFinderFactory {
 	public static final String	PROP_FILE		= ".file";
 	public static final String	PROP_URL		= ".url";
 	
-	private static Log logger							= LogFactory.getLog(XACMLPdpPolicyFinderFactory.class);
+	private static Log LOGGER							= LogFactory.getLog(XACMLPdpPolicyFinderFactory.class);
 	private List<PolicyDef> rootPolicies;
 	private List<PolicyDef> referencedPolicies;
 	private boolean needsInit					= true;
@@ -95,18 +95,18 @@ public class XACMLPdpPolicyFinderFactory extends PolicyFinderFactory {
 		if (propLocation != null) {
 			File fileLocation	= new File(propLocation);
 			if (!fileLocation.exists()) {
-				XACMLPdpPolicyFinderFactory.logger.error("Policy file " + fileLocation.getAbsolutePath() + " does not exist.");
+				XACMLPdpPolicyFinderFactory.LOGGER.error("Policy file " + fileLocation.getAbsolutePath() + " does not exist.");
 			} else if (!fileLocation.canRead()) {
-				XACMLPdpPolicyFinderFactory.logger.error("Policy file " + fileLocation.getAbsolutePath() + " cannot be read.");
+				XACMLPdpPolicyFinderFactory.LOGGER.error("Policy file " + fileLocation.getAbsolutePath() + " cannot be read.");
 			} else {
 				try {
-					XACMLPdpPolicyFinderFactory.logger.info("Loading policy file " + fileLocation);
+					XACMLPdpPolicyFinderFactory.LOGGER.info("Loading policy file " + fileLocation);
 					PolicyDef policyDef	= DOMPolicyDef.load(fileLocation);
 					if (policyDef != null) {
 						return policyDef;
 					}
 				} catch (DOMStructureException ex) {
-					XACMLPdpPolicyFinderFactory.logger.error( XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Error loading policy file " + fileLocation.getAbsolutePath() + ": " + ex.getMessage(), ex);
+					XACMLPdpPolicyFinderFactory.LOGGER.error( XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Error loading policy file " + fileLocation.getAbsolutePath() + ": " + ex.getMessage(), ex);
 					return new Policy(StdStatusCode.STATUS_CODE_SYNTAX_ERROR, ex.getMessage());
 				}
 			}
@@ -121,31 +121,31 @@ public class XACMLPdpPolicyFinderFactory extends PolicyFinderFactory {
 			try {
 				URL url						= new URL(propLocation);
 				URLConnection urlConnection	= url.openConnection();
-				XACMLPdpPolicyFinderFactory.logger.info("Loading policy file " + url.toString());
+				XACMLPdpPolicyFinderFactory.LOGGER.info("Loading policy file " + url.toString());
 				is = urlConnection.getInputStream();
 				PolicyDef policyDef			= DOMPolicyDef.load(is);
 				if (policyDef != null) {
 					return policyDef;
 				}
 			} catch (MalformedURLException ex) {
-				XACMLPdpPolicyFinderFactory.logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Invalid URL " + propLocation + ": " + ex.getMessage(), ex);
+				XACMLPdpPolicyFinderFactory.LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Invalid URL " + propLocation + ": " + ex.getMessage(), ex);
 			} catch (IOException ex) {
-				XACMLPdpPolicyFinderFactory.logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "IOException opening URL " + propLocation + ": " + ex.getMessage(), ex);
+				XACMLPdpPolicyFinderFactory.LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "IOException opening URL " + propLocation + ": " + ex.getMessage(), ex);
 			} catch (DOMStructureException ex) {
-				XACMLPdpPolicyFinderFactory.logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Invalid Policy " + propLocation + ": " + ex.getMessage(), ex);
+				XACMLPdpPolicyFinderFactory.LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Invalid Policy " + propLocation + ": " + ex.getMessage(), ex);
 				return new Policy(StdStatusCode.STATUS_CODE_SYNTAX_ERROR, ex.getMessage());
 			} finally {
 				if (is != null) {
 					try {
 						is.close();
 					} catch (IOException e) {
-						XACMLPdpPolicyFinderFactory.logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR  + "Exception closing InputStream for GET of url " + propLocation + " : " + e.getMessage() + "  (May be memory leak)", e);
+						XACMLPdpPolicyFinderFactory.LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR  + "Exception closing InputStream for GET of url " + propLocation + " : " + e.getMessage() + "  (May be memory leak)", e);
 					}
 				}
 			}
 		}
 		
-		XACMLPdpPolicyFinderFactory.logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"No known location for Policy " + policyId);
+		XACMLPdpPolicyFinderFactory.LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"No known location for Policy " + policyId);
 		return null;
 	}
 	
@@ -179,14 +179,14 @@ public class XACMLPdpPolicyFinderFactory extends PolicyFinderFactory {
 	
 	protected synchronized void init() {
 		if (this.needsInit) {
-			if (XACMLPdpPolicyFinderFactory.logger.isDebugEnabled()) {
-				XACMLPdpPolicyFinderFactory.logger.debug("Initializing");
+			if (XACMLPdpPolicyFinderFactory.LOGGER.isDebugEnabled()) {
+				XACMLPdpPolicyFinderFactory.LOGGER.debug("Initializing");
 			}
 			this.rootPolicies		= this.getPolicyDefs(XACMLProperties.PROP_ROOTPOLICIES);
 			this.referencedPolicies	= this.getPolicyDefs(XACMLProperties.PROP_REFERENCEDPOLICIES);
-			if (XACMLPdpPolicyFinderFactory.logger.isDebugEnabled()) {
-				XACMLPdpPolicyFinderFactory.logger.debug("Root Policies: " + this.rootPolicies);
-				XACMLPdpPolicyFinderFactory.logger.debug("Referenced Policies: " + this.referencedPolicies);
+			if (XACMLPdpPolicyFinderFactory.LOGGER.isDebugEnabled()) {
+				XACMLPdpPolicyFinderFactory.LOGGER.debug("Root Policies: " + this.rootPolicies);
+				XACMLPdpPolicyFinderFactory.LOGGER.debug("Referenced Policies: " + this.referencedPolicies);
 			}
 			this.needsInit	= false;
 		}

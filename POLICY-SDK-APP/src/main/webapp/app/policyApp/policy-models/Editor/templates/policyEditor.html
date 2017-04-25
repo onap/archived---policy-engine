@@ -1,0 +1,20 @@
+<style>
+ .content-container {
+ 	width:98%;
+ }
+</style>
+<div id="page-content">
+ <div ng-include="config.tplPath + '/navbar.html'"></div>  
+   <div>
+        <div class="row">
+              <div ng-include="config.tplPath + '/current-folder-breadcrumb.html'" ng-show="config.breadcrumb"></div>
+              <div ng-include="config.tplPath + '/main-table.html'" class="main-navigation clearfix"></div>
+        </div>
+    </div>
+   
+    <div ng-include="config.tplPath + '/item-context-menu.html'"></div>
+    <div ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/PolicyTypeTemplate.html'"></div>
+    <div ng-include="'app/policyApp/policy-models/Editor/templates/modals.html'"></div>
+    <div ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/DescribePolicyTemplate.html'"></div>
+    <div ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/ExportPolicyTemplate.html'"></div>
+</div>
