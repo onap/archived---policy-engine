@@ -2268,30 +2268,5 @@ System.out.println(jsonResponse);
 		} catch (Exception e) {
 			fail("operation failed, e="+e);
 		}
-	}
-
-
-//TODO - the JSON and XML spec imply that the Result Attributes may include the Content (It is part of the UML)
-	
-	
-	// test indentation???
-	
-	// order does not matter??
-	
+	}	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

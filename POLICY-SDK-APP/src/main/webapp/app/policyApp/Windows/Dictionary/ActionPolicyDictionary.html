@@ -1,0 +1,106 @@
+<!--/*-
+ * ============LICENSE_START=======================================================
+ * ECOMP Policy Engine
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */-->
+<script type="text/ng-template" id="add_actionPolicyDict_popup.html">
+  <div class="modal" tabindex="-1">
+		 <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+        <div class="modal-header">
+            <h2 class="font-showcase-font-name" style="color : #157bb2">{{label}}</h2>
+        </div>
+		<form name="formdata" ng-submit="saveActionDict(editActionDict);" novalidate>
+        <div class="modal-body">
+			<div class="form-group row">
+            <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.attributeName.$invalid && !formdata.attributeName.$pristine }">
+                <label>Attribute Name:<sup><b>*</b></sup></label><br>
+                <input type="text" class="form-control" ng-model="editActionDict.attributeName" name= "attributeName"  required/>
+				<p ng-show="formdata.attributeName.$invalid && !formdata.attributeName.$pristine" class="help-block">Attribute Name is required.</p>
+            </div>
+            <div class="form-group col-sm-2" ng-class="{ 'has-error' : formdata.type.$invalid && !formdata.type.$pristine }">
+                <label>Type:<sup><b>*</b></sup></label><BR>
+                <select class="form-control" ng-model="editActionDict.type" name= "type"  required>
+                    <option>REST</option>
+                </select>
+				<p ng-show="formdata.type.$invalid && !formdata.type.$pristine" class="help-block">Type is required.</p>
+            </div>
+			</div>
+			<div class="form-group row">
+            <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.url.$invalid && !formdata.url.$pristine }">
+                <label>URL:<sup><b>*</b></sup></label><br>
+                <input class="form-control" type="text" ng-model="editActionDict.url"  name= "url"  required/>
+				<p ng-show="formdata.url.$invalid && !formdata.url.$pristine" class="help-block">URL is required.</p>
+            </div>
+			<div class="form-group col-sm-2" ng-class="{ 'has-error' : formdata.method.$invalid && !formdata.method.$pristine }">
+                <label>Method:<sup><b>*</b></sup></label><BR>
+                <select class="form-control" ng-model="editActionDict.method" name= "method"  required>
+                    <option>GET</option>
+ 					<option>PUT</option>
+ 					<option>POST</option>
+                </select>
+				<p ng-show="formdata.method.$invalid && !formdata.method.$pristine" class="help-block">Method is required.</p>
+            </div>
+			</div>
+			<div class="form-group row">
+			<div class="form-group col-sm-6" >
+                <label>Description:</label><br>
+                <input type="text" class="form-control" ng-model="editActionDict.description" />
+            </div>
+			</div>
+			<div class="form-group row">
+        		<div class="form-group col-sm-1">
+					<label>Headers:</label><br>
+            		<button type="button" class="btn btn-secondary btn-small" ng-click="addNewChoice()"><i class="fa fa-plus"></i></button>
+        		</div>
+			</div>
+			<div class="form-group row">
+    			<div class="form-group">
+    			<div  data-ng-repeat="choice in choices">
+				<div class="form-group row">		
+        			<div  class="form-group col-sm-4" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
+            			<input type="text" class="form-control"  ng-model= "choice.option" placeholder="key" name= "ecompName"  required/>
+						<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">Header Key is required.</p>
+        			</div>
+        			<div  class="form-group col-sm-4" ng-class="{ 'has-error' : formdata.number.$invalid && !formdata.number.$pristine }">
+            			<input type="text" class="form-control"  ng-model= "choice.number" placeholder="Value" name= "ecompName"  required/>
+						<p ng-show="formdata.number.$invalid && !formdata.number.$pristine" class="help-block">Header Value is required.</p>
+        			</div>
+        			<div  class="form-group col-sm-1">
+            			<button type="button" class="btn btn-secondary btn-small" ng-show="$last" ng-click="removeChoice()"><i class="fa fa-minus"></i></button>
+        			</div>
+				</div>
+        		</div>	
+			</div> 
+			</div>
+			<div class="form-group row">
+			<div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.body.$invalid && !formdata.body.$pristine }">
+                <label>Body:<sup><b>*</b></sup></label><br>
+                <textarea type="text" class="form-control" ng-model="editActionDict.body" style="height :200px; width:500px;" name= "body"  required></textarea>
+				<p ng-show="formdata.body.$invalid && !formdata.body.$pristine" class="help-block">Action Body is required.</p>
+            </div>
+			</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" type="submit" ng-disabled="formdata.$invalid">Save</button>
+            <button class="btn btn-default" ng-click="$dismiss('cancel')">Close</button>
+        </div>
+		</form>
+			</div>
+</div>
+    </div>
+</script>

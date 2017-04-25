@@ -26,14 +26,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -52,17 +50,13 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openecomp.policy.pap.xacml.rest.adapters.PolicyRestAdapter;
+import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
 import org.openecomp.policy.pap.xacml.rest.util.JPAUtils;
+import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 import org.openecomp.policy.rest.jpa.ActionPolicyDict;
 import org.openecomp.policy.rest.jpa.Datatype;
 import org.openecomp.policy.rest.jpa.FunctionDefinition;
-
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
-
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
@@ -71,14 +65,11 @@ import org.openecomp.policy.common.logging.flexlogger.Logger;
 public class ActionPolicy extends Policy {
 	
 	/**
-	 * Config Fields
+	 * ActionPolicy Fields
 	 */
-	private static final Logger logger = FlexLogger.getLogger(ConfigPolicy.class);
-
+	private static final Logger LOGGER = FlexLogger.getLogger(ActionPolicy.class);
+	
 	public static final String JSON_CONFIG = "JSON";
-	public static final String XML_CONFIG = "XML";
-	public static final String PROPERTIES_CONFIG = "PROPERTIES";
-	public static final String OTHER_CONFIG = "OTHER";
 	
 	public static final String PDP_ACTION = "PDP";
 	public static final String PEP_ACTION = "PEP";
@@ -95,12 +86,16 @@ public class ActionPolicy extends Policy {
 	public static final String URL_ATTRIBUTEID = "url";
 	public static final String BODY_ATTRIBUTEID = "body";
 	
+	public static boolean isAttribute = false;
+
+	
 	List<String> dynamicLabelRuleAlgorithms = new LinkedList<String>();
 	List<String> dynamicFieldFunctionRuleAlgorithms = new LinkedList<String>();
 	List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<String>();
 	List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<String>();
 	
 	protected Map<String, String> dropDownMap = new HashMap<String, String>();
+	
 	
 	public ActionPolicy() {
 		super();
@@ -119,6 +114,11 @@ public class ActionPolicy extends Policy {
 			return successMap;
 		}
 		
+		if(!ActionPolicy.isAttribute) {
+			successMap.put("invalidAttribute", "Action Attrbute was not in the database.");
+			return successMap;
+		}
+		
 		if(!isPreparedToSave()){
 			//Prep and configure the policy for saving
 			prepareToSave();
@@ -126,12 +126,8 @@ public class ActionPolicy extends Policy {
 
 		// Until here we prepared the data and here calling the method to create xml.
 		Path newPolicyPath = null;
-		newPolicyPath = Paths.get(policyAdapter.getParentPath().toString(), policyName);
+		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject() );		
-		if (successMap.containsKey("success")) {
-			Path finalPolicyPath = getFinalPolicyPath();
-			policyAdapter.setFinalPolicyPath(finalPolicyPath.toString());
-		}
 		return successMap;		
 	}
 	
@@ -147,12 +143,7 @@ public class ActionPolicy extends Policy {
 		
 		int version = 0;
 		String policyID = policyAdapter.getPolicyID();
-		
-		if (policyAdapter.isEditPolicy()) {
-			version = policyAdapter.getHighestVersion() + 1;
-		} else {
-			version = 1;
-		}
+		version = policyAdapter.getHighestVersion();
 		
 		// Create the Instance for pojo, PolicyType object is used in marshalling.
 		if (policyAdapter.getPolicyType().equals("Action")) {
@@ -164,38 +155,23 @@ public class ActionPolicy extends Policy {
 			policyAdapter.setData(policyConfig);
 		}
 		
+		policyName = policyAdapter.getNewFileName();
+		
 		if (policyAdapter.getData() != null) {
-			
-			// Save off everything
-			// making ready all the required elements to generate the action policy xml.
-			// Get the uniqueness for policy name.
-			Path newFile = getNextFilename(Paths.get(policyAdapter.getParentPath().toString()), policyAdapter.getPolicyType(), policyAdapter.getPolicyName(), version);
-			if (newFile == null) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Policy already Exists, cannot create the policy.");
-				PolicyLogger.error("Policy already Exists, cannot create the policy.");
-				setPolicyExists(true);
-				return false;
-			}
-			policyName = newFile.getFileName().toString();
-			
 			// Action body is optional so checking value provided or not
-			//String actionBodyString = policyAdapter.getActionBody();
 			String comboDictValue = policyAdapter.getActionAttribute();
 	        String actionBody = getActionPolicyDict(comboDictValue).getBody();
-			if(!(actionBody==null || "".equals(actionBody))){
+			if(!(actionBody==null || "".equals(actionBody))){	
 				saveActionBody(policyName, actionBody);
-			}
-			
-			// Make sure the filename ends with an extension
-			if (policyName.endsWith(".xml") == false) {
-				policyName = policyName + ".xml";
+			} else {
+				if(!isAttribute){
+					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Could not find " + comboDictValue + " in the ActionPolicyDict table.");
+					return false;
+				}
 			}
 			
 			PolicyType actionPolicy = (PolicyType) policyAdapter.getData();
-			
 			actionPolicy.setDescription(policyAdapter.getPolicyDescription());
-			
 			actionPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
 
 			AllOfType allOf = new AllOfType();
@@ -252,7 +228,6 @@ public class ActionPolicy extends Policy {
 						condition.setExpression(new ObjectFactory().createApply(actionApply));
 						isCompound = true;
 					}
-					
 				}
 				// if rule algorithm not a compound
 				if (!isCompound) {
@@ -265,8 +240,6 @@ public class ActionPolicy extends Policy {
 			actionPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
 			policyAdapter.setPolicyData(actionPolicy);
 		}  else {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
 		}	
 
@@ -276,69 +249,25 @@ public class ActionPolicy extends Policy {
 	
 	// Saving the json Configurations file if exists at server location for action policy.
 	private void saveActionBody(String policyName, String actionBodyData) {
-		int version = 0;
-		int highestVersion = 0;
-		String domain = getParentPathSubScopeDir();
-		String path = domain.replace('\\', '.');
-		String removeExtension = policyName.substring(0, policyName.indexOf(".xml"));
-		String removeVersion = removeExtension.substring(0, removeExtension.indexOf("."));
-		if (policyAdapter.isEditPolicy()) {
-			highestVersion = policyAdapter.getHighestVersion();
-			if(highestVersion != 0){
-				version = highestVersion + 1;	
-			}
-		} else {
-			version = 1;
-		}
-		if(path.contains("/")){
-			path = domain.replace('/', '.');
-			logger.info("print the path:" +path);
-		}
 		try {
-
-			File file = new File(ACTION_HOME + File.separator + path + "." + removeVersion + "." + version + ".json");
-			
-			if (logger.isDebugEnabled())
-				logger.debug("The action body is at " + file.getAbsolutePath());
-
-			// if file doesn't exists, then create it
-			if (!file.exists()) {
-				file.createNewFile();
+			if(policyName.endsWith(".xml")){
+				policyName = policyName.replace(".xml", "");
 			}
-			File configHomeDir = new File(ACTION_HOME);
-			File[] listOfFiles = configHomeDir.listFiles();
-			if (listOfFiles != null){
-				for(File eachFile : listOfFiles){
-					if(eachFile.isFile()){
-						String fileNameWithoutExtension = FilenameUtils.removeExtension(eachFile.getName());
-						String actionFileNameWithoutExtension = FilenameUtils.removeExtension(path + "." + policyName);
-						if (fileNameWithoutExtension.equals(actionFileNameWithoutExtension)){
-							//delete the file
-							if (logger.isInfoEnabled())
-								logger.info("Deleting action body is at " + eachFile.getAbsolutePath());
-							eachFile.delete();
-						}
-					}
-				}
-			}
+			File file = new File(ACTION_HOME+ File.separator + policyName + ".json");
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(actionBodyData);
 			bw.close();
-
-			if (logger.isInfoEnabled()) {
-				logger.info("Action Body is succesfully saved at " + file.getAbsolutePath());
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Action Body is succesfully saved at " + file.getAbsolutePath());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	// Data required for obligation part is setting here.
 	private ObligationExpressionsType getObligationExpressions() {
-		
-		// TODO: add code to get all these values from dictionary
 		ObligationExpressionsType obligations = new ObligationExpressionsType();
 
 		ObligationExpressionType obligation = new ObligationExpressionType();
@@ -407,17 +336,7 @@ public class ActionPolicy extends Policy {
 
 			AttributeValueType jsonURLAttributeValue = new AttributeValueType();
 			jsonURLAttributeValue.setDataType(URI_DATATYPE);
-			final Path gitPath = Paths.get(policyAdapter.getUserGitPath().toString());;
-			String policyDir = policyAdapter.getParentPath().toString();
-			int startIndex1 = policyDir.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-			policyDir = policyDir.substring(startIndex1, policyDir.length());
-			logger.info("print the main domain value"+policyDir);
-			String path = policyDir.replace('\\', '.');
-			if(path.contains("/")){
-				path = policyDir.replace('/', '.');
-				logger.info("print the path:" +path);
-			}
-			jsonURLAttributeValue.getContent().add(CONFIG_URL + "/Action/" +  path + "." +FilenameUtils.removeExtension(policyName) + ".json");
+			jsonURLAttributeValue.getContent().add(CONFIG_URL + "/Action/"  + policyName + ".json");
 
 			assignmentJsonURL.setExpression(new ObjectFactory().createAttributeValue(jsonURLAttributeValue));
 			obligation.getAttributeAssignmentExpression().add(assignmentJsonURL);
@@ -428,7 +347,6 @@ public class ActionPolicy extends Policy {
 			if(headerVal != null && !headerVal.equals("")){
 				// parse it on : to get number of headers
 				String[] result = headerVal.split(":");
-				System.out.println(Arrays.toString(result));
 				for (String eachString : result){
 					// parse each value on =
 					String[] textFieldVals = eachString.split("=");
@@ -567,9 +485,8 @@ public class ActionPolicy extends Policy {
 	private Map<String,String> createDropDownMap(){
 		JPAUtils jpaUtils = null;
 		try {
-			jpaUtils = JPAUtils.getJPAUtilsInstance(policyAdapter.getEntityManagerFactory());
+			jpaUtils = JPAUtils.getJPAUtilsInstance(XACMLPapServlet.getEmf());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
@@ -587,32 +504,19 @@ public class ActionPolicy extends Policy {
 	
 	private ActionPolicyDict getActionPolicyDict(String attributeName){
 		ActionPolicyDict retObj = new ActionPolicyDict();
-		//EntityManagerFactory emf = policyAdapter.getEntityManagerFactory();
-		//EntityManager em = emf.createEntityManager();
-		EntityManager em = policyAdapter.getEntityManagerFactory().createEntityManager();
+		EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
 		Query getActionPolicyDicts = em.createNamedQuery("ActionPolicyDict.findAll");	
 		List<?> actionPolicyDicts = getActionPolicyDicts.getResultList(); 	
 		
 		for (Object id : actionPolicyDicts) {
-			//ActionPolicyDict actionPolicyList = actionPolicyDicts.getItem(id).getEntity();
 			ActionPolicyDict actionPolicy = (ActionPolicyDict) id;
 			if(attributeName.equals(actionPolicy.getAttributeName())){
+				isAttribute = true;
 				retObj = actionPolicy;
 				break;
 			}
 		}
-		
-		try{
-		em.getTransaction().commit();
-		} catch(Exception e){
-			try{
-				em.getTransaction().rollback();
-			} catch(Exception e2){
-				e2.printStackTrace();
-			}
-		}
 		em.close();
-		
 		return retObj;
 	}
 
@@ -620,7 +524,5 @@ public class ActionPolicy extends Policy {
 	public Object getCorrectPolicyDataObject() {
 		return policyAdapter.getPolicyData();
 	}
-
-
 
 }

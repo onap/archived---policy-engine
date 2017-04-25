@@ -1,6 +1,6 @@
 /*-
  * ================================================================================
- * eCOMP Portal SDK
+ * ECOMP Portal SDK
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property
  * ================================================================================
@@ -22,17 +22,17 @@ package org.openecomp.portalapp.conf;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openecomp.portalapp.scheduler.RegistryAdapter;
-import org.openecomp.portalapp.uebhandler.InitUebHandler;
-import org.openecomp.portalapp.uebhandler.MainUebHandler;
-import org.openecomp.portalapp.uebhandler.WidgetNotificationHandler;
+import org.openecomp.portalapp.lm.FusionLicenseManagerImpl;
+import org.openecomp.portalapp.login.LoginStrategyImpl;
+import org.openecomp.portalsdk.core.auth.LoginStrategy;
 import org.openecomp.portalsdk.core.conf.AppConfig;
 import org.openecomp.portalsdk.core.conf.Configurable;
+import org.openecomp.portalsdk.core.lm.FusionLicenseManager;
+import org.openecomp.portalsdk.core.lm.FusionLicenseManagerUtils;
 import org.openecomp.portalsdk.core.objectcache.AbstractCacheManager;
 import org.openecomp.portalsdk.core.service.DataAccessService;
 import org.openecomp.portalsdk.core.util.CacheManager;
 import org.openecomp.portalsdk.core.util.SystemProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -48,8 +48,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 /**
- * Configures Spring features in the ECOMP Portal SDK sample application.
- * Subclasses the ECOMP Portal SDK core AppConfig class to reuse interceptors,
+ * ECOMP Portal SDK sample application.
+ * ECOMP Portal SDK core AppConfig class to reuse interceptors,
  * view resolvers and other features defined there.
  */
 @Configuration
@@ -60,8 +60,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 @EnableAsync
 @EnableScheduling
 public class ExternalAppConfig extends AppConfig implements Configurable {
-	
-	private RegistryAdapter schedulerRegistryAdapter;
 
 	@Configuration
 	@Import(SystemProperties.class)
@@ -69,14 +67,14 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	}
 
 	/**
-	 * @see org.openecomp.portalsdk.core.conf.AppConfig#viewResolver()
+	 * @see com.att.fusion.core.conf.AppConfig#viewResolver()
 	 */
 	public ViewResolver viewResolver() {
 		return super.viewResolver();
 	}
 
 	/**
-	 * @see org.openecomp.portalsdk.core.conf.AppConfig#addResourceHandlers(ResourceHandlerRegistry)
+	 * @see com.att.fusion.core.conf.AppConfig#addResourceHandlers(ResourceHandlerRegistry)
 	 * 
 	 * @param registry
 	 */
@@ -85,7 +83,7 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	}
 
 	/**
-	 * @see org.openecomp.portalsdk.core.conf.AppConfig#dataAccessService()
+	 * @see com.att.fusion.core.conf.AppConfig#dataAccessService()
 	 */
 	public DataAccessService dataAccessService() {
 		return super.dataAccessService();
@@ -125,38 +123,16 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 		return new CacheManager();
 	}
 	
-	/**
-	 * Creates and returns a new instance of a {@link MainUebHandler}. 
-	 * 
-	 * @return New instance of {@link MainUebHandler}.
-	 */
 	@Bean
-	public MainUebHandler mainUebHandler() {
-		
-		return new MainUebHandler();
-	}
-	
-	/**
-	 * Creates and returns a new instance of a {@link InitUebHandler}.  
-	 * 
-	 * @return New instance of {@link InitUebHandler}.
-	 */
-	@Bean
-	public InitUebHandler initUebHandler() {
-		
-		return new InitUebHandler();
+	public FusionLicenseManager fusionLicenseManager(){
+			return new FusionLicenseManagerImpl();
 	}
 
-	/**
-	 * Creates and returns a new instance of a {@link WidgetNotificationHandler}
-	 * .
-	 * 
-	 * @return New instance of {@link WidgetNotificationHandler}.
-	 */
 	@Bean
-	public WidgetNotificationHandler widgetNotificationHandler() {
-		return new WidgetNotificationHandler();
+	public FusionLicenseManagerUtils fusionLicenseManagerUtils(){
+			return new FusionLicenseManagerUtils();
 	}
+
 	
 	/**
 	 * Creates and returns a new instance of a {@link SchedulerFactoryBean} and
@@ -165,24 +141,11 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	 * @return New instance of {@link SchedulerFactoryBean}
 	 * @throws Exception 
 	 */
-	// @Bean // ANNOTATION COMMENTED OUT 
-	// APPLICATIONS REQUIRING QUARTZ SHOULD RESTORE ANNOTATION
-	public SchedulerFactoryBean schedulerFactoryBean() throws Exception {
-		SchedulerFactoryBean scheduler = new SchedulerFactoryBean();
-		scheduler.setTriggers(schedulerRegistryAdapter.getTriggers());
-		scheduler.setConfigLocation(appApplicationContext.getResource("WEB-INF/conf/quartz.properties"));
-		scheduler.setDataSource(dataSource());
-		return scheduler;
-	}
-
 	
-	/**
-	 * Sets the scheduler registry adapter.
-	 * 
-	 * @param schedulerRegistryAdapter
-	 */
-	@Autowired
-	public void setSchedulerRegistryAdapter(final RegistryAdapter schedulerRegistryAdapter) {
-		this.schedulerRegistryAdapter = schedulerRegistryAdapter;
+	
+	@Bean
+	public LoginStrategy loginStrategy(){
+		
+		return new LoginStrategyImpl();
 	}
 }

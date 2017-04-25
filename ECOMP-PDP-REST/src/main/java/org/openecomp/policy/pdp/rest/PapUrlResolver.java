@@ -35,7 +35,7 @@ import com.att.research.xacml.util.XACMLProperties;
 import org.openecomp.policy.common.logging.flexlogger.*;
 
 public class PapUrlResolver {
-	private static final Logger logger = FlexLogger.getLogger(PapUrlResolver.class);
+	private static final Logger LOGGER = FlexLogger.getLogger(PapUrlResolver.class);
 	//how long to keep a pap failed before making it un-failed, in milli-seconds
 	private static final long FAIL_TIMEOUT = 18000000;
 	
@@ -177,7 +177,7 @@ public class PapUrlResolver {
 	//sets the current PAP url as being failed
 	//this will set the failed time to now and remove any succeeded time
 	public void failed(){
-		logger.error("PAP Server FAILED: "+sortedUrlNodes[pointer].getUrl());
+		LOGGER.error("PAP Server FAILED: "+sortedUrlNodes[pointer].getUrl());
 
 		sortedUrlNodes[pointer].setFailedTime(new Date());
 		sortedUrlNodes[pointer].setSucceededTime(null);
@@ -195,7 +195,7 @@ public class PapUrlResolver {
 	public void registered(){
 		sortedUrlNodes[pointer].setFailedTime(null);
 		sortedUrlNodes[pointer].setSucceededTime(new Date());
-		logger.info("PAP server SUCCEEDED "+sortedUrlNodes[pointer].getUrl());
+		LOGGER.info("PAP server SUCCEEDED "+sortedUrlNodes[pointer].getUrl());
 		propertiesUpdated();
 	}
 	
@@ -226,8 +226,8 @@ public class PapUrlResolver {
 		}
 		Properties prop = getProperties();
 
-		logger.debug("Failed PAP Url List: "+prop.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS));
-		logger.debug("Succeeded PAP Url List: "+prop.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS));
+		LOGGER.debug("Failed PAP Url List: "+prop.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS));
+		LOGGER.debug("Succeeded PAP Url List: "+prop.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS));
 		XACMLProperties.setProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS,prop.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS));
 		XACMLProperties.setProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS,prop.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS));
 	}
@@ -287,14 +287,6 @@ public class PapUrlResolver {
 		private String userId;
 		private String pass;
 		
-		public PapUrlNode(String url){
-			this.papUrl = url;
-			failedTime = null;
-			this.succeededTime = null;
-			this.userId = "";
-			this.pass = "";
-			
-		}
 		public PapUrlNode(String url,String userId,String pass){
 			this.papUrl = url;
 			failedTime = null;

@@ -44,7 +44,8 @@ import javax.persistence.TemporalType;
 @NamedQueries({
 	@NamedQuery(name="PolicyVersion.findAll", query="SELECT p FROM PolicyVersion p"),
 	@NamedQuery(name="PolicyVersion.deleteAll", query="DELETE FROM PolicyVersion WHERE 1=1"),
-	@NamedQuery(name="PolicyVersion.findByPolicyName", query="Select p from PolicyVersion p where p.policyName=:pname")
+	@NamedQuery(name="PolicyVersion.findByPolicyName", query="Select p from PolicyVersion p where p.policyName=:pname"),
+	@NamedQuery(name="PolicyVersion.findAllCount", query="SELECT COUNT(p) FROM PolicyVersion p")
 })
 public class PolicyVersion implements Serializable {
 	private static final long serialVersionUID = 1L;

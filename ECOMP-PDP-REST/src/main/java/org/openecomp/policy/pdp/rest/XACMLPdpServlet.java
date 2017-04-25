@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
@@ -47,22 +48,25 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.entity.ContentType;
-import org.openecomp.policy.pdp.rest.jmx.PdpRestMonitor;
-import org.openecomp.policy.rest.XACMLRest;
-import org.openecomp.policy.rest.XACMLRestProperties;
-import org.openecomp.policy.common.logging.ECOMPLoggingContext;
-import org.openecomp.policy.common.logging.ECOMPLoggingUtils;
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.api.PolicyParameters;
 import org.openecomp.policy.common.im.AdministrativeStateException;
 import org.openecomp.policy.common.im.ForwardProgressException;
 import org.openecomp.policy.common.im.IntegrityMonitor;
 import org.openecomp.policy.common.im.IntegrityMonitorProperties;
 import org.openecomp.policy.common.im.StandbyStatusException;
+import org.openecomp.policy.common.logging.ECOMPLoggingContext;
+import org.openecomp.policy.common.logging.ECOMPLoggingUtils;
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.pdp.rest.jmx.PdpRestMonitor;
+import org.openecomp.policy.rest.XACMLRest;
+import org.openecomp.policy.rest.XACMLRestProperties;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
+import org.openecomp.policy.xacml.pdp.std.functions.PolicyList;
+import org.openecomp.policy.xacml.std.pap.StdPDPStatus;
 
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import com.att.research.xacml.api.pap.PDPStatus.Status;
 import com.att.research.xacml.api.pdp.PDPEngine;
 import com.att.research.xacml.api.pdp.PDPException;
@@ -71,8 +75,6 @@ import com.att.research.xacml.std.dom.DOMResponse;
 import com.att.research.xacml.std.json.JSONRequest;
 import com.att.research.xacml.std.json.JSONResponse;
 import com.att.research.xacml.util.XACMLProperties;
-import org.openecomp.policy.xacml.pdp.std.functions.PolicyList;
-import org.openecomp.policy.xacml.std.pap.StdPDPStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -108,6 +110,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private static final String DEFAULT_MAX_CONTENT_LENGTH = "999999999"; //32767
+	private static final String CREATE_UPDATE_POLICY_SERVICE = "org.openecomp.policy.pdp.rest.api.services.CreateUpdatePolicyServiceImpl";
 	//
 	// Our application debug log
 	//
@@ -120,9 +123,9 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	// 
 	// audit logger
 	private static final Log auditLogger = LogFactory.getLog("auditLogger");
-	
+
 	private static final PdpRestMonitor monitor = PdpRestMonitor.singleton;
-	
+
 	//
 	// This thread may getting invoked on startup, to let the PAP know
 	// that we are up and running.
@@ -134,7 +137,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	// for access to the pointer. In case we are servicing PEP requests while
 	// an update is occurring from the PAP.
 	//
-	private PDPEngine pdpEngine	= null;
+	private static PDPEngine pdpEngine	= null;
 	private static final Object pdpEngineLock = new Object();
 	//
 	// This is our PDP's status. What policies are loaded (or not) and
@@ -143,7 +146,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	//
 	private static volatile StdPDPStatus status = new StdPDPStatus();
 	private static final Object pdpStatusLock = new Object();
-	
+	private static Constructor<?> createUpdatePolicyConstructor;
+
 	private static final String ENVIORNMENT_HEADER = "Environment";
 	private static String environment = null;
 	//
@@ -152,7 +156,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	public static class PutRequest {
 		public Properties policyProperties = null;
 		public Properties pipConfigProperties = null;
-		
+
 		PutRequest(Properties policies, Properties pips) {
 			this.policyProperties = policies;
 			this.pipConfigProperties = pips;
@@ -175,13 +179,14 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	//
 	private Thread configThread = null;
 	private volatile boolean configThreadTerminate = false;
-    private ECOMPLoggingContext baseLoggingContext = null;
+	private ECOMPLoggingContext baseLoggingContext = null;
 	private IntegrityMonitor im;
-    /**
-     * Default constructor. 
-     */
-    public XACMLPdpServlet() {
-    }
+	private String createUpdateResourceName = null;
+	/**
+	 * Default constructor. 
+	 */
+	public XACMLPdpServlet() {
+	}
 
 	/**
 	 * @see Servlet#init(ServletConfig)
@@ -230,7 +235,17 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 					"Error loading properties with: XACMLProperties.getProperties()");
 			throw new ServletException(e.getMessage(), e.getCause());
 		}
-		
+		if(properties.getProperty(XACMLRestProperties.PDP_RESOURCE_NAME)==null){
+			XACMLProperties.reloadProperties();
+			try {
+				properties = XACMLProperties.getProperties();
+			} catch (IOException e) {
+				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e,
+						"Error loading properties with: XACMLProperties.getProperties()");
+				throw new ServletException(e.getMessage(), e.getCause());
+			}
+			PolicyLogger.info("\n Properties Given : \n" + properties.toString());
+		}
 		pdpResourceName = properties.getProperty(XACMLRestProperties.PDP_RESOURCE_NAME);
 		if(pdpResourceName == null){
 			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, XACMLRestProperties.PDP_RESOURCE_NAME, "xacml.pdp");
@@ -251,6 +266,15 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			dependencyNodes[i] = dependencyNodes[i].trim();
 		}
 
+		// CreateUpdatePolicy ResourceName  
+		createUpdateResourceName = properties.getProperty("createUpdatePolicy.impl.className", CREATE_UPDATE_POLICY_SERVICE);
+		try{
+			Class<?> createUpdateclass = Class.forName(createUpdateResourceName);
+			createUpdatePolicyConstructor = createUpdateclass.getConstructor(PolicyParameters.class, String.class, boolean.class);
+		}catch(Exception e){
+			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, "createUpdatePolicy.impl.className", "xacml.pdp.init");
+			throw new ServletException("Could not find the Class name : " +createUpdateResourceName + "\n" +e.getMessage());
+		}
 
 		// Create an IntegrityMonitor
 		try {
@@ -260,7 +284,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to create IntegrityMonitor");
 			throw new ServletException(e);
 		}
-		
+
 		environment = XACMLProperties.getProperty("ENVIRONMENT", "DEVL");
 		//
 		// Kick off our thread to register with the PAP servlet.
@@ -331,7 +355,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	 *
 	 * 		EXAMPLE:
 	 *	 		xacml.rootPolicies=PolicyA.1, PolicyB.1
- 	 *
+	 *
 	 *			PolicyA.1.url=http://localhost:9090/PAP?id=b2d7b86d-d8f1-4adf-ba9d-b68b2a90bee1&version=1
 	 *			PolicyB.1.url=http://localhost:9090/PAP/id=be962404-27f6-41d8-9521-5acb7f0238be&version=1
 	 *	
@@ -372,12 +396,12 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		} else {
 			PolicyLogger.info("requestID was provided in call to XACMLPdpSrvlet (doPut)");
 		}
-				loggingContext.metricStarted();
-				loggingContext.metricEnded();
-				PolicyLogger.metrics("Metric example posted here - 1 of 2");
-				loggingContext.metricStarted();
-				loggingContext.metricEnded();
-				PolicyLogger.metrics("Metric example posted here - 2 of 2");
+		loggingContext.metricStarted();
+		loggingContext.metricEnded();
+		PolicyLogger.metrics("Metric example posted here - 1 of 2");
+		loggingContext.metricStarted();
+		loggingContext.metricEnded();
+		PolicyLogger.metrics("Metric example posted here - 2 of 2");
 		//
 		// Dump our request out
 		//
@@ -431,7 +455,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			return;
 		}
 	}
-	
+
 	protected void doPutConfig(String config, HttpServletRequest request, HttpServletResponse response, ECOMPLoggingContext loggingContext)  throws ServletException, IOException {
 		try {
 			// prevent multiple configuration changes from stacking up
@@ -476,7 +500,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				XACMLPdpServlet.queue.offer(new PutRequest(newProperties, null));
 				loggingContext.transactionEnded();
 				auditLogger.info("Success");
-            	PolicyLogger.audit("Success");
+				PolicyLogger.audit("Success");
 			} else if (config.equals("pips")) {
 				newProperties = XACMLProperties.getPipProperties(newProperties);
 				if (newProperties.size() == 0) {
@@ -490,7 +514,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				XACMLPdpServlet.queue.offer(new PutRequest(null, newProperties));
 				loggingContext.transactionEnded();
 				auditLogger.info("Success");
-            	PolicyLogger.audit("Success");
+				PolicyLogger.audit("Success");
 			} else if (config.equals("all")) {
 				Properties newPolicyProperties = XACMLProperties.getPolicyProperties(newProperties, true);
 				if (newPolicyProperties.size() == 0) {
@@ -513,7 +537,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				XACMLPdpServlet.queue.offer(new PutRequest(newPolicyProperties, newPipProperties));
 				loggingContext.transactionEnded();
 				auditLogger.info("Success");
-            	PolicyLogger.audit("Success");
+				PolicyLogger.audit("Success");
 			} else {
 				//
 				// Invalid value
@@ -533,9 +557,9 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			return;
 		}
-		
+
 	}
-	
+
 	/**
 	 * Parameters: type=hb|config|Status
 	 * 
@@ -562,12 +586,12 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		} else {
 			PolicyLogger.info("requestID was provided in call to XACMLPdpSrvlet (doGet)");
 		}
-				loggingContext.metricStarted();
-				loggingContext.metricEnded();
-				PolicyLogger.metrics("Metric example posted here - 1 of 2");
-				loggingContext.metricStarted();
-				loggingContext.metricEnded();
-				PolicyLogger.metrics("Metric example posted here - 2 of 2");
+		loggingContext.metricStarted();
+		loggingContext.metricEnded();
+		PolicyLogger.metrics("Metric example posted here - 1 of 2");
+		loggingContext.metricStarted();
+		loggingContext.metricEnded();
+		PolicyLogger.metrics("Metric example posted here - 2 of 2");
 
 		XACMLRest.dumpRequest(request);
 
@@ -645,7 +669,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				}
 			}
 		}
-		
+
 		try {
 			im.startTransaction();
 		}
@@ -668,18 +692,18 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			loggingContext.setServiceName("PDP.getConfig");
 			response.setContentType("text/x-java-properties");
 			try {
-    			String lists = XACMLProperties.PROP_ROOTPOLICIES + "=" + XACMLProperties.getProperty(XACMLProperties.PROP_ROOTPOLICIES, "");
-    			lists = lists + "\n" + XACMLProperties.PROP_REFERENCEDPOLICIES + "=" + XACMLProperties.getProperty(XACMLProperties.PROP_REFERENCEDPOLICIES, "") + "\n";
-    			try (InputStream listInputStream = new ByteArrayInputStream(lists.getBytes());
-    					InputStream pipInputStream = Files.newInputStream(XACMLPdpLoader.getPIPConfig());
-    					OutputStream os = response.getOutputStream()) {
-    				IOUtils.copy(listInputStream, os);
-    				IOUtils.copy(pipInputStream, os);
+				String lists = XACMLProperties.PROP_ROOTPOLICIES + "=" + XACMLProperties.getProperty(XACMLProperties.PROP_ROOTPOLICIES, "");
+				lists = lists + "\n" + XACMLProperties.PROP_REFERENCEDPOLICIES + "=" + XACMLProperties.getProperty(XACMLProperties.PROP_REFERENCEDPOLICIES, "") + "\n";
+				try (InputStream listInputStream = new ByteArrayInputStream(lists.getBytes());
+						InputStream pipInputStream = Files.newInputStream(XACMLPdpLoader.getPIPConfig());
+						OutputStream os = response.getOutputStream()) {
+					IOUtils.copy(listInputStream, os);
+					IOUtils.copy(pipInputStream, os);
 				}
-    			loggingContext.transactionEnded();
-    			auditLogger.info("Success");
-            	PolicyLogger.audit("Success");
-                response.setStatus(HttpServletResponse.SC_OK);
+				loggingContext.transactionEnded();
+				auditLogger.info("Success");
+				PolicyLogger.audit("Success");
+				response.setStatus(HttpServletResponse.SC_OK);
 			} catch (Exception e) {
 				logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Failed to copy property file", e);
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to copy property file");
@@ -687,23 +711,23 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				PolicyLogger.audit("Transaction Failed - See Error.log");
 				response.sendError(400, "Failed to copy Property file");
 			}
-			
+
 		} else if ("hb".equals(type)) {
 			returnHB = true;
 			response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-			
+
 		} else if ("Status".equals(type)) {
 			loggingContext.setServiceName("PDP.getStatus");
 			// convert response object to JSON and include in the response
 			synchronized(pdpStatusLock) {
 				ObjectMapper mapper = new ObjectMapper();
-	            mapper.writeValue(response.getOutputStream(),  status);
+				mapper.writeValue(response.getOutputStream(),  status);
 			}
-            response.setStatus(HttpServletResponse.SC_OK);
+			response.setStatus(HttpServletResponse.SC_OK);
 			loggingContext.transactionEnded();
 			auditLogger.info("Success");
-        	PolicyLogger.audit("Success");
-            
+			PolicyLogger.audit("Success");
+
 		} else {
 			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid type value: " + type);
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "Invalid type value: " + type);
@@ -741,14 +765,14 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		} else {
 			PolicyLogger.info("requestID was provided in call to XACMLPdpSrvlet (doPost)");
 		}
-				loggingContext.metricStarted();
-				loggingContext.metricEnded();
-				PolicyLogger.metrics("Metric example posted here - 1 of 2");
-				loggingContext.metricStarted();
-				loggingContext.metricEnded();
-				PolicyLogger.metrics("Metric example posted here - 2 of 2");
+		loggingContext.metricStarted();
+		loggingContext.metricEnded();
+		PolicyLogger.metrics("Metric example posted here - 1 of 2");
+		loggingContext.metricStarted();
+		loggingContext.metricEnded();
+		PolicyLogger.metrics("Metric example posted here - 2 of 2");
 		monitor.pdpEvaluationAttempts();
-		
+
 		try {
 			im.startTransaction();
 		}
@@ -772,7 +796,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			im.endTransaction();
 			return;
 		}
-		
+
 		XACMLRest.dumpRequest(request);
 		//
 		// Set our no-cache header
@@ -846,14 +870,14 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			}
 			incomingRequestString = buffer.toString();
 			logger.info(incomingRequestString);
-		    //
+			//
 			// Parse into a request
 			//
 			try {
 				if (contentType.getMimeType().equalsIgnoreCase(ContentType.APPLICATION_JSON.getMimeType())) {
 					pdpRequest = JSONRequest.load(incomingRequestString);
 				} else if (	contentType.getMimeType().equalsIgnoreCase(ContentType.APPLICATION_XML.getMimeType()) ||
-							contentType.getMimeType().equalsIgnoreCase("application/xacml+xml")) {
+						contentType.getMimeType().equalsIgnoreCase("application/xacml+xml")) {
 					pdpRequest = DOMRequest.load(incomingRequestString);
 				}
 			}
@@ -907,11 +931,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				return;
 			}
 			//
-	        // Get the pointer to the PDP Engine
-	        //
+			// Get the pointer to the PDP Engine
+			//
 			PDPEngine myEngine = null;
 			synchronized(pdpEngineLock) {
-				myEngine = this.pdpEngine;
+				myEngine = XACMLPdpServlet.pdpEngine;
 			}
 			if (myEngine == null) {
 				String message = "No engine loaded.";
@@ -929,50 +953,50 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			long lTimeStart, lTimeEnd;
 			Response pdpResponse	= null;
 
-//TODO - Make this unnecessary
-//TODO	It seems that the PDP Engine is not thread-safe, so when a configuration change occurs in the middle of processing
-//TODO	a PEP Request, that Request fails (it throws a NullPointerException in the decide() method).
-//TODO	Using synchronize will slow down processing of PEP requests, possibly by a significant amount.
-//TODO	Since configuration changes are rare, it would be A Very Good Thing if we could eliminate this sychronized block.
-//TODO
-//TODO	This problem was found by starting one PDP then
-//TODO		RestLoadTest switching between 2 configurations, 1 second apart
-//TODO			both configurations contain the datarouter policy
-//TODO			both configurations already have all policies cached in the PDPs config directory
-//TODO		RestLoadTest started with the Datarouter test requests, 5 threads, no interval
-//TODO	With that configuration this code (without the synchronized) throws a NullPointerException
-//TODO	within a few seconds.
-//
-synchronized(pdpEngineLock) {
-	myEngine = this.pdpEngine;
-			try {
-				PolicyList.clearPolicyList();
-				lTimeStart = System.currentTimeMillis();		
-				pdpResponse	= myEngine.decide(pdpRequest);
-				lTimeEnd = System.currentTimeMillis();
-			} catch (PDPException e) {
-				String message = "Exception during decide: " + e.getMessage();
-				logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + message);
-				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
-				loggingContext.transactionEnded();
-				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-				im.endTransaction();
-				return;
+			//TODO - Make this unnecessary
+			//TODO	It seems that the PDP Engine is not thread-safe, so when a configuration change occurs in the middle of processing
+			//TODO	a PEP Request, that Request fails (it throws a NullPointerException in the decide() method).
+			//TODO	Using synchronize will slow down processing of PEP requests, possibly by a significant amount.
+			//TODO	Since configuration changes are rare, it would be A Very Good Thing if we could eliminate this sychronized block.
+			//TODO
+			//TODO	This problem was found by starting one PDP then
+			//TODO		RestLoadTest switching between 2 configurations, 1 second apart
+			//TODO			both configurations contain the datarouter policy
+			//TODO			both configurations already have all policies cached in the PDPs config directory
+			//TODO		RestLoadTest started with the Datarouter test requests, 5 threads, no interval
+			//TODO	With that configuration this code (without the synchronized) throws a NullPointerException
+			//TODO	within a few seconds.
+			//
+			synchronized(pdpEngineLock) {
+				myEngine = XACMLPdpServlet.pdpEngine;
+				try {
+					PolicyList.clearPolicyList();
+					lTimeStart = System.currentTimeMillis();		
+					pdpResponse	= myEngine.decide(pdpRequest);
+					lTimeEnd = System.currentTimeMillis();
+				} catch (PDPException e) {
+					String message = "Exception during decide: " + e.getMessage();
+					logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + message);
+					PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
+					loggingContext.transactionEnded();
+					PolicyLogger.audit("Transaction Failed - See Error.log");
+					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+					im.endTransaction();
+					return;
+				}
 			}
-}
 			monitor.computeLatency(lTimeEnd - lTimeStart);	
 			requestLogger.info(lTimeStart + "=" + incomingRequestString);
 			for(String policy : PolicyList.getpolicyList()){
 				monitor.policyCountAdd(policy, 1);
 			}
-			
-			
+
+
 			logger.info("PolicyID triggered in Request: " + PolicyList.getpolicyList());
-			
+
 			//need to go through the list and find out if the value is unique and then add it other wise 
-//			monitor.policyCountAdd(PolicyList.getpolicyList(), 1);
-	
+			//			monitor.policyCountAdd(PolicyList.getpolicyList(), 1);
+
 			if (logger.isDebugEnabled()) {
 				logger.debug("Request time: " + (lTimeEnd - lTimeStart) + "ms");
 			}
@@ -1006,7 +1030,7 @@ synchronized(pdpEngineLock) {
 					outgoingResponseString = JSONResponse.toString(pdpResponse, false);
 				}
 			} else if (	contentType.getMimeType().equalsIgnoreCase(ContentType.APPLICATION_XML.getMimeType()) ||
-						contentType.getMimeType().equalsIgnoreCase("application/xacml+xml")) {
+					contentType.getMimeType().equalsIgnoreCase("application/xacml+xml")) {
 				//
 				// Get it as a String. This is not very efficient but we need to log our
 				// results for auditing.
@@ -1025,11 +1049,11 @@ synchronized(pdpEngineLock) {
 			if (outgoingResponseString.contains("NotApplicable") || outgoingResponseString.contains("Decision not a Permit")){
 				monitor.pdpEvaluationNA();
 			}
-			
+
 			if (outgoingResponseString.contains("Permit") && !outgoingResponseString.contains("Decision not a Permit")){
 				monitor.pdpEvaluationPermit();
 			}
-			
+
 			if (outgoingResponseString.contains("Deny")){
 				monitor.pdpEvaluationDeny();
 			}
@@ -1049,16 +1073,16 @@ synchronized(pdpEngineLock) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 			return;
 		}
-		
+
 		monitor.pdpEvaluationSuccess();
 		response.setStatus(HttpServletResponse.SC_OK);
 
 		loggingContext.transactionEnded();
 		auditLogger.info("Success");
-    	PolicyLogger.audit("Success");
+		PolicyLogger.audit("Success");
 
-}
-	
+	}
+
 	/*
 	 * Added for Authorizing the PEP Requests for Environment check. 
 	 */
@@ -1084,24 +1108,25 @@ synchronized(pdpEngineLock) {
 		//
 		try {
 			// variable not used, but constructor has needed side-effects so don't remove:
+			@SuppressWarnings("unused")
 			ECOMPLoggingContext loggingContext = new ECOMPLoggingContext(baseLoggingContext);
 			while (! this.configThreadTerminate) {
 				PutRequest request = XACMLPdpServlet.queue.take();
 				StdPDPStatus newStatus = new StdPDPStatus();
 
-//TODO - This is related to the problem discussed in the doPost() method about the PDPEngine not being thread-safe.
-//TODO	See that discussion, and when the PDPEngine is made thread-safe it should be ok to move the loadEngine out of
-//TODO	the synchronized block.
-//TODO	However, since configuration changes should be rare we may not care about changing this.
-PDPEngine newEngine = null;
+				//TODO - This is related to the problem discussed in the doPost() method about the PDPEngine not being thread-safe.
+				//TODO	See that discussion, and when the PDPEngine is made thread-safe it should be ok to move the loadEngine out of
+				//TODO	the synchronized block.
+				//TODO	However, since configuration changes should be rare we may not care about changing this.
+				PDPEngine newEngine = null;
 				synchronized(pdpStatusLock) {
 					XACMLPdpServlet.status.setStatus(Status.UPDATING_CONFIGURATION);
-newEngine = XACMLPdpLoader.loadEngine(newStatus, request.policyProperties, request.pipConfigProperties);
+					newEngine = XACMLPdpLoader.loadEngine(newStatus, request.policyProperties, request.pipConfigProperties);
 				}
-//				PDPEngine newEngine = XACMLPdpLoader.loadEngine(newStatus, request.policyProperties, request.pipConfigProperties);
+				//				PDPEngine newEngine = XACMLPdpLoader.loadEngine(newStatus, request.policyProperties, request.pipConfigProperties);
 				if (newEngine != null) {
 					synchronized(XACMLPdpServlet.pdpEngineLock) {
-						this.pdpEngine = newEngine;
+						XACMLPdpServlet.pdpEngine = newEngine;
 						try {
 							logger.info("Saving configuration.");
 							if (request.policyProperties != null) {
@@ -1134,5 +1159,17 @@ newEngine = XACMLPdpLoader.loadEngine(newStatus, request.policyProperties, reque
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, "interrupted");
 		}
 	}	
+
+	public static PDPEngine getPDPEngine(){
+		PDPEngine myEngine = null;
+		synchronized(pdpEngineLock) {
+			myEngine = XACMLPdpServlet.pdpEngine;
+		}
+		return myEngine;
+	}
+
+	public static Constructor<?> getCreateUpdatePolicyConstructor(){
+		return createUpdatePolicyConstructor;
+	}
 
 }

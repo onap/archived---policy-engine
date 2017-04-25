@@ -26,9 +26,7 @@ import java.util.List;
 import org.junit.*;
 import org.openecomp.policy.api.NotificationHandler;
 import org.openecomp.policy.api.NotificationScheme;
-import org.openecomp.policy.std.AutoClientEnd;
 import org.openecomp.policy.std.AutoClientUEB;
-import org.openecomp.policy.std.StdPolicyEngine;
 
 import static org.junit.Assert.*;
 
@@ -50,9 +48,11 @@ public class AutoClientUEBTest {
 	public void testAutoClientUEB_1()
 		throws Exception {
 		String url = "";
-		List<String> uebURLList = new LinkedList();
+		String apiKey = "";
+		String apiSecret = "";
+		List<String> uebURLList = new LinkedList<String>();
 
-		AutoClientUEB result = new AutoClientUEB(url, uebURLList);
+		AutoClientUEB result = new AutoClientUEB(url, uebURLList, apiKey, apiSecret);
 
 		// add additional test code here
 		// An unexpected exception was thrown in user code while executing this test:
@@ -129,7 +129,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testIsRunning_1()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(), "", "");
 		fixture.isRunning = true;
 
 		boolean result = fixture.isRunning();
@@ -150,7 +150,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_1()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(), "", "");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -170,7 +170,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_2()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(), "", "");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -190,7 +190,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_3()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(), "", "");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -210,7 +210,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_4()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(), "", "");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -230,7 +230,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_5()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -250,7 +250,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_6()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -270,7 +270,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_7()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -290,7 +290,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_8()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -310,7 +310,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_9()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -330,7 +330,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_10()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -350,7 +350,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_11()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -370,7 +370,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_12()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -390,7 +390,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_13()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -410,7 +410,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_14()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -430,7 +430,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_15()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -450,7 +450,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testRun_16()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.run();
@@ -470,7 +470,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testSetAuto_1()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 		NotificationScheme scheme = NotificationScheme.AUTO_ALL_NOTIFICATIONS;
 		NotificationHandler handler = null;
@@ -511,7 +511,7 @@ public class AutoClientUEBTest {
 	@Test
 	public void testTerminate_1()
 		throws Exception {
-		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList());
+		AutoClientUEB fixture = new AutoClientUEB("", new LinkedList<String>(),"","");
 		fixture.isRunning = true;
 
 		fixture.terminate();
@@ -533,12 +533,10 @@ public class AutoClientUEBTest {
 	public void setUp()
 		throws Exception {
 		// add set up code here
-		StdPolicyEngine policyEngine = new StdPolicyEngine("Test/config_pass.properties");
 		List<String> urlList = new LinkedList<String>();
 		urlList.add("test2.com");
-		AutoClientUEB client = new AutoClientUEB("test.com", urlList);
+		AutoClientUEB client = new AutoClientUEB("test.com", urlList, "testKey", "testSecret");
 		NotificationHandler handler = null;
-		//AutoClientEnd.setAuto(NotificationScheme.AUTO_ALL_NOTIFICATIONS, handler);
 		client.setAuto(NotificationScheme.AUTO_ALL_NOTIFICATIONS, handler);
 	}
 

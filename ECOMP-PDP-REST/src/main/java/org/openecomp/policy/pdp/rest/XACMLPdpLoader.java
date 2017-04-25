@@ -73,14 +73,14 @@ import com.google.common.base.Splitter;
  *
  */
 public class XACMLPdpLoader {
-	private static final Logger logger = FlexLogger.getLogger(XACMLPdpLoader.class);
+	private static final Logger LOGGER = FlexLogger.getLogger(XACMLPdpLoader.class);
 	private static NotificationController notificationController = new NotificationController();
 	private static final Long notifyDelay = (long) XACMLPdpServlet.getNotificationDelay();
 
 
 	public static synchronized PDPEngine loadEngine(StdPDPStatus status,
 			Properties policyProperties, Properties pipProperties) {
-		logger.info("loadEngine: " + policyProperties + " " + pipProperties);
+		LOGGER.info("loadEngine: " + policyProperties + " " + pipProperties);
 		//
 		// First load our policies
 		//
@@ -112,19 +112,15 @@ public class XACMLPdpLoader {
 			// Validate the policies
 			//
 			XACMLPdpLoader.validatePolicies(policyProperties, status);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Status: " + status);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Status: " + status);
 			}
 		} catch (ConcurrentModificationException e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e.getMessage());
-			// TODO:EELF Cleanup - Remove logger
-			//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "");
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e.getMessage());
 		} catch (Exception e) {
 			String error = "Failed to load Policy Cache properties file: "
 					+ e.getMessage();
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + error, e);
-			// TODO:EELF Cleanup - Remove logger
-			//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, error);
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + error, e);
 			status.addLoadError(error);
 			status.setStatus(PDPStatus.Status.LOAD_ERRORS);
 		}
@@ -148,15 +144,13 @@ public class XACMLPdpLoader {
 			// Validate our PIP configurations
 			//
 			XACMLPdpLoader.validatePipConfiguration(pipProperties, status);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Status: " + status);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Status: " + status);
 			}
 		} catch (Exception e) {
 			String error = "Failed to load/validate Pip Config properties file: "
 					+ e.getMessage();
-			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + error, e);
-			// TODO:EELF Cleanup - Remove logger
-			//PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, error);
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + error, e);
 			status.addLoadError(XACMLErrorConstants.ERROR_PROCESS_FLOW + error);
 			status.setStatus(PDPStatus.Status.LOAD_ERRORS);
 		}
@@ -164,9 +158,7 @@ public class XACMLPdpLoader {
 		// Were they validated?
 		//
 		if (status.getStatus() == Status.LOAD_ERRORS) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW  +"there were load errors");
-			// TODO:EELF Cleanup - Remove logger
-			//PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"there were load errors");
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW  +"there were load errors");
 			return null;
 		}
 		//
@@ -178,11 +170,9 @@ public class XACMLPdpLoader {
 		// Dump ALL our properties that we are trying to load
 		//
 		try {
-			logger.info(XACMLProperties.getProperties().toString());
+			LOGGER.info(XACMLProperties.getProperties().toString());
 		} catch (IOException e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to get XACML Properties", e);
-			// TODO:EELF Cleanup - Remove logger
-			//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Failed to get XACML Properties");
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to get XACML Properties", e);
 		}
 		//
 		// Now load the PDP engine
@@ -192,13 +182,11 @@ public class XACMLPdpLoader {
 		try {
 			factory = PDPEngineFactory.newInstance();
 			engine = factory.newEngine();
-			logger.info("Loaded new PDP engine.");
+			LOGGER.info("Loaded new PDP engine.");
 			status.setStatus(Status.UP_TO_DATE);
 		} catch (FactoryException e) {
 			String error = "Failed to create new PDP Engine";
-			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +error, e);
-			// TODO:EELF Cleanup - Remove logger
-			//PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, error);
+			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +error, e);
 			status.addLoadError(error);
 		}
 		// Notification will be Sent Here.
@@ -215,9 +203,7 @@ public class XACMLPdpLoader {
 					Thread.sleep(notifyDelay);
 					NotificationController.sendNotification();
 				}catch(Exception e){
-					logger.error(XACMLErrorConstants.ERROR_UNKNOWN + e);
-					// TODO:EELF Cleanup - Remove logger
-					//PolicyLogger.error(MessageCodes.ERROR_UNKNOWN, e, "");
+					LOGGER.error(XACMLErrorConstants.ERROR_UNKNOWN + e);
 				}
 			}
 		};
@@ -240,14 +226,13 @@ public class XACMLPdpLoader {
 		for (String id : refPolicies) {
 			loadPolicy(properties, status, id, false);
 		}
-		logger.info("Loaded " + status.getLoadedPolicies().size()
+		LOGGER.info("Loaded " + status.getLoadedPolicies().size()
 				+ " policies, failed to load "
 				+ status.getFailedPolicies().size() + " policies, "
 				+ status.getLoadedRootPolicies().size() + " root policies");
-		// TODO Notification Controller is here..
 		notificationController.check(status, policyContainer);
 		if (status.getLoadedRootPolicies().size() == 0) {
-			logger.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW +"NO ROOT POLICIES LOADED!!!  Cannot serve PEP Requests.");
+			LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW +"NO ROOT POLICIES LOADED!!!  Cannot serve PEP Requests.");
 			status.addLoadWarning("NO ROOT POLICIES LOADED!!!  Cannot serve PEP Requests.");
 		}
 		policyContainer.clear();
@@ -271,12 +256,12 @@ public class XACMLPdpLoader {
 				} catch (Exception e){
 					// This Happens if a any issue with the error policyFile. Lets remove it. 
 					try {
-						logger.error("Corrupted policy file, deleting: " + location);
+						LOGGER.error("Corrupted policy file, deleting: " + location);
 						Files.delete(Paths.get(location));
 						properties.remove(id + ".file");
 						rougeFile = true;
 					} catch (IOException e1) {
-						logger.error(e1);
+						LOGGER.error(e1);
 					}
 				}
 			}
@@ -301,7 +286,6 @@ public class XACMLPdpLoader {
 							String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
 							locationURI = URI.create(papUrls.getUrl(PapUrlResolver.extractIdFromUrl(location)));
 							URL url = locationURI.toURL();
-							//FIXME: modify me
 							URLConnection urlConnection = null;
 							try{
 								urlConnection = url.openConnection();
@@ -337,13 +321,13 @@ public class XACMLPdpLoader {
 								policy = DOMPolicyDef.load(fis);
 							}catch(Exception e){
 								try {
-									logger.error("Corrupted policy file, deleting: " + location);
+									LOGGER.error("Corrupted policy file, deleting: " + location);
 									Files.delete(outFile);
 									error = true;
 									errorCount++;
 									break;
 								} catch (IOException e1) {
-									logger.error(e1);
+									LOGGER.error(e1);
 								}
 							}
 							//
@@ -360,25 +344,20 @@ public class XACMLPdpLoader {
 			if (policy != null) {
 				status.addLoadedPolicy(new StdPDPPolicy(id, isRoot,
 						locationURI, properties));
-				logger.info("Loaded policy: " + policy.getIdentifier()
+				LOGGER.info("Loaded policy: " + policy.getIdentifier()
 						+ " version: " + policy.getVersion().stringValue());
 				// Sending the policy objects to the Notification Controller.
 				policyContainer.put(id, policy);
 			} else {
 				String error = "Failed to load policy " + location;
-				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + error);
-				// TODO:EELF Cleanup - Remove logger
-				//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, error);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + error);
 				status.setStatus(PDPStatus.Status.LOAD_ERRORS);
 				status.addLoadError(error);
 				status.addFailedPolicy(new StdPDPPolicy(id, isRoot));
 			}
 		} catch (Exception e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW +"Failed to load policy '" + id + "' from location '"
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW +"Failed to load policy '" + id + "' from location '"
 					+ location + "'", e);
-			// TODO:EELF Cleanup - Remove logger
-			//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Failed to load policy '" + id + "' from location '"
-			//		+ location + "'");
 			status.setStatus(PDPStatus.Status.LOAD_ERRORS);
 			status.addFailedPolicy(new StdPDPPolicy(id, isRoot));
 			//
@@ -389,18 +368,13 @@ public class XACMLPdpLoader {
 				// Let's remove it
 				//
 				try {
-					logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Corrupted policy file, deleting: " + location);
-					// TODO:EELF Cleanup - Remove logger
-					//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, "Corrupted policy file, deleting: " + location);
+					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Corrupted policy file, deleting: " + location);
 					Files.delete(Paths.get(location));
 					
 				} catch (IOException e1) {
-					logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e1);
-					// TODO:EELF Cleanup - Remove logger
-					//PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e1, "");
+					LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e1);
 				}
 			}
-			//throw new PAPException("Failed to load policy '" + id	+ "' from location '" + location + "'");
 		}
 	}
 
@@ -419,24 +393,20 @@ public class XACMLPdpLoader {
 			// Check for this, although it should always return something
 			//
 			if (finder == null) {
-				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "pip finder factory returned a null engine.");
-				// TODO:EELF Cleanup - Remove logger
-				//PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, "pip finder factory returned a null engine.");
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "pip finder factory returned a null engine.");
 				throw new PIPException("Could not create PIP Finder");
 			} else {
-				logger.info("Loaded PIP finder");
+				LOGGER.info("Loaded PIP finder");
 			}
 			for (PIPEngine engine : finder.getPIPEngines()) {
-				logger.info("Configured PIP Engine: " + engine.getName());
+				LOGGER.info("Configured PIP Engine: " + engine.getName());
 				StdPDPPIPConfig config = new StdPDPPIPConfig();
 				config.setName(engine.getName());
 				status.addLoadedPipConfig(config);
 			}
 		} catch (FactoryException | PIPException e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "validate PIP configuration failed: "
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "validate PIP configuration failed: "
 					+ e.getLocalizedMessage());
-			// TODO:EELF Cleanup - Remove logger
-			//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW,  e.getLocalizedMessage(), "validate PIP configuration failed");
 			status.addLoadError(e.getLocalizedMessage());
 			status.setStatus(Status.LOAD_ERRORS);
 			throw new PAPException(e);
@@ -486,7 +456,7 @@ public class XACMLPdpLoader {
 					//
 					policyExists = Files.exists(Paths.get(propLocation));
 					if (policyExists == false) {
-						logger.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Policy file " + policy + " expected at "
+						LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Policy file " + policy + " expected at "
 								+ propLocation + " does NOT exist.");
 					}
 				}
@@ -509,7 +479,7 @@ public class XACMLPdpLoader {
 						// Set the property so the PDP engine doesn't have
 						// to pull it from the URL but rather the FILE.
 						//
-						logger.info("Policy does exist: "
+						LOGGER.info("Policy does exist: "
 								+ outFile.toAbsolutePath().toString());
 						props.setProperty(policy
 								+ StdPolicyFinderFactory.PROP_FILE, outFile
@@ -546,7 +516,7 @@ public class XACMLPdpLoader {
 									// Create the URL
 									//
 									url = new URL(papUrls.getUrl(PapUrlResolver.extractIdFromUrl(propLocation)));
-									logger.info("Pulling " + url.toString());
+									LOGGER.info("Pulling " + url.toString());
 									//
 									// Open the connection
 									//
@@ -566,7 +536,7 @@ public class XACMLPdpLoader {
 									//
 									// Now save it in the properties as a .file
 									//
-									logger.info("Pulled policy: "
+									LOGGER.info("Pulled policy: "
 											+ outFile.toAbsolutePath().toString());
 									props.setProperty(policy
 											+ StdPolicyFinderFactory.PROP_FILE,
@@ -580,36 +550,23 @@ public class XACMLPdpLoader {
 								} catch (Exception e) {
 									papUrls.failed();
 									if (e instanceof MalformedURLException) {
-										logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Policy '"
+										LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Policy '"
 												+ policy
 												+ "' had bad URL in new configuration, URL='"
 												+ propLocation + "'");
-										// TODO:EELF Cleanup - Remove logger
-										//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW,  "Policy '"
-										//		+ policy
-										//		+ "' had bad URL in new configuration, URL='"
-										//		+ propLocation + "'");
 										
 									} else {
-										logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while retrieving policy "
+										LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while retrieving policy "
 												+ policy
 												+ " from URL "
 												+ url.toString() + ", e=" + e);
-										// TODO:EELF Cleanup - Remove logger
-										//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Error while retrieving policy "
-										//		+ policy
-										//		+ " from URL "
-										//		+ url.toString());
 									}
 								}
 								papUrls.getNext();
 							}
 						} else {
-							logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW +  "Policy " + policy
+							LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW +  "Policy " + policy
 									+ " does NOT exist and does NOT have a URL");
-							// TODO:EELF Cleanup - Remove logger
-							//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW,  "Policy " + policy
-							//		+ " does NOT exist and does NOT have a URL");
 						}
 					}
 				}
@@ -623,7 +580,7 @@ public class XACMLPdpLoader {
 		Path policyProperties = Paths.get(config.toAbsolutePath().toString(),
 				"xacml.policy.properties");
 		if (Files.notExists(policyProperties)) {
-			logger.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW +  policyProperties.toAbsolutePath().toString()
+			LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW +  policyProperties.toAbsolutePath().toString()
 					+ " does NOT exist.");
 			//
 			// Try to create the file
@@ -631,11 +588,8 @@ public class XACMLPdpLoader {
 			try {
 				Files.createFile(policyProperties);
 			} catch (IOException e) {
-				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create policy properties file: "
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create policy properties file: "
 						+ policyProperties.toAbsolutePath().toString());
-				// TODO:EELF Cleanup - Remove logger
-				//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW,  "Failed to create policy properties file: "
-				//		+ policyProperties.toAbsolutePath().toString());
 				throw new PAPException(
 						"Failed to create policy properties file: "
 								+ policyProperties.toAbsolutePath().toString());
@@ -649,7 +603,7 @@ public class XACMLPdpLoader {
 		Path pipConfigProperties = Paths.get(
 				config.toAbsolutePath().toString(), "xacml.pip.properties");
 		if (Files.notExists(pipConfigProperties)) {
-			logger.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + pipConfigProperties.toAbsolutePath().toString()
+			LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + pipConfigProperties.toAbsolutePath().toString()
 					+ " does NOT exist.");
 			//
 			// Try to create the file
@@ -657,11 +611,8 @@ public class XACMLPdpLoader {
 			try {
 				Files.createFile(pipConfigProperties);
 			} catch (IOException e) {
-				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create pip properties file: "
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create pip properties file: "
 						+ pipConfigProperties.toAbsolutePath().toString());
-				// TODO:EELF Cleanup - Remove logger
-				//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW,  "Failed to create pip properties file: "
-						//+ pipConfigProperties.toAbsolutePath().toString());
 				throw new PAPException("Failed to create pip properties file: "
 						+ pipConfigProperties.toAbsolutePath().toString());
 			}
@@ -673,18 +624,15 @@ public class XACMLPdpLoader {
 		Path config = Paths.get(XACMLProperties
 				.getProperty(XACMLRestProperties.PROP_PDP_CONFIG));
 		if (Files.notExists(config)) {
-			logger.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + config.toAbsolutePath().toString() + " does NOT exist.");
+			LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + config.toAbsolutePath().toString() + " does NOT exist.");
 			//
 			// Try to create the directory
 			//
 			try {
 				Files.createDirectories(config);
 			} catch (IOException e) {
-				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create config directory: "
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create config directory: "
 						+ config.toAbsolutePath().toString(), e);
-				// TODO:EELF Cleanup - Remove logger
-				//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Failed to create config directory: "
-						//+ config.toAbsolutePath().toString());
 				throw new PAPException("Failed to create config directory: "
 						+ config.toAbsolutePath().toString());
 			}

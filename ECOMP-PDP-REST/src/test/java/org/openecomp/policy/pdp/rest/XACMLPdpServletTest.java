@@ -21,7 +21,6 @@
 package org.openecomp.policy.pdp.rest;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,31 +35,26 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.lang.math.RandomUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.openecomp.policy.pdp.rest.XACMLPdpServlet;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletConfig;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
 import org.openecomp.policy.common.im.AdministrativeStateException;
 import org.openecomp.policy.common.im.IntegrityMonitor;
 import org.openecomp.policy.common.im.StandbyStatusException;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletConfig;
 
-import com.att.research.xacml.util.XACMLProperties;
 import com.mockrunner.mock.web.MockServletInputStream;
-import org.openecomp.policy.common.logging.flexlogger.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(IntegrityMonitor.class)	// so PowerMock can mock static method of IntegrityMonitor
 public class XACMLPdpServletTest extends TestCase{
-	private static Logger logger	= FlexLogger.getLogger(XACMLPdpServletTest.class);
+	private static Logger LOGGER	= FlexLogger.getLogger(XACMLPdpServletTest.class);
 	
 	private List<String> headers = new ArrayList<String>();
 	
@@ -89,14 +83,10 @@ public class XACMLPdpServletTest extends TestCase{
     	try {
 			Mockito.when(httpServletResponse.getOutputStream()).thenReturn(mockOutput);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			fail();
 		}
 
-    	
-    	//when(httpServletResponse.getOutputStream()).thenReturn(servletOutputStream);
     	servletConfig = Mockito.mock(MockServletConfig.class);
-    	//Mockito.when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
     	//servletConfig
     	Mockito.when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
     	pdpServlet = new XACMLPdpServlet();
@@ -120,7 +110,6 @@ public class XACMLPdpServletTest extends TestCase{
 			// when IntegrityMonitor.getInstance is called, return the mock object
 			PowerMockito.when(IntegrityMonitor.getInstance(Mockito.anyString(), Mockito.any(Properties.class))).thenReturn(im);
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -133,13 +122,11 @@ public class XACMLPdpServletTest extends TestCase{
     }
 	
 	public void testInit(){
-		logger.info("XACMLPdpServletTest - testInit");
+		LOGGER.info("XACMLPdpServletTest - testInit");
 		try {	
 			pdpServlet.init(servletConfig);
 			assertTrue(true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println("Unexpected exception in testInit");
 			e.printStackTrace();
 			fail();
 			
@@ -148,7 +135,7 @@ public class XACMLPdpServletTest extends TestCase{
 	}
 	
 	public void testDoGetNoTypeError(){
-		logger.info("XACMLPdpServletTest - testDoGetNoTypeError");
+		LOGGER.info("XACMLPdpServletTest - testDoGetNoTypeError");
 		try{
 			pdpServlet.init(servletConfig);
 			pdpServlet.doGet(httpServletRequest, httpServletResponse);
@@ -162,14 +149,13 @@ public class XACMLPdpServletTest extends TestCase{
 	}
 	
 	public void testDoGetConfigType(){
-		logger.info("XACMLPdpServletTest - testDoGetConfigType");
+		LOGGER.info("XACMLPdpServletTest - testDoGetConfigType");
 		Mockito.when(httpServletRequest.getParameter("type")).thenReturn("config");	
 
 		try{	
 			pdpServlet.init(servletConfig);
 			pdpServlet.doGet(httpServletRequest, httpServletResponse);
 			Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-			//Mockito.verify(httpServletResponse).sendError(400, "Failed to copy Property file");
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoGetConfigType");
@@ -181,7 +167,7 @@ public class XACMLPdpServletTest extends TestCase{
 	
 	
 	public void testDoGetTypeHb(){
-		logger.info("XACMLPdpServletTest - testDoGetTypeHb");
+		LOGGER.info("XACMLPdpServletTest - testDoGetTypeHb");
 		try{
 			Mockito.when(httpServletRequest.getParameter("type")).thenReturn("hb");
 			pdpServlet.init(servletConfig);
@@ -195,7 +181,7 @@ public class XACMLPdpServletTest extends TestCase{
 		}
 	}
 	public void testDoGetTypeStatus(){
-		logger.info("XACMLPdpServletTest - testDoGetTypeStatus");
+		LOGGER.info("XACMLPdpServletTest - testDoGetTypeStatus");
 		try{
 			Mockito.when(httpServletRequest.getParameter("type")).thenReturn("Status");
 			pdpServlet.init(servletConfig);
@@ -210,12 +196,10 @@ public class XACMLPdpServletTest extends TestCase{
 	}	
 	
 	public void testDoPost(){
-		logger.info("XACMLPdpServletTest - testDoPost");
+		LOGGER.info("XACMLPdpServletTest - testDoPost");
 		try{
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPost(httpServletRequest, httpServletResponse);
-			//response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no content-type given");
-			//Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "no content-type given");
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPost");
@@ -225,15 +209,13 @@ public class XACMLPdpServletTest extends TestCase{
 	}
 	
 	public void testDoPostToLong(){
-		logger.info("XACMLPdpServletTest - testDoPostToLong");
+		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
 		try{
 			Mockito.when(httpServletRequest.getContentType()).thenReturn("stuff");
 			Mockito.when(httpServletRequest.getContentLength()).thenReturn(32768);
 			
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPost(httpServletRequest, httpServletResponse);
-			//response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no content-type given");
-			//Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Content-Length larger than server will accept.");
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPostToLong");
@@ -243,15 +225,13 @@ public class XACMLPdpServletTest extends TestCase{
 	}	
 	
 	public void testDoPostContentLengthNegative(){
-		logger.info("XACMLPdpServletTest - testDoPostToLong");
+		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
 		try{
 			Mockito.when(httpServletRequest.getContentType()).thenReturn("stuff");
 			Mockito.when(httpServletRequest.getContentLength()).thenReturn(-1);
 			
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPost(httpServletRequest, httpServletResponse);
-			//response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no content-type given");
-			//Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Content-Length is negative");
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPostContentLengthNegative");
@@ -261,15 +241,13 @@ public class XACMLPdpServletTest extends TestCase{
 	}	
 	
 	public void testDoPostContentTypeNonValid(){
-		logger.info("XACMLPdpServletTest - testDoPostToLong");
+		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
 		try{
 			Mockito.when(httpServletRequest.getContentType()).thenReturn(";");
 			Mockito.when(httpServletRequest.getContentLength()).thenReturn(30768);
 			
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPost(httpServletRequest, httpServletResponse);
-			//response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no content-type given");
-			//Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Parsing Content-Type: ;, error=Invalid content type: ;");
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPostContentTypeNonValid");
@@ -279,15 +257,13 @@ public class XACMLPdpServletTest extends TestCase{
 	}	
 	
 	public void testDoPostContentTypeConfigurationError(){
-		logger.info("XACMLPdpServletTest - testDoPostToLong");
+		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
 		try{
 			Mockito.when(httpServletRequest.getContentType()).thenReturn("stuff");
 			Mockito.when(httpServletRequest.getContentLength()).thenReturn(30768);
 			
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPost(httpServletRequest, httpServletResponse);
-			//response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no content-type given");
-			//Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "unsupported content typestuff");
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPostContentTypeConfigurationError");
@@ -297,7 +273,7 @@ public class XACMLPdpServletTest extends TestCase{
 	}	
 	
 	public void testDoPutCacheEmpty(){
-		logger.info("XACMLPdpServletTest - testDoPutCacheEmpty");
+		LOGGER.info("XACMLPdpServletTest - testDoPutCacheEmpty");
 		mockInput = Mockito.mock(ServletInputStream.class);
 		
 		try{
@@ -316,7 +292,7 @@ public class XACMLPdpServletTest extends TestCase{
 	}
 	
 	public void testDoPutConfigPolicies(){
-		logger.info("XACMLPdpServletTest - testDoPutConfigPolicies");
+		LOGGER.info("XACMLPdpServletTest - testDoPutConfigPolicies");
 		byte[] b = new byte[20];
 		new Random().nextBytes(b);
 		
@@ -328,10 +304,6 @@ public class XACMLPdpServletTest extends TestCase{
 			Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPut(httpServletRequest, httpServletResponse);
-			/*
-			 * Started failing 8/17/16
-			 * Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Missing property: xacml.rootPolicies");
-			 */
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPutConfigPolicies");
@@ -341,7 +313,7 @@ public class XACMLPdpServletTest extends TestCase{
 	}	
 	
 	public void testDoPutToLong(){
-		logger.info("XACMLPdpServletTest - testDoPutToLong");
+		LOGGER.info("XACMLPdpServletTest - testDoPutToLong");
 		try{
 			Mockito.when(httpServletRequest.getParameter("cache")).thenReturn("policies");
 			
@@ -350,7 +322,6 @@ public class XACMLPdpServletTest extends TestCase{
 			
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPut(httpServletRequest, httpServletResponse);
-			//response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no content-type given");
 			Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Content-Length larger than server will accept.");
 			assertTrue(true);
 		}catch (Exception e){
@@ -361,7 +332,7 @@ public class XACMLPdpServletTest extends TestCase{
 	}	
 	
 	public void testDoPutInvalidContentType(){
-		logger.info("XACMLPdpServletTest - testDoPutToLong");
+		LOGGER.info("XACMLPdpServletTest - testDoPutToLong");
 		try{
 			Mockito.when(httpServletRequest.getParameter("cache")).thenReturn("policies");
 			
@@ -370,7 +341,6 @@ public class XACMLPdpServletTest extends TestCase{
 			
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPut(httpServletRequest, httpServletResponse);
-			//response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no content-type given");
 			Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid cache: 'policies' or content-type: 'text/json'");
 			assertTrue(true);
 		}catch (Exception e){
@@ -381,7 +351,7 @@ public class XACMLPdpServletTest extends TestCase{
 	}		
 	
 	public void testDestroy(){
-		logger.info("XACMLPdpServletTest - testDestroy");
+		LOGGER.info("XACMLPdpServletTest - testDestroy");
 		
 		try{
 			pdpServlet.init(servletConfig);

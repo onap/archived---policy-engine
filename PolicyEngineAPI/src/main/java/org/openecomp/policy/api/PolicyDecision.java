@@ -20,6 +20,8 @@
 
 package org.openecomp.policy.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * Enumeration of PolicyDecision that can be returned as a part of 
  * {@link org.openecomp.policy.api.DecisionResponse} getDecision().
@@ -54,4 +56,13 @@ public enum PolicyDecision {
 	public String toString(){
 		return this.name;
 	}
+	@JsonCreator
+    public static PolicyDecision create (String value) {
+        for(PolicyDecision type: values()){
+            if(type.toString().equals(value) || type.equals(PolicyDecision.valueOf(value))){
+                return type;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
 }

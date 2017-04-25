@@ -35,26 +35,22 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -80,7 +76,6 @@ public class GroupEntity implements Serializable {
 
 	@Id
 	@Column (name="groupKey", nullable=false)
-	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seqGroup")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long groupKey;
 	
@@ -94,9 +89,8 @@ public class GroupEntity implements Serializable {
 	@Column(name="version")
 	private int version;
 	
-	@ManyToMany
-	@JoinTable(name="PolicyGroupEntity",joinColumns={@JoinColumn(name="groupKey", referencedColumnName="groupKey")},
-	inverseJoinColumns={@JoinColumn(name="policyId",referencedColumnName="policyId")})
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name="PolicyGroupEntity",joinColumns={@JoinColumn(name="groupKey")}, inverseJoinColumns={@JoinColumn(name="policyId")})
 	@JsonManagedReference
 	private List<PolicyEntity> policies;
 	

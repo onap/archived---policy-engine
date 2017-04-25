@@ -21,7 +21,6 @@
 package org.openecomp.policyEngine;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,10 +30,8 @@ import java.util.UUID;
 import org.openecomp.policy.api.AttributeType;
 import org.openecomp.policy.api.PolicyChangeResponse;
 import org.openecomp.policy.api.PolicyClass;
-import org.openecomp.policy.api.PolicyConfigType;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyParameters;
-import org.openecomp.policy.api.PolicyType;
 
 public class ActionPolicyClient {
 	static Boolean isEdit = true;
@@ -59,9 +56,6 @@ public class ActionPolicyClient {
 	        attributes.put(AttributeType.MATCHING, configAttributes);
 	        policyParameters.setAttributes(attributes);
 
-	        //Set the Rule Algorithm
-	        // Map<String, Map<String, Map<String, String>>> translated to Map<Dynamic Label, Map<Field1,Map<Combo Operator, Field2>>>
-	        Map<String, Map<String,Map<String,String>>> ruleAlgorithm = new HashMap<String, Map<String,Map<String,String>>>();
 	        
 			List<String> dynamicRuleAlgorithmLabels = new LinkedList<String>();
 			List<String> dynamicRuleAlgorithmFunctions = new LinkedList<String>();

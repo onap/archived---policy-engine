@@ -32,7 +32,6 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -53,30 +52,25 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openecomp.policy.pap.xacml.rest.adapters.PolicyRestAdapter;
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
-
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import com.att.research.xacml.std.IdentifierImpl;
-
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger; 
 
 public class ConfigPolicy extends Policy {
 
 	/**
 	 * Config Fields
 	 */
-	private static final Logger logger = FlexLogger.getLogger(ConfigPolicy.class);
+	private static final Logger LOGGER = FlexLogger.getLogger(ConfigPolicy.class);
 
 	public static final String JSON_CONFIG = "JSON";
 	public static final String XML_CONFIG = "XML";
@@ -92,64 +86,24 @@ public class ConfigPolicy extends Policy {
 	public ConfigPolicy(PolicyRestAdapter policyAdapter){
 		this.policyAdapter = policyAdapter;
 	}
-
+	
 	// Saving the Configurations file at server location for config policy.
 	protected void saveConfigurations(String policyName) {
-		final Path gitPath = Paths.get(policyAdapter.getUserGitPath().toString());
-		String policyDir = policyAdapter.getParentPath().toString();
-		int startIndex = policyDir.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-		policyDir = policyDir.substring(startIndex, policyDir.length());
-		logger.info("print the main domain value"+policyDir);
-		String path = policyDir.replace('\\', '.');
-		if(path.contains("/")){
-			path = policyDir.replace('/', '.');
-			logger.info("print the path:" +path);
-		}
-		
 		try {
-			File file;
-			String configFileName = getConfigFile(policyName);
-			if(CONFIG_HOME.contains("\\"))
-			{
-			 file = new File(CONFIG_HOME + "\\" + path + "."+ configFileName);
-			}
-			else
-			{
-			 file = new File(CONFIG_HOME + "/" + path + "."+ configFileName);
-			}
-			
-			// if file doesnt exists, then create it
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-
-
-			File configHomeDir = new File(CONFIG_HOME);
-			File[] listOfFiles = configHomeDir.listFiles();
-			if (listOfFiles != null){
-				for(File eachFile : listOfFiles){
-					if(eachFile.isFile()){
-						String fileNameWithoutExtension = FilenameUtils.removeExtension(eachFile.getName());
-						String configFileNameWithoutExtension = FilenameUtils.removeExtension(path + "." + configFileName);
-						if (fileNameWithoutExtension.equals(configFileNameWithoutExtension)){
-							//delete the file
-							eachFile.delete();
-						}
-					}
-				}
-			}
-
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			String fileName = getConfigFile(policyName);
+			FileWriter fw = new FileWriter(CONFIG_HOME + File.separator + fileName);
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(configBodyData);
 			bw.close();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Configuration is succesfully saved");
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Configuration is succesfully saved");
 			}
 		} catch (IOException e) {
+			LOGGER.error("Exception Occured while writing Configuration Data"+e);
 			e.printStackTrace();
 		}
 	}
+
 
 	// Here we are adding the extension for the configurations file based on the
 	// config type selection for saving.
@@ -177,6 +131,7 @@ public class ConfigPolicy extends Policy {
 		return filename;
 	}
 
+	
 	// Validations for Config form
 	/*
 	 * FORM VALIDATION WILL BE DONE BY THE PAP-ADMIN before creating JSON object... 
@@ -295,12 +250,8 @@ public class ConfigPolicy extends Policy {
 
 		// Until here we prepared the data and here calling the method to create xml.
 		Path newPolicyPath = null;
-		newPolicyPath = Paths.get(policyAdapter.getParentPath().toString(), policyName);
-		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject() );		
-		if (successMap.containsKey("success")) {
-			Path finalPolicyPath = getFinalPolicyPath();
-			policyAdapter.setFinalPolicyPath(finalPolicyPath.toString());
-		}
+		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
+		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
 		return successMap;		
 	}
 	
@@ -310,18 +261,12 @@ public class ConfigPolicy extends Policy {
 	public boolean prepareToSave() throws Exception{
 
 		if(isPreparedToSave()){
-			//we have already done this
 			return true;
 		}
-		
+	
 		int version = 0;
 		String policyID = policyAdapter.getPolicyID();
-
-		if (policyAdapter.isEditPolicy()) {
-			version = policyAdapter.getHighestVersion() + 1;
-		} else {
-			version = 1;
-		}
+		version = policyAdapter.getHighestVersion();
 		
 		// Create the Instance for pojo, PolicyType object is used in marshalling.
 		if (policyAdapter.getPolicyType().equals("Config")) {
@@ -333,52 +278,19 @@ public class ConfigPolicy extends Policy {
 			policyAdapter.setData(policyConfig);
 		}
 		
+		policyName = policyAdapter.getNewFileName();
+		configBodyData = policyAdapter.getConfigBodyData();
+		saveConfigurations(policyName);
+		
 		if (policyAdapter.getData() != null) {
-			
-			// Save off everything
-			// making ready all the required elements to generate the action policy xml.
-			// Get the uniqueness for policy name.
-			Path newFile = getNextFilename(Paths.get(policyAdapter.getParentPath().toString()), policyAdapter.getPolicyType(), policyAdapter.getPolicyName(), version);
-			if (newFile == null) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("File already exists");
-				PolicyLogger.error("File alrady exists");
-				setPolicyExists(true);
-				return false;
-			}
-			policyName = newFile.getFileName().toString();
-			
-			// Body is optional so checking.
-			configBodyData = policyAdapter.getConfigBodyData();
-			if (!configBodyData.equals("")) {
-				// Save the Configurations file with the policy name with extention based on selection.
-				saveConfigurations(policyName);
-			}
-			
-			// Make sure the filename ends with an extension
-			if (policyName.endsWith(".xml") == false) {
-				policyName = policyName + ".xml";
-			}
-			
-	
 			PolicyType configPolicy = (PolicyType) policyAdapter.getData();
 			
 			configPolicy.setDescription(policyAdapter.getPolicyDescription());
 
 			configPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
 			AllOfType allOfOne = new AllOfType();
-			final Path gitPath = Paths.get(policyAdapter.getUserGitPath().toString());
-			String policyDir = policyAdapter.getParentPath().toString();
-			int startIndex = policyDir.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-			policyDir = policyDir.substring(startIndex, policyDir.length());
-			logger.info("print the main domain value "+policyDir);
-			String path = policyDir.replace('\\', '.');
-			if(path.contains("/")){
-				path = policyDir.replace('/', '.');
-				logger.info("print the path:" +path);
-			}
-			String fileName = FilenameUtils.removeExtension(policyName);
-			fileName = path + "." + fileName + ".xml";
+
+			String fileName = policyAdapter.getNewFileName();
 			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
 			if ((name == null) || (name.equals(""))) {
 				name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
@@ -389,17 +301,13 @@ public class ConfigPolicy extends Policy {
 			// Adding the matches to AllOfType element Match for Ecomp
 			allOf.getMatch().add(createMatch("ECOMPName", policyAdapter.getEcompName()));
 			// Match for riskType
-			allOf.getMatch().add(
-					createDynamicMatch("RiskType", policyAdapter.getRiskType()));
+			allOf.getMatch().add(createDynamicMatch("RiskType", policyAdapter.getRiskType()));
 			// Match for riskLevel
-			allOf.getMatch().add(
-					createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
+			allOf.getMatch().add(createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
 			// Match for riskguard
-			allOf.getMatch().add(
-					createDynamicMatch("guard", policyAdapter.getGuard()));
+			allOf.getMatch().add(createDynamicMatch("guard", policyAdapter.getGuard()));
 			// Match for ttlDate
-			allOf.getMatch().add(
-					createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
+			allOf.getMatch().add(createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
 			// Match for ConfigName
 			allOf.getMatch().add(createMatch("ConfigName", policyAdapter.getConfigName()));
 			
@@ -425,7 +333,6 @@ public class ConfigPolicy extends Policy {
 
 			RuleType rule = new RuleType();
 			rule.setRuleId(policyAdapter.getRuleID());
-			
 			rule.setEffect(EffectType.PERMIT);
 			
 			// Create Target in Rule
@@ -439,11 +346,9 @@ public class ConfigPolicy extends Policy {
 			accessMatch.setAttributeValue(accessAttributeValue);
 			AttributeDesignatorType accessAttributeDesignator = new AttributeDesignatorType();
 			URI accessURI = null;
-			try {
+			try{
 				accessURI = new URI(ACTION_ID);
-			} catch (URISyntaxException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getStackTrace());
+			}catch(URISyntaxException e){
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "ConfigPolicy", "Exception creating ACCESS URI");
 			}
 			accessAttributeDesignator.setCategory(CATEGORY_ACTION);
@@ -460,11 +365,9 @@ public class ConfigPolicy extends Policy {
 			configMatch.setAttributeValue(configAttributeValue);
 			AttributeDesignatorType configAttributeDesignator = new AttributeDesignatorType();
 			URI configURI = null;
-			try {
+			try{
 				configURI = new URI(RESOURCE_ID);
-			} catch (URISyntaxException e) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getStackTrace());
+			}catch(URISyntaxException e){
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "ConfigPolicy", "Exception creating Config URI");
 			}
 			configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
@@ -489,8 +392,6 @@ public class ConfigPolicy extends Policy {
 			policyAdapter.setPolicyData(configPolicy);
 
 		} else {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error("Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
 			PolicyLogger.error("Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
 		}
 		setPreparedToSave(true);
@@ -516,7 +417,6 @@ public class ConfigPolicy extends Policy {
 		assignment1.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue));
 
 		advice.getAttributeAssignmentExpression().add(assignment1);
-		final Path gitPath = Paths.get(policyAdapter.getUserGitPath().toString());
 		
 		// For Config file Url if configurations are provided.
 		if (policyAdapter.getConfigType() != null) {
@@ -527,18 +427,7 @@ public class ConfigPolicy extends Policy {
 
 			AttributeValueType AttributeValue = new AttributeValueType();
 			AttributeValue.setDataType(URI_DATATYPE);
-			String policyDir1 = policyAdapter.getParentPath().toString();
-			int startIndex1 = policyDir1.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-			policyDir1 = policyDir1.substring(startIndex1, policyDir1.length());
-			logger.info("print the main domain value"+policyDir1);
-			String path = policyDir1.replace('\\', '.');
-			if(path.contains("/")){
-				path = policyDir1.replace('/', '.');
-				logger.info("print the path:" +path);
-			}
-
-			String content = "$URL" + "/Config/" + path + "." + getConfigFile(policyName);
-			System.out.println("URL value :" + content);
+			String content = "$URL" + "/Config/" + getConfigFile(policyName);
 			AttributeValue.getContent().add(content);
 			assignment2.setExpression(new ObjectFactory().createAttributeValue(AttributeValue));
 
@@ -550,25 +439,9 @@ public class ConfigPolicy extends Policy {
 
 			AttributeValueType attributeValue3 = new AttributeValueType();
 			attributeValue3.setDataType(STRING_DATATYPE);
-			String policyDir = policyAdapter.getParentPath().toString();
-			int startIndex = policyDir.indexOf(gitPath.toString()) + gitPath.toString().length() + 1;
-			policyDir = policyDir.substring(startIndex, policyDir.length());
-			StringTokenizer tokenizer = null;
-			StringBuffer buffer = new StringBuffer();
-			if (policyDir.contains("\\")) {
-				tokenizer = new StringTokenizer(policyDir, "\\");
-			} else {
-				tokenizer = new StringTokenizer(policyDir, "/");
-			}
-			if (tokenizer != null) {
-				while (tokenizer.hasMoreElements()) {
-					String value = tokenizer.nextToken();
-					buffer.append(value);
-					buffer.append(".");
-				}
-			}
+			
 			fileName = FilenameUtils.removeExtension(fileName);
-			fileName = buffer.toString() + fileName + ".xml";
+			fileName = fileName + ".xml";
 			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
 			if ((name == null) || (name.equals(""))) {
 				name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
@@ -590,7 +463,7 @@ public class ConfigPolicy extends Policy {
 			advice.getAttributeAssignmentExpression().add(assignment4);
 
 			AttributeAssignmentExpressionType assignment5 = new AttributeAssignmentExpressionType();
-			assignment5.setAttributeId("matching:" + this.ECOMPID);
+			assignment5.setAttributeId("matching:" + ECOMPID);
 			assignment5.setCategory(CATEGORY_RESOURCE);
 			assignment5.setIssuer("");
 
@@ -602,7 +475,7 @@ public class ConfigPolicy extends Policy {
 			advice.getAttributeAssignmentExpression().add(assignment5);
 
 			AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
-			assignment6.setAttributeId("matching:" + this.CONFIGID);
+			assignment6.setAttributeId("matching:" + CONFIGID);
 			assignment6.setCategory(CATEGORY_RESOURCE);
 			assignment6.setIssuer("");
 
@@ -680,7 +553,6 @@ public class ConfigPolicy extends Policy {
 
 		advice.getAttributeAssignmentExpression().add(assignment11);
 		
-
 		advices.getAdviceExpression().add(advice);
 		return advices;
 	}

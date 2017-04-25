@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Sample Page</title>
+
+	<!-- Resources -->	
+	<script src= "./app/fusion/scripts/utils/page-resource-ds2.js"></script> 
+	<script>
+		loadjscssfile("./app/fusion/scripts/DS2-controllers/samplePage-route.js", "js");
+ 		loadjscssfile("./app/fusion/scripts/DS2-controllers/net-map-controller.js", "js");	
+		loadjscssfile("./app/fusion/scripts/network/net_map.js", "js");
+		loadjscssfile("./app/fusion/scripts/DS2-controllers/collaborate-list-controller.js", "js");	
+		loadjscssfile("./app/fusion/external/utils/js/browserCheck.js","js");	 
+	</script>
+	
+<!-- 	//<script src="dependency/joint.js"></script>	 -->
+	
+</head>
+	<body class="appBody" ng-app="abs">
+		<div ds2-Header class="header-container" ></div>
+		<div ds2-menu id="menuContainer" class="menu-container" ></div>
+		<div ng-view id="rightContentProfile" class="content-container"></div>	
+		<div ds2-Footer class="footer-container"></div>
+	</body>
+</html>
