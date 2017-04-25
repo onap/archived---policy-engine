@@ -28,15 +28,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.util.JsonMessage;
-import org.openecomp.policy.rest.dao.CategoryDao;
-import org.openecomp.policy.rest.dao.RiskTypeDao;
-import org.openecomp.policy.rest.dao.SafePolicyWarningDao;
-import org.openecomp.policy.rest.dao.UserInfoDao;
-import org.openecomp.policy.rest.jpa.Category;
+import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.RiskType;
 import org.openecomp.policy.rest.jpa.SafePolicyWarning;
 import org.openecomp.policy.rest.jpa.UserInfo;
@@ -53,45 +49,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class SafePolicyController {
 
-	private static final Log logger = LogFactory.getLog(SafePolicyController.class);
-
-	@Autowired
-	SafePolicyWarningDao safePolicyWarningDao;
-
-	@Autowired
-	RiskTypeDao riskTypeDao;
-
-	@Autowired
-	UserInfoDao userInfoDao;
-
-	@Autowired
-	CategoryDao categoryDao;
+	private static final Logger LOGGER  = FlexLogger.getLogger(SafePolicyController.class);
 	
-
-	public Category getCategory() {
-		for (int i = 0; i < categoryDao.getCategoryListData().size(); i++) {
-			Category value = categoryDao.getCategoryListData().get(i);
-			if (value.getShortName().equals("resource")) {
-				return value;
-			}
-		}
-		return null;
+	private static CommonClassDao commonClassDao;
+	
+	@Autowired
+	public SafePolicyController(CommonClassDao commonClassDao){
+		SafePolicyController.commonClassDao = commonClassDao;
 	}
-
-	public UserInfo getUserInfo(String loginId) {
-		UserInfo name = userInfoDao.getUserInfoByLoginId(loginId);
-		return name;
+	
+	public SafePolicyController(){}	
+	
+	public UserInfo getUserInfo(String loginId){
+		UserInfo name = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
+		return name;	
 	}
+	
+	private static String DUPLICATE = "Duplicate";
 
-	// EcompName Dictionary
 	@RequestMapping(value = { "/get_RiskTypeDataByName" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void getRiskTypeDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response) {
-		logger.info("get_RiskTypeDataByName is called");
 		try {
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("riskTypeDictionaryDatas", mapper.writeValueAsString(riskTypeDao.getRiskTypeDataByName()));
+			model.put("riskTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(RiskType.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -103,68 +85,108 @@ public class SafePolicyController {
 	@RequestMapping(value = { "/get_RiskTypeData" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void getEcompNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response) {
-		logger.info("get_RiskTypeData is called");
 		try {
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("riskTypeDictionaryDatas", mapper.writeValueAsString(riskTypeDao.getRiskName()));
+			model.put("riskTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(RiskType.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+            response.addHeader("successMapKey", "success"); 
+            response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("ERROR While callinge DAO: " + e.getMessage());
+            LOGGER.error(e.getMessage());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
 
-	@RequestMapping(value = { "/sp_dictionary/save_riskType.htm" }, method = {
+	@RequestMapping(value = { "/sp_dictionary/save_riskType" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.POST })
 	public ModelAndView saveRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		try {
 			boolean duplicateflag = false;
-			System.out.println("SafePolicyController:  saveRiskTypeDictionary() is called");
-			logger.debug("SafePolicyController:  saveRiskTypeDictionary() is called");
+            boolean isFakeUpdate = false;
+            boolean fromAPI = false;
+            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+                fromAPI = true;
+            }
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			RiskType riskTypeData = (RiskType) mapper.readValue(root.get("riskTypeDictionaryData").toString(),
-					RiskType.class);
-			String userId = root.get("loginId").textValue();
-			System.out.println("the userId from the ecomp portal is: " + userId);
+            RiskType riskTypeData;
+            String userId = null;
+            if (fromAPI) {
+                riskTypeData = (RiskType) mapper.readValue(root.get("dictionaryFields").toString(),
+                        RiskType.class);
+                userId = "API";
+                
+                //check if update operation or create, get id for data to be updated and update attributeData
+                if ("update".equalsIgnoreCase(request.getParameter("operation"))){
+                    List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(riskTypeData.getRiskName(), "name", RiskType.class);
+                    int id = 0;
+                    RiskType data = (RiskType) duplicateData.get(0);
+                    id = data.getId();
+                    
+                    if(id==0){
+                        isFakeUpdate=true;
+                        riskTypeData.setId(1);
+                    } else {
+                        riskTypeData.setId(id);
+                    }
+                    
+                    riskTypeData.setUserCreatedBy(this.getUserInfo(userId));
+                }
+            } else {
+            	riskTypeData = (RiskType) mapper.readValue(root.get("riskTypeDictionaryData").toString(), RiskType.class);
+            	userId = root.get("userid").textValue();
+            }
+			 
 			if (riskTypeData.getId() == 0) {
-				CheckDictionaryDuplicateEntries entry = new CheckDictionaryDuplicateEntries();
-				List<Object> duplicateData =  entry.CheckDuplicateEntry(riskTypeData.getRiskName(), "name", RiskType.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(riskTypeData.getRiskName(), "name", RiskType.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
 					riskTypeData.setUserCreatedBy(getUserInfo(userId));
 					riskTypeData.setUserModifiedBy(getUserInfo(userId));
-					System.out.println(
-							"SafePolicyController:  got the user info now about to call Save() method on riskTypedao");
-					riskTypeDao.Save(riskTypeData);
+					commonClassDao.save(riskTypeData);
 				}
 			} else {
-				riskTypeData.setUserModifiedBy(this.getUserInfo(userId));
-				riskTypeDao.update(riskTypeData);
+				if (!isFakeUpdate) {
+					riskTypeData.setUserModifiedBy(this.getUserInfo(userId));
+					commonClassDao.update(riskTypeData);
+				}
 			}
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-
-			PrintWriter out = response.getWriter();
-			String responseString = "";
-			if(duplicateflag){
-				responseString = "Duplicate";
-			}else{
-				responseString = mapper.writeValueAsString(this.riskTypeDao.getRiskName());
-			}
-			JSONObject j = new JSONObject("{riskTypeDictionaryDatas: " + responseString + "}");
-
-			out.write(j.toString());
-
-			return null;
-		} catch (Exception e) {
+            String responseString = "";
+            if(duplicateflag){
+                responseString = DUPLICATE;
+            }else{
+                responseString = mapper.writeValueAsString(commonClassDao.getData(RiskType.class));
+            }
+            
+            if (fromAPI) {
+                if (responseString!=null && !responseString.equals(DUPLICATE)) {
+                    if(isFakeUpdate){
+                        responseString = "Exists";
+                    } else {
+                        responseString = "Success";
+                    }
+                }
+                ModelAndView result = new ModelAndView();
+                result.setViewName(responseString);
+                return result;
+            } else {
+                response.setCharacterEncoding("UTF-8");
+                response.setContentType("application / json");
+                request.setCharacterEncoding("UTF-8");
+ 
+                PrintWriter out = response.getWriter();
+                JSONObject j = new JSONObject("{riskTypeDictionaryDatas: " + responseString + "}");
+                out.write(j.toString());
+                return null;
+            }
+        }catch (Exception e) {
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -173,7 +195,7 @@ public class SafePolicyController {
 		return null;
 	}
 
-	@RequestMapping(value = { "/sp_dictionary/remove_riskType.htm" }, method = {
+	@RequestMapping(value = { "/sp_dictionary/remove_riskType" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.POST })
 	public ModelAndView removeEcompDictionary(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -182,20 +204,19 @@ public class SafePolicyController {
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			RiskType ecompData = (RiskType) mapper.readValue(root.get("data").toString(), RiskType.class);
-			riskTypeDao.delete(ecompData);
+			commonClassDao.delete(ecompData);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
 
-			String responseString = mapper.writeValueAsString(this.riskTypeDao.getRiskName());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(RiskType.class));
 			JSONObject j = new JSONObject("{riskTypeDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
 
 			return null;
 		} catch (Exception e) {
-			System.out.println(e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -211,7 +232,7 @@ public class SafePolicyController {
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("safePolicyWarningDatas",
-					mapper.writeValueAsString(safePolicyWarningDao.getSafePolicyWarningDataByName()));
+					mapper.writeValueAsString(commonClassDao.getDataByColumn(SafePolicyWarning.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -227,55 +248,98 @@ public class SafePolicyController {
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("safePolicyWarningDatas",
-					mapper.writeValueAsString(safePolicyWarningDao.getSafePolicyWarningData()));
+					mapper.writeValueAsString(commonClassDao.getData(SafePolicyWarning.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+            response.addHeader("successMapKey", "success"); 
+            response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.addHeader("error", "dictionaryDBQuery");
+            LOGGER.error(e.getMessage());
 		}
 	}
 
-	@RequestMapping(value = { "/sp_dictionary/save_safePolicyWarning.htm" }, method = {
+	@RequestMapping(value = { "/sp_dictionary/save_safePolicyWarning" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.POST })
 	public ModelAndView saveSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		try {
 			boolean duplicateflag = false;
+            boolean isFakeUpdate = false;
+            boolean fromAPI = false;
+            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+                fromAPI = true;
+            }
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			SafePolicyWarning safePolicyWarning = (SafePolicyWarning) mapper
-					.readValue(root.get("safePolicyWarningData").toString(), SafePolicyWarning.class);
+			SafePolicyWarning safePolicyWarning;
+            if (fromAPI) {
+                safePolicyWarning = (SafePolicyWarning) mapper
+                        .readValue(root.get("dictionaryFields").toString(), SafePolicyWarning.class);
+                
+                //check if update operation or create, get id for data to be updated and update attributeData
+                if (request.getParameter("operation").equals("update")) {
+                    List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(safePolicyWarning.getName(), "name", SafePolicyWarning.class);
+                    int id = 0;
+                    SafePolicyWarning data = (SafePolicyWarning) duplicateData.get(0);
+                    id = data.getId();
+                    
+                    if(id==0){
+                        isFakeUpdate=true;
+                        safePolicyWarning.setId(1);
+                    } else {
+                        safePolicyWarning.setId(id);
+                    } 
+                }
+            } else {
+            	safePolicyWarning = (SafePolicyWarning) mapper.readValue(root.get("safePolicyWarningData").toString(), SafePolicyWarning.class);
+            }
 
 			if (safePolicyWarning.getId() == 0) {
-				CheckDictionaryDuplicateEntries entry = new CheckDictionaryDuplicateEntries();
-				List<Object> duplicateData =  entry.CheckDuplicateEntry(safePolicyWarning.getName(), "name", SafePolicyWarning.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(safePolicyWarning.getName(), "name", SafePolicyWarning.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
-					safePolicyWarningDao.Save(safePolicyWarning);
+					commonClassDao.save(safePolicyWarning);
 				}
 			} else {
-				safePolicyWarningDao.update(safePolicyWarning);
+				if(!isFakeUpdate) {
+					commonClassDao.update(safePolicyWarning);
+				}
 			}
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-
-			PrintWriter out = response.getWriter();
-			String responseString = "";
-			if(duplicateflag){
-				responseString = "Duplicate";
-			}else{
-				responseString = mapper.writeValueAsString(this.safePolicyWarningDao.getSafePolicyWarningData());
-			}
-			JSONObject j = new JSONObject("{safePolicyWarningDatas: " + responseString + "}");
-
-			out.write(j.toString());
-
-			return null;
-		} catch (Exception e) {
+            String responseString = "";
+            if(duplicateflag){
+                responseString = DUPLICATE;
+            }else{
+                responseString = mapper.writeValueAsString(commonClassDao.getData(SafePolicyWarning.class));
+            }
+            
+            if (fromAPI) {
+                if (responseString!=null && !responseString.equals(DUPLICATE)) {
+                    if(isFakeUpdate){
+                        responseString = "Exists";
+                    } else {
+                        responseString = "Success";
+                    }
+                }
+                ModelAndView result = new ModelAndView();
+                result.setViewName(responseString);
+                return result;
+            } else {
+                response.setCharacterEncoding("UTF-8");
+                response.setContentType("application / json");
+                request.setCharacterEncoding("UTF-8");
+ 
+                PrintWriter out = response.getWriter();
+                JSONObject j = new JSONObject("{safePolicyWarningDatas: " + responseString + "}");
+                out.write(j.toString());
+                return null;
+            }
+ 
+        }catch (Exception e) {
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -284,7 +348,7 @@ public class SafePolicyController {
 		return null;
 	}
 
-	@RequestMapping(value = { "/sp_dictionary/remove_SafePolicyWarning.htm" }, method = {
+	@RequestMapping(value = { "/sp_dictionary/remove_SafePolicyWarning" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.POST })
 	public ModelAndView removeSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -294,14 +358,14 @@ public class SafePolicyController {
 			JsonNode root = mapper.readTree(request.getReader());
 			SafePolicyWarning safePolicyWarningData = (SafePolicyWarning) mapper.readValue(root.get("data").toString(),
 					SafePolicyWarning.class);
-			safePolicyWarningDao.delete(safePolicyWarningData);
+			commonClassDao.delete(safePolicyWarningData);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
 
-			String responseString = mapper.writeValueAsString(this.safePolicyWarningDao.getSafePolicyWarningData());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(SafePolicyWarning.class));
 			JSONObject j = new JSONObject("{groupPolicyScopeListDatas: " + responseString + "}");
 			out.write(j.toString());
 

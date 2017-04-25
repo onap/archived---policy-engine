@@ -34,7 +34,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -51,13 +50,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 	@NamedQuery(name="ConfigurationDataEntity.findAll", query="SELECT e FROM ConfigurationDataEntity e "),
 	@NamedQuery(name="ConfigurationDataEntity.deleteAll", query="DELETE FROM ConfigurationDataEntity WHERE 1=1")
 })
-//@SequenceGenerator(name="seqConfig", initialValue=1, allocationSize=1)
 
 public class ConfigurationDataEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seqConfig")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="configurationDataId")
 	@JsonBackReference

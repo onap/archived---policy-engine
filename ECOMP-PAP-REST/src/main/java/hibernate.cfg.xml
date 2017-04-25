@@ -44,6 +44,8 @@
 		<mapping class="org.openecomp.policy.rest.jpa.EcompName"/>
 		<mapping class="org.openecomp.policy.rest.jpa.EnforcingType"/>
 		<mapping class="org.openecomp.policy.rest.jpa.FirewallDictionaryList"/>
+		<mapping class="org.openecomp.policy.rest.jpa.FWTag"/>
+        <mapping class="org.openecomp.policy.rest.jpa.FWTagPicker"/>
 		<mapping class="org.openecomp.policy.rest.jpa.FunctionDefinition"/>
 		<mapping class="org.openecomp.policy.rest.jpa.FunctionArgument"/>
 		<mapping class="org.openecomp.policy.rest.jpa.GroupPolicyScopeList"/>
@@ -56,8 +58,10 @@
 		<mapping class="org.openecomp.policy.rest.jpa.PolicyScopeResource"/>
 		<mapping class="org.openecomp.policy.rest.jpa.PolicyScopeType"/>
 		<mapping class="org.openecomp.policy.rest.jpa.PolicyScopeService"/>
+		<mapping class="org.openecomp.policy.rest.jpa.PolicyEditorScopes"/>
+		<mapping class="org.openecomp.policy.rest.jpa.PolicyVersion"/>
 		<mapping class="org.openecomp.policy.rest.jpa.PortList"/>
-		<mapping class="org.openecomp.policy.rest.jpa.PREFIXLIST"/>
+		<mapping class="org.openecomp.policy.rest.jpa.PrefixList"/>
 		<mapping class="org.openecomp.policy.rest.jpa.ProtocolList"/>
 		<mapping class="org.openecomp.policy.rest.jpa.ServiceList"/>
 		<mapping class="org.openecomp.policy.rest.jpa.SecurityZone"/>
@@ -69,5 +73,9 @@
 		<mapping class="org.openecomp.policy.rest.jpa.Zone"/>
 		<mapping class="org.openecomp.policy.rest.jpa.RiskType"/>
 		<mapping class="org.openecomp.policy.rest.jpa.SafePolicyWarning"/>
+		<mapping class="org.openecomp.policy.rest.jpa.ClosedLoops"/>
+        <mapping class="org.openecomp.policy.rest.jpa.BRMSController"/>
+        <mapping class="org.openecomp.policy.rest.jpa.BRMSDependency"/>
+        <mapping class="org.openecomp.policy.rest.jpa.MicroServiceAttribute"/>
 	</session-factory>
 </hibernate-configuration>

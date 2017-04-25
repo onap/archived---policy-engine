@@ -20,6 +20,8 @@
 
 package org.openecomp.policy.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * Enumeration of the Policy Return Types that can be returned as part of a
  * {@link org.openecomp.policy.api.PolicyConfig}.
@@ -58,4 +60,13 @@ public enum PolicyType {
 	public String toString() {
 		return this.name;
 	}
+	@JsonCreator
+    public static PolicyType create (String value) {
+        for(PolicyType type: values()){
+            if(type.toString().equalsIgnoreCase(value)){
+                return type;
+            }
+        }
+        throw new IllegalArgumentException();
+    }	
 }

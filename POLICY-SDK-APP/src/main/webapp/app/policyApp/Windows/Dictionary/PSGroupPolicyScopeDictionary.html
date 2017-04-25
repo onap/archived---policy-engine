@@ -1,0 +1,77 @@
+<!--/*-
+ * ============LICENSE_START=======================================================
+ * ECOMP Policy Engine
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */-->
+<script type="text/ng-template" id="add_PSGroupPolicyScope_popup.html">
+<div class="modal" tabindex="-1">
+		 <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+        <div class="modal-header">
+            <h2 class="font-showcase-font-name" style="color : #157bb2">{{label}}</h2>
+        </div>
+		<form name="formdata" ng-submit="savePSGroupPolicyScope(editPSGroupPolicyScope, editPSGroupPolicyScope1);" novalidate>
+        <div class="modal-body">
+			<div class="form-group row">
+            <div class="form-group col-sm-6"  ng-class="{ 'has-error' : formdata.groupName.$invalid && !formdata.groupName.$pristine }">
+                <label>Enter Policy Scope Group Name:<sup><b>*</b></sup></label><br>
+                <input type="text" ng-model="editPSGroupPolicyScope.groupName" class="form-control" name= "groupName"  required/>
+				<p ng-show="formdata.groupName.$invalid && !formdata.groupName.$pristine" class="help-block">Policy Scope Group Name is required.</p>
+            </div>
+            <div class="form-group col-sm-6" >
+                <label>Description:</label><br>
+                <input type="text" ng-model="editPSGroupPolicyScope.description" class="form-control"/>
+            </div>
+			</div>
+			<div class="form-group row">
+ 			<div class="form-group col-sm-6"  ng-class="{ 'has-error' : formdata.resource.$invalid && !formdata.resource.$pristine }">
+            	<label>Policy Scope Resource:<sup><b>*</b></sup></label><br>
+            	<select  name= "resource"  required class="form-control"  ng-model="editPSGroupPolicyScope1.resource"  ng-options="option for option in psResourceDictionaryDatas track by option">
+				<option value = "">{{editPSGroupPolicyScope1.resource[0]}}</option></select>
+				<p ng-show="formdata.resource.$invalid && !formdata.resource.$pristine" class="help-block">Policy Scope Resource is required.</p>
+     		 </div>
+ 			<div class="form-group col-sm-6"  ng-class="{ 'has-error' : formdata.type.$invalid && !formdata.type.$pristine }">
+           		 <label>Policy Scope Type:<sup><b>*</b></sup></label><br>
+            	 <select name= "type"  required class="form-control"  ng-model="editPSGroupPolicyScope1.type"  ng-options="option for option in psTypeDictionaryDatas track by option">
+				<option value = "">{{editPSGroupPolicyScope1.type[0]}}</option></select>
+				<p ng-show="formdata.type.$invalid && !formdata.type.$pristine" class="help-block">Policy Scope Type is required.</p>
+      		</div>
+			</div>
+			<div class="form-group row">
+ 			<div class="form-group col-sm-6"  ng-class="{ 'has-error' : formdata.service.$invalid && !formdata.service.$pristine }">
+            	<label>Policy Scope Service:<sup><b>*</b></sup></label><br>
+            	<select name= "service"  required class="form-control" ng-model="editPSGroupPolicyScope1.service"  ng-options="option for option in psServiceDictionaryDatas track by option">
+				<option value = "">{{editPSGroupPolicyScope1.service[0]}}</option></select>
+				<p ng-show="formdata.service.$invalid && !formdata.service.$pristine" class="help-block">Policy Scope Service is required.</p>
+      		</div>
+ 			<div class="form-group col-sm-6"  ng-class="{ 'has-error' : formdata.closedloop.$invalid && !formdata.closedloop.$pristine }">
+            	<label>Policy Scope ClosedLoop:<sup><b>*</b></sup></label><br>
+           	 	<select name= "closedloop"  required class="form-control"  ng-model="editPSGroupPolicyScope1.closedloop"  ng-options="option for option in psClosedLoopDictionaryDatas track by option">
+				<option value = "">{{editPSGroupPolicyScope1.closedloop[0]}}</option></select>
+				<p ng-show="formdata.closedloop.$invalid && !formdata.closedloop.$pristine" class="help-block">Policy Scope ClosedLoop is required.</p>
+      		</div>
+			</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" type="submit" ng-disabled="formdata.$invalid">Save</button>
+            <button class="btn btn-default"  type="button" ng-click="close()">Close</button>
+		</div>
+		</form>
+    </div>
+			</div>
+</div>
+</script>

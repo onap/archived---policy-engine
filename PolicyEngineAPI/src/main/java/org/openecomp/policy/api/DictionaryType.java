@@ -20,11 +20,17 @@
 
 package org.openecomp.policy.api;
 
-public enum DictionaryType {
+import com.fasterxml.jackson.annotation.JsonCreator;
+
+public enum DictionaryType{
 	/**
 	 * Indicates Common Dictionaries. 
 	 */
 	Common("Common"),
+	/**
+	 * Indicates Action Policy Dictionaries
+	 */
+	Action("Action"),
 	/**
 	 * Indicates ClosedLoop Policy Dictionaries. 
 	 */
@@ -32,7 +38,7 @@ public enum DictionaryType {
 	/**
 	 * Indicates Firewall Config Policy Dictionaries. 
 	 */
-	Firewall("FW"),
+	Firewall("Firewall"),
 	/**
 	 * Indicates Decision Policy Dictionaries. 
 	 */
@@ -42,9 +48,13 @@ public enum DictionaryType {
 	 */
 	BRMS("BRMS"),
 	/**
+	 * Indicates GOC Policy Dictionaries.  
+	 */
+	GOC("GOC"),
+	/**
 	 * Indicates DCAE Micro Service Policy Dictionaries. 
 	 */
-	MicroService("MS"),
+	MicroService("MicroService"),
 	/**
 	 * Indicates Descriptive Scope Dictionaries
 	 */
@@ -53,6 +63,14 @@ public enum DictionaryType {
 	 * Indicates Policy Scope Dictionaries
 	 */
 	PolicyScope("PolicyScope"),
+	/**
+	 * Indicates Enforcer Dictionaries
+	 */
+	Enforcer("Enforcer"),
+	/**
+	 * Indicates SafePolicy Dictionaries
+	 */
+	SafePolicy("SafePolicy"),
 	;
 	
 	private String name;
@@ -69,5 +87,14 @@ public enum DictionaryType {
 		return this.name;
 	}
 	
+	@JsonCreator
+    public static DictionaryType create (String value) {
+        for(DictionaryType type: values()){
+            if(type.toString().equals(value) || type.equals(DictionaryType.valueOf(value))){
+                return type;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
 
 }

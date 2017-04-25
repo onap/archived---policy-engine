@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +41,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.rest.XACMLRestProperties;
 
 import com.att.research.xacml.api.Advice;
@@ -62,10 +63,9 @@ import com.att.research.xacml.std.StdMutableResult;
 import com.att.research.xacml.std.StdObligation;
 import com.att.research.xacml.util.XACMLProperties;
 
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-
+@SuppressWarnings("deprecation")
 public class FindAction {
-	private Logger logger = (Logger) FlexLogger.getLogger(this.getClass());
+	private Logger LOGGER = FlexLogger.getLogger(this.getClass());
 	private Boolean changeIt = false;
 	private String configURL = null;
 	private StdMutableResponse newResponse = new StdMutableResponse();
@@ -105,8 +105,8 @@ public class FindAction {
 			search(stdResponse);
 		}
 		addResults(stdResponse, config , decide);
-		logger.info("Original Result is " + stdResponse.toString());
-		logger.info("Generated Result is " + addResult.toString());
+		LOGGER.info("Original Result is " + stdResponse.toString());
+		LOGGER.info("Generated Result is " + addResult.toString());
 		return newResponse;
 	}
 
@@ -142,7 +142,7 @@ public class FindAction {
 								attributeURI = new StdAttributeAssignment(attribute);
 							}
 						} else if (attribute.getAttributeId().stringValue().startsWith("headers")) {
-							logger.info("Headers are : "+ attribute.getAttributeValue().getValue().toString());
+							LOGGER.info("Headers are : "+ attribute.getAttributeValue().getValue().toString());
 							header = true;
 							headers.put(attribute.getAttributeId().stringValue().replaceFirst("(headers).", ""),
 									attribute.getAttributeValue().getValue().toString());
@@ -194,7 +194,7 @@ public class FindAction {
 	private void TakeAction(StdMutableResponse stdResponse, Identifier advId,
 			Collection<AttributeAssignment> afterRemoveAssignments) {
 		if (changeIt) {
-			logger.info("the URL is :" + configURL);
+			LOGGER.info("the URL is :" + configURL);
 			// Calling Rest URL..
 			callRest();
 			// Including the Results in an Advice
@@ -252,6 +252,7 @@ public class FindAction {
 
 	private int status;
 	private String response;
+	private DefaultHttpClient httpClient;
 
 	private void callRest() {
 		// Finding the Macros in the URL..
@@ -259,17 +260,17 @@ public class FindAction {
 		Matcher match = pattern.matcher(configURL);
 		StringBuffer sb = new StringBuffer();
 		while (match.find()) {
-			logger.info("Found Macro : " + match.group(1));
+			LOGGER.info("Found Macro : " + match.group(1));
 			String replaceValue = matchValues.get(match.group(1));
-			logger.info("Replacing with :" + replaceValue);
+			LOGGER.info("Replacing with :" + replaceValue);
 			match.appendReplacement(sb, replaceValue);
 		}
 		match.appendTail(sb);
-		logger.info("URL is : " + sb.toString());
+		LOGGER.info("URL is : " + sb.toString());
 		configURL = sb.toString();
 		// Calling the Requested service. 
 		if (matchValues.get("method").equalsIgnoreCase("GET")) {
-			DefaultHttpClient httpClient = new DefaultHttpClient();
+			httpClient = new DefaultHttpClient();
 			try {
 				HttpGet getRequest = new HttpGet(configURL);
 				// Adding Headers here
@@ -289,14 +290,16 @@ public class FindAction {
 				}
 				response = output;
 			} catch (ClientProtocolException e) {
+				LOGGER.error(e.getMessage());
 				response = e.getMessage();
 			} catch (IOException e) {
+				LOGGER.error(e.getMessage());
 				response = e.getMessage();
 			} finally {
 				httpClient.getConnectionManager().shutdown();
 			}
 		} else if(matchValues.get("method").equalsIgnoreCase("POST")) {
-			DefaultHttpClient httpClient = new DefaultHttpClient();
+			httpClient = new DefaultHttpClient();
 			try {
 				HttpPost postRequest = new HttpPost(configURL);
 				// Adding Headers here
@@ -310,14 +313,14 @@ public class FindAction {
 				URLConnection connection = null;
 				connection = configURL.openConnection();
 				// InputStream in = connection.getInputStrem();
-				// logger.info("The Body Content is : " + IOUtils.toString(in));
+				// LOGGER.info("The Body Content is : " + IOUtils.toString(in));
 				JsonReader jsonReader = Json.createReader(connection.getInputStream());
 				StringEntity input = new StringEntity(jsonReader.readObject().toString());
 				input.setContentType("application/json");
 				postRequest.setEntity(input);
 				// Executing the Request. 
 				HttpResponse result = httpClient.execute(postRequest);
-				logger.info("Result Headers are : " + result.getAllHeaders());
+				LOGGER.info("Result Headers are : " + result.getAllHeaders());
 				status = result.getStatusLine().getStatusCode();
 				BufferedReader br = new BufferedReader(new InputStreamReader(
 						(result.getEntity().getContent())));
@@ -328,14 +331,16 @@ public class FindAction {
 				}
 				response = output;
 			} catch (ClientProtocolException e) {
+				LOGGER.error(e.getMessage());
 				response = e.getMessage();
 			} catch (IOException e) {
+				LOGGER.error(e.getMessage());
 				response = e.getMessage();
 			} finally {
 				httpClient.getConnectionManager().shutdown();
 			}
 		} else if(matchValues.get("method").equalsIgnoreCase("PUT")) {
-			DefaultHttpClient httpClient = new DefaultHttpClient();
+			httpClient = new DefaultHttpClient();
 			try {
 				HttpPut putRequest = new HttpPut(configURL);
 				// Adding Headers here
@@ -349,7 +354,7 @@ public class FindAction {
 				URLConnection connection = null;
 				connection = configURL.openConnection();
 				//InputStream in = connection.getInputStream();
-				//logger.info("The Body Content is : " + IOUtils.toString(in));
+				//LOGGER.info("The Body Content is : " + IOUtils.toString(in));
 				JsonReader jsonReader = Json.createReader(connection.getInputStream());
 				StringEntity input = new StringEntity(jsonReader.readObject().toString());
 				input.setContentType("application/json");
@@ -366,8 +371,10 @@ public class FindAction {
 				}
 				response = output;
 			} catch (ClientProtocolException e) {
+				LOGGER.error(e.getMessage());
 				response = e.getMessage();
 			} catch (IOException e) {
+				LOGGER.error(e.getMessage());
 				response = e.getMessage();
 			} finally {
 				httpClient.getConnectionManager().shutdown();

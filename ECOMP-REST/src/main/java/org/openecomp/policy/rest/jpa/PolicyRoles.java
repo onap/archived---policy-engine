@@ -56,14 +56,14 @@ public class PolicyRoles implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="loginid")
 	@OrderBy("asc")
-	private UserInfo loginid;
+	private UserInfo loginId;
 
 	public UserInfo getLoginId() {
-		return loginid;
+		return loginId;
 	}
 
-	public void setLoginId(UserInfo loginid) {
-		this.loginid = loginid;
+	public void setLoginId(UserInfo loginId) {
+		this.loginId = loginId;
 	}
 
 	@Column(name="scope", nullable=true, length=45)

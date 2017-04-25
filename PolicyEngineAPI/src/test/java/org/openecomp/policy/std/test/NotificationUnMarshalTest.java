@@ -20,13 +20,13 @@
 
 package org.openecomp.policy.std.test;
 
-import org.junit.*;
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.openecomp.policy.std.NotificationUnMarshal;
 import org.openecomp.policy.std.StdPDPNotification;
-
-import static org.junit.Assert.*;
-
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * The class <code>NotificationUnMarshalTest</code> contains tests for the class <code>{@link NotificationUnMarshal}</code>.

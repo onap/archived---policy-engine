@@ -22,18 +22,16 @@ package org.openecomp.policy.test;
 
 import java.util.Collection;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.openecomp.policy.api.PolicyConfig;
 import org.openecomp.policy.api.PolicyConfigException;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 
-import org.openecomp.policy.common.logging.flexlogger.*; 
+import junit.framework.TestCase; 
 
 public class GetConfigByPolicyNameTest extends TestCase {
 	private PolicyEngine policyEngine = null;
@@ -51,6 +49,7 @@ public class GetConfigByPolicyNameTest extends TestCase {
 		logger.info("Loaded.. PolicyEngine");
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigPolicyNameNotValid(){
 		policyName = null;

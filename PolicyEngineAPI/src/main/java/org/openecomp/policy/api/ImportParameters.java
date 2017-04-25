@@ -20,7 +20,6 @@
 
 package org.openecomp.policy.api;
 
-import java.util.List;
 import java.util.UUID;
 
 
@@ -35,12 +34,12 @@ public class ImportParameters {
 	private String description;
 	private UUID requestID;
 	private String filePath;
-	private String importBody;
 	private String version;
 	private IMPORT_TYPE importType;
 	
 	public enum IMPORT_TYPE {
-	    MICROSERVICE
+	    MICROSERVICE,
+	    BRMSPARAM
 	}
 
 	/**
@@ -117,24 +116,6 @@ public class ImportParameters {
 	 */
 	public void setRequestID(UUID requestID) {
 		this.requestID = requestID;
-	}
-
-	/**
-	 * Gets the importBody of the new policy import. 
-	 * 
-	 * @return importBody the <code>String</code> format of the Policy Import Body
-	 */
-	public String getImportBody() {
-		return importBody;
-	}
-
-	/**
-	 * Sets the importBody of the Policy Import Body. 
-	 * 
-	 * @param importBody the <code>String</code> format of the Policy Import Body
-	 */
-	public void setImportBody(String importBody) {
-		this.importBody = importBody;
 	}
 	
 	/**

@@ -22,21 +22,15 @@ package org.openecomp.policy.test;
 
 import java.util.Collection;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.openecomp.policy.api.PolicyConfig;
 import org.openecomp.policy.api.PolicyConfigException;
-import org.openecomp.policy.api.PolicyConfigStatus;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
-import org.openecomp.policy.api.PolicyType;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 
-import org.openecomp.policy.common.logging.flexlogger.*; 
+import junit.framework.TestCase; 
 
 public class GetConfigStringTest extends TestCase{
 	
@@ -56,6 +50,7 @@ public class GetConfigStringTest extends TestCase{
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testGetConfigStringFail() {
 		eCOMPComponentName = null;
 		try {
