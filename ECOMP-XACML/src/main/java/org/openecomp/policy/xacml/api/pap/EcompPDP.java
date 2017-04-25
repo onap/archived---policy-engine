@@ -19,14 +19,12 @@
  */
 package org.openecomp.policy.xacml.api.pap;
 
-import java.util.Set;
-
 import org.openecomp.policy.xacml.std.pap.StdPDP;
 
 import com.att.research.xacml.api.pap.PDP;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /*
  * The following allows us to use Jackson to convert sub-types of this type into JSON and back to objects.

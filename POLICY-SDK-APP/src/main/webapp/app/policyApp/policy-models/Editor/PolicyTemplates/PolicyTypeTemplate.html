@@ -1,0 +1,84 @@
+<!--
+  ============LICENSE_START=======================================================
+  ECOMP Policy Engine
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+  -->
+
+<div class="modal" id="createNewPolicy"
+	style="margin-bottom: 20px; width: 100%" data-backdrop="static"
+	data-keyboard="false">
+	<div class="modal-dialog-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span> <span class="sr-only">{{"close"
+						| translate}}</span>
+				</button>
+				<form>
+					<div class="form-group" style="width: 300px">
+						<label>Policy Type:</label>
+						<div>
+							<select class="form-control" ng-model="temp.policy.policyType"
+								ng-disabled="temp.policy.readOnly || temp.policy.editPolicy">
+								<option>Action</option>
+								<option>Config</option>
+								<option>Decision</option>
+							</select>
+						</div>
+					</div>
+					<div ng-if="temp.policy.policyType == 'Action'"
+						ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/ActionPolicyTemplate.html'"></div>
+					<div ng-if="temp.policy.policyType == 'Decision'"
+						ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/DecisionPolicyTemplate.html'"></div>
+					<div ng-if="temp.policy.policyType == 'Config'">
+						<div class="form-group" style="width: 300px">
+							<label>Config Policy Type:</label>
+							<div>
+								<select class="form-control"
+									ng-model="temp.policy.configPolicyType"
+									ng-disabled="temp.policy.readOnly || temp.policy.editPolicy">
+									<option>Base</option>
+									<option>BRMS_Param</option>
+									<option>BRMS_Raw</option>
+									<option>ClosedLoop_Fault</option>
+									<option>ClosedLoop_PM</option>
+									<option>Micro Service</option>
+									<option>Firewall Config</option>
+								</select>
+							</div>
+						</div>
+						<div ng-if="temp.policy.configPolicyType == 'Base'"
+							ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/BasePolicyTemplate.html'"></div>
+						<div ng-if="temp.policy.configPolicyType == 'BRMS_Param'"
+							ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/BRMSParamPolicyTemplate.html'"></div>
+						<div ng-if="temp.policy.configPolicyType == 'BRMS_Raw'"
+							ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/BRMSRawPolicyTemplate.html'"></div>
+						<div ng-if="temp.policy.configPolicyType == 'ClosedLoop_Fault'"
+							ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/ClosedLoopFaultPolicyTemplate.html'"></div>
+						<div ng-if="temp.policy.configPolicyType == 'ClosedLoop_PM'"
+							ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/ClosedLoopPMPolicyTemplate.html'"></div>
+						<div ng-if="temp.policy.configPolicyType == 'Micro Service'"
+							ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/DCAEMicroServicePolicyTemplate.html'"></div>
+						<div ng-if="temp.policy.configPolicyType == 'Firewall Config'"
+							ng-include="'app/policyApp/policy-models/Editor/PolicyTemplates/FirewallPolicyTemplate.html'"></div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

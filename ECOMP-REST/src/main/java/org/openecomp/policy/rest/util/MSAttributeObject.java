@@ -21,7 +21,6 @@
 package org.openecomp.policy.rest.util;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MSAttributeObject {
@@ -31,8 +30,9 @@ public class MSAttributeObject {
 	private HashMap<String, String> refAttribute = new HashMap<String, String>();
 	private HashMap<String, String> subClass = new HashMap<String, String>();
 	private String dependency;
-	private List<String> enumType;
-
+	private HashMap<String, String> enumType = new HashMap<String, String>();
+	private HashMap<String, String> matchingSet = new HashMap<String, String>();
+	private boolean policyTempalate; 
 	
 	public Map<String, String> getRefAttribute() {
 		return refAttribute;
@@ -52,10 +52,10 @@ public class MSAttributeObject {
 	public void setAttribute(HashMap<String, String> attribute) {
 		this.attribute = attribute;
 	}
-	public List<String> getEnumType() {
+	public HashMap<String, String> getEnumType() {
 		return enumType;
 	}
-	public void setEnumType(List<String> enumType) {
+	public void setEnumType(HashMap<String, String> enumType) {
 		this.enumType = enumType;
 	}
 	public void addAttribute(String key, String value){
@@ -84,5 +84,26 @@ public class MSAttributeObject {
 	}
 	public void setDependency(String dependency) {
 		this.dependency = dependency;
+	}
+	public void addSingleEnum(String key, String value){
+		this.enumType.put(key, value);
+	}
+	public HashMap<String, String> getMatchingSet() {
+		return matchingSet;
+	}
+	public void setMatchingSet(HashMap<String, String> matchingSet) {
+		this.matchingSet = matchingSet;
+	}
+	public void addMatchingSet(String key, String value){
+		this.matchingSet.put(key, value);
+	}
+	public void addMatchingSet(HashMap<String, String> matchingSet){
+		this.matchingSet.putAll(matchingSet);
+	}
+	public boolean isPolicyTempalate() {
+		return policyTempalate;
+	}
+	public void setPolicyTempalate(boolean policyTempalate) {
+		this.policyTempalate = policyTempalate;
 	}
 }

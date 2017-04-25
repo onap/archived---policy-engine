@@ -29,12 +29,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.util.JsonMessage;
-import org.openecomp.policy.rest.dao.DecisionPolicyDao;
-import org.openecomp.policy.rest.dao.UserInfoDao;
+import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.Datatype;
 import org.openecomp.policy.rest.jpa.DecisionSettings;
 import org.openecomp.policy.rest.jpa.UserInfo;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -48,14 +50,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class DecisionPolicyDictionaryController {
 
-	@Autowired
-	DecisionPolicyDao decisionPolicyDao;
+	private static final Logger LOGGER  = FlexLogger.getLogger(DecisionPolicyDictionaryController.class);
+	
+	private static CommonClassDao commonClassDao;
 	
 	@Autowired
-	UserInfoDao userInfoDao;
+	public DecisionPolicyDictionaryController(CommonClassDao commonClassDao){
+		DecisionPolicyDictionaryController.commonClassDao = commonClassDao;
+	}
+	
+	public DecisionPolicyDictionaryController(){}
 	
 	public UserInfo getUserInfo(String loginId){
-		UserInfo name = userInfoDao.getUserInfoByLoginId(loginId);
+		UserInfo name = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
 		return name;	
 	}
 	
@@ -64,13 +71,13 @@ public class DecisionPolicyDictionaryController {
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("settingsDictionaryDatas", mapper.writeValueAsString(decisionPolicyDao.getDecisionDataByName()));
+			model.put("settingsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(DecisionSettings.class, "xacmlId")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
 	}
 
@@ -80,25 +87,57 @@ public class DecisionPolicyDictionaryController {
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("settingsDictionaryDatas", mapper.writeValueAsString(decisionPolicyDao.getDecisionSettingsData()));
+			model.put("settingsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+            response.addHeader("successMapKey", "success"); 
+            response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
 	
-	@RequestMapping(value={"/decision_dictionary/save_Settings.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/decision_dictionary/save_Settings"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
 			boolean duplicateflag = false;
+            boolean isFakeUpdate = false;
+            boolean fromAPI = false;
+            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+                fromAPI = true;
+            }
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			DecisionSettings decisionSettings = (DecisionSettings)mapper.readValue(root.get("settingsDictionaryData").toString(), DecisionSettings.class);
-		    String userId = root.get("loginId").textValue();
+			DecisionSettings decisionSettings;
+            String userId = null;
+            
+            if (fromAPI) {
+            	decisionSettings = (DecisionSettings)mapper.readValue(root.get("dictionaryFields").toString(), DecisionSettings.class);
+            	userId = "API";
+
+            	//check if update operation or create, get id for data to be updated and update attributeData
+            	if (request.getParameter("operation").equals("update")) {
+            		List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionSettings.getXacmlId(), "xacmlId", DecisionSettings.class);
+            		int id = 0;
+            		DecisionSettings data = (DecisionSettings) duplicateData.get(0);
+            		id = data.getId();
+            		if(id==0){
+            			isFakeUpdate=true;
+            			decisionSettings.setId(1);
+            		} else {
+            			decisionSettings.setId(id);
+            		}
+            		decisionSettings.setUserCreatedBy(this.getUserInfo(userId));
+            	}
+            } else {
+            	decisionSettings = (DecisionSettings)mapper.readValue(root.get("settingsDictionaryData").toString(), DecisionSettings.class);
+            	userId = root.get("userid").textValue();
+            }
 			if(decisionSettings.getDatatypeBean().getShortName() != null){
 				String datatype = decisionSettings.getDatatypeBean().getShortName();
 				Datatype a = new Datatype();
@@ -116,37 +155,51 @@ public class DecisionPolicyDictionaryController {
 				decisionSettings.setDatatypeBean(a);
 			}
 			if(decisionSettings.getId() == 0){
-				CheckDictionaryDuplicateEntries entry = new CheckDictionaryDuplicateEntries();
-				List<Object> duplicateData =  entry.CheckDuplicateEntry(decisionSettings.getXacmlId(), "xacmlId", DecisionSettings.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionSettings.getXacmlId(), "xacmlId", DecisionSettings.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
 					decisionSettings.setUserCreatedBy(this.getUserInfo(userId));
 					decisionSettings.setUserModifiedBy(this.getUserInfo(userId));
-					decisionPolicyDao.Save(decisionSettings);
+					commonClassDao.save(decisionSettings);
 				}
 			}else{
-				decisionSettings.setUserModifiedBy(this.getUserInfo(userId));
-				decisionPolicyDao.update(decisionSettings); 
-			} 
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-
-			PrintWriter out = response.getWriter();
-			String responseString = "";
-			if(duplicateflag){
-				responseString = "Duplicate";
-			}else{
-				responseString =  mapper.writeValueAsString(this.decisionPolicyDao.getDecisionSettingsData());
+				if(!isFakeUpdate) {
+					decisionSettings.setUserModifiedBy(this.getUserInfo(userId));
+					commonClassDao.update(decisionSettings); 
+				}
 			}
-			JSONObject j = new JSONObject("{settingsDictionaryDatas: " + responseString + "}");
-
-			out.write(j.toString());
-
-			return null;
-		}
-		catch (Exception e){
+            String responseString = "";
+            if(duplicateflag){
+                responseString = "Duplicate";
+            }else{
+                responseString =  mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class));
+            }
+          
+            if (fromAPI) {
+                if (responseString!=null && !responseString.equals("Duplicate")) {
+                    if(isFakeUpdate){
+                        responseString = "Exists";
+                    } else {
+                        responseString = "Success";
+                    }
+                }
+                ModelAndView result = new ModelAndView();
+                result.setViewName(responseString);
+                return result;
+            } else {
+                response.setCharacterEncoding("UTF-8");
+                response.setContentType("application / json");
+                request.setCharacterEncoding("UTF-8");
+ 
+                PrintWriter out = response.getWriter();
+                JSONObject j = new JSONObject("{settingsDictionaryDatas: " + responseString + "}");
+                out.write(j.toString());
+                return null;
+            }
+ 
+        }catch (Exception e){
+        	LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -155,28 +208,28 @@ public class DecisionPolicyDictionaryController {
 		return null;
 	}
 
-	@RequestMapping(value={"/settings_dictionary/remove_settings.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/settings_dictionary/remove_settings"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView removeSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			DecisionSettings decisionSettings = (DecisionSettings)mapper.readValue(root.get("data").toString(), DecisionSettings.class);
-			decisionPolicyDao.delete(decisionSettings);
+			commonClassDao.delete(decisionSettings);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
 
-			String responseString = mapper.writeValueAsString(this.decisionPolicyDao.getDecisionSettingsData());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class));
 			JSONObject j = new JSONObject("{settingsDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
 
 			return null;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();

@@ -19,6 +19,7 @@
  */
 package org.openecomp.policy.xacml.std.pip.engines.aaf;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ import com.att.research.xacml.std.pip.StdMutablePIPResponse;
 import com.att.research.xacml.std.pip.StdPIPRequest;
 import com.att.research.xacml.std.pip.StdPIPResponse;
 import com.att.research.xacml.std.pip.engines.StdConfigurableEngine;
+import com.att.research.xacml.util.XACMLProperties;
 
 /**
  * PIP Engine for Implementing {@link com.att.research.xacml.std.pip.engines.ConfigurableEngine} interface to provide
@@ -73,7 +75,6 @@ public class AAFEngine extends StdConfigurableEngine {
 	private static final PIPRequest PIP_REQUEST_TYPE = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, new IdentifierImpl("AAF_TYPE"), XACML3.ID_DATATYPE_STRING);
 	private static final PIPRequest PIP_REQUEST_INSTANCE = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, new IdentifierImpl("AAF_INSTANCE"), XACML3.ID_DATATYPE_STRING);
 	private static final PIPRequest PIP_REQUEST_ACTION = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, new IdentifierImpl("AAF_ACTION"), XACML3.ID_DATATYPE_STRING);
-	private static final PIPRequest PIP_REQUEST_ENV = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, new IdentifierImpl("AAF_ENVIRONMENT"), XACML3.ID_DATATYPE_STRING);
 	
 	private static final List<PIPRequest> mapRequiredAttributes	= new ArrayList<PIPRequest>();
 	static{ 
@@ -82,7 +83,6 @@ public class AAFEngine extends StdConfigurableEngine {
 		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_TYPE));
 		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_INSTANCE));
 		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_ACTION));
-		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_ENV));
 	}
 	
 	private static final Map<PIPRequest, String> mapSupportedAttributes	= new HashMap<PIPRequest, String>();
@@ -135,27 +135,21 @@ public class AAFEngine extends StdConfigurableEngine {
 		PIPResponse pipResponseType = this.getAttribute(PIP_REQUEST_TYPE, pipFinder);
 		PIPResponse pipResponseAction = this.getAttribute(PIP_REQUEST_ACTION, pipFinder);
 		PIPResponse pipResponseInstance = this.getAttribute(PIP_REQUEST_INSTANCE, pipFinder);
-		PIPResponse pipResponseEnv = this.getAttribute(PIP_REQUEST_ENV, pipFinder);
 		String response = null;
 		// Evaluate AAF if we have all the required values. 
-		if(pipResponseUID!=null && pipResponsePass!=null && pipResponseType != null && pipResponseAction!= null && pipResponseInstance!=null && pipResponseEnv!=null){
-			// Check the Environment. 
-			String environment = getValue(pipResponseEnv);
-			if(environment == null){
-				response = "Environment Value is not set. ";
-			}
+		if(pipResponseUID!=null && pipResponsePass!=null && pipResponseType != null && pipResponseAction!= null && pipResponseInstance!=null){
 			String userName = getValue(pipResponseUID);
 			String pass = getValue(pipResponsePass);
 			AAFPolicyClient aafClient = null;
-			Properties properties = new Properties();
-			if(environment.equalsIgnoreCase("PROD")){
-				properties.setProperty("ENVIRONMENT", "PROD");
-			}else if(environment.equalsIgnoreCase("TEST")){
-				properties.setProperty("ENVIRONMENT", "TEST");
-			}else{
-				properties.setProperty("ENVIRONMENT", "DEVL");
-			}
-			logger.debug("environment : " + environment);
+			Properties properties;
+			try {
+                properties = XACMLProperties.getProperties();
+                logger.debug("environment : " + properties.getProperty("ENVIRONMENT"));
+            } catch (IOException e1) {
+                logger.error("Exception while getting the properties " + e1);
+                properties = new Properties();
+                properties.setProperty("AAF_LOG_LEVEL", "DEBUG");
+            }
 			if(userName!=null && pass!=null){
 				try {
 					aafClient = AAFPolicyClient.getInstance(properties);

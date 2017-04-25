@@ -20,9 +20,6 @@
 
 package org.openecomp.policy.pap.xacml.restAuth;
 
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,14 +36,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
-
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
-
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger; 
 
 public class CheckPDP {
 
@@ -62,8 +57,6 @@ public class CheckPDP {
 		try {
 			readFile();
 		} catch (Exception e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "CheckPDP", "Exception reading file");
 			return false;
 		}
@@ -77,24 +70,18 @@ public class CheckPDP {
 	private static void readFile() throws Exception {
 		String pdpFile = XACMLPapServlet.getPDPFile();
 		if (pdpFile == null) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PDP File name not Valid : " + pdpFile);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + "PDP File name is undefined");
 			throw new Exception(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"PDP File name not Valid : " + pdpFile);
 		}
 		if (pdpPath == null) {
 			pdpPath = Paths.get(pdpFile);
 			if (Files.notExists(pdpPath)) {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "File doesn't exist in the specified Path : "	+ pdpPath.toString());
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + "File doesn't exist in the specified Path");
 				throw new Exception(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"File doesn't exist in the specified Path : "+ pdpPath.toString());
 			} 
 			if (pdpPath.toString().endsWith(".properties")) {
 				readProps();
 			} else {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Not a .properties file " + pdpFile);
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + "Not a .properties file");
 				throw new Exception(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Not a .properties file");
 			}
@@ -109,6 +96,7 @@ public class CheckPDP {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static void readProps() throws Exception {
 		InputStream in;
 		pdpProp = new Properties();
@@ -117,8 +105,6 @@ public class CheckPDP {
 			oldModified = pdpPath.toFile().lastModified();
 			pdpProp.load(in);
 		} catch (IOException e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "CheckPDP", "Cannot load the Properties file");
 			throw new Exception("Cannot Load the Properties file", e);
 		}
@@ -164,14 +150,10 @@ public class CheckPDP {
 				// 0 - PDPURL
 				pdpMap.put(pdpValues.get(0), encoder.encodeToString((userID+":"+pass).getBytes(StandardCharsets.UTF_8)));
 			}else{
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_PERMISSIONS + "No Credentials to send Request: " + pdpValues);
 				PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + "No Credentials to send Request");
 				throw new Exception(XACMLErrorConstants.ERROR_PERMISSIONS + "No enough Credentials to send Request. " + pdpValues);
 			}
 		}else{
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_PERMISSIONS + "No Credentials to send Request: " + pdpVal);
 			PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + "No Credentials to send Request: " + pdpVal);
 			throw new Exception(XACMLErrorConstants.ERROR_PERMISSIONS +"No enough Credentials to send Request.");
 		}
@@ -181,8 +163,6 @@ public class CheckPDP {
 		try {
 			readFile();
 		} catch (Exception e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "CheckPDP", "Exeption reading Properties file");
 		}
 		String encoding = null;
@@ -190,8 +170,6 @@ public class CheckPDP {
 			try{
 				encoding = pdpMap.get(pdpID);
 			} catch(Exception e){
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "CheckPDP", "Exception encoding");
 			}
 			return encoding;

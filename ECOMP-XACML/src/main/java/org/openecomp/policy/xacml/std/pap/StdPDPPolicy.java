@@ -168,8 +168,6 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 				this.version = versionStringToArray(((PolicyType)rootElement).getVersion());
 				this.isValid = true;
 			} else {
-				//TODO:EELF Cleanup - Remove logger
-				//logger.error("Unknown root element: " + rootElement.getClass().getCanonicalName());
 				PolicyLogger.error("Unknown root element: " + rootElement.getClass().getCanonicalName());
 			}
 		}

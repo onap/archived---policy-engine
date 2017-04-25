@@ -47,9 +47,9 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.entity.ContentType;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 
 import com.att.research.xacml.api.AttributeValue;
 import com.att.research.xacml.api.DataType;
@@ -79,9 +79,7 @@ import com.att.research.xacml.std.json.JSONStructureException;
 import com.att.research.xacml.util.FactoryException;
 import com.att.research.xacml.util.XACMLProperties;
 import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger; 
+import com.google.common.collect.Lists; 
 
 /**
  * This is a base class for setting up a test environment. Using properties files, it contains the

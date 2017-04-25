@@ -23,22 +23,15 @@ package org.openecomp.policy.pap.xacml.restAuth;
 import java.util.Base64;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openecomp.policy.rest.XACMLRestProperties;
-
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
-import com.att.research.xacml.util.XACMLProperties;
-
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger; 
+import org.openecomp.policy.rest.XACMLRestProperties;
+
+import com.att.research.xacml.util.XACMLProperties;
 
 public class AuthenticationService {
 	private String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
 	private String papPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
-	private static final Logger logger = FlexLogger.getLogger(AuthenticationService.class);
 	
 	public boolean authenticate(String authCredentials) {
 
@@ -51,8 +44,6 @@ public class AuthenticationService {
 			byte[] decodedBytes = Base64.getDecoder().decode(encodedUserPassword);
 			usernameAndPassword = new String(decodedBytes, "UTF-8");
 		} catch (Exception e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "AuthenticationService", "Exception decoding username and password");
 			return false;
 		}
@@ -64,8 +55,6 @@ public class AuthenticationService {
 			boolean authenticationStatus = papID.equals(username)	&& papPass.equals(password);
 			return authenticationStatus;
 		} catch (Exception e){
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "AuthenticationService", "Exception authenticating user");
 			return false;
 		}

@@ -20,6 +20,8 @@
 
 package org.openecomp.policy.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * Enumeration of the Policy Delete Condition that is used as a part of
  * {@link org.openecomp.policy.api.DeletePolicyParameters}.
@@ -50,4 +52,14 @@ public enum DeletePolicyCondition {
 	public String toString(){
 		return this.name;
 	}
+
+	@JsonCreator
+    public static DeletePolicyCondition create (String value) {
+        for(DeletePolicyCondition type: values()){
+            if(type.toString().equals(value) || type.equals(DeletePolicyCondition.valueOf(value))){
+                return type;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
 }

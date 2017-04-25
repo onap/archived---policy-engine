@@ -20,20 +20,19 @@
 
 package org.openecomp.policy.std.test;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.*;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.openecomp.policy.api.NotificationScheme;
 import org.openecomp.policy.api.PDPNotification;
 import org.openecomp.policy.std.ManualClientEndUEB;
-import org.openecomp.policy.std.NotificationUnMarshal;
 import org.openecomp.policy.std.StdPDPNotification;
-
-import static org.junit.Assert.*;
 
 /**
  * The class <code>ManualClientEndUEBTest</code> contains tests for the class <code>{@link ManualClientEndUEB}</code>.
@@ -59,7 +58,6 @@ public class ManualClientEndUEBTest {
 	public void setUp()
 		throws Exception {
 		String url = "http://test.com";
-		String uniqueID = "test";
 		List<String> uebURLList = new LinkedList<String>();
 		uebURLList.add(url);
 				

@@ -43,7 +43,7 @@ import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
 
 public class JPAUtils {
-	private static Logger logger	= FlexLogger.getLogger(JPAUtils.class);
+	private static Logger LOGGER	= FlexLogger.getLogger(JPAUtils.class);
 	
 	private EntityManagerFactory emf;
 	private static final Object mapAccess = new Object();
@@ -51,7 +51,6 @@ public class JPAUtils {
 	private static Map<String, FunctionDefinition> mapID2Function = null;
 	private static JPAUtils currentInstance = null;
 	
-	//private static List<LockdownListener> lockdownListeners = new ArrayList<LockdownListener>();
 	
 	/**
 	 * Get an instance of a JPAUtils. It creates one if it does not exist.
@@ -61,7 +60,7 @@ public class JPAUtils {
 	 * @throws IllegalStateException if a JPAUtils has already been constructed. Call getJPAUtilsInstance() to get this.
 	 */
 	public static JPAUtils getJPAUtilsInstance(EntityManagerFactory emf) throws Exception{
-		logger.debug("getJPAUtilsInstance(EntityManagerFactory emf) as getJPAUtilsInstance("+emf+") called");
+		LOGGER.debug("getJPAUtilsInstance(EntityManagerFactory emf) as getJPAUtilsInstance("+emf+") called");
 		if(currentInstance == null){
 			if(emf != null){
 				currentInstance = new JPAUtils(emf);
@@ -73,7 +72,7 @@ public class JPAUtils {
 	}
 	
 	private JPAUtils(EntityManagerFactory emf){
-		logger.debug("JPAUtils(EntityManagerFactory emf) as JPAUtils("+emf+") called");
+		LOGGER.debug("JPAUtils(EntityManagerFactory emf) as JPAUtils("+emf+") called");
 		this.emf = emf;	
 	}
 	
@@ -83,7 +82,7 @@ public class JPAUtils {
 	 * @throws IllegalStateException if a JPAUtils instance is null. Call getJPAUtilsInstance(EntityManagerFactory emf) to get this.
 	 */
 	public static JPAUtils getJPAUtilsInstance() throws Exception{
-		logger.debug("getJPAUtilsInstance() as getJPAUtilsInstance() called");
+		LOGGER.debug("getJPAUtilsInstance() as getJPAUtilsInstance() called");
 		if(currentInstance != null){
 			return currentInstance;
 		}
@@ -96,12 +95,12 @@ public class JPAUtils {
 		if (attribute.getCategoryBean() != null) {
 			designator.setCategory(attribute.getCategoryBean().getXacmlId());
 		} else {
-			logger.warn("No category bean");
+			LOGGER.warn("No category bean");
 		}
 		if (attribute.getDatatypeBean() != null) {
 			designator.setDataType(attribute.getDatatypeBean().getXacmlId());
 		} else {
-			logger.warn("No datatype bean");
+			LOGGER.warn("No datatype bean");
 		}
 		designator.setIssuer(attribute.getIssuer());
 		designator.setMustBePresent(attribute.isMustBePresent());
@@ -115,12 +114,12 @@ public class JPAUtils {
 		if (attribute.getCategoryBean() != null) {
 			selector.setCategory(attribute.getCategoryBean().getXacmlId());
 		} else {
-			logger.warn("No category bean");
+			LOGGER.warn("No category bean");
 		}
 		if (attribute.getDatatypeBean() != null) {
 			selector.setDataType(attribute.getDatatypeBean().getXacmlId());
 		} else {
-			logger.warn("No datatype bean");
+			LOGGER.warn("No datatype bean");
 		}
 		selector.setMustBePresent(attribute.isMustBePresent());
 		return selector;
@@ -139,7 +138,6 @@ public class JPAUtils {
 				try {
 					buildFunctionMaps();
 				} catch (ServletException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -153,7 +151,6 @@ public class JPAUtils {
 				try {
 					buildFunctionMaps();
 				} catch (ServletException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -191,14 +188,14 @@ public class JPAUtils {
 	 * @throws ConversionException
 	 */
 	public boolean dbLockdownIgnoreErrors() {
-		if (logger.isTraceEnabled())
-			logger.trace("ENTER");
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("ENTER");
 		
 		boolean lockdown = false;
 		try {
 			lockdown = dbLockdown();
 		} catch (Exception e) {
-			logger.warn("Cannot access DB lockdown value", e);
+			LOGGER.warn("Cannot access DB lockdown value", e);
 		}
 		return lockdown;
 	}
@@ -211,8 +208,8 @@ public class JPAUtils {
 	 */
 	public boolean dbLockdown() 
 			throws  IllegalAccessException {
-		if (logger.isTraceEnabled())
-			logger.trace("ENTER");
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("ENTER");
 		
 		EntityManager em = emf.createEntityManager();
 		Query globalRoleSettingsJPA = em.createNamedQuery("GlobalRoleSettings.findAll");	
@@ -222,15 +219,15 @@ public class JPAUtils {
 		if (globalRoleSettings == null) {
 			// this should not happen
 			String msg = "NO GlobalSetttings for " + XacmlAdminAuthorization.Role.ROLE_SUPERADMIN.toString();
-			if (logger.isErrorEnabled())
-				logger.error(msg);
+			if (LOGGER.isErrorEnabled())
+				LOGGER.error(msg);
 			throw new IllegalAccessException(msg);
 		}
 		
 		if (!globalRoleSettings.getRole().equals(XacmlAdminAuthorization.Role.ROLE_SUPERADMIN.toString())) {
 			String msg = "NOT FOUND db data for " + XacmlAdminAuthorization.Role.ROLE_SUPERADMIN.toString();
-			if (logger.isErrorEnabled())
-				logger.error(msg);
+			if (LOGGER.isErrorEnabled())
+				LOGGER.error(msg);
 			throw new IllegalAccessException(msg);
 		}
 		

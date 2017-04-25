@@ -25,9 +25,6 @@ import java.util.LinkedList;
 import org.openecomp.policy.xacml.api.pap.EcompPDP;
 import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
 
-import com.att.research.xacml.api.pap.PDP;
-import com.att.research.xacml.api.pap.PDPGroup;
-
 public class StdPDPItemSetChangeNotifier {
 	
 	private Collection<StdItemSetChangeListener> listeners = null;

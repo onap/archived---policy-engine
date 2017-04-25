@@ -72,7 +72,7 @@ public class ConfigRequestParametersTest {
 		String policyName = "";
 		String eCOMPComponentName = "";
 		String configName = "";
-		Map<String, String> configAttributes = new Hashtable();
+		Map<String, String> configAttributes = new Hashtable<String, String>();
 		Boolean unique = new Boolean(true);
 		UUID requestID = UUID.randomUUID();
 
@@ -96,7 +96,7 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testGetConfigAttributes_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.randomUUID());
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.randomUUID());
 
 		Map<String, String> result = fixture.getConfigAttributes();
 
@@ -115,7 +115,7 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testGetConfigName_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.randomUUID());
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.randomUUID());
 
 		String result = fixture.getConfigName();
 
@@ -133,7 +133,7 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testGetEcompName_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.randomUUID());
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.randomUUID());
 
 		String result = fixture.getEcompName();
 
@@ -151,7 +151,7 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testGetPolicyName_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.randomUUID());
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.randomUUID());
 
 		String result = fixture.getPolicyName();
 
@@ -169,7 +169,7 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testGetRequestID_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.fromString("6b5aa070-90bc-46a6-9a59-e1fe526df7ae"));
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.fromString("6b5aa070-90bc-46a6-9a59-e1fe526df7ae"));
 
 		UUID result = fixture.getRequestID();
 
@@ -192,7 +192,7 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testGetUnique_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.randomUUID());
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.randomUUID());
 
 		Boolean result = fixture.getUnique();
 
@@ -212,7 +212,7 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testMakeUnique_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.randomUUID());
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.randomUUID());
 		Boolean unique = new Boolean(true);
 
 		fixture.makeUnique(unique);
@@ -230,8 +230,8 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testSetConfigAttributes_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.randomUUID());
-		Map<String, String> configAttributes = new Hashtable();
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.randomUUID());
+		Map<String, String> configAttributes = new Hashtable<String, String>();
 
 		fixture.setConfigAttributes(configAttributes);
 
@@ -248,7 +248,7 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testSetConfigName_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.randomUUID());
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.randomUUID());
 		String configName = "";
 
 		fixture.setConfigName(configName);
@@ -266,7 +266,7 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testSetEcompName_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.randomUUID());
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.randomUUID());
 		String eCOMPComponentName = "";
 
 		fixture.setEcompName(eCOMPComponentName);
@@ -284,7 +284,7 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testSetPolicyName_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.randomUUID());
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.randomUUID());
 		String policyName = "";
 
 		fixture.setPolicyName(policyName);
@@ -302,7 +302,7 @@ public class ConfigRequestParametersTest {
 	@Test
 	public void testSetRequestID_1()
 		throws Exception {
-		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable(), new Boolean(true), UUID.randomUUID());
+		ConfigRequestParameters fixture = createConfigRequest("", "", "", new Hashtable<String, String>(), new Boolean(true), UUID.randomUUID());
 		UUID requestID = UUID.randomUUID();
 
 		fixture.setRequestID(requestID);

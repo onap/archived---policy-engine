@@ -48,7 +48,6 @@ public class PolicyEntityTest {
 	
 	private static Logger logger = FlexLogger.getLogger(PolicyEntityTest.class);
 	
-//    @Ignore
     @Test
     public void testAllOps(){
     	Properties properties = new Properties();
@@ -125,18 +124,18 @@ public class PolicyEntityTest {
         //We will NOT set the ConfigurationDataEntity or ActionBodyEntity object just to test that it is optional
         
         //set createdBy
-        p1.setCreatedBy("super-admin");
+        p1.setCreatedBy("kevin");
         
         //createdDate will be set when it is persisted
         
         //set scope
-        p1.setScope("com.test");
+        p1.setScope("mckiou.kevin");
         
         //set description
         p1.setDescription("PolicyEntity Description");
         
         //set modifiedBy
-        p1.setModifiedBy("super-admin");
+        p1.setModifiedBy("kevin");
         
         //modifiedDate will be set when it is persisted
       
@@ -202,7 +201,9 @@ public class PolicyEntityTest {
         
         c1.setDescription("ConfigurationDataEntity Description");
         
-        c1.setCreatedBy("super-admin");
+        c1.setCreatedBy("kevin");
+        
+        //c1.setModifiedBy("kevin");
         
         c1.setDeleted(true);
         
@@ -214,9 +215,9 @@ public class PolicyEntityTest {
         
         a1.setActionBodyName("myActionBodyName");
         
-        a1.setCreatedBy("super-admin");
+        a1.setCreatedBy("kevin");
         
-        a1.setModifiedBy("super-admin");
+        a1.setModifiedBy("kevin");
         
         a1.setDeleted(false);
         
@@ -274,7 +275,7 @@ public class PolicyEntityTest {
         Query queryscope = em.createQuery("Select p from PolicyEntity p where p.scope=:s");
         
         query.setParameter("pid", p1.getPolicyId());
-        queryscope.setParameter("s", "com.user");
+        queryscope.setParameter("s", "mckiou.kevin.kim");
         
         //Just test that we are retrieving the right object
         @SuppressWarnings("rawtypes")
@@ -669,7 +670,7 @@ public class PolicyEntityTest {
         
         pe1.setDescription("This is pe1");
         
-        pe1.setPolicyDBDaoUrl("http://10.11.12.13:2345");
+        pe1.setPolicyDBDaoUrl("http://123.45.2.456:2345");
         
         //push it to the DB
         em.flush();
@@ -680,7 +681,7 @@ public class PolicyEntityTest {
         
         pe2.setDescription("This is pe2");
         
-        pe2.setPolicyDBDaoUrl("http://10.11.12.13:2345");
+        pe2.setPolicyDBDaoUrl("http://789.01.2.345:2345");
         
         //Print them to the log before flushing
         logger.debug("\n\n***********PolicyEntityTest: PolicyDBDaoEntity objects before flush********"
@@ -711,9 +712,9 @@ public class PolicyEntityTest {
         	}
         	for(Object policyDBDaoEntity: resultList){
         		PolicyDBDaoEntity pdbdao = (PolicyDBDaoEntity)policyDBDaoEntity;
-        		if(pdbdao.getPolicyDBDaoUrl().equals("http://10.11.12.13:2345")){
+        		if(pdbdao.getPolicyDBDaoUrl().equals("http://123.45.2.456:2345")){
         			pex = pdbdao;
-        		}else if(pdbdao.getPolicyDBDaoUrl().equals("http://10.11.12.13:2345")){
+        		}else if(pdbdao.getPolicyDBDaoUrl().equals("http://789.01.2.345:2345")){
         			pey = pdbdao;
         		}
         	}
@@ -731,7 +732,7 @@ public class PolicyEntityTest {
         			+ "\n   modifiedDate-y " + pey.getModifiedDate()
             		);
         	//Verify the retrieved objects are the same as the ones we stored in the DB
-        	if(pex.getPolicyDBDaoUrl().equals("http://10.11.12.13:2345")){
+        	if(pex.getPolicyDBDaoUrl().equals("http://123.45.2.456:2345")){
         		assertSame(pe1,pex);
         		assertSame(pe2,pey);
         	}else{
