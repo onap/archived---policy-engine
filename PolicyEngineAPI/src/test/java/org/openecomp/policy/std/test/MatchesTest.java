@@ -60,7 +60,7 @@ public class MatchesTest {
 		throws Exception {
 		Matches fixture = new Matches();
 		fixture.setEcompName("");
-		fixture.setConfigAttributes(new Hashtable());
+		fixture.setConfigAttributes(new Hashtable<String, String>());
 		fixture.setConfigName("");
 
 		Map<String, String> result = fixture.getConfigAttributes();
@@ -82,7 +82,7 @@ public class MatchesTest {
 		throws Exception {
 		Matches fixture = new Matches();
 		fixture.setEcompName("");
-		fixture.setConfigAttributes(new Hashtable());
+		fixture.setConfigAttributes(new Hashtable<String, String>());
 		fixture.setConfigName("");
 
 		String result = fixture.getConfigName();
@@ -103,7 +103,7 @@ public class MatchesTest {
 		throws Exception {
 		Matches fixture = new Matches();
 		fixture.setEcompName("");
-		fixture.setConfigAttributes(new Hashtable());
+		fixture.setConfigAttributes(new Hashtable<String, String>());
 		fixture.setConfigName("");
 
 		String result = fixture.getEcompName();
@@ -124,9 +124,9 @@ public class MatchesTest {
 		throws Exception {
 		Matches fixture = new Matches();
 		fixture.setEcompName("");
-		fixture.setConfigAttributes(new Hashtable());
+		fixture.setConfigAttributes(new Hashtable<String, String>());
 		fixture.setConfigName("");
-		Map<String, String> configAttributes = new Hashtable();
+		Map<String, String> configAttributes = new Hashtable<String, String>();
 
 		fixture.setConfigAttributes(configAttributes);
 
@@ -145,7 +145,7 @@ public class MatchesTest {
 		throws Exception {
 		Matches fixture = new Matches();
 		fixture.setEcompName("");
-		fixture.setConfigAttributes(new Hashtable());
+		fixture.setConfigAttributes(new Hashtable<String, String>());
 		fixture.setConfigName("");
 		String configName = "";
 
@@ -166,7 +166,7 @@ public class MatchesTest {
 		throws Exception {
 		Matches fixture = new Matches();
 		fixture.setEcompName("");
-		fixture.setConfigAttributes(new Hashtable());
+		fixture.setConfigAttributes(new Hashtable<String, String>());
 		fixture.setConfigName("");
 		String ecompName = "";
 

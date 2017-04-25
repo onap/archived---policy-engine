@@ -1,6 +1,6 @@
 /*-
  * ================================================================================
- * eCOMP Portal SDK
+ * ECOMP Portal SDK
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property
  * ================================================================================
@@ -19,19 +19,31 @@
  */
 package org.openecomp.portalapp.conf;
 
-import org.openecomp.portalsdk.core.conf.HibernateMappingLocatable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+import org.openecomp.portalsdk.core.conf.HibernateMappingLocatable;
+
 @Component
 @Profile("src")
 public class HibernateMappingLocations implements HibernateMappingLocatable {
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.openecomp.portalsdk.core.conf.HibernateMappingLocatable#getMappingLocations()
+	 */
 	public Resource[] getMappingLocations() {
-		return new Resource[]{new ClassPathResource("../fusion/orm/Fusion.hbm.xml"), new ClassPathResource("../fusion/orm/Workflow.hbm.xml"), new ClassPathResource("../fusion/orm/RNoteBookIntegration.hbm.xml")};
+		return new Resource[] {
+				new ClassPathResource("../fusion/orm/Fusion.hbm.xml"), 
+				new ClassPathResource("../fusion/orm/Workflow.hbm.xml"), 
+				new ClassPathResource("../fusion/orm/RNoteBookIntegration.hbm.xml")
+		};
 	}
-     
-
+	
+	@Override
+	public String[] getPackagesToScan() {
+		return new String[] { "org.openecomp" };
+	}
 }

@@ -101,7 +101,6 @@ public class PolicyAccess implements Access {
 
 	@Override
 	public boolean willLog(Level arg0) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

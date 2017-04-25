@@ -22,7 +22,6 @@ package org.openecomp.policy.rest.jpa;
 /*
  */
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,13 +33,11 @@ import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="PREFIXLIST")
-@NamedQuery(name="PREFIXLIST.findAll", query="SELECT e FROM PREFIXLIST e ")
-public class PREFIXLIST implements Serializable {
+@Table(name="PrefixList")
+@NamedQuery(name="PrefixList.findAll", query="SELECT e FROM PrefixList e ")
+public class PrefixList implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static String domain;
@@ -64,14 +61,14 @@ public class PREFIXLIST implements Serializable {
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;*/
 
-	public PREFIXLIST() {
+	public PrefixList() {
 		
 	}
-	public PREFIXLIST(String string, String userid) {
+	public PrefixList(String string, String userid) {
 		this(domain);
 		
 	}
-	public PREFIXLIST(String domain) {
+	public PrefixList(String domain) {
 		
 	}	
 

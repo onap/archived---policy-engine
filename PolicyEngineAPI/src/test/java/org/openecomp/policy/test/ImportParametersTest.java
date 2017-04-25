@@ -20,13 +20,15 @@
 
 package org.openecomp.policy.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.UUID;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.openecomp.policy.api.ImportParameters;
-import org.openecomp.policy.api.ImportParameters.IMPORT_TYPE;
-
-import static org.junit.Assert.*;
 
 /**
  * The class <code>ImportParametersTest</code> contains tests for the class <code>{@link ImportParameters}</code>.
@@ -48,7 +50,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");
@@ -73,38 +74,12 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");
 		fixture.setServiceName("");
 
 		String result = fixture.getFilePath();
-
-		// add additional test code here
-		assertEquals("", result);
-	}
-
-	/**
-	 * Run the String getImportBody() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testGetImportBody_1()
-		throws Exception {
-		ImportParameters fixture = new ImportParameters();
-		fixture.setFilePath("");
-		fixture.setVersion("");
-		fixture.setImportBody("");
-		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
-		fixture.setRequestID(UUID.randomUUID());
-		fixture.setDescription("");
-		fixture.setServiceName("");
-
-		String result = fixture.getImportBody();
 
 		// add additional test code here
 		assertEquals("", result);
@@ -123,7 +98,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.fromString("731dca0a-fe99-456c-8ad2-87cff8437b2f"));
 		fixture.setDescription("");
@@ -153,7 +127,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");
@@ -178,7 +151,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");
@@ -206,7 +178,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");
@@ -231,7 +202,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");
@@ -256,7 +226,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");
@@ -264,31 +233,6 @@ public class ImportParametersTest {
 		String filePath = "";
 
 		fixture.setFilePath(filePath);
-
-		// add additional test code here
-	}
-
-	/**
-	 * Run the void setImportBody(String) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testSetImportBody_1()
-		throws Exception {
-		ImportParameters fixture = new ImportParameters();
-		fixture.setFilePath("");
-		fixture.setVersion("");
-		fixture.setImportBody("");
-		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
-		fixture.setRequestID(UUID.randomUUID());
-		fixture.setDescription("");
-		fixture.setServiceName("");
-		String importBody = "";
-
-		fixture.setImportBody(importBody);
 
 		// add additional test code here
 	}
@@ -306,7 +250,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");
@@ -336,7 +279,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");
@@ -361,7 +303,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");
@@ -386,7 +327,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");
@@ -411,7 +351,6 @@ public class ImportParametersTest {
 		ImportParameters fixture = new ImportParameters();
 		fixture.setFilePath("");
 		fixture.setVersion("");
-		fixture.setImportBody("");
 		fixture.setServiceType(ImportParameters.IMPORT_TYPE.MICROSERVICE);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setDescription("");

@@ -44,11 +44,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import org.apache.log4j.Logger;
 import org.openecomp.policy.common.im.AdministrativeStateException;
 import org.openecomp.policy.common.im.IntegrityMonitor;
 import org.openecomp.policy.common.im.StandbyStatusException;
-
-import org.apache.log4j.Logger;
 import org.openecomp.xacml.parser.LogEntryObject.LOGTYPE;
 
 /**
@@ -75,6 +74,8 @@ public class ParseLog {
 	private static String resourceName;
 	private static long sleepTimer = 50000;
 	static IntegrityMonitor im;
+
+	private static RandomAccessFile randomAccessFile;
 	
 	public static void main(String[] args) throws Exception {
 
@@ -143,9 +144,7 @@ public class ParseLog {
 	public static int countLines(String filename) throws IOException {
 	    LineNumberReader reader  = new LineNumberReader(new FileReader(filename));
 	    int cnt = 0;
-	    String lineRead = "";
-	    while ((lineRead = reader.readLine()) != null) {}
-
+	    while ((reader.readLine()) != null) {}
 	    cnt = reader.getLineNumber(); 
 	    reader.close();
 	    return cnt;
@@ -156,8 +155,7 @@ public class ParseLog {
 			file.createNewFile();
 			return null;
 		}
-		RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-        int lines = 0;
+		randomAccessFile = new RandomAccessFile(file, "r");
         StringBuilder builder = new StringBuilder();
         long length = file.length();
         length--;
@@ -172,9 +170,7 @@ public class ParseLog {
             		String[] parseString = builder.toString().split("Last line Read:");
             		String returnValue = parseString[1].replace("\r", "");
             		return returnValue.trim();
-            		//return parseString[2].replace("\r", "");
             	}
-                lines++;
                 builder = null;
                 builder = new StringBuilder();
              }

@@ -20,10 +20,9 @@
 
 package org.openecomp.policy.test;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
 import org.openecomp.policy.api.PolicyChangeResponse;
-
-import static org.junit.Assert.*;
 
 /**
  * The class <code>PolicyChangeResponseTest</code> contains tests for the class <code>{@link PolicyChangeResponse}</code>.

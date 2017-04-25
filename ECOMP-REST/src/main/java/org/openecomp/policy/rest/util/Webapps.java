@@ -38,7 +38,7 @@ import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 public class Webapps {
 	private static String actionHome = null;
 	private static String configHome = null;
-	private static Log logger	= LogFactory.getLog(Webapps.class);
+	private static Log LOGGER	= LogFactory.getLog(Webapps.class);
 	
 	private Webapps() {
 	}
@@ -66,8 +66,7 @@ public class Webapps {
 			Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));
 			//Sanity Check
 			if (webappsPath == null) {
-				logger.error("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
-				// TODO:EELF Cleanup - Remove logger
+				LOGGER.error("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
 				PolicyLogger.error("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
 				throw new Exception("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
 			}
@@ -88,9 +87,8 @@ public class Webapps {
 				try {
 					Files.createDirectories(webappsPathConfig);
 				} catch (IOException e) {
-					logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create config directory: "
+					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create config directory: "
 							+ webappsPathConfig.toAbsolutePath().toString(), e);
-					// TODO:EELF Cleanup - Remove logger
 					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Webapps", "Failed to create config directory");
 				}
 			}
@@ -99,9 +97,8 @@ public class Webapps {
 				try {
 					Files.createDirectories(webappsPathAction);
 				} catch (IOException e) {
-					logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create config directory: "
+					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create config directory: "
 							+ webappsPathAction.toAbsolutePath().toString(), e);
-					// TODO:EELF Cleanup - Remove logger
 					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Webapps", "Failed to create config directory");
 				}
 			}

@@ -41,33 +41,25 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-//import org.eclipse.emf.common.util.URI;
-//import org.eclipse.emf.ecore.EPackage;
-//import org.eclipse.emf.ecore.resource.Resource;
-//import org.eclipse.emf.ecore.resource.ResourceSet;
-//import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-//import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
 import org.openecomp.policy.rest.XACMLRestProperties;
 import org.openecomp.policy.rest.jpa.MicroServiceModels;
 import org.openecomp.policy.rest.jpa.UserInfo;
 import org.openecomp.policy.rest.util.MSAttributeObject;
-import org.openecomp.policy.rest.util.MSModelUtitils;
+import org.openecomp.policy.rest.util.MSModelUtils;
+import org.openecomp.policy.rest.util.MSModelUtils.MODEL_TYPE;
 
 import com.att.research.xacml.util.XACMLProperties;
-
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger; 
 
 public class CreateNewMicroSerivceModel {
 	private static final Logger logger = FlexLogger.getLogger(CreateNewMicroSerivceModel.class);
 	private MicroServiceModels newModel = null;
 	private HashMap<String,MSAttributeObject > classMap = new HashMap<String,MSAttributeObject>();
-	private String directory;
-	
+
 	/*
 	 * These are the parameters needed for DB access from the PAP
 	 */
@@ -76,15 +68,14 @@ public class CreateNewMicroSerivceModel {
 	private static String papDbUser = null;
 	private static String papDbPassword = null;
 	
-	MSModelUtitils utils = new MSModelUtitils();
+	MSModelUtils utils = new MSModelUtils(XACMLPapServlet.msEcompName, XACMLPapServlet.msPolicyName);
 
 	public CreateNewMicroSerivceModel(String fileName, String serviceName, String string, String version) {
 		super();
 	}
 
 	public CreateNewMicroSerivceModel(String importFile, String  modelName, String description, String version, String randomID) {
-		
-		Map<String, String> successMap = new HashMap<String,String>();
+	
 		this.newModel = new MicroServiceModels();
 		this.newModel.setDescription(description);
 		this.newModel.setVersion(version);
@@ -100,11 +91,10 @@ public class CreateNewMicroSerivceModel {
 	    	extractFolder(randomID + ".zip");
 	        File directory = new File("ExtractDir" + File.separator + randomID);
 	        List<File> fileList = listModelFiles(directory.toString());
-	        //get all the files from a directory
-	        File[] fList = directory.listFiles();
+	        //get all the files from a director
 	        for (File file : fileList){
 	            if (file.isFile()){
-				    tempMap = utils.processEpackage(file.getAbsolutePath());
+				    tempMap = utils.processEpackage(file.getAbsolutePath(), MODEL_TYPE.XMI);
 				    classMap.putAll(tempMap);
 	            }
 	        }
@@ -118,16 +108,12 @@ public class CreateNewMicroSerivceModel {
 				logger.error("Failed to unzip model file " + randomID);
 			}
 	    }else {
-		    tempMap = utils.processEpackage("ExtractDir" + File.separator + randomID+".xmi");
+		    tempMap = utils.processEpackage("ExtractDir" + File.separator + randomID+".xmi", MODEL_TYPE.XMI);
 		    classMap.putAll(tempMap);
 		    cleanUpFile = "ExtractDir" + File.separator + randomID+".xmi";
 		    File deleteFile = new File(cleanUpFile); 
 			deleteFile.delete();
 	    }
-
-	    //	addValuesToNewModel();
-
-
 	}
 	
 	private List<File> listModelFiles(String directoryName) {
@@ -144,6 +130,7 @@ public class CreateNewMicroSerivceModel {
 		return resultList;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void extractFolder(String zipFile) {
 	    int BUFFER = 2048;
 	    File file = new File(zipFile);
@@ -152,7 +139,6 @@ public class CreateNewMicroSerivceModel {
 		try {
 			zip = new ZipFile("ExtractDir" + File.separator +file);
 		    String newPath =  zipFile.substring(0, zipFile.length() - 4);
-		    this.directory = "ExtractDir" + File.separator + zipFile.substring(0, zipFile.length() - 4);
 		    new File(newPath).mkdir();
 		    Enumeration zipFileEntries = zip.entries();
 	
@@ -232,11 +218,14 @@ public class CreateNewMicroSerivceModel {
 		this.newModel.setSub_attributes(subAttribute);
 		this.newModel.setAttributes(mainClass.getAttribute().toString().replace("{", "").replace("}", ""));
 		this.newModel.setRef_attributes(mainClass.getRefAttribute().toString().replace("{", "").replace("}", ""));
+		this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
+        this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
 		successMap.put("success", "success");
 		return successMap;
 		
 	}
 	
+	@SuppressWarnings("resource")
 	public Map<String, String> saveImportService(){
 		Map<String, String> successMap = new HashMap<String,String>();
 		
@@ -275,21 +264,19 @@ public class CreateNewMicroSerivceModel {
 					ID++;
 				}
 	
-				insertQuery = "INSERT INTO MicroServiceModels (ID, modelName, Dependency, DESCRIPTION, attributes, ref_attributes, sub_attributes, version, imported_by) "
-							+ "VALUES("+ID+",'"+modelName+"','"+ this.newModel.getDependency()+"','"+this.newModel.getDescription()+"','"+this.newModel.getAttributes()+
-							"','"+this.newModel.getRef_attributes()+"','"+this.newModel.getSub_attributes()+"','"+version+"','"+imported_by+"')";
+				String newDependency = "[" + this.newModel.getDependency() + "]";
+	            this.newModel.setDependency(newDependency);
+	            insertQuery = "INSERT INTO MicroServiceModels (ID, modelName, Dependency, DESCRIPTION, attributes, ref_attributes, sub_attributes, version, imported_by, enumValues, annotation) "
+						+ "VALUES("+ID+",'"+modelName+"','"+ this.newModel.getDependency()+"','"+this.newModel.getDescription()+"','"+this.newModel.getAttributes()+
+						"','"+this.newModel.getRef_attributes()+"','"+this.newModel.getSub_attributes()+"','"+version+"','"+imported_by+"','"+this.newModel.getEnumValues()+"','"+this.newModel.getAnnotation()+"')";
 				st.executeUpdate(insertQuery);
 				successMap.put("success", "success");
 			}
 			rs.close();
 		}catch (ClassNotFoundException e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(e.getMessage());
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "saveImportService", "Exception querying MicroServiceModels");
 			successMap.put("DBError", "Error Query");
 		} catch (SQLException e) {
-			//TODO:EELF Cleanup - Remove logger
-			//logger.error(e.getMessage());
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "saveImportService", "Exception querying MicroServiceModels");
 			successMap.put("DBError", "Error Query");
 		} finally {
@@ -297,7 +284,9 @@ public class CreateNewMicroSerivceModel {
 				if (con!=null) con.close();
 				if (rs!=null) rs.close();
 				if (st!=null) st.close();
-			} catch (Exception ex){}
+			} catch (Exception ex){
+				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, ex, "saveImportService", "Exception querying MicroServiceModels");
+			}
 		}
 
 		return successMap;

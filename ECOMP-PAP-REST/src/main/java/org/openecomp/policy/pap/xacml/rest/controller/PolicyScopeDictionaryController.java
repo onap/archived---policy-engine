@@ -31,13 +31,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.util.JsonMessage;
-import org.openecomp.policy.rest.dao.GroupPolicyScopeListDao;
-import org.openecomp.policy.rest.dao.PolicyScopeClosedLoopDao;
-import org.openecomp.policy.rest.dao.PolicyScopeResourceDao;
-import org.openecomp.policy.rest.dao.PolicyScopeServiceDao;
-import org.openecomp.policy.rest.dao.PolicyScopeTypeDao;
-import org.openecomp.policy.rest.dao.UserInfoDao;
+import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.GroupPolicyScopeList;
 import org.openecomp.policy.rest.jpa.PolicyScopeClosedLoop;
 import org.openecomp.policy.rest.jpa.PolicyScopeResource;
@@ -57,36 +54,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class PolicyScopeDictionaryController {
 
-	@Autowired
-	GroupPolicyScopeListDao groupPolicyScopeListDao;
-	
-	@Autowired
-	PolicyScopeClosedLoopDao  policyScopeClosedLoopDao;
-	
-	@Autowired
-	PolicyScopeResourceDao PolicyScopeResourceDao;
-	
-	@Autowired
-	PolicyScopeTypeDao policyScopeTypeDao;
-	
-	@Autowired
-	PolicyScopeServiceDao policyScopeServiceDao;
-	
+	private static final Logger LOGGER  = FlexLogger.getLogger(PolicyScopeDictionaryController.class);
 
-	@Autowired
-	UserInfoDao userInfoDao;
+	private static CommonClassDao commonClassDao;
 	
-	public UserInfo getUserInfo(String loginId){
-		UserInfo name = userInfoDao.getUserInfoByLoginId(loginId);
-		return name;	
+	@Autowired
+	public PolicyScopeDictionaryController(CommonClassDao commonClassDao){
+		PolicyScopeDictionaryController.commonClassDao = commonClassDao;
 	}
 	
+	public PolicyScopeDictionaryController(){}	
+
+	private static String SUCCESSMAPKEY = "successMapKey";
+
+	public UserInfo getUserInfo(String loginId){
+		UserInfo name = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
+		return name;	
+	}
+
 	@RequestMapping(value={"/get_GroupPolicyScopeDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getGroupPolicyScopeEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("groupPolicyScopeListDatas", mapper.writeValueAsString(groupPolicyScopeListDao.getGroupPolicyScopeListDataByName()));
+			model.put("groupPolicyScopeListDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(GroupPolicyScopeList.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -95,41 +86,96 @@ public class PolicyScopeDictionaryController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@RequestMapping(value={"/get_GroupPolicyScopeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getGroupPolicyScopeEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("groupPolicyScopeListDatas", mapper.writeValueAsString(groupPolicyScopeListDao.getGroupPolicyScopeListData()));
+			model.put("groupPolicyScopeListDatas", mapper.writeValueAsString(commonClassDao.getData(GroupPolicyScopeList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+			response.addHeader(SUCCESSMAPKEY, "success"); 
+			response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.addHeader("error", "dictionaryDBQuery");
+			LOGGER.error(e);
 		}
 	}
-	
-	@RequestMapping(value={"/ps_dictionary/save_psGroupPolicyScope.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+
+	@RequestMapping(value={"/ps_dictionary/save_psGroupPolicyScope"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView savePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
 			boolean duplicateflag = false;
+			boolean isFakeUpdate = false;
+			boolean duplicateGroupFlag = false;
+			boolean fromAPI = false;
+			if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+				fromAPI = true;
+			}
+
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			GroupPolicyScopeList ecompData = (GroupPolicyScopeList)mapper.readValue(root.get("groupPolicyScopeListData").toString(), GroupPolicyScopeList.class);
+			//GroupPolicyScopeList gpdata = (GroupPolicyScopeList)mapper.readValue(root.get("groupPolicyScopeListData").toString(), GroupPolicyScopeList.class);
+			GroupPolicyScopeList gpdata = null;
 			GroupPolicyScope groupData = null;
-			try{
-				 groupData = (GroupPolicyScope)mapper.readValue(root.get("groupPolicyScopeListData1").toString(), GroupPolicyScope.class);
-			}catch(Exception e){
-				groupData = new GroupPolicyScope();
-				groupData.setResource(root.get("groupPolicyScopeListData1").get("resource").toString().replace("\"", ""));
-				groupData.setClosedloop(root.get("groupPolicyScopeListData1").get("closedloop").toString().replace("\"", ""));
-				groupData.setService(root.get("groupPolicyScopeListData1").get("service").toString().replace("\"", ""));
-				groupData.setType(root.get("groupPolicyScopeListData1").get("type").toString().replace("\"", ""));
+			if (fromAPI) {
+				gpdata = (GroupPolicyScopeList)mapper.readValue(root.get("dictionaryFields").toString(), GroupPolicyScopeList.class);
+				try{
+					groupData = (GroupPolicyScope)mapper.readValue(root.get("groupPolicyScopeListData1").toString(), GroupPolicyScope.class);
+				}catch(Exception e){
+					groupData = new GroupPolicyScope();
+					groupData.setResource(root.get("dictionaryFields").get("resource").toString().replace("\"", ""));
+					groupData.setClosedloop(root.get("dictionaryFields").get("closedloop").toString().replace("\"", ""));
+					groupData.setService(root.get("dictionaryFields").get("service").toString().replace("\"", ""));
+					groupData.setType(root.get("dictionaryFields").get("type").toString().replace("\"", ""));
+				}
+
+				if(!gpdata.getGroupName().startsWith("PolicyScope")){
+					String name = "PolicyScope_" + gpdata.getGroupName();
+					gpdata.setGroupName(name);
+				}
+
+				//check if update operation or create, get id for data to be updated and update attributeData
+				if (request.getParameter("operation").equals("update")) {
+
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(gpdata.getGroupName(), "name", GroupPolicyScopeList.class);
+					int id = 0;
+					for (int i =0; i< duplicateData.size(); i++){
+						GroupPolicyScopeList data = (GroupPolicyScopeList) duplicateData.get(0);
+						id = data.getId();
+					}                   
+
+					if(id==0){
+						isFakeUpdate=true;
+						gpdata.setId(1);
+					} else {
+						gpdata.setId(id);
+					}
+
+				}
+			} else {
+				gpdata = (GroupPolicyScopeList)mapper.readValue(root.get("groupPolicyScopeListData").toString(), GroupPolicyScopeList.class);
+
+				try{
+					groupData = (GroupPolicyScope)mapper.readValue(root.get("groupPolicyScopeListData1").toString(), GroupPolicyScope.class);
+				}catch(Exception e){
+					groupData = new GroupPolicyScope();
+					groupData.setResource(root.get("groupPolicyScopeListData1").get("resource").toString().replace("\"", ""));
+					groupData.setClosedloop(root.get("groupPolicyScopeListData1").get("closedloop").toString().replace("\"", ""));
+					groupData.setService(root.get("groupPolicyScopeListData1").get("service").toString().replace("\"", ""));
+					groupData.setType(root.get("groupPolicyScopeListData1").get("type").toString().replace("\"", ""));
+				}
+				if(!gpdata.getGroupName().startsWith("PolicyScope")){
+					String name = "PolicyScope_" + gpdata.getGroupName();
+					gpdata.setGroupName(name);
+				}
+
 			}
-			
 			ArrayList<String> valueList = new ArrayList<String>();
 			String list = null;
 			String resourceValue = groupData.getResource();
@@ -141,40 +187,66 @@ public class PolicyScopeDictionaryController {
 			valueList.add("type=" + typeValue);
 			valueList.add("closedLoopControlName="  + closedLoopValue);
 			list = StringUtils.replaceEach(valueList.toString(), new String[]{"[", "]", " "}, new String[]{"", "", ""});
-			ecompData.setGroupList(list);
-			if(!ecompData.getGroupName().startsWith("PolicyScope")){
-				String name = "PolicyScope_" + ecompData.getGroupName();
-				ecompData.setGroupName(name);
+			gpdata.setGroupList(list);
+			if(!gpdata.getGroupName().startsWith("PolicyScope")){
+				String name = "PolicyScope_" + gpdata.getGroupName();
+				gpdata.setGroupName(name);
 			}
-			if(ecompData.getId() == 0){
-				CheckDictionaryDuplicateEntries entry = new CheckDictionaryDuplicateEntries();
-				List<Object> duplicateData =  entry.CheckDuplicateEntry(ecompData.getGroupName(), "name", GroupPolicyScopeList.class);
+			if(gpdata.getId() == 0){
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(gpdata.getGroupName(), "name", GroupPolicyScopeList.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
-					groupPolicyScopeListDao.Save(ecompData);
+					duplicateData =  commonClassDao.checkDuplicateEntry(gpdata.getGroupList(), "groupList", GroupPolicyScopeList.class);
+					if(!duplicateData.isEmpty()){
+						duplicateGroupFlag = true;
+					}else{
+						commonClassDao.save(gpdata);
+					}
 				}
 			}else{
-				groupPolicyScopeListDao.update(ecompData); 
-			} 
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-
-			PrintWriter out = response.getWriter();
+				if(!isFakeUpdate) {
+					List<Object> duplicateGroupList =  commonClassDao.checkExistingGroupListforUpdate(gpdata.getGroupList(), gpdata.getGroupName());
+					if(!duplicateGroupList.isEmpty()) {
+						duplicateGroupFlag = true;
+					} else {
+						commonClassDao.update(gpdata); 
+					}
+				} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = "Duplicate";
+			}else if(duplicateGroupFlag){
+				responseString = "DuplicateGroup";
 			}else{
-				responseString = mapper.writeValueAsString(this.groupPolicyScopeListDao.getGroupPolicyScopeListData());
+				responseString = mapper.writeValueAsString(commonClassDao.getData(GroupPolicyScopeList.class));
 			}
-			JSONObject j = new JSONObject("{groupPolicyScopeListDatas: " + responseString + "}");
 
-			out.write(j.toString());
+			if (fromAPI) {
+				if (responseString!=null && !responseString.equals("Duplicate") && !responseString.equals("DuplicateGroup")) {
+					if(isFakeUpdate){
+						responseString = "Exists";
+					} else {
+						responseString = "Success";
+					}
+				}
 
-			return null;
-		}
-		catch (Exception e){
+				ModelAndView result = new ModelAndView();
+				result.setViewName(responseString);
+				return result;
+			} else {
+
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("application / json");
+				request.setCharacterEncoding("UTF-8");
+
+				PrintWriter out = response.getWriter();
+				JSONObject j = new JSONObject("{groupPolicyScopeListDatas: " + responseString + "}");
+				out.write(j.toString());
+				return null;
+			}
+		}catch (Exception e){
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -183,21 +255,21 @@ public class PolicyScopeDictionaryController {
 		return null;
 	}
 
-	@RequestMapping(value={"/ps_dictionary/remove_GroupPolicyScope.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/ps_dictionary/remove_GroupPolicyScope"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView removePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			GroupPolicyScopeList ecompData = (GroupPolicyScopeList)mapper.readValue(root.get("data").toString(), GroupPolicyScopeList.class);
-			groupPolicyScopeListDao.delete(ecompData);
+			commonClassDao.delete(ecompData);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
 
-			String responseString = mapper.writeValueAsString(this.groupPolicyScopeListDao.getGroupPolicyScopeListData());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(GroupPolicyScopeList.class));
 			JSONObject j = new JSONObject("{groupPolicyScopeListDatas: " + responseString + "}");
 			out.write(j.toString());
 
@@ -212,13 +284,13 @@ public class PolicyScopeDictionaryController {
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value={"/get_PSClosedLoopDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSClosedLoopEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("psClosedLoopDictionaryDatas", mapper.writeValueAsString(policyScopeClosedLoopDao.getPolicyScopeClosedLoopDataByName()));
+			model.put("psClosedLoopDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(PolicyScopeClosedLoop.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -227,59 +299,106 @@ public class PolicyScopeDictionaryController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@RequestMapping(value={"/get_PSClosedLoopData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSClosedLoopEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("psClosedLoopDictionaryDatas", mapper.writeValueAsString(policyScopeClosedLoopDao.getPolicyScopeClosedLoopData()));
+			model.put("psClosedLoopDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeClosedLoop.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+			response.addHeader(SUCCESSMAPKEY, "success"); 
+			response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.addHeader("error", "dictionaryDBQuery");
+			LOGGER.error(e);
 		}
 	}
-	
-	@RequestMapping(value={"/ps_dictionary/save_psClosedLoop.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+
+	@RequestMapping(value={"/ps_dictionary/save_psClosedLoop"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView savePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
 			boolean duplicateflag = false;
+			boolean isFakeUpdate = false;
+			boolean fromAPI = false;
+			if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+				fromAPI = true;
+			}
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			PolicyScopeClosedLoop ecompData = (PolicyScopeClosedLoop)mapper.readValue(root.get("psClosedLoopDictionaryData").toString(), PolicyScopeClosedLoop.class);
+			PolicyScopeClosedLoop ecompData;
+			if (fromAPI) {
+				ecompData = (PolicyScopeClosedLoop)mapper.readValue(root.get("dictionaryFields").toString(), PolicyScopeClosedLoop.class);
+
+				//check if update operation or create, get id for data to be updated and update attributeData
+				if (request.getParameter("operation").equals("update")) {
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ecompData.getName(), "name", PolicyScopeClosedLoop.class);
+					int id = 0;
+					for (int i =0; i< duplicateData.size(); i++){
+						PolicyScopeClosedLoop data = (PolicyScopeClosedLoop) duplicateData.get(0);
+						id = data.getId();
+					}
+
+					if(id==0){
+						isFakeUpdate=true;
+						ecompData.setId(1);
+					} else {
+						ecompData.setId(id);
+					}   
+
+				}
+			} else {
+				ecompData = (PolicyScopeClosedLoop)mapper.readValue(root.get("psClosedLoopDictionaryData").toString(), PolicyScopeClosedLoop.class);
+			}
 			if(ecompData.getId() == 0){
-				CheckDictionaryDuplicateEntries entry = new CheckDictionaryDuplicateEntries();
-				List<Object> duplicateData =  entry.CheckDuplicateEntry(ecompData.getName(), "name", PolicyScopeClosedLoop.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ecompData.getName(), "name", PolicyScopeClosedLoop.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
-					policyScopeClosedLoopDao.Save(ecompData);
+					commonClassDao.save(ecompData);
 				}
 			}else{
-				policyScopeClosedLoopDao.update(ecompData); 
+				if(!isFakeUpdate) {
+					commonClassDao.update(ecompData); 
+				}
 			} 
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-
-			PrintWriter out = response.getWriter();
 			String responseString = "";
 			if(duplicateflag){
 				responseString = "Duplicate";
 			}else{
-				responseString = mapper.writeValueAsString(this.policyScopeClosedLoopDao.getPolicyScopeClosedLoopData());
-			}	 
-			JSONObject j = new JSONObject("{psClosedLoopDictionaryDatas: " + responseString + "}");
+				responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeClosedLoop.class));
+			}
 
-			out.write(j.toString());
+			if (fromAPI) {
+				if (responseString!=null && !responseString.equals("Duplicate")) {
+					if(isFakeUpdate){
+						responseString = "Exists";
+					} else {
+						responseString = "Success";
+					}
+				}
+				ModelAndView result = new ModelAndView();
+				result.setViewName(responseString);
+				return result;
+			} else {
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("application / json");
+				request.setCharacterEncoding("UTF-8");
 
-			return null;
-		}
-		catch (Exception e){
+				PrintWriter out = response.getWriter();
+				JSONObject j = new JSONObject("{psClosedLoopDictionaryDatas: " + responseString + "}");
+
+				out.write(j.toString());
+
+				return null;
+			}
+
+		}catch (Exception e){
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -288,21 +407,21 @@ public class PolicyScopeDictionaryController {
 		return null;
 	}
 
-	@RequestMapping(value={"/ps_dictionary/remove_PSClosedLoop.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/ps_dictionary/remove_PSClosedLoop"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView removePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			PolicyScopeClosedLoop ecompData = (PolicyScopeClosedLoop)mapper.readValue(root.get("data").toString(), PolicyScopeClosedLoop.class);
-			policyScopeClosedLoopDao.delete(ecompData);
+			commonClassDao.delete(ecompData);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
 
-			String responseString = mapper.writeValueAsString(this.policyScopeClosedLoopDao.getPolicyScopeClosedLoopData());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeClosedLoop.class));
 			JSONObject j = new JSONObject("{psClosedLoopDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
 
@@ -317,13 +436,13 @@ public class PolicyScopeDictionaryController {
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value={"/get_PSServiceDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSServiceEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("psServiceDictionaryDatas", mapper.writeValueAsString(policyScopeServiceDao.getPolicyScopeServiceDataByName()));
+			model.put("psServiceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(PolicyScopeService.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -332,59 +451,103 @@ public class PolicyScopeDictionaryController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@RequestMapping(value={"/get_PSServiceData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSServiceEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("psServiceDictionaryDatas", mapper.writeValueAsString(policyScopeServiceDao.getPolicyScopeServiceData()));
+			model.put("psServiceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeService.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+			response.addHeader(SUCCESSMAPKEY, "success"); 
+			response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.addHeader("error", "dictionaryDBQuery");
+			LOGGER.error(e);
 		}
 	}
-	
-	@RequestMapping(value={"/ps_dictionary/save_psService.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+
+	@RequestMapping(value={"/ps_dictionary/save_psService"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView savePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
 			boolean duplicateflag = false;
+			boolean isFakeUpdate = false;
+			boolean fromAPI = false;
+			if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+				fromAPI = true;
+			}
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			PolicyScopeService ecompData = (PolicyScopeService)mapper.readValue(root.get("psServiceDictionaryData").toString(), PolicyScopeService.class);
+			PolicyScopeService ecompData;
+			if (fromAPI) {
+				ecompData = (PolicyScopeService)mapper.readValue(root.get("dictionaryFields").toString(), PolicyScopeService.class);
+
+				//check if update operation or create, get id for data to be updated and update attributeData
+				if (request.getParameter("operation").equals("update")) {
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ecompData.getName(), "name", PolicyScopeService.class);
+					int id = 0;
+					for (int i =0; i< duplicateData.size(); i++){
+						PolicyScopeService data = (PolicyScopeService) duplicateData.get(0);
+						id = data.getId();
+					}
+					if(id==0){
+						isFakeUpdate=true;
+						ecompData.setId(1);
+					} else {
+						ecompData.setId(id);
+					}
+				}
+			} else {
+				ecompData = (PolicyScopeService)mapper.readValue(root.get("psServiceDictionaryData").toString(), PolicyScopeService.class);
+			}
 			if(ecompData.getId() == 0){
-				CheckDictionaryDuplicateEntries entry = new CheckDictionaryDuplicateEntries();
-				List<Object> duplicateData =  entry.CheckDuplicateEntry(ecompData.getName(), "name", PolicyScopeService.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ecompData.getName(), "name", PolicyScopeService.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
-					policyScopeServiceDao.Save(ecompData);
+					commonClassDao.save(ecompData);
 				}
 			}else{
-				policyScopeServiceDao.update(ecompData); 
+				if(!isFakeUpdate) {
+					commonClassDao.update(ecompData); 
+				}
 			} 
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
 
-			PrintWriter out = response.getWriter();
 			String responseString = "";
 			if(duplicateflag){
 				responseString = "Duplicate";
 			}else{
-				responseString = mapper.writeValueAsString(this.policyScopeServiceDao.getPolicyScopeServiceData());
-			}	
-			JSONObject j = new JSONObject("{psServiceDictionaryDatas: " + responseString + "}");
+				responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeService.class));
+			}   
 
-			out.write(j.toString());
+			if (fromAPI) {
+				if (responseString!=null && !responseString.equals("Duplicate")) {
+					if(isFakeUpdate){
+						responseString = "Exists";
+					} else {
+						responseString = "Success";
+					}
+				}
+				ModelAndView result = new ModelAndView();
+				result.setViewName(responseString);
+				return result;
 
-			return null;
-		}
-		catch (Exception e){
+			} else {
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("application / json");
+				request.setCharacterEncoding("UTF-8");
+
+				PrintWriter out = response.getWriter();
+				JSONObject j = new JSONObject("{psServiceDictionaryDatas: " + responseString + "}");
+				out.write(j.toString());
+				return null;
+			}
+		}catch (Exception e){
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -393,21 +556,21 @@ public class PolicyScopeDictionaryController {
 		return null;
 	}
 
-	@RequestMapping(value={"/ps_dictionary/remove_PSService.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/ps_dictionary/remove_PSService"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView removePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			PolicyScopeService ecompData = (PolicyScopeService)mapper.readValue(root.get("data").toString(), PolicyScopeService.class);
-			policyScopeServiceDao.delete(ecompData);
+			commonClassDao.delete(ecompData);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
 
-			String responseString = mapper.writeValueAsString(this.policyScopeServiceDao.getPolicyScopeServiceData());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeService.class));
 			JSONObject j = new JSONObject("{psServiceDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
 
@@ -422,13 +585,13 @@ public class PolicyScopeDictionaryController {
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value={"/get_PSTypeDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSTypeEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("psTypeDictionaryDatas", mapper.writeValueAsString(policyScopeTypeDao.getPolicyScopeTypeDataByName()));
+			model.put("psTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(PolicyScopeType.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -437,59 +600,109 @@ public class PolicyScopeDictionaryController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@RequestMapping(value={"/get_PSTypeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSTypeEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("psTypeDictionaryDatas", mapper.writeValueAsString(policyScopeTypeDao.getPolicyScopeTypeData()));
+			model.put("psTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeType.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+			response.addHeader(SUCCESSMAPKEY, "success"); 
+			response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.addHeader("error", "dictionaryDBQuery");
+			LOGGER.error(e);
 		}
 	}
-	
-	@RequestMapping(value={"/ps_dictionary/save_psType.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+
+	@RequestMapping(value={"/ps_dictionary/save_psType"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView savePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
 			boolean duplicateflag = false;
+			boolean isFakeUpdate = false;
+			boolean fromAPI = false;
+			if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+				fromAPI = true;
+			}
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			PolicyScopeType ecompData = (PolicyScopeType)mapper.readValue(root.get("psTypeDictionaryData").toString(), PolicyScopeType.class);
+			PolicyScopeType ecompData;
+			if (fromAPI) {
+				ecompData = (PolicyScopeType)mapper.readValue(root.get("dictionaryFields").toString(), PolicyScopeType.class);
+
+				//check if update operation or create, get id for data to be updated and update attributeData
+				if (request.getParameter("operation").equals("update")) {
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ecompData.getName(), "name", PolicyScopeType.class);
+					int id = 0;
+					for (int i =0; i< duplicateData.size(); i++){
+						PolicyScopeType data = (PolicyScopeType) duplicateData.get(0);
+						id = data.getId();
+					}
+
+					if(id==0){
+						isFakeUpdate=true;
+						ecompData.setId(1);
+					} else {
+						ecompData.setId(id);
+					}   
+
+				}
+			} else {
+				ecompData = (PolicyScopeType)mapper.readValue(root.get("psTypeDictionaryData").toString(), PolicyScopeType.class);
+			}
 			if(ecompData.getId() == 0){
-				CheckDictionaryDuplicateEntries entry = new CheckDictionaryDuplicateEntries();
-				List<Object> duplicateData =  entry.CheckDuplicateEntry(ecompData.getName(), "name", PolicyScopeType.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ecompData.getName(), "name", PolicyScopeType.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
-					policyScopeTypeDao.Save(ecompData);
+					commonClassDao.save(ecompData);
 				}
 			}else{
-				policyScopeTypeDao.update(ecompData); 
+				if(!isFakeUpdate) {
+					commonClassDao.update(ecompData); 
+				}
 			} 
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-
-			PrintWriter out = response.getWriter();
 			String responseString = "";
 			if(duplicateflag){
 				responseString = "Duplicate";
 			}else{
-				responseString = mapper.writeValueAsString(this.policyScopeTypeDao.getPolicyScopeTypeData());
+				responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeType.class));
 			} 
-			JSONObject j = new JSONObject("{psTypeDictionaryDatas: " + responseString + "}");
 
-			out.write(j.toString());
+			if (fromAPI) {
+				if (responseString!=null && !responseString.equals("Duplicate")) {
+					if(isFakeUpdate){
+						responseString = "Exists";
+					} else {
+						responseString = "Success";
+					}
 
-			return null;
-		}
-		catch (Exception e){
+				}
+				ModelAndView result = new ModelAndView();
+				result.setViewName(responseString);
+				return result;
+
+			} else {
+
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("application / json");
+				request.setCharacterEncoding("UTF-8");
+
+				PrintWriter out = response.getWriter();
+				JSONObject j = new JSONObject("{psTypeDictionaryDatas: " + responseString + "}");
+
+				out.write(j.toString());
+
+				return null;
+			}
+
+		}catch (Exception e){
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -498,21 +711,21 @@ public class PolicyScopeDictionaryController {
 		return null;
 	}
 
-	@RequestMapping(value={"/ps_dictionary/remove_PSType.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/ps_dictionary/remove_PSType"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView removePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			PolicyScopeType ecompData = (PolicyScopeType)mapper.readValue(root.get("data").toString(), PolicyScopeType.class);
-			policyScopeTypeDao.delete(ecompData);
+			commonClassDao.delete(ecompData);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
 
-			String responseString = mapper.writeValueAsString(this.policyScopeTypeDao.getPolicyScopeTypeData());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeType.class));
 			JSONObject j = new JSONObject("{psTypeDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
 
@@ -527,13 +740,13 @@ public class PolicyScopeDictionaryController {
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value={"/get_PSResourceDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSResourceEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("psResourceDictionaryDatas", mapper.writeValueAsString(PolicyScopeResourceDao.getPolicyScopeResourceDataByName()));
+			model.put("psResourceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(PolicyScopeResource.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -542,59 +755,106 @@ public class PolicyScopeDictionaryController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@RequestMapping(value={"/get_PSResourceData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSResourceEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("psResourceDictionaryDatas", mapper.writeValueAsString(PolicyScopeResourceDao.getPolicyScopeResourceData()));
+			model.put("psResourceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeResource.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+			response.addHeader("successMapKey", "success"); 
+			response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.addHeader("error", "dictionaryDBQuery");
+			LOGGER.error(e);
 		}
 	}
-	
-	@RequestMapping(value={"/ps_dictionary/save_psResource.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+
+	@RequestMapping(value={"/ps_dictionary/save_psResource"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView savePSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
 			boolean duplicateflag = false;
+			boolean isFakeUpdate = false;
+			boolean fromAPI = false;
+			if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+				fromAPI = true;
+			}
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			PolicyScopeResource ecompData = (PolicyScopeResource)mapper.readValue(root.get("psResourceDictionaryData").toString(), PolicyScopeResource.class);
+			PolicyScopeResource ecompData;
+			if (fromAPI) {
+				ecompData = (PolicyScopeResource)mapper.readValue(root.get("dictionaryFields").toString(), PolicyScopeResource.class);
+
+				//check if update operation or create, get id for data to be updated and update attributeData
+				if (request.getParameter("operation").equals("update")) {
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ecompData.getName(), "name", PolicyScopeResource.class);
+					int id = 0;
+					PolicyScopeResource data = (PolicyScopeResource) duplicateData.get(0);
+					id = data.getId();
+
+					if(id==0){
+						isFakeUpdate=true;
+						ecompData.setId(1);
+					} else {
+						ecompData.setId(id);
+					}
+				}
+			} else {
+				ecompData = (PolicyScopeResource)mapper.readValue(root.get("psResourceDictionaryData").toString(), PolicyScopeResource.class);
+			}
 			if(ecompData.getId() == 0){
-				CheckDictionaryDuplicateEntries entry = new CheckDictionaryDuplicateEntries();
-				List<Object> duplicateData =  entry.CheckDuplicateEntry(ecompData.getName(), "name", PolicyScopeResource.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ecompData.getName(), "name", PolicyScopeResource.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
-					PolicyScopeResourceDao.Save(ecompData);
+					commonClassDao.save(ecompData);
 				}
 			}else{
-				PolicyScopeResourceDao.update(ecompData); 
+				if(!isFakeUpdate) {
+					commonClassDao.update(ecompData); 
+				}
 			} 
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-
-			PrintWriter out = response.getWriter();
 			String responseString = "";
 			if(duplicateflag){
 				responseString = "Duplicate";
 			}else{
-				responseString = mapper.writeValueAsString(this.PolicyScopeResourceDao.getPolicyScopeResourceData());
-			}	  
-			JSONObject j = new JSONObject("{psResourceDictionaryDatas: " + responseString + "}");
+				responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeResource.class));
+			}   
 
-			out.write(j.toString());
+			if (fromAPI) {
+				if (responseString!=null && !responseString.equals("Duplicate")) {
+					if(isFakeUpdate){
+						responseString = "Exists";
+					} else {
+						responseString = "Success";
+					}
 
-			return null;
-		}
-		catch (Exception e){
+				}
+				ModelAndView result = new ModelAndView();
+				result.setViewName(responseString);
+				return result;
+
+			} else {
+
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("application / json");
+				request.setCharacterEncoding("UTF-8");
+
+				PrintWriter out = response.getWriter();
+				JSONObject j = new JSONObject("{psResourceDictionaryDatas: " + responseString + "}");
+
+				out.write(j.toString());
+
+				return null;
+			}
+
+		}catch (Exception e){
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -603,21 +863,21 @@ public class PolicyScopeDictionaryController {
 		return null;
 	}
 
-	@RequestMapping(value={"/ps_dictionary/remove_PSResource.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/ps_dictionary/remove_PSResource"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView removePSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			PolicyScopeResource ecompData = (PolicyScopeResource)mapper.readValue(root.get("data").toString(), PolicyScopeResource.class);
-			PolicyScopeResourceDao.delete(ecompData);
+			commonClassDao.delete(ecompData);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
 
-			String responseString = mapper.writeValueAsString(this.PolicyScopeResourceDao.getPolicyScopeResourceData());
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeResource.class));
 			JSONObject j = new JSONObject("{psResourceDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
 
@@ -634,7 +894,7 @@ public class PolicyScopeDictionaryController {
 	}
 }
 
-	class GroupPolicyScope{
+class GroupPolicyScope{
 	String resource;
 	String type;
 	String service;
@@ -663,5 +923,5 @@ public class PolicyScopeDictionaryController {
 	public void setClosedloop(String closedloop) {
 		this.closedloop = closedloop;
 	}
-	
+
 }
