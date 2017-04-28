@@ -6,7 +6,7 @@
 	<artifactId>PolicyEngineSuite</artifactId>
 	<version>1.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>ECOMP Policy Engine</name>
+	<name>Policy Engine - Policy Engine Suite</name>
 
 	<description>The ECOMP Policy Engine main pom</description>
 
