@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_b031a0a4",
+        "filename": "ECOMP-PAP-REST/pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-01T17:36:07Z",
+      "side": 1,
+      "message": "duplicate dependency with a different version. Why is this being re-added in?",
+      "range": {
+        "startLine": 191,
+        "startChar": 2,
+        "endLine": 196,
+        "endChar": 15
+      },
+      "revId": "a6dd6d655a6f7d64d111dd858c0709e14ce5d83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_d02c144d",
+        "filename": "ECOMP-PDP-REST/pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-01T17:36:07Z",
+      "side": 1,
+      "message": "This is a 2nd entry for this dependency. With a different version. Please note that it was cleaned out previously and testing proceeded successfully.",
+      "range": {
+        "startLine": 154,
+        "startChar": 2,
+        "endLine": 158,
+        "endChar": 26
+      },
+      "revId": "a6dd6d655a6f7d64d111dd858c0709e14ce5d83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_90269c67",
+        "filename": "ECOMP-PDP/pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-01T17:36:07Z",
+      "side": 1,
+      "message": "Other pom.xml are using 19.0, why is this 18.0?",
+      "range": {
+        "startLine": 75,
+        "startChar": 3,
+        "endLine": 75,
+        "endChar": 26
+      },
+      "revId": "a6dd6d655a6f7d64d111dd858c0709e14ce5d83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
