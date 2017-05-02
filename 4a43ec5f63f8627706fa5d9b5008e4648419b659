@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_0d9393fb",
+        "filename": "BRMSGateway/config.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-02T18:21:50Z",
+      "side": 1,
+      "message": "This should not be changed",
+      "revId": "4a43ec5f63f8627706fa5d9b5008e4648419b659",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
