@@ -48,6 +48,23 @@
     },
     {
       "key": {
+        "uuid": "da141535_d082d451",
+        "filename": "ECOMP-PDP-REST/pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-02T18:21:50Z",
+      "side": 1,
+      "message": "would be nice if line formatting could be corrected",
+      "revId": "a6dd6d655a6f7d64d111dd858c0709e14ce5d83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da141535_90269c67",
         "filename": "ECOMP-PDP/pom.xml",
         "patchSetId": 6
@@ -65,6 +82,74 @@
         "endLine": 75,
         "endChar": 26
       },
+      "revId": "a6dd6d655a6f7d64d111dd858c0709e14ce5d83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_70aae8d5",
+        "filename": "packages/base/src/files/install/servers/brmsgw/dependency.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-02T18:21:50Z",
+      "side": 1,
+      "message": "This should be changed to 1.1.0-SNAPSHOT.    Check policy-docker there was some script to change it to the release version in one the tweaks, make sure that is covered there.",
+      "revId": "a6dd6d655a6f7d64d111dd858c0709e14ce5d83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_50afe4e3",
+        "filename": "packages/base/src/files/install/servers/console/bin/workspace/admin/repository/com/Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-02T18:21:50Z",
+      "side": 1,
+      "message": "Is this ok, just checking, the com.att.labs ?",
+      "revId": "a6dd6d655a6f7d64d111dd858c0709e14ce5d83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_30ac70ed",
+        "filename": "packages/base/src/files/install/servers/console/bin/workspace/admin/repository/com/Config_BRMS_Param_BRMSParamvLBDemoPolicy.1.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-02T18:21:50Z",
+      "side": 1,
+      "message": "same question, com.att.labs ?   thought we moved away from att name ..  this is general question.",
+      "revId": "a6dd6d655a6f7d64d111dd858c0709e14ce5d83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_10b96c2e",
+        "filename": "packages/install/src/files/pdp.conf",
+        "patchSetId": 6
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-02T18:21:50Z",
+      "side": 1,
+      "message": "ATT should it go away??",
       "revId": "a6dd6d655a6f7d64d111dd858c0709e14ce5d83f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
