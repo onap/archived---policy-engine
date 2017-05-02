@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_fbb8192c",
+        "filename": "BRMSGateway/dependency.json",
+        "patchSetId": 10
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-02T18:21:50Z",
+      "side": 1,
+      "message": "This has to be 1.1.0-SNAPSHOT ..  This is a global comment, search for 1.0.0-SNAPSHOT and replace with 1.1.-0-SNAPSHOT",
+      "revId": "859dbbeb64f1a90c01919ef95a415787c653b9a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_fb8ff973",
+        "filename": "packages/base/src/files/install/servers/brmsgw/config.properties",
+        "patchSetId": 10
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-02T18:21:50Z",
+      "side": 1,
+      "message": "# ?   This seems a problem",
+      "revId": "859dbbeb64f1a90c01919ef95a415787c653b9a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_1b93cda4",
+        "filename": "packages/base/src/files/install/servers/brmsgw/config.properties",
+        "patchSetId": 10
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-02T18:21:50Z",
+      "side": 1,
+      "message": "This version has been changed incorrectly",
+      "revId": "859dbbeb64f1a90c01919ef95a415787c653b9a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_db8c3582",
+        "filename": "packages/base/src/files/install/servers/brmsgw/dependency.json",
+        "patchSetId": 10
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-02T18:21:50Z",
+      "side": 1,
+      "message": "This should be 1.1.0-SNAPSHOT",
+      "revId": "859dbbeb64f1a90c01919ef95a415787c653b9a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_3bc45191",
+        "filename": "packages/base/src/files/install/servers/brmsgw/dependency.json",
+        "patchSetId": 10
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-02T18:21:50Z",
+      "side": 1,
+      "message": "There is another change to do in policy-docker.  There is a corresponding file in policy-docker repo:  config/pe/brmsgw-tweaks.sh.  This line has to be changed with the version (this is used for official releases)",
+      "revId": "859dbbeb64f1a90c01919ef95a415787c653b9a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
