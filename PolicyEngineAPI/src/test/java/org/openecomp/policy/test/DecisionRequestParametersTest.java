@@ -67,7 +67,7 @@ public class DecisionRequestParametersTest {
 	public void testDecisionRequestParameters_2()
 		throws Exception {
 		String eCOMPComponentName = "";
-		Map<String, String> decisionAttributes = new Hashtable();
+		Map<String, String> decisionAttributes = new Hashtable<String, String>();
 		UUID requestID = UUID.randomUUID();
 
 		DecisionRequestParameters result = new DecisionRequestParameters(eCOMPComponentName, decisionAttributes, requestID);
@@ -87,7 +87,7 @@ public class DecisionRequestParametersTest {
 	@Test
 	public void testGetDecisionAttributes_1()
 		throws Exception {
-		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable(), UUID.randomUUID());
+		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable<String, String>(), UUID.randomUUID());
 
 		Map<String, String> result = fixture.getDecisionAttributes();
 
@@ -106,7 +106,7 @@ public class DecisionRequestParametersTest {
 	@Test
 	public void testGetECOMPComponentName_1()
 		throws Exception {
-		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable(), UUID.randomUUID());
+		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable<String, String>(), UUID.randomUUID());
 
 		String result = fixture.getECOMPComponentName();
 
@@ -124,7 +124,7 @@ public class DecisionRequestParametersTest {
 	@Test
 	public void testGetRequestID_1()
 		throws Exception {
-		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable(), UUID.fromString("d1db6a6d-7140-4864-8200-6b541261fdd2"));
+		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable<String, String>(), UUID.fromString("d1db6a6d-7140-4864-8200-6b541261fdd2"));
 
 		UUID result = fixture.getRequestID();
 
@@ -147,8 +147,8 @@ public class DecisionRequestParametersTest {
 	@Test
 	public void testSetDecisionAttributes_1()
 		throws Exception {
-		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable(), UUID.randomUUID());
-		Map<String, String> decisionAttributes = new Hashtable();
+		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable<String, String>(), UUID.randomUUID());
+		Map<String, String> decisionAttributes = new Hashtable<String, String>();
 
 		fixture.setDecisionAttributes(decisionAttributes);
 
@@ -165,7 +165,7 @@ public class DecisionRequestParametersTest {
 	@Test
 	public void testSetECOMPComponentName_1()
 		throws Exception {
-		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable(), UUID.randomUUID());
+		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable<String, String>(), UUID.randomUUID());
 		String eCOMPComponentName = "";
 
 		fixture.setECOMPComponentName(eCOMPComponentName);
@@ -183,7 +183,7 @@ public class DecisionRequestParametersTest {
 	@Test
 	public void testSetRequestID_1()
 		throws Exception {
-		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable(), UUID.randomUUID());
+		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable<String, String>(), UUID.randomUUID());
 		UUID requestID = UUID.randomUUID();
 
 		fixture.setRequestID(requestID);

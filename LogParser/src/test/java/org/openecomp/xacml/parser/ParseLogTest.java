@@ -20,7 +20,7 @@
 
 package org.openecomp.xacml.parser;
 
-import static org.junit.Assert.*;
+/*import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -380,3 +380,4 @@ public class ParseLogTest {
 		ParseLog.process(line, "pap");
 	}
 }
+*/

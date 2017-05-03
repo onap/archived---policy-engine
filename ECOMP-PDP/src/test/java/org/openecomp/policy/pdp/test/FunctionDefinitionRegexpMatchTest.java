@@ -240,7 +240,7 @@ public class FunctionDefinitionRegexpMatchTest {
 		IPAddress addr1 = null;
 		IPAddress addr2 = null;
 		try {
-			addr1 = IPAddress.newInstance("10.123.45.67");
+			addr1 = IPAddress.newInstance("10.123.13.14");
 			addr2 = IPAddress.newInstance("10.12.13.14");
 		} catch (Exception e) {
 			fail("Unable to create IPAddresses, e="+e);

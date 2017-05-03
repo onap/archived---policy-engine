@@ -56,6 +56,7 @@ public class Handler implements NotificationHandler{
 					// Checking the Name is correct or not. 
 					try {
 						PolicyEngine policyEngine = new PolicyEngine("config.properties");
+						@SuppressWarnings("deprecation")
 						Collection<PolicyConfig> policyConfigs = policyEngine.getConfigByPolicyName(updatedPolicy.getPolicyName());
 						for(PolicyConfig policyConfig: policyConfigs){
 							if(policyConfig.getPolicyConfigStatus().equals(PolicyConfigStatus.CONFIG_RETRIEVED)){
@@ -93,6 +94,7 @@ public class Handler implements NotificationHandler{
 				// Checking the Name is correct or not. 
 				try {
 					PolicyEngine policyEngine = new PolicyEngine("config.properties");
+					@SuppressWarnings("deprecation")
 					Collection<PolicyConfig> policyConfigs = policyEngine.getConfigByPolicyName(updatedPolicy.getPolicyName());
 					for(PolicyConfig policyConfig: policyConfigs){
 						if(policyConfig.getPolicyConfigStatus().equals(PolicyConfigStatus.CONFIG_RETRIEVED)){

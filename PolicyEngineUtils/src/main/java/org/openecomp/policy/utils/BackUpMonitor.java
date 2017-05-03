@@ -21,6 +21,7 @@
 package org.openecomp.policy.utils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -50,9 +51,9 @@ import com.github.fge.jsonpatch.diff.JsonDiff;
  * 
  */
 public class BackUpMonitor {
-	private static final Logger logger = Logger.getLogger(BackUpMonitor.class.getName());
-	private static final int DEFAULT_PING = 60000; // Value is in milliseconds. 
-	
+	private static final Logger LOGGER = Logger.getLogger(BackUpMonitor.class.getName());
+	private static final int DEFAULT_PING = 15000; // Value is in milliseconds. 
+
 	private static BackUpMonitor instance = null;
 	private static String resourceName = null;
 	private static String resourceNodeName = null;
@@ -65,7 +66,7 @@ public class BackUpMonitor {
 	private static BackUpHandler handler= null;
 	private EntityManager em;
 	private EntityManagerFactory emf;
-	
+
 	/*
 	 * Enumeration for the Resource Node Naming. Add here if required. 
 	 */
@@ -73,7 +74,7 @@ public class BackUpMonitor {
 		BRMS,
 		ASTRA
 	}
-	
+
 	private BackUpMonitor(String resourceNodeName, String resourceName, Properties properties, BackUpHandler handler) throws Exception{
 		if(instance == null){
 			instance = this;
@@ -85,14 +86,14 @@ public class BackUpMonitor {
 		properties.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistencePU.xml");
 		emf = Persistence.createEntityManagerFactory("PolicyEngineUtils", properties);
 		if(emf==null){
-			logger.error("Unable to create Entity Manger Factory ");
+			LOGGER.error("Unable to create Entity Manger Factory ");
 			throw new Exception("Unable to create Entity Manger Factory");
 		}
 		em = emf.createEntityManager();
-		
+
 		// Check Database if this is Master or Slave.
 		checkDataBase();
-		
+
 		// Start thread.
 		Thread t = new Thread(new BMonitor());
 		t.start();
@@ -108,103 +109,103 @@ public class BackUpMonitor {
 	 */
 	public static synchronized BackUpMonitor getInstance(String resourceNodeName, String resourceName, Properties properties, BackUpHandler handler) throws Exception {
 		if(resourceNodeName==null || resourceNodeName.trim().equals("") ||resourceName==null|| resourceName.trim().equals("") || properties == null || handler==null){
-			logger.error("Error while getting Instance. Please check resourceName and/or properties file");
+			LOGGER.error("Error while getting Instance. Please check resourceName and/or properties file");
 			return null;
 		}else if((resourceNodeName.equals(ResourceNode.ASTRA.toString()) || resourceNodeName.equals(ResourceNode.BRMS.toString())) && validate(properties) && instance==null){
-			logger.info("Creating Instance of BackUpMonitor");
+			LOGGER.info("Creating Instance of BackUpMonitor");
 			instance = new BackUpMonitor(resourceNodeName, resourceName, properties, handler);
 		}
 		return instance;
 	}
-	
+
 	// This is to validate given Properties with required values. 
 	private static Boolean validate(Properties properties){
 		if(properties.getProperty("javax.persistence.jdbc.driver")==null ||properties.getProperty("javax.persistence.jdbc.driver").trim().equals("")){
-			logger.error("javax.persistence.jdbc.driver property is empty");
+			LOGGER.error("javax.persistence.jdbc.driver property is empty");
 			return false;
 		}
 		if(properties.getProperty("javax.persistence.jdbc.url")==null || properties.getProperty("javax.persistence.jdbc.url").trim().equals("")){
-			logger.error("javax.persistence.jdbc.url property is empty");
+			LOGGER.error("javax.persistence.jdbc.url property is empty");
 			return false;
 		}
 		if(properties.getProperty("javax.persistence.jdbc.user")==null || properties.getProperty("javax.persistence.jdbc.user").trim().equals("")){
-			logger.error("javax.persistence.jdbc.user property is empty");
+			LOGGER.error("javax.persistence.jdbc.user property is empty");
 			return false;
 		}
 		if(properties.getProperty("javax.persistence.jdbc.password")==null || properties.getProperty("javax.persistence.jdbc.password").trim().equals("")){
-			logger.error("javax.persistence.jdbc.password property is empty");
+			LOGGER.error("javax.persistence.jdbc.password property is empty");
 			return false;
 		}
 		if(properties.getProperty("ping_interval")==null || properties.getProperty("ping_interval").trim().equals("")){
-			logger.info("ping_interval property not specified. Taking default value");
+			LOGGER.info("ping_interval property not specified. Taking default value");
 		}else{
 			try{
 				pingInterval = Integer.parseInt(properties.getProperty("ping_interval").trim());
 			}catch(NumberFormatException e){
-				logger.warn("Ignored invalid proeprty ping_interval. Taking default value.");
+				LOGGER.warn("Ignored invalid proeprty ping_interval. Taking default value: " + pingInterval);
 				pingInterval = DEFAULT_PING;
 			}
 		}
 		return true;
 	}
-	
+
 	// Sets the Flag for masterFlag to either True or False. 
 	private static void setFlag(Boolean flag){
 		synchronized (lock) {
 			masterFlag = flag;
 		}
 	}
-	
+
 	/**
 	 * Gets the Boolean value of Master(True) or Slave mode (False)
 	 * 
 	 * @return Boolean flag which if True means that the operation needs to be performed(Master mode) or if false the operation is in slave mode. 
 	 */
-	public synchronized Boolean getFlag(){
+	public Boolean getFlag(){
 		synchronized (lock) {
 			return masterFlag;
 		}
 	}
-	
+
 	// BackUpMonitor Thread 
 	private class BMonitor implements Runnable{
 		@Override
 		public void run() {
-			logger.info("Starting BackUpMonitor Thread.. ");
+			LOGGER.info("Starting BackUpMonitor Thread.. ");
 			while(true){
 				try {
 					TimeUnit.MILLISECONDS.sleep(pingInterval);
 					checkDataBase();
 				} catch (Exception e) {
-					logger.error("Error during Thread execution " + e.getMessage());
+					LOGGER.error("Error during Thread execution " + e.getMessage());
 				}
 			}
 		}
 	}
-	
+
 	// Set Master 
 	private static BackUpMonitorEntity setMaster(BackUpMonitorEntity bMEntity){
 		bMEntity.setFlag("MASTER");
 		setFlag(true);
 		return bMEntity;
 	}
-	
+
 	// Set Slave 
 	private static BackUpMonitorEntity setSlave(BackUpMonitorEntity bMEntity){
 		bMEntity.setFlag("SLAVE");
 		setFlag(false);
 		return bMEntity;
 	}
-	
+
 	// Check Database and set the Flag. 
 	private void checkDataBase() throws Exception {
 		EntityTransaction et = em.getTransaction();
 		notificationRecord = PolicyUtils.objectToJsonString(NotificationStore.getNotificationRecord());
 		// Clear Cache. 
-		logger.info("Clearing Cache");
+		LOGGER.info("Clearing Cache");
 		em.getEntityManagerFactory().getCache().evictAll();
 		try{
-			logger.info("Checking Datatbase for BackUpMonitor.. ");
+			LOGGER.info("Checking Datatbase for BackUpMonitor.. ");
 			et.begin();
 			Query query = em.createQuery("select b from BackUpMonitorEntity b where b.resourceNodeName = :nn");
 			if(resourceNodeName.equals(ResourceNode.ASTRA.toString())){
@@ -215,7 +216,7 @@ public class BackUpMonitor {
 			List<?> bMList = query.getResultList();
 			if(bMList.isEmpty()){
 				// This is New. create an entry as Master. 
-				logger.info("Adding resource " + resourceName + " to Database");
+				LOGGER.info("Adding resource " + resourceName + " to Database");
 				BackUpMonitorEntity bMEntity = new BackUpMonitorEntity();
 				bMEntity.setResoruceNodeName(resourceNodeName);
 				bMEntity.setResourceName(resourceName);
@@ -224,115 +225,154 @@ public class BackUpMonitor {
 				em.persist(bMEntity);
 				em.flush();
 			}else{
-				// Check if resourceName already exists and if there is a Master in Node.
-				Boolean masterFlag = false;
-				Boolean alreadyMaster = false;
-				Date currentTime;
-				BackUpMonitorEntity masterEntity = null;
-				BackUpMonitorEntity slaveEntity = null;
-				long timeDiff = 0;
+				// Check for other Master(s)
+				ArrayList<BackUpMonitorEntity> masterEntities = new ArrayList<BackUpMonitorEntity>();
+				// Check for self. 
+				BackUpMonitorEntity selfEntity = null;
+				// Check backup monitor entities.
 				for(int i=0; i< bMList.size(); i++){
 					BackUpMonitorEntity bMEntity = (BackUpMonitorEntity) bMList.get(i);
-					logger.info("Refreshing Entity. ");
+					LOGGER.info("Refreshing Entity. ");
 					em.refresh(bMEntity);
+					if(bMEntity.getFlag().equalsIgnoreCase("MASTER")){
+						masterEntities.add(bMEntity);
+					}
 					if(bMEntity.getResourceName().equals(resourceName)){
-						logger.info("Resource Name already Exists. " + resourceName);
-						if(bMEntity.getFlag().equalsIgnoreCase("MASTER")){
-							// Master mode
-							setFlag(true);
-							logger.info(resourceName + " is on Master Mode");
-							bMEntity.setTimeStamp(new Date());
-							bMEntity.setNotificationRecord(notificationRecord);
-							em.persist(bMEntity);
-							em.flush();
-							setLastNotification(null);
-							alreadyMaster = true;
-							break;
-						}else{
-							// Slave mode. 
-							setFlag(false);
-							slaveEntity = bMEntity;
-							logger.info(resourceName + " is on Slave Mode");
-						}
-					}else{
-						if(bMEntity.getFlag().equalsIgnoreCase("MASTER")){
-							// check if its time stamp is old.
-							currentTime = new Date();
-							timeDiff = currentTime.getTime()-bMEntity.getTimeStamp().getTime();
-							masterEntity = bMEntity;
-							masterFlag = true;
-						}
+						selfEntity = bMEntity;
 					}
 				}
-				// If there is master and no slave entry then add the slave entry to database. 
-				// If we are slave and there is a masterFlag then check timeStamp to find if master is down. 
-				if(!alreadyMaster){
-					BackUpMonitorEntity bMEntity;
-					if(slaveEntity==null){
-						bMEntity = new BackUpMonitorEntity();
-					}else{
-						bMEntity = slaveEntity;
-					}
-					if(masterFlag && !getFlag()){
-						if(timeDiff > pingInterval){
-							// This is down or has an issue and we need to become Master while turning the Master to slave. 
-							masterEntity = setSlave(masterEntity);
-							String lastNotification = null;
-							if(masterEntity.getNotificationRecord()!=null){
-								lastNotification = calculatePatch(masterEntity.getNotificationRecord());
-							}
-							setLastNotification(lastNotification);
-							em.persist(masterEntity);
-							em.flush();
-							bMEntity = setMaster(bMEntity);
-							logger.info(resourceName + " changed to Master Mode");
-						}else{
-							bMEntity = setSlave(bMEntity);
-							setLastNotification(null);
-							logger.info(resourceName + " is on Slave Mode");
+				if(selfEntity!=null){
+					LOGGER.info("Resource Name already Exists: " + resourceName);
+					if(selfEntity.getFlag().equalsIgnoreCase("MASTER")){
+						// Already Master Mode. 
+						setFlag(true);
+						LOGGER.info(resourceName + " is on Master Mode");
+						selfEntity.setTimeStamp(new Date());
+						selfEntity.setNotificationRecord(notificationRecord);
+						em.persist(selfEntity);
+						em.flush();
+						setLastNotification(null);
+						if(!masterEntities.contains(selfEntity)){
+							masterEntities.add(selfEntity);
 						}
 					}else{
-						// If there is no Master. we need to become Master. 
-						bMEntity = setMaster(bMEntity);
-						logger.info(resourceName + " is on Master Mode");
-						setLastNotification(null);
+						// Already Slave Mode.
+						setFlag(false);
+						selfEntity.setTimeStamp(new Date());
+						selfEntity.setNotificationRecord(notificationRecord);
+						em.persist(selfEntity);
+						em.flush();
+						LOGGER.info(resourceName + " is on Slave Mode");
 					}
-					bMEntity.setNotificationRecord(notificationRecord);
-					bMEntity.setResoruceNodeName(resourceNodeName);
-					bMEntity.setResourceName(resourceName);
-					bMEntity.setTimeStamp(new Date());
-					em.persist(bMEntity);
+				}else{
+					// Resource name is null -> No resource with same name. 
+					selfEntity = new BackUpMonitorEntity();
+					selfEntity.setResoruceNodeName(resourceNodeName);
+					selfEntity.setResourceName(resourceName);
+					selfEntity.setTimeStamp(new Date());
+					selfEntity = setSlave(selfEntity);
+					setLastNotification(null);
+					LOGGER.info("Creating: " + resourceName + " on Slave Mode");
+					em.persist(selfEntity);
 					em.flush();
+				}
+				// Correct the database if any errors and perform monitor checks.
+				if(masterEntities.size()!=1 || !getFlag()){
+					// We are either not master or there are more masters or no masters. 
+					if(masterEntities.size()==0){
+						// No Masters is a problem Convert ourselves to Master. 
+						selfEntity = setMaster(selfEntity);
+						selfEntity.setTimeStamp(new Date());
+						selfEntity.setNotificationRecord(notificationRecord);
+						LOGGER.info(resourceName + " changed to Master Mode - No Masters available.");
+						em.persist(selfEntity);
+						em.flush();
+					}else {
+						if(masterEntities.size()>1){
+							// More Masters is a problem, Fix the issue by looking for the latest one and make others Slave. 
+							BackUpMonitorEntity masterEntity = null;
+							for(BackUpMonitorEntity currentEntity: masterEntities){
+								if(currentEntity.getFlag().equalsIgnoreCase("MASTER")){
+									if(masterEntity==null){
+										masterEntity = currentEntity;
+									}else if(currentEntity.getTimeStamp().getTime() > masterEntity.getTimeStamp().getTime()){
+										// False Master, Update master to slave and take currentMaster as Master. 
+										masterEntity.setFlag("SLAVE");
+										masterEntity.setTimeStamp(new Date());
+										em.persist(masterEntity);
+										em.flush();
+										masterEntity = currentEntity;
+									}else{
+										currentEntity.setFlag("SLAVE");
+										currentEntity.setTimeStamp(new Date());
+										em.persist(currentEntity);
+										em.flush();
+									}
+								}
+							}
+							masterEntities = new ArrayList<BackUpMonitorEntity>();
+							masterEntities.add(masterEntity);
+						}
+						if(masterEntities.size()==1){
+							// Correct Size, Check if Master is Latest, if not Change Master to Slave and Slave to Master.   
+							BackUpMonitorEntity masterEntity = masterEntities.get(0);
+							if(!masterEntity.getResourceName().equals(selfEntity.getResourceName())){
+								Date currentTime = new Date();
+								long timeDiff = 0;
+								timeDiff = currentTime.getTime()-masterEntity.getTimeStamp().getTime();
+								if(timeDiff > (pingInterval+1500)){
+									// This is down or has an issue and we need to become Master while turning the Master to slave.
+									masterEntity.setFlag("SLAVE");
+									String lastNotification = null;
+									if(masterEntity.getNotificationRecord()!=null){
+										lastNotification = calculatePatch(masterEntity.getNotificationRecord());
+									}
+									setLastNotification(lastNotification);
+									em.persist(masterEntity);
+									em.flush();
+									// Lets Become Master. 
+									selfEntity = setMaster(selfEntity);
+									LOGGER.info("Changing "+ resourceName + " from slave to Master Mode");
+									selfEntity.setTimeStamp(new Date());
+									selfEntity.setNotificationRecord(notificationRecord);
+									em.persist(selfEntity);
+									em.flush();
+								}
+							}
+						}else{
+							LOGGER.error("Backup Monitor Issue, Masters out of sync, This will be fixed in next interval.");
+						}
+					}
 				}
 			}
 			et.commit();
 		}catch(Exception e){
-			logger.error("failed Database Operation " + e.getMessage());
+			LOGGER.error("failed Database Operation " + e.getMessage());
 			if(et.isActive()){
 				et.rollback();
 			}
 			throw new Exception(e);
 		}
 	}
-	
+
 	// Calculate Patch and return String JsonPatch of the notification Delta. 
 	private synchronized String calculatePatch(String oldNotificationRecord) {
 		try{
 			JsonNode notification = JsonLoader.fromString(notificationRecord);
 			JsonNode oldNotification = JsonLoader.fromString(oldNotificationRecord);
 			JsonNode patchNode = JsonDiff.asJson(oldNotification, notification);
-			logger.info("Generated JSON Patch is " + patchNode.toString());
+			LOGGER.info("Generated JSON Patch is " + patchNode.toString());
 			JsonPatch patch = JsonPatch.fromJson(patchNode);
 			try {
 				JsonNode patched = patch.apply(oldNotification);
-				logger.info("Generated New Notification is : " + patched.toString());
+				LOGGER.info("Generated New Notification is : " + patched.toString());
 				return patched.toString();
 			} catch (JsonPatchException e) {
-				logger.error("Error generating Patched "  +e.getMessage());
+				LOGGER.error("Error generating Patched "  +e.getMessage());
 				return null;
 			}
 		}catch(IOException e){
-			logger.error("Error generating Patched "  +e.getMessage());
+			LOGGER.error("Error generating Patched "  +e.getMessage());
 			return null;
 		}
 	}
@@ -346,31 +386,35 @@ public class BackUpMonitor {
 	public synchronized void updateNotification() throws Exception{
 		checkDataBase();
 	}
-	
+
 	// Take in string notification and send the record delta to Handler. 
 	private static void callHandler(String notification){
 		if(handler!=null){
 			try {
 				PDPNotification notificationObject = PolicyUtils.jsonStringToObject(notification, StdPDPNotification.class);
 				if(notificationObject.getNotificationType()!=null){
-					logger.info("Performing Patched notification ");
+					LOGGER.info("Performing Patched notification ");
 					try{
 						handler.runOnNotification(notificationObject);
+						notificationRecord = lastMasterNotification;
 					}catch (Exception e){
-						logger.error("Error in Clients Handler Object : " + e.getMessage());
+						LOGGER.error("Error in Clients Handler Object : " + e.getMessage());
 					}
 				}
 			} catch (IOException e) {
-				logger.info("Error while notification Conversion " + e.getMessage());
+				LOGGER.info("Error while notification Conversion " + e.getMessage());
 			}
 		}
 	}
-	
+
 	// Used to set LastMasterNotification Record. 
 	private static void setLastNotification(String notification){
 		synchronized(notificationLock){
 			lastMasterNotification = notification;
 			if(lastMasterNotification!=null && !lastMasterNotification.equals("\"notificationType\":null")){
+				if(lastMasterNotification.equals(notificationRecord)){
+					return;
+				}
 				callHandler(notification);
 			}
 		}

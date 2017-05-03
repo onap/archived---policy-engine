@@ -22,16 +22,19 @@ package org.openecomp.policy.pdp.rest.notifications;
 
 import java.util.Collection;
 
+import org.openecomp.policy.api.NotificationType;
+
 /**
  * Notification is the POJO which will be used to send the Notifications to the Server. 
  * Notification must contain the Removal and Updated policies. 
  * 
- * @version 0.1
+ * @version 0.2
  *
  */
 public class Notification {
 	private Collection<Removed> removedPolicies = null;
 	private Collection<Updated> loadedPolicies = null;
+	private NotificationType notificationType= null;
 	
 	public Collection<Removed> getRemovedPolicies() {
 		return removedPolicies;
@@ -49,4 +52,11 @@ public class Notification {
 		this.loadedPolicies = loadedPolicies;
 	}
 	
+	public NotificationType getNotificationType() {
+        return notificationType;
+    }
+
+    public void setNotificationType(NotificationType notificationType){
+        this.notificationType= notificationType;
+    }
 }

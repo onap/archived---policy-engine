@@ -31,8 +31,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-import junit.framework.TestCase;
-
 import org.mockito.Mockito;
 import org.openecomp.policy.api.AttributeType;
 import org.openecomp.policy.api.ConfigRequestParameters;
@@ -42,6 +40,7 @@ import org.openecomp.policy.api.DeletePolicyCondition;
 import org.openecomp.policy.api.DeletePolicyParameters;
 import org.openecomp.policy.api.EventRequestParameters;
 import org.openecomp.policy.api.ImportParameters;
+import org.openecomp.policy.api.ImportParameters.IMPORT_TYPE;
 import org.openecomp.policy.api.NotificationHandler;
 import org.openecomp.policy.api.NotificationScheme;
 import org.openecomp.policy.api.PDPNotification;
@@ -49,7 +48,6 @@ import org.openecomp.policy.api.PolicyChangeResponse;
 import org.openecomp.policy.api.PolicyClass;
 import org.openecomp.policy.api.PolicyConfig;
 import org.openecomp.policy.api.PolicyConfigException;
-import org.openecomp.policy.api.PolicyDecision;
 import org.openecomp.policy.api.PolicyDecisionException;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
@@ -57,16 +55,13 @@ import org.openecomp.policy.api.PolicyEventException;
 import org.openecomp.policy.api.PolicyParameters;
 import org.openecomp.policy.api.PolicyResponse;
 import org.openecomp.policy.api.PushPolicyParameters;
-import org.openecomp.policy.api.ImportParameters.IMPORT_TYPE;
-import org.openecomp.policy.std.StdPDPNotification;
-import org.openecomp.policy.std.StdPolicyChangeResponse;
-import org.openecomp.policy.std.StdPolicyEngine;
-import org.openecomp.policy.std.StdPolicyResponse;
-
-import org.openecomp.policy.xacml.std.pap.StdPAPPolicy;
-
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.std.StdPDPNotification;
+import org.openecomp.policy.std.StdPolicyChangeResponse;
+import org.openecomp.policy.std.StdPolicyResponse;
+
+import junit.framework.TestCase;
 
 /**
  * The class <code>PolicyEngineInterfaceTest</code> contains tests for the
@@ -84,7 +79,6 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	private static final Logger logger = FlexLogger.getLogger(PolicyEngineInterfaceTest.class);
 
 	private PolicyEngine policyEngine = null;
-	private StdPolicyEngine stdPolicyEngine = null;
 	private PolicyEngine mockPolicyEngine = null;
 	private Collection<PolicyConfig> policyConfig = null;
 	private UUID requestID = UUID.randomUUID();
@@ -141,6 +135,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	 * Run the Collection<PolicyConfig> getConfigByPolicyName(String) method
 	 * test
 	 */
+	@SuppressWarnings("deprecation")
 	public void testGetConfigByPolicyName() {
 		String policyName = null;
 		try{
@@ -151,6 +146,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		assertNull(policyConfig);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void testGetConfigByPolicyName2() {
 		String policyName = null;
 		
@@ -165,6 +161,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	/**
 	 * Run the Collection<PolicyConfig> getConfig(String) method test
 	 */
+	@SuppressWarnings("deprecation")
 	public void testGetConfig() {
 		String ecompName = null;
 		
@@ -176,6 +173,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		assertNull(policyConfig);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void testGetConfig2() {
 		String ecompName = null;
 
@@ -188,6 +186,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	}
 
 	
+	@SuppressWarnings("deprecation")
 	public void testGetConfig3() {
 		String ecompName = null;
 		String configName = null;
@@ -200,6 +199,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		assertNull(policyConfig);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void testGetConfig4() {
 		String ecompName = null;
 		String configName = null;
@@ -213,6 +213,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		assertNull(policyConfig);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void testGetConfig5() {
 		String ecompName = null;
 		String configName = null;
@@ -242,6 +243,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	 * Run the Collection<PolicyResponse> sendEvent(Map<String,String>) method
 	 * test
 	 */
+	@SuppressWarnings("deprecation")
 	public void testSendEvent()
 	{
 		Collection<PolicyResponse> result = null;
@@ -252,7 +254,6 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.sendEvent(eventAttributes)).thenReturn(result);
 			result = mockPolicyEngine.sendEvent(eventAttributes);
 		} catch (PolicyEventException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -261,6 +262,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void testSendEvent2()
 	{
 		Collection<PolicyResponse> result = null;
@@ -271,7 +273,6 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.sendEvent(eventAttributes,requestID)).thenReturn(result);
 			result = mockPolicyEngine.sendEvent(eventAttributes,requestID);
 		} catch (PolicyEventException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -290,7 +291,6 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.sendEvent(parameters)).thenReturn(result);
 			result = mockPolicyEngine.sendEvent(parameters);
 		} catch (PolicyEventException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -304,6 +304,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	 * Run the PolicyDecision getDecision(String, Map<String,String>) method
 	 * test
 	 */
+	@SuppressWarnings("deprecation")
 	public void testGetDecision()
 	{
 		String eCOMPComponentName = null;
@@ -315,13 +316,13 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.getDecision(eCOMPComponentName,decisionAttributes)).thenReturn(null);
 			result = mockPolicyEngine.getDecision(eCOMPComponentName,decisionAttributes);
 		} catch (PolicyDecisionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		assertEquals(result,null);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void testGetDecision2()
 	{
 		String eCOMPComponentName = null;
@@ -333,7 +334,6 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.getDecision(eCOMPComponentName,decisionAttributes,requestID)).thenReturn(null);
 			result = mockPolicyEngine.getDecision(eCOMPComponentName,decisionAttributes);
 		} catch (PolicyDecisionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -349,7 +349,6 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.getDecision(parameters)).thenReturn(null);
 			result = mockPolicyEngine.getDecision(parameters);
 		} catch (PolicyDecisionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -453,7 +452,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	public void testCreateConfigFirewallPolicy() {
 		String response = "success";
 		String result = null;
-        String json = "{\"serviceTypeId\":\"/v0/firewall/pan\",\"configName\":\"rule1607\",\"deploymentOption\":{\"deployNow\":false},\"securityZoneId\":\"/v0/firewall/pan\",\"serviceGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"REFERENCE\",\"name\":\"SList\"},{\"type\":\"REFERENCE\",\"name\":\"Syslog\"}]},{\"name\":\"Syslog\",\"description\":\"NA\",\"type\":\"SERVICE\",\"transportProtocol\":\"udp\",\"appProtocol\":null,\"ports\":\"514\"},{\"name\":\"SList\",\"description\":\"Service List\",\"type\":\"SERVICE\",\"transportProtocol\":\"tcp\",\"appProtocol\":null,\"ports\":\"8080\"}],\"addressGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"},{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]},{\"name\":\"PL_CCE3\",\"description\":\"CCE Routers\",\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]}],\"firewallRuleList\":[{\"position\":\"1\",\"ruleName\":\"1607Rule\",\"fromZones\":[\"Trusted\"],\"toZones\":[\"Untrusted\"],\"negateSource\":false,\"negateDestination\":false,\"sourceList\":[{\"type\":\"REFERENCE\",\"value\":\"PL_CCE3\"},{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"destinationList\":[{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"sourceServices\":[],\"destServices\":[{\"type\":\"REFERENCE\",\"name\":\"1607Group\"}],\"action\":\"accept\",\"description\":\"Rule for 1607 templates\",\"enabled\":true,\"log\":true}]}";
+		String json = "{\"serviceTypeId\":\"/v0/firewall/pan\",\"configName\":\"rule1607\",\"deploymentOption\":{\"deployNow\":false},\"securityZoneId\":\"/v0/firewall/pan\",\"serviceGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"REFERENCE\",\"name\":\"SList\"},{\"type\":\"REFERENCE\",\"name\":\"Syslog\"}]},{\"name\":\"Syslog\",\"description\":\"NA\",\"type\":\"SERVICE\",\"transportProtocol\":\"udp\",\"appProtocol\":null,\"ports\":\"514\"},{\"name\":\"SList\",\"description\":\"Service List\",\"type\":\"SERVICE\",\"transportProtocol\":\"tcp\",\"appProtocol\":null,\"ports\":\"8080\"}],\"addressGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"},{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]},{\"name\":\"PL_CCE3\",\"description\":\"CCE Routers\",\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]}],\"firewallRuleList\":[{\"position\":\"1\",\"ruleName\":\"1607Rule\",\"fromZones\":[\"Trusted\"],\"toZones\":[\"Untrusted\"],\"negateSource\":false,\"negateDestination\":false,\"sourceList\":[{\"type\":\"REFERENCE\",\"value\":\"PL_CCE3\"},{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"destinationList\":[{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"sourceServices\":[],\"destServices\":[{\"type\":\"REFERENCE\",\"name\":\"1607Group\"}],\"action\":\"accept\",\"description\":\"Rule for 1607 templates\",\"enabled\":true,\"log\":true}]}";
 		JsonObject jsonObj = buildJSON(json);
 		try {
 		
@@ -474,7 +473,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	public void testUpdateConfigFirewallPolicy() {
 		String response = "success";
 		String result = null;
-        String json = "{\"serviceTypeId\":\"/v0/firewall/pan\",\"configName\":\"rule1607\",\"deploymentOption\":{\"deployNow\":false},\"securityZoneId\":\"/v0/firewall/pan\",\"serviceGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"REFERENCE\",\"name\":\"SList\"},{\"type\":\"REFERENCE\",\"name\":\"Syslog\"}]},{\"name\":\"Syslog\",\"description\":\"NA\",\"type\":\"SERVICE\",\"transportProtocol\":\"udp\",\"appProtocol\":null,\"ports\":\"514\"},{\"name\":\"SList\",\"description\":\"Service List\",\"type\":\"SERVICE\",\"transportProtocol\":\"tcp\",\"appProtocol\":null,\"ports\":\"8080\"}],\"addressGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"},{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]},{\"name\":\"PL_CCE3\",\"description\":\"CCE Routers\",\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]}],\"firewallRuleList\":[{\"position\":\"1\",\"ruleName\":\"1607Rule\",\"fromZones\":[\"Trusted\"],\"toZones\":[\"Untrusted\"],\"negateSource\":false,\"negateDestination\":false,\"sourceList\":[{\"type\":\"REFERENCE\",\"value\":\"PL_CCE3\"},{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"destinationList\":[{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"sourceServices\":[],\"destServices\":[{\"type\":\"REFERENCE\",\"name\":\"1607Group\"}],\"action\":\"accept\",\"description\":\"Rule for 1607 templates\",\"enabled\":true,\"log\":true}]}";
+		String json = "{\"serviceTypeId\":\"/v0/firewall/pan\",\"configName\":\"rule1607\",\"deploymentOption\":{\"deployNow\":false},\"securityZoneId\":\"/v0/firewall/pan\",\"serviceGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"REFERENCE\",\"name\":\"SList\"},{\"type\":\"REFERENCE\",\"name\":\"Syslog\"}]},{\"name\":\"Syslog\",\"description\":\"NA\",\"type\":\"SERVICE\",\"transportProtocol\":\"udp\",\"appProtocol\":null,\"ports\":\"514\"},{\"name\":\"SList\",\"description\":\"Service List\",\"type\":\"SERVICE\",\"transportProtocol\":\"tcp\",\"appProtocol\":null,\"ports\":\"8080\"}],\"addressGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"},{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]},{\"name\":\"PL_CCE3\",\"description\":\"CCE Routers\",\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]}],\"firewallRuleList\":[{\"position\":\"1\",\"ruleName\":\"1607Rule\",\"fromZones\":[\"Trusted\"],\"toZones\":[\"Untrusted\"],\"negateSource\":false,\"negateDestination\":false,\"sourceList\":[{\"type\":\"REFERENCE\",\"value\":\"PL_CCE3\"},{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"destinationList\":[{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"sourceServices\":[],\"destServices\":[{\"type\":\"REFERENCE\",\"name\":\"1607Group\"}],\"action\":\"accept\",\"description\":\"Rule for 1607 templates\",\"enabled\":true,\"log\":true}]}";
 		JsonObject jsonObj = buildJSON(json);
 		try {
 		
@@ -492,10 +491,8 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	 */
 	public void testCreatePolicy() {
 		response.setResponseMessage("success");
-		String callPapResponse = "success";
 		PolicyChangeResponse result = null;
 		PolicyParameters policyParameters = new PolicyParameters();
-		StdPAPPolicy newPAPPolicy = null;
 
         policyParameters.setPolicyClass(PolicyClass.Action); //required
         policyParameters.setPolicyName("test.junitTest"); //required
@@ -566,6 +563,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	 * Run the String pushPolicy(String, String, String, String, UUID) method
 	 * test
 	 */
+	@SuppressWarnings("deprecation")
 	public void testPushPolicy() {
 		String response = "Success";
 		String result = null;

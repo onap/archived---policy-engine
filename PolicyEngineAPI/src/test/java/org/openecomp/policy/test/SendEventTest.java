@@ -29,17 +29,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
-import org.junit.Test;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
 import org.openecomp.policy.api.PolicyEventException;
 import org.openecomp.policy.api.PolicyResponse;
 import org.openecomp.policy.api.PolicyResponseStatus;
-
-import org.openecomp.policy.common.logging.flexlogger.*; 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger; 
 
 public class SendEventTest {
 	
@@ -59,6 +56,7 @@ public class SendEventTest {
 	}
 
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testSendEventFail() {
 		eventAttributes = null;
 		try {
@@ -70,6 +68,7 @@ public class SendEventTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testSendEventFailNull() {
 		eventAttributes.put("", "");
 		try {
@@ -93,6 +92,7 @@ public class SendEventTest {
 	}*/
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testSendEventNotValid() {
 		eventAttributes.put("Action.fail", "Value");
 		try {
@@ -112,6 +112,7 @@ public class SendEventTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testSendEventActionAdvised() {
 		eventAttributes.put("Key", "Value");
 		eventAttributes.put("cpu", "80");
@@ -132,6 +133,7 @@ public class SendEventTest {
 	}
 	
 	//@Test
+	@SuppressWarnings("deprecation")
 	public void testSendEventActionTaken() {
 		eventAttributes.put("Key", "Value");
 		eventAttributes.put("cpu", "91");

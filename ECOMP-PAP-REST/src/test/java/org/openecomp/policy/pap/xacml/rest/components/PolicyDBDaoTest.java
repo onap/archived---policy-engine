@@ -36,40 +36,33 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.junit.After;
+import org.junit.Assert;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.openecomp.policy.pap.xacml.rest.adapters.PolicyRestAdapter;
-import org.openecomp.policy.pap.xacml.rest.components.ConfigPolicy;
-import org.openecomp.policy.pap.xacml.rest.components.Policy;
-import org.openecomp.policy.pap.xacml.rest.components.PolicyDBDao;
-import org.openecomp.policy.pap.xacml.rest.components.PolicyDBDaoTransaction;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.components.PolicyDBDao.PolicyDBDaoTestClass;
 import org.openecomp.policy.rest.XACMLRestProperties;
+import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 import org.openecomp.policy.rest.jpa.ActionBodyEntity;
 import org.openecomp.policy.rest.jpa.GroupEntity;
 import org.openecomp.policy.rest.jpa.PdpEntity;
 import org.openecomp.policy.rest.jpa.PolicyEntity;
 import org.openecomp.policy.rest.util.Webapps;
-
-import com.att.research.xacml.api.pap.PAPException;
-
 import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
 import org.openecomp.policy.xacml.std.pap.StdPDPGroup;
 import org.openecomp.policy.xacml.util.XACMLPolicyWriter;
+
+import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.util.XACMLProperties;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Ignore;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-
-import org.junit.Assert;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger;
 
 @Ignore //only run locally as timing sometimes causes failures on Jenkins
 public class PolicyDBDaoTest {
@@ -180,14 +173,14 @@ public class PolicyDBDaoTest {
 //			Assert.fail();
 //		}
 		String filePath = null;
-		String xmlFile = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" PolicyId=\"urn:com:xacml:policy:id:eaa4bb64-59cf-4517-bb44-b2eeabd50b11\" Version=\"1\" RuleCombiningAlgId=\"urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides\">\n    <Description></Description>\n    <Target>\n        <AnyOf>\n            <AllOf>\n                <Match MatchId=\"org.openecomp.function.regex-match\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#integer\">99</AttributeValue>\n                    <AttributeDesignator Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\" AttributeId=\"cpu\" DataType=\"http://www.w3.org/2001/XMLSchema#integer\" MustBePresent=\"false\"/>\n                </Match>\n            </AllOf>\n        </AnyOf>\n    </Target>\n    <Rule RuleId=\"urn:com:xacml:rule:id:3350bf37-43d0-4a94-a317-febec81150d8\" Effect=\"Permit\">\n        <Target/>\n        <ObligationExpressions>\n            <ObligationExpression ObligationId=\"test\" FulfillOn=\"Permit\">\n                <AttributeAssignmentExpression AttributeId=\"performer\" Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">PDPAction</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"type\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">REST</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"url\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#anyURI\">http://localhost:8056/pcd</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"method\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">GET</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"body\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#anyURI\">$URLaction/com.Action_patbaction7.json</AttributeValue>\n                </AttributeAssignmentExpression>\n            </ObligationExpression>\n        </ObligationExpressions>\n    </Rule>\n</Policy>\n";
+		String xmlFile = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" PolicyId=\"urn:com:xacml:policy:id:eaa4bb64-59cf-4517-bb44-b2eeabd50b11\" Version=\"1\" RuleCombiningAlgId=\"urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides\">\n    <Description></Description>\n    <Target>\n        <AnyOf>\n            <AllOf>\n                <Match MatchId=\"org.openecomp.labs.ecomp.function.regex-match\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#integer\">99</AttributeValue>\n                    <AttributeDesignator Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\" AttributeId=\"cpu\" DataType=\"http://www.w3.org/2001/XMLSchema#integer\" MustBePresent=\"false\"/>\n                </Match>\n            </AllOf>\n        </AnyOf>\n    </Target>\n    <Rule RuleId=\"urn:com:xacml:rule:id:3350bf37-43d0-4a94-a317-febec81150d8\" Effect=\"Permit\">\n        <Target/>\n        <ObligationExpressions>\n            <ObligationExpression ObligationId=\"test\" FulfillOn=\"Permit\">\n                <AttributeAssignmentExpression AttributeId=\"performer\" Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">PDPAction</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"type\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">REST</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"url\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#anyURI\">http://localhost:8056/pcd</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"method\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">GET</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"body\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#anyURI\">$URLaction/com.Action_patbaction7.json</AttributeValue>\n                </AttributeAssignmentExpression>\n            </ObligationExpression>\n        </ObligationExpressions>\n    </Rule>\n</Policy>\n";
 		String jsonFile = "{\"actionAttribute\":\"Memory\"}";
 		
 		try{
 			//policy file
 			InputStream in = new ByteArrayInputStream(xmlFile.getBytes());
 			String workspaceDir = "src/test/resources/junitTestCreatedDirectory/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE)+"/admin/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_REPOSITORY);
-			FileUtils.forceMkdir(new File(workspaceDir+"/org/openecomp"));
+			FileUtils.forceMkdir(new File(workspaceDir+"/com/att"));
 			File outFile = new File(workspaceDir+"/org/openecomp/Action_mypol.xml");
 			OutputStream out = new FileOutputStream(outFile);
 			IOUtils.copy(in, out);
@@ -283,7 +276,7 @@ public class PolicyDBDaoTest {
 			}
 			willFail.close();
 			
-			fakeFile = new File("directorythatdoesnotexist/"+workspaceDir+"org/openecomp/Action_mypol2.xml");
+			fakeFile = new File("directorythatdoesnotexist/"+workspaceDir+"com/att/Action_mypol2.xml");
 			willFail = dbd.getNewTransaction();
 			try{
 			willFail.createPolicy(fakeFile.getAbsolutePath(), "user1");
@@ -319,7 +312,7 @@ public class PolicyDBDaoTest {
 	@Test
 	public void createFromPolicyObject(){
 		String workspaceDir = "src/test/resources/junitTestCreatedDirectory/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE)+"/admin/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_REPOSITORY);
-		File parentPath = new File(workspaceDir+"/org/openecomp");
+		File parentPath = new File(workspaceDir+"/com/att");
 		File scope = new File(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE)+"/admin/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_REPOSITORY));
 		Policy policyObject = new ConfigPolicy();
 		policyObject.policyAdapter = new PolicyRestAdapter();
@@ -635,7 +628,6 @@ public class PolicyDBDaoTest {
 			System.out.println("Decrypted password: "+decr);
 			Assert.assertEquals("testpassword", decr);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			Assert.fail();
 		}
@@ -670,7 +662,6 @@ public class PolicyDBDaoTest {
 			}
 			Thread.sleep(sleepTime);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(logger.isDebugEnabled()){
@@ -712,7 +703,6 @@ public class PolicyDBDaoTest {
 			}
 			Thread.sleep(sleepTime);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(logger.isDebugEnabled()){

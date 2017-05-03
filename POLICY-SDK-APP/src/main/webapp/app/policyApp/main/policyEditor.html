@@ -1,0 +1,280 @@
+<!--/*-
+ * ============LICENSE_START=======================================================
+ * ECOMP Policy Engine
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */-->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Policy</title>
+
+	<!-- Resources -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+	<!---------------------------AngularJs-------------------------------->
+	<script src= "app/fusion/external/angular-1.4.8/angular.js"></script>
+	<script src= "app/fusion/external/angular-1.4.8/angular.min.js"></script>
+	<script src= "app/policyApp/libs/bower_components/angular-translate/angular-translate.min.js"></script>
+	<script src= "app/policyApp/libs/bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+	<script src= "app/fusion/external/angular-1.4.8/angular-messages.js"></script>
+	<script src= "app/fusion/external/angular-1.4.8/angular-touch.js"></script>
+	<script src= "//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.js"></script>
+	<script src= "app/fusion/external/angular-1.4.8/angular-sanitize.min.js"></script>	
+	<script src= "app/fusion/external/angular-1.4.8/angular-route.min.js"></script>
+	<script src= "app/fusion/external/angular-1.4.8/angular-cookies.min.js"></script>
+	
+	<script src= "app/fusion/external/b2b/js/b2b-angular/b2b-library.min.js"></script>
+	<script src= "app/fusion/external/jquery/dist/jquery.min.js"></script>
+	<script src= "app/policyApp/libs/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	
+	<!---------------------------Angular Gridster-------------------------------->
+	<link rel="stylesheet" href="app/fusion/external/angular-gridster/dist/angular-gridster.min.css">	
+	<link rel="stylesheet" href= "app/fusion/external/angular-bootstrap/ui-bootstrap-csp.css">	
+	<script src= "app/fusion/external/javascript-detect-element-resize/jquery.resize.js"></script>
+	<script src= "app/fusion/external/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+	<script src= "app/fusion/external/angular-gridster/dist/angular-gridster.min.js"></script>
+
+	<!---------------------------Policy App CSS-------------------------------->
+	<link rel="stylesheet" href="app/policyApp/CSS/font-awesome.min.css">
+	<link rel="stylesheet" href="app/policyApp/CSS/Notification/angular-csp.css">
+	<link rel="stylesheet" href="app/policyApp/CSS/Notification/angular-ui-notification.min.css">
+	<link rel="stylesheet" href="app/policyApp/CSS/lockdownIcon.css">
+	<link rel="stylesheet" href="app/policyApp/CSS/w3.css">
+	<link rel="stylesheet" href="app/policyApp/CSS/select.css">
+	<link rel="stylesheet" href="app/policyApp/policy-models/Editor/css/normalize.css">
+	<link rel="stylesheet" href="app/policyApp/policy-models/Editor/css/animations.css">
+	<link rel="stylesheet" href="app/policyApp/policy-models/Editor/css/dialogs.css">
+	<link rel="stylesheet" href="app/policyApp/policy-models/Editor/css/main.css">
+	<link rel="stylesheet" href="app/policyApp/policy-models/Editor/css/styles.css">
+	<script src= "app/policyApp/CSS/Notification/angular-ui-notification.min.js"></script>
+	
+	<script src= "app/policyApp/CSS/UIGrid/ui-grid.js"></script>
+	<link rel="stylesheet" href="app/policyApp/CSS/UIGrid/ui-grid.css">
+	
+	<script src= "app/fusion/external/ds2/js/appDS2.js"></script>	
+
+	<script src= "app/fusion/scripts/DS2-services/headerServiceDS2.js"></script>
+	<script src= "app/fusion/scripts/DS2-services/leftMenuServiceDS2.js"></script>
+	<script src= "app/fusion/scripts/DS2-services/manifestService.js"></script>
+	<script src= "app/fusion/scripts/DS2-directives/footer.js"></script>
+	<script src= "app/fusion/scripts/DS2-directives/ds2Header.js"></script>
+	<script src= "app/fusion/scripts/DS2-directives/ds2LeftMenu.js"></script>
+	<script src="app/fusion/scripts/DS2-directives/b2b-leftnav-ext.js"></script> 
+	<!-- /*<script src= "app/fusion/scripts/DS2-services/userInfoServiceDS2.js"></script>*/ -->
+	<script src= "app/policyApp/service/userInfoServiceDS2.js"></script>
+	
+	<!---------------------------Policy Editor js-------------------------------->
+	<script src= "app/policyApp/policy-models/Editor/js/app.js"></script>
+	<script src= "app/policyApp/service/PolicyAppService.js"></script>
+	<script src= "app/policyApp/main/modalPopupController.js"></script>
+	<script src= "app/policyApp/service/modalService.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/PolicyTemplateController/ExportPolicyController.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/js/directives/directives.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/js/filters/filters.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/js/providers/config.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/js/entities/item.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/js/services/policynavigator.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/js/services/policyuploader.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/js/controllers/policyManager.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/js/controllers/selector-controller.js"></script>
+	<script src= "app/policyApp/controller/policyController.js"></script>
+	
+	<!---------------------------Policy Left Menu Controllers-------------------------------->
+	<script src= "app/policyApp/controller/policyAdminTabController.js"></script>
+	<script src= "app/policyApp/controller/dashboard_Logging_Controller.js"></script>
+	<script src= "app/policyApp/controller/dashboardController.js"></script>
+	<script src= "app/policyApp/controller/pdpController.js"></script>
+	<script src= "app/policyApp/controller/pdpGroupPopUpController.js"></script>
+	<script src= "app/policyApp/controller/DictionaryController.js"></script>
+	<script src= "app/policyApp/controller/PolicyRolesController.js"></script>
+	<script src= "app/policyApp/controller/PolicyAddScopeRoleController.js"></script>
+	<script src= "app/policyApp/controller/AutoPushController.js"></script>
+	<script src= "app/policyApp/controller/ImportDictionaryController.js"></script>
+	<script src= "app/policyApp/controller/PDPTabController/AddorEditPdpInGroup.js"></script>
+	<script src= "app/policyApp/controller/PDPTabController/PDPGroupStatusController.js"></script>
+	<script src= "app/policyApp/controller/AutoPushTabController/RemovePDPGroupPoliciesController.js"></script>
+	
+	<!---------------------------Policy Creation resources-------------------------------->
+	<script src= "app/policyApp/policy-models/Editor/PolicyTemplateController/BaseConfigPolicyController.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/PolicyTemplateController/ClosedLoopFaultController.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/PolicyTemplateController/ClosedLoopPMController.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/PolicyTemplateController/ActionPolicyController.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/PolicyTemplateController/DecisionPolicyController.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/PolicyTemplateController/FirewallPolicyController.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/PolicyTemplateController/BRMSRawPolicyController.js"></script>
+	<script src= "app/policyApp/policy-models/Editor/PolicyTemplateController/BRMSParamPolicyController.js"></script>
+	
+	<!--------------------------Dictionary resources--------------------------------->
+	<script src= "app/policyApp/controller/dictionaryGridController/actionPolicyDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/attributeDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/ecompNameDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/BRMSParamDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/BRMSDependencyDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/BRMSControllerDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/CLPepOptionsDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/CLServiceDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/CLSiteDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/CLVarbindDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/CLVnfTypeDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/CLVsclActionDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/DecisionSettingsDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/DescriptiveScopeDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/EnforcerTypeDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWActionListDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWAddressGroupDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWParentListDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWPortListDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWPrefixListDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWProtocolListDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWSecurityZoneDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWServiceGroupDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWServiceListDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWTermListDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWTagListDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWTagPickerListDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/FWZoneDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/MSConfigNameDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/MSDcaeUUIDDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/MSLocationDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/MSModelDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/ModelAttributeDictGridController.js"></script>
+		
+	<script src= "app/policyApp/controller/dictionaryGridController/PSClosedLoopDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/PSGroupPolicyScopeDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/PSResourceDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/PSServiceDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/PSTypeDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/RiskTypeDictGridController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryGridController/SafePolicyWarningDictGridController.js"></script>
+
+	<script src= "app/policyApp/controller/dictionaryController/actionPolicyDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/attributeDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/ecompNameEditorController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/BRMSParamDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/BRMSDependencyDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/BRMSControllerDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/CLPepOptionsDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/CLServiceDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/CLSiteDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/CLVarbindDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/CLVnfTypeDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/CLVsclActionDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/DecisionSettingsDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/DescriptiveSearchDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/EnforcerDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWActionListDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWAddressGroupDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWParentListDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWPortListDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWPrefixListDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWProtocolListDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWSecurityZoneDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWServiceGroupDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWServiceListDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWTermListDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWTagListDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWTagPickerListDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/FWZoneDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/MSConfigNameDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/MSDcaeUUIDDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/MSLocationDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/MSModelsDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/ModelAttributeDictController.js"></script>
+		
+	<script src= "app/policyApp/controller/dictionaryController/PSClosedLoopDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/PSGroupPolicyScopeDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/PSResourceDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/PSServiceDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/PSTypeDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/RiskTypeDictController.js"></script>
+	<script src= "app/policyApp/controller/dictionaryController/SafePolicyWarningDictController.js"></script>
+		
+	<script src= "app/policyApp/controller/ImportDictionaryController.js"></script>
+	
+	<!---------------------------DS2 styles-------------------------------->
+	<link rel="stylesheet" href="app/policyApp/CSS/b2b-angular.css">	
+	<link rel="stylesheet" href="app/fusion/external/b2b/css/b2b-angular/font_icons.css">	
+	<link rel="stylesheet" href="app/policyApp/CSS/bootstrap/dist/css/bootstrap.min.css">	
+	
+	<!---------------------------DS2 ICONS-------------------------------->
+	<link rel="stylesheet" href="app/fusion/external/ds2/css/digital-ng-library/ionicons.css">	
+	<link rel="stylesheet" href="app/fusion/styles/ecomp.css">
+	<link rel="stylesheet" href="app/fusion/external/angular-gridster/dist/angular-gridster.min.css">
+	<script src= "app/policyApp/CSS/UIGrid/ui-grid.eot"></script>
+	<link rel="stylesheet" href="app/policyApp/CSS/UIGrid/ui-grid.svg">
+	<script src= "app/policyApp/CSS/UIGrid/ui-grid.woff"></script>
+	<script src= "app/policyApp/CSS/UIGrid/ui-grid.ttf"></script>
+	
+</head>
+	<body class="appBody" ng-app="abs" style="padding-top: 0px;">
+		<div ds2-Header class="header-container" ></div>
+		<div ds2-menu id="menuContainer" class="menu-container" ></div>
+		<div ng-view id="rightContentProfile" class="content-container">
+		</div>
+		<!--  Dictionary Windows -->
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/ActionPolicyDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/AttributeDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/BRMSParamDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/BRMSDependencyDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/BRMSControllerDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/CLPepOptionsDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/CLServiceTypeDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/CLSiteDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/CLVarbindDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/CLVnfTypeDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/CLVsclActionDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/DecisionSettingsDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/DescriptiveScopeDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/EcompNameDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/EnforcerTypeDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWActionListDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWAddressGroupDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWParentListDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWPortListDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWPrefixListDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWProtocolListDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWSecurityZoneDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWServiceGroupDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWServiceListDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWTag.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWTagPicker.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWTermListDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/FWZoneDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/MSConfigNameDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/MSDCAEUUIDDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/MSLocationDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/MSModelsDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/ModelAttributeDictionary.html'"></div>
+	    
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/PSClosedLoopDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/PSGroupPolicyScopeDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/PSResourceDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/PSServiceDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/PSTypeDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/RiskTypeDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/RiskTypeDictionary.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Dictionary/SafePolicyWarningDictionary.html'"></div>
+	    
+	    <div ng-include src="'app/policyApp/policy-models/Editor/PolicyTemplates/BRMSShowParamRuleModal.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/PDPTabWindows/PdpStatusWindow.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/Edit_Roles_Window.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/PushtabWindow/removeGroupPoliciesWindow.html'"></div>
+	    <div ng-include src="'app/policyApp/Windows/popup_modal.html'"></div>
+		<div ds2-Footer class="footer-container"></div>
+	</body>
+</html>

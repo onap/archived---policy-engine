@@ -20,14 +20,12 @@
 
 package org.openecomp.policyEngine;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.openecomp.policy.api.ImportParameters;
+import org.openecomp.policy.api.ImportParameters.IMPORT_TYPE;
 import org.openecomp.policy.api.PolicyChangeResponse;
 import org.openecomp.policy.api.PolicyEngine;
-import org.openecomp.policy.api.ImportParameters.IMPORT_TYPE;
 
 public class ImportMicroServiceClient {
 	static Boolean isEdit = false;
@@ -35,7 +33,6 @@ public class ImportMicroServiceClient {
 		try{	
 	        PolicyEngine policyEngine = new PolicyEngine("config.properties");
 	        ImportParameters importParameters = new ImportParameters();
-	        List<String> filepath = new ArrayList<String>();
 	        importParameters.setFilePath("C:\\Workspaces\\models\\TestingModel\\ControllerServiceSampleSdnlServiceInstance-v0.1.0-SNAPSHOT.zip");
 	        importParameters.setServiceName("ControllerServiceSampleSdnlServiceInstance");
 	  	  	

@@ -1,3 +1,0 @@
-{
-	"PAP_URL" : "${{REST_PAPURL_WITH_AUTH_PASSWORD}}"
-}

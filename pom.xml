@@ -16,12 +16,10 @@
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<!-- from vaadin-test -->
 		<jetty.plugin.version>9.2.3.v20140905</jetty.plugin.version>
 		<project.source.version>1.8</project.source.version>
 		<project.target.version>1.8</project.target.version>
 		<project.encoding>UTF-8</project.encoding>
-		<!-- end -->
 
 		<sonar.language>java</sonar.language>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -40,32 +38,26 @@
 
 
 	<modules>
+		<module>PolicyEngineUtils</module>
 		<module>ECOMP-XACML</module>
 		<module>ECOMP-REST</module>
+		<module>PolicyEngineAPI</module>
 		<module>ECOMP-PDP</module>
 		<module>ECOMP-PDP-REST</module>
 		<module>ECOMP-PAP-REST</module>
-		<module>ECOMP-TEST</module>
 		<module>LogParser</module>
 		<module>PolicyEngineClient</module>
-		<module>PolicyEngineUtils</module>
-		<module>PolicyEngineAPI</module>
-		<module>PyPDPServer</module>
 		<module>BRMSGateway</module>
-		<module>ecomp-sdk-app</module>
+		<module>POLICY-SDK-APP</module>
+		<module>ECOMP-SDK-APP</module>
 		<module>packages</module>
 	</modules>
 
 	<repositories>
 		<repository>
-			<id>central</id>
-			<name>Maven 2 repository</name>
-			<url>http://repo2.maven.org/maven2/</url>
-		</repository>
-		<repository>
-			<id>soapUI</id>
-			<url>http://www.soapui.org/repository/maven2/</url>
-			<name>SoapUI plugin</name>
+			<id>ecomp-snapshots</id>
+			<name>OpenECOMP Snapshot Repository</name>
+			<url>${nexusproxy}/${snapshots.path}</url>
 		</repository>
 		<repository>
 			<id>ecomp-releases</id>
@@ -76,11 +68,6 @@
 			<id>ecomp-staging</id>
 			<name>OpenECOMP Staging Repository</name>
 			<url>${nexusproxy}/${staging.path}</url>
-		</repository>
-		<repository>
-			<id>ecomp-snapshots</id>
-			<name>OpenECOMP Snapshot Repository</name>
-			<url>${nexusproxy}/${snapshots.path}</url>
 		</repository>
 	</repositories>
 
@@ -127,8 +114,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
-			<!-- <scope>provided</scope> -->
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<!-- org.w3c.dom dependencies -->

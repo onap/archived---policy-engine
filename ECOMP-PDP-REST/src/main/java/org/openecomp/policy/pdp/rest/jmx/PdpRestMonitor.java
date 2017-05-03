@@ -22,11 +22,7 @@ package org.openecomp.policy.pdp.rest.jmx;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BinaryOperator;
 
 import org.openecomp.policy.xacml.util.MetricsUtil.AvgLatency;
 import org.openecomp.policy.xacml.util.MetricsUtil.MaxLatency;
