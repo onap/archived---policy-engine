@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_5b1145ab",
+        "filename": "pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-03T13:16:38Z",
+      "side": 1,
+      "message": "This should be removed - JIRA is [POLICY-10] Appreciate if we could do this in this review.",
+      "range": {
+        "startLine": 57,
+        "startChar": 2,
+        "endLine": 61,
+        "endChar": 15
+      },
+      "revId": "1fb87660b06242121d06082c81d7b1884de3dc57",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
