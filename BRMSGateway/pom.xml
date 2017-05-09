@@ -61,6 +61,11 @@
 			<version>2.3.1</version>
 		</dependency>
 		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+		<dependency>
 			<groupId>com.att.nsa</groupId>
 			<artifactId>cambriaClient</artifactId>
 			<version>0.0.1</version>

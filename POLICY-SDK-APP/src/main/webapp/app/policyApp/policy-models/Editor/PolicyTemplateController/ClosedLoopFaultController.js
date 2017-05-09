@@ -17,11 +17,23 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-angular.module("abs").controller('clFaultController', function($scope, $window, PolicyAppService, modalService, $modal, Notification){
+angular.module("abs").controller('clFaultController', ['$scope', '$window', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', function($scope, $window, PolicyAppService, PolicyNavigator, modalService, $modal, Notification){
 	$("#dialog").hide();
 
+	$scope.policyNavigator;
 	$scope.savebutton = true;
-	$scope.finalPath = null;
+	$scope.refreshCheck = false;
+    
+    $scope.refresh = function(){
+    	if($scope.refreshCheck){
+    		$scope.policyNavigator.refresh();
+    	}
+    	$scope.modal('createNewPolicy', true);
+    };
+    
+    $scope.modal = function(id, hide) {
+        return $('#' + id).modal(hide ? 'hide' : 'show');
+    };
 	
 	if($scope.temp.policy.triggerTrapSignatures == undefined){
 		$scope.temp.policy.triggerTrapSignatures = [];
@@ -501,7 +513,11 @@ angular.module("abs").controller('clFaultController', function($scope, $window, 
 	};
 
 	$scope.saveFaultPolicy = function(policy){
-		console.log(policy);
+		if(policy.itemContent != undefined){
+    		$scope.refreshCheck = true; 
+        	$scope.policyNavigator = policy.itemContent;
+        	policy.itemContent = "";
+    	}
 		$scope.savebutton = false;
 		var data = {};
 		var faultData = {};
@@ -780,4 +796,4 @@ angular.module("abs").controller('clFaultController', function($scope, $window, 
 	};
 
 
-});
+}]);

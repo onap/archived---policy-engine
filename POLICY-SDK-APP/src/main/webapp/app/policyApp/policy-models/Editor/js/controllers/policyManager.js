@@ -208,55 +208,12 @@ app.controller('PolicyManagerController', [
                }
            });
        };
-       
-	    $scope.search = function(search){
-		    var deferred = $q.defer();
-           var uuu = "searchPolicy";
-           var postData = {searchdata : search};
-           $.ajax({
-               type : 'POST',
-               url : uuu,
-               dataType: 'json',
-               contentType: 'application/json',
-               data: JSON.stringify(postData),
-               success : function(data){
-                   $scope.$apply(function(){
-                       $scope.searchdata=data.result;});
-                   if($scope.searchdata[0].error != undefined){
-                	   Notification.info($scope.searchdata[0].error);
-                   }else{
-                	var j = data;  
-           	        $scope.data = JSON.stringify(data.result);
-                	   $scope.searchDatas = JSON.parse($scope.data);	   
-						var searchString = "Policies List" + "<br>";
-						var i;
-						for(i = 0 ; i < $scope.searchDatas.length; i++){
-							searchString += $scope.searchDatas[i].name + ".xml" + "<br>";
-						}
-						 var myWindow = window.open("", "MsgWindow", "width=500,height=500");
-						 myWindow.document.write("<p>Search List</p>");
-						 myWindow.document.write("<p>"+searchString+"</p>");
-                   }      
-               },
-               error : function(data){
-                   alert("Error while Searching.");
-               }
-           });
+     
+         
+       $scope.refresh = function(){
+    	   $scope.policyNavigator.refresh();
        };
-	   
-      
-        /* $scope.describePolicy = function(item){
-        	 item.describePolicy().then(function(){
-        		 $scope.modal('describePolicy', true);
-        	 });
-         };
-         
-         $scope.exportPolicy = function(item){
-        	 item.exportPolicy().then(function(){
-        		 $scope.modal('exportPolicy', true);
-        	 });
-         };*/
-         
+       
          $scope.switchVersion = function(item){
         	 if ($scope.policyNavigator.fileNameExists(item.tempModel.content.activeVersion)) {
                  item.error = 'Invalid filename or already exists, specify another name';
@@ -267,13 +224,6 @@ app.controller('PolicyManagerController', [
         		 $scope.modal('switchVersion', true);
         	 });
          };
-
-
-        /* $scope.viewPolicy = function(item){
-        	 item.viewPolicy().then(function(){
-        		 $scope.modal('createNewPolicy', true);
-        	 });
-         };*/
 
         $scope.copy = function(item) {
             var samePath = item.tempModel.path.join() === item.model.path.join();

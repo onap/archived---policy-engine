@@ -17,11 +17,23 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-angular.module('abs').controller('brmsParamPolicyController', function ($scope, $window, PolicyAppService, modalService, $modal, Notification) {
+angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$window', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', function ($scope, $window, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
     $("#dialog").hide();
 
+    $scope.policyNavigator;
     $scope.savebutton = true;
-    $scope.finalPath = null;
+    $scope.refreshCheck = false;
+    
+    $scope.refresh = function(){
+    	if($scope.refreshCheck){
+    		$scope.policyNavigator.refresh();
+    	}
+    	$scope.modal('createNewPolicy', true);
+    };
+    
+    $scope.modal = function(id, hide) {
+        return $('#' + id).modal(hide ? 'hide' : 'show');
+    };
     
     $scope.validateSuccess = true;
     var readValue = $scope.temp.policy.readOnly;
@@ -129,7 +141,11 @@ angular.module('abs').controller('brmsParamPolicyController', function ($scope, 
     };
     
     $scope.saveBrmsParamPolicy = function(policy){
-        console.log(policy);
+    	if(policy.itemContent != undefined){
+    		$scope.refreshCheck = true; 
+        	$scope.policyNavigator = policy.itemContent;
+        	policy.itemContent = "";
+    	}
         $scope.savebutton = false;
         var uuu = "policycreation/save_policy";
         var postData={policyData: policy};
@@ -231,7 +247,7 @@ angular.module('abs').controller('brmsParamPolicyController', function ($scope, 
         var lastItem = $scope.temp.policy.attributes.length-1;
         $scope.temp.policy.attributes.splice(lastItem);
     };
-});
+}]);
 
 app.controller('showrulecontroller' ,  function ($scope, $modalInstance, message){
 	if(message.datas!=null){

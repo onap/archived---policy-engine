@@ -63,6 +63,7 @@ import com.att.research.xacml.std.StdMutableResult;
 import com.att.research.xacml.std.StdObligation;
 import com.att.research.xacml.util.XACMLProperties;
 
+@SuppressWarnings("deprecation")
 public class FindAction {
 	private Logger LOGGER = FlexLogger.getLogger(this.getClass());
 	private Boolean changeIt = false;

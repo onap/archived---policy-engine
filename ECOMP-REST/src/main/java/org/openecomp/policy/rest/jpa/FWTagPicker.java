@@ -59,6 +59,9 @@ public class FWTagPicker implements Serializable {
 
 	@Column(name="description", nullable=true, length=2048)
 	private String description;
+	
+	@Column(name="networkRole", nullable=true)
+	private String networkRole;
 
 	@Column(name="tags", nullable=true)
 	@OrderBy("asc")
@@ -135,6 +138,14 @@ public class FWTagPicker implements Serializable {
 		this.description = description;
 	}
 
+	public String getNetworkRole() {
+		return networkRole;
+	}
+
+	public void setNetworkRole(String networkRole) {
+		this.networkRole = networkRole;
+	}
+	
 	public String getTagValues() {
 		return tagValues;
 	}

@@ -30,22 +30,19 @@ import org.openecomp.policy.api.NotificationHandler;
 import org.openecomp.policy.api.NotificationScheme;
 import org.openecomp.policy.api.NotificationType;
 import org.openecomp.policy.api.PDPNotification;
-import org.openecomp.policy.std.StdPDPNotification;
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 
 import com.att.nsa.cambria.client.CambriaClientBuilders;
-import com.att.nsa.cambria.client.CambriaClientFactory;
-import com.att.nsa.cambria.client.CambriaConsumer;
 import com.att.nsa.cambria.client.CambriaClientBuilders.ConsumerBuilder;
+import com.att.nsa.cambria.client.CambriaConsumer;
 /**
  * Create a UEB Consumer to receive policy update notification.
  * 
  * 
  *
  */
-@SuppressWarnings("deprecation")
 public class AutoClientUEB implements Runnable  {
 	private static StdPDPNotification notification = null;
 	private static NotificationScheme scheme = null;
@@ -117,8 +114,6 @@ public class AutoClientUEB implements Runnable  {
 				} catch (MalformedURLException e) {
 					topic = AutoClientUEB.url.replace("[:/]", "");
 				}
-				
-				//TODO  create a loop to listen for messages from UEB cluster
 					
 				try {
 					//CConsumer = CambriaClientFactory.createConsumer ( null, uebURLList, topic, group, id, 15*1000, 1000 );
@@ -147,7 +142,6 @@ public class AutoClientUEB implements Runnable  {
 							callHandler();
 						}
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						logger.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Error in processing UEB message" + e.getMessage());
 					}
 

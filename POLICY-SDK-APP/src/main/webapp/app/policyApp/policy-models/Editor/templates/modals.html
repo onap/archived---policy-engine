@@ -4,17 +4,16 @@
     <form ng-submit="remove(temp)">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">
-            <span aria-hidden="true">&times;</span>
             <span class="sr-only">Close</span>
         </button>
         <h4 class="modal-title">Confirm</h4>
       </div>
-      <div>
+      <div class="modal-body">
         Are you Sure to delete   <b>{{temp.model.name}}</b> ?
         <div ng-include data-src="'error-bar'" class="clearfix"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="temp.inprocess">Cancel</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="refresh();" ng-disabled="temp.inprocess">Cancel</button>
         <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess" autofocus="autofocus">Delete</button>
       </div>
       </form>
@@ -28,12 +27,11 @@
     <form ng-submit="removePolicy(temp)">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">
-            <span aria-hidden="true">&times;</span>
             <span class="sr-only">Close</span>
         </button>
         <h4 class="modal-title">Confirm</h4>
       </div>
-      <div>Are you Sure to delete  <b>{{temp.model.name}}</b> ?
+      <div class="modal-body">Are you Sure to delete  <b>{{temp.model.name}}</b> ?
       	<div>
       	 <p>          
           	<input type = "radio" ng-model ="temp.model.versions"  name = "radSize" id = "sizeSmall" value = "CURRENT" checked = "checked" /><label for = "sizeSmall">Are you sure you want to delete Current Version of Policy</label>
@@ -44,7 +42,7 @@
         <div ng-include data-src="'error-bar'" class="clearfix"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="temp.inprocess">Cancel</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="refresh();" ng-disabled="temp.inprocess">Cancel</button>
         <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess" autofocus="autofocus">Delete</button>
       </div>
       </form>
@@ -58,16 +56,14 @@
         <form ng-submit="rename(temp)">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">
-                  <span aria-hidden="true">&times;</span>
                   <span class="sr-only">Close</span>
               </button>
               <h4 class="modal-title">Rename</h4>
             </div>
-            <div>
+            <div class="modal-body">
               <label class="radio">Enter New Name : <b>{{temp.model.name}}</b></label>
               <input class="form-control" ng-model="temp.tempModel.name" autofocus="autofocus">
 
-                <div ng-include data-src="'path-selector'" class="clearfix"></div>
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
             </div>
             <div class="modal-footer">
@@ -85,7 +81,6 @@
         <form>
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">
-                  <span aria-hidden="true">&times;</span>
                   <span class="sr-only">Close</span>
               </button>
               <h4 class="modal-title">List of Policies</h4>
@@ -107,12 +102,11 @@
         <form ng-submit="move(temp)">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">
-                  <span aria-hidden="true">&times;</span>
                   <span class="sr-only">Close</span>
               </button>
               <h4 class="modal-title">Move Policy</h4>
             </div>
-            <div>
+            <div class="modal-body">
               <div ng-include data-src="'path-selector'" class="clearfix"></div>
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
             </div>
@@ -131,16 +125,15 @@
         <form ng-submit="switchVersion(temp)">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">
-                  <span aria-hidden="true">&times;</span>
                   <span class="sr-only">Close</span>
               </button>
               <h4 class="modal-title">Switch Version</h4>
             </div>
-            <div>
+            <div class="modal-body">
               <label class="radio">Highest Version <b></b></label>
               <input class="form-control" ng-disabled="true" ng-model="temp.tempModel.content.highestVersion" autofocus="autofocus">
             </div>
-             <div>
+             <div class="modal-body">
               <label class="radio">Active Version <b></b></label>
               <select class="form-control" ng-model="temp.tempModel.content.activeVersion" ng-options="option for option in temp.tempModel.content.availableVersions" autofocus="autofocus"></select>
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
@@ -160,12 +153,11 @@
         <form ng-submit="copy(temp)">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">
-                  <span aria-hidden="true">&times;</span>
                   <span class="sr-only">Close</span>
               </button>
               <h4 class="modal-title">Clone Policy</h4>
             </div>
-            <div>
+            <div class="modal-body">
               <label class="radio">Enter new Policy Name to Clone <b>{{temp.model.name}}</b></label>
               <input class="form-control" ng-model="temp.tempModel.name" autofocus="autofocus">
 
@@ -187,12 +179,11 @@
         <form ng-submit="createFolder(temp)">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">
-                  <span aria-hidden="true">&times;</span>
                   <span class="sr-only">Close</span>
               </button>
               <h4 class="modal-title">Add Scope</h4>
             </div>
-            <div>
+            <div class="modal-body">
               <label class="radio">Scope Name</label>
               <input class="form-control" ng-model="temp.tempModel.name" autofocus="autofocus">
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
@@ -212,12 +203,11 @@
         <form ng-submit="subScopeFolder(temp)">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">
-                  <span aria-hidden="true">&times;</span>
                   <span class="sr-only">Close</span>
               </button>
               <h4 class="modal-title">Add Sub Scope</h4>
             </div>
-            <div>
+            <div class="modal-body">
               <label class="radio">Scope Name</label>
               <input class="form-control" ng-model="temp.tempModel.subScopename" autofocus="autofocus">
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
@@ -237,12 +227,11 @@
         <form ng-submit="uploadFiles()">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal">
-                  <span aria-hidden="true">&times;</span>
                   <span class="sr-only">Close</span>
               </button>
               <h4 class="modal-title">Import</h4>
             </div>
-            <div>
+            <div class="modal-body">
               <label class="radio">Upload to</label>
               <input type="file" class="form-control" ng-file="$parent.uploadFileList" autofocus="autofocus" multiple="multiple"/>
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
@@ -266,7 +255,6 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">
-            <span aria-hidden="true">&times;</span>
             <span class="sr-only">Close</span>
         </button>
         <h4 class="modal-title">Select the Destination Scope</h4>

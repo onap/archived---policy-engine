@@ -17,11 +17,23 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-angular.module('abs').controller('fwPolicyController', function ($scope, $window, PolicyAppService, modalService, $modal, Notification) {
+angular.module('abs').controller('fwPolicyController', ['$scope', '$window', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', function ($scope, $window, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
     $("#dialog").hide();
     
+    $scope.policyNavigator;
     $scope.savebutton = true;
-    $scope.finalPath = null;
+    $scope.refreshCheck = false;
+    
+    $scope.refresh = function(){
+    	if($scope.refreshCheck){
+    		$scope.policyNavigator.refresh();
+    	}
+    	$scope.modal('createNewPolicy', true);
+    };
+    
+    $scope.modal = function(id, hide) {
+        return $('#' + id).modal(hide ? 'hide' : 'show');
+    };
 		
     PolicyAppService.getData('getDictionary/get_SecurityZoneDataByName').then(function (data) {
     	var j = data;
@@ -113,6 +125,11 @@ angular.module('abs').controller('fwPolicyController', function ($scope, $window
     
     
     $scope.saveFWPolicy = function(policy){
+    	if(policy.itemContent != undefined){
+    		$scope.refreshCheck = true; 
+        	$scope.policyNavigator = policy.itemContent;
+        	policy.itemContent = "";
+    	}
     	$scope.savebutton = false;
         console.log(policy);
         var uuu = "policycreation/save_policy";
@@ -224,4 +241,4 @@ angular.module('abs').controller('fwPolicyController', function ($scope, $window
       $scope.temp.policy.fwattributes.splice(lastItem);
     };
         
-});
+}]);

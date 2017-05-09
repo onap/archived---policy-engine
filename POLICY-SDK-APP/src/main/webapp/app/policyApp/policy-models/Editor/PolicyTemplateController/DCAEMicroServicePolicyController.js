@@ -17,13 +17,25 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-angular.module('abs').controller('dcaeMicroServiceController', function ($scope, $window, $compile, PolicyAppService, modalService, $modal, Notification) {
+angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$window', '$compile', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', function ($scope, $window, $compile, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
     $("#dialog").hide();
+    
+    $scope.policyNavigator;
     $scope.isCheck = false;
     $scope.savebutton = true;
-    $scope.finalPath = null;
+    $scope.refreshCheck = false;
     
-//	$scope.temp.policy.ttlDate = "2016-12-31";
+    $scope.refresh = function(){
+    	if($scope.refreshCheck){
+    		$scope.policyNavigator.refresh();
+    	}
+    	$scope.modal('createNewPolicy', true);
+    };
+    
+    $scope.modal = function(id, hide) {
+        return $('#' + id).modal(hide ? 'hide' : 'show');
+    };
+    
 	if ($scope.temp.policy.editPolicy != undefined|| $scope.temp.policy.readOnly  != undefined){
 		if ($scope.temp.policy.configName == undefined){
 			$scope.isCheck = false;
@@ -384,11 +396,17 @@ angular.module('abs').controller('dcaeMicroServiceController', function ($scope,
     }
     
     function getList(attribute) {
-    	
+	    	var enumName = attribute;
+	    	console.log("In getList: attribute => " + attribute);
+	    	if(attribute){
+	    	   if(attribute.includes(":")){
+	    		   enumName = attribute.split(":")[0];
+	    	   }
+	    	}   	
             var baseEnum = $scope.dcaeModelData.enumValues;
 	    	var enumList = baseEnum.split(splitEnum);
 	    	var enumAttributes;
-	    	var patternTest = new RegExp(attribute);
+	    	var patternTest = new RegExp(enumName);
 	    	for (k=0; k < enumList.length; k += 1){
 	    		if(patternTest.test(enumList[k]) == true){
 	    			enumAttributes = enumList[k].trim();
@@ -399,12 +417,9 @@ angular.module('abs').controller('dcaeMicroServiceController', function ($scope,
 	        enumAttributes = enumAttributes.replace("[", "");
 	       	enumAttributes = enumAttributes.replace("]", "");
 	       	enumAttributes = enumAttributes.replace(/ /g, '');
-         
 			var dropListAfterCommaSplit = enumAttributes.split(splitEqual);
 			listemunerateValues  = dropListAfterCommaSplit[1].split(splitComma);
-         
-			enumKeyList.push(attribute);
-			
+			//enumKeyList.push(attribute); 
 	        return listemunerateValues;
          }
          
@@ -704,7 +719,10 @@ angular.module('abs').controller('dcaeMicroServiceController', function ($scope,
 	    option.appendChild(document.createTextNode(listemunerateValues[i]));
 	    listField.appendChild(option);
 	}
-	listField.setAttribute("id" , ''+ labelLevel + attributeName + '');;
+	listField.setAttribute("id" , ''+ labelLevel + attributeName + '');
+	
+	enumKeyList.push(attributeName);
+	
 	document.getElementById(divID).appendChild(label);  
 	document.getElementById(divID).appendChild(br);	
 			
@@ -750,6 +768,11 @@ angular.module('abs').controller('dcaeMicroServiceController', function ($scope,
     	
     }
     $scope.savePolicy = function(policy){
+    	if(policy.itemContent != undefined){
+    		$scope.refreshCheck = true; 
+        	$scope.policyNavigator = policy.itemContent;
+        	policy.itemContent = "";
+    	}
     	$scope.savebutton = false;
     	var splitAt = '*';
     	var dot ='.';
@@ -926,4 +949,4 @@ angular.module('abs').controller('dcaeMicroServiceController', function ($scope,
         }
         return obj;
     }
-});
+}]);

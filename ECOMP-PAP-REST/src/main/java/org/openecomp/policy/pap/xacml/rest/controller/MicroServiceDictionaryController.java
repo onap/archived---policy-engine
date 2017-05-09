@@ -55,6 +55,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 @Controller
 public class MicroServiceDictionaryController {
@@ -100,7 +101,7 @@ public class MicroServiceDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 	}
 
@@ -225,7 +226,7 @@ public class MicroServiceDictionaryController {
 			return null;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			LOGGER.error(e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -246,7 +247,7 @@ public class MicroServiceDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 	}
 	
@@ -374,7 +375,7 @@ public class MicroServiceDictionaryController {
 			return null;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			LOGGER.error(e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -394,7 +395,7 @@ public class MicroServiceDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 	}
 	
@@ -520,7 +521,7 @@ public class MicroServiceDictionaryController {
 			return null;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			LOGGER.error(e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -757,7 +758,7 @@ public class MicroServiceDictionaryController {
         catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
             response.addHeader("error", "dictionaryDBQuery");
-            e.printStackTrace();
+            LOGGER.error(e);
         }
     }
     
@@ -785,74 +786,128 @@ public class MicroServiceDictionaryController {
 	public ModelAndView saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
 			boolean duplicateflag = false;
-            boolean fromAPI = false;
-            this.newModel = new MicroServiceModels();
-            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
-                fromAPI = true;
-            }
+			boolean fromAPI = false;
+			this.newModel = new MicroServiceModels();
+			if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+				fromAPI = true;
+			}
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-            MicroServiceModels microServiceModels = new MicroServiceModels();
-            String userId = null;
-            if (fromAPI) {
-                microServiceModels = (MicroServiceModels)mapper.readValue(root.get("dictionaryFields").toString(), MicroServiceModels.class);
-                userId = "API";
-                
-                //check if update operation or create, get id for data to be updated and update attributeData
-                if (request.getParameter(OPERATION).equals("update")) {
-                    String checkName = microServiceModels.getModelName() + ":" + microServiceModels.getVersion();
-                    List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(checkName, "modelName:version", MicroServiceModels.class);
-                    int id = 0;
-                    for (int i=0; i< duplicateData.size(); i++){
-                        MicroServiceModels data = (MicroServiceModels) duplicateData.get(0);
-                        id = data.getId();
-                    }
-                    microServiceModels.setId(id);
-                    microServiceModels.setUserCreatedBy(this.getUserInfo(userId));
-                
-                }
-            } else {
-            	//microServiceModels = (MicroServiceModels)mapper.readValue(root.get("microServiceModelsDictionaryData").toString(), MicroServiceModels.class);
-            	if (root.has("microServiceModelsDictionaryData")){
-            		if (root.get("microServiceModelsDictionaryData").has("description")){
-            			microServiceModels.setDescription(root.get("microServiceModelsDictionaryData").get("description").asText().replace("\"", ""));
-            		}
-            		if (root.get("microServiceModelsDictionaryData").has("modelName")){
-            			microServiceModels.setModelName(root.get("microServiceModelsDictionaryData").get("modelName").asText().replace("\"", ""));
-            			this.newModel.setModelName(microServiceModels.getModelName());
-            		}
-            		if (root.get("microServiceModelsDictionaryData").has("version")){
-            			microServiceModels.setVersion(root.get("microServiceModelsDictionaryData").get("version").asText().replace("\"", ""));
-            			this.newModel.setVersion(microServiceModels.getVersion());
-            		}
-            	}
-            	if(root.has("classMap")){
-            		classMap = new HashMap<String, MSAttributeObject>();
-            		JsonNode data = root.get("classMap");
-            		ObjectMapper mapper1 = new ObjectMapper();
-            		String data1 = data.toString().substring(1, data.toString().length()-1);
-            		data1 = data1.replace("\\", "");
-            		JSONObject jsonObject = new JSONObject(data1);
-            		Set<String> keys = jsonObject.keySet();
-            		for(String key : keys){
-            			String value = jsonObject.get(key).toString();
-            			MSAttributeObject msAttributeObject = mapper1.readValue(value, MSAttributeObject.class);
-            			classMap.put(key, msAttributeObject);
-            		}
-            	}
-            	userId = root.get("userid").textValue();
-            	addValuesToNewModel(classMap);
-            }
+			MicroServiceModels microServiceModels = new MicroServiceModels();
+			String userId = null;
+
+			if(root.has("modelType")){
+				JsonNode dataType = root.get("modelType");
+				String modelType= dataType.toString();
+				if(modelType.contains("yml")){
+					if (root.has("microServiceModelsDictionaryData")){
+						if (root.get("microServiceModelsDictionaryData").has("description")){
+							microServiceModels.setDescription(root.get("microServiceModelsDictionaryData").get("description").asText().replace("\"", ""));
+						}
+						if (root.get("microServiceModelsDictionaryData").has("modelName")){
+							microServiceModels.setModelName(root.get("microServiceModelsDictionaryData").get("modelName").asText().replace("\"", ""));
+							this.newModel.setModelName(microServiceModels.getModelName());
+						}
+						if (root.get("microServiceModelsDictionaryData").has("version")){
+							microServiceModels.setVersion(root.get("microServiceModelsDictionaryData").get("version").asText().replace("\"", ""));
+							this.newModel.setVersion(microServiceModels.getVersion());
+						}
+					}
+
+					MSAttributeObject mainClass  = null;
+					classMap = new HashMap<String, MSAttributeObject>();
+					JsonNode data = root.get("classMap");
+					ObjectMapper mapper1 = new ObjectMapper();
+					String data1 = data.toString().substring(1, data.toString().length()-1);
+					data1 = data1.replace("\\", "");
+					data1=data1.replace("\"{","{");
+					data1=data1.replace("}\"","}");
+					JSONObject jsonObject = new JSONObject(data1);
+					Set<String> keys = jsonObject.keySet();
+					for(String key : keys){
+						String value = jsonObject.get(key).toString();
+						MSAttributeObject msAttributeObject = mapper1.readValue(value, MSAttributeObject.class);
+						classMap.put(key, msAttributeObject);
+					}
+
+					userId = root.get("userid").textValue();
+					mainClass = classMap.get(this.newModel.getModelName());
+					this.newModel.setDependency("[]");
+					String value = new Gson().toJson(mainClass.getSubClass());
+					this.newModel.setSub_attributes(value);
+					String attributes= mainClass.getAttribute().toString().replace("{", "").replace("}", "");
+					int equalsIndexForAttributes= attributes.indexOf("=");
+					String atttributesAfterFirstEquals= attributes.substring(equalsIndexForAttributes+1);
+					this.newModel.setAttributes(atttributesAfterFirstEquals);
+					String refAttributes= mainClass.getRefAttribute().toString().replace("{", "").replace("}", "");
+					int equalsIndex= refAttributes.indexOf("=");
+					String refAttributesAfterFirstEquals= refAttributes.substring(equalsIndex+1);
+					this.newModel.setRef_attributes(refAttributesAfterFirstEquals);
+					this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
+					this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
+
+				}else{
+					if (fromAPI) {
+						microServiceModels = (MicroServiceModels)mapper.readValue(root.get("dictionaryFields").toString(), MicroServiceModels.class);
+						userId = "API";
+
+						//check if update operation or create, get id for data to be updated and update attributeData
+						if (request.getParameter(OPERATION).equals("update")) {
+							String checkName = microServiceModels.getModelName() + ":" + microServiceModels.getVersion();
+							List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(checkName, "modelName:version", MicroServiceModels.class);
+							int id = 0;
+							for (int i=0; i< duplicateData.size(); i++){
+								MicroServiceModels data = (MicroServiceModels) duplicateData.get(0);
+								id = data.getId();
+							}
+							microServiceModels.setId(id);
+							microServiceModels.setUserCreatedBy(this.getUserInfo(userId));
+
+						}
+					} else {
+						if (root.has("microServiceModelsDictionaryData")){
+							if (root.get("microServiceModelsDictionaryData").has("description")){
+								microServiceModels.setDescription(root.get("microServiceModelsDictionaryData").get("description").asText().replace("\"", ""));
+							}
+							if (root.get("microServiceModelsDictionaryData").has("modelName")){
+								microServiceModels.setModelName(root.get("microServiceModelsDictionaryData").get("modelName").asText().replace("\"", ""));
+								this.newModel.setModelName(microServiceModels.getModelName());
+							}
+							if (root.get("microServiceModelsDictionaryData").has("version")){
+								microServiceModels.setVersion(root.get("microServiceModelsDictionaryData").get("version").asText().replace("\"", ""));
+								this.newModel.setVersion(microServiceModels.getVersion());
+							}
+						}
+						if(root.has("classMap")){
+							classMap = new HashMap<String, MSAttributeObject>();
+							JsonNode data = root.get("classMap");
+							ObjectMapper mapper1 = new ObjectMapper();
+							String data1 = data.toString().substring(1, data.toString().length()-1);
+							data1 = data1.replace("\\", "");
+							JSONObject jsonObject = new JSONObject(data1);
+							Set<String> keys = jsonObject.keySet();
+							for(String key : keys){
+								String value = jsonObject.get(key).toString();
+								MSAttributeObject msAttributeObject = mapper1.readValue(value, MSAttributeObject.class);
+								classMap.put(key, msAttributeObject);
+							}
+						}
+						userId = root.get("userid").textValue();
+						addValuesToNewModel(classMap);
+					}
+				}		
+
+			}
 			microServiceModels.setAttributes(this.newModel.getAttributes());
 			microServiceModels.setRef_attributes(this.newModel.getRef_attributes());
 			microServiceModels.setDependency(this.newModel.getDependency());
 			microServiceModels.setModelName(this.newModel.getModelName());
 			microServiceModels.setSub_attributes(this.newModel.getSub_attributes());
 			microServiceModels.setVersion(this.newModel.getVersion());
-            microServiceModels.setEnumValues(this.newModel.getEnumValues());
-            microServiceModels.setAnnotation(this.newModel.getAnnotation());
-            
+			microServiceModels.setEnumValues(this.newModel.getEnumValues());
+			microServiceModels.setAnnotation(this.newModel.getAnnotation());
+
 			if(microServiceModels.getId() == 0){
 				String checkName = microServiceModels.getModelName() + ":" + microServiceModels.getVersion();
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(checkName, "modelName:version", MicroServiceModels.class);
@@ -865,31 +920,31 @@ public class MicroServiceDictionaryController {
 			}else{
 				commonClassDao.update(microServiceModels); 
 			} 
-            String responseString = "";
-            if(duplicateflag){
-                responseString = "Duplicate";
-            }else{
-                responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceModels.class));
-            } 
-            
-            if (fromAPI) {
-                if (responseString!=null && !responseString.equals("Duplicate")) {
-                    responseString = "Success";
-                }
-                ModelAndView result = new ModelAndView();
-                result.setViewName(responseString);
-                return result;
-            } else {
-                response.setCharacterEncoding("UTF-8");
-                response.setContentType("application / json");
-                request.setCharacterEncoding("UTF-8");
- 
-                PrintWriter out = response.getWriter();
-                JSONObject j = new JSONObject("{microServiceModelsDictionaryDatas: " + responseString + "}");
-                out.write(j.toString());
-                return null;
-            }
-        }catch (Exception e){
+			String responseString = "";
+			if(duplicateflag){
+				responseString = "Duplicate";
+			}else{
+				responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceModels.class));
+			} 
+
+			if (fromAPI) {
+				if (responseString!=null && !responseString.equals("Duplicate")) {
+					responseString = "Success";
+				}
+				ModelAndView result = new ModelAndView();
+				result.setViewName(responseString);
+				return result;
+			} else {
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("application / json");
+				request.setCharacterEncoding("UTF-8");
+
+				PrintWriter out = response.getWriter();
+				JSONObject j = new JSONObject("{microServiceModelsDictionaryDatas: " + responseString + "}");
+				out.write(j.toString());
+				return null;
+			}
+		}catch (Exception e){
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -919,7 +974,7 @@ public class MicroServiceDictionaryController {
 			return null;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			LOGGER.error(e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -927,11 +982,7 @@ public class MicroServiceDictionaryController {
 		}
 		return null;
 	}
-	
-	
-
- 
-	
+		
 	private void addValuesToNewModel(HashMap<String,MSAttributeObject > classMap) {
 		new MicroServiceModels();
 		//Loop  through the classmap and pull out the required info for the new file.

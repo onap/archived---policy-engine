@@ -17,12 +17,24 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-angular.module('abs').controller('actionPolicyController', function ($scope, PolicyAppService, modalService, $modal, Notification) {
+app.controller('actionPolicyController', ['$scope', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', function ($scope, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
     $("#dialog").hide();
     
+    $scope.policyNavigator;
     $scope.savebutton = true;
-    $scope.finalPath = null;
-		
+    $scope.refreshCheck = false;
+	
+    $scope.refresh = function(){
+    	if($scope.refreshCheck){
+    		$scope.policyNavigator.refresh();
+    	}
+    	$scope.modal('createNewPolicy', true);
+    };
+    
+    $scope.modal = function(id, hide) {
+        return $('#' + id).modal(hide ? 'hide' : 'show');
+    };
+    
     PolicyAppService.getData('getDictionary/get_ActionPolicyDictDataByName').then(function (data) {
     	var j = data;
     	$scope.data = JSON.parse(j.data);
@@ -61,7 +73,11 @@ angular.module('abs').controller('actionPolicyController', function ($scope, Pol
     }
     
     $scope.saveActionPolicy = function(policy){
-        console.log(policy);
+    	if(policy.itemContent != undefined){
+    		$scope.refreshCheck = true; 
+        	$scope.policyNavigator = policy.itemContent;
+        	policy.itemContent = "";
+    	}
         $scope.savebutton = false;
         var uuu = "policycreation/save_policy";
 		var postData={policyData: policy};
@@ -82,7 +98,6 @@ angular.module('abs').controller('actionPolicyController', function ($scope, Pol
 						Notification.error("Policy Already Exists with Same Name in Scope.");
 					}
 				});
-				console.log($scope.data);
 			},
 			error : function(data){
 				Notification.error("Error Occured while saving Policy.");
@@ -92,9 +107,8 @@ angular.module('abs').controller('actionPolicyController', function ($scope, Pol
     };
 
     $scope.validatePolicy = function(policy){
-    	console.log(policy);
     	document.getElementById("validate").innerHTML = "";
-         var uuu = "policyController/validate_policy.htm";
+        var uuu = "policyController/validate_policy.htm";
  		var postData={policyData: policy};
  		$.ajax({
  			type : 'POST',
@@ -118,7 +132,6 @@ angular.module('abs').controller('actionPolicyController', function ($scope, Pol
  						}
  						
  				});
- 				console.log($scope.data);
  			},
  			error : function(data){
  				Notification.error("Validation Failed.");
@@ -170,4 +183,4 @@ angular.module('abs').controller('actionPolicyController', function ($scope, Pol
       $scope.temp.policy.ruleAlgorithmschoices.splice(lastItem);
     };
     
-});
+}]);

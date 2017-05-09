@@ -24,8 +24,11 @@ package org.openecomp.policy.controller;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -75,6 +78,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.yaml.snakeyaml.Yaml;
 
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -105,6 +109,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	private List<String> modelList = new ArrayList<String>();
 	private List<String> dirDependencyList = new ArrayList<String>();
 	private HashMap<String,MSAttributeObject > classMap = new HashMap<String,MSAttributeObject>();
+	//Tosca Model related Datastructure. 
+	String referenceAttributes;
+	String attributeString;
+	String listConstraints;
+	String subAttributeString;
+	HashMap<String, Object> retmap = new HashMap<String, Object>();
+	Set<String> uniqueKeys= new HashSet<String>();
+	Set<String> uniqueDataKeys= new HashSet<String>();
 	
 	@Autowired
 	private CreateDcaeMicroServiceController(CommonClassDao commonClassDao){
@@ -191,7 +203,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		} catch (JsonProcessingException e) {
 			logger.error("Error writing out the object");
 		}
-		System.out.println(json);
+		logger.info(json);
 		String cleanJson = cleanUPJson(json);
 		cleanJson = removeNullAttributes(cleanJson);
 		policyAdapter.setJsonBody(cleanJson);
@@ -223,8 +235,360 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 		return cleanJson;
 	}
-
 	
+	// Second index of dot should be returned. 
+	public void stringBetweenDots(String str,String value){
+		String stringToSearch=str;
+		String[]ss=stringToSearch.split("\\.");
+		if(ss!=null){
+			int len= ss.length;
+			if(len>2){
+				uniqueKeys.add(ss[2]);
+			}
+		}
+	}
+	
+	public void stringBetweenDotsForDataFields(String str,String value){
+		String stringToSearch=str;
+		String[]ss=stringToSearch.split("\\.");
+		if(ss!=null){
+			int len= ss.length;
+
+			if(len>2){
+				uniqueDataKeys.add(ss[0]+"%"+ss[2]);
+			}
+		}
+	}
+	
+ 
+	public Map<String, String> load(String fileName) throws IOException { 
+		File newConfiguration = new File(fileName);
+		InputStream is = null;
+		try {
+			is = new FileInputStream(newConfiguration);
+		} catch (FileNotFoundException e) {
+			logger.error(e);
+		}
+
+		Yaml yaml = new Yaml();
+		@SuppressWarnings("unchecked")
+		Map<Object, Object> yamlMap = (Map<Object, Object>) yaml.load(is); 
+		StringBuilder sb = new StringBuilder(); 
+		Map<String, String> settings = new HashMap<String, String>(); 
+		if (yamlMap == null) { 
+			return settings; 
+		} 
+		List<String> path = new ArrayList<String>(); 
+		serializeMap(settings, sb, path, yamlMap); 
+		return settings; 
+	} 
+
+	public Map<String, String> load(byte[] source) throws IOException { 
+		Yaml yaml = new Yaml(); 
+		@SuppressWarnings("unchecked")
+		Map<Object, Object> yamlMap = (Map<Object, Object>) yaml.load(source.toString()); 
+		StringBuilder sb = new StringBuilder(); 
+		Map<String, String> settings = new HashMap<String, String>(); 
+		if (yamlMap == null) { 
+			return settings; 
+		} 
+		List<String> path = new ArrayList<String>(); 
+		serializeMap(settings, sb, path, yamlMap); 
+		return settings; 
+	} 
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void serializeMap(Map<String, String> settings, StringBuilder sb, List<String> path, Map<Object, Object> yamlMap) { 
+		for (Map.Entry<Object, Object> entry : yamlMap.entrySet()) { 
+			if (entry.getValue() instanceof Map) { 
+				path.add((String) entry.getKey()); 
+				serializeMap(settings, sb, path, (Map<Object, Object>) entry.getValue()); 
+				path.remove(path.size() - 1); 
+			} else if (entry.getValue() instanceof List) { 
+				path.add((String) entry.getKey()); 
+				serializeList(settings, sb, path, (List) entry.getValue()); 
+				path.remove(path.size() - 1); 
+			} else { 
+				serializeValue(settings, sb, path, (String) entry.getKey(), entry.getValue()); 
+			} 
+		} 
+	} 
+
+	@SuppressWarnings("unchecked")
+	private void serializeList(Map<String, String> settings, StringBuilder sb, List<String> path, List<String> yamlList) { 
+		int counter = 0; 
+		for (Object listEle : yamlList) { 
+			if (listEle instanceof Map) { 
+				path.add(Integer.toString(counter)); 
+				serializeMap(settings, sb, path, (Map<Object, Object>) listEle); 
+				path.remove(path.size() - 1); 
+			} else if (listEle instanceof List) { 
+				path.add(Integer.toString(counter)); 
+				serializeList(settings, sb, path, (List<String>) listEle); 
+				path.remove(path.size() - 1); 
+			} else { 
+				serializeValue(settings, sb, path, Integer.toString(counter), listEle); 
+			} 
+			counter++; 
+		} 
+	} 
+
+	private void serializeValue(Map<String, String> settings, StringBuilder sb, List<String> path, String name, Object value) { 
+		if (value == null) { 
+			return; 
+		} 
+		sb.setLength(0); 
+		for (String pathEle : path) { 
+			sb.append(pathEle).append('.'); 
+		} 
+		sb.append(name); 
+		settings.put(sb.toString(), value.toString()); 
+	} 
+    
+    
+	public void parseTosca (String fileName){
+		Map<String,String> map= new HashMap<String, String>();
+		try {
+			map=load(fileName);
+			for(String key:map.keySet()){
+				if(key.contains("policy.nodes.Root"))
+				{
+					continue;
+				}
+				else if(key.contains("policy.nodes")){
+					String wordToFind = "policy.nodes.";
+					int indexForPolicyNode=key.indexOf(wordToFind);
+					String subNodeString= key.substring(indexForPolicyNode+13, key.length());
+
+					stringBetweenDots(subNodeString,map.get(key));
+				}
+				else if(key.contains("policy.data")){
+					String wordToFind="policy.data.";
+					int indexForPolicyNode=key.indexOf(wordToFind);
+					String subNodeString= key.substring(indexForPolicyNode+12, key.length());
+
+					stringBetweenDotsForDataFields(subNodeString,map.get(key));
+					Iterator<String> itr= uniqueDataKeys.iterator();
+					while(itr.hasNext()){
+						logger.info(itr.next());
+					}
+				}
+			}
+
+			String attributeIndividualString="";
+			String userDefinedIndividualString="";
+			String referenceIndividualAttributes="";
+
+			String attributeString="";
+			String userDefinedString="";
+			String referenceAttributes="";
+			String listConstraints="";
+
+			for(String uniqueDataKey: uniqueDataKeys){
+				String[] uniqueDataKeySplit= uniqueDataKey.split("%");
+				userDefinedIndividualString=userDefinedIndividualString+uniqueDataKey+"=";
+				userDefinedIndividualString=userDefinedIndividualString+"#A:defaultValue-#B:required-#C:MANY-false";
+				for(String key:map.keySet()){
+					if(key.contains("policy.data")){
+						String containsKey= uniqueDataKeySplit[1]+".type";
+						if(key.contains(uniqueDataKeySplit[0])){
+							if(key.contains("default")){
+								userDefinedIndividualString=userDefinedIndividualString.replace("#B", map.get(key));
+							}
+							else if(key.contains("required")){
+								userDefinedIndividualString=userDefinedIndividualString.replace("#C", map.get(key));
+							}
+							else if(key.contains(containsKey)){
+								String typeValue= map.get(key);
+								userDefinedIndividualString=userDefinedIndividualString.replace("#A", typeValue);
+							} 
+						}
+					}
+
+				}
+				if(userDefinedString!=""){
+					userDefinedString=userDefinedString+","+userDefinedIndividualString;
+				}else{
+					userDefinedString=userDefinedString+userDefinedIndividualString;
+				}
+				userDefinedIndividualString="";
+			}
+			logger.info("userDefinedString   :"+userDefinedString);
+
+			HashMap<String,ArrayList<String>> mapKey= new HashMap<String,ArrayList<String>>();
+			String secondPartString="";
+			String firstPartString="";
+			for(String value: userDefinedString.split(",")){
+				String[] splitWithEquals= value.split("=");
+				secondPartString=splitWithEquals[0].substring(splitWithEquals[0].indexOf("%")+1);
+				firstPartString=splitWithEquals[0].substring(0, splitWithEquals[0].indexOf("%"));
+				ArrayList<String> list;
+				if(mapKey.containsKey(firstPartString)){
+					list = mapKey.get(firstPartString);
+					list.add(secondPartString+"<"+splitWithEquals[1]);
+				} else {
+					list = new ArrayList<String>();
+					list.add(secondPartString+"<"+splitWithEquals[1]);
+					mapKey.put(firstPartString, list);
+				}
+			}
+
+			JSONObject mainObject= new JSONObject();;
+			JSONObject json;
+			for(String s: mapKey.keySet()){
+				json= new JSONObject();
+				List<String> value=mapKey.get(s);
+				for(String listValue:value){
+					String[] splitValue=listValue.split("<");
+					json.put(splitValue[0], splitValue[1]);
+				}
+				mainObject.put(s,json);
+			}
+
+			logger.info(mainObject);
+
+			Iterator<String> keysItr = mainObject.keys();
+			while(keysItr.hasNext()) {
+				String key = keysItr.next();
+				String value = mainObject.get(key).toString();
+				retmap.put(key, value);
+			}
+
+			for(String str:retmap.keySet()){
+				logger.info(str+":"+retmap.get(str));
+			}
+
+			String typeValueFromKey="";
+			boolean userDefinedDataType=false;
+			boolean isList=false;
+			for(String uniqueKey: uniqueKeys){
+				List<String> constraints= new ArrayList<String>();
+				logger.info("====================");
+				attributeIndividualString=attributeIndividualString+uniqueKey+"=";
+				attributeIndividualString=attributeIndividualString+"#A:defaultValue-#B:required-#C:MANY-false";
+
+				logger.info("UniqueStrings: "+uniqueKey);
+				for(String key:map.keySet()){
+					if(key.contains("policy.nodes.Root")||
+							key.contains("policy.data"))
+					{
+						continue;
+					}
+					else if(key.contains("policy.nodes")){
+						if(key.contains(uniqueKey)){
+							int p=key.lastIndexOf(".");
+							String firstLastOccurance=key.substring(0,p);
+							int p1=firstLastOccurance.lastIndexOf(".");
+							String secondLastOccurance= firstLastOccurance.substring(p1+1,firstLastOccurance.length());
+							if(secondLastOccurance.equals(uniqueKey)){
+								String checkTypeString= firstLastOccurance+".type";
+								typeValueFromKey= map.get(checkTypeString);
+							}//Its a list. 
+							else if (key.contains("entry_schema")){
+								if(key.contains("constraints")){
+									constraints.add(map.get(key));
+								}
+								if(key.contains("type")){
+									isList=true;
+									String value= map.get(key);
+									if(! (value.contains("string")) ||
+											(value.contains("integer")) || 
+											(value.contains("boolean")) )
+									{
+										if(!key.contains("valid_values")){
+											String trimValue=value.substring(value.lastIndexOf(".")+1);
+											referenceIndividualAttributes=referenceIndividualAttributes+uniqueKey+"="+trimValue+":MANY-true";
+											attributeIndividualString="";
+										}
+
+									}
+								}
+							}
+
+							if(!(typeValueFromKey.equals("string")||
+									typeValueFromKey.equals("integer") ||
+									typeValueFromKey.equals("boolean")))
+							{
+								if(typeValueFromKey.equals("list")){
+									isList=true;
+									userDefinedDataType=false;
+								}
+								else{
+									userDefinedDataType=true;
+								}
+							}
+							if(userDefinedDataType==false && isList==false){
+								if(key.contains("default")){
+									attributeIndividualString=attributeIndividualString.replace("#B", map.get(key));
+								}
+								else if(key.contains("required")){
+									attributeIndividualString=attributeIndividualString.replace("#C", map.get(key));
+								}
+								else if(key.contains("type")){
+									String typeValue= map.get(key);
+									attributeIndividualString=attributeIndividualString.replace("#A", typeValue);
+								} 
+							}
+							else if(userDefinedDataType==true){
+								String checkTypeAndUpdate=key.substring(p+1);
+								if(checkTypeAndUpdate.equals("type")){
+									String value=map.get(key);
+									String trimValue=value.substring(value.lastIndexOf(".")+1);
+									referenceIndividualAttributes=referenceIndividualAttributes+uniqueKey+"="+trimValue+":MANY-false";
+								}
+								attributeIndividualString="";
+							}
+						}
+					}
+				}
+
+				if(constraints!=null &&constraints.isEmpty()==false){
+					//List handling. 
+					listConstraints=uniqueKey.toUpperCase()+"=[";
+					isList=true;
+					for(String str:constraints){
+						listConstraints=listConstraints+str+",";
+					}
+					listConstraints+="],";
+					logger.info(listConstraints);
+					attributeIndividualString="";
+					referenceIndividualAttributes=referenceIndividualAttributes+uniqueKey+"="+uniqueKey.toUpperCase()+":MANY-false";
+					constraints=null;
+
+				}
+				if(userDefinedDataType==false && isList==false){
+					if(attributeString!=""){
+						attributeString=attributeString+","+attributeIndividualString;
+					}else{
+						attributeString=attributeString+attributeIndividualString;
+					}
+				}
+				if(isList==true || userDefinedDataType==true){
+					if(referenceAttributes!=""){
+						referenceAttributes=referenceAttributes+","+referenceIndividualAttributes;
+					}else{
+						referenceAttributes=referenceAttributes+referenceIndividualAttributes;
+					}
+					logger.info("ReferenceAttributes: "+referenceAttributes);
+				}
+
+				logger.info("AttributeString: "+ attributeString);
+				logger.info("ListConstraints is: "+listConstraints);
+
+				attributeIndividualString="";
+				referenceIndividualAttributes="";
+				userDefinedDataType=false;
+				isList=false;
+
+			}
+			this.listConstraints=listConstraints;
+			this.referenceAttributes=referenceAttributes;
+			this.attributeString=attributeString;
+		} catch (IOException e) {
+			logger.error(e);
+		}
+	} 
+
 	private String cleanUPJson(String json) {
 		String cleanJson = StringUtils.replaceEach(json, new String[]{"\\\\", "\\\\\\", "\\\\\\\\"}, new String[]{"\\", "\\", "\\"});
 		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\\\\\\"}, new String[]{"\\"});
@@ -269,7 +633,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				presKey = key;
 			}
 			// first check if we are different from old.
-			System.out.println(key+"\n");
+			logger.info(key+"\n");
 			if(jsonArray!=null && jsonArray.length()>0 && key.contains("@") && !key.contains(".") && oldValue!=null){
 				if(!oldValue.equals(key.substring(0,key.indexOf("@")))){
 					jsonResult.put(oldValue, jsonArray);
@@ -444,7 +808,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private String createMicroSeriveJson(MicroServiceModels returnModel) {
 		Map<String, String> attributeMap = new HashMap<String, String>();
 		Map<String, String> refAttributeMap = new HashMap<String, String>();
@@ -620,7 +984,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error(e);
 		}
 	}
 
@@ -755,7 +1119,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 
 	}
@@ -852,8 +1216,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	public void SetMSModelData(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 		boolean zip = false;
+		boolean yml= false;
 		for (FileItem item : items) {
-			if(item.getName().endsWith(".zip") || item.getName().endsWith(".xmi")){
+			if(item.getName().endsWith(".zip") || item.getName().endsWith(".xmi")||item.getName().endsWith(".yml")){
 				this.newModel = new MicroServiceModels();
 				try{
 					File file = new File(item.getName());
@@ -862,41 +1227,81 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					outputStream.close();
 					this.newFile = file.toString();
 					this.newModel.setModelName(this.newFile.toString().split("-v")[0]);
+				
 					if (this.newFile.toString().contains("-v")){
 						if (item.getName().endsWith(".zip")){
 							this.newModel.setVersion(this.newFile.toString().split("-v")[1].replace(".zip", ""));
 							zip = true;
-						}else {
+						}else if(item.getName().endsWith(".yml")){
+							this.newModel.setVersion(this.newFile.toString().split("-v")[1].replace(".yml", ""));
+							yml = true;
+						}
+						else {
 							this.newModel.setVersion(this.newFile.toString().split("-v")[1].replace(".xmi", ""));
 						}
 					}
+				
 				}catch(Exception e){
 					logger.error("Upload error : " + e);
 				}
 			}
+			
 		}
 		List<File> fileList = new ArrayList<File>();;
 		this.directory = "model";
 		if (zip){
 			extractFolder(this.newFile);
 			fileList = listModelFiles(this.directory);
+		}else if (yml==true){
+			parseTosca(this.newFile);
 		}else {
 			File file = new File(this.newFile);
 			fileList.add(file);
 		}
-		
-		//Process Main Model file first
-		classMap = new HashMap<String,MSAttributeObject>();
-		for (File file : fileList) {
-			if(!file.isDirectory() && file.getName().endsWith(".xmi")){
-            	retreiveDependency(file.toString(), true);
-            }	
+		String modelType= "";
+		if(yml==false){
+			modelType="xmi";
+			//Process Main Model file first
+			classMap = new HashMap<String,MSAttributeObject>();
+			for (File file : fileList) {
+				if(!file.isDirectory() && file.getName().endsWith(".xmi")){
+	            	retreiveDependency(file.toString(), true);
+	            }	
+			}
+			
+			modelList = createList();
+			
+			cleanUp(this.newFile);
+			cleanUp(directory);
+		}else{
+			modelType="yml";
+			modelList.add(this.newModel.getModelName());
+			String className=this.newModel.getModelName();
+			MSAttributeObject msAttributes= new MSAttributeObject();
+			msAttributes.setClassName(className);
+			
+			HashMap<String, String> returnAttributeList =new HashMap<String, String>();
+			returnAttributeList.put(className, this.attributeString);
+			msAttributes.setAttribute(returnAttributeList);
+			
+			msAttributes.setSubClass(this.retmap);
+			
+			HashMap<String, String> returnReferenceList =new HashMap<String, String>();
+			//String[] referenceArray=this.referenceAttributes.split("=");
+			returnReferenceList.put(className, this.referenceAttributes);
+			msAttributes.setRefAttribute(returnReferenceList);
+			
+			if(this.listConstraints!=""){
+				HashMap<String, String> enumList =new HashMap<String, String>();
+				String[] listArray=this.listConstraints.split("=");
+				enumList.put(listArray[0], listArray[1]);
+				msAttributes.setEnumType(enumList);
+			}
+			
+			classMap=new HashMap<String,MSAttributeObject>();
+			classMap.put(className, msAttributes);
+			
 		}
-	
-		modelList = createList();
-		
-		cleanUp(this.newFile);
-		cleanUp(directory);
 		
 		PrintWriter out = response.getWriter();
 		
@@ -908,6 +1313,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		JSONObject j = new JSONObject();
 		j.put("classListDatas", modelList);
 		j.put("modelDatas", mapper.writeValueAsString(classMap));
+		j.put("modelType", modelType);
 		out.write(j.toString());
 	}
 	
@@ -969,7 +1375,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	    tempMap = utils.processEpackage(workingFile, MODEL_TYPE.XMI);
 	    
 	    classMap.putAll(tempMap);
-	    System.out.println(tempMap);
+	    logger.info(tempMap);
 	    
 	    return;   	
 	    

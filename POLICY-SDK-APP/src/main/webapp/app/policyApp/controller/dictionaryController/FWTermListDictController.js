@@ -25,6 +25,8 @@ app.controller('editFWTermListController' , function ($scope, $modalInstance, me
      $scope.sourceServicechoices = [];
      $scope.destinationServicechoices = [];
      $scope.actionListchoices = [];
+     $scope.groupAddresses=[];
+     $scope.groupServices=[];
     if(message.termListDictionaryData==null){
         $scope.label='Add Term List Name'
     }else{
@@ -143,6 +145,10 @@ app.controller('editFWTermListController' , function ($scope, $modalInstance, me
     	console.log($scope.data);
     	$scope.prefixListDictionaryDatas = JSON.parse($scope.data.prefixListDictionaryDatas);
     	console.log($scope.prefixListDictionaryDatas);
+    	for(i = 0; i < $scope.prefixListDictionaryDatas.length; i++){
+			var key  = $scope.prefixListDictionaryDatas[i];
+			$scope.groupAddresses.push(key);
+		}
     }, function (error) {
     	console.log("failed");
     });
@@ -163,6 +169,10 @@ app.controller('editFWTermListController' , function ($scope, $modalInstance, me
     	console.log($scope.data);
     	$scope.addressGroupDictionaryDatas = JSON.parse($scope.data.addressGroupDictionaryDatas);
     	console.log($scope.addressGroupDictionaryDatas);
+    	for(i = 0; i < $scope.addressGroupDictionaryDatas.length; i++){
+			var key  = $scope.addressGroupDictionaryDatas[i];
+			$scope.groupAddresses.push(key);
+		}
     }, function (error) {
     	console.log("failed");
     });
@@ -173,6 +183,10 @@ app.controller('editFWTermListController' , function ($scope, $modalInstance, me
     	console.log($scope.data);
     	$scope.serviceListDictionaryDatas = JSON.parse($scope.data.serviceListDictionaryDatas);
     	console.log($scope.serviceListDictionaryDatas);
+    	for(i = 0; i < $scope.serviceListDictionaryDatas.length; i++){
+			var key  = $scope.serviceListDictionaryDatas[i];
+			$scope.groupServices.push(key);
+		}
     }, function (error) {
     	console.log("failed");
     });
@@ -183,6 +197,10 @@ app.controller('editFWTermListController' , function ($scope, $modalInstance, me
     	console.log($scope.data);
     	$scope.serviceGroupDictionaryDatas = JSON.parse($scope.data.serviceGroupDictionaryDatas);
     	console.log($scope.serviceGroupDictionaryDatas);
+    	for(i = 0; i < $scope.serviceGroupDictionaryDatas.length; i++){
+			var key  = $scope.serviceGroupDictionaryDatas[i];
+			$scope.groupServices.push(key);
+		}
     }, function (error) {
     	console.log("failed");
     });

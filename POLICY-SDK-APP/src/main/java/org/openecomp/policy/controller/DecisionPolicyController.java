@@ -29,14 +29,14 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
+import org.openecomp.policy.rest.adapter.YAMLParams;
 import org.openecomp.policy.rest.jpa.PolicyEntity;
+import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
@@ -150,23 +150,46 @@ public class DecisionPolicyController extends RestrictedBaseController {
 						decisionList.add(settings);
 					} else if (object instanceof RuleType) {
 						// get the condition data under the rule for rule Algorithms.
-						if (((RuleType) object).getEffect().equals(EffectType.PERMIT)) {
-							ConditionType condition = ((RuleType) object).getCondition();
-							if (condition != null) {
-								ApplyType decisionApply = (ApplyType) condition.getExpression().getValue();
-								ruleAlgoirthmTracker = new LinkedList<Integer>();
-								// Populating Rule Algorithms starting from compound.
-								prePopulateDecisionCompoundRuleAlgorithm(index, decisionApply);
-								policyAdapter.setRuleAlgorithmschoices(ruleAlgorithmList);
-							}
-						}else if(((RuleType) object).getEffect().equals(EffectType.DENY)) {
+						if(((RuleType) object).getEffect().equals(EffectType.DENY)) {
 							if(((RuleType) object).getAdviceExpressions()!=null){
 								if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().toString().equalsIgnoreCase("AAF")){
 									policyAdapter.setRuleProvider("AAF");
 									break;
+								}else if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().toString().equalsIgnoreCase("GUARD_YAML")){
+									policyAdapter.setRuleProvider("GUARD_YAML");
 								}
 							}else{
 								policyAdapter.setRuleProvider("Custom");
+							}
+							ConditionType condition = ((RuleType) object).getCondition();
+							if (condition != null) {
+								ApplyType decisionApply = (ApplyType) condition.getExpression().getValue();
+								decisionApply = (ApplyType) decisionApply.getExpression().get(0).getValue();
+								ruleAlgoirthmTracker = new LinkedList<Integer>();
+								if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals("GUARD_YAML")){
+									YAMLParams yamlParams = new YAMLParams();
+									for(int i=0; i<attributeList.size() ; i++){
+										Map<String, String> map = (Map<String,String>)attributeList.get(i);
+										if(map.get("key").equals("actor")){
+											yamlParams.setActor(map.get("value"));
+										}else if(map.get("key").equals("recipe")){
+											yamlParams.setRecipe(map.get("value"));
+										}
+									}
+									ApplyType apply = ((ApplyType)((ApplyType)decisionApply.getExpression().get(0).getValue()).getExpression().get(0).getValue());
+									yamlParams.setGuardActiveStart(((AttributeValueType)apply.getExpression().get(1).getValue()).getContent().get(0).toString());
+									yamlParams.setGuardActiveEnd(((AttributeValueType)apply.getExpression().get(2).getValue()).getContent().get(0).toString());
+									yamlParams.setLimit(((AttributeValueType)((ApplyType)decisionApply.getExpression().get(1).getValue()).getExpression().get(1).getValue()).getContent().get(0).toString());
+									String timeWindow = ((AttributeDesignatorType)((ApplyType)((ApplyType)decisionApply.getExpression().get(1).getValue()).getExpression().get(0).getValue()).getExpression().get(0).getValue()).getIssuer();
+									yamlParams.setTimeWindow(timeWindow.substring(timeWindow.lastIndexOf(":")+1));
+									policyAdapter.setYamlparams(yamlParams);
+									policyAdapter.setAttributes(new ArrayList<Object>());
+									policyAdapter.setRuleAlgorithmschoices(new ArrayList<Object>());
+									break;
+								}
+								// Populating Rule Algorithms starting from compound.
+								prePopulateDecisionCompoundRuleAlgorithm(index, decisionApply);
+								policyAdapter.setRuleAlgorithmschoices(ruleAlgorithmList);
 							}
 						}
 					}
@@ -244,6 +267,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 				String keyValue = PolicyController.getDropDownMap().get(key);
 				if (keyValue.equals(decisionApply.getFunctionId())) {
 					rule.put("dynamicRuleAlgorithmCombo", key);
+					break;
 				}
 			}
 

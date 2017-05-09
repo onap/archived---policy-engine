@@ -47,7 +47,7 @@
             </a>
         </li>
         <li ng-show="config.allowedActions.edit && !temp.isFolder()">
-            <a href="" tabindex="-1" data-toggle="modal" data-target="#createNewPolicy" ng-show="editPolicyId" ng-click="temp.getContent();">
+            <a href="" tabindex="-1" data-toggle="modal" data-target="#createNewPolicy" ng-show="editPolicyId" ng-click="temp.getContent(policyNavigator);">
                 <i class="glyphicon glyphicon-pencil"></i> Edit Policy
             </a>
         </li>

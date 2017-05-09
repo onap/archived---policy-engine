@@ -41,6 +41,7 @@
 		<module>PolicyEngineUtils</module>
 		<module>ECOMP-XACML</module>
 		<module>ECOMP-REST</module>
+		<module>ECOMP-ControlloopPolicy</module>
 		<module>PolicyEngineAPI</module>
 		<module>ECOMP-PDP</module>
 		<module>ECOMP-PDP-REST</module>

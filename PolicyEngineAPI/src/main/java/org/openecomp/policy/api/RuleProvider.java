@@ -36,7 +36,11 @@ public enum RuleProvider {
 	/**
 	 * Indicates AAF will be providing the Rule information. 
 	 */
-	AAF("AAF")
+	AAF("AAF"),
+	/**
+	 * Indicates Guard YAML will be providing the Rule information.
+	 */
+	GUARD_YAML("GUARD_YAML")
 	;
 	
 	private String name;

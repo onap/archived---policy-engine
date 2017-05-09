@@ -20,7 +20,7 @@
 package org.openecomp.policy.pap.xacml.rest.elk.client;
 
 
-import java.util.ArrayList;
+import java.util.Map;
 
 import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 
@@ -58,106 +58,43 @@ public interface ElkConnector {
 		none,
 	}
 
-	public JestResult policy(String policyId) 
-		   throws IllegalStateException, IllegalArgumentException;
-	
 	public boolean delete(PolicyRestAdapter policyData)
 			throws IllegalStateException;
-
-	public ArrayList<PolicyLocator> policyLocators(PolicyIndexType type, String text,int connector)
-		   throws IllegalStateException, IllegalArgumentException;
-	
-	public ArrayList<PolicyLocator> policyLocators(PolicyIndexType type, String text, 
-			                                       ArrayList<Pair<ArrayList<String>,ArrayList<String>>> filter_s,int connector)
-		   throws IllegalStateException, IllegalArgumentException;
 
 	public JestResult search(PolicyIndexType type, String text) 
 		   throws IllegalStateException, IllegalArgumentException;
 	
 	public JestResult search(PolicyIndexType type, String text, 
-			                 ArrayList<Pair<ArrayList<String>,ArrayList<String>>> filter_s) 
+			Map<String, String> searchKeyValue) 
 			   throws IllegalStateException, IllegalArgumentException;
 	
 	public boolean update(PolicyRestAdapter policyData) throws IllegalStateException;
 	
 	public ElkConnector singleton = new ElkConnectorImpl();
 	
-	public static PolicyIndexType toPolicyIndexType(PolicyType type) 
-	       throws IllegalArgumentException {
-		if (type == null)
-			throw new IllegalArgumentException("Unsupported NULL type conversion");
-		
-		switch(type) {
-		case Config:
-			return PolicyIndexType.config;
-		case Action:
-			return PolicyIndexType.action;
-		case Decision:
-			return PolicyIndexType.decision;
-		case Config_Fault:
-			return PolicyIndexType.closedloop;
-		case Config_PM:
-			return PolicyIndexType.closedloop;
-		case Config_FW:
-			return PolicyIndexType.config;
-		case Config_MS:
-			return PolicyIndexType.config;
-		case none:
-			return PolicyIndexType.all;
-		default:
-			throw new IllegalArgumentException("Unsupported type conversion to index: " + type.name());
-		}
-	}
-	
 	public static PolicyIndexType toPolicyIndexType(String policyName) 
-		       throws IllegalArgumentException {
-			if (policyName == null)
-				throw new IllegalArgumentException("Unsupported NULL policy name conversion");
-			
-			if (policyName.startsWith("Config_Fault")) {
-				return PolicyIndexType.closedloop;
-			} else if (policyName.startsWith("Config_PM")) {
-				return PolicyIndexType.closedloop;
-			} else if (policyName.startsWith("Config_FW")) {
-				return PolicyIndexType.config;
-			} else if (policyName.startsWith("Config_MS")) {
-				return PolicyIndexType.config;
-			}else if (policyName.startsWith("Action")) {
-				return PolicyIndexType.action;
-			} else if (policyName.startsWith("Decision")) {
-				return PolicyIndexType.decision;
-			} else if (policyName.startsWith("Config")) {
-				return PolicyIndexType.config;
-			} else {
-				throw new IllegalArgumentException
-							("Unsupported policy name conversion to index: " + 
-				             policyName);
-			}
-	}
-	
-	public static PolicyType toPolicyType(String policyName) 
-		       throws IllegalArgumentException {
+			throws IllegalArgumentException {
 		if (policyName == null)
-			throw new IllegalArgumentException("Unsupported NULL policy name conversion to Policy Type");
-		
+			throw new IllegalArgumentException("Unsupported NULL policy name conversion");
+
 		if (policyName.startsWith("Config_Fault")) {
-			return PolicyType.Config_Fault;
+			return PolicyIndexType.closedloop;
 		} else if (policyName.startsWith("Config_PM")) {
-			return PolicyType.Config_PM;
+			return PolicyIndexType.closedloop;
 		} else if (policyName.startsWith("Config_FW")) {
-			return PolicyType.Config_FW;
+			return PolicyIndexType.config;
 		} else if (policyName.startsWith("Config_MS")) {
-			return PolicyType.Config_MS;
+			return PolicyIndexType.config;
 		}else if (policyName.startsWith("Action")) {
-			return PolicyType.Action;
+			return PolicyIndexType.action;
 		} else if (policyName.startsWith("Decision")) {
-			return PolicyType.Decision;
+			return PolicyIndexType.decision;
 		} else if (policyName.startsWith("Config")) {
-			return PolicyType.Config;
+			return PolicyIndexType.config;
 		} else {
 			throw new IllegalArgumentException
-						("Unsupported policy name conversion to index: " + 
-			             policyName);
+			("Unsupported policy name conversion to index: " + 
+					policyName);
 		}
 	}
 	

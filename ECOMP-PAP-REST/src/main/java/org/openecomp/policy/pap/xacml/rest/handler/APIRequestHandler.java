@@ -40,12 +40,6 @@ public class APIRequestHandler {
 			dictionaryHandler.doDictionaryAPIGet(request, response);
 			return;
 		}
-		// Request from the API to get the gitPath
-		if ("gitPath".equalsIgnoreCase(apiflag)) {
-			PushPolicyHandler pushHandler = new PushPolicyHandler();
-			pushHandler.getGitPath(request, response);
-			return;
-		}
 		// Request from the API to get the ActiveVersion from the PolicyVersion table
 		if ("version".equalsIgnoreCase(apiflag)){
 			PushPolicyHandler pushHandler = new PushPolicyHandler();

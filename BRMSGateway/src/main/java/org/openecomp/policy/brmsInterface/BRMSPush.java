@@ -36,6 +36,7 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +76,7 @@ import org.openecomp.policy.brmsInterface.jpa.DependencyInfo;
 import org.openecomp.policy.common.im.AdministrativeStateException;
 import org.openecomp.policy.common.im.IntegrityMonitor;
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.utils.BackUpHandler;
@@ -100,6 +102,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * @version 0.9 
  */
 
+@SuppressWarnings("deprecation")
 public class BRMSPush {
 	private static final Logger LOGGER = FlexLogger.getLogger(BRMSPush.class.getName());
 	private static final String PROJECTSLOCATION = "RuleProjects";
@@ -114,7 +117,7 @@ public class BRMSPush {
 	private String defaultName = null;
 	private String repID = null; 
 	private String repName = null;
-	private String repURL= null; 
+	private ArrayList<String> repURLs= null;  
 	private String repUserName = null;
 	private String repPassword = null;
 	private String policyKeyID = null;
@@ -132,6 +135,7 @@ public class BRMSPush {
 	private Map<String, String> policyMap = new HashMap<String,String>();
 	private String brmsdependencyversion;
 	private EntityManager em;
+	private boolean syncFlag = false;
 
 	public BRMSPush(String propertiesFile, BackUpHandler handler) throws PolicyException{
 		Properties config = new Properties();
@@ -196,12 +200,17 @@ public class BRMSPush {
 			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryName property is missing from the property file ");
 		}
 		repName = repName.trim();
-		repURL = config.getProperty("repositoryURL");
+		String repURL = config.getProperty("repositoryURL");
 		if(repURL==null){
 			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryURL property is missing from the property file ");
 			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryURL property is missing from the property file ");
 		}
-		repURL = repURL.trim();
+		if(repURL.contains(",")){
+			repURLs = new ArrayList<String>(Arrays.asList(repURL.trim().split(",")));
+		}else{
+			repURLs = new ArrayList<>();
+			repURLs.add(repURL);
+		}
 		repUserName = config.getProperty("repositoryUsername");
 		repPassword = config.getProperty("repositoryPassword");
 		if(repUserName==null || repPassword==null){
@@ -216,6 +225,11 @@ public class BRMSPush {
 			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "policyKeyID property is missing from the property file ");
 		}
 		policyKeyID = policyKeyID.trim();
+		String syncF = config.getProperty("sync", "false").trim();
+		syncFlag = Boolean.parseBoolean(syncF);
+		if(syncFlag){
+			PolicyLogger.info("SYNC Flag is turned ON. DB will be given Priority.");
+		}
 		brmsdependencyversion = config.getProperty("brms.dependency.version");
 		if(brmsdependencyversion==null){
 			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "brmsdependencyversion property is missing from the property file, Using default Version.");
@@ -440,6 +454,9 @@ public class BRMSPush {
 		addToPolicy(name,selectedName);
 	}
 
+	/*
+	 * Add Policy to JMemory and DataBase. 
+	 */
 	private void addToPolicy(String policyName, String controllerName) {
 		policyMap.put(policyName, controllerName);
 		EntityTransaction et = em.getTransaction();
@@ -523,7 +540,11 @@ public class BRMSPush {
 		    	String path = PROJECTSLOCATION+ File.separator + artifactId + File.separator + "src"+ 
 				    	File.separator+ "main" + File.separator + "resources" + File.separator+ "rules"; 
 		    	new File(path).mkdirs();
-		    	f = new File(path + File.separator + fileName);
+		    	if(syncFlag  && policyMap.containsKey(fileName.replace(".drl", ""))){
+		    		f = new File(path + File.separator + fileName);
+		    	}else{
+		    		f = new File(path + File.separator + fileName);
+		    	}
 		    }else if(file.getName().endsWith("pom.xml")){
 		    	String path = PROJECTSLOCATION+ File.separator + artifactId; 
 		    	new File(path).mkdirs();
@@ -578,22 +599,35 @@ public class BRMSPush {
 
 	private List<NexusArtifact> getArtifactFromNexus(String selectedName, String version) {
 		final NexusClient client = new NexusRestClient();
-		try {
-			client.connect(repURL.substring(0, repURL.indexOf(repURL.split(":[0-9]+\\/nexus")[1])), repUserName, repPassword);
-			final NexusArtifact template = new NexusArtifact();
-	        template.setGroupId(getGroupID(selectedName));
-	        template.setArtifactId(getArtifactID(selectedName));
-			if(version!=null){
-				template.setVersion(version);
-			}
-			return client.searchByGAV(template);	
-		} catch (NexusClientException | NexusConnectionException | NullPointerException e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Connection to remote Nexus has failed. " +e.getMessage());
-		} finally {
+		int i = 0 ;
+		boolean flag = false;
+		while(i<repURLs.size()){
 			try {
-				client.disconnect();
-			} catch (NexusClientException | NexusConnectionException e) {
-				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "failed to disconnect Connection from Nexus." +e.getMessage());
+				String repURL = repURLs.get(0);
+				client.connect(repURL.substring(0, repURL.indexOf(repURL.split(":[0-9]+\\/nexus")[1])), repUserName, repPassword);
+				final NexusArtifact template = new NexusArtifact();
+				template.setGroupId(getGroupID(selectedName));
+				template.setArtifactId(getArtifactID(selectedName));
+				if(version!=null){
+					template.setVersion(version);
+				}
+				List<NexusArtifact> resultList = client.searchByGAV(template);
+				if(resultList!=null){
+					flag = true;
+					return resultList;
+				}
+			} catch (NexusClientException | NexusConnectionException | NullPointerException e) {
+				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Connection to remote Nexus has failed. " +e.getMessage());
+			} finally {
+				try {
+					client.disconnect();
+				} catch (NexusClientException | NexusConnectionException e) {
+					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "failed to disconnect Connection from Nexus." +e.getMessage());
+				}
+				if(!flag){
+					Collections.rotate(repURLs, -1);
+					i++;
+				}
 			}
 		}
 		return new ArrayList<NexusArtifact>();
@@ -637,8 +671,9 @@ public class BRMSPush {
 	 * Will Push policies to the PolicyRepo. 
 	 * 
 	 * @param notificationType <String> type of notification Type. 
+	 * @throws PolicyException 
 	 */
-	public void pushRules(){
+	public void pushRules() throws PolicyException{
 		// Check how many groups have been updated. 
 		// Invoke their Maven process.
 		try {
@@ -651,6 +686,7 @@ public class BRMSPush {
 		if(!modifiedGroups.isEmpty()){
 			Boolean flag = false;
 			for(String group: modifiedGroups.keySet()){
+				InvocationResult result = null;
 				try{
 					InvocationRequest request = new DefaultInvocationRequest();
 					setVersion(group);
@@ -658,23 +694,25 @@ public class BRMSPush {
 					request.setPomFile(new File(PROJECTSLOCATION+File.separator+getArtifactID(group)+File.separator+"pom.xml"));
 					request.setGoals(Arrays.asList(GOALS));
 					Invoker invoker = new DefaultInvoker();
-					InvocationResult result = invoker.execute(request);
+					result = invoker.execute(request);
 					if(result.getExecutionException()!=null){
 						LOGGER.error(result.getExecutionException());
 					}else if(result.getExitCode()!=0){
 						LOGGER.error("Maven Invocation failure..!");
 					}
-					if(result.getExitCode()==0){
-						LOGGER.info("Build Completed..!");
-						if (createFlag) {
-                            addNotification(group, "create");
-                        }else{
-                            addNotification(group, modifiedGroups.get(group));
-                        }
-                        flag = true;
-					}
 				}catch(Exception e){
 					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Maven Invocation issue for "+getArtifactID(group) + e.getMessage());
+				}
+				if(result!=null && result.getExitCode()==0){
+					LOGGER.info("Build Completed..!");
+					if (createFlag) {
+						addNotification(group, "create");
+					}else{
+						addNotification(group, modifiedGroups.get(group));
+					}
+					flag = true;
+				}else{
+					throw new PolicyException(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Maven Invocation failure!");
 				}
 			}
 			if(flag){
@@ -799,10 +837,10 @@ public class BRMSPush {
 		DeploymentRepository repository = new DeploymentRepository();
 		repository.setId(repID);
 		repository.setName(repName);
-		repository.setUrl(repURL);
+		repository.setUrl(repURLs.get(0));
 		distributionManagement.setRepository(repository);
 		model.setDistributionManagement(distributionManagement);
-		// Depenendency Mangement goes here. 
+		// Dependency Management goes here. 
 		List<Dependency> dependencyList= new ArrayList<Dependency>();
 		if(groupMap.get(name).size()>1){
 			@SuppressWarnings("unchecked")
@@ -1007,6 +1045,7 @@ public class BRMSPush {
         File file = new File(ruleFolder+File.separator+ policyName +".drl");
         if(file.delete()){
     		LOGGER.info("Deleted File.. " + file.getAbsolutePath());
+    		removePolicyFromGroup(policyName, controllerName);
         }
         if(new File(ruleFolder).listFiles().length == 0) {
             removedRuleModifiedGroup(controllerName);
@@ -1016,6 +1055,26 @@ public class BRMSPush {
         }
     }
 	
+    // Removes Policy from Memory and Database. 
+ 	private void removePolicyFromGroup(String policyName, String controllerName) {
+ 		policyMap.remove(policyName);
+ 		EntityTransaction et = em.getTransaction();
+ 		et.begin();
+ 		Query query = em.createQuery("select b from BRMSPolicyInfo as b where b.policyName = :pn");
+ 		query.setParameter("pn", policyName);
+ 		List<?> pList = query.getResultList();
+ 		BRMSPolicyInfo brmsPolicyInfo = new BRMSPolicyInfo();
+ 		if(pList.size()>0){
+ 			// Already exists. 
+ 			brmsPolicyInfo = (BRMSPolicyInfo) pList.get(0);
+ 			if(brmsPolicyInfo.getControllerName().getControllerName().equals(controllerName)){
+ 				em.remove(brmsPolicyInfo);
+ 				em.flush();
+ 			}
+ 		}
+ 		et.commit();
+ 	}
+ 	
 	private void setVersion(String newVersion, String controllerName) {
         PEDependency userController = (PEDependency) groupMap.get(controllerName).get(0);
         userController.setVersion(newVersion);
@@ -1025,5 +1084,17 @@ public class BRMSPush {
 	// Return BackUpMonitor 
 	public static BackUpMonitor getBackUpMonitor(){
 		return bm;
+	}
+	
+	public void rotateURLs() {
+		if(repURLs!=null){
+			Collections.rotate(repURLs, -1);
+		}
+	}
+
+	public int URLListSize() {
+		if(repURLs!=null){
+			return repURLs.size();
+		}else return 0;
 	}
 }

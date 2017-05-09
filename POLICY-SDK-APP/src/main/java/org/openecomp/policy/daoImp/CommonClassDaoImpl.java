@@ -264,8 +264,6 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getEntityItem(Class className, String columnName, String key) {
-		System.out.println(columnName);
-		System.out.println(key);
 		Session session = sessionfactory.openSession();
 		Transaction tx = session.beginTransaction();
 		Object data = null;
@@ -281,7 +279,6 @@ public class CommonClassDaoImpl implements CommonClassDao{
 				cr.add(Restrictions.eq(columnName, key));	
 			}
 			data = cr.list().get(0);
-			System.out.println(data);
 			tx.commit();
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table"+e);	

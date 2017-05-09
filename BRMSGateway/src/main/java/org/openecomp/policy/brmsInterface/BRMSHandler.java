@@ -20,6 +20,7 @@
 
 package org.openecomp.policy.brmsInterface;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.openecomp.policy.api.ConfigRequestParameters;
@@ -31,11 +32,10 @@ import org.openecomp.policy.api.PolicyConfigStatus;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyException;
 import org.openecomp.policy.api.RemovedPolicy;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.utils.BackUpHandler;
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
-//import org.apache.log4j.Logger;
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 
 /**
  * BRMSHandler: Notification Handler which listens for PDP Notifications. 
@@ -56,7 +56,12 @@ public class BRMSHandler implements BackUpHandler{
 	public void setBRMSPush(BRMSPush brmsPush) {
 		this.bRMSPush = brmsPush;
 	}
-
+	
+	/*
+	 * This Method is executed upon notification by the Policy Engine API Notification. 
+	 * (non-Javadoc)
+	 * @see org.openecomp.policy.utils.BackUpHandler#notificationReceived(org.openecomp.policy.api.PDPNotification)
+	 */
 	@Override
 	public void notificationReceived(PDPNotification notification) {
 		logger.info("Notification Recieved");
@@ -71,6 +76,9 @@ public class BRMSHandler implements BackUpHandler{
 		}
 	}
 	
+	/*
+	 * Executed when a policy is removed from PDP.  
+	 */
 	private void removedPolicies(Collection<RemovedPolicy> removedPolicies){
 		Boolean removed = false;
 		logger.info("Removed Policies");
@@ -87,44 +95,88 @@ public class BRMSHandler implements BackUpHandler{
 				}
 			}
 		}
-		if(removed){
-			bRMSPush.pushRules();
-		}
+		Boolean failureFlag = false;
+		int i = 0;
+		do{
+			failureFlag = false;
+			if(removed){
+				try{
+					bRMSPush.pushRules();
+				}catch(PolicyException e){
+					//Upon Notification failure 
+					failureFlag = true;
+					bRMSPush.rotateURLs();
+				}
+			}
+			i++;
+		}while(failureFlag && i< bRMSPush.URLListSize());
 	}
 	
+	/*
+	 * This method is executed if BRMSGW is "MASTER" 
+	 * (non-Javadoc)
+	 * @see org.openecomp.policy.utils.BackUpHandler#runOnNotification(org.openecomp.policy.api.PDPNotification)
+	 */
 	public void runOnNotification(PDPNotification notification){
 		if(notification.getNotificationType().equals(NotificationType.REMOVE)){
 			removedPolicies(notification.getRemovedPolicies());
 		}else if(notification.getNotificationType().equals(NotificationType.UPDATE)|| notification.getNotificationType().equals(NotificationType.BOTH)){
 			logger.info("Updated Policies: \n");
-			for(LoadedPolicy updatedPolicy: notification.getLoadedPolicies()){
-				logger.info("policyName : " + updatedPolicy.getPolicyName());
-				logger.info("policyVersion :" + updatedPolicy.getVersionNo());
-				logger.info("Matches: " + updatedPolicy.getMatches());
-				// Checking the Name is correct or not. 
-				if(updatedPolicy.getPolicyName().contains("_BRMS_")){
-					try{
-						PolicyEngine policyEngine = getPolicyEngine();
-						if(policyEngine!=null){
-							ConfigRequestParameters configRequestParameters = new ConfigRequestParameters();
-							configRequestParameters.setPolicyName(updatedPolicy.getPolicyName());
-							Collection<PolicyConfig> policyConfigs = policyEngine.getConfig(configRequestParameters);
-							for(PolicyConfig policyConfig: policyConfigs){
-								if(policyConfig.getPolicyConfigStatus().equals(PolicyConfigStatus.CONFIG_RETRIEVED)){
-									logger.info("Policy Retrieved with this Name notified: " + policyConfig.getPolicyName());
-								    bRMSPush.addRule(policyConfig.getPolicyName(),policyConfig.toOther(),policyConfig.getResponseAttributes());
-								}else{
-									logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Fail to retrieve policy so rule will not be pushed to PolicyRepo !!!!\n\n");
-								}
-							}
-						}
-					}catch(Exception e){
-						logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Rertriving policy failed " + e.getMessage());
+			ArrayList<PolicyConfig> brmsPolicies = addedPolicies(notification);
+			Boolean successFlag = false;
+			for(int i=0; !successFlag && i< bRMSPush.URLListSize(); i++){
+				successFlag = false;
+				if(i!=0 && !successFlag){
+					for(PolicyConfig policyConfig: brmsPolicies){
+						logger.info("Policy Retry with this Name notified: " + policyConfig.getPolicyName());
+						bRMSPush.addRule(policyConfig.getPolicyName(),policyConfig.toOther(),policyConfig.getResponseAttributes());
 					}
 				}
+				try{
+					bRMSPush.pushRules();
+					successFlag = true;
+				}catch(PolicyException e){
+					//Upon Notification failure 
+					successFlag = false;
+					bRMSPush.rotateURLs();
+				}
 			}
-			bRMSPush.pushRules();
 		}
+	}
+
+	/*
+	 * Executed when a policy is added to PDP.  
+	 */
+	private ArrayList<PolicyConfig> addedPolicies(PDPNotification notification) {
+		ArrayList<PolicyConfig> result = new ArrayList<PolicyConfig>();
+		for(LoadedPolicy updatedPolicy: notification.getLoadedPolicies()){
+			logger.info("policyName : " + updatedPolicy.getPolicyName());
+			logger.info("policyVersion :" + updatedPolicy.getVersionNo());
+			logger.info("Matches: " + updatedPolicy.getMatches());
+			// Checking the Name is correct or not. 
+			if(updatedPolicy.getPolicyName().contains("_BRMS_")){
+				try{
+					PolicyEngine policyEngine = getPolicyEngine();
+					if(policyEngine!=null){
+						ConfigRequestParameters configRequestParameters = new ConfigRequestParameters();
+						configRequestParameters.setPolicyName(updatedPolicy.getPolicyName());
+						Collection<PolicyConfig> policyConfigs = policyEngine.getConfig(configRequestParameters);
+						for(PolicyConfig policyConfig: policyConfigs){
+							if(policyConfig.getPolicyConfigStatus().equals(PolicyConfigStatus.CONFIG_RETRIEVED)){
+								logger.info("Policy Retrieved with this Name notified: " + policyConfig.getPolicyName());
+								result.add(policyConfig);
+								bRMSPush.addRule(policyConfig.getPolicyName(),policyConfig.toOther(),policyConfig.getResponseAttributes());
+							}else{
+								logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Fail to retrieve policy so rule will not be pushed to PolicyRepo !!!!\n\n");
+							}
+						}
+					}
+				}catch(Exception e){
+					logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Rertriving policy failed " + e.getMessage());
+				}
+			}
+		}
+		return result;
 	}
 
 	public PolicyEngine getPolicyEngine() {

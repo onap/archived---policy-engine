@@ -55,7 +55,7 @@ app.config(function($routeProvider) {
 	})
 	.when('/policy_SearchFilter', {
 		templateUrl: 'app/policyApp/policy-models/policy_SearchFilter.html',
-		controller : "PolicyManagerController"
+		controller : "PolicySearchController"
 	})
 	.otherwise({
 		templateUrl:'app/policyApp/policy-models/Editor/templates/policyEditor.html',

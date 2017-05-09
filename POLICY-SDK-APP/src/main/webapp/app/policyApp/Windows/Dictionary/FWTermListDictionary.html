@@ -91,7 +91,7 @@
     			<div  data-ng-repeat="choice in sourceListchoices">	
 					<div class="form-group row">	
         			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
-            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in addressGroupDictionaryDatas track by option"><option value = "" name= "option"  required>{{choice.option}}</option></select>
+            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in groupAddresses track by option"><option value = "" name= "option"  required>{{choice.option}}</option></select>
 						<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">Source-List is required.</p>
         			</div>
         			<div  class="form-group col-sm-1">
@@ -112,7 +112,7 @@
     			<div  data-ng-repeat="choice in destinationListchoices">
 					<div class="form-group row">		
         			<div class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
-            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in prefixListDictionaryDatas track by option"><option value = "" name= "option"  required>{{choice.option}}</option></select>
+            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in groupAddresses track by option"><option value = "" name= "option"  required>{{choice.option}}</option></select>
 						<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">Destination-List is required.</p>
         			</div>
         			<div  class="form-group col-sm-1">
@@ -133,7 +133,7 @@
     			<div  data-ng-repeat="choice in sourceServicechoices">	
 					<div class="form-group row">		
         			<div class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
-            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in serviceListDictionaryDatas track by option" ng-options="option for option in serviceGroupDictionaryDatas track by option"><option value = "" name= "option"  required>{{choice.option}}</option></select>
+            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in groupServices track by option" ng-options="option for option in groupServices track by option"><option value = "" name= "option"  required>{{choice.option}}</option></select>
         				<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">Source-Services is required.</p>
 					</div>
         			<div  class="form-group col-sm-1">
@@ -154,7 +154,7 @@
     			<div  data-ng-repeat="choice in destinationServicechoices">	
 					<div class="form-group row">	
         			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
-            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in serviceListDictionaryDatas track by option" ng-options="option for option in serviceGroupDictionaryDatas track by option" name= "option"  required><option value = "">{{choice.option}}</option></select>
+            			<select  class="form-control"  ng-model="choice.option" ng-options="option for option in groupServices track by option" ng-options="option for option in groupServices track by option" name= "option"  required><option value = "">{{choice.option}}</option></select>
         				<p ng-show="formdata.option.$invalid && !formdata.option.$pristine" class="help-block">Destination-Services is required.</p>
 					</div>
         			<div class="form-group col-sm-1">

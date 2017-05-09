@@ -127,7 +127,7 @@ public class SavePolicyHandler {
 		policyAdapter.setDynamicRuleAlgorithmField2(policy.getDynamicRuleAlgorithmField2());
 		//Decision Policy Specific
 		policyAdapter.setDynamicSettingsMap(policy.getDynamicSettingsMap());
-		policyAdapter.setProviderComboBox(policy.getProviderComboBox());
+		policyAdapter.setRuleProvider(policy.getProviderComboBox());
 		policyAdapter.setDomainDir(policyAdapter.getPolicyScope());
 		policyAdapter.setDomain(policyAdapter.getPolicyScope());
 		return policyAdapter;

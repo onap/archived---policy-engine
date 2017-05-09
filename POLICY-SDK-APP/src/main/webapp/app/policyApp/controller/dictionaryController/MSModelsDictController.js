@@ -37,7 +37,7 @@ app.controller('editMSModelController' ,  function ($scope, $modalInstance, mess
 
     $scope.uploadFile = function(files) {
     	var extn = files[0].name.substr(files[0].name.lastIndexOf('.')+1);
-    	if(extn == 'zip' || extn == 'xmi'){
+    	if(extn == 'zip' || extn == 'xmi'||  extn == 'yml'){
     		valid = true;
     		var fd = new FormData();
     		fd.append("file", files[0]);
@@ -51,6 +51,7 @@ app.controller('editMSModelController' ,  function ($scope, $modalInstance, mess
                 }else{      
                 	$scope.classListDatas=data.classListDatas;
                 	$scope.modalDatas = data.modelDatas;
+                	$scope.modelType= data.modelType;
                 	console.log($scope.classListDatas);
                 }
             }).error( );
@@ -64,7 +65,7 @@ app.controller('editMSModelController' ,  function ($scope, $modalInstance, mess
     $scope.saveMSModel = function(microServiceModelsDictionaryData) {
     	if(valid){
     		 var uuu = "saveDictionary/ms_dictionary/save_model";
-    	        var postData={microServiceModelsDictionaryData: microServiceModelsDictionaryData, userid: userid, classMap: $scope.modalDatas};
+    	        var postData={microServiceModelsDictionaryData: microServiceModelsDictionaryData, userid: userid, classMap: $scope.modalDatas,modelType:$scope.modelType};
     	        $.ajax({
     	            type : 'POST',
     	            url : uuu,
