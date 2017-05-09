@@ -170,7 +170,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
         };
 
         
-        Item.prototype.getContent = function() {
+        Item.prototype.getContent = function(policyNavigator) {
             var self = this;
             var deferred = $q.defer();
             var data = {params: {
@@ -185,6 +185,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
                 var json = data.result;
                 var policy = JSON.parse(json);
                 self.policy = policy;
+                self.itemContent = policyNavigator;
                 console.log(policy);
                 self.deferredHandler(data, deferred);
             }).error(function(data) {
@@ -338,10 +339,6 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
         Item.prototype.isEditable = function() {
             return !this.isFolder() && policyManagerConfig.isEditableFilePattern.test(this.model.name);
         };
-
-        /*Item.prototype.isImage = function() {
-            return policyManagerConfig.isImageFilePattern.test(this.model.name);
-        };*/
 
         return Item;
     }]);

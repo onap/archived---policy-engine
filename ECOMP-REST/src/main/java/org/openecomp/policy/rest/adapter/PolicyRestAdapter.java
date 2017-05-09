@@ -31,6 +31,14 @@ import org.openecomp.policy.rest.jpa.EcompName;
 
 public class PolicyRestAdapter {
 	
+	/*
+	 * 
+	 * Note : Make Sure if any variables are added in PolicyRestAdapter.java, add them to PolicyElasticData.java file
+	 * 
+	 * 
+	 * */
+		
+	
 	//Common
 	private Object data;
 	private String policyName = null;
@@ -117,6 +125,7 @@ public class PolicyRestAdapter {
 	private String actionDictType = null;
 	private String actionDictUrl = null;
 	private String actionDictMethod = null;
+	private YAMLParams yamlparams; 
 	
 	//MicroSerice
 	private String serviceType = null;
@@ -823,5 +832,11 @@ public class PolicyRestAdapter {
 		}
 		public void setExistingCLName(String existingCLName) {
 			this.existingCLName = existingCLName;
+		}
+		public YAMLParams getYamlparams() {
+			return yamlparams;
+		}
+		public void setYamlparams(YAMLParams yamlparams) {
+			this.yamlparams = yamlparams;
 		}
 }

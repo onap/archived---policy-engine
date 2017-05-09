@@ -448,7 +448,44 @@ public class PolicyValidationController extends RestrictedBaseController {
 					responseString = responseString + "Ecomp Name: Ecomp Name Should not be empty" + "<br>";
 					valid = false;
 				}
-
+				if(policyData.getRuleProvider().equals("GUARD_YAML")){
+					if(policyData.getYamlparams()==null){
+						responseString = responseString + "<b> Guard Params are Required </b>" + "<br>";
+						valid = false;
+					}else{
+						if(policyData.getYamlparams().getActor()==null){
+							responseString = responseString + "Guard Params <b>Actor</b> is Required " + "<br>";
+							valid = false;
+						}
+						if(policyData.getYamlparams().getRecipe()==null){
+							responseString = responseString + "Guard Params <b>Recipe</b> is Required " + "<br>";
+							valid = false;
+						}
+						if(policyData.getYamlparams().getLimit()==null){
+							responseString = responseString + " Guard Params <b>Limit</b> is Required " + "<br>";
+							valid = false;
+						}else{
+							try{
+								Integer.parseInt(policyData.getYamlparams().getLimit());
+							}catch(NumberFormatException e){
+								responseString = responseString + " Guard Params <b>Limit</b> Should be Integer " + "<br>";
+								valid = false;
+							}
+						}
+						if(policyData.getYamlparams().getTimeWindow()==null){
+							responseString = responseString + "Guard Params <b>Time Window</b> is Required" + "<br>";
+							valid = false;
+						}
+						if(policyData.getYamlparams().getGuardActiveStart()==null){
+							responseString = responseString + "Guard Params <b>Guard Active Start/b>is Required " + "<br>";
+							valid = false;
+						}
+						if(policyData.getYamlparams().getGuardActiveEnd()==null){
+							responseString = responseString + "Guard Params <b>Guard Active End</b>is Required " + "<br>";
+							valid = false;
+						}
+					}
+				}
 			}
 
 			if(policyData.getPolicyType().equals(ACTION_POLICY)){

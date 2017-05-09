@@ -17,11 +17,25 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('baseConfigController', function ($scope, PolicyAppService, modalService, $modal, Notification) {
+app.controller('baseConfigController', ['$scope', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification',  function ($scope, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
     $("#dialog").hide();
     
+   
+    $scope.policyNavigator;
     $scope.savebutton = true;
-		
+    $scope.refreshCheck = false;
+    
+    $scope.refresh = function(){
+    	if($scope.refreshCheck){
+    		$scope.policyNavigator.refresh();
+    	}
+    	$scope.modal('createNewPolicy', true);
+    };
+    
+    $scope.modal = function(id, hide) {
+        return $('#' + id).modal(hide ? 'hide' : 'show');
+    };
+    
     PolicyAppService.getData('getDictionary/get_EcompNameDataByName').then(function (data) {
     	var j = data;  
     	$scope.data = JSON.parse(j.data);
@@ -61,8 +75,12 @@ app.controller('baseConfigController', function ($scope, PolicyAppService, modal
     }
     
     $scope.savePolicy = function(policy){
+    	if(policy.itemContent != undefined){
+    		$scope.refreshCheck = true; 
+        	$scope.policyNavigator = policy.itemContent;
+        	policy.itemContent = "";
+    	}
     	$scope.savebutton = false;
-        console.log(policy);
         var uuu = "policycreation/save_policy";
 		var postData={policyData: policy};
 		$.ajax({
@@ -92,7 +110,7 @@ app.controller('baseConfigController', function ($scope, PolicyAppService, modal
     
  
     $scope.validatePolicy = function(policy){
-    	console.log(policy);
+    	$scope.scope = policy.domain;
     	document.getElementById("validate").innerHTML = "";
         var uuu = "policyController/validate_policy.htm";
 		var postData={policyData: policy};
@@ -150,5 +168,4 @@ app.controller('baseConfigController', function ($scope, PolicyAppService, modal
         var lastItem = $scope.temp.policy.attributes.length-1;
         $scope.temp.policy.attributes.splice(lastItem);
     };
-    
-});
+}]);

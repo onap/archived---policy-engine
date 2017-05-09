@@ -42,6 +42,7 @@
             addSubScopeUrl : 'fm/addSubScopeUrl',
             switchVersionUrl : 'fm/switchVersionUrl',
             exportUrl : 'fm/exportUrl',
+            searchListUrl : 'fm/searchListUrl',
 
             sidebar: true,
             breadcrumb: true,

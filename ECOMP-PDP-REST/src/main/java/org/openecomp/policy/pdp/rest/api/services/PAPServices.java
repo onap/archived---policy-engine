@@ -611,19 +611,21 @@ public class PAPServices {
                     response = "Transaction ID: " + requestID + " --Policy with the name "+ connection.getHeaderField("policyName")
                             + " was successfully updated. ";
                     if (connection.getHeaderField("safetyChecker")!=null) {
-                    	response = response + "\nPolicy Safety Checker Warning: This closedLoopControlName (" 
-                    					+ connection.getHeaderField("newCLName") + ") " + "is potentially in conflict with " + connection.getHeaderField("conflictCLName") 
-                    					+  "that already exists." + "See detailed information on ClosedLoop Pairs below: "
-                    					+"\n"+connection.getHeaderField("safetyChecker");
+                    	response = response 
+            					+ "\n\nPolicy Safety Checker Warning: This closedLoopControlName "
+            					+ "is potentially in conflict with " + connection.getHeaderField("conflictCLName") 
+            					+  " that already exists." + " See detailed information on ClosedLoop Pairs below: "
+            					+"\n\n"+connection.getHeaderField("safetyChecker");
                     }
                 } else if ("create".equals(operation)) {
                 	response = "Transaction ID: " + requestID + " --Policy with the name "+ connection.getHeaderField("policyName")
                             + " was successfully created.";
                     if (connection.getHeaderField("safetyChecker")!=null) {
-                    	response = response + "\nPolicy Safety Checker Warning: This closedLoopControlName (" 
-                    					+ connection.getHeaderField("newCLName") + ") " + "is potentially in conflict with " + connection.getHeaderField("conflictCLName") 
-                    					+  "that already exists." + "See detailed information on ClosedLoop Pairs below: "
-                    					+"\n"+connection.getHeaderField("safetyChecker");
+                    	response = response 
+            					+ "\n\nPolicy Safety Checker Warning: This closedLoopControlName "
+            					+ "is potentially in conflict with " + connection.getHeaderField("conflictCLName") 
+            					+  " that already exists. " + "See detailed information on ClosedLoop Pairs below: "
+            					+"\n\n"+connection.getHeaderField("safetyChecker");
                     }
                 } else if ("delete".equals(operation)) {
                     response = "Transaction ID: " + requestID + " --The policy was successfully deleted.";

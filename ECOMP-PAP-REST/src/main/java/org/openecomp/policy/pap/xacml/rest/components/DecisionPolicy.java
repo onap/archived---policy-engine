@@ -20,17 +20,43 @@
 
 package org.openecomp.policy.pap.xacml.rest.components;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.controlloop.policy.builder.BuilderException;
+import org.openecomp.policy.controlloop.policy.builder.Results;
+import org.openecomp.policy.controlloop.policy.guard.Constraint;
+import org.openecomp.policy.controlloop.policy.guard.ControlLoopGuard;
+import org.openecomp.policy.controlloop.policy.guard.Guard;
+import org.openecomp.policy.controlloop.policy.guard.GuardPolicy;
+import org.openecomp.policy.controlloop.policy.guard.builder.ControlLoopGuardBuilder;
+import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
+import org.openecomp.policy.pap.xacml.rest.util.JPAUtils;
+import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
+import org.openecomp.policy.rest.jpa.Datatype;
+import org.openecomp.policy.rest.jpa.DecisionSettings;
+import org.openecomp.policy.rest.jpa.FunctionDefinition;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
+import org.openecomp.policy.xacml.std.pip.engines.aaf.AAFEngine;
+import org.openecomp.policy.xacml.util.XACMLPolicyScanner;
+
+import com.att.research.xacml.std.IdentifierImpl;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -50,22 +76,13 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
-import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
-import org.openecomp.policy.pap.xacml.rest.util.JPAUtils;
-import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
-import org.openecomp.policy.rest.jpa.Datatype;
-import org.openecomp.policy.rest.jpa.DecisionSettings;
-import org.openecomp.policy.rest.jpa.FunctionDefinition;
-import org.openecomp.policy.xacml.std.pip.engines.aaf.AAFEngine;
-
-import com.att.research.xacml.std.IdentifierImpl;
-
 public class DecisionPolicy extends Policy {
 
 	public static final String FUNCTION_NOT = "urn:oasis:names:tc:xacml:1.0:function:not";
 	private static final String AAFProvider = "AAF";
+	public static final String GUARD_YAML = "GUARD_YAML";
+	private static final String XACMLTEMPLATE = "Decision_GuardPolicyTemplate.xml";
+
 	
 	List<String> dynamicLabelRuleAlgorithms = new LinkedList<String>();
 	List<String> dynamicFieldComboRuleAlgorithms = new LinkedList<String>();
@@ -131,7 +148,25 @@ public class DecisionPolicy extends Policy {
 		}
 		policyName = policyAdapter.getNewFileName();
 		
-		if (policyAdapter.getData() != null) {
+		if(policyAdapter.getRuleProvider().equals(GUARD_YAML)){
+			Map<String, String> yamlParams = new HashMap<String, String>();
+			yamlParams.put("description", (policyAdapter.getPolicyDescription()!=null)? policyAdapter.getPolicyDescription(): "YAML Guard Policy");
+			String fileName = policyAdapter.getNewFileName();
+			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
+			if ((name == null) || (name.equals(""))) {
+				name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
+			}
+			yamlParams.put("PolicyName", name);
+			yamlParams.put("ECOMPName", policyAdapter.getEcompName());
+			Map<String, String> params = policyAdapter.getDynamicFieldConfigAttributes();
+			yamlParams.putAll(params);
+			// Call YAML to XACML 
+			PolicyType decisionPolicy = getGuardPolicy(yamlParams);
+			decisionPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
+			decisionPolicy.setVersion(Integer.toString(version));
+			policyAdapter.setPolicyData(decisionPolicy);
+			policyAdapter.setData(decisionPolicy);
+		}else if (policyAdapter.getData() != null) {
 			PolicyType decisionPolicy = (PolicyType)  policyAdapter.getData();
 			
 			decisionPolicy.setDescription(policyAdapter.getPolicyDescription());
@@ -174,7 +209,7 @@ public class DecisionPolicy extends Policy {
 			Map<String, String> dynamicFieldDecisionSettings = policyAdapter.getDynamicSettingsMap();
 			
 			//dynamicVariableList = policyAdapter.getDynamicVariableList();
-			if(policyAdapter.getProviderComboBox()!=null && policyAdapter.getProviderComboBox().equals(AAFProvider)){
+			if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFProvider)){
 				dynamicFieldDecisionSettings = new HashMap<String,String>();
 			}
 			
@@ -194,6 +229,47 @@ public class DecisionPolicy extends Policy {
 
 		setPreparedToSave(true);
 		return true;
+	}
+	
+	public PolicyType getGuardPolicy(Map<String, String> yamlParams) {
+		try {
+			ControlLoopGuardBuilder builder = ControlLoopGuardBuilder.Factory.buildControlLoopGuard(new Guard());
+			GuardPolicy policy1 = new GuardPolicy((policyAdapter.getUuid()!=null? policyAdapter.getUuid(): UUID.randomUUID().toString()) ,yamlParams.get("PolicyName"), yamlParams.get("description"), yamlParams.get("actor"), yamlParams.get("recipe"));
+			builder = builder.addGuardPolicy(policy1);
+			Map<String, String> time_in_range = new HashMap<String, String>();
+			time_in_range.put("arg2", yamlParams.get("guardActiveStart"));
+			time_in_range.put("arg3", yamlParams.get("guardActiveEnd"));
+			Constraint cons = new Constraint(Integer.parseInt(yamlParams.get("limit")), yamlParams.get("timeWindow"), time_in_range);
+			builder = builder.addLimitConstraint(policy1.id, cons);
+			// Build the specification
+			Results results = builder.buildSpecification();
+			// YAML TO XACML 
+			ControlLoopGuard yamlGuardObject = SafePolicyBuilder.loadYamlGuard(results.getSpecification());
+			Path xacmlTemplatePath = Paths.get(XACMLTEMPLATE);
+	        String xacmlTemplateContent;
+	        try {
+				xacmlTemplateContent = new String(Files.readAllBytes(xacmlTemplatePath));
+				HashMap<String, String> yamlSpecs = new HashMap<String, String>();
+				yamlSpecs.put("PolicyName", yamlParams.get("PolicyName"));
+				yamlSpecs.put("description", yamlParams.get("description"));
+				yamlSpecs.put("ECOMPName", yamlParams.get("ECOMPName"));
+				yamlSpecs.put("actor", yamlGuardObject.guards.getFirst().actor);
+				yamlSpecs.put("recipe", yamlGuardObject.guards.getFirst().recipe);
+				yamlSpecs.put("limit", yamlGuardObject.guards.getFirst().limit_constraints.getFirst().num.toString());
+				yamlSpecs.put("timeWindow", yamlGuardObject.guards.getFirst().limit_constraints.getFirst().duration);
+				yamlSpecs.put("guardActiveStart", yamlGuardObject.guards.getFirst().limit_constraints.getFirst().time_in_range.get("arg2"));
+				yamlSpecs.put("guardActiveEnd", yamlGuardObject.guards.getFirst().limit_constraints.getFirst().time_in_range.get("arg3"));
+		        String xacmlPolicyContent = SafePolicyBuilder.generateXacmlGuard(xacmlTemplateContent,yamlSpecs);
+		        // Convert the  Policy into Stream input to Policy Adapter. 
+		        Object policy = XACMLPolicyScanner.readPolicy(new ByteArrayInputStream(xacmlPolicyContent.getBytes(StandardCharsets.UTF_8)));
+				return (PolicyType) policy;
+			} catch (IOException e) {
+				PolicyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage());
+			}
+		} catch (BuilderException e) {
+			PolicyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage());
+		}
+		return null;
 	}
 	
 	private DecisionSettings findDecisionSettingsBySettingId(String settingId) {

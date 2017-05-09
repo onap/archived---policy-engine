@@ -106,7 +106,7 @@ public class AutoPushController extends RestrictedBaseController{
 		try{
 			Set<String> scopes = null;
 			List<String> roles = null;
-			data = null;
+			data = new ArrayList<Object>();
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			Map<String, Object> model = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -123,20 +123,29 @@ public class AutoPushController extends RestrictedBaseController{
 							scopes.add(multipleScopes[i]);
 						}
 					}else{
-						scopes.add(userRole.getScope());
+						if(!userRole.getScope().equals("")){
+							scopes.add(userRole.getScope());
+						}
 					}		
 				}
 			}
-			if (roles.contains("super-admin") || roles.contains("super-editor")   || roles.contains("super-guest") ) {
+			if (roles.contains("super-admin") || roles.contains("super-editor")  || roles.contains("super-guest")) {
 				data = commonClassDao.getData(PolicyVersion.class);
 			}else{
-				List<Object> filterdatas = commonClassDao.getData(PolicyVersion.class);
-				for(Object filter : filterdatas){
-					PolicyVersion filterdata = (PolicyVersion) filter;
-					String scopeName = filterdata.getPolicyName().substring(0, filterdata.getPolicyName().lastIndexOf(File.separator));
-					if(scopes.contains(scopeName)){	
-						data.add(filterdata);
+				if(!scopes.isEmpty()){
+					for(String scope : scopes){
+						String query = "From PolicyVersion where policy_name like '"+scope+"%' and id > 0";
+						List<Object> filterdatas = commonClassDao.getDataByQuery(query);
+						if(filterdatas != null){
+							for(int i =0; i < filterdatas.size(); i++){
+								data.add(filterdatas.get(i));
+							}	
+						}
 					}
+				}else{
+					PolicyVersion emptyPolicyName = new PolicyVersion();
+					emptyPolicyName.setPolicyName("Please Contact Policy Super Admin, There are no scopes assigned to you");
+					data.add(emptyPolicyName);
 				}
 			}
 			model.put("policydatas", mapper.writeValueAsString(data));

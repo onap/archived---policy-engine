@@ -19,8 +19,6 @@
  */
 
 package org.openecomp.policy.controller;
-
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -514,7 +512,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 		ServiceListJson targetSl=null;
 		int i=0;
 		try{
-			
+			String networkRole="";
 			for(String tag:tagCollectorList){
 				tags= new Tags();
 				List<Object> tagListData = commonClassDao.getData(FWTagPicker.class);
@@ -535,12 +533,14 @@ public class CreateFirewallController extends RestrictedBaseController {
 							tagList.add(tagDefine);
 							
 						}
-						
+						networkRole=jpaTagPickerList.getNetworkRole();
+						break;
 					}
 				}	
 				tags.setTags(tagList);
 				tags.setTagPickerName(tag);
 				tags.setRuleName(termCollectorList.get(i));
+				tags.setNetworkRole(networkRole);
 				tagsList.add(tags);
 				i++;
 			}

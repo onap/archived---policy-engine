@@ -361,6 +361,10 @@ public class PolicyController extends RestrictedBaseController {
 	public void deleteData(Object entity) {
 		commonClassDao.delete(entity);
 	}
+	
+	public List<Object> getData(@SuppressWarnings("rawtypes") Class className){
+		return commonClassDao.getData(className);
+	}
 
 	public PolicyVersion getPolicyEntityFromPolicyVersion(String query){
 		PolicyVersion policyVersionEntity = (PolicyVersion) commonClassDao.getEntityItem(PolicyVersion.class, "policyName", query);

@@ -18,11 +18,6 @@
  * ============LICENSE_END=========================================================
  */
 
-/*
- * 
- * 
- * 
- * */
 package org.openecomp.policy.admin;
 
 import java.io.BufferedReader;
@@ -63,6 +58,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.http.HttpStatus;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
@@ -96,7 +92,7 @@ public class PolicyManagerServlet extends HttpServlet {
 	private static final long serialVersionUID = -8453502699403909016L;
 
 	private enum Mode {
-		LIST, RENAME, COPY, DELETE, EDITFILE, ADDFOLDER, DESCRIBEPOLICYFILE, VIEWPOLICY, ADDSUBSCOPE, SWITCHVERSION, EXPORT
+		LIST, RENAME, COPY, DELETE, EDITFILE, ADDFOLDER, DESCRIBEPOLICYFILE, VIEWPOLICY, ADDSUBSCOPE, SWITCHVERSION, EXPORT, SEARCHLIST
 	}
 
 	private static String CONTENTTYPE = "application/json";
@@ -120,6 +116,7 @@ public class PolicyManagerServlet extends HttpServlet {
 	}
 
 	private static List<String> serviceTypeNamesList = new ArrayList<String>();
+	private List<Object> policyData;
 
 	public static List<String> getServiceTypeNamesList() {
 		return serviceTypeNamesList;
@@ -276,6 +273,9 @@ public class PolicyManagerServlet extends HttpServlet {
 			case SWITCHVERSION:
 				responseJsonObject = switchVersion(params, request);
 				break;
+			case SEARCHLIST:
+				responseJsonObject = searchPolicyList(params, request);
+				break;
 			default:
 				throw new ServletException("not implemented");
 			}
@@ -290,6 +290,101 @@ public class PolicyManagerServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.print(responseJsonObject);
 		out.flush();
+	}
+
+	private JSONObject searchPolicyList(JSONObject params, HttpServletRequest request) {
+		Set<String> scopes = null;
+		List<String> roles = null;
+		policyData = null;
+		JSONArray policyList = null;
+		if(params.has("policyList")){
+			policyList = (JSONArray) params.get("policyList");
+		}
+		PolicyController controller = new PolicyController();
+		List<JSONObject> resultList = new ArrayList<JSONObject>();
+		try {
+			//Get the Login Id of the User from Request
+			String userId =  UserUtils.getUserSession(request).getOrgUserId();
+			//Check if the Role and Scope Size are Null get the values from db. 
+			List<Object> userRoles = PolicyController.getRoles(userId);
+			roles = new ArrayList<String>();
+			scopes = new HashSet<String>();
+			for(Object role: userRoles){
+				Roles userRole = (Roles) role;
+				roles.add(userRole.getRole());
+				if(userRole.getScope() != null){
+					if(userRole.getScope().contains(",")){
+						String[] multipleScopes = userRole.getScope().split(",");
+						for(int i =0; i < multipleScopes.length; i++){
+							scopes.add(multipleScopes[i]);
+						}
+					}else{
+						scopes.add(userRole.getScope());
+					}		
+				}
+			}
+			if (roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST) ) {
+				if(scopes.isEmpty()){
+					return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
+				}
+			} 
+			if(policyList!= null){
+				for(int i = 0; i < policyList.length(); i++){
+					String policyName = policyList.get(i).toString().replace(".xml", "");
+					String version = policyName.substring(policyName.lastIndexOf(".")+1);
+					policyName = policyName.substring(0, policyName.lastIndexOf(".")).replace(".", File.separator);
+					if(policyName.contains("\\")){
+						policyName = policyName.replace("\\", "\\\\");
+					}
+					String policyVersionQuery = "From PolicyVersion where policy_name ='"+policyName+"'  and active_version = '"+version+"'and id >0";
+					List<Object> activeData = controller.getDataByQuery(policyVersionQuery);
+					if(!activeData.isEmpty()){
+						PolicyVersion policy = (PolicyVersion) activeData.get(0);
+						JSONObject el = new JSONObject();
+						el.put("name", policy.getPolicyName().replace(File.separator, "/"));	
+						el.put("date", policy.getModifiedDate());
+						el.put("version", policy.getActiveVersion());
+						el.put("size", "");
+						el.put("type", "file");
+						el.put("createdBy", getUserName(policy.getCreatedBy()));
+						el.put("modifiedBy", getUserName(policy.getModifiedBy()));
+						resultList.add(el);
+					}
+				}
+			}else{
+				if (roles.contains("super-admin") || roles.contains("super-editor")   || roles.contains("super-guest") ){
+					policyData = controller.getData(PolicyVersion.class);
+				}else{
+					List<Object> filterdatas = controller.getData(PolicyVersion.class);
+					for(Object filter : filterdatas){
+						PolicyVersion filterdata = (PolicyVersion) filter;
+						String scopeName = filterdata.getPolicyName().substring(0, filterdata.getPolicyName().lastIndexOf(File.separator));
+						if(scopes.contains(scopeName)){	
+							policyData.add(filterdata);
+						}
+					}
+				}
+				
+				if(!policyData.isEmpty()){
+					for(int i =0; i < policyData.size(); i++){
+						PolicyVersion policy = (PolicyVersion) policyData.get(i);
+						JSONObject el = new JSONObject();
+						el.put("name", policy.getPolicyName().replace(File.separator, "/"));	
+						el.put("date", policy.getModifiedDate());
+						el.put("version", policy.getActiveVersion());
+						el.put("size", "");
+						el.put("type", "file");
+						el.put("createdBy", getUserName(policy.getCreatedBy()));
+						el.put("modifiedBy", getUserName(policy.getModifiedBy()));
+						resultList.add(el);
+					}
+				}
+			}
+		}catch(Exception e){
+			LOGGER.error("Exception occured while reading policy Data from Policy Version table for Policy Search Data"+e);
+		}
+			
+		return new JSONObject().put(RESULT, resultList);
 	}
 
 	//Switch Version Functionality
@@ -387,7 +482,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		String[] split = path.split(":");
 		String query = "FROM PolicyEntity where policyName = '"+split[1]+"' and scope ='"+split[0]+"'";
 		List<Object> queryData = controller.getDataByQuery(query);
-		if(queryData != null){
+		if(!queryData.isEmpty()){
 			PolicyEntity entity = (PolicyEntity) queryData.get(0);
 			File temp = null;
 			try {
@@ -731,7 +826,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				//Check Policy Group Entity table if policy has been pushed or not
 				String query = "from PolicyGroupEntity where policyid = '"+entity.getPolicyId()+"'";
 				List<Object> object = controller.getDataByQuery(query);
-				if(object == null){
+				if(object.isEmpty()){
 					String oldPolicyNameWithoutExtension = removeoldPolicyExtension;
 					String newPolicyNameWithoutExtension = removenewPolicyExtension;
 					if(removeoldPolicyExtension.endsWith(".xml")){
@@ -926,7 +1021,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				controller.saveData(entityItem);
 			}
 
-			LOGGER.debug("copy from: {} to: {}" + oldPath +newPath);
+			LOGGER.debug("copy from: {} to:Â {}" + oldPath +newPath);
 
 			return success();
 		} catch (Exception e) {
@@ -972,7 +1067,8 @@ public class PolicyManagerServlet extends HttpServlet {
 			}
 			
 			List<Object> policyEntityobjects = controller.getDataByQuery(query);
-			boolean pdpCheck = true;
+			String activePolicyName = null;
+			boolean pdpCheck = false;
 			if(path.endsWith(".xml")){
 				policyNamewithoutExtension = policyNamewithoutExtension.replace(".", File.separator);
 				int version = Integer.parseInt(policyVersionName.substring(policyVersionName.indexOf(".")+1));
@@ -982,38 +1078,43 @@ public class PolicyManagerServlet extends HttpServlet {
 							policyEntity = (PolicyEntity) object;
 							String groupEntityquery = "from PolicyGroupEntity where policyid = '"+policyEntity.getPolicyId()+"'";
 							List<Object> groupobject = controller.getDataByQuery(groupEntityquery);
-							if(groupobject != null){
-								pdpCheck = false;
-								break;
+							if(!groupobject.isEmpty()){
+								pdpCheck = true;
+								activePolicyName = policyEntity.getScope() +"."+ policyEntity.getPolicyName();
+							}else{
+								//Delete the entity from Elastic Search Database
+								String searchFileName = policyEntity.getScope() + "." + policyEntity.getPolicyName();
+								restController.deleteElasticData(searchFileName);
+								//Delete the entity from Policy Entity table
+								controller.deleteData(policyEntity);
+								if(policyNamewithoutExtension.contains("Config_")){
+									controller.deleteData(policyEntity.getConfigurationData());
+								}else if(policyNamewithoutExtension.contains("Action_")){
+									controller.deleteData(policyEntity.getActionBodyEntity());
+								}			
 							}
 						}
 					}
+					//Policy Notification
+					PolicyVersion versionEntity = new PolicyVersion();
+					versionEntity.setPolicyName(policyNamewithoutExtension);
+					versionEntity.setModifiedBy(userId);
+					controller.watchPolicyFunction(versionEntity, policyNamewithExtension, "DeleteAll");
 					if(pdpCheck){
-						for(Object object : policyEntityobjects){
-							policyEntity = (PolicyEntity) object;
-							//Delete the entity from Elastic Search Database
-							String searchFileName = policyEntity.getScope() + "." + policyEntity.getPolicyName();
-							restController.deleteElasticData(searchFileName);
-							//Delete the entity from Policy Entity table
-							controller.deleteData(policyEntity);
-							if(policyNamewithoutExtension.contains("Config_")){
-								controller.deleteData(policyEntity.getConfigurationData());
-							}else if(policyNamewithoutExtension.contains("Action_")){
-								controller.deleteData(policyEntity.getActionBodyEntity());
-							}
-						}
-						//Policy Notification
-						PolicyVersion versionEntity = new PolicyVersion();
-						versionEntity.setPolicyName(policyNamewithoutExtension);
-						versionEntity.setModifiedBy(userId);
-						controller.watchPolicyFunction(versionEntity, policyNamewithExtension, "DeleteAll");
 						//Delete from policyVersion table
+						String getActivePDPPolicyVersion = activePolicyName.replace(".xml", "");
+						getActivePDPPolicyVersion = getActivePDPPolicyVersion.substring(getActivePDPPolicyVersion.lastIndexOf(".")+1);
+						String policyVersionQuery = "update PolicyVersion set active_version='"+getActivePDPPolicyVersion+"' , highest_version='"+getActivePDPPolicyVersion+"'  where policy_name ='" +policyNamewithoutExtension.replace("\\", "\\\\")+"' and id >0";
+						if(policyVersionQuery != null){
+							controller.executeQuery(policyVersionQuery);
+						}
+						return error("Policies with Same name has been deleted. Except the Active Policy in PDP.     PolicyName: "+activePolicyName);
+					}else{
+						//No Active Policy in PDP. So, deleting all entries from policyVersion table
 						String policyVersionQuery = "delete from PolicyVersion  where policy_name ='" +policyNamewithoutExtension.replace("\\", "\\\\")+"' and id >0";
 						if(policyVersionQuery != null){
 							controller.executeQuery(policyVersionQuery);
 						}
-					}else{
-						return error("Policy can't be deleted, it is active in PDP Groups.     PolicyName: '"+policyEntity.getScope() + "." +policyEntity.getPolicyName()+"'");
 					}
 				}else if("CURRENT".equals(deleteVersion)){
 					String currentVersionPolicyName = policyNamewithExtension.substring(policyNamewithExtension.lastIndexOf(File.separator)+1);
@@ -1024,9 +1125,9 @@ public class PolicyManagerServlet extends HttpServlet {
 						policyEntity = (PolicyEntity) policyEntitys.get(0);
 					}
 					if(policyEntity != null){
-						String groupEntityquery = "from PolicyGroupEntity where policyid = '"+policyEntity.getPolicyId()+"'";
+						String groupEntityquery = "from PolicyGroupEntity where policyid = '"+policyEntity.getPolicyId()+"' and policyid > 0";
 						List<Object> groupobject = controller.getDataByQuery(groupEntityquery);
-						if(groupobject == null){
+						if(groupobject.isEmpty()){
 							//Delete the entity from Elastic Search Database
 							String searchFileName = policyEntity.getScope() + "." + policyEntity.getPolicyName();
 							restController.deleteElasticData(searchFileName);
@@ -1040,7 +1141,7 @@ public class PolicyManagerServlet extends HttpServlet {
 							
 							if(version > 1){
 								int highestVersion = 0; 
-								if(policyEntityobjects.isEmpty()){
+								if(!policyEntityobjects.isEmpty()){
 									for(Object object : policyEntityobjects){
 										policyEntity = (PolicyEntity) object;
 										String policyEntityName = policyEntity.getPolicyName().replace(".xml", "");
@@ -1072,18 +1173,16 @@ public class PolicyManagerServlet extends HttpServlet {
 					}
 				}	
 			}else{
+				List<String> activePoliciesInPDP = new ArrayList<String>();
 				if(!policyEntityobjects.isEmpty()){
 					for(Object object : policyEntityobjects){
 						policyEntity = (PolicyEntity) object;
 						String groupEntityquery = "from PolicyGroupEntity where policyid = '"+policyEntity.getPolicyId()+"'";
 						List<Object> groupobject = controller.getDataByQuery(groupEntityquery);
-						if(groupobject != null){
-							pdpCheck = false;
-						}
-					}
-					if(pdpCheck){
-						for(Object object : policyEntityobjects){
-							policyEntity = (PolicyEntity) object;
+						if(!groupobject.isEmpty()){
+							pdpCheck = true;
+							activePoliciesInPDP.add(policyEntity.getScope()+"."+policyEntity.getPolicyName());
+						}else{
 							//Delete the entity from Elastic Search Database
 							String searchFileName = policyEntity.getScope() + "." + policyEntity.getPolicyName();
 							restController.deleteElasticData(searchFileName);
@@ -1096,17 +1195,35 @@ public class PolicyManagerServlet extends HttpServlet {
 								controller.deleteData(policyEntity.getActionBodyEntity());
 							}
 						}
+					}
+					//Delete from policyVersion and policyEditor Scope table
+					String policyVersionQuery = "delete PolicyVersion where POLICY_NAME like '"+path.replace("\\", "\\\\")+"%' and id >0";
+					controller.executeQuery(policyVersionQuery);
+					
+					//Policy Notification
+					PolicyVersion entity = new PolicyVersion();
+					entity.setPolicyName(path);
+					entity.setModifiedBy(userId);
+					controller.watchPolicyFunction(entity, path, "DeleteScope");
+					if(pdpCheck){
+						//Add Active Policies List to PolicyVersionTable
+						for(int i =0; i < activePoliciesInPDP.size(); i++){
+							String activePDPPolicyName = activePoliciesInPDP.get(i).replace(".xml", "");
+							int activePDPPolicyVersion = Integer.parseInt(activePDPPolicyName.substring(activePDPPolicyName.lastIndexOf(".")+1));
+							activePDPPolicyName = activePDPPolicyName.substring(0, activePDPPolicyName.lastIndexOf(".")).replace(".", File.separator);
+							PolicyVersion insertactivePDPVersion = new PolicyVersion();
+							insertactivePDPVersion.setPolicyName(activePDPPolicyName);
+							insertactivePDPVersion.setHigherVersion(activePDPPolicyVersion);
+							insertactivePDPVersion.setActiveVersion(activePDPPolicyVersion);
+							insertactivePDPVersion.setCreatedBy(userId);
+							insertactivePDPVersion.setModifiedBy(userId);
+							controller.saveData(insertactivePDPVersion);
+						}
 						
-						//Delete from policyVersion and policyEditor Scope table
-						String policyVersionQuery = "delete PolicyVersion where POLICY_NAME like '"+path.replace("\\", "\\\\")+"%' and id >0";
+						return error("All the Policies has been deleted in Scope. Except the following list of Policies:"+activePoliciesInPDP);
+					}else{
 						String policyScopeQuery = "delete PolicyEditorScopes where SCOPENAME like '"+path.replace("\\", "\\\\")+"%' and id >0";
-						controller.executeQuery(policyVersionQuery);
-						controller.executeQuery(policyScopeQuery);
-						//Policy Notification
-						PolicyVersion entity = new PolicyVersion();
-						entity.setPolicyName(path);
-						entity.setModifiedBy(userId);
-						controller.watchPolicyFunction(entity, path, "DeleteScope");
+					    controller.executeQuery(policyScopeQuery);
 					}
 				}
 			}

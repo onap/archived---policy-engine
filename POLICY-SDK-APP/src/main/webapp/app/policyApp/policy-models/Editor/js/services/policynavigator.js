@@ -30,8 +30,13 @@
             this.currentPath = [];
             this.history = [];
             this.error = '';
+            this.searchModalActive = false;
         };
 
+        PolicyNavigator.prototype.setSearchModalActiveStatus = function(){
+        	this.searchModalActive = true;
+        };
+        
         PolicyNavigator.prototype.deferredHandler = function(data, deferred, defaultMsg) {
             if (!data || typeof data !== 'object') {
                 this.error = 'Bridge response error, please check the docs';
@@ -99,29 +104,49 @@
         PolicyNavigator.prototype.refresh = function() {
             var self = this;
             var path = self.currentPath.join('/');
-            return self.list().then(function(data) {
-                self.fileList = (data.result || []).map(function(file) {
-                    return new Item(file, self.currentPath);
-                });
-                self.buildTree(path);
-            });
+            if(self.searchModalActive){
+            	return self.searchlist(null).then(function(data) {
+            		self.fileList = (data.result || []).map(function(file) {
+            			return new Item(file, self.currentPath);
+            		});
+            		self.buildTree(path);
+            	});	
+            }else{
+            	return self.list().then(function(data) {
+            		self.fileList = (data.result || []).map(function(file) {
+            			return new Item(file, self.currentPath);
+            		});
+            		self.buildTree(path);
+            	});
+            }
         };
         
-        PolicyNavigator.prototype.policylist = function(finalpath) {
+        PolicyNavigator.prototype.searchlist = function(policyList) {
             var self = this;
             var deferred = $q.defer();
-            var path = finalpath;
-            var data = {params: {
-                mode: 'LIST',
-                onlyFolders: false,
-                path: '/' + path
-            }};
+            var path = self.currentPath.join('/');
+            var data;
+            if(policyList == null){
+            	 data = {params: {
+                     mode: 'SEARCHLIST',
+                     onlyFolders: false,
+                     path: '/' + path
+                 }};
+            }else{
+            	 data = {params: {
+                     mode: 'SEARCHLIST',
+                     onlyFolders: false,
+                     path: '/' + path,
+                     policyList : policyList
+                 }};
+            }
+           
 
             self.requesting = true;
             self.fileList = [];
             self.error = '';
 
-            $http.post(policyManagerConfig.listUrl, data).success(function(data) {
+            $http.post(policyManagerConfig.searchListUrl, data).success(function(data) {
                 self.deferredHandler(data, deferred);
             }).error(function(data) {
                 self.deferredHandler(data, deferred, 'Unknown error listing, check the response');
@@ -131,16 +156,15 @@
             return deferred.promise;
         };
 
-        PolicyNavigator.prototype.policyrefresh = function(finalpath) {
-            var self = this;
-            var path = finalpath;
-            self.currentPath = path;
-            return self.policylist(finalpath).then(function(data) {
-                self.fileList = (data.result || []).map(function(file) {
-                    return new Item(file, self.currentPath);
-                });
-                self.buildTree(path);
-            });
+        PolicyNavigator.prototype.searchrefresh = function(policyList) {
+        	var self = this;
+        	var path = self.currentPath.join('/');
+        	return self.searchlist(policyList).then(function(data) {
+        		self.fileList = (data.result || []).map(function(file) {
+        			return new Item(file, self.currentPath);
+        		});
+        		self.buildTree(path);
+        	});	
         };
         
         

@@ -92,10 +92,29 @@ public class PolicyRestController extends RestrictedBaseController{
 		JsonNode root = mapper.readTree(request.getReader());
 		
 		PolicyRestAdapter policyData = (PolicyRestAdapter)mapper.readValue(root.get("policyData").get("policy").toString(), PolicyRestAdapter.class);
-		policyData.setDomainDir(root.get("policyData").get("model").get("name").toString().replace("\"", ""));
+	
 		if(root.get("policyData").get("model").get("type").toString().replace("\"", "").equals("file")){
 			policyData.isEditPolicy = true;
 		}
+		if(root.get("policyData").get("model").get("path").size() != 0){
+			String dirName = "";
+			for(int i = 0; i < root.get("policyData").get("model").get("path").size(); i++){
+				dirName = dirName.replace("\"", "") + root.get("policyData").get("model").get("path").get(i).toString().replace("\"", "") + File.separator;
+			}
+			if(policyData.isEditPolicy){
+				policyData.setDomainDir(dirName.substring(0, dirName.lastIndexOf(File.separator)));
+			}else{
+				policyData.setDomainDir(dirName + root.get("policyData").get("model").get("name").toString().replace("\"", ""));
+			}
+		}else{
+			String domain = root.get("policyData").get("model").get("name").toString();
+			if(domain.contains("/")){
+				domain = domain.substring(0, domain.lastIndexOf("/")).replace("/", File.separator);
+			}
+			domain = domain.replace("\"", "");
+			policyData.setDomainDir(domain);
+		}
+		
 		if(policyData.getConfigPolicyType() != null){
 			if(policyData.getConfigPolicyType().equalsIgnoreCase("ClosedLoop_Fault")){
 				CreateClosedLoopFaultController faultController = new CreateClosedLoopFaultController();
@@ -111,19 +130,6 @@ public class PolicyRestController extends RestrictedBaseController{
 		
 		policyData.setUserId(userId);
 		
-		if(root.get("policyData").get("model").get("path").size() != 0){
-			String dirName = "";
-			for(int i = 0; i < root.get("policyData").get("model").get("path").size(); i++){
-				dirName = dirName.replace("\"", "") + root.get("policyData").get("model").get("path").get(i).toString().replace("\"", "") + File.separator;
-			}
-			if(policyData.isEditPolicy){
-				policyData.setDomainDir(dirName.substring(0, dirName.lastIndexOf(File.separator)));
-			}else{
-				policyData.setDomainDir(dirName + root.get("policyData").get("model").get("name").toString().replace("\"", ""));
-			}
-		}else{
-			policyData.setDomainDir(root.get("policyData").get("model").get("name").toString().replace("\"", ""));
-		}
 		String result;
 		String body = PolicyUtils.objectToJsonString(policyData);
 		String uri = request.getRequestURI();
@@ -253,7 +259,8 @@ public class PolicyRestController extends RestrictedBaseController{
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 
-			if(!uri.contains("searchPolicy")){
+			if(!uri.contains("searchPolicy?action=delete&")){
+				
 				if(!(uri.endsWith("set_BRMSParamData") || uri.contains("import_dictionary"))){
 					connection.setRequestProperty("Content-Type","application/json");
 					ObjectMapper mapper = new ObjectMapper();
@@ -368,6 +375,23 @@ public class PolicyRestController extends RestrictedBaseController{
 		String uri = request.getRequestURI().replace("/deleteDictionary", "");
 		String body = callPAP(request, response, "POST", uri.replaceFirst("/", "").trim());
 		response.getWriter().write(body);
+		return null;
+	}
+	
+	@RequestMapping(value={"/searchPolicy"}, method={RequestMethod.POST})
+	public ModelAndView searchPolicy(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String uri = request.getRequestURI()+"?action=search";
+		String body = callPAP(request, response, "POST", uri.replaceFirst("/", "").trim());
+		JSONObject json = new JSONObject(body);
+		Object resultList = json.get("policyresult");
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application / json");
+		request.setCharacterEncoding("UTF-8");
+
+		PrintWriter out = response.getWriter();
+		JSONObject j = new JSONObject("{result: " + resultList + "}");
+		out.write(j.toString());
 		return null;
 	}
 	

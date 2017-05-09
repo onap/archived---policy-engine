@@ -68,7 +68,7 @@
 						<option>InActive</option>
 					</select>
 				</div>
-				<div class="form-group col-sm-6">
+				<div class="form-group col-sm-3">
 					<label>D2/Virtualized Services(s):<sup><b>*</b></sup></label><br>
 					<input type="checkbox" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.trinity"> Hosted Voice
@@ -80,6 +80,11 @@
 						ng-model="temp.policy.jsonBodyData.gamma"> Gamma</input> <input
 						type="checkbox" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.vDNS"> vDNS</input>
+				</div>
+				<div class="form-group col-sm-3">
+					<label>Time to Live Date:</label> <input type="date"
+						class="form-control" name="ttlDate" ng-disabled="temp.policy.readOnly" class="date"
+						ng-model="temp.policy.ttlDate" />
 				</div>
 			</div>
 		</div>
@@ -492,9 +497,7 @@
 			<button class="btn btn-success" herf="javascript:void(0)"
 				ng-disabled="savebutton" ng-disabled="temp.policy.readOnly"
 				ng-click="saveFaultPolicy(temp);">Save</button>
-			<button type="button" class="btn btn-default" data-dismiss="modal"
-				ng-disabled="temp.inprocess" ng-model="finalPath"
-				ng-controller="FileManagerCtrl" ng-click="closefunction(finalPath);">Close</button>
+			<button type="button" class="btn btn-default" ng-click="refresh();">Close</button>
 		</div>
 	</form>
 </div>

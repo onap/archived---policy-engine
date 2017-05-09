@@ -349,7 +349,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 							}
 						}
 					}
-					if(policyData.getRuleAlgorithmschoices().size() > 0){
+					if(policyData.getRuleAlgorithmschoices()!=null && policyData.getRuleAlgorithmschoices().size() > 0){
 						for(Object attribute : policyData.getRuleAlgorithmschoices()){
 							if(attribute instanceof LinkedHashMap<?, ?>){
 								String label = ((LinkedHashMap<?, ?>) attribute).get("id").toString();
@@ -363,7 +363,14 @@ public class PolicyCreation extends AbstractPolicyCreation{
 							}
 						}
 					}
-
+					if(policyData.getRuleProvider()!=null && policyData.getRuleProvider().equals(DecisionPolicy.GUARD_YAML) && policyData.getYamlparams()!=null){
+						attributeMap.put("actor", policyData.getYamlparams().getActor());
+						attributeMap.put("recipe", policyData.getYamlparams().getRecipe());
+						attributeMap.put("limit", policyData.getYamlparams().getLimit());
+						attributeMap.put("timeWindow", policyData.getYamlparams().getTimeWindow());
+						attributeMap.put("guardActiveStart", policyData.getYamlparams().getGuardActiveStart());
+						attributeMap.put("guardActiveEnd", policyData.getYamlparams().getGuardActiveEnd());
+					}
 					policyData.setDynamicRuleAlgorithmLabels(dynamicRuleAlgorithmLabels);
 					policyData.setDynamicRuleAlgorithmCombo(dynamicRuleAlgorithmCombo);
 					policyData.setDynamicRuleAlgorithmField1(dynamicRuleAlgorithmField1);

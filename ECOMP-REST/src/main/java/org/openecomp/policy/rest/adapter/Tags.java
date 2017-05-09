@@ -28,6 +28,7 @@ public class Tags {
 	String ruleName;
 	List<TagDefines> tags;
 	String tagPickerName;
+	String networkRole;
 	
 	public String getRuleName() {
 		return ruleName;
@@ -47,6 +48,12 @@ public class Tags {
 
 	public void setTagPickerName(String tagPickerName) {
 		this.tagPickerName = tagPickerName;
+	}
+	public String getNetworkRole() {
+		return networkRole;
+	}
+	public void setNetworkRole(String networkRole) {
+		this.networkRole = networkRole;
 	}
 	
 }

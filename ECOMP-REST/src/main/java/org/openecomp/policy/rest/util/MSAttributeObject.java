@@ -28,7 +28,7 @@ public class MSAttributeObject {
 	private String className;
 	private HashMap<String, String> attribute = new HashMap<String, String>();
 	private HashMap<String, String> refAttribute = new HashMap<String, String>();
-	private HashMap<String, String> subClass = new HashMap<String, String>();
+	private HashMap<String, Object> subClass = new HashMap<String, Object>();
 	private String dependency;
 	private HashMap<String, String> enumType = new HashMap<String, String>();
 	private HashMap<String, String> matchingSet = new HashMap<String, String>();
@@ -70,13 +70,13 @@ public class MSAttributeObject {
 	public void addAllRefAttribute(Map<String, String> map){
 		this.refAttribute.putAll(map);
 	}
-	public HashMap<String, String> getSubClass() {
+	public HashMap<String, Object> getSubClass() {
 		return subClass;
 	}
-	public void setSubClass(HashMap<String, String> subClass) {
+	public void setSubClass(HashMap<String, Object> subClass) {
 		this.subClass = subClass;
 	}
-	public void addAllSubClass(HashMap<String, String> subClass){
+	public void addAllSubClass(HashMap<String, Object> subClass){
 		this.subClass.putAll(subClass);
 	}
 	public String getDependency() {

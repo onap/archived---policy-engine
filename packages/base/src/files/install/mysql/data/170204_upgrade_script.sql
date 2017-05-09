@@ -36,6 +36,20 @@ controllerName VARCHAR(255) NOT NULL references brmsgroup_info(controllerName),
 PRIMARY KEY(policyname)
 );
 
+drop table if exists operationshistory10; 
+
+create table operationshistory10(
+CLNAME varchar(255) not null, 
+requestID varchar(100),
+actor varchar(50) not null,
+operation varchar(50) not null,
+target varchar(50) not null,
+starttime timestamp not null,
+outcome varchar(50) not null,
+message varchar(255) ,
+subrequestId varchar(100),
+endtime timestamp not null default current_timestamp
+);
 
 Insert into fn_role (ROLE_ID,ROLE_NAME,ACTIVE_YN,PRIORITY) values (5002,'Policy Super Admin','Y',10);
 Insert into fn_role (ROLE_ID,ROLE_NAME,ACTIVE_YN,PRIORITY) values (5003,'Policy Super Editor','Y',10);

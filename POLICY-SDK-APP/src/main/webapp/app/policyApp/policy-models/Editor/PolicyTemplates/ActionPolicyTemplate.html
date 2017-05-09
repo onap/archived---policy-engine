@@ -133,10 +133,7 @@
 				<button class="btn btn-success" ng-disabled="savebutton"
 					herf="javascript:void(0)" ng-disabled="temp.policy.readOnly"
 					ng-click="saveActionPolicy(temp);">Save</button>
-				<button class="btn btn-default" data-dismiss="modal"
-					ng-disabled="temp.inprocess" ng-model="finalPath"
-					ng-controller="FileManagerCtrl"
-					ng-click="closefunction(finalPath);">Close</button>
+				<button type="button" class="btn btn-default" ng-click="refresh();">Close</button>
 			</div>
 	</form>
 </div>

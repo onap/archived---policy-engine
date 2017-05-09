@@ -217,7 +217,7 @@ public class MSModelUtils {
 		String extendClass = getSubTypes(root, className);
 		HashMap<String, String> returnRefList = getRefAttributeList(root, className, extendClass);
 		HashMap<String, String> returnAttributeList = getAttributeList(root, className, extendClass);
-		HashMap<String, String> returnSubList = getSubAttributeList(root, className, extendClass);
+		HashMap<String, Object> returnSubList = getSubAttributeList(root, className, extendClass);
 		HashMap<String, String> returnAnnotation = getAnnotation(root, className, extendClass);
 		msAttributeObject.setAttribute(returnAttributeList);
 		msAttributeObject.setRefAttribute(returnRefList);
@@ -285,10 +285,10 @@ public class MSModelUtils {
 		return annotationSet;
 	}
 
-	private HashMap<String, String> getSubAttributeList(EPackage root, String className , String superClass) {
+	private HashMap<String, Object> getSubAttributeList(EPackage root, String className , String superClass) {
 		TreeIterator<EObject> treeItr = root.eAllContents();
 		boolean requiredAttribute = false; 
-		HashMap<String, String> subAttribute = new HashMap<String, String>();
+		HashMap<String, Object> subAttribute = new HashMap<String, Object>();
 		int rollingCount = 0;
 		int processClass = 0;
 		boolean annotation = false;
@@ -622,7 +622,7 @@ public class MSModelUtils {
 
 	}
 
-	public String createJson(HashMap<String, String> subClassAttributes, HashMap<String, MSAttributeObject> classMap, String className) { 
+	public String createJson(HashMap<String, Object> subClassAttributes, HashMap<String, MSAttributeObject> classMap, String className) { 
 		boolean enumType;
 		Map<String, HashMap<String, String>> myObject = new HashMap<String, HashMap<String, String>>();
 		for ( Entry<String, String> map : classMap.get(className).getRefAttribute().entrySet()){
@@ -660,7 +660,7 @@ public class MSModelUtils {
 
 	public String createSubAttributes(ArrayList<String> dependency, HashMap<String, MSAttributeObject> classMap, String modelName) {
 
-		HashMap <String,  String>  workingMap = new HashMap<String,String>();
+		HashMap <String,  Object>  workingMap = new HashMap<String,Object>();
 		MSAttributeObject tempObject = new MSAttributeObject();
 		if (dependency!=null){
 			if (dependency.size()==0){

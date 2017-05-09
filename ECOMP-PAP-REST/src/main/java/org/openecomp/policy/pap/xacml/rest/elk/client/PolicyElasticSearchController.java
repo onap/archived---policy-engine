@@ -20,15 +20,14 @@
 package org.openecomp.policy.pap.xacml.rest.elk.client;
 
 
-import java.io.File;
 import java.io.PrintWriter;
-import java.nio.file.Path;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -52,7 +51,6 @@ import org.openecomp.policy.rest.jpa.ClosedLoopD2Services;
 import org.openecomp.policy.rest.jpa.ClosedLoopSite;
 import org.openecomp.policy.rest.jpa.DCAEuuid;
 import org.openecomp.policy.rest.jpa.DecisionSettings;
-import org.openecomp.policy.rest.jpa.DescriptiveScope;
 import org.openecomp.policy.rest.jpa.EcompName;
 import org.openecomp.policy.rest.jpa.EnforcingType;
 import org.openecomp.policy.rest.jpa.GroupPolicyScopeList;
@@ -74,12 +72,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.searchbox.client.JestResult;
+
 @Controller
 @RequestMapping({"/"})
 public class PolicyElasticSearchController{
 
 	private static final Logger LOGGER = FlexLogger.getLogger(PolicyElasticSearchController.class);
-	private volatile HashMap<Path, String> filteredPolicies = new HashMap<Path, String>();
 	private List<JSONObject> policyNames = null;
 
 	enum Mode{
@@ -90,8 +89,6 @@ public class PolicyElasticSearchController{
 	public static final HashMap<String, String> name2jsonPath = new HashMap<String, String>() {
 		private static final long serialVersionUID = 1L;
 	};
-	//For AND and OR logical connector AND=0 and OR=1
-	private int connectorSelected;
 
 	public static CommonClassDao commonClassDao;
 
@@ -350,27 +347,17 @@ public class PolicyElasticSearchController{
 	public String searchElkDatabase(String value){
 		String policyType = "";
 		String searchText = value;
-		ArrayList<PolicyLocator> locators;
-		ArrayList<Pair<ArrayList<String>,ArrayList<String>>> filter_s = new ArrayList<Pair<ArrayList<String>,ArrayList<String>>>();
+		JestResult locators;
+		Map<String, String> filter_s = new HashMap<String, String>();
 		try {
-			locators = ElkConnector.singleton.policyLocators(toPolicyIndexType(policyType), searchText, filter_s,0);	
+			locators = ElkConnector.singleton.search(toPolicyIndexType(policyType), searchText, filter_s);	
 		} catch (Exception ise) {
 			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR+"Search is unavailable: " + ise.getMessage());
 			value = "$notSuccess%";
 			return value;
 		}
 		policyNames = new ArrayList<JSONObject>();
-		for (PolicyLocator p: locators) {
-			String dbPolicyName = p.scope + "/" + p.policyType + "_" + p.policyName + "." +p.version + ".xml";
-			LOGGER.debug(dbPolicyName);
-			JSONObject el = new JSONObject();
-			el.put("name", dbPolicyName);	
-			policyNames.add(el);
-		}
-		if(!locators.isEmpty()){
-			value = "$success%";
-			return value;
-		}
+		System.out.println(locators);
 		return value;
 	}
 
@@ -378,8 +365,8 @@ public class PolicyElasticSearchController{
 	public String searchElkDatabase(String key, String value){
 		String policyType = "";
 		String searchText = key+":"+value;
-		ArrayList<PolicyLocator> locators;
-		ArrayList<Pair<ArrayList<String>,ArrayList<String>>> filter_s = new ArrayList<Pair<ArrayList<String>,ArrayList<String>>>();
+		JestResult locators;
+		Map<String, String> filter_s = new HashMap<String, String>();
 		LOGGER.debug("Parameter value is"+value);
 
 		String clSearchKey=null;
@@ -387,13 +374,7 @@ public class PolicyElasticSearchController{
 
 		LOGGER.debug("Filter value is"+clSearchKey);
 
-		ArrayList<String> clSearchBoxFilterField_s = new ArrayList<String>();
 
-		clSearchBoxFilterField_s.add("Policy.Body." + ElkConnector.PolicyType.Config_Fault.name() + "_Body." + clSearchKey);
-		clSearchBoxFilterField_s.add("Policy.Body." + ElkConnector.PolicyType.Config_PM.name() + "_Body." + clSearchKey);
-		clSearchBoxFilterField_s.add("Policy.Body." + ElkConnector.PolicyType.Config_FW.name() + "_Body." + clSearchKey);
-		clSearchBoxFilterField_s.add("Policy.Body." + ElkConnector.PolicyType.Config_MS.name() + "_Body." + clSearchKey);
-		//clSearchBoxFilterField_s.add("Policy.Body." + ElkConnector.PolicyType.Config_PM.name() + "_Body." + clSearchKey);
 
 		String clSearchValue=null;
 		clSearchValue=value;
@@ -403,15 +384,10 @@ public class PolicyElasticSearchController{
 		ArrayList<String> clSearchBoxFilterValue_s = new ArrayList<String>();
 		clSearchBoxFilterValue_s.add(clSearchValue);
 
-		filter_s.add(new Pair<ArrayList<String>,ArrayList<String>>(clSearchBoxFilterField_s, clSearchBoxFilterValue_s));
 
 		try {
-			locators = ElkConnector.singleton.policyLocators(toPolicyIndexType(policyType), searchText, filter_s,0);	
-			LOGGER.debug("No Exceptions");
-			for (PolicyLocator l: locators) {
-				LOGGER.debug(l.policyName);
-			}
-			LOGGER.debug("After for");
+			locators = ElkConnector.singleton.search(toPolicyIndexType(policyType), searchText, filter_s);	
+			System.out.println(locators);
 		} catch (Exception ise) {
 			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR+"Search is unavailable: " + ise.getMessage());
 			//PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, ise, "AttributeDictionary", " Exception while searching Elk database ");
@@ -419,107 +395,14 @@ public class PolicyElasticSearchController{
 			value = "$notSuccess%";
 			return value;
 		}
-		policyNames = new ArrayList<JSONObject>();
-		for (PolicyLocator p: locators) {
-			String dbPolicyName = p.scope + File.separator + p.policyType + "_" + p.policyName + ".xml";
-			LOGGER.debug(dbPolicyName);
-			JSONObject el = new JSONObject();
-			el.put("name", dbPolicyName);	
-			policyNames.add(el);
-		}
-		if(!locators.isEmpty()){
-			value = "$success%";
-			LOGGER.debug("Success");
-			return value;
-		}
 		return value;
 	}
-
-	//For AutoPush of policy using descriptive Scope. 
-	//Returns string either "UnMatched" or "Matched" or "Search Unavailable".
-	public String searchDescriptiveScope(String scopeName, String policyNameToCheck) {
-		String searchText=null;
-		String status="UnMatched";
-		ArrayList<Pair<ArrayList<String>,ArrayList<String>>> filter_s = 
-				new ArrayList<Pair<ArrayList<String>,ArrayList<String>>>();
-		//Finding the descriptive scope search tag. 		
-		LOGGER.warn("Entry into DS");				
-		DescriptiveScope dsSearch = (DescriptiveScope) commonClassDao.getEntityItem(DescriptiveScope.class, "descriptiveScopeName", scopeName);
-
-		searchText=dsSearch.getSearch();
-		LOGGER.warn("Search text is  " + searchText);
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("DescriptiveScope Search String is " +searchText );	
-		}
-
-
-		if(searchText.contains(":"))
-		{
-			String connector="AND";
-
-			for (String retval: searchText.split(connector)){
-
-				int index= retval.indexOf(':');
-				String filterKey=null;
-				String filterValue=null;
-
-				filterKey=retval.substring(0,index).trim();
-				filterValue= retval.substring(index+1).trim();
-
-				LOGGER.debug("Key is "+filterKey+" and value is "+filterValue);
-				String clSearchBoxFilter=filterKey;
-
-				ArrayList<String> clSearchBoxFilterField_s = new ArrayList<String>();
-
-				clSearchBoxFilterField_s.add("Policy.Body." + ElkConnector.PolicyType.Config_Fault.name() + "_Body." + clSearchBoxFilter);
-				clSearchBoxFilterField_s.add("Policy.Body." + ElkConnector.PolicyType.Config_PM.name() + "_Body." + clSearchBoxFilter);
-				clSearchBoxFilterField_s.add("Policy.Body." + ElkConnector.PolicyType.Config_FW.name() + "_Body." + clSearchBoxFilter);
-				clSearchBoxFilterField_s.add("Policy.Body." + ElkConnector.PolicyType.Config_MS.name() + "_Body." + clSearchBoxFilter);
-
-
-				ArrayList<String> clSearchBoxFilterValue_s = new ArrayList<String>();
-				clSearchBoxFilterValue_s.add(filterValue);
-
-				filter_s.add(new Pair<ArrayList<String>,ArrayList<String>>(clSearchBoxFilterField_s, clSearchBoxFilterValue_s));
-			}
-		}
-
-		ArrayList<PolicyLocator> locators=null;
-		try {
-			LOGGER.warn("Before calling search");
-			locators = ElkConnector.singleton.policyLocators(ElkConnector.PolicyIndexType.all, 
-					searchText, filter_s,connectorSelected);	
-			LOGGER.warn("After calling search");
-		} catch (Exception ise) {
-			//AdminNotification.warn("Search is unavailable: " + ise.getMessage());
-			status= "Search Unavailable";
-			LOGGER.warn("Search is unavailable");
-		}
-		synchronized(filteredPolicies) {
-			if (locators.isEmpty()) {
-				LOGGER.debug("No match has been found");
-				//AdminNotification.warn("No match has been found");
-				status="UnMatched";
-			}
-
-			for (PolicyLocator p: locators) {
-				LOGGER.debug("Second String "+policyNameToCheck);
-				if(p.policyName.contains(policyNameToCheck))
-				{
-					status="Matched"; 
-					LOGGER.warn("Policies matched");
-					break;
-				}
-				else
-				{
-					LOGGER.warn("Policies Unmatched");
-					status="UnMatched";
-				}
-			}
-		}
-		return status;	
-
+	
+	public JestResult search(PolicyIndexType type, String text, 
+            Map<String, String> searchKeyValue) {
+		 return ElkConnector.singleton.search(type, text, searchKeyValue);
 	}
+	
 }
 
 class SearchData{

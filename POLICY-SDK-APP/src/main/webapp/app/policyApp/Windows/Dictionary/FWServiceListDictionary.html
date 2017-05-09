@@ -46,7 +46,7 @@
         	<div class="form-group row">
 			<div class="form-group">
     			<div  data-ng-repeat="choice in tpchoices">	
-				<div class="form-group row">	
+				<div class="form-group row" style="margin-left: 2%">	
         			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
             			<select  class="form-control"  name= "option"  required ng-model="choice.option" ng-options="option for option in protocolListDictionaryDatas track by option" >
                         <option value="">{{choice.option}}</option></select>
@@ -68,7 +68,7 @@
 			<div class="form-group row">
 			<div class="form-group">
     			<div  data-ng-repeat="choice in apchoices">
-					<div class="form-group row">		
+					<div class="form-group row" style="margin-left: 2%">		
         			<div  class="form-group col-sm-5" ng-class="{ 'has-error' : formdata.option.$invalid && !formdata.option.$pristine }">
             			<select  class="form-control"  name= "option"  required ng-model="choice.option" ng-options="option for option in protocolListDictionaryDatas track by option" >
                         <option value="">{{choice.option}}</option></select>

@@ -25,18 +25,26 @@ import java.util.List;
 import java.util.Map;
 
 import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
+import org.openecomp.policy.rest.adapter.YAMLParams;
 
 public class PolicyElasticData {
 	
 	private String scope;
 	private String policyType;
 	private String configPolicyType;
+	private String configBodyData;
 	private String policyName;
 	private String policyDescription;
 	private String ecompName;
 	private String configName;
 	private String configType;
 	private String jsonBody;
+	private Object jsonBodyData;
+	
+	private LinkedHashMap<?, ?> serviceTypePolicyName;
+	private LinkedHashMap<?, ?> verticaMetrics;
+    private LinkedHashMap<?, ?> description;
+    private LinkedHashMap<?, ?> attributeFields;
 
 	//Safe Policy
 	private String policyScope;
@@ -102,17 +110,25 @@ public class PolicyElasticData {
 	private String actionDictType;
 	private String actionDictUrl;
 	private String actionDictMethod;
+	private YAMLParams yamlparams; 
 
 	public PolicyElasticData(PolicyRestAdapter policyData) {
 		this.scope = policyData.getDomain();
 		this.policyType = policyData.getPolicyType();
 		this.configPolicyType = policyData.getConfigPolicyType();
+		this.configBodyData = policyData.getConfigBodyData();
 		this.policyName  = policyData.getNewFileName();
 		this.policyDescription  = policyData.getPolicyDescription();
 		this.ecompName = policyData.getEcompName();
 		this.configName = policyData.getConfigName();
 		this.configType = policyData.getConfigType();
 		this.jsonBody = policyData.getJsonBody();
+		this.jsonBodyData = policyData.getJsonBodyData(); 
+		
+		this.serviceTypePolicyName = policyData.getServiceTypePolicyName();
+		this.verticaMetrics = policyData.getVerticaMetrics();
+		this.description = policyData.getDescription();
+		this.attributeFields = policyData.getAttributeFields();
 
 		//Safe Policy
 		this.policyScope = policyData.getPolicyScope();
@@ -178,6 +194,7 @@ public class PolicyElasticData {
 		this.actionDictType = policyData.getActionDictType();
 		this.actionDictUrl = policyData.getActionDictUrl();
 		this.actionDictMethod = policyData.getActionDictMethod();
+		this.yamlparams = policyData.getYamlparams();
 	}
 	
 	public String getScope() {
@@ -197,6 +214,13 @@ public class PolicyElasticData {
 	}
 	public void setConfigPolicyType(String configPolicyType) {
 		this.configPolicyType = configPolicyType;
+	}
+	public String getConfigBodyData() {
+		return configBodyData;
+	}
+
+	public void setConfigBodyData(String configBodyData) {
+		this.configBodyData = configBodyData;
 	}
 	public String getPolicyName() {
 		return policyName;
@@ -233,6 +257,37 @@ public class PolicyElasticData {
 	}
 	public void setJsonBody(String jsonBody) {
 		this.jsonBody = jsonBody;
+	}
+	public LinkedHashMap<?, ?> getServiceTypePolicyName() {
+		return serviceTypePolicyName;
+	}
+
+	public void setServiceTypePolicyName(LinkedHashMap<?, ?> serviceTypePolicyName) {
+		this.serviceTypePolicyName = serviceTypePolicyName;
+	}
+
+	public LinkedHashMap<?, ?> getVerticaMetrics() {
+		return verticaMetrics;
+	}
+
+	public void setVerticaMetrics(LinkedHashMap<?, ?> verticaMetrics) {
+		this.verticaMetrics = verticaMetrics;
+	}
+
+	public LinkedHashMap<?, ?> getDescription() {
+		return description;
+	}
+
+	public void setDescription(LinkedHashMap<?, ?> description) {
+		this.description = description;
+	}
+
+	public LinkedHashMap<?, ?> getAttributeFields() {
+		return attributeFields;
+	}
+
+	public void setAttributeFields(LinkedHashMap<?, ?> attributeFields) {
+		this.attributeFields = attributeFields;
 	}
 	public String getPolicyScope() {
 		return policyScope;
@@ -546,5 +601,19 @@ public class PolicyElasticData {
 	public void setActionDictMethod(String actionDictMethod) {
 		this.actionDictMethod = actionDictMethod;
 	}
+	public YAMLParams getYamlparams() {
+		return yamlparams;
+	}
 
+	public void setYamlparams(YAMLParams yamlparams) {
+		this.yamlparams = yamlparams;
+	}
+
+	public Object getJsonBodyData() {
+		return jsonBodyData;
+	}
+
+	public void setJsonBodyData(Object jsonBodyData) {
+		this.jsonBodyData = jsonBodyData;
+	}
 }

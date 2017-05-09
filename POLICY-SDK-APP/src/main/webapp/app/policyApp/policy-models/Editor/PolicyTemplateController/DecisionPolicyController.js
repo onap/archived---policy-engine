@@ -17,10 +17,23 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-angular.module('abs').controller('decisionPolicyController', function ($scope, PolicyAppService, modalService, $modal, Notification) {
+angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', function ($scope, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
     $("#dialog").hide();
+    
+    $scope.policyNavigator;
     $scope.savebutton = true;
-    $scope.finalPath = null;
+    $scope.refreshCheck = false;
+    
+    $scope.refresh = function(){
+    	if($scope.refreshCheck){
+    		$scope.policyNavigator.refresh();
+    	}
+    	$scope.modal('createNewPolicy', true);
+    };
+    
+    $scope.modal = function(id, hide) {
+        return $('#' + id).modal(hide ? 'hide' : 'show');
+    };
 
 	if($scope.temp.policy.ruleProvider==undefined){
 		$scope.temp.policy.ruleProvider="Custom";
@@ -76,6 +89,11 @@ angular.module('abs').controller('decisionPolicyController', function ($scope, P
     }
     
     $scope.saveDecisionPolicy = function(policy){
+    	if(policy.itemContent != undefined){
+    		$scope.refreshCheck = true; 
+        	$scope.policyNavigator = policy.itemContent;
+        	policy.itemContent = "";
+    	}
     	$scope.savebutton = false;
         console.log(policy);
         var uuu = "policycreation/save_policy";
@@ -146,7 +164,7 @@ angular.module('abs').controller('decisionPolicyController', function ($scope, P
     	$scope.temp.policy.attributes = [];
     	  $scope.temp.policy.settings = [];
     	 $scope.temp.policy.ruleAlgorithmschoices = [];
-    }else{
+    }else if($scope.temp.policy.ruleProvider=="Custom"){
 	   if($scope.temp.policy.attributes.length == 0){
 		   $scope.temp.policy.attributes = [];
 	   }
@@ -206,4 +224,4 @@ angular.module('abs').controller('decisionPolicyController', function ($scope, P
     		$scope.temp.policy.attributes = [];
     	}
     };
-});
+}]);

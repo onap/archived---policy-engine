@@ -102,7 +102,7 @@ body {
 														</div>
 													</div>
 													<div class="form-group row">
-														<div class="form-group col-sm-6">
+														<div class="form-group col-sm-6" ng-if="search.closedLooppolicyType == 'Config_PM'">
 															<label>D2 Service:</label><BR> <select
 																class="form-control" ng-model="search.d2Service">
 																<option>Hosted Voice(Trinity)</option>
@@ -112,18 +112,15 @@ body {
 																<option>vDNS</option>
 															</select>
 														</div>
-														<div class="form-group col-sm-6">
-															<label>Bind Text Search to:</label><BR> <select
-																class="form-control" ng-model="search.bindTextSearch">
-																<option>Email Address</option>
-																<option>Trigger Signature</option>
-																<option>Connect All Traps</option>
-																<option>Verification Signature</option>
-																<option>Connect All Faults</option>
-																<option>Onset Message</option>
-																<option>Policy Name</option>
-																<option>Abatement Message</option>
-																<option>Geo Link</option>
+														<div class="form-group col-sm-6"
+															ng-if="search.closedLooppolicyType == 'Config_PM'">
+															<label>Service Type:</label><BR> <select
+																class="form-control" ng-model="search.serviceType">
+																<option>Registration Failure(Trinity)</option>
+																<option>International Fraud(Trinity)</option>
+																<option>No Dial Tone(Trinity)</option>
+																<option>Call Storm(Trinity)</option>
+																<option>Registration Storm(Trinity)</option>
 															</select>
 														</div>
 													</div>
@@ -150,15 +147,18 @@ body {
 																class="form-control" ng-model="search.vproAction"
 																ng-options="option for option in vsclActionDictionaryDatas track by option"></select>
 														</div>
-														<div class="form-group col-sm-6"
-															ng-if="search.closedLooppolicyType == 'Config_PM'">
-															<label>Service Type:</label><BR> <select
-																class="form-control" ng-model="search.serviceType">
-																<option>Registration Failure(Trinity)</option>
-																<option>International Fraud(Trinity)</option>
-																<option>No Dial Tone(Trinity)</option>
-																<option>Call Storm(Trinity)</option>
-																<option>Registration Storm(Trinity)</option>
+														<div class="form-group col-sm-6" ng-if="search.closedLooppolicyType == 'Config_Fault'">
+															<label>Bind Text Search to:</label><BR> <select
+																class="form-control" ng-model="search.bindTextSearch">
+																<option>Email Address</option>
+																<option>Trigger Signature</option>
+																<option>Connect All Traps</option>
+																<option>Verification Signature</option>
+																<option>Connect All Faults</option>
+																<option>Onset Message</option>
+																<option>Policy Name</option>
+																<option>Abatement Message</option>
+																<option>Geo Link</option>
 															</select>
 														</div>
 													</div>
@@ -166,8 +166,12 @@ body {
 											</form>
 										</div>
 									</div>
+									<button type="button" class="btn btn-default"
+										ng-click="refresh(search = null);">
+										<span aria-hidden="true">Clear</span>
+									</button>
 									<button type="button" class="btn btn-primary"
-										ng-click="search(search);">
+										ng-click="searchPolicy(search);">
 										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 									</button>
 								</div>

@@ -49,8 +49,8 @@
 				<p ng-show="formdata.classList.$invalid && !formdata.classList.$pristine" class="help-block">Micro Service is required.</p>
      		 </div>
 			 <div class="form-group col-sm-6">
-            	<label>Verison:</label><br>
-            	<input type="text" ng-model="editMSmodelName.version" class="form-control"/>
+            	<label>Version:<sup><b>*</b></sup></label><br>
+            	<input type="text" required ng-model="editMSmodelName.version" class="form-control"/>
          	</div>
 			</div>
         </div>

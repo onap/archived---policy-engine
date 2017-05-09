@@ -20,3 +20,4 @@
 use ecomp_sdk;
 drop table if exists brmsgroup_info;
 drop table if exists brmsgroup_policy;
+drop table if exists operationshistory10;

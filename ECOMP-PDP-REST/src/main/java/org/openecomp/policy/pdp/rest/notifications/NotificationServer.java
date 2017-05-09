@@ -158,15 +158,12 @@ public class NotificationServer {
 			// to succeed before giving up. If any messages are unsent after that time,
 			// they're returned to your app. You could, for example, persist to disk
 			// and try again later.
-			final List stuck = pub.close ( 20, TimeUnit.SECONDS );
+			final List<?> stuck = pub.close ( 20, TimeUnit.SECONDS );
 			
-			if ( stuck.size () > 0 )
-			{
-				System.err.println ( stuck.size() + " messages unsent" );
-			}
-			else
-			{
-				System.out.println ( "Clean exit; all messages sent: " + notification );
+			if ( stuck.size () > 0 ){
+				LOGGER.error( stuck.size() + " messages unsent" );
+			}else{
+				LOGGER.info( "Clean exit; all messages sent: " + notification );
 			}
 			
 		} else if (propNotificationType.equals("dmaap")) {

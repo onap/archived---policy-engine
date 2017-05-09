@@ -41,6 +41,7 @@ import com.att.nsa.cambria.client.CambriaConsumer;
 import com.att.nsa.cambria.client.CambriaPublisher;
 import com.att.research.xacml.util.XACMLProperties;
 
+@SuppressWarnings("deprecation")
 public class ManualNotificationUpdateThread implements Runnable {
 
 	private static final Logger LOGGER	= FlexLogger.getLogger(ManualNotificationUpdateThread.class);
@@ -139,8 +140,7 @@ public class ManualNotificationUpdateThread implements Runnable {
 				try {
 					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					LOGGER.error(e);
 				}
 			}
 			

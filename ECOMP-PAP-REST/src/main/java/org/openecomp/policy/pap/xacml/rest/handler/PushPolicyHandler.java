@@ -21,9 +21,6 @@ package org.openecomp.policy.pap.xacml.rest.handler;
 
 import java.io.File;
 import java.net.URI;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -34,16 +31,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
-import org.openecomp.policy.rest.XACMLRestProperties;
 import org.openecomp.policy.rest.jpa.PolicyVersion;
 import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
 import org.openecomp.policy.xacml.std.pap.StdPDPPolicy;
-import org.openecomp.policy.xacml.util.XACMLPolicyScanner;
 
 import com.att.research.xacml.util.XACMLProperties;
-
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 public class PushPolicyHandler {
 	
@@ -90,85 +82,6 @@ public class PushPolicyHandler {
 			response.addHeader("version", String.valueOf(activeVersion));								
 		} else {
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);								
-		}
-	}
-	
-	/*
-	 * Get Git Path 
-	 */
-	public void getGitPath(HttpServletRequest request, HttpServletResponse response) {
-		String policyScope = request.getParameter("policyScope");
-		String filePrefix = request.getParameter("filePrefix");
-		String policyName = request.getParameter("policyName");
-		String activeVersion = request.getParameter("activeVersion");
-		
-		Path workspacePath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE), "admin");
-		Path repositoryPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_REPOSITORY));
-		Path gitPath = Paths.get(workspacePath.toString(), repositoryPath.getFileName().toString());
-		
-		//getting the fullpath of the gitPath and convert to string
-		String fullGitPath = gitPath.toAbsolutePath().toString();
-		String finalGitPath = null;
-		
-		//creating the parentPath directory for the Admin Console use
-		if(fullGitPath.contains("\\")){
-			if(fullGitPath.contains("ECOMP-PAP-REST")){
-				finalGitPath = fullGitPath.replace("ECOMP-PAP-REST", "ecomp-sdk-app");
-			}else{
-				finalGitPath = fullGitPath.replace("ATT-PAP-REST", "ATT-ecomp-sdk-app");
-			}
-		}else{
-			finalGitPath = fullGitPath.replace("pap",  "console");
-		}
-
-		finalGitPath += File.separator + policyScope + File.separator + filePrefix + policyName + "." + activeVersion + ".xml";
-		File file = new File(finalGitPath);
-		URI uri = file.toURI();
-
-		//
-		// Extract XACML policy information
-		//
-		Boolean isValid = false;
-		String policyId = null;
-		String description = null;
-		String	version = null;
-
-		URL url;
-		try {
-			url = uri.toURL();
-			Object rootElement = XACMLPolicyScanner.readPolicy(url.openStream());
-			if (rootElement == null ||
-					(
-							! (rootElement instanceof PolicySetType) &&
-							! (rootElement instanceof PolicyType)
-							)	) {
-				PolicyLogger.warn("No root policy element in URI: " + uri.toString() + " : " + rootElement);
-				isValid = false;
-			} else {
-				if (rootElement instanceof PolicySetType) {
-					policyId = ((PolicySetType)rootElement).getPolicySetId();
-					description = ((PolicySetType)rootElement).getDescription();
-					isValid = true;
-					version = ((PolicySetType)rootElement).getVersion();
-				} else if (rootElement instanceof PolicyType) {
-					policyId = ((PolicyType)rootElement).getPolicyId();
-					description = ((PolicyType)rootElement).getDescription();
-					version = ((PolicyType)rootElement).getVersion();
-					isValid = true;
-				} else {
-					PolicyLogger.error("Unknown root element: " + rootElement.getClass().getCanonicalName());
-				}
-			}
-		} catch (Exception e) {
-			PolicyLogger.error("Exception Occured While Extracting Policy Information");
-		} 
-		if (!finalGitPath.equalsIgnoreCase("") || policyId!=null || description!=null || version!=null || isValid!=null) {							
-			response.setStatus(HttpServletResponse.SC_OK);								
-			response.addHeader("gitPath", finalGitPath);
-			response.addHeader("policyId", policyId);
-			response.addHeader("description", description);
-			response.addHeader("version", version);
-			response.addHeader("isValid", isValid.toString());
 		}
 	}
 	
