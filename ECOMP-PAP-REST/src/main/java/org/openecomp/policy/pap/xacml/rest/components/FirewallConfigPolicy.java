@@ -114,7 +114,7 @@ public class FirewallConfigPolicy extends Policy {
 				LOGGER.debug("Configuration is succesfully saved");
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 	
@@ -372,7 +372,10 @@ public class FirewallConfigPolicy extends Policy {
 		assignment2.setCategory(CATEGORY_RESOURCE);
 		assignment2.setIssuer("");
 		AttributeValueType AttributeValue = new AttributeValueType();
-		AttributeValue.setDataType(URI_DATATYPE);	
+		AttributeValue.setDataType(URI_DATATYPE);
+		if (policyName.endsWith(".xml")) {
+			policyName = policyName.substring(0, policyName.lastIndexOf(".xml"));
+		}
 		String content = CONFIG_URL + "/Config/" + policyName + ".json";
 
 		AttributeValue.getContent().add(content);
@@ -1588,10 +1591,10 @@ public class FirewallConfigPolicy extends Policy {
 		JsonNode updatedJason = null;
 
 		try {
-		oldJason = JsonLoader.fromString(oldJson);
-		updatedJason = JsonLoader.fromString(json);
+			oldJason = JsonLoader.fromString(oldJson);
+			updatedJason = JsonLoader.fromString(json);
 		} catch (IOException e) {
-		e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 
 		JsonPatch jsonPatch = JsonDiff.asJsonPatch(oldJason, updatedJason);

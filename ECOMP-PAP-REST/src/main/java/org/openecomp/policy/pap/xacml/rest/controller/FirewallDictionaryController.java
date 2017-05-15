@@ -1333,7 +1333,7 @@ public class FirewallDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 
@@ -1885,7 +1885,6 @@ public class FirewallDictionaryController {
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 	}
 
@@ -1901,7 +1900,6 @@ public class FirewallDictionaryController {
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 	}
 
@@ -2050,7 +2048,6 @@ public class FirewallDictionaryController {
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 	}
 
@@ -2066,7 +2063,6 @@ public class FirewallDictionaryController {
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 	}
 

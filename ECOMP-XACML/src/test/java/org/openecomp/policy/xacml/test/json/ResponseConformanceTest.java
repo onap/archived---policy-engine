@@ -53,35 +53,31 @@ import com.att.research.xacml.util.ListUtil;
  *
  */
 public class ResponseConformanceTest {
-	
+
 	// where to find the conformance test XML files
 	private final String CONFORMANCE_DIRECTORY_PATH = "testsets/conformance/xacml3.0-ct-v.0.4";
-	
+
 	// The request object output from each test conversion from JSON string
 	Response response;
 
-
-	
-	
-	
 	// test just one of each top-level element.
 	// For simple elements also test for incorrect type
 	@Test
 	public void testConformanceResponses() {
-		
+
 		List<File> filesInDirectory = null;
-		
+
 		File conformanceDirectory = null;
-		
+
 		File currentFile = null;
-		
+
 		try {
 			conformanceDirectory = new File(CONFORMANCE_DIRECTORY_PATH);
 			filesInDirectory = getRequestsInDirectory(conformanceDirectory);
 		} catch (Exception e) {
 			fail("Unable to set up Conformance tests for dir '" + conformanceDirectory.getAbsolutePath()+"' e="+ e);
 		}
-		
+
 		// run through each XML file
 		//	- load the file from XML into an internal Response object
 		//	- generate the JSON representation of that Response object
@@ -93,12 +89,12 @@ public class ResponseConformanceTest {
 			for (File f : filesInDirectory) {
 				currentFile = f;
 
-//// This is a simple way to select just one file for debugging - comment out when not being used
-//if ( ! f.getName().equals("IIIA030Response.xml") && ! f.getName().equals("IIIA330Response.xml")) {   continue;  }
+				//// This is a simple way to select just one file for debugging - comment out when not being used
+				//if ( ! f.getName().equals("IIIA030Response.xml") && ! f.getName().equals("IIIA330Response.xml")) {   continue;  }
 
-// during debugging it is helpful to know what file it is starting to work on
-//				System.out.println("starting file="+currentFile.getName());
-				
+				// during debugging it is helpful to know what file it is starting to work on
+				//				System.out.println("starting file="+currentFile.getName());
+
 				try {
 					// load XML into a Response object
 					xmlResponse = DOMResponse.load(f);
@@ -107,40 +103,40 @@ public class ResponseConformanceTest {
 					System.out.println("XML file did not load: '" + f.getName() + "  e=" + e);
 					continue;
 				}
-				
+
 				// some tests have JSON response files to load, most do not
 				String jsonFileName = f.getName().replace(".xml", ".json");
 				File jsonFile = new File(conformanceDirectory, jsonFileName);
-				
+
 				if (jsonFile.exists()) {
-//System.out.println("found file "+jsonFile.getName());
+					//System.out.println("found file "+jsonFile.getName());
 					// json version exists in file, so load it
 					jsonResponse = JSONResponse.load(jsonFile);
 				} else {
 					// json does not exist in file, so create it from the XML response using a String intermediate version
 					String jsonResponseString = JSONResponse.toString(xmlResponse, false);
-//System.out.println(jsonResponseString);	
-//System.out.println(JSONResponse.toString(xmlResponse, true));
-					
+					//System.out.println(jsonResponseString);	
+					//System.out.println(JSONResponse.toString(xmlResponse, true));
+
 					jsonResponse = JSONResponse.load(jsonResponseString);
 				}			
-				
-				
-//System.out.println(JSONResponse.toString(xmlResponse, true));
+
+
+				//System.out.println(JSONResponse.toString(xmlResponse, true));
 
 
 
-				
+
 				// compare the two Response objects
-				
+
 				// compare results
 				assertEquals(xmlResponse.getResults().size(), jsonResponse.getResults().size());
-				
+
 				if (xmlResponse.getResults().size() == 0) {
 					fail("neither XML nor JSON response have any Results");
 				}
-				
-				
+
+
 				// Results are an un-ordered Collection.
 				// There is no identifying information that is unique to a specific Result.
 				// If there are more than one we cannot be sure which one corresponds with which.
@@ -168,16 +164,16 @@ public class ResponseConformanceTest {
 					// we've done the best we can for multiple decisions, so go to next file
 					continue;
 				}
-				
+
 				// single Result in each
 				Result xmlResult = xmlResponse.getResults().iterator().next();
 				Result jsonResult = jsonResponse.getResults().iterator().next();
-				
+
 				// The following sections have not given us trouble, so checking is very high-level.
 				// If we see a problem in one of these elements, the single line will need to be replaced with detailed examination of the objects.
 				assertEquals(f.getName() + " Decision", xmlResult.getDecision(), jsonResult.getDecision());
 				assertEquals(f.getName() + " Status", xmlResult.getStatus(), jsonResult.getStatus());
-				
+
 				// Obligations
 				if (xmlResult.getObligations() != jsonResult.getObligations()) {
 					Collection<Obligation> xmlObligations = xmlResult.getObligations();
@@ -188,10 +184,10 @@ public class ResponseConformanceTest {
 					}
 					if (ListUtil.equalsAllowNulls(xmlObligations, jsonObligations) == false) {
 						// collections are not equal, so need to examine further
-fail(f.getName() + " Obligation collections not equal\nXML="+xmlObligations + "\nJSON="+jsonObligations);
+						fail(f.getName() + " Obligation collections not equal\nXML="+xmlObligations + "\nJSON="+jsonObligations);
 					}
 				}
-				
+
 				// AssociatedAdvice
 				if (xmlResult.getAssociatedAdvice() != jsonResult.getAssociatedAdvice()) {
 					Collection<Advice> xmlAdvice = xmlResult.getAssociatedAdvice();
@@ -202,12 +198,12 @@ fail(f.getName() + " Obligation collections not equal\nXML="+xmlObligations + "\
 					}
 					if (ListUtil.equalsAllowNulls(xmlAdvice, jsonAdvice) == false) {
 						// collections are not equal, so need to examine further
-fail(f.getName() + " Advice collections not equal\nXML="+xmlAdvice + "\nJSON="+jsonAdvice);
+						fail(f.getName() + " Advice collections not equal\nXML="+xmlAdvice + "\nJSON="+jsonAdvice);
 					}
 				}
-				
-				
-				
+
+
+
 				// check Attributes in more detail
 				Collection<AttributeCategory> xmlAttributes = xmlResult.getAttributes();
 				Collection<AttributeCategory> jsonAttributes = jsonResult.getAttributes();
@@ -228,7 +224,7 @@ fail(f.getName() + " Advice collections not equal\nXML="+xmlAdvice + "\nJSON="+j
 						}
 						fail(f.getName() + " XML and JSON have different number of Category elements: " + xmlAttributesString + ", " + jsonAttributesString);
 					}
-					
+
 					// Attribute collections are the same size but may be in different orders.
 					// for each XML category try to find the corresponding JSON category.
 					// ASSUME that each category only shows up once!!!!
@@ -268,7 +264,7 @@ fail(f.getName() + " Advice collections not equal\nXML="+xmlAdvice + "\nJSON="+j
 											"/nXML Attribute="+xmlAttr+
 											"\nJSON Category Attributes="+jsonAttributeCategory.toString());
 								}
-								
+
 
 
 							}
@@ -278,9 +274,9 @@ fail(f.getName() + " Advice collections not equal\nXML="+xmlAdvice + "\nJSON="+j
 						}
 						fail("XML Category not found in JSON; xml="+xmlAttributeCategory.toString());
 					}
-					
+
 				}
-				
+
 				// PolicyIdentifiers
 				if (xmlResult.getPolicyIdentifiers() != jsonResult.getPolicyIdentifiers()) {
 					Collection<IdReference> xmlIdReferences = xmlResult.getPolicyIdentifiers();
@@ -291,10 +287,10 @@ fail(f.getName() + " Advice collections not equal\nXML="+xmlAdvice + "\nJSON="+j
 					}
 					if (ListUtil.equalsAllowNulls(xmlIdReferences, jsonIdReferences) == false) {
 						// collections are not equal, so need to examine further
-fail(f.getName() + " PolicyIdentifiers collections not equal\nXML="+xmlIdReferences+ "\nJSON="+jsonIdReferences);
+						fail(f.getName() + " PolicyIdentifiers collections not equal\nXML="+xmlIdReferences+ "\nJSON="+jsonIdReferences);
 					}
 				}
-				
+
 				// PolicySetIdentifiers
 				if (xmlResult.getPolicySetIdentifiers() != jsonResult.getPolicySetIdentifiers()) {
 					Collection<IdReference> xmlIdReferences = xmlResult.getPolicySetIdentifiers();
@@ -305,10 +301,10 @@ fail(f.getName() + " PolicyIdentifiers collections not equal\nXML="+xmlIdReferen
 					}
 					if (ListUtil.equalsAllowNulls(xmlIdReferences, jsonIdReferences) == false) {
 						// collections are not equal, so need to examine further
-fail(f.getName() + " PolicySetIdentifiers collections not equal\nXML="+xmlIdReferences + "\nJSON="+jsonIdReferences);
+						fail(f.getName() + " PolicySetIdentifiers collections not equal\nXML="+xmlIdReferences + "\nJSON="+jsonIdReferences);
 					}
 				}
-								
+
 
 			}			
 
@@ -316,16 +312,16 @@ fail(f.getName() + " PolicySetIdentifiers collections not equal\nXML="+xmlIdRefe
 			fail ("Failed test with '" + currentFile.getName() + "', e=" + e);
 		}
 
-		
+
 	}
-	
+
 	//
 	// HELPER to get list of all Request files in the given directory
 	//
-	
+
 	private List<File> getRequestsInDirectory(File directory) {
 		List<File> fileList = new ArrayList<File>();
-		
+
 		File[] fileArray = directory.listFiles();
 		for (File f : fileArray) {
 			if (f.isDirectory()) {
@@ -337,19 +333,15 @@ fail(f.getName() + " PolicySetIdentifiers collections not equal\nXML="+xmlIdRefe
 			}
 		}
 		return fileList;
-		
+
 	}
-	
+
 }
-
-
-
 
 
 /*
  * 
 This is a place to copy the really long output from test rigs that need to be manually edited for readability....
-
 
 
 {"Response":[{"Status":{"StatusCode":{"Value":"urn:oasis:names:tc:xacml:1.0:status:ok"}},"Obligations":[{"Id":"urn:oasis:names:tc:xacml:2.0:conformance-test:IIIA030:obligation-1","AttributeAssignment":[
@@ -362,9 +354,4 @@ This is a place to copy the really long output from test rigs that need to be ma
 
 
 
-*/
-
-
-
-
-
+ */

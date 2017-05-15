@@ -254,7 +254,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.sendEvent(eventAttributes)).thenReturn(result);
 			result = mockPolicyEngine.sendEvent(eventAttributes);
 		} catch (PolicyEventException e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		
 		
@@ -273,7 +273,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.sendEvent(eventAttributes,requestID)).thenReturn(result);
 			result = mockPolicyEngine.sendEvent(eventAttributes,requestID);
 		} catch (PolicyEventException e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		
 		
@@ -291,7 +291,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.sendEvent(parameters)).thenReturn(result);
 			result = mockPolicyEngine.sendEvent(parameters);
 		} catch (PolicyEventException e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		
 		assertEquals(result,response);
@@ -316,7 +316,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.getDecision(eCOMPComponentName,decisionAttributes)).thenReturn(null);
 			result = mockPolicyEngine.getDecision(eCOMPComponentName,decisionAttributes);
 		} catch (PolicyDecisionException e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		
 		assertEquals(result,null);
@@ -334,7 +334,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.getDecision(eCOMPComponentName,decisionAttributes,requestID)).thenReturn(null);
 			result = mockPolicyEngine.getDecision(eCOMPComponentName,decisionAttributes);
 		} catch (PolicyDecisionException e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		
 		assertEquals(result,null);
@@ -349,7 +349,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			Mockito.when(mockPolicyEngine.getDecision(parameters)).thenReturn(null);
 			result = mockPolicyEngine.getDecision(parameters);
 		} catch (PolicyDecisionException e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		
 		assertEquals(result,null);
@@ -519,7 +519,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		assertEquals(result, response);
 	}

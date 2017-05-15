@@ -171,7 +171,11 @@ app.controller('PolicySearchController', [
                    $scope.$apply(function(){
                       var searchdata = data.result;
                        if(searchdata.length > 0){
-                    	   $scope.policyNavigator.searchrefresh(searchdata);
+                    	   if(searchdata[0] == "Elastic Search Server is down"){
+                    		   alert("Elastic Search Server is down.");
+                    	   }else{
+                    		   $scope.policyNavigator.searchrefresh(searchdata);  
+                    	   }
                        }else{
                     	   Notification.info("No Matches Found with your Search");
                        }

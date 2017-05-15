@@ -262,7 +262,7 @@ public class ActionPolicy extends Policy {
 				LOGGER.info("Action Body is succesfully saved at " + file.getAbsolutePath());
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 	
@@ -487,7 +487,7 @@ public class ActionPolicy extends Policy {
 		try {
 			jpaUtils = JPAUtils.getJPAUtilsInstance(XACMLPapServlet.getEmf());
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 		Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
 		Map<String, String> dropDownMap = new HashMap<String, String>();

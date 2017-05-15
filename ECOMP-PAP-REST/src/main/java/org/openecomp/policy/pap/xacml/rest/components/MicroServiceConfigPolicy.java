@@ -98,7 +98,6 @@ public class MicroServiceConfigPolicy extends Policy {
 			out.close();
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured While writing Configuration data"+e);
-			e.printStackTrace();
 		} 
 	}
 	

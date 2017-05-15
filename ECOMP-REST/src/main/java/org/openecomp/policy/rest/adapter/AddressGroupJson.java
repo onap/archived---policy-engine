@@ -39,15 +39,15 @@ public class AddressGroupJson {
 		this.name = value;
 	}
 	
-	public boolean equals(Object obj) 
-	{
-		AddressGroupJson servGroupobj=(AddressGroupJson) obj;
-		 if(this.getName().equals(servGroupobj.getName()))
-	        {
-	                return true;
-	        }
-	        return false;
-    }
+	public boolean equals(Object obj){
+		if(obj != null){
+			AddressGroupJson servGroupobj=(AddressGroupJson) obj;
+			if(this.getName().equals(servGroupobj.getName())){
+				return true;
+			}	
+		}
+		return false;
+	}
 	
 	 public int hashCode() {
 	    return Integer.valueOf(name.charAt(0)+(name.charAt(1)));

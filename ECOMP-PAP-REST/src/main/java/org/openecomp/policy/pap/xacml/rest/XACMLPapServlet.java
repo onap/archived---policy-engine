@@ -1166,7 +1166,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				try {
 					apiRequestHandler.doDelete(request, response, loggingContext, apiflag);
 				} catch (Exception e) {
-					e.printStackTrace();
+					LOGGER.error("Exception Occured"+e);
 				}
 				if(apiRequestHandler.getNewGroup()!=null){
 					groupChanged(apiRequestHandler.getNewGroup());

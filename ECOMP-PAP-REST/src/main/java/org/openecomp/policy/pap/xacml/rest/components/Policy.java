@@ -35,15 +35,12 @@ import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonReader;
 
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.rest.XACMLRestProperties;
 import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 import org.openecomp.policy.xacml.util.XACMLPolicyWriter;
@@ -53,7 +50,15 @@ import com.att.research.xacml.util.XACMLProperties;
 import com.att.research.xacmlatt.pdp.policy.PolicyDef;
 import com.att.research.xacmlatt.pdp.policy.dom.DOMPolicyDef;
 
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+
 public abstract class Policy {
+	
+	private static final Logger LOGGER	= FlexLogger.getLogger(Policy.class);
+	
 
 	/**
 	 * Common Fields
@@ -158,7 +163,7 @@ public abstract class Policy {
 		try {
 			uri = new URI(key);
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 		attributeDesignator.setCategory(CATEGORY_ACCESS_SUBJECT);
 		attributeDesignator.setDataType(STRING_DATATYPE);
@@ -184,7 +189,7 @@ public abstract class Policy {
 		try {
 			dynamicURI = new URI(key);
 		} catch (URISyntaxException e) {
-			e.printStackTrace();// log msg
+			LOGGER.error("Exception Occured"+e);// log msg
 		}
 		dynamicAttributeDesignator.setCategory(CATEGORY_RESOURCE);
 		dynamicAttributeDesignator.setDataType(dataType);

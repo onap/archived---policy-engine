@@ -494,7 +494,7 @@ public class TestBase extends SimpleFileVisitor<Path> {
 				this.sendRequest(file, group);
 			} catch (Exception e) {
 				logger.error(e);
-				e.printStackTrace();
+				logger.error("Exception Occured"+e);
 			}
 		}
 		return super.visitFile(file, attrs);

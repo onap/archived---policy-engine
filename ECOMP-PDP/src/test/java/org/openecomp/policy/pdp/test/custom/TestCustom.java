@@ -125,13 +125,13 @@ public class TestCustom extends TestBase {
 		try (ObjectOutputStream os = new ObjectOutputStream(Files.newOutputStream(file))) {
 			os.writeObject(key.getPrivate());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		file = Paths.get(this.directory, PUBLICKEY_FILE);
 		try (ObjectOutputStream os = new ObjectOutputStream(Files.newOutputStream(file))) {
 			os.writeObject(key.getPublic());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 	}
 

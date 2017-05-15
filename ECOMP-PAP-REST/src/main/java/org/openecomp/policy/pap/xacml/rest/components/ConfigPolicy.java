@@ -100,7 +100,6 @@ public class ConfigPolicy extends Policy {
 			}
 		} catch (IOException e) {
 			LOGGER.error("Exception Occured while writing Configuration Data"+e);
-			e.printStackTrace();
 		}
 	}
 

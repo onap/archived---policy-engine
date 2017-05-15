@@ -200,7 +200,7 @@ public class PolicyDBDao {
 			}
 		} catch(Exception e){
 			System.out.println("Could not get lock entity");
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		if(lock == null){
 			throw new IllegalStateException("The lock row does not exist in the table. Please create a primary key with value = 1.");	
@@ -1157,7 +1157,7 @@ public class PolicyDBDao {
 				try {
 					FileUtils.forceMkdir(groupPath.toFile());
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error("Exception Occured"+e);
 				}
 			}
 				Properties policyProperties = new Properties();
@@ -1628,7 +1628,7 @@ public class PolicyDBDao {
 			auditGroups(papEngine2);
 		} catch(Exception e){
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "auditLocalDatabase() error");
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}		
 	}
 
@@ -2150,7 +2150,7 @@ public class PolicyDBDao {
 					try{
 						em.close();
 					} catch(Exception e){
-						e.printStackTrace();
+						logger.error("Exception Occured"+e);
 					}
 					return;
 				}

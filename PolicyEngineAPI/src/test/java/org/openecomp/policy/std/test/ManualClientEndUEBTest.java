@@ -76,25 +76,6 @@ public class ManualClientEndUEBTest {
 	}
 
 	/**
-	 * Run the void createTopic(String,String,List<String>) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testCreateTopic_1()
-		throws Exception {
-		String url = "http://test.com";
-		String uniqueID = "test";
-		List<String> uebURLList = new LinkedList<String>();
-		uebURLList.add(url);
-
-		ManualClientEndUEB.createTopic(url, uniqueID, uebURLList);
-
-	}
-
-	/**
 	 * Run the PDPNotification result(NotificationScheme) method test.
 	 *
 	 * @throws Exception
@@ -110,30 +91,6 @@ public class ManualClientEndUEBTest {
 
 		assertNull(result);
 	}
-
-
-	/**
-	 * Run the void start(String,List<String>,String) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testStart_1()
-		throws Exception {
-		String url = "http://test.com";
-		List<String> uebURLList = new LinkedList<String>();
-		String uniqueID = "test";
-		uebURLList.add(url);
-
-		ManualClientEndUEB.start(url, uebURLList, uniqueID);
-
-		// add additional test code here
-		// An unexpected exception was thrown in user code while executing this test:
-		//    java.lang.NoClassDefFoundError: Could not initialize class org.openecomp.policy.std.ManualClientEndUEB
-	}
-
 
 	/**
 	 * Perform post-test clean-up.

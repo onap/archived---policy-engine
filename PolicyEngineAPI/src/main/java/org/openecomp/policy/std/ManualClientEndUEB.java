@@ -102,7 +102,7 @@ public class ManualClientEndUEB {
         try {
 			pub.send ( "MyPartitionKey", msg1.toString () );
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		} 
         pub.close (); 
 		

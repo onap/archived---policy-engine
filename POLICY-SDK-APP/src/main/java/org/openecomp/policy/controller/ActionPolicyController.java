@@ -115,7 +115,7 @@ public class ActionPolicyController extends RestrictedBaseController{
 										AttributeDesignatorType designator = match.getAttributeDesignator();
 										String attributeId = designator.getAttributeId();
 										// Component attributes are saved under Target here we are fetching them back.
-										// One row is default so we are not adding dynamic componet at index 0.
+										// One row is default so we are not adding dynamic component at index 0.
 										Map<String, String> attribute = new HashMap<String, String>();
 										attribute.put("key", attributeId);
 										attribute.put("value", value);

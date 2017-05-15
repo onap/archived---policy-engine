@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.GlobalRoleSettings;
 import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
@@ -47,11 +49,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping({"/"})
 public class AdminTabController extends RestrictedBaseController{
 
+	private static final Logger LOGGER	= FlexLogger.getLogger(AdminTabController.class);
+	
 	@Autowired
 	CommonClassDao commonClassDao;
 		
-	
-
 	@RequestMapping(value={"/get_LockDownData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getAdminTabEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -63,7 +65,7 @@ public class AdminTabController extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 	

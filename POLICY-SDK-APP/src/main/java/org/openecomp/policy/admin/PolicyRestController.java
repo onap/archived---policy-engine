@@ -28,6 +28,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -321,7 +322,7 @@ public class PolicyRestController extends RestrictedBaseController{
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}finally{
 			if(file != null){
 				if(file.exists()){
@@ -378,13 +379,43 @@ public class PolicyRestController extends RestrictedBaseController{
 		return null;
 	}
 	
+	@RequestMapping(value={"/searchDictionary"}, method={RequestMethod.POST})
+	public ModelAndView searchDictionaryController(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		Object resultList = null;
+		String uri = request.getRequestURI();
+		String body = callPAP(request, response, "POST", uri.replaceFirst("/", "").trim());
+		if(body.contains("CouldNotConnectException")){
+			List<String> data = new ArrayList<String>();
+			data.add("Elastic Search Server is down");
+			resultList = data;
+		}else{
+			JSONObject json = new JSONObject(body);
+			resultList = json.get("policyresult");
+		}
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application / json");
+		PrintWriter out = response.getWriter();
+		JSONObject j = new JSONObject("{result: " + resultList + "}");
+		out.write(j.toString());
+		return null;
+	}
+	
 	@RequestMapping(value={"/searchPolicy"}, method={RequestMethod.POST})
 	public ModelAndView searchPolicy(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		Object resultList = null;
 		String uri = request.getRequestURI()+"?action=search";
 		String body = callPAP(request, response, "POST", uri.replaceFirst("/", "").trim());
+
 		JSONObject json = new JSONObject(body);
-		Object resultList = json.get("policyresult");
-		
+		try{
+			resultList = json.get("policyresult");
+		}catch(Exception e){
+			List<String> data = new ArrayList<String>();
+			data.add("Elastic Search Server is down");
+			resultList = data;
+		}
+
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application / json");
 		request.setCharacterEncoding("UTF-8");

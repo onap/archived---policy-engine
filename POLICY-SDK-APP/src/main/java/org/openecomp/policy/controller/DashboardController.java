@@ -99,7 +99,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 	}
 	
@@ -114,7 +114,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 	}
 	
@@ -149,7 +149,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 	}
 	
@@ -167,7 +167,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 	}
 	
@@ -288,7 +288,7 @@ public class DashboardController  extends RestrictedBaseController{
 			logger.error("MalformedObjectNameException for JMX connection");
 		} catch (MBeanException e) {
 			logger.error("MBeanException for JMX connection");
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		} catch (ReflectionException e) {
 			logger.error("ReflectionException for JMX connection");
 		}
@@ -395,7 +395,7 @@ public class DashboardController  extends RestrictedBaseController{
 			logger.error("MalformedObjectNameException for JMX connection");
 		} catch (MBeanException e) {
 			logger.error("MBeanException for JMX connection");
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		} catch (ReflectionException e) {
 			logger.error("ReflectionException for JMX connection");
 		}

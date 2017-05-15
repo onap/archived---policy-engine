@@ -138,7 +138,7 @@ public class JPAUtils {
 				try {
 					buildFunctionMaps();
 				} catch (ServletException e) {
-					e.printStackTrace();
+					LOGGER.error("Exception Occured"+e);
 				}
 			}
 		}
@@ -151,7 +151,7 @@ public class JPAUtils {
 				try {
 					buildFunctionMaps();
 				} catch (ServletException e) {
-					e.printStackTrace();
+					LOGGER.error("Exception Occured"+e);
 				}
 			}
 		}

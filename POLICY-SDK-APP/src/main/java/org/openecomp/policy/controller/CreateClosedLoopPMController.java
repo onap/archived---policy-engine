@@ -30,6 +30,8 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 import org.openecomp.policy.admin.PolicyManagerServlet;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.rest.adapter.ClosedLoopPMBody;
 import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 import org.openecomp.policy.rest.jpa.PolicyEntity;
@@ -38,6 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
@@ -45,6 +48,8 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 public class CreateClosedLoopPMController{
 
+	private static final Logger LOGGER	= FlexLogger.getLogger(CreateClosedLoopPMController.class);
+	
 	protected PolicyRestAdapter policyAdapter = null;
 
 	public void prePopulateClosedLoopPMPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
@@ -79,39 +84,36 @@ public class CreateClosedLoopPMController{
 								// Under AllOFType we have Match
 								List<MatchType> matchList = allOf.getMatch();
 								if (matchList != null) {
-									int index = 0;
 									Iterator<MatchType> iterMatch = matchList.iterator();
 									while (matchList.size()>1 && iterMatch.hasNext()) {
 										MatchType match = iterMatch.next();
 										//
-										// Under the match we have attributevalue and
+										// Under the match we have attribute value and
 										// attributeDesignator. So,finally down to the actual attribute.
 										//
 										AttributeValueType attributeValue = match.getAttributeValue();
 										String value = (String) attributeValue.getContent().get(0);
+										AttributeDesignatorType designator = match.getAttributeDesignator();
+										String attributeId = designator.getAttributeId();
 
 										// First match in the target is EcompName, so set that value.
-										if (index == 0) {
+										if (attributeId.equals("ECOMPName")) {
 											policyAdapter.setEcompName(value);
 										}
-
-										if (index ==  1){
+										if (attributeId.equals("RiskType")){
 											policyAdapter.setRiskType(value);
 										}
-
-										if (index ==  2){
+										if (attributeId.equals("RiskLevel")){
 											policyAdapter.setRiskLevel(value);
 										}
-
-										if (index ==  3){
+										if (attributeId.equals("guard")){
 											policyAdapter.setGuard(value);
 										}
-
-										if (index == 4 && !value.contains("NA")){
+										if (attributeId.equals("TTLDate") && !value.contains("NA")){
 											String newDate = convertDate(value, true);
 											policyAdapter.setTtlDate(newDate);
 										}
-										if (index == 5){
+										if (attributeId.equals("ServiceType")){
 											LinkedHashMap<String, String> serviceTypePolicyName1 = new LinkedHashMap<>();
 											String key = "serviceTypePolicyName";
 											serviceTypePolicyName1.put(key, value);
@@ -126,7 +128,6 @@ public class CreateClosedLoopPMController{
 											attributes.put("attributes", getAttributes(value));
 											policyAdapter.setAttributeFields(attributes);
 										}
-										index++;
 									}
 								}
 							}
@@ -160,7 +161,7 @@ public class CreateClosedLoopPMController{
 			ClosedLoopPMBody closedLoopBody = mapper.readValue(entity.getConfigurationData().getConfigBody(), ClosedLoopPMBody.class);
 			policyAdapter.setJsonBodyData(closedLoopBody);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}	
 	}
 	

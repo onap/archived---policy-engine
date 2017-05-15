@@ -21,32 +21,36 @@
 package org.openecomp.policy.controller;
 
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.model.PDPGroupContainer;
+import org.openecomp.policy.model.Roles;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
+import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
+import org.openecomp.policy.xacml.std.pap.StdPDP;
+import org.openecomp.policy.xacml.std.pap.StdPDPGroup;
 import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
 import org.openecomp.portalsdk.core.web.support.JsonMessage;
+import org.openecomp.portalsdk.core.web.support.UserUtils;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
-import org.openecomp.policy.common.logging.flexlogger.Logger;
-
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
-import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
-
 import com.att.research.xacml.api.pap.PAPException;
-import org.openecomp.policy.xacml.std.pap.StdPDP;
-import org.openecomp.policy.xacml.std.pap.StdPDPGroup;
+import com.att.research.xacml.api.pap.PDPPolicy;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,16 +63,73 @@ public class PDPController extends RestrictedBaseController {
 	protected List<EcompPDPGroup> groups = Collections.synchronizedList(new ArrayList<EcompPDPGroup>());
 	private PDPGroupContainer container;
 	
-	public synchronized void refreshGroups() {
+	private static String SUPERADMIN = "super-admin";
+	private static String SUPEREDITOR = "super-editor";
+	private static String SUPERGUEST = "super-guest";
+	
+	public synchronized void refreshGroups(HttpServletRequest request) {
 		synchronized(this.groups) { 
 			this.groups.clear();
 			try {
-				this.groups.addAll(PolicyController.getPapEngine().getEcompPDPGroups());
+				Set<PDPPolicy> filteredPolicies = new HashSet<PDPPolicy>();
+				Set<String> scopes = null;
+				List<String> roles = null;
+				String userId = UserUtils.getUserSession(request).getOrgUserId();
+				List<Object> userRoles = PolicyController.getRoles(userId);
+				roles = new ArrayList<String>();
+				scopes = new HashSet<String>();
+				for(Object role: userRoles){
+					Roles userRole = (Roles) role;
+					roles.add(userRole.getRole());
+					if(userRole.getScope() != null){
+						if(userRole.getScope().contains(",")){
+							String[] multipleScopes = userRole.getScope().split(",");
+							for(int i =0; i < multipleScopes.length; i++){
+								scopes.add(multipleScopes[i]);
+							}
+						}else{
+							scopes.add(userRole.getScope());
+						}
+					}	
+				}
+				if (roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR) || roles.contains(SUPERGUEST) ) {
+					this.groups.addAll(PolicyController.getPapEngine().getEcompPDPGroups());
+				}else{
+					if(!userRoles.isEmpty()){
+						if(!scopes.isEmpty()){
+							this.groups.addAll(PolicyController.getPapEngine().getEcompPDPGroups());
+							if(!groups.isEmpty()){
+								for(EcompPDPGroup group : groups){
+									Set<PDPPolicy> policies = group.getPolicies();
+									for(PDPPolicy policy : policies){
+										for(String scope : scopes){
+											scope = scope.replace(File.separator, ".");
+											String policyName = policy.getId();
+											if(policyName.contains(".Config_")){
+												policyName = policyName.substring(0, policyName.lastIndexOf(".Config_"));
+											}else if(policyName.contains(".Action_")){
+												policyName = policyName.substring(0, policyName.lastIndexOf(".Action_"));
+											}else if(policyName.contains(".Decision_")){
+												policyName = policyName.substring(0, policyName.lastIndexOf(".Decision_"));
+											}
+											if(policyName.startsWith(scope)){
+												filteredPolicies.add(policy);
+											}
+										}
+									}
+									groups.remove(group);
+									StdPDPGroup newGroup = (StdPDPGroup) group;
+									newGroup.setPolicies(filteredPolicies);
+									groups.add(newGroup);
+ 								}	
+							}
+						}
+					}
+				}
 			} catch (PAPException e) {
 				String message = "Unable to retrieve Groups from server: " + e;
 				logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR+"Pap Engine is Null" + message);
 			}
-		
 		}
 	}
 	
@@ -76,7 +137,7 @@ public class PDPController extends RestrictedBaseController {
 	public void getPDPGroupContainerData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			ObjectMapper mapper = new ObjectMapper();
-			refreshGroups();
+			refreshGroups(request);
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -90,7 +151,7 @@ public class PDPController extends RestrictedBaseController {
 	public void getPDPGroupEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			ObjectMapper mapper = new ObjectMapper();
-			refreshGroups();
+			refreshGroups(request);
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -126,7 +187,7 @@ public class PDPController extends RestrictedBaseController {
 	      request.setCharacterEncoding("UTF-8");
 	      
 	      PrintWriter out = response.getWriter();
-	      refreshGroups();
+	      refreshGroups(request);
 	      JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
 		  JSONObject j = new JSONObject(msg);
 	      out.write(j.toString());
@@ -163,7 +224,7 @@ public class PDPController extends RestrictedBaseController {
 	      
 	      PrintWriter out = response.getWriter();
 	      
-	      refreshGroups();
+	      refreshGroups(request);
 	      JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
 		  JSONObject j = new JSONObject(msg);
 	      out.write(j.toString());
@@ -208,7 +269,7 @@ public class PDPController extends RestrictedBaseController {
 	      request.setCharacterEncoding("UTF-8");
 	      
 	      PrintWriter out = response.getWriter();
-	      refreshGroups();
+	      refreshGroups(request);
 	      JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
 		  JSONObject j = new JSONObject(msg);
 	      out.write(j.toString());
@@ -241,7 +302,7 @@ public class PDPController extends RestrictedBaseController {
 	      request.setCharacterEncoding("UTF-8");
 	      
 	      PrintWriter out = response.getWriter();
-	      refreshGroups();
+	      refreshGroups(request);
 	      String responseString = mapper.writeValueAsString(groups);
 	      JSONObject j = new JSONObject("{pdpEntityDatas: " + responseString + "}");
 	      out.write(j.toString());

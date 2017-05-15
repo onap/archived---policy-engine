@@ -466,7 +466,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 		return new ResponseEntity<String>(body, status);
 	}
