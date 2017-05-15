@@ -529,7 +529,7 @@ public class TestPolicy extends TestBase {
 							}
 						} catch (Exception e) {
 							logger.error(e);
-							e.printStackTrace();
+							logger.error("Exception Occured"+e);
 						}
 					}
 					return super.visitFile(file, attrs);
@@ -738,7 +738,7 @@ public class TestPolicy extends TestBase {
 					}
 //				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Exception Occured"+e);
 			}
 			
 			count++;

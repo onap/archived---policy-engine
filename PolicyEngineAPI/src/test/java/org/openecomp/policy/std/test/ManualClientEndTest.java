@@ -20,15 +20,15 @@
 
 package org.openecomp.policy.std.test;
 
-import javax.websocket.Session;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-import org.junit.*;
-import org.mockito.Mockito;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.openecomp.policy.api.NotificationScheme;
 import org.openecomp.policy.api.PDPNotification;
 import org.openecomp.policy.std.ManualClientEnd;
-
-import static org.junit.Assert.*;
 
 /**
  * The class <code>ManualClientEndTest</code> contains tests for the class <code>{@link ManualClientEnd}</code>.
@@ -50,74 +50,6 @@ public class ManualClientEndTest {
 		// add additional test code here
 	}
 
-	/**
-	 * Run the void onClose(Session) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Test
-	public void testOnClose()
-		throws Exception {
-		ManualClientEnd fixture = Mockito.mock(ManualClientEnd.class);
-		Session mockSession = Mockito.mock(Session.class);
-
-		fixture.onClose(mockSession);
-
-	}
-
-	/**
-	 * Run the void onError(Session,Throwable) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Test
-	public void testOnError()
-		throws Exception {
-		ManualClientEnd fixture = Mockito.mock(ManualClientEnd.class);
-		Session mockSession = Mockito.mock(Session.class);
-		Throwable e = new Throwable();
-
-		fixture.onError(mockSession, e);
-	}
-
-	/**
-	 * Run the void onMessage(String,Session) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Test
-	public void testOnMessage()
-		throws Exception {
-		ManualClientEnd mockclient = Mockito.mock(ManualClientEnd.class);
-		String message = "";
-		Session mockSession = Mockito.mock(Session.class);
-		
-		Mockito.doNothing().when(mockclient).onMessage(message,mockSession);
-		mockclient.onMessage(message,mockSession);
-	}
-
-	/**
-	 * Run the void onOpen(Session) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Test
-	public void testOnOpen()
-		throws Exception {
-		ManualClientEnd fixture = Mockito.mock(ManualClientEnd.class);
-		Session mockSession = Mockito.mock(Session.class);
-
-		fixture.onOpen(mockSession);
-
-	}
 
 	/**
 	 * Run the PDPNotification result(NotificationScheme) method test.

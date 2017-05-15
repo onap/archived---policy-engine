@@ -56,7 +56,9 @@ public enum PolicyConfigType{
 	/**
 	 * Indicates DCAE Micro Service based Policy. 
 	 */
-	MicroService("MS")
+	MicroService("MS"),
+	
+	Extended("EXTENDED")
 	;
 	
 	private String name;

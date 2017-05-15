@@ -143,7 +143,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		try {
 			inputStream = new FileInputStream(location);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured while initializing the JSONConfig file"+e);
 		}
 		if (location.endsWith("json")) {
 			JsonReader jsonReader = null;
@@ -295,7 +295,7 @@ public class PolicyManagerServlet extends HttpServlet {
 	private JSONObject searchPolicyList(JSONObject params, HttpServletRequest request) {
 		Set<String> scopes = null;
 		List<String> roles = null;
-		policyData = null;
+		policyData = new ArrayList<Object>();
 		JSONArray policyList = null;
 		if(params.has("policyList")){
 			policyList = (JSONArray) params.get("policyList");
@@ -492,7 +492,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				bw.close();
 				object = HumanPolicyComponent.DescribePolicy(temp);
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("Exception Occured while Describing the Policy"+e);
 			}finally{
 				temp.delete();
 			}
@@ -679,6 +679,9 @@ public class PolicyManagerServlet extends HttpServlet {
 	private String getUserName(String loginId){
 		PolicyController controller = new PolicyController();
 		UserInfo userInfo = (UserInfo) controller.getEntityItem(UserInfo.class, "userLoginId", loginId);
+		if(userInfo == null){
+			return "super-admin";
+		}
 		return userInfo.getUserName();
 	}
 
@@ -798,13 +801,15 @@ public class PolicyManagerServlet extends HttpServlet {
 				}
 			}else{
 				//Query the Policy Entity with oldPolicy Name
-				String oldpolicyEntityquery = "FROM PolicyEntity where policyName = '"+oldPolicySplit[1]+"' and scope ='"+oldPolicySplit[0]+"'";
-				System.out.println(oldpolicyEntityquery);
+				String policyEntityCheck = oldPolicySplit[1].substring(0, oldPolicySplit[1].indexOf("."));
+				String oldpolicyEntityquery = "FROM PolicyEntity where policyName like '"+policyEntityCheck+"%' and scope ='"+oldPolicySplit[0]+"'";
 				List<Object> oldEntityData = controller.getDataByQuery(oldpolicyEntityquery);
 				if(!oldEntityData.isEmpty()){
-					entity = (PolicyEntity) oldEntityData.get(0);
+					for(int i=0; i<oldEntityData.size(); i++){
+						entity = (PolicyEntity) oldEntityData.get(i);
+						checkOldPolicyEntryAndUpdate(entity, newPolicySplit[0] , newPolicySplit[1], oldPolicySplit[0], oldPolicySplit[1], policyName, newpolicyName, oldpolicyName, userId);
+					}
 				}
-				checkOldPolicyEntryAndUpdate(entity, newPolicySplit[0] , newPolicySplit[1], oldPolicySplit[0], oldPolicySplit[1], policyName, newpolicyName, oldpolicyName, userId);
 			}
 
 			return success();
@@ -833,17 +838,15 @@ public class PolicyManagerServlet extends HttpServlet {
 						oldPolicyNameWithoutExtension = oldPolicyNameWithoutExtension.substring(0, oldPolicyNameWithoutExtension.indexOf("."));
 						newPolicyNameWithoutExtension = newPolicyNameWithoutExtension.substring(0, newPolicyNameWithoutExtension.indexOf("."));
 					}
-					entity.setPolicyName(entity.getPolicyName().replace(removeoldPolicyExtension, removenewPolicyExtension));
+					entity.setPolicyName(entity.getPolicyName().replace(oldPolicyNameWithoutExtension, newPolicyNameWithoutExtension));
 					entity.setPolicyData(entity.getPolicyData().replace(oldScope +"."+oldPolicyNameWithoutExtension, newScope+"."+newPolicyNameWithoutExtension));
 					entity.setScope(newScope);
 					entity.setModifiedBy(userId);
-					String oldConfigRemoveExtension = removeoldPolicyExtension.replace(".xml", "");
-					String newConfigRemoveExtension = removenewPolicyExtension.replace(".xml", "");
 					if(newpolicyName.contains("Config_")){
-						configEntity.setConfigurationName(configEntity.getConfigurationName().replace(oldScope +"."+oldConfigRemoveExtension, newScope+"."+newConfigRemoveExtension));
+						configEntity.setConfigurationName(configEntity.getConfigurationName().replace(oldScope +"."+oldPolicyNameWithoutExtension, newScope+"."+newPolicyNameWithoutExtension));
 						controller.updateData(configEntity);
 					}else if(newpolicyName.contains("Action_")){
-						actionEntity.setActionBody(actionEntity.getActionBody().replace(oldScope +"."+oldConfigRemoveExtension, newScope+"."+newConfigRemoveExtension));
+						actionEntity.setActionBody(actionEntity.getActionBody().replace(oldScope +"."+oldPolicyNameWithoutExtension, newScope+"."+newPolicyNameWithoutExtension));
 						controller.updateData(actionEntity);
 					}
 					controller.updateData(entity);
@@ -875,7 +878,7 @@ public class PolicyManagerServlet extends HttpServlet {
 			}
 			return success();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			return error(e.getMessage());
 		}
 	}
@@ -1021,7 +1024,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				controller.saveData(entityItem);
 			}
 
-			LOGGER.debug("copy from: {} to:Â {}" + oldPath +newPath);
+			LOGGER.debug("copy from: {} to: {}" + oldPath +newPath);
 
 			return success();
 		} catch (Exception e) {
@@ -1225,6 +1228,9 @@ public class PolicyManagerServlet extends HttpServlet {
 						String policyScopeQuery = "delete PolicyEditorScopes where SCOPENAME like '"+path.replace("\\", "\\\\")+"%' and id >0";
 					    controller.executeQuery(policyScopeQuery);
 					}
+				}else{
+					String policyScopeQuery = "delete PolicyEditorScopes where SCOPENAME like '"+path.replace("\\", "\\\\")+"%' and id >0";
+					controller.executeQuery(policyScopeQuery);
 				}
 			}
 			return success();

@@ -30,6 +30,15 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
+import org.openecomp.policy.common.logging.eelf.MessageCodes;
+import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
+
+import com.att.research.xacml.std.IdentifierImpl;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -44,14 +53,9 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
-import org.apache.commons.io.FilenameUtils;
-import org.openecomp.policy.common.logging.eelf.MessageCodes;
-import org.openecomp.policy.common.logging.eelf.PolicyLogger;
-import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
-
-import com.att.research.xacml.std.IdentifierImpl;
-
 public class CreateClosedLoopPerformanceMetrics extends Policy {
+	
+	private static final Logger LOGGER	= FlexLogger.getLogger(CreateClosedLoopPerformanceMetrics.class);
 	
 	public CreateClosedLoopPerformanceMetrics() {
 		super();
@@ -68,7 +72,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 			try {
 				body = jsonBody;
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("Exception Occured"+e);
 			}
 			if(policyName.endsWith(".xml")){
 				policyName	 = policyName.substring(0, policyName.lastIndexOf(".xml"));	
@@ -80,7 +84,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 			out.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 	

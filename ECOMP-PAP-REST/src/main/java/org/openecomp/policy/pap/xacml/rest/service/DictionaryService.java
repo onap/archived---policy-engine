@@ -58,7 +58,6 @@ public class DictionaryService {
 			
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 		
 		return responseString;
@@ -75,7 +74,6 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 		
 		return responseString;
@@ -91,7 +89,6 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 		
 		return responseString;
@@ -107,7 +104,6 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 		
 		return responseString;
@@ -123,7 +119,6 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 		
 		return responseString;
@@ -139,7 +134,6 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 		
 		return responseString;
@@ -155,7 +149,6 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 		
 		return responseString;
@@ -171,7 +164,6 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 		
 		return responseString;
@@ -187,7 +179,6 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 		
 		return responseString;
@@ -203,7 +194,6 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
 		}
 		
 		return responseString;
@@ -219,7 +209,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -235,7 +225,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -251,7 +241,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -267,7 +257,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -283,7 +273,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -299,7 +289,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -315,7 +305,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -331,7 +321,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -347,7 +337,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -363,7 +353,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -379,7 +369,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -395,7 +385,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -414,7 +404,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -430,7 +420,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -446,7 +436,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -462,7 +452,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -478,7 +468,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -494,7 +484,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -510,7 +500,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -526,7 +516,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -542,7 +532,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -558,7 +548,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -574,7 +564,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -590,7 +580,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 		return responseString;
@@ -607,7 +597,7 @@ public class DictionaryService {
 			dictionary.getEcompNameDictionaryEntityData(request, response);					
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}		
 	}
 	
@@ -618,7 +608,7 @@ public class DictionaryService {
 			dictionary.getAttributeDictionaryEntityData(request, response);
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -629,7 +619,7 @@ public class DictionaryService {
 			action.getActionPolicyDictionaryEntityData(request, response);	
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -640,7 +630,7 @@ public class DictionaryService {
 			dictionary.getBRMSParamDictionaryEntityData(request, response);
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 	}
@@ -652,7 +642,7 @@ public class DictionaryService {
 			dictionary.getVSCLActionDictionaryEntityData(request, response);
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -664,7 +654,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 	}
@@ -676,7 +666,7 @@ public class DictionaryService {
 			dictionary.getPEPOptionsDictionaryEntityData(request, response);
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -688,7 +678,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 		
 	}
@@ -700,7 +690,7 @@ public class DictionaryService {
 			dictionary.getClosedLoopServiceDictionaryEntityData(request, response);
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -711,7 +701,7 @@ public class DictionaryService {
 			dictionary.getClosedLoopSiteDictionaryEntityData(request, response);	
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -723,7 +713,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}		
 	}
 	
@@ -734,7 +724,7 @@ public class DictionaryService {
 			dictionary.getDescriptiveDictionaryEntityData(request, response);
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -746,7 +736,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -758,7 +748,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -770,7 +760,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -782,7 +772,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -794,7 +784,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -806,7 +796,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -818,7 +808,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -830,7 +820,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -842,7 +832,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -854,7 +844,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -867,7 +857,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -879,7 +869,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -891,7 +881,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -903,7 +893,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -915,7 +905,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -927,7 +917,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -939,7 +929,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -951,7 +941,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -963,7 +953,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -975,7 +965,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -987,7 +977,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 	
@@ -999,7 +989,7 @@ public class DictionaryService {
 		
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			e.printStackTrace();
+			
 		}
 	}
 }

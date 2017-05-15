@@ -31,6 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.PolicyEditorScopes;
 import org.openecomp.policy.rest.jpa.PolicyRoles;
@@ -53,6 +55,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping("/")
 public class PolicyRolesController extends RestrictedBaseController{
 	
+	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyRolesController.class);
+	
 	@Autowired
 	CommonClassDao commonClassDao;
 	
@@ -69,7 +73,7 @@ public class PolicyRolesController extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 	
@@ -105,7 +109,7 @@ public class PolicyRolesController extends RestrictedBaseController{
 			out.write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 		return null;
 	}
@@ -124,7 +128,7 @@ public class PolicyRolesController extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 }

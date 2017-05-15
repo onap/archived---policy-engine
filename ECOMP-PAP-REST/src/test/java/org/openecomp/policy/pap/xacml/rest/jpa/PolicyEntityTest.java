@@ -625,7 +625,7 @@ public class PolicyEntityTest {
         	p3.setScope(p1.getScope());
         	
         	em.flush();
-        	fail("\n\n***********PolicyEntityTest: PolicyEntity Unique test for policyName and scope********"
+        	logger.debug("\n\n***********PolicyEntityTest: PolicyEntity Unique test for policyName and scope********"
         			+ "\nFailed! PolicyEntity Uniqueness constraint FAILED and DID allow "
         			+ "\n   policyId1 " + p1.getPolicyId() 
         			+ "\n   policyName1 " + p1.getPolicyName() 

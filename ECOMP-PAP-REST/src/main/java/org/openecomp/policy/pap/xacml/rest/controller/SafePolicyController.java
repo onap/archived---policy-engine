@@ -78,7 +78,7 @@ public class SafePolicyController {
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 
@@ -237,7 +237,7 @@ public class SafePolicyController {
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 

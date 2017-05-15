@@ -76,6 +76,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
@@ -247,7 +248,6 @@ public class CreateFirewallController extends RestrictedBaseController {
 				// Under target we have AnyOFType
 				List<AnyOfType> anyOfList = target.getAnyOf();
 				if (anyOfList != null) {
-					int index = 0;
 					Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
 					while (iterAnyOf.hasNext()) {
 						AnyOfType anyOf = iterAnyOf.next();
@@ -270,25 +270,24 @@ public class CreateFirewallController extends RestrictedBaseController {
 										//
 										AttributeValueType attributeValue = match.getAttributeValue();
 										String value = (String) attributeValue.getContent().get(0);
-										if (index == 1) {
+										AttributeDesignatorType designator = match.getAttributeDesignator();
+										String attributeId = designator.getAttributeId();
+										if (attributeId.equals("ConfigName")) {
 											policyAdapter.setConfigName(value);
 										}
-										if (index ==  2){
+										if (attributeId.equals("RiskType")){
 											policyAdapter.setRiskType(value);
 										}
-	
-										if (index ==  3){
+										if (attributeId.equals("RiskLevel")){
 											policyAdapter.setRiskLevel(value);
 										}
-										
-										if (index ==  4){
+										if (attributeId.equals("guard")){
 											policyAdapter.setGuard(value);
 										}
-										if (index == 5 && !value.contains("NA")){
+										if (attributeId.equals("TTLDate") && !value.contains("NA")){
 											String newDate = convertDate(value, true);
 											policyAdapter.setTtlDate(newDate);
 										}
-										index++;
 									}
 								}
 							}
@@ -915,15 +914,15 @@ public class CreateFirewallController extends RestrictedBaseController {
 			try {
 				json = om.writeValueAsString(tc);
 			} catch (JsonGenerationException e) {
-				e.printStackTrace();
+				logger.error("Exception Occured"+e);
 			} catch (JsonMappingException e) {
-				e.printStackTrace();
+				logger.error("Exception Occured"+e);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Exception Occured"+e);
 			}	
 
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 
 		return json;

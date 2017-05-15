@@ -133,26 +133,57 @@ app.controller('ecompNameDictGridController', function ($scope, PolicyAppService
     };
 
     $scope.deleteEcompName = function(data) {
-        modalService.popupConfirmWin("Confirm","You are about to delete the Ecomp Name  "+data.ecompName+". Do you want to continue?",
-            function(){
-                var uuu = "deleteDictionary/ecomp_dictionary/remove_ecomp";
-                var postData={data: data};
-                $.ajax({
-                    type : 'POST',
-                    url : uuu,
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: JSON.stringify(postData),
-                    success : function(data){
-                        $scope.$apply(function(){$scope.ecompNameDictionaryDatas=data.ecompNameDictionaryDatas;});
-                    },
-                    error : function(data){
-                        console.log(data);
-                        modalService.showFailure("Fail","Error while deleting: "+ data.responseText);
-                    }
-                });
+    	var uuu = "searchDictionary";
+    	var postData={data: data, type: "ecompName"};
+    	var searchString = "\n";
+    	$.ajax({
+    		type : 'POST',
+    		url : uuu,
+    		dataType: 'json',
+    		contentType: 'application/json',
+    		data: JSON.stringify(postData),
+    		success : function(resultList){
+    			$scope.$apply(function(){
+    				$scope.list =resultList.result;});
+    			$scope.searchData = JSON.stringify(resultList.result);
+    			$scope.searchDatas = JSON.parse($scope.searchData);	   
+    			$scope.success = true;
+    			var i;
+    			if($scope.searchDatas.length > 0){
+    				for(i = 0 ; i < $scope.searchDatas.length; i++){
+    					searchString += $scope.searchDatas[i] + "\n";
+    				}	
+    			}else{
+    				searchString += "No Policies is Using this Value"
+    			}
 
-            })
+    			console.log($scope.list);
+    			if($scope.success){
+    				modalService.popupConfirmWin("Confirm","You are about to delete the Ecomp Name  "+data.ecompName+".\n "+searchString+" \n  Do you want to continue?",
+    						function(){
+    					var uuu = "deleteDictionary/ecomp_dictionary/remove_ecomp";
+    					var postData={data: data};
+    					$.ajax({
+    						type : 'POST',
+    						url : uuu,
+    						dataType: 'json',
+    						contentType: 'application/json',
+    						data: JSON.stringify(postData),
+    						success : function(data){
+    							$scope.$apply(function(){$scope.ecompNameDictionaryDatas=data.ecompNameDictionaryDatas;});
+    						},
+    						error : function(data){
+    							console.log(data);
+    							modalService.showFailure("Fail","Error while deleting: "+ data.responseText);
+    						}
+    					});
+
+    				})}
+    		},
+    		error : function(data){
+    			alert("Error while Searching.");
+    		}
+    	});	
     };
 
 });

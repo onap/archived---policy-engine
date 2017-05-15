@@ -106,7 +106,7 @@ public class CreatePolicyController extends RestrictedBaseController{
 									while (iterMatch.hasNext()) {
 										MatchType match = iterMatch.next();
 										//
-										// Under the match we have attributevalue and
+										// Under the match we have attribute value and
 										// attributeDesignator. So,finally down to the actual attribute.
 										//
 										AttributeValueType attributeValue = match.getAttributeValue();
@@ -114,25 +114,23 @@ public class CreatePolicyController extends RestrictedBaseController{
 										AttributeDesignatorType designator = match.getAttributeDesignator();
 										String attributeId = designator.getAttributeId();
 										// First match in the target is EcompName, so set that value.
-										if (index == 1) {
+										if (attributeId.equals("ECOMPName")) {
 											policyAdapter.setEcompName(value);
 										}
-										if (index ==  2){
+										if (attributeId.equals("RiskType")){
 											policyAdapter.setRiskType(value);
 										}
-
-										if (index ==  3){
+										if (attributeId.equals("RiskLevel")){
 											policyAdapter.setRiskLevel(value);
 										}
-
-										if (index ==  4){
+										if (attributeId.equals("guard")){
 											policyAdapter.setGuard(value);
 										}
-										if (index == 5 && !value.contains("NA")){
+										if (attributeId.equals("TTLDate") && !value.contains("NA")){
 											String newDate = convertDate(value, true);
 											policyAdapter.setTtlDate(newDate);
 										}
-										if (index == 6){
+										if (attributeId.equals("ConfigName")){
 											policyAdapter.setConfigName(value);
 										}
 										// After Ecomp and Config it is optional to have attributes, so

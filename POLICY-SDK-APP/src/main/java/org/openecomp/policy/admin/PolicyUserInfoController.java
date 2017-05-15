@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
 import org.openecomp.portalsdk.core.web.support.JsonMessage;
 import org.openecomp.portalsdk.core.web.support.UserUtils;
@@ -39,6 +41,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping("/")
 public class PolicyUserInfoController extends RestrictedBaseController{
 	
+	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyUserInfoController.class);
+	
 	@RequestMapping(value="/get_PolicyUserInfo", method = RequestMethod.GET)
 	private void getPolicyUserInfo(HttpServletRequest request, HttpServletResponse response){
 		JsonMessage msg = null;
@@ -51,7 +55,7 @@ public class PolicyUserInfoController extends RestrictedBaseController{
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 

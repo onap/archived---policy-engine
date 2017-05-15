@@ -642,6 +642,10 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements EcompPDP
 	}
 		
 	public boolean removePolicyFromGroup(PDPPolicy policy) {
+		PolicyLogger.info("policy: " + policy.getId());
+		PolicyLogger.info("Policy ID:" + policy.getPolicyId());
+		PolicyLogger.info("Policy Version: " + policy.getVersion());
+		PolicyLogger.info("StdPDPPolicy Class cast: " + this.getPolicy(policy.getId()).toString());
 		StdPDPPolicy currentPolicy = (StdPDPPolicy) this.getPolicy(policy.getId());
 		if (currentPolicy == null) {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Policy " + policy.getId() + " does not exist.");

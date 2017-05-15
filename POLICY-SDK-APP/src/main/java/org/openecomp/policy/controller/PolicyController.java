@@ -303,7 +303,7 @@ public class PolicyController extends RestrictedBaseController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 

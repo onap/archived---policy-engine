@@ -241,7 +241,7 @@ public class PushPolicyController {
 			XACMLPapServlet.getPAPEngine().updateGroup(selectedPDPGroup);
 		} catch (PAPException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		// policy file copied ok and the Group was updated on the PDP
 		response.setStatus(HttpServletResponse.SC_NO_CONTENT);

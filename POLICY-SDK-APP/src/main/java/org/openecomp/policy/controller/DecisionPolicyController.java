@@ -115,11 +115,11 @@ public class DecisionPolicyController extends RestrictedBaseController {
 										AttributeDesignatorType designator = match.getAttributeDesignator();
 										String attributeId = designator.getAttributeId();
 										// First match in the target is EcompName, so set that value.
-										if (index == 0) {
+										if (attributeId.equals("ECOMPName")) {
 											policyAdapter.setEcompName(value);
 										}
 										// Component attributes are saved under Target here we are fetching  them back.
-										// One row is default so we are not adding dynamic componet at index 0.
+										// One row is default so we are not adding dynamic component at index 0.
 										if (index >= 1) {	
 											Map<String, String> attribute = new HashMap<String, String>();
 											attribute.put("key", attributeId);

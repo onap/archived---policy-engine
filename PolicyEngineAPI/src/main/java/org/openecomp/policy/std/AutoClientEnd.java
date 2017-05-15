@@ -191,7 +191,7 @@ public class AutoClientEnd {
 	public void onError(Session session, Throwable e) {
 		// trying to Restart by self.
 		logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Session Error.. "+ session.getId() + "\n Error is : " + e );
-		// e.printStackTrace();
+		// logger.error("Exception Occured"+e);
 		stop();
 		if (url != null) {
 			client = null;

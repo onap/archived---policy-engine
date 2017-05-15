@@ -20,7 +20,8 @@
 
 package org.openecomp.xacml.parser;
 
-/*import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,31 +29,24 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Properties;
-
-import org.openecomp.policy.common.im.AdministrativeStateException;
-import org.openecomp.policy.common.im.IntegrityMonitor;
-import org.openecomp.policy.common.im.StandbyStatusException;
+import java.util.TimeZone;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.openecomp.xacml.parser.LogEntryObject;
-import org.openecomp.xacml.parser.ParseLog;
+import org.openecomp.policy.common.im.AdministrativeStateException;
+import org.openecomp.policy.common.im.IntegrityMonitor;
+import org.openecomp.policy.common.im.StandbyStatusException;
 import org.openecomp.xacml.parser.LogEntryObject.LOGTYPE;
 
 
 public class ParseLogTest {
 
-	private ParseLog logParser = new ParseLog();
 	private Properties config = new Properties();
 	private String configFile = "test_config.properties";
-	private static Properties myProp;
-	private static Properties systemProps;
-	private static String resourceName;
 	private IntegrityMonitor im;
 
 	
@@ -60,9 +54,6 @@ public class ParseLogTest {
 	public void setUp() throws Exception {
 		System.setProperty("com.sun.management.jmxremote.port", "9998");
 		im = Mockito.mock(IntegrityMonitor.class);
-		
-		// Need PowerMockito for mocking static method getInstance(...)
-	//	PowerMockito.mockStatic(IntegrityMonitor.class);
 		
 		try {
 			Mockito.doNothing().when(im).startTransaction();
@@ -77,23 +68,21 @@ public class ParseLogTest {
 	public void tearDown() {
 		File file = new File("nonExistFile.txt");
 		file.delete();
-//		systemProps.remove("com.sun.management.jmxremote.port");
 	}
 
-	@Test
+	//@Test
 	public void testMain() {
 		try {	
-			
-			logParser.main(null);
+			ParseLog.main(null);
 		} catch (Exception e) {
-			//fail();
+			fail();
 		}
 	}
 
 	@Test
 	public void testCountLines() throws IOException {
 		String fileName = "LineTest.txt";
-		int returnValue = logParser.countLines(fileName);
+		int returnValue = ParseLog.countLines(fileName);
 		
 		assertEquals(9, returnValue);
 	}
@@ -120,7 +109,7 @@ public class ParseLogTest {
 		config.put("LOGPATH", "C:\\Workspaces\\HealthCheck\\pap-rest.log");
 		config.put("PARSERLOGPATH", "IntegrityMonitor.log");
 		
-		Properties returnConfig = logParser.getPropertiesValue(configFile);
+		Properties returnConfig = ParseLog.getPropertiesValue(configFile);
 
 		
 		assertEquals(config.get("RESOURCE_NAME"), returnConfig.get("RESOURCE_NAME"));	
@@ -137,8 +126,8 @@ public class ParseLogTest {
 	public  void  testParseDate(){
 		String line = "2016-02-23 08:07:30";
 		Date returnValue = ParseLog.parseDate(line, "yyyy-MM-dd HH:mm:ss", false);
-		
-		assertEquals("Tue Feb 23 08:07:30 CST 2016", returnValue.toString());
+		line = returnValue.toString().substring(0, returnValue.toString().lastIndexOf(":30")+3);
+		assertEquals("Tue Feb 23 08:07:30", line);
 	}
 	
 	@Test
@@ -343,14 +332,12 @@ public class ParseLogTest {
 	@Test
 	public void testPullOutLogValuesNull(){
 		// Open the file
-		FileInputStream fstream;
 		LogEntryObject retrunObject = ParseLog.pullOutLogValues("", "Console");
 		assertEquals(null, retrunObject);
 	}
 	
 	@Test
 	public void testLogEntryObject(){
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date = new Date();
 	 
 		// Open the file
@@ -380,4 +367,3 @@ public class ParseLogTest {
 		ParseLog.process(line, "pap");
 	}
 }
-*/

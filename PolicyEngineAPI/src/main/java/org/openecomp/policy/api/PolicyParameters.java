@@ -57,6 +57,7 @@ public class PolicyParameters {
 	private boolean guard = false;
 	private String riskLevel = "5";
 	private String riskType = "defualt";
+	private String extendedOption;
 	
 	/**
 	 * Sets Config Policy Parameters.
@@ -535,6 +536,14 @@ public class PolicyParameters {
     public void setDependencyNames(ArrayList<String> dependencyNames) {
         this.dependencyNames = dependencyNames;
     }
+	
+    public String getExtendedOption() {
+		return extendedOption;
+	}
+
+	public void setExtendedOption(String extendedOption) {
+		this.extendedOption = extendedOption;
+	}
 	
 	public String toString() {
 		return "PolicyParameters [ policyName=" + policyName + ", policyDescription=" + policyDescription + ", ecompName="+ ecompName 

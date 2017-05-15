@@ -97,7 +97,7 @@ public class PolicyEngineTestClient {
 				}
 			}
 		} catch (PolicyConfigException e) {
-//			e.printStackTrace();
+//			logger.error("Exception Occured"+e);
 			resultReceived.add(""+e);
 		}
 		return resultReceived;
@@ -123,7 +123,7 @@ public class PolicyEngineTestClient {
 					eCOMPComponentName, decisionAttributes, requestID);
 			resultReceived.add(policyDecision.getDecision().toString());
 		} catch (PolicyDecisionException e) {
-//			e.printStackTrace();
+//			logger.error("Exception Occured"+e);
 			resultReceived.add(""+e);
 		}
 		return resultReceived;
@@ -154,7 +154,7 @@ public class PolicyEngineTestClient {
 				}
 			}
 		} catch (PolicyEventException e) {
-//			e.printStackTrace();
+//			logger.error("Exception Occured"+e);
 			resultReceived.add(""+e);
 		}
 		return resultReceived;
