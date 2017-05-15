@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_e6bab9e0",
+        "filename": "PolicyEngineAPI/src/main/java/org/openecomp/policy/api/PolicyParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-15T17:44:14Z",
+      "side": 1,
+      "message": "Spelling?",
+      "range": {
+        "startLine": 59,
+        "startChar": 28,
+        "endLine": 59,
+        "endChar": 35
+      },
+      "revId": "3a79fac4f22538e27cd9634d5d2fe08f6263e678",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_c6bfb5cf",
+        "filename": "PolicyEngineAPI/src/main/java/org/openecomp/policy/api/PolicyParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-15T17:44:14Z",
+      "side": 1,
+      "message": "Should this be included in the toString() method?",
+      "range": {
+        "startLine": 60,
+        "startChar": 16,
+        "endLine": 60,
+        "endChar": 30
+      },
+      "revId": "3a79fac4f22538e27cd9634d5d2fe08f6263e678",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
