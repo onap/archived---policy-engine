@@ -154,7 +154,7 @@ public class AutoPushController extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 	}
 
@@ -251,7 +251,7 @@ public class AutoPushController extends RestrictedBaseController{
 						try {
 							PolicyController.getPapEngine().copyPolicy(selectedPolicy, (StdPDPGroup) pdpDestinationGroupId);
 						} catch (PAPException e) {
-							e.printStackTrace();
+							logger.error("Exception Occured"+e);
 							return null;
 						}
 						selectedPolicies.add(selectedPolicy);

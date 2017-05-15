@@ -56,7 +56,8 @@ public class PolicyParameters {
 	private Date TTLDate;
 	private boolean guard = false;
 	private String riskLevel = "5";
-	private String riskType = "defualt";
+	private String riskType = "default";
+	private String extendedOption;
 	
 	/**
 	 * Sets Config Policy Parameters.
@@ -536,13 +537,21 @@ public class PolicyParameters {
         this.dependencyNames = dependencyNames;
     }
 	
+    public String getExtendedOption() {
+		return extendedOption;
+	}
+
+	public void setExtendedOption(String extendedOption) {
+		this.extendedOption = extendedOption;
+	}
+	
 	public String toString() {
 		return "PolicyParameters [ policyName=" + policyName + ", policyDescription=" + policyDescription + ", ecompName="+ ecompName 
 				+ ", configName=" + configName + ", attributes=" + attributes + ", configBody=" + configBody 
 				+ ",dynamicRuleAlgorithmLabels=" + dynamicRuleAlgorithmLabels + ",dynamicRuleAlgorithmFunctions=" + dynamicRuleAlgorithmFunctions 
 				+ ",dynamicRuleAlgorithmField1=" + dynamicRuleAlgorithmField1 + ",dynamicRuleAlgorithmField2=" + dynamicRuleAlgorithmField2 
 				+ ", actionPerformer=" + actionPerformer + ", actionAttribute=" + actionAttribute + ", priority=" + priority  
-				+ ", ruleProvider= " + ruleProvider + ", riskLevel= " + riskLevel + ", riskType= " + riskType
+				+ ", ruleProvider= " + ruleProvider + ", riskLevel= " + riskLevel + ", riskType= " + riskType + ", extendedOption= " + extendedOption
 				+ "]";
 	}
 }

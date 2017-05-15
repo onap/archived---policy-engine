@@ -99,7 +99,7 @@ public class PolicyImportWindow{
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 
 	}
@@ -152,7 +152,7 @@ public class PolicyImportWindow{
 			outputFile.close();
 		} catch (IOException e) {
 			LOGGER.info("IOException:" +e);
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 

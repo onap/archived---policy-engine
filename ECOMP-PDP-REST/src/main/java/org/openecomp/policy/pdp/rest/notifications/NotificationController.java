@@ -186,7 +186,6 @@ public class NotificationController {
 				NotificationServer.sendNotification(notificationJSON, propNotificationType, pdpURL);
 			} catch (Exception e) {
 				LOGGER.info(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in sending the Event Notification: "+ e.getMessage());
-				e.printStackTrace();
 			}
 			notificationFlag = false;
 		}

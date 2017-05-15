@@ -57,6 +57,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeAssignmentExpressionType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
@@ -275,7 +276,6 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 						List<AllOfType> allOfList = anyOf.getAllOf();
 						if (allOfList != null) {
 							Iterator<AllOfType> iterAllOf = allOfList.iterator();
-							int index = 0;
 							while (iterAllOf.hasNext()) {
 								AllOfType allOf = iterAllOf.next();
 								// Under AllOFType we have Match
@@ -285,29 +285,27 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 									while (iterMatch.hasNext()) {
 										MatchType match = iterMatch.next();
 										//
-										// Under the match we have attributevalue and
+										// Under the match we have attribute value and
 										// attributeDesignator. So,finally down to the actual attribute.
 										//
 										AttributeValueType attributeValue = match.getAttributeValue();
 										String value = (String) attributeValue.getContent().get(0);
+										AttributeDesignatorType designator = match.getAttributeDesignator();
+										String attributeId = designator.getAttributeId();
 
-										if (index ==  3){
+										if (attributeId.equals("RiskType")){
 											policyAdapter.setRiskType(value);
 										}
-
-										if (index ==  4){
+										if (attributeId.equals("RiskLevel")){
 											policyAdapter.setRiskLevel(value);
 										}
-										
-										if (index ==  5){
+										if (attributeId.equals("guard")){
 											policyAdapter.setGuard(value);
 										}
-										if (index == 6 && !value.contains("NA")){
+										if (attributeId.equals("TTLDate") && !value.contains("NA")){
 											String newDate = convertDate(value, true);
 											policyAdapter.setTtlDate(newDate);
 										}
-
-										index++;
 									}
 								}
 							}

@@ -83,7 +83,7 @@ public class PolicyScopeDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 
@@ -296,7 +296,7 @@ public class PolicyScopeDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 
@@ -448,7 +448,7 @@ public class PolicyScopeDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 
@@ -597,7 +597,7 @@ public class PolicyScopeDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 
@@ -752,7 +752,7 @@ public class PolicyScopeDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 

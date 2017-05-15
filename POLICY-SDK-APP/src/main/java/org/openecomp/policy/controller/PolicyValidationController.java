@@ -48,6 +48,8 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.util.XMLErrorHandler;
 import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.rest.adapter.ClosedLoopFaultBody;
 import org.openecomp.policy.rest.adapter.ClosedLoopPMBody;
 import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
@@ -76,6 +78,8 @@ import com.google.common.base.Strings;
 @RequestMapping("/")
 public class PolicyValidationController extends RestrictedBaseController {
 
+	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyValidationController.class);
+	
 	public static final String CONFIG_POLICY = "Config";
 	public static final String ACTION_POLICY = "Action";
 	public static final String DECISION_POLICY = "Decision";
@@ -644,7 +648,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 			JsonReader jsonReader = Json.createReader(stream);
 			System.out.println("Json Value is: " + jsonReader.read().toString() );
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			return false;
 		}
 		return true;

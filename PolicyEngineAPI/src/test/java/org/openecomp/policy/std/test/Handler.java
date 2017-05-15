@@ -32,8 +32,12 @@ import org.openecomp.policy.api.PolicyConfigStatus;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
 import org.openecomp.policy.api.RemovedPolicy;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 
 public class Handler implements NotificationHandler{
+	
+	private static final Logger LOGGER	= FlexLogger.getLogger(Handler.class);
 	
 	@Override
 	public void notificationReceived(PDPNotification notification) {
@@ -72,9 +76,9 @@ public class Handler implements NotificationHandler{
 							}
 						}
 					} catch (PolicyEngineException e) {
-						e.printStackTrace();
+						LOGGER.error("Exception Occured"+e);
 					} catch (PolicyConfigException e) {
-						e.printStackTrace();
+						LOGGER.error("Exception Occured"+e);
 					}
 				}
 			}
@@ -110,9 +114,9 @@ public class Handler implements NotificationHandler{
 						}
 					}
 				} catch (PolicyEngineException e) {
-					e.printStackTrace();
+					LOGGER.error("Exception Occured"+e);
 				} catch (PolicyConfigException e) {
-					e.printStackTrace();
+					LOGGER.error("Exception Occured"+e);
 				}
 			}
 		}

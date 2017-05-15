@@ -147,7 +147,7 @@ public class DecisionPolicyApiTest extends TestCase {
 	
 	@Test
 	public final void testCreatePolicyNullPolicyName() {
-		response.setResponseMessage("PE300 - Data Issue: No Policy Name given.");
+		response.setResponseMessage("PE500 - Process Flow Issue: :500:");
 		policyParameters.setPolicyName(null);
 		try{
 			result = policyEngine.createPolicy(policyParameters);
@@ -159,7 +159,7 @@ public class DecisionPolicyApiTest extends TestCase {
 	
 	@Test
 	public final void testCreatePolicyNullPolicyScope() {
-		response.setResponseMessage("PE300 - Data Issue: No Policy Scope given.");
+		response.setResponseMessage("PE500 - Process Flow Issue: :500:");
 		policyParameters.setPolicyName("test");
 		try{
 			result = policyEngine.createPolicy(policyParameters);
@@ -171,7 +171,7 @@ public class DecisionPolicyApiTest extends TestCase {
 	
 	@Test
 	public final void testCreatePolicyNullEcompName() {
-		response.setResponseMessage("PE300 - Data Issue: No ECOMP Name given.");
+		response.setResponseMessage("PE500 - Process Flow Issue: :500:");
 		policyParameters.setEcompName(null);
 		try{
 			result = policyEngine.createPolicy(policyParameters);
@@ -183,7 +183,7 @@ public class DecisionPolicyApiTest extends TestCase {
 	
 	@Test
 	public final void testUpdatePolicyNullPolicyName() {
-		response.setResponseMessage("PE300 - Data Issue: No Policy Name given.");
+		response.setResponseMessage("PE500 - Process Flow Issue: :500:");
 		policyParameters.setPolicyName(null);
 		try{
 			result = policyEngine.updatePolicy(policyParameters);
@@ -195,7 +195,7 @@ public class DecisionPolicyApiTest extends TestCase {
 	
 	@Test
 	public final void testUpdatePolicyNullPolicyScope() {
-		response.setResponseMessage("PE300 - Data Issue: No Policy Scope given.");
+		response.setResponseMessage("PE500 - Process Flow Issue: :500:");
 		policyParameters.setPolicyName("test");
 		try{
 			result = policyEngine.updatePolicy(policyParameters);
@@ -207,7 +207,7 @@ public class DecisionPolicyApiTest extends TestCase {
 	
 	@Test
 	public final void testUpdatePolicyNullEcompName() {
-		response.setResponseMessage("PE300 - Data Issue: No ECOMP Name given.");
+		response.setResponseMessage("PE500 - Process Flow Issue: :500:");
 		policyParameters.setEcompName(null);
 		try{
 			result = policyEngine.updatePolicy(policyParameters);

@@ -4,6 +4,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.portalsdk.core.auth.LoginStrategy;
 import org.openecomp.portalsdk.core.onboarding.exception.PortalAPIException;
 import org.openecomp.portalsdk.core.onboarding.util.CipherUtil;
@@ -12,6 +14,8 @@ import org.openecomp.portalsdk.core.onboarding.util.PortalApiProperties;
 import org.springframework.web.servlet.ModelAndView;
 
 public class LoginStrategyImpl extends LoginStrategy {
+	
+	private static final Logger LOGGER	= FlexLogger.getLogger(LoginStrategyImpl.class);
 	
 	@Override
 	public ModelAndView doLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -29,8 +33,7 @@ public class LoginStrategyImpl extends LoginStrategy {
 		try {
 			userid = getUserIdFromCookie(request);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 		return userid;	
 	}

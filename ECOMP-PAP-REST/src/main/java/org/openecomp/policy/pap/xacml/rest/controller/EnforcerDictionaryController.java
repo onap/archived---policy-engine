@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.util.JsonMessage;
 import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.EnforcingType;
@@ -46,6 +48,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class EnforcerDictionaryController {
 
+	private static final Logger LOGGER	= FlexLogger.getLogger(EnforcerDictionaryController.class);
+	
 	@Autowired
 	CommonClassDao commonClassDao;
 
@@ -66,7 +70,7 @@ public class EnforcerDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 	

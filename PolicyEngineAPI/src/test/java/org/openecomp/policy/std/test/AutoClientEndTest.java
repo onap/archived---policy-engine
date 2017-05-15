@@ -20,16 +20,15 @@
 
 package org.openecomp.policy.std.test;
 
-import javax.websocket.Session;
+import static org.junit.Assert.assertNotNull;
 
-import org.junit.*;
-import org.mockito.Mockito;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.openecomp.policy.api.NotificationHandler;
 import org.openecomp.policy.api.NotificationScheme;
 import org.openecomp.policy.std.AutoClientEnd;
 import org.openecomp.policy.std.StdPolicyEngine;
-
-import static org.junit.Assert.*;
 
 /**
  * The class <code>AutoClientEndTest</code> contains tests for the class <code>{@link AutoClientEnd}</code>.
@@ -86,89 +85,6 @@ public class AutoClientEndTest {
 		assertNotNull(result);
 	}
 
-	/**
-	 * Run the void onClose(Session) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testOnClose()
-		throws Exception {
-		AutoClientEnd fixture = new AutoClientEnd();
-		Session mockSession = Mockito.mock(Session.class);
-		fixture.onClose(mockSession);
-
-		// add additional test code here
-		// An unexpected exception was thrown in user code while executing this test:
-		//    java.lang.NoClassDefFoundError: Could not initialize class org.openecomp.policy.std.AutoClientEnd
-	}
-
-
-	/**
-	 * Run the void onError(Session,Throwable) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testOnError()
-		throws Exception {
-		AutoClientEnd fixture = new AutoClientEnd();
-		Session mockSession = Mockito.mock(Session.class);
-		Throwable e = new Throwable();
-
-		fixture.onError(mockSession, e);
-
-		// add additional test code here
-		// An unexpected exception was thrown in user code while executing this test:
-		//    java.lang.NoClassDefFoundError: Could not initialize class org.openecomp.policy.std.AutoClientEnd
-	}
-
-	/**
-	 * Run the void onMessage(String,Session) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testOnMessage()
-		throws Exception {
-		AutoClientEnd fixture = new AutoClientEnd();
-		Session mockSession = Mockito.mock(Session.class);
-		String message = "";
-		//Session session = null;
-
-		fixture.onMessage(message, mockSession);
-
-		// add additional test code here
-		// An unexpected exception was thrown in user code while executing this test:
-		//    java.lang.NoClassDefFoundError: Could not initialize class org.openecomp.policy.std.AutoClientEnd
-	}
-
-
-	/**
-	 * Run the void onOpen(Session) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testOnOpen()
-		throws Exception {
-		AutoClientEnd fixture = new AutoClientEnd();
-		Session mockSession = Mockito.mock(Session.class);
-
-		fixture.onOpen(mockSession);
-
-		// add additional test code here
-		// An unexpected exception was thrown in user code while executing this test:
-		//    java.lang.NoClassDefFoundError: Could not initialize class org.openecomp.policy.std.AutoClientEnd
-	}
 
 	/**
 	 * Run the void setAuto(NotificationScheme,NotificationHandler) method test.

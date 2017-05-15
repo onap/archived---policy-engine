@@ -39,6 +39,8 @@ import javax.persistence.Query;
 
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.controlloop.policy.builder.BuilderException;
 import org.openecomp.policy.controlloop.policy.builder.Results;
 import org.openecomp.policy.controlloop.policy.guard.Constraint;
@@ -77,7 +79,9 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 
 public class DecisionPolicy extends Policy {
-
+	
+	private static final Logger LOGGER	= FlexLogger.getLogger(DecisionPolicy.class);
+	
 	public static final String FUNCTION_NOT = "urn:oasis:names:tc:xacml:1.0:function:not";
 	private static final String AAFProvider = "AAF";
 	public static final String GUARD_YAML = "GUARD_YAML";
@@ -595,7 +599,7 @@ public class DecisionPolicy extends Policy {
 		try {
 			jpaUtils = JPAUtils.getJPAUtilsInstance(XACMLPapServlet.getEmf());
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 		Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
 		Map<String, String> dropDownMap = new HashMap<String, String>();

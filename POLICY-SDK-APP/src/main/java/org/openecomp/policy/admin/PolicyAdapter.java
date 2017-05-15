@@ -1,5 +1,7 @@
 package org.openecomp.policy.admin;
 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.controller.ActionPolicyController;
 import org.openecomp.policy.controller.CreateBRMSParamController;
 import org.openecomp.policy.controller.CreateBRMSRawController;
@@ -16,6 +18,8 @@ import com.att.research.xacml.util.XACMLProperties;
 
 public class PolicyAdapter {
 
+	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyAdapter.class);
+	
 	public void configure(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		String	policyNameValue = null ;
 		String	configPolicyName = null ;
@@ -102,7 +106,7 @@ public class PolicyAdapter {
 			Class<?> policyAdapter = Class.forName(XACMLProperties.getProperty("policyAdapter.impl.className", PolicyAdapter.class.getName()));
 			return (PolicyAdapter) policyAdapter.newInstance();
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 		return null;
 	}

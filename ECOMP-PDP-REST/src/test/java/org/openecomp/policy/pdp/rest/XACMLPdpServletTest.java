@@ -33,8 +33,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -50,6 +48,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
 import com.mockrunner.mock.web.MockServletInputStream;
+
+import junit.framework.TestCase;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(IntegrityMonitor.class)	// so PowerMock can mock static method of IntegrityMonitor
@@ -127,7 +127,7 @@ public class XACMLPdpServletTest extends TestCase{
 			pdpServlet.init(servletConfig);
 			assertTrue(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 			
 		}
@@ -143,7 +143,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch(Exception e){
 			System.out.println("Unexpected exception in testDoGetNoTypeError");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}
@@ -159,7 +159,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoGetConfigType");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 
@@ -176,7 +176,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch(Exception e){
 			System.out.println("Unexpected exception in testDoGetTypeHb");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}
@@ -190,7 +190,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch(Exception e){
 			System.out.println("Unexpected exception in testDoGetTypeStatus");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}	
@@ -203,7 +203,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPost");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}
@@ -219,7 +219,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPostToLong");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}	
@@ -235,7 +235,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPostContentLengthNegative");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}	
@@ -251,7 +251,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPostContentTypeNonValid");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}	
@@ -267,7 +267,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPostContentTypeConfigurationError");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}	
@@ -286,7 +286,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPutCacheEmpty");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}
@@ -307,7 +307,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPutConfigPolicies");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}	
@@ -326,7 +326,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPutToLong");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}	
@@ -345,7 +345,7 @@ public class XACMLPdpServletTest extends TestCase{
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPutInvalidContentType");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}		
@@ -358,7 +358,7 @@ public class XACMLPdpServletTest extends TestCase{
 			pdpServlet.destroy();
 		}catch(Exception e){
 			System.out.println("Unexpected exception in testDestroy");
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
 	}

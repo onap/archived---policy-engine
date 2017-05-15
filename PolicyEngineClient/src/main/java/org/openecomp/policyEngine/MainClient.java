@@ -41,9 +41,14 @@ import org.openecomp.policy.api.PolicyConfigException;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
 import org.openecomp.policy.api.RemovedPolicy;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.w3c.dom.Document;
 
 public class MainClient {
+	
+	private static final Logger LOGGER	= FlexLogger.getLogger(MainClient.class);
+	
 	public static void main(String[] args) {
 		PolicyEngine policyEngine;
 		try {
@@ -72,7 +77,7 @@ public class MainClient {
 					}
 				}
 			} catch (PolicyConfigException e) {
-				e.printStackTrace();
+				LOGGER.error("Exception Occured"+e);
 			}
 			
 			// Manual Notifications.. 

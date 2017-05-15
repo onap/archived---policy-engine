@@ -47,6 +47,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 
 /**
  * Class reads from .testCases file and run the test cases available in the file
@@ -58,6 +60,9 @@ import org.openecomp.policy.api.PolicyEngineException;
  *
  */
 public class GeneralTestClient {
+	
+	private static final Logger LOGGER	= FlexLogger.getLogger(GeneralTestClient.class);
+	
 	static int totalTC = 0, passTC = 0, failTC = 0;
 
 	public static void main(String[] args) {
@@ -275,29 +280,26 @@ public class GeneralTestClient {
 
 						}
 					} catch (PolicyEngineException e) {
-						// TODO Auto-generated catch block
 						printResult(id, testFor, testCaseDescription, "FAILED");
 						failTCforFile++;
 						failTC++;
-						e.printStackTrace();
+						LOGGER.error("Exception Occured"+e);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						printResult(id, testFor, testCaseDescription, "FAILED");
 						failTCforFile++;
 						failTC++;
-						e.printStackTrace();
+						LOGGER.error("Exception Occured"+e);
 					}
 				}
 
 			} catch (FileNotFoundException ex) {
-				ex.printStackTrace();
+				LOGGER.error("Exception Occured due to File not found"+ex);
 			} catch (IOException ex) {
-				ex.printStackTrace();
+				LOGGER.error("Exception Occured"+ex);
 			} catch (NullPointerException ex) {
-				ex.printStackTrace();
+				LOGGER.error("Exception Occured due to Null Pointer"+ex);
 			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOGGER.error("Exception Occured while Parsing"+e);
 			}
 		}
 		System.out.println("\n\n\t Summary for the file: TOTAL: "

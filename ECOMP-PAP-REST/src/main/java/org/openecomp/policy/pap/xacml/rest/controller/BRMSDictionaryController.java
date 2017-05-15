@@ -242,7 +242,6 @@ public class BRMSDictionaryController{
         }
         catch (Exception e){
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-            e.printStackTrace();
         }
     }
     
@@ -262,7 +261,6 @@ public class BRMSDictionaryController{
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
             response.addHeader("error", "dictionaryDBQuery");
-            e.printStackTrace();
         }
     }
     
@@ -402,7 +400,6 @@ public class BRMSDictionaryController{
         }
         catch (Exception e){
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-            e.printStackTrace();
         }
     }
     
@@ -422,7 +419,6 @@ public class BRMSDictionaryController{
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
             response.addHeader("error", "dictionaryDBQuery");
-            e.printStackTrace();
         }
     }
     

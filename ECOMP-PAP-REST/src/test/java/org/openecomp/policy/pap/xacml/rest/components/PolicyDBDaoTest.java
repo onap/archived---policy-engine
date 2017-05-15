@@ -89,7 +89,7 @@ public class PolicyDBDaoTest {
 
 		em.getTransaction().commit();
 		} catch(Exception e){
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			em.getTransaction().rollback();
 		}
 		em.close();
@@ -97,7 +97,7 @@ public class PolicyDBDaoTest {
 			dbd = PolicyDBDao.getPolicyDBDaoInstance(emf);
 			dbd2 = PolicyDBDao.getPolicyDBDaoInstance(emf);
 		} catch (Exception e) {
-			//e.printStackTrace();
+			//logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 
@@ -217,7 +217,7 @@ public class PolicyDBDaoTest {
 			try{
 				result = (PolicyEntity)getDataQuery.getSingleResult();
 			} catch(Exception e){
-				e.printStackTrace();
+				logger.error("Exception Occured"+e);
 				Assert.fail();
 			}
 			Assert.assertEquals(xmlFile, result.getPolicyData());
@@ -228,7 +228,7 @@ public class PolicyDBDaoTest {
 				transac = dbd.getNewTransaction();
 				transac.deletePolicy(filePath);
 			} catch(Exception e){
-				e.printStackTrace();
+				logger.error("Exception Occured"+e);
 				Assert.fail();
 			}
 			Assert.assertTrue(transac.isTransactionOpen());
@@ -246,7 +246,7 @@ public class PolicyDBDaoTest {
 				transac = dbd.getNewTransaction();
 				transac.deletePolicy(filePath);
 			} catch(Exception e){
-				e.printStackTrace();
+				logger.error("Exception Occured"+e);
 				Assert.fail();
 			}
 			transac.commitTransaction();
@@ -343,7 +343,7 @@ public class PolicyDBDaoTest {
 		try{
 		result = (PolicyEntity)getDataQuery.getSingleResult();
 		} catch(Exception e){
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		String expectedData;
@@ -360,7 +360,7 @@ public class PolicyDBDaoTest {
 			transaction = dbd.getNewTransaction();
 			transaction.deletePolicy(policyFile.getAbsolutePath());
 		} catch(Exception e){
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		Assert.assertTrue(transaction.isTransactionOpen());
@@ -378,7 +378,7 @@ public class PolicyDBDaoTest {
 			transaction = dbd.getNewTransaction();
 			transaction.deletePolicy(policyFile.getAbsolutePath());
 		} catch(Exception e){
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		//Assert.assertFalse(transaction.isTransactionOpen());
@@ -394,7 +394,7 @@ public class PolicyDBDaoTest {
 			group.commitTransaction();
 		} catch(Exception e){
 			group.rollbackTransaction();
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		EntityManager em = emf.createEntityManager();
@@ -416,7 +416,7 @@ public class PolicyDBDaoTest {
 			group.commitTransaction();
 		} catch(Exception e){
 			group.rollbackTransaction();
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		em = emf.createEntityManager();
@@ -436,7 +436,7 @@ public class PolicyDBDaoTest {
 			group.commitTransaction();
 		} catch(Exception e){
 			group.rollbackTransaction();
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		group = dbd.getNewTransaction();
@@ -445,7 +445,7 @@ public class PolicyDBDaoTest {
 			group.commitTransaction();
 		} catch(Exception e){
 			group.rollbackTransaction();
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		em = emf.createEntityManager();
@@ -467,7 +467,7 @@ public class PolicyDBDaoTest {
 			group.commitTransaction();
 		} catch(Exception e){
 			group.rollbackTransaction();
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		em = emf.createEntityManager();
@@ -488,7 +488,7 @@ public class PolicyDBDaoTest {
 			group.commitTransaction();
 		} catch(Exception e){
 			group.rollbackTransaction();
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		group = dbd.getNewTransaction();
@@ -497,7 +497,7 @@ public class PolicyDBDaoTest {
 			group.commitTransaction();
 		} catch(Exception e){
 			group.rollbackTransaction();
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		
@@ -507,7 +507,7 @@ public class PolicyDBDaoTest {
 			group.commitTransaction();
 		} catch(Exception e){
 			group.rollbackTransaction();
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		group = dbd.getNewTransaction();
@@ -516,7 +516,7 @@ public class PolicyDBDaoTest {
 			group.commitTransaction();
 		} catch(Exception e){
 			group.rollbackTransaction();
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		em = emf.createEntityManager();
@@ -536,7 +536,7 @@ public class PolicyDBDaoTest {
 			group.commitTransaction();
 		} catch(Exception e){
 			group.rollbackTransaction();
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		em = emf.createEntityManager();
@@ -571,7 +571,7 @@ public class PolicyDBDaoTest {
 			group.rollbackTransaction();
 		} catch(Exception e){
 			group.rollbackTransaction();
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		
@@ -585,7 +585,7 @@ public class PolicyDBDaoTest {
 			group.updateGroup(pdpGroup, "testuser");
 			group.commitTransaction();
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			group.rollbackTransaction();
 			Assert.fail();
 		}
@@ -628,7 +628,7 @@ public class PolicyDBDaoTest {
 			System.out.println("Decrypted password: "+decr);
 			Assert.assertEquals("testpassword", decr);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		
@@ -662,7 +662,7 @@ public class PolicyDBDaoTest {
 			}
 			Thread.sleep(sleepTime);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		if(logger.isDebugEnabled()){
 			Date date= new java.util.Date();
@@ -703,7 +703,7 @@ public class PolicyDBDaoTest {
 			}
 			Thread.sleep(sleepTime);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 		if(logger.isDebugEnabled()){
 			Date date= new java.util.Date();
@@ -798,7 +798,7 @@ public class PolicyDBDaoTest {
 						+ "\n   TimeStamp = " + date.getTime()
 						+ "\n\n");
 			}
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		

@@ -220,7 +220,7 @@ public class TestAnnotation extends TestBase {
 			}
 		} catch (IllegalArgumentException | IllegalAccessException | DataTypeException | IOException e) {
 			logger.error(e);
-			e.printStackTrace();
+			logger.error("Exception Occured"+e);
 		}
 	}
 	

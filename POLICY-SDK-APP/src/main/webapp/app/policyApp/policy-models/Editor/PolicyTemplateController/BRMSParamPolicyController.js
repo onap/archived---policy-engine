@@ -121,7 +121,7 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
                 	$scope.datarule = data.policyData;
                 	var modalInstance = $modal.open({
                     	backdrop: 'static', keyboard: false,
-                        templateUrl : 'brmsshowrule',
+                        templateUrl : 'app/policyApp/policy-models/Editor/PolicyTemplates/BRMSShowParamRuleModal.html',
                         controller: 'showrulecontroller',
                         resolve: {
                             message: function () {

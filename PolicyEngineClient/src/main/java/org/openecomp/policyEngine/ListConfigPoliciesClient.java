@@ -29,8 +29,13 @@ import org.openecomp.policy.api.ConfigRequestParameters;
 import org.openecomp.policy.api.PolicyConfigException;
 import org.openecomp.policy.api.PolicyEngine;
 import org.openecomp.policy.api.PolicyEngineException;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 
 public class ListConfigPoliciesClient {
+	
+	private static final Logger LOGGER	= FlexLogger.getLogger(ListConfigPoliciesClient.class);
+	
 	public static void main(String[] args) {
 		PolicyEngine policyEngine;
 
@@ -62,10 +67,9 @@ public class ListConfigPoliciesClient {
 	        }
 
 		} catch (PolicyConfigException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		} catch (PolicyEngineException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("Exception Occured"+e);
 		}
 	}
 	
