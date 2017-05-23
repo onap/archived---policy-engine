@@ -22,7 +22,6 @@ package org.openecomp.policy.std;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.UUID;
 
@@ -127,11 +126,9 @@ public class AutoClientUEB implements Runnable  {
 					
 					 CConsumer = builder.build();
 					
-				} catch (MalformedURLException e1) {
-					e1.printStackTrace();
-				} catch (GeneralSecurityException e1) {
-					e1.printStackTrace();
-				}
+				} catch (Exception e1) {
+					logger.error("Exception Occured" + e1);
+				} 
 				while (this.isRunning() )
 				{
 					try {

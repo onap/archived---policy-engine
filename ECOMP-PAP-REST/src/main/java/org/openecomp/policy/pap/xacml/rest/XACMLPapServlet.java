@@ -1275,12 +1275,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.info("JSON request from PolicyEngine API: " + json);
 			// convert Object sent as JSON into local object
 			StdPDPPolicy policy = PolicyUtils.jsonStringToObject(json, StdPDPPolicy.class);
-			Set<PDPPolicy> policies = new HashSet<PDPPolicy>();
+			Set<PDPPolicy> policies = new HashSet<>();
 			if(policy!=null){
 				policies.add(policy);
 			}
 			//Get the current policies from the Group and Add the new one
-			Set<PDPPolicy> currentPoliciesInGroup = new HashSet<PDPPolicy>();
+			Set<PDPPolicy> currentPoliciesInGroup = new HashSet<>();
 			currentPoliciesInGroup = group.getPolicies();
 			//If the selected policy is in the group we must remove it because the name is default
 			Iterator<PDPPolicy> policyIterator = policies.iterator();
@@ -1296,7 +1296,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				}
 			}
 			//Update the PDP Group after removing old version of policy
-			Set<PDPPolicy> updatedPoliciesInGroup = new HashSet<PDPPolicy>();
+			Set<PDPPolicy> updatedPoliciesInGroup = new HashSet<>();
 			updatedPoliciesInGroup = group.getPolicies();
 			//need to remove the policy with default name from group
 			for (PDPPolicy updatedPolicy : currentPoliciesInGroup) {
@@ -1319,9 +1319,13 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				throw new PAPException(e.getMessage());	
 			}
 			papEngine.updateGroup(group);
+			String policyId = "empty";
+			if(policy!=null){
+				policyId = policy.getId();
+			}
 			response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 			response.addHeader("operation", "push");
-			response.addHeader("policyId", policy.getId());
+			response.addHeader("policyId", policyId);
 			response.addHeader("groupId", groupId);
 			if (LOGGER.isDebugEnabled()) {		
 				LOGGER.debug("Group '" + group.getId() + "' updated");
@@ -1992,7 +1996,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					moveToGroup = papEngine.getGroup(moveToGroupId);
 				}
 				// get list of PDPs in the group being deleted so we can notify them that they got changed
-				Set<EcompPDP> movedPDPs = new HashSet<EcompPDP>();
+				Set<EcompPDP> movedPDPs = new HashSet<>();
 				movedPDPs.addAll(group.getEcompPdps());
 				// do the move/remove
 				try{
@@ -2049,7 +2053,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 */
 	private class Heartbeat implements Runnable {
 		private PAPPolicyEngine papEngine;
-		private Set<EcompPDP> pdps = new HashSet<EcompPDP>();
+		private Set<EcompPDP> pdps = new HashSet<>();
 		private int heartbeatInterval;
 		private int heartbeatTimeout;
 
@@ -2075,7 +2079,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			synchronized(this) {
 				this.isRunning = true;
 			}
-			HashMap<String, URL> idToURLMap = new HashMap<String, URL>();
+			HashMap<String, URL> idToURLMap = new HashMap<>();
 			try {
 				while (this.isRunning()) {
 					// Wait the given time
@@ -2382,7 +2386,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 
 	private class NotifyACThread implements Runnable {
 		public void run() {
-			List<String> disconnectedACs = new ArrayList<String>();
+			List<String> disconnectedACs = new ArrayList<>();
 			// There should be no Concurrent exception here because the list is a CopyOnWriteArrayList.
 			// The "for each" loop uses the collection's iterator under the covers, so it should be correct.
 			for (String acURL : adminConsoleURLStringList) {

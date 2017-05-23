@@ -1,0 +1,27 @@
+guard:
+  version: 2.0.0
+
+guards:
+  - id: unique_guard_vUSP_1
+    name: APPC 5 Restart
+    description: 
+      We only allow 5 restarts over 15 minute window during the day time hours (i.e. avoid midnight to 5am)
+    actor: APPC
+    recipe: Restart
+    limit_constraints:
+      - num: 5
+        time_in_range:
+          arg2: PT5H
+          arg3: PT24H
+  #
+  - id: unique_guard_vUSP_1
+    name: APPC 5 Restart
+    description: 
+      We only allow 5 restarts over 15 minute window during the day time hours (i.e. avoid midnight to 5am)
+    actor: APPC
+    recipe: Restart
+    limit_constraints:
+      - num: 5
+        time_in_range:
+          arg2: PT5H
+          arg3: PT24H

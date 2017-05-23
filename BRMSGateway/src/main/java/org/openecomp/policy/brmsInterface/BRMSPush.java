@@ -110,7 +110,7 @@ public class BRMSPush {
 	private static final String DEFAULT_VERSION = "1.1.0-SNAPSHOT";
 	private static final String DEPENDENCY_FILE = "dependency.json";
 
-	private static Map<String, String> modifiedGroups = new HashMap<String, String>();
+	private static Map<String, String> modifiedGroups = new HashMap<>();
 	private static IntegrityMonitor im;
 	private static BackUpMonitor bm;
 	private static String resourceName = null;
@@ -131,8 +131,8 @@ public class BRMSPush {
 	private Long dmaapDelay = Long.parseLong("5000");
 	private String notificationType = null;
 	private ArrayList<ControllerPOJO> controllers;
-	private HashMap<String, ArrayList<Object>> groupMap = new HashMap<String, ArrayList<Object>>();
-	private Map<String, String> policyMap = new HashMap<String,String>();
+	private HashMap<String, ArrayList<Object>> groupMap = new HashMap<>();
+	private Map<String, String> policyMap = new HashMap<>();
 	private String brmsdependencyversion;
 	private EntityManager em;
 	private boolean syncFlag = false;
@@ -206,7 +206,7 @@ public class BRMSPush {
 			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "repositoryURL property is missing from the property file ");
 		}
 		if(repURL.contains(",")){
-			repURLs = new ArrayList<String>(Arrays.asList(repURL.trim().split(",")));
+			repURLs = new ArrayList<>(Arrays.asList(repURL.trim().split(",")));
 		}else{
 			repURLs = new ArrayList<>();
 			repURLs.add(repURL);
@@ -258,9 +258,9 @@ public class BRMSPush {
 			pubTopic = pubTopic.trim();
 			
 			if(dmaapServers.contains(",")) {
-				dmaapList = new ArrayList<String>(Arrays.asList(dmaapServers.split("\\s*,\\s*")));
+				dmaapList = new ArrayList<>(Arrays.asList(dmaapServers.split("\\s*,\\s*")));
 			} else {
-				dmaapList = new ArrayList<String>();
+				dmaapList = new ArrayList<>();
 				dmaapList.add(dmaapServers);
 			}
 			
@@ -322,8 +322,8 @@ public class BRMSPush {
 	 * Will Initialize the variables required for BRMSPush. 
 	 */
 	public void initiate(boolean flag) {
-		modifiedGroups =  new HashMap<String, String>();
-		controllers = new ArrayList<ControllerPOJO>();
+		modifiedGroups =  new HashMap<>();
+		controllers = new ArrayList<>();
 		try {
 			bm.updateNotification();
 		} catch (Exception e) {
@@ -346,7 +346,7 @@ public class BRMSPush {
 		if(!responseAttributes.isEmpty()){
 			// Pick selected Value
 			String userControllerName = null;
-			ArrayList<PEDependency> userDependencies = new ArrayList<PEDependency>();
+			ArrayList<PEDependency> userDependencies = new ArrayList<>();
 			for(String key: responseAttributes.keySet()){
 				if(key.equals(policyKeyID)){
 					selectedName = responseAttributes.get(key);
@@ -421,7 +421,7 @@ public class BRMSPush {
 				dependency.setArtifactId(brmsGroupInfo.getArtifactId());
 				dependency.setGroupId(brmsGroupInfo.getGroupId());
 				dependency.setVersion(brmsGroupInfo.getVersion());
-				ArrayList<Object> values = new ArrayList<Object>();
+				ArrayList<Object> values = new ArrayList<>();
 				values.add(dependency);
 				groupMap.put(brmsGroupInfo.getControllerName(), values);
 			}
@@ -756,7 +756,7 @@ public class BRMSPush {
         ControllerPOJO controllerPOJO = new ControllerPOJO();
         controllerPOJO.setName(controllerName);
         controllerPOJO.setOperation(operation);
-        HashMap<String, String> drools = new HashMap<String, String>();
+        HashMap<String, String> drools = new HashMap<>();
         drools.put("groupId", getGroupID(controllerName));
         drools.put("artifactId", getArtifactID(controllerName));
         drools.put("version", getVersion(controllerName));
@@ -776,7 +776,7 @@ public class BRMSPush {
 		ControllerPOJO controllerPOJO = new ControllerPOJO();
 		controllerPOJO.setName(controllerName);
 		controllerPOJO.setOperation("lock");
-		List<ControllerPOJO> controllers = new ArrayList<ControllerPOJO>();
+		List<ControllerPOJO> controllers = new ArrayList<>();
 		controllers.add(controllerPOJO);
 		sendNotification(controllers);
 	}
@@ -841,7 +841,7 @@ public class BRMSPush {
 		distributionManagement.setRepository(repository);
 		model.setDistributionManagement(distributionManagement);
 		// Dependency Management goes here. 
-		List<Dependency> dependencyList= new ArrayList<Dependency>();
+		List<Dependency> dependencyList= new ArrayList<>();
 		if(groupMap.get(name).size()>1){
 			@SuppressWarnings("unchecked")
             ArrayList<PEDependency> dependencies = (ArrayList<PEDependency>) groupMap.get(name).get(1);
@@ -880,7 +880,7 @@ public class BRMSPush {
 				if(dependencyInfo.getDependencies().containsKey(controllerName)){
 					controller = controllerName;
 				}
-				List<Dependency> dependencyList = new ArrayList<Dependency>();
+				List<Dependency> dependencyList = new ArrayList<>();
 				for(PEDependency dependency: dependencyInfo.getDependencies().get(controller)){
 					dependencyList.add(dependency.getDependency());
 				}
@@ -897,7 +897,7 @@ public class BRMSPush {
 	// Default Dependency Section. Can be changed as required. 
 	public List<Dependency> defaultDependencies(String controllerName) {
 		
-		List<Dependency> dependencyList = new ArrayList<Dependency>();
+		List<Dependency> dependencyList = new ArrayList<>();
 		String version= StringEscapeUtils.escapeJava(brmsdependencyversion);
 
 		Dependency demoDependency = new Dependency();
@@ -977,7 +977,7 @@ public class BRMSPush {
 			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "groupNames property is missing or empty from the property file ");
 			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "groupNames property is missing or empty from the property file ");
 		}
-		groupMap = new HashMap<String, ArrayList<Object>>();
+		groupMap = new HashMap<>();
 		for(int counter=0; counter < groupNames.length ;counter++){
 			String name = groupNames[counter];
 			String groupID = config.getProperty(name+".groupID");
@@ -999,7 +999,7 @@ public class BRMSPush {
 	}
 
 	private void addToGroup(String name, PEDependency dependency) {
-		ArrayList<Object> values = new ArrayList<Object>();
+		ArrayList<Object> values = new ArrayList<>();
         values.add(dependency);
 		groupMap.put(name, values);
 		EntityTransaction et = em.getTransaction();

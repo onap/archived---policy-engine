@@ -76,7 +76,7 @@ public class AAFEngine extends StdConfigurableEngine {
 	private static final PIPRequest PIP_REQUEST_INSTANCE = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, new IdentifierImpl("AAF_INSTANCE"), XACML3.ID_DATATYPE_STRING);
 	private static final PIPRequest PIP_REQUEST_ACTION = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, new IdentifierImpl("AAF_ACTION"), XACML3.ID_DATATYPE_STRING);
 	
-	private static final List<PIPRequest> mapRequiredAttributes	= new ArrayList<PIPRequest>();
+	private static final List<PIPRequest> mapRequiredAttributes	= new ArrayList<>();
 	static{ 
 		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_UID));
 		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_PASS));
@@ -85,7 +85,7 @@ public class AAFEngine extends StdConfigurableEngine {
 		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_ACTION));
 	}
 	
-	private static final Map<PIPRequest, String> mapSupportedAttributes	= new HashMap<PIPRequest, String>();
+	private static final Map<PIPRequest, String> mapSupportedAttributes	= new HashMap<>();
 	static{
 		mapSupportedAttributes.put(new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, AAF_RESPONSE_ID, XACML3.ID_DATATYPE_STRING), "response");
 		mapSupportedAttributes.put(new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, AAF_RESULT_ID, XACML3.ID_DATATYPE_BOOLEAN), "result");
@@ -251,7 +251,7 @@ public class AAFEngine extends StdConfigurableEngine {
 	
 	@Override
 	public Collection<PIPRequest> attributesRequired() {
-		List<PIPRequest> attributes = new ArrayList<PIPRequest>();
+		List<PIPRequest> attributes = new ArrayList<>();
 		for (PIPRequest attribute: mapRequiredAttributes) {
 			attributes.add(new StdPIPRequest(attribute));
 		}
@@ -260,7 +260,7 @@ public class AAFEngine extends StdConfigurableEngine {
 
 	@Override
 	public Collection<PIPRequest> attributesProvided() {
-		List<PIPRequest> attributes = new ArrayList<PIPRequest>();
+		List<PIPRequest> attributes = new ArrayList<>();
 		for (PIPRequest attribute : mapSupportedAttributes.keySet()) {
 			attributes.add(new StdPIPRequest(attribute));
 		}

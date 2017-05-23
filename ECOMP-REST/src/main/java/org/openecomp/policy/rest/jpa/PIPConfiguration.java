@@ -112,7 +112,7 @@ public class PIPConfiguration implements Serializable {
 
 	//bi-directional many-to-one association to PIPConfigParam
 	@OneToMany(mappedBy="pipconfiguration", orphanRemoval=true, cascade=CascadeType.REMOVE)
-	private Set<PIPConfigParam> pipconfigParams = new HashSet<PIPConfigParam>();
+	private Set<PIPConfigParam> pipconfigParams = new HashSet<>();
 
 	//bi-directional many-to-one association to PIPType
 	@ManyToOne
@@ -121,7 +121,7 @@ public class PIPConfiguration implements Serializable {
 
 	//bi-directional many-to-one association to PIPResolver
 	@OneToMany(mappedBy="pipconfiguration", orphanRemoval=true, cascade=CascadeType.REMOVE)
-	private Set<PIPResolver> pipresolvers = new HashSet<PIPResolver>();
+	private Set<PIPResolver> pipresolvers = new HashSet<>();
 
 	public PIPConfiguration() {
 	}
@@ -344,7 +344,7 @@ public class PIPConfiguration implements Serializable {
 	
 	@Transient
 	public static Collection<PIPConfiguration>		importPIPConfigurations(Properties properties) {
-		Collection<PIPConfiguration> configurations = new ArrayList<PIPConfiguration>();
+		Collection<PIPConfiguration> configurations = new ArrayList<>();
 		String engines = properties.getProperty(XACMLProperties.PROP_PIP_ENGINES);
 		if (engines == null || engines.isEmpty()) {
 			return configurations;
@@ -452,7 +452,7 @@ public class PIPConfiguration implements Serializable {
 		if (prefix.endsWith(".") == false) {
 			prefix = prefix + ".";
 		}
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put(prefix + "classname", this.classname);
 		map.put(prefix + "name", this.name);
 		if (this.description != null) {
@@ -466,7 +466,7 @@ public class PIPConfiguration implements Serializable {
 			map.put(prefix + param.getParamName(), param.getParamValue());
 		}
 		
-		List<String> ids = new ArrayList<String>();
+		List<String> ids = new ArrayList<>();
 		Iterator<PIPResolver> iter = this.pipresolvers.iterator();
 		while (iter.hasNext()) {
 			PIPResolver resolver = iter.next();
@@ -508,7 +508,7 @@ public class PIPConfiguration implements Serializable {
 			props.setProperty(prefix + param.getParamName(), param.getParamValue());
 		}
 		
-		List<String> ids = new ArrayList<String>();
+		List<String> ids = new ArrayList<>();
 		Iterator<PIPResolver> iter = this.pipresolvers.iterator();
 		while (iter.hasNext()) {
 			PIPResolver resolver = iter.next();

@@ -214,7 +214,7 @@ public class TestCustom extends TestBase {
 		//
 		// Copy the request attributes
 		//
-		List<StdMutableRequestAttributes> attributes = new ArrayList<StdMutableRequestAttributes>();
+		List<StdMutableRequestAttributes> attributes = new ArrayList<>();
 		for (RequestAttributes a : oldRequest.getRequestAttributes()) {
 			attributes.add(new StdMutableRequestAttributes(a));
 		}

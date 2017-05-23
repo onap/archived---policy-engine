@@ -1,0 +1,76 @@
+#!/bin/bash
+
+ELK_BASE=${POLICY_HOME}/elk/
+ELK_RUNNING="^$JAVA_HOME/bin/java .* -cp.* org.elasticsearch.bootstrap.Elasticsearch$"
+COMPONENT=elk
+
+JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote"
+JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote.port=${{ELK_JMX_PORT}}"
+JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote.ssl=false" 
+JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote.authenticate=false"
+
+RETVAL=0
+
+function update_monitor() {
+	COMPONENT=$1
+	STATUS=$2
+	if [[ -f ${POLICY_HOME}/etc/monitor/monitor.cfg ]]; then
+		/bin/sed -i.bak \
+			-e "s/^${COMPONENT}=.*/${COMPONENT}=${STATUS}/g" \
+			${POLICY_HOME}/etc/monitor/monitor.cfg	
+	fi
+}
+
+function stop() {
+	pkill -u ${POLICY_USER} -f "${ELK_RUNNING}" -TERM
+	RETVAL=$?
+	if [[ ${RETVAL} != 0 ]]; then
+		sleep 2
+		pkill -u ${POLICY_USER} -f "${ELK_RUNNING}" -KILL
+		RETVAL=$?
+    fi
+    update_monitor ${COMPONENT} off	
+    sleep 1
+}
+
+function start() {
+	export JAVA_OPTS="${JAVA_OPTS} ${JMX_JAVA_OPTS}" 
+	$POLICY_HOME/elk/bin/elasticsearch -d
+	RETVAL=$?
+	if [[ ${RETVAL} != 0 ]]; then
+		update_monitor ${COMPONENT} off
+	else
+		update_monitor ${COMPONENT} on
+	fi	
+}
+
+# main
+
+case "$1" in
+    status)
+        pid=$(pgrep -f -u ${POLICY_USER} "${ELK_RUNNING}" 2> /dev/null)
+        RETVAL=$?
+        if [ $RETVAL -eq 0 ]; then
+        	echo "running with pid ${pid}"
+        else
+        	echo "stopped"
+        fi
+        ;;
+	restart)
+		stop
+        sleep 2
+        start
+        ;;
+	start)
+        start
+        ;;
+	stop)
+		stop
+        ;;        
+    *)
+        echo "error: invalid option $@"
+        RETVAL=1
+        ;;
+esac
+
+exit ${RETVAL}

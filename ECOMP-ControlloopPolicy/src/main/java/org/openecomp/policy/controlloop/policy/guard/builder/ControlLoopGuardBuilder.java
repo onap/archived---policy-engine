@@ -113,6 +113,9 @@ public interface ControlLoopGuardBuilder {
 	 */
 	public static class Factory {
 		
+		private Factory(){
+			//Do Nothing Private Constructor. 
+		}
 		/**
 		 * @param guard
 		 * @return ControlLoopGuardBuilder object
@@ -120,9 +123,8 @@ public interface ControlLoopGuardBuilder {
 		 */
 		public static ControlLoopGuardBuilder	buildControlLoopGuard (Guard guard) throws BuilderException {
 			
-			ControlLoopGuardBuilder builder = new ControlLoopGuardBuilderImpl(guard);
+			return  new ControlLoopGuardBuilderImpl(guard);
 			
-			return builder;
 		}
 	}
 }

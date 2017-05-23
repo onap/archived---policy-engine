@@ -26,16 +26,19 @@ package org.openecomp.policy.conf;
  * */
 import java.util.Properties;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.controller.PolicyController;
 import org.openecomp.policy.rest.jpa.SystemLogDB;
 
 @SuppressWarnings("deprecation")
 public class HibernateSession{
 
+	private static final Logger LOGGER	= FlexLogger.getLogger(HibernateSession.class);
+	
 	private static SessionFactory logSessionFactory;
 	
 	static {
@@ -49,11 +52,11 @@ public class HibernateSession{
 			prop.setProperty("show_sql", "false");	
 			logSessionFactory = new Configuration().addPackage("org.openecomp.policy.*").addProperties(prop)
 				   .addAnnotatedClass(SystemLogDB.class).buildSessionFactory();
-		} catch (Throwable ex) {
-			throw new ExceptionInInitializerError(ex);
+		} catch (Exception ex) {
+			LOGGER.error("Exception Occured while creating Log database Hibernate session"+ex);
 		}
 	}
-	public static Session getSession() throws HibernateException {
+	public static Session getSession(){
 		return logSessionFactory.openSession();
 	}
 

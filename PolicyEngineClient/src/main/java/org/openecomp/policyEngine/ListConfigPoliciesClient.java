@@ -48,7 +48,7 @@ public class ListConfigPoliciesClient {
 			parameters.setEcompName(".*");
 			parameters.setConfigName(".*");
 			
-			Map<String, String> configAttributes = new HashMap<String,String>();
+			Map<String, String> configAttributes = new HashMap<>();
 			configAttributes.put("java", "java");
 			configAttributes.put("peach", "Tar");
 			configAttributes.put("true", "false");

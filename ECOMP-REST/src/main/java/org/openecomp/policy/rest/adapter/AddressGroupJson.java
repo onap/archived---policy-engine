@@ -40,12 +40,16 @@ public class AddressGroupJson {
 	}
 	
 	public boolean equals(Object obj){
-		if(obj != null){
-			AddressGroupJson servGroupobj=(AddressGroupJson) obj;
-			if(this.getName().equals(servGroupobj.getName())){
-				return true;
-			}	
+		if(obj == null){
+			return false;
 		}
+		if(this.getClass() != obj.getClass()){
+			return false;
+		}
+		AddressGroupJson servGroupobj=(AddressGroupJson) obj;
+		if(this.getName().equals(servGroupobj.getName())){
+			return true;
+		}	
 		return false;
 	}
 	

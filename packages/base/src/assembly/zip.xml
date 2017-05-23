@@ -45,12 +45,6 @@
 			<directoryMode>700</directoryMode>
 		</fileSet>
 		<fileSet>
-			<directory>${project.build.directory}/pypdp/webapps</directory>
-			<outputDirectory>install/servers/pypdp/webapps</outputDirectory>
-			<fileMode>700</fileMode>
-			<directoryMode>700</directoryMode>
-		</fileSet>	
-		<fileSet>
 			<directory>${project.build.directory}/pdp/webapps</directory>
 			<outputDirectory>install/servers/pdp/webapps</outputDirectory>
 			<fileMode>700</fileMode>

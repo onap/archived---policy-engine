@@ -77,7 +77,7 @@ public class RemoveGroupPolicy {
 				null);
 		
 		// replace the original set of Policies with the set from the container (possibly modified by the user)
-		Set<PDPPolicy> changedPolicies = new HashSet<PDPPolicy>();
+		Set<PDPPolicy> changedPolicies = new HashSet<>();
 		changedPolicies.addAll((Collection<PDPPolicy>) RemoveGroupPolicy.policyContainer.getItemIds());
 		updatedGroupObject.setPolicies(changedPolicies);
 		updatedGroupObject.setEcompPdps(this.group.getEcompPdps());

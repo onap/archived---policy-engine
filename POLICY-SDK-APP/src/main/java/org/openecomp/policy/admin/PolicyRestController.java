@@ -246,7 +246,7 @@ public class PolicyRestController extends RestrictedBaseController{
 				String newFile = file.toString();
 				uri = uri +"&dictionaryName="+newFile;
 			} catch (Exception e2) {
-				e2.printStackTrace();
+				LOGGER.error("Exception Occured while calling PAP with import dictionary request"+e2);
 			}
 		}
 
@@ -270,7 +270,7 @@ public class PolicyRestController extends RestrictedBaseController{
 					try {
 						root = mapper.readTree(request.getReader());
 					}catch (Exception e1) {
-						e1.printStackTrace();
+						LOGGER.error("Exception Occured while calling PAP"+e1);
 					}
 
 					ObjectMapper mapper1 = new ObjectMapper();
@@ -281,7 +281,7 @@ public class PolicyRestController extends RestrictedBaseController{
 
 					Object content =  new ByteArrayInputStream(json.getBytes());
 
-					if (content != null && (content instanceof InputStream)) {
+					if (content instanceof InputStream) {
 						// send current configuration
 						try (OutputStream os = connection.getOutputStream()) {
 							int count = IOUtils.copy((InputStream) content, os);
@@ -300,7 +300,9 @@ public class PolicyRestController extends RestrictedBaseController{
 						boundary = "===" + System.currentTimeMillis() + "===";
 						connection.setRequestProperty("Content-Type","multipart/form-data; boundary=" + boundary);
 						try (OutputStream os = connection.getOutputStream()) {
-							IOUtils.copy((InputStream) item.getInputStream(), os);
+							if(item != null){
+								IOUtils.copy((InputStream) item.getInputStream(), os);
+							}
 						}
 					}
 				}
@@ -385,7 +387,7 @@ public class PolicyRestController extends RestrictedBaseController{
 		String uri = request.getRequestURI();
 		String body = callPAP(request, response, "POST", uri.replaceFirst("/", "").trim());
 		if(body.contains("CouldNotConnectException")){
-			List<String> data = new ArrayList<String>();
+			List<String> data = new ArrayList<>();
 			data.add("Elastic Search Server is down");
 			resultList = data;
 		}else{
@@ -411,7 +413,7 @@ public class PolicyRestController extends RestrictedBaseController{
 		try{
 			resultList = json.get("policyresult");
 		}catch(Exception e){
-			List<String> data = new ArrayList<String>();
+			List<String> data = new ArrayList<>();
 			data.add("Elastic Search Server is down");
 			resultList = data;
 		}

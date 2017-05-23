@@ -75,7 +75,7 @@ public class Obadvice implements Serializable {
 
 	//bi-directional one-to-many association to Attribute Assignment
 	@OneToMany(mappedBy="obadvice", orphanRemoval=true, cascade=CascadeType.REMOVE)
-	private Set<ObadviceExpression> obadviceExpressions = new HashSet<ObadviceExpression>(2);
+	private Set<ObadviceExpression> obadviceExpressions = new HashSet<>(2);
 
 	@Column(name="created_by", nullable=false, length=255)
 	private String createdBy;

@@ -72,13 +72,13 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements EcompPDP
 	
 	private StdPDPGroupStatus status = new StdPDPGroupStatus(Status.UNKNOWN);
 	
-	private Set<EcompPDP>	pdps = new HashSet<EcompPDP>();
+	private Set<EcompPDP>	pdps = new HashSet<>();
 	
-	private Set<PDPPolicy> policies = new HashSet<PDPPolicy>();
+	private Set<PDPPolicy> policies = new HashSet<>();
 	
-	private Set<PDPPolicy> selectedPolicies = new HashSet<PDPPolicy>();
+	private Set<PDPPolicy> selectedPolicies = new HashSet<>();
 	
-	private Set<PDPPIPConfig> pipConfigs = new HashSet<PDPPIPConfig>();
+	private Set<PDPPIPConfig> pipConfigs = new HashSet<>();
 	
 	private String operation;
 	

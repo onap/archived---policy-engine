@@ -23,7 +23,6 @@ package org.openecomp.policy.std;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -90,10 +89,8 @@ public class ManualClientEndUEB {
         CambriaPublisher pub = null;
 		try {
 			pub = CambriaClientFactory.createSimplePublisher(null, UEBlist, pubTopic);
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		} catch (GeneralSecurityException e1) {
-			e1.printStackTrace();
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
 		}
         final JSONObject msg1 = new JSONObject (); 
 
@@ -135,11 +132,9 @@ public class ManualClientEndUEB {
 		String id = "0";
 		try {
 			CConsumer = CambriaClientFactory.createConsumer ( null, uebURLList, topic + uniquID, "clientGroup", id, 15*1000, 1000 );
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		} catch (GeneralSecurityException e1) {
-			e1.printStackTrace();
-		}		
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+		} 		
 		int count = 1;
 		while (count < 4) {
 				publishMessage(topic + "UpdateRequest", uniquID, uebURLList);

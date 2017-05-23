@@ -27,7 +27,7 @@ app.controller('editAttributeController' ,function ($scope, $modalInstance, mess
         $scope.disableCd=true;
         var headers = message.attributeDictionaryData.attributeValue;
         var splitEqual = ',';
-        if(headers != null){
+        if(headers != null && headers != ""){
         	if (headers.indexOf(splitEqual) >= 0) {
         		var splitValue = headers.split(splitEqual);
         		for(i = 0; i < splitValue.length; i++){

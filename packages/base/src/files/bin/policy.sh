@@ -104,10 +104,6 @@ function policy_status() {
 		component_status configs
 	fi
 	
-	if check_x_file "${POLICY_HOME}/etc/init.d/pypdp"; then
-		component_status pypdp
-	fi
-	
 	if check_x_file "${POLICY_HOME}/etc/init.d/console"; then
 		component_status console
 	fi
@@ -145,10 +141,6 @@ function policy_start() {
 
 	if check_x_file "${POLICY_HOME}/etc/init.d/configs"; then
 		component_start configs
-	fi
-	
-	if check_x_file "${POLICY_HOME}/etc/init.d/pypdp"; then
-		component_start pypdp
 	fi
 	
 	if check_x_file "${POLICY_HOME}/etc/init.d/console"; then
@@ -194,10 +186,6 @@ function policy_stop() {
 	
 	if check_x_file "${POLICY_HOME}/etc/init.d/console"; then
 		component_stop console
-	fi
-		
-	if check_x_file "${POLICY_HOME}/etc/init.d/pypdp"; then
-		component_stop pypdp
 	fi
 	
 	if check_x_file "${POLICY_HOME}/etc/init.d/configs"; then

@@ -140,10 +140,8 @@ public class NotificationServer {
 				
 			} catch (MalformedURLException e1) {
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error creating the UEB publisher" + e1.getMessage());
-				e1.printStackTrace();
 			} catch (GeneralSecurityException e1) {
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error creating the UEB publisher" + e1.getMessage());
-				e1.printStackTrace();
 			}
 
 			try {
@@ -189,7 +187,7 @@ public class NotificationServer {
 				if(dmaapServers.contains(",")) {
 					dmaapList = new ArrayList<String>(Arrays.asList(dmaapServers.split("\\s*,\\s*")));
 				} else {
-					dmaapList = new ArrayList<String>();
+					dmaapList = new ArrayList<>();
 					dmaapList.add(dmaapServers);
 				}
 				

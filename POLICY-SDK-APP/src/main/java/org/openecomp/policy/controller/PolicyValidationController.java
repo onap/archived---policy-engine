@@ -90,8 +90,8 @@ public class PolicyValidationController extends RestrictedBaseController {
 	private Pattern pattern;
 	private Matcher matcher;
 
-	private static Map<String, String> rangeMap = new HashMap<String,String>();
-	private static Map<String, String> mapAttribute = new HashMap<String,String>();
+	private static Map<String, String> rangeMap = new HashMap<>();
+	private static Map<String, String> mapAttribute = new HashMap<>();
 
 	private static final String EMAIL_PATTERN = 
 			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -642,14 +642,24 @@ public class PolicyValidationController extends RestrictedBaseController {
 
 	// Validation for json.
 	protected static boolean isJSONValid(String data) {
+		InputStream stream = null;
+		JsonReader jsonReader = null;
 		try {
 			new JSONObject(data);
-			InputStream stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
-			JsonReader jsonReader = Json.createReader(stream);
-			System.out.println("Json Value is: " + jsonReader.read().toString() );
+			stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
+			jsonReader = Json.createReader(stream);
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured"+e);
 			return false;
+		}finally{
+			try {
+				if(stream != null && jsonReader != null){
+					jsonReader.close();
+					stream.close();
+				}
+			} catch (IOException e) {
+				LOGGER.error("Exception Occured while closing the input stream"+e);
+			}
 		}
 		return true;
 	}

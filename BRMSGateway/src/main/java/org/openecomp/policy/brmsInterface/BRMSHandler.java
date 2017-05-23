@@ -125,7 +125,6 @@ public class BRMSHandler implements BackUpHandler{
 			ArrayList<PolicyConfig> brmsPolicies = addedPolicies(notification);
 			Boolean successFlag = false;
 			for(int i=0; !successFlag && i< bRMSPush.URLListSize(); i++){
-				successFlag = false;
 				if(i!=0 && !successFlag){
 					for(PolicyConfig policyConfig: brmsPolicies){
 						logger.info("Policy Retry with this Name notified: " + policyConfig.getPolicyName());
@@ -148,7 +147,7 @@ public class BRMSHandler implements BackUpHandler{
 	 * Executed when a policy is added to PDP.  
 	 */
 	private ArrayList<PolicyConfig> addedPolicies(PDPNotification notification) {
-		ArrayList<PolicyConfig> result = new ArrayList<PolicyConfig>();
+		ArrayList<PolicyConfig> result = new ArrayList<>();
 		for(LoadedPolicy updatedPolicy: notification.getLoadedPolicies()){
 			logger.info("policyName : " + updatedPolicy.getPolicyName());
 			logger.info("policyVersion :" + updatedPolicy.getVersionNo());

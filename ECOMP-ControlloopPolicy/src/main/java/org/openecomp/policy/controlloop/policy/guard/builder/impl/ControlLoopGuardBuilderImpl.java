@@ -40,11 +40,11 @@ import org.yaml.snakeyaml.Yaml;
 
 public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 
-	private ControlLoopGuard CLGuard;
+	private ControlLoopGuard cLGuard;
 	
 	public ControlLoopGuardBuilderImpl(Guard guard) {
-		CLGuard = new ControlLoopGuard();
-		CLGuard.guard = guard;
+		cLGuard = new ControlLoopGuard();
+		cLGuard.setGuard(guard);
 	}
 	
 	@Override
@@ -56,10 +56,10 @@ public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 			if (!policy.isValid()) {
 				throw new BuilderException("Invalid guard policy - some required fields are missing");
 			}
-			if (CLGuard.guards == null) {
-				CLGuard.guards = new LinkedList<GuardPolicy>();
+			if (cLGuard.getGuards() == null) {
+				cLGuard.setGuards(new LinkedList<>());
 			}
-			CLGuard.guards.add(policy);
+			cLGuard.getGuards().add(policy);
 		}
 		return this;
 	}
@@ -69,16 +69,16 @@ public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 		if (policies == null) {
             throw new BuilderException("GuardPolicy must not be null");
         }
-        if (CLGuard.guards == null) {
+        if (cLGuard.getGuards() == null) {
             throw new BuilderException("No existing guard policies to remove");
         }
         for (GuardPolicy policy : policies) {
         	if (!policy.isValid()) {
 				throw new BuilderException("Invalid guard policy - some required fields are missing");
 			}
-            boolean removed = CLGuard.guards.remove(policy);    
+            boolean removed = cLGuard.getGuards().remove(policy);
             if (!removed) {
-                throw new BuilderException("Unknown guard policy: " + policy.name);
+                throw new BuilderException("Unknown guard policy: " + policy.getName());
             }
         }
         return this;
@@ -86,7 +86,7 @@ public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 
 	@Override
 	public ControlLoopGuardBuilder removeAllGuardPolicies() throws BuilderException {
-		CLGuard.guards.clear();
+		cLGuard.getGuards().clear();
         return this;
 	}
 
@@ -98,29 +98,33 @@ public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 		if (constraints == null) {
 			throw new BuilderException("Constraint much not be null");
 		}
+		if (!addLimitConstraints(id,constraints)) {
+			throw new BuilderException("No existing guard policy matching the id: " + id);
+		}
+		return this;
+	}
+
+	private boolean addLimitConstraints(String id, Constraint... constraints) throws BuilderException {
 		boolean exist = false;
-		for (GuardPolicy policy: CLGuard.guards) {
+		for (GuardPolicy policy: cLGuard.getGuards()) {
 			//
 			// We could have only one guard policy matching the id
 			//
-			if (policy.id.equals(id)) {
+			if (policy.getId().equals(id)) {
 				exist = true;
 				for (Constraint cons: constraints) {
 					if (!cons.isValid()) {
 						throw new BuilderException("Invalid guard constraint - some required fields are missing");
 					}
-					if (policy.limit_constraints == null) {
-						policy.limit_constraints = new LinkedList<Constraint>();
+					if (policy.getLimit_constraints() == null) {
+						policy.setLimit_constraints(new LinkedList<>());
 					}
-					policy.limit_constraints.add(cons);
+					policy.getLimit_constraints().add(cons);
 				}
 				break;
 			}
 		}
-		if (exist == false) {
-			throw new BuilderException("No existing guard policy matching the id: " + id);
-		}
-		return this;
+		return exist;
 	}
 
 	@Override
@@ -131,18 +135,25 @@ public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 		if (constraints == null) {
 			throw new BuilderException("Constraint much not be null");
 		}
+		if (!removeConstraints(id, constraints)) {
+			throw new BuilderException("No existing guard policy matching the id: " + id);
+		}
+		return this;
+	}
+
+	private boolean removeConstraints(String id, Constraint... constraints) throws BuilderException {
 		boolean exist = false;
-		for (GuardPolicy policy: CLGuard.guards) {
+		for (GuardPolicy policy: cLGuard.getGuards()) {
 			//
 			// We could have only one guard policy matching the id
 			//
-			if (policy.id.equals(id)) {
+			if (policy.getId().equals(id)) {
 				exist = true;
 				for (Constraint cons: constraints) {
 					if (!cons.isValid()) {
 						throw new BuilderException("Invalid guard constraint - some required fields are missing");
 					}
-					boolean removed = policy.limit_constraints.remove(cons);
+					boolean removed = policy.getLimit_constraints().remove(cons);
 					if (!removed) {
 						throw new BuilderException("Unknown guard constraint: " + cons);
 					}
@@ -150,28 +161,25 @@ public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 				break;
 			}
 		}
-		if (exist == false) {
-			throw new BuilderException("No existing guard policy matching the id: " + id);
-		}
-		return this;
+		return exist;
 	}
 
 	@Override
 	public ControlLoopGuardBuilder removeAllLimitConstraints(String id) throws BuilderException {
-		if (CLGuard.guards == null || CLGuard.guards.isEmpty()) {
+		if (cLGuard.getGuards() == null || cLGuard.getGuards().isEmpty()) {
 			throw new BuilderException("No guard policies exist");
 		} 
 		if (id == null) {
 			throw new BuilderException("The id of target guard policy must not be null");
 		}
 		boolean exist = false;
-		for (GuardPolicy policy: CLGuard.guards) {
-			if (policy.id.equals(id)) {
+		for (GuardPolicy policy: cLGuard.getGuards()) {
+			if (policy.getId().equals(id)) {
 				exist = true;
-				policy.limit_constraints.clear();
+				policy.getLimit_constraints().clear();
 			}
 		}
-		if (exist == false) {
+		if (!exist) {
 			throw new BuilderException("No existing guard policy matching the id: " + id);
 		}
 		return this;
@@ -180,7 +188,7 @@ public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 	
 	private class BuilderCompilerCallback implements ControlLoopCompilerCallback {
 
-		public ResultsImpl results = new ResultsImpl();
+		private ResultsImpl results = new ResultsImpl();
 		
 		@Override
 		public boolean onWarning(String message) {
@@ -197,8 +205,7 @@ public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 	
 	@Override
 	public ControlLoopGuard getControlLoopGuard() {
-		ControlLoopGuard guard = new ControlLoopGuard(this.CLGuard);
-		return guard;
+		return new ControlLoopGuard(this.cLGuard);
 	}	
 	
 	
@@ -211,7 +218,7 @@ public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 		options.setDefaultFlowStyle(FlowStyle.BLOCK);
 		options.setPrettyFlow(true);
 		Yaml yaml = new Yaml(options);
-		String dumpedYaml = yaml.dump(CLGuard);
+		String dumpedYaml = yaml.dump(cLGuard);
 		//
 		// This is our callback class for our compiler
 		//
@@ -220,7 +227,7 @@ public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 		// Compile it
 		//
 		try {
-			ControlLoopGuardCompiler.compile(CLGuard, callback);
+			ControlLoopGuardCompiler.compile(cLGuard, callback);
 		} catch (CompilerException e) {
 			callback.results.addMessage(new MessageImpl(e.getMessage(), MessageLevel.EXCEPTION));
 		}

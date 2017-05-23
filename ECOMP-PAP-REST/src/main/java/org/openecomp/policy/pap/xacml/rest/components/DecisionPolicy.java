@@ -88,13 +88,13 @@ public class DecisionPolicy extends Policy {
 	private static final String XACMLTEMPLATE = "Decision_GuardPolicyTemplate.xml";
 
 	
-	List<String> dynamicLabelRuleAlgorithms = new LinkedList<String>();
-	List<String> dynamicFieldComboRuleAlgorithms = new LinkedList<String>();
-	List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<String>();
-	List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<String>();
-	List<String> dataTypeList = new LinkedList<String>();
+	List<String> dynamicLabelRuleAlgorithms = new LinkedList<>();
+	List<String> dynamicFieldComboRuleAlgorithms = new LinkedList<>();
+	List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<>();
+	List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<>();
+	List<String> dataTypeList = new LinkedList<>();
 	
-	protected Map<String, String> dropDownMap = new HashMap<String, String>();
+	protected Map<String, String> dropDownMap = new HashMap<>();
 	
 
 	public DecisionPolicy() {
@@ -108,7 +108,7 @@ public class DecisionPolicy extends Policy {
 	@Override
 	public Map<String, String> savePolicies() throws Exception {
 
-		Map<String, String> successMap = new HashMap<String,String>();
+		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
@@ -153,7 +153,7 @@ public class DecisionPolicy extends Policy {
 		policyName = policyAdapter.getNewFileName();
 		
 		if(policyAdapter.getRuleProvider().equals(GUARD_YAML)){
-			Map<String, String> yamlParams = new HashMap<String, String>();
+			Map<String, String> yamlParams = new HashMap<>();
 			yamlParams.put("description", (policyAdapter.getPolicyDescription()!=null)? policyAdapter.getPolicyDescription(): "YAML Guard Policy");
 			String fileName = policyAdapter.getNewFileName();
 			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
@@ -191,7 +191,7 @@ public class DecisionPolicy extends Policy {
 			
 			Map<String, String> dynamicFieldComponentAttributes = policyAdapter.getDynamicFieldConfigAttributes();
 			if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFProvider)){
-				dynamicFieldComponentAttributes = new HashMap<String,String>();
+				dynamicFieldComponentAttributes = new HashMap<>();
 			}
 			
 			// If there is any dynamic field attributes create the matches here
@@ -214,7 +214,7 @@ public class DecisionPolicy extends Policy {
 			
 			//dynamicVariableList = policyAdapter.getDynamicVariableList();
 			if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFProvider)){
-				dynamicFieldDecisionSettings = new HashMap<String,String>();
+				dynamicFieldDecisionSettings = new HashMap<>();
 			}
 			
 			// settings are dynamic so check how many rows are added and add all
@@ -240,11 +240,12 @@ public class DecisionPolicy extends Policy {
 			ControlLoopGuardBuilder builder = ControlLoopGuardBuilder.Factory.buildControlLoopGuard(new Guard());
 			GuardPolicy policy1 = new GuardPolicy((policyAdapter.getUuid()!=null? policyAdapter.getUuid(): UUID.randomUUID().toString()) ,yamlParams.get("PolicyName"), yamlParams.get("description"), yamlParams.get("actor"), yamlParams.get("recipe"));
 			builder = builder.addGuardPolicy(policy1);
-			Map<String, String> time_in_range = new HashMap<String, String>();
+			Map<String, String> time_in_range = new HashMap<>();
 			time_in_range.put("arg2", yamlParams.get("guardActiveStart"));
 			time_in_range.put("arg3", yamlParams.get("guardActiveEnd"));
-			Constraint cons = new Constraint(Integer.parseInt(yamlParams.get("limit")), yamlParams.get("timeWindow"), time_in_range);
-			builder = builder.addLimitConstraint(policy1.id, cons);
+			Constraint cons = new Constraint(Integer.parseInt(yamlParams.get("limit")), yamlParams.get("timeWindow"));
+			cons.setTime_in_range(time_in_range);
+			builder = builder.addLimitConstraint(policy1.getId(), cons);
 			// Build the specification
 			Results results = builder.buildSpecification();
 			// YAML TO XACML 
@@ -257,12 +258,12 @@ public class DecisionPolicy extends Policy {
 				yamlSpecs.put("PolicyName", yamlParams.get("PolicyName"));
 				yamlSpecs.put("description", yamlParams.get("description"));
 				yamlSpecs.put("ECOMPName", yamlParams.get("ECOMPName"));
-				yamlSpecs.put("actor", yamlGuardObject.guards.getFirst().actor);
-				yamlSpecs.put("recipe", yamlGuardObject.guards.getFirst().recipe);
-				yamlSpecs.put("limit", yamlGuardObject.guards.getFirst().limit_constraints.getFirst().num.toString());
-				yamlSpecs.put("timeWindow", yamlGuardObject.guards.getFirst().limit_constraints.getFirst().duration);
-				yamlSpecs.put("guardActiveStart", yamlGuardObject.guards.getFirst().limit_constraints.getFirst().time_in_range.get("arg2"));
-				yamlSpecs.put("guardActiveEnd", yamlGuardObject.guards.getFirst().limit_constraints.getFirst().time_in_range.get("arg3"));
+				yamlSpecs.put("actor", ((LinkedList<GuardPolicy>)yamlGuardObject.getGuards()).getFirst().getActor());
+				yamlSpecs.put("recipe", ((LinkedList<GuardPolicy>)yamlGuardObject.getGuards()).getFirst().getRecipe());
+				yamlSpecs.put("limit", ((LinkedList<Constraint>)((LinkedList<GuardPolicy>)yamlGuardObject.getGuards()).getFirst().getLimit_constraints()).getFirst().getNum().toString());
+				yamlSpecs.put("timeWindow", ((LinkedList<Constraint>)((LinkedList<GuardPolicy>)yamlGuardObject.getGuards()).getFirst().getLimit_constraints()).getFirst().getDuration());
+				yamlSpecs.put("guardActiveStart", ((LinkedList<Constraint>)((LinkedList<GuardPolicy>)yamlGuardObject.getGuards()).getFirst().getLimit_constraints()).getFirst().getTime_in_range().get("arg2"));
+				yamlSpecs.put("guardActiveEnd", ((LinkedList<Constraint>)((LinkedList<GuardPolicy>)yamlGuardObject.getGuards()).getFirst().getLimit_constraints()).getFirst().getTime_in_range().get("arg3"));
 		        String xacmlPolicyContent = SafePolicyBuilder.generateXacmlGuard(xacmlTemplateContent,yamlSpecs);
 		        // Convert the  Policy into Stream input to Policy Adapter. 
 		        Object policy = XACMLPolicyScanner.readPolicy(new ByteArrayInputStream(xacmlPolicyContent.getBytes(StandardCharsets.UTF_8)));

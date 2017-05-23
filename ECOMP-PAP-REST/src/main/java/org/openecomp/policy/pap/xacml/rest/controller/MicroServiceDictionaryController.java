@@ -82,7 +82,7 @@ public class MicroServiceDictionaryController {
     private static String ERROR = "error";
     private static String DICTIONARYDBQUERY = "dictionaryDBQuery";
     private HashMap<String,MSAttributeObject > classMap;
-    private List<String> modelList = new ArrayList<String>();
+    private List<String> modelList = new ArrayList<>();
     
 	
 
@@ -93,7 +93,7 @@ public class MicroServiceDictionaryController {
 	@RequestMapping(value={"/get_DCAEUUIDDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getDCAEUUIDDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("dcaeUUIDDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(DCAEuuid.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -108,7 +108,7 @@ public class MicroServiceDictionaryController {
 	@RequestMapping(value={"/get_DCAEUUIDData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getDCAEUUIDDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("dcaeUUIDDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(DCAEuuid.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -239,7 +239,7 @@ public class MicroServiceDictionaryController {
 	@RequestMapping(value={"/get_MicroServiceConfigNameDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getMicroServiceConfigNameByNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("microServiceCongigNameDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(MicroServiceConfigName.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -256,7 +256,7 @@ public class MicroServiceDictionaryController {
 	@RequestMapping(value={"/get_MicroServiceConfigNameData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getMicroServiceConfigNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("microServiceCongigNameDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(MicroServiceConfigName.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -387,7 +387,7 @@ public class MicroServiceDictionaryController {
 	@RequestMapping(value={"/get_MicroServiceLocationDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getMicroServiceLocationByNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("microServiceLocationDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(MicroServiceLocation.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -402,7 +402,7 @@ public class MicroServiceDictionaryController {
 	@RequestMapping(value={"/get_MicroServiceLocationData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getMicroServiceLocationDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("microServiceLocationDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(MicroServiceLocation.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -533,7 +533,7 @@ public class MicroServiceDictionaryController {
     @RequestMapping(value={"/get_MicroServiceAttributeDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceAttributeByNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
         try{
-            Map<String, Object> model = new HashMap<String, Object>();
+            Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("microServiceAttributeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(MicroServiceAttribute.class, "name")));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -548,7 +548,7 @@ public class MicroServiceDictionaryController {
     @RequestMapping(value={"/get_MicroServiceAttributeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceAttributeDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
         try{
-            Map<String, Object> model = new HashMap<String, Object>();
+            Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("microServiceAttributeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(MicroServiceAttribute.class)));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -679,7 +679,7 @@ public class MicroServiceDictionaryController {
 	@RequestMapping(value={"/get_MicroServiceModelsDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getMicroServiceModelsDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("microServiceModelsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(MicroServiceModels.class, "modelName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -694,7 +694,7 @@ public class MicroServiceDictionaryController {
     @RequestMapping(value={"/get_MicroServiceModelsDataByVersion"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceModelsDictionaryByVersionEntityData(HttpServletRequest request, HttpServletResponse response){
         try{
-            Map<String, Object> model = new HashMap<String, Object>();
+            Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(request.getReader());
             String modelName = null;
@@ -718,7 +718,7 @@ public class MicroServiceDictionaryController {
 	@RequestMapping(value={"/get_MicroServiceModelsData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getMicroServiceModelsDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("microServiceModelsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(MicroServiceModels.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -737,9 +737,9 @@ public class MicroServiceDictionaryController {
     @RequestMapping(value={"/get_MicroServiceModelsDataServiceVersion"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceModelsDictionaryEntityDataServiceVersion(HttpServletRequest request, HttpServletResponse response){
         try{
-            Map<String, Object> model = new HashMap<String, Object>();
+            Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
-            List<String> data = new ArrayList<String>();
+            List<String> data = new ArrayList<>();
             List<Object> datas = commonClassDao.getData(MicroServiceModels.class);
             for(int i = 0; i < datas.size(); i++){
             	MicroServiceModels msmodel = (MicroServiceModels) datas.get(i);
@@ -765,7 +765,7 @@ public class MicroServiceDictionaryController {
     @RequestMapping(value={"/get_MicroServiceModelsDataByClass"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceModelsDictionaryClassEntityData(HttpServletRequest request, HttpServletResponse response){
         try{
-            Map<String, Object> model = new HashMap<String, Object>();
+            Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("microServiceModelsDictionaryClassDatas", mapper.writeValueAsString(modelList));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -816,7 +816,7 @@ public class MicroServiceDictionaryController {
 					}
 
 					MSAttributeObject mainClass  = null;
-					classMap = new HashMap<String, MSAttributeObject>();
+					classMap = new HashMap<>();
 					JsonNode data = root.get("classMap");
 					ObjectMapper mapper1 = new ObjectMapper();
 					String data1 = data.toString().substring(1, data.toString().length()-1);
@@ -880,7 +880,7 @@ public class MicroServiceDictionaryController {
 							}
 						}
 						if(root.has("classMap")){
-							classMap = new HashMap<String, MSAttributeObject>();
+							classMap = new HashMap<>();
 							JsonNode data = root.get("classMap");
 							ObjectMapper mapper1 = new ObjectMapper();
 							String data1 = data.toString().substring(1, data.toString().length()-1);
@@ -1024,8 +1024,8 @@ public class MicroServiceDictionaryController {
 	} 
 	
 	private ArrayList<String> getFullDependencyList(ArrayList<String> dependency) {
-		ArrayList<String> returnList = new ArrayList<String>();
-		ArrayList<String> workingList = new ArrayList<String>();
+		ArrayList<String> returnList = new ArrayList<>();
+		ArrayList<String> workingList = new ArrayList<>();
 		returnList.addAll(dependency);
 		for (String element : dependency ){
 			if (classMap.containsKey(element)){

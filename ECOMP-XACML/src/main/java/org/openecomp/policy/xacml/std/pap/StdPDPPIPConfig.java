@@ -42,7 +42,7 @@ public class StdPDPPIPConfig implements PDPPIPConfig, Serializable {
 	
 	private String classname;
 	
-	private Map<String,String> config = new HashMap<String, String>();
+	private Map<String,String> config = new HashMap<>();
 	
 	public StdPDPPIPConfig() {
 		

@@ -56,7 +56,7 @@ public class FunctionDefinitionStringEqualIgnoreCaseTest {
 	/*
 	 * variables useful in the following tests
 	 */
-	List<FunctionArgument> arguments = new ArrayList<FunctionArgument>();
+	List<FunctionArgument> arguments = new ArrayList<>();
 	
 	FunctionArgumentAttributeValue stringAttr1 = null;
 	FunctionArgumentAttributeValue stringAttr2 = null;

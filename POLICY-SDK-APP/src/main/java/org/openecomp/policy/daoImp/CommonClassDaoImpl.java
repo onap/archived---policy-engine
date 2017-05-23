@@ -353,7 +353,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		try {
 			Criteria cr = session.createCriteria(className);		
 			Disjunction disjunction = Restrictions.disjunction(); 
-			List<Conjunction> conjunctionList = new ArrayList<Conjunction>();
+			List<Conjunction> conjunctionList = new ArrayList<>();
 			String[] columNames = columnName.split(":");
 			for(int i =0; i < data.size(); i++){
 				String[] entiySplit = data.get(i).split(":");

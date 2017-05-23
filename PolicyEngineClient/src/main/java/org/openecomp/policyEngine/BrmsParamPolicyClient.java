@@ -62,16 +62,13 @@ public class BrmsParamPolicyClient {
             // Set description of the policy(Optional)
             policyParameters.setPolicyDescription("This is a sample BRMS Param policy creation example");
             
-            //Set Scope folder where the policy needs to be created(Mandatory)
-            //policyParameters.setPolicyScope("Lakshman");
-
             // Set BRMS Param Template Attributes(Mandatory) 
-            Map<String, String> ruleAttributes = new HashMap<String, String>();
+            Map<String, String> ruleAttributes = new HashMap<>();
             ruleAttributes.put("templateName", "Sample"); // This sampleTemplate is the Template name from dictionary. 
             ruleAttributes.put("controller", "default"); // Set Rule to a PDP Controller, default is the controller name.
             ruleAttributes.put("SamPoll", "300"); // Template specific key and value set by us. 
             ruleAttributes.put("value", "abcd"); // Template specific key and value set by us. 
-            Map<AttributeType, Map<String, String>> attributes = new HashMap<AttributeType, Map<String, String>>();
+            Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
             attributes.put(AttributeType.RULE, ruleAttributes);
             policyParameters.setAttributes(attributes);
             

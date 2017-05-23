@@ -155,7 +155,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 			this.groups = this.readProperties(this.repository, properties);
 		} catch (IOException e) {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdEngine", "Failed to load properties file");
-			this.groups = new HashSet<StdPDPGroup>();
+			this.groups = new HashSet<>();
 		}
 		//
 		// Initialize the default group
@@ -377,7 +377,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		// Add the default PIP configuration. 
 		String list = props.getProperty(XACMLProperties.PROP_PIP_ENGINES);
         if (list != null && list.length() > 0) {
-            Set<PDPPIPConfig> pipConfigs = new HashSet<PDPPIPConfig>();
+            Set<PDPPIPConfig> pipConfigs = new HashSet<>();
             for (String pipID : list.split("[,]")) {
                 StdPDPPIPConfig config = new StdPDPPIPConfig(pipID, props);
                 if (config.isConfigured()) {
@@ -561,7 +561,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 	//
 	
 	private Set<StdPDPGroup>	readProperties(Path repository, Properties properties) throws PAPException {
-		Set<StdPDPGroup> groups = new HashSet<StdPDPGroup>();
+		Set<StdPDPGroup> groups = new HashSet<>();
 		//
 		// See if there is a groups property
 		//
@@ -616,7 +616,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		//
 		// Iterate our groups
 		//
-		List<String> ids = new ArrayList<String>();
+		List<String> ids = new ArrayList<>();
 		for (PDPGroup group : this.groups) {
 			ids.add(group.getId());
 			properties.setProperty(group.getId() + ".name", (group.getName() == null ? "" : group.getName()));
@@ -624,7 +624,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 			//
 			// Iterate its PDPs
 			//
-			List<String> pdps = new ArrayList<String>();
+			List<String> pdps = new ArrayList<>();
 			for (PDP pdp : group.getPdps()) {
 				pdps.add(pdp.getId());
 				properties.setProperty(pdp.getId() + ".name", (pdp.getName() == null ? "" : pdp.getName()));
@@ -717,7 +717,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 			if (group.getPdps().size() == 1) {
 				pdpList = group.getPdps().iterator().next().getId();
 			} else if (group.getPdps().size() > 1) {
-				Set<String> ids = new HashSet<String>();
+				Set<String> ids = new HashSet<>();
 				for (PDP pdp : group.getPdps()) {
 					ids.add(pdp.getId());
 				}
@@ -792,7 +792,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 	
 	@Override
 	public Set<EcompPDPGroup> getEcompPDPGroups() throws PAPException {
-		final Set<EcompPDPGroup> grps = new HashSet<EcompPDPGroup>();
+		final Set<EcompPDPGroup> grps = new HashSet<>();
 		for (EcompPDPGroup g : this.groups) {
 			grps.add(g);
 		}
@@ -978,7 +978,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 			}
 			// The movePDP function will modify the set of PDPs in the group.
 			// To avoid concurrent modification exceptions we need to duplicate the list before calling that function.
-			List<EcompPDP> pdpList = new ArrayList<EcompPDP>();
+			List<EcompPDP> pdpList = new ArrayList<>();
 			for (EcompPDP pdp : pdps) {
 				pdpList.add(pdp);
 			}

@@ -144,7 +144,7 @@ public class ParseLog {
 	public static int countLines(String filename) throws IOException {
 	    LineNumberReader reader  = new LineNumberReader(new FileReader(filename));
 	    int cnt = 0;
-	    while ((reader.readLine()) != null) {}
+	    while ((reader.readLine()) != null);
 	    cnt = reader.getLineNumber(); 
 	    reader.close();
 	    return cnt;

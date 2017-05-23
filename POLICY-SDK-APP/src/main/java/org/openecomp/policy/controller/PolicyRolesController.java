@@ -65,7 +65,7 @@ public class PolicyRolesController extends RestrictedBaseController{
 	@RequestMapping(value={"/get_RolesData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPolicyRolesEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("rolesDatas", mapper.writeValueAsString(commonClassDao.getUserRoles()));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -117,8 +117,8 @@ public class PolicyRolesController extends RestrictedBaseController{
 	@RequestMapping(value={"/get_PolicyRolesScopeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPolicyScopesEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			scopelist = new ArrayList<String>();
-			Map<String, Object> model = new HashMap<String, Object>();
+			scopelist = new ArrayList<>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 			List<String> scopesData = commonClassDao.getDataByColumn(PolicyEditorScopes.class, "scopeName");

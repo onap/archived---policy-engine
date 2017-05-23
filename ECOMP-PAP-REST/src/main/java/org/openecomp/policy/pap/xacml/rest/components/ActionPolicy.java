@@ -89,12 +89,12 @@ public class ActionPolicy extends Policy {
 	public static boolean isAttribute = false;
 
 	
-	List<String> dynamicLabelRuleAlgorithms = new LinkedList<String>();
-	List<String> dynamicFieldFunctionRuleAlgorithms = new LinkedList<String>();
-	List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<String>();
-	List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<String>();
+	List<String> dynamicLabelRuleAlgorithms = new LinkedList<>();
+	List<String> dynamicFieldFunctionRuleAlgorithms = new LinkedList<>();
+	List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<>();
+	List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<>();
 	
-	protected Map<String, String> dropDownMap = new HashMap<String, String>();
+	protected Map<String, String> dropDownMap = new HashMap<>();
 	
 	
 	public ActionPolicy() {
@@ -108,7 +108,7 @@ public class ActionPolicy extends Policy {
 	@Override
 	public Map<String, String> savePolicies() throws Exception {
 		
-		Map<String, String> successMap = new HashMap<String,String>();
+		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
@@ -490,7 +490,7 @@ public class ActionPolicy extends Policy {
 			LOGGER.error("Exception Occured"+e);
 		}
 		Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
-		Map<String, String> dropDownMap = new HashMap<String, String>();
+		Map<String, String> dropDownMap = new HashMap<>();
 		for (Datatype id : functionMap.keySet()) {
 			List<FunctionDefinition> functionDefinitions = (List<FunctionDefinition>) functionMap
 					.get(id);

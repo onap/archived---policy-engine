@@ -63,12 +63,12 @@ public class ActionPolicyController extends RestrictedBaseController{
 	private ArrayList<Object> attributeList;
 	protected  LinkedList<Integer> ruleAlgoirthmTracker;
 	public static final String PERFORMER_ATTRIBUTEID = "performer";
-	protected  Map<String, String> performer = new HashMap<String, String>();
+	protected  Map<String, String> performer = new HashMap<>();
 	private  ArrayList<Object>  ruleAlgorithmList;
 
 	public void prePopulateActionPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-		attributeList = new ArrayList<Object>();
-		ruleAlgorithmList = new ArrayList<Object>();
+		attributeList = new ArrayList<>();
+		ruleAlgorithmList = new ArrayList<>();
 		performer.put("PDP", "PDPAction");
 		performer.put("PEP", "PEPAction");
 
@@ -116,7 +116,7 @@ public class ActionPolicyController extends RestrictedBaseController{
 										String attributeId = designator.getAttributeId();
 										// Component attributes are saved under Target here we are fetching them back.
 										// One row is default so we are not adding dynamic component at index 0.
-										Map<String, String> attribute = new HashMap<String, String>();
+										Map<String, String> attribute = new HashMap<>();
 										attribute.put("key", attributeId);
 										attribute.put("value", value);
 										attributeList.add(attribute);	
@@ -137,7 +137,7 @@ public class ActionPolicyController extends RestrictedBaseController{
 						if (condition != null) {
 							int index = 0;
 							ApplyType actionApply = (ApplyType) condition.getExpression().getValue();
-							ruleAlgoirthmTracker = new LinkedList<Integer>();
+							ruleAlgoirthmTracker = new LinkedList<>();
 							// Populating Rule Algorithms starting from compound.
 							prePopulateCompoundRuleAlgorithm(index, actionApply);
 						}

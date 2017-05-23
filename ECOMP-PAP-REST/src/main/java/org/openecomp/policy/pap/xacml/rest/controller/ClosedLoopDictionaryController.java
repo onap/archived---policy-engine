@@ -76,7 +76,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_VSCLActionDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getVSCLActionDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("vsclActionDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(VSCLAction.class, "vsclaction")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -92,7 +92,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_VSCLActionData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getVSCLActionDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("vsclActionDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(VSCLAction.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -111,7 +111,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_VNFTypeDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getVNFTypeDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("vnfTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(VNFType.class, "vnftype")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -128,7 +128,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_VNFTypeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getVNFTypeDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("vnfTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(VNFType.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -147,7 +147,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_PEPOptionsDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPEPOptionsDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("pepOptionsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(PEPOptions.class, "pepName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -162,7 +162,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_PEPOptionsData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPEPOptionsDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("pepOptionsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PEPOptions.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -181,7 +181,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_VarbindDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getVarbindDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("varbindDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(VarbindDictionary.class, "varbindName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -196,7 +196,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_VarbindDictionaryData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getVarbindDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("varbindDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(VarbindDictionary.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -215,7 +215,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_ClosedLoopServicesDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getClosedLoopServiceDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("closedLoopServiceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(ClosedLoopD2Services.class, "serviceName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -230,7 +230,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_ClosedLoopServicesData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getClosedLoopServiceDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("closedLoopServiceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ClosedLoopD2Services.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -249,7 +249,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_ClosedLoopSiteDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getClosedLoopSiteDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("closedLoopSiteDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(ClosedLoopSite.class, "siteName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -264,7 +264,7 @@ public class ClosedLoopDictionaryController{
 	@RequestMapping(value={"/get_ClosedLoopSiteData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getClosedLoopSiteDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("closedLoopSiteDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ClosedLoopSite.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));

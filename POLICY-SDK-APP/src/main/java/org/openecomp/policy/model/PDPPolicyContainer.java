@@ -177,7 +177,7 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 
 	@Override
 	public Collection<?> getItemIds() {
-		final Collection<Object> items = new ArrayList<Object>();
+		final Collection<Object> items = new ArrayList<>();
 		items.addAll(this.policies);
 		return Collections.unmodifiableCollection(items);
 	}

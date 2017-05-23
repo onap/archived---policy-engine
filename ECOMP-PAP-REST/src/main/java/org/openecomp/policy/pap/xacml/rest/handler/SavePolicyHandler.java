@@ -139,7 +139,7 @@ public class SavePolicyHandler {
 	
 	public void addErrorHeader(String key, String value){
 		if(ErrorHeaders==null){
-			ErrorHeaders= new HashMap<String, String>();
+			ErrorHeaders= new HashMap<>();
 		}
 		ErrorHeaders.put(key, value);
 	}

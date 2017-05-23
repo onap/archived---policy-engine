@@ -167,7 +167,7 @@ public class XACMLPdpPolicyFinderFactory extends PolicyFinderFactory {
 			return null;
 		}
 		
-		List<PolicyDef> listPolicyDefs	= new ArrayList<PolicyDef>();
+		List<PolicyDef> listPolicyDefs	= new ArrayList<>();
 		for (String policyId : policyIdArray) {
 			PolicyDef policyDef	= this.loadPolicyDef(policyId);	
 			if (policyDef != null) {

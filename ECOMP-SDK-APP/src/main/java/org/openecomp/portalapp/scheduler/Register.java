@@ -36,7 +36,7 @@ public class Register implements Registerable {
 
 	EELFLoggerDelegate logger = EELFLoggerDelegate.getLogger(Register.class);
 
-	private List<Trigger> scheduleTriggers = new ArrayList<Trigger>();
+	private List<Trigger> scheduleTriggers = new ArrayList<>();
 	Trigger trigger[] = new Trigger[1];
 
 	@Autowired

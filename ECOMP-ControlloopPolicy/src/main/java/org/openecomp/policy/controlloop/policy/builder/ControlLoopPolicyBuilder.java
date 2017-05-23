@@ -22,6 +22,8 @@ package org.openecomp.policy.controlloop.policy.builder;
 
 import java.util.Map;
 
+import org.openecomp.policy.asdc.Resource;
+import org.openecomp.policy.asdc.Service;
 import org.openecomp.policy.controlloop.policy.ControlLoop;
 import org.openecomp.policy.controlloop.policy.OperationsAccumulateParams;
 import org.openecomp.policy.controlloop.policy.Policy;
@@ -30,6 +32,52 @@ import org.openecomp.policy.controlloop.policy.Target;
 import org.openecomp.policy.controlloop.policy.builder.impl.ControlLoopPolicyBuilderImpl;
 
 public interface ControlLoopPolicyBuilder {
+	
+	/**
+	 * Adds one or more services to the ControlLoop
+	 * 
+	 * 
+	 * @param service
+	 * @return
+	 * @throws BuilderException
+	 */
+	public ControlLoopPolicyBuilder	addService(Service... services) throws BuilderException;
+	
+	/**
+	 * @param services
+	 * @return
+	 * @throws BuilderException
+	 */
+	public ControlLoopPolicyBuilder removeService(Service... services) throws BuilderException;
+	
+	/**
+	 * @return
+	 * @throws BuilderException
+	 */
+	public ControlLoopPolicyBuilder removeAllServices() throws BuilderException;
+	
+	/**
+	 * Adds one or more resources to the ControlLoop
+	 * 
+	 * 
+	 * @param resource
+	 * @return
+	 * @throws BuilderException
+	 */
+	public ControlLoopPolicyBuilder	addResource(Resource... resources) throws BuilderException;
+	
+	/**
+	 * @param resources
+	 * @return
+	 * @throws BuilderException
+	 */
+	public ControlLoopPolicyBuilder removeResource(Resource... resources) throws BuilderException;
+	
+	/**
+	 * @return
+	 * @throws BuilderException
+	 */
+	public ControlLoopPolicyBuilder removeAllResources() throws BuilderException;
 	
 	/**
 	 *  @param abatement
@@ -186,6 +234,9 @@ public interface ControlLoopPolicyBuilder {
 	 *
 	 */
 	public static class Factory {
+		private Factory(){
+			// Private Constructor.
+		}
 		
 		/**
 		 * Builds a basic Control Loop with an overall timeout. Use this method if you wish to create an OpenLoop, or if you 
@@ -197,12 +248,40 @@ public interface ControlLoopPolicyBuilder {
 		 * @throws BuilderException
 		 */
 		public static ControlLoopPolicyBuilder	buildControlLoop (String controlLoopName, Integer timeout) throws BuilderException {
+			return new ControlLoopPolicyBuilderImpl(controlLoopName, timeout);
+		}
+		
+		/**
+		 * Build a Control Loop for a resource and services associated with the resource.
+		 * 
+		 * @param controlLoopName - Per Closed Loop AID v1.0, unique string for the closed loop.
+		 * @param timeout - Overall timeout for the Closed Loop to execute.
+		 * @param resource - Resource this closed loop is for. Should come from ASDC, but if not available use resourceName to distinguish.
+		 * @param services - Zero or more services associated with this resource. Should come from ASDC, but if not available use serviceName to distinguish.
+		 * @return ControlLoopPolicyBuilder object
+		 * @throws BuilderException
+		 */
+		public static ControlLoopPolicyBuilder	buildControlLoop (String controlLoopName, Integer timeout, Resource resource, Service... services) throws BuilderException {
 			
-			ControlLoopPolicyBuilder builder = new ControlLoopPolicyBuilderImpl(controlLoopName, timeout);
+			ControlLoopPolicyBuilder builder = new ControlLoopPolicyBuilderImpl(controlLoopName, timeout, resource, services);
 			
 			return builder;
-		}		
+		}
 		
+		/**
+		 * @param controlLoopName
+		 * @param timeout
+		 * @param service
+		 * @param resources
+		 * @return
+		 * @throws BuilderException
+		 */
+		public static ControlLoopPolicyBuilder	buildControlLoop (String controlLoopName, Integer timeout, Service service, Resource... resources) throws BuilderException {
+			
+			ControlLoopPolicyBuilder builder = new ControlLoopPolicyBuilderImpl(controlLoopName, timeout, service, resources);
+			
+			return builder;
+		}
 	}
 
 }

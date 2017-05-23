@@ -109,7 +109,7 @@ public class TestBase extends SimpleFileVisitor<Path> {
 		Path file;
 		InputStream is;
 		BufferedReader reader;
-		List<StdMutableAttribute> attributes = new ArrayList<StdMutableAttribute>();
+		List<StdMutableAttribute> attributes = new ArrayList<>();
 		
 		public Generator(Path path) {
 			this.file = path;
@@ -193,7 +193,7 @@ public class TestBase extends SimpleFileVisitor<Path> {
 	protected URL restURL = null;
 	protected int loop = 1;
 	protected PDPEngine engine = null;
-	protected List<Generator> generators = new ArrayList<Generator>();
+	protected List<Generator> generators = new ArrayList<>();
 	protected static DataTypeFactory dataTypeFactory		= null;
 	
 	private long	permits = 0;
@@ -649,7 +649,7 @@ public class TestBase extends SimpleFileVisitor<Path> {
 		//
 		// Copy the request attributes
 		//
-		List<StdMutableRequestAttributes> attributes = new ArrayList<StdMutableRequestAttributes>();
+		List<StdMutableRequestAttributes> attributes = new ArrayList<>();
 		for (RequestAttributes a : request.getRequestAttributes()) {
 			attributes.add(new StdMutableRequestAttributes(a));
 		}

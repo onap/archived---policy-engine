@@ -40,8 +40,8 @@ import com.att.research.xacmlatt.pdp.std.StdPolicyFinderFactory;
  * @version $Revision$
  */
 public class ConformanceRepository {
-	private List<File> rootPolicies			= new ArrayList<File>();
-	private List<File> referencedPolicies	= new ArrayList<File>();
+	private List<File> rootPolicies			= new ArrayList<>();
+	private List<File> referencedPolicies	= new ArrayList<>();
 	
 	private void setXACMLProperty(String propertyName, List<File> listFiles) {
 		Iterator<File> iterFiles			= listFiles.iterator();

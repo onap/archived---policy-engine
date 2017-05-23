@@ -57,7 +57,7 @@ public class AdminTabController extends RestrictedBaseController{
 	@RequestMapping(value={"/get_LockDownData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getAdminTabEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("lockdowndata", mapper.writeValueAsString(commonClassDao.getData(GlobalRoleSettings.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));

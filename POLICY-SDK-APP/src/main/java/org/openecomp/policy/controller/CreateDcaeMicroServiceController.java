@@ -101,23 +101,23 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 @Controller
 @RequestMapping("/")
 public class CreateDcaeMicroServiceController extends RestrictedBaseController {
-	private static final Logger logger = FlexLogger.getLogger(CreateDcaeMicroServiceController.class);
+	private static final Logger LOGGER = FlexLogger.getLogger(CreateDcaeMicroServiceController.class);
 
 	private static CommonClassDao commonClassDao;
 	private MicroServiceModels newModel;
 	private String newFile;
 	private String directory;
-	private List<String> modelList = new ArrayList<String>();
-	private List<String> dirDependencyList = new ArrayList<String>();
-	private HashMap<String,MSAttributeObject > classMap = new HashMap<String,MSAttributeObject>();
+	private List<String> modelList = new ArrayList<>();
+	private List<String> dirDependencyList = new ArrayList<>();
+	private HashMap<String,MSAttributeObject > classMap = new HashMap<>();
 	//Tosca Model related Datastructure. 
 	String referenceAttributes;
 	String attributeString;
 	String listConstraints;
 	String subAttributeString;
-	HashMap<String, Object> retmap = new HashMap<String, Object>();
-	Set<String> uniqueKeys= new HashSet<String>();
-	Set<String> uniqueDataKeys= new HashSet<String>();
+	HashMap<String, Object> retmap = new HashMap<>();
+	Set<String> uniqueKeys= new HashSet<>();
+	Set<String> uniqueDataKeys= new HashSet<>();
 	
 	@Autowired
 	private CreateDcaeMicroServiceController(CommonClassDao commonClassDao){
@@ -128,8 +128,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
 	protected PolicyRestAdapter policyAdapter = null;
 	private int priorityCount; 
-	private Map<String, String> attributesListRefMap =  new HashMap<String, String>();
-	private Map<String, LinkedList<String>> arrayTextList =  new HashMap<String, LinkedList<String>>();
+	private Map<String, String> attributesListRefMap =  new HashMap<>();
+	private Map<String, LinkedList<String>> arrayTextList =  new HashMap<>();
 
 	public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData, JsonNode root) {
 		
@@ -138,7 +138,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			jsonContent = decodeContent(root.get("policyJSON")).toString();
 			constructJson(policyData, jsonContent);
 		}catch(Exception e){
-			logger.error("Error while decoding microservice content");
+			LOGGER.error("Error while decoding microservice content");
 		}
 		
 		return policyData;
@@ -202,9 +202,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		try {
 			json = om.writeValueAsString(microServiceObject);
 		} catch (JsonProcessingException e) {
-			logger.error("Error writing out the object");
+			LOGGER.error("Error writing out the object");
 		}
-		logger.info(json);
+		LOGGER.info(json);
 		String cleanJson = cleanUPJson(json);
 		cleanJson = removeNullAttributes(cleanJson);
 		policyAdapter.setJsonBody(cleanJson);
@@ -232,7 +232,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				cleanJson = returnNode.toString();
 			}
 		} catch (IOException e) {
-			logger.error("Error writing out the JsonNode");
+			LOGGER.error("Error writing out the JsonNode");
 		}
 		return cleanJson;
 	}
@@ -268,14 +268,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		try {
 			is = new FileInputStream(newConfiguration);
 		} catch (FileNotFoundException e) {
-			logger.error(e);
+			LOGGER.error(e);
 		}
 
 		Yaml yaml = new Yaml();
 		@SuppressWarnings("unchecked")
 		Map<Object, Object> yamlMap = (Map<Object, Object>) yaml.load(is); 
 		StringBuilder sb = new StringBuilder(); 
-		Map<String, String> settings = new HashMap<String, String>(); 
+		Map<String, String> settings = new HashMap<>(); 
 		if (yamlMap == null) { 
 			return settings; 
 		} 
@@ -348,12 +348,11 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
     
     
 	public void parseTosca (String fileName){
-		Map<String,String> map= new HashMap<String, String>();
+		Map<String,String> map= new HashMap<>();
 		try {
 			map=load(fileName);
 			for(String key:map.keySet()){
-				if(key.contains("policy.nodes.Root"))
-				{
+				if(key.contains("policy.nodes.Root")){
 					continue;
 				}
 				else if(key.contains("policy.nodes")){
@@ -369,21 +368,11 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					String subNodeString= key.substring(indexForPolicyNode+12, key.length());
 
 					stringBetweenDotsForDataFields(subNodeString,map.get(key));
-					Iterator<String> itr= uniqueDataKeys.iterator();
-					while(itr.hasNext()){
-						logger.info(itr.next());
-					}
 				}
 			}
 
-			String attributeIndividualString="";
 			String userDefinedIndividualString="";
-			String referenceIndividualAttributes="";
-
-			String attributeString="";
 			String userDefinedString="";
-			String referenceAttributes="";
-			String listConstraints="";
 
 			for(String uniqueDataKey: uniqueDataKeys){
 				String[] uniqueDataKeySplit= uniqueDataKey.split("%");
@@ -405,7 +394,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 							} 
 						}
 					}
-
 				}
 				if(userDefinedString!=""){
 					userDefinedString=userDefinedString+","+userDefinedIndividualString;
@@ -414,9 +402,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				}
 				userDefinedIndividualString="";
 			}
-			logger.info("userDefinedString   :"+userDefinedString);
+			LOGGER.info("userDefinedString   :"+userDefinedString);
 
-			HashMap<String,ArrayList<String>> mapKey= new HashMap<String,ArrayList<String>>();
+			HashMap<String,ArrayList<String>> mapKeyUserdefined= new HashMap<>();
 			String secondPartString="";
 			String firstPartString="";
 			for(String value: userDefinedString.split(",")){
@@ -424,30 +412,27 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				secondPartString=splitWithEquals[0].substring(splitWithEquals[0].indexOf("%")+1);
 				firstPartString=splitWithEquals[0].substring(0, splitWithEquals[0].indexOf("%"));
 				ArrayList<String> list;
-				if(mapKey.containsKey(firstPartString)){
-					list = mapKey.get(firstPartString);
+				if(mapKeyUserdefined.containsKey(firstPartString)){
+					list = mapKeyUserdefined.get(firstPartString);
 					list.add(secondPartString+"<"+splitWithEquals[1]);
 				} else {
 					list = new ArrayList<String>();
 					list.add(secondPartString+"<"+splitWithEquals[1]);
-					mapKey.put(firstPartString, list);
+					mapKeyUserdefined.put(firstPartString, list);
 				}
 			}
 
 			JSONObject mainObject= new JSONObject();;
 			JSONObject json;
-			for(String s: mapKey.keySet()){
+			for(String s: mapKeyUserdefined.keySet()){
 				json= new JSONObject();
-				List<String> value=mapKey.get(s);
+				List<String> value=mapKeyUserdefined.get(s);
 				for(String listValue:value){
 					String[] splitValue=listValue.split("<");
 					json.put(splitValue[0], splitValue[1]);
 				}
 				mainObject.put(s,json);
 			}
-
-			logger.info(mainObject);
-
 			Iterator<String> keysItr = mainObject.keys();
 			while(keysItr.hasNext()) {
 				String key = keysItr.next();
@@ -455,138 +440,116 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				retmap.put(key, value);
 			}
 
-			for(String str:retmap.keySet()){
-				logger.info(str+":"+retmap.get(str));
-			}
+			LOGGER.info("#############################################################################");
+			LOGGER.info(mainObject);
+			LOGGER.info("###############################################################################");
 
-			String typeValueFromKey="";
-			boolean userDefinedDataType=false;
-			boolean isList=false;
+			HashMap<String,HashMap<String,String>> mapKey= new HashMap<>();
 			for(String uniqueKey: uniqueKeys){
-				List<String> constraints= new ArrayList<String>();
-				logger.info("====================");
-				attributeIndividualString=attributeIndividualString+uniqueKey+"=";
-				attributeIndividualString=attributeIndividualString+"#A:defaultValue-#B:required-#C:MANY-false";
+				HashMap<String,String> hm;
 
-				logger.info("UniqueStrings: "+uniqueKey);
 				for(String key:map.keySet()){
-					if(key.contains("policy.nodes.Root")||
-							key.contains("policy.data"))
-					{
-						continue;
-					}
-					else if(key.contains("policy.nodes")){
-						if(key.contains(uniqueKey)){
-							int p=key.lastIndexOf(".");
-							String firstLastOccurance=key.substring(0,p);
-							int p1=firstLastOccurance.lastIndexOf(".");
-							String secondLastOccurance= firstLastOccurance.substring(p1+1,firstLastOccurance.length());
-							if(secondLastOccurance.equals(uniqueKey)){
-								String checkTypeString= firstLastOccurance+".type";
-								typeValueFromKey= map.get(checkTypeString);
-							}//Its a list. 
-							else if (key.contains("entry_schema")){
-								if(key.contains("constraints")){
-									constraints.add(map.get(key));
+					if(key.contains(uniqueKey)){
+						if(mapKey.containsKey(uniqueKey)){
+							hm = mapKey.get(uniqueKey);
+							String keyStr= key.substring(key.lastIndexOf(".")+1);
+							String valueStr= map.get(key);
+							if(keyStr.equals("type")){
+								if(!key.contains("entry_schema")){
+									hm.put(keyStr,valueStr);
 								}
-								if(key.contains("type")){
-									isList=true;
-									String value= map.get(key);
-									if(! (value.contains("string")) ||
-											(value.contains("integer")) || 
-											(value.contains("boolean")) )
-									{
-										if(!key.contains("valid_values")){
-											String trimValue=value.substring(value.lastIndexOf(".")+1);
-											referenceIndividualAttributes=referenceIndividualAttributes+uniqueKey+"="+trimValue+":MANY-true";
-											attributeIndividualString="";
-										}
-
-									}
-								}
+							}else{
+								hm.put(keyStr,valueStr);
 							}
-
-							if(!(typeValueFromKey.equals("string")||
-									typeValueFromKey.equals("integer") ||
-									typeValueFromKey.equals("boolean")))
-							{
-								if(typeValueFromKey.equals("list")){
-									isList=true;
-									userDefinedDataType=false;
+						} else {
+							hm = new HashMap<>();
+							String keyStr= key.substring(key.lastIndexOf(".")+1);
+							String valueStr= map.get(key);
+							if(keyStr.equals("type")){
+								if(!key.contains("entry_schema")){
+									hm.put(keyStr,valueStr);
 								}
-								else{
-									userDefinedDataType=true;
-								}
+							}else{
+								hm.put(keyStr,valueStr);
 							}
-							if(userDefinedDataType==false && isList==false){
-								if(key.contains("default")){
-									attributeIndividualString=attributeIndividualString.replace("#B", map.get(key));
-								}
-								else if(key.contains("required")){
-									attributeIndividualString=attributeIndividualString.replace("#C", map.get(key));
-								}
-								else if(key.contains("type")){
-									String typeValue= map.get(key);
-									attributeIndividualString=attributeIndividualString.replace("#A", typeValue);
-								} 
-							}
-							else if(userDefinedDataType==true){
-								String checkTypeAndUpdate=key.substring(p+1);
-								if(checkTypeAndUpdate.equals("type")){
-									String value=map.get(key);
-									String trimValue=value.substring(value.lastIndexOf(".")+1);
-									referenceIndividualAttributes=referenceIndividualAttributes+uniqueKey+"="+trimValue+":MANY-false";
-								}
-								attributeIndividualString="";
-							}
+							mapKey.put(uniqueKey, hm);
 						}
 					}
 				}
+			}
 
+			StringBuilder attributeStringBuilder= new StringBuilder();
+			StringBuilder referenceStringBuilder= new StringBuilder();
+			StringBuilder listBuffer= new StringBuilder();
+
+			List<String> constraints= new ArrayList<>();
+			for(String keySetString: mapKey.keySet()){
+				HashMap<String,String> keyValues=mapKey.get(keySetString);
+				if(keyValues.get("type").equalsIgnoreCase("string")|| keyValues.get("type").equalsIgnoreCase("integer")){
+					StringBuilder attributeIndividualStringBuilder= new StringBuilder();
+					attributeIndividualStringBuilder.append(keySetString+"=");
+					attributeIndividualStringBuilder.append(keyValues.get("type")+":defaultValue-");
+					attributeIndividualStringBuilder.append(keyValues.get("default")+":required-");
+					attributeIndividualStringBuilder.append(keyValues.get("required")+":MANY-false");
+					attributeStringBuilder.append(attributeIndividualStringBuilder+",");	
+				}
+				else if(keyValues.get("type").equalsIgnoreCase("list")){
+					//List Datatype
+					Set<String> keys= keyValues.keySet();
+					Iterator<String> itr=keys.iterator();
+					while(itr.hasNext()){
+						String key= itr.next().toString();
+						if((!key.equals("type"))){
+							String value= keyValues.get(key);
+							//The "." in the value determines if its a string or a user defined type.  
+							if (!value.contains(".")){
+								//This is string
+								constraints.add(keyValues.get(key));
+							}else{
+								//This is user defined string
+								String trimValue=value.substring(value.lastIndexOf(".")+1);
+								StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+								referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-true");
+								referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+							}
+						}
+					}
+				}else{
+					//User defined Datatype. 
+					String value=keyValues.get("type");
+					String trimValue=value.substring(value.lastIndexOf(".")+1);
+					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+					referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-false");
+					referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+				}
 				if(constraints!=null &&constraints.isEmpty()==false){
 					//List handling. 
-					listConstraints=uniqueKey.toUpperCase()+"=[";
-					isList=true;
+					listBuffer.append(keySetString.toUpperCase()+"=[");
 					for(String str:constraints){
-						listConstraints=listConstraints+str+",";
+						listBuffer.append(str+",");
 					}
-					listConstraints+="],";
-					logger.info(listConstraints);
-					attributeIndividualString="";
-					referenceIndividualAttributes=referenceIndividualAttributes+uniqueKey+"="+uniqueKey.toUpperCase()+":MANY-false";
-					constraints=null;
+					listBuffer.append("]#");
+					LOGGER.info(listBuffer);
 
+
+					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+					referenceIndividualStringBuilder.append(keySetString+"="+keySetString.toUpperCase()+":MANY-false");
+					referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+					constraints.clear();
 				}
-				if(userDefinedDataType==false && isList==false){
-					if(attributeString!=""){
-						attributeString=attributeString+","+attributeIndividualString;
-					}else{
-						attributeString=attributeString+attributeIndividualString;
-					}
-				}
-				if(isList==true || userDefinedDataType==true){
-					if(referenceAttributes!=""){
-						referenceAttributes=referenceAttributes+","+referenceIndividualAttributes;
-					}else{
-						referenceAttributes=referenceAttributes+referenceIndividualAttributes;
-					}
-					logger.info("ReferenceAttributes: "+referenceAttributes);
-				}
-
-				logger.info("AttributeString: "+ attributeString);
-				logger.info("ListConstraints is: "+listConstraints);
-
-				attributeIndividualString="";
-				referenceIndividualAttributes="";
-				userDefinedDataType=false;
-				isList=false;
-
 			}
-			this.listConstraints=listConstraints;
-			this.referenceAttributes=referenceAttributes;
-			this.attributeString=attributeString;
+
+			LOGGER.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			LOGGER.info("Whole attribute String is:"+attributeStringBuilder);	
+			LOGGER.info("Whole reference String is:"+referenceStringBuilder);
+			LOGGER.info("List String is:"+listBuffer);
+			LOGGER.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+			this.listConstraints=listBuffer.toString();
+			this.referenceAttributes=referenceStringBuilder.toString();
+			this.attributeString=attributeStringBuilder.toString();
+
 		} catch (IOException e) {
-			logger.error(e);
+			LOGGER.error(e);
 		}
 	} 
 
@@ -611,7 +574,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	private JSONObject decodeContent(JsonNode jsonNode){
 		Iterator<JsonNode> jsonElements = jsonNode.elements();
 		Iterator<String> jsonKeys = jsonNode.fieldNames();
-		Map<String,String> element = new TreeMap<String,String>();
+		Map<String,String> element = new TreeMap<>();
 		while(jsonElements.hasNext() && jsonKeys.hasNext()){
 			element.put(jsonKeys.next(), jsonElements.next().toString());
 		}
@@ -634,7 +597,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				presKey = key;
 			}
 			// first check if we are different from old.
-			logger.info(key+"\n");
+			LOGGER.info(key+"\n");
 			if(jsonArray!=null && jsonArray.length()>0 && key.contains("@") && !key.contains(".") && oldValue!=null){
 				if(!oldValue.equals(key.substring(0,key.indexOf("@")))){
 					jsonResult.put(oldValue, jsonArray);
@@ -664,7 +627,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 								isArray = true;
 								jsonArray = new JSONArray();
 							}
-							if(arryKey.equals(nodeKey.substring(0,nodeKey.indexOf("@")))){
+							if(jsonArray != null && arryKey.equals(nodeKey.substring(0,nodeKey.indexOf("@")))){
 								jsonArray.put(decodeContent(node));
 							} 
 							if(key.contains("@") && !arryKey.equals(key.substring(0,nodeKey.indexOf("@")))){
@@ -696,7 +659,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 						isArray = true;
 						jsonArray = new JSONArray();
 					}
-					if(arryKey.equals(nodeKey.substring(0,nodeKey.indexOf("@")))){
+					if(jsonArray != null && arryKey.equals(nodeKey.substring(0,nodeKey.indexOf("@")))){
 						jsonArray.put(decodeContent(node));
 					}
 					jsonResult.put(arryKey, jsonArray);
@@ -811,8 +774,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private String createMicroSeriveJson(MicroServiceModels returnModel) {
-		Map<String, String> attributeMap = new HashMap<String, String>();
-		Map<String, String> refAttributeMap = new HashMap<String, String>();
+		Map<String, String> attributeMap = new HashMap<>();
+		Map<String, String> refAttributeMap = new HashMap<>();
 		String attribute = returnModel.getAttributes();
 		if(attribute != null){
 			attribute = attribute.trim();
@@ -882,7 +845,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	@SuppressWarnings("unchecked")
 	private JSONObject recursiveReference(String name, Map<String,String> subAttributeMap, String enumAttribute) {
 		JSONObject object = new JSONObject();
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		Object returnClass = subAttributeMap.get(name);
 		map = (Map<String, String>) returnClass; 
 		JSONArray array = new JSONArray();
@@ -935,7 +898,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
 	private Set<String> getVersionList(String name) {	
 		MicroServiceModels workingModel = new MicroServiceModels();
-		Set<String> list = new HashSet<String>();
+		Set<String> list = new HashSet<>();
 		List<Object> microServiceModelsData = commonClassDao.getDataById(MicroServiceModels.class, "modelName", name);
 		for (int i = 0; i < microServiceModelsData.size(); i++) {
 			workingModel = (MicroServiceModels) microServiceModelsData.get(i);
@@ -972,9 +935,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	@RequestMapping(value={"/get_DCAEPriorityValues"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getDCAEPriorityValuesData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
-			List<String> priorityList = new ArrayList<String>();
+			List<String> priorityList = new ArrayList<>();
 			priorityCount = 10;
 			for (int i = 1; i < priorityCount; i++) {
 				priorityList.add(String.valueOf(i));
@@ -985,7 +948,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			logger.error(e);
+			LOGGER.error(e);
 		}
 	}
 
@@ -1079,7 +1042,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	}
 	
 	public static Map<String, String> convert(String str, String split) {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		for(final String entry : str.split(split)) {
 		    String[] parts = entry.split("=");
 		    map.put(parts[0], parts[1]);
@@ -1106,14 +1069,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				policyAdapter.setServiceType(msBody.getService());
 			}
 			if(msBody.getContent() != null){
-				LinkedHashMap<String, Object>  data = new LinkedHashMap<String, Object>();
+				LinkedHashMap<String, Object>  data = new LinkedHashMap<>();
 				LinkedHashMap<String, ?> map = (LinkedHashMap<String, ?>) msBody.getContent();
 				readRecursivlyJSONContent(map, data);
 				policyAdapter.setRuleData(data);
 			}
 
 		} catch (Exception e) {
-			logger.error(e);
+			LOGGER.error(e);
 		}
 
 	}
@@ -1124,7 +1087,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			Object key =  iterator.next();
 			Object value = map.get(key);
 			if(value instanceof LinkedHashMap<?, ?>){
-				LinkedHashMap<String, Object> secondObjec = new LinkedHashMap<String, Object>(); 
+				LinkedHashMap<String, Object> secondObjec = new LinkedHashMap<>(); 
 				readRecursivlyJSONContent((LinkedHashMap<String, ?>) value, secondObjec);
 				for(String objKey: secondObjec.keySet()){
 					data.put(key+"." +objKey, secondObjec.get(objKey));
@@ -1134,7 +1097,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				for(int i = 0; i < jsonArrayVal.size(); i++){
 					Object arrayvalue = jsonArrayVal.get(i);
 					if(arrayvalue instanceof LinkedHashMap<?, ?>){
-						LinkedHashMap<String, Object> newData = new LinkedHashMap<String, Object>();   
+						LinkedHashMap<String, Object> newData = new LinkedHashMap<>();   
 						readRecursivlyJSONContent((LinkedHashMap<String, ?>) arrayvalue, newData);
 						for(String objKey: newData.keySet()){
 							data.put(key+"@"+i+"." +objKey, newData.get(objKey));
@@ -1171,7 +1134,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
 	//Convert the map values and set into JSON body
 	public Map<String, String> convertMap(Map<String, String> attributesMap, Map<String, String> attributesRefMap) {
-		Map<String, String> attribute = new HashMap<String, String>();
+		Map<String, String> attribute = new HashMap<>();
 		String temp = null;
 		String key;
 		String value;
@@ -1236,12 +1199,12 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					}
 				
 				}catch(Exception e){
-					logger.error("Upload error : " + e);
+					LOGGER.error("Upload error : " + e);
 				}
 			}
 			
 		}
-		List<File> fileList = new ArrayList<File>();;
+		List<File> fileList = new ArrayList<>();;
 		this.directory = "model";
 		if (zip){
 			extractFolder(this.newFile);
@@ -1256,7 +1219,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		if(yml==false){
 			modelType="xmi";
 			//Process Main Model file first
-			classMap = new HashMap<String,MSAttributeObject>();
+			classMap = new HashMap<>();
 			for (File file : fileList) {
 				if(!file.isDirectory() && file.getName().endsWith(".xmi")){
 	            	retreiveDependency(file.toString(), true);
@@ -1274,25 +1237,30 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			MSAttributeObject msAttributes= new MSAttributeObject();
 			msAttributes.setClassName(className);
 			
-			HashMap<String, String> returnAttributeList =new HashMap<String, String>();
+			HashMap<String, String> returnAttributeList =new HashMap<>();
 			returnAttributeList.put(className, this.attributeString);
 			msAttributes.setAttribute(returnAttributeList);
 			
 			msAttributes.setSubClass(this.retmap);
 			
-			HashMap<String, String> returnReferenceList =new HashMap<String, String>();
+			HashMap<String, String> returnReferenceList =new HashMap<>();
 			//String[] referenceArray=this.referenceAttributes.split("=");
 			returnReferenceList.put(className, this.referenceAttributes);
 			msAttributes.setRefAttribute(returnReferenceList);
 			
 			if(this.listConstraints!=""){
-				HashMap<String, String> enumList =new HashMap<String, String>();
-				String[] listArray=this.listConstraints.split("=");
-				enumList.put(listArray[0], listArray[1]);
+				HashMap<String, String> enumList =new HashMap<>();
+				String[] listArray=this.listConstraints.split("#");
+                for(String str:listArray){
+                    String[] strArr= str.split("=");
+                    if(strArr.length>1){
+                        enumList.put(strArr[0], strArr[1]);
+                    }
+                }
 				msAttributes.setEnumType(enumList);
 			}
 			
-			classMap=new HashMap<String,MSAttributeObject>();
+			classMap=new HashMap<>();
 			classMap.put(className, msAttributes);
 			
 		}
@@ -1319,7 +1287,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	    int BUFFER = 2048;
 	    File file = new File(zipFile);
 
-	    ZipFile zip;
+	    ZipFile zip = null;
 		try {
 			zip = new ZipFile(file);
 		    String newPath =  "model" + File.separator + zipFile.substring(0, zipFile.length() - 4);
@@ -1357,19 +1325,26 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		        }
 		    }
 	    } catch (IOException e) {
-	    	logger.error("Failed to unzip model file " + zipFile);
+	    	LOGGER.error("Failed to unzip model file " + zipFile);
+		}finally{
+			try {
+				if(zip != null)
+				zip.close();
+			} catch (IOException e) {
+				LOGGER.error("Exception Occured While closing zipfile " + e);
+			}
 		}
 	}
 	
 	private void retreiveDependency(String workingFile, Boolean modelClass) {
 		
 		MSModelUtils utils = new MSModelUtils(PolicyController.msEcompName, PolicyController.msPolicyName);
-	    HashMap<String, MSAttributeObject> tempMap = new HashMap<String, MSAttributeObject>();
+	    HashMap<String, MSAttributeObject> tempMap = new HashMap<>();
 	    
 	    tempMap = utils.processEpackage(workingFile, MODEL_TYPE.XMI);
 	    
 	    classMap.putAll(tempMap);
-	    logger.info(tempMap);
+	    LOGGER.info(tempMap);
 	    
 	    return;   	
 	    
@@ -1377,7 +1352,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		
 	private List<File> listModelFiles(String directoryName) {
 		File directory = new File(directoryName);
-		List<File> resultList = new ArrayList<File>();
+		List<File> resultList = new ArrayList<>();
 		File[] fList = directory.listFiles();
 		for (File file : fList) {
 			if (file.isFile()) {
@@ -1395,7 +1370,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             try {
                 FileUtils.forceDelete(new File(path));
             } catch (IOException e) {
-            	logger.error("Failed to delete folder " + path);
+            	LOGGER.error("Failed to delete folder " + path);
             }  
         }
     }
@@ -1409,7 +1384,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
     }
 	
     private List<String> createList() {
-        List<String> list = new  ArrayList<String>();
+        List<String> list = new  ArrayList<>();
         for (Entry<String, MSAttributeObject> cMap : classMap.entrySet()){
             if (cMap.getValue().isPolicyTempalate()){
                 list.add(cMap.getKey());

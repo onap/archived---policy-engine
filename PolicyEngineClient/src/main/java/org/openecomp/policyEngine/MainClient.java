@@ -53,15 +53,15 @@ public class MainClient {
 		PolicyEngine policyEngine;
 		try {
 			policyEngine = new PolicyEngine("config.properties");
-			Map<String, String> configAttributes = new HashMap<String,String>();
+			Map<String, String> configAttributes = new HashMap<>();
 			configAttributes.put("java", "java");
 			configAttributes.put("peach", "Tar");
 			configAttributes.put("true", "false");
 			configAttributes.put("small", "testPass");
-			Map<String, String> eventAttributes = new HashMap<String,String>();
+			Map<String, String> eventAttributes = new HashMap<>();
 			eventAttributes.put("true", "true");
 			eventAttributes.put("cpu", "91");
-			Map<String, String> decisionAttributes = new HashMap<String,String>();
+			Map<String, String> decisionAttributes = new HashMap<>();
 			decisionAttributes.put("Key", "Value");
 			
 			// Config Example 
@@ -102,11 +102,11 @@ public class MainClient {
 			try {
 				System.in.read();
 			} catch (IOException e) {
-				//
+				System.err.println("Exception Occured"+e);
 			}
 			
 		} catch (PolicyEngineException e1) {
-			e1.printStackTrace();
+			System.err.println("Exception Occured"+e1);
 		}
 	}
 	

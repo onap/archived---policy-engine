@@ -41,6 +41,7 @@ import org.openecomp.policy.rest.adapter.AddressGroupJson;
 import org.openecomp.policy.rest.adapter.AddressJson;
 import org.openecomp.policy.rest.adapter.AddressMembers;
 import org.openecomp.policy.rest.adapter.DeployNowJson;
+import org.openecomp.policy.rest.adapter.IdMap;
 import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 import org.openecomp.policy.rest.adapter.PrefixIPList;
 import org.openecomp.policy.rest.adapter.ServiceGroupJson;
@@ -51,6 +52,7 @@ import org.openecomp.policy.rest.adapter.TagDefines;
 import org.openecomp.policy.rest.adapter.Tags;
 import org.openecomp.policy.rest.adapter.Term;
 import org.openecomp.policy.rest.adapter.TermCollector;
+import org.openecomp.policy.rest.adapter.VendorSpecificData;
 import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.AddressGroup;
 import org.openecomp.policy.rest.jpa.FWTagPicker;
@@ -94,8 +96,8 @@ public class CreateFirewallController extends RestrictedBaseController {
 
 	private List<String> tagCollectorList;
 	private String jsonBody;
-	List<String> expandablePrefixIPList = new ArrayList<String>();
-	List<String> expandableServicesList= new ArrayList<String>();
+	List<String> expandablePrefixIPList = new ArrayList<>();
+	List<String> expandableServicesList= new ArrayList<>();
 	@Autowired
 	private CreateFirewallController(CommonClassDao commonClassDao){
 		CreateFirewallController.commonClassDao = commonClassDao;
@@ -122,9 +124,8 @@ public class CreateFirewallController extends RestrictedBaseController {
 			}
 		}
 		jsonBody = constructJson(policyData);	
-		if (jsonBody != null || jsonBody.equalsIgnoreCase("")) {
+		if (jsonBody != null && !jsonBody.equalsIgnoreCase("")) {
 			policyData.setJsonBody(jsonBody);
-
 		} else {
 			policyData.setJsonBody("{}");
 		}
@@ -136,7 +137,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 	private List<String> mapping(String expandableList) {
 		String value = new String();
 		String desc =  new String();
-		List <String> valueDesc= new ArrayList<String>();
+		List <String> valueDesc= new ArrayList<>();
 		List<Object> prefixListData = commonClassDao.getData(PrefixList.class);
 		for (int i = 0; i< prefixListData.size(); i++) {
 			PrefixList prefixList = (PrefixList) prefixListData.get(i);
@@ -190,7 +191,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 	}
 
 	public void prePopulateFWPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-		attributeList = new ArrayList<Object>();
+		attributeList = new ArrayList<>();
 		if (policyAdapter.getPolicyData() instanceof PolicyType) {
 			Object policyData = policyAdapter.getPolicyData();
 			PolicyType policy = (PolicyType) policyData;
@@ -232,14 +233,15 @@ public class CreateFirewallController extends RestrictedBaseController {
 			}
 			
 			Map<String, String> termTagMap=null;
-
-			for(int i=0;i<tc1.getFirewallRuleList().size();i++){
-				termTagMap = new HashMap<String, String>();
-				String ruleName= tc1.getFirewallRuleList().get(i).getRuleName();
-				String tagPickerName=tc1.getRuleToTag().get(i).getTagPickerName();
-				termTagMap.put("key", ruleName);
-				termTagMap.put("value", tagPickerName);
-				attributeList.add(termTagMap);
+			if(tc1 != null){
+				for(int i=0;i<tc1.getFirewallRuleList().size();i++){
+					termTagMap = new HashMap<String, String>();
+					String ruleName= tc1.getFirewallRuleList().get(i).getRuleName();
+					String tagPickerName=tc1.getRuleToTag().get(i).getTagPickerName();
+					termTagMap.put("key", ruleName);
+					termTagMap.put("value", tagPickerName);
+					attributeList.add(termTagMap);
+				}
 			}
 			policyAdapter.setAttributes(attributeList);
 			// Get the target data under policy.
@@ -317,7 +319,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 	@RequestMapping(value={"/policyController/ViewFWPolicyRule.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView setFWViewRule(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try {
-			termCollectorList = new ArrayList<String>();
+			termCollectorList = new ArrayList<>();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
@@ -336,7 +338,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 			String ruleSrcPort=null;
 			String ruleDestPort=null;
 			String ruleAction=null;
-			List <String> valueDesc= new ArrayList<String>();
+			List <String> valueDesc= new ArrayList<>();
 			StringBuffer displayString = new StringBuffer();
 			for (String id : termCollectorList) {
 				List<Object> tmList = commonClassDao.getDataById(TermList.class, "termName", id);
@@ -497,14 +499,14 @@ public class CreateFirewallController extends RestrictedBaseController {
 		String json = null;
 
 
-		List<String> expandableList = new ArrayList<String>();
+		List<String> expandableList = new ArrayList<>();
 		TermList jpaTermList;
 		TermCollector tc = new TermCollector();
 		SecurityZone jpaSecurityZone;
-		List<Term> termList = new ArrayList<Term>();
+		List<Term> termList = new ArrayList<>();
 		
 		Tags tags=null;
-		List<Tags>tagsList= new ArrayList<Tags>();
+		List<Tags>tagsList= new ArrayList<>();
 		
 		TagDefines tagDefine= new TagDefines();
 		List<TagDefines> tagList=null;
@@ -519,7 +521,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 					FWTagPicker jpaTagPickerList=(FWTagPicker) tagListData.get(tagCounter);
 					if (jpaTagPickerList.getTagPickerName().equals(tag) ){
 						String tagValues=jpaTagPickerList.getTagValues();
-						tagList= new ArrayList<TagDefines>();
+						tagList= new ArrayList<>();
 						for(String val:tagValues.split("#")) {
 							int index=val.indexOf(":");
 							String keyToStore=val.substring(0,index);
@@ -561,46 +563,46 @@ public class CreateFirewallController extends RestrictedBaseController {
 						ruleFromZone=jpaTermList.getFromZone();	
 
 						if ((ruleFromZone != null) && (!ruleFromZone.isEmpty())){
-							fromZone_map = new HashMap<Integer, String>();
+							fromZone_map = new HashMap<>();
 							fromZone_map.put(tl, ruleFromZone);
 						} 	
 						ruleToZone=jpaTermList.getToZone();
 
 						if ((ruleToZone != null) && (!ruleToZone.isEmpty())){
-							toZone_map = new HashMap<Integer, String>();
+							toZone_map = new HashMap<>();
 							toZone_map.put(tl, ruleToZone);
 						} 
 						ruleSrcPrefixList=jpaTermList.getSrcIPList();
 
 						if ((ruleSrcPrefixList != null) && (!ruleSrcPrefixList.isEmpty())){
-							srcIP_map = new HashMap<Integer, String>();
+							srcIP_map = new HashMap<>();
 							srcIP_map.put(tl, ruleSrcPrefixList);
 						} 
 
 						ruleDestPrefixList= jpaTermList.getDestIPList();
 						if ((ruleDestPrefixList != null) && (!ruleDestPrefixList.isEmpty())){
-							destIP_map = new HashMap<Integer, String>();
+							destIP_map = new HashMap<>();
 							destIP_map.put(tl, ruleDestPrefixList);
 						} 
 
 						ruleSrcPort=jpaTermList.getSrcPortList();
 
 						if (ruleSrcPort != null && (!ruleSrcPort.isEmpty())){
-							srcPort_map = new HashMap<Integer, String>();
+							srcPort_map = new HashMap<>();
 							srcPort_map.put(tl, ruleSrcPort);
 						} 
 
 						ruleDestPort= jpaTermList.getDestPortList();
 
 						if (ruleDestPort!= null && (!jpaTermList.getDestPortList().isEmpty())){
-							destPort_map = new HashMap<Integer, String>();
+							destPort_map = new HashMap<>();
 							destPort_map.put(tl, ruleDestPort);
 						} 
 
 						ruleAction=jpaTermList.getAction();
 
 						if (( ruleAction!= null) && (!ruleAction.isEmpty())){
-							action_map = new HashMap<Integer, String>();
+							action_map = new HashMap<>();
 							action_map.put(tl, ruleAction);
 						} 
 					}
@@ -616,7 +618,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 
 				//FromZone arrays
 				if(fromZone_map!=null){
-					List<String> fromZone= new ArrayList<String>();
+					List<String> fromZone= new ArrayList<>();
 					for(String fromZoneStr:fromZone_map.get(tl).split(",") ){
 						fromZone.add(fromZoneStr);
 					}
@@ -625,7 +627,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 
 				//ToZone arrays
 				if(toZone_map!=null){
-					List<String> toZone= new ArrayList<String>();
+					List<String> toZone= new ArrayList<>();
 					for(String toZoneStr:toZone_map.get(tl).split(",") ){
 						toZone.add(toZoneStr);
 					}
@@ -634,7 +636,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 
 				//Destination Services.
 				if(destPort_map!=null){
-					Set<ServicesJson> destServicesJsonList= new HashSet<ServicesJson>();
+					Set<ServicesJson> destServicesJsonList= new HashSet<>();
 					for(String destServices:destPort_map.get(tl).split(",") ){
 						ServicesJson destServicesJson= new ServicesJson();
 						destServicesJson.setType("REFERENCE");
@@ -665,7 +667,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 
 				if(srcIP_map!=null){
 					//Source List
-					List<AddressJson> sourceListArrayJson= new ArrayList<AddressJson>();			
+					List<AddressJson> sourceListArrayJson= new ArrayList<>();			
 					for(String srcList:srcIP_map.get(tl).split(",") ){
 						AddressJson srcListJson= new AddressJson();
 						if(srcList.equals("ANY")){
@@ -686,7 +688,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 				}
 				if(destIP_map!=null){
 					//Destination List
-					List<AddressJson> destListArrayJson= new ArrayList<AddressJson>();				
+					List<AddressJson> destListArrayJson= new ArrayList<>();				
 					for(String destList:destIP_map.get(tl).split(",")){
 						AddressJson destListJson= new AddressJson();
 						if(destList.equals("ANY")){
@@ -727,25 +729,32 @@ public class CreateFirewallController extends RestrictedBaseController {
 				jpaSecurityZone = (SecurityZone) securityZoneData.get(j);
 				if (jpaSecurityZone.getZoneName().equals(policyData.getSecurityZone())){
 					tc.setSecurityZoneId(jpaSecurityZone.getZoneValue());
-					//setParentSecurityZone(jpaSecurityZone.getZoneValue());//For storing the securityZone IDs to the DB
+					IdMap idMapInstance= new IdMap();
+					idMapInstance.setAstraId(jpaSecurityZone.getZoneValue());
+					idMapInstance.setVendorId("deviceGroup:dev");
+					
+					List<IdMap> idMap = new ArrayList<IdMap>();
+					idMap.add(idMapInstance);
+					
+					VendorSpecificData vendorStructure= new VendorSpecificData();
+					vendorStructure.setIdMap(idMap);
+					tc.setVendorSpecificData(vendorStructure);
 					break;
 				}
 			}
 
 			tc.setServiceTypeId("/v0/firewall/pan");
 			tc.setConfigName(policyData.getConfigName());
+			tc.setVendorServiceId("vipr");
 			
-			//Astra is rejecting the packet when it sees a new JSON field, so removing it for now. 
-			//tc.setTemplateVersion(XACMLProperties.getProperty(XACMLRestProperties.TemplateVersion_FW));
-
 			DeployNowJson deployNow= new DeployNowJson();
 			deployNow.setDeployNow(false);
 
 			tc.setDeploymentOption(deployNow);
 
-			Set<ServiceListJson> servListArray = new HashSet<ServiceListJson>();
-			Set<ServiceGroupJson> servGroupArray= new HashSet<ServiceGroupJson>();
-			Set<AddressGroupJson> addrGroupArray= new HashSet<AddressGroupJson>();
+			Set<ServiceListJson> servListArray = new HashSet<>();
+			Set<ServiceGroupJson> servGroupArray= new HashSet<>();
+			Set<AddressGroupJson> addrGroupArray= new HashSet<>();
 
 			ServiceGroupJson targetSg= null;
 			AddressGroupJson addressSg=null;
@@ -801,7 +810,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 						String name=sg.getGroupName();
 						//Removing the "Group_" prepending string before packing the JSON 
 						targetSg.setName(name.substring(6,name.length()));
-						List<ServiceMembers> servMembersList= new ArrayList<ServiceMembers>();
+						List<ServiceMembers> servMembersList= new ArrayList<>();
 
 						for(String groupString: sg.getServiceList().split(",")){
 							ServiceMembers serviceMembers= new ServiceMembers();
@@ -828,13 +837,13 @@ public class CreateFirewallController extends RestrictedBaseController {
 				}
 			}
 
-			Set<PrefixIPList> prefixIPList = new HashSet<PrefixIPList>();
+			Set<PrefixIPList> prefixIPList = new HashSet<>();
 			for(String prefixList:expandablePrefixIPList){
 				for(String prefixIP: prefixList.split(",")){
 					if((!prefixIP.startsWith("Group_"))){
 						if(!prefixIP.equals("ANY")){
-							List<AddressMembers> addMembersList= new ArrayList<AddressMembers>();
-							List<String> valueDesc= new ArrayList<String>();
+							List<AddressMembers> addMembersList= new ArrayList<>();
+							List<String> valueDesc= new ArrayList<>();
 							PrefixIPList targetAddressList = new PrefixIPList();
 							AddressMembers addressMembers= new AddressMembers();
 							targetAddressList.setName(prefixIP);
@@ -866,9 +875,9 @@ public class CreateFirewallController extends RestrictedBaseController {
 						//Removing the "Group_" prepending string before packing the JSON 
 						addressSg.setName(name.substring(6,name.length()));
 
-						List<AddressMembers> addrMembersList= new ArrayList<AddressMembers>();
+						List<AddressMembers> addrMembersList= new ArrayList<>();
 						for(String groupString: ag.getPrefixList().split(",")){
-							List<String> valueDesc= new ArrayList<String>();
+							List<String> valueDesc= new ArrayList<>();
 							AddressMembers addressMembers= new AddressMembers();
 							valueDesc= mapping (groupString);
 							if(valueDesc.size() > 0){
@@ -886,7 +895,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 				}
 			}
 
-			Set<Object> serviceGroup= new HashSet<Object>();
+			Set<Object> serviceGroup= new HashSet<>();
 
 			for(Object obj1:servGroupArray){
 				serviceGroup.add(obj1);
@@ -896,7 +905,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 				serviceGroup.add(obj);
 			}
 
-			Set<Object> addressGroup= new HashSet<Object>();
+			Set<Object> addressGroup= new HashSet<>();
 
 			for(Object addObj:prefixIPList){
 				addressGroup.add(addObj);

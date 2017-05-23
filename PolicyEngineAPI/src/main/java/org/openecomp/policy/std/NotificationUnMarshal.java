@@ -39,7 +39,7 @@ public class NotificationUnMarshal {
 		notification = mapper.readValue(json, StdPDPNotification.class);
 		if(notification!=null){
 			if(notification.getLoadedPolicies()!=null){
-				Collection<StdLoadedPolicy> stdLoadedPolicies = new ArrayList<StdLoadedPolicy>();
+				Collection<StdLoadedPolicy> stdLoadedPolicies = new ArrayList<>();
 				for(LoadedPolicy loadedPolicy: notification.getLoadedPolicies()){
 					StdLoadedPolicy stdLoadedPolicy = (StdLoadedPolicy) loadedPolicy;
 					if(notification.getRemovedPolicies()!=null){

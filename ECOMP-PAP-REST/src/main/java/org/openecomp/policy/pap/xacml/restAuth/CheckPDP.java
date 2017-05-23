@@ -109,7 +109,7 @@ public class CheckPDP {
 			throw new Exception("Cannot Load the Properties file", e);
 		}
 		// Read the Properties and Load the PDPs and encoding.
-		pdpMap = new HashMap<String, String>();
+		pdpMap = new HashMap<>();
 		// Check the Keys for PDP_URLs
 		Collection<Object> unsorted = pdpProp.keySet();
 		List<String> sorted = new ArrayList(unsorted);
@@ -121,7 +121,7 @@ public class CheckPDP {
 					throw new Exception("Properties file doesn't have the PDP_URL parameter");
 				}
 				if (check_val.contains(";")) {
-					List<String> pdp_default = new ArrayList<String>(Arrays.asList(check_val.split("\\s*;\\s*")));
+					List<String> pdp_default = new ArrayList<>(Arrays.asList(check_val.split("\\s*;\\s*")));
 					int pdpCount = 0;
 					while (pdpCount < pdp_default.size()) {
 						String pdpVal = pdp_default.get(pdpCount);
@@ -141,7 +141,7 @@ public class CheckPDP {
 
 	private static void readPDPParam(String pdpVal) throws Exception{
 		if(pdpVal.contains(",")){
-			List<String> pdpValues = new ArrayList<String>(Arrays.asList(pdpVal.split("\\s*,\\s*")));
+			List<String> pdpValues = new ArrayList<>(Arrays.asList(pdpVal.split("\\s*,\\s*")));
 			if(pdpValues.size()==3){
 				// 1:2 will be UserID:Password
 				String userID = pdpValues.get(1);

@@ -70,8 +70,8 @@ public class ConformancePIPEngine implements ConfigurableEngine {
 	
 	private String name;
 	private String description;
-	private Map<String,PIPResponse> cache	= new HashMap<String,PIPResponse>();
-	private List<Attribute> listAttributes	= new ArrayList<Attribute>();
+	private Map<String,PIPResponse> cache	= new HashMap<>();
+	private List<Attribute> listAttributes	= new ArrayList<>();
 	private DataTypeFactory dataTypeFactory;
 	
 	public ConformancePIPEngine() {
@@ -182,7 +182,7 @@ public class ConformancePIPEngine implements ConfigurableEngine {
 		/*
 		 * Iterate through the values and only return the ones that match the requested data type
 		 */
-		List<AttributeValue<?>> matchingValues	= new ArrayList<AttributeValue<?>>();
+		List<AttributeValue<?>> matchingValues	= new ArrayList<>();
 		Iterator<AttributeValue<?>> iterAttributeValues	= attributeMatch.getValues().iterator();
 		while (iterAttributeValues.hasNext()) {
 			AttributeValue<?> attributeValue	= iterAttributeValues.next();

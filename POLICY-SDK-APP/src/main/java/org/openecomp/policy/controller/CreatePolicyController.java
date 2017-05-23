@@ -67,7 +67,7 @@ public class CreatePolicyController extends RestrictedBaseController{
 	}
 
 	public void prePopulateBaseConfigPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-		attributeList = new ArrayList<Object>();
+		attributeList = new ArrayList<>();
 		if (policyAdapter.getPolicyData() instanceof PolicyType) {
 			Object policyData = policyAdapter.getPolicyData();
 			PolicyType policy = (PolicyType) policyData;
@@ -136,7 +136,7 @@ public class CreatePolicyController extends RestrictedBaseController{
 										// After Ecomp and Config it is optional to have attributes, so
 										// check weather dynamic values or there or not.
 										if (index >= 7) {
-											Map<String, String> attribute = new HashMap<String, String>();
+											Map<String, String> attribute = new HashMap<>();
 											attribute.put("key", attributeId);
 											attribute.put("value", value);
 											attributeList.add(attribute);

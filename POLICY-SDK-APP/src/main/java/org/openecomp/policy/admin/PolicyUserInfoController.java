@@ -48,7 +48,7 @@ public class PolicyUserInfoController extends RestrictedBaseController{
 		JsonMessage msg = null;
 		try {
 			String userId =  UserUtils.getUserSession(request).getOrgUserId();
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("userid", userId);
 			msg = new JsonMessage(mapper.writeValueAsString(model));
