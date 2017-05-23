@@ -47,27 +47,27 @@ public class DecisionPolicyClient {
 	        //policyParameters.setPolicyScope("MikeAPItests"); //Directory will be created where the Policies are saved... this displays a a subscope on the GUI
 	        
 	        //Set the Component Attributes... These are Optional
-	        Map<String, String> configAttributes = new HashMap<String, String>(); 
+	        Map<String, String> configAttributes = new HashMap<>(); 
 	        configAttributes.put("Template", "UpdateTemplate");
 	        configAttributes.put("controller", "default"); 
 	        configAttributes.put("SamPoll", "30");
 	        configAttributes.put("value", "abcd"); 
 	        
-	        Map<AttributeType, Map<String,String>> attributes = new HashMap<AttributeType, Map<String,String>>();
+	        Map<AttributeType, Map<String,String>> attributes = new HashMap<>();
 	        attributes.put(AttributeType.MATCHING, configAttributes);
 	        
 	        //Set the settings... These are Optional
-	        Map<String, String> settingsMap = new HashMap<String, String>();
+	        Map<String, String> settingsMap = new HashMap<>();
 	        settingsMap.put("server", "5");
 	        
 	        attributes.put(AttributeType.SETTINGS, settingsMap);
 	        policyParameters.setAttributes(attributes);
 
 	        
-			List<String> dynamicRuleAlgorithmLabels = new LinkedList<String>();
-			List<String> dynamicRuleAlgorithmFunctions = new LinkedList<String>();
-			List<String> dynamicRuleAlgorithmField1 = new LinkedList<String>();
-			List<String> dynamicRuleAlgorithmField2 = new LinkedList<String>();
+			List<String> dynamicRuleAlgorithmLabels = new LinkedList<>();
+			List<String> dynamicRuleAlgorithmFunctions = new LinkedList<>();
+			List<String> dynamicRuleAlgorithmField1 = new LinkedList<>();
+			List<String> dynamicRuleAlgorithmField2 = new LinkedList<>();
 			
 			//Example of a complex Rule algorithm using the settings in the Field1
 			/* label 	field1     	function				field2

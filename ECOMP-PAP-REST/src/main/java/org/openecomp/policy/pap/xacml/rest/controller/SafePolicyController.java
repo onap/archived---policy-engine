@@ -71,7 +71,7 @@ public class SafePolicyController {
 			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void getRiskTypeDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("riskTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(RiskType.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -86,7 +86,7 @@ public class SafePolicyController {
 			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void getEcompNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("riskTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(RiskType.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -229,7 +229,7 @@ public class SafePolicyController {
 			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void getSafePolicyWarningEntityDataByName(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("safePolicyWarningDatas",
 					mapper.writeValueAsString(commonClassDao.getDataByColumn(SafePolicyWarning.class, "name")));
@@ -245,7 +245,7 @@ public class SafePolicyController {
 			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void getSafePolicyWarningeEntityData(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("safePolicyWarningDatas",
 					mapper.writeValueAsString(commonClassDao.getData(SafePolicyWarning.class)));

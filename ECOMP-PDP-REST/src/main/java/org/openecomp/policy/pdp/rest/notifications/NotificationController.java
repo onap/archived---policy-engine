@@ -85,8 +85,8 @@ public class NotificationController {
 		boolean updated = false;
 		boolean removed = false;
 		Notification notification = new Notification();
-		HashSet<Removed> removedPolicies = new HashSet<Removed>();
-		HashSet<Updated> updatedPolicies = new HashSet<Updated>();
+		HashSet<Removed> removedPolicies = new HashSet<>();
+		HashSet<Updated> updatedPolicies = new HashSet<>();
 
 		if (oldStatus == null) {
 			oldStatus = newStatus;
@@ -229,7 +229,7 @@ public class NotificationController {
 				while (allOfs.hasNext()) {
 					AllOf allOf = allOfs.next();
 					Iterator<Match> matches = allOf.getMatches();
-					HashMap<String, String> matchValues = new HashMap<String, String>();
+					HashMap<String, String> matchValues = new HashMap<>();
 					while (matches.hasNext()) {
 						Match match = matches.next();
 						LOGGER.info("Attribute Value is: "+ match.getAttributeValue().getValue().toString());
@@ -339,7 +339,7 @@ public class NotificationController {
             if(updated && removed){
                 notification.setNotificationType(NotificationType.BOTH);
                 if(notification.getLoadedPolicies()!=null){
-                    HashSet<Updated> updatedPolicies = new HashSet<Updated>(); 
+                    HashSet<Updated> updatedPolicies = new HashSet<>(); 
                     for(Updated oldUpdatedPolicy: notification.getLoadedPolicies()){
                         Updated updatePolicy = oldUpdatedPolicy;
                         if(notification.getRemovedPolicies()!=null){

@@ -20,13 +20,29 @@
 
 package org.openecomp.policy.controlloop.policy;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class ControlLoopPolicy {
 	
-	public ControlLoop controlLoop;
+	private ControlLoop controlLoop;
 
-	public LinkedList<Policy> policies;
+	private List<Policy> policies;
+
+	public ControlLoop getControlLoop() {
+		return controlLoop;
+	}
+
+	public void setControlLoop(ControlLoop controlLoop) {
+		this.controlLoop = controlLoop;
+	}
+
+	public List<Policy> getPolicies() {
+		return policies;
+	}
+
+	public void setPolicies(List<Policy> policies) {
+		this.policies = policies;
+	}
 
 	@Override
 	public String toString() {

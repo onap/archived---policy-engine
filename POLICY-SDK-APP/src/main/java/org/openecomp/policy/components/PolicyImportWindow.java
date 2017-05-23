@@ -86,11 +86,11 @@ public class PolicyImportWindow{
 		try {
 			extractFile = new TarArchiveInputStream (new FileInputStream(this.newfile.toFile()));
 		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Exception while Importing Polcies"+e1);
 		}
 		//Create a loop to read every single entry in TAR file 
 		try {
-			while ((entry = extractFile.getNextTarEntry()) != null) {
+			while (extractFile!=null && (entry = extractFile.getNextTarEntry()) != null) {
 				this.superadmin = true;
 				try{
 					copyFileToLocation(extractFile, entry, xacmlFiles, null, superadmin);
@@ -100,6 +100,14 @@ public class PolicyImportWindow{
 			}
 		} catch (IOException e) {
 			LOGGER.error("Exception Occured"+e);
+		}finally{
+			try {
+				if(extractFile != null){
+					extractFile.close();
+				}
+			} catch (IOException e) {
+				LOGGER.error("Exception Occured"+e);
+			}
 		}
 
 	}
@@ -149,7 +157,9 @@ public class PolicyImportWindow{
 
 		// Close Output Stream 
 		try {
-			outputFile.close();
+			if(outputFile != null){
+				outputFile.close();
+			}
 		} catch (IOException e) {
 			LOGGER.info("IOException:" +e);
 			LOGGER.error("Exception Occured"+e);

@@ -25,6 +25,7 @@ public class CompilerException extends Exception {
 	private static final long serialVersionUID = -7262217239867898601L;
 
 	public CompilerException() {
+		//Empty Constructor
 	}
 
 	public CompilerException(String message) {

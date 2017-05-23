@@ -35,7 +35,7 @@ import com.att.research.xacml.api.Result;
  * @version $Revision: 1.1 $
  */
 public class ResponseMatchResult {
-	private List<ResultMatchResult>	resultMatchResults	= new ArrayList<ResultMatchResult>();
+	private List<ResultMatchResult>	resultMatchResults	= new ArrayList<>();
 	
 	private boolean bAssociatedAdviceMatches			= true;
 	private boolean bAttributesMatch					= true;

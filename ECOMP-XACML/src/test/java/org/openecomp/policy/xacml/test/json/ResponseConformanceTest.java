@@ -320,7 +320,7 @@ public class ResponseConformanceTest {
 	//
 
 	private List<File> getRequestsInDirectory(File directory) {
-		List<File> fileList = new ArrayList<File>();
+		List<File> fileList = new ArrayList<>();
 
 		File[] fileArray = directory.listFiles();
 		for (File f : fileArray) {

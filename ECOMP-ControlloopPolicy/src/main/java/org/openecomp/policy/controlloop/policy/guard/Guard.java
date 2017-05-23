@@ -21,14 +21,22 @@ package org.openecomp.policy.controlloop.policy.guard;
 
 public class Guard {
 
-	public static String VERSION = "2.0.0";
+	private static final String DEFAULTVERSION = "2.0.0";
 	
-	public final String version = VERSION;
+	private String version = DEFAULTVERSION;
 	
 	public Guard() {
-		
+		//DO Nothing empty Constructor. 
 	}
 	
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
 	@Override
 	public String toString() {
 		return "Guard [version=" + version + "]";

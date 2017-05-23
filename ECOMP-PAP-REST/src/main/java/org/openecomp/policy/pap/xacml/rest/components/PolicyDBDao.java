@@ -213,7 +213,7 @@ public class PolicyDBDao {
 	 */
 	private List<?> getRemotePolicyDBDaoList(){
 		logger.debug("getRemotePolicyDBDaoList() as getRemotePolicyDBDaoList() called");
-		List<?> policyDBDaoEntityList = new LinkedList<Object>();
+		List<?> policyDBDaoEntityList = new LinkedList<>();
 		EntityManager em = emf.createEntityManager();
 		startTransactionSynced(em, 1000);
 		try{						
@@ -375,7 +375,6 @@ public class PolicyDBDao {
 					em.close();					
 				} catch(Exception e2){
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "COULD NOT CREATE DATABASELOCK ROW.  WILL TRY ONE MORE TIME");
-					e2.printStackTrace();
 				}
 				em = null;
 				em = emf.createEntityManager();
@@ -446,7 +445,7 @@ public class PolicyDBDao {
 	}
 	public void notifyOthers(long entityId, String entityType, String newGroupId){
 		logger.debug("notifyOthers(long entityId, String entityType, long newGroupId) as notifyOthers("+entityId+","+entityType+","+newGroupId+") called");		
-		LinkedList<Thread> notifyThreads = new LinkedList<Thread>();
+		LinkedList<Thread> notifyThreads = new LinkedList<>();
 
 		//we're going to run notiftions in parellel threads to speed things up
 		for(Object obj : otherServers){
@@ -855,7 +854,7 @@ public class PolicyDBDao {
 		//this must always be true since we don't explicitly know when a delete is occuring
 		boolean didUpdate = true;
 		HashMap<String,PDPPolicy> currentPolicySet = new HashMap<String,PDPPolicy>(oldPdpGroup.getPolicies().size());
-		HashSet<PDPPolicy> newPolicySet = new HashSet<PDPPolicy>();
+		HashSet<PDPPolicy> newPolicySet = new HashSet<>();
 		for(PDPPolicy pdpPolicy : oldPdpGroup.getPolicies()){
 			currentPolicySet.put(pdpPolicy.getId(), pdpPolicy);
 		}
@@ -1127,7 +1126,7 @@ public class PolicyDBDao {
 			Properties propertyFileProperties = new Properties();
 			String groupList = "";
 			String defaultGroup = "";
-			HashSet<String> currentGroupPaths = new HashSet<String>();
+			HashSet<String> currentGroupPaths = new HashSet<>();
 			for(Object o : groups){
 				GroupEntity group = (GroupEntity)o;
 				Path groupPath = Paths.get(pdpsPath.toString(), group.getGroupId());
@@ -1663,7 +1662,7 @@ public class PolicyDBDao {
 			getPolicyEntitiesQuery.setParameter("deleted", false);
 			policyEntityList = getPolicyEntitiesQuery.getResultList();
 		} catch(Exception e){
-			policyEntityList = new LinkedList<PolicyEntity>();
+			policyEntityList = new LinkedList<>();
 		}
 
 		for (PolicyEntity policy: policyEntityList){
@@ -1971,7 +1970,7 @@ public class PolicyDBDao {
 		}
 		String gitPath  = getGitPath();
 
-		ArrayList<String> gitPathParts = new ArrayList<String>();
+		ArrayList<String> gitPathParts = new ArrayList<>();
 		Iterator<?> gitPathIterator = Paths.get(gitPath).iterator();
 		while(gitPathIterator.hasNext()){
 			gitPathParts.add(gitPathIterator.next().toString());
@@ -2528,7 +2527,7 @@ public class PolicyDBDao {
 						getGroups.setParameter("pid", existingPolicy.getPolicyId());
 						groups = getGroups.getResultList();
 					}catch(Exception e){
-						groups = new LinkedList<GroupEntity>();
+						groups = new LinkedList<>();
 					}
 					for(Object o : groups){
 						GroupEntity group = (GroupEntity)o;
@@ -3104,7 +3103,7 @@ public class PolicyDBDao {
 					PolicyLogger.error("We cannot get the group from the papEngine to delete policies");
 				} else {
 
-					Set<String> newPolicySet = new HashSet<String>(group.getPolicies().size());
+					Set<String> newPolicySet = new HashSet<>(group.getPolicies().size());
 					//a multiple of n runtime is faster than n^2, so I am using a hashset to do the comparison
 					for(PDPPolicy pol: group.getPolicies()){
 						newPolicySet.add(pol.getId());

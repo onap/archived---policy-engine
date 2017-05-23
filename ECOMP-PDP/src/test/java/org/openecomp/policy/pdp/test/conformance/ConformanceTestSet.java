@@ -45,7 +45,7 @@ import org.openecomp.policy.common.logging.flexlogger.Logger;
  */
 public class ConformanceTestSet {
 	private static final Logger logger						= FlexLogger.getLogger(ConformanceTestSet.class);
-	private List<ConformanceTest> listConformanceTests	= new ArrayList<ConformanceTest>();
+	private List<ConformanceTest> listConformanceTests	= new ArrayList<>();
 	
 	protected List<ConformanceTest> getListConformanceTests() {
 		return this.listConformanceTests;
@@ -127,7 +127,7 @@ public class ConformanceTestSet {
 		/*
 		 * Sort the keyset and pull out the tests that have the required components
 		 */
-		List<String> listTestNames	= new ArrayList<String>();
+		List<String> listTestNames	= new ArrayList<>();
 		listTestNames.addAll(mapConformanceTests.keySet());
 		Collections.sort(listTestNames);
 		

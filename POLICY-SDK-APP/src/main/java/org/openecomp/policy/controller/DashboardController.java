@@ -91,7 +91,7 @@ public class DashboardController  extends RestrictedBaseController{
 	@RequestMapping(value={"/get_DashboardLoggingData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("availableLoggingDatas", mapper.writeValueAsString(systemDAO.getLoggingData()));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -106,7 +106,7 @@ public class DashboardController  extends RestrictedBaseController{
 	@RequestMapping(value={"/get_DashboardSystemAlertData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSystemAlertData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("systemAlertsTableDatas", mapper.writeValueAsString(systemDAO.getSystemAlertData()));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -121,7 +121,7 @@ public class DashboardController  extends RestrictedBaseController{
 	@RequestMapping(value={"/get_DashboardPAPStatusData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPAPStatusData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 			addPAPToTable();
@@ -138,7 +138,7 @@ public class DashboardController  extends RestrictedBaseController{
 	@RequestMapping(value={"/get_DashboardPDPStatusData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPDPStatusData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 			this.pdpConatiner = new PDPGroupContainer(PolicyController.getPapEngine());
@@ -156,7 +156,7 @@ public class DashboardController  extends RestrictedBaseController{
 	@RequestMapping(value={"/get_DashboardPolicyActivityData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPolicyActivityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 			this.pdpConatiner = new PDPGroupContainer(PolicyController.getPapEngine());
@@ -175,7 +175,7 @@ public class DashboardController  extends RestrictedBaseController{
 	 * Add the PAP information to the PAP Table
 	 */
 	public void addPAPToTable(){
-		papStatusData = new ArrayList<Object>();
+		papStatusData = new ArrayList<>();
 		String papStatus = null;
 		try {
 			Set<EcompPDPGroup> groups = PolicyController.getPapEngine().getEcompPDPGroups();
@@ -205,7 +205,7 @@ public class DashboardController  extends RestrictedBaseController{
 	 */
 	public void addPDPToTable(){	
 		pdpCount = 0;
-		pdpStatusData = new ArrayList<Object>();
+		pdpStatusData = new ArrayList<>();
 		long naCount;
 		long denyCount = 0;
 		long permitCount = 0;
@@ -305,7 +305,7 @@ public class DashboardController  extends RestrictedBaseController{
 	 * Add the information to the Policy Table
 	 */
 	private void addPolicyToTable() {
-		policyActivityData = new ArrayList<Object>();
+		policyActivityData = new ArrayList<>();
 		int i = 1;
 		String policyID = null;
 		int policyFireCount = 0;

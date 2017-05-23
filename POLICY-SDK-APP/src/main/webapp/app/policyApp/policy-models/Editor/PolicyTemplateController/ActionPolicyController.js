@@ -29,6 +29,7 @@ app.controller('actionPolicyController', ['$scope', 'PolicyAppService', 'policyN
     		$scope.policyNavigator.refresh();
     	}
     	$scope.modal('createNewPolicy', true);
+    	$scope.temp.policy = "";
     };
     
     $scope.modal = function(id, hide) {

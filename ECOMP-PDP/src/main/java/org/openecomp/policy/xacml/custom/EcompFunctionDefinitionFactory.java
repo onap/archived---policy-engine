@@ -34,12 +34,12 @@ import com.att.research.xacmlatt.pdp.policy.FunctionDefinitionFactory;
 import com.att.research.xacmlatt.pdp.std.StdFunctions;
 
 public class EcompFunctionDefinitionFactory extends FunctionDefinitionFactory {
-	private static Map<Identifier,FunctionDefinition> 	mapFunctionDefinitions	= new HashMap<Identifier,FunctionDefinition>();
+	private static Map<Identifier,FunctionDefinition> 	mapFunctionDefinitions	= new HashMap<>();
 	private static boolean								needMapInit				= true;
 
 	public static final Identifier ID_FUNCTION_CUSTOM_REGEXP_MATCH						= new IdentifierImpl("org.openecomp.function.regex-match");
 	
-	private static final FunctionDefinition FD_CUSTOM_REGEXP_MATCH = new FunctionDefinitionCustomRegexpMatch<String>(ID_FUNCTION_CUSTOM_REGEXP_MATCH, DataTypes.DT_STRING);
+	private static final FunctionDefinition FD_CUSTOM_REGEXP_MATCH = new FunctionDefinitionCustomRegexpMatch<>(ID_FUNCTION_CUSTOM_REGEXP_MATCH, DataTypes.DT_STRING);
 
 	private static void register(FunctionDefinition functionDefinition) {
 		mapFunctionDefinitions.put(functionDefinition.getId(), functionDefinition);

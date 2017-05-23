@@ -72,7 +72,7 @@ public class CreateUpdateConfigPolicyService {
         policyParameters.setPolicyDescription(configPolicyAPIRequest.getPolicyDescription());
         policyParameters.setEcompName(configPolicyAPIRequest.getEcompName());
         policyParameters.setConfigName(configPolicyAPIRequest.getConfigName());
-        Map<AttributeType, Map<String, String>> attributes = new HashMap<AttributeType, Map<String, String>>();
+        Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
         attributes.put(AttributeType.MATCHING, configPolicyAPIRequest.getConfigAttributes());
         policyParameters.setAttributes(attributes);
         policyParameters.setConfigBodyType(PolicyType.valueOf(configPolicyAPIRequest.getConfigType()));

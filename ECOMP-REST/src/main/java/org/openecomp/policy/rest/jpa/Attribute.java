@@ -99,7 +99,7 @@ public class Attribute implements Serializable {
 	//bi-directional many-to-one association to ConstraintValue
 	@OneToMany(mappedBy="attribute", orphanRemoval=true, cascade=CascadeType.REMOVE)
 	@JsonIgnore
-	private Set<ConstraintValue> constraintValues = new HashSet<ConstraintValue>();
+	private Set<ConstraintValue> constraintValues = new HashSet<>();
 
 	//bi-directional many-to-one association to Category
 	@ManyToOne
@@ -259,7 +259,7 @@ public class Attribute implements Serializable {
 
 	public ConstraintValue addConstraintValue(ConstraintValue constraintValue) {
 		if (this.constraintValues == null) {
-			this.constraintValues = new HashSet<ConstraintValue>();
+			this.constraintValues = new HashSet<>();
 		}
 		this.constraintValues.add(constraintValue);
 		constraintValue.setAttribute(this);

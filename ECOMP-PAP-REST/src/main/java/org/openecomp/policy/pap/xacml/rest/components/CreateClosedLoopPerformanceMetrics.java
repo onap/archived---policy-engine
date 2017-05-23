@@ -101,7 +101,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 	@Override
 	public Map<String, String> savePolicies() throws Exception {
 
-		Map<String, String> successMap = new HashMap<String,String>();
+		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;

@@ -208,7 +208,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 
 	@Override
 	public Collection<?> getItemIds() {
-		final Collection<Object> items = new ArrayList<Object>();
+		final Collection<Object> items = new ArrayList<>();
 		items.addAll(this.groups);
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("getItemIds: " + items);

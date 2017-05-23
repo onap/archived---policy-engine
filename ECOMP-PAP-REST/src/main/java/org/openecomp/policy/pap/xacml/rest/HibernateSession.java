@@ -20,7 +20,6 @@
 
 package org.openecomp.policy.pap.xacml.rest;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -53,13 +52,12 @@ public class HibernateSession{
 			StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
 			xacmlsessionFactory = configuration.configure("/hibernate.cfg.xml").buildSessionFactory(builder.build());
 			
-		} catch (Throwable ex) {
+		} catch (Exception ex) {
 			LOGGER.error("Exception Occured While Creating Hiberante Session Factory"+ex);
-			throw new ExceptionInInitializerError(ex);
 		}
 	}
 	
-	public static Session getSessionFactory() throws HibernateException {
+	public static Session getSessionFactory(){
 		return xacmlsessionFactory.openSession();
 	}
 

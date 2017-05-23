@@ -42,10 +42,10 @@ public class NotificationStore {
 	
 	public static StdPDPNotification getDeltaNotification(StdPDPNotification newNotification){
 		StdPDPNotification notificationDelta = new StdPDPNotification();
-		ArrayList<StdRemovedPolicy> removedDelta = new ArrayList<StdRemovedPolicy>();
-		ArrayList<StdLoadedPolicy> updatedDelta = new ArrayList<StdLoadedPolicy>();
-		Collection<StdLoadedPolicy> newUpdatedPolicies = new ArrayList<StdLoadedPolicy>();
-		Collection<StdRemovedPolicy> newRemovedPolicies = new ArrayList<StdRemovedPolicy>();
+		ArrayList<StdRemovedPolicy> removedDelta = new ArrayList<>();
+		ArrayList<StdLoadedPolicy> updatedDelta = new ArrayList<>();
+		Collection<StdLoadedPolicy> newUpdatedPolicies = new ArrayList<>();
+		Collection<StdRemovedPolicy> newRemovedPolicies = new ArrayList<>();
 		Collection<LoadedPolicy> oldUpdatedLostPolicies = notificationRecord.getLoadedPolicies();
 		Collection<RemovedPolicy> oldRemovedPolicies = notificationRecord.getRemovedPolicies();
 		Collection<LoadedPolicy> oldUpdatedPolicies = notificationRecord.getLoadedPolicies();
@@ -168,14 +168,14 @@ public class NotificationStore {
 			}else{
 				// Check if there is anything new and update the record. 
 				if(notificationRecord.getLoadedPolicies()!=null || notificationRecord.getRemovedPolicies()!=null){
-					HashSet<StdRemovedPolicy> removedPolicies = new HashSet<StdRemovedPolicy>();
+					HashSet<StdRemovedPolicy> removedPolicies = new HashSet<>();
 					for(RemovedPolicy rPolicy: notificationRecord.getRemovedPolicies()){
 						StdRemovedPolicy sRPolicy = new StdRemovedPolicy();
 						sRPolicy.setPolicyName(rPolicy.getPolicyName());
 						sRPolicy.setVersionNo(rPolicy.getVersionNo());
 						removedPolicies.add(sRPolicy);
 					}
-					HashSet<StdLoadedPolicy> updatedPolicies = new HashSet<StdLoadedPolicy>();
+					HashSet<StdLoadedPolicy> updatedPolicies = new HashSet<>();
 					for(LoadedPolicy uPolicy: notificationRecord.getLoadedPolicies()){
 						StdLoadedPolicy sUPolicy = new StdLoadedPolicy();
 						sUPolicy.setMatches(uPolicy.getMatches());

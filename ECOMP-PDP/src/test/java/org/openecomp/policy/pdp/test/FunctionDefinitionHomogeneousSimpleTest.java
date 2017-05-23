@@ -88,8 +88,8 @@ public class FunctionDefinitionHomogeneousSimpleTest {
 		}
 		
 		FunctionDefinitionEquality<String> fd   = new FunctionDefinitionEquality<String>(XACML3.ID_FUNCTION_STRING_EQUAL, DataTypes.DT_STRING);
-		List<String> convertedValues = new ArrayList<String>();
-		List<FunctionArgument> listFunctionArguments = new ArrayList<FunctionArgument>();
+		List<String> convertedValues = new ArrayList<>();
+		List<FunctionArgument> listFunctionArguments = new ArrayList<>();
 		
 		// test correct # of args, both of them strings
 		listFunctionArguments.add(stringAttr1);

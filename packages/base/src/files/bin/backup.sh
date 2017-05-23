@@ -74,7 +74,6 @@ function backup() {
 			--exclude backup \
 			--exclude servers/pap/webapps/pap \
 			--exclude servers/pdp/webapps/pdp \
-			--exclude servers/pypdp/webapps/PyPDPServer \
 			--exclude servers/console/webapps/policy \
 			${POLICY_HOME}/* \
 			${BACKUP_DIR}

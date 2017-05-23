@@ -83,11 +83,11 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 		ClosedLoopGridJSONData policyJsonData = mapper.readValue(root.get("policyData").get("policy").toString(), ClosedLoopGridJSONData.class);
 		ClosedLoopFaultBody jsonBody = mapper.readValue(root.get("policyData").get("policy").get("jsonBodyData").toString(), ClosedLoopFaultBody.class);
 		
-		ArrayList<Object> trapSignatureDatas = new ArrayList<Object>();
+		ArrayList<Object> trapSignatureDatas = new ArrayList<>();
 		if(trapDatas.getTrap1() != null){
 			trapSignatureDatas.add(trapDatas);
 		}
-		ArrayList<Object> faultSignatureDatas = new ArrayList<Object>();
+		ArrayList<Object> faultSignatureDatas = new ArrayList<>();
 		if(faultDatas.getTrap1() != null){
 			faultSignatureDatas.add(faultDatas);
 		}

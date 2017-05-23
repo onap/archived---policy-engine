@@ -34,19 +34,19 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 	
 	private Status status = Status.UNKNOWN;
 
-	private Set<String>	loadErrors = new HashSet<String>();
+	private Set<String>	loadErrors = new HashSet<>();
 	
-	private Set<String> loadWarnings = new HashSet<String>();
+	private Set<String> loadWarnings = new HashSet<>();
 	
-	private Set<PDPPolicy> loadedPolicies = new HashSet<PDPPolicy>();
+	private Set<PDPPolicy> loadedPolicies = new HashSet<>();
 	
-	private Set<PDPPolicy> loadedRootPolicies = new HashSet<PDPPolicy>();
+	private Set<PDPPolicy> loadedRootPolicies = new HashSet<>();
 	
-	private Set<PDPPolicy> failedPolicies = new HashSet<PDPPolicy>();
+	private Set<PDPPolicy> failedPolicies = new HashSet<>();
 	
-	private Set<PDPPIPConfig>	loadedPIPConfigs = new HashSet<PDPPIPConfig>();
+	private Set<PDPPIPConfig>	loadedPIPConfigs = new HashSet<>();
 	
-	private Set<PDPPIPConfig>	failedPIPConfigs = new HashSet<PDPPIPConfig>();
+	private Set<PDPPIPConfig>	failedPIPConfigs = new HashSet<>();
 	
 	public StdPDPStatus() {
 	}

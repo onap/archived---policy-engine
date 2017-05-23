@@ -67,7 +67,7 @@
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="temp.inprocess">Cancel</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="refresh();" ng-disabled="temp.inprocess">Cancel</button>
               <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess">Rename</button>
             </div>
         </form>
@@ -111,7 +111,7 @@
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" ng-disabled="temp.inprocess">Cancel</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="refresh();" ng-disabled="temp.inprocess">Cancel</button>
               <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess">Move</button>
             </div>
         </form>

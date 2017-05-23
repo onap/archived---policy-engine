@@ -26,17 +26,65 @@ import java.util.UUID;
 
 public class GuardPolicy {
 
-	public String id = UUID.randomUUID().toString();
-	public String name;
-	public String description;
-	public String actor;
-	public String recipe;
-	public LinkedList<Constraint> limit_constraints;
+	private String id = UUID.randomUUID().toString();
+	private String name;
+	private String description;
+	private String actor;
+	private String recipe;
+	private List<Constraint> limit_constraints;
 	
 	public GuardPolicy() {
-		
+		//Do Nothing Empty Constructor. 
 	}
 	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getActor() {
+		return actor;
+	}
+
+	public void setActor(String actor) {
+		this.actor = actor;
+	}
+
+	public String getRecipe() {
+		return recipe;
+	}
+
+	public void setRecipe(String recipe) {
+		this.recipe = recipe;
+	}
+
+	public List<Constraint> getLimit_constraints() {
+		return limit_constraints;
+	}
+
+	public void setLimit_constraints(List<Constraint> limit_constraints) {
+		this.limit_constraints = limit_constraints;
+	}
+
 	public GuardPolicy(String id) {
 		this.id = id;
 	}
@@ -82,20 +130,7 @@ public class GuardPolicy {
 	}
 	
 	public boolean isValid() {
-		try {
-			if (id == null) {
-				throw new NullPointerException();
-			}
-			if (name == null) {
-				throw new NullPointerException();
-			}
-			if (actor == null) {
-				throw new NullPointerException();
-			}
-			if (recipe == null) {
-				throw new NullPointerException();
-			}
-		} catch (Exception e) {
+		if(id==null || name ==null|| actor==null|| recipe==null){
 			return false;
 		}
 		return true;
@@ -104,7 +139,7 @@ public class GuardPolicy {
 	@Override
 	public String toString() {
 		return "Policy [id=" + id + ", name=" + name + ", description=" + description + ", actor=" + actor + ", recipe="
-				+ recipe + ", limit_constraints=" + limit_constraints + "]";
+				+ recipe + ", limitConstraints=" + limit_constraints + "]";
 	}
 
 	@Override

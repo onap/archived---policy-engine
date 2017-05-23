@@ -56,7 +56,7 @@ import junit.framework.TestCase;
 public class XACMLPdpServletTest extends TestCase{
 	private static Logger LOGGER	= FlexLogger.getLogger(XACMLPdpServletTest.class);
 	
-	private List<String> headers = new ArrayList<String>();
+	private List<String> headers = new ArrayList<>();
 	
 	private HttpServletRequest httpServletRequest;
 	private HttpServletResponse httpServletResponse;
@@ -110,7 +110,7 @@ public class XACMLPdpServletTest extends TestCase{
 			// when IntegrityMonitor.getInstance is called, return the mock object
 			PowerMockito.when(IntegrityMonitor.getInstance(Mockito.anyString(), Mockito.any(Properties.class))).thenReturn(im);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			LOGGER.error("Exception Occured"+e1);
 		}
 		
 		try {

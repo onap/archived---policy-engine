@@ -28,7 +28,7 @@ import org.openecomp.policy.controlloop.policy.builder.Results;
 public class ResultsImpl implements Results {
 	
 	private String specification;
-	private List<Message>	messages = new LinkedList<Message>();
+	private List<Message>	messages = new LinkedList<>();
 
 	@Override
 	public List<Message> getMessages() {
@@ -42,7 +42,7 @@ public class ResultsImpl implements Results {
 
 	@Override
 	public boolean isValid() {
-		return (this.specification != null);
+		return this.specification != null;
 	}
 
 	public void addMessage(Message message) {

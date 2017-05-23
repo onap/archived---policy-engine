@@ -69,7 +69,7 @@ public class DecisionPolicyDictionaryController {
 	@RequestMapping(value={"/get_SettingsDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSettingsDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("settingsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(DecisionSettings.class, "xacmlId")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -85,7 +85,7 @@ public class DecisionPolicyDictionaryController {
 	@RequestMapping(value={"/get_SettingsDictionaryData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSettingsDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("settingsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));

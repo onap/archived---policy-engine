@@ -35,9 +35,9 @@ public class StdPAPPolicy implements EcompPAPPolicy, Serializable{
 	private String policyDescription = null;
 	private String ecompName = null;
 	private String configName = null;
-	private Map<String, String> dyanamicFieldConfigAttributes = new HashMap<String, String>();
-	private Map<String, String> dropDownMap = new HashMap<String, String>();
-	private Map<String, String> dynamicSettingsMap = new HashMap<String, String>();
+	private Map<String, String> dyanamicFieldConfigAttributes = new HashMap<>();
+	private Map<String, String> dropDownMap = new HashMap<>();
+	private Map<String, String> dynamicSettingsMap = new HashMap<>();
 	private List<String> dynamicRuleAlgorithmLabels;
 	private List<String> dynamicRuleAlgorithmCombo;
 	private List<String> dynamicRuleAlgorithmField1;

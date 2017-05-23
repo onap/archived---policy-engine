@@ -117,7 +117,7 @@ public class CreateBrmsRawPolicy extends Policy {
 	@Override
 	public Map<String, String> savePolicies() throws Exception {
 		
-		Map<String, String> successMap = new HashMap<String,String>();
+		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
@@ -405,7 +405,7 @@ public class CreateBrmsRawPolicy extends Policy {
         // Adding Dependencies. 
         if(policyAdapter.getBrmsDependency()!=null){
             BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
-            ArrayList<String> dependencies = new ArrayList<String>();
+            ArrayList<String> dependencies = new ArrayList<>();
             StringBuilder key = new StringBuilder();
             for(String dependencyName: policyAdapter.getBrmsDependency()){
                 dependencies.add(brmsDicitonaryController.getDependencyDataByID(dependencyName).getDependency());

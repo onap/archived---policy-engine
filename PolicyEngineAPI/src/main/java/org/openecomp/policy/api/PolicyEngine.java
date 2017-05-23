@@ -326,8 +326,8 @@ public class PolicyEngine{
 	/**
 	 * Retrieves the count of policies on the PAP, PDP, and Policy Engine as a whole
 	 * 
-	 * @param parameters {@link com.att.labs.ecomp.policy.api.MetricsRequestParameters} which represents the Parameters required to get the Policy Metrics 
-	 * @return {@link com.att.labs.ecomp.policy.api.MetricsResponse} which consists of the response related to getMetrics Request. 
+	 * @param parameters {@link  org.openecomp.policy.api.MetricsRequestParameters} which represents the Parameters required to get the Policy Metrics 
+	 * @return {@link org.openecomp.policy.api.MetricsResponse} which consists of the response related to getMetrics Request. 
 	 * @throws PolicyException PolicyException related to the operation	 
 	 * 
 	 * */
