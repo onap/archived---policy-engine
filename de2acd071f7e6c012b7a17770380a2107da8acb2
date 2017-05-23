@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "da141535_fad7eaeb",
+        "filename": "ECOMP-ControlloopPolicy/src/test/resources/v1.0.0/policy_vProbes_1610.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-23T19:46:17Z",
+      "side": 1,
+      "message": "let\u0027s also pull this out",
+      "revId": "de2acd071f7e6c012b7a17770380a2107da8acb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da141535_7aecfac7",
         "filename": "ECOMP-ControlloopPolicy/src/test/resources/v1.0.0/policy_vSCP_F5_1610.yaml",
         "patchSetId": 1
@@ -47,6 +64,23 @@
       "writtenOn": "2017-05-23T19:43:18Z",
       "side": 1,
       "message": "lets remove (or rename resources/service)",
+      "revId": "de2acd071f7e6c012b7a17770380a2107da8acb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_da042680",
+        "filename": "ECOMP-ControlloopPolicy/src/test/resources/v2.0.0-guard/policy_guard_vUSP_1707_appc.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-23T19:46:17Z",
+      "side": 1,
+      "message": "let\u0027s just rename (i.e. get rid of vUSP)",
       "revId": "de2acd071f7e6c012b7a17770380a2107da8acb2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
