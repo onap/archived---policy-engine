@@ -226,7 +226,7 @@ public class BackUpMonitor {
 				em.flush();
 			}else{
 				// Check for other Master(s)
-				ArrayList<BackUpMonitorEntity> masterEntities = new ArrayList<BackUpMonitorEntity>();
+				ArrayList<BackUpMonitorEntity> masterEntities = new ArrayList<>();
 				// Check for self. 
 				BackUpMonitorEntity selfEntity = null;
 				// Check backup monitor entities.
@@ -310,7 +310,7 @@ public class BackUpMonitor {
 									}
 								}
 							}
-							masterEntities = new ArrayList<BackUpMonitorEntity>();
+							masterEntities = new ArrayList<>();
 							masterEntities.add(masterEntity);
 						}
 						if(masterEntities.size()==1){

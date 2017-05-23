@@ -69,7 +69,7 @@ public class ActionPolicyDictionaryController {
 	@RequestMapping(value={"/get_ActionPolicyDictDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getActionEntitybyName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("actionPolicyDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(ActionPolicyDict.class, "attributeName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -84,7 +84,7 @@ public class ActionPolicyDictionaryController {
 	@RequestMapping(value={"/get_ActionPolicyDictData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getActionPolicyDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("actionPolicyDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ActionPolicyDict.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));

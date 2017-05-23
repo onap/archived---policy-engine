@@ -99,7 +99,7 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	 * @return List of String, size 1
 	 */
 	public List<String> addTileDefinitions() {
-		List<String> definitions = new ArrayList<String>();
+		List<String> definitions = new ArrayList<>();
 		definitions.add("/WEB-INF/defs/definitions.xml");
 		return definitions;
 	}

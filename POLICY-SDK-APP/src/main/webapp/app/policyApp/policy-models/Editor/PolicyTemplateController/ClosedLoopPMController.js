@@ -29,6 +29,7 @@ angular.module("abs").controller('clPMController', ['$scope', '$window', '$timeo
 	    	$scope.policyNavigator.refresh();
 	    }
 	    $scope.modal('createNewPolicy', true);
+	    $scope.temp.policy = "";
 	  };
 	    
 	  $scope.modal = function(id, hide) {

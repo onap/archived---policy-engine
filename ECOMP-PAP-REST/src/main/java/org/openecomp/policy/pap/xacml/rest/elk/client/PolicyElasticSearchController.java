@@ -198,8 +198,8 @@ public class PolicyElasticSearchController{
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			PolicyRestAdapter policyData = new PolicyRestAdapter();
 			PolicyElasticSearchController controller = new PolicyElasticSearchController();
-			Map<String, String> searchKeyValue = new HashMap<String, String>();
-			List<String> policyList = new ArrayList<String>();
+			Map<String, String> searchKeyValue = new HashMap<>();
+			List<String> policyList = new ArrayList<>();
 			if(request.getParameter("policyName") != null){
 				String policyName = request.getParameter("policyName");
 				policyData.setNewFileName(policyName);
@@ -340,7 +340,7 @@ public class PolicyElasticSearchController{
 			String dictionaryType = root.get("type").textValue();
 			Mode mode = Mode.valueOf(dictionaryType);
 			String value; 
-			List<String> policyList = new ArrayList<String>();
+			List<String> policyList = new ArrayList<>();
 			switch (mode){
 			case attribute :
 				Attribute attributedata = (Attribute)mapper.readValue(root.get("data").toString(), Attribute.class);
@@ -451,12 +451,12 @@ public class PolicyElasticSearchController{
 	//Search the Elk database
 	public List<String> searchElkDatabase(PolicyIndexType type, String key, String value){
 		PolicyElasticSearchController controller = new PolicyElasticSearchController();
-		Map<String, String> searchKeyValue = new HashMap<String, String>();
+		Map<String, String> searchKeyValue = new HashMap<>();
 		if(!"pholder".equals(key)){
 			searchKeyValue.put(key, value);
 		}
 		
-		List<String> policyList = new ArrayList<String>();
+		List<String> policyList = new ArrayList<>();
 		JestResult policyResultList = controller.search(type, value, searchKeyValue);
 		if(policyResultList.isSucceeded()){
 			JsonArray resultObject = policyResultList.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray();

@@ -38,7 +38,7 @@ import com.att.research.xacml.api.pap.PDPPolicy;
 public class MetricService {
 
 	public static void doGetPolicyMetrics(HttpServletRequest request, HttpServletResponse response) {
-		Set<EcompPDPGroup> groups = new HashSet<EcompPDPGroup>();
+		Set<EcompPDPGroup> groups = new HashSet<>();
 		try {
 			//get the count of policies on the PDP
 			if(XACMLPapServlet.getPAPEngine()!=null){

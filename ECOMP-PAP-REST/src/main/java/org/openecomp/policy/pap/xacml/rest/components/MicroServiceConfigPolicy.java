@@ -76,8 +76,8 @@ public class MicroServiceConfigPolicy extends Policy {
     private static String papDbUrl = null;
     private static String papDbUser = null;
     private static String papDbPassword = null;
-    private static Map<String, String> mapAttribute = new HashMap<String,String>();
-    private static Map<String, String> matchMap = new HashMap<String,String>();
+    private static Map<String, String> mapAttribute = new HashMap<>();
+    private static Map<String, String> matchMap = new HashMap<>();
 
 	public MicroServiceConfigPolicy() {
 		super();
@@ -105,7 +105,7 @@ public class MicroServiceConfigPolicy extends Policy {
 	@Override
 	public Map<String, String> savePolicies() throws Exception {
 
-		Map<String, String> successMap = new HashMap<String,String>();
+		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
@@ -188,7 +188,7 @@ public class MicroServiceConfigPolicy extends Policy {
                 matching = getValueFromDictionary(policyAdapter.getServiceType() + "-v" + jsonVersion);
             }
             
-            matchMap = new HashMap<String,String>();
+            matchMap = new HashMap<>();
             if (matching != null && !matching.isEmpty()){
                 matchMap = Splitter.on(",").withKeyValueSeparator("=").split(matching);
                 if(policyAdapter.getJsonBody() != null){
@@ -372,9 +372,15 @@ public class MicroServiceConfigPolicy extends Policy {
            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "MicroServiceModels", "Exception querying MicroServiceModels");
        } finally {
            try{
-               if (con!=null) con.close();
-               if (rs!=null) rs.close();
-               if (st!=null) st.close();
+               if (con!=null){
+            	   con.close();
+               }
+               if (rs!=null){
+            	   rs.close();
+               }
+               if (st!=null){
+            	   st.close();
+               }
            } catch (Exception ex){
         	   LOGGER.error("Exception Occured While Closing the Database Connection"+ex);
            }

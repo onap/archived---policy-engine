@@ -26,37 +26,62 @@ import java.util.Map;
 
 public class Constraint {
 
-	public Integer num;
-	public String duration;
-	public Map<String, String> time_in_range;
+	private Integer num;
+	private String duration;
+	private Map<String, String> time_in_range;
 	
-	public LinkedList<String> blacklist;
+	private List<String> blacklist;
 	
 	public Constraint() {
-		
+		// Do Nothing empty constructor. 
 	}
 	
+	public Integer getNum() {
+		return num;
+	}
+
+	public void setNum(Integer num) {
+		this.num = num;
+	}
+
+	public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}
+
+	public Map<String, String> getTime_in_range() {
+		return time_in_range;
+	}
+
+	public void setTime_in_range(Map<String, String> time_in_range) {
+		this.time_in_range = time_in_range;
+	}
+
+	public List<String> getBlacklist() {
+		return blacklist;
+	}
+
+	public void setBlacklist(List<String> blacklist) {
+		this.blacklist = blacklist;
+	}
+
 	public Constraint(Integer num, String duration) {
 		this.num = num;
 		this.duration = duration;
 	}
 	
 	public Constraint(List<String> blacklist) {
-		this.blacklist = new LinkedList<String>(blacklist);
+		this.blacklist = new LinkedList<>(blacklist);
 		
-	}
-	
-	public Constraint(Integer num, String duration, Map<String, String> time_in_range) {
-		this(num, duration);
-		if (time_in_range != null) {
-			this.time_in_range = Collections.unmodifiableMap(time_in_range);
-		}
 	}
 	
 	public Constraint(Integer num, String duration, List<String> blacklist) {
 		this.num = num;
 		this.duration = duration;
-		this.blacklist = new LinkedList<String>(blacklist);
+		this.blacklist = new LinkedList<>(blacklist);
 	}
 	
 	public Constraint(Integer num, String duration, Map<String, String> time_in_range, List<String> blacklist) {
@@ -64,7 +89,7 @@ public class Constraint {
 		if (time_in_range != null) {
 			this.time_in_range = Collections.unmodifiableMap(time_in_range);
 		}
-		this.blacklist = new LinkedList<String>(blacklist);
+		this.blacklist = new LinkedList<>(blacklist);
 	}
 	
 	public Constraint(Constraint constraint) {
@@ -73,18 +98,14 @@ public class Constraint {
 		if (constraint.time_in_range != null) {
 			this.time_in_range = Collections.unmodifiableMap(constraint.time_in_range);
 		}
-		this.blacklist = new LinkedList<String>(constraint.blacklist);
+		this.blacklist = new LinkedList<>(constraint.blacklist);
 	}
 	
 	public boolean isValid() {
-		try {
-			if (num == null && duration != null) {
-				throw new NullPointerException();
-			}
-			if (duration == null && num != null) {
-				throw new NullPointerException();
-			}
-		} catch (Exception e) {
+		if (num == null && duration != null) {
+			return false;
+		}
+		if (duration == null && num != null) {
 			return false;
 		}
 		return true;

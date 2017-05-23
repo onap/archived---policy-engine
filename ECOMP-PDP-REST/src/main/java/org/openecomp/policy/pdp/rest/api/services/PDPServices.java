@@ -114,9 +114,9 @@ public class PDPServices {
 
     private Collection<PDPResponse> checkResponse(Response response) throws PolicyException{
         String pdpConfigLocation = null;
-        Collection<PDPResponse> combinedResult = new HashSet<PDPResponse>();
+        Collection<PDPResponse> combinedResult = new HashSet<>();
         int priority = DEFAULT_PRIORITY;
-        Map<Integer, PDPResponse> uniqueResult = new HashMap<Integer, PDPResponse>();
+        Map<Integer, PDPResponse> uniqueResult = new HashMap<>();
         for (Result result : response.getResults()) {
             if (!result.getDecision().equals(Decision.PERMIT)) {
                 LOGGER.debug("Decision not a Permit. "  + result.getDecision().toString());
@@ -153,12 +153,12 @@ public class PDPServices {
                         String policyName = null;
                         String policyVersion = null;
                         match = new Matches();
-                        Map<String, String> matchingConditions = new HashMap<String, String>();
-                        Map<String, String> configAttributes = new HashMap<String, String>();
-                        Map<String, String> responseAttributes = new HashMap<String,String>();
-                        Map<String, String> actionTaken = new HashMap<String, String>();
+                        Map<String, String> matchingConditions = new HashMap<>();
+                        Map<String, String> configAttributes = new HashMap<>();
+                        Map<String, String> responseAttributes = new HashMap<>();
+                        Map<String, String> actionTaken = new HashMap<>();
                         PDPResponse pdpResponse = new PDPResponse();
-                        Map<String, String> adviseAttributes = new HashMap<String, String>();
+                        Map<String, String> adviseAttributes = new HashMap<>();
                         for (AttributeAssignment attribute : advice.getAttributeAssignments()) {
                             adviseAttributes.put(attribute.getAttributeId().stringValue(), attribute.getAttributeValue().getValue().toString());
                             if (attribute.getAttributeValue().getValue().toString().equalsIgnoreCase("CONFIGURATION")) {
@@ -267,7 +267,7 @@ public class PDPServices {
                     // Obligation actions
                     // Action advised should be in obligations.
                     for (Obligation obligation : result.getObligations()) {
-                        Map<String, String> actionAdvised = new HashMap<String, String>();
+                        Map<String, String> actionAdvised = new HashMap<>();
                         PDPResponse pdpResponse = new PDPResponse();
                         for (AttributeAssignment attribute : obligation.getAttributeAssignments()) {
                             actionAdvised.put(attribute.getAttributeId().stringValue(),
@@ -302,8 +302,9 @@ public class PDPServices {
         if(pdpConfigLocation.contains("/")){
             pdpConfigLocation = pdpConfigLocation.replace("/", File.separator);
         }
+        InputStream inputStream = null;
         try {
-            InputStream inputStream = new FileInputStream(new File(pdpConfigLocation));
+            inputStream = new FileInputStream(new File(pdpConfigLocation));
             try {
                 if (pdpConfigLocation.endsWith("json")) {
                     pdpResponse.setType(PolicyType.JSON);
@@ -335,7 +336,7 @@ public class PDPServices {
                     pdpResponse.setType(PolicyType.PROPERTIES);
                     Properties configProp = new Properties();
                     configProp.load(inputStream);
-                    Map<String, String> propVal = new HashMap<String, String>();
+                    Map<String, String> propVal = new HashMap<>();
                     for(String name: configProp.stringPropertyNames()) {
                         propVal.put(name, configProp.getProperty(name));
                     }
@@ -365,6 +366,10 @@ public class PDPServices {
         } catch (MalformedURLException e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
             throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error in ConfigURL", e);
+        }finally{
+        	if(inputStream != null){
+            	inputStream.close();
+        	}
         }
     }
 

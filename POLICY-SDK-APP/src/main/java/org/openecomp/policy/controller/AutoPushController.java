@@ -108,11 +108,11 @@ public class AutoPushController extends RestrictedBaseController{
 			List<String> roles = null;
 			data = new ArrayList<Object>();
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			List<Object> userRoles = PolicyController.getRoles(userId);
-			roles = new ArrayList<String>();
-			scopes = new HashSet<String>();
+			roles = new ArrayList<>();
+			scopes = new HashSet<>();
 			for(Object role: userRoles){
 				Roles userRole = (Roles) role;
 				roles.add(userRole.getRole());
@@ -161,8 +161,8 @@ public class AutoPushController extends RestrictedBaseController{
 	@RequestMapping(value={"/auto_Push/PushPolicyToPDP.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView PushPolicyToPDPGroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
-			ArrayList<Object> selectedPDPS = new ArrayList<Object>();
-			ArrayList<String> selectedPoliciesInUI = new ArrayList<String>();
+			ArrayList<Object> selectedPDPS = new ArrayList<>();
+			ArrayList<String> selectedPoliciesInUI = new ArrayList<>();
 			this.groups.addAll(PolicyController.getPapEngine().getEcompPDPGroups());
 			ObjectMapper mapper = new ObjectMapper();
 			this.container = new PDPGroupContainer(PolicyController.getPapEngine());
@@ -185,8 +185,8 @@ public class AutoPushController extends RestrictedBaseController{
 			}
 
 			for (Object pdpDestinationGroupId :  selectedPDPS) {
-				Set<PDPPolicy> currentPoliciesInGroup = new HashSet<PDPPolicy>();
-				Set<PDPPolicy> selectedPolicies = new HashSet<PDPPolicy>();
+				Set<PDPPolicy> currentPoliciesInGroup = new HashSet<>();
+				Set<PDPPolicy> selectedPolicies = new HashSet<>();
 				for (String policyId : selectedPoliciesInUI) {
 					logger.debug("Handlepolicies..." + pdpDestinationGroupId + policyId);
 					
@@ -329,7 +329,7 @@ public class AutoPushController extends RestrictedBaseController{
 					String data = removePolicyData.get(i).toString();
 					AutoPushController.policyContainer.removeItem(data);
 				}
-				Set<PDPPolicy> changedPolicies = new HashSet<PDPPolicy>();
+				Set<PDPPolicy> changedPolicies = new HashSet<>();
 				changedPolicies.addAll((Collection<PDPPolicy>) AutoPushController.policyContainer.getItemIds());
 				StdPDPGroup updatedGroupObject = new StdPDPGroup(group.getId(), group.isDefaultGroup(), group.getName(), group.getDescription(),null);
 				updatedGroupObject.setPolicies(changedPolicies);

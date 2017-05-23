@@ -87,7 +87,7 @@ public enum FinalResult {
 		if (toResult == null) {
 			return false;
 		}
-		return (toResult.equals(finalResult));
+		return toResult.equals(finalResult);
 	}
 
 }

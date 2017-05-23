@@ -33,29 +33,29 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 	
 	private Status status = Status.UNKNOWN;
 	
-	private Set<String>	loadErrors = new HashSet<String>();
+	private Set<String>	loadErrors = new HashSet<>();
 	
-	private Set<String> loadWarnings = new HashSet<String>();
+	private Set<String> loadWarnings = new HashSet<>();
 	
-	private Set<PDPPolicy> loadedPolicies = new HashSet<PDPPolicy>();
+	private Set<PDPPolicy> loadedPolicies = new HashSet<>();
 	
-	private Set<PDPPolicy> failedPolicies = new HashSet<PDPPolicy>();
+	private Set<PDPPolicy> failedPolicies = new HashSet<>();
 	
-	private Set<PDPPIPConfig>	loadedPIPConfigs = new HashSet<PDPPIPConfig>();
+	private Set<PDPPIPConfig>	loadedPIPConfigs = new HashSet<>();
 	
-	private Set<PDPPIPConfig>	failedPIPConfigs = new HashSet<PDPPIPConfig>();
+	private Set<PDPPIPConfig>	failedPIPConfigs = new HashSet<>();
 	
-	private Set<PDP>			inSynchPDPs = new HashSet<PDP>();
+	private Set<PDP>			inSynchPDPs = new HashSet<>();
 	
-	private Set<PDP>			outOfSynchPDPs = new HashSet<PDP>();
+	private Set<PDP>			outOfSynchPDPs = new HashSet<>();
 	
-	private Set<PDP>			failedPDPs = new HashSet<PDP>();
+	private Set<PDP>			failedPDPs = new HashSet<>();
 	
-	private Set<PDP>			updatingPDPs = new HashSet<PDP>();
+	private Set<PDP>			updatingPDPs = new HashSet<>();
 	
-	private Set<PDP>			lastUpdateFailedPDPs = new HashSet<PDP>();
+	private Set<PDP>			lastUpdateFailedPDPs = new HashSet<>();
 	
-	private Set<PDP>			unknownPDPs = new HashSet<PDP>();
+	private Set<PDP>			unknownPDPs = new HashSet<>();
 	
 	
 	// Constructor needed for JSON deserialization

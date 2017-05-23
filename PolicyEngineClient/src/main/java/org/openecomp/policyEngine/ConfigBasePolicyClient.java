@@ -50,12 +50,12 @@ public class ConfigBasePolicyClient{
             //policyParameters.setPolicyScope("MikeConsole"); //Directory will be created where the Policies are saved... this displays a a subscope on the GUI
             
             //Set the Config Attributes... These are Optional
-            Map<String, String> configAttributes = new HashMap<String, String>(); 
+            Map<String, String> configAttributes = new HashMap<>(); 
             configAttributes.put("Template", "SampleTemplate");
             configAttributes.put("controller", "default"); 
             configAttributes.put("SamPoll", "30");
             configAttributes.put("value", "abcd"); 
-            Map<AttributeType, Map<String,String>> attributes = new HashMap<AttributeType, Map<String,String>>();
+            Map<AttributeType, Map<String,String>> attributes = new HashMap<>();
             attributes.put(AttributeType.MATCHING, configAttributes);
             policyParameters.setAttributes(attributes);
             policyParameters.setRequestID(UUID.randomUUID());

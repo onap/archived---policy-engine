@@ -40,11 +40,15 @@ public class ServiceListJson {
 	}
 	
 	public boolean equals(Object obj){
-		if(obj != null){
-			ServiceListJson servobj=(ServiceListJson) obj;
-			if(this.getName().equals(servobj.getName())){
-				return true;
-			}
+		if(obj == null){
+			return false;
+		}
+		if(this.getClass() != obj.getClass()){
+			return false;
+		}
+		ServiceListJson servobj=(ServiceListJson) obj;
+		if(this.getName().equals(servobj.getName())){
+			return true;
 		}
 		return false;
 	}

@@ -79,7 +79,7 @@ public class BRMSDictionaryController{
 	@RequestMapping(value={"/get_BRMSParamDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getBRMSParamDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("brmsParamDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(BRMSParamTemplate.class, "ruleName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -94,7 +94,7 @@ public class BRMSDictionaryController{
 	@RequestMapping(value={"/get_BRMSParamData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getBRMSParamDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("brmsParamDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(BRMSParamTemplate.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -233,7 +233,7 @@ public class BRMSDictionaryController{
     @RequestMapping(value={"/get_BRMSDependencyDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSDependencyDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
         try{
-            Map<String, Object> model = new HashMap<String, Object>();
+            Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("brmsDependencyDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(BRMSDependency.class, "dependencyName")));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -248,7 +248,7 @@ public class BRMSDictionaryController{
     @RequestMapping(value={"/get_BRMSDependencyData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSDependencyDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
         try{
-            Map<String, Object> model = new HashMap<String, Object>();
+            Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("brmsDependencyDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(BRMSDependency.class)));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -391,7 +391,7 @@ public class BRMSDictionaryController{
     @RequestMapping(value={"/get_BRMSControllerDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSControllerDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
         try{
-            Map<String, Object> model = new HashMap<String, Object>();
+            Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("brmsControllerDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(BRMSController.class, "controllerName")));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -406,7 +406,7 @@ public class BRMSDictionaryController{
     @RequestMapping(value={"/get_BRMSControllerData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSControllerDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
         try{
-            Map<String, Object> model = new HashMap<String, Object>();
+            Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("brmsControllerDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(BRMSController.class)));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));

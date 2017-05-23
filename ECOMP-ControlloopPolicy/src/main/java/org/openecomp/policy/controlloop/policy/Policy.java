@@ -26,28 +26,156 @@ import java.util.UUID;
 
 public class Policy {
 
-	public String id = UUID.randomUUID().toString();
-	public String name;
-	public String description;
-	public String actor;
-	public String recipe;
-	public Map<String, String> payload;
-	public Target target;
-	public OperationsAccumulateParams operationsAccumulateParams;
-	public Integer retry = 0;
-	public Integer timeout = 300;
-	public String success = FinalResult.FINAL_SUCCESS.toString();
-	public String failure = FinalResult.FINAL_FAILURE.toString();
-	public String failure_retries = FinalResult.FINAL_FAILURE_RETRIES.toString();
-	public String failure_timeout = FinalResult.FINAL_FAILURE_TIMEOUT.toString();
-	public String failure_exception = FinalResult.FINAL_FAILURE_EXCEPTION.toString();
-	public String failure_guard = FinalResult.FINAL_FAILURE_GUARD.toString();
+	private String id = UUID.randomUUID().toString();
+	private String name;
+	private String description;
+	private String actor;
+	private String recipe;
+	private Map<String, String> payload;
+	private Target target;
+	private OperationsAccumulateParams operationsAccumulateParams;
+	private Integer retry = 0;
+	private Integer timeout = 300;
+	private String success = FinalResult.FINAL_SUCCESS.toString();
+	private String failure = FinalResult.FINAL_FAILURE.toString();
+	private String failure_retries = FinalResult.FINAL_FAILURE_RETRIES.toString();
+	private String failure_timeout = FinalResult.FINAL_FAILURE_TIMEOUT.toString();
+	private String failure_exception = FinalResult.FINAL_FAILURE_EXCEPTION.toString();
+	private String failure_guard = FinalResult.FINAL_FAILURE_GUARD.toString();
 	
 	
 	public Policy() {
-		
+		//Does Nothing Empty Constructor
 	}
 	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getActor() {
+		return actor;
+	}
+
+	public void setActor(String actor) {
+		this.actor = actor;
+	}
+
+	public String getRecipe() {
+		return recipe;
+	}
+
+	public void setRecipe(String recipe) {
+		this.recipe = recipe;
+	}
+
+	public Map<String, String> getPayload() {
+		return payload;
+	}
+
+	public void setPayload(Map<String, String> payload) {
+		this.payload = payload;
+	}
+
+	public Target getTarget() {
+		return target;
+	}
+
+	public void setTarget(Target target) {
+		this.target = target;
+	}
+
+	public OperationsAccumulateParams getOperationsAccumulateParams() {
+		return operationsAccumulateParams;
+	}
+
+	public void setOperationsAccumulateParams(OperationsAccumulateParams operationsAccumulateParams) {
+		this.operationsAccumulateParams = operationsAccumulateParams;
+	}
+
+	public Integer getRetry() {
+		return retry;
+	}
+
+	public void setRetry(Integer retry) {
+		this.retry = retry;
+	}
+
+	public Integer getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(Integer timeout) {
+		this.timeout = timeout;
+	}
+
+	public String getSuccess() {
+		return success;
+	}
+
+	public void setSuccess(String success) {
+		this.success = success;
+	}
+
+	public String getFailure() {
+		return failure;
+	}
+
+	public void setFailure(String failure) {
+		this.failure = failure;
+	}
+
+	public String getFailure_retries() {
+		return failure_retries;
+	}
+
+	public void setFailure_retries(String failure_retries) {
+		this.failure_retries = failure_retries;
+	}
+
+	public String getFailure_timeout() {
+		return failure_timeout;
+	}
+
+	public void setFailure_timeout(String failure_timeout) {
+		this.failure_timeout = failure_timeout;
+	}
+
+	public String getFailure_exception() {
+		return failure_exception;
+	}
+
+	public void setFailure_exception(String failure_exception) {
+		this.failure_exception = failure_exception;
+	}
+
+	public String getFailure_guard() {
+		return failure_guard;
+	}
+
+	public void setFailure_guard(String failure_guard) {
+		this.failure_guard = failure_guard;
+	}
+
 	public Policy(String id) {
 		this.id = id;
 	}
@@ -58,7 +186,6 @@ public class Policy {
 		this.recipe = recipe;
 		this.target = target;
 		if (payload != null) {
-//			this.payload = new LinkedList<Map<String, String>>();
 			this.payload = Collections.unmodifiableMap(payload);
 		}
 	}
@@ -82,8 +209,6 @@ public class Policy {
 		this.actor = policy.actor;
 		this.recipe = policy.recipe;
 		if (policy.payload != null) {
-//			this.payload = new LinkedList<Map<String, String>>();
-//			this.payload.addAll(policy.payload);
 			this.payload = Collections.unmodifiableMap(policy.payload);
 		}
 		this.target = policy.target;
@@ -99,26 +224,9 @@ public class Policy {
 	}
 
 	public boolean isValid() {
-		try {
-			if (id == null) {
-				throw new NullPointerException();
-			}
-			if (name == null) {
-				throw new NullPointerException();
-			}
-			if (actor == null) {
-				throw new NullPointerException();
-			}
-			if (recipe == null) {
-				throw new NullPointerException();
-			}
-			if (target == null) {
-				throw new NullPointerException();
-			}
-		} catch (Exception e) {
+		if(id==null || name==null || actor==null|| recipe==null || target==null){
 			return false;
 		}
-		
 		return true;
 	}
 

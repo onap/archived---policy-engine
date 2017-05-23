@@ -118,7 +118,7 @@ public abstract class Policy {
 	public static String ACTION_HOME = null;
 	public static String CONFIG_URL = null;
 
-	protected Map<String, String> performer = new HashMap<String, String>();
+	protected Map<String, String> performer = new HashMap<>();
 
 	private static String actionHome = null;
 	private static String configHome = null;
@@ -287,7 +287,7 @@ public abstract class Policy {
 
 	//create policy once all the validations are completed
 	protected Map<String, String> createPolicy(final Path policyPath, final Object policyData) {
-		Map<String, String> success = new HashMap<String, String>(); 
+		Map<String, String> success = new HashMap<>(); 
 		//
 		// Is the root a PolicySet or Policy?
 		//

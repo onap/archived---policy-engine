@@ -103,7 +103,7 @@ public class PIPResolver implements Serializable {
 
 	//bi-directional many-to-one association to PIPResolverParam
 	@OneToMany(mappedBy="pipresolver", orphanRemoval=true, cascade=CascadeType.REMOVE)
-	private Set<PIPResolverParam> pipresolverParams = new HashSet<PIPResolverParam>();
+	private Set<PIPResolverParam> pipresolverParams = new HashSet<>();
 
 	public PIPResolver() {
 	}
@@ -274,7 +274,7 @@ public class PIPResolver implements Serializable {
 	
 	@Transient
 	public static Collection<PIPResolver>	importResolvers(String prefix, String list, Properties properties, String user) throws PIPException {
-		Collection<PIPResolver> resolvers = new ArrayList<PIPResolver>();
+		Collection<PIPResolver> resolvers = new ArrayList<>();
 		for (String id : Splitter.on(',').trimResults().omitEmptyStrings().split(list)) {
 			resolvers.add(new PIPResolver(prefix + "." + id, properties, user));
 		}		
@@ -316,7 +316,7 @@ public class PIPResolver implements Serializable {
 
 	@Transient
 	public Map<String, String> getConfiguration(String prefix) {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		if (prefix.endsWith(".") == false) {
 			prefix = prefix + ".";
 		}

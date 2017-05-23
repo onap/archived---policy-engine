@@ -70,7 +70,7 @@ public class DescriptiveDictionaryController {
 	@RequestMapping(value={"/get_DescriptiveScopeByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getDescriptiveDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("descriptiveScopeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(DescriptiveScope.class, "descriptiveScopeName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -85,7 +85,7 @@ public class DescriptiveDictionaryController {
 	@RequestMapping(value={"/get_DescriptiveScope"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getDescriptiveDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("descriptiveScopeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(DescriptiveScope.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));

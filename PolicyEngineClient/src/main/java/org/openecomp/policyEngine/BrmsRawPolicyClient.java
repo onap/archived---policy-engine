@@ -66,10 +66,10 @@ public class BrmsRawPolicyClient {
 		try {
 	        PolicyEngine policyEngine = new PolicyEngine("config.properties");
 	        PolicyParameters policyParameters = new PolicyParameters();
-	        Map<String, String> attrib= new HashMap<String,String>();
+	        Map<String, String> attrib= new HashMap<>();
 	        attrib.put("cpu","80");
 	        attrib.put("memory", "50");
-	        Map<AttributeType, Map<String, String>> attributes = new HashMap<AttributeType, Map<String, String>>();
+	        Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
             attributes.put(AttributeType.RULE, attrib);
 	        
 	        // Set Policy Type

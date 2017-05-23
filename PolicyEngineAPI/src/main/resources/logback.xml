@@ -205,7 +205,7 @@
       <maxIndex>9</maxIndex>
     </rollingPolicy>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-     <level>INFO</level>
+     <level>DEBUG</level>
      </filter>
     <triggeringPolicy
       class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">

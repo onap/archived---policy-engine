@@ -71,7 +71,7 @@ public class PolicyEngineTestClient {
 	public static ArrayList<String> getConfig(PolicyEngine policyEngine,
 			String eCOMPComponentName, String configName,
 			Map<String, String> configAttributes) {
-		ArrayList<String> resultReceived = new ArrayList<String>();
+		ArrayList<String> resultReceived = new ArrayList<>();
 		try {
 			UUID requestID = UUID.randomUUID();
 			Collection<PolicyConfig> policyConfigs;
@@ -114,7 +114,7 @@ public class PolicyEngineTestClient {
 	 */
 	public static ArrayList<String> getDecision(PolicyEngine policyEngine,
 			String eCOMPComponentName, Map<String, String> decisionAttributes) {
-		ArrayList<String> resultReceived = new ArrayList<String>();
+		ArrayList<String> resultReceived = new ArrayList<>();
 		// Decision example
 		try {
 			UUID requestID = UUID.randomUUID();
@@ -139,7 +139,7 @@ public class PolicyEngineTestClient {
 	 */
 	public static ArrayList<String> getAction(PolicyEngine policyEngine,
 			Map<String, String> eventAttributes) {
-		ArrayList<String> resultReceived = new ArrayList<String>();
+		ArrayList<String> resultReceived = new ArrayList<>();
 		try {
 			UUID requestID = UUID.randomUUID();
 			@SuppressWarnings("deprecation")

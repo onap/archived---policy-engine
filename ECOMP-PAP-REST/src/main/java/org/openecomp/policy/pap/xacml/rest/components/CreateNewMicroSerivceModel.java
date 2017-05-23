@@ -58,7 +58,7 @@ import com.att.research.xacml.util.XACMLProperties;
 public class CreateNewMicroSerivceModel {
 	private static final Logger logger = FlexLogger.getLogger(CreateNewMicroSerivceModel.class);
 	private MicroServiceModels newModel = null;
-	private HashMap<String,MSAttributeObject > classMap = new HashMap<String,MSAttributeObject>();
+	private HashMap<String,MSAttributeObject > classMap = new HashMap<>();
 
 	/*
 	 * These are the parameters needed for DB access from the PAP
@@ -85,7 +85,7 @@ public class CreateNewMicroSerivceModel {
 		this.newModel.setUserCreatedBy(userInfo);
 		String cleanUpFile = null;
 	
-	    HashMap<String, MSAttributeObject> tempMap = new HashMap<String, MSAttributeObject>();
+	    HashMap<String, MSAttributeObject> tempMap = new HashMap<>();
 	    //Need to delete the file
 	    if (importFile.contains(".zip")){
 	    	extractFolder(randomID + ".zip");
@@ -118,7 +118,7 @@ public class CreateNewMicroSerivceModel {
 	
 	private List<File> listModelFiles(String directoryName) {
 		File directory = new File(directoryName);
-		List<File> resultList = new ArrayList<File>();
+		List<File> resultList = new ArrayList<>();
 		File[] fList = directory.listFiles();
 		for (File file : fList) {
 			if (file.isFile()) {
@@ -185,7 +185,7 @@ public class CreateNewMicroSerivceModel {
 
 	public Map<String, String> addValuesToNewModel() {
 		
-		Map<String, String> successMap = new HashMap<String,String>();
+		Map<String, String> successMap = new HashMap<>();
 		MSAttributeObject mainClass  = null;
 		ArrayList<String> dependency = null;
 		String subAttribute = null;
@@ -227,13 +227,13 @@ public class CreateNewMicroSerivceModel {
 	
 	@SuppressWarnings("resource")
 	public Map<String, String> saveImportService(){
-		Map<String, String> successMap = new HashMap<String,String>();
+		Map<String, String> successMap = new HashMap<>();
 		
 		Connection con = null;
 		Statement st = null;
 		ResultSet rs = null;
 		String modelName = this.newModel.getModelName();
-		String imported_by = "API";////////////////////////////////////////////
+		String imported_by = "API";
 		String version = this.newModel.getVersion();
 		String insertQuery = null;
 		int ID = 0;

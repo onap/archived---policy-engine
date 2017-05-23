@@ -60,7 +60,9 @@ public class ManualClientEndDMAAP {
 		} catch (Exception e) {
 			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Unable to create DMaaP Publisher: ", e);
 		}
-        pub.close (); 
+		if(pub != null){
+	        pub.close (); 
+		}
 	}
 
 	//NOTE:  should be able to remove this for DMAAP since we will not be creating topics dynamically

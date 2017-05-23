@@ -47,7 +47,7 @@ public class RegistryAdapter {
 
 		registry.registerTriggers();
 
-		List<Trigger> allTriggers = new ArrayList<Trigger>();
+		List<Trigger> allTriggers = new ArrayList<>();
 
 		List<Trigger> coreTriggers = addCoreTriggers();
 		final Trigger[] extTriggerArray = registry.getTriggers();

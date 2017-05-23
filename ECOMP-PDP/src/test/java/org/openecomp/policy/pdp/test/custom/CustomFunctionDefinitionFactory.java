@@ -35,7 +35,7 @@ import com.att.research.xacmlatt.pdp.std.StdFunctions;
 import com.att.research.xacmlatt.pdp.std.functions.FunctionDefinitionBagOneAndOnly;
 
 public class CustomFunctionDefinitionFactory extends FunctionDefinitionFactory {
-	private static Map<Identifier,FunctionDefinition> 	mapFunctionDefinitions	= new HashMap<Identifier,FunctionDefinition>();
+	private static Map<Identifier,FunctionDefinition> 	mapFunctionDefinitions	= new HashMap<>();
 	private static boolean								needMapInit				= true;
 	
 	public static final Identifier ID_FUNCTION_PRIVATEKEY_ONE_AND_ONLY = new IdentifierImpl("urn:com:att:research:xacml:custom:function:3.0:rsa:privatekey-one-and-only");

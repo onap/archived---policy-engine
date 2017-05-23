@@ -75,7 +75,7 @@ public class PolicyScopeDictionaryController {
 	@RequestMapping(value={"/get_GroupPolicyScopeDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getGroupPolicyScopeEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("groupPolicyScopeListDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(GroupPolicyScopeList.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -90,7 +90,7 @@ public class PolicyScopeDictionaryController {
 	@RequestMapping(value={"/get_GroupPolicyScopeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getGroupPolicyScopeEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("groupPolicyScopeListDatas", mapper.writeValueAsString(commonClassDao.getData(GroupPolicyScopeList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -176,7 +176,7 @@ public class PolicyScopeDictionaryController {
 				}
 
 			}
-			ArrayList<String> valueList = new ArrayList<String>();
+			ArrayList<String> valueList = new ArrayList<>();
 			String list = null;
 			String resourceValue = groupData.getResource();
 			String typeValue = groupData.getType();
@@ -288,7 +288,7 @@ public class PolicyScopeDictionaryController {
 	@RequestMapping(value={"/get_PSClosedLoopDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSClosedLoopEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("psClosedLoopDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(PolicyScopeClosedLoop.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -303,7 +303,7 @@ public class PolicyScopeDictionaryController {
 	@RequestMapping(value={"/get_PSClosedLoopData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSClosedLoopEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("psClosedLoopDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeClosedLoop.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -440,7 +440,7 @@ public class PolicyScopeDictionaryController {
 	@RequestMapping(value={"/get_PSServiceDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSServiceEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("psServiceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(PolicyScopeService.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -455,7 +455,7 @@ public class PolicyScopeDictionaryController {
 	@RequestMapping(value={"/get_PSServiceData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSServiceEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("psServiceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeService.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -589,7 +589,7 @@ public class PolicyScopeDictionaryController {
 	@RequestMapping(value={"/get_PSTypeDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSTypeEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("psTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(PolicyScopeType.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -604,7 +604,7 @@ public class PolicyScopeDictionaryController {
 	@RequestMapping(value={"/get_PSTypeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSTypeEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("psTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeType.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -744,7 +744,7 @@ public class PolicyScopeDictionaryController {
 	@RequestMapping(value={"/get_PSResourceDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSResourceEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("psResourceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(PolicyScopeResource.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -759,7 +759,7 @@ public class PolicyScopeDictionaryController {
 	@RequestMapping(value={"/get_PSResourceData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSResourceEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("psResourceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeResource.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));

@@ -85,7 +85,7 @@ public class PolicyController extends RestrictedBaseController {
 
 	public static String logTableLimit;
 	public static String systemAlertTableLimit;
-	protected static Map<String, String> dropDownMap = new HashMap<String, String>();
+	protected static Map<String, String> dropDownMap = new HashMap<>();
 	public static Map<String, String> getDropDownMap() {
 		return dropDownMap;
 	}
@@ -134,6 +134,10 @@ public class PolicyController extends RestrictedBaseController {
 	//MicroService Model Properties
 	public static String msEcompName;
 	public static String msPolicyName;
+	
+	//WebApp directories
+	public static String configHome;
+	public static String actionHome;
 
 	@Autowired
 	private PolicyController(CommonClassDao commonClassDao){
@@ -179,6 +183,9 @@ public class PolicyController extends RestrictedBaseController {
 			//Micro Service Properties
 			msEcompName=prop.getProperty("xacml.policy.msEcompName");
 			msPolicyName=prop.getProperty("xacml.policy.msPolicyName");
+			//WebApp directories
+			configHome = prop.getProperty("xacml.rest.config.webapps") + "Config";
+			actionHome = prop.getProperty("xacml.rest.config.webapps") + "Action";
 			//Get the Property Values for Dashboard tab Limit 
 			try{
 				logTableLimit = prop.getProperty("xacml.ecomp.dashboard.logTableLimit");
@@ -231,8 +238,8 @@ public class PolicyController extends RestrictedBaseController {
 	}
 
 	private static  void buildFunctionMaps() {
-		mapDatatype2Function = new HashMap<Datatype, List<FunctionDefinition>>();
-		mapID2Function = new  HashMap<String, FunctionDefinition>(); 
+		mapDatatype2Function = new HashMap<>();
+		mapID2Function = new  HashMap<>(); 
 		List<Object> functiondefinitions = commonClassDao.getData(FunctionDefinition.class);	
 		for (int i = 0; i < functiondefinitions.size(); i ++) {
 			FunctionDefinition value = (FunctionDefinition) functiondefinitions.get(i);
@@ -247,7 +254,7 @@ public class PolicyController extends RestrictedBaseController {
 	@RequestMapping(value={"/get_FunctionDefinitionDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getFunctionDefinitionData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("functionDefinitionDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(FunctionDefinition.class, "shortname")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -267,7 +274,7 @@ public class PolicyController extends RestrictedBaseController {
 	}
 
 	public static Map<String, Roles> getUserRoles(String userId) {
-		Map<String, Roles> scopes = new HashMap<String, Roles>();
+		Map<String, Roles> scopes = new HashMap<>();
 		List<Object> roles = commonClassDao.getDataById(Roles.class, "loginId", userId);
 		if (roles != null && roles.size() > 0) {
 			for (Object role : roles) {
@@ -295,7 +302,7 @@ public class PolicyController extends RestrictedBaseController {
 	public void getUserRolesEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("userRolesDatas", mapper.writeValueAsString(getRolesOfUser(userId)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -320,7 +327,7 @@ public class PolicyController extends RestrictedBaseController {
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR+"Exception Occured while loading PAP"+e);
 		}	
-		Map<String, Object> model = new HashMap<String, Object>();
+		Map<String, Object> model = new HashMap<>();
 		return new ModelAndView("policy_Editor","model", model);
 	}
 
@@ -404,7 +411,7 @@ public class PolicyController extends RestrictedBaseController {
 		String[] splitDBCheckName = dbCheckName.split(":");
 		String query =   "FROM PolicyEntity where policyName like'"+splitDBCheckName[1]+"%' and scope ='"+splitDBCheckName[0]+"'";
 		List<Object> policyEntity = commonClassDao.getDataByQuery(query);
-		List<String> av = new ArrayList<String>();
+		List<String> av = new ArrayList<>();
 		for(Object entity : policyEntity){
 			PolicyEntity pEntity = (PolicyEntity) entity;
 			String removeExtension = pEntity.getPolicyName().replace(".xml", "");

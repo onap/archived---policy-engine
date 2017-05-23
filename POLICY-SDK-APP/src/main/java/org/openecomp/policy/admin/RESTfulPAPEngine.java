@@ -438,7 +438,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
             	LOGGER.info("Success. We have a return object.");
             	String isValidData = connection.getHeaderField("isValidData");
             	String isSuccess = connection.getHeaderField("successMapKey");
-            	Map<String, String> successMap = new HashMap<String, String>();
+            	Map<String, String> successMap = new HashMap<>();
             	if (isValidData != null && isValidData.equalsIgnoreCase("true")){
     	            LOGGER.info("Policy Data is valid.");	
             		return true;

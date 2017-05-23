@@ -45,7 +45,7 @@ public class CreateBRMSRuleTemplate {
 	public CreateBRMSRuleTemplate() {}
 
 	public Map<String, String> addRule(String rule, String ruleName, String description, String userID) {
-		Map<String,String> responseMap = new HashMap<String,String>();
+		Map<String,String> responseMap = new HashMap<>();
 		if(rule!=null && !PolicyUtils.brmsRawValidate(rule).contains("[ERR")){
 			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ruleName, "ruleName", BRMSParamTemplate.class);
 			if(duplicateData!=null && !duplicateData.isEmpty()){

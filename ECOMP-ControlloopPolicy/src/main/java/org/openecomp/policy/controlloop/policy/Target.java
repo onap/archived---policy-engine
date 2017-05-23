@@ -28,13 +28,29 @@ public class Target implements Serializable {
 	 */
 	private static final long serialVersionUID = 2180988443264988319L;
 	 
-	public String resourceID;
-	public TargetType type;
+	private String resourceID;
+	private TargetType type;
 
 	public Target() {
-		
+		//Does Nothing Empty Constructor
 	}
 	
+	public String getResourceID() {
+		return resourceID;
+	}
+
+	public void setResourceID(String resourceID) {
+		this.resourceID = resourceID;
+	}
+
+	public TargetType getType() {
+		return type;
+	}
+
+	public void setType(TargetType type) {
+		this.type = type;
+	}
+
 	public Target(TargetType type) {
 		this.type = type;
 	}

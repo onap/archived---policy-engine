@@ -87,7 +87,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_PrefixListDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPrefixListDictionaryEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("prefixListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(PrefixList.class, "prefixListName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -102,7 +102,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_PrefixListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPrefixListDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("prefixListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PrefixList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -263,7 +263,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_PortListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPortListDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("portListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PortList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -500,7 +500,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_AddressGroupDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getAddressGroupDictionaryEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("addressGroupDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(AddressGroup.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -515,7 +515,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_AddressGroupData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getAddressGroupDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("addressGroupDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(AddressGroup.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -671,10 +671,10 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_ActionListDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getActionListDictionaryEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			List<Object> list = commonClassDao.getData(ActionList.class);
-			List<String> dictList = new ArrayList<String>();
+			List<String> dictList = new ArrayList<>();
 			for(int i = 0; i < list.size(); i++){
 				ActionList dict = (ActionList) list.get(i);
 				dictList.add(dict.getActionName());
@@ -692,7 +692,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_ActionListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getActionListDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("actionListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ActionList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -821,7 +821,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_ServiceGroupData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getServiceGroupDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("serviceGroupDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(GroupServiceList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -840,7 +840,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_ServiceGroupDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getServiceGroupDictionaryEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("serviceGroupDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(GroupServiceList.class, "name")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -994,7 +994,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_SecurityZoneDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSecurityZoneDictionaryEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("securityZoneDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(SecurityZone.class, "zoneName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -1009,7 +1009,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_SecurityZoneData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSecurityZoneDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("securityZoneDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(SecurityZone.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -1142,7 +1142,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_ServiceListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getServiceListDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("serviceListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ServiceList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -1161,7 +1161,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_ServiceListDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getServiceListDictionaryEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("serviceListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(ServiceList.class, "serviceName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -1323,7 +1323,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_ZoneData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getZoneDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("zoneDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(Zone.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -1340,7 +1340,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_ZoneDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getZoneDictionaryEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("zoneDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(Zone.class, "zoneName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -1735,7 +1735,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_FWDictionaryListDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getFWDictListDictionaryEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("fwDictListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(FirewallDictionaryList.class, "parentItemName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -1750,7 +1750,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_FWDictionaryListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getFWDictionaryListEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("fwDictListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(FirewallDictionaryList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -2039,7 +2039,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_TagNameByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getTagNameEntityDataByName(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("fwTagDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(FWTag.class, "fwTagName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -2054,7 +2054,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_TagListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getTagDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("fwTagDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(FWTag.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));

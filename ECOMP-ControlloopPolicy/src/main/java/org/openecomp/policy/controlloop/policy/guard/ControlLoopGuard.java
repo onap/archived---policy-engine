@@ -20,20 +20,37 @@
 package org.openecomp.policy.controlloop.policy.guard;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class ControlLoopGuard {
 	
-	public Guard guard;
+	private Guard guard;
 	
-	public LinkedList<GuardPolicy> guards;
+	private List<GuardPolicy> guards;
 	
 	public ControlLoopGuard() {
-		
+		//DO Nothing Empty Constructor
 	}
 	
-	public ControlLoopGuard(ControlLoopGuard CLGuard) {
+	public Guard getGuard() {
+		return guard;
+	}
+
+	public void setGuard(Guard guard) {
+		this.guard = guard;
+	}
+
+	public List<GuardPolicy> getGuards() {
+		return guards;
+	}
+
+	public void setGuards(List<GuardPolicy> guards) {
+		this.guards = guards;
+	}
+
+	public ControlLoopGuard(ControlLoopGuard cLGuard) {
 		this.guard = new Guard();
-		this.guards = new LinkedList<GuardPolicy>(CLGuard.guards);
+		this.guards = new LinkedList<>(cLGuard.guards);
 	}
 	
 	@Override

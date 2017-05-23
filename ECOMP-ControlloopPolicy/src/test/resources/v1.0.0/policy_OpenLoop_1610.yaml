@@ -1,0 +1,12 @@
+controlLoop:
+  version: 1.0.0
+  controlLoopName: ControlLoop-Open-fac4ae3d-c3f5-4bab-8e54-0a8581ede132
+  services:
+    - serviceName: Service
+  resources:
+    - resourceType: VF
+      resourceName: Example
+  trigger_policy: final_openloop
+  timeout: 0
+
+policies:

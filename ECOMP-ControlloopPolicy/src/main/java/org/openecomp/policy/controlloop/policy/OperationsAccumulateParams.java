@@ -28,11 +28,11 @@ public class OperationsAccumulateParams implements Serializable {
 	 */
 	private static final long serialVersionUID = -3597358159130168247L;
 	
-	public String period;
-	public Integer limit;
+	private String period;
+	private Integer limit;
 	
 	public OperationsAccumulateParams() {
-		
+		// Does Nothing 
 	} 
 	
 	public OperationsAccumulateParams(OperationsAccumulateParams ops) {
@@ -45,6 +45,22 @@ public class OperationsAccumulateParams implements Serializable {
 		this.limit = limit;
 	}
 	
+	public String getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(String period) {
+		this.period = period;
+	}
+
+	public Integer getLimit() {
+		return limit;
+	}
+
+	public void setLimit(Integer limit) {
+		this.limit = limit;
+	}
+
 	@Override
 	public String toString() {
 		return "OperationsAccumulateParams [period=" + period + ", limit=" + limit + "]";

@@ -87,7 +87,7 @@ public class DictionaryController {
 	public void getAttributeDictionaryEntityDatabyAttributeName(HttpServletRequest request, HttpServletResponse response){
 		try{
 			System.out.println();
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("attributeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(Attribute.class, "xacmlId")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -104,7 +104,7 @@ public class DictionaryController {
 	public void getAttributeDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			System.out.println();
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("attributeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(Attribute.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -278,7 +278,7 @@ public class DictionaryController {
 	public void getEcompNameDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		LOGGER.info("get_EcompNameDataByName is called");
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("ecompNameDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(EcompName.class, "ecompName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -293,7 +293,7 @@ public class DictionaryController {
 	@RequestMapping(value={"/get_EcompNameData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getEcompNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("ecompNameDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(EcompName.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));

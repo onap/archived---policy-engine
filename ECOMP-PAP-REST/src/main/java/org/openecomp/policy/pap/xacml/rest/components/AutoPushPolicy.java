@@ -72,7 +72,7 @@ public class AutoPushPolicy {
 	 * @param papEngine
 	 */
 	public Set<StdPDPGroup> checkGroupsToPush(String policyToCreateUpdate, PAPPolicyEngine papEngine) {
-		Set<StdPDPGroup> changedGroups= new HashSet<StdPDPGroup>();
+		Set<StdPDPGroup> changedGroups= new HashSet<>();
 		// Check if the file has been modified. then re-load the properties file. 
 		newModified = propFile.lastModified();
 		try {
@@ -135,7 +135,7 @@ public class AutoPushPolicy {
 		StdPDPPolicy policy = new StdPDPPolicy(policyId, true, policyName, null);
 		//Get the current policies from the Group and Add the new one
         Set<PDPPolicy> currentPoliciesInGroup = pdpGroup.getPolicies();
-        Set<PDPPolicy> policies = new HashSet<PDPPolicy>();
+        Set<PDPPolicy> policies = new HashSet<>();
         if(policy!=null){
 			policies.add(policy);
 		}

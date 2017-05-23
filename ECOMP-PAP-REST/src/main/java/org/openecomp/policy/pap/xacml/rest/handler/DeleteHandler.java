@@ -123,7 +123,14 @@ public class DeleteHandler {
 					}else if(policyName.contains("Decision_")){
 						splitPolicyName = removeVersionExtension.replace(".Decision_", ":Decision_");
 					}
-					split = splitPolicyName.split(":");
+					if(splitPolicyName != null){
+						split = splitPolicyName.split(":");
+					}else{
+						PolicyLogger.error(MessageCodes.ERROR_UNKNOWN + "Failed to delete the policy. Please, provide the valid policyname.");
+						response.addHeader("error", "unknown");
+						response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
+						return;
+					}
 					policyEntityQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.policyName LIKE :pName and p.scope=:pScope");
 				}else if(policy.getDeleteCondition().equalsIgnoreCase("Current Version")) {
 					if(policyName.contains("Config_")){
@@ -249,7 +256,9 @@ public class DeleteHandler {
 			return;
 		} finally {
 			em.close();
-			con.close();
+			if(con != null){
+				con.close();
+			}
 		}
 
 		if (policyVersionDeleted) {
@@ -290,12 +299,16 @@ public class DeleteHandler {
 			PolicyEntity policyEntity = (PolicyEntity) peData;
 			Statement st = null;
 			ResultSet rs = null;
-			st = con.createStatement();
-			rs = st.executeQuery("Select * from PolicyGroupEntity where policyid = '"+policyEntity.getPolicyId()+"'");
-			boolean gEntityList = rs.next();
-			rs.close();
-			if(gEntityList){
-				return true;
+			try{
+				st = con.createStatement();
+				rs = st.executeQuery("Select * from PolicyGroupEntity where policyid = '"+policyEntity.getPolicyId()+"'");
+				boolean gEntityList = rs.next();
+				rs.close();
+				if(gEntityList){
+					return true;
+				}
+			}finally{
+				st.close();
 			}
 		}
 		return false;
@@ -392,8 +405,8 @@ public class DeleteHandler {
 		} catch (PAPException e1) {
 			PolicyLogger.error("Exception occured While Deleting Policy From PDP Group"+e1);
 		}
-		if (group == null || ! (group instanceof StdPDPGroup) || ! (group.getId().equals(existingGroup.getId()))) {
-			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Group update had bad input. id=" + existingGroup.getId() + " objectFromJSON="+group);
+		if (group == null || ! (group instanceof StdPDPGroup) || existingGroup == null || ! (group.getId().equals(existingGroup.getId()))) {
+			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Group update had bad input. id=" + existingGroup != null ? existingGroup.getId() : "null" + " objectFromJSON="+group);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
 			response = "No Group";

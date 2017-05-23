@@ -29,6 +29,7 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
     		$scope.policyNavigator.refresh();
     	}
     	$scope.modal('createNewPolicy', true);
+    	$scope.temp.policy = "";
     };
     
     $scope.modal = function(id, hide) {
@@ -106,6 +107,8 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
         }   
     };
     
+    $scope.showbrmsrule = true;
+    
     $scope.ShowRule = function(policy){
         console.log(policy);
         var uuu = "policyController/ViewBRMSParamPolicyRule.htm";
@@ -117,27 +120,22 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
             contentType: 'application/json',
             data: JSON.stringify(postData),
             success : function(data){
+            	$scope.showbrmsrule = false;
+            	$scope.validateSuccess = true;
                 $scope.$apply(function(){
                 	$scope.datarule = data.policyData;
-                	var modalInstance = $modal.open({
-                    	backdrop: 'static', keyboard: false,
-                        templateUrl : 'app/policyApp/policy-models/Editor/PolicyTemplates/BRMSShowParamRuleModal.html',
-                        controller: 'showrulecontroller',
-                        resolve: {
-                            message: function () {
-                                var message = {
-                                    datas: $scope.datarule
-                                };
-                                return message;
-                            }
-                        }
-                    });
                 });
             },
             error : function(data){
             	Notification.error("Error Occured while Showing Rule.");
             }
         });
+    };
+    
+    $scope.hideRule = function(){
+    	$scope.showbrmsrule = true;
+    	$scope.validateSuccess = false;
+    	$scope.apply();
     };
     
     $scope.saveBrmsParamPolicy = function(policy){
@@ -248,14 +246,3 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
         $scope.temp.policy.attributes.splice(lastItem);
     };
 }]);
-
-app.controller('showrulecontroller' ,  function ($scope, $modalInstance, message){
-	if(message.datas!=null){
-		$scope.datarule=message.datas;
-	}
-	
-	$scope.close = function() {
-        $modalInstance.close();
-    };
-
-});

@@ -40,6 +40,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -93,13 +94,14 @@ public class CreateBrmsParamPolicy extends Policy {
 	
 	public String expandConfigBody(String ruleContents, Map<String, String> brmsParamBody) { 
 			 
-			Set<String> keySet= new HashSet<String>();
+			Set<String> keySet= new HashSet<>();
 			
 			Map<String,String> copyMap=new HashMap<>();
 			copyMap.putAll(brmsParamBody);
 			copyMap.put("policyName", policyName.substring(0, policyName.replace(".xml", "").lastIndexOf(".")));
 			copyMap.put("policyScope", policyAdapter.getDomainDir());
 			copyMap.put("policyVersion",policyAdapter.getHighestVersion().toString());
+			copyMap.put("unique", ("p"+policyName+UUID.randomUUID().toString()).replaceAll("[^A-Za-z0-9]", ""));
 			
 			//Finding all the keys in the Map data-structure.
 			keySet= copyMap.keySet();
@@ -179,7 +181,7 @@ public class CreateBrmsParamPolicy extends Policy {
 	@Override
 	public Map<String, String> savePolicies() throws Exception {
 		
-		Map<String, String> successMap = new HashMap<String,String>();
+		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
@@ -195,7 +197,7 @@ public class CreateBrmsParamPolicy extends Policy {
 		
 		Boolean dbIsUpdated = true;
 
-		successMap = new HashMap<String, String>();
+		successMap = new HashMap<>();
 		if (dbIsUpdated) {
 			successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
 		} else {
@@ -253,7 +255,7 @@ public class CreateBrmsParamPolicy extends Policy {
 	}
 	
 	protected Map<String, String> findType(String rule) {
-		Map<String, String> mapFieldType= new HashMap<String,String>();
+		Map<String, String> mapFieldType= new HashMap<>();
 		if(rule!=null){
 			try {
 				String params = "";
@@ -658,7 +660,7 @@ public class CreateBrmsParamPolicy extends Policy {
         // Adding Dependencies. 
         if(policyAdapter.getBrmsDependency()!=null){
             BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
-            ArrayList<String> dependencies = new ArrayList<String>();
+            ArrayList<String> dependencies = new ArrayList<>();
             StringBuilder key = new StringBuilder();
             for(String dependencyName: policyAdapter.getBrmsDependency()){
                 dependencies.add(brmsDicitonaryController.getDependencyDataByID(dependencyName).getDependency());
