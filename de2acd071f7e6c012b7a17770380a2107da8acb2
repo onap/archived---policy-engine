@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_5ad136fa",
+        "filename": "ECOMP-ControlloopPolicy/src/test/resources/v1.0.0/policy_SDNO_1702.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-23T19:43:18Z",
+      "side": 1,
+      "message": "remove this",
+      "revId": "de2acd071f7e6c012b7a17770380a2107da8acb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_7aecfac7",
+        "filename": "ECOMP-ControlloopPolicy/src/test/resources/v1.0.0/policy_vSCP_F5_1610.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-23T19:43:18Z",
+      "side": 1,
+      "message": "remove (or rename the internals of it)",
+      "revId": "de2acd071f7e6c012b7a17770380a2107da8acb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_3ace825b",
+        "filename": "ECOMP-ControlloopPolicy/src/test/resources/v1.0.0/policy_vUSP_1610.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-23T19:43:18Z",
+      "side": 1,
+      "message": "lets remove (or rename resources/service)",
+      "revId": "de2acd071f7e6c012b7a17770380a2107da8acb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_9ae7cee4",
+        "filename": "ECOMP-ControlloopPolicy/src/test/resources/v2.0.0/policy_vUSP_1707.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-05-23T19:43:18Z",
+      "side": 1,
+      "message": "Remove this",
+      "revId": "de2acd071f7e6c012b7a17770380a2107da8acb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
