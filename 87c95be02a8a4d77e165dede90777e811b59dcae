@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_5a549653",
+        "filename": "BRMSGateway/src/main/resources/logback.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-23T21:17:51Z",
+      "side": 1,
+      "message": "is this ok debug, instead of info?",
+      "revId": "87c95be02a8a4d77e165dede90777e811b59dcae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_1a4e1ec2",
+        "filename": "ECOMP-PDP/src/test/resources/logback.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-23T21:17:51Z",
+      "side": 1,
+      "message": "is ok debug instead of info?",
+      "revId": "87c95be02a8a4d77e165dede90777e811b59dcae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_fa4a4aab",
+        "filename": "PolicyEngineAPI/src/main/resources/logback.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-05-23T21:17:51Z",
+      "side": 1,
+      "message": "question: is debug ok instead of info?",
+      "revId": "87c95be02a8a4d77e165dede90777e811b59dcae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
