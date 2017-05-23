@@ -81,11 +81,6 @@ public class GetMetricsService {
 	}
 
 	private void run() throws PolicyException {
-		// Check Validation.
-		/*
-		 * if(!getValidation()){ LOGGER.error(message); throw new
-		 * PolicyException(message); }
-		 */
 		// Get Result.
 		try {
 			status = HttpStatus.OK;
@@ -124,7 +119,7 @@ public class GetMetricsService {
 
 				} catch (JsonException | IllegalStateException e) {
 					message = XACMLErrorConstants.ERROR_DATA_ISSUE
-							+ " improper JSON object : " + json.toString();
+							+ " improper JSON object : " + json != null ? json.toString() : "JSON is null";
 					LOGGER.error(message);
 					metricsResponse.setResponseMessage(message);
 					metricsResponse.setResponseCode(400);

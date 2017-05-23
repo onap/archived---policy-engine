@@ -161,7 +161,7 @@ public class GetDecisionService {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No eCOMPComponentName given : " + eCOMPComponentName;
             return false;
         }
-        if (decisionAttributes == null && decisionAttributes.isEmpty()) {
+        if (decisionAttributes == null || decisionAttributes.isEmpty()) {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Decision Attributes Given. ";
             return false;
         }

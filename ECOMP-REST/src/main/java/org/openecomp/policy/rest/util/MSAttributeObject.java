@@ -26,12 +26,12 @@ import java.util.Map;
 public class MSAttributeObject {
 
 	private String className;
-	private HashMap<String, String> attribute = new HashMap<String, String>();
-	private HashMap<String, String> refAttribute = new HashMap<String, String>();
-	private HashMap<String, Object> subClass = new HashMap<String, Object>();
+	private HashMap<String, String> attribute = new HashMap<>();
+	private HashMap<String, String> refAttribute = new HashMap<>();
+	private HashMap<String, Object> subClass = new HashMap<>();
 	private String dependency;
-	private HashMap<String, String> enumType = new HashMap<String, String>();
-	private HashMap<String, String> matchingSet = new HashMap<String, String>();
+	private HashMap<String, String> enumType = new HashMap<>();
+	private HashMap<String, String> matchingSet = new HashMap<>();
 	private boolean policyTempalate; 
 	
 	public Map<String, String> getRefAttribute() {

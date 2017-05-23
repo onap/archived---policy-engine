@@ -30,6 +30,7 @@ app.controller('baseConfigController', ['$scope', 'PolicyAppService', 'policyNav
     		$scope.policyNavigator.refresh();
     	}
     	$scope.modal('createNewPolicy', true);
+    	$scope.temp.policy = "";
     };
     
     $scope.modal = function(id, hide) {

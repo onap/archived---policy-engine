@@ -97,9 +97,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.xml.sax.InputSource;
 
-import com.att.aft.dme2.internal.gson.Gson;
-import com.att.aft.dme2.internal.gson.GsonBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * PolicyEngine Implementation class
@@ -565,7 +565,7 @@ public class StdPolicyEngine {
 	
     public Collection<PolicyConfig> getConfigImpl(ConfigRequestParameters configRequestParameters) throws PolicyConfigException{
 	    String resource= "getConfig";
-		ArrayList<PolicyConfig> response = new ArrayList<PolicyConfig>();
+		ArrayList<PolicyConfig> response = new ArrayList<>();
 		String body = new String();
 		// Create Request. 
 		try {
@@ -598,7 +598,7 @@ public class StdPolicyEngine {
 	}
     
     private ArrayList<PolicyConfig> configResult(APIPolicyConfigResponse[] response) throws PolicyConfigException {
-        ArrayList<PolicyConfig> result = new ArrayList<PolicyConfig>();
+        ArrayList<PolicyConfig> result = new ArrayList<>();
         if(response!=null && response.length>0){
             for(APIPolicyConfigResponse policyConfigResponse: response){
                 StdPolicyConfig policyConfig = new StdPolicyConfig();
@@ -647,7 +647,7 @@ public class StdPolicyEngine {
 
     private void setMatches(Map<String, String> matchingConditions) {
         Matches match = new Matches();
-        HashMap<String, String> configAttributes = new HashMap<String,String>();
+        HashMap<String, String> configAttributes = new HashMap<>();
         try{
             for(String key: matchingConditions.keySet()){
                 if(key.equalsIgnoreCase("ECOMPName")){
@@ -741,7 +741,7 @@ public class StdPolicyEngine {
     }
 
     public Collection<String> listConfigImpl(ConfigRequestParameters listRequestParameters) throws PolicyConfigException{
-		Collection<String> policyList = new ArrayList<String>();
+		Collection<String> policyList = new ArrayList<>();
 		if (junit){
 			policyList.add("Policy Name: listConfigTest");
 			return policyList;
@@ -796,7 +796,7 @@ public class StdPolicyEngine {
 	}
 
 	private ArrayList<PolicyResponse> eventResult(StdPolicyResponse[] response) throws PolicyEventException{
-        ArrayList<PolicyResponse> eventResult = new ArrayList<PolicyResponse>();
+        ArrayList<PolicyResponse> eventResult = new ArrayList<>();
         if(response!=null && response.length>0){
             for(StdPolicyResponse policyConfigResponse: response){
                 eventResult.add(policyConfigResponse);
@@ -860,7 +860,7 @@ public class StdPolicyEngine {
 					typeDefault = new ArrayList<String>(Arrays.asList(prop.getProperty("NOTIFICATION_TYPE").split(",")));
 					notificationType = typeDefault; 
 				} else {
-						notificationType = new ArrayList<String>();
+						notificationType = new ArrayList<>();
 						notificationType.add(check_type);
 				}
 			}
@@ -873,7 +873,7 @@ public class StdPolicyEngine {
 				if(serverList.contains(",")) {
 					notificationURLList = new ArrayList<String>(Arrays.asList(serverList.split(","))); 
 				} else {
-					notificationURLList = new ArrayList<String>();
+					notificationURLList = new ArrayList<>();
 					notificationURLList.add(serverList);
 				}
 			}
@@ -911,8 +911,8 @@ public class StdPolicyEngine {
 				environment = Environment.DEVL.toString();
 			}
 			// Initializing the values.
-			pdps = new ArrayList<String>();
-			encoding = new ArrayList<String>();
+			pdps = new ArrayList<>();
+			encoding = new ArrayList<>();
 			// Check the Keys for PDP_URLs
 			Collection<Object> unsorted = prop.keySet();
 			@SuppressWarnings({ "rawtypes", "unchecked" })

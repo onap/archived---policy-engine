@@ -97,7 +97,7 @@ public class ManualNotificationUpdateThread implements Runnable {
 			
 			String consumerTopic = aURL.getHost() + aURL.getPort() + "UpdateRequest";
 			SendMessage(consumerTopic, "Starting-Topic");
-			final LinkedList<String> urlList = new LinkedList<String> ();
+			final LinkedList<String> urlList = new LinkedList<> ();
 			for ( String u : clusterList.split ( "," ) ){
 				urlList.add ( u );
 			}
@@ -151,7 +151,7 @@ public class ManualNotificationUpdateThread implements Runnable {
 			
 			String consumerTopic = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TOPIC).trim();
 			SendMessage(consumerTopic, "Starting-Topic");
-			dmaapList = new ArrayList<String>();
+			dmaapList = new ArrayList<>();
 			for ( String u : dmaapServers.split ( "," ) ){
 				dmaapList.add ( u );
 			}

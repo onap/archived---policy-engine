@@ -63,9 +63,9 @@ public class MSModelUtils {
 
 	private static final Log logger	= LogFactory.getLog(MSModelUtils.class);
 
-	private HashMap<String,MSAttributeObject > classMap = new HashMap<String,MSAttributeObject>();
-	private HashMap<String, String> enumMap = new HashMap<String, String>();
-	private HashMap<String, String> matchingClass = new HashMap<String, String>();
+	private HashMap<String,MSAttributeObject > classMap = new HashMap<>();
+	private HashMap<String, String> enumMap = new HashMap<>();
+	private HashMap<String, String> matchingClass = new HashMap<>();
 	private String configuration = "configuration";
 	private String dictionary = "dictionary";
 	private String ecomp = "";
@@ -126,7 +126,7 @@ public class MSModelUtils {
 	}
 
 	private void CheckForMatchingClass() {
-		HashMap<String, String> tempAttribute = new HashMap<String, String>();
+		HashMap<String, String> tempAttribute = new HashMap<>();
 
 		for (Entry<String, String> set : matchingClass.entrySet()){
 			String key = set.getKey();
@@ -193,7 +193,7 @@ public class MSModelUtils {
 
 	private HashMap<String, String> getEEnum(EObject obj) {
 		List<String> valueList = new ArrayList<>();
-		HashMap<String, String> returnMap = new HashMap<String, String>();
+		HashMap<String, String> returnMap = new HashMap<>();
 		EEnum eenum = (EEnum)obj;
 
 		String name = eenum.getName();
@@ -208,7 +208,7 @@ public class MSModelUtils {
 	}
 
 	public void getAttributes(String className, String dependency, EPackage root) {
-		List<String> dpendList = null;
+		List<String> dpendList = new ArrayList<>();
 		if (dependency!=null){
 			dpendList = new ArrayList<String>(Arrays.asList(dependency.split(",")));
 		}
@@ -233,7 +233,7 @@ public class MSModelUtils {
 		TreeIterator<EObject> treeItr = root.eAllContents();
 		boolean requiredAttribute = false; 
 		boolean requiredMatchAttribute = false;
-		HashMap<String, String> annotationSet = new HashMap<String, String>();
+		HashMap<String, String> annotationSet = new HashMap<>();
 		String  matching  = null;
 		String range   = null;
 		String dictionary = null;
@@ -360,7 +360,7 @@ public class MSModelUtils {
 
 		TreeIterator<EObject> treeItr = root.eAllContents();
 		boolean requiredAttribute = false; 
-		HashMap<String, String> refAttribute = new HashMap<String, String>();
+		HashMap<String, String> refAttribute = new HashMap<>();
 		int rollingCount = 0;
 		int processClass = 0;
 		boolean annotation = false;
@@ -505,7 +505,7 @@ public class MSModelUtils {
 
 		TreeIterator<EObject> treeItr = root.eAllContents();
 		boolean requiredAttribute = false; 
-		HashMap<String, String> refAttribute = new HashMap<String, String>();
+		HashMap<String, String> refAttribute = new HashMap<>();
 		boolean annotation = false;
 		boolean dictionaryTest = false;
 		String defaultValue = null;
@@ -579,8 +579,8 @@ public class MSModelUtils {
 	}
 
 	public Map<String, String> buildSubList(HashMap<String, String> subClassAttributes, HashMap<String, MSAttributeObject> classMap, String className){
-		Map<String, String> missingValues = new HashMap<String, String>();
-		Map<String, String> workingMap = new HashMap<String, String>();
+		Map<String, String> missingValues = new HashMap<>();
+		Map<String, String> workingMap = new HashMap<>();
 		boolean enumType;
 
 		for ( Entry<String, String> map : classMap.get(className).getRefAttribute().entrySet()){
@@ -606,7 +606,7 @@ public class MSModelUtils {
 
 	public Map<String, HashMap<String, String>> recursiveReference(HashMap<String, MSAttributeObject> classMap, String className){
 
-		Map<String, HashMap<String, String>> returnObject = new HashMap<String, HashMap<String, String>>();
+		Map<String, HashMap<String, String>> returnObject = new HashMap<>();
 		HashMap<String, String> returnClass = getRefclass(classMap, className);
 		returnObject.put(className, returnClass);
 		for (Entry<String, String> reAttribute :returnClass.entrySet()){
@@ -624,7 +624,7 @@ public class MSModelUtils {
 
 	public String createJson(HashMap<String, Object> subClassAttributes, HashMap<String, MSAttributeObject> classMap, String className) { 
 		boolean enumType;
-		Map<String, HashMap<String, String>> myObject = new HashMap<String, HashMap<String, String>>();
+		Map<String, HashMap<String, String>> myObject = new HashMap<>();
 		for ( Entry<String, String> map : classMap.get(className).getRefAttribute().entrySet()){
 			String value = map.getValue().split(":")[0];
 			if (value!=null){
@@ -645,7 +645,7 @@ public class MSModelUtils {
 	}
 
 	public HashMap<String, String> getRefclass(HashMap<String, MSAttributeObject> classMap, String className){
-		HashMap<String, String> missingValues = new HashMap<String, String>();
+		HashMap<String, String> missingValues = new HashMap<>();
 
 		if (classMap.get(className).getAttribute()!=null || !classMap.get(className).getAttribute().isEmpty()){
 			missingValues.putAll(classMap.get(className).getAttribute());
@@ -660,7 +660,7 @@ public class MSModelUtils {
 
 	public String createSubAttributes(ArrayList<String> dependency, HashMap<String, MSAttributeObject> classMap, String modelName) {
 
-		HashMap <String,  Object>  workingMap = new HashMap<String,Object>();
+		HashMap <String,  Object>  workingMap = new HashMap<>();
 		MSAttributeObject tempObject = new MSAttributeObject();
 		if (dependency!=null){
 			if (dependency.size()==0){
@@ -680,8 +680,8 @@ public class MSModelUtils {
 	}
 
 	public ArrayList<String> getFullDependencyList(ArrayList<String> dependency, HashMap<String,MSAttributeObject > classMap) {
-		ArrayList<String> returnList = new ArrayList<String>();
-		ArrayList<String> workingList = new ArrayList<String>();
+		ArrayList<String> returnList = new ArrayList<>();
+		ArrayList<String> workingList = new ArrayList<>();
 		returnList.addAll(dependency);
 		for (String element : dependency ){
 			if (classMap.containsKey(element)){

@@ -80,7 +80,7 @@ public class CreateBRMSRawController{
 			for( AdviceExpressionType adviceExpression: expressionTypes.getAdviceExpression()){
 				for(AttributeAssignmentExpressionType attributeAssignment: adviceExpression.getAttributeAssignmentExpression()){
 					if(attributeAssignment.getAttributeId().startsWith("key:")){
-						Map<String, String> attribute = new HashMap<String, String>();
+						Map<String, String> attribute = new HashMap<>();
 						String key = attributeAssignment.getAttributeId().replace("key:", "");
 						attribute.put("key", key);
 						JAXBElement<AttributeValueType> attributevalue = (JAXBElement<AttributeValueType>) attributeAssignment.getExpression();

@@ -56,10 +56,10 @@ public class EnforcerDictionaryController {
 	@RequestMapping(value={"/get_EnforcerTypeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getEnforcerDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> model = new HashMap<String, Object>();
+			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			List<Object> list = commonClassDao.getData(EnforcingType.class);
-			List<String> dictList = new ArrayList<String>();
+			List<String> dictList = new ArrayList<>();
 			for(int i = 0; i < list.size(); i++){
 				EnforcingType dict = (EnforcingType) list.get(i);
 				dictList.add(dict.getEnforcingType());

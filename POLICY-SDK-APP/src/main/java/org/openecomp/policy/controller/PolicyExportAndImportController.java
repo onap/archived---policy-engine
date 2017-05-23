@@ -101,7 +101,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 	public void ExportPolicy(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try{
 			String file = null;
-			selectedPolicy = new ArrayList<String>();
+			selectedPolicy = new ArrayList<>();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
@@ -196,8 +196,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 
 		//Check if the Role and Scope Size are Null get the values from db. 
 		List<Object> userRoles = PolicyController.getRoles(userId);
-		roles = new ArrayList<String>();
-		scopes = new HashSet<String>();
+		roles = new ArrayList<>();
+		scopes = new HashSet<>();
 		for(Object role: userRoles){
 			Roles userRole = (Roles) role;
 			roles.add(userRole.getRole());

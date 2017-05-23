@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -71,13 +72,13 @@ public class PDPController extends RestrictedBaseController {
 		synchronized(this.groups) { 
 			this.groups.clear();
 			try {
-				Set<PDPPolicy> filteredPolicies = new HashSet<PDPPolicy>();
+				Set<PDPPolicy> filteredPolicies = new HashSet<>();
 				Set<String> scopes = null;
 				List<String> roles = null;
 				String userId = UserUtils.getUserSession(request).getOrgUserId();
 				List<Object> userRoles = PolicyController.getRoles(userId);
-				roles = new ArrayList<String>();
-				scopes = new HashSet<String>();
+				roles = new ArrayList<>();
+				scopes = new HashSet<>();
 				for(Object role: userRoles){
 					Roles userRole = (Roles) role;
 					roles.add(userRole.getRole());
@@ -98,8 +99,11 @@ public class PDPController extends RestrictedBaseController {
 					if(!userRoles.isEmpty()){
 						if(!scopes.isEmpty()){
 							this.groups.addAll(PolicyController.getPapEngine().getEcompPDPGroups());
+							List<EcompPDPGroup> tempGroups = new ArrayList<EcompPDPGroup>();
 							if(!groups.isEmpty()){
-								for(EcompPDPGroup group : groups){
+								Iterator<EcompPDPGroup> pdpGroup = groups.iterator();
+								while(pdpGroup.hasNext()){
+									EcompPDPGroup group = pdpGroup.next();
 									Set<PDPPolicy> policies = group.getPolicies();
 									for(PDPPolicy policy : policies){
 										for(String scope : scopes){
@@ -117,11 +121,13 @@ public class PDPController extends RestrictedBaseController {
 											}
 										}
 									}
-									groups.remove(group);
+									pdpGroup.remove();
 									StdPDPGroup newGroup = (StdPDPGroup) group;
 									newGroup.setPolicies(filteredPolicies);
-									groups.add(newGroup);
- 								}	
+									tempGroups.add(newGroup);
+								}	
+								groups.clear();
+								groups = tempGroups;	
 							}
 						}
 					}

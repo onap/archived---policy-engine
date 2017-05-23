@@ -102,7 +102,7 @@ public class SendEventService {
 
     private Collection<PolicyResponse> eventResult(
             Collection<PDPResponse> generateRequest) {
-        Collection<PolicyResponse> result = new HashSet<PolicyResponse>();
+        Collection<PolicyResponse> result = new HashSet<>();
         if (generateRequest == null) {
             return null;
         }

@@ -686,3 +686,232 @@
     right: 3px;
     height: 16px;
     width: 16px; }
+    
+.b2b-header-tabs .icon-primary-att-globe {
+  color: #0568ae;
+  font-size: 34px; }
+
+.b2b-header-tabs .globe-text {
+  margin-left: 20px;
+  font-size: 2rem; }
+
+.b2b-header-tabs .header__items {
+  width: 980px;
+  margin: 0 auto;
+  display: block;
+  list-style: none;
+  border-spacing: 30px 0;
+  padding: 3px 0px 0px 0px; }
+
+.b2b-header-tabs .header__item {
+  display: inline-block;
+  text-align: left;
+  width: auto;
+  font-size: 14px;
+  font-family: "Omnes-ECOMP-W02", Arial;
+  cursor: pointer;
+  padding: 0 15px 4px 15px;
+  /*margin-top:-3px;*/
+  color: #fff; }
+
+.b2b-header-tabs .header__item.b2b-headermenu {
+  padding: 0; }
+
+.b2b-header-tabs .header__item.b2b-headermenu a.menu__item {
+  color: #fff;
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 15px 12px 15px;
+  font-size: 16px; }
+
+.b2b-header-tabs .header__item.active {
+  background-color: #fff;
+  border-radius: 2px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; }
+
+.b2b-header-tabs .header__item.active a.menu__item {
+  color: #0578ae; }
+
+.b2b-header-tabs li:focus {
+  outline: 2px solid #0578ae; }
+
+/** profile pop Over **/
+.b2b-header-tabs .header__item.profile {
+  position: relative;
+  float: right; }
+
+/** Secondary Menu **/
+.b2b-header-tabs .header__item .header-secondary-wrapper, .b2b-header-tabs .header__item .header-tertiary-wrapper {
+  background-color: #fff;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 42px;
+  border-bottom: solid 1px #ccc;
+  -webkit-box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.16);
+  -moz-box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.16);
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.16);
+  display: none;
+  z-index: 111; }
+
+.b2b-header-tabs .header-secondary, .b2b-header-tabs .header-tertiary {
+  background-color: #fff;
+  width: 980px;
+  margin: 0 auto; }
+
+.b2b-header-tabs .header__item.active .header-secondary-wrapper,
+.b2b-header-tabs .header-secondary .header-subitem.active .header-tertiary-wrapper {
+  display: block; }
+
+.b2b-header-tabs .header-secondary .header-subitem {
+  display: inline-block;
+  width: auto;
+  margin: 0 15px; }
+
+.b2b-header-tabs .header-secondary .header-subitem a.menu__item {
+  display: inline-block;
+  padding: 15px 0;
+  color: #333;
+  font-size: 14px; }
+
+.b2b-header-tabs .header-secondary .header-subitem a.menu__item:hover, .b2b-header-tabs .header-secondary .header-subitem a.menu__item:focus {
+  color: #0578ae; }
+
+.b2b-label-hide {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px); }
+
+/** Tertiary Level Menu **/
+.b2b-header-tabs .header-secondary .header-subitem.active i.menuCaret:after,
+.b2b-header-tabs .header-secondary .header-subitem.active i.menuCaret:before {
+  content: '';
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  position: absolute;
+  -webkit-transition: left .2s ease-out;
+  -moz-transition: left .2s ease-out;
+  transition: left .2s ease-out; }
+
+.b2b-header-tabs .header-secondary .header-subitem.active i.menuCaret {
+  position: absolute;
+  z-index: 111;
+  top: 25px; }
+
+.b2b-header-tabs .header-secondary .header-subitem.active i.menuCaret:after {
+  border-bottom: 8px solid #fff;
+  top: 10px; }
+
+.b2b-header-tabs .header-secondary .header-subitem.active i.menuCaret:before {
+  border-bottom: 8px solid #ccc;
+  top: 9px; }
+
+/** Tertiary Level Menu **/
+.b2b-header-tabs .header-secondary .header-subitem.active .header-tertiary {
+  border-top: solid 1px #ccc; }
+
+.b2b-header-tabs .header-tertiary:after {
+  content: '';
+  clear: both;
+  display: block; }
+
+.b2b-header-tabs .header-tertiary li {
+  display: inline-block;
+  padding: 0;
+  float: left; }
+
+.b2b-header-tabs .header-tertiary li a {
+  color: #333;
+  display: block;
+  padding: 7px 15px;
+  max-width: 228px; }
+
+.b2b-header-tabs .header-tertiary li label {
+  text-align: left;
+  display: block;
+  font-size: 14px !important;
+  font-weight: bold;
+  color: #857B7B;
+  padding: 15px 0 0 15px; }
+
+/** Quarternary Level Menu **/
+.b2b-header-tabs .header-quarternary {
+  width: 100%;
+  float: left; }
+
+.b2b-header-tabs .header-quarternary li {
+  padding-left: 15px;
+  font-family: "Omnes-ECOMP-W02", Arial;
+  display: none; }
+
+.b2b-header-tabs .header-quarternary li.active {
+  display: block; }
+
+.b2b-header-tabs .header-quarternary li a {
+  color: #666666;
+  font-size: 14px;
+  padding: 0px 10px 10px 10px; }
+
+/** Skip Navigation**/
+.b2b-header-tabs .header__item.skip {
+  padding: 0;
+  display: inline-block;
+  cursor: default !important; }
+
+.b2b-header-tabs .header__item.skip a {
+  color: transparent;
+  font-size: 12px;
+  line-height: 15px;
+  text-decoration: none; }
+
+.b2b-header-tabs .header__item.skip a:focus {
+  color: #fff;
+  outline: 2px solid #0578ae; }
+
+/** Dropdown css inside Header ****/
+.b2b-header-tabs .selectWrap {
+  min-width: 150px; }
+
+.b2b-header-tabs .selectWrap button.awd-select, .b2b-header-tabs .selectWrap input.awd-select {
+  height: 36px;
+  line-height: 8px;
+  font-size: 1rem;
+  display: inline-block; }
+
+.b2b-header-tabs .selectWrap .awd-select-list {
+  background-color: #fff;
+  color: #333;
+  -webkit-transition: opacity .2s ease-out;
+  -moz-transition: opacity .2s ease-out;
+  transition: opacity .2s ease-out;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176); }
+
+/*
+ * responsive header media queries
+ */
+@media screen and (max-width: 1100px) {
+  .b2b-header-tabs .globe-text {
+    display: none; }
+  .b2b-header-tabs .header__item.profile {
+    padding-left: 15px;
+    float: none; }
+  .b2b-header-tabs .header__items {
+    padding-top: 0px; } }
+
+@media screen and (max-width: 950px) {
+  .header__item.profile {
+    top: 20px; }
+  .b2b-header-tabs {
+    height: 90px; }
+  .selectWrap {
+    bottom: 15px; }
+  .b2b-header-tabs .header__items {
+    padding-top: 25px; }
+  .b2b-header-tabs .header__item .header-secondary-wrapper, .b2b-header-tabs .header__item .header-tertiary-wrapper {
+    top: 80px; }
+  .b2b-header-tabs .header-secondary .header-subitem.active i.menuCaret {
+    top: 35px; }
+  .b2b-header-tabs .header__item.b2b-headermenu a.menu__item {
+    padding-bottom: 30px; }
+  .b2b-header-tabs .header-secondary .header-subitem.active .header-tertiary {
+    margin-top: -28px; } }    

@@ -1,0 +1,107 @@
+controlLoop:
+  version: 2.0.0
+  controlLoopName: ControlLoop-vUSP-vCTS-cbed919f-2212-4ef7-8051-fe6308da1bda
+  services: 
+    - serviceName: vUSP
+  resources: 
+    - resourceName: vCTS
+      resourceType: VFC
+    - resourceName: vCOM
+      resourceType: VFC
+    - resourceName: vRAR
+      resourceType: VFC
+    - resourceName: vLCS
+      resourceType: VFC
+    - resourceName: v3CB
+      resourceType: VFC
+  trigger_policy: unique-policy-id-1-restart
+  timeout: 1200
+  abatement: false
+
+policies:
+  - id: unique-policy-id-1-restart
+    name: Restart Policy
+    description:
+    actor: APPC
+    recipe: Restart
+    target:
+      type: VM
+    retry: 2
+    timeout: 300
+    success: unique-policy-id-1-healthdiagnostic
+    failure: unique-policy-id-2-rebuild
+    failure_timeout: unique-policy-id-2-rebuild
+    failure_retries: unique-policy-id-2-rebuild
+    failure_exception: final_failure_exception
+    failure_guard: unique-policy-id-2-rebuild
+  
+  - id: unique-policy-id-2-rebuild
+    name: Rebuild Policy
+    description:
+    actor: APPC
+    recipe: Rebuild
+    target:
+      type: VM 
+    retry: 0
+    timeout: 600
+    success: unique-policy-id-2-healthdiagnostic
+    failure: unique-policy-id-3-migrate
+    failure_timeout: unique-policy-id-3-migrate
+    failure_retries: unique-policy-id-3-migrate
+    failure_exception: final_failure_exception
+    failure_guard: unique-policy-id-3-migrate
+  
+  - id: unique-policy-id-3-migrate
+    name: Migrate Policy
+    description:
+    actor: APPC
+    recipe: Migrate
+    target: 
+      type: VM
+    retry: 0
+    timeout: 600
+    success: final_success
+    failure: final_failure
+    failure_timeout: final_failure_timeout
+    failure_retries: final_failure_retries
+    failure_exception: final_failure_exception
+    failure_guard: final_failure_guard
+    
+  - id: unique-policy-id-1-healthdiagnostic
+    name: Do SDNO Health Diagnostic
+    description:
+    actor: SDNO
+    recipe: health-diagnostic
+    payload: 
+      health-diagnostic-code: HC99
+      health-diagnostic-code-parameters: "{\"Junk\":\"--version\",\"Junk2\":\"--help\"}"
+    target: 
+      type: VM 
+    retry: 0
+    timeout: 600
+    success: final_success
+    failure: unique-policy-id-2-rebuild
+    failure_timeout: unique-policy-id-2-rebuild
+    failure_retries: unique-policy-id-2-rebuild
+    failure_exception: final_failure_exception
+    failure_guard: unique-policy-id-2-rebuild
+
+  - id: unique-policy-id-2-healthdiagnostic
+    name: Do SDNO Health Diagnostic
+    description:
+    actor: SDNO
+    recipe: health-diagnostic
+    payload: 
+      health-diagnostic-code: HC99
+      health-diagnostic-code-parameters: "{\"Junk\":\"--version\",\"Junk2\":\"--help\"}" 
+    target:
+      type: VM
+    retry: 0
+    timeout: 600
+    success: final_success
+    failure: final_failure
+    failure_timeout: final_failure_timeout
+    failure_retries: final_failure_retries
+    failure_exception: final_failure_exception
+    failure_guard: final_failure_guard
+

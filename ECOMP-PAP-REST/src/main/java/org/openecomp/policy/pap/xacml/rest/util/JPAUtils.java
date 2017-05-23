@@ -159,8 +159,8 @@ public class JPAUtils {
 	}
 	
 	private void buildFunctionMaps() throws ServletException {
-		mapDatatype2Function = new HashMap<Datatype, List<FunctionDefinition>>();
-		mapID2Function = new HashMap<String, FunctionDefinition>();
+		mapDatatype2Function = new HashMap<>();
+		mapID2Function = new HashMap<>();
 
 		EntityManager em = emf.createEntityManager();
 		Query getFunctionDefinitions = em.createNamedQuery("FunctionDefinition.findAll");	

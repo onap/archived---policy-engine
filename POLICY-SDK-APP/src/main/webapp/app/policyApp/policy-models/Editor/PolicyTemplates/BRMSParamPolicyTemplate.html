@@ -124,6 +124,14 @@
 			</div>
 		</div>
 		<div id="validate" style="width: 70%"></div>
+		<div ng-hide="showbrmsrule">
+		<div class="well">
+			<h2 class="font-showcase-font-name"> Rule Preview: </h2>
+			<div class="divider-container"><hr> </div>
+			<textarea type="text" style="width: 100%; height: 800px" ng-bind="datarule" ng-disabled="true"></textarea>
+			<button class="btn btn-default" herf="javascript:void(0)" ng-click="hideRule();">Hide Rule</button>
+		</div>	
+		</div>
 		<br>
 		<div class="modal-footer">
 			<div>

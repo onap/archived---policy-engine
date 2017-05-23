@@ -382,7 +382,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 
 			if(closedloopsdata!=null && !closedloopsdata.isEmpty()) {
 				LOGGER.info("ClosedLoops exist in the database, we need to delete them in our first step to buildCache().");
-				for(int i=0; i > closedloopsdata.size(); i++) {
+				for(int i=0; i < closedloopsdata.size(); i++) {
 					ClosedLoops cl = closedloopsdata.get(i);
 					session.delete(cl);
 				}

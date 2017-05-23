@@ -1,0 +1,24 @@
+controlLoop:
+  version: 1.0.0
+  controlLoopName: ControlLoop-vProbes-41aba939-9a93-4535-b193-973c68fc8763
+  services: 
+  resources: 
+    - resourceName: vProbes
+      resourceType: VF
+  trigger_policy: unique-policy-id-1-restart
+  timeout: 600
+
+policies:
+  - id: unique-policy-id-1-restart
+    name: Restart Policy
+    description:
+    actor: APPC
+    recipe: Restart
+    target: VM
+    retry: 2
+    timeout: 300
+    success: final_success
+    failure: final_failure
+    failure_timeout: final_failure_timeout
+    failure_retries: final_failure_retries
+    failure_exception: final_failure_exception

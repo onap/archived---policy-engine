@@ -93,8 +93,8 @@ public class PolicyCreation extends AbstractPolicyCreation{
 	public ResponseEntity<String> savePolicy(@RequestBody PolicyRestAdapter policyData, HttpServletResponse response) throws Exception{
 		String body = null;
 		HttpStatus status = HttpStatus.BAD_REQUEST;
-		Map<String, String> successMap = new HashMap<String, String>();
-		Map<String, String> attributeMap = new HashMap<String, String>();
+		Map<String, String> successMap = new HashMap<>();
+		Map<String, String> attributeMap = new HashMap<>();
 		PolicyVersion policyVersionDao;
 		try {
 		
@@ -161,7 +161,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 				highestVersion = policyVersion.getHigherVersion();
 			}
 			
-			if(highestVersion != 0){
+			if(highestVersion != 0 && policyVersion != null){
 				if(policyData.isEditPolicy){
 					version = highestVersion +1;
 					if(userId ==null){
@@ -239,7 +239,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 				}else if (policyConfigType.equalsIgnoreCase("BRMS_Param")) {
 					policyData.setEcompName("DROOLS");
 					policyData.setConfigName("BRMS_PARAM_RULE");
-					Map<String, String> drlRuleAndUIParams = new HashMap<String, String>();
+					Map<String, String> drlRuleAndUIParams = new HashMap<>();
 					if(policyData.getApiflag() == null){
 						// If there is any dynamic field create the matches here
 						String key="templateName";
@@ -288,10 +288,10 @@ public class PolicyCreation extends AbstractPolicyCreation{
 				}
 			}else if(policyType.equalsIgnoreCase("Action")) {
 				if(policyData.getApiflag() == null){
-					List<String> dynamicRuleAlgorithmLabels = new LinkedList<String>();
-					List<String> dynamicRuleAlgorithmCombo = new LinkedList<String>();
-					List<String> dynamicRuleAlgorithmField1 = new LinkedList<String>();
-					List<String> dynamicRuleAlgorithmField2 = new LinkedList<String>();
+					List<String> dynamicRuleAlgorithmLabels = new LinkedList<>();
+					List<String> dynamicRuleAlgorithmCombo = new LinkedList<>();
+					List<String> dynamicRuleAlgorithmField1 = new LinkedList<>();
+					List<String> dynamicRuleAlgorithmField2 = new LinkedList<>();
 
 
 					if(policyData.getRuleAlgorithmschoices().size() > 0){
@@ -332,13 +332,13 @@ public class PolicyCreation extends AbstractPolicyCreation{
 				newPolicy = new ActionPolicy(policyData);
 			} else if (policyType.equalsIgnoreCase("Decision")) {
 				if(policyData.getApiflag() == null){
-					Map<String, String> settingsMap = new HashMap<String, String>();
-					List<String> dynamicRuleAlgorithmLabels = new LinkedList<String>();
-					List<String> dynamicRuleAlgorithmCombo = new LinkedList<String>();
-					List<String> dynamicRuleAlgorithmField1 = new LinkedList<String>();
-					List<String> dynamicRuleAlgorithmField2 = new LinkedList<String>();
-					List<Object> dynamicVariableList = new LinkedList<Object>();
-					List<String> dataTypeList = new LinkedList<String>();
+					Map<String, String> settingsMap = new HashMap<>();
+					List<String> dynamicRuleAlgorithmLabels = new LinkedList<>();
+					List<String> dynamicRuleAlgorithmCombo = new LinkedList<>();
+					List<String> dynamicRuleAlgorithmField1 = new LinkedList<>();
+					List<String> dynamicRuleAlgorithmField2 = new LinkedList<>();
+					List<Object> dynamicVariableList = new LinkedList<>();
+					List<String> dataTypeList = new LinkedList<>();
 
 					if(policyData.getSettings().size() > 0){
 						for(Object settingsData : policyData.getSettings()){
@@ -383,7 +383,15 @@ public class PolicyCreation extends AbstractPolicyCreation{
 				newPolicy = new DecisionPolicy(policyData);
 			}
 
-			newPolicy.prepareToSave();
+			if(newPolicy != null){
+				newPolicy.prepareToSave();
+			}else{
+				body = "error";
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);								
+				response.addHeader("error", "error");
+				return new ResponseEntity<String>(body, status);
+			}
 			
 			PolicyDBDaoTransaction policyDBDaoTransaction = null;
 			try{
@@ -461,9 +469,10 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					response.addHeader("error", "error");							
 				}
 			}catch(Exception e){
-				policyDBDaoTransaction.rollbackTransaction();
+				if(policyDBDaoTransaction != null){
+					policyDBDaoTransaction.rollbackTransaction();
+				}
 			}
-
 		}
 		catch (Exception e){
 			LOGGER.error("Exception Occured"+e);

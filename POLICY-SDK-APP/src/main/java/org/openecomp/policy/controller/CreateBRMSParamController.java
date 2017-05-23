@@ -88,7 +88,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 
 	@RequestMapping(value={"/policyController/getBRMSTemplateData.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView getBRMSParamPolicyRuleData(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		dynamicLayoutMap = new HashMap<String, String>();
+		dynamicLayoutMap = new HashMap<>();
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		JsonNode root = mapper.readTree(request.getReader());
@@ -211,8 +211,8 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 
 	@SuppressWarnings("unchecked")
 	public void prePopulateBRMSParamPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-		attributeList = new ArrayList<Object>();
-		dynamicLayoutMap = new HashMap<String, String>();
+		attributeList = new ArrayList<>();
+		dynamicLayoutMap = new HashMap<>();
 		if (policyAdapter.getPolicyData() instanceof PolicyType) {
 			PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
 			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
@@ -235,7 +235,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			for( AdviceExpressionType adviceExpression: expressionTypes.getAdviceExpression()){
 				for(AttributeAssignmentExpressionType attributeAssignment: adviceExpression.getAttributeAssignmentExpression()){
 					if(attributeAssignment.getAttributeId().startsWith("key:")){
-						Map<String, String> attribute = new HashMap<String, String>();
+						Map<String, String> attribute = new HashMap<>();
 						String key = attributeAssignment.getAttributeId().replace("key:", "");
 						attribute.put("key", key);
 						JAXBElement<AttributeValueType> attributevalue = (JAXBElement<AttributeValueType>) attributeAssignment.getExpression();
@@ -258,7 +258,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			// Get the target data under policy.
 			policyAdapter.setDynamicLayoutMap(dynamicLayoutMap);
 			if(policyAdapter.getDynamicLayoutMap().size() > 0){
-				LinkedHashMap<String,String> drlRule = new LinkedHashMap<String, String>();
+				LinkedHashMap<String,String> drlRule = new LinkedHashMap<>();
 				for(Object keyValue: policyAdapter.getDynamicLayoutMap().keySet()){
 					drlRule.put(keyValue.toString(), policyAdapter.getDynamicLayoutMap().get(keyValue).toString());
 				}

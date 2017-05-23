@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class PolicyList {
 	
-	private static List<String> policyList = new ArrayList<String>();
+	private static List<String> policyList = new ArrayList<>();
 	
 	
 	public static List<String> getpolicyList(){

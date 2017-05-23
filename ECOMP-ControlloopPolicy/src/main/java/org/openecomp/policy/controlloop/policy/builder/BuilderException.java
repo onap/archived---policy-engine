@@ -17,17 +17,15 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.openecomp.policy.controlloop.policy.builder;
 
 public class BuilderException extends Exception {
 
+	private static final long serialVersionUID = 610064813684337895L;
+	
 	public BuilderException(String string) {
 		super(string);
 	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 610064813684337895L;
 
 }

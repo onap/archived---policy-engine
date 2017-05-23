@@ -44,8 +44,8 @@ public class PolicyUtilsTest {
 		PolicyUtils policyUtils = new PolicyUtils();
 		StdPDPNotification notification = new StdPDPNotification();
 		notification.setNotificationType(NotificationType.BOTH);
-		Collection<StdRemovedPolicy> removedPolicies = new ArrayList<StdRemovedPolicy>();
-		Collection<StdLoadedPolicy> loadedPolicies = new ArrayList<StdLoadedPolicy>();
+		Collection<StdRemovedPolicy> removedPolicies = new ArrayList<>();
+		Collection<StdLoadedPolicy> loadedPolicies = new ArrayList<>();
 		StdRemovedPolicy removedPolicy = new StdRemovedPolicy();
 		StdLoadedPolicy updatedPolicy = new StdLoadedPolicy();
 		removedPolicy.setPolicyName("Test");
@@ -54,7 +54,7 @@ public class PolicyUtilsTest {
 		updatedPolicy.setPolicyName("Testing");
 		updatedPolicy.setVersionNo("1");
 		updatedPolicy.setUpdateType(UpdateType.NEW);
-		Map<String, String> matches = new HashMap<String, String>();
+		Map<String, String> matches = new HashMap<>();
 		matches.put("key", "value");
 		updatedPolicy.setMatches(matches);
 		loadedPolicies.add(updatedPolicy);

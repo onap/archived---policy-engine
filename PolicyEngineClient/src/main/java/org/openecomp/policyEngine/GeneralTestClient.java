@@ -126,8 +126,8 @@ public class GeneralTestClient {
 				for (Object jsonObject : jsonObjectArray) {
 					totalTC++;
 					totalTCforFile++;
-					ArrayList<String> expectedResult = new ArrayList<String>();
-					ArrayList<String> resultReceived = new ArrayList<String>();
+					ArrayList<String> expectedResult = new ArrayList<>();
+					ArrayList<String> resultReceived = new ArrayList<>();
 					JSONObject testCase = (JSONObject) jsonObject;
 					// get a String from the JSON object
 					long id = (long) testCase.get("id");
@@ -155,7 +155,7 @@ public class GeneralTestClient {
 							.get("ECOMPName");
 							String configName = (String) testCase
 									.get("ConfigName");
-							Map<String, String> configAttributes = new HashMap<String, String>();
+							Map<String, String> configAttributes = new HashMap<>();
 							configAttributes.put("key", "value");
 							JSONArray configAttributesJSON = (JSONArray) testCase
 									.get("configAttributes");
@@ -191,7 +191,7 @@ public class GeneralTestClient {
 							break;
 
 						case "getAction":
-							Map<String, String> eventAttributes = new HashMap<String, String>();
+							Map<String, String> eventAttributes = new HashMap<>();
 							eventAttributes.put("Key", "Value");
 							JSONArray eventAttributesJSON = (JSONArray) testCase
 									.get("eventAttributes");
@@ -228,7 +228,7 @@ public class GeneralTestClient {
 						case "getDecision":
 							eCOMPComponentName = (String) testCase
 							.get("ECOMPName");
-							Map<String, String> decisionAttributes = new HashMap<String, String>();
+							Map<String, String> decisionAttributes = new HashMap<>();
 							decisionAttributes.put("Key", "Value");
 							JSONArray decisionAttributesJSON = (JSONArray) testCase
 									.get("decisionAttributes");

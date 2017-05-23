@@ -181,8 +181,8 @@ public class DbAuditCompareEntriesTest {
 		
 		dbAudit.writeAuditDebugLog(className, resourceName1, resourceName2, entry1, entry2);
 		
-		HashMap<Object, Object> myEntries = new HashMap<Object, Object>();
-		HashMap<Object, Object> theirEntries = new HashMap<Object, Object>();
+		HashMap<Object, Object> myEntries = new HashMap<>();
+		HashMap<Object, Object> theirEntries = new HashMap<>();
 		
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
@@ -205,8 +205,8 @@ public class DbAuditCompareEntriesTest {
 		 */
 		entry2.setDesignated(true);
 				
-		myEntries = new HashMap<Object, Object>();
-		theirEntries = new HashMap<Object, Object>();
+		myEntries = new HashMap<>();
+		theirEntries = new HashMap<>();
 		
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
@@ -240,8 +240,8 @@ public class DbAuditCompareEntriesTest {
 		// Clone the first entry
 		entry2 = SerializationUtils.clone(entry1);
 		
-		HashMap<Object, Object> myEntries = new HashMap<Object, Object>();
-		HashMap<Object, Object> theirEntries = new HashMap<Object, Object>();
+		HashMap<Object, Object> myEntries = new HashMap<>();
+		HashMap<Object, Object> theirEntries = new HashMap<>();
 		
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
@@ -264,8 +264,8 @@ public class DbAuditCompareEntriesTest {
 		 
 		entry2.setFlag("flag2");
 				
-		myEntries = new HashMap<Object, Object>();
-		theirEntries = new HashMap<Object, Object>();
+		myEntries = new HashMap<>();
+		theirEntries = new HashMap<>();
 		
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
@@ -300,8 +300,8 @@ public class DbAuditCompareEntriesTest {
 		// Clone the first entry
 		entry2 = SerializationUtils.clone(entry1);
 		
-		HashMap<Object, Object> myEntries = new HashMap<Object, Object>();
-		HashMap<Object, Object> theirEntries = new HashMap<Object, Object>();
+		HashMap<Object, Object> myEntries = new HashMap<>();
+		HashMap<Object, Object> theirEntries = new HashMap<>();
 		
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
@@ -324,8 +324,8 @@ public class DbAuditCompareEntriesTest {
 		 
 		entry2.setAdminState("unlocked");
 				
-		myEntries = new HashMap<Object, Object>();
-		theirEntries = new HashMap<Object, Object>();
+		myEntries = new HashMap<>();
+		theirEntries = new HashMap<>();
 		
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
@@ -379,8 +379,8 @@ public class DbAuditCompareEntriesTest {
 		 
 		entry2.setFpcCount(321L);
 				
-		myEntries = new HashMap<Object, Object>();
-		theirEntries = new HashMap<Object, Object>();
+		myEntries = new HashMap<>();
+		theirEntries = new HashMap<>();
 		
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
@@ -414,8 +414,8 @@ public class DbAuditCompareEntriesTest {
 		// Clone the first entry
 		entry2 = SerializationUtils.clone(entry1);
 		
-		HashMap<Object, Object> myEntries = new HashMap<Object, Object>();
-		HashMap<Object, Object> theirEntries = new HashMap<Object, Object>();
+		HashMap<Object, Object> myEntries = new HashMap<>();
+		HashMap<Object, Object> theirEntries = new HashMap<>();
 		
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
@@ -436,8 +436,8 @@ public class DbAuditCompareEntriesTest {
 		 
 		entry2.setSite("site_1a");
 				
-		myEntries = new HashMap<Object, Object>();
-		theirEntries = new HashMap<Object, Object>();
+		myEntries = new HashMap<>();
+		theirEntries = new HashMap<>();
 		
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);

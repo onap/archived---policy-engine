@@ -50,7 +50,7 @@ import com.att.research.xacml.std.datatypes.DataTypes;
  */
 public class ConformanceScopeResolver implements ScopeResolver {
 	private Logger logger									= FlexLogger.getLogger(ConformanceScopeResolver.class);
-	private Map<URI, List<URI>> mapIdentifierToChildren	= new HashMap<URI,List<URI>>();
+	private Map<URI, List<URI>> mapIdentifierToChildren	= new HashMap<>();
 	
 	public ConformanceScopeResolver() {
 	}
@@ -58,7 +58,7 @@ public class ConformanceScopeResolver implements ScopeResolver {
 	public void add(URI identifierRoot, URI identifierChild) {
 		List<URI> listChildrenRoot	= this.mapIdentifierToChildren.get(identifierRoot);
 		if (listChildrenRoot == null) {
-			listChildrenRoot	= new ArrayList<URI>();
+			listChildrenRoot	= new ArrayList<>();
 			this.mapIdentifierToChildren.put(identifierRoot, listChildrenRoot);
 		}
 		listChildrenRoot.add(identifierChild);
@@ -98,7 +98,7 @@ public class ConformanceScopeResolver implements ScopeResolver {
 	
 	@Override
 	public ScopeResolverResult resolveScope(Attribute attributeResourceId, ScopeQualifier scopeQualifier) throws ScopeResolverException {
-		List<Attribute> listAttributes	= new ArrayList<Attribute>();
+		List<Attribute> listAttributes	= new ArrayList<>();
 		switch(scopeQualifier) {
 		case CHILDREN:
 			listAttributes.add(attributeResourceId);

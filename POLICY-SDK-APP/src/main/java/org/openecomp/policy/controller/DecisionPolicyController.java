@@ -68,9 +68,9 @@ public class DecisionPolicyController extends RestrictedBaseController {
 
 	@SuppressWarnings("unchecked")
 	public void prePopulateDecisionPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-		attributeList = new ArrayList<Object>();
-		decisionList = new ArrayList<Object>();
-		ruleAlgorithmList = new ArrayList<Object>();
+		attributeList = new ArrayList<>();
+		decisionList = new ArrayList<>();
+		ruleAlgorithmList = new ArrayList<>();
 		if (policyAdapter.getPolicyData() instanceof PolicyType) {
 			Object policyData = policyAdapter.getPolicyData();
 			PolicyType policy = (PolicyType) policyData;
@@ -121,7 +121,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 										// Component attributes are saved under Target here we are fetching  them back.
 										// One row is default so we are not adding dynamic component at index 0.
 										if (index >= 1) {	
-											Map<String, String> attribute = new HashMap<String, String>();
+											Map<String, String> attribute = new HashMap<>();
 											attribute.put("key", attributeId);
 											attribute.put("value", value);
 											attributeList.add(attribute);	
@@ -165,7 +165,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 							if (condition != null) {
 								ApplyType decisionApply = (ApplyType) condition.getExpression().getValue();
 								decisionApply = (ApplyType) decisionApply.getExpression().get(0).getValue();
-								ruleAlgoirthmTracker = new LinkedList<Integer>();
+								ruleAlgoirthmTracker = new LinkedList<>();
 								if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals("GUARD_YAML")){
 									YAMLParams yamlParams = new YAMLParams();
 									for(int i=0; i<attributeList.size() ; i++){
@@ -201,7 +201,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 	}
 
 	private void prePopulateDecisionRuleAlgorithms(int index, ApplyType decisionApply, List<JAXBElement<?>> jaxbDecisionTypes) {
-		Map<String, String> ruleMap = new HashMap<String, String>();
+		Map<String, String> ruleMap = new HashMap<>();
 		ruleMap.put("id", "A" + (index +1));
 		Map<String, String> dropDownMap = PolicyController.getDropDownMap();
 		for (String key : dropDownMap.keySet()) {
@@ -262,7 +262,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Prepopulating Compound rule algorithm: " + index);
 			}
-			Map<String, String> rule = new HashMap<String, String>();
+			Map<String, String> rule = new HashMap<>();
 			for (String key : PolicyController.getDropDownMap().keySet()) {
 				String keyValue = PolicyController.getDropDownMap().get(key);
 				if (keyValue.equals(decisionApply.getFunctionId())) {

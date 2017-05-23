@@ -378,7 +378,7 @@ public class ElkConnectorImpl implements ElkConnector{
 			result = jestClient.execute(deleteRequest);
 		} catch (IllegalArgumentException | IOException e) {
 			LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ": delete:" + 
-					((indexType != null) ? indexType.name() : "null") + ":" + policyData.getNewFileName() + ": " + 
+					indexType +  ": null" + ":" + policyData.getNewFileName() + ": " + 
 					e.getMessage(), e);
 			throw new IllegalStateException(e);
 		}

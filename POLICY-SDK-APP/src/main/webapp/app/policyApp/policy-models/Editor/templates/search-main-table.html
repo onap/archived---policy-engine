@@ -1,0 +1,74 @@
+<table class="table mb0 table-files">
+    <thead>
+        <tr>
+            <th>
+                <a href="" ng-click="order('model.name')">
+                    Name
+                    <span class="sortorder" ng-show="predicate[1] === 'model.name'" ng-class="{reverse:reverse}"></span>
+                </a>
+            </th>
+              <th class="hidden-sm hidden-xs">
+                <a href="" ng-click="order('model.version')">
+                    Version
+                    <span class="sortorder" ng-show="predicate[1] === 'model.version'" ng-class="{reverse:reverse}"></span>
+                </a>
+            </th>
+            <th class="hidden-sm hidden-xs">
+                <a href="" ng-click="order('model.date')">
+                    Date
+                    <span class="sortorder" ng-show="predicate[1] === 'model.date'" ng-class="{reverse:reverse}"></span>
+                </a>
+            </th>
+              <th class="hidden-sm hidden-xs">
+                <a href="" ng-click="order('model.createdBy')">
+                    Created By
+                    <span class="sortorder" ng-show="predicate[1] === 'model.createdBy'" ng-class="{reverse:reverse}"></span>
+                </a>
+            </th>
+              <th class="hidden-sm hidden-xs">
+                <a href="" ng-click="order('model.modifiedBy')">
+                   Modified By
+                    <span class="sortorder" ng-show="predicate[1] === 'model.modifiedBy'" ng-class="{reverse:reverse}"></span>
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody class="file-item">
+        <tr ng-show="policyNavigator.requesting">
+            <td colspan="5">
+                <div ng-include="config.tplPath + '/spinner.html'"></div>
+            </td>
+        </tr>
+        <tr ng-show="!policyNavigator.requesting && policyNavigator.fileList.length < 1 && !policyNavigator.error">
+            <td colspan="5">
+                No Policy's in Scope...
+            </td>
+        </tr>
+        <tr ng-show="!policyNavigator.requesting && policyNavigator.error">
+            <td colspan="5">
+                {{ policyNavigator.error }}
+            </td>
+        </tr>
+        <tr ng-repeat="item in policyNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse" ng-show="!policyNavigator.requesting">
+            <td ng-right-click="touch(item)">
+                <a href="" ng-click="smartClick(item)" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)">
+                    <i class="glyphicon glyphicon-folder-close" ng-show="item.model.type === 'dir'"></i>
+                    <i class="glyphicon glyphicon-file" ng-show="item.model.type === 'file'"></i>
+                    {{item.model.name | strLimit : 64}}
+                </a>
+            </td>
+            <td class="hidden-xs">
+                {{item.model.version}}
+            </td>
+            <td class="hidden-sm hidden-xs">
+                {{item.model.date | formatDate }}
+            </td>
+            <td class="hidden-sm hidden-xs">
+                {{item.model.createdBy}}
+            </td>
+            <td class="hidden-sm hidden-xs">
+                {{item.model.modifiedBy}}
+            </td>
+        </tr>
+    </tbody>
+</table>

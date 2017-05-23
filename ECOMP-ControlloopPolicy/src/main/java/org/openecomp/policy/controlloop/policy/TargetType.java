@@ -25,14 +25,15 @@ public enum TargetType {
 	VFC("VFC")
 	;
 	
-	private String targetType;
+	private String target;
 	
 	private TargetType(String targetType) {
-		this.targetType = targetType;
+		this.target = targetType;
 	}
 	
+	@Override
 	public String toString() {
-		return this.targetType;
+		return this.target;
 	}
 
 }

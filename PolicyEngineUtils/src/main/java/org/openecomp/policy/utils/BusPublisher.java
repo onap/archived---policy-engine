@@ -40,7 +40,7 @@ public interface BusPublisher {
 				                     String aafLogin,
 				                     String aafPassword) {
 			
-			ArrayList<String> dmaapServers = new ArrayList<String>();
+			ArrayList<String> dmaapServers = new ArrayList<>();
 			for (String server: servers) {
 				dmaapServers.add(server + ":3904");
 			}

@@ -110,9 +110,9 @@ public class FindAction {
 		return newResponse;
 	}
 
-	private Collection<Obligation> obligations = new ArrayList<Obligation>();
-	private Map<String, String> matchValues = new HashMap<String, String>();
-	private Map<String, String> headers = new HashMap<String, String>();
+	private Collection<Obligation> obligations = new ArrayList<>();
+	private Map<String, String> matchValues = new HashMap<>();
+	private Map<String, String> headers = new HashMap<>();
 	private boolean header = false;
 
 	private void search(StdMutableResponse stdResponse) {
@@ -124,7 +124,7 @@ public class FindAction {
 					int count = 0, uri = 0, PEP = 0;
 					header = false;
 					changeIt = false;
-					Collection<AttributeAssignment> afterRemoveAssignments = new ArrayList<AttributeAssignment>();
+					Collection<AttributeAssignment> afterRemoveAssignments = new ArrayList<>();
 					Identifier oblId = new IdentifierImpl(obligation.getId().stringValue());
 					StdAttributeAssignment attributeURI = null;
 					for (AttributeAssignment attribute : obligation.getAttributeAssignments()) {
@@ -151,22 +151,7 @@ public class FindAction {
 							String papPath = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
 							papPath= papPath.replace("/pap", "");
 							matchValues.put("body",attribute.getAttributeValue().getValue().toString().replace("$URL", papPath));
-						} /*
-						 * else if (attribute.getAttributeId().stringValue().
-						 * equalsIgnoreCase("type")){ requestAction.put("Type",
-						 * attribute.getAttributeValue().getValue().toString());
-						 * afterRemoveAssignments.add(attribute); } else
-						 * if(attribute
-						 * .getAttributeId().stringValue().equalsIgnoreCase
-						 * ("method")) { requestAction.put("Method",
-						 * attribute.getAttributeValue().getValue().toString());
-						 * afterRemoveAssignments.add(attribute); } else
-						 * if(attribute
-						 * .getAttributeId().stringValue().equalsIgnoreCase
-						 * ("body")) { requestAction.put("Body",
-						 * attribute.getAttributeValue().getValue().toString());
-						 * afterRemoveAssignments.add(attribute); }
-						 */else {
+						}else {
 							StdAttributeAssignment attributeObligation = new StdAttributeAssignment(attribute);
 							afterRemoveAssignments.add(attributeObligation);
 						}
@@ -174,7 +159,7 @@ public class FindAction {
 					if (count == 1 && uri == 1 && PEP == 0) {
 						// Remove Obligation and add Advice
 						changeIt = true;
-						TakeAction(stdResponse, oblId, afterRemoveAssignments);
+						takeAction(stdResponse, oblId, afterRemoveAssignments);
 					} else if (PEP == 1 && count == 0) {
 						// Strip the PEPACTION if available
 						if (uri == 1) {
@@ -191,7 +176,7 @@ public class FindAction {
 		}
 	}
 
-	private void TakeAction(StdMutableResponse stdResponse, Identifier advId,
+	private void takeAction(StdMutableResponse stdResponse, Identifier advId,
 			Collection<AttributeAssignment> afterRemoveAssignments) {
 		if (changeIt) {
 			LOGGER.info("the URL is :" + configURL);
@@ -199,24 +184,22 @@ public class FindAction {
 			callRest();
 			// Including the Results in an Advice
 			Identifier id = new IdentifierImpl(
-					"com:att:labs:ecomp:policy:pdp:reply");
+					"org:openecomp:policy:pdp:reply");
 			Identifier statId = new IdentifierImpl(
-					"com:att:labs:ecomp:policy:pdp:reply:status");
+					"org:openecomp:ecomp:policy:pdp:reply:status");
 			Identifier statCategory = new IdentifierImpl(
 					"urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject");
 			Identifier strId = new IdentifierImpl(
 					"http://www.w3.org/2001/XMLSchema#string");
 			Identifier resId = new IdentifierImpl(
-					"com:att:labs:ecomp:policy:pdp:reply:resource");
+					"org:openecomp:ecomp:policy:pdp:reply:resource");
 			Identifier resCategory = new IdentifierImpl(
 					"urn:oasis:names:tc:xacml:3.0:attribute-category:resource");
 			Identifier urlId = new IdentifierImpl(
 					"http://www.w3.org/2001/XMLSchema#anyURI");
-			// Collection<AttributeAssignment> attributes = new
-			// ArrayList<AttributeAssignment>();
-			AttributeValue<String> attributeStatusValue = new StdAttributeValue<String>(
+			AttributeValue<String> attributeStatusValue = new StdAttributeValue<>(
 					strId, status + response);
-			AttributeValue<String> attributeResourceValue = new StdAttributeValue<String>(
+			AttributeValue<String> attributeResourceValue = new StdAttributeValue<>(
 					urlId, configURL);
 			StdAttributeAssignment attributeStatus = new StdAttributeAssignment(
 					statCategory, statId, "PDP", attributeStatusValue);

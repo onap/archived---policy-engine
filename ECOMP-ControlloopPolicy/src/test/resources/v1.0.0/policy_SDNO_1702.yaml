@@ -1,0 +1,26 @@
+controlLoop:
+  version: 1.0.0
+  controlLoopName: PoloControlLoop-vPE-248b154b-ff3f-458f-885c-ec290c615714
+  services: 
+    - serviceName: vPE
+  trigger_policy: unique-policy-id-1-healthdianostic
+  timeout: 600
+
+policies:  
+  - id: unique-policy-id-1-healthdiagnostic
+    name: Do SDNO Health Diagnostic
+    description:
+    actor: SDNO
+    recipe: health-diagnostic
+    payload: 
+      health-diagnostic-code: HC99
+      health-diagnostic-code-parameters: "{\"Junk\":\"--version\",\"Junk2\":\"--help\"}" 
+    target: VM
+    retry: 0
+    timeout: 600
+    success: final_success
+    failure: final_failure
+    failure_timeout: final_failure_timeout
+    failure_retries: final_failure_retries
+    failure_exception: final_failure_exception
+  

@@ -160,7 +160,7 @@ public class PDPApiAuth {
 	            throw new PolicyEngineException(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Cannot Load the Properties file", e);
 	        }
 	        // Read the Properties and Load the Clients and their scopes.
-	        clientMap = new HashMap<String, ArrayList<String>>();
+	        clientMap = new HashMap<>();
 	        // 
 	        for (Object propKey : clientProp.keySet()) {
 	            String clientID = (String)propKey; 
@@ -174,7 +174,7 @@ public class PDPApiAuth {
 	                } 
 	            }
 	        }
-	        if (clientMap == null || clientMap.isEmpty()) {
+	        if (clientMap.isEmpty()) {
 	            PolicyLogger.debug(XACMLErrorConstants.ERROR_PERMISSIONS + "No Clients ID , Client Key and Scopes are available. Cannot serve any Clients !!");
 	            throw new PolicyEngineException("Empty Client file");
 	        }

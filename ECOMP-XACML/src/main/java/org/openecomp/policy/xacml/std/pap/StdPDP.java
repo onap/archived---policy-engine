@@ -47,9 +47,9 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements EcompPDP, Com
 	
 	private PDPStatus status = new StdPDPStatus();
 	
-	private Set<PDPPolicy> policies = new HashSet<PDPPolicy>();
+	private Set<PDPPolicy> policies = new HashSet<>();
 	
-	private Set<PDPPIPConfig> pipConfigs = new HashSet<PDPPIPConfig>();
+	private Set<PDPPIPConfig> pipConfigs = new HashSet<>();
 	
 	public StdPDP() {
 		

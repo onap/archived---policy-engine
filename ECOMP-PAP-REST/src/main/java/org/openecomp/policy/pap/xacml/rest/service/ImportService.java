@@ -45,7 +45,7 @@ public class ImportService {
 		String version = request.getParameter("version");
 		String serviceName = request.getParameter("serviceName");
 		String description = request.getParameter("description");
-		Map<String, String> successMap = new HashMap<String, String>();
+		Map<String, String> successMap = new HashMap<>();
 		switch(importServiceCreation){
 		case "BRMSPARAM":
 			StringBuilder builder = new StringBuilder();
@@ -94,19 +94,30 @@ public class ImportService {
 						return;
 					}
 				}else{ 
+					InputStream inputStream = null;
+					FileOutputStream outputStream = null;
 					try {	
-						InputStream inputStream = request.getInputStream();
-						FileOutputStream outputStream = new FileOutputStream("ExtractDir" + File.separator + randomID+".zip"); 
+						inputStream = request.getInputStream();
+						outputStream = new FileOutputStream("ExtractDir" + File.separator + randomID+".zip"); 
 						byte[] buffer = new byte[4096];
 						int bytesRead = -1 ; 
 						while ((bytesRead = inputStream.read(buffer)) != -1) { 
 							outputStream.write(buffer, 0, bytesRead) ; 
 						}
-						outputStream.close() ; 
-						inputStream.close() ;
 					} catch (IOException e) {
 						PolicyLogger.error("Error in reading in Zip File from API call");
 						return;
+					}finally{
+						try {
+							if(inputStream != null){
+								inputStream.close();
+							}
+							if(outputStream != null){
+								outputStream.close();
+							}
+						} catch (IOException e) {
+							PolicyLogger.error("Exception Occured while closing the input/output stream"+e);
+						}
 					}
 				}
 				newMS =  new CreateNewMicroSerivceModel(fileName, serviceName, "API", version, randomID);

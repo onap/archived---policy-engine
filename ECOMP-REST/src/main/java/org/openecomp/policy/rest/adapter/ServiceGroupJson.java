@@ -39,15 +39,19 @@ public class ServiceGroupJson {
 		this.name = value;
 	}
 	
-	public boolean equals(Object obj) 
-	{
+	public boolean equals(Object obj){
+		if(obj == null){
+			return false;
+		}
+		if(this.getClass() != obj.getClass()){
+			return false;
+		}
 		ServiceGroupJson servGroupobj=(ServiceGroupJson) obj;
-		 if(this.getName().equals(servGroupobj.getName()))
-	        {
-	                return true;
-	        }
-	        return false;
-    }
+		if(this.getName().equals(servGroupobj.getName())){
+			return true;
+		}
+		return false;
+	}
 	
 	 public int hashCode() {
 	    return Integer.valueOf(name.charAt(0)+(name.charAt(1)));

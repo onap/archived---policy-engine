@@ -36,21 +36,25 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 public class ControlLoopGuardCompiler {
 	
-	public static ControlLoopGuard compile(ControlLoopGuard CLGuard, ControlLoopCompilerCallback callback) throws CompilerException {
+	private ControlLoopGuardCompiler(){
+		// Private Constructor 
+	}
+	
+	public static ControlLoopGuard compile(ControlLoopGuard cLGuard, ControlLoopCompilerCallback callback) throws CompilerException {
 		//
 		// Ensure ControlLoopGuard has at least one guard policies
 		//
-		validateControlLoopGuard(CLGuard, callback);
+		validateControlLoopGuard(cLGuard, callback);
 		//
 		// Ensure each guard policy has at least one constraints and all guard policies are unique
 		//
-		validateGuardPolicies(CLGuard.guards, callback);
+		validateGuardPolicies(cLGuard.getGuards(), callback);
 		//
 		// Ensure constraints for each guard policy are unique
 		//
-		validateConstraints(CLGuard.guards, callback);
+		validateConstraints(cLGuard.getGuards(), callback);
 		
-		return CLGuard;
+		return cLGuard;
 	}
 	
 	public static ControlLoopGuard	compile(InputStream yamlSpecification, ControlLoopCompilerCallback callback) throws CompilerException {
@@ -65,26 +69,22 @@ public class ControlLoopGuardCompiler {
 		return ControlLoopGuardCompiler.compile((ControlLoopGuard) obj, callback);
 	}
 	
-	private static void validateControlLoopGuard(ControlLoopGuard CLGuard, ControlLoopCompilerCallback callback) throws CompilerException {
-		if (CLGuard == null) {
+	private static void validateControlLoopGuard(ControlLoopGuard cLGuard, ControlLoopCompilerCallback callback) throws CompilerException {
+		if (cLGuard == null) {
 			if (callback != null) {
 				callback.onError("ControlLoop Guard cannot be null");
 			}
 			throw new CompilerException("ControlLoop Guard cannot be null");
 		}
-		if (CLGuard.guard == null) {
-			if (callback != null) {
-				callback.onError("Guard version cannot be null");
-			}
+		if (cLGuard.getGuard() == null && callback != null) {
+			callback.onError("Guard version cannot be null");
 		}
-		if (CLGuard.guards == null) {
+		if (cLGuard.getGuards() == null) {
 			if (callback != null) {
 				callback.onError("ControlLoop Guard should have at least one guard policies");
 			}
-		} else if (CLGuard.guards.size() < 1) {
-			if (callback != null) {
-				callback.onError("ControlLoop Guard should have at least one guard policies");
-			}
+		} else if (cLGuard.getGuards().isEmpty() && callback != null) {
+			callback.onError("ControlLoop Guard should have at least one guard policies");
 		}
 	}
 	
@@ -98,21 +98,19 @@ public class ControlLoopGuardCompiler {
 		//
 		// Ensure all guard policies are unique
 		//
-		Set<GuardPolicy> newSet = new HashSet<GuardPolicy>(policies);
-		if (newSet.size() != policies.size()) {
-			if (callback != null) {
-				callback.onWarning("There are duplicate guard policies");
-			}
+		Set<GuardPolicy> newSet = new HashSet<>(policies);
+		if (newSet.size() != policies.size() && callback != null) {
+			callback.onWarning("There are duplicate guard policies");
 		}
 		//
 		// Ensure each guard policy has at least one constraints
 		//
 		for (GuardPolicy policy : policies) {
-			if (policy.limit_constraints == null || policy.limit_constraints.size() < 1) {
+			if (policy.getLimit_constraints() == null || policy.getLimit_constraints().isEmpty()) {
 				if (callback != null) {
-					callback.onError("Guard policy " + policy.name + " does not have any limit constraint");
+					callback.onError("Guard policy " + policy.getName() + " does not have any limit constraint");
 				}
-				throw new CompilerException("Guard policy " + policy.name + " does not have any limit constraint");
+				throw new CompilerException("Guard policy " + policy.getName() + " does not have any limit constraint");
 			}
 		}
 	}
@@ -125,11 +123,9 @@ public class ControlLoopGuardCompiler {
 			throw new CompilerException("Guard policies should not be null");
 		}
 		for (GuardPolicy policy : policies) {
-			Set<Constraint> newSet = new HashSet<Constraint>(policy.limit_constraints);
-			if (newSet.size() != policy.limit_constraints.size()) {
-				if (callback != null) {
-					callback.onWarning("Guard policy " + policy.name + " has duplicate limit constraints");
-				}
+			Set<Constraint> newSet = new HashSet<>(policy.getLimit_constraints());
+			if (newSet.size() != policy.getLimit_constraints().size() && callback != null) {
+				callback.onWarning("Guard policy " + policy.getName() + " has duplicate limit constraints");
 			}
 		}
 	}

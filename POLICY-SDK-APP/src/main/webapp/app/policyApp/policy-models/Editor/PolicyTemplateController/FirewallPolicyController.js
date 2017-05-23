@@ -29,6 +29,7 @@ angular.module('abs').controller('fwPolicyController', ['$scope', '$window', 'Po
     		$scope.policyNavigator.refresh();
     	}
     	$scope.modal('createNewPolicy', true);
+    	$scope.temp.policy = "";
     };
     
     $scope.modal = function(id, hide) {

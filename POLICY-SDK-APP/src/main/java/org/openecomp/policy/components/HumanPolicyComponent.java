@@ -121,12 +121,9 @@ public class HumanPolicyComponent{
 			JSONObject result = new JSONObject();
 			result.put("html", html);
 			return result;
-			//ByteArrayInputStream is = new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8));
 			
 		} catch (IllegalArgumentException e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "cannot build html area por policy", e);
-			/*AdminNotification.warn("An error has occurred.  Cannot describe this policy: " + 
-			                       e.getMessage());*/
 		}
 		return null;
 	}
@@ -179,7 +176,7 @@ class HtmlProcessor extends SimpleCallback {
 	
 	private static Map<String, String> function2human;
 	static {
-		function2human = new HashMap<String, String>();
+		function2human = new HashMap<>();
 		function2human.put(HumanPolicyComponent.FUNCTION_STRING_EQUAL, "equal");
 		function2human.put(HumanPolicyComponent.FUNCTION_STRING_EQUAL_IGNORE, "equal");
 		function2human.put(HumanPolicyComponent.FUNCTION_STRING_ONE_AND_ONLY, "one-and-only");
@@ -189,7 +186,7 @@ class HtmlProcessor extends SimpleCallback {
 	
 	private static Map<String, String> combiningAlgo2human;
 	static {
-		combiningAlgo2human = new HashMap<String, String>();
+		combiningAlgo2human = new HashMap<>();
 		combiningAlgo2human.put("deny-overrides", "to deny if any $placeholder$ below evaluates to <i>deny</i>");
 		combiningAlgo2human.put("permit-overrides", "to permit if any $placeholder$ below evaluates to <i>permit</i>");
 

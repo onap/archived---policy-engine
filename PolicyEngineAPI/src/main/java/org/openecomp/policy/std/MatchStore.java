@@ -34,7 +34,7 @@ import org.openecomp.policy.std.StdRemovedPolicy;
 import org.openecomp.policy.common.logging.flexlogger.*; 
 
 public class MatchStore {
-	private static HashSet<Matches> matchStore = new HashSet<Matches>();
+	private static HashSet<Matches> matchStore = new HashSet<>();
 	private static Logger logger = FlexLogger.getLogger(MatchStore.class.getName());
 	
 	public static HashSet<Matches> getMatchStore() {
@@ -115,7 +115,7 @@ public class MatchStore {
 		} 
 		if(oldNotification.getRemovedPolicies()!=null && !oldNotification.getRemovedPolicies().isEmpty()){
 			// send all removed policies to client.
-			Collection<StdRemovedPolicy> removedPolicies = new HashSet<StdRemovedPolicy>();
+			Collection<StdRemovedPolicy> removedPolicies = new HashSet<>();
 			StdRemovedPolicy newRemovedPolicy;
 			for(RemovedPolicy removedPolicy: oldNotification.getRemovedPolicies()){
 				newRemovedPolicy = new StdRemovedPolicy();
@@ -127,7 +127,7 @@ public class MatchStore {
 			removed = true;
 		}
 		if(oldNotification.getLoadedPolicies()!=null && !oldNotification.getLoadedPolicies().isEmpty()){
-			Collection<StdLoadedPolicy> updatedPolicies = new HashSet<StdLoadedPolicy>();
+			Collection<StdLoadedPolicy> updatedPolicies = new HashSet<>();
 			StdLoadedPolicy newUpdatedPolicy;
 			for(LoadedPolicy updatedPolicy: oldNotification.getLoadedPolicies()){
 				// if it is config policies check their matches..
