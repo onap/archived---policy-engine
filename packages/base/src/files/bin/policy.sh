@@ -108,6 +108,10 @@ function policy_status() {
 		component_status console
 	fi
 	
+	if check_x_file "${POLICY_HOME}/etc/init.d/elk"; then
+		component_status elk
+	fi
+	
 	if check_x_file "${POLICY_HOME}/etc/init.d/brmsgw"; then
 		component_status brmsgw
 	fi
@@ -145,6 +149,10 @@ function policy_start() {
 	
 	if check_x_file "${POLICY_HOME}/etc/init.d/console"; then
 		component_start console
+	fi
+	
+	if check_x_file "${POLICY_HOME}/etc/init.d/elk"; then
+		component_start elk
 	fi
 	
 	if check_x_file "${POLICY_HOME}/etc/init.d/brmsgw"; then
@@ -186,6 +194,10 @@ function policy_stop() {
 	
 	if check_x_file "${POLICY_HOME}/etc/init.d/console"; then
 		component_stop console
+	fi
+	
+	if check_x_file "${POLICY_HOME}/etc/init.d/elk"; then
+		component_stop elk
 	fi
 	
 	if check_x_file "${POLICY_HOME}/etc/init.d/configs"; then
