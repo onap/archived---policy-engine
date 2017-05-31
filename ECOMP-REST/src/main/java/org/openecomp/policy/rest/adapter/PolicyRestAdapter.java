@@ -55,8 +55,8 @@ public class PolicyRestAdapter {
 	private String parentPath;	
 	private boolean isValidData = false;
 	private String adminNotification = null;
-	public boolean isEditPolicy = false;
-	public boolean isViewPolicy = false;
+	private boolean isEditPolicy = false;
+	private boolean isViewPolicy = false;
 	private boolean isDraft = false;
 	private Object policyData = null;
 	private String gitPath;
@@ -97,7 +97,7 @@ public class PolicyRestAdapter {
 	private String clearTimeOut;
 	private String trapMaxAge;
 	private String verificationclearTimeOut;
-	public Map<String , String> dynamicLayoutMap;
+	private Map<String , String> dynamicLayoutMap;
 	
     //FireWall
     private String fwPolicyType;
@@ -156,7 +156,7 @@ public class PolicyRestAdapter {
     private ArrayList<Object> symptomSignatures;
     private String logicalConnector;
     private String policyStatus;
-    public String gocServerScope;
+    private String gocServerScope;
     private String supressionType;
     
     

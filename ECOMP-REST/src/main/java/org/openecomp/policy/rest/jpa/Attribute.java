@@ -58,10 +58,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @NamedQuery(name="Attribute.findAll", query="SELECT a FROM Attribute a order by  a.priority asc, a.xacmlId asc")
 public class Attribute implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final Log logger = LogFactory.getLog(Attribute.class);
 	
-	public static String	ATTRIBUTE_DESIGNATOR = "Attribute Designator";
-	public static String	ATTRIBUTE_SELECTOR = "Attribute Selector";
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -151,7 +149,7 @@ public class Attribute implements Serializable {
 		this.userModifiedBy = userModifiedBy;
 	}
 
-	private static Log LOGGER = LogFactory.getLog(Attribute.class);
+	
 	public Attribute() {
 	}
 	
@@ -159,12 +157,8 @@ public class Attribute implements Serializable {
 		this.xacmlId = domain;
 	}
 	
-	public Attribute(String domain, String user) {
-		this(domain);
-	}
-	
-	public Attribute(Attribute copy, String user) {
-		this(copy.getXacmlId() + ":(0)", user);
+	public Attribute(Attribute copy) {
+		this(copy.getXacmlId() + ":(0)");
 		this.constraintType = copy.getConstraintType();
 		this.categoryBean = copy.getCategoryBean();
 		this.datatypeBean = copy.getDatatypeBean();
@@ -189,7 +183,7 @@ public class Attribute implements Serializable {
 		try {
 			this.userModifiedBy = XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
-			LOGGER.error("Exception caused While adding Modified by Role"+e);
+			logger.error("Exception caused While adding Modified by Role"+e);
 		}
 	}
 

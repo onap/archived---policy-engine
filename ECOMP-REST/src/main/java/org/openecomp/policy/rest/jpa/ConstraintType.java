@@ -41,17 +41,17 @@ import javax.persistence.Table;
 public class ConstraintType implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public static String ENUMERATION_TYPE = "Enumeration";
-	public static String RANGE_TYPE = "Range";
-	public static String REGEXP_TYPE = "Regular Expression";
+	public static final String ENUMERATION_TYPE = "Enumeration";
+	public static final String RANGE_TYPE = "Range";
+	public static final String REGEXP_TYPE = "Regular Expression";
 	
-	public static Map<String, String> defaults = new HashMap<String, String>();
+	protected static final Map<String, String> defaults = new HashMap<>();
 	static {
 		defaults.put(ENUMERATION_TYPE, "Enumerate a set of values that the attribute may be set to during policy creation.");
 		defaults.put(RANGE_TYPE, "Set a range of min and/or max integer/double values the attribute can be set to during policy creation.");
 		defaults.put(REGEXP_TYPE, "Define a regular expression the attribute must match against during policy creation.");
 	}
-	public static final String[] RANGE_TYPES = {"minExclusive", "minInclusive", "maxExclusive", "maxInclusive"};
+	protected static final String[] RANGE_TYPES = {"minExclusive", "minInclusive", "maxExclusive", "maxInclusive"};
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

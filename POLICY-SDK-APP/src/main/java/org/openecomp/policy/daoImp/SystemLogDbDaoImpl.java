@@ -49,7 +49,7 @@ public class SystemLogDbDaoImpl implements SystemLogDbDao {
 		Transaction tx = session.beginTransaction();
 		List<SystemLogDB> system = null;
         try {
-        	String sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) ORDER BY date DESC limit "+PolicyController.logTableLimit+"";
+        	String sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) ORDER BY date DESC limit "+PolicyController.getLogTableLimit()+"";
         	Criteria cr = session.createCriteria(SystemLogDB.class);
         	cr.add(Restrictions.sqlRestriction(sqlWhere));
             system = cr.list();
@@ -73,7 +73,7 @@ public class SystemLogDbDaoImpl implements SystemLogDbDao {
 		Transaction tx = session.beginTransaction();
 		List<SystemLogDB> system = null;
         try {
-        	String sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) and logtype = 'error' ORDER BY date DESC limit "+PolicyController.systemAlertTableLimit+"";
+        	String sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) and logtype = 'error' ORDER BY date DESC limit "+PolicyController.getSystemAlertTableLimit()+"";
         	Criteria cr = session.createCriteria(SystemLogDB.class);
         	cr.add(Restrictions.sqlRestriction(sqlWhere));
             system = cr.list();

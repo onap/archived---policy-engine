@@ -38,7 +38,7 @@ import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 public class Webapps {
 	private static String actionHome = null;
 	private static String configHome = null;
-	private static Log LOGGER	= LogFactory.getLog(Webapps.class);
+	private static Log logger	= LogFactory.getLog(Webapps.class);
 	
 	private Webapps() {
 	}
@@ -47,6 +47,7 @@ public class Webapps {
 		try {
 			loadWebapps();
 		} catch (Exception e) {
+			logger.error("Exception Occured while loading webapps"+e);
 			return null;
 		}
 		return configHome;
@@ -56,54 +57,58 @@ public class Webapps {
 		try {
 			loadWebapps();
 		} catch (Exception e) {
+			logger.error("Exception Occured while loading webapps"+e);
 			return null;
 		}
 		return actionHome;
 	}
 	
 	private static void loadWebapps() throws Exception{
+		String errorMessageName = "Invalid Webapps Path Location property :";
 		if(actionHome == null || configHome == null){
 			Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));
 			//Sanity Check
 			if (webappsPath == null) {
-				LOGGER.error("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
-				PolicyLogger.error("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
-				throw new Exception("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
+				logger.error(errorMessageName + XACMLRestProperties.PROP_PAP_WEBAPPS);
+				PolicyLogger.error(errorMessageName + XACMLRestProperties.PROP_PAP_WEBAPPS);
+				throw new Exception(errorMessageName + XACMLRestProperties.PROP_PAP_WEBAPPS);
 			}
 			Path webappsPathConfig;
 			Path webappsPathAction;
-			if(webappsPath.toString().contains("\\"))
-			{
+			if(webappsPath.toString().contains("\\")){
 				webappsPathConfig = Paths.get(webappsPath.toString()+"\\Config");
 				webappsPathAction = Paths.get(webappsPath.toString()+"\\Action");
-			}
-			else
-			{
+			}else{
 				webappsPathConfig = Paths.get(webappsPath.toString()+"/Config");
 				webappsPathAction = Paths.get(webappsPath.toString()+"/Action");
 			}
-			if (Files.notExists(webappsPathConfig)) 
-			{
-				try {
-					Files.createDirectories(webappsPathConfig);
-				} catch (IOException e) {
-					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create config directory: "
-							+ webappsPathConfig.toAbsolutePath().toString(), e);
-					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Webapps", "Failed to create config directory");
-				}
-			}
-			if (Files.notExists(webappsPathAction)) 
-			{
-				try {
-					Files.createDirectories(webappsPathAction);
-				} catch (IOException e) {
-					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create config directory: "
-							+ webappsPathAction.toAbsolutePath().toString(), e);
-					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Webapps", "Failed to create config directory");
-				}
-			}
+			
+			checkConfigActionHomeExists(webappsPathConfig, webappsPathAction);
+			
 			actionHome = webappsPathAction.toString();
 			configHome = webappsPathConfig.toString();
+		}
+	}
+	
+	private  static void checkConfigActionHomeExists(Path webappsPathConfig, Path webappsPathAction){
+		if (!webappsPathConfig.toFile().exists()){
+			try {
+				Files.createDirectories(webappsPathConfig);
+			} catch (IOException e) {
+				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create config directory: "
+						+ webappsPathConfig.toAbsolutePath().toString(), e);
+				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Webapps", "Failed to create config directory");
+			}
+		}
+		
+		if (!webappsPathAction.toFile().exists()){
+			try {
+				Files.createDirectories(webappsPathAction);
+			} catch (IOException e) {
+				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create config directory: "
+						+ webappsPathAction.toAbsolutePath().toString(), e);
+				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Webapps", "Failed to create config directory");
+			}
 		}
 	}
 

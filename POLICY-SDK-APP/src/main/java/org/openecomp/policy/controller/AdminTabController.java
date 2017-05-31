@@ -51,9 +51,25 @@ public class AdminTabController extends RestrictedBaseController{
 
 	private static final Logger LOGGER	= FlexLogger.getLogger(AdminTabController.class);
 	
+	private static CommonClassDao commonClassDao;
+	
+	public static CommonClassDao getCommonClassDao() {
+		return commonClassDao;
+	}
+
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
+		AdminTabController.commonClassDao = commonClassDao;
+	}
+	
 	@Autowired
-	CommonClassDao commonClassDao;
+	private AdminTabController(CommonClassDao commonClassDao){
+		AdminTabController.commonClassDao = commonClassDao;
+	}
 		
+	public AdminTabController() {
+		//default constructor
+	}
+
 	@RequestMapping(value={"/get_LockDownData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getAdminTabEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -92,6 +108,7 @@ public class AdminTabController extends RestrictedBaseController{
 			return null;
 		}
 		catch (Exception e){
+			LOGGER.error("Exception Occured"+e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();

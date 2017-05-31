@@ -86,7 +86,18 @@ public class DashboardController  extends RestrictedBaseController{
 	private ArrayList<Object> papStatusData;
 	private ArrayList<Object> policyActivityData;
 	
+	private PolicyController policyController;
+	public PolicyController getPolicyController() {
+		return policyController;
+	}
 
+	public void setPolicyController(PolicyController policyController) {
+		this.policyController = policyController;
+	}
+	
+	private PolicyController getPolicyControllerInstance(){
+		return policyController != null ? getPolicyController() : new PolicyController();
+	}
 	
 	@RequestMapping(value={"/get_DashboardLoggingData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getData(HttpServletRequest request, HttpServletResponse response){
@@ -141,7 +152,8 @@ public class DashboardController  extends RestrictedBaseController{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-			this.pdpConatiner = new PDPGroupContainer(PolicyController.getPapEngine());
+			PolicyController controller = getPolicyControllerInstance();
+			this.pdpConatiner = new PDPGroupContainer(controller.getPapEngine());
 			addPDPToTable();
 			model.put("pdpTableDatas", mapper.writeValueAsString(pdpStatusData));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -159,7 +171,8 @@ public class DashboardController  extends RestrictedBaseController{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-			this.pdpConatiner = new PDPGroupContainer(PolicyController.getPapEngine());
+			PolicyController controller = getPolicyControllerInstance();
+			this.pdpConatiner = new PDPGroupContainer(controller.getPapEngine());
 			addPolicyToTable();
 			model.put("policyActivityTableDatas", mapper.writeValueAsString(policyActivityData));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
@@ -178,7 +191,8 @@ public class DashboardController  extends RestrictedBaseController{
 		papStatusData = new ArrayList<>();
 		String papStatus = null;
 		try {
-			Set<EcompPDPGroup> groups = PolicyController.getPapEngine().getEcompPDPGroups();
+			PolicyController controller = getPolicyControllerInstance();
+			Set<EcompPDPGroup> groups = controller.getPapEngine().getEcompPDPGroups();
 			if (groups == null) {
 				papStatus = "UNKNOWN";
 				throw new PAPException("PAP not running");		

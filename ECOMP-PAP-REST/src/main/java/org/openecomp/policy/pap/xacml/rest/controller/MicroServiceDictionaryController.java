@@ -86,7 +86,7 @@ public class MicroServiceDictionaryController {
     
 	
 
-	MSModelUtils utils = new MSModelUtils(XACMLPapServlet.msEcompName, XACMLPapServlet.msPolicyName);
+	MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsEcompName(), XACMLPapServlet.getMsPolicyName());
 	private MicroServiceModels newModel;
 	
 	

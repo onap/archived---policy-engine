@@ -69,6 +69,8 @@ import org.openecomp.policy.common.logging.flexlogger.Logger;
  */
 public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyEngine {
 	private static final Logger LOGGER	= FlexLogger.getLogger(RESTfulPAPEngine.class);
+	
+	private static final String groupID = "groupId=";
 
 	//
 	// URL of the PAP Servlet that this Admin Console talks to
@@ -113,28 +115,26 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 	
 	@Override
 	public EcompPDPGroup getDefaultGroup() throws PAPException {
-		EcompPDPGroup newGroup = (EcompPDPGroup)sendToPAP("GET", null, null, StdPDPGroup.class, "groupId=", "default=");
-		return newGroup;
+		return (EcompPDPGroup)sendToPAP("GET", null, null, StdPDPGroup.class, groupID, "default=");
 	}
 
 	@Override
 	public void SetDefaultGroup(EcompPDPGroup group) throws PAPException {
-		sendToPAP("POST", null, null, null, "groupId=" + group.getId(), "default=true");
+		sendToPAP("POST", null, null, null, groupID + group.getId(), "default=true");
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Set<EcompPDPGroup> getEcompPDPGroups() throws PAPException {
 		Set<EcompPDPGroup> newGroupSet;
-		newGroupSet = (Set<EcompPDPGroup>) this.sendToPAP("GET", null, Set.class, StdPDPGroup.class, "groupId=");
+		newGroupSet = (Set<EcompPDPGroup>) this.sendToPAP("GET", null, Set.class, StdPDPGroup.class, groupID);
 		return Collections.unmodifiableSet(newGroupSet);
 	}
 
 
 	@Override
 	public EcompPDPGroup getGroup(String id) throws PAPException {
-		EcompPDPGroup newGroup = (EcompPDPGroup)sendToPAP("GET", null, null, StdPDPGroup.class, "groupId=" + id);
-		return newGroup;
+		return (EcompPDPGroup)sendToPAP("GET", null, null, StdPDPGroup.class, groupID + id);
 	}
 
 	@Override
@@ -146,10 +146,10 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 			escapedName = URLEncoder.encode(name, "UTF-8");
 			escapedDescription = URLEncoder.encode(description, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new PAPException("Unable to send name or description to PAP: " + e.getMessage());
+			throw new PAPException("Unable to send name or description to PAP: " + e.getMessage()  +e);
 		}
 		
-		this.sendToPAP("POST", null, null, null, "groupId=", "groupName="+escapedName, "groupDescription=" + escapedDescription);
+		this.sendToPAP("POST", null, null, null, groupID, "groupName="+escapedName, "groupDescription=" + escapedDescription);
 	}
 	
 	
@@ -178,7 +178,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 			
 			// now update the group object on the PAP
 			
-			sendToPAP("PUT", group, null, null, "groupId=" + group.getId());
+			sendToPAP("PUT", group, null, null, groupID + group.getId());
 		} catch (Exception e) {
 			String message = "Unable to PUT policy '" + group.getId() + "', e:" + e;
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);
@@ -194,7 +194,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 		if (newGroup != null) {
 			moveToGroupString = "movePDPsToGroupId=" + newGroup.getId();
 		}
-		sendToPAP("DELETE", null, null, null, "groupId=" + group.getId(), moveToGroupString);
+		sendToPAP("DELETE", null, null, null, groupID + group.getId(), moveToGroupString);
 	}
 	
 	@Override
@@ -204,41 +204,39 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 
 	
 	public EcompPDPGroup getPDPGroup(String pdpId) throws PAPException {
-		EcompPDPGroup newGroup = (EcompPDPGroup)sendToPAP("GET", null, null, StdPDPGroup.class, "groupId=", "pdpId=" + pdpId, "getPDPGroup=");
-		return newGroup;
+		return (EcompPDPGroup)sendToPAP("GET", null, null, StdPDPGroup.class, groupID, "pdpId=" + pdpId, "getPDPGroup=");
 	}
 
 	@Override
 	public EcompPDP getPDP(String pdpId) throws PAPException {
-		EcompPDP newPDP = (EcompPDP)sendToPAP("GET", null, null, StdPDP.class, "groupId=", "pdpId=" + pdpId);
-		return newPDP;
+		return (EcompPDP)sendToPAP("GET", null, null, StdPDP.class, groupID, "pdpId=" + pdpId);
 	}
 	
 	@Override
 	public void newPDP(String id, EcompPDPGroup group, String name, String description, int jmxport) throws PAPException,
 			NullPointerException {
 		StdPDP newPDP = new StdPDP(id, name, description, jmxport);
-		sendToPAP("PUT", newPDP, null, null, "groupId=" + group.getId(), "pdpId=" + id);
+		sendToPAP("PUT", newPDP, null, null, groupID + group.getId(), "pdpId=" + id);
 		return;
 	}
 
 	@Override
 	public void movePDP(EcompPDP pdp, EcompPDPGroup newGroup) throws PAPException {
-		sendToPAP("POST", null, null, null, "groupId=" + newGroup.getId(), "pdpId=" + pdp.getId());
+		sendToPAP("POST", null, null, null, groupID + newGroup.getId(), "pdpId=" + pdp.getId());
 		return;
 	}
 
 	@Override
 	public void updatePDP(EcompPDP pdp) throws PAPException {
 		EcompPDPGroup group = getPDPGroup(pdp);
-		sendToPAP("PUT", pdp, null, null, "groupId=" + group.getId(), "pdpId=" + pdp.getId());
+		sendToPAP("PUT", pdp, null, null, groupID + group.getId(), "pdpId=" + pdp.getId());
 		return;
 	}
 	
 	@Override
 	public void removePDP(EcompPDP pdp) throws PAPException {
 		EcompPDPGroup group = getPDPGroup(pdp);
-		sendToPAP("DELETE", null, null, null, "groupId=" + group.getId(), "pdpId=" + pdp.getId());
+		sendToPAP("DELETE", null, null, null, groupID + group.getId(), "pdpId=" + pdp.getId());
 		return;
 	}
 	
@@ -285,7 +283,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 	public void copyFile(String policyId, EcompPDPGroup group, InputStream policy) throws PAPException {
 		// send the policy file to the PAP Servlet
 		try {
-			sendToPAP("POST", policy, null, null, "groupId=" + group.getId(), "policyId="+policyId);
+			sendToPAP("POST", policy, null, null, groupID + group.getId(), "policyId="+policyId);
 		} catch (Exception e) {
 			String message = "Unable to PUT policy '" + policyId + "', e:" + e;
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);
@@ -325,8 +323,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 	 */
 	
 	public PDPStatus getStatus(EcompPDP pdp) throws PAPException {
-		StdPDPStatus status = (StdPDPStatus)sendToPAP("GET", pdp, null, StdPDPStatus.class);
-		return status;
+		return (StdPDPStatus)sendToPAP("GET", pdp, null, StdPDPStatus.class);
 	}
 	
 	
@@ -356,7 +353,6 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 		String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
 		LOGGER.info("User Id is " + papID);
 		String papPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
-		LOGGER.info("Pass is: " + papPass);
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
 		LOGGER.info("Encoding for the PAP is: " + encoding);
@@ -419,7 +415,6 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 		    			}
 		    		} catch (Exception e) {
 		    			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to write content in '" + method + "'", e);
-		    			throw e;
 		    		}
 				} else {
 					// The content is an object to be encoded in JSON
@@ -504,20 +499,14 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 			throw new PAPException("Request/Response threw :" + e);
 		} finally {
 			// cleanup the connection
-				if (connection != null) {
+			if (connection != null) {
 				try {
 					// For some reason trying to get the inputStream from the connection
 					// throws an exception rather than returning null when the InputStream does not exist.
-					InputStream is = null;
-					try {
-						is = connection.getInputStream();
-					} catch (Exception e1) {
-						// ignore this
-					}
+					InputStream is = connection.getInputStream();
 					if (is != null) {
 						is.close();
 					}
-
 				} catch (IOException ex) {
 					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to close connection: " + ex, ex);
 				}

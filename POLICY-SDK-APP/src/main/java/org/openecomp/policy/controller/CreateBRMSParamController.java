@@ -70,7 +70,7 @@ import org.openecomp.policy.common.logging.flexlogger.Logger;
 @Controller
 @RequestMapping("/")
 public class CreateBRMSParamController extends RestrictedBaseController {
-	private static final Logger logger = FlexLogger.getLogger(CreateBRMSParamController.class);
+	private static final Logger policyLogger = FlexLogger.getLogger(CreateBRMSParamController.class);
 
 	private static CommonClassDao commonClassDao;
 
@@ -80,10 +80,12 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 	}
 
 	public CreateBRMSParamController(){}
-	protected PolicyRestAdapter policyAdapter = null;
-	private ArrayList<Object> attributeList;
+	protected PolicyRestAdapter policyAdapter = null; 
 
 	private HashMap<String, String> dynamicLayoutMap;
+	
+	private static String brmsTemplateVlaue = "<$%BRMSParamTemplate=";
+	private static String String = "String";
 
 
 	@RequestMapping(value={"/policyController/getBRMSTemplateData.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
@@ -92,11 +94,11 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		JsonNode root = mapper.readTree(request.getReader());
-		String rule = findRule(root.get("policyData").toString().replaceAll("^\"|\"$", ""));
+		String rule = findRule(root.get(PolicyController.getPolicydata()).toString().replaceAll("^\"|\"$", ""));
 		generateUI(rule);
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("application / json");
-		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding(PolicyController.getCharacterencoding());
+		response.setContentType(PolicyController.getContenttype());
+		request.setCharacterEncoding(PolicyController.getCharacterencoding());
 
 		PrintWriter out = response.getWriter();
 		String responseString = mapper.writeValueAsString(dynamicLayoutMap);
@@ -119,7 +121,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 	protected void generateUI(String rule) {
 		if(rule!=null){
 			try {
-				String params = "";
+				StringBuilder params = new StringBuilder("");
 				Boolean flag = false;
 				Boolean comment = false;
 				String lines[] = rule.split("\n");
@@ -142,6 +144,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 								line = line.split("\\/\\*")[0]
 										+ line.split("\\*\\/")[1].replace("*/", "");
 							} catch (Exception e) {
+								policyLogger.info("Just for Logging"+e);
 								line = line.split("\\/\\*")[0];
 							}
 						} else {
@@ -153,6 +156,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 						try {
 							line = line.split("\\*\\/")[1].replace("*/", "");
 						} catch (Exception e) {
+							policyLogger.info("Just for Logging"+e);
 							line = "";
 						}
 					}
@@ -160,38 +164,38 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 						continue;
 					}
 					if (flag) {
-						params = params + line;
+						params.append(line);
 					}
 					if (line.contains("declare Params")) {
-						params = params + line;
+						params.append(line);
 						flag = true;
 					}
 					if (line.contains("end") && flag) {
 						break;
 					}
 				}
-				params = params.replace("declare Params", "").replace("end", "")
-						.replaceAll("\\s+", "");
-				String[] components = params.split(":");
+				params = new StringBuilder(params.toString().replace("declare Params", "").replace("end", "").replaceAll("\\s+", ""));
+				String[] components = params.toString().split(":");
 				String caption = "";
 				for (int i = 0; i < components.length; i++) {
 					String type = "";
 					if (i == 0) {
 						caption = components[i];
 					}
-					if(caption.equals("")){
+					if("".equals(caption)){
 						break;
 					}
 					String nextComponent = "";
 					try {
 						nextComponent = components[i + 1];
 					} catch (Exception e) {
+						policyLogger.info("Just for Logging"+e);
 						nextComponent = components[i];
 					}
-					if (nextComponent.startsWith("String")) {
+					if (nextComponent.startsWith(String)) {
 						type = "String";
 						createField(caption, type);
-						caption = nextComponent.replace("String", "");
+						caption = nextComponent.replace(String, "");
 					} else if (nextComponent.startsWith("int")) {
 						type = "int";
 						createField(caption, type);
@@ -199,7 +203,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 					}
 				}
 			} catch (Exception e) {
-				logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
+				policyLogger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 			}
 		}
 	}
@@ -208,10 +212,11 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 		dynamicLayoutMap.put(caption, type);
 	}
 
-
-	@SuppressWarnings("unchecked")
+	/*
+	 * When the User Click Edit or View Policy the following method will get invoked for setting the data to PolicyRestAdapter.
+	 * Which is used to bind the data in GUI
+	 */
 	public void prePopulateBRMSParamPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-		attributeList = new ArrayList<>();
 		dynamicLayoutMap = new HashMap<>();
 		if (policyAdapter.getPolicyData() instanceof PolicyType) {
 			PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
@@ -219,101 +224,116 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			// policy name value is the policy name without any prefix and
 			// Extensions.
 			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("BRMS_Param_") + 11);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Prepopulating form data for BRMS RAW Policy selected:" + policyAdapter.getPolicyName());
+			if (policyLogger.isDebugEnabled()) {
+				policyLogger.debug("Prepopulating form data for BRMS RAW Policy selected:" + policyAdapter.getPolicyName());
 			}
 			policyAdapter.setPolicyName(policyNameValue);
 			String description = "";
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
+				policyLogger.info("Just for Logging"+e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);
-			// Set Attributes. 
-			AdviceExpressionsType expressionTypes = ((RuleType)policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().get(0)).getAdviceExpressions();
-			for( AdviceExpressionType adviceExpression: expressionTypes.getAdviceExpression()){
-				for(AttributeAssignmentExpressionType attributeAssignment: adviceExpression.getAttributeAssignmentExpression()){
-					if(attributeAssignment.getAttributeId().startsWith("key:")){
-						Map<String, String> attribute = new HashMap<>();
-						String key = attributeAssignment.getAttributeId().replace("key:", "");
-						attribute.put("key", key);
-						JAXBElement<AttributeValueType> attributevalue = (JAXBElement<AttributeValueType>) attributeAssignment.getExpression();
-						String value = (String) attributevalue.getValue().getContent().get(0);
-						attribute.put("value", value);
-						attributeList.add(attribute);
-                    }else if(attributeAssignment.getAttributeId().startsWith("dependencies:")){
-                        ArrayList<String> dependencies = new ArrayList<String>(Arrays.asList(attributeAssignment.getAttributeId().replace("dependencies:", "").split(",")));
-                        if(dependencies.contains("")){
-                            dependencies.remove("");
-                        }
-                        policyAdapter.setBrmsDependency(dependencies);
-                    }else if(attributeAssignment.getAttributeId().startsWith("controller:")){
-                        policyAdapter.setBrmsController(attributeAssignment.getAttributeId().replace("controller:", ""));
-					}
-				}
-				policyAdapter.setAttributes(attributeList);
-			}
+			setDataAdapterFromAdviceExpressions(policy, policyAdapter);
 			paramUIGenerate(policyAdapter, entity);
 			// Get the target data under policy.
 			policyAdapter.setDynamicLayoutMap(dynamicLayoutMap);
 			if(policyAdapter.getDynamicLayoutMap().size() > 0){
 				LinkedHashMap<String,String> drlRule = new LinkedHashMap<>();
 				for(Object keyValue: policyAdapter.getDynamicLayoutMap().keySet()){
-					drlRule.put(keyValue.toString(), policyAdapter.getDynamicLayoutMap().get(keyValue).toString());
+					drlRule.put(keyValue.toString(), policyAdapter.getDynamicLayoutMap().get(keyValue));
 				}
 				policyAdapter.setRuleData(drlRule);
 			}	
 			TargetType target = policy.getTarget();
 			if (target != null) {
-				// Under target we have AnyOFType
-				List<AnyOfType> anyOfList = target.getAnyOf();
-				if (anyOfList != null) {
-					Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
-					while (iterAnyOf.hasNext()) {
-						AnyOfType anyOf = iterAnyOf.next();
-						// Under AnyOFType we have AllOFType
-						List<AllOfType> allOfList = anyOf.getAllOf();
-						if (allOfList != null) {
-							Iterator<AllOfType> iterAllOf = allOfList.iterator();
-							while (iterAllOf.hasNext()) {
-								AllOfType allOf = iterAllOf.next();
-								// Under AllOFType we have Match
-								List<MatchType> matchList = allOf.getMatch();
-								if (matchList != null) {
-									Iterator<MatchType> iterMatch = matchList.iterator();
-									while (iterMatch.hasNext()) {
-										MatchType match = iterMatch.next();
-										//
-										// Under the match we have attribute value and
-										// attributeDesignator. So,finally down to the actual attribute.
-										//
-										AttributeValueType attributeValue = match.getAttributeValue();
-										String value = (String) attributeValue.getContent().get(0);
-										AttributeDesignatorType designator = match.getAttributeDesignator();
-										String attributeId = designator.getAttributeId();
-
-										if (attributeId.equals("RiskType")){
-											policyAdapter.setRiskType(value);
-										}
-										if (attributeId.equals("RiskLevel")){
-											policyAdapter.setRiskLevel(value);
-										}
-										if (attributeId.equals("guard")){
-											policyAdapter.setGuard(value);
-										}
-										if (attributeId.equals("TTLDate") && !value.contains("NA")){
-											String newDate = convertDate(value, true);
-											policyAdapter.setTtlDate(newDate);
-										}
-									}
-								}
-							}
+				setDataToAdapterFromTarget(target, policyAdapter);
+			}
+		} 		
+	}
+	
+	private void setDataAdapterFromAdviceExpressions(PolicyType policy, PolicyRestAdapter policyAdapter){
+		ArrayList<Object> attributeList = new ArrayList<>();
+		// Set Attributes. 
+		AdviceExpressionsType expressionTypes = ((RuleType)policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().get(0)).getAdviceExpressions();
+		for( AdviceExpressionType adviceExpression: expressionTypes.getAdviceExpression()){
+			for(AttributeAssignmentExpressionType attributeAssignment: adviceExpression.getAttributeAssignmentExpression()){
+				if(attributeAssignment.getAttributeId().startsWith("key:")){
+					Map<String, String> attribute = new HashMap<>();
+					String key = attributeAssignment.getAttributeId().replace("key:", "");
+					attribute.put("key", key);
+					@SuppressWarnings("unchecked")
+					JAXBElement<AttributeValueType> attributevalue = (JAXBElement<AttributeValueType>) attributeAssignment.getExpression();
+					String value = (String) attributevalue.getValue().getContent().get(0);
+					attribute.put("value", value);
+					attributeList.add(attribute);
+				}else if(attributeAssignment.getAttributeId().startsWith("dependencies:")){
+					ArrayList<String> dependencies = new ArrayList<>(Arrays.asList(attributeAssignment.getAttributeId().replace("dependencies:", "").split(",")));
+					if(dependencies.contains("")){
+						dependencies.remove("");
+					}
+					policyAdapter.setBrmsDependency(dependencies);
+				}else if(attributeAssignment.getAttributeId().startsWith("controller:")){
+					policyAdapter.setBrmsController(attributeAssignment.getAttributeId().replace("controller:", ""));
+				}
+			}
+			policyAdapter.setAttributes(attributeList);
+		}
+	}
+	
+	private void setDataToAdapterFromTarget(TargetType target, PolicyRestAdapter policyAdapter){
+		// Under target we have AnyOFType
+		List<AnyOfType> anyOfList = target.getAnyOf();
+		if (anyOfList != null) {
+			Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
+			while (iterAnyOf.hasNext()) {
+				AnyOfType anyOf = iterAnyOf.next();
+				// Under AnyOFType we have AllOFType
+				List<AllOfType> allOfList = anyOf.getAllOf();
+				if (allOfList != null) {
+					Iterator<AllOfType> iterAllOf = allOfList.iterator();
+					while (iterAllOf.hasNext()) {
+						AllOfType allOf = iterAllOf.next();
+						// Under AllOFType we have Match
+						List<MatchType> matchList = allOf.getMatch();
+						if (matchList != null) {
+							setDataToAdapterFromMatchList(matchList, policyAdapter);
 						}
 					}
 				}
 			}
-		} 		
+		}
+	}
+	
+	private void setDataToAdapterFromMatchList(List<MatchType> matchList, PolicyRestAdapter policyAdapter){
+		Iterator<MatchType> iterMatch = matchList.iterator();
+		while (iterMatch.hasNext()) {
+			MatchType match = iterMatch.next();
+			//
+			// Under the match we have attribute value and
+			// attributeDesignator. So,finally down to the actual attribute.
+			//
+			AttributeValueType attributeValue = match.getAttributeValue();
+			String value = (String) attributeValue.getContent().get(0);
+			AttributeDesignatorType designator = match.getAttributeDesignator();
+			String attributeId = designator.getAttributeId();
+
+			if ("RiskType".equals(attributeId)){
+				policyAdapter.setRiskType(value);
+			}
+			if ("RiskLevel".equals(attributeId)){
+				policyAdapter.setRiskLevel(value);
+			}
+			if ("guard".equals(attributeId)){
+				policyAdapter.setGuard(value);
+			}
+			if ("TTLDate".equals(attributeId) && !value.contains("NA")){
+				String newDate = convertDate(value, true);
+				policyAdapter.setTtlDate(newDate);
+			}
+		}
 	}
 
 	private String convertDate(String dateTTL, boolean portalType) {
@@ -336,26 +356,24 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 		String data = entity.getConfigurationData().getConfigBody();
 		if(data != null){
 			try {	
-				String params = "";
+				StringBuilder params = new StringBuilder("");
 				Boolean flag = false;
 				Boolean comment = false;
 				for (String line : data.split("\n")) {
 					if (line.isEmpty() || line.startsWith("//")) {
 						continue;
 					}
-					if(line.contains("<$%BRMSParamTemplate=")){
+					if(line.contains(brmsTemplateVlaue)){
 						String value = line.substring(line.indexOf("<$%"),line.indexOf("%$>"));
-						value = value.replace("<$%BRMSParamTemplate=", "");
+						value = value.replace(brmsTemplateVlaue, "");
 						policyAdapter.setRuleName(value);
 					}
 					if (line.startsWith("/*")) {
 						comment = true;
 						continue;
 					}
-					if (line.contains("//")) {
-						if(!(line.contains("http://") || line.contains("https://"))){
-							line = line.split("\\/\\/")[0];
-						}
+					if ((line.contains("//"))&&(!(line.contains("http://") || line.contains("https://")))){
+						line = line.split("\\/\\/")[0];
 					}
 					if (line.contains("/*")) {
 						comment = true;
@@ -366,6 +384,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 										+ line.split("\\*\\/")[1].replace(
 												"*/", "");
 							} catch (Exception e) {
+								policyLogger.info("Just for Logging"+e);
 								line = line.split("\\/\\*")[0];
 							}
 						} else {
@@ -378,6 +397,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 							line = line.split("\\*\\/")[1]
 									.replace("*/", "");
 						} catch (Exception e) {
+							policyLogger.info("Just for Logging"+e);
 							line = "";
 						}
 					}
@@ -385,26 +405,27 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 						continue;
 					}
 					if (flag) {
-						params = params + line;
+						params.append(line);
 					}
 					if (line.contains("rule") && line.contains(".Params\"")) {
-						params = params + line;
+						params.append(line);
 						flag = true;
 					}
 					if (line.contains("end") && flag) {
 						break;
 					}
 				}
-				params = params.substring(params.indexOf(".Params\"")+ 8);
-                params = params.replaceAll("\\s+", "").replace("salience1000whenthenParamsparams=newParams();","")
+				params = new StringBuilder(params.substring(params.indexOf(".Params\"")+ 8));
+				params = new StringBuilder(params.toString().replaceAll("\\s+", "").replace("salience1000whenthenParamsparams=newParams();","")
                         .replace("insert(params);end", "")
-                        .replace("params.set", "");
-				String[] components = params.split(";");
+                        .replace("params.set", ""));
+				String[] components = params.toString().split("\\);");
 				if(components!= null && components.length > 0){
 					for (int i = 0; i < components.length; i++) {
 						String value = null;
+						components[i] = components[i]+")";
 						String caption = components[i].substring(0,
-								components[i].indexOf("("));
+								components[i].indexOf('('));
 						caption = caption.substring(0, 1).toLowerCase() + caption.substring(1);
 						if (components[i].contains("(\"")) {
 							value = components[i]
@@ -413,8 +434,8 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 									.replace("(\"", "").replace("\")", "");
 						} else {
 							value = components[i]
-									.substring(components[i].indexOf("("),
-											components[i].indexOf(")"))
+									.substring(components[i].indexOf('('),
+											components[i].indexOf(')'))
 									.replace("(", "").replace(")", "");
 						}
 						dynamicLayoutMap.put(caption, value);
@@ -422,7 +443,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 					}
 				}
 			} catch (Exception e) {
-				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage());
+				policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage() + e);
 			} 
 		}
 		
@@ -436,37 +457,37 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			PolicyRestAdapter policyData = (PolicyRestAdapter)mapper.readValue(root.get("policyData").get("policy").toString(), PolicyRestAdapter.class);
-			policyData.setDomainDir(root.get("policyData").get("model").get("name").toString().replace("\"", ""));
-			if(root.get("policyData").get("model").get("type").toString().replace("\"", "").equals("file")){
-				policyData.isEditPolicy = true;
+			PolicyRestAdapter policyData = mapper.readValue(root.get(PolicyController.getPolicydata()).get("policy").toString(), PolicyRestAdapter.class);
+			policyData.setDomainDir(root.get(PolicyController.getPolicydata()).get("model").get("name").toString().replace("\"", ""));
+			if(root.get(PolicyController.getPolicydata()).get("model").get("type").toString().replace("\"", "").equals(PolicyController.getFile())){
+				policyData.setEditPolicy(true);
 			}
 
 			String body = "";
 
 			body = "/* Autogenerated Code Please Don't change/remove this comment section. This is for the UI purpose. \n\t " +
-					"<$%BRMSParamTemplate=" + policyData.getRuleName() + "%$> \n */ \n";
+					brmsTemplateVlaue + policyData.getRuleName() + "%$> \n */ \n";
 			body = body + findRule((String) policyData.getRuleName()) + "\n";
-			String generatedRule = "rule \""+ policyData.getDomainDir().replace("\\", ".") +".Config_BRMS_Param_" + policyData.getPolicyName()+".Params\" \n\tsalience 1000 \n\twhen\n\tthen\n\t\tParams params = new Params();";
+			StringBuilder generatedRule = new StringBuilder();
+			generatedRule.append("rule \""+ policyData.getDomainDir().replace("\\", ".") +".Config_BRMS_Param_" + policyData.getPolicyName()+".Params\" \n\tsalience 1000 \n\twhen\n\tthen\n\t\tParams params = new Params();");
 
 			if(policyData.getRuleData().size() > 0){ 
 				for(Object keyValue: policyData.getRuleData().keySet()){ 
 					String key = keyValue.toString().substring(0, 1).toUpperCase() + keyValue.toString().substring(1); 
-					if (keyValue.equals("String")) { 
-						generatedRule = generatedRule + "\n\t\tparams.set" 
+					if (String.equals(keyValue)) { 
+						generatedRule.append("\n\t\tparams.set" 
 								+ key + "(\"" 
-								+ policyData.getRuleData().get(keyValue).toString() + "\");"; 
+								+ policyData.getRuleData().get(keyValue).toString() + "\");"); 
 					} else { 
-						generatedRule = generatedRule + "\n\t\tparams.set" 
+						generatedRule.append("\n\t\tparams.set" 
 								+ key + "(" 
-								+ policyData.getRuleData().get(keyValue).toString() + ");"; 
+								+ policyData.getRuleData().get(keyValue).toString() + ");"); 
 					} 
 				} 
 			}
-			generatedRule = generatedRule
-					+ "\n\t\tinsert(params);\nend";
-			logger.info("New rule generated with :" + generatedRule);
-			body = body + generatedRule;
+			generatedRule.append("\n\t\tinsert(params);\nend");
+			policyLogger.info("New rule generated with :" + generatedRule.toString());
+			body = body + generatedRule.toString();
 			// Expand the body. 
 			Map<String,String> copyMap=new HashMap<>();
 			copyMap.putAll((Map<? extends String, ? extends String>) policyData.getRuleData());
@@ -499,7 +520,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			out.write(j.toString());
 			return null;
 		} catch (Exception e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+			policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
 		return null;	
 	}

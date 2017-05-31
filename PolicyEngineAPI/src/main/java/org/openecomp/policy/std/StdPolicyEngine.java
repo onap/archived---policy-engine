@@ -82,7 +82,7 @@ import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.models.APIDictionaryResponse;
 import org.openecomp.policy.models.APIPolicyConfigResponse;
-import org.openecomp.policy.utils.AAFPolicyClient.Environment;
+import org.openecomp.policy.utils.AAFEnvironment;
 import org.openecomp.policy.utils.PolicyUtils;
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.core.io.FileSystemResource;
@@ -902,13 +902,13 @@ public class StdPolicyEngine {
 				pass = clientKey.trim();
 			}
 			setClientEncoding();
-			environment = prop.getProperty("ENVIRONMENT", Environment.DEVL.toString());
-			if(environment.equalsIgnoreCase(Environment.TEST.toString())){
-				environment = Environment.TEST.toString();
-			}else if(environment.equalsIgnoreCase(Environment.PROD.toString())){
-				environment = Environment.PROD.toString();
+			environment = prop.getProperty("ENVIRONMENT", AAFEnvironment.DEVL.toString());
+			if(environment.equalsIgnoreCase(AAFEnvironment.TEST.toString())){
+				environment = AAFEnvironment.TEST.toString();
+			}else if(environment.equalsIgnoreCase(AAFEnvironment.PROD.toString())){
+				environment = AAFEnvironment.PROD.toString();
 			}else{
-				environment = Environment.DEVL.toString();
+				environment = AAFEnvironment.DEVL.toString();
 			}
 			// Initializing the values.
 			pdps = new ArrayList<>();

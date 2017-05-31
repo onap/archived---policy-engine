@@ -41,7 +41,7 @@ import com.att.cadi.config.Config;
  * 
  */
 public class AAFPolicyClientImpl implements AAFPolicyClient{
-	private static Logger LOGGER = Logger.getLogger(AAFPolicyClientImpl.class.getName());
+	private static Logger logger = Logger.getLogger(AAFPolicyClientImpl.class.getName());
 
 	private static final String ENVIRONMENT = "ENVIRONMENT";
 	
@@ -80,14 +80,14 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 	 */
 	public static synchronized AAFPolicyClientImpl getInstance(Properties properties) throws AAFPolicyException{
 		if(instance == null) {
-			LOGGER.info("Creating AAFClient Instance ");
+			logger.info("Creating AAFClient Instance ");
 			instance = new AAFPolicyClientImpl(properties);
 		}
 		return instance;
 	}
 
 	// To set Property values && Connections. 
-	private void setup(Properties properties) throws AAFPolicyException {
+	private static void setup(Properties properties) throws AAFPolicyException {
 		if(properties!=null && !properties.isEmpty()){
 			props = System.getProperties();
 			props.setProperty("AFT_LATITUDE", properties.getProperty("AFT_LATITUDE", DEFAULT_AFT_LATITUDE));
@@ -101,9 +101,9 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 				props.setProperty(Config.AAF_URL, properties.getProperty(Config.AAF_URL));
 			}else{
 				// Set Default values. 
-				if(properties.getProperty(ENVIRONMENT, "DEVL").equalsIgnoreCase(Environment.TEST.toString())){
+				if(properties.getProperty(ENVIRONMENT, "DEVL").equalsIgnoreCase(AAFEnvironment.TEST.toString())){
 					props.setProperty(Config.AAF_URL, TEST_AAF_URL);
-				}else if(properties.getProperty(ENVIRONMENT, "DEVL").equalsIgnoreCase(Environment.PROD.toString())){
+				}else if(properties.getProperty(ENVIRONMENT, "DEVL").equalsIgnoreCase(AAFEnvironment.PROD.toString())){
 					props.setProperty(Config.AAF_URL, PROD_AAF_URL);
 					aftEnv = PROD_AFT_ENVIRONMENT;
 				}else{
@@ -114,7 +114,7 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 			props.setProperty(Config.AAF_USER_EXPIRES, properties.getProperty(Config.AAF_USER_EXPIRES, DEFAULT_AAF_USER_EXPIRES));	
 			props.setProperty(Config.AAF_HIGH_COUNT, properties.getProperty(Config.AAF_HIGH_COUNT, DEFAULT_AAF_HIGH_COUNT));
 		}else{
-			LOGGER.error("Required Property value is missing : " + ENVIRONMENT);
+			logger.error("Required Property value is missing : " + ENVIRONMENT);
 			throw new AAFPolicyException("Required Property value is missing : " + ENVIRONMENT);
 		}
 		access = new PolicyAccess(props, Level.valueOf(properties.getProperty("AAF_LOG_LEVEL", Level.ERROR.toString())));
@@ -142,10 +142,7 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 	 * @return
 	 */
 	public boolean checkAuthPerm(String mechID, String pass, String type, String instance, String action){
-		if(checkAuth(mechID, pass) && checkPerm(mechID, pass, type, instance, action)){
-			return true;
-		}
-		return false;
+		return checkAuth(mechID, pass) && checkPerm(mechID, pass, type, instance, action);
 	}
 
 	/**
@@ -166,10 +163,10 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 					i++;
 				}while(i<2);
 			} catch (Exception e) {
-				LOGGER.error(e.getMessage());
+				logger.error(e.getMessage() + e);
 			}
 		}
-		LOGGER.info("Authentication failed for : " + userName + " in " + props.getProperty(Config.AAF_URL));
+		logger.info("Authentication failed for : " + userName + " in " + props.getProperty(Config.AAF_URL));
 		return false;
 	}
 
@@ -193,24 +190,24 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 					AAFPermission perm = new AAFPermission(type, instance, action);
 					result = aafLurPerm.fish(userName, perm);
 				} catch (CadiException e) {
-					LOGGER.error(e.getMessage());
+					logger.error(e.getMessage() + e);
 					aafLurPerm.destroy();
 				}
 			}
-			LOGGER.info("Permissions for : " + userName + " in " + props.getProperty(Config.AAF_URL) + " for " + type  + "," + instance + "," + action + "\n Result is: " + result);
+			logger.info("Permissions for : " + userName + " in " + props.getProperty(Config.AAF_URL) + " for " + type  + "," + instance + "," + action + "\n Result is: " + result);
 			i++;
 		}while(i<2 && !result); // Try once more to check if this can be passed. AAF has some issues. 
 		return result;
 	}
 
-	private boolean setUpAAF(){
+	private static boolean setUpAAF(){
 		try {
 			aafCon = new AAFConDME2(access);
 			aafLurPerm = aafCon.newLur();//new AAFLurPerm(aafCon);
 			aafAuthn = aafCon.newAuthn(aafLurPerm);//new AAFAuthn(aafCon, aafLurPerm);
 			return true;
 		} catch (Exception e) {
-			LOGGER.error("Error while setting up AAF Connection " + e.getMessage());
+			logger.error("Error while setting up AAF Connection " + e.getMessage() + e);
 			return false;
 		}
 	}

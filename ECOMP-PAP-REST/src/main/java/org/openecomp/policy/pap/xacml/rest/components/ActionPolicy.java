@@ -86,7 +86,7 @@ public class ActionPolicy extends Policy {
 	public static final String URL_ATTRIBUTEID = "url";
 	public static final String BODY_ATTRIBUTEID = "body";
 	
-	public static boolean isAttribute = false;
+	private static boolean isAttribute = false;
 
 	
 	List<String> dynamicLabelRuleAlgorithms = new LinkedList<>();

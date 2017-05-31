@@ -94,6 +94,7 @@ public class AAFEngine extends StdConfigurableEngine {
 	protected Log logger	= LogFactory.getLog(this.getClass());
 	
 	public AAFEngine(){
+		//default constructor
 	}
 	
 	private PIPResponse getAttribute(PIPRequest pipRequest, PIPFinder pipFinder) {
@@ -104,7 +105,7 @@ public class AAFEngine extends StdConfigurableEngine {
 				this.logger.warn("Error retrieving " + pipRequest.getAttributeId().stringValue() + ": " + pipResponse.getStatus().toString());
 				pipResponse	= null;
 			}
-			if (pipResponse.getAttributes().size() == 0) {
+			if (pipResponse != null && pipResponse.getAttributes().isEmpty()) {
 				this.logger.warn("No value for " + pipRequest.getAttributeId().stringValue());
 				pipResponse	= null;
 			}
@@ -140,6 +141,7 @@ public class AAFEngine extends StdConfigurableEngine {
 		if(pipResponseUID!=null && pipResponsePass!=null && pipResponseType != null && pipResponseAction!= null && pipResponseInstance!=null){
 			String userName = getValue(pipResponseUID);
 			String pass = getValue(pipResponsePass);
+			
 			AAFPolicyClient aafClient = null;
 			Properties properties;
 			try {
@@ -154,7 +156,7 @@ public class AAFEngine extends StdConfigurableEngine {
 				try {
 					aafClient = AAFPolicyClient.getInstance(properties);
 				} catch (AAFPolicyException e) {
-					logger.error("AAF configuration failed. " + e.getMessage());
+					logger.error("AAF configuration failed. " + e.getMessage() +e);
 				}
 				if(aafClient!=null){
 					if(aafClient.checkAuth(userName, pass)){
@@ -212,13 +214,13 @@ public class AAFEngine extends StdConfigurableEngine {
 		 * First check to see if the issuer is set and then match it
 		 */
 		String string;
-		if ((string = pipRequest.getIssuer()) != null) {
-			if (!string.equals(this.getIssuer())) {
-				this.logger.debug("Requested issuer '" + string + "' does not match " + (this.getIssuer() == null ? "null" : "'" + this.getIssuer() + "'"));
-				return StdPIPResponse.PIP_RESPONSE_EMPTY;
-			}
+
+		if((string = pipRequest.getIssuer()) != null && !string.equals(this.getIssuer())) {
+			this.logger.debug("Requested issuer '" + string + "' does not match " + (this.getIssuer() == null ? "null" : "'" + this.getIssuer() + "'"));
+			return StdPIPResponse.PIP_RESPONSE_EMPTY;
 		}
-		
+
+
 		/*
 		 * Drop the issuer and see if the request matches any of our supported queries
 		 */
@@ -230,7 +232,7 @@ public class AAFEngine extends StdConfigurableEngine {
 		StdMutablePIPResponse stdPIPResponse = new StdMutablePIPResponse();
 		String response = this.getResult(pipFinder);
 		boolean result = false;
-		if(response.contains(SUCCESS)){
+		if(response != null && response.contains(SUCCESS)){
 			result = true;
 		}
 		this.addBooleanAttribute(stdPIPResponse, XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, AAF_RESULT_ID, result);

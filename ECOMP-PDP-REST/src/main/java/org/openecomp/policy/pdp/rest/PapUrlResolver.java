@@ -24,15 +24,16 @@ import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.rest.XACMLRestProperties;
 
 import com.att.research.xacml.util.XACMLProperties;
-
-import org.openecomp.policy.common.logging.flexlogger.*;
 
 public class PapUrlResolver {
 	private static final Logger LOGGER = FlexLogger.getLogger(PapUrlResolver.class);
@@ -40,19 +41,17 @@ public class PapUrlResolver {
 	private static final long FAIL_TIMEOUT = 18000000;
 	
 	//thread locks
-	public static Object propertyLock = new Object();
+	public static final Object propertyLock = new Object();
 	
-	public static void setPapUrls(String[] papUrls){
-		
-	}
 	//keeping this here for backward compatibility
 	public static String extractIdFromUrl(String url){
 		return extractQuery(url);
 	}
 	public static String extractQuery(String url){
 		try{
-		return URI.create(url).getQuery();
+			return URI.create(url).getQuery();
 		} catch(Exception e){
+			LOGGER.error("Exception occured while extracting query. So, empty string is returned"+e);
 			return "";
 		}
 	}
@@ -92,22 +91,24 @@ public class PapUrlResolver {
 	//because it is used for a difference purpose.
 	private PapUrlResolver(String urlList, String failedList, String succeededList, boolean autoUpdateProperties){	
 		this.autoUpdateProperties = autoUpdateProperties;
-		//synchronized(propertyLock){
-		if(urlList == null){
-			urlList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URLS);
-			if(urlList == null){
-				urlList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
+		String papUrlLists = urlList;
+		String papUrlFailedList = failedList;
+		String papUrlSuccessList = succeededList;
+		if(papUrlLists == null){
+			papUrlLists = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URLS);
+			if(papUrlLists == null){
+				papUrlLists = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
 			}
-			failedList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS);
-			succeededList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS);
+			papUrlFailedList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_FAILED_URLS);
+			papUrlSuccessList = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_SUCCEEDED_URLS);
 		}
-		//}		
-		String[] urls = urlList.split(",");
+		
+		String[] urls = papUrlLists.split(",");
 		if(urls.length == 0){		
 			//log error
 		}
-		String[] failed = emptyOrSplit(failedList,urls.length);
-		String[] succeeded = emptyOrSplit(succeededList,urls.length);
+		String[] failed = emptyOrSplit(papUrlFailedList,urls.length);
+		String[] succeeded = emptyOrSplit(papUrlSuccessList,urls.length);
 		
 		sortedUrlNodes = new PapUrlNode[urls.length];
 		for(int i=0;i<urls.length;i++){
@@ -130,7 +131,6 @@ public class PapUrlResolver {
 			if(sortedUrlNodes[i] == null){
 				sortedUrlNodes[i] = newNode;
 			}
-			
 		}
 		originalUrlNodes = sortedUrlNodes.clone();
 		sort(sortedUrlNodes);
@@ -243,8 +243,7 @@ public class PapUrlResolver {
 		if(sortedUrlNodes[pointer]== null){
 			throw new NoSuchElementException();
 		} else {
-			String finalUrl = sortedUrlNodes[pointer].getUrl().concat("?").concat(query);
-			return finalUrl;
+			return sortedUrlNodes[pointer].getUrl().concat("?").concat(query);
 		}
 	}
 	
@@ -324,13 +323,12 @@ public class PapUrlResolver {
 		//parses string into a date or a null date, if the url never failed/succeeded (since -1 will be in the property)
 		private Date setHandler(Object time){
 			if(time instanceof String){
-				if(((String)time).equals("-1")){
+				if("-1".equals((String)time)){
 					return null;
 				}
 				try {
 					DateFormat df = new SimpleDateFormat();
-					Date parsedTime = df.parse((String)time);
-					return parsedTime;
+					return df.parse((String)time);
 				} catch (ParseException e) {					
 					return null;
 				}
@@ -362,7 +360,8 @@ public class PapUrlResolver {
 		public String getUrl(){
 			return papUrl;
 		}
-
+		
+		@Override
 		public int compareTo(PapUrlNode other){
 			if(this.failedTime == null && other.failedTime != null){
 				return -1;

@@ -29,7 +29,7 @@ import org.openecomp.policy.xacml.util.MetricsUtil.MaxLatency;
 import org.openecomp.policy.xacml.util.MetricsUtil.MinLatency;
 
 public class PdpRestMonitor implements PdpRestMonitorMBean {	
-	public static PdpRestMonitor singleton = new PdpRestMonitor();
+	private static PdpRestMonitor singleton = new PdpRestMonitor();
 	
 	private final AtomicLong pdpEvaluationAttempts = new AtomicLong();
 	private final AtomicLong pdpEvaluationSuccesses = new AtomicLong();
@@ -136,22 +136,27 @@ public class PdpRestMonitor implements PdpRestMonitorMBean {
 	}
 
 	public void policyCountAdd(String policyID, Integer count){
+		int countValue = count;
 		if (policyCount.containsKey(policyID)){
-			count = count + policyCount.get(policyID);		
+			countValue = countValue + policyCount.get(policyID);		
 		}
-		policyCount.put(policyID, count);
+		policyCount.put(policyID, countValue);
 	}
 	public Map<String, Integer> getpolicyMap() {
 		return policyCount;
 	}
 	public Integer getpolicyCount(String policyID) {
-		// TODO Auto-generated method stub
 		if (policyCount.containsKey(policyID)){
 			return policyCount.get(policyID);
 		}
 		return null;
 	}
 	
-
+	public static PdpRestMonitor getSingleton() {
+		return singleton;
+	}
+	public static void setSingleton(PdpRestMonitor singleton) {
+		PdpRestMonitor.singleton = singleton;
+	}
 
 }

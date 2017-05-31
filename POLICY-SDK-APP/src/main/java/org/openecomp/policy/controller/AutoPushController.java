@@ -83,8 +83,16 @@ public class AutoPushController extends RestrictedBaseController{
 	private PDPGroupContainer container;
 	protected List<EcompPDPGroup> groups = Collections.synchronizedList(new ArrayList<EcompPDPGroup>());
 	
-	private static PDPPolicyContainer policyContainer;
-	Set<PDPPolicy> selectedPolicies;
+	private PDPPolicyContainer policyContainer;
+
+	private PolicyController policyController;
+	public PolicyController getPolicyController() {
+		return policyController;
+	}
+
+	public void setPolicyController(PolicyController policyController) {
+		this.policyController = policyController;
+	}
 
 	private List<Object> data;
 
@@ -92,7 +100,8 @@ public class AutoPushController extends RestrictedBaseController{
 		synchronized(this.groups) { 
 			this.groups.clear();
 			try {
-				this.groups.addAll(PolicyController.getPapEngine().getEcompPDPGroups());
+				PolicyController controller = getPolicyControllerInstance();
+				this.groups.addAll(controller.getPapEngine().getEcompPDPGroups());
 			} catch (PAPException e) {
 				String message = "Unable to retrieve Groups from server: " + e;
 				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
@@ -101,6 +110,10 @@ public class AutoPushController extends RestrictedBaseController{
 		}
 	}
 
+	private PolicyController getPolicyControllerInstance(){
+		return policyController != null ? getPolicyController() : new PolicyController();
+	}
+	
 	@RequestMapping(value={"/get_AutoPushPoliciesContainerData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPolicyGroupContainerData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -110,7 +123,8 @@ public class AutoPushController extends RestrictedBaseController{
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
-			List<Object> userRoles = PolicyController.getRoles(userId);
+			PolicyController controller = policyController != null ? getPolicyController() : new PolicyController();
+			List<Object> userRoles = controller.getRoles(userId);
 			roles = new ArrayList<>();
 			scopes = new HashSet<>();
 			for(Object role: userRoles){
@@ -163,12 +177,13 @@ public class AutoPushController extends RestrictedBaseController{
 		try {
 			ArrayList<Object> selectedPDPS = new ArrayList<>();
 			ArrayList<String> selectedPoliciesInUI = new ArrayList<>();
-			this.groups.addAll(PolicyController.getPapEngine().getEcompPDPGroups());
+			PolicyController controller = getPolicyControllerInstance();
+			this.groups.addAll(controller.getPapEngine().getEcompPDPGroups());
 			ObjectMapper mapper = new ObjectMapper();
-			this.container = new PDPGroupContainer(PolicyController.getPapEngine());
+			this.container = new PDPGroupContainer(controller.getPapEngine());
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			AutoPushTabAdapter adapter = (AutoPushTabAdapter) mapper.readValue(root.get("pushTabData").toString(), AutoPushTabAdapter.class);
+			AutoPushTabAdapter adapter = mapper.readValue(root.get("pushTabData").toString(), AutoPushTabAdapter.class);
 			for (Object pdpGroupId :  adapter.getPdpDatas()) {
 				LinkedHashMap<?, ?> selectedPDP = (LinkedHashMap<?, ?>)pdpGroupId;
 				for(EcompPDPGroup pdpGroup : this.groups){
@@ -220,10 +235,8 @@ public class AutoPushController extends RestrictedBaseController{
 					}else if(dbCheckName.contains("Decision_")){
 						dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
 					}
-					PolicyController controller = new PolicyController();
 					String[] split = dbCheckName.split(":");
 					String query = "FROM PolicyEntity where policyName = '"+split[1]+"' and scope ='"+split[0]+"'";
-					System.out.println(query);
 					List<Object> queryData = controller.getDataByQuery(query);
 					PolicyEntity policyEntity = (PolicyEntity) queryData.get(0);
 					File temp = new File(name);
@@ -237,7 +250,6 @@ public class AutoPushController extends RestrictedBaseController{
 						selectedPolicy = new StdPDPPolicy(name, true, id, selectedURI);
 					} catch (IOException e) {
 						logger.error("Unable to create policy '" + name + "': "+ e.getMessage());
-						//AdminNotification.warn("Unable to create policy '" + id + "': " + e.getMessage());
 					}
 					StdPDPGroup selectedGroup = (StdPDPGroup) pdpDestinationGroupId;
 					if (selectedPolicy != null) {
@@ -249,7 +261,7 @@ public class AutoPushController extends RestrictedBaseController{
 						}
 						// copy policy to PAP
 						try {
-							PolicyController.getPapEngine().copyPolicy(selectedPolicy, (StdPDPGroup) pdpDestinationGroupId);
+							controller.getPapEngine().copyPolicy(selectedPolicy, (StdPDPGroup) pdpDestinationGroupId);
 						} catch (PAPException e) {
 							logger.error("Exception Occured"+e);
 							return null;
@@ -317,7 +329,8 @@ public class AutoPushController extends RestrictedBaseController{
 	@RequestMapping(value={"/auto_Push/remove_GroupPolicies.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView removePDPGroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
-			this.container = new PDPGroupContainer(PolicyController.getPapEngine());
+			PolicyController controller = getPolicyControllerInstance();
+			this.container = new PDPGroupContainer(controller.getPapEngine());
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());  
@@ -327,10 +340,10 @@ public class AutoPushController extends RestrictedBaseController{
 			if(removePolicyData.size() > 0){
 				for(int i = 0 ; i < removePolicyData.size(); i++){
 					String data = removePolicyData.get(i).toString();
-					AutoPushController.policyContainer.removeItem(data);
+					this.policyContainer.removeItem(data);
 				}
 				Set<PDPPolicy> changedPolicies = new HashSet<>();
-				changedPolicies.addAll((Collection<PDPPolicy>) AutoPushController.policyContainer.getItemIds());
+				changedPolicies.addAll((Collection<PDPPolicy>) this.policyContainer.getItemIds());
 				StdPDPGroup updatedGroupObject = new StdPDPGroup(group.getId(), group.isDefaultGroup(), group.getName(), group.getDescription(),null);
 				updatedGroupObject.setPolicies(changedPolicies);
 				updatedGroupObject.setEcompPdps(group.getEcompPdps());

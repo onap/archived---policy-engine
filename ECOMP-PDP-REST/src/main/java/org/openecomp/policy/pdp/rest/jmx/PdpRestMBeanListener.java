@@ -51,7 +51,7 @@ public class PdpRestMBeanListener implements ServletContextListener {
         final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
         try {
             objectName = new ObjectName(JMX_OBJECT_NAME);
-            server.registerMBean(PdpRestMonitor.singleton, objectName);
+            server.registerMBean(PdpRestMonitor.getSingleton(), objectName);
             LOGGER.info("MBean registered: " + objectName);
         } catch (Exception e) {
 

@@ -1,0 +1,65 @@
+tosca_definitions_version: tosca_simple_yaml_1_0_0
+
+node_types: 
+    # policy root node
+    policy.nodes.Root:
+        derived_from: tosca.nodes.Root
+        properties:
+            policyName:
+                type: string
+                required: true
+            policyVersion:
+                type: string
+                required: true
+            policyScope:
+                type: string
+                required: true
+            policyDescription:
+                type: string
+                required: false
+
+    # virtual policy node for string matcher
+    policy.nodes.tca:
+        derived_from: policy.nodes.Root
+        properties:
+            functionalRole:
+                type: string
+                required: true
+                default: "ClosedLoop_F5-d925ed73-8231-4d02-9545-db4e101f88f8" 
+            policyName:
+                type: string
+                required: true
+                default: "configuration.dcae.microservice.tca.xml"
+            policyVersion:
+                type: string
+                required: true
+                default: "v0.0.1"
+            threshholds:
+                type: list
+                entry_schema:
+                    - type:policy.data.Threshold                    
+            
+data_types:
+    policy.data.Threshold:
+        derived_from: tosca.nodes.Root
+        properties:
+            closedLoopControlName:
+                type: string
+                required: true
+            version:
+                type: string
+                required: true
+                default: "1.0.2"
+            fieldPath:
+                type: string
+                required: true
+            thresholdValue:
+                type: integer
+                required: true
+            direction:
+                type: string
+                required: true
+            severity:
+                type: string
+                required: true
+            

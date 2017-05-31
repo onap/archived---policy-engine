@@ -89,6 +89,15 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 	private Workbook workbook;
 
 	private HSSFWorkbook workBook2;
+	
+	private PolicyController policyController;
+	public PolicyController getPolicyController() {
+		return policyController;
+	}
+
+	public void setPolicyController(PolicyController policyController) {
+		this.policyController = policyController;
+	}
 
 	@Autowired
 	private PolicyExportAndImportController(CommonClassDao commonClassDao){
@@ -190,12 +199,12 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 		String configName = null;
 		String scope = null;
 		boolean finalColumn = false;
-		PolicyController controller = new PolicyController();
+		PolicyController controller = policyController != null ? getPolicyController() : new PolicyController();
 		String userId = UserUtils.getUserSession(request).getOrgUserId();
 		UserInfo userInfo = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", userId);
 
 		//Check if the Role and Scope Size are Null get the values from db. 
-		List<Object> userRoles = PolicyController.getRoles(userId);
+		List<Object> userRoles = controller.getRoles(userId);
 		roles = new ArrayList<>();
 		scopes = new HashSet<>();
 		for(Object role: userRoles){

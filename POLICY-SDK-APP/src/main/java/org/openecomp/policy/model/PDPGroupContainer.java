@@ -52,57 +52,51 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
     /**
      * String identifier of a file's "Id" property.
      */
-    public static String PROPERTY_ID = "Id";
+	private static String PROPERTY_ID = "Id";
 
    /**
      * String identifier of a file's "name" property.
      */
-    public static String PROPERTY_NAME = "Name";
+	private static String PROPERTY_NAME = "Name";
 
     /**
      * String identifier of a file's "Description" property.
      */
-    public static String PROPERTY_DESCRIPTION = "Description";
+	private static String PROPERTY_DESCRIPTION = "Description";
 
     /**
      * String identifier of a file's "Default" property.
      */
-    public static String PROPERTY_DEFAULT = "Default";
-
-    /**
-     * String identifier of a file's "icon" property.
-     */
-    public static String PROPERTY_ICON = "Icon";
-
+	private static String PROPERTY_DEFAULT = "Default";
     /**
      * String identifier of a file's "Status" property.
      */
-    public static String PROPERTY_STATUS = "Status";
+	private static String PROPERTY_STATUS = "Status";
 
     /**
      * String identifier of a file's "PDPs" property.
      */
-    public static String PROPERTY_PDPS = "PDPs";
+	private static String PROPERTY_PDPS = "PDPs";
 
     /**
      * String identifier of a file's "Policies" property.
      */
-    public static String PROPERTY_POLICIES = "Policies";
+	private static String PROPERTY_POLICIES = "Policies";
 
     /**
      * String identifier of a file's "PIP Configurations" property.
      */
-    public static String PROPERTY_PIPCONFIG = "PIP Configurations";
+	private static String PROPERTY_PIPCONFIG = "PIP Configurations";
     
     /**
      * String identifier of a file's "Selected" property.
      */
-    public static String PROPERTY_SELECTED = "Selected";
+	private static String PROPERTY_SELECTED = "Selected";
 
     /**
      * List of the string identifiers for the available properties.
      */
-    public static Collection<String> PDP_PROPERTIES;
+	private static Collection<String> PDP_PROPERTIES;
 
  	private PAPPolicyEngine papEngine = null;
  	protected List<EcompPDPGroup> groups = Collections.synchronizedList(new ArrayList<EcompPDPGroup>());

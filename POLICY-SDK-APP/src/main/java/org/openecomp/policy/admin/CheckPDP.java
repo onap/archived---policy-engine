@@ -25,7 +25,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,22 +36,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
-import org.openecomp.policy.rest.XACMLRestProperties;
-
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
-import com.att.research.xacml.util.XACMLProperties;
-
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.rest.XACMLRestProperties;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
+
+import com.att.research.xacml.util.XACMLProperties;
 
 public class CheckPDP {
 	private static Path pdpPath = null;
-	private static Properties pdpProp = null;
 	private static Long oldModified = null;
-	private static Long newModified = null;
 	private static HashMap<String, String> pdpMap = null;
 	private static final Logger LOGGER = FlexLogger.getLogger(CheckPDP.class);
-
+	
+	private CheckPDP(){
+		//default constructor
+	}
 	public static boolean validateID(String id) {
 		// ReadFile
 		try {
@@ -62,41 +61,37 @@ public class CheckPDP {
 			return false;
 		}
 		// Check ID
-		if (pdpMap.containsKey(id)) {
-			return true;
-		}
-		return false;
+		return (pdpMap.containsKey(id))? true: false;
 	}
 
-	private static void readFile() throws Exception {
+	private static void readFile(){
 		String pdpFile = null;
+		Long newModified = null;
 		try{
 			pdpFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_IDFILE);	
 		}catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot read the PDP ID File");
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot read the PDP ID File" + e);
 			return;
 		}
 		if (pdpFile == null) {
 			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PDP File name not Valid : " + pdpFile);
-			throw new Exception(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"PDP File name not Valid : " + pdpFile);
 		}
 		if (pdpPath == null) {
 			pdpPath = Paths.get(pdpFile);
-			if (Files.notExists(pdpPath)) {
+			if (!pdpPath.toFile().exists()) {
 				LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "File doesn't exist in the specified Path : "	+ pdpPath.toString());
-				throw new Exception(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"File doesn't exist in the specified Path : "+ pdpPath.toString());
+
 			} 
 			if (pdpPath.toString().endsWith(".properties")) {
 				readProps();
 			} else {
 				LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Not a .properties file " + pdpFile);
-				throw new Exception(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Not a .properties file");
 			}
 		}
 		// Check if File is updated recently
 		else {
 			newModified = pdpPath.toFile().lastModified();
-			if (newModified != oldModified) {
+			if (!newModified.equals(oldModified)) {
 				// File has been updated.
 				readProps();
 			}
@@ -104,51 +99,52 @@ public class CheckPDP {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static void readProps() throws Exception {
-		InputStream in;
+	private static void readProps() {
+		Properties pdpProp = null;
 		pdpProp = new Properties();
 		try {
-			in = new FileInputStream(pdpPath.toFile());
+			InputStream in = new FileInputStream(pdpPath.toFile());
 			oldModified = pdpPath.toFile().lastModified();
 			pdpProp.load(in);
+			// Read the Properties and Load the PDPs and encoding.
+			pdpMap = new HashMap<>();
+			// Check the Keys for PDP_URLs
+			Collection<Object> unsorted = pdpProp.keySet();
+			List<String> sorted = new ArrayList(unsorted);
+			Collections.sort(sorted);
+			for (String propKey : sorted) {
+				loadPDPProperties(propKey, pdpProp);
+			}
+			if (pdpMap == null || pdpMap.isEmpty()) {
+				LOGGER.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Cannot Proceed without PDP_URLs");
+			}
+			in.close();
 		} catch (IOException e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
-			throw new Exception("Cannot Load the Properties file", e);
 		}
-		// Read the Properties and Load the PDPs and encoding.
-		pdpMap = new HashMap<String, String>();
-		// Check the Keys for PDP_URLs
-		Collection<Object> unsorted = pdpProp.keySet();
-		List<String> sorted = new ArrayList(unsorted);
-		Collections.sort(sorted);
-		for (String propKey : sorted) {
-			if (propKey.startsWith("PDP_URL")) {
-				String check_val = pdpProp.getProperty(propKey);
-				if (check_val == null) {
-					throw new Exception("Properties file doesn't have the PDP_URL parameter");
-				}
-				if (check_val.contains(";")) {
-					List<String> pdp_default = new ArrayList<String>(Arrays.asList(check_val.split("\\s*;\\s*")));
-					int pdpCount = 0;
-					while (pdpCount < pdp_default.size()) {
-						String pdpVal = pdp_default.get(pdpCount);
-						readPDPParam(pdpVal);
-						pdpCount++;
-					}
-				} else {
-					readPDPParam(check_val);
+	}
+	
+	private static void loadPDPProperties(String propKey, Properties pdpProp){
+		if (propKey.startsWith("PDP_URL")) {
+			String check_val = pdpProp.getProperty(propKey);
+			if (check_val == null) {
+				LOGGER.error("Properties file doesn't have the PDP_URL parameter");
+			}
+			if (check_val != null && check_val.contains(";")) {
+				List<String> pdp_default = new ArrayList<>(Arrays.asList(check_val.split("\\s*;\\s*")));
+				int pdpCount = 0;
+				while (pdpCount < pdp_default.size()) {
+					String pdpVal = pdp_default.get(pdpCount);
+					readPDPParam(pdpVal);
+					pdpCount++;
 				}
 			}
 		}
-		if (pdpMap == null || pdpMap.isEmpty()) {
-			LOGGER.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Cannot Proceed without PDP_URLs");
-			throw new Exception(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Cannot Proceed without PDP_URLs");
-		}
 	}
 
-	private static void readPDPParam(String pdpVal) throws Exception{
+	private static void readPDPParam(String pdpVal){
 		if(pdpVal.contains(",")){
-			List<String> pdpValues = new ArrayList<String>(Arrays.asList(pdpVal.split("\\s*,\\s*")));
+			List<String> pdpValues = new ArrayList<>(Arrays.asList(pdpVal.split("\\s*,\\s*")));
 			if(pdpValues.size()==3){
 				// 1:2 will be UserID:Password
 				String userID = pdpValues.get(1);
@@ -158,11 +154,9 @@ public class CheckPDP {
 				pdpMap.put(pdpValues.get(0), encoder.encodeToString((userID+":"+pass).getBytes(StandardCharsets.UTF_8)));
 			}else{
 				LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS + "No Credentials to send Request: " + pdpValues);
-				throw new Exception(XACMLErrorConstants.ERROR_PERMISSIONS + "No enough Credentials to send Request. " + pdpValues);
 			}
 		}else{
 			LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS + "No Credentials to send Request: " + pdpVal);
-			throw new Exception(XACMLErrorConstants.ERROR_PERMISSIONS +"No enough Credentials to send Request.");
 		}
 	}
 	

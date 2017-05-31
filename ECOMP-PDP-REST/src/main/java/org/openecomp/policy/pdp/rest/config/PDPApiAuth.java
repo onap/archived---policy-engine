@@ -91,7 +91,7 @@ public class PDPApiAuth {
 	                StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
 	                String username = tokenizer.nextToken();
 	                String password = tokenizer.nextToken();
-	                userNamePass=  new String[]{username, password};
+	                userNamePass=  new String[]{username,  password};
 	            }
 	            PolicyLogger.info("User " + userNamePass[0] + " is Accessing Policy Engine API.");
 	            Boolean result = false;

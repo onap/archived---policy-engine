@@ -37,7 +37,6 @@
 		<!-- Skip assembling the zip; assemble via mvn -Dskipassembly=false .. -->
 		<skipassembly>true</skipassembly>
 		<!-- Tests usually require some setup that maven cannot do, so skip. -->
-		<skiptests>true</skiptests>
 		<jackson.version>2.6.0</jackson.version>
 	</properties>
 	<profiles>

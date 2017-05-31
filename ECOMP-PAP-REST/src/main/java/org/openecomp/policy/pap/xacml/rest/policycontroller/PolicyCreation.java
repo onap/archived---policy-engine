@@ -162,7 +162,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			}
 			
 			if(highestVersion != 0 && policyVersion != null){
-				if(policyData.isEditPolicy){
+				if(policyData.isEditPolicy()){
 					version = highestVersion +1;
 					if(userId ==null){
 						modifiedBy = "API";
@@ -401,7 +401,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 				successMap = newPolicy.savePolicies();
 				if(successMap.containsKey("success")){
 					policyDBDaoTransaction.commitTransaction();
-					if(policyData.isEditPolicy){
+					if(policyData.isEditPolicy()){
 						commonClassDao.update(policyVersionDao);
 					}else{
 						commonClassDao.save(policyVersionDao);

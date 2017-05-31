@@ -43,7 +43,7 @@
 			<outputDirectory>install/3rdparty/</outputDirectory>
 			<fileMode>700</fileMode>
 			<directoryMode>700</directoryMode>
-		</fileSet>
+		</fileSet>	
 		<fileSet>
 			<directory>${project.build.directory}/pdp/webapps</directory>
 			<outputDirectory>install/servers/pdp/webapps</outputDirectory>

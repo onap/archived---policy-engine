@@ -124,7 +124,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	// audit logger
 	private static final Log auditLogger = LogFactory.getLog("auditLogger");
 
-	private static final PdpRestMonitor monitor = PdpRestMonitor.singleton;
+	private static final PdpRestMonitor monitor = PdpRestMonitor.getSingleton();
 
 	//
 	// This thread may getting invoked on startup, to let the PAP know
@@ -154,8 +154,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	// Queue of PUT requests
 	//
 	public static class PutRequest {
-		public Properties policyProperties = null;
-		public Properties pipConfigProperties = null;
+		private Properties policyProperties = null;
+		private Properties pipConfigProperties = null;
 
 		PutRequest(Properties policies, Properties pips) {
 			this.policyProperties = policies;
@@ -170,7 +170,6 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	}
 
 	private static String pdpResourceName;
-	private static String dependencyGroups = null;
 	private static String[] dependencyNodes = null;
 
 	//
@@ -181,17 +180,20 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	private volatile boolean configThreadTerminate = false;
 	private ECOMPLoggingContext baseLoggingContext = null;
 	private IntegrityMonitor im;
-	private String createUpdateResourceName = null;
 	/**
 	 * Default constructor. 
 	 */
 	public XACMLPdpServlet() {
+		//Default constructor.
 	}
 
 	/**
 	 * @see Servlet#init(ServletConfig)
 	 */
+	@Override
 	public void init(ServletConfig config) throws ServletException {
+		String createUpdateResourceName = null;
+		String dependencyGroups = null;
 		//
 		// Initialize
 		//
@@ -200,7 +202,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		try{
 			XACMLPdpServlet.notificationDelay = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_DELAY));
 		}catch(Exception e){
-			logger.info("Notification Delay Not set. Keeping it 0 as default.");
+			logger.info("Notification Delay Not set. Keeping it 0 as default."+e);
 		}
 		// Load Queue size. 
 		int queueSize = 5; // Set default Queue Size here. 
@@ -221,10 +223,10 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		baseLoggingContext = new ECOMPLoggingContext();
 		// fixed data that will be the same in all logging output goes here
 		try {
-			String hostname = InetAddress.getLocalHost().getCanonicalHostName();
-			baseLoggingContext.setServer(hostname);
+			String ipaddress = InetAddress.getLocalHost().getHostAddress();
+			baseLoggingContext.setServer(ipaddress);
 		} catch (UnknownHostException e) {
-			logger.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get hostname for logging");
+			logger.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get hostname for logging"+e);
 		}
 
 		Properties properties;
@@ -305,6 +307,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	/**
 	 * @see Servlet#destroy()
 	 */
+	@Override
 	public void destroy() {
 		super.destroy();
 		logger.info("Destroying....");
@@ -386,10 +389,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	 * 
 	 * @see HttpServlet#doPut(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ECOMPLoggingContext loggingContext = ECOMPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
 		loggingContext.transactionStarted();
-		if ((loggingContext.getRequestID() == null) || (loggingContext.getRequestID() == "")){
+		if ((loggingContext.getRequestID() == null) || "".equals(loggingContext.getRequestID())){
 			UUID requestID = UUID.randomUUID();
 			loggingContext.setRequestID(requestID.toString());
 			PolicyLogger.info("requestID not provided in call to XACMLPdpSrvlet (doPut) so we generated one");
@@ -414,7 +418,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		}
 		catch (AdministrativeStateException | StandbyStatusException e) {
 			String message = e.toString();
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
+			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + e);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
@@ -576,6 +580,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	 * 
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ECOMPLoggingContext loggingContext = ECOMPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
 		loggingContext.transactionStarted();
@@ -753,6 +758,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	 * 
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		ECOMPLoggingContext loggingContext = ECOMPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
@@ -778,7 +784,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		}
 		catch (AdministrativeStateException | StandbyStatusException e) {
 			String message = e.toString();
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
+			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + e);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
@@ -787,7 +793,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		//
 		// no point in doing any work if we know from the get-go that we cannot do anything with the request
 		//
-		if (status.getLoadedRootPolicies().size() == 0) {
+		if (status.getLoadedRootPolicies().isEmpty()) {
 			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Request from PEP at " + request.getRequestURI() + " for service when PDP has No Root Policies loaded");
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, "Request from PEP at " + request.getRequestURI() + " for service when PDP has No Root Policies loaded");
 			loggingContext.transactionEnded();
@@ -865,9 +871,14 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			StringBuilder buffer = new StringBuilder();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
 			String line;
-			while((line = reader.readLine()) != null){
-				buffer.append(line);
+			try{
+				while((line = reader.readLine()) != null){
+					buffer.append(line);
+				}
+			}catch(Exception e){
+				logger.error("Exception Occured while reading line"+e);
 			}
+			
 			incomingRequestString = buffer.toString();
 			logger.info(incomingRequestString);
 			//
@@ -920,7 +931,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			//
 			// Authenticating the Request here. 
 			//
-			if(!authorizeRequest(request, pdpRequest)){
+			if(!authorizeRequest(request)){
 				String message = "PEP not Authorized for making this Request!! \n Contact Administrator for this Scope. ";
 				logger.error(XACMLErrorConstants.ERROR_PERMISSIONS + message );
 				PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS, message);
@@ -950,23 +961,10 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			//
 			// Send the request and save the response
 			//
-			long lTimeStart, lTimeEnd;
+			long lTimeStart;
+			long lTimeEnd;
 			Response pdpResponse	= null;
 
-			//TODO - Make this unnecessary
-			//TODO	It seems that the PDP Engine is not thread-safe, so when a configuration change occurs in the middle of processing
-			//TODO	a PEP Request, that Request fails (it throws a NullPointerException in the decide() method).
-			//TODO	Using synchronize will slow down processing of PEP requests, possibly by a significant amount.
-			//TODO	Since configuration changes are rare, it would be A Very Good Thing if we could eliminate this sychronized block.
-			//TODO
-			//TODO	This problem was found by starting one PDP then
-			//TODO		RestLoadTest switching between 2 configurations, 1 second apart
-			//TODO			both configurations contain the datarouter policy
-			//TODO			both configurations already have all policies cached in the PDPs config directory
-			//TODO		RestLoadTest started with the Datarouter test requests, 5 threads, no interval
-			//TODO	With that configuration this code (without the synchronized) throws a NullPointerException
-			//TODO	within a few seconds.
-			//
 			synchronized(pdpEngineLock) {
 				myEngine = XACMLPdpServlet.pdpEngine;
 				try {
@@ -976,7 +974,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 					lTimeEnd = System.currentTimeMillis();
 				} catch (PDPException e) {
 					String message = "Exception during decide: " + e.getMessage();
-					logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + message);
+					logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + message +e);
 					PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
@@ -1005,7 +1003,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			//
 			if (pdpResponse == null) {
 				requestLogger.info(lTimeStart + "=" + "{}");
-				throw new Exception("Failed to get response from PDP engine.");
+				throw new PDPException("Failed to get response from PDP engine.");
 			}
 			//
 			// Set our content-type
@@ -1086,16 +1084,12 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	/*
 	 * Added for Authorizing the PEP Requests for Environment check. 
 	 */
-	private boolean authorizeRequest(HttpServletRequest request, Request pepRequest) {
-		if(request instanceof HttpServletRequest) {
-			// Get the client Credentials from the Request header. 
-			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-			String clientCredentials = httpServletRequest.getHeader(ENVIORNMENT_HEADER);
-			if(clientCredentials!=null && clientCredentials.equalsIgnoreCase(environment)){
-				return true;
-			}else{
-				return false;
-			}
+	private boolean authorizeRequest(HttpServletRequest request) {
+		// Get the client Credentials from the Request header. 
+		HttpServletRequest httpServletRequest = request;
+		String clientCredentials = httpServletRequest.getHeader(ENVIORNMENT_HEADER);
+		if(clientCredentials!=null && clientCredentials.equalsIgnoreCase(environment)){
+			return true;
 		}else{
 			return false;
 		}
@@ -1108,22 +1102,15 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		//
 		try {
 			// variable not used, but constructor has needed side-effects so don't remove:
-			@SuppressWarnings("unused")
-			ECOMPLoggingContext loggingContext = new ECOMPLoggingContext(baseLoggingContext);
 			while (! this.configThreadTerminate) {
 				PutRequest request = XACMLPdpServlet.queue.take();
 				StdPDPStatus newStatus = new StdPDPStatus();
-
-				//TODO - This is related to the problem discussed in the doPost() method about the PDPEngine not being thread-safe.
-				//TODO	See that discussion, and when the PDPEngine is made thread-safe it should be ok to move the loadEngine out of
-				//TODO	the synchronized block.
-				//TODO	However, since configuration changes should be rare we may not care about changing this.
+				
 				PDPEngine newEngine = null;
 				synchronized(pdpStatusLock) {
 					XACMLPdpServlet.status.setStatus(Status.UPDATING_CONFIGURATION);
 					newEngine = XACMLPdpLoader.loadEngine(newStatus, request.policyProperties, request.pipConfigProperties);
 				}
-				//				PDPEngine newEngine = XACMLPdpLoader.loadEngine(newStatus, request.policyProperties, request.pipConfigProperties);
 				if (newEngine != null) {
 					synchronized(XACMLPdpServlet.pdpEngineLock) {
 						XACMLPdpServlet.pdpEngine = newEngine;
@@ -1141,7 +1128,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 							}
 							newStatus.setStatus(Status.UP_TO_DATE);
 						} catch (Exception e) {
-							logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to store new properties.");
+							logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to store new properties."+e);
 							PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, "Failed to store new properties");
 							newStatus.setStatus(Status.LOAD_ERRORS);
 							newStatus.addLoadWarning("Unable to save configuration: " + e.getMessage());
@@ -1155,8 +1142,9 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				}
 			}
 		} catch (InterruptedException e) {
-			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "interrupted");
+			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "interrupted"+e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, "interrupted");
+			Thread.currentThread().interrupt();
 		}
 	}	
 
@@ -1171,5 +1159,4 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	public static Constructor<?> getCreateUpdatePolicyConstructor(){
 		return createUpdatePolicyConstructor;
 	}
-
 }

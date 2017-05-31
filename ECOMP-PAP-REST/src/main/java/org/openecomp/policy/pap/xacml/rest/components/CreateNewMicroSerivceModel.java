@@ -68,7 +68,7 @@ public class CreateNewMicroSerivceModel {
 	private static String papDbUser = null;
 	private static String papDbPassword = null;
 	
-	MSModelUtils utils = new MSModelUtils(XACMLPapServlet.msEcompName, XACMLPapServlet.msPolicyName);
+	MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsEcompName(), XACMLPapServlet.getMsPolicyName());
 
 	public CreateNewMicroSerivceModel(String fileName, String serviceName, String string, String version) {
 		super();

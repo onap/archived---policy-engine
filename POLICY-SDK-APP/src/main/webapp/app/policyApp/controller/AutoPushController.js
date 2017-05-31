@@ -38,7 +38,7 @@ app.controller('policyPushController', function ($scope, PolicyAppService, modal
     });
 
     $scope.pdpdata;
-    PolicyAppService.getData('get_PDPGroupContainerData').then(function (data) {
+    PolicyAppService.getData('get_PDPGroupData').then(function (data) {
         var j = data;
         $scope.pdpdata = JSON.parse(j.data);
         console.log($scope.pdpdata);

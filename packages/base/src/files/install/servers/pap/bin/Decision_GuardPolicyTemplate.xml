@@ -14,11 +14,11 @@
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${ECOMPName}</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ECOMPName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${actor}</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="actor" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${recipe}</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="recipe" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>

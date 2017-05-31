@@ -32,14 +32,18 @@ public class HibernateSession{
 	private static final Logger LOGGER	= FlexLogger.getLogger(HibernateSession.class);
 	private static SessionFactory xacmlsessionFactory;
 	
+	private HibernateSession(){
+		//Default Constructor
+	}
+	
 	static {
 		try {
 			Configuration configuration= new Configuration();
-			configuration.setProperty("hibernate.connection.url", XACMLPapServlet.papDbUrl);
-			configuration.setProperty("hibernate.connection.username", XACMLPapServlet.papDbUser);
-			configuration.setProperty("hibernate.connection.password", XACMLPapServlet.papDbPassword);
+			configuration.setProperty("hibernate.connection.url", XACMLPapServlet.getPapDbUrl());
+			configuration.setProperty("hibernate.connection.username", XACMLPapServlet.getPapDbUser());
+			configuration.setProperty("hibernate.connection.password", XACMLPapServlet.getPapDbPassword());
 			configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-			configuration.setProperty("hibernate.connection.driver_class", XACMLPapServlet.papDbDriver);	
+			configuration.setProperty("hibernate.connection.driver_class", XACMLPapServlet.getPapDbDriver());	
 			configuration.setProperty("hibernate.show_sql", "false");	
 			configuration.setProperty("hibernate.connection.autocommit", "true");
 			configuration.setProperty("hibernate.c3p0.min_size", "5");

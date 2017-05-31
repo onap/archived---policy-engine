@@ -97,7 +97,7 @@ public class DictionaryImportController {
 		List<String[]> dictSheet = csvReader.readAll();
 		if(dictionaryName.startsWith("Attribute")){
 			for(int i = 1; i< dictSheet.size(); i++){
-				Attribute attribute = new Attribute("",  userId);
+				Attribute attribute = new Attribute("");
 				UserInfo userinfo = new UserInfo();
 				userinfo.setUserLoginId(userId);
 				attribute.setUserCreatedBy(userinfo);

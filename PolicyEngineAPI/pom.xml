@@ -121,10 +121,6 @@
 					<groupId>com.att.aft</groupId>
     				<artifactId>dme2</artifactId>
 				</exclusion>
-				<exclusion>
-					<groupId>com.att.cadi</groupId>
-					<artifactId>cadi-aaf</artifactId>
-				</exclusion>
 			</exclusions>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->

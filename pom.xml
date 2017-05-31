@@ -20,7 +20,7 @@
 		<project.source.version>1.8</project.source.version>
 		<project.target.version>1.8</project.target.version>
 		<project.encoding>UTF-8</project.encoding>
-
+		
 		<sonar.language>java</sonar.language>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
@@ -248,7 +248,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.5.201505241946</version>
+				<version>0.7.6.201602180812</version>
 				<configuration>
 					<dumpOnExit>true</dumpOnExit>
 					<includes>

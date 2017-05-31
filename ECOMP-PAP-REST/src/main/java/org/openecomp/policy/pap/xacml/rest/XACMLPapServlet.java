@@ -152,10 +152,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 * These are the parameters needed for DB access from the PAP
 	 */
 	private static int papIntegrityAuditPeriodSeconds = -1;
-	public static String papDbDriver = null;
-	public static String papDbUrl = null;
-	public static String papDbUser = null;
-	public static String papDbPassword = null;
+	private static String papDbDriver = null;
+	private static String papDbUrl = null;
+	private static String papDbUser = null;
+	private static String papDbPassword = null;
 	private static Integer papTransWait = null;
 	private static Integer papTransTimeout = null;
 	private static Integer papAuditTimeout = null;
@@ -179,8 +179,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	private IntegrityAudit ia;
 	
 	//MicroService Model Properties
-	public static String msEcompName;
-	public static String msPolicyName;
+	private static String msEcompName;
+	private static String msPolicyName;
 	/*
 	 * This thread may be invoked upon startup to initiate sending PDP policy/pip configuration when
 	 * this servlet starts. Its configurable by the admin.
@@ -224,21 +224,25 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbDriver property entry");
 				throw new PAPException("papDbDriver is null");
 			}
+			setPapDbDriver(papDbDriver);
 			papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
 			if(papDbUrl == null){
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbUrl property entry");
 				throw new PAPException("papDbUrl is null");
 			}
+			setPapDbUrl(papDbUrl);
 			papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
 			if(papDbUser == null){
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbUser property entry");
 				throw new PAPException("papDbUser is null");
 			}
+			setPapDbUser(papDbUser);
 			papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
 			if(papDbPassword == null){
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbPassword property entry");
 				throw new PAPException("papDbPassword is null");
 			}
+			setPapDbPassword(papDbPassword);
 			papResourceName = XACMLProperties.getProperty(XACMLRestProperties.PAP_RESOURCE_NAME);
 			if(papResourceName == null){
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papResourceName property entry");
@@ -350,7 +354,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			}
 			//Micro Service Properties
 			msEcompName=properties.getProperty("xacml.policy.msEcompName");
+			setMsEcompName(msEcompName);
 			msPolicyName=properties.getProperty("xacml.policy.msPolicyName");
+			setMsPolicyName(msPolicyName);
 			// PDPId File location 
 			XACMLPapServlet.pdpFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_IDFILE);
 			if (XACMLPapServlet.pdpFile == null) {
@@ -2593,5 +2599,52 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	
 	public static PolicyDBDaoTransaction getDbDaoTransaction(){
 		return policyDBDao.getNewTransaction();
+	}
+	public static String getPapDbDriver() {
+		return papDbDriver;
+	}
+
+	public static void setPapDbDriver(String papDbDriver) {
+		XACMLPapServlet.papDbDriver = papDbDriver;
+	}
+
+	public static String getPapDbUrl() {
+		return papDbUrl;
+	}
+
+	public static void setPapDbUrl(String papDbUrl) {
+		XACMLPapServlet.papDbUrl = papDbUrl;
+	}
+
+	public static String getPapDbUser() {
+		return papDbUser;
+	}
+
+	public static void setPapDbUser(String papDbUser) {
+		XACMLPapServlet.papDbUser = papDbUser;
+	}
+
+	public static String getPapDbPassword() {
+		return papDbPassword;
+	}
+
+	public static void setPapDbPassword(String papDbPassword) {
+		XACMLPapServlet.papDbPassword = papDbPassword;
+	}
+
+	public static String getMsEcompName() {
+		return msEcompName;
+	}
+
+	public static void setMsEcompName(String msEcompName) {
+		XACMLPapServlet.msEcompName = msEcompName;
+	}
+
+	public static String getMsPolicyName() {
+		return msPolicyName;
+	}
+
+	public static void setMsPolicyName(String msPolicyName) {
+		XACMLPapServlet.msPolicyName = msPolicyName;
 	}
 }

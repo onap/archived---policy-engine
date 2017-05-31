@@ -46,10 +46,10 @@ public class ConfigurableRESTUtils  {
 		  GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE;
 		}
 	
-	public String ERROR_RECEIVED = "ERROR - Unexpected HTTP response: ";
+	private String ERROR_RECEIVED = "ERROR - Unexpected HTTP response: ";
 	
 	public ConfigurableRESTUtils() {
-
+		//Default Constructor
 	}
 	
 	
@@ -144,7 +144,7 @@ public class ConfigurableRESTUtils  {
 					try {
 						is = connection.getInputStream();
 					} catch (Exception e1) {
-						// ignore this
+						LOGGER.error("Exception Occured"+e1);
 					}
 					if (is != null) {
 						is.close();

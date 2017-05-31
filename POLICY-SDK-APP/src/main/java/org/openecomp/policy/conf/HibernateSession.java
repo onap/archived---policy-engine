@@ -44,11 +44,11 @@ public class HibernateSession{
 	static {
 		try {
 			Properties prop= new Properties();
-			prop.setProperty("hibernate.connection.url", PolicyController.logdbUrl);
-			prop.setProperty("hibernate.connection.username", PolicyController.logdbUserName);
-			prop.setProperty("hibernate.connection.password", PolicyController.logdbPassword);
-			prop.setProperty("dialect", PolicyController.logdbDialect);
-			prop.setProperty("hibernate.connection.driver_class", PolicyController.logdbDriver);	
+			prop.setProperty("hibernate.connection.url", PolicyController.getLogdbUrl());
+			prop.setProperty("hibernate.connection.username", PolicyController.getLogdbUserName());
+			prop.setProperty("hibernate.connection.password", PolicyController.getLogdbPassword());
+			prop.setProperty("dialect", PolicyController.getLogdbDialect());
+			prop.setProperty("hibernate.connection.driver_class", PolicyController.getLogdbDriver());	
 			prop.setProperty("show_sql", "false");	
 			logSessionFactory = new Configuration().addPackage("org.openecomp.policy.*").addProperties(prop)
 				   .addAnnotatedClass(SystemLogDB.class).buildSessionFactory();

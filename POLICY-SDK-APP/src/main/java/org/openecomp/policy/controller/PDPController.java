@@ -60,23 +60,37 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping({"/"})
 public class PDPController extends RestrictedBaseController {
 	private static final  Logger logger = FlexLogger.getLogger(PDPController.class);
-	
+
 	protected List<EcompPDPGroup> groups = Collections.synchronizedList(new ArrayList<EcompPDPGroup>());
 	private PDPGroupContainer container;
-	
+
 	private static String SUPERADMIN = "super-admin";
 	private static String SUPEREDITOR = "super-editor";
 	private static String SUPERGUEST = "super-guest";
-	
+
+	private Set<EcompPDPGroup> groupsData;
+
+	private boolean junit = false;
+
+	private PolicyController policyController;
+	public PolicyController getPolicyController() {
+		return policyController;
+	}
+
+	public void setPolicyController(PolicyController policyController) {
+		this.policyController = policyController;
+	}
+
 	public synchronized void refreshGroups(HttpServletRequest request) {
 		synchronized(this.groups) { 
 			this.groups.clear();
 			try {
+				PolicyController controller = getPolicyControllerInstance();
 				Set<PDPPolicy> filteredPolicies = new HashSet<>();
 				Set<String> scopes = null;
 				List<String> roles = null;
-				String userId = UserUtils.getUserSession(request).getOrgUserId();
-				List<Object> userRoles = PolicyController.getRoles(userId);
+				String userId =  isJunit()  ? "Test" : UserUtils.getUserSession(request).getOrgUserId();
+				List<Object> userRoles = controller.getRoles(userId);
 				roles = new ArrayList<>();
 				scopes = new HashSet<>();
 				for(Object role: userRoles){
@@ -94,12 +108,16 @@ public class PDPController extends RestrictedBaseController {
 					}	
 				}
 				if (roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR) || roles.contains(SUPERGUEST) ) {
-					this.groups.addAll(PolicyController.getPapEngine().getEcompPDPGroups());
+					if(!junit){
+						this.groups.addAll(controller.getPapEngine().getEcompPDPGroups());
+					}else{
+						this.groups.addAll(this.getGroupsData());
+					}	
 				}else{
 					if(!userRoles.isEmpty()){
 						if(!scopes.isEmpty()){
-							this.groups.addAll(PolicyController.getPapEngine().getEcompPDPGroups());
-							List<EcompPDPGroup> tempGroups = new ArrayList<EcompPDPGroup>();
+							this.groups.addAll(controller.getPapEngine().getEcompPDPGroups());
+							List<EcompPDPGroup> tempGroups = new ArrayList<>();
 							if(!groups.isEmpty()){
 								Iterator<EcompPDPGroup> pdpGroup = groups.iterator();
 								while(pdpGroup.hasNext()){
@@ -138,21 +156,7 @@ public class PDPController extends RestrictedBaseController {
 			}
 		}
 	}
-	
-	@RequestMapping(value={"/get_PDPGroupContainerData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getPDPGroupContainerData(HttpServletRequest request, HttpServletResponse response){
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			refreshGroups(request);
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while retrieving the PDP Group Container data" + e);
-		}
-	}
-	
+
 	@RequestMapping(value={"/get_PDPGroupData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPDPGroupEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -166,164 +170,188 @@ public class PDPController extends RestrictedBaseController {
 			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while retrieving the PDP Group data" + e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/pdp_Group/save_pdp_group"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	  public ModelAndView savePDPGroup(HttpServletRequest request, HttpServletResponse response) throws Exception{
-	    try {
-	      ObjectMapper mapper = new ObjectMapper();
-	      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	      JsonNode root = mapper.readTree(request.getReader());
-	      this.container = new PDPGroupContainer(PolicyController.getPapEngine());
-	      StdPDPGroup pdpGroupData =  mapper.readValue(root.get("pdpGroupData").toString().replace("groupName", "name"), StdPDPGroup.class);
-	      try {
-	    	  if(pdpGroupData.getId() == null){
-	    		  this.container.addNewGroup(pdpGroupData.getName(), pdpGroupData.getDescription());
-	    	  }else{
-	    		  this.container.updateGroup(pdpGroupData);
-	    	  }
-				
+	public ModelAndView savePDPGroup(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			PolicyController controller = getPolicyControllerInstance();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			JsonNode root = mapper.readTree(request.getReader());
+			this.container = new PDPGroupContainer(controller.getPapEngine());
+			StdPDPGroup pdpGroupData =  mapper.readValue(root.get("pdpGroupData").toString().replace("groupName", "name"), StdPDPGroup.class);
+			try {
+				if(pdpGroupData.getId() == null){
+					this.container.addNewGroup(pdpGroupData.getName(), pdpGroupData.getDescription());
+				}else{
+					this.container.updateGroup(pdpGroupData);
+				}
+
 			} catch (Exception e) {
 				String message = "Unable to create Group.  Reason:\n" + e.getMessage();
 				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while creating the PDP Group" + message);
 			}
-	        
-	    
-	      response.setCharacterEncoding("UTF-8");
-	      response.setContentType("application / json");
-	      request.setCharacterEncoding("UTF-8");
-	      
-	      PrintWriter out = response.getWriter();
-	      refreshGroups(request);
-	      JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-		  JSONObject j = new JSONObject(msg);
-	      out.write(j.toString());
-	      
-	      return null;
-	    }
-	    catch (Exception e){
-	     logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while Saving the PDP Group" + e);
-	      response.setCharacterEncoding("UTF-8");
-	      request.setCharacterEncoding("UTF-8");
-	      PrintWriter out = response.getWriter();
-	      out.write(e.getMessage());
-	    }
-	    return null;
-	  }
-	  
-	  @RequestMapping(value={"/pdp_Group/remove_pdp_group"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	  public ModelAndView removePDPGroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
-	    try{
-	      ObjectMapper mapper = new ObjectMapper();
-	      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	      JsonNode root = mapper.readTree(request.getReader());
-	      this.container = new PDPGroupContainer(PolicyController.getPapEngine()); 
-	      StdPDPGroup pdpGroupData =  mapper.readValue(root.get("pdpGroupData").toString(), StdPDPGroup.class);
-	      	if(pdpGroupData.getName().equals("Default")) {
+
+
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application / json");
+			request.setCharacterEncoding("UTF-8");
+
+			PrintWriter out = response.getWriter();
+			refreshGroups(request);
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
+			JSONObject j = new JSONObject(msg);
+			out.write(j.toString());
+
+			return null;
+		}
+		catch (Exception e){
+			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while Saving the PDP Group" + e);
+			response.setCharacterEncoding("UTF-8");
+			request.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			out.write(e.getMessage());
+		}
+		return null;
+	}
+
+	@RequestMapping(value={"/pdp_Group/remove_pdp_group"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	public ModelAndView removePDPGroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try{
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			JsonNode root = mapper.readTree(request.getReader());
+			PolicyController controller = getPolicyControllerInstance();
+			this.container = new PDPGroupContainer(controller.getPapEngine()); 
+			StdPDPGroup pdpGroupData =  mapper.readValue(root.get("pdpGroupData").toString(), StdPDPGroup.class);
+			if(pdpGroupData.getName().equals("Default")) {
 				throw new UnsupportedOperationException("You can't remove the Default Group.");
 			}else{
 				this.container.removeGroup(pdpGroupData, null);
 			}
-	  
-	      response.setCharacterEncoding("UTF-8");
-	      response.setContentType("application / json");
-	      request.setCharacterEncoding("UTF-8");
-	      
-	      PrintWriter out = response.getWriter();
-	      
-	      refreshGroups(request);
-	      JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-		  JSONObject j = new JSONObject(msg);
-	      out.write(j.toString());
-	      
-	      return null;
-	    }
-	    catch (Exception e){
-	      logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while Removing the PDP Group" + e);
-	      response.setCharacterEncoding("UTF-8");
-	      request.setCharacterEncoding("UTF-8");
-	      PrintWriter out = response.getWriter();
-	      out.write(e.getMessage());
-	    }
-	    return null;
-	  }
-	  
-	  @RequestMapping(value={"/pdp_Group/save_pdpTogroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	  public ModelAndView savePDPToGroup(HttpServletRequest request, HttpServletResponse response) throws Exception{
-	    try {
-	      ObjectMapper mapper = new ObjectMapper();
-	      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	      JsonNode root = mapper.readTree(request.getReader());
-	      this.container = new PDPGroupContainer(PolicyController.getPapEngine()); 
-	      String update = root.get("update").toString();
-	      PdpData pdpGroupData = (PdpData)mapper.readValue(root.get("pdpInGroup").toString(), PdpData.class);
-	      StdPDPGroup activeGroupData =  mapper.readValue(root.get("activePDP").toString(), StdPDPGroup.class);
-	      try {
-	    	  
-	    	  if(update.contains("false")){
-	    		  this.container.addNewPDP(pdpGroupData.getId(), activeGroupData, pdpGroupData.getName(), pdpGroupData.getDescription(), pdpGroupData.getJmxPort());
-	    	  }else{
-	    		  this.container.updateGroup(activeGroupData);
-	    	  }
+
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application / json");
+			request.setCharacterEncoding("UTF-8");
+
+			PrintWriter out = response.getWriter();
+
+			refreshGroups(request);
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
+			JSONObject j = new JSONObject(msg);
+			out.write(j.toString());
+
+			return null;
+		}
+		catch (Exception e){
+			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while Removing the PDP Group" + e);
+			response.setCharacterEncoding("UTF-8");
+			request.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			out.write(e.getMessage());
+		}
+		return null;
+	}
+
+	@RequestMapping(value={"/pdp_Group/save_pdpTogroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	public ModelAndView savePDPToGroup(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			JsonNode root = mapper.readTree(request.getReader());
+			PolicyController controller = getPolicyControllerInstance();
+			this.container = new PDPGroupContainer(controller.getPapEngine()); 
+			String update = root.get("update").toString();
+			PdpData pdpGroupData = (PdpData)mapper.readValue(root.get("pdpInGroup").toString(), PdpData.class);
+			StdPDPGroup activeGroupData =  mapper.readValue(root.get("activePDP").toString(), StdPDPGroup.class);
+			try {
+
+				if(update.contains("false")){
+					this.container.addNewPDP(pdpGroupData.getId(), activeGroupData, pdpGroupData.getName(), pdpGroupData.getDescription(), pdpGroupData.getJmxPort());
+				}else{
+					this.container.updateGroup(activeGroupData);
+				}
 			} catch (Exception e) {
 				String message = "Unable to create Group.  Reason:\n" + e.getMessage();
-				 logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while Creating Pdp in PDP Group" + message);
+				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while Creating Pdp in PDP Group" + message);
 			}
-	        
-	    
-	      response.setCharacterEncoding("UTF-8");
-	      response.setContentType("application / json");
-	      request.setCharacterEncoding("UTF-8");
-	      
-	      PrintWriter out = response.getWriter();
-	      refreshGroups(request);
-	      JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
-		  JSONObject j = new JSONObject(msg);
-	      out.write(j.toString());
-	      
-	      return null;
-	    }
-	    catch (Exception e){
-	      logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while Creating Pdp in PDP Group" + e);
-	      response.setCharacterEncoding("UTF-8");
-	      request.setCharacterEncoding("UTF-8");
-	      PrintWriter out = response.getWriter();
-	      out.write(e.getMessage());
-	    }
-	    return null;
-	  }
-	  
-	  @RequestMapping(value={"/pdp_Group/remove_pdpFromGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	  public ModelAndView removePDPFromGroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
-	    try{
-	      ObjectMapper mapper = new ObjectMapper();
-	      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	      JsonNode root = mapper.readTree(request.getReader());
-	      this.container = new PDPGroupContainer(PolicyController.getPapEngine()); 
-	      StdPDP deletePdp =  mapper.readValue(root.get("data").toString(), StdPDP.class);
-	      StdPDPGroup activeGroupData =  mapper.readValue(root.get("activePDP").toString(), StdPDPGroup.class);
-	      	
-	      this.container.removePDP(deletePdp, activeGroupData);
-	      response.setCharacterEncoding("UTF-8");
-	      response.setContentType("application / json");
-	      request.setCharacterEncoding("UTF-8");
-	      
-	      PrintWriter out = response.getWriter();
-	      refreshGroups(request);
-	      String responseString = mapper.writeValueAsString(groups);
-	      JSONObject j = new JSONObject("{pdpEntityDatas: " + responseString + "}");
-	      out.write(j.toString());
-	      
-	      return null;
-	    }
-	    catch (Exception e){
-	      logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while Removing Pdp from PDP Group" + e);
-	      response.setCharacterEncoding("UTF-8");
-	      request.setCharacterEncoding("UTF-8");
-	      PrintWriter out = response.getWriter();
-	      out.write(e.getMessage());
-	    }
-	    return null;
-	  }
+
+
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application / json");
+			request.setCharacterEncoding("UTF-8");
+
+			PrintWriter out = response.getWriter();
+			refreshGroups(request);
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
+			JSONObject j = new JSONObject(msg);
+			out.write(j.toString());
+
+			return null;
+		}
+		catch (Exception e){
+			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while Creating Pdp in PDP Group" + e);
+			response.setCharacterEncoding("UTF-8");
+			request.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			out.write(e.getMessage());
+		}
+		return null;
+	}
+
+	@RequestMapping(value={"/pdp_Group/remove_pdpFromGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	public ModelAndView removePDPFromGroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try{
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			JsonNode root = mapper.readTree(request.getReader());
+			PolicyController controller = getPolicyControllerInstance();
+			this.container = new PDPGroupContainer(controller.getPapEngine()); 
+			StdPDP deletePdp =  mapper.readValue(root.get("data").toString(), StdPDP.class);
+			StdPDPGroup activeGroupData =  mapper.readValue(root.get("activePDP").toString(), StdPDPGroup.class);
+
+			this.container.removePDP(deletePdp, activeGroupData);
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application / json");
+			request.setCharacterEncoding("UTF-8");
+
+			PrintWriter out = response.getWriter();
+			refreshGroups(request);
+			String responseString = mapper.writeValueAsString(groups);
+			JSONObject j = new JSONObject("{pdpEntityDatas: " + responseString + "}");
+			out.write(j.toString());
+
+			return null;
+		}
+		catch (Exception e){
+			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Error Occured while Removing Pdp from PDP Group" + e);
+			response.setCharacterEncoding("UTF-8");
+			request.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			out.write(e.getMessage());
+		}
+		return null;
+	}
+
+	private PolicyController getPolicyControllerInstance(){
+		return policyController != null ? getPolicyController() : new PolicyController();
+	}
+
+	public boolean isJunit() {
+		return junit;
+	}
+
+	public void setJunit(boolean junit) {
+		this.junit = junit;
+	}
+
+	public Set<EcompPDPGroup> getGroupsData() {
+		return groupsData;
+	}
+
+	public void setGroupsData(Set<EcompPDPGroup> groupsData) {
+		this.groupsData = groupsData;
+	}
 }
 
 class PdpData{

@@ -46,32 +46,32 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 	 /**
      * String identifier of a file's "Id" property.
      */
-    public static String PROPERTY_ID = "Id";
+	private static String PROPERTY_ID = "Id";
 
    /**
      * String identifier of a file's "name" property.
      */
-    public static String PROPERTY_NAME = "Name";
+	private static String PROPERTY_NAME = "Name";
 
     /**
       * String identifier of a file's "name" property.
       */
-     public static String PROPERTY_VERSION = "Version";
+	private static String PROPERTY_VERSION = "Version";
      
     /**
      * String identifier of a file's "Description" property.
      */
-    public static String PROPERTY_DESCRIPTION = "Description";
+	private static String PROPERTY_DESCRIPTION = "Description";
     
     /**
      * String identifier of a file's "IsRoot" property.
      */
-    public static String PROPERTY_ISROOT = "Root";
+	private static String PROPERTY_ISROOT = "Root";
 
     /**
      * List of the string identifiers for the available properties.
      */
-    public static Collection<String> PDPPOLICY_PROPERTIES;
+	private static Collection<String> PDPPOLICY_PROPERTIES;
  
     private final Object data;
     private List<PDPPolicy> policies;

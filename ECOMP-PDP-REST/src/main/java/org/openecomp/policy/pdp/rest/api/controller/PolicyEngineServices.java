@@ -81,7 +81,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(value = "Policy Engine Services")
 @RequestMapping("/")
 public class PolicyEngineServices {
-	private static Logger LOGGER = FlexLogger
+	private static Logger logger = FlexLogger
 			.getLogger(PolicyEngineServices.class.getName());
 	private final AtomicLong configCounter = new AtomicLong();
 	private final AtomicLong configNameCounter = new AtomicLong();
@@ -118,8 +118,7 @@ public class PolicyEngineServices {
 			status = getConfigService.getResponseCode();
 		}
 		configCounter.incrementAndGet();
-		return new ResponseEntity<Collection<PolicyConfig>>(policyConfig,
-				status);
+		return new ResponseEntity<Collection<PolicyConfig>>(policyConfig, status);
 	}
 
 	@ApiImplicitParams({
@@ -147,8 +146,7 @@ public class PolicyEngineServices {
 			status = getConfigService.getResponseCode();
 		}
 		configNameCounter.incrementAndGet();
-		return new ResponseEntity<Collection<PolicyConfig>>(policyConfig,
-				status);
+		return new ResponseEntity<>(policyConfig, status);
 	}
 
 	@ApiImplicitParams({
@@ -172,7 +170,7 @@ public class PolicyEngineServices {
 			status = listConfigService.getResponseCode();
 		}
 		configCounter.incrementAndGet();
-		return new ResponseEntity<Collection<String>>(results, status);
+		return new ResponseEntity<>(results, status);
 	}
 	
 	@ApiImplicitParams({
@@ -194,7 +192,7 @@ public class PolicyEngineServices {
 			status = getMetricsService.getResponseCode();
 		}	
 		metricCounter.incrementAndGet();
-		return new ResponseEntity<MetricsResponse>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiImplicitParams({
@@ -217,7 +215,7 @@ public class PolicyEngineServices {
 			status = sendEventService.getResponseCode();
 		}
 		eventCounter.incrementAndGet();
-		return new ResponseEntity<Collection<PolicyResponse>>(policyResponse,
+		return new ResponseEntity<>(policyResponse,
 				status);
 	}
 
@@ -242,7 +240,7 @@ public class PolicyEngineServices {
 			status = getDecisionService.getResponseCode();
 		}
 		decisionCounter.incrementAndGet();
-		return new ResponseEntity<DecisionResponse>(decisionResponse, status);
+		return new ResponseEntity<>(decisionResponse, status);
 	}
 
 	@ApiImplicitParams({
@@ -266,7 +264,7 @@ public class PolicyEngineServices {
 			status = pushPolicyService.getResponseCode();
 		}
 		pushCounter.incrementAndGet();
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiImplicitParams({
@@ -290,7 +288,7 @@ public class PolicyEngineServices {
 			status = deletePolicyService.getResponseCode();
 		}
 		deleteCounter.incrementAndGet();
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiImplicitParams({
@@ -316,13 +314,13 @@ public class PolicyEngineServices {
 				status = createPolicyService.getResponseCode();
 			} catch (InstantiationException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException e) {
-				LOGGER.error(e.getMessage());
+				logger.error(e.getMessage());
 				response = "Problem with CreateUpdate Policy Service. ";
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 			}
 		}
 		createPolicyCounter.incrementAndGet();
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiImplicitParams({
@@ -348,13 +346,13 @@ public class PolicyEngineServices {
 				status = updatePolicyService.getResponseCode();
 			} catch (InstantiationException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException e) {
-				LOGGER.error(e.getMessage());
+				logger.error(e.getMessage());
 				response = "Problem with CreateUpdate Policy Service. ";
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 			}
 		}
 		updatePolicyCounter.incrementAndGet();
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiImplicitParams({
@@ -378,7 +376,7 @@ public class PolicyEngineServices {
 			status = createDictionaryService.getResponseCode();
 		}
 		createDictionaryCounter.incrementAndGet();
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiImplicitParams({
@@ -402,7 +400,7 @@ public class PolicyEngineServices {
 			status = updateDictionaryService.getResponseCode();
 		}
 		updateDictionaryCounter.incrementAndGet();
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiImplicitParams({
@@ -426,7 +424,7 @@ public class PolicyEngineServices {
 			status = getDictionaryService.getResponseCode();
 		}
 		getDictionaryCounter.incrementAndGet();
-		return new ResponseEntity<DictionaryResponse>(dictionaryResponse,
+		return new ResponseEntity<>(dictionaryResponse,
 				status);
 	}
 
@@ -452,7 +450,7 @@ public class PolicyEngineServices {
 			status = policyEngineImportService.getResponseCode();
 		}
 		policyEngineImportCounter.incrementAndGet();
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiImplicitParams({
@@ -477,7 +475,7 @@ public class PolicyEngineServices {
 			status = createPolicyService.getResponseCode();
 		}
 		deprecatedCounter.incrementAndGet();
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiImplicitParams({
@@ -502,7 +500,7 @@ public class PolicyEngineServices {
 			status = updatePolicyService.getResponseCode();
 		}
 		deprecatedCounter.incrementAndGet();
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiImplicitParams({
@@ -527,7 +525,7 @@ public class PolicyEngineServices {
 			status = createFirewallPolicyService.getResponseCode();
 		}
 		deprecatedCounter.incrementAndGet();
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiImplicitParams({
@@ -552,7 +550,7 @@ public class PolicyEngineServices {
 			status = updateFirewallPolicyService.getResponseCode();
 		}
 		deprecatedCounter.incrementAndGet();
-		return new ResponseEntity<String>(response, status);
+		return new ResponseEntity<>(response, status);
 	}
 
 	@ApiOperation(value = "Gets the API Services usage Information")
@@ -579,7 +577,7 @@ public class PolicyEngineServices {
 	@ExceptionHandler({ HttpMessageNotReadableException.class })
 	public ResponseEntity<String> messageNotReadableExceptionHandler(
 			HttpServletRequest req, HttpMessageNotReadableException exception) {
-		LOGGER.error("Request not readable: {}", exception);
+		logger.error("Request not readable: {}", exception);
 		StringBuilder message = new StringBuilder();
 		message.append(exception.getMessage());
 		if (exception.getCause() != null) {

@@ -104,6 +104,15 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	private static final Logger LOGGER = FlexLogger.getLogger(CreateDcaeMicroServiceController.class);
 
 	private static CommonClassDao commonClassDao;
+	
+	public static CommonClassDao getCommonClassDao() {
+		return commonClassDao;
+	}
+
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
+		CreateDcaeMicroServiceController.commonClassDao = commonClassDao;
+	}
+
 	private MicroServiceModels newModel;
 	private String newFile;
 	private String directory;
@@ -238,7 +247,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	}
 	
 	// Second index of dot should be returned. 
-	public void stringBetweenDots(String str,String value){
+	public int stringBetweenDots(String str,String value){
 		String stringToSearch=str;
 		String[]ss=stringToSearch.split("\\.");
 		if(ss!=null){
@@ -247,6 +256,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				uniqueKeys.add(ss[2]);
 			}
 		}
+		
+		return uniqueKeys.size();
 	}
 	
 	public void stringBetweenDotsForDataFields(String str,String value){
@@ -1338,7 +1349,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	
 	private void retreiveDependency(String workingFile, Boolean modelClass) {
 		
-		MSModelUtils utils = new MSModelUtils(PolicyController.msEcompName, PolicyController.msPolicyName);
+		MSModelUtils utils = new MSModelUtils(PolicyController.getMsEcompName(), PolicyController.getMsPolicyName());
 	    HashMap<String, MSAttributeObject> tempMap = new HashMap<>();
 	    
 	    tempMap = utils.processEpackage(workingFile, MODEL_TYPE.XMI);
@@ -1402,23 +1413,31 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         return list;
     }
 
+	public Map<String, String> getAttributesListRefMap() {
+		return attributesListRefMap;
+	}
+
+	public Map<String, LinkedList<String>> getArrayTextList() {
+		return arrayTextList;
+	}
+
 }
 
 class DCAEMicroServiceObject {
 
-	public String service;
-	public String location;
-	public String uuid;
-	public String policyName;
-	public String description;
-	public String configName;
-	public String templateVersion;
-	public String version;
-	public String priority;
-	public String policyScope;
-	public String riskType;
-	public String riskLevel; 
-	public String guard = null;
+	private String service;
+	private String location;
+	private String uuid;
+	private String policyName;
+	private String description;
+	private String configName;
+	private String templateVersion;
+	private String version;
+	private String priority;
+	private String policyScope;
+	private String riskType;
+	private String riskLevel; 
+	private String guard = null;
 
 	public String getGuard() {
 		return guard;

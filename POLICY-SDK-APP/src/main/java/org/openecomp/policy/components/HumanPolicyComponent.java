@@ -103,6 +103,10 @@ public class HumanPolicyComponent{
 	
 	private static File policyFile;
 	
+	private HumanPolicyComponent(){
+		//Default Constructor
+	}
+	
 	public static JSONObject DescribePolicy(final File policyFile) {
 		if (LOGGER.isTraceEnabled()) 
 			LOGGER.trace("ENTER");
@@ -298,7 +302,7 @@ class HtmlProcessor extends SimpleCallback {
 			AttributeIdentifiers value = entry.getValue();
 			htmlOut.println("<tr>");
 			htmlOut.print("<td><a name=\"" + entry.getKey() + "\"></a>" + value.category + "</td>");
-			htmlOut.print("<td>" + value.type + "</td>");
+			htmlOut.print("<td>" + value.getType() + "</td>");
 			htmlOut.print("<td>" + value.id + "</td>");
 			htmlOut.println("</tr>");
 		}
@@ -654,7 +658,7 @@ class HtmlProcessor extends SimpleCallback {
 			if (assignmentObject instanceof AttributeValueType) {
 				AttributeValueType avt = (AttributeValueType) assignmentObject;
 				if (attributeIdentifiers != null) {
-					attributeIdentifiers.type = avt.getDataType();
+					attributeIdentifiers.setType(avt.getDataType());
 				}
 				int numContent = avt.getContent().size();
 				int countContent = 0;
@@ -968,12 +972,20 @@ class HtmlProcessor extends SimpleCallback {
 
 class AttributeIdentifiers {
 	public final String category;
-	public String type;
+	private String type;
 	public final String id;
 	
 	public AttributeIdentifiers(String category, String type, String id) {
 		this.category = category;
-		this.type = type;
+		this.setType(type);
 		this.id = id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }	
