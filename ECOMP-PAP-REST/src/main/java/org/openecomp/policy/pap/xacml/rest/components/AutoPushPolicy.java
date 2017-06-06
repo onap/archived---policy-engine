@@ -136,9 +136,7 @@ public class AutoPushPolicy {
 		//Get the current policies from the Group and Add the new one
         Set<PDPPolicy> currentPoliciesInGroup = pdpGroup.getPolicies();
         Set<PDPPolicy> policies = new HashSet<>();
-        if(policy!=null){
-			policies.add(policy);
-		}
+		policies.add(policy);
         pdpGroup.copyPolicyToFile(policyId, new FileInputStream(Paths.get(policyToCreateUpdate).toFile()));
         //If the selected policy is in the group we must remove it because the name is default
 		Iterator<PDPPolicy> policyIterator = policies.iterator();

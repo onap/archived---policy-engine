@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ELK_BASE=${POLICY_HOME}/elk/
-ELK_RUNNING="^$JAVA_HOME/bin/java .* -cp.* org.elasticsearch.bootstrap.Elasticsearch$"
+ELK_RUNNING="^$JAVA_HOME/bin/java .* -cp .* org.elasticsearch.bootstrap.Elasticsearch -d$"
 COMPONENT=elk
 
 JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote"
@@ -34,7 +34,7 @@ function stop() {
 }
 
 function start() {
-	export JAVA_OPTS="${JAVA_OPTS} ${JMX_JAVA_OPTS}" 
+	export ES_JAVA_OPTS="${JAVA_OPTS} ${JMX_JAVA_OPTS}" 
 	$POLICY_HOME/elk/bin/elasticsearch -d
 	RETVAL=$?
 	if [[ ${RETVAL} != 0 ]]; then

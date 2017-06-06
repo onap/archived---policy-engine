@@ -490,9 +490,16 @@ public class PAPServices {
                         + connection.getHeaderField("message");
             } else if ("addGroupError".equals(connection.getHeaderField("error"))) {
                 response = connection.getHeaderField("message");
+            } else if ("validation".equals(connection.getHeaderField("error"))){
+                response = XACMLErrorConstants.ERROR_DATA_ISSUE
+                        + "Validation errors during policy engine " + connection.getHeaderField("operation") +
+                        " for " + connection.getHeaderField("service");
             } else if ("error".equals(connection.getHeaderField("error"))) {
                 response = XACMLErrorConstants.ERROR_UNKNOWN
                         + "Could not create or update the policy for and unknown reason";
+            }else{
+                response = XACMLErrorConstants.ERROR_DATA_ISSUE
+                        + "BAD REQUEST:  Error occured while attempting perform this operation.. the request may be incorrect.";
             }
             LOGGER.error(response);
         } else {

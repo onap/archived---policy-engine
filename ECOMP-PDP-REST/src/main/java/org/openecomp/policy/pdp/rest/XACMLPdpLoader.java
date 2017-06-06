@@ -559,7 +559,7 @@ public class XACMLPdpLoader {
 										LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while retrieving policy "
 												+ policy
 												+ " from URL "
-												+ url.toString() + ", e=" + e);
+												+ url + ", e=" + e);
 									}
 								}
 								papUrls.getNext();

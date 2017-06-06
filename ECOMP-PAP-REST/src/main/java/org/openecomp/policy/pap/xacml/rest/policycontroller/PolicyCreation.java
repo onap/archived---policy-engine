@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
@@ -363,13 +364,17 @@ public class PolicyCreation extends AbstractPolicyCreation{
 							}
 						}
 					}
-					if(policyData.getRuleProvider()!=null && policyData.getRuleProvider().equals(DecisionPolicy.GUARD_YAML) && policyData.getYamlparams()!=null){
-						attributeMap.put("actor", policyData.getYamlparams().getActor());
+					if(policyData.getRuleProvider()!=null && (policyData.getRuleProvider().equals(DecisionPolicy.GUARD_YAML)|| policyData.getRuleProvider().equals(DecisionPolicy.GUARD_BL_YAML)) 
+							&& policyData.getYamlparams()!=null){	attributeMap.put("actor", policyData.getYamlparams().getActor());
 						attributeMap.put("recipe", policyData.getYamlparams().getRecipe());
 						attributeMap.put("limit", policyData.getYamlparams().getLimit());
 						attributeMap.put("timeWindow", policyData.getYamlparams().getTimeWindow());
 						attributeMap.put("guardActiveStart", policyData.getYamlparams().getGuardActiveStart());
 						attributeMap.put("guardActiveEnd", policyData.getYamlparams().getGuardActiveEnd());
+						if(policyData.getYamlparams().getBlackList()!=null){
+							String blackList = StringUtils.join(policyData.getYamlparams().getBlackList(), ",");
+							attributeMap.put("blackList", blackList);
+						}
 					}
 					policyData.setDynamicRuleAlgorithmLabels(dynamicRuleAlgorithmLabels);
 					policyData.setDynamicRuleAlgorithmCombo(dynamicRuleAlgorithmCombo);

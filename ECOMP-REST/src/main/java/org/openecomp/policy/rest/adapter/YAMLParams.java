@@ -20,6 +20,8 @@
 
 package org.openecomp.policy.rest.adapter;
 
+import java.util.List;
+
 public class YAMLParams {
 	private String actor;
 	private String recipe;
@@ -27,6 +29,7 @@ public class YAMLParams {
 	private String timeWindow;
 	private String guardActiveStart;
 	private String guardActiveEnd;
+	private List<String> blackList;
 	
 	public String getActor() {
 		return actor;
@@ -63,5 +66,11 @@ public class YAMLParams {
 	}
 	public void setGuardActiveEnd(String guardActiveEnd) {
 		this.guardActiveEnd = guardActiveEnd;
+	}
+	public List<String> getBlackList() {
+		return blackList;
+	}
+	public void setBlackList(List<String> blackList) {
+		this.blackList = blackList;
 	}
 }

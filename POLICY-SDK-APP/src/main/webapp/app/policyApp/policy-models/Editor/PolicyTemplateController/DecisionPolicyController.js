@@ -163,8 +163,14 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
    
     if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
     	$scope.temp.policy.attributes = [];
-    	  $scope.temp.policy.settings = [];
-    	 $scope.temp.policy.ruleAlgorithmschoices = [];
+    	$scope.temp.policy.settings = [];
+    	$scope.temp.policy.ruleAlgorithmschoices = [];
+    	if(!$scope.temp.policy.yamlparams){
+    		$scope.temp.policy.yamlparams = {};
+    	}
+    	if(!$scope.temp.policy.yamlparams.blackList){
+    		$scope.temp.policy.yamlparams.blackList = [];
+    	}
     }else if($scope.temp.policy.ruleProvider=="Custom"){
 	   if($scope.temp.policy.attributes.length == 0){
 		   $scope.temp.policy.attributes = [];
@@ -172,10 +178,14 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
 	   if($scope.temp.policy.settings.length == 0){
 		   $scope.temp.policy.settings = [];
 	   }
-	   if($scope.temp.policy.ruleAlgorithmschoices.length == 0){
+	   if($scope.temp.policy.ruleAlgorithmschoices == null || $scope.temp.policy.ruleAlgorithmschoices.length == 0){
 		   $scope.temp.policy.ruleAlgorithmschoices = [];
 	   }
-   }
+    }else if($scope.temp.policy.ruleProvider=="GUARD_BL_YAML"){
+    	if($scope.temp.policy.yamlparams.blackList.length==0){
+    		$scope.temp.policy.yamlparams.blackList = [];
+    	}
+    }
     $scope.attributeDatas = [{"attributes" : $scope.temp.policy.attributes}];
     $scope.addNewChoice = function() {
       var newItemNo = $scope.temp.policy.attributes.length+1;
@@ -195,6 +205,14 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
     $scope.removeSettingsChoice = function() {
       var lastItem = $scope.temp.policy.settings.length-1;
       $scope.temp.policy.settings.splice(lastItem);
+    };
+    
+    $scope.addNewBL = function() {
+    	$scope.temp.policy.yamlparams.blackList.push('');
+    };
+    $scope.removeBL = function() {
+    	var lastItem = $scope.temp.policy.yamlparams.blackList.length-1;
+    	$scope.temp.policy.yamlparams.blackList.splice(lastItem);
     };
     
     $scope.ItemNo = 0;

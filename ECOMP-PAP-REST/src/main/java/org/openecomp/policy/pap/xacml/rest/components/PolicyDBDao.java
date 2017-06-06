@@ -35,7 +35,6 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -68,8 +67,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
-
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -104,6 +101,8 @@ import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDP;
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.util.XACMLProperties;
+
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 public class PolicyDBDao {
 	private static final Logger logger	= FlexLogger.getLogger(PolicyDBDao.class);		
@@ -871,6 +870,7 @@ public class PolicyDBDao {
 					try {
 						policyStream.close();
 					} catch (IOException e) {
+						didUpdate = false;
 						PolicyLogger.error(e.getMessage());
 					}
 				}
@@ -1031,7 +1031,7 @@ public class PolicyDBDao {
 		String action = "unknown action";
 		try {
 
-			if(policy.isDeleted()){
+			if(policy != null && policy.isDeleted()){
 				logger.debug("Deleting Policy: " + policy.getPolicyName());
 				action = "delete";
 				Path newPath = Paths.get(policyPath.toString(), policy.getPolicyName());
@@ -1098,7 +1098,7 @@ public class PolicyDBDao {
 
 			}
 		} catch (IOException e1) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Error occurred while performing [" + action + "] of Policy File: " +  policy.getPolicyName());
+			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Error occurred while performing [" + action + "] of Policy File: " + policy != null ? policy.getPolicyName() : "null");
 		}	
 	}
 
@@ -1315,11 +1315,12 @@ public class PolicyDBDao {
 		String repo = buildPolicyDirectory();
 
 		String policyScope = policy.getScope();
+		
 		if(policyScope == null){
 			policyScope = "";
 			PolicyLogger.error("buildPolicyScopeDirectory("+policy+") computed null policyScope. Using blank.");
 		} else {
-			policyScope = policyScope.replace(".", FileSystems.getDefault().getSeparator());	
+			policyScope = policyScope.replace(".", File.separator);	
 		}
 		if(policyScope == null){
 			policyScope = "";
@@ -1329,7 +1330,7 @@ public class PolicyDBDao {
 			PolicyLogger.error("buildPolicyScopeDirectory("+policy+") received null repo. Using blank.");
 			repo = "";
 		}
-		Path returnPath = Paths.get(repo + FileSystems.getDefault().getSeparator() + policyScope);
+		Path returnPath = Paths.get(repo + File.separator + policyScope);
 		if(returnPath !=  null){
 			return returnPath.toString();
 		} else {
@@ -1341,9 +1342,7 @@ public class PolicyDBDao {
 	}
 	private String buildPolicyScopeDirectory(String policyScope){
 		String repo = buildPolicyDirectory();		
-		policyScope = policyScope.replace(".", FileSystems.getDefault().getSeparator());
-		return repo + FileSystems.getDefault().getSeparator() + policyScope;
-
+		return repo + File.separator + policyScope.replace(".", File.separator);
 	}
 
 	private static String buildPolicyDirectory(){
@@ -1628,7 +1627,13 @@ public class PolicyDBDao {
 		} catch(Exception e){
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "auditLocalDatabase() error");
 			logger.error("Exception Occured"+e);
-		}		
+		}finally{
+			try {
+				Files.walk(webappsPath).close();
+			} catch (IOException e) {
+				logger.error("Exception Occured while closing File Stream"+e);
+			}
+		}
 	}
 
 	/**
@@ -1980,7 +1985,7 @@ public class PolicyDBDao {
 			for(int j=i;j<gitPathParts.size();j++){
 				testGitPath = Paths.get(testGitPath.toString(),gitPathParts.get(j));
 			}
-			if(path.contains(testGitPath.toString())){
+			if(path != null && path.contains(testGitPath.toString())){
 				gitPath = testGitPath.toString();
 				break;
 			}
@@ -1989,7 +1994,7 @@ public class PolicyDBDao {
 			logger.debug("gitPath is null.  Returning");
 			return null;
 		}
-		if(gitPath.length() >= path.length()){
+		if(path != null && (gitPath.length() >= path.length())){
 			logger.debug("gitPath length(): " + gitPath.length() + ">= path.length(): " + path.length() + ".  Returning null");
 			return null;
 		}
@@ -2994,6 +2999,13 @@ public class PolicyDBDao {
 					if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Action")){
 						policy.policyAdapter.setConfigType(JSON_CONFIG);
 					}
+				}
+			}
+			if(policyXmlStream != null){
+				try {
+					policyXmlStream.close();
+				} catch (IOException e) {
+					logger.error("Exception Occured while closing input stream"+e);
 				}
 			}
 			createPolicy(policy.policyAdapter, username, policyScope,finalName,policyDataString);
