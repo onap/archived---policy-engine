@@ -40,7 +40,11 @@ public enum RuleProvider {
 	/**
 	 * Indicates Guard YAML will be providing the Rule information.
 	 */
-	GUARD_YAML("GUARD_YAML")
+	GUARD_YAML("GUARD_YAML"),
+	/**
+	 * Indicates Guard BLACKLIST YAML 
+	 */
+	GUARD_BL_YAML("GUARD_BL_YAML")
 	;
 	
 	private String name;

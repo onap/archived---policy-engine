@@ -194,7 +194,7 @@ public class ElkConnectorImpl implements ElkConnector{
 			LOGGER.trace("ENTER: " + text);
 		}
 
-		if (filter_s == null || filter_s.size() <= 0) {
+		if (filter_s == null || filter_s.size() == 0) {
 			return search(type, text);
 		}
 

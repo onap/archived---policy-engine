@@ -77,8 +77,8 @@ public class GuardPolicy {
 		this.recipe = recipe;
 	}
 
-	public List<Constraint> getLimit_constraints() {
-		return limit_constraints;
+	public LinkedList<Constraint> getLimit_constraints() {
+		return (LinkedList<Constraint>) limit_constraints;
 	}
 
 	public void setLimit_constraints(List<Constraint> limit_constraints) {

@@ -40,8 +40,8 @@ public class ControlLoopGuard {
 		this.guard = guard;
 	}
 
-	public List<GuardPolicy> getGuards() {
-		return guards;
+	public LinkedList<GuardPolicy> getGuards() {
+		return (LinkedList<GuardPolicy>) guards;
 	}
 
 	public void setGuards(List<GuardPolicy> guards) {

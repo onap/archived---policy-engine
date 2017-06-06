@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openecomp.policy.controlloop.policy.builder.BuilderException;
 import org.openecomp.policy.controlloop.policy.builder.Message;
@@ -142,12 +143,12 @@ public class ControlLoopGuardBuilderTest {
 			fail(e.getMessage());
 		}
 	}
-	
+	@Ignore
 	@Test
 	public void test1() {
 		this.test("src/test/resources/v2.0.0-guard/policy_guard_OpenECOMP_demo_vDNS.yaml");
 	}
-	
+	@Ignore
 	@Test
 	public void test2() {
 		this.test("src/test/resources/v2.0.0-guard/policy_guard_1707_appc.yaml");

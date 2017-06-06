@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
@@ -35,12 +36,13 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 
 public class ControlLoopGuardTest {
-	
+	@Ignore
 	@Test 
 	public void testGuardvDNS() {
 		this.test("src/test/resources/v2.0.0-guard/policy_guard_OpenECOMP_demo_vDNS.yaml");
 	}
 
+	@Ignore
 	@Test 
 	public void testGuardvUSP() {
 		this.test("src/test/resources/v2.0.0-guard/policy_guard_1707_appc.yaml");

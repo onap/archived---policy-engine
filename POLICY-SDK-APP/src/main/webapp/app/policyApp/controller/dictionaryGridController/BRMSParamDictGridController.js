@@ -125,7 +125,7 @@ app.controller('brmsParamDictGridController', function ($scope, PolicyAppService
 				var i;
 				if($scope.searchDatas.length > 0){
 					for(i = 0 ; i < $scope.searchDatas.length; i++){
-						searchString += $scope.searchDatas[i].name + "\n";
+						searchString += $scope.searchDatas[i] + "\n";
 					}	
 				}else{
 					searchString += "No Policies is Using this Value"

@@ -29,17 +29,11 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,11 +44,11 @@ import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.controller.BRMSDictionaryController;
-import org.openecomp.policy.rest.XACMLRestProperties;
+import org.openecomp.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
+import org.openecomp.policy.rest.jpa.BRMSParamTemplate;
 
 import com.att.research.xacml.std.IdentifierImpl;
-import com.att.research.xacml.util.XACMLProperties;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -74,14 +68,6 @@ public class CreateBrmsParamPolicy extends Policy {
 	
 	private static final Logger LOGGER = FlexLogger.getLogger(CreateBrmsParamPolicy.class);
 
-	/*
-	 * These are the parameters needed for DB access from the PAP
-	 */
-	private static String papDbDriver = null;
-	private static String papDbUrl = null;
-	private static String papDbUser = null;
-	private static String papDbPassword = null;
-
 	public CreateBrmsParamPolicy() {
 		super();
 	}
@@ -92,38 +78,35 @@ public class CreateBrmsParamPolicy extends Policy {
 
 	}
 	
-	public String expandConfigBody(String ruleContents, Map<String, String> brmsParamBody) { 
-			 
-			Set<String> keySet= new HashSet<>();
-			
-			Map<String,String> copyMap=new HashMap<>();
-			copyMap.putAll(brmsParamBody);
-			copyMap.put("policyName", policyName.substring(0, policyName.replace(".xml", "").lastIndexOf(".")));
-			copyMap.put("policyScope", policyAdapter.getDomainDir());
-			copyMap.put("policyVersion",policyAdapter.getHighestVersion().toString());
-			copyMap.put("unique", ("p"+policyName+UUID.randomUUID().toString()).replaceAll("[^A-Za-z0-9]", ""));
-			
-			//Finding all the keys in the Map data-structure.
-			keySet= copyMap.keySet();
-			Iterator<String> iterator = keySet.iterator(); 
-			Pattern p;
-			Matcher m;
-			while(iterator.hasNext()) {
-				//Converting the first character of the key into a lower case. 
-				String input= iterator.next();
-				String output  = Character.toLowerCase(input.charAt(0)) +
-		                   (input.length() > 1 ? input.substring(1) : "");
-				//Searching for a pattern in the String using the key. 
-				p=Pattern.compile("\\$\\{"+output+"\\}");	
-				m=p.matcher(ruleContents);
-				//Replacing the value with the inputs provided by the user in the editor. 
-				String finalInput = copyMap.get(input);
-				if(finalInput.contains("$")){
-					finalInput = finalInput.replace("$", "\\$");
-				}
-				ruleContents=m.replaceAll(finalInput);
+	public String expandConfigBody(String ruleContents, Map<String, String> brmsParamBody) {
+
+		Map<String,String> copyMap=new HashMap<>();
+		copyMap.putAll(brmsParamBody);
+		copyMap.put("policyName", policyName.substring(0, policyName.replace(".xml", "").lastIndexOf(".")));
+		copyMap.put("policyScope", policyAdapter.getDomainDir());
+		copyMap.put("policyVersion",policyAdapter.getHighestVersion().toString());
+		copyMap.put("unique", ("p"+policyName+UUID.randomUUID().toString()).replaceAll("[^A-Za-z0-9]", ""));
+
+		//Finding all the keys in the Map data-structure.
+		Iterator<String> iterator = copyMap.keySet().iterator(); 
+		Pattern p;
+		Matcher m;
+		while(iterator.hasNext()) {
+			//Converting the first character of the key into a lower case. 
+			String input= iterator.next();
+			String output  = Character.toLowerCase(input.charAt(0)) +
+					(input.length() > 1 ? input.substring(1) : "");
+			//Searching for a pattern in the String using the key. 
+			p=Pattern.compile("\\$\\{"+output+"\\}");	
+			m=p.matcher(ruleContents);
+			//Replacing the value with the inputs provided by the user in the editor. 
+			String finalInput = copyMap.get(input);
+			if(finalInput.contains("$")){
+				finalInput = finalInput.replace("$", "\\$");
 			}
-			return ruleContents; 
+			ruleContents=m.replaceAll(finalInput);
+		}
+		return ruleContents; 
 	} 
 			 
 
@@ -194,13 +177,9 @@ public class CreateBrmsParamPolicy extends Policy {
 		// xml.
 		Path newPolicyPath = null;
 		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
-		
-		Boolean dbIsUpdated = true;
-
-		successMap = new HashMap<>();
-		if (dbIsUpdated) {
-			successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
-		} else {
+		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
+		if(successMap == null){
+			successMap = new HashMap<>();
 			PolicyLogger.error("Failed to Update the Database Dictionary Tables.");
 			successMap.put("error", "DB UPDATE");
 		}
@@ -208,50 +187,15 @@ public class CreateBrmsParamPolicy extends Policy {
 	}
 	
 	private String getValueFromDictionary(String templateName){
-		
-		Connection con = null;
-		Statement st = null;
-		ResultSet rs = null;
-		
-		/*
-		 * Retrieve the property values for db access from the xacml.pap.properties
-		 */
-		papDbDriver = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_DRIVER);
-		papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
-		papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
-		papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
-		
-		String ruleTemplate=null;
-		
-		try {
-			//Get DB Connection
-			Class.forName(papDbDriver);
-			con = DriverManager.getConnection(papDbUrl,papDbUser,papDbPassword);
-			st = con.createStatement();
-			
-			String queryString="select rule from BRMSParamTemplate where param_template_name=\"";
-			queryString=queryString+templateName+"\"";
-			
-			rs = st.executeQuery(queryString);
-			if(rs.next()){
-				ruleTemplate=rs.getString("rule");
-			}
-			rs.close();
-		}catch (ClassNotFoundException e) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "CreateBrmsParamPolicy", "Exception querying BRMSParamTemplate");
-		} catch (SQLException e) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "CreateBrmsParamPolicy", "Exception querying BRMSParamTemplate");
-		} finally {
-			try{
-				if (con!=null) con.close();
-				if (rs!=null) rs.close();
-				if (st!=null) st.close();
-			} catch (Exception ex){
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, ex, "CreateBrmsParamPolicy", "Exception querying BRMSParamTemplate");
-			}
+		String ruleTemplate = null;
+		CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
+		String queryString="select rule from BRMSParamTemplate where param_template_name= '"+templateName+"'";
+		List<Object> result = dbConnection.getDataByQuery(queryString);
+		if(!result.isEmpty()){
+			BRMSParamTemplate template = (BRMSParamTemplate) result.get(0);
+			ruleTemplate = template.getRule();
 		}
 		return ruleTemplate;
-		
 	}
 	
 	protected Map<String, String> findType(String rule) {
