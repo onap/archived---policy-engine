@@ -19,7 +19,9 @@
  */
 package org.openecomp.policy.controlloop.policy.guard;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,7 +37,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 
 public class ControlLoopGuardTest {
-	
+
 	@Test 
 	public void testGuardvDNS() {
 		this.test("src/test/resources/v2.0.0-guard/policy_guard_OpenECOMP_demo_vDNS.yaml");

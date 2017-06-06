@@ -105,7 +105,7 @@ public class ImportService {
 							outputStream.write(buffer, 0, bytesRead) ; 
 						}
 					} catch (IOException e) {
-						PolicyLogger.error("Error in reading in Zip File from API call");
+						PolicyLogger.error("Error in reading in Zip File from API call"+e);
 						return;
 					}finally{
 						try {

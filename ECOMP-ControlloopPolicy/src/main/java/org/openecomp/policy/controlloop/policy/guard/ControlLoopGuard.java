@@ -20,13 +20,12 @@
 package org.openecomp.policy.controlloop.policy.guard;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class ControlLoopGuard {
 	
 	private Guard guard;
 	
-	private List<GuardPolicy> guards;
+	private LinkedList<GuardPolicy> guards;
 	
 	public ControlLoopGuard() {
 		//DO Nothing Empty Constructor
@@ -40,11 +39,11 @@ public class ControlLoopGuard {
 		this.guard = guard;
 	}
 
-	public List<GuardPolicy> getGuards() {
+	public LinkedList<GuardPolicy> getGuards() {
 		return guards;
 	}
 
-	public void setGuards(List<GuardPolicy> guards) {
+	public void setGuards(LinkedList<GuardPolicy> guards) {
 		this.guards = guards;
 	}
 

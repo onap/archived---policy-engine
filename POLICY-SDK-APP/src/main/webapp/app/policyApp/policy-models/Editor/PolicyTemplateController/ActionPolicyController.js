@@ -143,6 +143,7 @@ app.controller('actionPolicyController', ['$scope', 'PolicyAppService', 'policyN
 
     if(!$scope.temp.policy.editPolicy && !$scope.temp.policy.readOnly){
     	$scope.temp.policy.attributes = [];
+    	$scope.temp.policy.attributes.push({'id':'choice'+1});
     	 $scope.temp.policy.ruleAlgorithmschoices = [];
     }else{
 	   if($scope.temp.policy.attributes.length == 0){

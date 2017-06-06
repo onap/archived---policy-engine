@@ -157,6 +157,8 @@ public class DecisionPolicyController extends RestrictedBaseController {
 									break;
 								}else if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().toString().equalsIgnoreCase("GUARD_YAML")){
 									policyAdapter.setRuleProvider("GUARD_YAML");
+								}else if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().toString().equalsIgnoreCase("GUARD_BL_YAML")){
+									policyAdapter.setRuleProvider("GUARD_BL_YAML");
 								}
 							}else{
 								policyAdapter.setRuleProvider("Custom");
@@ -166,7 +168,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 								ApplyType decisionApply = (ApplyType) condition.getExpression().getValue();
 								decisionApply = (ApplyType) decisionApply.getExpression().get(0).getValue();
 								ruleAlgoirthmTracker = new LinkedList<>();
-								if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals("GUARD_YAML")){
+								if(policyAdapter.getRuleProvider()!=null && (policyAdapter.getRuleProvider().equals("GUARD_YAML")||(policyAdapter.getRuleProvider().equals("GUARD_BL_YAML")))){
 									YAMLParams yamlParams = new YAMLParams();
 									for(int i=0; i<attributeList.size() ; i++){
 										Map<String, String> map = (Map<String,String>)attributeList.get(i);
@@ -179,9 +181,19 @@ public class DecisionPolicyController extends RestrictedBaseController {
 									ApplyType apply = ((ApplyType)((ApplyType)decisionApply.getExpression().get(0).getValue()).getExpression().get(0).getValue());
 									yamlParams.setGuardActiveStart(((AttributeValueType)apply.getExpression().get(1).getValue()).getContent().get(0).toString());
 									yamlParams.setGuardActiveEnd(((AttributeValueType)apply.getExpression().get(2).getValue()).getContent().get(0).toString());
-									yamlParams.setLimit(((AttributeValueType)((ApplyType)decisionApply.getExpression().get(1).getValue()).getExpression().get(1).getValue()).getContent().get(0).toString());
-									String timeWindow = ((AttributeDesignatorType)((ApplyType)((ApplyType)decisionApply.getExpression().get(1).getValue()).getExpression().get(0).getValue()).getExpression().get(0).getValue()).getIssuer();
-									yamlParams.setTimeWindow(timeWindow.substring(timeWindow.lastIndexOf(":")+1));
+									if(policyAdapter.getRuleProvider().equals("GUARD_BL_YAML")){
+										apply = (ApplyType)((ApplyType)((ApplyType)decisionApply.getExpression().get(0).getValue()).getExpression().get(1).getValue()).getExpression().get(2).getValue();
+										Iterator<JAXBElement<?>> attributes = apply.getExpression().iterator();
+										List<String> blackList = new ArrayList<>();
+										while(attributes.hasNext()){
+											blackList.add(((AttributeValueType)attributes.next().getValue()).getContent().get(0).toString());
+										}
+										yamlParams.setBlackList(blackList);
+									}else{
+										yamlParams.setLimit(((AttributeValueType)((ApplyType)decisionApply.getExpression().get(1).getValue()).getExpression().get(1).getValue()).getContent().get(0).toString());
+										String timeWindow = ((AttributeDesignatorType)((ApplyType)((ApplyType)decisionApply.getExpression().get(1).getValue()).getExpression().get(0).getValue()).getExpression().get(0).getValue()).getIssuer();
+										yamlParams.setTimeWindow(timeWindow.substring(timeWindow.lastIndexOf(":")+1));
+									}
 									policyAdapter.setYamlparams(yamlParams);
 									policyAdapter.setAttributes(new ArrayList<Object>());
 									policyAdapter.setRuleAlgorithmschoices(new ArrayList<Object>());

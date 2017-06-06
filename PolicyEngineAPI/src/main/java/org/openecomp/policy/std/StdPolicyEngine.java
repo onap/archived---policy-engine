@@ -689,15 +689,13 @@ public class StdPolicyEngine {
                 LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + pdps.get(0), e);
                 exception = new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
             }
-            finally{
-                if(result == null){
-                    Collections.rotate(pdps, -1);
-                    Collections.rotate(encoding, -1);
-                    pdpsCount++;
-                }else{
-                    break;
-                }
-            }
+            if(result == null){
+        		Collections.rotate(pdps, -1);
+        		Collections.rotate(encoding, -1);
+        		pdpsCount++;
+        	}else{
+        		break;
+        	}
         }
         if(exception != null && exception.getStatusCode()!=null){
             if(exception.getStatusCode().equals(HttpStatus.UNAUTHORIZED)){

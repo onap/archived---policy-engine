@@ -32,7 +32,86 @@
 						<option>Custom</option>
 						<option>AAF</option>
 						<option>GUARD_YAML</option>
+						<option>GUARD_BL_YAML<option>
 					</select>
+				</div>
+			</div>
+		</div>
+		
+		<div ng-if="temp.policy.ruleProvider == 'GUARD_BL_YAML'">
+			<div class="well">
+				<div class="form-group row">
+					<div class="form-group col-sm-1">
+						<label>Guard YAML Attributes:</label><br>
+					</div>
+				</div>
+				<div class="form-group row">
+						<div class="form-group row" style="margin-left: 2%">
+							<div class="form-group col-sm-3">
+								<label> actor: </label>
+							</div>
+							<div class="form-group col-sm-3">
+								<input type="text" class="form-control"
+									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.actor"
+									placeholder="Actor" />
+							</div>
+						</div>
+						<div class="form-group row" style="margin-left: 2%">
+							<div class="form-group col-sm-3">
+								<label> recipe: </label>
+							</div>
+							<div class="form-group col-sm-3">
+								<input type="text" class="form-control"
+									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.recipe"
+									placeholder="Recipe" />
+							</div>
+						</div>
+						<div class="form-group row" style="margin-left: 2%">
+							<div class="form-group col-sm-3">
+								<label> guardActiveStart: </label>
+							</div>
+							<div class="form-group col-sm-3">
+								<input type="text" class="form-control"
+									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.guardActiveStart"
+									placeholder="00:00:00-05:00" />
+							</div>
+						</div>
+						<div class="form-group row" style="margin-left: 2%">
+							<div class="form-group col-sm-3">
+								<label> guardActiveEnd: </label>
+							</div>
+							<div class="form-group col-sm-3">
+								<input type="text" class="form-control"
+									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.guardActiveEnd"
+									placeholder="00:00:00-05:00" />
+							</div>
+						</div>
+						<div class="form-group row" style="margin-left: 2%">
+							<div class="form-group col-sm-3">
+								<label> BlackList: </label>
+								<button type="button" class="btn btn-default"
+									ng-disabled="temp.policy.readOnly" ng-click="addNewBL()">
+									<i class="fa fa-plus"></i>
+								</button>
+							</div>
+							<div class="form-group col-sm-4">
+								<div data-ng-repeat="choice in temp.policy.yamlparams.blackList track by $index">
+									<div class="form-group row">
+									<div class="form-group col-sm-9">
+										<input type="text" class="form-control"
+										ng-disabled="temp.policy.readOnly"
+										ng-model="temp.policy.yamlparams.blackList[$index]" placeholder="BlackList" />
+									</div>
+									<div class="form-group col-sm-1">
+										<button type="button" class="btn btn-default" ng-show="$last"
+										ng-disabled="temp.policy.readOnly" ng-click="removeBL()">
+										<i class="fa fa-minus"></i>
+										</button>
+									</div>
+									</div>
+								</div>
+							</div>
+						</div>
 				</div>
 			</div>
 		</div>
@@ -199,7 +278,7 @@
 
 		<div ng-if="temp.policy.ruleProvider == 'Custom'">
 			<div class="well">
-				<label>Decision Rule Algorithms:<sup><b>*</b></sup></label><br>
+				<label>Decision Rule Algorithms:<sup><b></b></sup></label><br>
 				<div class="form-group row">
 					<div class="form-group col-sm-1">
 						<button type="button" class="btn btn-default"

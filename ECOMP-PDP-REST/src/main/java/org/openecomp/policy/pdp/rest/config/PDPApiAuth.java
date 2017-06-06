@@ -51,6 +51,10 @@ public class PDPApiAuth {
 	    private static Long oldModified = null;
 	    private static AAFPolicyClient aafClient = null;
 	    
+	    private PDPApiAuth(){
+	    	// Private Constructor
+	    }
+	    
 	    /*
 	     * Set Property by reading the properties File.
 	     */
@@ -84,7 +88,7 @@ public class PDPApiAuth {
 	            String resource) {
 	        try{
 	            String[] userNamePass = PolicyUtils.decodeBasicEncoding(clientEncoding);
-	            if(userNamePass==null){
+	            if(userNamePass==null || userNamePass.length==0){
 	                String usernameAndPassword = null;
 	                byte[] decodedBytes = Base64.getDecoder().decode(clientEncoding);
 	                usernameAndPassword = new String(decodedBytes, "UTF-8");

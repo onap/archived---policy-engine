@@ -23,6 +23,7 @@ package org.openecomp.policyEngine;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.file.Path;
@@ -65,10 +66,9 @@ public class ConfigFirewallPolicyClient {
 			policyParameters.setRiskType("PROD");
 			File jsonFile = null;
 			String jsonRuleList = null;
-			if (jsonRuleList == null) {
-				Path file = Paths.get("C:\\policyAPI\\firewallRulesJSON\\Config_FW_1607Rule.json");
-				jsonFile = file.toFile();
-			}
+			Path file = Paths.get("C:\\policyAPI\\firewallRulesJSON\\Config_FW_1607Rule.json");
+			jsonFile = file.toFile();
+			
 			//buildJSON(jsonFile, jsonRuleList);
 			policyParameters.setConfigBody(buildJSON(jsonFile, jsonRuleList).toString());		
 			policyParameters.setConfigBodyType(PolicyType.JSON);
@@ -93,24 +93,26 @@ public class ConfigFirewallPolicyClient {
 }
 	
 	private static JsonObject buildJSON(File jsonInput, String jsonString) throws FileNotFoundException {
-		JsonObject json = null;;
+		JsonObject json = null;
+		JsonReader jsonReader = null;
 		if (jsonString != null && jsonInput == null) {
 			StringReader in = null;
-			
 			in = new StringReader(jsonString);
-			
-			JsonReader jsonReader = Json.createReader(in);
+			jsonReader = Json.createReader(in);
 			json = jsonReader.readObject();
-			
-			
+			in.close();
 		} else {
 			InputStream in = null;
 			in = new FileInputStream(jsonInput); 
-			
-			JsonReader jsonReader = Json.createReader(in);
+			jsonReader = Json.createReader(in);
 			json = jsonReader.readObject();
+			try {
+				in.close();
+			} catch (IOException e) {
+				System.err.println("Exception Occured while closing input stream"+e);
+			}
 		}
-
+		jsonReader.close();
 		return json;
 	}
 

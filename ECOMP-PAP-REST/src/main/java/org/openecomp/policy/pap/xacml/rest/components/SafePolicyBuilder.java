@@ -19,6 +19,7 @@
  */
 package org.openecomp.policy.pap.xacml.rest.components;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +31,10 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 public class SafePolicyBuilder {
 
+	private SafePolicyBuilder(){
+		//Private Constructor. 
+	}
+	
 	public static ControlLoopGuard loadYamlGuard(String specification) {
 		//
 		// Read the yaml into our Java Object
@@ -40,18 +45,29 @@ public class SafePolicyBuilder {
 		return (ControlLoopGuard) obj;
 	}
 	
-	public static String	generateXacmlGuard(String xacmlFileContent,Map<String, String> generateMap) {
-		for(String key: generateMap.keySet()){
-			Pattern p = Pattern.compile("\\$\\{" +key +"\\}");
+	public static String generateXacmlGuard(String xacmlFileContent,Map<String, String> generateMap, List<String> blacklist) {
+		for(Map.Entry<String,String> map: generateMap.entrySet()){
+			Pattern p = Pattern.compile("\\$\\{" +map.getKey() +"\\}");
 			Matcher m = p.matcher(xacmlFileContent);
-			String finalInput = generateMap.get(key);
+			String finalInput = map.getValue();
 			if(finalInput.contains("$")){
 				finalInput = finalInput.replace("$", "\\$");
 			}
 			xacmlFileContent=m.replaceAll(finalInput);
 		}
+		if(blacklist!=null && !blacklist.isEmpty()){
+			StringBuilder rule = new StringBuilder();
+			for(String blackListName : blacklist){
+				if(blackListName.contains("$")){
+					blackListName = blackListName.replace("$", "\\$");
+				}
+				rule.append("<AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">"+blackListName+"</AttributeValue>");
+			}
+			Pattern p = Pattern.compile("\\$\\{blackListElement\\}");
+			Matcher m = p.matcher(xacmlFileContent);
+			xacmlFileContent=m.replaceAll(rule.toString());
+		}
 		PolicyLogger.info("Generated XACML from the YAML Spec: \n" + xacmlFileContent);
-
 		return xacmlFileContent;
 	}
 }

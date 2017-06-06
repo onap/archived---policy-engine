@@ -1124,7 +1124,7 @@ rule "BRMSParamvFWDemoPolicy.MSO.RESPONSE"
 		}
 		
 end	
-rule "Params" 
+rule "com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.Params" 
 	salience 1000 
 	when
 	then

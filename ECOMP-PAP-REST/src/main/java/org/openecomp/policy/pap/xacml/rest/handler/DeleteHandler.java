@@ -308,7 +308,9 @@ public class DeleteHandler {
 					return true;
 				}
 			}finally{
-				st.close();
+				if(st != null){
+					st.close();
+				}	
 			}
 		}
 		return false;

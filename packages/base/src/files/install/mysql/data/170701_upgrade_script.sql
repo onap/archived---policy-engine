@@ -19,3 +19,5 @@
 */
 use ecomp_sdk;
 ALTER TABLE fwtagpicker add networkRole varchar(64);
+
+INSERT INTO policyeditorscopes (`id`, `scopename`, `created_date`, `created_by`, `modified_date`, `modified_by`) VALUES ('1', 'com', '2017-06-01 11:45:36', 'demo', '2017-06-01 11:45:36', 'demo');
