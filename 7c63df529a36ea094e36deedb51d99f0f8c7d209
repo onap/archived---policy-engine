@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_fbbb6bc2",
+        "filename": "ECOMP-PAP-REST/Decision_GuardBLPolicyTemplate.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-06-06T14:16:37Z",
+      "side": 1,
+      "message": "Should this be located at the root directory? Or in a resource directory?",
+      "revId": "7c63df529a36ea094e36deedb51d99f0f8c7d209",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_bbb5f3ce",
+        "filename": "ECOMP-PAP-REST/src/main/java/org/openecomp/policy/pap/xacml/rest/components/CreateNewMicroSerivceModel.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-06-06T14:16:37Z",
+      "side": 1,
+      "message": "Let\u0027s spell check the name of this file. Serivce --\u003e Service",
+      "revId": "7c63df529a36ea094e36deedb51d99f0f8c7d209",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_dbb0a7df",
+        "filename": "ECOMP-REST/src/main/java/org/openecomp/policy/rest/adapter/YAMLParams.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-06-06T14:16:37Z",
+      "side": 1,
+      "message": "Our goal is to build this platform such that templates can be imported and updated WITHOUT any code changes. By implementing this way, every time the template changes then this piece of code has to change. That results in an update in the software. Not our goal. We need to build the code such that the parameters are flexible.",
+      "revId": "7c63df529a36ea094e36deedb51d99f0f8c7d209",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
