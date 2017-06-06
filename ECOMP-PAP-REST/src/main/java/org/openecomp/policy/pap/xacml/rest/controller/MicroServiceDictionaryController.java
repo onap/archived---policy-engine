@@ -1010,7 +1010,7 @@ public class MicroServiceDictionaryController {
 			this.newModel.setDependency("");
 		}
 
-		if (mainClass.getDependency()==null){
+		if (mainClass != null && mainClass.getDependency()==null){
 			mainClass.setDependency("");
 		}
 

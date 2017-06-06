@@ -23,6 +23,7 @@ package org.openecomp.policyEngine;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.file.Path;
@@ -48,20 +49,26 @@ static Boolean isEdit = false;
 //Builds JSONObject from File  
 private static JsonObject buildJSON(File jsonInput, String jsonString) throws FileNotFoundException {
     JsonObject json = null;;
-         
+    JsonReader jsonReader = null;  
     if (jsonString != null && jsonInput == null) {
         StringReader in = null;
             in = new StringReader(jsonString);
-        JsonReader jsonReader = Json.createReader(in);
+            jsonReader = Json.createReader(in);
             json = jsonReader.readObject();
+            in.close();
     }
     else {
         InputStream in = null;
         in = new FileInputStream(jsonInput);
-        JsonReader jsonReader = Json.createReader(in);
+        jsonReader = Json.createReader(in);
         json = jsonReader.readObject();
+        try {
+			in.close();
+		} catch (IOException e) {
+			System.err.println("Exception Occured while closing input stream"+e);
+		}
     }
-         
+    jsonReader.close();    
     return json;
 }
 public static void main(String[] args) {
@@ -80,10 +87,9 @@ public static void main(String[] args) {
 			// Set up Micro Services Attributes 
 			File jsonFile = null;
 			String MSjsonString= null;
-			if (MSjsonString == null) {
-				Path file = Paths.get("C:\\policyAPI\\MicroServicesJSON\\testStringMatching.json");
-				jsonFile = file.toFile();
-			}
+			Path file = Paths.get("C:\\policyAPI\\MicroServicesJSON\\testStringMatching.json");
+			jsonFile = file.toFile();
+			
 			policyParameters.setConfigBody(buildJSON(jsonFile, MSjsonString).toString());		
 			policyParameters.setConfigBodyType(PolicyType.JSON);
 

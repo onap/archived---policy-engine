@@ -328,8 +328,7 @@ public class ActionPolicy extends Policy {
 
 		// Add JSON_URL Assignment:
 		String actionBody = getActionPolicyDict(comboDictValue).getBody();
-		if (!actionBody.equals(null)) {
-		//if(!(actionBody==null || "".equals(actionBody))){
+		if (actionBody != null) {
 			AttributeAssignmentExpressionType assignmentJsonURL = new AttributeAssignmentExpressionType();
 			assignmentJsonURL.setAttributeId(BODY_ATTRIBUTEID);
 			assignmentJsonURL.setCategory(CATEGORY_RESOURCE);
@@ -342,7 +341,7 @@ public class ActionPolicy extends Policy {
 			obligation.getAttributeAssignmentExpression().add(assignmentJsonURL);
 		}
 
-		if(!getActionPolicyDict(comboDictValue).getHeader().equals(null)){
+		if(getActionPolicyDict(comboDictValue).getHeader() != null){
 			String headerVal = getActionPolicyDict(comboDictValue).getHeader();
 			if(headerVal != null && !headerVal.equals("")){
 				// parse it on : to get number of headers
@@ -484,21 +483,23 @@ public class ActionPolicy extends Policy {
 	
 	private Map<String,String> createDropDownMap(){
 		JPAUtils jpaUtils = null;
+		Map<String, String> dropDownMap = new HashMap<>();
 		try {
 			jpaUtils = JPAUtils.getJPAUtilsInstance(XACMLPapServlet.getEmf());
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured"+e);
 		}
-		Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
-		Map<String, String> dropDownMap = new HashMap<>();
-		for (Datatype id : functionMap.keySet()) {
-			List<FunctionDefinition> functionDefinitions = (List<FunctionDefinition>) functionMap
-					.get(id);
-			for (FunctionDefinition functionDef : functionDefinitions) {
-				dropDownMap.put(functionDef.getShortname(),functionDef.getXacmlid());
+		if(jpaUtils != null){
+			Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
+			
+			for (Datatype id : functionMap.keySet()) {
+				List<FunctionDefinition> functionDefinitions = (List<FunctionDefinition>) functionMap
+						.get(id);
+				for (FunctionDefinition functionDef : functionDefinitions) {
+					dropDownMap.put(functionDef.getShortname(),functionDef.getXacmlid());
+				}
 			}
 		}
-		
 		return dropDownMap;
 	}
 	

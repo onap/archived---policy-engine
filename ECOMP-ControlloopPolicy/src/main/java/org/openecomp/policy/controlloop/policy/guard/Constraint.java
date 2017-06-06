@@ -77,11 +77,25 @@ public class Constraint {
 		this.blacklist = new LinkedList<>(blacklist);
 		
 	}
+
+	public Constraint(Map<String, String> time_in_range, List<String> blacklist) {
+		if (time_in_range != null) {
+			this.time_in_range = Collections.unmodifiableMap(time_in_range);
+		}
+		this.blacklist = new LinkedList<>(blacklist);
+	}
 	
 	public Constraint(Integer num, String duration, List<String> blacklist) {
 		this.num = num;
 		this.duration = duration;
 		this.blacklist = new LinkedList<>(blacklist);
+	}
+	
+	public Constraint(Integer num, String duration, Map<String, String> time_in_range) {
+		this(num, duration);
+		if (time_in_range != null) {
+			this.time_in_range = Collections.unmodifiableMap(time_in_range);
+		}
 	}
 	
 	public Constraint(Integer num, String duration, Map<String, String> time_in_range, List<String> blacklist) {
@@ -102,13 +116,7 @@ public class Constraint {
 	}
 	
 	public boolean isValid() {
-		if (num == null && duration != null) {
-			return false;
-		}
-		if (duration == null && num != null) {
-			return false;
-		}
-		return true;
+		return ((num == null && duration != null)|| (duration == null && num != null))? false : true;
 	}
 	
 	@Override

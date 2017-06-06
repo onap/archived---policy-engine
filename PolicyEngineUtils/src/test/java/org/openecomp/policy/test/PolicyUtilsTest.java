@@ -40,8 +40,6 @@ public class PolicyUtilsTest {
 	
 	@Test
 	public void testJsonConversions() throws Exception{
-		@SuppressWarnings("unused")
-		PolicyUtils policyUtils = new PolicyUtils();
 		StdPDPNotification notification = new StdPDPNotification();
 		notification.setNotificationType(NotificationType.BOTH);
 		Collection<StdRemovedPolicy> removedPolicies = new ArrayList<>();

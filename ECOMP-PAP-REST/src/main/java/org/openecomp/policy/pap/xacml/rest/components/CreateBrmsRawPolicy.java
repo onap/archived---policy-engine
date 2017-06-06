@@ -131,13 +131,9 @@ public class CreateBrmsRawPolicy extends Policy {
 		Path newPolicyPath = null;
 		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 		
-		Boolean dbIsUpdated = true;
-
-		successMap = new HashMap<String, String>();
-		if (dbIsUpdated) {
-			successMap = createPolicy(newPolicyPath,
-					getCorrectPolicyDataObject());
-		} else {
+		successMap = createPolicy(newPolicyPath, getCorrectPolicyDataObject());
+		if (successMap == null) {
+			successMap = new HashMap<>();
 			PolicyLogger.error("Failed to Update the Database Dictionary Tables.");
 			successMap.put("error", "DB UPDATE");
 		}

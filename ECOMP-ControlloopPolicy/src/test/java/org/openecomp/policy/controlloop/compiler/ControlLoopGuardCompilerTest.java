@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.openecomp.policy.controlloop.guard.compiler.ControlLoopGuardCompiler;
 
 public class ControlLoopGuardCompilerTest {
-
+	
 	@Test 
 	public void testTest1() {
 		try {

@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.pap.xacml.rest.components.CreateBRMSRuleTemplate;
-import org.openecomp.policy.pap.xacml.rest.components.CreateNewMicroSerivceModel;
+import org.openecomp.policy.pap.xacml.rest.components.CreateNewMicroServiceModel;
 
 public class ImportService {
 
@@ -65,7 +65,7 @@ public class ImportService {
 			successMap = brmsRuleTemplate.addRule(builder.toString(), serviceName, description, "API");
 			break;
 		case "MICROSERVICE":
-			CreateNewMicroSerivceModel newMS = null;
+			CreateNewMicroServiceModel newMS = null;
 			String randomID = UUID.randomUUID().toString();
 			if ( fileName != null) {
 				File extracDir = new File("ExtractDir");
@@ -105,7 +105,7 @@ public class ImportService {
 							outputStream.write(buffer, 0, bytesRead) ; 
 						}
 					} catch (IOException e) {
-						PolicyLogger.error("Error in reading in Zip File from API call");
+						PolicyLogger.error("Error in reading in Zip File from API call"+e);
 						return;
 					}finally{
 						try {
@@ -120,7 +120,7 @@ public class ImportService {
 						}
 					}
 				}
-				newMS =  new CreateNewMicroSerivceModel(fileName, serviceName, "API", version, randomID);
+				newMS =  new CreateNewMicroServiceModel(fileName, serviceName, "API", version, randomID);
 				successMap = newMS.addValuesToNewModel();
 				if (successMap.containsKey("success")) {
 					successMap.clear();

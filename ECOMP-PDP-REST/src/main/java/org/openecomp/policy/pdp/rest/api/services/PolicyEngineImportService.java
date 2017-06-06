@@ -80,10 +80,10 @@ public class PolicyEngineImportService {
     }
 
     private void specialCheck() {
-        if(importResponse.contains("BAD REQUEST") || importResponse.contains("PE300")){
-            status = HttpStatus.BAD_REQUEST;
-        }else if(importResponse.contains("PE200")){
+    	if(importResponse==null || importResponse.contains("PE200")){
             status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }else if(importResponse.contains("BAD REQUEST") || importResponse.contains("PE300")){
+            status = HttpStatus.BAD_REQUEST;
         }
     }
 

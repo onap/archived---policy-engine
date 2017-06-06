@@ -126,7 +126,7 @@ app.controller('siteDictGridController', function ($scope, PolicyAppService, mod
 				var i;
 				if($scope.searchDatas.length > 0){
 					for(i = 0 ; i < $scope.searchDatas.length; i++){
-						searchString += $scope.searchDatas[i].name + "\n";
+						searchString += $scope.searchDatas[i] + "\n";
 					}	
 				}else{
 					searchString += "No Policies is Using this Value"
