@@ -109,30 +109,6 @@ public class PushPolicyController {
 		}
 	}
 
-	/*private void safetyChecker(String policyName) {
-		if (XACMLProperties.getProperty("xacml.rest.pap.safetychecker").equals("on")) {
-			if (policyName.contains("Config_MS_") || policyName.contains("BRMS_Param")) {
-				SafetyCheckerService service = new SafetyCheckerService();
-				PolicySafetyChecker safetyChecker = new PolicySafetyChecker();
-				boolean isEntered = false;
-				try {
-					JSONObject policyDataObj = service.getConfigByPolicyName(policyName, XACMLPapServlet.getConfigHome());
-					isEntered = safetyChecker.addItem(policyDataObj);
-				} catch (Exception e) {
-					PolicyLogger.warn(MessageCodes.ERROR_PROCESS_FLOW, "XACMLPapServlet", e, "Error while adding ClosedLoop in the database: "
-							+ "This is a PolicySafetyChecker warning, the push execution may proceed normally.");
-				}
-				if (isEntered) {
-					LOGGER.info("SafetyChecker successfully added the closedLoop to the DB table.");
-				} else {
-					LOGGER.info("SafetyChecker failed to add the closedLoop to the DB table.");
-				}
-			}
-		} else {
-			LOGGER.info("PolicySafetyChecker is turned off.");
-		}
-	}*/
-
 	private void addPolicyToGroup(String policyScope, String policyID, String policyName, String pdpGroup, HttpServletResponse response) {
 		StdPDPGroup selectedPDPGroup = null;
 		StdPDPPolicy selectedPolicy = null;

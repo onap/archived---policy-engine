@@ -31,7 +31,7 @@ public class GuardPolicy {
 	private String description;
 	private String actor;
 	private String recipe;
-	private List<Constraint> limit_constraints;
+	private LinkedList<Constraint> limit_constraints;
 	
 	public GuardPolicy() {
 		//Do Nothing Empty Constructor. 
@@ -77,11 +77,11 @@ public class GuardPolicy {
 		this.recipe = recipe;
 	}
 
-	public List<Constraint> getLimit_constraints() {
-		return limit_constraints;
+	public LinkedList<Constraint> getLimit_constraints() {
+		return  limit_constraints;
 	}
 
-	public void setLimit_constraints(List<Constraint> limit_constraints) {
+	public void setLimit_constraints(LinkedList<Constraint> limit_constraints) {
 		this.limit_constraints = limit_constraints;
 	}
 

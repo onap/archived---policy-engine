@@ -25,11 +25,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -46,27 +41,18 @@ import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
-import org.openecomp.policy.rest.XACMLRestProperties;
+import org.openecomp.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.openecomp.policy.rest.jpa.MicroServiceModels;
 import org.openecomp.policy.rest.jpa.UserInfo;
 import org.openecomp.policy.rest.util.MSAttributeObject;
 import org.openecomp.policy.rest.util.MSModelUtils;
 import org.openecomp.policy.rest.util.MSModelUtils.MODEL_TYPE;
 
-import com.att.research.xacml.util.XACMLProperties;
-
 public class CreateNewMicroSerivceModel {
 	private static final Logger logger = FlexLogger.getLogger(CreateNewMicroSerivceModel.class);
 	private MicroServiceModels newModel = null;
 	private HashMap<String,MSAttributeObject > classMap = new HashMap<>();
 
-	/*
-	 * These are the parameters needed for DB access from the PAP
-	 */
-	private static String papDbDriver = null;
-	private static String papDbUrl = null;
-	private static String papDbUser = null;
-	private static String papDbPassword = null;
 	
 	MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsEcompName(), XACMLPapServlet.getMsPolicyName());
 
@@ -77,7 +63,6 @@ public class CreateNewMicroSerivceModel {
 	public CreateNewMicroSerivceModel(String importFile, String  modelName, String description, String version, String randomID) {
 	
 		this.newModel = new MicroServiceModels();
-		this.newModel.setDescription(description);
 		this.newModel.setVersion(version);
 		this.newModel.setModelName(modelName);
 		UserInfo userInfo = new UserInfo();
@@ -135,7 +120,7 @@ public class CreateNewMicroSerivceModel {
 	    int BUFFER = 2048;
 	    File file = new File(zipFile);
 
-	    ZipFile zip;
+	    ZipFile zip = null;
 		try {
 			zip = new ZipFile("ExtractDir" + File.separator +file);
 		    String newPath =  zipFile.substring(0, zipFile.length() - 4);
@@ -143,8 +128,7 @@ public class CreateNewMicroSerivceModel {
 		    Enumeration zipFileEntries = zip.entries();
 	
 		    // Process each entry
-		    while (zipFileEntries.hasMoreElements())
-		    {
+		    while (zipFileEntries.hasMoreElements()){
 		        // grab a zip file entry
 		        ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
 		        String currentEntry = entry.getName();
@@ -153,8 +137,7 @@ public class CreateNewMicroSerivceModel {
 	
 		        destinationParent.mkdirs();
 	
-		        if (!entry.isDirectory())
-		        {
+		        if (!entry.isDirectory()){
 		            BufferedInputStream is = new BufferedInputStream(zip
 		            .getInputStream(entry));
 		            int currentByte;
@@ -173,13 +156,20 @@ public class CreateNewMicroSerivceModel {
 		            is.close();
 		        }
 	
-		        if (currentEntry.endsWith(".zip"))
-		        {
+		        if (currentEntry.endsWith(".zip")){
 		            extractFolder(destFile.getAbsolutePath());
 		        }
 		    }
 	    } catch (IOException e) {
-			logger.error("Failed to unzip model file " + zipFile);
+			logger.error("Failed to unzip model file " + zipFile + e);
+		}finally{
+			if(zip != null){
+				try {
+					zip.close();
+				} catch (Exception e) {
+					logger.error("Exception Occured while closing the zip file"+e);
+				}
+			}
 		}
 	}
 
@@ -225,70 +215,34 @@ public class CreateNewMicroSerivceModel {
 		
 	}
 	
-	@SuppressWarnings("resource")
 	public Map<String, String> saveImportService(){
-		Map<String, String> successMap = new HashMap<>();
-		
-		Connection con = null;
-		Statement st = null;
-		ResultSet rs = null;
 		String modelName = this.newModel.getModelName();
 		String imported_by = "API";
 		String version = this.newModel.getVersion();
-		String insertQuery = null;
-		int ID = 0;
-		
-		/*
-		 * Retrieve the property values for db access from the xacml.pap.properties
-		 */
-		papDbDriver = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_DRIVER);
-		papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
-		papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
-		papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
-		
-		try {
-			//Get DB Connection
-			Class.forName(papDbDriver);
-			con = DriverManager.getConnection(papDbUrl,papDbUser,papDbPassword);
-			st = con.createStatement();
-			String queryString ="SELECT * FROM MicroServiceModels WHERE modelName='" + modelName + "' AND version='" + version+ "';";
-			rs = st.executeQuery(queryString);
-		
-			if(rs.next()){
-				successMap.put("DBError", "EXISTS");
-				logger.error("Import new service failed.  Service already exists");
-			}else{
-				rs = st.executeQuery("SELECT MAX(ID) AS ID FROM MicroServiceModels;");
-				if(rs.next()){
-					ID = rs.getInt("ID");
-					ID++;
-				}
-	
-				String newDependency = "[" + this.newModel.getDependency() + "]";
-	            this.newModel.setDependency(newDependency);
-	            insertQuery = "INSERT INTO MicroServiceModels (ID, modelName, Dependency, DESCRIPTION, attributes, ref_attributes, sub_attributes, version, imported_by, enumValues, annotation) "
-						+ "VALUES("+ID+",'"+modelName+"','"+ this.newModel.getDependency()+"','"+this.newModel.getDescription()+"','"+this.newModel.getAttributes()+
-						"','"+this.newModel.getRef_attributes()+"','"+this.newModel.getSub_attributes()+"','"+version+"','"+imported_by+"','"+this.newModel.getEnumValues()+"','"+this.newModel.getAnnotation()+"')";
-				st.executeUpdate(insertQuery);
-				successMap.put("success", "success");
-			}
-			rs.close();
-		}catch (ClassNotFoundException e) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "saveImportService", "Exception querying MicroServiceModels");
-			successMap.put("DBError", "Error Query");
-		} catch (SQLException e) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "saveImportService", "Exception querying MicroServiceModels");
-			successMap.put("DBError", "Error Query");
-		} finally {
-			try{
-				if (con!=null) con.close();
-				if (rs!=null) rs.close();
-				if (st!=null) st.close();
-			} catch (Exception ex){
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, ex, "saveImportService", "Exception querying MicroServiceModels");
-			}
-		}
-
+		Map<String, String> successMap = new HashMap<>();
+		CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
+		List<Object> result = dbConnection.getDataById(MicroServiceModels.class, "modelName:version", modelName+":"+version);
+		if(result.isEmpty()){
+			MicroServiceModels model = new MicroServiceModels();
+			model.setModelName(modelName);
+			model.setVersion(version);
+			model.setAttributes(this.newModel.getAttributes());
+			model.setAnnotation(this.newModel.getAnnotation());
+			model.setDependency(this.newModel.getDependency());
+			model.setDescription(this.newModel.getDescription());
+			model.setEnumValues(this.newModel.getEnumValues());
+			model.setRef_attributes(this.newModel.getRef_attributes());
+			model.setSub_attributes(this.newModel.getSub_attributes());
+			UserInfo userInfo = new UserInfo();
+			userInfo.setUserLoginId(imported_by);
+			userInfo.setUserName(imported_by);
+			model.setUserCreatedBy(userInfo);
+			dbConnection.save(model);
+			successMap.put("success", "success");
+		}else{
+			successMap.put("DBError", "EXISTS");
+			logger.error("Import new service failed.  Service already exists");
+		}		
 		return successMap;
 	}
 }

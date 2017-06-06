@@ -1343,7 +1343,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			loggingContext.transactionEnded();
 			auditLogger.info("Success");
 
-			if ((policy.getId().contains("Config_MS_")) || (policy.getId().contains("BRMS_Param"))) {
+			if (policy != null && (policy.getId().contains("Config_MS_")) || (policy.getId().contains("BRMS_Param"))) {
 				PushPolicyHandler pushPolicyHandler = PushPolicyHandler.getInstance();
 				if (pushPolicyHandler.preSafetyCheck(policy, CONFIG_HOME)) {
 					LOGGER.debug("Precheck Successful.");
@@ -1801,10 +1801,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				if (papEngine.getPDP(pdpId) == null) {
 					// this is a request to create a new PDP object
 					try{
-						acPutTransaction.addPdpToGroup(pdp.getId(), group.getId(), pdp.getName(), pdp.getDescription(), pdp.getJmxPort(),"XACMLPapServlet.doACPut");
+						acPutTransaction.addPdpToGroup(pdp == null ? "PDP is null" : pdp.getId(), group.getId(), pdp == null ? "PDP is null" : pdp.getName(), 
+								pdp == null ? "PDP is null" : pdp.getDescription(), 
+								pdp == null ? 0 : pdp.getJmxPort(),"XACMLPapServlet.doACPut");
 					} catch(Exception e){
 						PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " Error while adding pdp to group in the database: "
-								+"pdp="+pdp.getId()+",to group="+group.getId());
+								+"pdp="+ (pdp == null ? "PDP is null" : pdp.getId()) +",to group="+group.getId());
 						throw new PAPException(e.getMessage());
 					}
 					papEngine.newPDP(pdp.getId(), group, pdp.getName(), pdp.getDescription(), pdp.getJmxPort());
@@ -1813,7 +1815,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						acPutTransaction.updatePdp(pdp, "XACMLPapServlet.doACPut");
 					} catch(Exception e){
 						PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " Error while updating pdp in the database: "
-								+"pdp="+pdp.getId());
+								+"pdp="+(pdp == null ? "PDP is null" : pdp.getId()));
 						throw new PAPException(e.getMessage());
 					}
 					// this is a request to update the pdp
@@ -1867,7 +1869,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				// The Path on the PAP side is not carried on the RESTful interface with the AC
 				// (because it is local to the PAP)
 				// so we need to fill that in before submitting the group for update
-				((StdPDPGroup)objectFromJSON).setDirectory(((StdPDPGroup)group).getDirectory());
+				if(objectFromJSON != null){
+					((StdPDPGroup)objectFromJSON).setDirectory(((StdPDPGroup)group).getDirectory());
+				}
 				try{
 					acPutTransaction.updateGroup((StdPDPGroup)objectFromJSON, "XACMLPapServlet.doACPut");
 				} catch(Exception e){
@@ -2138,26 +2142,28 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						HttpURLConnection connection = null;
 						try {
 							// Open up the connection
-							connection = (HttpURLConnection)pdpURL.openConnection();
-							// Setup our method and headers
-							connection.setRequestMethod("GET");
-							connection.setConnectTimeout(heartbeatTimeout);
-							// Authentication
-							String encoding = CheckPDP.getEncoding(pdp.getId());
-							if(encoding !=null){
-								connection.setRequestProperty("Authorization", "Basic " + encoding);
-							}
-							// Do the connect
-							connection.connect();
-							if (connection.getResponseCode() == 204) {
-								newStatus = connection.getHeaderField(XACMLRestProperties.PROP_PDP_HTTP_HEADER_HB);
-								if (LOGGER.isDebugEnabled()) {
-									LOGGER.debug("Heartbeat '" + pdp.getId() + "' status='" + newStatus + "'");
+							if(pdpURL != null){
+								connection = (HttpURLConnection)pdpURL.openConnection();
+								// Setup our method and headers
+								connection.setRequestMethod("GET");
+								connection.setConnectTimeout(heartbeatTimeout);
+								// Authentication
+								String encoding = CheckPDP.getEncoding(pdp.getId());
+								if(encoding !=null){
+									connection.setRequestProperty("Authorization", "Basic " + encoding);
 								}
-							} else {
-								// anything else is an unexpected result
-								newStatus = PDPStatus.Status.UNKNOWN.toString();
-								PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " Heartbeat connect response code " + connection.getResponseCode() + ": " + pdp.getId());
+								// Do the connect
+								connection.connect();
+								if (connection.getResponseCode() == 204) {
+									newStatus = connection.getHeaderField(XACMLRestProperties.PROP_PDP_HTTP_HEADER_HB);
+									if (LOGGER.isDebugEnabled()) {
+										LOGGER.debug("Heartbeat '" + pdp.getId() + "' status='" + newStatus + "'");
+									}
+								} else {
+									// anything else is an unexpected result
+									newStatus = PDPStatus.Status.UNKNOWN.toString();
+									PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " Heartbeat connect response code " + connection.getResponseCode() + ": " + pdp.getId());
+								}	
 							}
 						} catch (UnknownHostException e) {
 							newStatus = PDPStatus.Status.NO_SUCH_HOST.toString();
@@ -2173,7 +2179,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 							PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", "Heartbeat '" + pdp.getId() + "' connect exception");
 						} finally {
 							// cleanup the connection
-							connection.disconnect();
+							if(connection != null)
+								connection.disconnect();
 						}
 						if ( ! pdp.getStatus().getStatus().toString().equals(newStatus)) {
 							if (LOGGER.isDebugEnabled()) {
@@ -2372,7 +2379,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				}
 			} finally {
 				// cleanup the connection
-				connection.disconnect();
+				if(connection != null){
+					connection.disconnect();	
+				}
 				// tell the AC to update it's status info
 				notifyAC();
 			}
@@ -2436,7 +2445,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					disconnectedACs.add(acURL);
 				} finally {
 					// cleanup the connection
-					connection.disconnect();
+					if(connection != null)
+						connection.disconnect();
 				}
 			}
 			// remove any ACs that are no longer connected

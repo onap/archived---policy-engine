@@ -403,9 +403,12 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	    	   if(attribute.includes(":")){
 	    		   enumName = attribute.split(":")[0];
 	    	   }
-	    	}   	
+	    	}   
             var baseEnum = $scope.dcaeModelData.enumValues;
-	    	var enumList = baseEnum.split(splitEnum);
+            var enumList = [];
+            if(baseEnum != null){
+            	enumList = baseEnum.split(splitEnum);
+            }
 	    	var enumAttributes;
 	    	var patternTest = new RegExp(enumName);
 	    	for (k=0; k < enumList.length; k += 1){

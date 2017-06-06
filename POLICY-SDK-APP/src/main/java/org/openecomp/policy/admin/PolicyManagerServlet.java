@@ -353,6 +353,16 @@ public class PolicyManagerServlet extends HttpServlet {
 				if(scopes.isEmpty()){
 					return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
 				}
+				Set<String> tempScopes = scopes;
+				for(String scope : tempScopes){
+					List<Object> scopesList = queryPolicyEditorScopes(scope);
+					if(!scopesList.isEmpty()){
+						for(int i = 0; i < scopesList.size(); i++){
+							PolicyEditorScopes tempScope = (PolicyEditorScopes) scopesList.get(i);
+							scopes.add(tempScope.getScopeName());
+						}
+					}
+				}
 			} 
 			if(policyList!= null){
 				for(int i = 0; i < policyList.length(); i++){
@@ -384,9 +394,13 @@ public class PolicyManagerServlet extends HttpServlet {
 					List<Object> filterdatas = controller.getData(PolicyVersion.class);
 					for(Object filter : filterdatas){
 						PolicyVersion filterdata = (PolicyVersion) filter;
-						String scopeName = filterdata.getPolicyName().substring(0, filterdata.getPolicyName().lastIndexOf(File.separator));
-						if(scopes.contains(scopeName)){	
-							policyData.add(filterdata);
+						try{
+							String scopeName = filterdata.getPolicyName().substring(0, filterdata.getPolicyName().lastIndexOf(File.separator));
+							if(scopes.contains(scopeName)){	
+								policyData.add(filterdata);
+							}
+						}catch(Exception e){
+							LOGGER.error("Exception occured while filtering policyversion data"+e);
 						}
 					}
 				}
@@ -567,11 +581,6 @@ public class PolicyManagerServlet extends HttpServlet {
 					}		
 				}
 			}
-			if (roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST) ) {
-				if(scopes.isEmpty()){
-					return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
-				}
-			} 
 
 			List<JSONObject> resultList = new ArrayList<>();
 			boolean onlyFolders = params.getBoolean("onlyFolders");
@@ -580,7 +589,18 @@ public class PolicyManagerServlet extends HttpServlet {
 				path = path.replaceAll("..xml", "").trim();
 			}
 
-
+			if (roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST) ) {
+				if(scopes.isEmpty()){
+					return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
+				}else{
+					if(!"/".equals(path)){
+						String tempScope = path.substring(1, path.length());
+						tempScope = tempScope.replace("/", File.separator);
+						scopes.add(tempScope);
+					}
+				}
+			} 
+			
 			if("/".equals(path)){
 				if(roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR) || roles.contains(SUPERGUEST)){
 					List<Object> scopesList = queryPolicyEditorScopes(null);
@@ -601,14 +621,16 @@ public class PolicyManagerServlet extends HttpServlet {
 					for(Object scope : scopes){
 						JSONObject el = new JSONObject();
 						List<Object> scopesList = queryPolicyEditorScopes(scope.toString());
-						PolicyEditorScopes scopeById = (PolicyEditorScopes) scopesList.get(0);
-						el.put("name", scopeById.getScopeName());	
-						el.put("date", scopeById.getCreatedDate());
-						el.put("size", "");
-						el.put("type", "dir");
-						el.put("createdBy", scopeById.getUserCreatedBy().getUserName());
-						el.put("modifiedBy", scopeById.getUserModifiedBy().getUserName());
-						resultList.add(el);
+						if(!scopesList.isEmpty()){
+							PolicyEditorScopes scopeById = (PolicyEditorScopes) scopesList.get(0);
+							el.put("name", scopeById.getScopeName());	
+							el.put("date", scopeById.getCreatedDate());
+							el.put("size", "");
+							el.put("type", "dir");
+							el.put("createdBy", scopeById.getUserCreatedBy().getUserName());
+							el.put("modifiedBy", scopeById.getUserModifiedBy().getUserName());
+							resultList.add(el);
+						}
 					}
 				}
 			}else{
@@ -632,7 +654,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		if(scopeName == null){
 			scopeNamequery = "from PolicyEditorScopes";
 		}else{
-			scopeNamequery = "from PolicyEditorScopes where SCOPENAME like'" +scopeName+"'";
+			scopeNamequery = "from PolicyEditorScopes where SCOPENAME like'" +scopeName+"%'";
 		}
 		PolicyController controller = getPolicyControllerInstance();
 		List<Object> scopesList = controller.getDataByQuery(scopeNamequery);
@@ -945,6 +967,7 @@ public class PolicyManagerServlet extends HttpServlet {
 	}
 
 	private JSONObject cloneRecord(String newpolicyName, String oldScope, String removeoldPolicyExtension, String newScope, String removenewPolicyExtension, PolicyEntity entity, String userId) throws ServletException{
+		FileWriter fw = null;
 		String queryEntityName = null;
 		PolicyController controller = getPolicyControllerInstance();
 		PolicyEntity cloneEntity = new PolicyEntity();
@@ -967,6 +990,15 @@ public class PolicyManagerServlet extends HttpServlet {
 			controller.saveData(configurationDataEntity);
 			ConfigurationDataEntity configEntiy = (ConfigurationDataEntity) controller.getEntityItem(ConfigurationDataEntity.class, "configurationName", queryEntityName);
 			cloneEntity.setConfigurationData(configEntiy);
+			String newConfigurationName = configEntiy.getConfigurationName();
+			try {
+				fw = new FileWriter(PolicyController.getConfigHome() + File.separator + newConfigurationName);
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write(configEntiy.getConfigBody());
+				bw.close();
+			} catch (IOException e) {
+				LOGGER.error("Exception Occured While cloning the configuration file"+e);
+			}
 		}else if(newpolicyName.contains("Action_")){
 			ActionBodyEntity actionBodyEntity = new ActionBodyEntity();
 			actionBodyEntity.setActionBodyName(entity.getActionBodyEntity().getActionBodyName().replace(oldScope+"."+oldConfigRemoveExtension, newScope+"."+newConfigRemoveExtension));
@@ -978,6 +1010,22 @@ public class PolicyManagerServlet extends HttpServlet {
 			controller.saveData(actionBodyEntity);
 			ActionBodyEntity actionEntiy = (ActionBodyEntity) controller.getEntityItem(ActionBodyEntity.class, "actionBodyName", queryEntityName);
 			cloneEntity.setActionBodyEntity(actionEntiy);
+			String newConfigurationName = actionEntiy.getActionBodyName();
+			try {
+				fw = new FileWriter(PolicyController.getActionHome() + File.separator + newConfigurationName);
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write(actionEntiy.getActionBody());
+				bw.close();
+			} catch (IOException e) {
+				LOGGER.error("Exception Occured While cloning the configuration file"+e);
+			}
+		}
+		if(fw != null){
+			try {
+				fw.close();
+			} catch (IOException e) {
+				LOGGER.error("Exception Occured While closing the File input stream"+e);
+			}
 		}
 		cloneEntity.setDeleted(entity.isDeleted());
 		cloneEntity.setCreatedBy(userId);
@@ -1033,45 +1081,20 @@ public class PolicyManagerServlet extends HttpServlet {
 			String policyEntityquery = "FROM PolicyEntity where policyName = '"+newPolicySplit[1]+"' and scope ='"+newPolicySplit[0]+"'";
 			List<Object> queryData = controller.getDataByQuery(policyEntityquery);
 			if(!queryData.isEmpty()){
+				return error("Policy already exists with same name");
+			}
+
+			//Query the Policy Entity with oldPolicy Name
+			policyEntityquery = "FROM PolicyEntity where policyName = '"+oldPolicySplit[1]+"' and scope ='"+oldPolicySplit[0]+"'";
+			queryData = controller.getDataByQuery(policyEntityquery);
+			if(!queryData.isEmpty()){
 				entity = (PolicyEntity) queryData.get(0);
 			}
 			if(entity != null){
-				//if a policy exists with new name check if it is deleted or not
-				if(entity.isDeleted()){
-					//Check Policy Group Entity table if policy has been pushed or not
-					String query = "from PolicyGroupEntity where policyid = '"+entity.getPolicyId()+"'";
-					List<Object> object = controller.getDataByQuery(query);
-					if(object == null){
-						//if PolicyGroupEntity data is empty delete the entry from database
-						controller.deleteData(entity);
-						//Query the Policy Entity with oldPolicy Name
-						policyEntityquery = "FROM PolicyEntity where policyName = '"+oldPolicySplit[1]+"' and scope ='"+oldPolicySplit[0]+"'";
-						queryData = controller.getDataByQuery(policyEntityquery);
-						if(!queryData.isEmpty()){
-							entity = (PolicyEntity) queryData.get(0);
-						}
-						if(entity != null){
-							cloneRecord(newPolicySplit[1], oldPolicySplit[0], oldPolicySplit[1], newPolicySplit[0], newPolicySplit[1], entity, userId);
-							success = true;
-						}
-					}else{
-						return error("Policy Clone failed due to policy with new name existing in PDP Group.");
-					}
-				}else{
-					return error("Policy Clone failed due to same name existing.");
-				}
-			}else{
-				//Query the Policy Entity with oldPolicy Name
-				policyEntityquery = "FROM PolicyEntity where policyName = '"+oldPolicySplit[1]+"' and scope ='"+oldPolicySplit[0]+"'";
-				queryData = controller.getDataByQuery(policyEntityquery);
-				if(!queryData.isEmpty()){
-					entity = (PolicyEntity) queryData.get(0);
-				}
-				if(entity != null){
-					cloneRecord(newPolicySplit[1], oldPolicySplit[0], oldPolicySplit[1],  newPolicySplit[0], newPolicySplit[1], entity, userId);
-					success = true;
-				}
+				cloneRecord(newPolicySplit[1], oldPolicySplit[0], oldPolicySplit[1],  newPolicySplit[0], newPolicySplit[1], entity, userId);
+				success = true;
 			}
+			
 			if(success){
 				PolicyVersion entityItem = new PolicyVersion();
 				entityItem.setActiveVersion(Integer.parseInt(version));
@@ -1394,18 +1417,15 @@ public class PolicyManagerServlet extends HttpServlet {
 			}
 			LOGGER.debug("addFolder path: {} name: {}" + path +name);
 			if(!name.equals("")){
+				if(name.startsWith(File.separator)){
+					name = name.substring(1);
+				}
 				PolicyEditorScopes entity = (PolicyEditorScopes) controller.getEntityItem(PolicyEditorScopes.class, "scopeName", name);
 				if(entity == null){
 					UserInfo userInfo = new UserInfo();
 					userInfo.setUserLoginId(userId);
 					PolicyEditorScopes newScope = new PolicyEditorScopes();
-					String scopeName = null;
-					if(name.startsWith(File.separator)){
-						scopeName = name.substring(1);
-					}else{
-						scopeName = name;
-					} 
-					newScope.setScopeName(scopeName);
+					newScope.setScopeName(name);
 					newScope.setUserCreatedBy(userInfo);
 					newScope.setUserModifiedBy(userInfo);
 					controller.saveData(newScope);	

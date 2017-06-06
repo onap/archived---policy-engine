@@ -380,14 +380,21 @@ public class PolicyRestController extends RestrictedBaseController{
 	public ModelAndView searchDictionaryController(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Object resultList = null;
 		String uri = request.getRequestURI();
-		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
-		if(body.contains("CouldNotConnectException")){
+		try{
+			String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
+			if(body.contains("CouldNotConnectException")){
+				List<String> data = new ArrayList<>();
+				data.add("Elastic Search Server is down");
+				resultList = data;
+			}else{
+				JSONObject json = new JSONObject(body);
+				resultList = json.get("policyresult");
+			}
+		}catch(Exception e){
+			policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Exception Occured while querying Elastic Search: " + e);
 			List<String> data = new ArrayList<>();
 			data.add("Elastic Search Server is down");
 			resultList = data;
-		}else{
-			JSONObject json = new JSONObject(body);
-			resultList = json.get("policyresult");
 		}
 		
 		response.setCharacterEncoding(PolicyController.getCharacterencoding());

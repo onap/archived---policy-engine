@@ -210,13 +210,17 @@ public abstract class Policy {
 
 	// Validation for json.
 	protected static boolean isJSONValid(String data) {
+		JsonReader jsonReader = null;
 		try {
 			new JSONObject(data);
 			InputStream stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
-			JsonReader jsonReader = Json.createReader(stream);
+			jsonReader = Json.createReader(stream);
 			System.out.println("Json Value is: " + jsonReader.read().toString() );
 		} catch (Exception e) {
+			LOGGER.error("Exception Occured while reading json"+e);
 			return false;
+		}finally{
+			jsonReader.close();
 		}
 		return true;
 	}
@@ -308,6 +312,12 @@ public abstract class Policy {
 				}
 			} catch (Exception e) {
 				success.put("error", "Validation Failed");
+			}finally{
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					LOGGER.error("Exception Occured while closing the input stream"+e);
+				}
 			}
 		} else {
 			PolicyLogger.error("Unknown data type sent back.");
