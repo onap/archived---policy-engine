@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "da141535_5bf2579b",
+        "filename": "ECOMP-PAP-REST/Decision_GuardBLPolicyTemplate.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-06-08T18:47:54Z",
+      "side": 1,
+      "message": "I will check with developer and update this.",
+      "parentUuid": "da141535_fbbb6bc2",
+      "revId": "7c63df529a36ea094e36deedb51d99f0f8c7d209",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da141535_bbb5f3ce",
         "filename": "ECOMP-PAP-REST/src/main/java/org/openecomp/policy/pap/xacml/rest/components/CreateNewMicroSerivceModel.java",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2017-06-06T14:16:37Z",
       "side": 1,
       "message": "Let\u0027s spell check the name of this file. Serivce --\u003e Service",
+      "revId": "7c63df529a36ea094e36deedb51d99f0f8c7d209",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_fb092b96",
+        "filename": "ECOMP-PAP-REST/src/main/java/org/openecomp/policy/pap/xacml/rest/components/CreateNewMicroSerivceModel.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-06-08T18:47:54Z",
+      "side": 1,
+      "message": "Pam, I will correct it and update.",
+      "parentUuid": "da141535_bbb5f3ce",
       "revId": "7c63df529a36ea094e36deedb51d99f0f8c7d209",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
