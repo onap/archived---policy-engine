@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_24d4201f",
+        "filename": "packages/base/src/files/install/servers/pap/webapps/Config/com.Config_BRMS_Param_BRMSParamvLBDemoPolicy.1.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1126,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-08T18:25:11Z",
+      "side": 1,
+      "message": "why are these files pre-created?",
+      "revId": "a923a40364c333bf6a591933b5e50249ef10e2db",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
