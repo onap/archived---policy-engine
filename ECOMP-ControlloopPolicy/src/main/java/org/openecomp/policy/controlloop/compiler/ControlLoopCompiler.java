@@ -78,14 +78,16 @@ public class ControlLoopCompiler {
 		if (controlLoop == null && callback != null) {
 			callback.onError("controlLoop cannot be null");
 		}
-		if ((controlLoop.getControlLoopName() == null || controlLoop.getControlLoopName().length() < 1) && callback != null) {
-			callback.onError("Missing controlLoopName");
-		}
-		if ((!controlLoop.getVersion().contentEquals(ControlLoop.getVERSION())) && callback != null) {
-			callback.onError("Unsupported version for this compiler");
-		}
-		if (controlLoop.getTrigger_policy() == null || controlLoop.getTrigger_policy().length() < 1) {
-			throw new CompilerException("trigger_policy is not valid");
+		if (controlLoop!=null){
+			if ((controlLoop.getControlLoopName() == null || controlLoop.getControlLoopName().length() < 1) && callback != null) {
+				callback.onError("Missing controlLoopName");
+			}
+			if ((!controlLoop.getVersion().contentEquals(ControlLoop.getVERSION())) && callback != null) {
+				callback.onError("Unsupported version for this compiler");
+			}
+			if (controlLoop.getTrigger_policy() == null || controlLoop.getTrigger_policy().length() < 1) {
+				throw new CompilerException("trigger_policy is not valid");
+			}
 		}
 	}
 

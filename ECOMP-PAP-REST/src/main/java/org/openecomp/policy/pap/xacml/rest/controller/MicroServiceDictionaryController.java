@@ -1013,14 +1013,14 @@ public class MicroServiceDictionaryController {
 		if (mainClass != null && mainClass.getDependency()==null){
 			mainClass.setDependency("");
 		}
-
-		this.newModel.setDependency(mainClass.getDependency());
-		this.newModel.setSub_attributes(subAttribute.toString());
-		this.newModel.setAttributes(mainClass.getAttribute().toString().replace("{", "").replace("}", ""));
-		this.newModel.setRef_attributes(mainClass.getRefAttribute().toString().replace("{", "").replace("}", ""));
-        this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
-        this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
-
+		if(mainClass != null){
+			this.newModel.setDependency(mainClass.getDependency());
+			this.newModel.setSub_attributes(subAttribute);
+			this.newModel.setAttributes(mainClass.getAttribute().toString().replace("{", "").replace("}", ""));
+			this.newModel.setRef_attributes(mainClass.getRefAttribute().toString().replace("{", "").replace("}", ""));
+			this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
+			this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
+		}
 	} 
 	
 	private ArrayList<String> getFullDependencyList(ArrayList<String> dependency) {

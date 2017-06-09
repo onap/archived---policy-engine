@@ -51,16 +51,6 @@ public interface PolicyDBDaoTransaction {
 	public void createPolicy(Policy policy, String username) throws IllegalStateException, PersistenceException, IllegalArgumentException;
 	
 	/**
-	 * Create or update a policy
-	 * @param filePath The file path of the policy xml file
-	 * @param username A string of the username you want to be stored for doing this operation
-	 * @throws IllegalStateException If a transaction is open that has not yet been committed
-	 * @throws PersistenceException If a database error occurs
-	 * @throws IllegalArgumentException If the file path is incorrect, or if it refers to a Config policy
-	 */
-	public void createPolicy(String filePath, String username) throws IllegalStateException, PersistenceException, IllegalArgumentException;
-	
-	/**
 	 * Check if the PolicyDBDaoTransaction is currently open
 	 * @return False if the PolicyDBDao transaction has not been used or has been committed already, true if it is open.
 	 */
