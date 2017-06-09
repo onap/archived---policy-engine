@@ -202,12 +202,14 @@ public class XacmlAdminAuthorization {
 			//
 			// Should only be one result
 			//
-			for (Result result : response.getResults()) {
-				Decision decision = result.getDecision();
-				logger.info("Decision: " + decision);
-				if (decision.equals(Decision.PERMIT)) {
-					return true;
-				}
+			if(response != null){
+				for (Result result : response.getResults()) {
+					Decision decision = result.getDecision();
+					logger.info("Decision: " + decision);
+					if (decision.equals(Decision.PERMIT)) {
+						return true;
+					}
+				}	
 			}
 		} catch (PDPException e) {
 			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "PDP Decide failed: " + e.getLocalizedMessage());

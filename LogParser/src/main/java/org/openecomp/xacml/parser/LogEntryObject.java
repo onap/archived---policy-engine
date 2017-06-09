@@ -32,7 +32,7 @@ public class LogEntryObject {
 	private LOGTYPE logType;
 	
 	public enum LOGTYPE {
-		INFO, ERROR, SEVERE, WARN;
+		INFO, DEBUG, ERROR, SEVERE, WARN;
 	}
 		
 	public String getSystem() {

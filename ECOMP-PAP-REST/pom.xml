@@ -109,6 +109,16 @@
 			<groupId>org.openecomp.policy.common</groupId>
 			<artifactId>ECOMP-Logging</artifactId>
 			<version>${common-modules.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.powermock</groupId>
+						<artifactId>powermock-module-junit4</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.powermock</groupId>
+						<artifactId>powermock-api-mockito</artifactId>
+					</exclusion>
+				</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>

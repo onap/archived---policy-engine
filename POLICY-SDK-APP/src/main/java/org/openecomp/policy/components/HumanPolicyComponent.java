@@ -27,8 +27,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,6 +36,23 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
+
+import org.apache.commons.io.FilenameUtils;
+import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.controller.PolicyController;
+import org.openecomp.policy.rest.jpa.FunctionDefinition;
+import org.openecomp.policy.utils.XACMLPolicyWriterWithPapNotify;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
+import org.openecomp.policy.xacml.util.XACMLPolicyScanner;
+
+import com.att.research.xacml.api.AttributeValue;
+import com.att.research.xacml.std.IdentifierImpl;
+import com.att.research.xacml.std.StdAttribute;
+import com.att.research.xacml.std.StdAttributeValue;
+import com.att.research.xacml.util.XACMLPolicyScanner.CallbackResult;
+import com.att.research.xacml.util.XACMLPolicyScanner.SimpleCallback;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -54,24 +71,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
-
-import org.apache.commons.io.FilenameUtils;
-import org.json.JSONObject;
-import org.openecomp.policy.controller.PolicyController;
-import org.openecomp.policy.rest.jpa.FunctionDefinition;
-import org.openecomp.policy.utils.XACMLPolicyWriterWithPapNotify;
-
-import com.att.research.xacml.api.AttributeValue;
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
-import com.att.research.xacml.std.IdentifierImpl;
-import com.att.research.xacml.std.StdAttribute;
-import com.att.research.xacml.std.StdAttributeValue;
-import org.openecomp.policy.xacml.util.XACMLPolicyScanner;
-import com.att.research.xacml.util.XACMLPolicyScanner.CallbackResult;
-import com.att.research.xacml.util.XACMLPolicyScanner.SimpleCallback;
-
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger;
 
 
 
@@ -147,7 +146,7 @@ public class HumanPolicyComponent{
 			HumanPolicyComponent.htmlProcessor =  
 					new HtmlProcessor(HumanPolicyComponent.policyFile, policy);
 			
-			Path policyPath = FileSystems.getDefault().getPath(policyFile.getAbsolutePath());
+			Path policyPath = Paths.get(policyFile.getAbsolutePath());
 			XACMLPolicyScanner xacmlScanner = new XACMLPolicyScanner(policyPath, htmlProcessor);
 			xacmlScanner.scan();
 			String html = htmlProcessor.html();
@@ -734,35 +733,36 @@ class HtmlProcessor extends SimpleCallback {
 								}
 								
 								String functionName = getHumanFunction(match.getMatchId());
-								
-								String succintIdentifier = extractLastIdentifier(attribute.getCategory().stringValue(), ":") +
-										                   ":" + extractLastIdentifier(attribute.getAttributeId().stringValue(), ":");
-								AttributeIdentifiers ai = new AttributeIdentifiers(attribute.getCategory().stringValue(), 
-										                                           attributeDataType,
-										                                           attribute.getAttributeId().stringValue());
-								this.attributeIdentifiersMap.put(succintIdentifier,ai);
-								
-								targetInHuman += "<i><a href=\"#" + succintIdentifier + "\">" + succintIdentifier + "</a></i> " + functionName + " ";
-								
-								int numAttributes = attribute.getValues().size();
-								int count = 0;
-								for (AttributeValue<?> v: attribute.getValues()) {
-									count++;						
-									if (v.getValue() instanceof Collection<?>) {
-										Collection<?> value_s = (Collection<?>) v.getValue();
-										int numValues = value_s.size();
-										int countValues = 0;
-										for (Object o : value_s) {
-											countValues++;
-											targetInHuman += " <I>" + o + "</I>";
-											if (countValues < numValues) {
-												targetInHuman += ", or";
+								if(attribute != null){
+									String succintIdentifier = extractLastIdentifier(attribute.getCategory().stringValue(), ":") +
+											":" + extractLastIdentifier(attribute.getAttributeId().stringValue(), ":");
+									AttributeIdentifiers ai = new AttributeIdentifiers(attribute.getCategory().stringValue(), 
+											attributeDataType,
+											attribute.getAttributeId().stringValue());
+									this.attributeIdentifiersMap.put(succintIdentifier,ai);
+
+									targetInHuman += "<i><a href=\"#" + succintIdentifier + "\">" + succintIdentifier + "</a></i> " + functionName + " ";
+
+									int numAttributes = attribute.getValues().size();
+									int count = 0;
+									for (AttributeValue<?> v: attribute.getValues()) {
+										count++;						
+										if (v.getValue() instanceof Collection<?>) {
+											Collection<?> value_s = (Collection<?>) v.getValue();
+											int numValues = value_s.size();
+											int countValues = 0;
+											for (Object o : value_s) {
+												countValues++;
+												targetInHuman += " <I>" + o + "</I>";
+												if (countValues < numValues) {
+													targetInHuman += ", or";
+												}
 											}
-										}
-									} else {
-										targetInHuman += " <I>" + v.getValue() + "</I>";
-										if (count < numAttributes) {
-											targetInHuman += ", or ";
+										} else {
+											targetInHuman += " <I>" + v.getValue() + "</I>";
+											if (count < numAttributes) {
+												targetInHuman += ", or ";
+											}
 										}
 									}
 								}

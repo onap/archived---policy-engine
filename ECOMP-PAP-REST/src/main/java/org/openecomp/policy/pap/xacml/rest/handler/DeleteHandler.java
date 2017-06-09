@@ -408,7 +408,11 @@ public class DeleteHandler {
 			PolicyLogger.error("Exception occured While Deleting Policy From PDP Group"+e1);
 		}
 		if (group == null || ! (group instanceof StdPDPGroup) || existingGroup == null || ! (group.getId().equals(existingGroup.getId()))) {
-			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Group update had bad input. id=" + existingGroup != null ? existingGroup.getId() : "null" + " objectFromJSON="+group);
+			String existingID = null;
+			if(existingGroup != null){
+				existingID = existingGroup.getId();
+			}
+			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Group update had bad input. id=" + existingID + " objectFromJSON="+group);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
 			response = "No Group";

@@ -403,6 +403,15 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				}
 			}
 			policyDBDao.setPapEngine((PAPPolicyEngine) XACMLPapServlet.papEngine);
+			//boolean performFileToDatabaseAudit = false;
+    		if (Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG))){
+    			//get an AuditTransaction to lock out all other transactions
+    			PolicyDBDaoTransaction auditTrans = policyDBDao.getNewAuditTransaction();
+    			policyDBDao.auditLocalDatabase(XACMLPapServlet.papEngine);
+    			//release the transaction lock
+    			auditTrans.close();
+    		}
+		
 			// Sanity check for URL.
 			if (XACMLPapServlet.papURL == null) {
 				throw new PAPException("The property " + XACMLRestProperties.PROP_PAP_URL + " is not valid: " + XACMLPapServlet.papURL);
@@ -856,7 +865,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			String message = "PUT interface called for PAP " + papResourceName + " but it has an Administrative"
 					+ " state of " + im.getStateManager().getAdminState()
 					+ "\n Exception Message: " + ae.getMessage();
-			LOGGER.info(message);
+			LOGGER.info(message +ae);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
@@ -866,7 +875,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			String message = "PUT interface called for PAP " + papResourceName + " but it has a Standby Status"
 					+ " of " + im.getStateManager().getStandbyStatus()
 					+ "\n Exception Message: " + se.getMessage();
-			LOGGER.info(message);
+			LOGGER.info(message  +se);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
@@ -892,69 +901,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			}
 			policyDBDao.handleIncomingHttpNotification(policyDBDaoRequestUrl,policyDBDaoRequestEntityId,policyDBDaoRequestEntityType,policyDBDaoRequestExtraData,this);			
 			response.setStatus(200);
-			loggingContext.transactionEnded();
-			PolicyLogger.audit("Transaction Ended Successfully");
-			im.endTransaction();
-			return;
-		}
-		//This would occur if we received a notification of a policy creation or update
-		String policyToCreateUpdate = request.getParameter("policyToCreateUpdate");
-		if(policyToCreateUpdate != null){
-			if(LOGGER.isDebugEnabled()){
-				LOGGER.debug("\nXACMLPapServlet.doPut() - before decoding"
-						+ "\npolicyToCreateUpdate = " + policyToCreateUpdate);
-			}
-			//decode it
-			try{
-				policyToCreateUpdate = URLDecoder.decode(policyToCreateUpdate, "UTF-8");
-				if(LOGGER.isDebugEnabled()){
-					LOGGER.debug("\nXACMLPapServlet.doPut() - after decoding"
-							+ "\npolicyToCreateUpdate = " + policyToCreateUpdate);
-				}
-			} catch(UnsupportedEncodingException e){
-				PolicyLogger.error("\nXACMLPapServlet.doPut() - Unsupported URL encoding of policyToCreateUpdate (UTF-8)"
-						+ "\npolicyToCreateUpdate = " + policyToCreateUpdate);
-				response.sendError(500,"policyToCreateUpdate encoding not supported"
-						+ "\nfailure with the following exception: " + e);
-				loggingContext.transactionEnded();
-				PolicyLogger.audit("Transaction Failed - See error.log");
-				im.endTransaction();
-				return;
-			}
-			//send it to PolicyDBDao
-			PolicyDBDaoTransaction createUpdateTransaction = policyDBDao.getNewTransaction();
-			try{
-				createUpdateTransaction.createPolicy(policyToCreateUpdate, "XACMLPapServlet.doPut");
-			}catch(Exception e){
-				createUpdateTransaction.rollbackTransaction();
-				response.sendError(500,"createUpdateTransaction.createPolicy(policyToCreateUpdate, XACMLPapServlet.doPut) "
-						+ "\nfailure with the following exception: " + e);
-				loggingContext.transactionEnded();
-				PolicyLogger.audit("Transaction Failed - See error.log");
-				im.endTransaction();
-				return;
-			}
-			createUpdateTransaction.commitTransaction();
-			// Before sending Ok. Lets call AutoPush. 
-			if(autoPushFlag){
-				Set<StdPDPGroup> changedGroups = autoPushPolicy.checkGroupsToPush(policyToCreateUpdate,  XACMLPapServlet.papEngine);
-				if(!changedGroups.isEmpty()){
-					for(StdPDPGroup group: changedGroups){
-						try{
-							papEngine.updateGroup(group);
-							if (LOGGER.isDebugEnabled()) {		
-								LOGGER.debug("Group '" + group.getId() + "' updated");
-							}
-							notifyAC();
-							// Group changed, which might include changing the policies	
-							groupChanged(group);
-						}catch(Exception e){
-							PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW + " Failed to Push policy. ");
-						}
-					}
-				}
-			}
-			response.setStatus(HttpServletResponse.SC_OK);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Ended Successfully");
 			im.endTransaction();
@@ -1343,7 +1289,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			loggingContext.transactionEnded();
 			auditLogger.info("Success");
 
-			if (policy != null && (policy.getId().contains("Config_MS_")) || (policy.getId().contains("BRMS_Param"))) {
+			if (policy != null && ((policy.getId().contains("Config_MS_")) || (policy.getId().contains("BRMS_Param")))) {
 				PushPolicyHandler pushPolicyHandler = PushPolicyHandler.getInstance();
 				if (pushPolicyHandler.preSafetyCheck(policy, CONFIG_HOME)) {
 					LOGGER.debug("Precheck Successful.");
@@ -1798,44 +1744,53 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					response.sendError(500, "Bad input, pdpid="+pdpId+" object="+objectFromJSON);
 				}
 				StdPDP pdp = (StdPDP) objectFromJSON;
-				if (papEngine.getPDP(pdpId) == null) {
-					// this is a request to create a new PDP object
-					try{
-						acPutTransaction.addPdpToGroup(pdp == null ? "PDP is null" : pdp.getId(), group.getId(), pdp == null ? "PDP is null" : pdp.getName(), 
-								pdp == null ? "PDP is null" : pdp.getDescription(), 
-								pdp == null ? 0 : pdp.getJmxPort(),"XACMLPapServlet.doACPut");
-					} catch(Exception e){
-						PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " Error while adding pdp to group in the database: "
-								+"pdp="+ (pdp == null ? "PDP is null" : pdp.getId()) +",to group="+group.getId());
-						throw new PAPException(e.getMessage());
+				if(pdp != null){
+					if (papEngine.getPDP(pdpId) == null) {
+						// this is a request to create a new PDP object
+						try{
+							acPutTransaction.addPdpToGroup(pdp == null ? "PDP is null" : pdp.getId(), group.getId(), pdp.getName(), 
+									pdp.getDescription(), pdp.getJmxPort(),"XACMLPapServlet.doACPut");
+						} catch(Exception e){
+							PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " Error while adding pdp to group in the database: "
+									+"pdp="+ (pdp == null ? "PDP is null" : pdp.getId()) +",to group="+group.getId());
+							throw new PAPException(e.getMessage());
+						}
+						papEngine.newPDP(pdp.getId(), group, pdp.getName(), pdp.getDescription(), pdp.getJmxPort());
+					} else {
+						try{
+							acPutTransaction.updatePdp(pdp, "XACMLPapServlet.doACPut");
+						} catch(Exception e){
+							PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " Error while updating pdp in the database: "
+									+"pdp="+ pdp.getId());
+							throw new PAPException(e.getMessage());
+						}
+						// this is a request to update the pdp
+						papEngine.updatePDP(pdp);
 					}
-					papEngine.newPDP(pdp.getId(), group, pdp.getName(), pdp.getDescription(), pdp.getJmxPort());
-				} else {
-					try{
-						acPutTransaction.updatePdp(pdp, "XACMLPapServlet.doACPut");
-					} catch(Exception e){
-						PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " Error while updating pdp in the database: "
-								+"pdp="+(pdp == null ? "PDP is null" : pdp.getId()));
-						throw new PAPException(e.getMessage());
+					response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("PDP '" + pdpId + "' created/updated");
 					}
-					// this is a request to update the pdp
-					papEngine.updatePDP(pdp);
+					// adjust the group's state including the new PDP
+					((StdPDPGroup)group).resetStatus();
+					// tell the Admin Consoles there is a change
+					notifyAC();
+					// this might affect the PDP, so notify it of the change
+					pdpChanged(pdp);
+					acPutTransaction.commitTransaction();
+					loggingContext.transactionEnded();
+					auditLogger.info("Success");
+					PolicyLogger.audit("Transaction Ended Successfully");
+					return;
+				}else{
+					try{
+						PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, "XACMLPapServlet", " Error while adding pdp to group in the database: "
+								+"pdp=null" + ",to group="+group.getId());
+						throw new PAPException("PDP is null");
+					} catch(Exception e){
+						throw new PAPException("PDP is null" + e.getMessage() +e);
+					}
 				}
-				response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("PDP '" + pdpId + "' created/updated");
-				}
-				// adjust the group's state including the new PDP
-				((StdPDPGroup)group).resetStatus();
-				// tell the Admin Consoles there is a change
-				notifyAC();
-				// this might affect the PDP, so notify it of the change
-				pdpChanged(pdp);
-				acPutTransaction.commitTransaction();
-				loggingContext.transactionEnded();
-				auditLogger.info("Success");
-				PolicyLogger.audit("Transaction Ended Successfully");
-				return;
 			} else if (request.getParameter("pipId") != null) {
 				//                group=<groupId> pipId=<pipEngineId> contents=pip properties              <= add a PIP to pip config, or replace it if it already exists (lenient operation) 
 				loggingContext.setServiceName("AC:PAP.putPIP");
@@ -2593,6 +2548,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 
 	public static EntityManagerFactory getEmf() {
 		return emf;
+	}
+	
+	public IntegrityAudit getIa() {
+		return ia;
 	}
 	
 	public static String getPDPFile(){

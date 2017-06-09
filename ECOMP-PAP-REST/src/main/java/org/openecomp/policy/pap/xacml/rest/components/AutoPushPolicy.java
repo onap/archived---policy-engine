@@ -32,8 +32,6 @@ import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
-import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
-import org.openecomp.policy.xacml.api.pap.PAPPolicyEngine;
 import org.openecomp.policy.xacml.std.pap.StdPDPGroup;
 import org.openecomp.policy.xacml.std.pap.StdPDPPolicy;
 
@@ -62,63 +60,6 @@ public class AutoPushPolicy {
 		properties = new Properties();
 		propFile = Paths.get(filePath).toFile();
 		readFile();
-	}
-	
-	/**
-	 * Checks Policy with all the Groups which has set such Property. 
-	 * Else returns Empty Set. 
-	 * 
-	 * @param policyToCreateUpdate
-	 * @param papEngine
-	 */
-	public Set<StdPDPGroup> checkGroupsToPush(String policyToCreateUpdate, PAPPolicyEngine papEngine) {
-		Set<StdPDPGroup> changedGroups= new HashSet<>();
-		// Check if the file has been modified. then re-load the properties file. 
-		newModified = propFile.lastModified();
-		try {
-			if(newModified!=oldModified){
-				// File has been updated.
-				readFile();
-			}
-			// Read the File name as its made.
-			String gitPath  = PolicyDBDao.getGitPath();
-			String policyId =  policyToCreateUpdate.substring(policyToCreateUpdate.indexOf(gitPath)+gitPath.length()+1);
-			String policyName = policyId.substring(policyId.lastIndexOf(File.separator)+1,policyId.lastIndexOf("."));
-			policyName = policyName.substring(0,policyName.lastIndexOf("."));
-			policyId = policyId.replace("/", ".");
-			if(policyId.contains("\\")){
-				policyId = policyId.replace("\\", ".");
-			}
-			LOGGER.info("Policy ID : " + policyId);
-			LOGGER.info("Policy Name : " + policyName);
-			// Read in Groups 
-			for(EcompPDPGroup pdpGroup: papEngine.getEcompPDPGroups()){
-				String groupName = pdpGroup.getName();
-				Boolean typeFlag = false;
-				Boolean scopeFlag = false;
-				if(properties.containsKey(groupName + ".policyType")){
-					String type= properties.getProperty(groupName + ".policyType").replaceAll(" ","");
-					if(type.equals("")){
-						type = " ";
-					}
-					typeFlag = policyName.contains(type);
-				}
-				if(properties.containsKey(groupName + ".policyScope")){
-					String scope = properties.getProperty(groupName + ".policyScope").replaceAll(" ", "");
-					if(scope.equals("")){
-						scope = " ";
-					}
-					scopeFlag = policyId.contains(scope);
-				}
-				if(typeFlag || scopeFlag){
-					StdPDPGroup group = addToGroup(policyId,policyName, policyToCreateUpdate, (StdPDPGroup)pdpGroup);
-					changedGroups.add(group);
-				}
-			}
-		} catch (Exception e) {
- 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "AutoPushPolicy", "Error while processing the auto push for " + policyToCreateUpdate);
-		}
-		return changedGroups;
 	}
 	
 	private void readFile(){

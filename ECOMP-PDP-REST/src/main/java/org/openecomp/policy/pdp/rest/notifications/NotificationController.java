@@ -377,7 +377,7 @@ public class NotificationController {
 				delete = true;
 				dir = new File(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_WEBAPPS)+File.separator+"Action");
 			}
-			if(delete && dir!=null){
+			if(delete){
 				FileFilter fileFilter = new WildcardFileFilter(oldPolicy.getId().substring(0, oldPolicy.getId().lastIndexOf("."))+".*");
 				File[] configFile = dir.listFiles(fileFilter);
 				if(configFile.length==1){
@@ -385,9 +385,7 @@ public class NotificationController {
 				}
 			}
 		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Couldn't remove the policy/config file " + oldPolicy.getName());
-			// TODO:EELF Cleanup - Remove LOGGER
-			//PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Couldn't remove the policy file " + oldPolicy.getName());
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Couldn't remove the policy/config file " + oldPolicy.getName() + e);
 		}
 	}
 	
