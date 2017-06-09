@@ -38,7 +38,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openecomp.policy.common.ia.DbAudit;
 import org.openecomp.policy.common.ia.DbDAO;
@@ -49,7 +48,6 @@ import org.openecomp.policy.common.im.jpa.ResourceRegistrationEntity;
 import org.openecomp.policy.common.im.jpa.StateManagementEntity;
 import org.openecomp.policy.jpa.BackUpMonitorEntity;
 
-@Ignore
 public class DbAuditCompareEntriesTest {
 
 	private static Log logger = LogFactory.getLog(DbAuditCompareEntriesTest.class);
@@ -152,7 +150,7 @@ public class DbAuditCompareEntriesTest {
 		//There is only one entry IntegrityAuditEntity, but we will check anyway
 		HashSet<String> classNameSet = dbDAO.getPersistenceClassNames();
 		for(String c : classNameSet){
-			if (c.equals("org.openecomp.policy.common.ia.IntegrityAuditEntity")){
+			if (c.equals("org.openecomp.policy.common.ia.jpa.IntegrityAuditEntity")){
 				className = c;
 			}
 		}

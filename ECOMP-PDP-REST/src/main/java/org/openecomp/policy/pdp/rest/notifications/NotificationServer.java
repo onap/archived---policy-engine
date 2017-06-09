@@ -143,27 +143,26 @@ public class NotificationServer {
 			} catch (GeneralSecurityException e1) {
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error creating the UEB publisher" + e1.getMessage());
 			}
-
-			try {
-				pub.send( "MyPartitionKey", notification );
-			} catch (IOException e) {
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error sending notification update" + e.getMessage());
+			if(pub != null){
+				try {
+					pub.send( "MyPartitionKey", notification );
+				} catch (IOException e) {
+					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error sending notification update" + e.getMessage() + e);
+				}
+				// close the publisher. The batching publisher does not send events
+				// immediately, so you MUST use close to send any remaining messages.
+				// You provide the amount of time you're willing to wait for the sends
+				// to succeed before giving up. If any messages are unsent after that time,
+				// they're returned to your app. You could, for example, persist to disk
+				// and try again later.
+				final List<?> stuck = pub.close ( 20, TimeUnit.SECONDS );
+				
+				if (!stuck.isEmpty()){
+					LOGGER.error( stuck.size() + " messages unsent" );
+				}else{
+					LOGGER.info( "Clean exit; all messages sent: " + notification );
+				}
 			}
-			
-			// close the publisher. The batching publisher does not send events
-			// immediately, so you MUST use close to send any remaining messages.
-			// You provide the amount of time you're willing to wait for the sends
-			// to succeed before giving up. If any messages are unsent after that time,
-			// they're returned to your app. You could, for example, persist to disk
-			// and try again later.
-			final List<?> stuck = pub.close ( 20, TimeUnit.SECONDS );
-			
-			if ( stuck.size () > 0 ){
-				LOGGER.error( stuck.size() + " messages unsent" );
-			}else{
-				LOGGER.info( "Clean exit; all messages sent: " + notification );
-			}
-			
 		} else if (propNotificationType.equals("dmaap")) {
 			
 			// Setting up the Publisher for DMaaP MR
