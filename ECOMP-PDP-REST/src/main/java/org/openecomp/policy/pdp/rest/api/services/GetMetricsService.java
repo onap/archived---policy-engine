@@ -118,9 +118,13 @@ public class GetMetricsService {
 					metricsResponse.setPdpMetrics(pdpCount);
 
 				} catch (JsonException | IllegalStateException e) {
+					String jsonString = null;
+					if(json != null){
+						jsonString = json.toString();
+					}
 					message = XACMLErrorConstants.ERROR_DATA_ISSUE
-							+ " improper JSON object : " + json != null ? json.toString() : "JSON is null";
-					LOGGER.error(message);
+							+ " improper JSON object : " + jsonString;
+					LOGGER.error(message + e);
 					metricsResponse.setResponseMessage(message);
 					metricsResponse.setResponseCode(400);
 					return metricsResponse;

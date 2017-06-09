@@ -22,10 +22,8 @@ package org.openecomp.policy.pap.xacml.rest.components;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,10 +38,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Key;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,7 +46,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
@@ -68,7 +62,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.openecomp.policy.common.logging.eelf.MessageCodes;
@@ -85,14 +78,12 @@ import org.openecomp.policy.rest.jpa.GroupEntity;
 import org.openecomp.policy.rest.jpa.PdpEntity;
 import org.openecomp.policy.rest.jpa.PolicyDBDaoEntity;
 import org.openecomp.policy.rest.jpa.PolicyEntity;
-import org.openecomp.policy.rest.jpa.PolicyVersion;
 import org.openecomp.policy.rest.util.Webapps;
 import org.openecomp.policy.xacml.api.pap.EcompPDP;
 import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
 import org.openecomp.policy.xacml.api.pap.PAPPolicyEngine;
 import org.openecomp.policy.xacml.std.pap.StdPDPGroup;
 import org.openecomp.policy.xacml.std.pap.StdPDPPolicy;
-import org.openecomp.policy.xacml.util.XACMLPolicyScanner;
 import org.openecomp.policy.xacml.util.XACMLPolicyWriter;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -164,7 +155,7 @@ public class PolicyDBDao {
 		if(logger.isDebugEnabled()){
 			logger.debug("Number of remote PolicyDBDao instances: "+otherServers.size());
 		}
-		if(otherServers.size() < 1){
+		if(otherServers.isEmpty()){
 			logger.warn("List of PolicyDBDao servers is empty or could not be retrieved");
 		}
 	}
@@ -446,7 +437,7 @@ public class PolicyDBDao {
 		logger.debug("notifyOthers(long entityId, String entityType, long newGroupId) as notifyOthers("+entityId+","+entityType+","+newGroupId+") called");		
 		LinkedList<Thread> notifyThreads = new LinkedList<>();
 
-		//we're going to run notiftions in parellel threads to speed things up
+		//we're going to run notifications in parallel threads to speed things up
 		for(Object obj : otherServers){
 
 			Thread newNotifyThread = new Thread(new NotifyOtherThread(obj, entityId, entityType, newGroupId));
@@ -461,7 +452,7 @@ public class PolicyDBDao {
 			try {
 				t.join();
 			} catch (Exception e) {
-				logger.warn("Could not join a notifcation thread");
+				logger.warn("Could not join a notifcation thread" + e);
 			}
 		}
 
@@ -593,31 +584,6 @@ public class PolicyDBDao {
 		}
 	}
 
-	private static String getElementFromXMLString(String element, String xml) {
-		InputSource source = new InputSource(new StringReader(xml));
-
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		String description = "";
-		try{
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document document = db.parse(source);
-
-			XPathFactory xpathFactory = XPathFactory.newInstance();
-			XPath xpath = xpathFactory.newXPath();
-
-			if (element.endsWith("/")){
-				element = element.substring(0, element.length() -1);
-			}
-
-			description = xpath.evaluate("/Policy" + element + "/text()", document);		
-		}catch(Exception e){
-
-		}
-
-
-		System.out.println("description_" + description);
-		return description;
-	}
 	private static String evaluateXPath(String expression, String xml) {
 		InputSource source = new InputSource(new StringReader(xml));
 
@@ -633,11 +599,9 @@ public class PolicyDBDao {
 
 			description = xpath.evaluate(expression, document);		
 		}catch(Exception e){
-
+			logger.error("Exception Occured while evaluating path"+e);
 		}
 
-
-		System.out.println("description_" + description);
 		return description;
 	}
 
@@ -662,7 +626,7 @@ public class PolicyDBDao {
 			retries = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_INCOMINGNOTIFICATION_TRIES));
 
 		} catch(Exception e){
-			logger.error("xacml.rest.pap.incomingnotification.tries property not set, using a default of 3.");
+			logger.error("xacml.rest.pap.incomingnotification.tries property not set, using a default of 3."+e);
 			retries = 3;
 		}
 		//if someone sets it to some dumb value, we need to make sure it will try at least once
@@ -871,7 +835,7 @@ public class PolicyDBDao {
 						policyStream.close();
 					} catch (IOException e) {
 						didUpdate = false;
-						PolicyLogger.error(e.getMessage());
+						PolicyLogger.error(e.getMessage() +e);
 					}
 				}
 			}
@@ -1021,22 +985,14 @@ public class PolicyDBDao {
 		@SuppressWarnings("unchecked")
 		List<PolicyEntity> policies = getPolicyEntityQuery.getResultList();
 		PolicyEntity policy = null;
-		if (policies.size() > 0){
+		if (!policies.isEmpty()){
 			policy = policies.get(0);
 		}
-
-		String policyRepo = buildPolicyScopeDirectory(policy);
-
-		Path policyPath = Paths.get(policyRepo);
 		String action = "unknown action";
 		try {
-
-			if(policy != null && policy.isDeleted()){
+			if(policy != null){
 				logger.debug("Deleting Policy: " + policy.getPolicyName());
 				action = "delete";
-				Path newPath = Paths.get(policyPath.toString(), policy.getPolicyName());
-				Files.deleteIfExists(newPath);
-
 				Path subFile = null;
 
 				if (policy.getConfigurationData()!= null){
@@ -1048,255 +1004,16 @@ public class PolicyDBDao {
 				if(subFile != null){
 					Files.deleteIfExists(subFile);
 				}
-
-			}else{
-				logger.debug("Updating/Creating Policy: " + policy.getPolicyName());
-				action = "update";
-				Files.createDirectories(policyPath);
-				Path newPath = Paths.get(policyPath.toString(), policy.getPolicyName());
-				Files.deleteIfExists(newPath);
-				if(!isNullOrEmpty(oldPathString)){
-					try{
-						String[] scopeName = getScopeAndNameAndType(oldPathString);
-						Path oldPath = Paths.get(buildPolicyScopeDirectory(scopeName[0]),scopeName[1]);
-						Files.delete(oldPath.toAbsolutePath());
-					}catch(Exception e){
-						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy before rename: "+oldPathString);
-					}
-				}
-				Object policyData = XACMLPolicyScanner.readPolicy(IOUtils.toInputStream(policy.getPolicyData()));
-				XACMLPolicyWriter.writePolicyFile(newPath, (PolicyType) policyData);		
-
 				if (policy.getConfigurationData()!= null){
-					if(!isNullOrEmpty(oldPathString)){
-						try{						
-							String[] oldPolicyScopeName = getScopeAndNameAndType(oldPathString);
-							String oldConfigFileName = getConfigFile(oldPolicyScopeName[1],policy.getConfigurationData().getConfigType());
-							Path oldConfigFilePath = getPolicySubFile(oldConfigFileName, "Config");
-							logger.debug("Trying to delete: "+oldConfigFilePath.toString());
-							Files.delete(oldConfigFilePath);						
-						}catch(Exception e){
-							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy config before rename for policy: "+oldPathString);
-						}
-					}
 					writePolicySubFile(policy, "Config");
-
 				}else if(policy.getActionBodyEntity()!= null){
-					if(!isNullOrEmpty(oldPathString)){
-						try{						
-							String[] oldPolicyScopeName = getScopeAndNameAndType(oldPathString);
-							String oldActionFileName = getConfigFile(oldPolicyScopeName[1],ConfigPolicy.JSON_CONFIG);
-							Path oldActionFilePath = getPolicySubFile(oldActionFileName, "Action");
-							logger.debug("Trying to delete: "+oldActionFilePath.toString());
-							Files.delete(oldActionFilePath);						
-						}catch(Exception e){
-							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy action body before rename for policy: "+oldPathString);
-						}
-					}
 					writePolicySubFile(policy, "Action");
 				}
-
 			}
 		} catch (IOException e1) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Error occurred while performing [" + action + "] of Policy File: " + policy != null ? policy.getPolicyName() : "null");
+			String policyName = policy.getPolicyName();
+			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Error occurred while performing [" + action + "] of Policy File: " + policyName);
 		}	
-	}
-
-	private void createGroupsFromDatabase(){
-		//get list of groups
-		boolean foundDefault = false;
-		//need to avoid infinite loop, just in case
-		boolean alreadyRunAdd = false;
-		while(!foundDefault){			
-
-			EntityManager em = emf.createEntityManager();
-			Query getGroups = em.createQuery("SELECT g FROM GroupEntity g WHERE g.deleted=:deleted");
-			getGroups.setParameter("deleted", false);
-			List<?> groups = getGroups.getResultList();
-			em.close();
-			//make a folder for each group in pdps folders
-			Path pdpsPath = Paths.get(XACMLProperties.getProperty("xacml.pap.pdps"));
-			if(!pdpsPath.toFile().exists()){
-				try {
-					FileUtils.forceMkdir(pdpsPath.toFile());
-				} catch (IOException e) {
-					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not make the new pdps folder; one does not exist");
-				}
-			}
-			Properties propertyFileProperties = new Properties();
-			String groupList = "";
-			String defaultGroup = "";
-			HashSet<String> currentGroupPaths = new HashSet<>();
-			for(Object o : groups){
-				GroupEntity group = (GroupEntity)o;
-				Path groupPath = Paths.get(pdpsPath.toString(), group.getGroupId());
-	            currentGroupPaths.add(groupPath.getFileName().toString());
-	            if(groupPath.toFile().exists()){
-	                try {
-	                    FileUtils.forceDelete(Paths.get(groupPath.toString(), "xacml.policy.properties").toFile());
-	                } catch (IOException e) {
-	                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete old xacml.policy.properties file");
-	                }
-	                File[] xmlFiles = groupPath.toFile().listFiles(new FileFilter(){
-	     
-	                    @Override
-	                    public boolean accept(File pathname) {
-	                        return pathname.toString().endsWith(".xml");
-	                    }
-	                    
-	                });
-	                for(File deleteMe : xmlFiles){
-	                    try {
-	                        FileUtils.forceDelete(deleteMe);
-	                    } catch (IOException e) {
-	                        PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete one of the policy files that we are going to replace: "+deleteMe.toString());
-	                    }
-	                }
-	            } else {
-				try {
-					FileUtils.forceMkdir(groupPath.toFile());
-				} catch (IOException e) {
-					logger.error("Exception Occured"+e);
-				}
-			}
-				Properties policyProperties = new Properties();
-				String rootPolicies = "";
-				for(PolicyEntity policy : group.getPolicies()){
-					Path newPolicyPath = Paths.get(groupPath.toString(),getPdpPolicyName(policy.getPolicyName(),policy.getScope()));
-					File newPolicyFile = newPolicyPath.toFile();
-					try {
-						newPolicyFile.createNewFile();
-					} catch (IOException e) {
-						PolicyLogger.error(e.getMessage());
-					}
-					try {
-						FileOutputStream policyFileStream = new FileOutputStream(newPolicyFile);
-						policyFileStream.write(policy.getPolicyData().getBytes("UTF-8"));
-						policyFileStream.close();
-					} catch (IOException e) {
-						PolicyLogger.error(e.getMessage());
-					}
-					policyProperties.setProperty(getPdpPolicyName(policy.getPolicyName(),policy.getScope())+".name",removeExtensionAndVersionFromPolicyName(policy.getPolicyName()));
-					rootPolicies += ",".concat(getPdpPolicyName(policy.getPolicyName(),policy.getScope()));
-				}
-				Path xacmlPolicyPropertiesPath = Paths.get(groupPath.toString(),"xacml.policy.properties");
-				File xacmlPolicyPropertiesFile = xacmlPolicyPropertiesPath.toFile();
-				if(rootPolicies.length() > 0){
-					rootPolicies = rootPolicies.substring(1);
-				}
-				policyProperties.setProperty("xacml.referencedPolicies", "");
-				policyProperties.setProperty("xacml.rootPolicies", rootPolicies);
-
-				try {
-					xacmlPolicyPropertiesFile.createNewFile();
-				} catch (IOException e) {
-					PolicyLogger.error(e.getMessage());
-				}
-				try {
-					FileOutputStream xacmlPolicyPropertiesFileStream = new FileOutputStream(xacmlPolicyPropertiesFile);
-					policyProperties.store(xacmlPolicyPropertiesFileStream, "");
-					xacmlPolicyPropertiesFileStream.close();
-				} catch (IOException e) {
-					PolicyLogger.error(e.getMessage());
-				}
-
-				em = emf.createEntityManager();
-				Query getPdpsQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.groupEntity=:group AND p.deleted=:deleted");
-				getPdpsQuery.setParameter("group", group);
-				getPdpsQuery.setParameter("deleted", false);
-				List<?> pdps = getPdpsQuery.getResultList();
-				em.close();			
-				String pdpLine = "";
-				for(Object o2 : pdps){
-					PdpEntity pdp = (PdpEntity)o2;
-					pdpLine += ",".concat(pdp.getPdpId());
-					propertyFileProperties.setProperty(pdp.getPdpId()+".description",pdp.getDescription());
-					propertyFileProperties.setProperty(pdp.getPdpId()+".jmxport",String.valueOf(pdp.getJmxPort()));
-					propertyFileProperties.setProperty(pdp.getPdpId()+".name",pdp.getPdpName());
-				}
-				if(pdpLine.length() > 0){
-					pdpLine = pdpLine.substring(1);
-				}
-				propertyFileProperties.setProperty(group.getGroupId()+".description", group.getDescription());
-				propertyFileProperties.setProperty(group.getGroupId()+".name", group.getgroupName());
-				propertyFileProperties.setProperty(group.getGroupId()+".pdps",pdpLine);
-				groupList += ",".concat(group.getGroupId());
-				if(group.isDefaultGroup()){
-					defaultGroup = group.getGroupId();
-					foundDefault = true;
-				}
-			}
-	        //check the list of directories in the pdps folder and make sure none should be deleted
-	        File[] filesInPdpsFolder = pdpsPath.toFile().listFiles(new FileFilter(){
-	            @Override
-	            public boolean accept(File pathname) {
-	                return pathname.isDirectory();
-	            }
-	        });
-	        for(File f : filesInPdpsFolder){
-	            if(f.isDirectory()){
-	                if(!currentGroupPaths.contains(f.toPath().getFileName().toString())){
-	                    try {
-	                        FileUtils.forceDelete(f);
-	                    } catch (IOException e) {
-	                        PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete pdp group folder, which has been deleted from the database");
-	                    }
-	                }
-	            }
-	        }
-			if(!foundDefault && !alreadyRunAdd){
-				alreadyRunAdd = true;
-				//add default group to db
-				try{
-					em = emf.createEntityManager();
-					em.getTransaction().begin();
-					GroupEntity newDefaultGroup = new GroupEntity();
-					em.persist(newDefaultGroup);
-					newDefaultGroup.setDescription("The default group where new PDP's are put.");
-					newDefaultGroup.setGroupId("default");
-					newDefaultGroup.setGroupName("default");
-					newDefaultGroup.setDefaultGroup(true);
-					newDefaultGroup.setCreatedBy("automaticallyAdded");
-					newDefaultGroup.setModifiedBy("automaticallyAdded");
-					em.flush();
-					em.getTransaction().commit();		
-					continue;
-				} catch(Exception e){
-					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not add a new default group to the database");
-				}
-			}
-
-			Path xacmlPropertiesPath = Paths.get(pdpsPath.toString(),"xacml.properties");
-			File xacmlPropertiesFile = xacmlPropertiesPath.toFile();
-			if(groupList.length()>0){
-				groupList = groupList.substring(1);
-			}
-			propertyFileProperties.setProperty("xacml.pap.groups",groupList);
-			propertyFileProperties.setProperty("xacml.pap.groups.default",defaultGroup);
-	        try {
-	            FileUtils.forceDelete(xacmlPropertiesFile);
-	        } catch (IOException e) {
-	            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old xacml.properties file");
-	        }
-			try {
-				xacmlPropertiesFile.createNewFile();
-			} catch (IOException e) {
-				PolicyLogger.error(e.getMessage());
-			}
-			try {
-				FileOutputStream xacmlPropertiesFileStream = new FileOutputStream(xacmlPropertiesFile);
-				propertyFileProperties.store(xacmlPropertiesFileStream, "");
-				xacmlPropertiesFileStream.close();
-			} catch (IOException e) {
-				PolicyLogger.error(e.getMessage());
-			}
-			//if we get this far down, something went wrong and we don't want to get stuck in the loop
-			foundDefault = true;
-		}
-		//put policies in group folder
-		//create xacml.policy.properties in each folder with list of policies in that folder
-		//get list of pdps
-		//create xacml.properties with list of groups and pdps and other info
 	}
 
 	private String getPdpPolicyName(String name, String scope){
@@ -1309,63 +1026,6 @@ public class PolicyDBDao {
 	}
 	private String removeFileExtension(String fileName){
 		return fileName.substring(0, fileName.lastIndexOf('.'));
-	}
-
-	private String buildPolicyScopeDirectory(PolicyEntity policy){
-		String repo = buildPolicyDirectory();
-
-		String policyScope = policy.getScope();
-		
-		if(policyScope == null){
-			policyScope = "";
-			PolicyLogger.error("buildPolicyScopeDirectory("+policy+") computed null policyScope. Using blank.");
-		} else {
-			policyScope = policyScope.replace(".", File.separator);	
-		}
-		if(policyScope == null){
-			policyScope = "";
-			PolicyLogger.error("buildPolicyScopeDirectory("+policy+") computed null policyScope. Using blank.");
-		}
-		if(repo == null){
-			PolicyLogger.error("buildPolicyScopeDirectory("+policy+") received null repo. Using blank.");
-			repo = "";
-		}
-		Path returnPath = Paths.get(repo + File.separator + policyScope);
-		if(returnPath !=  null){
-			return returnPath.toString();
-		} else {
-			PolicyLogger.error("buildPolicyScopeDirectory("+policy+") received null repo. Using blank.");
-			return "";
-		}
-
-
-	}
-	private String buildPolicyScopeDirectory(String policyScope){
-		String repo = buildPolicyDirectory();		
-		return repo + File.separator + policyScope.replace(".", File.separator);
-	}
-
-	private static String buildPolicyDirectory(){
-		Path workspacePath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE), getDefaultWorkspace());
-		Path repositoryPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_REPOSITORY));
-		Path gitPath = Paths.get(workspacePath.toString(), repositoryPath.getFileName().toString());
-
-		/*
-		 * Getting and Setting the parent path for Admin Console use when reading the policy files
-		 */
-		//getting the fullpath of the gitPath and convert to string
-		String policyDir = gitPath.toAbsolutePath().toString();
-
-
-		if(policyDir.contains("\\")){
-			policyDir = policyDir.replace("XACML-PAP-REST", "XACML-PAP-ADMIN");
-		}else{
-			if (policyDir.contains("pap")){
-				policyDir = policyDir.replace("pap", "console");
-			}
-		}
-		logger.debug("policyDir: " + policyDir);
-		return policyDir;
 	}
 
 	private Path getPolicySubFile(String filename, String subFileType){
@@ -1448,256 +1108,15 @@ public class PolicyDBDao {
 
 	}
 
-	private String getPolicySubType(String filename){
-		String type = null;
-
-		if (filename != null) {
-			if (FilenameUtils.getExtension(filename).equalsIgnoreCase("json")) {
-				type = ConfigPolicy.JSON_CONFIG;
-			}
-			if (FilenameUtils.getExtension(filename).equalsIgnoreCase("xml")) {
-				type = ConfigPolicy.XML_CONFIG;
-			}
-			if (FilenameUtils.getExtension(filename).equalsIgnoreCase("properties")) {
-				type = ConfigPolicy.PROPERTIES_CONFIG;
-			}
-			if (FilenameUtils.getExtension(filename).equalsIgnoreCase("txt")) {
-				type = ConfigPolicy.OTHER_CONFIG;
-			}
-		}
-
-		return type;
-
-	}
-
-
-	private  void convertFileToDBEntry(Path path){
-		logger.info("convertFileToDBEntry");
-
-		if(path.toString().contains(".git")){
-			return;
-		}
-
-		String filename = path.getFileName().toString();
-		if (filename.contains(".svnignore")){
-			return;
-		}
-
-		String[] scopeAndName = getScopeAndNameAndType(path.toString());
-
-		if(scopeAndName == null){
-			PolicyLogger.error("convertFileToDBEntry error: getScopeAndNameAndType(" + path.toString() + " is null!");
-			return;
-		}
-
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-
-		PolicyEntity policy = new PolicyEntity();
-		em.persist(policy);
-		String policyScope = scopeAndName[0];
-		String policyName = scopeAndName[1];
-		policy.setScope(policyScope);
-		policy.setPolicyName(policyName);
-		policy.setCreatedBy(AUDIT_USER);
-		policy.setModifiedBy(AUDIT_USER);
-
-		String newScope = policyScope.replace(".", File.separator);
-		String newName = FilenameUtils.removeExtension(policyName);
-		int version = 1;
-		try{
-			//we want the last index +1 because we don't want the dot
-			version = Integer.parseInt(newName.substring(newName.lastIndexOf(".")+1)); 
-		} catch(Exception e){
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not get the policy version number from "+newName);
-		}
-		newName = newScope + File.separator + newName.substring(0, newName.lastIndexOf("."));	
-
-		Query query = em.createNamedQuery("PolicyVersion.findByPolicyName");
-		query.setParameter("pname", newName);
-
-		List<?> result = query.getResultList();
-		PolicyVersion versionEntity = null;
-
-		if (!result.isEmpty()) {
-			logger.info("Result is not empty");
-			versionEntity = (PolicyVersion) result.get(0);
-			int highestVersion = Math.max(versionEntity.getHigherVersion(),version);
-			versionEntity.setHigherVersion(highestVersion);
-			versionEntity.setActiveVersion(highestVersion);
-		}else{
-			logger.info("result is empty");
-			Calendar calendar = Calendar.getInstance();
-			Timestamp createdDate = new Timestamp(calendar.getTime().getTime());
-
-			versionEntity = new PolicyVersion();
-			em.persist(versionEntity);
-			versionEntity.setPolicyName(newName);
-			versionEntity.setHigherVersion(version);
-			versionEntity.setActiveVersion(version);
-			versionEntity.setCreatedBy(AUDIT_USER);
-			versionEntity.setModifiedBy(AUDIT_USER);
-			versionEntity.setCreatedDate(createdDate);
-			versionEntity.setModifiedDate(createdDate);
-		}
-
-
-		try {
-			String policyContent = new String(Files.readAllBytes(path));
-			policy.setDescription(getElementFromXMLString("/Description", policyContent));
-			policy.setPolicyData(policyContent);
-		} catch (IOException e1) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "convertFileToDBEntry error settingPolicyData");
-			em.getTransaction().rollback();
-			em.close();
-			return;
-		}
-
-		if((scopeAndName[2].equalsIgnoreCase("Config"))){
-			String scopeName = scopeAndName[0] + "." + scopeAndName[1];
-			Path subFilePath = getPolicySubFile(scopeName, scopeAndName[2]);
-			try {
-				String content = new String(Files.readAllBytes(subFilePath));
-				String configName = subFilePath.getFileName().toString();
-				ConfigurationDataEntity configData = new ConfigurationDataEntity();
-				em.persist(configData);
-				configData.setConfigurationName(subFilePath.getFileName().toString());
-				configData.setConfigBody(content);
-				configData.setConfigType(getPolicySubType(configName));
-				configData.setCreatedBy(AUDIT_USER);
-				configData.setModifiedBy(AUDIT_USER);
-				policy.setConfigurationData(configData);
-
-			} catch (Exception e) {
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "convertFileToDBEntry error for Config policy");
-				em.getTransaction().rollback();
-				em.close();
-				return;
-			}
-		}else if(scopeAndName[2].equalsIgnoreCase("Action")){
-			String scopeName = scopeAndName[0] + "." + scopeAndName[1];
-			Path subFilePath = getPolicySubFile(scopeName, scopeAndName[2]);
-			try {
-				String content = new String(Files.readAllBytes(subFilePath));
-				ActionBodyEntity actionBody = new ActionBodyEntity();
-				em.persist(actionBody);
-				actionBody.setActionBodyName(subFilePath.getFileName().toString());
-				actionBody.setActionBody(content);
-				actionBody.setCreatedBy(AUDIT_USER);
-				actionBody.setModifiedBy(AUDIT_USER);
-				policy.setActionBodyEntity(actionBody);
-
-			} catch (Exception e) {
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "convertFileToDBEntry error for Action policy");
-				em.getTransaction().rollback();
-				em.close();
-				return;
-			}			
-		}
-		logger.debug("convertFileToDBEntry commit transaction");
-		em.getTransaction().commit();
-		em.close();
-	}
-
-	private void deleteAllPolicyTables(){
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		Query deletePolicyEntityTableUpdate = em.createNamedQuery("PolicyEntity.deleteAll");
-		Query deleteActionBodyEntityTableUpdate = em.createNamedQuery("ActionBodyEntity.deleteAll");
-		Query deleteConfigurationDataEntityTableUpdate = em.createNamedQuery("ConfigurationDataEntity.deleteAll");
-		Query deletePolicyVersionEntityTableUpdate = em.createNamedQuery("PolicyVersion.deleteAll");
-		deletePolicyEntityTableUpdate.executeUpdate();
-		deleteActionBodyEntityTableUpdate.executeUpdate();
-		deleteConfigurationDataEntityTableUpdate.executeUpdate();
-		deletePolicyVersionEntityTableUpdate.executeUpdate();
-		em.getTransaction().commit();
-		em.close();
-
-	}
-
 	public void auditLocalDatabase(PAPPolicyEngine papEngine2){
 		logger.debug("PolicyDBDao.auditLocalDatabase() is called");
-		Path webappsPath = Paths.get(buildPolicyDirectory());
 		try{
 			deleteAllGroupTables();
-			deleteAllPolicyTables();
-			Files.createDirectories(webappsPath);
-			Files.walk(webappsPath).filter(Files::isRegularFile).forEach(this::convertFileToDBEntry);
 			auditGroups(papEngine2);
 		} catch(Exception e){
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "auditLocalDatabase() error");
 			logger.error("Exception Occured"+e);
-		}finally{
-			try {
-				Files.walk(webappsPath).close();
-			} catch (IOException e) {
-				logger.error("Exception Occured while closing File Stream"+e);
-			}
 		}
-	}
-
-	/**
-	 * Audits and loads the local file system to match the database version.
-	 */
-	@SuppressWarnings("unchecked")
-	public void auditLocalFileSystem(){
-		logger.debug("PolicyDBDau.auditLocalFileSystem() is called");
-
-		Path webappsPath = Paths.get(buildPolicyDirectory());
-		Path configFilesPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS).toString(), "Config");
-		Path actionFilesPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS).toString(), "Action");
-		try {
-			Files.createDirectories(configFilesPath);
-			Files.createDirectories(actionFilesPath);
-			FileUtils.cleanDirectory(actionFilesPath.toFile());
-			FileUtils.cleanDirectory(configFilesPath.toFile());
-			if (webappsPath.toFile().exists()){
-				FileUtils.cleanDirectory(webappsPath.toFile());
-			}
-			Path repoWithScope = Paths.get(webappsPath.toString(), XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DOMAIN));
-			Files.createDirectories(repoWithScope);
-		} catch (IOException e2) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Error occurred while creating / clearing Config and Policy filesystem directories");
-		}
-
-		List<PolicyEntity> policyEntityList;
-		try{
-			EntityManager em = emf.createEntityManager();
-			Query getPolicyEntitiesQuery = em.createNamedQuery("PolicyEntity.findAllByDeletedFlag");
-			getPolicyEntitiesQuery.setParameter("deleted", false);
-			policyEntityList = getPolicyEntitiesQuery.getResultList();
-		} catch(Exception e){
-			policyEntityList = new LinkedList<>();
-		}
-
-		for (PolicyEntity policy: policyEntityList){
-			String name = "";
-			try {
-				if (!policy.isDeleted()){
-					name = policy.getPolicyName();				
-					String scope = policy.getScope();
-
-					scope = scope.replace(".", "//");
-					if (policy.getConfigurationData()!=null){
-						writePolicySubFile(policy, "Config");
-					}	
-					else if(policy.getActionBodyEntity()!=null){
-						writePolicySubFile(policy, "Action");
-					}
-
-
-					Path fileLocation = Paths.get(webappsPath.toString(), scope);
-
-					Files.createDirectories(fileLocation);
-					Path newPath = Paths.get(fileLocation.toString(), name);
-					Object policyData = XACMLPolicyScanner.readPolicy(IOUtils.toInputStream(policy.getPolicyData()));
-					XACMLPolicyWriter.writePolicyFile(newPath, (PolicyType) policyData);		
-				}
-			} catch (Exception e1) {
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Error occurred while creating Policy File: " + name);
-			}		
-		}	
-		createGroupsFromDatabase();
 	}
 
 	public void deleteAllGroupTables(){
@@ -1762,9 +1181,7 @@ public class PolicyDBDao {
 
 							policyEntityList = getPolicyEntitiesQuery.getResultList();
 							PolicyEntity policyEntity = null;
-							if(policyEntityList.size() < 1){
-								policyEntity = addPolicyThatOnlyExistsInPdpGroup(policy.getId(),Paths.get(XACMLProperties.getProperty("xacml.pap.pdps"),grp.getId(),policy.getId()),em);
-							} else {
+							if(!policyEntityList.isEmpty()){
 								policyEntity = policyEntityList.get(0);
 							}
 							if(policyEntity != null){
@@ -1788,41 +1205,6 @@ public class PolicyDBDao {
 		em.getTransaction().commit();
 		em.close();
 
-	}
-
-	private PolicyEntity addPolicyThatOnlyExistsInPdpGroup(String polId, Path path,EntityManager em){
-		String filename = path.getFileName().toString();
-		if (filename.contains(".svnignore")){
-			return null;
-		}
-
-		String[] scopeAndName = getNameScopeAndVersionFromPdpPolicy(polId);
-
-		if(scopeAndName == null){
-			PolicyLogger.error("convertFileToDBEntry error: getScopeAndNameAndType(" + polId.toString() + " is null!");
-			return null;
-		}
-
-		PolicyEntity policy = new PolicyEntity();
-		em.persist(policy);
-		String policyScope = scopeAndName[1];
-		String policyName = scopeAndName[0];
-		policy.setScope(policyScope);
-		policy.setPolicyName(policyName);
-		policy.setCreatedBy(AUDIT_USER);
-		policy.setModifiedBy(AUDIT_USER);
-		policy.setDeleted(true);
-
-		try {
-			String policyContent = new String(Files.readAllBytes(path));
-			policy.setDescription(getElementFromXMLString("/Description", policyContent));
-			policy.setPolicyData(policyContent);
-			em.flush();
-		} catch (IOException e1) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "convertFileToDBEntry error settingPolicyData");
-			return null;
-		}
-		return policy;
 	}
 
 	private String getConfigFile(String filename, PolicyRestAdapter policy){
@@ -1855,37 +1237,6 @@ public class PolicyDBDao {
 		}
 		return filename;
 	}
-
-	/**
-	 * Constructs the file name of a policy.
-	 * @param policy The name of a policy (ex: mypolicy1)
-	 * @return The file name of the policy (ex: Config_mypolicy1.xml)
-	 * @deprecated
-	 */
-	@SuppressWarnings("unused")
-	private String getName(PolicyRestAdapter policy){
-		logger.debug("getName(PolicyRestAdapter policy) as getName("+policy+") called");
-		String namePrefix = "";
-		if(policy.getPolicyType().contains("Config")){
-			namePrefix = namePrefix.concat(policy.getPolicyType());
-			if(policy.getConfigType().contains("Firewall")){
-				namePrefix = namePrefix.concat("_FW");
-			}
-		}
-		String concats =  namePrefix + "_" +policy.getPolicyName() + ".xml";
-		return concats;
-	}
-
-	private String stripPolicyName(String policyFileName){
-		String policyName = policyFileName;
-		try{
-			policyName = policyName.substring(policyName.indexOf('_')+1);
-			policyName = removeFileExtension(policyName);
-		}catch(Exception e){						
-			throw new IllegalArgumentException("Could not get name out of policy file name: "+policyName);						
-		}
-		return policyName;
-	}
 	
 	private String[] getNameScopeAndVersionFromPdpPolicy(String fileName){
 		String[] splitByDots = fileName.split("\\.");
@@ -1909,19 +1260,6 @@ public class PolicyDBDao {
 		returnArray[2] = version;
 		returnArray[1] = scope;
 		return returnArray;
-	}
-
-	/**
-	 * Constructs the complete repository path based on the properties files
-	 * @return The repository path
-	 */
-	public static String getGitPath(){
-		logger.debug("getGitPath() as getGitPath() called");
-		Path workspacePath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE), "admin");
-		Path repositoryPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_REPOSITORY));
-		Path gitPath = Paths.get(workspacePath.toString(), repositoryPath.getFileName().toString());
-		logger.debug("after gitPath: " + gitPath);
-		return gitPath.toString();
 	}
 
 	//copied from StdEngine.java
@@ -1963,95 +1301,7 @@ public class PolicyDBDao {
 		return false;
 	}
 
-	/**
-	 * Computes the scope, name, and type of a policy based on its file path
-	 * @param path The file path of the policy (including the xml policy file)
-	 * @return A string array of size 3. 1: the scope of the policy 2: the name of the policy (Config_mypol.xml) 3: the type (Config). Or, null if the path can not be parsed.
-	 */
-	private static String[] getScopeAndNameAndType(String path){
-		logger.debug("getScopeAndNameAndType(String path) as getScopeAndNameAndType("+path+") called");
-		if(path == null){
-
-		}
-		String gitPath  = getGitPath();
-
-		ArrayList<String> gitPathParts = new ArrayList<>();
-		Iterator<?> gitPathIterator = Paths.get(gitPath).iterator();
-		while(gitPathIterator.hasNext()){
-			gitPathParts.add(gitPathIterator.next().toString());
-		}
-		for(int i=0;i<gitPathParts.size();i++){
-			Path testGitPath = Paths.get("");
-			for(int j=i;j<gitPathParts.size();j++){
-				testGitPath = Paths.get(testGitPath.toString(),gitPathParts.get(j));
-			}
-			if(path != null && path.contains(testGitPath.toString())){
-				gitPath = testGitPath.toString();
-				break;
-			}
-		}
-		if(gitPath == null){
-			logger.debug("gitPath is null.  Returning");
-			return null;
-		}
-		if(path != null && (gitPath.length() >= path.length())){
-			logger.debug("gitPath length(): " + gitPath.length() + ">= path.length(): " + path.length() + ".  Returning null");
-			return null;
-		}
-		String scopeAndName = path.substring(path.indexOf(gitPath)+gitPath.length());
-
-		logger.debug("scopeAndName: " + scopeAndName);
-		String policyType = null;
-		String[] policyTypes = {"Config_","Action_","Decision_"};
-		for(String pType : policyTypes){
-			if(scopeAndName.contains(pType)){
-				policyType = pType;
-			}
-		}
-		if(policyType == null){
-			return null;
-		}
-		String scope = scopeAndName.substring(0,scopeAndName.indexOf(policyType));
-		String name = scopeAndName.substring(scopeAndName.indexOf(policyType), scopeAndName.length());
-		scope = scope.replace('\\', '.');
-		scope = scope.replace('/', '.');
-		if(scope.length()<1){
-			return null;
-		}
-		if(scope.charAt(0) == '.'){
-			if(scope.length() < 2){
-				logger.debug("getScopeAndNameAndType error: " + scope.length() + " < 2. " + "| scope.charAt(0)==.");
-				return null;
-			}
-			scope = scope.substring(1);
-		}
-		if(scope.charAt(scope.length()-1) == '.'){
-			if(scope.length() < 2){
-				logger.debug("getScopeAndNameAndType error: " + scope.length() + " < 2" + "| scope.charAt(scope.length()-1)==.");
-				return null;
-			}
-			scope = scope.substring(0,scope.length()-1);
-		}
-		if(name.length()<1){
-			logger.debug("getScopeAndNameAndType error: name.length()<1");
-			return null;
-		}
-		if(name.charAt(0) == '.'){
-			if(name.length() < 2){
-				logger.debug("getScopeAndNameAndType error: " + name.length() + " < 2. " + "| scope.charAt(0)==.");
-				return null;
-			}
-			name = name.substring(1);
-		}
-		String[] returnArray = new String[3];
-		returnArray[0] = scope;
-		returnArray[1] = name;
-		//remove the underscore and return it
-		returnArray[2] = policyType.substring(0, policyType.length()-1);
-		return returnArray;
-	}
-
-
+	
 	private class PolicyDBDaoTransactionInstance implements PolicyDBDaoTransaction {
 		private EntityManager em;
 		private final Object emLock = new Object();
@@ -2504,7 +1754,7 @@ public class PolicyDBDao {
 
 		@Override
 		public void renamePolicy(String oldPath, String newPath,String username){
-			String[] oldPolicy = getScopeAndNameAndType(oldPath);
+/*			String[] oldPolicy = getScopeAndNameAndType(oldPath);
 			String[] newPolicy = getScopeAndNameAndType(newPath);
 			if(oldPolicy == null || newPolicy == null){
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW+"Could not parse one or more of the path names: "
@@ -2614,7 +1864,7 @@ public class PolicyDBDao {
 				em.flush();
 				this.policyId = policyToRename.getPolicyId();
 				this.newGroupId = oldPath;
-			}
+			}*/
 		}
 
 		@Override
@@ -2717,7 +1967,7 @@ public class PolicyDBDao {
 		}
 		
 		public void deletePolicy(String policyToDeletes){
-			synchronized(emLock){
+			/*synchronized(emLock){
 				checkBeforeOperationRun();
 				logger.debug("deletePolicy(String policyToDeletes) as deletePolicy("+policyToDeletes+") called");
 				String[] scopeNameAndType = getScopeAndNameAndType(policyToDeletes);
@@ -2758,7 +2008,7 @@ public class PolicyDBDao {
 
 				}
 			}
-
+*/
 		}
 
 
@@ -2773,7 +2023,7 @@ public class PolicyDBDao {
 
 		@Override
 		public void clonePolicy(String oldPolicyPath, String newPolicyPath, String username){
-			String[] oldPolicyData = getScopeAndNameAndType(oldPolicyPath);
+			/*String[] oldPolicyData = getScopeAndNameAndType(oldPolicyPath);
 			String[] newPolicyData = getScopeAndNameAndType(newPolicyPath);
 			if(oldPolicyData == null || newPolicyData == null){
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW+"Could not parse one or more of the path names: "
@@ -2811,83 +2061,9 @@ public class PolicyDBDao {
 				em.flush();
 			}			
 
-
+*/
 		}
 
-		@Override
-		public void createPolicy(String filePath, String username) {
-			logger.debug("createPolicy(String filePath, String username) as createPolicy("+filePath+","+username+") called");
-			//get just the scope and file name
-			//its actually scope, name, and type now
-			String[] scopeAndName = getScopeAndNameAndType(filePath);
-			if(scopeAndName == null){
-				throw new IllegalArgumentException("The file path could not be parsed");
-			}
-			PolicyRestAdapter policy = new PolicyRestAdapter();
-
-			policy.setPolicyType(scopeAndName[2]);
-			policy.setPolicyDescription("");
-
-			String policyName = scopeAndName[1];
-			try{
-				policyName = stripPolicyName(policyName);
-			}catch(IllegalArgumentException e){
-				if(scopeAndName[2].equals("Config")){
-					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Exception calling stripPolicyName with policy name: "+policyName);
-					throw new IllegalArgumentException(e.getMessage(),e);
-				} else {
-					logger.warn(e.getMessage());
-				}
-			}
-			policy.setPolicyName(policyName);
-			String policyDataString = null;
-			InputStream fileContentStream = null;
-			try {
-				fileContentStream = new FileInputStream(filePath);
-				policyDataString = IOUtils.toString(fileContentStream);
-			} catch (FileNotFoundException e) {
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught FileNotFoundException on new FileInputStream("+filePath+")");
-				throw new IllegalArgumentException("The file path does not exist");
-			} catch(IOException e2){
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Caught IOException on newIOUtils.toString("+fileContentStream+")");
-				throw new IllegalArgumentException("The file path cannot be read");
-			} finally {
-				IOUtils.closeQuietly(fileContentStream);
-			}
-			if(policyDataString == null){
-				throw new IllegalArgumentException("The file path cannot be read");
-			}
-			try{
-				String policyDescription = getElementFromXMLString("/Description", policyDataString);
-				if(policyDescription != null){
-					policy.setPolicyDescription(policyDescription);
-				}
-			} catch(Exception e){
-				logger.warn("Could not get description from the policy file");
-			}
-			if(scopeAndName[2].equals("Config")){
-				//this method is not used for config, since there is no way to get config info (could be modified to)
-				String configPath;
-				try{
-					configPath = evaluateXPath("/Policy/Rule/AdviceExpressions/AdviceExpression[contains(@AdviceId,'ID')]/AttributeAssignmentExpression[@AttributeId='URLID']/AttributeValue/text()", policyDataString);
-					if(configPath == null){
-						throw new NullPointerException("configPath is null");
-					}
-				} catch(Exception e){
-					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not get config file path from policy file");
-					throw new IllegalArgumentException("Could not get config file path from policy file");
-				}
-				configPath = processConfigPath(configPath);
-				logger.debug("The location of our config file is: "+configPath);
-				policy.setConfigType(getPolicySubType(configPath));
-				logger.debug("Config type is: "+policy.getConfigType());
-
-				String configDataString = readConfigFile(configPath);
-				policy.setConfigBodyData(configDataString);
-			}
-			createPolicy(policy,username,scopeAndName[0],scopeAndName[1],policyDataString);			
-		}
-		
 		private String processConfigPath(String configPath){
 			String webappsPath = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS);
 			if(webappsPath == null){
@@ -3585,12 +2761,6 @@ public class PolicyDBDao {
 		}
 	}
 
-
-
-	private static String getDefaultWorkspace(){
-		return "admin";
-	}
-
 	private PolicyDBDao(){
 
 	}
@@ -3600,14 +2770,8 @@ public class PolicyDBDao {
 	}
 	
 	final class PolicyDBDaoTestClass {
-		String[] getScopeAndNameAndType(final String path){
-			return PolicyDBDao.getScopeAndNameAndType(path);
-		}
-		String getGitPath(){
-			return PolicyDBDao.getGitPath();
-		}
 		String getConfigFile(String filename, String scope, PolicyRestAdapter policy){
-			return PolicyDBDao.this.getConfigFile(filename, policy);
+			return scope + "." + PolicyDBDao.this.getConfigFile(filename, policy);
 		}
 		String computeScope(String fullPath, String pathToExclude){
 			return PolicyDBDao.computeScope(fullPath, pathToExclude);

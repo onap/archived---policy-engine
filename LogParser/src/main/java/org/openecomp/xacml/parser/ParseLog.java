@@ -48,6 +48,7 @@ import org.apache.log4j.Logger;
 import org.openecomp.policy.common.im.AdministrativeStateException;
 import org.openecomp.policy.common.im.IntegrityMonitor;
 import org.openecomp.policy.common.im.StandbyStatusException;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.xacml.parser.LogEntryObject.LOGTYPE;
 
 /**
@@ -57,15 +58,24 @@ import org.openecomp.xacml.parser.LogEntryObject.LOGTYPE;
  */
 public class ParseLog {
 	
-	private static final Logger logger = Logger.getLogger(ParseLog.class.getName());
+	// only logging last line of each log file processed to the log4j log file defined by property - PARSERLOGPATH
+	private static final Logger log4jlogger = Logger.getLogger(ParseLog.class.getName());
+
+	// processing logging 
+	private static org.openecomp.policy.common.logging.flexlogger.Logger logger = FlexLogger.getLogger(ParseLog.class.getName());
 
 	private static String system;
 	private static int lastNumberRead = 0;
+	private static int debuglastNumberRead = 0;
+	private static int errorlastNumberRead = 0;
 	private static String type;
 	private static long startFileSize;
+	private static long debugStartFileSize;
+	private static long errorStartFileSize;
 	private static String systemLogFile;
 	private static String logFile;
-	
+	private static String debuglogFile;
+	private static String errorlogFile;
 	private static String JDBC_URL;
 	private static String JDBC_USER;
 	private static String JDBC_PASSWORD = "";
@@ -73,84 +83,240 @@ public class ParseLog {
 	private static int maxLength = 255;   //Max length that is allowed in the DB table
 	private static String resourceName;
 	private static long sleepTimer = 50000;
-	static IntegrityMonitor im;
+	static  IntegrityMonitor im;
+	private static boolean isMissingLogFile;
 
 	private static RandomAccessFile randomAccessFile;
 	
 	public static void main(String[] args) throws Exception {
 
 		Properties logProperties = getPropertiesValue("parserlog.properties");
-		Path filePath = Paths.get(logFile);
-		File file = new File(logFile);
+		
+		if(logProperties == null || isMissingLogFile){
+			// missing the path of log file in the properties file, so stop the process
+			logger.error("logProperties is null or LOGPATH is missing in parserlog.properties, so stop the process.");
+			return;
+		}
+     
 		File fileLog = new File(systemLogFile);
-		startFileSize = file.length();
-			
+
 		im = IntegrityMonitor.getInstance(resourceName,logProperties );
 		
-		logger.info("System: " + system );  
-		logger.info("System type: " + type );  
-		logger.info("Logging File: " + systemLogFile );
-		logger.info("log file: " + logFile);
-		logger.info("JDBC_URL: " + JDBC_URL);
-		logger.info("JDBC_DRIVER: " + JDBC_DRIVER);
-		
-		String filesRead = PullLastLineRead(fileLog);
-		if (filesRead!= null){			
-			filesRead = filesRead.replaceAll("(\\r\\n|\\n)", "<br />");
-			lastNumberRead= Integer.parseInt(filesRead.trim());
-		}else{
-			lastNumberRead = 0;
-		}
-		startFileSize =  countLines(logFile);
-		logger.info("File Line Count: " + startFileSize + " value read in: " + lastNumberRead);
-		if (startFileSize < lastNumberRead ){
-			logger.error("Filed Rolled: set Last number read to 0");
-			lastNumberRead = 0;
-		}
-		Runnable  runnable = new Runnable (){
-		public void run(){
-			while (true){		
-	             
-				if (file.isFile()){
-					try (Stream<String> lines = Files.lines(filePath, Charset.defaultCharset()).onClose(() -> logger.info("Last line Read: " + lastNumberRead)).skip(lastNumberRead)) {
+		startDebugLogParser(fileLog);
+		startErrorLogParser(fileLog);
+		startAPIRestLogParser(fileLog);	
+	
+	}	
+	
+	private static void startDebugLogParser(File fileLog) throws Exception{
+		if(debuglogFile != null && !debuglogFile.isEmpty()){
+			
+			// pull the last line number 
+			String dataFileName = "debug.log";
+			String filesRead = PullLastLineRead(fileLog, dataFileName);  
+			if (filesRead!= null){			
+				filesRead = filesRead.replaceAll("(\\r\\n|\\n)", "<br />");
+				debuglastNumberRead= Integer.parseInt(filesRead.trim());
+			}else{
+				debuglastNumberRead = 0;
+			}	
+			
+			debugStartFileSize =  countLines(debuglogFile);
+			if (debugStartFileSize < debuglastNumberRead ){ 
+				logger.error("Filed Rolled: set Last debug number read to 0");
+				debuglastNumberRead = 0;
+			}
+			
+			isMissingLogFile = false; 
+			Path debugfilePath = Paths.get(debuglogFile);
+			File debugfile = new File(debuglogFile);
+			debugStartFileSize = debugfile.length();
+			// start process debug.log file
+
+			Runnable  runnable = new Runnable (){
+				boolean isStop = false;
+				
+				public void run(){
+					while (!isStop){	
+			             
+						if (debugfile.isFile()){
+							// log4jlogger must use .info
+							try (Stream<String> lines = Files.lines(debugfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + debuglastNumberRead)).skip(debuglastNumberRead)) {
+								
+								lines.forEachOrdered(line -> process(line, type, LOGTYPE.DEBUG));
+
+							} catch (IOException e) {
+								logger.error("Error processing line in " + dataFileName + ":" + e);
+								logger.error("break the loop.");
+								isStop = true;
+							}	
+						}
+						try {
+							Thread.sleep(sleepTimer);
+							debugStartFileSize =  countLines(debuglogFile);
+						} catch (InterruptedException | IOException e) {
+							logger.error("Error processing line in " + dataFileName + ":" + e);
+							logger.error("break the loop.");
+							isStop = true;
+						}
 						
-						lines.forEachOrdered(line -> process(line, type));
-		
-					} catch (IOException e) {
-						logger.error("Error processing line in log file: " + e);
+						logger.debug("File Line Count of debug.log: " + debugStartFileSize + " value read in: " + debuglastNumberRead);
+						if (debugStartFileSize < debuglastNumberRead ){
+							logger.debug("Failed Rolled: set Last number read to 0");
+							debuglastNumberRead = 0;
+						}
 					}	
 				}
-				try {
-					Thread.sleep(sleepTimer);
-					startFileSize =  countLines(logFile);
-				} catch (InterruptedException | IOException e) {
-					logger.error("Error: " + e);
-				}
-				
-				logger.info("File Line Count: " + startFileSize + " value read in: " + lastNumberRead);
-				if (startFileSize < lastNumberRead ){
-					logger.info("Failed Rolled: set Last number read to 0");
-					lastNumberRead = 0;
-				}
-			}	
-		}
-		};
+			};
+			
+			Thread thread = new Thread(runnable);
+			thread.start();
+			
+		} 	
+	}
+
+	private static void startErrorLogParser(File fileLog) throws Exception{
 		
-		Thread thread = new Thread(runnable);
-		thread.start();
-
-	}			
-
+		if(errorlogFile != null && !errorlogFile.isEmpty()){
+			
+			// pull the last line number 
+			String dataFileName = "error.log";
+			String filesRead = PullLastLineRead(fileLog, dataFileName);  
+			if (filesRead!= null){			
+				filesRead = filesRead.replaceAll("(\\r\\n|\\n)", "<br />");
+				errorlastNumberRead= Integer.parseInt(filesRead.trim());
+			}else{
+				errorlastNumberRead = 0;
+			}	
+			
+			errorStartFileSize =  countLines(errorlogFile);
+			if (errorStartFileSize < errorlastNumberRead ){
+				logger.error("Filed Rolled: set Last error number read to 0");
+				errorlastNumberRead = 0;
+			}
+			
+			isMissingLogFile = false;			
+			Path errorfilePath = Paths.get(errorlogFile);
+			File errorfile = new File(errorlogFile);
+			errorStartFileSize = errorfile.length();
+			// start process error.log file
+			Runnable  runnable = new Runnable (){
+				boolean isStop = false;
+				public void run(){
+                    
+					while (!isStop){
+						if (errorfile.isFile()){
+							// log4jlogger must use .info
+							try (Stream<String> lines = Files.lines(errorfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + errorlastNumberRead)).skip(errorlastNumberRead)) {
+								
+								lines.forEachOrdered(line -> process(line, type, LOGTYPE.ERROR));
+				
+							} catch (IOException e) {
+								logger.error("Error processing line in " + dataFileName + ":" + e);
+								logger.error("break the loop.");
+								isStop = true;
+							}	
+						}
+						try {
+							Thread.sleep(sleepTimer);
+							errorStartFileSize =  countLines(errorlogFile);
+						} catch (InterruptedException | IOException e) {
+							logger.error("Error processing line in " + dataFileName + ":" + e);
+							logger.error("break the loop.");
+							isStop = true;
+						}
+						
+						logger.debug("File Line Count of error.log: " + errorStartFileSize + " value read in: " + errorlastNumberRead);
+						if (errorStartFileSize < errorlastNumberRead ){
+							logger.debug("Failed Rolled: set Last error number read to 0");
+							errorlastNumberRead = 0;
+						}
+					}	
+				}
+			};
+			
+			Thread thread = new Thread(runnable);
+			thread.start();
+		}		
+	}
+	
+	private static void startAPIRestLogParser(File fileLog) throws Exception{
+		
+		if(logFile != null && !logFile.isEmpty()){
+			
+			// pull the last line number 
+			String dataFileName = type.toLowerCase()+"-rest.log";
+			String filesRead = PullLastLineRead(fileLog, dataFileName);  
+			if (filesRead!= null){			
+				filesRead = filesRead.replaceAll("(\\r\\n|\\n)", "<br />");
+				lastNumberRead= Integer.parseInt(filesRead.trim());
+			}else{
+				lastNumberRead = 0;
+			}			
+			startFileSize =  countLines(logFile);
+			if (startFileSize < lastNumberRead ){
+				logger.error("Filed Rolled: set Last number read to 0");
+				lastNumberRead = 0;
+			}
+			
+			isMissingLogFile = false;
+	        Path filePath = Paths.get(logFile);
+	        File file = new File(logFile);		
+			startFileSize = file.length();
+			// start process pap/pdp-rest.log file
+			Runnable  runnable = new Runnable () {
+				boolean isStop = false;
+				public void run(){
+					while (!isStop){		
+						
+						if (file.isFile()){
+							// log4jlogger must use .info
+							try (Stream<String> lines = Files.lines(filePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + lastNumberRead)).skip(lastNumberRead)) {
+								
+								lines.forEachOrdered(line -> process(line, type, LOGTYPE.INFO));
+				
+							} catch (IOException e) {
+								logger.error("Error processing line in " + dataFileName + ":" + e);
+								logger.error("break the loop.");
+								isStop = true;
+							}	
+						}
+						try {
+							Thread.sleep(sleepTimer);
+							startFileSize =  countLines(logFile);
+						} catch (InterruptedException | IOException e) {
+							logger.error("Error processing line in " + dataFileName + ":" + e);
+							logger.error("break the loop.");
+							isStop = true;
+						}
+						
+						logger.debug("File Line Count of " + dataFileName+": " + startFileSize + " value read in: " + lastNumberRead);
+						if (startFileSize < lastNumberRead ){
+							logger.debug("Failed Rolled: set Last number read to 0");
+							lastNumberRead = 0;
+						}
+					}	
+				}
+			};
+				
+			Thread thread = new Thread(runnable);
+			thread.start();
+		}		
+	}
+	
 	public static int countLines(String filename) throws IOException {
 	    LineNumberReader reader  = new LineNumberReader(new FileReader(filename));
 	    int cnt = 0;
-	    while ((reader.readLine()) != null);
+	    String line= null;
+	    while ((line = reader.readLine()) != null) {
+	    	logger.info("Reading the Logs"+line);
+	    }
 	    cnt = reader.getLineNumber(); 
 	    reader.close();
 	    return cnt;
 	}	
 	
-	public static String PullLastLineRead(File file) throws IOException {
+	public static String PullLastLineRead(File file, String dataFileName) throws IOException {
 		if(!file.exists()){
 			file.createNewFile();
 			return null;
@@ -158,38 +324,48 @@ public class ParseLog {
 		randomAccessFile = new RandomAccessFile(file, "r");
         StringBuilder builder = new StringBuilder();
         long length = file.length();
-        length--;
-        randomAccessFile.seek(length);
-        for(long seek = length; seek >= 0; --seek){
-            randomAccessFile.seek(seek);
-            char c = (char)randomAccessFile.read();
-            builder.append(c);
-            if(c == '\n'){
-                builder = builder.reverse();
-                if (builder.toString().contains("Last line Read:")){
-            		String[] parseString = builder.toString().split("Last line Read:");
-            		String returnValue = parseString[1].replace("\r", "");
-            		return returnValue.trim();
-            	}
-                builder = null;
-                builder = new StringBuilder();
-             }
-
+        logger.debug("dataFileName: " +dataFileName);
+        if(length > 0){
+	        length--;	        
+	        randomAccessFile.seek(length);
+	        for(long seek = length; seek >= 0; --seek){
+	            randomAccessFile.seek(seek);
+	            char c = (char)randomAccessFile.read();
+	            builder.append(c);
+	            if(c == '\n'){
+	                builder = builder.reverse();
+	                logger.debug("builder.toString(): " +builder.toString());
+	                if (builder.toString().contains("Last-"+dataFileName+"-line-Read:")){
+	            		String[] parseString = builder.toString().split("Last-"+dataFileName+"-line-Read:");
+	            		String returnValue = parseString[1].replace("\r", "");
+	            		return returnValue.trim();
+	            	}
+	                builder = null;
+	                builder = new StringBuilder();
+	             }	
+	        }
         }
+        
 		return null;
 	}
 
 	public static LogEntryObject pullOutLogValues(String line, String type){
 		Date date;
 		LogEntryObject logEntry = new LogEntryObject();
+		String description = "";
 		logEntry.setSystemType(type);
-		String description = null;
-		
 		logEntry.setSystem(system);
-		
-		//Values for PDP/PAP log file
-		if(line.contains("||INFO||") || line.contains("||ERROR||")){
-			String[] splitString = line.split("[||]");
+		logger.debug("In pullOutLogValues ...");
+		//Values for PDP/PAP debug.log file contains "INFO:", error.log file contains ""ERROR:", others are in PDP/PAP rest log file
+		if(line.contains("||INFO||") || line.contains("||ERROR||") || line.contains("INFO:") || line.contains("ERROR:")){
+			String[] splitString = null;
+			if(line.contains("||INFO||") || line.contains("||ERROR||")){
+				splitString = line.split("[||]");
+			}else if(line.contains("INFO:")){
+				splitString = line.split("INFO:");
+			}else{
+				splitString = line.split("ERROR:");
+			}
 			String dateString = splitString[0].substring(0, 19);
 			logEntry.setDescription(splitString[splitString.length-1]);	
 
@@ -198,12 +374,13 @@ public class ParseLog {
 			logEntry.setDate(date);
 			
 			logEntry.setRemote(parseRemoteSystem(line));
-			if (line.contains("||INFO||")){
+			if (line.contains("INFO:") || line.contains("||INFO||")){
 				logEntry.setLogType(LOGTYPE.INFO);
 			}else{
 				logEntry.setLogType(LOGTYPE.ERROR);
-			}		
-		}else if (line.contains("INFO") && line.contains(")-")){
+			}
+           // from PDP/PAP rest log file below
+		}else if (line.contains("INFO") && line.contains(")-")){ 
 			//parse out description
 			logEntry.setDescription(line.substring(line.indexOf(")-")+3));
 
@@ -272,8 +449,7 @@ public class ParseLog {
 			logEntry.setLogType(LOGTYPE.ERROR);
 		}else {
 			return null;
-		}
-		
+		}		
 
 		return logEntry;
 	}
@@ -287,20 +463,28 @@ public class ParseLog {
 		}
 	}
 
-	public static void process(String line, String type)  {
+	public static void process(String line, String type, LOGTYPE logFile)  {
+		
+		logger.debug("In process: processing line : " + line);
 		LogEntryObject returnLogValue = null;
 		if (im!=null){
 			try {
 				im.startTransaction();
 			} catch (AdministrativeStateException e) {
-				logger.error("Error received" + e);
-				
+				logger.error("Error received" + e);				
 			} catch (StandbyStatusException e) {
 				logger.error("Error received" + e);
 			}
 		}
 		returnLogValue = pullOutLogValues(line, type);
-		lastNumberRead++;
+		
+		if(logFile.equals(LOGTYPE.DEBUG)){
+		   debuglastNumberRead++;
+		}else if(logFile.equals(LOGTYPE.ERROR)){
+		   errorlastNumberRead++;
+		}else if(logFile.equals(LOGTYPE.INFO)){
+		   lastNumberRead++;
+		}
 		if (returnLogValue!=null){
 			writeDB(returnLogValue);
 		}
@@ -310,6 +494,7 @@ public class ParseLog {
 	}
 	
 	private static void writeDB(LogEntryObject returnLogValue) {
+
 		Connection conn = DBConnection(JDBC_DRIVER, JDBC_URL, JDBC_USER,JDBC_PASSWORD);
 		DBAccesss(conn, returnLogValue.getSystem(), returnLogValue.getDescription(),  
 						returnLogValue.getDate(), returnLogValue.getRemote(), 
@@ -334,7 +519,10 @@ public class ParseLog {
 		
 		if (date!=null){
 			Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			sdate = formatter.format(date);		
+			sdate = formatter.format(date);	
+			logger.debug("DBAccesss : sdate : " + sdate);
+		}else{
+			logger.debug("DBAccesss : sdate is null");
 		}
 		
 		//ensure the length of description is less than the maximumm db char length
@@ -399,11 +587,26 @@ public class ParseLog {
 		return null;
 	}
 	
+	public static String[] getPaths(String logPath){	
+		
+		if(logPath != null && !logPath.isEmpty()){
+			if(logPath.contains(";")){
+		       return logPath.split(";");
+			}else{
+				 String[] oneFile = new String[1];
+				 oneFile[0] = logPath;
+				 return oneFile;
+			}
+		}
+		
+	    return null;	
+	}
+	
 	public static Properties getPropertiesValue(String fileName) {
 		Properties config = new Properties();
 		Path file = Paths.get(fileName);
 		if (Files.notExists(file)) {
-			logger.info("File doesn't exist in the specified Path "	+ file.toString());
+			logger.debug("File doesn't exist in the specified Path "	+ file.toString());
 		}else{ 
 			if (file.toString().endsWith(".properties")) {
 				InputStream in;
@@ -415,7 +618,44 @@ public class ParseLog {
 					system = config.getProperty("SERVER");
 					type = config.getProperty("LOGTYPE");
 					systemLogFile = config.getProperty("PARSERLOGPATH");
-					logFile = config.getProperty("LOGPATH");
+					String logFiles = config.getProperty("LOGPATH");
+					if(logFiles == null || logFiles.isEmpty()){
+						isMissingLogFile = true;
+						return null;
+					}
+					
+					String[] splitString = getPaths(logFiles);
+					
+					if(splitString != null){
+                        for(int i=0;  i < splitString.length; i++){
+                        	
+                        	if(splitString[i].contains("debug")){
+        						// get path of debug.log file
+        						debuglogFile = splitString[i];
+        						if(debuglogFile != null && !debuglogFile.isEmpty()){
+        							debuglogFile = debuglogFile.trim();
+        						}
+                        	}else if(splitString[i].contains("error")){
+        						// get path of error.log file
+        						errorlogFile = splitString[i];
+        						if(errorlogFile != null && !errorlogFile.isEmpty()){
+        							errorlogFile = errorlogFile.trim();
+        						}
+                        	}else {
+        						// get path of default file
+                        		logFile = splitString[i];
+        						if(logFile != null && !logFile.isEmpty()){
+        							logFile = logFile.trim();
+        						}
+                        	}
+                        }
+					}else{	
+						
+						debuglogFile = null;
+						errorlogFile = null;
+						logFile = null;
+					}
+					
 					JDBC_URL = config.getProperty("JDBC_URL").replace("'", "");
 					JDBC_USER = config.getProperty("JDBC_USER");
 					JDBC_DRIVER =  config.getProperty("JDBC_DRIVER");
@@ -423,7 +663,7 @@ public class ParseLog {
 					return config;
 
 				} catch (IOException e) {					
-					logger.info("Error porcessing Cofnig file will be unable to create Health Check");
+					logger.debug("Error porcessing Config file will be unable to create Health Check" + e);
 				}
 				
 			}

@@ -22,7 +22,6 @@ package org.openecomp.policy.controller;
 
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -42,7 +41,6 @@ import javax.json.Json;
 import javax.json.JsonReader;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -65,7 +63,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -419,12 +416,6 @@ public class PolicyValidationController extends RestrictedBaseController {
 								}
 							}
 						}
-						//for continue testing for Dkat, just blocked this validation until fixing it. gw1218 on 3/30/17
-						//if (!checkAttributeValues()){
-						//responseString.append("<b>Micro Service</b>:<i>  Attribute Values Missing" + "</i><br>");
-						//valid = false;
-						//} 
-
 					}else{
 						responseString.append("<b>Micro Service</b>:<i> Micro Service is required" + "</i><br>");
 						valid = false;
@@ -576,7 +567,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 					if (!spData.isEmpty()){
 						SafePolicyWarning safePolicyWarningData  = (SafePolicyWarning) spData.get(0);
 						safePolicyWarningData.getMessage();
-						value = "Messaage:" +  safePolicyWarningData.getMessage();
+						value = "Message:" +  safePolicyWarningData.getMessage();
 					}
 					responseString.append("success" + "@#"+ value);
 				}
@@ -698,14 +689,19 @@ public class PolicyValidationController extends RestrictedBaseController {
 
 	// Validation for json.
 	protected static boolean isJSONValid(String data) {
+		JsonReader jsonReader = null;
 		try {
 			new JSONObject(data);
 			InputStream stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
-			JsonReader jsonReader = Json.createReader(stream);
-			System.out.println("Json Value is: " + jsonReader.read().toString() );
+			jsonReader = Json.createReader(stream);
+			LOGGER.info("Json Value is: " + jsonReader.read().toString() );
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception Occured While Validating"+e);
 			return false;
+		}finally{
+			if(jsonReader != null){
+				jsonReader.close();
+			}
 		}
 		return true;
 	}
@@ -720,11 +716,8 @@ public class PolicyValidationController extends RestrictedBaseController {
 			XMLReader reader = parser.getXMLReader();
 			reader.setErrorHandler(new XMLErrorHandler());
 			reader.parse(new InputSource(new StringReader(data)));
-		} catch (ParserConfigurationException e) {
-			return false;
-		} catch (SAXException e) {
-			return false;
-		} catch (IOException e) {
+		} catch (Exception e) {
+			LOGGER.error("Exception Occured While Validating"+e);
 			return false;
 		}
 		return true;

@@ -20,12 +20,8 @@
 
 package org.openecomp.policy.pap.xacml.rest.components;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
@@ -50,11 +46,9 @@ import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.pap.xacml.rest.components.PolicyDBDao.PolicyDBDaoTestClass;
 import org.openecomp.policy.rest.XACMLRestProperties;
 import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
-import org.openecomp.policy.rest.jpa.ActionBodyEntity;
 import org.openecomp.policy.rest.jpa.GroupEntity;
 import org.openecomp.policy.rest.jpa.PdpEntity;
 import org.openecomp.policy.rest.jpa.PolicyEntity;
-import org.openecomp.policy.rest.util.Webapps;
 import org.openecomp.policy.xacml.api.pap.EcompPDPGroup;
 import org.openecomp.policy.xacml.std.pap.StdPDPGroup;
 import org.openecomp.policy.xacml.util.XACMLPolicyWriter;
@@ -64,7 +58,6 @@ import com.att.research.xacml.util.XACMLProperties;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
-@Ignore //only run locally as timing sometimes causes failures on Jenkins
 public class PolicyDBDaoTest {
 
 	private static Logger logger = FlexLogger.getLogger(PolicyDBDaoTest.class);
@@ -80,14 +73,14 @@ public class PolicyDBDaoTest {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		try{	
-		em.createQuery("DELETE FROM PolicyDBDaoEntity").executeUpdate();
-		em.createQuery("DELETE FROM PolicyEntity").executeUpdate();
-		em.createQuery("DELETE FROM ConfigurationDataEntity").executeUpdate();
-		em.createQuery("DELETE FROM ActionBodyEntity").executeUpdate();
-		em.createQuery("DELETE FROM PdpEntity").executeUpdate();
-		em.createQuery("DELETE FROM GroupEntity").executeUpdate();
+			em.createQuery("DELETE FROM PolicyDBDaoEntity").executeUpdate();
+			em.createQuery("DELETE FROM PolicyEntity").executeUpdate();
+			em.createQuery("DELETE FROM ConfigurationDataEntity").executeUpdate();
+			em.createQuery("DELETE FROM ActionBodyEntity").executeUpdate();
+			em.createQuery("DELETE FROM PdpEntity").executeUpdate();
+			em.createQuery("DELETE FROM GroupEntity").executeUpdate();
 
-		em.getTransaction().commit();
+			em.getTransaction().commit();
 		} catch(Exception e){
 			logger.error("Exception Occured"+e);
 			em.getTransaction().rollback();
@@ -130,21 +123,6 @@ public class PolicyDBDaoTest {
 	}
 	
 	@Test
-	public void getScopeAndNameAndTypeTest(){
-
-		String s = d.getGitPath();
-		String pathIwantToUse;
-		if(s.contains("/")){
-			pathIwantToUse = "/root/users/" + s + "/org/openecomp/Config_mypolicy.xml";
-		} else {
-			pathIwantToUse = "C:\\root\\users\\" + s + "\\org\\openecomp\\Config_mypolicy.xml";
-		}
-		String[] snt = d.getScopeAndNameAndType(pathIwantToUse);
-		Assert.assertEquals("Scope was parsed wrong","org.openecomp", snt[0]);
-		Assert.assertEquals("Policy name was parsed wrong","Config_mypolicy.xml", snt[1]);
-		Assert.assertEquals("Policy type was parsed wrong","Config", snt[2]);
-	}
-	@Test
 	public void computeScopeTest(){
 		Assert.assertEquals("com",d.computeScope("C:\\Users\\testuser\\admin\\repo\\com\\", "C:\\Users\\testuser\\admin\\repo"));
 		Assert.assertEquals("org.openecomp.policy",d.computeScope("/Users/testuser/admin/repo/org/openecomp/policy", "/Users/testuser/admin/repo"));
@@ -160,176 +138,27 @@ public class PolicyDBDaoTest {
 		Assert.assertEquals("org.openecomp.Action_mypolicy.json", configFile);
 	}
 	
-	@Test
-	public void transactionTests(){
-		
-		
-//		try{
-//			transac.commitTransaction();
-//			Assert.fail();
-//		} catch(IllegalStateException e){
-//			//worked
-//		} catch(Exception e2){
-//			Assert.fail();
-//		}
-		String filePath = null;
-		String xmlFile = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" PolicyId=\"urn:com:xacml:policy:id:eaa4bb64-59cf-4517-bb44-b2eeabd50b11\" Version=\"1\" RuleCombiningAlgId=\"urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides\">\n    <Description></Description>\n    <Target>\n        <AnyOf>\n            <AllOf>\n                <Match MatchId=\"org.openecomp.labs.ecomp.function.regex-match\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#integer\">99</AttributeValue>\n                    <AttributeDesignator Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\" AttributeId=\"cpu\" DataType=\"http://www.w3.org/2001/XMLSchema#integer\" MustBePresent=\"false\"/>\n                </Match>\n            </AllOf>\n        </AnyOf>\n    </Target>\n    <Rule RuleId=\"urn:com:xacml:rule:id:3350bf37-43d0-4a94-a317-febec81150d8\" Effect=\"Permit\">\n        <Target/>\n        <ObligationExpressions>\n            <ObligationExpression ObligationId=\"test\" FulfillOn=\"Permit\">\n                <AttributeAssignmentExpression AttributeId=\"performer\" Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">PDPAction</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"type\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">REST</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"url\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#anyURI\">http://localhost:8056/pcd</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"method\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">GET</AttributeValue>\n                </AttributeAssignmentExpression>\n                <AttributeAssignmentExpression AttributeId=\"body\" Category=\"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\">\n                    <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#anyURI\">$URLaction/com.Action_patbaction7.json</AttributeValue>\n                </AttributeAssignmentExpression>\n            </ObligationExpression>\n        </ObligationExpressions>\n    </Rule>\n</Policy>\n";
-		String jsonFile = "{\"actionAttribute\":\"Memory\"}";
-		
-		try{
-			//policy file
-			InputStream in = new ByteArrayInputStream(xmlFile.getBytes());
-			String workspaceDir = "src/test/resources/junitTestCreatedDirectory/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE)+"/admin/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_REPOSITORY);
-			FileUtils.forceMkdir(new File(workspaceDir+"/com/att"));
-			File outFile = new File(workspaceDir+"/org/openecomp/Action_mypol.xml");
-			OutputStream out = new FileOutputStream(outFile);
-			IOUtils.copy(in, out);
-			filePath = outFile.getAbsolutePath();	
-			out.close();
-			
-			//action body file
-			InputStream actionIn = new ByteArrayInputStream(jsonFile.getBytes());
-			String webappDir = "src/test/resources/junitTestCreatedDirectory/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE);
-			XACMLProperties.setProperty(XACMLRestProperties.PROP_PAP_WEBAPPS, webappDir);
-			String actionDir = Webapps.getActionHome();
-			FileUtils.forceMkdir(new File(actionDir));
-			File actionOutFile = new File(actionDir+"/org.openecomp.Action_mypol.json");
-			OutputStream actionOut = new FileOutputStream(actionOutFile);
-			IOUtils.copy(actionIn, actionOut);
-			actionOut.close();
-			
-		}catch(Exception e){
-			//could not run test
-		}
-		PolicyDBDaoTransaction transac = dbd.getNewTransaction();
-		if(filePath != null){
-			try{
-				transac.createPolicy(filePath, "tester");
-				transac.commitTransaction();
-			} catch(Exception e){
-				Assert.fail();
-			}
-			EntityManager getData = emf.createEntityManager();
-			Query getDataQuery = getData.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:name");
-			getDataQuery.setParameter("scope", "org.openecomp");
-			getDataQuery.setParameter("name","Action_mypol.xml");
-			PolicyEntity result = null;
-			try{
-				result = (PolicyEntity)getDataQuery.getSingleResult();
-			} catch(Exception e){
-				logger.error("Exception Occured"+e);
-				Assert.fail();
-			}
-			Assert.assertEquals(xmlFile, result.getPolicyData());
-			getData.close();
-			result = null;
-			xmlFile = null;
-			try{
-				transac = dbd.getNewTransaction();
-				transac.deletePolicy(filePath);
-			} catch(Exception e){
-				logger.error("Exception Occured"+e);
-				Assert.fail();
-			}
-			Assert.assertTrue(transac.isTransactionOpen());
-			try{				
-				transac.deletePolicy(filePath);
-				Assert.fail();
-			} catch(IllegalStateException e){
-				//pass
-			} catch(Exception e){
-				Assert.fail();
-			}
-			transac.commitTransaction();
-			//Assert.assertFalse(transac.isTransactionOpen());
-			try{
-				transac = dbd.getNewTransaction();
-				transac.deletePolicy(filePath);
-			} catch(Exception e){
-				logger.error("Exception Occured"+e);
-				Assert.fail();
-			}
-			transac.commitTransaction();
-			//Assert.assertFalse(transac.isTransactionOpen());
-			String workspaceDir = "src/test/resources/junitTestCreatedDirectory/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE)+"/admin/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_REPOSITORY);
-			PolicyDBDaoTransaction willFail = dbd.getNewTransaction();
-			File fakeFile = new File("directorythatdoesnotexist/"+workspaceDir);
-			try{
-			willFail.createPolicy(fakeFile.getAbsolutePath(), "user1");
-			Assert.fail();
-			} catch(IllegalArgumentException e){
-				if(!e.getMessage().equals("The file path could not be parsed")){
-					Assert.fail();
-				}
-			}			
-			willFail.close();
-			
-			fakeFile = new File("directorythatdoesnotexist/"+workspaceDir+"/Action_mypol2.xml");
-			willFail = dbd.getNewTransaction();
-			try{
-			willFail.createPolicy(fakeFile.getAbsolutePath(), "user1");
-			Assert.fail();
-			} catch(IllegalArgumentException e){
-				if(!e.getMessage().equals("The file path could not be parsed")){
-					Assert.fail();
-				}
-			}
-			willFail.close();
-			
-			fakeFile = new File("directorythatdoesnotexist/"+workspaceDir+"com/att/Action_mypol2.xml");
-			willFail = dbd.getNewTransaction();
-			try{
-			willFail.createPolicy(fakeFile.getAbsolutePath(), "user1");
-			Assert.fail();
-			} catch(IllegalArgumentException e){
-				if(!e.getMessage().equals("The file path does not exist")){
-					Assert.fail();
-				}
-			}
-			willFail.close();
-			
-			emf = Persistence.createEntityManagerFactory("testPU");
-			EntityManager aem = emf.createEntityManager();
-			Query actionQuery = aem.createQuery("SELECT a FROM ActionBodyEntity a WHERE a.actionBodyName=:actionBodyName");
-			actionQuery.setParameter("actionBodyName", "org.openecomp.Action_mypol.json");
-			List<?> actionQueryList = actionQuery.getResultList();
-			if(actionQueryList.size() < 1){
-				Assert.fail("ActionBodyEntity not found with actionBodyName=: org.openecomp.Action_mypol.json"  );
-			} else if(actionQueryList.size() > 1){
-				//something went wrong
-				Assert.fail("Somehow, more than one ActionBodyEntity with the actionBodyName = org.openecomp.Action_mypol.json");
-			} else {
-				ActionBodyEntity abe = (ActionBodyEntity)actionQueryList.get(0);
-				logger.debug("\n\nPolicyDBDaoTest.transactionTests() Assert.assertEquals"
-						+ "\n   abe.getActionBody() = " + abe.getActionBody()
-						+ "\n   jsonFile = " + jsonFile
-						+ "\n\n");
-				Assert.assertEquals(abe.getActionBody(),jsonFile);				
-			}
-		}
-	}
-	
+	@Ignore
 	@Test
 	public void createFromPolicyObject(){
-		String workspaceDir = "src/test/resources/junitTestCreatedDirectory/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE)+"/admin/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_REPOSITORY);
-		File parentPath = new File(workspaceDir+"/com/att");
-		File scope = new File(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WORKSPACE)+"/admin/"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_REPOSITORY));
+		String workspaceDir = "src/test/resources/";
+		File parentPath = new File(workspaceDir+"/com");
 		Policy policyObject = new ConfigPolicy();
 		policyObject.policyAdapter = new PolicyRestAdapter();
 		policyObject.policyAdapter.setConfigName("testpolicy1");
 		policyObject.policyAdapter.setParentPath(parentPath.getAbsolutePath());
-		policyObject.policyAdapter.setUserGitPath(scope.getPath());
 		policyObject.policyAdapter.setPolicyDescription("my description");
 		policyObject.policyAdapter.setConfigBodyData("this is my test config file");
 		policyObject.policyAdapter.setPolicyName("testpolicy1");
 		policyObject.policyAdapter.setConfigType(ConfigPolicy.OTHER_CONFIG);
 		policyObject.policyAdapter.setPolicyType("Config");
+		policyObject.policyAdapter.setDomainDir("org.openecomp");
 		PolicyType policyTypeObject = new PolicyType();
 		policyObject.policyAdapter.setPolicyData(policyTypeObject);
 		PolicyDBDaoTransaction transaction = dbd.getNewTransaction();
 		try{
-		transaction.createPolicy(policyObject, "testuser1");
-		transaction.commitTransaction();
+			transaction.createPolicy(policyObject, "testuser1");
+			transaction.commitTransaction();
 		} catch(Exception e){
 			transaction.rollbackTransaction();
 			Assert.fail();
@@ -385,6 +214,7 @@ public class PolicyDBDaoTest {
 		transaction.commitTransaction();
 	}
 
+	@Ignore
 	@Test
 	public void groupTransactions(){		
 		PolicyDBDaoTransaction group = dbd.getNewTransaction();
@@ -609,13 +439,6 @@ public class PolicyDBDaoTest {
 			Assert.fail();
 		}
 		em.close();
-		//update pdp
-
-		//set group as default
-
-		//move pdp to new group
-
-
 	}
 	
 	@Test
@@ -639,7 +462,7 @@ public class PolicyDBDaoTest {
 		String desc = d.getDescriptionFromXacml("<Description>"+myTestDesc+"</Description>");
 		Assert.assertEquals(myTestDesc, desc);
 	}
-
+	@Ignore
 	@Test
 	public void threadingStabilityTest(){
 		if(logger.isDebugEnabled()){

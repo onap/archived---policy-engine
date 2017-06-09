@@ -26,13 +26,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -42,11 +38,11 @@ import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
-import org.openecomp.policy.rest.XACMLRestProperties;
+import org.openecomp.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
+import org.openecomp.policy.rest.jpa.MicroServiceModels;
 
 import com.att.research.xacml.std.IdentifierImpl;
-import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Splitter;
@@ -69,13 +65,6 @@ public class MicroServiceConfigPolicy extends Policy {
 	
 	private static final Logger LOGGER = FlexLogger.getLogger(MicroServiceConfigPolicy.class);
 	
-    /*
-     * These are the parameters needed for DB access from the PAP
-     */
-    private static String papDbDriver = null;
-    private static String papDbUrl = null;
-    private static String papDbUser = null;
-    private static String papDbPassword = null;
     private static Map<String, String> mapAttribute = new HashMap<>();
     private static Map<String, String> matchMap = new HashMap<>();
 
@@ -188,7 +177,6 @@ public class MicroServiceConfigPolicy extends Policy {
                 matching = getValueFromDictionary(policyAdapter.getServiceType() + "-v" + jsonVersion);
             }
             
-            matchMap = new HashMap<>();
             if (matching != null && !matching.isEmpty()){
                 matchMap = Splitter.on(",").withKeyValueSeparator("=").split(matching);
                 if(policyAdapter.getJsonBody() != null){
@@ -332,62 +320,19 @@ public class MicroServiceConfigPolicy extends Policy {
    }
 
    private String getValueFromDictionary(String service){
-       
-       Connection con = null;
-       Statement st = null;
-       ResultSet rs = null;
-       
+       String ruleTemplate=null;
        String modelName = service.split("-v")[0];
        String modelVersion = service.split("-v")[1];
        
-       
-       /*
-        * Retrieve the property values for db access from the xacml.pap.properties
-        */
-       papDbDriver = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_DRIVER);
-       papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
-       papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
-       papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
-       
-       String ruleTemplate=null;
-       
-       try {
-           //Get DB Connection
-           Class.forName(papDbDriver);
-           con = DriverManager.getConnection(papDbUrl,papDbUser,papDbPassword);
-           st = con.createStatement();
-   
-           String queryString = "Select * from MicroServiceModels where modelName=\""  + modelName
-                   + "\" AND version=\"" + modelVersion+"\"";
-
-           
-           rs = st.executeQuery(queryString);
-           if(rs.next()){
-               ruleTemplate=rs.getString("annotation");
-           }
-           rs.close();
-       }catch (ClassNotFoundException e) {
-           PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "MicroServiceModels", "Exception querying MicroServiceModels");
-       } catch (SQLException e) {
-           PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "MicroServiceModels", "Exception querying MicroServiceModels");
-       } finally {
-           try{
-               if (con!=null){
-            	   con.close();
-               }
-               if (rs!=null){
-            	   rs.close();
-               }
-               if (st!=null){
-            	   st.close();
-               }
-           } catch (Exception ex){
-        	   LOGGER.error("Exception Occured While Closing the Database Connection"+ex);
-           }
+       CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
+       List<Object> result = dbConnection.getDataById(MicroServiceModels.class, "modelName:version", modelName+":"+modelVersion);
+       if(result != null && !result.isEmpty()){
+    	   MicroServiceModels model = (MicroServiceModels) result.get(0);
+    	   ruleTemplate = model.getAnnotation();
        }
        return ruleTemplate;
-       
    }
+   
 	// Data required for Advice part is setting here.
 	private AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
 		AdviceExpressionsType advices = new AdviceExpressionsType();
