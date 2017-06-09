@@ -95,14 +95,14 @@ public class ManualClientEndUEB {
         final JSONObject msg1 = new JSONObject (); 
 
         msg1.put ( "JSON", "UEB Update Ruest UID=" + uniqueID);  
-
-        try {
-			pub.send ( "MyPartitionKey", msg1.toString () );
-		} catch (IOException e) {
-			logger.error("Exception Occured"+e);
-		} 
-        pub.close (); 
-		
+        if(pub != null){
+        	 try {
+     			pub.send ( "MyPartitionKey", msg1.toString () );
+     		} catch (IOException e) {
+     			logger.error("Exception Occured"+e);
+     		} 
+             pub.close (); 	
+        }	
 	}
 
 	public static void createTopic (String url, String uniquID, List<String> uebURLList){

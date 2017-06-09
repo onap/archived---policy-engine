@@ -215,12 +215,14 @@ public abstract class Policy {
 			new JSONObject(data);
 			InputStream stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
 			jsonReader = Json.createReader(stream);
-			System.out.println("Json Value is: " + jsonReader.read().toString() );
+			LOGGER.info("Json Value is: " + jsonReader.read().toString() );
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured while reading json"+e);
 			return false;
 		}finally{
-			jsonReader.close();
+			if(jsonReader != null){
+				jsonReader.close();
+			}
 		}
 		return true;
 	}
@@ -302,8 +304,9 @@ public abstract class Policy {
 			//
 			//Does not need to be XACMLPolicyWriterWithPapNotify since it is already in the PAP
 			//and this transaction is intercepted up stream.
-			InputStream inputStream = XACMLPolicyWriter.getXmlAsInputStream((PolicyType) policyData);
+			InputStream inputStream = null;
 			try {
+				inputStream = XACMLPolicyWriter.getXmlAsInputStream((PolicyType) policyData);
 				PolicyDef policyDef = DOMPolicyDef.load(inputStream);
 				if (policyDef == null) {
 					success.put("validation", "PolicyDef Validation Failed");
@@ -311,10 +314,12 @@ public abstract class Policy {
 					success.put("success", "success");
 				}
 			} catch (Exception e) {
+				LOGGER.error("PolicyDef Validation failed"+e);
 				success.put("error", "Validation Failed");
 			}finally{
 				try {
-					inputStream.close();
+					if(inputStream != null)
+						inputStream.close();
 				} catch (IOException e) {
 					LOGGER.error("Exception Occured while closing the input stream"+e);
 				}

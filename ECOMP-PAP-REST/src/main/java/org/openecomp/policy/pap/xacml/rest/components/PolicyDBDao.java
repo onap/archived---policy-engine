@@ -1050,55 +1050,60 @@ public class PolicyDBDao {
 				}
 
 			}else{
-				logger.debug("Updating/Creating Policy: " + policy.getPolicyName());
-				action = "update";
-				Files.createDirectories(policyPath);
-				Path newPath = Paths.get(policyPath.toString(), policy.getPolicyName());
-				Files.deleteIfExists(newPath);
-				if(!isNullOrEmpty(oldPathString)){
-					try{
-						String[] scopeName = getScopeAndNameAndType(oldPathString);
-						Path oldPath = Paths.get(buildPolicyScopeDirectory(scopeName[0]),scopeName[1]);
-						Files.delete(oldPath.toAbsolutePath());
-					}catch(Exception e){
-						PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy before rename: "+oldPathString);
-					}
-				}
-				Object policyData = XACMLPolicyScanner.readPolicy(IOUtils.toInputStream(policy.getPolicyData()));
-				XACMLPolicyWriter.writePolicyFile(newPath, (PolicyType) policyData);		
-
-				if (policy.getConfigurationData()!= null){
+				if(policy != null && policy.getPolicyName() != null){
+					logger.debug("Updating/Creating Policy: " + policy.getPolicyName());
+					action = "update";
+					Files.createDirectories(policyPath);
+					Path newPath = Paths.get(policyPath.toString(), policy.getPolicyName());
+					Files.deleteIfExists(newPath);
 					if(!isNullOrEmpty(oldPathString)){
-						try{						
-							String[] oldPolicyScopeName = getScopeAndNameAndType(oldPathString);
-							String oldConfigFileName = getConfigFile(oldPolicyScopeName[1],policy.getConfigurationData().getConfigType());
-							Path oldConfigFilePath = getPolicySubFile(oldConfigFileName, "Config");
-							logger.debug("Trying to delete: "+oldConfigFilePath.toString());
-							Files.delete(oldConfigFilePath);						
+						try{
+							String[] scopeName = getScopeAndNameAndType(oldPathString);
+							Path oldPath = Paths.get(buildPolicyScopeDirectory(scopeName[0]),scopeName[1]);
+							Files.delete(oldPath.toAbsolutePath());
 						}catch(Exception e){
-							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy config before rename for policy: "+oldPathString);
+							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy before rename: "+oldPathString);
 						}
 					}
-					writePolicySubFile(policy, "Config");
+					Object policyData = XACMLPolicyScanner.readPolicy(IOUtils.toInputStream(policy.getPolicyData()));
+					XACMLPolicyWriter.writePolicyFile(newPath, (PolicyType) policyData);		
 
-				}else if(policy.getActionBodyEntity()!= null){
-					if(!isNullOrEmpty(oldPathString)){
-						try{						
-							String[] oldPolicyScopeName = getScopeAndNameAndType(oldPathString);
-							String oldActionFileName = getConfigFile(oldPolicyScopeName[1],ConfigPolicy.JSON_CONFIG);
-							Path oldActionFilePath = getPolicySubFile(oldActionFileName, "Action");
-							logger.debug("Trying to delete: "+oldActionFilePath.toString());
-							Files.delete(oldActionFilePath);						
-						}catch(Exception e){
-							PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy action body before rename for policy: "+oldPathString);
+					if (policy.getConfigurationData()!= null){
+						if(!isNullOrEmpty(oldPathString)){
+							try{						
+								String[] oldPolicyScopeName = getScopeAndNameAndType(oldPathString);
+								String oldConfigFileName = getConfigFile(oldPolicyScopeName[1],policy.getConfigurationData().getConfigType());
+								Path oldConfigFilePath = getPolicySubFile(oldConfigFileName, "Config");
+								logger.debug("Trying to delete: "+oldConfigFilePath.toString());
+								Files.delete(oldConfigFilePath);						
+							}catch(Exception e){
+								PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy config before rename for policy: "+oldPathString);
+							}
 						}
-					}
-					writePolicySubFile(policy, "Action");
-				}
+						writePolicySubFile(policy, "Config");
 
+					}else if(policy.getActionBodyEntity()!= null){
+						if(!isNullOrEmpty(oldPathString)){
+							try{						
+								String[] oldPolicyScopeName = getScopeAndNameAndType(oldPathString);
+								String oldActionFileName = getConfigFile(oldPolicyScopeName[1],ConfigPolicy.JSON_CONFIG);
+								Path oldActionFilePath = getPolicySubFile(oldActionFileName, "Action");
+								logger.debug("Trying to delete: "+oldActionFilePath.toString());
+								Files.delete(oldActionFilePath);						
+							}catch(Exception e){
+								PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not delete the old policy action body before rename for policy: "+oldPathString);
+							}
+						}
+						writePolicySubFile(policy, "Action");
+					}
+				}
 			}
 		} catch (IOException e1) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Error occurred while performing [" + action + "] of Policy File: " + policy != null ? policy.getPolicyName() : "null");
+			String policyName = null;
+			if(policy != null){
+				policyName = policy.getPolicyName();
+			}
+			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Error occurred while performing [" + action + "] of Policy File: " + policyName);
 		}	
 	}
 
@@ -1970,85 +1975,85 @@ public class PolicyDBDao {
 	 */
 	private static String[] getScopeAndNameAndType(String path){
 		logger.debug("getScopeAndNameAndType(String path) as getScopeAndNameAndType("+path+") called");
-		if(path == null){
+		if(path != null){
+			String gitPath  = getGitPath();
 
-		}
-		String gitPath  = getGitPath();
-
-		ArrayList<String> gitPathParts = new ArrayList<>();
-		Iterator<?> gitPathIterator = Paths.get(gitPath).iterator();
-		while(gitPathIterator.hasNext()){
-			gitPathParts.add(gitPathIterator.next().toString());
-		}
-		for(int i=0;i<gitPathParts.size();i++){
-			Path testGitPath = Paths.get("");
-			for(int j=i;j<gitPathParts.size();j++){
-				testGitPath = Paths.get(testGitPath.toString(),gitPathParts.get(j));
+			ArrayList<String> gitPathParts = new ArrayList<>();
+			Iterator<?> gitPathIterator = Paths.get(gitPath).iterator();
+			while(gitPathIterator.hasNext()){
+				gitPathParts.add(gitPathIterator.next().toString());
 			}
-			if(path != null && path.contains(testGitPath.toString())){
-				gitPath = testGitPath.toString();
-				break;
+			for(int i=0;i<gitPathParts.size();i++){
+				Path testGitPath = Paths.get("");
+				for(int j=i;j<gitPathParts.size();j++){
+					testGitPath = Paths.get(testGitPath.toString(),gitPathParts.get(j));
+				}
+				if(path != null && path.contains(testGitPath.toString())){
+					gitPath = testGitPath.toString();
+					break;
+				}
 			}
-		}
-		if(gitPath == null){
-			logger.debug("gitPath is null.  Returning");
-			return null;
-		}
-		if(path != null && (gitPath.length() >= path.length())){
-			logger.debug("gitPath length(): " + gitPath.length() + ">= path.length(): " + path.length() + ".  Returning null");
-			return null;
-		}
-		String scopeAndName = path.substring(path.indexOf(gitPath)+gitPath.length());
-
-		logger.debug("scopeAndName: " + scopeAndName);
-		String policyType = null;
-		String[] policyTypes = {"Config_","Action_","Decision_"};
-		for(String pType : policyTypes){
-			if(scopeAndName.contains(pType)){
-				policyType = pType;
-			}
-		}
-		if(policyType == null){
-			return null;
-		}
-		String scope = scopeAndName.substring(0,scopeAndName.indexOf(policyType));
-		String name = scopeAndName.substring(scopeAndName.indexOf(policyType), scopeAndName.length());
-		scope = scope.replace('\\', '.');
-		scope = scope.replace('/', '.');
-		if(scope.length()<1){
-			return null;
-		}
-		if(scope.charAt(0) == '.'){
-			if(scope.length() < 2){
-				logger.debug("getScopeAndNameAndType error: " + scope.length() + " < 2. " + "| scope.charAt(0)==.");
+			if(gitPath == null){
+				logger.debug("gitPath is null.  Returning");
 				return null;
 			}
-			scope = scope.substring(1);
-		}
-		if(scope.charAt(scope.length()-1) == '.'){
-			if(scope.length() < 2){
-				logger.debug("getScopeAndNameAndType error: " + scope.length() + " < 2" + "| scope.charAt(scope.length()-1)==.");
+			if(path != null && (gitPath.length() >= path.length())){
+				logger.debug("gitPath length(): " + gitPath.length() + ">= path.length(): " + path.length() + ".  Returning null");
 				return null;
 			}
-			scope = scope.substring(0,scope.length()-1);
-		}
-		if(name.length()<1){
-			logger.debug("getScopeAndNameAndType error: name.length()<1");
-			return null;
-		}
-		if(name.charAt(0) == '.'){
-			if(name.length() < 2){
-				logger.debug("getScopeAndNameAndType error: " + name.length() + " < 2. " + "| scope.charAt(0)==.");
+			String scopeAndName = path.substring(path.indexOf(gitPath)+gitPath.length());
+
+			logger.debug("scopeAndName: " + scopeAndName);
+			String policyType = null;
+			String[] policyTypes = {"Config_","Action_","Decision_"};
+			for(String pType : policyTypes){
+				if(scopeAndName.contains(pType)){
+					policyType = pType;
+				}
+			}
+			if(policyType == null){
 				return null;
 			}
-			name = name.substring(1);
+			String scope = scopeAndName.substring(0,scopeAndName.indexOf(policyType));
+			String name = scopeAndName.substring(scopeAndName.indexOf(policyType), scopeAndName.length());
+			scope = scope.replace('\\', '.');
+			scope = scope.replace('/', '.');
+			if(scope.length()<1){
+				return null;
+			}
+			if(scope.charAt(0) == '.'){
+				if(scope.length() < 2){
+					logger.debug("getScopeAndNameAndType error: " + scope.length() + " < 2. " + "| scope.charAt(0)==.");
+					return null;
+				}
+				scope = scope.substring(1);
+			}
+			if(scope.charAt(scope.length()-1) == '.'){
+				if(scope.length() < 2){
+					logger.debug("getScopeAndNameAndType error: " + scope.length() + " < 2" + "| scope.charAt(scope.length()-1)==.");
+					return null;
+				}
+				scope = scope.substring(0,scope.length()-1);
+			}
+			if(name.length()<1){
+				logger.debug("getScopeAndNameAndType error: name.length()<1");
+				return null;
+			}
+			if(name.charAt(0) == '.'){
+				if(name.length() < 2){
+					logger.debug("getScopeAndNameAndType error: " + name.length() + " < 2. " + "| scope.charAt(0)==.");
+					return null;
+				}
+				name = name.substring(1);
+			}
+			String[] returnArray = new String[3];
+			returnArray[0] = scope;
+			returnArray[1] = name;
+			//remove the underscore and return it
+			returnArray[2] = policyType.substring(0, policyType.length()-1);
+			return returnArray;
 		}
-		String[] returnArray = new String[3];
-		returnArray[0] = scope;
-		returnArray[1] = name;
-		//remove the underscore and return it
-		returnArray[2] = policyType.substring(0, policyType.length()-1);
-		return returnArray;
+		return null;
 	}
 
 
