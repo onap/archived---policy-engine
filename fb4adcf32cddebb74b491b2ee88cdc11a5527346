@@ -34,6 +34,24 @@
       "revId": "fb4adcf32cddebb74b491b2ee88cdc11a5527346",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_5e65a0df",
+        "filename": "LogParser/LineTest.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-06-12T16:54:30Z",
+      "side": 1,
+      "message": "Are those JUnit tests? Then the file should probably reside in src/test/resources instead of the root of the project?",
+      "parentUuid": "da141535_3e1d4c67",
+      "revId": "fb4adcf32cddebb74b491b2ee88cdc11a5527346",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
