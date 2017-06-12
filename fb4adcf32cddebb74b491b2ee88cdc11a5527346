@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_be095c2e",
+        "filename": "LogParser/LineTest.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-06-12T14:39:24Z",
+      "side": 1,
+      "message": "Is this file something that is generated during testing or is it used by the source code? I\u0027m thinking maybe it shouldn\u0027t be in git??",
+      "revId": "fb4adcf32cddebb74b491b2ee88cdc11a5527346",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
