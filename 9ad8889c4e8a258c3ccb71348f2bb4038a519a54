@@ -1,0 +1,208 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_1ec5e85a",
+        "filename": "ECOMP-PAP-REST/src/main/java/org/openecomp/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "fix indentation",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_dea650c1",
+        "filename": "ECOMP-PAP-REST/src/test/java/org/openecomp/policy/pap/xacml/rest/XACMLPapServletTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "delete code if not used",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_9eb0d8f5",
+        "filename": "ECOMP-PAP-REST/src/test/java/org/openecomp/policy/pap/xacml/rest/XACMLPapServletTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "delete method if not a test or not clear what should be expected",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_beab9c88",
+        "filename": "ECOMP-PAP-REST/src/test/java/org/openecomp/policy/pap/xacml/rest/XACMLPapServletTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "delete unused code",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_7e95043f",
+        "filename": "ECOMP-PAP-REST/src/test/java/org/openecomp/policy/pap/xacml/rest/XACMLPapServletTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "should be with a @test ??",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_5e924058",
+        "filename": "ECOMP-PAP-REST/src/test/java/org/openecomp/policy/pap/xacml/rest/XACMLPapServletTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "same as above .. - general comment",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_3e9f8c61",
+        "filename": "ECOMP-PDP-REST/src/main/java/org/openecomp/policy/pdp/rest/notifications/ManualNotificationUpdateThread.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "Not sure if close() can throw IOException, may be better to move it under the previous try (?)",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_1e9cc868",
+        "filename": "LogParser/src/main/java/org/openecomp/xacml/parser/ParseLog.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 629,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "fix indentation",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_fe88f423",
+        "filename": "LogParser/src/main/java/org/openecomp/xacml/parser/ParseLog.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "fix typos: \"Cofnig\" ?",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_de8d3033",
+        "filename": "LogParser/src/test/java/org/openecomp/xacml/parser/ParseLogTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "remove if it does not test an unit case",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_9e87b80f",
+        "filename": "LogParser/src/test/resources/test_config.properties",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "Windows Paths should not appear in open source.  If used it will fail gerrit jobs, as they are executed in linux environment",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da141535_7e7ce420",
+        "filename": "PolicyEngineAPI/src/main/java/org/openecomp/policy/std/ManualClientEndUEB.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T20:25:23Z",
+      "side": 1,
+      "message": "Not sure if close() can throw IOException, may be better to move it under the previous try (?)",
+      "revId": "9ad8889c4e8a258c3ccb71348f2bb4038a519a54",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
