@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_dee2d0d4",
+        "filename": "ECOMP-PAP-REST/src/main/java/org/openecomp/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-12T21:50:12Z",
+      "side": 1,
+      "message": "missed this indentation",
+      "revId": "685ed1545ed28b777a3ba6e7d315b78f355154cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
