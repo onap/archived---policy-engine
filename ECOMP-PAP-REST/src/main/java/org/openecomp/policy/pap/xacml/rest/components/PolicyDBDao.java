@@ -978,6 +978,7 @@ public class PolicyDBDao {
 		//call command to update
 	}
 	private void handleIncomingPolicyChange(String url, String policyId,String oldPathString){
+		String policyName = null;
 		EntityManager em = emf.createEntityManager();
 		Query getPolicyEntityQuery = em.createNamedQuery("PolicyEntity.FindById");
 		getPolicyEntityQuery.setParameter("id", Long.valueOf(policyId));
@@ -991,6 +992,7 @@ public class PolicyDBDao {
 		String action = "unknown action";
 		try {
 			if(policy != null){
+				policyName = policy.getPolicyName();
 				logger.debug("Deleting Policy: " + policy.getPolicyName());
 				action = "delete";
 				Path subFile = null;
@@ -1011,7 +1013,6 @@ public class PolicyDBDao {
 				}
 			}
 		} catch (IOException e1) {
-			String policyName = policy.getPolicyName();
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, "PolicyDBDao", "Error occurred while performing [" + action + "] of Policy File: " + policyName);
 		}	
 	}
@@ -2103,89 +2104,93 @@ public class PolicyDBDao {
 
 		@Override
 		public void createPolicy(Policy policy, String username){
-			logger.debug("createPolicy(PolicyRestAdapter policy, String username) as createPolicy("+policy+","+username+") called");
-			String policyScope = policy.policyAdapter.getDomainDir().replace(File.separator, ".");
-			//Does not need to be XACMLPolicyWriterWithPapNotify since it is already in the PAP
-			//and this transaction is intercepted up stream.
-			InputStream policyXmlStream = XACMLPolicyWriter.getXmlAsInputStream((PolicyType)policy.getCorrectPolicyDataObject());
-			String policyDataString;
-			try {
-				policyDataString = IOUtils.toString(policyXmlStream);
-			} catch (IOException e) {
-				policyDataString = "could not read";
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught IOException on IOUtils.toString("+policyXmlStream+")");
-				throw new IllegalArgumentException("Cannot parse the policy xml from the PolicyRestAdapter.");
-			}
-			IOUtils.closeQuietly(policyXmlStream);
-			String configPath = "";
-			if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Config")) {
-				configPath = evaluateXPath("/Policy/Rule/AdviceExpressions/AdviceExpression[contains(@AdviceId,'ID')]/AttributeAssignmentExpression[@AttributeId='URLID']/AttributeValue/text()", policyDataString);
-			} else if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Action")) {
-				configPath = evaluateXPath("/Policy/Rule/ObligationExpressions/ObligationExpression[contains(@ObligationId, " +policy.policyAdapter.getActionAttribute()+ ")]/AttributeAssignmentExpression[@AttributeId='body']/AttributeValue/text()", policyDataString);
-			}
-
-			String prefix = null;
-			if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Config")) {
-
-				prefix = configPath.substring(configPath.indexOf(policyScope+".")+policyScope.concat(".").length(), configPath.indexOf(policy.policyAdapter.getPolicyName()));
-				if(isNullOrEmpty(policy.policyAdapter.getConfigBodyData())){
-					String configData = "";
-					try{
-						String newConfigPath = configPath;
-						try{
-							newConfigPath = processConfigPath(newConfigPath);							
-						}catch(Exception e2){
-							logger.error("Could not process config path: "+newConfigPath,e2);
-						}
-						configData = readConfigFile(newConfigPath);
-					}catch(Exception e){
-						logger.error("Could not read config body data for "+configPath,e);
-					}
-					policy.policyAdapter.setConfigBodyData(configData);
-				}
-			} else if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Action")) {
-				prefix = "Action_";
-			} else if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Decision")) {
-				prefix = "Decision_";
-			}
-
-			if(!(policy.policyAdapter.getData() instanceof PolicyType)){
-				PolicyLogger.error("The data field is not an instance of PolicyType");
-				throw new IllegalArgumentException("The data field is not an instance of PolicyType");
-			}
-			String finalName = policyScope + "." + prefix+policy.policyAdapter.getPolicyName()+"."+((PolicyType)policy.policyAdapter.getData()).getVersion()+".xml";
-			if(policy.policyAdapter.getConfigType() == null || policy.policyAdapter.getConfigType().equals("")){
-				//get the config file extension
-				String ext = "";
-				if (configPath != null) {
-					if (!configPath.equalsIgnoreCase("")) {
-						ext = configPath.substring(configPath.lastIndexOf('.'), configPath.length());;
-					}
-				}
-
-				if(ext.contains("txt")){
-					policy.policyAdapter.setConfigType(OTHER_CONFIG);
-				} else if(ext.contains("json")){
-					policy.policyAdapter.setConfigType(JSON_CONFIG);
-				} else if(ext.contains("xml")){
-					policy.policyAdapter.setConfigType(XML_CONFIG);
-				} else if(ext.contains("properties")){
-					policy.policyAdapter.setConfigType(PROPERTIES_CONFIG);
-				} else {
-					if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Action")){
-						policy.policyAdapter.setConfigType(JSON_CONFIG);
-					}
-				}
-			}
-			if(policyXmlStream != null){
+			InputStream policyXmlStream = null;
+			try{
+				logger.debug("createPolicy(PolicyRestAdapter policy, String username) as createPolicy("+policy+","+username+") called");
+				String policyScope = policy.policyAdapter.getDomainDir().replace(File.separator, ".");
+				//Does not need to be XACMLPolicyWriterWithPapNotify since it is already in the PAP
+				//and this transaction is intercepted up stream.
+				String policyDataString;
 				try {
-					policyXmlStream.close();
+					policyXmlStream = XACMLPolicyWriter.getXmlAsInputStream((PolicyType)policy.getCorrectPolicyDataObject());
+					policyDataString = IOUtils.toString(policyXmlStream);
 				} catch (IOException e) {
-					logger.error("Exception Occured while closing input stream"+e);
+					policyDataString = "could not read";
+					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught IOException on IOUtils.toString("+policyXmlStream+")");
+					throw new IllegalArgumentException("Cannot parse the policy xml from the PolicyRestAdapter.");
+				}
+				IOUtils.closeQuietly(policyXmlStream);
+				String configPath = "";
+				if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Config")) {
+					configPath = evaluateXPath("/Policy/Rule/AdviceExpressions/AdviceExpression[contains(@AdviceId,'ID')]/AttributeAssignmentExpression[@AttributeId='URLID']/AttributeValue/text()", policyDataString);
+				} else if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Action")) {
+					configPath = evaluateXPath("/Policy/Rule/ObligationExpressions/ObligationExpression[contains(@ObligationId, " +policy.policyAdapter.getActionAttribute()+ ")]/AttributeAssignmentExpression[@AttributeId='body']/AttributeValue/text()", policyDataString);
+				}
+
+				String prefix = null;
+				if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Config")) {
+
+					prefix = configPath.substring(configPath.indexOf(policyScope+".")+policyScope.concat(".").length(), configPath.indexOf(policy.policyAdapter.getPolicyName()));
+					if(isNullOrEmpty(policy.policyAdapter.getConfigBodyData())){
+						String configData = "";
+						try{
+							String newConfigPath = configPath;
+							try{
+								newConfigPath = processConfigPath(newConfigPath);							
+							}catch(Exception e2){
+								logger.error("Could not process config path: "+newConfigPath,e2);
+							}
+							configData = readConfigFile(newConfigPath);
+						}catch(Exception e){
+							logger.error("Could not read config body data for "+configPath,e);
+						}
+						policy.policyAdapter.setConfigBodyData(configData);
+					}
+				} else if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Action")) {
+					prefix = "Action_";
+				} else if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Decision")) {
+					prefix = "Decision_";
+				}
+
+				if(!(policy.policyAdapter.getData() instanceof PolicyType)){
+					PolicyLogger.error("The data field is not an instance of PolicyType");
+					throw new IllegalArgumentException("The data field is not an instance of PolicyType");
+				}
+				String finalName = policyScope + "." + prefix+policy.policyAdapter.getPolicyName()+"."+((PolicyType)policy.policyAdapter.getData()).getVersion()+".xml";
+				if(policy.policyAdapter.getConfigType() == null || policy.policyAdapter.getConfigType().equals("")){
+					//get the config file extension
+					String ext = "";
+					if (configPath != null) {
+						if (!configPath.equalsIgnoreCase("")) {
+							ext = configPath.substring(configPath.lastIndexOf('.'), configPath.length());;
+						}
+					}
+
+					if(ext.contains("txt")){
+						policy.policyAdapter.setConfigType(OTHER_CONFIG);
+					} else if(ext.contains("json")){
+						policy.policyAdapter.setConfigType(JSON_CONFIG);
+					} else if(ext.contains("xml")){
+						policy.policyAdapter.setConfigType(XML_CONFIG);
+					} else if(ext.contains("properties")){
+						policy.policyAdapter.setConfigType(PROPERTIES_CONFIG);
+					} else {
+						if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Action")){
+							policy.policyAdapter.setConfigType(JSON_CONFIG);
+						}
+					}
+				}
+
+				createPolicy(policy.policyAdapter, username, policyScope,finalName,policyDataString);
+			}finally{
+				if(policyXmlStream != null){
+					try {
+						policyXmlStream.close();
+					} catch (IOException e) {
+						logger.error("Exception Occured while closing input stream"+e);
+					}
 				}
 			}
-			createPolicy(policy.policyAdapter, username, policyScope,finalName,policyDataString);
-
 		}
 
 		@Override
