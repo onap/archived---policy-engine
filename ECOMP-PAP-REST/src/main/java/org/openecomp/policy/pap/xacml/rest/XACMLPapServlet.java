@@ -1495,6 +1495,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				try{
 					doACPostTransaction.movePdp(pdp, group, "XACMLPapServlet.doACPost");
 				}catch(Exception e){	
+					doACPostTransaction.rollbackTransaction();
 					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", 
 							" Error while moving pdp in the database: "
 									+"pdp="+pdp.getId()+",to group="+group.getId());
@@ -1520,9 +1521,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				return;
 			}
 		} catch (PAPException e) {
-			if(doACPostTransaction != null){
-				doACPostTransaction.rollbackTransaction();
-			}
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " AC POST exception");
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
@@ -1748,11 +1746,11 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					if (papEngine.getPDP(pdpId) == null) {
 						// this is a request to create a new PDP object
 						try{
-							acPutTransaction.addPdpToGroup(pdp == null ? "PDP is null" : pdp.getId(), group.getId(), pdp.getName(), 
+							acPutTransaction.addPdpToGroup(pdp.getId(), group.getId(), pdp.getName(), 
 									pdp.getDescription(), pdp.getJmxPort(),"XACMLPapServlet.doACPut");
 						} catch(Exception e){
 							PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " Error while adding pdp to group in the database: "
-									+"pdp="+ (pdp == null ? "PDP is null" : pdp.getId()) +",to group="+group.getId());
+									+"pdp="+ (pdp.getId()) +",to group="+group.getId());
 							throw new PAPException(e.getMessage());
 						}
 						papEngine.newPDP(pdp.getId(), group, pdp.getName(), pdp.getDescription(), pdp.getJmxPort());

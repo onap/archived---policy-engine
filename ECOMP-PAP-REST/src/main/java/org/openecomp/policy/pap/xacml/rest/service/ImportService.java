@@ -95,15 +95,14 @@ public class ImportService {
 					}
 				}else{ 
 					InputStream inputStream = null;
-					FileOutputStream outputStream = null;
-					try {	
+					try(FileOutputStream outputStream = new FileOutputStream("ExtractDir" + File.separator + randomID+".zip")) {	
 						inputStream = request.getInputStream();
-						outputStream = new FileOutputStream("ExtractDir" + File.separator + randomID+".zip"); 
 						byte[] buffer = new byte[4096];
 						int bytesRead = -1 ; 
 						while ((bytesRead = inputStream.read(buffer)) != -1) { 
 							outputStream.write(buffer, 0, bytesRead) ; 
 						}
+						outputStream.close();
 					} catch (IOException e) {
 						PolicyLogger.error("Error in reading in Zip File from API call"+e);
 						return;
@@ -111,9 +110,6 @@ public class ImportService {
 						try {
 							if(inputStream != null){
 								inputStream.close();
-							}
-							if(outputStream != null){
-								outputStream.close();
 							}
 						} catch (IOException e) {
 							PolicyLogger.error("Exception Occured while closing the input/output stream"+e);
