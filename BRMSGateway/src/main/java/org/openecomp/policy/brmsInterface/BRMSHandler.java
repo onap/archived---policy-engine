@@ -125,7 +125,7 @@ public class BRMSHandler implements BackUpHandler{
 			ArrayList<PolicyConfig> brmsPolicies = addedPolicies(notification);
 			Boolean successFlag = false;
 			for(int i=0; !successFlag && i< bRMSPush.URLListSize(); i++){
-				if(i!=0 && !successFlag){
+				if(i!=0){
 					for(PolicyConfig policyConfig: brmsPolicies){
 						logger.info("Policy Retry with this Name notified: " + policyConfig.getPolicyName());
 						bRMSPush.addRule(policyConfig.getPolicyName(),policyConfig.toOther(),policyConfig.getResponseAttributes());

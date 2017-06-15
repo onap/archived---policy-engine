@@ -21,3 +21,70 @@ use ecomp_sdk;
 ALTER TABLE fwtagpicker add networkRole varchar(64);
 
 INSERT INTO policyeditorscopes (`id`, `scopename`, `created_date`, `created_by`, `modified_date`, `modified_by`) VALUES ('1', 'com', '2017-06-01 11:45:36', 'demo', '2017-06-01 11:45:36', 'demo');
+
+alter table IntegrityAuditEntity modify jdbcUrl varchar(200) not null; 
+
+alter table `ecomp_sdk`.`microservicemodels` 
+add column `enumValues` longtext null default null after `version`, 
+add column `annotation` longtext null after `enumValues`;
+
+drop table if exists FWTag; 
+CREATE TABLE FWTag(
+Id int NOT NULL AUTO_INCREMENT,
+tagName VARCHAR(45) NOT NULL,
+description VARCHAR(1024),
+tagValues VARCHAR(1024) NOT NULL,
+CREATED_DATE TIMESTAMP NOT NULL default current_timestamp,
+CREATED_BY VARCHAR(45) NOT NULL,
+MODIFIED_DATE TIMESTAMP NOT NULL,
+MODIFIED_BY VARCHAR(45) NOT NULL,
+PRIMARY KEY(ID)
+);
+
+drop table if exists FWTagPicker; 
+CREATE TABLE FWTagPicker(
+ID INT NOT NULL AUTO_INCREMENT,
+tagPickerName VARCHAR(45) NOT NULL,
+DESCRIPTION VARCHAR(1024),
+tags VARCHAR(1024) NOT NULL,
+CREATED_DATE TIMESTAMP NOT NULL default current_timestamp,
+CREATED_BY VARCHAR(45) NOT NULL,
+MODIFIED_DATE TIMESTAMP NOT NULL,
+MODIFIED_BY VARCHAR(45) NOT NULL,
+PRIMARY KEY(ID)
+);
+
+drop table if exists brmsdependency;
+CREATE TABLE brmsdependency (
+id int not null auto_increment,
+dependency_name varchar(1024) not null,
+description varchar(1024),
+created_by varchar(45) not null,
+created_date timestamp not null default current_timestamp,
+modified_by varchar(45),
+modified_date timestamp,
+dependency longtext not null,
+primary key(id)
+);
+
+drop table if exists brmscontroller;
+CREATE TABLE brmscontroller (
+id int not null auto_increment,
+controller_name varchar(1024) not null,
+description varchar(1024),
+created_by varchar(45) not null,
+created_date timestamp not null default current_timestamp,
+modified_by varchar(45),
+modified_date timestamp,
+controller longtext not null,
+primary key(id)
+);
+
+drop table if exists microserviceattribute; 
+CREATE TABLE microserviceattribute(
+ID INT NOT NULL AUTO_INCREMENT,
+name VARCHAR(255) NOT NULL,
+value VARCHAR(1024),
+modelName VARCHAR(1024) NOT NULL,
+PRIMARY KEY(ID)
+);

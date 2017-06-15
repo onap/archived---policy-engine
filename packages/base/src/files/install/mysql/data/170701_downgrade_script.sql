@@ -19,3 +19,9 @@
 */
 use ecomp_sdk;
 ALTER TABLE fwtagpicker drop networkRole;
+alter table microservicemodels drop column enumValues, drop column annotation; 
+drop table if exists FWTag; 
+drop table if exists FWTagPicker; 
+drop table if exists brmsdependency;
+drop table if exists brmscontroller;
+drop table if exists microserviceattribute; 
