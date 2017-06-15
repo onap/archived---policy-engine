@@ -144,7 +144,7 @@ public class ParseLog {
 							try (Stream<String> lines = Files.lines(debugfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + debuglastNumberRead)).skip(debuglastNumberRead)) {
 								
 								lines.forEachOrdered(line -> process(line, type, LOGTYPE.DEBUG));
-
+								lines.close();
 							} catch (IOException e) {
 								logger.error("Error processing line in " + dataFileName + ":" + e);
 								logger.error("break the loop.");
@@ -210,7 +210,7 @@ public class ParseLog {
 							try (Stream<String> lines = Files.lines(errorfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + errorlastNumberRead)).skip(errorlastNumberRead)) {
 								
 								lines.forEachOrdered(line -> process(line, type, LOGTYPE.ERROR));
-				
+								lines.close();
 							} catch (IOException e) {
 								logger.error("Error processing line in " + dataFileName + ":" + e);
 								logger.error("break the loop.");
@@ -274,7 +274,7 @@ public class ParseLog {
 							try (Stream<String> lines = Files.lines(filePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + lastNumberRead)).skip(lastNumberRead)) {
 								
 								lines.forEachOrdered(line -> process(line, type, LOGTYPE.INFO));
-				
+								lines.close();
 							} catch (IOException e) {
 								logger.error("Error processing line in " + dataFileName + ":" + e);
 								logger.error("break the loop.");
