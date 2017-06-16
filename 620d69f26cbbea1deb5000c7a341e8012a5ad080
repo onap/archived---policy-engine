@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da141535_d4a071f6",
+        "filename": "LogParser/src/main/java/org/openecomp/xacml/parser/ParseLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-06-16T23:08:26Z",
+      "side": 1,
+      "message": "out of curiosity, what was the problem with the try-with-resources to replace it ?",
+      "revId": "620d69f26cbbea1deb5000c7a341e8012a5ad080",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
