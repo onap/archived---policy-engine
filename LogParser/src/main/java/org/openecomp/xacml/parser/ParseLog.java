@@ -141,15 +141,19 @@ public class ParseLog {
 			             
 						if (debugfile.isFile()){
 							// log4jlogger must use .info
-							try (Stream<String> lines = Files.lines(debugfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + debuglastNumberRead)).skip(debuglastNumberRead)) {
-								
+							Stream<String> lines = null;
+							try {
+								lines = Files.lines(debugfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + debuglastNumberRead)).skip(debuglastNumberRead);
 								lines.forEachOrdered(line -> process(line, type, LOGTYPE.DEBUG));
-								lines.close();
 							} catch (IOException e) {
 								logger.error("Error processing line in " + dataFileName + ":" + e);
 								logger.error("break the loop.");
 								isStop = true;
-							}	
+							}finally{
+								if(lines != null){
+									lines.close();
+								}
+							}
 						}
 						try {
 							Thread.sleep(sleepTimer);
@@ -207,15 +211,19 @@ public class ParseLog {
 					while (!isStop){
 						if (errorfile.isFile()){
 							// log4jlogger must use .info
-							try (Stream<String> lines = Files.lines(errorfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + errorlastNumberRead)).skip(errorlastNumberRead)) {
-								
+							Stream<String> lines = null;
+							try{
+								lines = Files.lines(errorfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + errorlastNumberRead)).skip(errorlastNumberRead);
 								lines.forEachOrdered(line -> process(line, type, LOGTYPE.ERROR));
-								lines.close();
 							} catch (IOException e) {
 								logger.error("Error processing line in " + dataFileName + ":" + e);
 								logger.error("break the loop.");
 								isStop = true;
-							}	
+							}finally{
+								if(lines != null){
+									lines.close();
+								}
+							}
 						}
 						try {
 							Thread.sleep(sleepTimer);
@@ -271,14 +279,18 @@ public class ParseLog {
 						
 						if (file.isFile()){
 							// log4jlogger must use .info
-							try (Stream<String> lines = Files.lines(filePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + lastNumberRead)).skip(lastNumberRead)) {
-								
+							Stream<String> lines = null;;
+							try {
+								lines = Files.lines(filePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + lastNumberRead)).skip(lastNumberRead);
 								lines.forEachOrdered(line -> process(line, type, LOGTYPE.INFO));
-								lines.close();
 							} catch (IOException e) {
 								logger.error("Error processing line in " + dataFileName + ":" + e);
 								logger.error("break the loop.");
 								isStop = true;
+							}finally{
+								if(lines != null){
+									lines.close();
+								}
 							}	
 						}
 						try {

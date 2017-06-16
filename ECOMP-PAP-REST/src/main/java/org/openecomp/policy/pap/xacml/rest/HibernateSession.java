@@ -48,7 +48,7 @@ public class HibernateSession{
 			configuration.setProperty("hibernate.connection.autocommit", "true");
 			configuration.setProperty("hibernate.c3p0.min_size", "5");
 			configuration.setProperty("hibernate.c3p0.max_size", "200");
-			configuration.setProperty("hibernate.c3p0.timeout", "3600");
+			configuration.setProperty("hibernate.c3p0.timeout", "2147483");
 			configuration.setProperty("hibernate.c3p0.idle_test_period", "3600");
 			configuration.setProperty("hibernate.cache.use.query_cache", "false");
 			configuration.setProperty("hibernate.cache.use_second_level_cache", "false");
