@@ -27,18 +27,19 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.openecomp.policy.pap.xacml.rest.HibernateSession;
 import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.ClosedLoops;
 import org.openecomp.policy.rest.jpa.GroupPolicyScopeList;
 import org.openecomp.policy.rest.jpa.PolicyRoles;
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("CommonClassDao")
@@ -46,12 +47,22 @@ public class CommonClassDaoImpl implements CommonClassDao{
 
 	private static final Log LOGGER = LogFactory.getLog(CommonClassDaoImpl.class);
 	
-
+	
+	private static SessionFactory sessionFactory;
+	
+	@Autowired
+	private CommonClassDaoImpl(SessionFactory sessionFactory){
+		CommonClassDaoImpl.sessionFactory = sessionFactory;
+	}
+	
+	public CommonClassDaoImpl(){
+		//Default Constructor
+	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Object> getData(Class className) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		List<Object> data = null;
 		try{
 			Criteria cr = session.createCriteria(className);
@@ -72,7 +83,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<Object> getDataById(Class className, String columnName, String key) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		List<Object> data = null;
 		try {
 			Criteria cr = session.createCriteria(className);
@@ -101,7 +112,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<String> getDataByColumn(Class className, String columnName) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		List<String> data = null;
 		try{
 			Criteria cr = session.createCriteria(className);
@@ -121,7 +132,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	
 	@Override
 	public void save(Object entity) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		try {
 			session.persist(entity);
@@ -140,7 +151,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 
 	@Override
 	public void delete(Object entity) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		try {
 			session.delete(entity);
@@ -160,7 +171,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 
 	@Override
 	public void update(Object entity) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		try {
 			session.update(entity);
@@ -181,7 +192,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Object> checkDuplicateEntry(String value, String columnName, Class className) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		List<Object> data = null;
 		
@@ -221,7 +232,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> getDataByQuery(String query) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		List<Object> data = null;
 		try {
@@ -243,7 +254,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 
 	@Override
 	public void updateQuery(String query) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();	
 		try {
 			Query hbquery = session.createQuery(query);
@@ -264,7 +275,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getEntityItem(Class className, String columnName, String key) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		Object data = null;
 		try {
@@ -296,7 +307,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PolicyRoles> getUserRoles() {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		List<PolicyRoles> rolesData = null;
 		try {
@@ -329,7 +340,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateClAlarms(String clName, String alarms) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		List<ClosedLoops> closedloopsdata = null;
 		Transaction tx = session.beginTransaction();
 		try {
@@ -351,7 +362,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateClYaml(String clName, String yaml) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
         List<ClosedLoops> closedloopsdata = null;
 		Transaction tx = session.beginTransaction();
 		try {
@@ -373,7 +384,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public void deleteAll() {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		List<ClosedLoops> closedloopsdata = null;
 		try {
@@ -401,7 +412,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@SuppressWarnings({ "unchecked"})
 	@Override
 	public List<Object> checkExistingGroupListforUpdate(String groupListValue, String groupNameValue) {
-		Session session = HibernateSession.getSessionFactory();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		List<Object> data = null;
 		try {

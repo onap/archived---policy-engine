@@ -18,7 +18,6 @@
 * ============LICENSE_END=========================================================
 */
 use ecomp_sdk;
-ALTER TABLE fwtagpicker add networkRole varchar(64);
 
 INSERT INTO policyeditorscopes (`id`, `scopename`, `created_date`, `created_by`, `modified_date`, `modified_by`) VALUES ('1', 'com', '2017-06-01 11:45:36', 'demo', '2017-06-01 11:45:36', 'demo');
 
@@ -47,6 +46,7 @@ ID INT NOT NULL AUTO_INCREMENT,
 tagPickerName VARCHAR(45) NOT NULL,
 DESCRIPTION VARCHAR(1024),
 tags VARCHAR(1024) NOT NULL,
+networkRole varchar(64),
 CREATED_DATE TIMESTAMP NOT NULL default current_timestamp,
 CREATED_BY VARCHAR(45) NOT NULL,
 MODIFIED_DATE TIMESTAMP NOT NULL,
