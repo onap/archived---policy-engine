@@ -438,6 +438,35 @@ public class PolicyValidationController extends RestrictedBaseController {
 					responseString.append("Ecomp Name: Ecomp Name Should not be empty" + "<br>");
 					valid = false;
 				}
+				
+				if("Rainy_Day".equals(policyData.getRuleProvider())){
+					if(policyData.getRainyday()==null){
+						responseString.append("<b> Rainy Day Parameters are Required </b><br>");
+						valid = false;
+					}else{
+						if(policyData.getRainyday().getServiceType()==null){
+							responseString.append("Rainy Day <b>Service Type</b> is Required<br>");
+							valid = false;
+						}
+						if(policyData.getRainyday().getVnfType()==null){
+							responseString.append("Rainy Day <b>VNF Type</b> is Required<br>");
+							valid = false;
+						}						
+						if(policyData.getRainyday().getBbid()==null){
+							responseString.append("Rainy Day <b>Building Block ID</b> is Required<br>");
+							valid = false;
+						}
+						if(policyData.getRainyday().getWorkstep()==null){
+							responseString.append("Rainy Day <b>Work Step</b> is Required<br>");
+							valid = false;
+						}
+						if(policyData.getRainyday().getServiceType()==null){
+							responseString.append("Rainy Day <b>Error Code</b> is Required<br>");
+							valid = false;
+						}
+					}
+				}
+				
 				if("GUARD_YAML".equals(policyData.getRuleProvider()) || "GUARD_BL_YAML".equals(policyData.getRuleProvider())){
 					if(policyData.getYamlparams()==null){
 						responseString.append("<b> Guard Params are Required </b>" + "<br>");
