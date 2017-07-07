@@ -127,6 +127,12 @@ public class PolicyRestAdapter {
 	private String actionDictMethod = null;
 	private YAMLParams yamlparams; 
 	
+	//Rainy Day Decision
+	private RainyDayParams rainyday;
+	private Map<String,String> rainydayMap;
+	private List<String> errorCodeList;
+	private List<String> treatmentList;
+	
 	//MicroSerice
 	private String serviceType = null;
 	private String uuid = null;
@@ -150,7 +156,7 @@ public class PolicyRestAdapter {
 	private String riskLevel;
 	private String guard = null;
 	private String ttlDate;
-	private  Map<String,String> matching; 
+	private Map<String,String> matching; 
 	
 	private ArrayList<Object> triggerSignatures;
     private ArrayList<Object> symptomSignatures;
@@ -838,5 +844,53 @@ public class PolicyRestAdapter {
 		}
 		public void setYamlparams(YAMLParams yamlparams) {
 			this.yamlparams = yamlparams;
+		}
+		/**
+		 * @return the rainyday
+		 */
+		public RainyDayParams getRainyday() {
+			return rainyday;
+		}
+		/**
+		 * @param rainyday the rainyday to set
+		 */
+		public void setRainyday(RainyDayParams rainyday) {
+			this.rainyday = rainyday;
+		}
+		/**
+		 * @return the errorCodeList
+		 */
+		public List<String> getErrorCodeList() {
+			return errorCodeList;
+		}
+		/**
+		 * @param errorCodeList the errorCodeList to set
+		 */
+		public void setErrorCodeList(List<String> errorCodeList) {
+			this.errorCodeList = errorCodeList;
+		}
+		/**
+		 * @return the treatmentList
+		 */
+		public List<String> getTreatmentList() {
+			return treatmentList;
+		}
+		/**
+		 * @param treatmentList the treatmentList to set
+		 */
+		public void setTreatmentList(List<String> treatmentList) {
+			this.treatmentList = treatmentList;
+		}
+		/**
+		 * @return the rainydayMap
+		 */
+		public Map<String,String> getRainydayMap() {
+			return rainydayMap;
+		}
+		/**
+		 * @param rainydayMap the rainydayMap to set
+		 */
+		public void setRainydayMap(Map<String,String> rainydayMap) {
+			this.rainydayMap = rainydayMap;
 		}
 }

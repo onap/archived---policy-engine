@@ -82,6 +82,14 @@ public class PolicyCreation extends AbstractPolicyCreation{
 	
 	private static CommonClassDao commonClassDao;
 	
+	public static CommonClassDao getCommonClassDao() {
+		return commonClassDao;
+	}
+
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
+		PolicyCreation.commonClassDao = commonClassDao;
+	}
+
 	@Autowired
 	public PolicyCreation(CommonClassDao commonClassDao){
 		PolicyCreation.commonClassDao = commonClassDao;
@@ -334,12 +342,15 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			} else if (policyType.equalsIgnoreCase("Decision")) {
 				if(policyData.getApiflag() == null){
 					Map<String, String> settingsMap = new HashMap<>();
+					Map<String, String> treatmentMap = new HashMap<>();
 					List<String> dynamicRuleAlgorithmLabels = new LinkedList<>();
 					List<String> dynamicRuleAlgorithmCombo = new LinkedList<>();
 					List<String> dynamicRuleAlgorithmField1 = new LinkedList<>();
 					List<String> dynamicRuleAlgorithmField2 = new LinkedList<>();
 					List<Object> dynamicVariableList = new LinkedList<>();
 					List<String> dataTypeList = new LinkedList<>();
+					List<String> errorCodeList = new LinkedList<>();
+					List<String> treatmentList = new LinkedList<>();
 
 					if(policyData.getSettings().size() > 0){
 						for(Object settingsData : policyData.getSettings()){
@@ -365,7 +376,8 @@ public class PolicyCreation extends AbstractPolicyCreation{
 						}
 					}
 					if(policyData.getRuleProvider()!=null && (policyData.getRuleProvider().equals(DecisionPolicy.GUARD_YAML)|| policyData.getRuleProvider().equals(DecisionPolicy.GUARD_BL_YAML)) 
-							&& policyData.getYamlparams()!=null){	attributeMap.put("actor", policyData.getYamlparams().getActor());
+							&& policyData.getYamlparams()!=null){
+						attributeMap.put("actor", policyData.getYamlparams().getActor());
 						attributeMap.put("recipe", policyData.getYamlparams().getRecipe());
 						attributeMap.put("limit", policyData.getYamlparams().getLimit());
 						attributeMap.put("timeWindow", policyData.getYamlparams().getTimeWindow());
@@ -376,6 +388,23 @@ public class PolicyCreation extends AbstractPolicyCreation{
 							attributeMap.put("blackList", blackList);
 						}
 					}
+					if(policyData.getRuleProvider()!=null && policyData.getRuleProvider().equals(DecisionPolicy.RAINY_DAY)){
+						attributeMap.put("ServiceType", policyData.getRainyday().getServiceType());
+						attributeMap.put("VNFType", policyData.getRainyday().getVnfType());
+						attributeMap.put("BB_ID", policyData.getRainyday().getBbid());
+						attributeMap.put("WorkStep", policyData.getRainyday().getWorkstep());
+						
+						if(policyData.getRainyday().getTreatmentTableChoices()!=null && policyData.getRainyday().getTreatmentTableChoices().size() > 0){
+							for (Object table : policyData.getRainyday().getTreatmentTableChoices()){
+								if(table instanceof LinkedHashMap<?,?>){
+									String errorcode = ((LinkedHashMap<?,?>) table).get("errorcode").toString();
+									String treatment = ((LinkedHashMap<?,?>) table).get("treatment").toString();
+									treatmentMap.put(errorcode, treatment);
+								}
+							}
+						}
+					}
+					
 					policyData.setDynamicRuleAlgorithmLabels(dynamicRuleAlgorithmLabels);
 					policyData.setDynamicRuleAlgorithmCombo(dynamicRuleAlgorithmCombo);
 					policyData.setDynamicRuleAlgorithmField1(dynamicRuleAlgorithmField1);
@@ -384,6 +413,9 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					policyData.setDynamicSettingsMap(settingsMap);
 					policyData.setDynamicFieldConfigAttributes(attributeMap);
 					policyData.setDataTypeList(dataTypeList);
+					policyData.setRainydayMap(treatmentMap);
+					policyData.setErrorCodeList(errorCodeList);
+					policyData.setTreatmentList(treatmentList);
 				}
 				newPolicy = new DecisionPolicy(policyData);
 			}
@@ -480,7 +512,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			}
 		}
 		catch (Exception e){
-			LOGGER.error("Exception Occured"+e);
+			LOGGER.error("Exception Occured : "+e);
 		}
 		return new ResponseEntity<String>(body, status);
 	}

@@ -88,7 +88,8 @@ public class DecisionPolicy extends Policy {
 	public static final String FUNCTION_NOT = "urn:oasis:names:tc:xacml:1.0:function:not";
 	private static final String AAFProvider = "AAF";
 	public static final String GUARD_YAML = "GUARD_YAML";
-	public static final String GUARD_BL_YAML = "GUARD_BL_YAML";
+    public static final String GUARD_BL_YAML = "GUARD_BL_YAML";
+    public static final String RAINY_DAY = "Rainy_Day";
     private static final String XACML_GUARD_TEMPLATE = "Decision_GuardPolicyTemplate.xml";
     private static final String XACML_BLGUARD_TEMPLATE = "Decision_GuardBLPolicyTemplate.xml";
 
@@ -235,9 +236,21 @@ public class DecisionPolicy extends Policy {
 				VariableDefinitionType dynamicVariable = createDynamicVariable(key, value, dataType);
 				decisionPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(dynamicVariable);
 			}
+			
+			
+			Map<String, String> dynamicFieldTreatmentAttributes = policyAdapter.getRainydayMap();
+			
+			if(policyAdapter.getRuleProvider().equals(RAINY_DAY)){
+				for(String keyField : dynamicFieldTreatmentAttributes.keySet()) {
+					String errorcode = keyField;
+					String treatment = dynamicFieldTreatmentAttributes.get(errorcode);
+					createRainydayRule(decisionPolicy, errorcode, treatment, true);
+				}
+			} else {
+				createRule(decisionPolicy, true);
+				createRule(decisionPolicy, false);
+			}
 
-			createRule(decisionPolicy, true);
-			createRule(decisionPolicy, false);
 		}
 
 		setPreparedToSave(true);
@@ -481,6 +494,87 @@ public class DecisionPolicy extends Policy {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Unsupported data object."+ policyAdapter.getData().getClass().getCanonicalName());
 		}
 
+	}
+	
+	private void createRainydayRule(PolicyType decisionPolicy, String errorcode, String treatment, boolean permitRule) {
+		RuleType rule = new RuleType();
+		
+		rule.setRuleId(UUID.randomUUID().toString());
+			
+		if (permitRule) {
+			rule.setEffect(EffectType.PERMIT);
+		} else {
+			rule.setEffect(EffectType.DENY);
+		}
+		rule.setTarget(new TargetType());
+
+		// Create Target in Rule
+		AllOfType allOfInRule = new AllOfType();
+
+		// Creating match for ACCESS in rule target
+		MatchType accessMatch = new MatchType();
+		AttributeValueType accessAttributeValue = new AttributeValueType();
+		accessAttributeValue.setDataType(STRING_DATATYPE);
+		accessAttributeValue.getContent().add("DECIDE");
+		accessMatch.setAttributeValue(accessAttributeValue);
+		AttributeDesignatorType accessAttributeDesignator = new AttributeDesignatorType();
+		URI accessURI = null;
+		try {
+			accessURI = new URI(ACTION_ID);
+		} catch (URISyntaxException e) {
+			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "DecisionPolicy", "Exception creating ACCESS URI");
+		}
+		accessAttributeDesignator.setCategory(CATEGORY_ACTION);
+		accessAttributeDesignator.setDataType(STRING_DATATYPE);
+		accessAttributeDesignator.setAttributeId(new IdentifierImpl(accessURI).stringValue());
+		accessMatch.setAttributeDesignator(accessAttributeDesignator);
+		accessMatch.setMatchId(FUNCTION_STRING_EQUAL_IGNORE);
+		
+		allOfInRule.getMatch().add(accessMatch);
+		
+		// Creating match for ErrorCode in rule target
+		MatchType errorcodeMatch = new MatchType();
+		AttributeValueType errorcodeAttributeValue = new AttributeValueType();
+		errorcodeAttributeValue.setDataType(STRING_DATATYPE);
+		errorcodeAttributeValue.getContent().add(errorcode);
+		errorcodeMatch.setAttributeValue(errorcodeAttributeValue);
+		AttributeDesignatorType errorcodeAttributeDesignator = new AttributeDesignatorType();
+		errorcodeAttributeDesignator.setCategory(CATEGORY_ACTION);
+		errorcodeAttributeDesignator.setDataType(STRING_DATATYPE);
+		errorcodeAttributeDesignator.setAttributeId("ErrorCode");
+		errorcodeMatch.setAttributeDesignator(errorcodeAttributeDesignator);
+		errorcodeMatch.setMatchId(FUNCTION_STRING_EQUAL_IGNORE);
+		
+		allOfInRule.getMatch().add(errorcodeMatch);
+		
+		AnyOfType anyOfInRule = new AnyOfType();
+		anyOfInRule.getAllOf().add(allOfInRule);
+		
+		TargetType targetInRule = new TargetType();
+		targetInRule.getAnyOf().add(anyOfInRule);
+		
+		rule.setTarget(targetInRule);
+		
+		AdviceExpressionsType adviceExpressions = new AdviceExpressionsType();
+		AdviceExpressionType adviceExpression = new AdviceExpressionType();		
+		adviceExpression.setAdviceId(RAINY_DAY);
+		adviceExpression.setAppliesTo(EffectType.PERMIT);
+		
+		AttributeAssignmentExpressionType assignment = new AttributeAssignmentExpressionType();
+		assignment.setAttributeId("treatment");
+		assignment.setCategory(CATEGORY_RESOURCE);
+		
+		AttributeValueType treatmentAttributeValue = new AttributeValueType();
+		treatmentAttributeValue.setDataType(STRING_DATATYPE);
+		treatmentAttributeValue.getContent().add(treatment);
+		assignment.setExpression(new ObjectFactory().createAttributeValue(treatmentAttributeValue));
+		
+		adviceExpression.getAttributeAssignmentExpression().add(assignment);
+		adviceExpressions.getAdviceExpression().add(adviceExpression);
+		rule.setAdviceExpressions(adviceExpressions);
+		decisionPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
+		policyAdapter.setPolicyData(decisionPolicy);
+		
 	}
 	
 	// if compound setting the inner apply here
