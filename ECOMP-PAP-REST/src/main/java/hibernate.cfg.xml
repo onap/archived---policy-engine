@@ -39,7 +39,8 @@
 		<mapping class="org.openecomp.policy.rest.jpa.ConstraintValue"/>
 		<mapping class="org.openecomp.policy.rest.jpa.Datatype"/>	
 		<mapping class="org.openecomp.policy.rest.jpa.DCAEuuid"/>
-		<mapping class="org.openecomp.policy.rest.jpa.DecisionSettings"/>	
+		<mapping class="org.openecomp.policy.rest.jpa.DecisionSettings"/>
+		<mapping class="org.openecomp.policy.rest.jpa.RainyDayTreatments"/>	
 		<mapping class="org.openecomp.policy.rest.jpa.DescriptiveScope"/>
 		<mapping class="org.openecomp.policy.rest.jpa.EcompName"/>
 		<mapping class="org.openecomp.policy.rest.jpa.EnforcingType"/>

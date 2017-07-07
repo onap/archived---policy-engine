@@ -31,13 +31,102 @@
 						ng-click="providerListener(temp.policy.ruleProvider);">
 						<option>Custom</option>
 						<option>AAF</option>
+						<option>Rainy_Day</option>
 						<option>GUARD_YAML</option>
 						<option>GUARD_BL_YAML<option>
 					</select>
 				</div>
 			</div>
 		</div>
-		
+		<div ng-if="temp.policy.ruleProvider == 'Rainy_Day'">
+			<div class="well">
+				<div class="form-group row">
+					<div class="form-group row">
+						<div class="form-group col-sm-1">
+							<label>Service Type:<sup><b>*</b></sup></label>
+						</div>
+						<div class="form-group col-sm-2">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly" ng-model="temp.policy.rainyday.serviceType"
+								placeholder="Service Type" />
+						</div>
+						<div class="form-group col-sm-1">
+							<label>VNF Type:<sup><b>*</b></sup></label>
+						</div>
+						<div class="form-group col-sm-2">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly" ng-model="temp.policy.rainyday.vnfType"
+								placeholder="VNF Type" />
+						</div>
+						<div class="form-group col-sm-1">
+							<label>Building Block ID:<sup><b>*</b></sup></label>
+						</div>
+						<div class="form-group col-sm-2">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly" ng-model="temp.policy.rainyday.bbid"
+								placeholder="Building Block ID" />
+						</div>
+						<div class="form-group col-sm-1">
+							<label>Work Step:<sup><b>*</b></sup></label>
+						</div>
+						<div class="form-group col-sm-2">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly" ng-model="temp.policy.rainyday.workstep"
+								placeholder="Work Step" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="form-group col-sm-3">
+							<label>Desired Automated Treatments:</label>
+							<button type="button" class="btn btn-default"
+								ng-disabled="temp.policy.readOnly"
+								ng-click="addNewTreatment()">
+								<i class="fa fa-plus"></i>
+							</button>
+						</div>
+					</div>
+					<div class="form-group row">
+					<div data-ng-repeat="treatmentTableChoice in temp.policy.rainyday.treatmentTableChoices">
+						<div class="form-group row" style="margin-left: 2%">
+							<div class="form-group col-sm-1">
+								<label>Error Code:<sup><b>*</b></sup></label>
+							</div>
+							<div class="form-group col-sm-3">
+								<input type="text" class="form-control"
+									ng-disabled="temp.policy.readOnly"
+									ng-model="treatmentTableChoice.errorcode"
+									placeholder="Error Code" />
+							</div>
+							<div class="form-group col-sm-1">
+								<label>Desired Treatment:<sup><b>*</b></sup></label>
+							</div>		
+							<div class="form-group col-sm-3">						
+								<select class="form-control" id="mySelect"
+									ng-disabled="temp.policy.readOnly"
+									ng-model="treatmentTableChoice.treatment"
+									placeholder="Desired Treatment">
+<!-- 								<option value="">{{tableChoice.desiredtreatment}}</option> -->
+									<option>Rollback</option>
+									<option>Manual Handling</option>
+									<option>Abort</option>
+									<option>Auto Rollback</option>
+									<option>Retry</option>
+									<option>Skip</option>
+								</select>
+							</div>
+							<div class="form-group col-sm-1">
+								<button type="button" class="btn btn-default"
+									ng-disabled="temp.policy.readOnly"
+									ng-click="removeTreatment()">
+									<i class="fa fa-minus"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div ng-if="temp.policy.ruleProvider == 'GUARD_BL_YAML'">
 			<div class="well">
 				<div class="form-group row">

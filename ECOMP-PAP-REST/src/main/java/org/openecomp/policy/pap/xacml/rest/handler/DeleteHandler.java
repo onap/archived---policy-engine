@@ -158,7 +158,7 @@ public class DeleteHandler {
 					getPolicyVersion.setParameter("pname", removeVersionExtension.replace(".", File.separator));
 					List<?> pvResult = getPolicyVersion.getResultList();
 					PolicyVersion pVersion = (PolicyVersion) pvResult.get(0);
-					int highestVersion = 0; 
+					int newVersion = 0; 
 					em.getTransaction().begin();
 					Class.forName(papDbDriver);
 					con = DriverManager.getConnection(papDbUrl,papDbUser,papDbPassword);
@@ -180,7 +180,7 @@ public class DeleteHandler {
 							return;
 						}else if(status.equals("PolicyInPDP")){
 							PolicyLogger.error(MessageCodes.GENERAL_WARNING + "Policy can't be deleted, it is active in PDP Groups.");
-							response.addHeader("error", "unknown");
+							response.addHeader("error", "PolicyInPDP");
 							response.setStatus(HttpServletResponse.SC_CONFLICT);
 							return;
 						}else{
@@ -217,13 +217,13 @@ public class DeleteHandler {
 										policyEntity = (PolicyEntity) object;
 										String policyEntityName = policyEntity.getPolicyName().replace(".xml", "");
 										int policyEntityVersion = Integer.parseInt(policyEntityName.substring(policyEntityName.lastIndexOf(".")+1));
-										if(policyEntityVersion > highestVersion){
-											highestVersion = policyEntityVersion;
+										if(policyEntityVersion > newVersion){
+											newVersion = policyEntityVersion-1;
 										}
 									}
 								}
-								pVersion.setActiveVersion(highestVersion);
-								pVersion.setHigherVersion(highestVersion);
+								pVersion.setActiveVersion(newVersion);
+								pVersion.setHigherVersion(newVersion);
 								try{
 									policyVersionDeleted = true;
 									em.persist(pVersion);

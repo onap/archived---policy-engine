@@ -21,7 +21,9 @@
 package org.openecomp.policy.pap.xacml.rest.controller;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +37,7 @@ import org.openecomp.policy.pap.xacml.rest.util.JsonMessage;
 import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.Datatype;
 import org.openecomp.policy.rest.jpa.DecisionSettings;
+import org.openecomp.policy.rest.jpa.RainyDayTreatments;
 import org.openecomp.policy.rest.jpa.UserInfo;
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -238,4 +241,184 @@ public class DecisionPolicyDictionaryController {
 		return null;
 	}
 	
+	
+	
+	@RequestMapping(value={"/get_RainyDayDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	public void getRainyDayDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
+		try{
+			Map<String, Object> model = new HashMap<>();
+			ObjectMapper mapper = new ObjectMapper();
+			model.put("rainyDayDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(RainyDayTreatments.class, "bbID")));
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
+			JSONObject j = new JSONObject(msg);
+			response.getWriter().write(j.toString());
+		}
+		catch (Exception e){
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+		}
+	}
+
+	
+	@RequestMapping(value={"/get_RainyDayDictionaryData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	public void getRainyDayDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+		try{
+			Map<String, Object> model = new HashMap<>();
+			ObjectMapper mapper = new ObjectMapper();
+			model.put("rainyDayDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(RainyDayTreatments.class)));
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
+			JSONObject j = new JSONObject(msg);
+            response.addHeader("successMapKey", "success"); 
+            response.addHeader("operation", "getDictionary");
+			response.getWriter().write(j.toString());
+		}
+		catch (Exception e){
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.addHeader("error", "dictionaryDBQuery");
+		}
+	}
+	
+	@RequestMapping(value={"/decision_dictionary/save_RainyDay"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	public ModelAndView saveRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		try {
+			boolean duplicateflag = false;
+            boolean isFakeUpdate = false;
+            boolean fromAPI = false;
+            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+                fromAPI = true;
+            }
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			JsonNode root = mapper.readTree(request.getReader());
+			RainyDayTreatments decisionRainyDay;
+            TreatmentValues treatmentsData = null;
+            if (fromAPI) {
+            	decisionRainyDay = (RainyDayTreatments)mapper.readValue(root.get("dictionaryFields").toString(), RainyDayTreatments.class);
+            	treatmentsData = (TreatmentValues)mapper.readValue(root.get("dictionaryFields").toString(), TreatmentValues.class);
+            	//check if update operation or create, get id for data to be updated and update attributeData
+            	if (request.getParameter("operation").equals("update")) {
+            		List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionRainyDay.getBbid()+":"+decisionRainyDay.getWorkstep(), "bbid:workstep", RainyDayTreatments.class);
+            		int id = 0;
+            		RainyDayTreatments data = (RainyDayTreatments) duplicateData.get(0);
+            		id = data.getId();
+            		if(id==0){
+            			isFakeUpdate=true;
+            		} else {
+            			decisionRainyDay.setId(id);
+            		}
+            	}
+            } else {
+            	decisionRainyDay = (RainyDayTreatments)mapper.readValue(root.get("rainyDayDictionaryData").toString(), RainyDayTreatments.class);
+            	treatmentsData = (TreatmentValues)mapper.readValue(root.get("rainyDayDictionaryData").toString(), TreatmentValues.class);
+            }
+            
+			String userValue = "";
+			int counter = 0;
+			if(treatmentsData.getUserDataTypeValues().size() > 0){
+				for(Object treatment : treatmentsData.getUserDataTypeValues()){
+					if(treatment instanceof LinkedHashMap<?, ?>){
+						String key = ((LinkedHashMap<?, ?>) treatment).get("treatment").toString();
+						if(counter>0){
+							userValue = userValue + ",";
+						}
+						userValue = userValue + key ;
+						counter ++;
+					}
+				}
+			}
+			decisionRainyDay.setTreatments(userValue);
+			
+			if(decisionRainyDay.getId() == 0){
+        		List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionRainyDay.getBbid()+":"+decisionRainyDay.getWorkstep(), "bbid:workstep", RainyDayTreatments.class);
+				if(!duplicateData.isEmpty()){
+					duplicateflag = true;
+				}else{
+					commonClassDao.save(decisionRainyDay);
+				}
+			}else{
+				if(!isFakeUpdate) {
+					commonClassDao.update(decisionRainyDay); 
+				}
+			}
+            String responseString = "";
+            if(duplicateflag){
+                responseString = "Duplicate";
+            }else{
+                responseString =  mapper.writeValueAsString(commonClassDao.getData(RainyDayTreatments.class));
+            }
+          
+            if (fromAPI) {
+                if (responseString!=null && !responseString.equals("Duplicate")) {
+                    if(isFakeUpdate){
+                        responseString = "Exists";
+                    } else {
+                        responseString = "Success";
+                    }
+                }
+                ModelAndView result = new ModelAndView();
+                result.setViewName(responseString);
+                return result;
+            } else {
+                response.setCharacterEncoding("UTF-8");
+                response.setContentType("application / json");
+                request.setCharacterEncoding("UTF-8");
+ 
+                PrintWriter out = response.getWriter();
+                JSONObject j = new JSONObject("{rainyDayDictionaryDatas: " + responseString + "}");
+                out.write(j.toString());
+                return null;
+            }
+ 
+        }catch (Exception e){
+        	LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+			response.setCharacterEncoding("UTF-8");
+			request.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			out.write(e.getMessage());
+		}
+		return null;
+	}
+
+	@RequestMapping(value={"/decision_dictionary/remove_rainyDay"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	public ModelAndView removeRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try{
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			JsonNode root = mapper.readTree(request.getReader());
+			RainyDayTreatments decisionRainyDay = (RainyDayTreatments)mapper.readValue(root.get("data").toString(), RainyDayTreatments.class);
+			commonClassDao.delete(decisionRainyDay);
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application / json");
+			request.setCharacterEncoding("UTF-8");
+
+			PrintWriter out = response.getWriter();
+
+			String responseString = mapper.writeValueAsString(commonClassDao.getData(RainyDayTreatments.class));
+			JSONObject j = new JSONObject("{rainyDayDictionaryDatas: " + responseString + "}");
+			out.write(j.toString());
+
+			return null;
+		}
+		catch (Exception e){
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+			response.setCharacterEncoding("UTF-8");
+			request.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			out.write(e.getMessage());
+		}
+		return null;
+	}
+	
+}
+
+class TreatmentValues { 
+	private ArrayList<Object> userDataTypeValues;
+
+	public ArrayList<Object> getUserDataTypeValues() {
+		return userDataTypeValues;
+	}
+
+	public void setUserDataTypeValues(ArrayList<Object> userDataTypeValues) {
+		this.userDataTypeValues = userDataTypeValues;
+	}
 }

@@ -80,8 +80,6 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
 		console.log("failed");
 	});
 
-	
-
     function extend(obj, src) {
         for (var key in src) {
             if (src.hasOwnProperty(key)) obj[key] = src[key];
@@ -171,6 +169,13 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
     	if(!$scope.temp.policy.yamlparams.blackList){
     		$scope.temp.policy.yamlparams.blackList = [];
     	}
+    	if(!$scope.temp.policy.rainyday){
+    		$scope.temp.policy.rainyday = {};
+    	}
+    	if(!$scope.temp.policy.rainyday.treatmentTableChoices){
+    		$scope.temp.policy.rainyday.treatmentTableChoices = [];
+    	}
+    
     }else if($scope.temp.policy.ruleProvider=="Custom"){
 	   if($scope.temp.policy.attributes.length == 0){
 		   $scope.temp.policy.attributes = [];
@@ -182,8 +187,12 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
 		   $scope.temp.policy.ruleAlgorithmschoices = [];
 	   }
     }else if($scope.temp.policy.ruleProvider=="GUARD_BL_YAML"){
-    	if($scope.temp.policy.yamlparams.blackList.length==0){
-    		$scope.temp.policy.yamlparams.blackList = [];
+	   if($scope.temp.policy.yamlparams.blackList.length==0){
+		   $scope.temp.policy.yamlparams.blackList = [];
+	   }
+    }else if($scope.temp.policy.ruleProvider=="Rainy_Day"){
+    	if($scope.temp.policy.rainyday.treatmentTableChoices == null || $scope.temp.policy.rainyday.treatmentTableChoices.length == 0){
+    		$scope.temp.policy.rainyday.treatmentTableChoices = [];
     	}
     }
     $scope.attributeDatas = [{"attributes" : $scope.temp.policy.attributes}];
@@ -196,7 +205,6 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
       $scope.temp.policy.attributes.splice(lastItem);
     };
     
-  
     $scope.settingsDatas = [{"settings" : $scope.temp.policy.settings}];
     $scope.addNewSettingsChoice = function() {
       var newItemNo = $scope.temp.policy.settings.length+1;
@@ -213,6 +221,15 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
     $scope.removeBL = function() {
     	var lastItem = $scope.temp.policy.yamlparams.blackList.length-1;
     	$scope.temp.policy.yamlparams.blackList.splice(lastItem);
+    };
+    
+    $scope.treatmentDatas = [{"treatmentValues" : $scope.temp.policy.rainyday.treatmentTableChoices}];
+    $scope.addNewTreatment = function() {
+    	$scope.temp.policy.rainyday.treatmentTableChoices.push({});
+    };
+    $scope.removeTreatment = function() {
+    	var lastItem = $scope.temp.policy.rainyday.treatmentTableChoices.length-1;
+    	$scope.temp.policy.rainyday.treatmentTableChoices.splice(lastItem);
     };
     
     $scope.ItemNo = 0;
