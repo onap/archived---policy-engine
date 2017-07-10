@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a0e1d27_460cdc94",
+        "filename": "ECOMP-PAP-REST/src/main/java/org/openecomp/policy/pap/xacml/rest/controller/DecisionPolicyDictionaryController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-07-10T15:26:09Z",
+      "side": 1,
+      "message": "Mike, can you please verify the tabbing (ctrl + i). It seems the ordering is not proper.",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_0626e416",
+        "filename": "ECOMP-PAP-REST/src/main/java/org/openecomp/policy/pap/xacml/rest/controller/DecisionPolicyDictionaryController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-07-10T15:26:09Z",
+      "side": 1,
+      "message": "Mike, In database we have auto increment for table and it is not necessary to set id.\n\nSo, it can throw error. if there is id already exists with 1 in this condition.",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_a61cd8c2",
+        "filename": "ECOMP-PAP-REST/xacml.pap.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-07-10T15:26:09Z",
+      "side": 1,
+      "message": "Please, revert back to existing database url. ONAP db name is ecomp_Sdk",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_8679d4fe",
+        "filename": "ECOMP-PDP-REST/xacml.pdp.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-07-10T15:26:09Z",
+      "side": 1,
+      "message": "Please revert to existing changes",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
