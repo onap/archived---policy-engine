@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "9a0e1d27_c61fccb6",
+        "filename": "ECOMP-PAP-REST/src/main/java/org/openecomp/policy/pap/xacml/rest/components/DecisionPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "would be nice to keep same indentation ..",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a0e1d27_460cdc94",
         "filename": "ECOMP-PAP-REST/src/main/java/org/openecomp/policy/pap/xacml/rest/controller/DecisionPolicyDictionaryController.java",
         "patchSetId": 1
@@ -36,6 +53,23 @@
     },
     {
       "key": {
+        "uuid": "9a0e1d27_e669b026",
+        "filename": "ECOMP-PAP-REST/xacml.pap.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "xacml db does not exist in LF.  Let\u0027s make sure this is tested properly.",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a0e1d27_a61cd8c2",
         "filename": "ECOMP-PAP-REST/xacml.pap.properties",
         "patchSetId": 1
@@ -53,6 +87,74 @@
     },
     {
       "key": {
+        "uuid": "9a0e1d27_c676ac06",
+        "filename": "ECOMP-PAP-REST/xacml.pap.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "Is this password change is okay?",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_a673b814",
+        "filename": "ECOMP-PAP-REST/xacml.pap.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "why this change?",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_8660b436",
+        "filename": "ECOMP-PDP-REST/config/xacml.pip.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "why does this change?",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_6665a044",
+        "filename": "ECOMP-PDP-REST/xacml.pdp.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "xacml does not exist, probably should also include the failover and reconnect flags here ..",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a0e1d27_8679d4fe",
         "filename": "ECOMP-PDP-REST/xacml.pdp.properties",
         "patchSetId": 1
@@ -64,6 +166,108 @@
       "writtenOn": "2017-07-10T15:26:09Z",
       "side": 1,
       "message": "Please revert to existing changes",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_465a9c84",
+        "filename": "ECOMP-PDP-REST/xacml.pdp.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "is the password change ok?",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_265fa874",
+        "filename": "ECOMP-PDP-REST/xacml.pdp.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "why env change?",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_2611e8ac",
+        "filename": "ECOMP-REST/src/main/java/org/openecomp/policy/rest/jpa/RainyDayTreatments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "Q: just making sure, no explicit counterpart SQL table creation statement needed here in the packages directory (automatically created), correct?   We got hit in the past with issues of missing tables at install time, just making sure we are covered here.   If you can confirm.",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_0654a452",
+        "filename": "ECOMP-SDK-APP/src/main/webapp/WEB-INF/conf/system.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "same comments as in previous files?",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_e6509060",
+        "filename": "ECOMP-SDK-APP/xacml.admin.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "same comments as in previous files",
+      "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_c64d8cc6",
+        "filename": "POLICY-SDK-APP/src/main/webapp/WEB-INF/conf/system.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-10T15:45:27Z",
+      "side": 1,
+      "message": "same Qs as in previous files",
       "revId": "69c29265ddd1f61ccc7f74ff1666aef6d054bbb7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
