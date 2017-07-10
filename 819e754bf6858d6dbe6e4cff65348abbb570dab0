@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a0e1d27_66f36074",
+        "filename": "packages/base/src/files/install/mysql/data/171001_upgrade_script.sql",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-07-10T17:24:43Z",
+      "side": 1,
+      "message": "Can you verify on executing this script in local machine on dropping table. \n\nIn create statement there should be . in between db name and table name.",
+      "revId": "819e754bf6858d6dbe6e4cff65348abbb570dab0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
