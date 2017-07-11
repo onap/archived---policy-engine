@@ -901,43 +901,43 @@ public class BRMSPush {
 		String version= StringEscapeUtils.escapeJava(brmsdependencyversion);
 
 		Dependency demoDependency = new Dependency();
-		demoDependency.setGroupId("org.openecomp.policy.drools-applications");
+		demoDependency.setGroupId("org.onap.policy.drools-applications");
 		demoDependency.setArtifactId("demo");
 		demoDependency.setVersion(version);
 		dependencyList.add(demoDependency);
 
 		Dependency controlloopDependency = new Dependency();
-		controlloopDependency.setGroupId("org.openecomp.policy.drools-applications");
+		controlloopDependency.setGroupId("org.onap.policy.drools-applications");
 		controlloopDependency.setArtifactId("controlloop");
 		controlloopDependency.setVersion(version);
 		dependencyList.add(controlloopDependency);
 
 		Dependency restDependency = new Dependency();
-		restDependency.setGroupId("org.openecomp.policy.drools-applications");
+		restDependency.setGroupId("org.onap.policy.drools-applications");
 		restDependency.setArtifactId("rest");
 		restDependency.setVersion(version);
 		dependencyList.add(restDependency);
 
 		Dependency appcDependency = new Dependency();
-		appcDependency.setGroupId("org.openecomp.policy.drools-applications");
+		appcDependency.setGroupId("org.onap.policy.drools-applications");
 		appcDependency.setArtifactId("appc");
 		appcDependency.setVersion(version);
 		dependencyList.add(appcDependency);
 
 		Dependency aaiDependency = new Dependency();
-		aaiDependency.setGroupId("org.openecomp.policy.drools-applications");
+		aaiDependency.setGroupId("org.onap.policy.drools-applications");
 		aaiDependency.setArtifactId("aai");
 		aaiDependency.setVersion(version);
 		dependencyList.add(aaiDependency);
 
 		Dependency msoDependency = new Dependency();
-		msoDependency.setGroupId("org.openecomp.policy.drools-applications");
+		msoDependency.setGroupId("org.onap.policy.drools-applications");
 		msoDependency.setArtifactId("mso");
 		msoDependency.setVersion(version);
 		dependencyList.add(msoDependency);
 
 		Dependency trafficgeneratorDependency = new Dependency();
-		trafficgeneratorDependency.setGroupId("org.openecomp.policy.drools-applications");
+		trafficgeneratorDependency.setGroupId("org.onap.policy.drools-applications");
 		trafficgeneratorDependency.setArtifactId("trafficgenerator");
 		trafficgeneratorDependency.setVersion(version);	
 		dependencyList.add(trafficgeneratorDependency);

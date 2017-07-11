@@ -23,7 +23,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.openecomp.policy.controlloop;
+package org.onap.policy.controlloop;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -31,57 +31,57 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.openecomp.policy.controlloop.VirtualControlLoopEvent;
-import org.openecomp.policy.controlloop.ControlLoopEventStatus;
-import org.openecomp.policy.controlloop.VirtualControlLoopNotification;
-import org.openecomp.policy.controlloop.ControlLoopNotificationType;
-import org.openecomp.policy.controlloop.ControlLoopOperation;
-import org.openecomp.policy.controlloop.ControlLoopOperationWrapper;
-import org.openecomp.policy.template.demo.ControlLoopException;
+import org.onap.policy.controlloop.VirtualControlLoopEvent;
+import org.onap.policy.controlloop.ControlLoopEventStatus;
+import org.onap.policy.controlloop.VirtualControlLoopNotification;
+import org.onap.policy.controlloop.ControlLoopNotificationType;
+import org.onap.policy.controlloop.ControlLoopOperation;
+import org.onap.policy.controlloop.ControlLoopOperationWrapper;
+import org.onap.policy.template.demo.ControlLoopException;
 
-import org.openecomp.policy.aai.AAINQF199.AAINQF199CloudRegion;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199ExtraProperties;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199ExtraProperty;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199GenericVNF;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199InstanceFilters;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199InventoryResponseItem;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199InventoryResponseItems;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199Manager;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199NamedQuery;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199QueryParameters;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199Request;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199RequestWrapper;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199Response;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199ResponseWrapper;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199ServiceInstance;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199Tenant;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199VfModule;
-import org.openecomp.policy.aai.AAINQF199.AAINQF199VServer;
-import org.openecomp.policy.aai.util.Serialization;
+import org.onap.policy.aai.AAINQF199.AAINQF199CloudRegion;
+import org.onap.policy.aai.AAINQF199.AAINQF199ExtraProperties;
+import org.onap.policy.aai.AAINQF199.AAINQF199ExtraProperty;
+import org.onap.policy.aai.AAINQF199.AAINQF199GenericVNF;
+import org.onap.policy.aai.AAINQF199.AAINQF199InstanceFilters;
+import org.onap.policy.aai.AAINQF199.AAINQF199InventoryResponseItem;
+import org.onap.policy.aai.AAINQF199.AAINQF199InventoryResponseItems;
+import org.onap.policy.aai.AAINQF199.AAINQF199Manager;
+import org.onap.policy.aai.AAINQF199.AAINQF199NamedQuery;
+import org.onap.policy.aai.AAINQF199.AAINQF199QueryParameters;
+import org.onap.policy.aai.AAINQF199.AAINQF199Request;
+import org.onap.policy.aai.AAINQF199.AAINQF199RequestWrapper;
+import org.onap.policy.aai.AAINQF199.AAINQF199Response;
+import org.onap.policy.aai.AAINQF199.AAINQF199ResponseWrapper;
+import org.onap.policy.aai.AAINQF199.AAINQF199ServiceInstance;
+import org.onap.policy.aai.AAINQF199.AAINQF199Tenant;
+import org.onap.policy.aai.AAINQF199.AAINQF199VfModule;
+import org.onap.policy.aai.AAINQF199.AAINQF199VServer;
+import org.onap.policy.aai.util.Serialization;
 
-import org.openecomp.policy.appc.CommonHeader;
-import org.openecomp.policy.appc.Request;
-import org.openecomp.policy.appc.Response;
-import org.openecomp.policy.appc.ResponseCode;
-import org.openecomp.policy.appc.ResponseStatus;
-import org.openecomp.policy.appc.ResponseValue;
+import org.onap.policy.appc.CommonHeader;
+import org.onap.policy.appc.Request;
+import org.onap.policy.appc.Response;
+import org.onap.policy.appc.ResponseCode;
+import org.onap.policy.appc.ResponseStatus;
+import org.onap.policy.appc.ResponseValue;
 
-import org.openecomp.policy.template.demo.EventManager;
-import org.openecomp.policy.vnf.trafficgenerator.PGRequest;
-import org.openecomp.policy.vnf.trafficgenerator.PGStream;
-import org.openecomp.policy.vnf.trafficgenerator.PGStreams;
+import org.onap.policy.template.demo.EventManager;
+import org.onap.policy.vnf.trafficgenerator.PGRequest;
+import org.onap.policy.vnf.trafficgenerator.PGStream;
+import org.onap.policy.vnf.trafficgenerator.PGStreams;
 
-import org.openecomp.policy.mso.MSOManager;
-import org.openecomp.policy.mso.MSORequest;
-import org.openecomp.policy.mso.MSORequestStatus;
-import org.openecomp.policy.mso.MSORequestDetails;
-import org.openecomp.policy.mso.MSOModelInfo;
-import org.openecomp.policy.mso.MSOCloudConfiguration;
-import org.openecomp.policy.mso.MSORequestInfo;
-import org.openecomp.policy.mso.MSORequestParameters;
-import org.openecomp.policy.mso.MSORelatedInstanceListElement;
-import org.openecomp.policy.mso.MSORelatedInstance;
-import org.openecomp.policy.mso.MSOResponse;
+import org.onap.policy.mso.MSOManager;
+import org.onap.policy.mso.MSORequest;
+import org.onap.policy.mso.MSORequestStatus;
+import org.onap.policy.mso.MSORequestDetails;
+import org.onap.policy.mso.MSOModelInfo;
+import org.onap.policy.mso.MSOCloudConfiguration;
+import org.onap.policy.mso.MSORequestInfo;
+import org.onap.policy.mso.MSORequestParameters;
+import org.onap.policy.mso.MSORelatedInstanceListElement;
+import org.onap.policy.mso.MSORelatedInstance;
+import org.onap.policy.mso.MSOResponse;
 
 import org.openecomp.policy.drools.system.PolicyEngine;
 

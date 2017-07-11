@@ -1,31 +1,31 @@
 {
 	"dependencies": {
 		"default": [{
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "demo",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "controlloop",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "rest",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "appc",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "aai",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "mso",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "trafficgenerator",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}]

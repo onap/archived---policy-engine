@@ -1,31 +1,31 @@
 {
 	"dependencies": {
 		"default": [{
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "demo",
 			"version": "1.1.0-SNAPSHOT"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "controlloop",
 			"version": "1.1.0-SNAPSHOT"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "rest",
 			"version": "1.1.0-SNAPSHOT"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "appc",
 			"version": "1.1.0-SNAPSHOT"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "aai",
 			"version": "1.1.0-SNAPSHOT"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "mso",
 			"version": "1.1.0-SNAPSHOT"
 		}, {
-			"groupId": "org.openecomp.policy.drools-applications",
+			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "trafficgenerator",
 			"version": "1.1.0-SNAPSHOT"
 		}]
