@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a0e1d27_0c416339",
+        "filename": "POLICY-SDK-APP/src/main/java/org/openecomp/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-12T20:04:34Z",
+      "side": 1,
+      "message": "if uniqueDataKey does not contain a \"%\" , uniqueDataKeySplit[1] will throw a NullPointerException, may be better check String[] length and do a continue on the loop to go to next key processing ... just seems safer.   Did you check sonar on this for blockers?",
+      "revId": "6b2c8dfa208132f4306a72c352f133893b58ec15",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_6cee9f24",
+        "filename": "POLICY-SDK-APP/src/main/java/org/openecomp/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-12T20:04:34Z",
+      "side": 1,
+      "message": "are guaranteed listValue is always non-null for not throwing nullpointerexception?",
+      "revId": "6b2c8dfa208132f4306a72c352f133893b58ec15",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
