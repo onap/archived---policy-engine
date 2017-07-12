@@ -127,6 +127,19 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	HashMap<String, Object> retmap = new HashMap<>();
 	Set<String> uniqueKeys= new HashSet<>();
 	Set<String> uniqueDataKeys= new HashSet<>();
+	StringBuilder dataListBuffer=new StringBuilder();
+	List<String> dataConstraints= new ArrayList <>();
+	
+	public static final String DATATYPE  = "data_types.policy.data.";
+	public static final String PROPERTIES=".properties.";
+	public static final String TYPE=".type";
+	public static final String STRING="string";
+	public static final String INTEGER="integer";
+	public static final String LIST="list";
+	public static final String DEFAULT=".default";
+	public static final String REQUIRED=".required";
+	public static final String MANYFALSE=":MANY-false";
+	
 	
 	@Autowired
 	private CreateDcaeMicroServiceController(CommonClassDao commonClassDao){
@@ -247,7 +260,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	}
 	
 	// Second index of dot should be returned. 
-	public int stringBetweenDots(String str,String value){
+	public int stringBetweenDots(String str){
 		String stringToSearch=str;
 		String[]ss=stringToSearch.split("\\.");
 		if(ss!=null){
@@ -260,7 +273,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return uniqueKeys.size();
 	}
 	
-	public void stringBetweenDotsForDataFields(String str,String value){
+	public void stringBetweenDotsForDataFields(String str){
 		String stringToSearch=str;
 		String[]ss=stringToSearch.split("\\.");
 		if(ss!=null){
@@ -290,7 +303,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		if (yamlMap == null) { 
 			return settings; 
 		} 
-		List<String> path = new ArrayList<String>(); 
+		List<String> path = new ArrayList <>(); 
 		serializeMap(settings, sb, path, yamlMap); 
 		return settings; 
 	} 
@@ -300,11 +313,11 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		@SuppressWarnings("unchecked")
 		Map<Object, Object> yamlMap = (Map<Object, Object>) yaml.load(source.toString()); 
 		StringBuilder sb = new StringBuilder(); 
-		Map<String, String> settings = new HashMap<String, String>(); 
+		Map<String, String> settings = new HashMap <>(); 
 		if (yamlMap == null) { 
 			return settings; 
 		} 
-		List<String> path = new ArrayList<String>(); 
+		List<String> path = new ArrayList <>(); 
 		serializeMap(settings, sb, path, yamlMap); 
 		return settings; 
 	} 
@@ -357,211 +370,290 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		settings.put(sb.toString(), value.toString()); 
 	} 
     
+	void parseDataAndPolicyNodes(Map<String,String> map){
+		for(String key:map.keySet()){
+			if(key.contains("policy.nodes.Root"))
+			{
+				continue;
+			}
+			else if(key.contains("policy.nodes")){
+				String wordToFind = "policy.nodes.";
+				int indexForPolicyNode=key.indexOf(wordToFind);
+				String subNodeString= key.substring(indexForPolicyNode+13, key.length());
+
+				stringBetweenDots(subNodeString);
+			}
+			else if(key.contains("policy.data")){
+				String wordToFind="policy.data.";
+				int indexForPolicyNode=key.indexOf(wordToFind);
+				String subNodeString= key.substring(indexForPolicyNode+12, key.length());
+
+				stringBetweenDotsForDataFields(subNodeString);
+			}
+		}
+	}
+	
+	HashMap<String,String> parseDataNodes(Map<String,String> map){
+		HashMap<String,String> dataMapForJson=new HashMap <>(); 
+		for(String uniqueDataKey: uniqueDataKeys){
+			String[] uniqueDataKeySplit= uniqueDataKey.split("%");
+			String findType=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+TYPE;
+			String typeValue=map.get(findType);
+			LOGGER.info(typeValue);
+			if(typeValue.equalsIgnoreCase(STRING)||
+					typeValue.equalsIgnoreCase(INTEGER)
+			  )
+			{
+				String findDefault=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+DEFAULT;
+				String defaultValue= map.get(findDefault);
+				LOGGER.info("defaultValue is:"+ defaultValue);
+				
+				String findRequired=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+REQUIRED;
+				String requiredValue= map.get(findRequired);
+				LOGGER.info("requiredValue is:"+ requiredValue);
+				
+				StringBuilder attributeIndividualStringBuilder= new StringBuilder();
+				attributeIndividualStringBuilder.append(typeValue+":defaultValue-");
+				attributeIndividualStringBuilder.append(defaultValue+":required-");
+				attributeIndividualStringBuilder.append(requiredValue+MANYFALSE);
+				dataMapForJson.put(uniqueDataKey, attributeIndividualStringBuilder.toString());		
+			}
+			else if(typeValue.equalsIgnoreCase(LIST)){
+				String findList= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.type";
+				String listValue=map.get(findList);
+				LOGGER.info("Type of list is:"+ listValue);
+				//Its userdefined
+				if(listValue.contains(".")){
+					String trimValue=listValue.substring(listValue.lastIndexOf('.')+1);
+					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+					referenceIndividualStringBuilder.append(trimValue+":MANY-true");
+					dataMapForJson.put(uniqueDataKey, referenceIndividualStringBuilder.toString());
+				}//Its string
+				else{
+					StringBuilder stringListItems= new StringBuilder();
+					stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+":MANY-false");
+					dataMapForJson.put(uniqueDataKey, stringListItems.toString());
+					dataListBuffer.append(uniqueDataKeySplit[1].toUpperCase()+"=[");
+					for(int i=0;i<10;i++){
+						String findConstraints= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.constraints.0.valid_values."+i;
+						String constraintsValue=map.get(findConstraints);
+						LOGGER.info(constraintsValue);
+						if(constraintsValue==null){
+							break;
+						}
+						else{
+							dataConstraints.add(constraintsValue);
+							dataListBuffer.append(constraintsValue+",");
+						}
+					}
+					dataListBuffer.append("]#");
+					
+					LOGGER.info(dataListBuffer);
+				}
+			}
+			else{
+				String findUserDefined="data_types.policy.data."+uniqueDataKeySplit[0]+"."+"properties"+"."+uniqueDataKeySplit[1]+".type";
+				String userDefinedValue=map.get(findUserDefined);
+				String trimValue=userDefinedValue.substring(userDefinedValue.lastIndexOf('.')+1);
+				StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+				referenceIndividualStringBuilder.append(trimValue+":MANY-false");
+				dataMapForJson.put(uniqueDataKey, referenceIndividualStringBuilder.toString());
+				
+			}
+		}
+		return dataMapForJson;
+	}
+	
+	void constructJsonForDataFields(HashMap<String,String> dataMapForJson){
+		HashMap<String,HashMap<String,String>> dataMapKey= new HashMap <>();
+		HashMap<String,String> hmSub;
+		for(Map.Entry<String, String> entry: dataMapForJson.entrySet()){
+			String uniqueDataKey= entry.getKey();
+			String[] uniqueDataKeySplit=uniqueDataKey.split("%");
+			String value= dataMapForJson.get(uniqueDataKey);
+			if(dataMapKey.containsKey(uniqueDataKeySplit[0])){
+				hmSub = dataMapKey.get(uniqueDataKeySplit[0]);
+				hmSub.put(uniqueDataKeySplit[1], value);
+			}
+			else{
+				hmSub=new HashMap <>();
+				hmSub.put(uniqueDataKeySplit[1], value);
+			}
+				
+			dataMapKey.put(uniqueDataKeySplit[0], hmSub);
+		}
+				
+		JSONObject mainObject= new JSONObject();
+		JSONObject json;
+		for(Map.Entry<String,HashMap<String,String>> entry: dataMapKey.entrySet()){
+			String s=entry.getKey();
+			json= new JSONObject();
+			HashMap<String,String> jsonHm=dataMapKey.get(s);
+			for(Map.Entry<String,String> entryMap:jsonHm.entrySet()){
+				String key=entryMap.getKey();
+				json.put(key, jsonHm.get(key));
+			}
+			mainObject.put(s,json);
+		}	
+		Iterator<String> keysItr = mainObject.keys();
+		while(keysItr.hasNext()) {
+			String key = keysItr.next();
+			String value = mainObject.get(key).toString();
+			retmap.put(key, value);
+		}
+		
+		LOGGER.info("#############################################################################");
+		LOGGER.info(mainObject);
+		LOGGER.info("###############################################################################");	
+	}
+	
+	
+	HashMap<String,HashMap<String,String>> parsePolicyNodes(Map<String,String> map){
+		HashMap<String,HashMap<String,String>> mapKey= new HashMap <>();
+		for(String uniqueKey: uniqueKeys){
+			HashMap<String,String> hm;
+
+			for(Map.Entry<String,String> entry:map.entrySet()){
+				String key=entry.getKey();
+				if(key.contains(uniqueKey) && key.contains("policy.nodes")){
+					if(mapKey.containsKey(uniqueKey)){
+						hm = mapKey.get(uniqueKey);
+						String keyStr= key.substring(key.lastIndexOf('.')+1);
+						String valueStr= map.get(key);
+						if(("type").equals(keyStr)){
+							if(!key.contains("entry_schema"))
+							{
+								hm.put(keyStr,valueStr);
+							}
+						}else{
+							hm.put(keyStr,valueStr);
+						}
+
+					} else {
+						hm = new HashMap <>();
+						String keyStr= key.substring(key.lastIndexOf('.')+1);
+						String valueStr= map.get(key);
+						if(("type").equals(keyStr)){
+							if(!key.contains("entry_schema"))
+							{
+								hm.put(keyStr,valueStr);
+							}
+						}else{
+							hm.put(keyStr,valueStr);
+						}
+						mapKey.put(uniqueKey, hm);
+					}
+				}
+			}
+		}
+		return mapKey;
+	}
+
+	void createAttributes(HashMap<String,HashMap<String,String>> mapKey){
+		StringBuilder attributeStringBuilder= new StringBuilder();
+		StringBuilder referenceStringBuilder= new StringBuilder();
+		StringBuilder listBuffer= new StringBuilder();
+		List<String> constraints= new ArrayList<>();
+		for(Map.Entry<String,HashMap<String,String>> entry: mapKey.entrySet()){
+			String keySetString= entry.getKey();
+			HashMap<String,String> keyValues=mapKey.get(keySetString);
+			if(keyValues.get("type").equalsIgnoreCase(STRING)||
+					keyValues.get("type").equalsIgnoreCase(INTEGER)
+					){
+				StringBuilder attributeIndividualStringBuilder= new StringBuilder();
+				attributeIndividualStringBuilder.append(keySetString+"=");
+				attributeIndividualStringBuilder.append(keyValues.get("type")+":defaultValue-");
+				attributeIndividualStringBuilder.append(keyValues.get("default")+":required-");
+				attributeIndividualStringBuilder.append(keyValues.get("required")+":MANY-false");
+				attributeStringBuilder.append(attributeIndividualStringBuilder+",");	
+
+			}
+			else if(keyValues.get("type").equalsIgnoreCase(LIST)){
+				//List Datatype
+				Set<String> keys= keyValues.keySet();
+				Iterator<String> itr=keys.iterator();
+				while(itr.hasNext()){
+					String key= itr.next();
+					if((!("type").equals(key) ||("required").equals(key)))
+					{
+						String value= keyValues.get(key);
+						//The "." in the value determines if its a string or a user defined type.  
+						if (!value.contains(".")){
+							//This is string
+							constraints.add(keyValues.get(key));
+						}else{
+							//This is userdefined string
+							String trimValue=value.substring(value.lastIndexOf('.')+1);
+							StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+							referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-true");
+							referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+						}
+					}
+				}
+
+			}else{
+				//User defined Datatype. 
+				String value=keyValues.get("type");
+				String trimValue=value.substring(value.lastIndexOf('.')+1);
+				StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+				referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-false");
+				referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+
+			}
+			if(constraints!=null &&constraints.isEmpty()==false){
+				//List handling. 
+				listBuffer.append(keySetString.toUpperCase()+"=[");
+				for(String str:constraints){
+					listBuffer.append(str+",");
+				}
+				listBuffer.append("]#");
+				LOGGER.info(listBuffer);
+
+
+				StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+				referenceIndividualStringBuilder.append(keySetString+"="+keySetString.toUpperCase()+":MANY-false");
+				referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+				constraints.clear();
+			}
+		}
+		
+		dataListBuffer.append(listBuffer);
+		
+
+		LOGGER.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		LOGGER.info("Whole attribute String is:"+attributeStringBuilder);	
+		LOGGER.info("Whole reference String is:"+referenceStringBuilder);
+		LOGGER.info("List String is:"+listBuffer);
+		LOGGER.info("Data list buffer is:"+dataListBuffer);
+		LOGGER.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		
+		this.listConstraints=dataListBuffer.toString();
+		this.referenceAttributes=referenceStringBuilder.toString();
+		this.attributeString=attributeStringBuilder.toString();
+	}
+	
+	
     
 	public void parseTosca (String fileName){
 		Map<String,String> map= new HashMap<>();
-		try {
+    
+    	try {
 			map=load(fileName);
-			for(String key:map.keySet()){
-				if(key.contains("policy.nodes.Root")){
-					continue;
-				}
-				else if(key.contains("policy.nodes")){
-					String wordToFind = "policy.nodes.";
-					int indexForPolicyNode=key.indexOf(wordToFind);
-					String subNodeString= key.substring(indexForPolicyNode+13, key.length());
-
-					stringBetweenDots(subNodeString,map.get(key));
-				}
-				else if(key.contains("policy.data")){
-					String wordToFind="policy.data.";
-					int indexForPolicyNode=key.indexOf(wordToFind);
-					String subNodeString= key.substring(indexForPolicyNode+12, key.length());
-
-					stringBetweenDotsForDataFields(subNodeString,map.get(key));
-				}
-			}
-
-			String userDefinedIndividualString="";
-			String userDefinedString="";
-
-			for(String uniqueDataKey: uniqueDataKeys){
-				String[] uniqueDataKeySplit= uniqueDataKey.split("%");
-				userDefinedIndividualString=userDefinedIndividualString+uniqueDataKey+"=";
-				userDefinedIndividualString=userDefinedIndividualString+"#A:defaultValue-#B:required-#C:MANY-false";
-				for(String key:map.keySet()){
-					if(key.contains("policy.data")){
-						String containsKey= uniqueDataKeySplit[1]+".type";
-						if(key.contains(uniqueDataKeySplit[0])){
-							if(key.contains("default")){
-								userDefinedIndividualString=userDefinedIndividualString.replace("#B", map.get(key));
-							}
-							else if(key.contains("required")){
-								userDefinedIndividualString=userDefinedIndividualString.replace("#C", map.get(key));
-							}
-							else if(key.contains(containsKey)){
-								String typeValue= map.get(key);
-								userDefinedIndividualString=userDefinedIndividualString.replace("#A", typeValue);
-							} 
-						}
-					}
-				}
-				if(userDefinedString!=""){
-					userDefinedString=userDefinedString+","+userDefinedIndividualString;
-				}else{
-					userDefinedString=userDefinedString+userDefinedIndividualString;
-				}
-				userDefinedIndividualString="";
-			}
-			LOGGER.info("userDefinedString   :"+userDefinedString);
-
-			HashMap<String,ArrayList<String>> mapKeyUserdefined= new HashMap<>();
-			String secondPartString="";
-			String firstPartString="";
-			for(String value: userDefinedString.split(",")){
-				String[] splitWithEquals= value.split("=");
-				secondPartString=splitWithEquals[0].substring(splitWithEquals[0].indexOf("%")+1);
-				firstPartString=splitWithEquals[0].substring(0, splitWithEquals[0].indexOf("%"));
-				ArrayList<String> list;
-				if(mapKeyUserdefined.containsKey(firstPartString)){
-					list = mapKeyUserdefined.get(firstPartString);
-					list.add(secondPartString+"<"+splitWithEquals[1]);
-				} else {
-					list = new ArrayList<String>();
-					list.add(secondPartString+"<"+splitWithEquals[1]);
-					mapKeyUserdefined.put(firstPartString, list);
-				}
-			}
-
-			JSONObject mainObject= new JSONObject();;
-			JSONObject json;
-			for(String s: mapKeyUserdefined.keySet()){
-				json= new JSONObject();
-				List<String> value=mapKeyUserdefined.get(s);
-				for(String listValue:value){
-					String[] splitValue=listValue.split("<");
-					json.put(splitValue[0], splitValue[1]);
-				}
-				mainObject.put(s,json);
-			}
-			Iterator<String> keysItr = mainObject.keys();
-			while(keysItr.hasNext()) {
-				String key = keysItr.next();
-				String value = mainObject.get(key).toString();
-				retmap.put(key, value);
-			}
-
-			LOGGER.info("#############################################################################");
-			LOGGER.info(mainObject);
-			LOGGER.info("###############################################################################");
-
-			HashMap<String,HashMap<String,String>> mapKey= new HashMap<>();
-			for(String uniqueKey: uniqueKeys){
-				HashMap<String,String> hm;
-
-				for(String key:map.keySet()){
-					if(key.contains(uniqueKey)){
-						if(mapKey.containsKey(uniqueKey)){
-							hm = mapKey.get(uniqueKey);
-							String keyStr= key.substring(key.lastIndexOf(".")+1);
-							String valueStr= map.get(key);
-							if(keyStr.equals("type")){
-								if(!key.contains("entry_schema")){
-									hm.put(keyStr,valueStr);
-								}
-							}else{
-								hm.put(keyStr,valueStr);
-							}
-						} else {
-							hm = new HashMap<>();
-							String keyStr= key.substring(key.lastIndexOf(".")+1);
-							String valueStr= map.get(key);
-							if(keyStr.equals("type")){
-								if(!key.contains("entry_schema")){
-									hm.put(keyStr,valueStr);
-								}
-							}else{
-								hm.put(keyStr,valueStr);
-							}
-							mapKey.put(uniqueKey, hm);
-						}
-					}
-				}
-			}
-
-			StringBuilder attributeStringBuilder= new StringBuilder();
-			StringBuilder referenceStringBuilder= new StringBuilder();
-			StringBuilder listBuffer= new StringBuilder();
-
-			List<String> constraints= new ArrayList<>();
-			for(String keySetString: mapKey.keySet()){
-				HashMap<String,String> keyValues=mapKey.get(keySetString);
-				if(keyValues.get("type").equalsIgnoreCase("string")|| keyValues.get("type").equalsIgnoreCase("integer")){
-					StringBuilder attributeIndividualStringBuilder= new StringBuilder();
-					attributeIndividualStringBuilder.append(keySetString+"=");
-					attributeIndividualStringBuilder.append(keyValues.get("type")+":defaultValue-");
-					attributeIndividualStringBuilder.append(keyValues.get("default")+":required-");
-					attributeIndividualStringBuilder.append(keyValues.get("required")+":MANY-false");
-					attributeStringBuilder.append(attributeIndividualStringBuilder+",");	
-				}
-				else if(keyValues.get("type").equalsIgnoreCase("list")){
-					//List Datatype
-					Set<String> keys= keyValues.keySet();
-					Iterator<String> itr=keys.iterator();
-					while(itr.hasNext()){
-						String key= itr.next().toString();
-						if((!key.equals("type"))){
-							String value= keyValues.get(key);
-							//The "." in the value determines if its a string or a user defined type.  
-							if (!value.contains(".")){
-								//This is string
-								constraints.add(keyValues.get(key));
-							}else{
-								//This is user defined string
-								String trimValue=value.substring(value.lastIndexOf(".")+1);
-								StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-								referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-true");
-								referenceStringBuilder.append(referenceIndividualStringBuilder+",");
-							}
-						}
-					}
-				}else{
-					//User defined Datatype. 
-					String value=keyValues.get("type");
-					String trimValue=value.substring(value.lastIndexOf(".")+1);
-					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-					referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-false");
-					referenceStringBuilder.append(referenceIndividualStringBuilder+",");
-				}
-				if(constraints!=null &&constraints.isEmpty()==false){
-					//List handling. 
-					listBuffer.append(keySetString.toUpperCase()+"=[");
-					for(String str:constraints){
-						listBuffer.append(str+",");
-					}
-					listBuffer.append("]#");
-					LOGGER.info(listBuffer);
-
-
-					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-					referenceIndividualStringBuilder.append(keySetString+"="+keySetString.toUpperCase()+":MANY-false");
-					referenceStringBuilder.append(referenceIndividualStringBuilder+",");
-					constraints.clear();
-				}
-			}
-
-			LOGGER.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-			LOGGER.info("Whole attribute String is:"+attributeStringBuilder);	
-			LOGGER.info("Whole reference String is:"+referenceStringBuilder);
-			LOGGER.info("List String is:"+listBuffer);
-			LOGGER.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-			this.listConstraints=listBuffer.toString();
-			this.referenceAttributes=referenceStringBuilder.toString();
-			this.attributeString=attributeStringBuilder.toString();
-
-		} catch (IOException e) {
-			LOGGER.error(e);
-		}
+			
+			parseDataAndPolicyNodes(map);
+			
+			HashMap<String,String> dataMapForJson=parseDataNodes(map);
+			
+			constructJsonForDataFields(dataMapForJson);	
+			
+			HashMap<String,HashMap<String,String>> mapKey= parsePolicyNodes(map);
+			
+			createAttributes(mapKey);
+		
+    	} catch (IOException e) {
+    		LOGGER.error(e);
+    	}
+	
 	} 
 
 	private String cleanUPJson(String json) {
