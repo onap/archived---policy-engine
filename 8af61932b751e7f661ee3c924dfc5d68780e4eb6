@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a0e1d27_e3e63d44",
+        "filename": "POLICY-SDK-APP/src/main/java/org/openecomp/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-17T18:57:23Z",
+      "side": 1,
+      "message": "same rationale as before could end up [1] not being available, if you can check ..",
+      "revId": "8af61932b751e7f661ee3c924dfc5d68780e4eb6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0e1d27_03da5178",
+        "filename": "POLICY-SDK-APP/src/main/java/org/openecomp/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-17T18:57:23Z",
+      "side": 1,
+      "message": "I think you may run same case here with uniqueDataKeySplit[1] and arrayoutofbounds, if you can check ..",
+      "revId": "8af61932b751e7f661ee3c924dfc5d68780e4eb6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
