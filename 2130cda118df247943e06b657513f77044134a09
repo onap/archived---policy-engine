@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a0e1d27_a39ba5c8",
+        "filename": "POLICY-SDK-APP/src/main/java/org/openecomp/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-17T17:24:21Z",
+      "side": 1,
+      "message": "I think you can still get in trouble with the \"indexoutofbounds\" if input is for example \"blah%\" (% at end).   You could just do here:  \n\nif (uniqueDataKeySplit.length \u003c 2) continue;\n\nto go to next key and get around this problem.   \n\nAnother caveat is that is the string has multiple \"%\" the split will give you back and array with more than 2 entries, not sure what\u0027s the input data, but you could limit it to only one split with split(\"%\", 2).",
+      "revId": "2130cda118df247943e06b657513f77044134a09",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
