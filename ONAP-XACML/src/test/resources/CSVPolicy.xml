@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ============LICENSE_START=======================================================
+  ONAP-XACML
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+  -->
+
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:fb9e6bed-b5dd-430c-acd4-1baed0c1f1cf" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit">
+    <Description>This Policy handles the Take action and Advice action operations. </Description>
+    <Target />
+	<!--<Target>
+        <AnyOf>
+            <AllOf>
+                <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">VM</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+            </AllOf>
+        </AnyOf>
+    </Target> -->
+    <VariableDefinition VariableId="doesItRequireNewVM">
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+            <Description>Check the CPU Utilization or Network Load</Description>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than">
+                <Description>Load</Description>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="com:att:labs:onap:resource:vm:load" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="true"/>
+                </Apply>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">95</AttributeValue>
+                <!--<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                    <AttributeDesignator Category="com:att:research:xacml:test:pip:csv:category:server" AttributeId="com:att:research:xacml:test:pip:csv:server:loadval" DataType="http://www.w3.org/2001/XMLSchema#integer" Issuer="com:att:research:xacml:test:pip:csv" MustBePresent="false"/>
+                </Apply> -->
+            </Apply>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than">
+                <Description>CPU</Description>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="com:att:labs:onap:resource:vm:cpu" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="true"/>
+                </Apply>
+				<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">95</AttributeValue>
+                <!-- <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                    <AttributeDesignator Category="com:att:research:xacml:test:pip:csv:category:server" AttributeId="com:att:research:xacml:test:pip:csv:server:cpuval" DataType="http://www.w3.org/2001/XMLSchema#integer" Issuer="com:att:research:xacml:test:pip:csv" MustBePresent="false"/>
+                </Apply> -->
+            </Apply>
+        </Apply>
+    </VariableDefinition>
+	<Rule RuleId="urn:com:xacml:rule:id:9f8e2241-8205-4656-b6f6-143637cc0c66" Effect="Permit">
+        <Description>Permit to create a new VM with Obligation</Description>
+        <Target />
+		<!--<Target>
+			<AnyOf>
+				<AllOf>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">create_Action</AttributeValue>
+						<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+					</Match>
+				</AllOf>
+			</AnyOf>
+		</Target> -->
+		<Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+                <Description>If the Requirement has met create the VM</Description>
+                <VariableReference VariableId="doesItRequireNewVM"/>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+            </Apply>
+        </Condition>
+		<ObligationExpressions>
+            <ObligationExpression ObligationId="com.att.research.nvp.test.obligation" FulfillOn="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.research.nvp.test.obligation.key" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Action_Info</AttributeValue>
+                </AttributeAssignmentExpression>
+            </ObligationExpression>
+            <ObligationExpression ObligationId="com.att.research.nvp.test.multiobligation" FulfillOn="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.research.nvp.obligation.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Create_NEW_VM</AttributeValue>
+                </AttributeAssignmentExpression>
+            </ObligationExpression>
+        </ObligationExpressions>
+    </Rule>
+    <Rule RuleId="urn:com:xacml:rule:id:6dd4c4b2-8864-4bae-b497-7472b464ffe7" Effect="Permit">
+        <Description>Permit to create a new VM with Advice</Description>
+        <Target>
+			<AnyOf>
+				<AllOf>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">create_adviceAction</AttributeValue>
+						<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+					</Match>
+				</AllOf>
+			</AnyOf>
+		</Target>
+		<Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+                <Description>If the Requirement has met create the VM</Description>
+                <VariableReference VariableId="doesItRequireNewVM"/>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+            </Apply>
+        </Condition>
+		<AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.research.nvp.test.advice.multi" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.research.nvp.test.advice.key">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Action_Info</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+            <AdviceExpression AdviceId="com.att.research.nvp.test.advice.multiadvice" AppliesTo="Permit">
+				<AttributeAssignmentExpression AttributeId="com.att.research.nvp.test.advice.multival">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Created New VM</AttributeValue>
+                </AttributeAssignmentExpression>
+				<AttributeAssignmentExpression AttributeId="com.att.research.nvp.test.advice.val" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/pdp/?type=hb</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+	<VariableDefinition VariableId="removeVM">
+        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-less-than">
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="com:att:research:xacml:test:pip:csv:resource:cpu" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="true"/>
+            </Apply>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                <AttributeDesignator Category="com:att:research:xacml:test:pip:csv:category:server" AttributeId="com:att:research:xacml:test:pip:csv:server:minval" DataType="http://www.w3.org/2001/XMLSchema#integer" Issuer="com:att:research:xacml:test:pip:csv" MustBePresent="false"/>
+            </Apply>
+        </Apply>
+    </VariableDefinition>
+    <Rule RuleId="urn:com:xacml:rule:id:262fc3fd-f3f3-4aaa-8b9c-504f89be5ba2" Effect="Permit">
+        <Description>Permit to remove a VM with Obligation</Description>
+        <Target>
+			<AnyOf>
+				<AllOf>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">remove_Action</AttributeValue>
+						<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+					</Match>
+				</AllOf>
+			</AnyOf>
+		</Target>
+		<Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+                <Description>If the resource usage is low then remove the VM</Description>
+                <VariableReference VariableId="removeVM"/>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+            </Apply>
+        </Condition>
+		<ObligationExpressions>
+            <ObligationExpression ObligationId="com.att.research.nvp.test.obligation" FulfillOn="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.research.nvp.test.obligation.key" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Action_Info</AttributeValue>
+                </AttributeAssignmentExpression>
+            </ObligationExpression>
+            <ObligationExpression ObligationId="com.att.research.nvp.test.multiobligation" FulfillOn="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.research.nvp.obligation.value" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Remove_VM</AttributeValue>
+                </AttributeAssignmentExpression>
+            </ObligationExpression>
+        </ObligationExpressions>
+    </Rule>
+    <Rule RuleId="urn:com:xacml:rule:id:6b17c532-6b43-4577-b499-30c862bc7df3" Effect="Permit">
+        <Description>Permit to remove a VM with Advice</Description>
+        <Target>
+			<AnyOf>
+				<AllOf>
+					<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">remove_adviceAction</AttributeValue>
+						<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+					</Match>
+				</AllOf>
+			</AnyOf>
+		</Target>
+		<Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:boolean-equal">
+                <Description>If the resource usage is low then remove the VM</Description>
+                <VariableReference VariableId="removeVM"/>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#boolean">true</AttributeValue>
+            </Apply>
+        </Condition>
+		<AdviceExpressions>
+            <AdviceExpression AdviceId="com.att.research.nvp.test.advice.multi" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="com.att.research.nvp.test.advice.key">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Action_Info</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+            <AdviceExpression AdviceId="com.att.research.nvp.test.advice.multiadvice" AppliesTo="Permit">
+				<AttributeAssignmentExpression AttributeId="com.att.research.nvp.test.advice.multival">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Removed VM</AttributeValue>
+                </AttributeAssignmentExpression>
+				<AttributeAssignmentExpression AttributeId="com.att.research.nvp.test.advice.val" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost:8080/pdp/?type=hb</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+</Policy>

@@ -1,6 +1,6 @@
 /*-
 * ============LICENSE_START=======================================================
-* ECOMP Policy Engine
+* ONAP Policy Engine
 * ================================================================================
 * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
 * ================================================================================
@@ -17,10 +17,10 @@
 * limitations under the License.
 * ============LICENSE_END=========================================================
 */
-use ecomp_sdk;
-drop table if exists `ecomp_sdk`.`rainydaytreatments`;
+use onap_sdk;
+drop table if exists `onap_sdk`.`rainydaytreatments`;
 
-CREATE TABLE `ecomp_sdk`.`rainydaytreatments` (
+CREATE TABLE `onap_sdk`.`rainydaytreatments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `bbid` varchar(250) DEFAULT NULL,
   `workstep` varchar(250) DEFAULT NULL,

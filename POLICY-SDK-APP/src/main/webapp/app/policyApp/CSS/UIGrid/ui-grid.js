@@ -272,7 +272,7 @@ angular.module('ui.grid').directive('uiGridCell', ['$compile', '$parse', 'gridUt
           // No controller, compile the element manually (for unit tests)
           else {
             if ( uiGridCtrl && !$scope.col.compiledElementFn ){
-              // gridUtil.logError('Render has been called before precompile.  Please log a ui-grid issue');  
+              // gridUtil.logError('Render has been called before pronapile.  Please log a ui-grid issue');  
 
               $scope.col.getCompiledElementFn()
                 .then(function (compiledElementFn) {
@@ -4658,7 +4658,7 @@ angular.module('ui.grid')
  * @ngdoc function
  * @name preCompileCellTemplates
  * @methodOf ui.grid.class:Grid
- * @description precompiles all cell templates
+ * @description pronapiles all cell templates
  */
   Grid.prototype.preCompileCellTemplates = function() {
     var self = this;
@@ -8110,7 +8110,7 @@ angular.module('ui.grid')
        * <pre>  $scope.gridOptions.headerTemplate = 'header_template.html';</pre>
        * inline html
        * <pre>  $scope.gridOptions.headerTemplate = '<div class="ui-grid-top-panel" style="text-align: center">I am a Custom Grid Header</div>'</pre>
-       * or the id of a precompiled template (TBD how to use this).
+       * or the id of a pronapiled template (TBD how to use this).
        * </br>Refer to the custom header tutorial for more information.
        * If you want no header at all, you can set to an empty div:
        * <pre>  $scope.gridOptions.headerTemplate = '<div></div>';</pre>
@@ -8130,7 +8130,7 @@ angular.module('ui.grid')
        * aggregation totals.
        * When provided, this setting uses a custom footer template. Can be set to either the name of a template file 'footer_template.html', inline html
        * <pre>'<div class="ui-grid-bottom-panel" style="text-align: center">I am a Custom Grid Footer</div>'</pre>, or the id
-       * of a precompiled template (TBD how to use this).  Refer to the custom footer tutorial for more information.
+       * of a pronapiled template (TBD how to use this).  Refer to the custom footer tutorial for more information.
        */
       baseOptions.footerTemplate = baseOptions.footerTemplate || 'ui-grid/ui-grid-footer';
 
@@ -8152,7 +8152,7 @@ angular.module('ui.grid')
        * <pre> $scope.gridOptions.rowTemplate = 'row_template.html';</pre>
        * inline html
        * <pre>  $scope.gridOptions.rowTemplate = '<div style="background-color: aquamarine" ng-click="grid.appScope.fnOne(row)" ng-repeat="col in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ui-grid-cell></div>';</pre>
-       * or the id of a precompiled template (TBD how to use this) can be provided.
+       * or the id of a pronapiled template (TBD how to use this) can be provided.
        * </br>Refer to the custom row template tutorial for more information.
        */
       baseOptions.rowTemplate = baseOptions.rowTemplate || 'ui-grid/ui-grid-row';

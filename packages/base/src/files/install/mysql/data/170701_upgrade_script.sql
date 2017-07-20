@@ -1,6 +1,6 @@
 /*-
 * ============LICENSE_START=======================================================
-* ECOMP Policy Engine
+* ONAP Policy Engine
 * ================================================================================
 * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
 * ================================================================================
@@ -17,13 +17,13 @@
 * limitations under the License.
 * ============LICENSE_END=========================================================
 */
-use ecomp_sdk;
+use onap_sdk;
 
 INSERT INTO policyeditorscopes (`id`, `scopename`, `created_date`, `created_by`, `modified_date`, `modified_by`) VALUES ('1', 'com', '2017-06-01 11:45:36', 'demo', '2017-06-01 11:45:36', 'demo');
 
 alter table IntegrityAuditEntity modify jdbcUrl varchar(200) not null; 
 
-alter table `ecomp_sdk`.`microservicemodels` 
+alter table `onap_sdk`.`microservicemodels` 
 add column `enumValues` longtext null default null after `version`, 
 add column `annotation` longtext null after `enumValues`;
 

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ECOMP Policy Engine
+ * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -91,7 +91,7 @@ app.controller('pepOptionsDictGridController', function ($scope, PolicyAppServic
 
 	$scope.editPEPOptions = null;
 	$scope.createNewPEPOptionsWindow = function(){
-		$scope.editEcompName = null;
+		$scope.editOnapName = null;
 		var modalInstance = $modal.open({
 			backdrop: 'static', keyboard: false,
 			templateUrl : 'add_PEPOptions_popup.html',

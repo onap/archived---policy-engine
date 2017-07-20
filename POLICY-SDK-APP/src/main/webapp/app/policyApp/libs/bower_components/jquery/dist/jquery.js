@@ -2493,7 +2493,7 @@ select = Sizzle.select = function( selector, context, results, seed ) {
 			if ( !context ) {
 				return results;
 
-			// Precompiled matchers will still verify ancestry, so step up a level
+			// Pronapiled matchers will still verify ancestry, so step up a level
 			} else if ( compiled ) {
 				context = context.parentNode;
 			}

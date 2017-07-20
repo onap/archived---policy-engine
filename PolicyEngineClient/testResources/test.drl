@@ -78,7 +78,7 @@ import org.onap.policy.mso.MSORelatedInstanceListElement;
 import org.onap.policy.mso.MSORelatedInstance;
 import org.onap.policy.mso.MSOResponse;
 
-import org.openecomp.policy.drools.system.PolicyEngine;
+import org.onap.policy.drools.system.PolicyEngine;
 
 //
 // These parameters are required to build the runtime policy
@@ -101,7 +101,7 @@ end
 /*
 *
 * Called once and only once to insert the parameters into working memory for this Closed Loop policy.
-* (Comment SETUP rule out for the first ECOMP opensource release since policy BRMS_GW already puts a Params fact in there)
+* (Comment SETUP rule out for the first ONAP opensource release since policy BRMS_GW already puts a Params fact in there)
 *
 *
 *rule "${policyName}.SETUP"

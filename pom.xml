@@ -2,13 +2,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.openecomp.policy.engine</groupId>
+	<groupId>org.onap.policy.engine</groupId>
 	<artifactId>PolicyEngineSuite</artifactId>
 	<version>1.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Policy Engine - Policy Engine Suite</name>
 
-	<description>The ECOMP Policy Engine main pom</description>
+	<description>The ONAP Policy Engine main pom</description>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -39,53 +39,53 @@
 
 	<modules>
 		<module>PolicyEngineUtils</module>
-		<module>ECOMP-XACML</module>
-		<module>ECOMP-REST</module>
-		<module>ECOMP-ASDC</module>
-		<module>ECOMP-ControlloopPolicy</module>
+		<module>ONAP-XACML</module>
+		<module>ONAP-REST</module>
+		<module>ONAP-ASDC</module>
+		<module>ONAP-ControlloopPolicy</module>
 		<module>PolicyEngineAPI</module>
-		<module>ECOMP-PDP</module>
-		<module>ECOMP-PDP-REST</module>
-		<module>ECOMP-PAP-REST</module>
+		<module>ONAP-PDP</module>
+		<module>ONAP-PDP-REST</module>
+		<module>ONAP-PAP-REST</module>
 		<module>LogParser</module>
 		<module>PolicyEngineClient</module>
 		<module>BRMSGateway</module>
 		<module>POLICY-SDK-APP</module>
-		<module>ECOMP-SDK-APP</module>
+		<module>ONAP-SDK-APP</module>
 		<module>packages</module>
 	</modules>
 
 	<repositories>
 		<repository>
-			<id>ecomp-snapshots</id>
-			<name>OpenECOMP Snapshot Repository</name>
+			<id>onap-snapshots</id>
+			<name>ONAP Snapshot Repository</name>
 			<url>${nexusproxy}/${snapshots.path}</url>
 		</repository>
 		<repository>
-			<id>ecomp-releases</id>
-			<name>OpenECOMP Release Repository</name>
+			<id>onap-releases</id>
+			<name>ONAP Release Repository</name>
 			<url>${nexusproxy}/${releases.path}/</url>
 		</repository>
 		<repository>
-			<id>ecomp-staging</id>
-			<name>OpenECOMP Staging Repository</name>
+			<id>onap-staging</id>
+			<name>ONAP Staging Repository</name>
 			<url>${nexusproxy}/${staging.path}</url>
 		</repository>
 	</repositories>
 
 	<distributionManagement>
 		<repository>
-			<id>ecomp-releases</id>
-			<name>OpenECOMP Release Repository</name>
+			<id>onap-releases</id>
+			<name>ONAP Release Repository</name>
 			<url>${nexusproxy}/${releases.path}</url>
 		</repository>
 		<snapshotRepository>
-			<id>ecomp-snapshots</id>
-			<name>OpenECOMP Snapshot Repository</name>
+			<id>onap-snapshots</id>
+			<name>ONAP Snapshot Repository</name>
 			<url>${nexusproxy}/${snapshots.path}</url>
 		</snapshotRepository>
 		<site>
-			<id>ecomp-site</id>
+			<id>onap-site</id>
 			<url>dav:${nexusproxy}${sitePath}</url>
 		</site>
 	</distributionManagement>
@@ -136,7 +136,7 @@
 				<configuration>
 					<nexusUrl>${nexusproxy}</nexusUrl>
 					<stagingProfileId>176c31dfe190a</stagingProfileId>
-					<serverId>ecomp-staging</serverId>
+					<serverId>onap-staging</serverId>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -252,7 +252,7 @@
 				<configuration>
 					<dumpOnExit>true</dumpOnExit>
 					<includes>
-						<include>org.openecomp.*</include>
+						<include>org.onap.*</include>
 					</includes>
 				</configuration>
 				<executions>

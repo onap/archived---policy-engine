@@ -83,7 +83,7 @@ import org.onap.policy.mso.MSORelatedInstanceListElement;
 import org.onap.policy.mso.MSORelatedInstance;
 import org.onap.policy.mso.MSOResponse;
 
-import org.openecomp.policy.drools.system.PolicyEngine;
+import org.onap.policy.drools.system.PolicyEngine;
 
 //
 // These parameters are required to build the runtime policy
@@ -106,7 +106,7 @@ end
 /*
 *
 * Called once and only once to insert the parameters into working memory for this Closed Loop policy.
-* (Comment SETUP rule out for the first ECOMP opensource release since policy BRMS_GW already puts a Params fact in there)
+* (Comment SETUP rule out for the first ONAP opensource release since policy BRMS_GW already puts a Params fact in there)
 *
 *
 *rule "BRMSParamvLBDemoPolicy.SETUP"
@@ -119,7 +119,7 @@ end
 *		params.setAaiURL("https://aai.api.simpledemo.openecomp.org:8443");
 *		params.setAaiUsername("POLICY");
 *		params.setAaiPassword("POLICY");
-*		params.setMsoURL("http://vm1.mso.simpledemo.openecomp.org:8080/ecomp/mso/infra");
+*		params.setMsoURL("http://vm1.mso.simpledemo.openecomp.org:8080/onap/mso/infra");
 *		params.setMsoUsername("InfraPortalClient");
 *		params.setMsoPassword("password1$");
 *		params.setAaiNamedQueryUUID("f199cb88-5e69-4b1f-93e0-6f257877d066");
@@ -1135,7 +1135,7 @@ rule "com.Config_BRMS_Param_BRMSParamvLBDemoPolicy.Params"
 		params.setMsoPassword("password1$");
 		params.setClosedLoopControlName("CL-DNS-LOW-TRAFFIC-SIG-d925ed73-8231-4d02-9545-db4e101f88f8");
 		params.setAaiUsername("POLICY");
-		params.setMsoURL("http://vm1.mso.simpledemo.openecomp.org:8080/ecomp/mso/infra");
+		params.setMsoURL("http://vm1.mso.simpledemo.openecomp.org:8080/onap/mso/infra");
 		params.setActor("MSO");
 		params.setMsoUsername("InfraPortalClient");
 		params.setAaiNamedQueryUUID("f199cb88-5e69-4b1f-93e0-6f257877d066");

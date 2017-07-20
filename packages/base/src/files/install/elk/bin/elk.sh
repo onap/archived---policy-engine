@@ -108,7 +108,7 @@ function audit() {
 		fi
 	fi
 	
-	$JAVA_HOME/bin/java -cp $POLICY_HOME/servers/pap/webapps/pap/WEB-INF/lib/ECOMP-PAP-REST-*.jar:$POLICY_HOME/servers/pap/webapps/pap/WEB-INF/lib/*: -DPROPERTY_FILE=$POLICY_HOME/servers/pap/bin/policyelk.properties org.openecomp.policy.pap.xacml.rest.elk.client.ElasticSearchPolicyUpdate
+	$JAVA_HOME/bin/java -cp $POLICY_HOME/servers/pap/webapps/pap/WEB-INF/lib/ONAP-PAP-REST-*.jar:$POLICY_HOME/servers/pap/webapps/pap/WEB-INF/lib/*: -DPROPERTY_FILE=$POLICY_HOME/servers/pap/bin/policyelk.properties org.onap.policy.pap.xacml.rest.elk.client.ElasticSearchPolicyUpdate
 }
 
 #########################################################################
