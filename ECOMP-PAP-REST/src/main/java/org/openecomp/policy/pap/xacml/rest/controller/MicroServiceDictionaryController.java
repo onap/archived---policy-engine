@@ -62,7 +62,11 @@ public class MicroServiceDictionaryController {
 	private static final Logger LOGGER  = FlexLogger.getLogger(MicroServiceDictionaryController.class);
 
 	private static CommonClassDao commonClassDao;
-	
+
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
+		MicroServiceDictionaryController.commonClassDao = commonClassDao;
+	}
+
 	@Autowired
 	public MicroServiceDictionaryController(CommonClassDao commonClassDao){
 		MicroServiceDictionaryController.commonClassDao = commonClassDao;

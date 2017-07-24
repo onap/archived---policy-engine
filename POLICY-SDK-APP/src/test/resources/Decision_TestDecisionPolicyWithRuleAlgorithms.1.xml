@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+ <Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:xacml:policy:id:b622d808-ba62-4392-93c8-eaff0cbfb63f" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
+     <Description>TestDecisionPolicyWithRuleAlgorithms@CreatedBy:rb7147@CreatedBy:@ModifiedBy:rb7147@ModifiedBy:</Description>
+     <Target>
+         <AnyOf>
+             <AllOf>
+                 <Match MatchId="org.openecomp.function.regex-match">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">com.Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml</AttributeValue>
+                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="PolicyName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                 </Match>
+             </AllOf>
+             <AllOf>
+                 <Match MatchId="org.openecomp.function.regex-match">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Test</AttributeValue>
+                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ECOMPName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                 </Match>
+                 <Match MatchId="org.openecomp.function.regex-match">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">test</AttributeValue>
+                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="SamplTest" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                 </Match>
+             </AllOf>
+         </AnyOf>
+     </Target>
+     <VariableDefinition VariableId="TestSettings">
+         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">test</AttributeValue>
+     </VariableDefinition>
+     <Rule RuleId="" Effect="Permit">
+         <Target>
+             <AnyOf>
+                 <AllOf>
+                     <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DECIDE</AttributeValue>
+                         <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                     </Match>
+                 </AllOf>
+             </AnyOf>
+         </Target>
+         <Condition>
+             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Sample</AttributeValue>
+                     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                         <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="SamplTest" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                     </Apply>
+                 </Apply>
+                 <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">test</AttributeValue>
+                     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                         <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="SamplTest" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                     </Apply>
+                 </Apply>
+             </Apply>
+         </Condition>
+     </Rule>
+     <Rule RuleId="" Effect="Deny">
+         <Target>
+             <AnyOf>
+                 <AllOf>
+                     <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DECIDE</AttributeValue>
+                         <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                     </Match>
+                 </AllOf>
+             </AnyOf>
+         </Target>
+         <Condition>
+             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Sample</AttributeValue>
+                         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                             <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="SamplTest" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                         </Apply>
+                     </Apply>
+                     <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">test</AttributeValue>
+                         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                             <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="SamplTest" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                         </Apply>
+                     </Apply>
+                 </Apply>
+             </Apply>
+         </Condition>
+     </Rule>
+ </Policy>

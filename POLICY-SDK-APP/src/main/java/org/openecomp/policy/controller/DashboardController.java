@@ -73,7 +73,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 @RequestMapping({"/"})
 public class DashboardController  extends RestrictedBaseController{
-	private static final Logger logger = FlexLogger.getLogger(DashboardController.class);
+	private static final Logger policyLogger = FlexLogger.getLogger(DashboardController.class);
 	@Autowired
 	SystemLogDbDao systemDAO;
 	
@@ -110,7 +110,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			logger.error("Exception Occured"+e);
+			policyLogger.error("Exception Occured"+e);
 		}
 	}
 	
@@ -125,7 +125,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			logger.error("Exception Occured"+e);
+			policyLogger.error("Exception Occured"+e);
 		}
 	}
 	
@@ -142,7 +142,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			logger.error("Exception Occured"+e);
+			policyLogger.error("Exception Occured"+e);
 		}
 	}
 	
@@ -161,7 +161,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			logger.error("Exception Occured"+e);
+			policyLogger.error("Exception Occured"+e);
 		}
 	}
 	
@@ -180,7 +180,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			logger.error("Exception Occured"+e);
+			policyLogger.error("Exception Occured"+e);
 		}
 	}
 	
@@ -201,7 +201,7 @@ public class DashboardController  extends RestrictedBaseController{
 			}
 		} catch (PAPException | NullPointerException e1) {
 			papStatus = "CANNOT_CONNECT";
-			logger.error("Error getting PAP status, PAP not responding to requests");
+			policyLogger.error("Error getting PAP status, PAP not responding to requests", e1);
 		}
 		String papURL = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
 		JSONObject object = new JSONObject();
@@ -229,11 +229,12 @@ public class DashboardController  extends RestrictedBaseController{
 				if (pdp.getStatus().getStatus().toString() == "UP_TO_DATE" && ((EcompPDP) pdp).getJmxPort() != 0){
 					String pdpIpAddress = parseIPSystem(pdp.getId());
 					int port = ((EcompPDP) pdp).getJmxPort();
-					if (port != 0)
-					logger.debug("Getting JMX Response Counts from " + pdpIpAddress + " at JMX port " + port);
-					naCount = getRequestCounts(pdpIpAddress, port, "pdpEvaluationNA");
-					permitCount = getRequestCounts(pdpIpAddress, port, "PdpEvaluationPermit");
-					denyCount = getRequestCounts(pdpIpAddress, port, "PdpEvaluationDeny");
+					if (port != 0){
+						policyLogger.debug("Getting JMX Response Counts from " + pdpIpAddress + " at JMX port " + port);
+						naCount = getRequestCounts(pdpIpAddress, port, "pdpEvaluationNA");
+						permitCount = getRequestCounts(pdpIpAddress, port, "PdpEvaluationPermit");
+						denyCount = getRequestCounts(pdpIpAddress, port, "PdpEvaluationDeny");
+					}
 				}
 				if (naCount == -1){
 					JSONObject object = new JSONObject();
@@ -279,7 +280,7 @@ public class DashboardController  extends RestrictedBaseController{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private long getRequestCounts(String host, int port, String jmxAttribute) {
 		
-		logger.debug("Create an RMI connector client and connect it to the JMX connector server");
+		policyLogger.debug("Create an RMI connector client and connect it to the JMX connector server");
 		HashMap map = new HashMap();
 		map = null;
 		JMXConnector jmxConnection;
@@ -288,23 +289,23 @@ public class DashboardController  extends RestrictedBaseController{
 			jmxConnection.connect();
 			Object o = jmxConnection.getMBeanServerConnection().getAttribute(new ObjectName("PdpRest:type=PdpRestMonitor"), jmxAttribute);
 			jmxConnection.close();
-			logger.debug("pdpEvaluationNA value retreived: " + o);
+			policyLogger.debug("pdpEvaluationNA value retreived: " + o);
 			return (long) o;
 		} catch (MalformedURLException e) {
-			logger.error("MalformedURLException for JMX connection");
+			policyLogger.error("MalformedURLException for JMX connection" , e);
 		} catch (IOException e) {
-			logger.error("Error in reteriving" + jmxAttribute + " from JMX connection");
+			policyLogger.error("Error in reteriving" + jmxAttribute + " from JMX connection", e);
 		} catch (AttributeNotFoundException e) {		
-			logger.error("AttributeNotFoundException  " + jmxAttribute +  " for JMX connection");
+			policyLogger.error("AttributeNotFoundException  " + jmxAttribute +  " for JMX connection", e);
 		} catch (InstanceNotFoundException e) {
-			logger.error("InstanceNotFoundException " + host + " for JMX connection");
+			policyLogger.error("InstanceNotFoundException " + host + " for JMX connection", e);
 		} catch (MalformedObjectNameException e) {
-			logger.error("MalformedObjectNameException for JMX connection");
+			policyLogger.error("MalformedObjectNameException for JMX connection", e);
 		} catch (MBeanException e) {
-			logger.error("MBeanException for JMX connection");
-			logger.error("Exception Occured"+e);
+			policyLogger.error("MBeanException for JMX connection");
+			policyLogger.error("Exception Occured"+e);
 		} catch (ReflectionException e) {
-			logger.error("ReflectionException for JMX connection");
+			policyLogger.error("ReflectionException for JMX connection", e);
 		}
 		
 		return -1;
@@ -332,7 +333,7 @@ public class DashboardController  extends RestrictedBaseController{
 				try{
 					policyMap.put(policy.getPolicyId().replace(" ", ""), policy.getId());
 				}catch(Exception e){
-					logger.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID+policy.getName() +e);
+					policyLogger.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID+policy.getName() +e);
 				}
 			}
 			
@@ -386,7 +387,7 @@ public class DashboardController  extends RestrictedBaseController{
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Object getPolicy(String host, int port, String jmxAttribute){
-		logger.debug("Create an RMI connector client and connect it to the JMX connector server for Policy: " + host);
+		policyLogger.debug("Create an RMI connector client and connect it to the JMX connector server for Policy: " + host);
 		HashMap map = new HashMap();
 		map = null;
 		JMXConnector jmxConnection;
@@ -395,23 +396,23 @@ public class DashboardController  extends RestrictedBaseController{
 			jmxConnection.connect();
 			Object o = jmxConnection.getMBeanServerConnection().getAttribute(new ObjectName("PdpRest:type=PdpRestMonitor"), "policyMap");
 			jmxConnection.close();
-			logger.debug("policyMap value retreived: " + o);
+			policyLogger.debug("policyMap value retreived: " + o);
 			return  o;
 		} catch (MalformedURLException e) {
-			logger.error("MalformedURLException for JMX connection");
+			policyLogger.error("MalformedURLException for JMX connection");
 		} catch (IOException e) {
-			logger.error("AttributeNotFoundException for policyMap" );
+			policyLogger.error("AttributeNotFoundException for policyMap" );
 		} catch (AttributeNotFoundException e) {		
-			logger.error("AttributeNotFoundException for JMX connection");
+			policyLogger.error("AttributeNotFoundException for JMX connection");
 		} catch (InstanceNotFoundException e) {
-			logger.error("InstanceNotFoundException " + host + " for JMX connection");
+			policyLogger.error("InstanceNotFoundException " + host + " for JMX connection");
 		} catch (MalformedObjectNameException e) {
-			logger.error("MalformedObjectNameException for JMX connection");
+			policyLogger.error("MalformedObjectNameException for JMX connection");
 		} catch (MBeanException e) {
-			logger.error("MBeanException for JMX connection");
-			logger.error("Exception Occured"+e);
+			policyLogger.error("MBeanException for JMX connection");
+			policyLogger.error("Exception Occured"+e);
 		} catch (ReflectionException e) {
-			logger.error("ReflectionException for JMX connection");
+			policyLogger.error("ReflectionException for JMX connection");
 		}
 		
 		return null;

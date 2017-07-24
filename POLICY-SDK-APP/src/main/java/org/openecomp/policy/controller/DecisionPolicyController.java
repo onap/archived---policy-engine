@@ -21,6 +21,7 @@
 package org.openecomp.policy.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -39,7 +40,6 @@ import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
@@ -58,7 +58,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 @Controller
 @RequestMapping("/")
 public class DecisionPolicyController extends RestrictedBaseController {
-	private static final Logger logger = FlexLogger.getLogger(DecisionPolicyController.class);
+	private static final Logger policyLogger = FlexLogger.getLogger(DecisionPolicyController.class);
 	
 	public DecisionPolicyController(){}
 
@@ -88,6 +88,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
+				policyLogger.info("General error", e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);
@@ -141,23 +142,28 @@ public class DecisionPolicyController extends RestrictedBaseController {
 						}
 					}
 					// Setting rainy day attributes to the parameters object if they exist 
+					boolean rainy = false;
 					if(!attributeList.isEmpty()) {
 						for(int i=0; i<attributeList.size() ; i++){
 							Map<String, String> map = (Map<String,String>)attributeList.get(i);
 							if(map.get("key").equals("WorkStep")){
 								rainydayParams.setWorkstep(map.get("value"));
+								rainy=true;
 							}else if(map.get("key").equals("BB_ID")){
 								rainydayParams.setBbid(map.get("value"));
+								rainy=true;
 							}else if(map.get("key").equals("ServiceType")){
 								rainydayParams.setServiceType(map.get("value"));
+								rainy=true;
 							}else if(map.get("key").equals("VNFType")){
 								rainydayParams.setVnfType(map.get("value"));
+								rainy=true;
 							}
 						}	
 					}
-					
-					policyAdapter.setRuleProvider("Rainy_Day");
-
+					if(rainy){
+						policyAdapter.setRuleProvider("Rainy_Day");
+					}
 				}
 
 				List<Object> ruleList = policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
@@ -165,7 +171,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 				for (Object object : ruleList) {
 					if (object instanceof VariableDefinitionType) {
 						VariableDefinitionType variableDefinitionType = (VariableDefinitionType) object;
-						Map<String, String> settings = new HashMap<String, String>();
+						Map<String, String> settings = new HashMap<>();
 						settings.put("key", variableDefinitionType.getVariableId());
 						JAXBElement<AttributeValueType> attributeValueTypeElement = (JAXBElement<AttributeValueType>) variableDefinitionType.getExpression();
 						if (attributeValueTypeElement != null) {
@@ -201,6 +207,10 @@ public class DecisionPolicyController extends RestrictedBaseController {
 											yamlParams.setActor(map.get("value"));
 										}else if(map.get("key").equals("recipe")){
 											yamlParams.setRecipe(map.get("value"));
+										}else if(map.get("key").equals("targets")){
+											yamlParams.setTargets(Arrays.asList(map.get("value").split("\\|")));
+										}else if(map.get("key").equals("clname")){
+											yamlParams.setClname(map.get("value"));
 										}
 									}
 									ApplyType apply = ((ApplyType)((ApplyType)decisionApply.getExpression().get(0).getValue()).getExpression().get(0).getValue());
@@ -215,9 +225,11 @@ public class DecisionPolicyController extends RestrictedBaseController {
 										}
 										yamlParams.setBlackList(blackList);
 									}else{
-										yamlParams.setLimit(((AttributeValueType)((ApplyType)decisionApply.getExpression().get(1).getValue()).getExpression().get(1).getValue()).getContent().get(0).toString());
-										String timeWindow = ((AttributeDesignatorType)((ApplyType)((ApplyType)decisionApply.getExpression().get(1).getValue()).getExpression().get(0).getValue()).getExpression().get(0).getValue()).getIssuer();
-										yamlParams.setTimeWindow(timeWindow.substring(timeWindow.lastIndexOf(":")+1));
+										ApplyType timeWindowSection = (ApplyType)((ApplyType)decisionApply.getExpression().get(0).getValue()).getExpression().get(1).getValue();
+										yamlParams.setLimit(((AttributeValueType)timeWindowSection.getExpression().get(1).getValue()).getContent().get(0).toString());
+										String timeWindow = ((AttributeDesignatorType)((ApplyType)timeWindowSection.getExpression().get(0).getValue()).getExpression().get(0).getValue()).getIssuer();
+										yamlParams.setTimeUnits(timeWindow.substring(timeWindow.lastIndexOf(':')+1));
+										yamlParams.setTimeWindow(timeWindow.substring(timeWindow.indexOf(":tw:")+4,timeWindow.lastIndexOf(':')));
 									}
 									policyAdapter.setYamlparams(yamlParams);
 									policyAdapter.setAttributes(new ArrayList<Object>());
@@ -228,7 +240,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 								prePopulateDecisionCompoundRuleAlgorithm(index, decisionApply);
 								policyAdapter.setRuleAlgorithmschoices(ruleAlgorithmList);
 							}
-						} else if (((RuleType) object).getEffect().equals(EffectType.PERMIT)) {
+						} else if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals("Rainy_Day")&& ((RuleType) object).getEffect().equals(EffectType.PERMIT)) {
 							
 							TargetType ruleTarget = ((RuleType) object).getTarget();
 							AdviceExpressionsType adviceExpression = ((RuleType) object).getAdviceExpressions();
@@ -303,8 +315,8 @@ public class DecisionPolicyController extends RestrictedBaseController {
 		List<JAXBElement<?>> jaxbDecisionTypes = decisionApply.getExpression();
 		for (JAXBElement<?> jaxbElement : jaxbDecisionTypes) {
 			// If There is Attribute Value under Decision Type that means we came to the final child
-			if (logger.isDebugEnabled()) {
-				logger.debug("Prepopulating rule algoirthm: " + index);
+			if (policyLogger.isDebugEnabled()) {
+				policyLogger.debug("Prepopulating rule algoirthm: " + index);
 			}
 			// Check to see if Attribute Value exists, if yes then it is not a compound rule
 			if(jaxbElement.getValue() instanceof AttributeValueType) {
@@ -321,8 +333,8 @@ public class DecisionPolicyController extends RestrictedBaseController {
 				index = prePopulateDecisionCompoundRuleAlgorithm(index, innerDecisionApply);
 			}
 			// Populate combo box
-			if (logger.isDebugEnabled()) {
-				logger.debug("Prepopulating Compound rule algorithm: " + index);
+			if (policyLogger.isDebugEnabled()) {
+				policyLogger.debug("Prepopulating Compound rule algorithm: " + index);
 			}
 			Map<String, String> rule = new HashMap<>();
 			for (String key : PolicyController.getDropDownMap().keySet()) {

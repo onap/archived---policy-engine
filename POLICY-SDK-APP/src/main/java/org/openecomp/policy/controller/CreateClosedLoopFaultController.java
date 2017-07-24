@@ -61,7 +61,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 @RequestMapping("/")
 public class CreateClosedLoopFaultController extends RestrictedBaseController{
 
-	private static final Logger LOGGER	= FlexLogger.getLogger(CreateClosedLoopFaultController.class);
+	private static final Logger policyLogger	= FlexLogger.getLogger(CreateClosedLoopFaultController.class);
 	
 	protected PolicyRestAdapter policyAdapter = null;
 	
@@ -75,86 +75,91 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 	
 	public CreateClosedLoopFaultController(){}
 	
-	public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData, JsonNode root) throws Exception{
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		TrapDatas trapDatas = mapper.readValue(root.get("trapData").toString(), TrapDatas.class);
-		TrapDatas faultDatas = mapper.readValue(root.get("faultData").toString(), TrapDatas.class);
-		ClosedLoopGridJSONData policyJsonData = mapper.readValue(root.get("policyData").get("policy").toString(), ClosedLoopGridJSONData.class);
-		ClosedLoopFaultBody jsonBody = mapper.readValue(root.get("policyData").get("policy").get("jsonBodyData").toString(), ClosedLoopFaultBody.class);
-		
-		ArrayList<Object> trapSignatureDatas = new ArrayList<>();
-		if(trapDatas.getTrap1() != null){
-			trapSignatureDatas.add(trapDatas);
-		}
-		ArrayList<Object> faultSignatureDatas = new ArrayList<>();
-		if(faultDatas.getTrap1() != null){
-			faultSignatureDatas.add(faultDatas);
-		}
-		
-		String resultBody = "";
-		if(!policyJsonData.getConnecttriggerSignatures().isEmpty()){
-			resultBody = resultBody + "(";
-			for(int i = policyJsonData.getConnecttriggerSignatures().size()-1; i>=0 ; i--){
-				String connectBody = connectTriggerSignature(i, policyJsonData.getConnecttriggerSignatures(), trapSignatureDatas.get(0));
-				resultBody = resultBody  + connectBody;
+	public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData, JsonNode root){
+		try{
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			TrapDatas trapDatas = mapper.readValue(root.get("trapData").toString(), TrapDatas.class);
+			TrapDatas faultDatas = mapper.readValue(root.get("faultData").toString(), TrapDatas.class);
+			ClosedLoopGridJSONData policyJsonData = mapper.readValue(root.get("policyData").get("policy").toString(), ClosedLoopGridJSONData.class);
+			ClosedLoopFaultBody jsonBody = mapper.readValue(root.get("policyData").get("policy").get("jsonBodyData").toString(), ClosedLoopFaultBody.class);
+
+			ArrayList<Object> trapSignatureDatas = new ArrayList<>();
+			if(trapDatas.getTrap1() != null){
+				trapSignatureDatas.add(trapDatas);
 			}
-			resultBody = resultBody + ")";
-		}else{
-			if(!trapSignatureDatas.isEmpty()){
-				resultBody = callTrap("nill", trapSignatureDatas.get(0));
+			ArrayList<Object> faultSignatureDatas = new ArrayList<>();
+			if(faultDatas.getTrap1() != null){
+				faultSignatureDatas.add(faultDatas);
 			}
+
+			String resultBody = "";
+			if(!policyJsonData.getConnecttriggerSignatures().isEmpty()){
+				resultBody = resultBody + "(";
+				for(int i = policyJsonData.getConnecttriggerSignatures().size()-1; i>=0 ; i--){
+					String connectBody = connectTriggerSignature(i, policyJsonData.getConnecttriggerSignatures(), trapSignatureDatas.get(0));
+					resultBody = resultBody  + connectBody;
+				}
+				resultBody = resultBody + ")";
+			}else{
+				if(!trapSignatureDatas.isEmpty()){
+					resultBody = callTrap("nill", trapSignatureDatas.get(0));
+				}
+			}
+			ClosedLoopSignatures triggerSignatures = new ClosedLoopSignatures();
+			triggerSignatures.setSignatures(resultBody);
+			if(policyData.getClearTimeOut() != null){
+				triggerSignatures.setTimeWindow(Integer.parseInt(policyData.getClearTimeOut()));	
+				triggerSignatures.setTrapMaxAge(Integer.parseInt(policyData.getTrapMaxAge()));
+				ClosedLoopFaultTriggerUISignatures uiTriggerSignatures = new ClosedLoopFaultTriggerUISignatures();
+				if(!trapSignatureDatas.isEmpty()){
+					uiTriggerSignatures.setSignatures(getUITriggerSignature("Trap", trapSignatureDatas.get(0)));
+					if(!policyJsonData.getConnecttriggerSignatures().isEmpty()){
+						uiTriggerSignatures.setConnectSignatures(getUIConnectTraps(policyJsonData.getConnecttriggerSignatures()));
+					}				
+				}			
+				jsonBody.setTriggerSignaturesUsedForUI(uiTriggerSignatures);
+				jsonBody.setTriggerTimeWindowUsedForUI(Integer.parseInt(policyData.getClearTimeOut()));
+				jsonBody.setTrapMaxAgeUsedForUI(Integer.parseInt(policyData.getTrapMaxAge()));
+			}
+
+			jsonBody.setTriggerSignatures(triggerSignatures);
+			String faultBody = "";
+			if(!policyJsonData.getConnectVerificationSignatures().isEmpty()){
+				faultBody = faultBody + "(";
+				for(int i = policyJsonData.getConnectVerificationSignatures().size()-1; i>=0 ; i--){
+					String connectBody = connectTriggerSignature(i, policyJsonData.getConnectVerificationSignatures(), faultSignatureDatas.get(0));
+					faultBody = faultBody  + connectBody;
+				}
+				faultBody = faultBody + ")";
+			}else{
+				if(!faultSignatureDatas.isEmpty()){
+					faultBody = callTrap("nill", faultSignatureDatas.get(0));
+				}
+			}
+			ClosedLoopSignatures faultSignatures = new ClosedLoopSignatures();
+			faultSignatures.setSignatures(faultBody);
+			if(policyData.getVerificationclearTimeOut() != null){
+				faultSignatures.setTimeWindow(Integer.parseInt(policyData.getVerificationclearTimeOut()));
+				ClosedLoopFaultTriggerUISignatures uifaultSignatures = new ClosedLoopFaultTriggerUISignatures();
+				if(!faultSignatureDatas.isEmpty()){
+					uifaultSignatures.setSignatures(getUITriggerSignature("Fault", faultSignatureDatas.get(0)));
+					if(!policyJsonData.getConnectVerificationSignatures().isEmpty()){
+						uifaultSignatures.setConnectSignatures(getUIConnectTraps(policyJsonData.getConnectVerificationSignatures()));
+					}		
+				}
+
+				jsonBody.setVerificationSignaturesUsedForUI(uifaultSignatures);
+				jsonBody.setVerfificationTimeWindowUsedForUI(Integer.parseInt(policyData.getVerificationclearTimeOut()));
+			}		
+			jsonBody.setVerificationSignatures(faultSignatures);
+			ObjectWriter om = new ObjectMapper().writer();
+			String json = om.writeValueAsString(jsonBody);
+			policyData.setJsonBody(json);
+
+		}catch(Exception e){
+			policyLogger.error("Exception Occured while setting data to Adapter" , e);
 		}
-		ClosedLoopSignatures triggerSignatures = new ClosedLoopSignatures();
-		triggerSignatures.setSignatures(resultBody);
-		if(policyData.getClearTimeOut() != null){
-			triggerSignatures.setTimeWindow(Integer.parseInt(policyData.getClearTimeOut()));	
-			triggerSignatures.setTrapMaxAge(Integer.parseInt(policyData.getTrapMaxAge()));
-			ClosedLoopFaultTriggerUISignatures uiTriggerSignatures = new ClosedLoopFaultTriggerUISignatures();
-			if(!trapSignatureDatas.isEmpty()){
-				uiTriggerSignatures.setSignatures(getUITriggerSignature("Trap", trapSignatureDatas.get(0)));
-				if(!policyJsonData.getConnecttriggerSignatures().isEmpty()){
-					uiTriggerSignatures.setConnectSignatures(getUIConnectTraps(policyJsonData.getConnecttriggerSignatures()));
-				}				
-			}			
-			jsonBody.setTriggerSignaturesUsedForUI(uiTriggerSignatures);
-			jsonBody.setTriggerTimeWindowUsedForUI(Integer.parseInt(policyData.getClearTimeOut()));
-			jsonBody.setTrapMaxAgeUsedForUI(Integer.parseInt(policyData.getTrapMaxAge()));
-		}
-		
-		jsonBody.setTriggerSignatures(triggerSignatures);
-		String faultBody = "";
-		if(!policyJsonData.getConnectVerificationSignatures().isEmpty()){
-			faultBody = faultBody + "(";
-			for(int i = policyJsonData.getConnectVerificationSignatures().size()-1; i>=0 ; i--){
-				String connectBody = connectTriggerSignature(i, policyJsonData.getConnectVerificationSignatures(), faultSignatureDatas.get(0));
-				faultBody = faultBody  + connectBody;
-			}
-			faultBody = faultBody + ")";
-		}else{
-			if(!faultSignatureDatas.isEmpty()){
-				faultBody = callTrap("nill", faultSignatureDatas.get(0));
-			}
-		}
-		ClosedLoopSignatures faultSignatures = new ClosedLoopSignatures();
-		faultSignatures.setSignatures(faultBody);
-		if(policyData.getVerificationclearTimeOut() != null){
-			faultSignatures.setTimeWindow(Integer.parseInt(policyData.getVerificationclearTimeOut()));
-			ClosedLoopFaultTriggerUISignatures uifaultSignatures = new ClosedLoopFaultTriggerUISignatures();
-			if(!faultSignatureDatas.isEmpty()){
-				uifaultSignatures.setSignatures(getUITriggerSignature("Fault", faultSignatureDatas.get(0)));
-				if(!policyJsonData.getConnectVerificationSignatures().isEmpty()){
-					uifaultSignatures.setConnectSignatures(getUIConnectTraps(policyJsonData.getConnectVerificationSignatures()));
-				}		
-			}
-			
-			jsonBody.setVerificationSignaturesUsedForUI(uifaultSignatures);
-			jsonBody.setVerfificationTimeWindowUsedForUI(Integer.parseInt(policyData.getVerificationclearTimeOut()));
-		}		
-		jsonBody.setVerificationSignatures(faultSignatures);
-		ObjectWriter om = new ObjectMapper().writer();
-		String json = om.writeValueAsString(jsonBody);
-		policyData.setJsonBody(json);
 		return policyData;
 	}
 	
@@ -170,6 +175,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 			}
 			resultBody = resultBody + "(" + notBox;
 		}catch(NullPointerException e){
+			policyLogger.info("General error" , e);
 			resultBody = resultBody + "(";
 		}
 		String connectTrap1 = connectTraps.get("connectTrap1");
@@ -194,11 +200,13 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 			String trapCount1 = connectTraps.get("trapCount1");
 			resultBody = resultBody + ", Time = " + trapCount1 + ")";
 		}catch(NullPointerException e){
+			policyLogger.info("General error" , e);
 		}
 		try{
 			String operatorBox = connectTraps.get("operatorBox");
 			resultBody = resultBody + operatorBox +"(";
 		}catch (NullPointerException e){
+			policyLogger.info("General error" , e);
 		}
 		try{
 			String connectTrap2 = connectTraps.get("connectTrap2");
@@ -220,11 +228,13 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 				}
 			}
 		}catch(NullPointerException e){
+			policyLogger.info("General error" , e);
 		}
 		try{
 			String trapCount2 = connectTraps.get("trapCount2");
 			resultBody = resultBody + ", Time = " + trapCount2 + ")";
 		}catch(NullPointerException e){
+			policyLogger.info("General error" , e);
 		}
 		return resultBody;
 	}
@@ -603,7 +613,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 			}
 
 		} catch (Exception e) {
-			LOGGER.error("Exception Occured"+e);
+			policyLogger.error("Exception Occured"+e);
 		}
 
 		return null;	

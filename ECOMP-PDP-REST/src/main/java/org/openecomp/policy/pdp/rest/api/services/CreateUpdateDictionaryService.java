@@ -34,7 +34,7 @@ import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
 
 public class CreateUpdateDictionaryService {
-    private static Logger LOGGER = FlexLogger.getLogger(CreateUpdateDictionaryService.class.getName());
+    private static final Logger LOGGER = FlexLogger.getLogger(CreateUpdateDictionaryService.class.getName());
     
     private String dictionaryResult = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -54,7 +54,7 @@ public class CreateUpdateDictionaryService {
                     requestUUID = UUID.fromString(requestID);
                 } catch (IllegalArgumentException e) {
                     requestUUID = UUID.randomUUID();
-                    LOGGER.info("Generated Random UUID: " + requestUUID.toString());
+                    LOGGER.info("Generated Random UUID: " + requestUUID.toString(),e);
                 }
             }else{
                 requestUUID = UUID.randomUUID();
@@ -110,13 +110,12 @@ public class CreateUpdateDictionaryService {
             json = PolicyApiUtils.stringToJsonObject(dictionaryParameters.getDictionaryJson());
         } catch(JsonException| IllegalStateException e){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper Dictionary JSON object : " + dictionaryParameters.getDictionaryJson();
-            LOGGER.error(message);
+            LOGGER.error(message, e);
             return message;
         }
         String dictionaryFields = json.toString();
         PAPServices papServices = new PAPServices();
-        String result = (String) papServices.callPAP(new ByteArrayInputStream(dictionaryFields.getBytes()), new String[] {"operation="+operation, "apiflag=api", "dictionaryType="+dictionaryParameters.getDictionary()}, dictionaryParameters.getRequestID(), "dictionaryItem");
-        return result;
+        return (String) papServices.callPAP(new ByteArrayInputStream(dictionaryFields.getBytes()), new String[] {"operation="+operation, "apiflag=api", "dictionaryType="+dictionaryParameters.getDictionary()}, dictionaryParameters.getRequestID(), "dictionaryItem");
     }
 
     private boolean getValidation() {
@@ -136,11 +135,9 @@ public class CreateUpdateDictionaryService {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Dictionary JSON given.";
             return false;
         }
-        if (updateFlag && dictionaryParameters.getDictionary().equalsIgnoreCase("MicroServiceDictionary")){
-        	if (!dictionaryParameters.getDictionaryJson().contains("initialFields")){
-        		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Mising the required field initialFields.";
-        		return false;
-        	}
+        if (updateFlag && "MicroServiceDictionary".equalsIgnoreCase(dictionaryParameters.getDictionary())&& !dictionaryParameters.getDictionaryJson().contains("initialFields")){
+        	message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Mising the required field initialFields.";
+        	return false;
         }
         return true;
     }

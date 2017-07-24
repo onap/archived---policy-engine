@@ -52,14 +52,14 @@ import com.att.research.xacml.util.XACMLProperties;
 
 /**
  * PIP Engine for Implementing {@link com.att.research.xacml.std.pip.engines.ConfigurableEngine} interface to provide
- * attribute retrieval from AT&T AAF interface.  
+ * attribute retrieval from AAF interface.  
  * 
  * @version $Revision$
  */
 public class AAFEngine extends StdConfigurableEngine {
 	
-	public static final String DEFAULT_DESCRIPTION		= "PIP for authenticating aaf attributes using the AT&T AAF REST interface";
-	public static final String DEFAULT_ISSUER			= "att-aaf";
+	public static final String DEFAULT_DESCRIPTION		= "PIP for authenticating aaf attributes using the AAF REST interface";
+	public static final String DEFAULT_ISSUER			= "aaf";
 	
 	private static final String SUCCESS = "Success";
 	

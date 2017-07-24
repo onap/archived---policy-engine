@@ -379,13 +379,19 @@ public class PolicyCreation extends AbstractPolicyCreation{
 							&& policyData.getYamlparams()!=null){
 						attributeMap.put("actor", policyData.getYamlparams().getActor());
 						attributeMap.put("recipe", policyData.getYamlparams().getRecipe());
+						attributeMap.put("clname", policyData.getYamlparams().getClname());
 						attributeMap.put("limit", policyData.getYamlparams().getLimit());
 						attributeMap.put("timeWindow", policyData.getYamlparams().getTimeWindow());
+						attributeMap.put("timeUnits", policyData.getYamlparams().getTimeUnits());
 						attributeMap.put("guardActiveStart", policyData.getYamlparams().getGuardActiveStart());
 						attributeMap.put("guardActiveEnd", policyData.getYamlparams().getGuardActiveEnd());
 						if(policyData.getYamlparams().getBlackList()!=null){
 							String blackList = StringUtils.join(policyData.getYamlparams().getBlackList(), ",");
 							attributeMap.put("blackList", blackList);
+						}
+						if(policyData.getYamlparams().getTargets()!=null){
+							String targets = StringUtils.join(policyData.getYamlparams().getTargets(),",");
+							attributeMap.put("targets", targets);
 						}
 					}
 					if(policyData.getRuleProvider()!=null && policyData.getRuleProvider().equals(DecisionPolicy.RAINY_DAY)){
@@ -513,8 +519,11 @@ public class PolicyCreation extends AbstractPolicyCreation{
 		}
 		catch (Exception e){
 			LOGGER.error("Exception Occured : "+e);
+			body = "error";
+			response.addHeader("error", e.getMessage());	
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<String>(body, status);
+		return new ResponseEntity<>(body, status);
 	}
 
 	@ExceptionHandler({ HttpMessageNotReadableException.class })

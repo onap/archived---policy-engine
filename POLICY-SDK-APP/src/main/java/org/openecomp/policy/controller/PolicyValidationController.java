@@ -401,10 +401,8 @@ public class PolicyValidationController extends RestrictedBaseController {
 									int endNum = Integer.parseInt(tempString[1]);
 									String returnString = "Invalid Range:" + rMap.getKey() + " must be between " 
 											+ startNum + " - "  + endNum + ",";
-									if (isInteger(value.replace("\"", ""))){
+									if (PolicyUtils.isInteger(value.replace("\"", ""))){
 										int result = Integer.parseInt(value.replace("\"", ""));
-
-
 										if (result < startNum || result > endNum){
 											responseString.append(returnString);									
 											valid = false;
@@ -492,12 +490,19 @@ public class PolicyValidationController extends RestrictedBaseController {
 							if(policyData.getYamlparams().getLimit()==null){
 								responseString.append(" Guard Params <b>Limit</b> is Required " + "<br>");
 								valid = false;
-							}else if(!isInteger(policyData.getYamlparams().getLimit())){
+							}else if(!PolicyUtils.isInteger(policyData.getYamlparams().getLimit())){
 								responseString.append(" Guard Params <b>Limit</b> Should be Integer " + "<br>");
 								valid = false;
 							}
 							if(policyData.getYamlparams().getTimeWindow()==null){
 								responseString.append("Guard Params <b>Time Window</b> is Required" + "<br>");
+								valid = false;
+							}else if(!PolicyUtils.isInteger(policyData.getYamlparams().getTimeWindow())){
+								responseString.append(" Guard Params <b>Time Window</b> Should be Integer " + "<br>");
+								valid = false;
+							}
+							if(policyData.getYamlparams().getTimeUnits()==null){
+								responseString.append("Guard Params <b>Time Units</b> is Required" + "<br>");
 								valid = false;
 							}
 						}else if("GUARD_BL_YAML".equals(policyData.getRuleProvider())){
@@ -621,15 +626,6 @@ public class PolicyValidationController extends RestrictedBaseController {
 			out.write(e.getMessage());
 		}
 		return null;
-	}
-
-	protected boolean isInteger(String number) {
-		try{
-			Integer.parseInt(number);
-		}catch(NumberFormatException e){
-			return false;
-		}
-		return true;
 	}
 
 	protected String  emptyValidator(String field){

@@ -270,13 +270,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 
 		// CreateUpdatePolicy ResourceName  
 		createUpdateResourceName = properties.getProperty("createUpdatePolicy.impl.className", CREATE_UPDATE_POLICY_SERVICE);
-		try{
-			Class<?> createUpdateclass = Class.forName(createUpdateResourceName);
-			createUpdatePolicyConstructor = createUpdateclass.getConstructor(PolicyParameters.class, String.class, boolean.class);
-		}catch(Exception e){
-			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, "createUpdatePolicy.impl.className", "xacml.pdp.init");
-			throw new ServletException("Could not find the Class name : " +createUpdateResourceName + "\n" +e.getMessage());
-		}
+		setCreateUpdatePolicyConstructor(createUpdateResourceName);
 
 		// Create an IntegrityMonitor
 		try {
@@ -1158,5 +1152,15 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 
 	public static Constructor<?> getCreateUpdatePolicyConstructor(){
 		return createUpdatePolicyConstructor;
+	}
+	
+	private static void setCreateUpdatePolicyConstructor(String createUpdateResourceName) throws ServletException{
+		try{
+			Class<?> createUpdateclass = Class.forName(createUpdateResourceName);
+			createUpdatePolicyConstructor = createUpdateclass.getConstructor(PolicyParameters.class, String.class, boolean.class);
+		}catch(Exception e){
+			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, "createUpdatePolicy.impl.className", "xacml.pdp.init");
+			throw new ServletException("Could not find the Class name : " +createUpdateResourceName + "\n" +e.getMessage());
+		}
 	}
 }

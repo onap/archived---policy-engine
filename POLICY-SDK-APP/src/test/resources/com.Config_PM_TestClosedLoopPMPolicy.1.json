@@ -1,0 +1,1 @@
+{"serviceTypePolicyName": "Registration Failure(Trinity)","vUSP":true,"attributes":{"PtileLimit":"11","Threshold":"12","Window":"13","Training":"14","FractionSamplePerDay":"15","ConsecutiveIntervalOnset":"11","RetryTimer":"12","ConsecutiveIntervalAbatement":"11","OnsetMessage":"11","AbatementMessage":"12","PolicyName":"13"},"geoLink":"TEST","emailAddress":"test@test.com"}

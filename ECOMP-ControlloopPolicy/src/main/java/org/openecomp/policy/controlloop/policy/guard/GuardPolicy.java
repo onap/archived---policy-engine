@@ -29,8 +29,7 @@ public class GuardPolicy {
 	private String id = UUID.randomUUID().toString();
 	private String name;
 	private String description;
-	private String actor;
-	private String recipe;
+	private MatchParameters match_parameters;
 	private LinkedList<Constraint> limit_constraints;
 	
 	public GuardPolicy() {
@@ -61,20 +60,12 @@ public class GuardPolicy {
 		this.description = description;
 	}
 
-	public String getActor() {
-		return actor;
+	public MatchParameters getMatch_parameters() {
+		return match_parameters;
 	}
 
-	public void setActor(String actor) {
-		this.actor = actor;
-	}
-
-	public String getRecipe() {
-		return recipe;
-	}
-
-	public void setRecipe(String recipe) {
-		this.recipe = recipe;
+	public void setMatch_parameters(MatchParameters match_parameters) {
+		this.match_parameters = match_parameters;
 	}
 
 	public LinkedList<Constraint> getLimit_constraints() {
@@ -89,32 +80,31 @@ public class GuardPolicy {
 		this.id = id;
 	}
 	
-	public GuardPolicy(String name, String actor, String recipe) {
+	public GuardPolicy(String name, MatchParameters matchParameters) {
 		this.name = name;
-		this.actor = actor;
-		this.recipe = recipe;
+		this.match_parameters = matchParameters;
 	}
 	
-	public GuardPolicy(String id, String name, String description, String actor, String recipe) {
-		this(name, actor, recipe);
+	public GuardPolicy(String id, String name, String description, MatchParameters matchParameters) {
+		this(name, matchParameters);
 		this.id = id;
 		this.description = description;
 	}
 	
-	public GuardPolicy(String name, String actor, String recipe, List<Constraint> limit_constraints) {
-		this(name, actor, recipe);
+	public GuardPolicy(String name, MatchParameters matchParameters, List<Constraint> limitConstraints) {
+		this(name, matchParameters);
 		if (limit_constraints != null) {
-			this.limit_constraints = (LinkedList<Constraint>) Collections.unmodifiableList(limit_constraints);
+			this.limit_constraints = (LinkedList<Constraint>) Collections.unmodifiableList(limitConstraints);
 		}
 	}
 	
-	public GuardPolicy(String name, String description, String actor, String recipe, List<Constraint> limit_constraints) {
-		this(name, actor, recipe, limit_constraints);
+	public GuardPolicy(String name, String description, MatchParameters matchParameters, List<Constraint> limitConstraints) {
+		this(name, matchParameters, limitConstraints);
 		this.description = description;
 	}
 	
-	public GuardPolicy(String id, String name, String description, String actor, String recipe, List<Constraint> limit_constraints) {
-		this(name, description, actor, recipe, limit_constraints);
+	public GuardPolicy(String id, String name, String description, MatchParameters matchParameters, List<Constraint> limitConstraints) {
+		this(name, description, matchParameters, limitConstraints);
 		this.id = id;
 	}
 	
@@ -122,36 +112,31 @@ public class GuardPolicy {
 		this.id = policy.id;
 		this.name = policy.name;
 		this.description = policy.description;
-		this.actor = policy.actor;
-		this.recipe = policy.recipe;
+		this.match_parameters = new MatchParameters(policy.match_parameters);
 		if (policy.limit_constraints != null) {
 			this.limit_constraints = (LinkedList<Constraint>) Collections.unmodifiableList(policy.limit_constraints);
 		}
 	}
 	
 	public boolean isValid() {
-		if(id==null || name ==null|| actor==null|| recipe==null){
-			return false;
-		}
-		return true;
+		return (id==null || name ==null)? false : true;
 	}
 	
 	@Override
 	public String toString() {
-		return "Policy [id=" + id + ", name=" + name + ", description=" + description + ", actor=" + actor + ", recipe="
-				+ recipe + ", limitConstraints=" + limit_constraints + "]";
+		return "Policy [id=" + id + ", name=" + name + ", description=" + description + ", match_parameters=" 
+				+match_parameters + ", limitConstraints=" + limit_constraints + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((actor == null) ? 0 : actor.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((limit_constraints == null) ? 0 : limit_constraints.hashCode());
-		result = prime * result + ((recipe == null) ? 0 : recipe.hashCode());
+		result = prime * result + ((match_parameters == null) ? 0 : match_parameters.hashCode());
 		return result;
 	}
 
@@ -164,11 +149,6 @@ public class GuardPolicy {
 		if (getClass() != obj.getClass())
 			return false;
 		GuardPolicy other = (GuardPolicy) obj;
-		if (actor == null) {
-			if (other.actor != null) 
-				return false;
-		} else if (!actor.equals(other.actor))
-			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
@@ -189,10 +169,10 @@ public class GuardPolicy {
 				return false;
 		} else if (!limit_constraints.equals(other.limit_constraints))
 			return false;
-		if (recipe == null) {
-			if (other.recipe != null)
+		if (match_parameters==null){
+			if(other.match_parameters !=null)
 				return false;
-		} else if (!recipe.equals(other.recipe))
+		} else if(!match_parameters.equals(other.match_parameters))
 			return false;
 		return true;
 	}

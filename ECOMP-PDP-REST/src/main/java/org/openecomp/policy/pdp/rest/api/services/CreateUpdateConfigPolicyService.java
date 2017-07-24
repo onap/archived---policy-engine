@@ -37,7 +37,7 @@ import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
 
 public class CreateUpdateConfigPolicyService {
-    private static Logger LOGGER = FlexLogger.getLogger(CreateUpdateConfigPolicyService.class.getName());
+    private static final Logger LOGGER = FlexLogger.getLogger(CreateUpdateConfigPolicyService.class.getName());
     
     private String response = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -75,15 +75,21 @@ public class CreateUpdateConfigPolicyService {
         Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
         attributes.put(AttributeType.MATCHING, configPolicyAPIRequest.getConfigAttributes());
         policyParameters.setAttributes(attributes);
-        policyParameters.setConfigBodyType(PolicyType.valueOf(configPolicyAPIRequest.getConfigType()));
+        try{
+        	policyParameters.setConfigBodyType(PolicyType.valueOf(configPolicyAPIRequest.getConfigType()));
+        }catch(NullPointerException| IllegalArgumentException e){
+        	String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy ConfigType given.";
+            LOGGER.error(message, e);
+            throw new PolicyException(message);
+        }
         policyParameters.setConfigBody(configPolicyAPIRequest.getBody());
         policyParameters.setRiskLevel(configPolicyAPIRequest.getRiskLevel());
         policyParameters.setRiskType(configPolicyAPIRequest.getRiskType());
         policyParameters.setGuard(Boolean.parseBoolean(configPolicyAPIRequest.getGuard()));
         try {
             policyParameters.setTtlDate(new SimpleDateFormat("dd-MM-yyyy").parse(configPolicyAPIRequest.getTtlDate()));
-        } catch (ParseException e) {
-            LOGGER.warn("Error Parsing date given " + configPolicyAPIRequest.getTtlDate());
+        } catch (NullPointerException| ParseException e) {
+            LOGGER.warn("Error Parsing date given " + configPolicyAPIRequest.getTtlDate(), e);
             policyParameters.setTtlDate(null);
         }
         CreateUpdatePolicyService createUpdatePolicyService = new CreateUpdatePolicyServiceImpl(policyParameters, requestID, updateFlag);

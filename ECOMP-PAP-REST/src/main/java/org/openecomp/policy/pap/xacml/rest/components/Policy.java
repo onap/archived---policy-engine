@@ -105,6 +105,7 @@ public abstract class Policy {
 	public static final String FUNCTION_BOOLEAN_ONE_AND_ONLY = "urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only";
 	public static final String FUNCTION_STRING_EQUAL = "urn:oasis:names:tc:xacml:1.0:function:string-equal";
 	public static final String FUNCTION_STRING_REGEX_MATCH = "org.openecomp.function.regex-match";
+	public static final String FUNCTION_STRING_REGEXP_MATCH = "urn:oasis:names:tc:xacml:1.0:function:string-regexp-match";
 	public static final String FUNCTION_STRING_EQUAL_IGNORE = "urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case";
 	public static final String INTEGER_DATATYPE = "http://www.w3.org/2001/XMLSchema#integer";
 	public static final String BOOLEAN_DATATYPE = "http://www.w3.org/2001/XMLSchema#boolean";

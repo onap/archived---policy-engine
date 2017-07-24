@@ -106,7 +106,7 @@ public class PolicyNotificationMail{
 					 + '\n'  + '\n' + "Moved By : " +entityItem.getModifiedBy() + '\n' + "Moved Time  : " +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + "Policy Notification System  (please don't respond to this email)";
 		}
 		String policyFileName = entityItem.getPolicyName();
-		String checkPolicyName = policyFileName;
+		String checkPolicyName = policyName;
 		if(policyFileName.contains("/")){
 			policyFileName = policyFileName.substring(0, policyFileName.indexOf("/"));
 			policyFileName = policyFileName.replace("/", File.separator);
@@ -119,40 +119,41 @@ public class PolicyNotificationMail{
 		String query = "from WatchPolicyNotificationTable where policyName like'" +policyFileName+"%'";
 		boolean sendFlag = false;
 		List<Object> watchList = policyNotificationDao.getDataByQuery(query);
-		if(watchList != null){
-			if(watchList.isEmpty()){
-				for(Object watch : watchList){
-					WatchPolicyNotificationTable list = (WatchPolicyNotificationTable) watch;
-					String watchPolicyName = list.getPolicyName();
-					if(watchPolicyName.contains("Config_") || watchPolicyName.contains("Action_") || watchPolicyName.contains("Decision_")){
-						if(watchPolicyName.equals(checkPolicyName)){
-							sendFlag = true;
-						}else{
-							sendFlag = false;
-						}
+		if(watchList != null && !watchList.isEmpty()){
+			for(Object watch : watchList){
+				WatchPolicyNotificationTable list = (WatchPolicyNotificationTable) watch;
+				String watchPolicyName = list.getPolicyName();
+				if(watchPolicyName.contains("Config_") || watchPolicyName.contains("Action_") || watchPolicyName.contains("Decision_")){
+					if(watchPolicyName.equals(checkPolicyName)){
+						sendFlag = true;
+					}else{
+						sendFlag = false;
 					}
-					if(sendFlag){
-						AnnotationConfigApplicationContext ctx = null;
-						try {
-							to = list.getLoginIds()+"@"+PolicyController.getSmtpApplicationName();
-							to = to.trim();
-							ctx = new AnnotationConfigApplicationContext();
-							ctx.register(PolicyNotificationMail.class);
-							ctx.refresh();
-							JavaMailSenderImpl mailSender = ctx.getBean(JavaMailSenderImpl.class);
-							MimeMessage mimeMessage = mailSender.createMimeMessage();
-							MimeMessageHelper mailMsg = new MimeMessageHelper(mimeMessage);
-							mailMsg.setFrom(new InternetAddress(from, "Policy Notification System"));
-							mailMsg.setTo(to);
-							mailMsg.setSubject(subject);
-							mailMsg.setText(message);
-							mailSender.send(mimeMessage);
-						} catch (Exception e) {
-							policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Exception Occured in Policy Notification" +e);
-						}finally{
-							if(ctx != null){
-								ctx.close();
-							}
+				}
+				if(sendFlag){
+					AnnotationConfigApplicationContext ctx = null;
+					try {
+						to = list.getLoginIds()+"@"+PolicyController.getSmtpEmailExtension();
+						to = to.trim();
+						ctx = new AnnotationConfigApplicationContext();
+						ctx.register(PolicyNotificationMail.class);
+						ctx.refresh();
+						JavaMailSenderImpl mailSender = ctx.getBean(JavaMailSenderImpl.class);
+						MimeMessage mimeMessage = mailSender.createMimeMessage();
+						MimeMessageHelper mailMsg = new MimeMessageHelper(mimeMessage);
+						mailMsg.setFrom(new InternetAddress(from, "Policy Notification System"));
+						mailMsg.setTo(to);
+						mailMsg.setSubject(subject);
+						mailMsg.setText(message);
+						mailSender.send(mimeMessage);
+						if(mode.equalsIgnoreCase("Rename") || mode.contains("Delete") || mode.contains("Move")){
+							policyNotificationDao.delete(watch);
+						}
+					} catch (Exception e) {
+						policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Exception Occured in Policy Notification" +e);
+					}finally{
+						if(ctx != null){
+							ctx.close();
 						}
 					}
 				}

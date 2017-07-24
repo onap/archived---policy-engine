@@ -21,12 +21,24 @@
 
 package org.openecomp.policy.pap.xacml.rest.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mockito;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
@@ -35,12 +47,7 @@ import org.openecomp.policy.rest.jpa.DCAEuuid;
 import org.openecomp.policy.rest.jpa.MicroServiceLocation;
 import org.openecomp.policy.rest.jpa.MicroServiceModels;
 import org.openecomp.policy.rest.jpa.UserInfo;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 /**
  * The class <code>MicroServiceDictionaryControllerTest</code> contains tests
@@ -50,6 +57,7 @@ import static org.mockito.Mockito.*;
  * where they have write privileges and can execute time-sensitive
  * tasks.
  */
+
 public class MicroServiceDictionaryControllerTest {
 	
 	private static Logger logger = FlexLogger.getLogger(MicroServiceDictionaryControllerTest.class);
@@ -84,8 +92,9 @@ public class MicroServiceDictionaryControllerTest {
         
         doNothing().when(commonClassDao).delete(microServiceModels);
 		
-	
-		controller = new MicroServiceDictionaryController(commonClassDao);
+		MicroServiceDictionaryController.setCommonClassDao(commonClassDao);	
+		
+		controller = new MicroServiceDictionaryController();
        
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         

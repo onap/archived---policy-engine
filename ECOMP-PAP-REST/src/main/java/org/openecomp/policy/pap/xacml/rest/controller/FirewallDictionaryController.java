@@ -23,6 +23,7 @@ package org.openecomp.policy.pap.xacml.rest.controller;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1969,6 +1970,7 @@ public class FirewallDictionaryController {
 				}
 			}else{
 				fwTagPicker.setUserModifiedBy(this.getUserInfo(userId));
+				fwTagPicker.setModifiedDate(new Date());
 				commonClassDao.update(fwTagPicker); 
 			} 
 
@@ -2130,6 +2132,7 @@ public class FirewallDictionaryController {
 				}   
 			}else{
 				fwTag.setUserModifiedBy(this.getUserInfo(userId));
+				fwTag.setModifiedDate(new Date());
 				commonClassDao.update(fwTag); 
 			} 
 

@@ -41,7 +41,7 @@ import com.att.research.xacmlatt.pdp.std.functions.FunctionDefinitionBase;
  * and returning a <code>Boolean</code> for whether the regular expression matches the string representation of the first argument.
  * 
  * 
- * @version $Revision: 0.1 $
+ * @version $Revision: 0.2 $
  * 
  * @param <I> the java class for the data type of the function Input arguments
  */
@@ -107,7 +107,15 @@ public class FunctionDefinitionCustomRegexpMatch<I> extends FunctionDefinitionBa
 		regexpValue = elementValueString.substring(0,(elementValueString.length()- regexpValue.length()));
 		elementValueString = elementValueString.substring(regexpValue.length(),(elementValueString.length()));
 		// 
-		
+		// Supporting multiple values in the element and be able to query them. 
+		if(elementValueString.contains(",")){
+			String[] elements = elementValueString.split(",");
+			for(int i=0; i<elements.length; i++){
+				if(elements[i].trim().matches(regexpValue)) {
+					return ER_TRUE;
+				}
+			}
+		}
 		if (elementValueString.matches(regexpValue)) {
 			return ER_TRUE;
 		} else {

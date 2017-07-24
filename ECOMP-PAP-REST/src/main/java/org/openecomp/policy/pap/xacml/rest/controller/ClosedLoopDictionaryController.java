@@ -21,6 +21,7 @@
 package org.openecomp.policy.pap.xacml.rest.controller;
 
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -325,6 +326,7 @@ public class ClosedLoopDictionaryController{
 				}else{
 					vSCLAction.setUserCreatedBy(this.getUserInfo(userId));
 					vSCLAction.setUserModifiedBy(this.getUserInfo(userId));
+					vSCLAction.setModifiedDate(new Date());
 					commonClassDao.save(vSCLAction);
 				}
 			}else{
@@ -453,6 +455,7 @@ public class ClosedLoopDictionaryController{
 			}else{
 				if(!isFakeUpdate) {
 					vNFType.setUserModifiedBy(this.getUserInfo(userId));
+					vNFType.setModifiedDate(new Date());
 					commonClassDao.update(vNFType); 
 				}
 			} 
@@ -592,6 +595,7 @@ public class ClosedLoopDictionaryController{
 			}else{
 				if(!isFakeUpdate){
 					pEPOptions.setUserModifiedBy(this.getUserInfo(userId));
+					pEPOptions.setModifiedDate(new Date());
 					commonClassDao.update(pEPOptions);
 				}
 			}
@@ -712,6 +716,7 @@ public class ClosedLoopDictionaryController{
 			}else{
 				if(!isFakeUpdate){
 					serviceData.setUserModifiedBy(this.getUserInfo(userId));
+					serviceData.setModifiedDate(new Date());
 					commonClassDao.update(serviceData); 
 				}
 			}
@@ -830,6 +835,7 @@ public class ClosedLoopDictionaryController{
 			}else{
 				if(!isFakeUpdate) {
 					siteData.setUserModifiedBy(this.getUserInfo(userId));
+					siteData.setModifiedDate(new Date());
 					commonClassDao.update(siteData);
 				}
 			}
@@ -949,6 +955,7 @@ public class ClosedLoopDictionaryController{
 			}else{
 				if(!isFakeUpdate){
 					varbindDictionary.setUserModifiedBy(this.getUserInfo(userId));
+					varbindDictionary.setModifiedDate(new Date());
 					commonClassDao.update(varbindDictionary);
 				}
 			}

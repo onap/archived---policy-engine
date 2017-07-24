@@ -21,6 +21,7 @@ package org.openecomp.policy.pdp.rest.api.services;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.json.Json;
@@ -40,7 +41,7 @@ import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
 
 public class GetDecisionService {
-    private static Logger LOGGER = FlexLogger.getLogger(GetDecisionService.class.getName());
+    private static final Logger LOGGER = FlexLogger.getLogger(GetDecisionService.class.getName());
     
     private DecisionResponse decisionResponse = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -60,7 +61,7 @@ public class GetDecisionService {
                     requestUUID = UUID.fromString(requestID);
                 } catch (IllegalArgumentException e) {
                     requestUUID = UUID.randomUUID();
-                    LOGGER.info("Generated Random UUID: " + requestUUID.toString());
+                    LOGGER.info("Generated Random UUID: " + requestUUID.toString(),e);
                 }
             }else{
                 requestUUID = UUID.randomUUID();
@@ -117,24 +118,33 @@ public class GetDecisionService {
 
     private JsonObject getModel() throws PolicyDecisionException{
         JsonArrayBuilder resourceArray = Json.createArrayBuilder();
-        for (String key : decisionAttributes.keySet()) {
-            if (key.isEmpty()) {
+        for (Entry<String,String> key : decisionAttributes.entrySet()) {
+            if (key.getKey().isEmpty()) {
                 String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot have an Empty Key";
                 LOGGER.error(message);
                 throw new PolicyDecisionException(message);
             }
             JsonObjectBuilder resourceBuilder = Json.createObjectBuilder();
-            if (decisionAttributes.get(key).matches("[0-9]+")) {
-                int val = Integer.parseInt(decisionAttributes.get(key));
-                resourceBuilder.add("Value", val);
+            if (key.getValue().matches("[0-9]+")) {
+            	
+            	if ((key.getKey().equals("ErrorCode")) || (key.getKey().equals("WorkStep"))) {
+                    
+            		resourceBuilder.add("Value", key.getValue());
+
+            	} else {
+            		
+                    int val = Integer.parseInt(key.getValue());
+                    resourceBuilder.add("Value", val);
+                    
+            	}
+            	
             } else {
-                resourceBuilder.add("Value", decisionAttributes.get(key));
+                resourceBuilder.add("Value", key.getValue());
             }
-            resourceBuilder.add("AttributeId", key);
+            resourceBuilder.add("AttributeId", key.getKey());
             resourceArray.add(resourceBuilder);
         }
-        JsonObject model = Json
-                .createObjectBuilder()
+        return Json.createObjectBuilder()
                 .add("Request", Json.createObjectBuilder()
                                 .add("AccessSubject", Json.createObjectBuilder()
                                                 .add("Attribute", Json.createObjectBuilder()
@@ -147,7 +157,6 @@ public class GetDecisionService {
                                                                 .add("Value", "DECIDE")
                                                                 .add("AttributeId", "urn:oasis:names:tc:xacml:1.0:action:action-id"))))
                 .build();
-        return model;
     }
 
     private boolean getValidation() {

@@ -31,7 +31,7 @@ import org.openecomp.policy.xacml.std.pap.StdPAPPolicy;
 import org.springframework.http.HttpStatus;
 
 public class DeletePolicyService {
-    private static Logger LOGGER = FlexLogger.getLogger(DeletePolicyService.class.getName());
+    private static final Logger LOGGER = FlexLogger.getLogger(DeletePolicyService.class.getName());
     
     private String deleteResult = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -53,7 +53,7 @@ public class DeletePolicyService {
                     requestUUID = UUID.fromString(requestID);
                 } catch (IllegalArgumentException e) {
                     requestUUID = UUID.randomUUID();
-                    LOGGER.info("Generated Random UUID: " + requestUUID.toString());
+                    LOGGER.info("Generated Random UUID: " + requestUUID.toString(), e);
                 }
             }else{
                 requestUUID = UUID.randomUUID();
@@ -74,7 +74,7 @@ public class DeletePolicyService {
     	if(deleteResult==null){
     		return;
     	}
-        if (deleteResult.contains("BAD REQUEST")||deleteResult.contains("PE300")||deleteResult.contains("not exist")||deleteResult.contains("Invalid policyName")) {
+        if (deleteResult.contains("BAD REQUEST")||deleteResult.contains("PE300")||deleteResult.contains("PE200")||deleteResult.contains("not exist")||deleteResult.contains("Invalid policyName")) {
             status = HttpStatus.BAD_REQUEST;
         } else if (deleteResult.contains("locked down")){
             status = HttpStatus.ACCEPTED;
@@ -174,6 +174,10 @@ public class DeletePolicyService {
 
  private boolean getValidation() {
      // While Validating, extract the required values.
+	 if (deletePolicyParameters.getPolicyName()==null||deletePolicyParameters.getPolicyName().trim().isEmpty()){
+         message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Name given.";
+         return false;
+     }
      if (!deletePolicyParameters.getPolicyName().contains("xml")) {
          if (deletePolicyParameters.getPolicyName() != null
                  && deletePolicyParameters.getPolicyName().contains(".")) {
@@ -187,10 +191,6 @@ public class DeletePolicyService {
          }
      } else {
          policyName = deletePolicyParameters.getPolicyName();
-     }
-     if (deletePolicyParameters.getPolicyName()==null||deletePolicyParameters.getPolicyName().trim().isEmpty()){
-         message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Name given.";
-         return false;
      }
      policyType = deletePolicyParameters.getPolicyType();
      if(policyType== null || policyType.trim().isEmpty()){

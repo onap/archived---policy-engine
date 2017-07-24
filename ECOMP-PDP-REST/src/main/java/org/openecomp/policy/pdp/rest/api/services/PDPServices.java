@@ -70,12 +70,12 @@ import com.att.research.xacml.std.json.JSONResponse;
 import com.att.research.xacml.util.XACMLProperties;
 
 public class PDPServices {
-    private static Logger LOGGER = FlexLogger.getLogger(PDPServices.class.getName());
+    private static final Logger LOGGER = FlexLogger.getLogger(PDPServices.class.getName());
     // Change the default Priority value here. 
     private static final int DEFAULT_PRIORITY = 9999;
     private boolean unique = false;
     private Boolean decide = false;
-    private Matches match = null;
+    private Request rainydayRequest = null;
     
     public Collection<PDPResponse> generateRequest(String jsonString, UUID requestID, boolean unique, boolean decide) throws PolicyException{
         this.unique = unique;
@@ -85,13 +85,17 @@ public class PDPServices {
         // Create Request. We need XACML API here.
         try {
             Request request = JSONRequest.load(jsonString);
+            // Assign a rainy day treatment request to parse the decided treatment
+        	if (jsonString.contains("BB_ID")) {
+        		rainydayRequest = request;
+        	}
             // Call the PDP
-            LOGGER.debug("--- Generating Request: ---\n" + JSONRequest.toString(request));
+            LOGGER.info("--- Generating Request: ---\n" + JSONRequest.toString(request));
             response = callPDP(request, requestID);
         } catch (Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID + e);
             PDPResponse pdpResponse = new PDPResponse();
-            results = new HashSet<PDPResponse>();
+            results = new HashSet<>();
             pdpResponse.setPolicyConfigMessage("Unable to Call PDP. Error with the URL");
             pdpResponse.setPolicyConfigStatus(PolicyConfigStatus.CONFIG_NOT_FOUND);
             pdpResponse.setPolicyResponseStatus(PolicyResponseStatus.NO_ACTION_REQUIRED);
@@ -101,9 +105,9 @@ public class PDPServices {
         if (response != null) {
             results = checkResponse(response);
         } else {
-            LOGGER.debug("No Response Received from PDP");
+            LOGGER.info("No Response Received from PDP");
             PDPResponse pdpResponse = new PDPResponse();
-            results = new HashSet<PDPResponse>();
+            results = new HashSet<>();
             pdpResponse.setPolicyConfigMessage("No Response Received");
             pdpResponse.setPolicyConfigStatus(PolicyConfigStatus.CONFIG_NOT_FOUND);
             pdpResponse.setPolicyResponseStatus(PolicyResponseStatus.NO_ACTION_REQUIRED);
@@ -119,10 +123,19 @@ public class PDPServices {
         Map<Integer, PDPResponse> uniqueResult = new HashMap<>();
         for (Result result : response.getResults()) {
             if (!result.getDecision().equals(Decision.PERMIT)) {
-                LOGGER.debug("Decision not a Permit. "  + result.getDecision().toString());
+                LOGGER.info("Decision not a Permit. "  + result.getDecision().toString());
                 PDPResponse pdpResponse = new PDPResponse();
                 if (decide) {
-                    pdpResponse.setDecision(PolicyDecision.DENY);
+                	String indeterminatePropValue = XACMLProperties.getProperty("decision.inStringdeterminate.response");
+                	if(result.getDecision().equals(Decision.INDETERMINATE)&& indeterminatePropValue != null){
+                		if("PERMIT".equalsIgnoreCase(indeterminatePropValue)){
+                			pdpResponse.setDecision(PolicyDecision.PERMIT);
+                		}else{
+                			pdpResponse.setDecision(PolicyDecision.DENY);
+                		}
+                	}else{
+                		pdpResponse.setDecision(PolicyDecision.DENY);
+                	}
                     for(Advice advice: result.getAssociatedAdvice()){
                         for(AttributeAssignment attribute: advice.getAttributeAssignments()){
                             pdpResponse.setDetails(attribute.getAttributeValue().getValue().toString());
@@ -140,7 +153,13 @@ public class PDPServices {
                     // check for Decision for decision based calls.
                     PDPResponse pdpResponse = new PDPResponse();
                     pdpResponse.setDecision(PolicyDecision.PERMIT);
-                    pdpResponse.setDetails("Decision Permit. OK!");
+                    
+                	//if this is a Rainy Day treatment decision we need to get the selected treatment
+                	if(rainydayRequest!=null){
+                		pdpResponse.setDetails(getRainyDayTreatment(result));
+                	} else {
+                        pdpResponse.setDetails("Decision Permit. OK!");
+                	}
                     combinedResult.add(pdpResponse);
                     return combinedResult;
                 }
@@ -152,7 +171,7 @@ public class PDPServices {
                         String configURL = null;
                         String policyName = null;
                         String policyVersion = null;
-                        match = new Matches();
+                        Matches match = new Matches();
                         Map<String, String> matchingConditions = new HashMap<>();
                         Map<String, String> configAttributes = new HashMap<>();
                         Map<String, String> responseAttributes = new HashMap<>();
@@ -161,7 +180,7 @@ public class PDPServices {
                         Map<String, String> adviseAttributes = new HashMap<>();
                         for (AttributeAssignment attribute : advice.getAttributeAssignments()) {
                             adviseAttributes.put(attribute.getAttributeId().stringValue(), attribute.getAttributeValue().getValue().toString());
-                            if (attribute.getAttributeValue().getValue().toString().equalsIgnoreCase("CONFIGURATION")) {
+                            if ("CONFIGURATION".equalsIgnoreCase(attribute.getAttributeValue().getValue().toString())) {
                                 config++;
                             } else if (attribute.getDataTypeId().stringValue().endsWith("anyURI")) {
                                 uri++;
@@ -169,29 +188,29 @@ public class PDPServices {
                                     configURL = attribute.getAttributeValue().getValue().toString();
                                     pdpConfigLocation = configURL.replace("$URL", XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_WEBAPPS));
                                 } else {
-                                    if (!(attribute.getIssuer().equalsIgnoreCase("PDP"))) {
+                                    if (!("PDP".equalsIgnoreCase(attribute.getIssuer()))) {
                                         throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error having multiple URI in the Policy");
                                     }
                                 }
-                            } else if (attribute.getAttributeId().stringValue().equalsIgnoreCase("PolicyName")) {
+                            } else if ("PolicyName".equalsIgnoreCase(attribute.getAttributeId().stringValue())) {
                                 policyName = attribute.getAttributeValue().getValue().toString();
-                            } else if (attribute.getAttributeId().stringValue().equalsIgnoreCase("VersionNumber")) {
+                            } else if ("VersionNumber".equalsIgnoreCase(attribute.getAttributeId().stringValue())) {
                                 policyVersion = attribute.getAttributeValue().getValue().toString();
-                            } else if (attribute.getAttributeId().stringValue().equalsIgnoreCase("Priority")){
+                            } else if ("Priority".equalsIgnoreCase(attribute.getAttributeId().stringValue())){
                                 try{
                                     priority = Integer.parseInt(attribute.getAttributeValue().getValue().toString());
                                 } catch(Exception e){
-                                    LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE+ "Unable to Parse Integer for Priority. Setting to default value");
+                                    LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE+ "Unable to Parse Integer for Priority. Setting to default value",e);
                                     priority = DEFAULT_PRIORITY;
                                 }
                             } else if (attribute.getAttributeId().stringValue().startsWith("matching")) {
                                 matchingConditions.put(attribute.getAttributeId().stringValue()
                                         .replaceFirst("(matching).", ""),attribute.getAttributeValue().getValue().toString());
-                                if (attribute.getAttributeId().stringValue()
-                                        .replaceFirst("(matching).", "").equals("ECOMPName")) {
+                                if ("ECOMPName".equals(attribute.getAttributeId().stringValue()
+                                        .replaceFirst("(matching).", ""))) {
                                     match.setEcompName(attribute.getAttributeValue().getValue().toString());
-                                } else if (attribute.getAttributeId().stringValue()
-                                        .replaceFirst("(matching).", "").equals("ConfigName")) {
+                                } else if ("ConfigName".equals(attribute.getAttributeId().stringValue()
+                                        .replaceFirst("(matching).", ""))) {
                                     match.setConfigName(attribute.getAttributeValue().getValue().toString());
                                 } else {
                                     configAttributes.put(attribute.getAttributeId().stringValue()
@@ -296,6 +315,23 @@ public class PDPServices {
         
         return combinedResult;
     }
+    
+    private String getRainyDayTreatment(Result result) {
+    	String treatment = null;
+    	if (rainydayRequest!=null&& !result.getAssociatedAdvice().isEmpty()) {
+    		// Get the desired treatment for requested errorCode from the Advice
+    		for (Advice advice : result.getAssociatedAdvice()) {
+    			Map<String, String> adviseAttributes = new HashMap<>();
+    			for (AttributeAssignment attribute : advice.getAttributeAssignments()) {
+    				adviseAttributes.put(attribute.getAttributeId().stringValue(), attribute.getAttributeValue().getValue().toString());
+    				if ("treatment".equalsIgnoreCase(attribute.getAttributeId().stringValue())){
+    					treatment = attribute.getAttributeValue().getValue().toString();
+    				}
+    			}   
+    		}
+    	}
+    	return treatment;
+    }
 
     private PDPResponse configCall(String pdpConfigLocation) throws Exception{
         PDPResponse pdpResponse = new PDPResponse();
@@ -392,7 +428,7 @@ public class PDPServices {
         // call the PDPEngine to decide and give the response on the Request.
         try {
             response = pdpEngine.decide(request);
-            LOGGER.debug("Response from the PDP is: \n" + JSONResponse.toString(response));
+            LOGGER.info("Response from the PDP is: \n" + JSONResponse.toString(response));
         } catch (Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
             return null;

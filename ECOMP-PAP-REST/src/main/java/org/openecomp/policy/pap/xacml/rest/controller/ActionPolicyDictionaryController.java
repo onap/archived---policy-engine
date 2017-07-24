@@ -22,6 +22,7 @@ package org.openecomp.policy.pap.xacml.rest.controller;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -170,6 +171,7 @@ public class ActionPolicyDictionaryController {
 			}else{
 				if(!isFakeUpdate) {
 					actionPolicyDict.setUserModifiedBy(this.getUserInfo(userId));
+					actionPolicyDict.setModifiedDate(new Date());
 					commonClassDao.update(actionPolicyDict); 
 				}
 			} 

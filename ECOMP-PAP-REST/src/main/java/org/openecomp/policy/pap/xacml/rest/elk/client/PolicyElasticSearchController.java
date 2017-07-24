@@ -65,6 +65,7 @@ import org.openecomp.policy.rest.jpa.VNFType;
 import org.openecomp.policy.rest.jpa.VSCLAction;
 import org.openecomp.policy.rest.jpa.VarbindDictionary;
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -96,6 +97,7 @@ public class PolicyElasticSearchController{
 	
 	public static CommonClassDao commonClassDao;
 
+	@Autowired
 	public PolicyElasticSearchController(CommonClassDao commonClassDao) {
 		PolicyElasticSearchController.commonClassDao = commonClassDao;
 	}
@@ -219,12 +221,16 @@ public class PolicyElasticSearchController{
 					String searchText = searchData.getQuery();
 					String descriptivevalue = searchData.getDescriptiveScope();
 					if(descriptivevalue != null){
-						DescriptiveScope dsSearch = (DescriptiveScope) commonClassDao.getEntityItem(DescriptiveScope.class, "descriptiveScopeName", searchData.getDescriptiveScope());
+						DescriptiveScope dsSearch = (DescriptiveScope) commonClassDao.getEntityItem(DescriptiveScope.class, "descriptiveScopeName", descriptivevalue);
 						if(dsSearch != null){
 							String[] descriptiveList =  dsSearch.getSearch().split("AND");
 							for(String keyValue : descriptiveList){
 								String[] entry = keyValue.split(":");
-								searchKeyValue.put(entry[0], entry[1]);
+								if(searchData.getPolicyType() != null && "closedLoop".equals(searchData.getPolicyType())){
+									searchKeyValue.put("jsonBodyData", "*" +entry[1] +"*");
+								}else{
+									searchKeyValue.put(entry[0], entry[1]);
+								}
 							}
 						}
 					}
@@ -257,16 +263,16 @@ public class PolicyElasticSearchController{
 						searchKeyValue.put("jsonBodyData."+d2Service+"", "true");
 					}	
 					if(searchData.getVnfType() != null){
-						searchKeyValue.put("jsonBodyData.vnfType", searchData.getVnfType());					
+						searchKeyValue.put("jsonBodyData", "*" +searchData.getVnfType() +"*");					
 					}
 					if(searchData.getPolicyStatus() != null){
-						searchKeyValue.put("jsonBodyData.closedLoopPolicyStatus", searchData.getPolicyStatus());
+						searchKeyValue.put("jsonBodyData", "*" +searchData.getPolicyStatus()+"*");
 					}
 					if(searchData.getVproAction() != null){
-						searchKeyValue.put("jsonBodyData.actions", searchData.getVproAction());
+						searchKeyValue.put("jsonBodyData", "*" +searchData.getVproAction()+"*");
 					}
 					if(searchData.getServiceType() != null){
-						searchKeyValue.put("jsonBodyData.serviceTypePolicyName", searchData.getServiceType());
+						searchKeyValue.put("serviceType", searchData.getServiceType());
 					}
 					if(searchData.getBindTextSearch() != null){
 						searchKeyValue.put(searchData.getBindTextSearch(), searchText);

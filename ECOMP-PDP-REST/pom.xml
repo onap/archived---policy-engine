@@ -22,30 +22,30 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>org.openecomp.policy.engine</groupId>
 		<artifactId>PolicyEngineSuite</artifactId>
 		<version>1.1.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<artifactId>ECOMP-PDP-REST</artifactId>
-	
+
 	<description>ECOMP PDP REST</description>
 	<properties>
-        <springframework.version>4.3.3.RELEASE</springframework.version>
-    </properties>
+		<springframework.version>4.3.3.RELEASE</springframework.version>
+	</properties>
 	<packaging>war</packaging>
 	<build>
 		<plugins>
-	 		<plugin>
-	      		<artifactId>maven-war-plugin</artifactId>
-	      		<version>2.1</version>
-	      		<configuration>
-	        		<attachClasses>true</attachClasses>
-	      		</configuration>
-   			</plugin>
-    	</plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<attachClasses>true</attachClasses>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 	<dependencies>
 		<dependency>
@@ -88,11 +88,23 @@
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
 			<version>1.2.3</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901.jdbc4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${springframework.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
+			<version>3.0.0</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -110,27 +122,33 @@
 			<version>1.18</version>
 		</dependency>
 		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>javax.websocket</groupId>
 			<artifactId>javax.websocket-api</artifactId>
 			<version>1.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-  			<groupId>com.att.nsa</groupId>
-  			<artifactId>cambriaClient</artifactId>
-  			<version>0.0.1</version>
-  			<exclusions>
-  				<exclusion>
-  					<artifactId>slf4j-log4j12</artifactId>
-  					<groupId>org.slf4j</groupId>
-  				</exclusion>
-  			</exclusions>
+			<groupId>com.att.nsa</groupId>
+			<artifactId>cambriaClient</artifactId>
+			<version>0.0.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>1.9.5</version>
-		</dependency>     
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-mock</artifactId>
@@ -152,28 +170,28 @@
 			<version>1.5.6</version>
 		</dependency>
 		<dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${springframework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${springframework.version}</version>
-        </dependency>
-        <dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>2.5.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.fasterxml.jackson.core</groupId>
-    				<artifactId>jackson-annotations</artifactId>
+					<artifactId>jackson-annotations</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -197,11 +215,7 @@
 				</exclusion>
 				<exclusion>
 					<groupId>javax.persistence</groupId>
-            		<artifactId>persistence-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.att.aft</groupId>
-    				<artifactId>dme2</artifactId>
+					<artifactId>persistence-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

@@ -30,11 +30,11 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 public class SafePolicyBuilder {
-
+	
 	private SafePolicyBuilder(){
 		//Private Constructor. 
 	}
-	
+
 	public static ControlLoopGuard loadYamlGuard(String specification) {
 		//
 		// Read the yaml into our Java Object
@@ -45,7 +45,20 @@ public class SafePolicyBuilder {
 		return (ControlLoopGuard) obj;
 	}
 	
-	public static String generateXacmlGuard(String xacmlFileContent,Map<String, String> generateMap, List<String> blacklist) {
+	public static String generateXacmlGuard(String xacmlFileContent,Map<String, String> generateMap, List<String> blacklist, List<String> targets) {
+		//Setup default values and Targets. 
+		StringBuilder targetRegex= new StringBuilder(".*|");
+		if(targets!=null && !targets.isEmpty()){
+			targetRegex = new StringBuilder();
+            for(String t : targets){
+            	targetRegex.append(t + "|");
+            }
+		}
+		if(generateMap.get("clname")==null|| generateMap.get("clname").isEmpty()){
+			generateMap.put("clname",".*");
+		}
+		generateMap.put("targets", targetRegex.toString().substring(0, targetRegex.length()-1));
+		// Replace values. 
 		for(Map.Entry<String,String> map: generateMap.entrySet()){
 			Pattern p = Pattern.compile("\\$\\{" +map.getKey() +"\\}");
 			Matcher m = p.matcher(xacmlFileContent);

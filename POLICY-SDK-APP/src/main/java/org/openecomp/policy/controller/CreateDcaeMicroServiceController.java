@@ -35,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -160,7 +161,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			jsonContent = decodeContent(root.get("policyJSON")).toString();
 			constructJson(policyData, jsonContent);
 		}catch(Exception e){
-			LOGGER.error("Error while decoding microservice content");
+			LOGGER.error("Error while decoding microservice content", e);
 		}
 		
 		return policyData;
@@ -224,7 +225,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		try {
 			json = om.writeValueAsString(microServiceObject);
 		} catch (JsonProcessingException e) {
-			LOGGER.error("Error writing out the object");
+			LOGGER.error("Error writing out the object", e);
 		}
 		LOGGER.info(json);
 		String cleanJson = cleanUPJson(json);
@@ -254,7 +255,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				cleanJson = returnNode.toString();
 			}
 		} catch (IOException e) {
-			LOGGER.error("Error writing out the JsonNode");
+			LOGGER.error("Error writing out the JsonNode",e);
 		}
 		return cleanJson;
 	}
@@ -311,7 +312,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	public Map<String, String> load(byte[] source) throws IOException { 
 		Yaml yaml = new Yaml(); 
 		@SuppressWarnings("unchecked")
-		Map<Object, Object> yamlMap = (Map<Object, Object>) yaml.load(source.toString()); 
+		Map<Object, Object> yamlMap = (Map<Object, Object>) yaml.load(Arrays.toString(source)); 
 		StringBuilder sb = new StringBuilder(); 
 		Map<String, String> settings = new HashMap <>(); 
 		if (yamlMap == null) { 
@@ -397,10 +398,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		HashMap<String,String> dataMapForJson=new HashMap <>(); 
 		for(String uniqueDataKey: uniqueDataKeys){
 			if(uniqueDataKey.contains("%")){
-				String[] uniqueDataKeySplit= uniqueDataKey.split("%",2);
-				if (uniqueDataKeySplit.length < 2) {
-					continue;
-				}
+				String[] uniqueDataKeySplit= uniqueDataKey.split("%");
 				String findType=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+TYPE;
 				String typeValue=map.get(findType);
 				LOGGER.info(typeValue);
@@ -476,10 +474,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		HashMap<String,String> hmSub;
 		for(Map.Entry<String, String> entry: dataMapForJson.entrySet()){
 			String uniqueDataKey= entry.getKey();
-			String[] uniqueDataKeySplit=uniqueDataKey.split("%",2);
-			if (uniqueDataKeySplit.length < 2) {
-				continue;
-			}
+			String[] uniqueDataKeySplit=uniqueDataKey.split("%");
 			String value= dataMapForJson.get(uniqueDataKey);
 			if(dataMapKey.containsKey(uniqueDataKeySplit[0])){
 				hmSub = dataMapKey.get(uniqueDataKeySplit[0]);
@@ -743,10 +738,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 							if(jsonArray != null && arryKey.equals(nodeKey.substring(0,nodeKey.indexOf("@")))){
 								jsonArray.put(decodeContent(node));
 							} 
-							if(key.contains("@") && !arryKey.equals(key.substring(0,nodeKey.indexOf("@")))){
-								jsonResult.put(arryKey, jsonArray);
-								jsonArray = new JSONArray();
-							}else if(!key.contains("@")){
+							if((key.contains("@") && !arryKey.equals(key.substring(0,nodeKey.indexOf("@")))) || !key.contains("@")){
 								jsonResult.put(arryKey, jsonArray);
 								jsonArray = new JSONArray();
 							}
@@ -1231,18 +1223,13 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 	}
 
-	private String getPolicyScope(String value) {	
-		GroupPolicyScopeList pScope = new GroupPolicyScopeList();
-		List<Object> groupList= commonClassDao.getData(GroupPolicyScopeList.class);
-		if(groupList.size() > 0){
-			for(int i = 0 ; i < groupList.size() ; i ++){
-				pScope = (GroupPolicyScopeList) groupList.get(i);
-				if (pScope.getGroupList().equals(value)){
-					break;
-				}		
-			}
+	private String getPolicyScope(String value) {
+		List<Object> groupList= commonClassDao.getDataById(GroupPolicyScopeList.class, "groupList", value);
+		if(groupList != null && !groupList.isEmpty()){
+			GroupPolicyScopeList pScope = (GroupPolicyScopeList) groupList.get(0);
+			return pScope.getGroupName();		
 		}
-		return pScope.getGroupName();
+		return null;
 	}
 
 	//Convert the map values and set into JSON body

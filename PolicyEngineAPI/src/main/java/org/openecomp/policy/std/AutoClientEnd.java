@@ -165,12 +165,16 @@ public class AutoClientEnd {
 				try{
 					handler.notificationReceived(notification);
 				}catch (Exception e){
-					logger.error("Error in Clients Handler Object : " + e.getMessage());
+					logger.error("Error in Clients Handler Object : ", e);
 				}
 			} else if (scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) {
 				PDPNotification newNotification = MatchStore.checkMatch(notification);
 				if (newNotification.getNotificationType() != null) {
-					handler.notificationReceived(newNotification);
+					try{
+						handler.notificationReceived(newNotification);
+					}catch (Exception e){
+						logger.error("Error in Clients Handler Object : ", e);
+					}
 				}
 			}
 		}

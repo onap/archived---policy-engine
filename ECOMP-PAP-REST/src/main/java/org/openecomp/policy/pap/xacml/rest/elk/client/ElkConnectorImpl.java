@@ -206,17 +206,19 @@ public class ElkConnectorImpl implements ElkConnector{
 				"            \"must\" : [";
 		
 		String match_params = "";
+		boolean first = true;
 		for(Entry<String, String> entry : filter_s.entrySet()){
 			String key = entry.getKey();
 			String value = entry.getValue();
-			if(filter_s.size() == 1){
-				match_params = "\"match\" : {\""+key+"\" : \""+value+"\" }";
+			if(first){
+				match_params = "\"match\" : {\""+key+"\" : \""+value+"\" }},";
+				first = false;
 			}else{
-				match_params = match_params + "match\" : { \""+key+"\" : \""+value+"\" } ,";
+				match_params = match_params + "{\"match\" : { \""+key+"\" : \""+value+"\" } },";
 			}
 		}
 		if(match_params.endsWith(",")){
-			match_params = match_params.substring(0, match_params.length()-1);
+			match_params = match_params.substring(0, match_params.length()-2);
 		}
 
 		matches_s = matches_s + "{\n" + match_params + "\n}" ;

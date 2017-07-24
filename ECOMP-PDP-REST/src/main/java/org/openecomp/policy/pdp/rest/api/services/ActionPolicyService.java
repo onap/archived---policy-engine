@@ -35,8 +35,8 @@ import org.openecomp.policy.xacml.std.pap.StdPAPPolicy;
  * @version 0.1
  */
 public class ActionPolicyService {
-	private static Logger LOGGER = FlexLogger.getLogger(ActionPolicyService.class.getName());
-	private static PAPServices papServices = null;
+	private static final Logger LOGGER = FlexLogger.getLogger(ActionPolicyService.class.getName());
+	private PAPServices papServices = null;
 	
 	private PolicyParameters policyParameters = null;
 	private String message = null;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:d56af069-6cf1-430c-ba07-e26602e06a52" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides"> 
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:com:xacml:policy:id:d56af069-6cf1-430c-ba07-e26602e06a52" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-unless-deny"> 
     <Description>${description}</Description>
     <Target>
         <AnyOf>
@@ -14,13 +14,21 @@
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${ECOMPName}</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ECOMPName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${actor}</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="actor" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${recipe}</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="recipe" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+                <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${targets}</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="target" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+                <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${clname}</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="clname" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
             </AllOf>
         </AnyOf>
@@ -37,8 +45,8 @@
             </AnyOf>
         </Target>
         <Condition>
-            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
-                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+        	<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+        		<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
                     <Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:time-in-range">
                         <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-one-and-only">
                             <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time" DataType="http://www.w3.org/2001/XMLSchema#time" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment" MustBePresent="false"/>
@@ -46,12 +54,12 @@
                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveStart}</AttributeValue>
                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveEnd}</AttributeValue>
                     </Apply>
-                </Apply>
-                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-less-than-or-equal">
-                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
-                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="count" DataType="http://www.w3.org/2001/XMLSchema#integer" Issuer="org:openecomp:xacml:sql:${timeWindow}" MustBePresent="false"/>
-                    </Apply>
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${limit}</AttributeValue>
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than-or-equal">
+                    	<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                        	<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="count" DataType="http://www.w3.org/2001/XMLSchema#integer" Issuer="org:onap:xacml:guard:historydb:tw:${twValue}:${twUnits}" MustBePresent="false"/>
+                    	</Apply>
+                    	<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${limit}</AttributeValue>
+                	</Apply>
                 </Apply>
             </Apply>
         </Condition>
@@ -69,21 +77,21 @@
         </Target>
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
-                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
-	                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
-   		            	<Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:time-in-range">
-   	                    	<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-one-and-only">
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+        			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                    	<Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:time-in-range">
+                        	<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-one-and-only">
                             	<AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time" DataType="http://www.w3.org/2001/XMLSchema#time" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment" MustBePresent="false"/>
                         	</Apply>
                         	<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveStart}</AttributeValue>
                         	<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveEnd}</AttributeValue>
                     	</Apply>
-                	</Apply>
-                	<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-less-than-or-equal">
-                    	<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
-                        	<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="count" DataType="http://www.w3.org/2001/XMLSchema#integer" Issuer="org:openecomp:xacml:sql:${timeWindow}" MustBePresent="false"/>
-                    	</Apply>
-                    	<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${limit}</AttributeValue>
+                    	<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than-or-equal">
+                    		<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                        		<AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="count" DataType="http://www.w3.org/2001/XMLSchema#integer" Issuer="org:onap:xacml:guard:historydb:tw:${twValue}:${twUnits}" MustBePresent="false"/>
+                    		</Apply>
+                    		<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${limit}</AttributeValue>
+                		</Apply>
                 	</Apply>
             	</Apply>
             </Apply>

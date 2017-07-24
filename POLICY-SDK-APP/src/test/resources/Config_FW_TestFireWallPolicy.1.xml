@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+ <Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:xacml:policy:id:2f5c1b1e-7cd4-4e71-9a0d-2fcef2a6cb7b" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
+     <Description>TestFireWallPolicy@CreatedBy:@CreatedBy:@ModifiedBy:@ModifiedBy:</Description>
+     <Target>
+         <AnyOf>
+             <AllOf>
+                 <Match MatchId="org.openecomp.function.regex-match">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">com.Config_FW_TestFireWallPolicy.1.xml</AttributeValue>
+                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="PolicyName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                 </Match>
+             </AllOf>
+             <AllOf>
+                 <Match MatchId="org.openecomp.function.regex-match">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">TestFireWallPolicy</AttributeValue>
+                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ConfigName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                 </Match>
+                 <Match MatchId="org.openecomp.function.regex-match">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SampleRiskType</AttributeValue>
+                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="RiskType" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                 </Match>
+                 <Match MatchId="org.openecomp.function.regex-match">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">1</AttributeValue>
+                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="RiskLevel" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                 </Match>
+                 <Match MatchId="org.openecomp.function.regex-match">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">True</AttributeValue>
+                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="guard" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                 </Match>
+                 <Match MatchId="org.openecomp.function.regex-match">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">08-06-2017</AttributeValue>
+                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="TTLDate" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                 </Match>
+             </AllOf>
+         </AnyOf>
+     </Target>
+     <Rule RuleId="" Effect="Permit">
+         <Target>
+             <AnyOf>
+                 <AllOf>
+                     <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                         <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                     </Match>
+                     <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                         <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                     </Match>
+                 </AllOf>
+             </AnyOf>
+         </Target>
+         <AdviceExpressions>
+             <AdviceExpression AdviceId="firewallConfigID" AppliesTo="Permit">
+                 <AttributeAssignmentExpression AttributeId="type" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="URLID" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">$URL/Config/com.Config_FW_TestFireWallPolicy.1.json</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="PolicyName" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">com.Config_FW_TestFireWallPolicy.1.xml</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="VersionNumber" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">1</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="matching:ECOMPName" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="matching:ConfigName" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">TestFireWallPolicy</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="RiskType" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SampleRiskType</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="RiskLevel" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">1</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="guard" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">True</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="TTLDate" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">08-06-2017</AttributeValue>
+                 </AttributeAssignmentExpression>
+             </AdviceExpression>
+         </AdviceExpressions>
+     </Rule>
+ </Policy>

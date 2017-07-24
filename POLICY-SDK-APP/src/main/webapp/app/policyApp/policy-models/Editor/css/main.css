@@ -58,9 +58,45 @@ body {
   margin-top: -5px;
 }
 
+.btn.btn-pedefault {
+	color: #444;
+	background-color: #FAFAFA;
+}
+	
 .btn.btn-default {
   color: #444;
   background-color: #FAFAFA;
+}
+
+.btn-add-remove {
+  color: #444;
+  background-color: #FAFAFA;
+  margin-right: 12px;
+  margin-bottom: 10px;
+}
+
+.child_single {
+  color: #444;
+  background-color: #FAFAFA;
+  margin-left: 0px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.children_group {
+    color: #444;
+    background-color: white;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-right: 20px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .btn {

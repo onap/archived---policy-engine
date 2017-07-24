@@ -33,7 +33,7 @@ import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
 
 public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService {
-	private static Logger LOGGER = FlexLogger.getLogger(CreateUpdatePolicyService.class.getName());
+	private static final Logger LOGGER = FlexLogger.getLogger(CreateUpdatePolicyServiceImpl.class.getName());
     
     private String policyResult = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -55,7 +55,7 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
                     requestUUID = UUID.fromString(requestID);
                 } catch (IllegalArgumentException e) {
                     requestUUID = UUID.randomUUID();
-                    LOGGER.info("Generated Random UUID: " + requestUUID.toString());
+                    LOGGER.info("Generated Random UUID: " + requestUUID.toString(), e);
                 }
             }else{
                 requestUUID = UUID.randomUUID();
@@ -233,7 +233,6 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
         if (policyName==null||policyName.trim().isEmpty()){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Name given.";
             return false;
-        
         }
         message = PolicyUtils.emptyPolicyValidator(policyScope);
         if(!message.contains("success")){

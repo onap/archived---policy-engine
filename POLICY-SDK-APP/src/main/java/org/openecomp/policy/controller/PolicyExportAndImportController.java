@@ -99,6 +99,14 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 		this.policyController = policyController;
 	}
 
+	public static CommonClassDao getCommonClassDao() {
+		return commonClassDao;
+	}
+
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
+		PolicyExportAndImportController.commonClassDao = commonClassDao;
+	}
+
 	@Autowired
 	private PolicyExportAndImportController(CommonClassDao commonClassDao){
 		PolicyExportAndImportController.commonClassDao = commonClassDao;
@@ -107,7 +115,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 	public PolicyExportAndImportController(){}
 
 	@RequestMapping(value={"/policy_download/exportPolicy.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public void ExportPolicy(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void exportPolicy(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try{
 			String file = null;
 			selectedPolicy = new ArrayList<>();

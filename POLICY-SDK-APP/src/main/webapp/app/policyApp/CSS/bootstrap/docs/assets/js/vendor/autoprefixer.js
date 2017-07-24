@@ -14778,7 +14778,7 @@ var _inherits = function (subClass, superClass) { if (typeof superClass !== "fun
 
 var Container = require("./container");
 
-// CSS at-rule like “this.keyframes name { }”.
+// CSS at-rule like ï¿½this.keyframes name { }ï¿½.
 //
 // Can contain declarations (like this.font-face or this.page) ot another rules.
 var AtRule = (function (Container) {
@@ -15486,7 +15486,7 @@ var _inherits = function (subClass, superClass) { if (typeof superClass !== "fun
 var Node = require("./node");
 var vendor = require("./vendor");
 
-// CSS declaration like “color: black” in rules
+// CSS declaration like ï¿½color: blackï¿½ in rules
 var Declaration = (function (Node) {
     function Declaration(defaults) {
         this.type = "decl";
@@ -17281,7 +17281,7 @@ var Container = require("./container");
 var Declaration = require("./declaration");
 var list = require("./list");
 
-// CSS rule like “a { }”
+// CSS rule like ï¿½a { }ï¿½
 var Rule = (function (Container) {
     function Rule(defaults) {
         this.type = "rule";

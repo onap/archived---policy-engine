@@ -6,7 +6,7 @@
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
 			"groupId": "org.onap.policy.drools-applications",
-			"artifactId": "controlloop",
+			"artifactId": "events",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
 		}, {
 			"groupId": "org.onap.policy.drools-applications",

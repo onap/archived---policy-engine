@@ -21,6 +21,7 @@
 package org.openecomp.policy.pap.xacml.rest.controller;
 
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,6 +156,7 @@ public class SafePolicyController {
 			} else {
 				if (!isFakeUpdate) {
 					riskTypeData.setUserModifiedBy(this.getUserInfo(userId));
+					riskTypeData.setModifiedDate(new Date());
 					commonClassDao.update(riskTypeData);
 				}
 			}

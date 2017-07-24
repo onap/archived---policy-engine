@@ -23,6 +23,7 @@ package org.openecomp.policy.pap.xacml.rest.controller;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -324,6 +325,7 @@ public class BRMSDictionaryController{
                         }
                     }else{
                         brmsDependency.setUserModifiedBy(this.getUserInfo(userId));
+                        brmsDependency.setModifiedDate(new Date());
                         commonClassDao.update(brmsDependency); 
                     }
                     if(duplicateflag) {
@@ -476,6 +478,7 @@ public class BRMSDictionaryController{
                         }
                     }else{
                         brmsController.setUserModifiedBy(this.getUserInfo(userId));
+                        brmsController.setModifiedDate(new Date());
                         commonClassDao.update(brmsController); 
                     }
                     if(duplicateflag) {

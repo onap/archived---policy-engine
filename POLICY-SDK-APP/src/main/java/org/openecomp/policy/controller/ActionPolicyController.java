@@ -58,7 +58,9 @@ import org.openecomp.policy.common.logging.flexlogger.Logger;
 public class ActionPolicyController extends RestrictedBaseController{
 	private static final Logger LOGGER = FlexLogger.getLogger(ActionPolicyController.class);
 	
-	public ActionPolicyController(){}
+	public ActionPolicyController(){
+		//Default Constructor
+	}
 
 	private ArrayList<Object> attributeList;
 	protected  LinkedList<Integer> ruleAlgoirthmTracker;

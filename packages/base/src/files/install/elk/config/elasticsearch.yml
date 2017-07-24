@@ -55,6 +55,7 @@ path.logs: ${{POLICY_HOME}}/logs
 # Set the bind address to a specific IP (IPv4 or IPv6):
 #
 #network.host: 192.168.0.1
+network.host: ["${{ELK_NETWORK_HOST}}", "127.0.0.1"]
 #
 # Set a custom port for HTTP:
 #

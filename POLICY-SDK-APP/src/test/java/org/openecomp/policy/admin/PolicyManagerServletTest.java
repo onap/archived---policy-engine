@@ -19,11 +19,16 @@
  */
 package org.openecomp.policy.admin;
 
+import static org.junit.Assert.fail;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,8 +38,13 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.controller.CreateDcaeMicroServiceController;
 import org.openecomp.policy.controller.PolicyController;
 import org.openecomp.policy.model.Roles;
+import org.openecomp.policy.rest.dao.CommonClassDao;
+import org.openecomp.policy.rest.jpa.ActionBodyEntity;
+import org.openecomp.policy.rest.jpa.ConfigurationDataEntity;
+import org.openecomp.policy.rest.jpa.GroupPolicyScopeList;
 import org.openecomp.policy.rest.jpa.PolicyEditorScopes;
 import org.openecomp.policy.rest.jpa.PolicyEntity;
 import org.openecomp.policy.rest.jpa.PolicyVersion;
@@ -43,11 +53,13 @@ import org.openecomp.policy.rest.jpa.UserInfo;
 public class PolicyManagerServletTest extends Mockito{
 	
 	private static Logger logger = FlexLogger.getLogger(PolicyManagerServletTest.class);
+	private List<String> headers = new ArrayList<String>();
 
 	private static List<Object> rolesdata;
-	private static List<Object> policyData;
+	private static List<Object> basePolicyData;
 	private static List<Object> policyEditorScopes;
 	private static List<Object> policyVersion;
+	private static CommonClassDao commonClassDao;
 	
 	@Before
 	public void setUp() throws Exception{
@@ -68,7 +80,7 @@ public class PolicyManagerServletTest extends Mockito{
         rolesdata.add(roles1);
         
         //PolicyEntity Data
-        policyData = new ArrayList<>();
+        basePolicyData = new ArrayList<>();
         String policyContent = "";
         try {
 			ClassLoader classLoader = getClass().getClassLoader();
@@ -80,7 +92,13 @@ public class PolicyManagerServletTest extends Mockito{
         entity.setPolicyName("Config_SampleTest.1.xml");
         entity.setPolicyData(policyContent);
         entity.setScope("com");
-        policyData.add(entity);
+        ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
+        configurationEntity.setConfigBody("Sample Test");
+        configurationEntity.setConfigType("OTHER");
+        configurationEntity.setConfigurationName("com.Config_SampleTest1206.1.txt");
+        configurationEntity.setDescription("test");
+        entity.setConfigurationData(configurationEntity);
+        basePolicyData.add(entity);
         
         //PolicyEditorScopes data
         policyEditorScopes = new ArrayList<>();
@@ -107,6 +125,21 @@ public class PolicyManagerServletTest extends Mockito{
 	}
 	
 	@Test
+	public void testInit(){
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		ServletConfig servletConfig = mock(ServletConfig.class);       
+        try {
+        	when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
+        	when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.admin.properties");
+        	System.setProperty("xacml.rest.admin.closedLoopJSON", new File(".").getCanonicalPath() + File.separator + "src"+ File.separator + "test" + File.separator + "resources" + File.separator + "JSONConfig.json");
+			servlet.init(servletConfig);
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+			fail();
+		}
+	}
+	
+	@Test
 	public void testDescribePolicy(){
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
 		HttpServletRequest request = mock(HttpServletRequest.class);       
@@ -116,11 +149,12 @@ public class PolicyManagerServletTest extends Mockito{
         BufferedReader reader = new BufferedReader(new StringReader("{params: { mode: 'DESCRIBEPOLICYFILE', path: 'com.Config_SampleTest1206.1.xml'}}"));
         try {
 			when(request.getReader()).thenReturn(reader);
-			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'")).thenReturn(policyData);
+			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'")).thenReturn(basePolicyData);
 			servlet.setPolicyController(controller);
 			servlet.doPost(request, response);
 		} catch (Exception e1) {
 			logger.error("Exception Occured"+e1);
+			fail();
 		}
 	}
 	
@@ -147,9 +181,390 @@ public class PolicyManagerServletTest extends Mockito{
     			servlet.doPost(request, response);
     		} catch (Exception e1) {
     			logger.error("Exception Occured"+e1);
+    			fail();
     		}
         }
 	}
 	
+	@Test
+	public void editBasePolicyTest(){
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class); 
+        PolicyController controller = mock(PolicyController.class);
+        List<String> list = new ArrayList<>();
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_SampleTest1206.1.xml', onlyFolders: false}}");
+        for(int i =0; i < list.size(); i++){
+        	BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
+            try {
+    			when(request.getReader()).thenReturn(reader);
+    			when(controller.getRoles("Test")).thenReturn(rolesdata);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'")).thenReturn(basePolicyData);
+    			servlet.setPolicyController(controller);
+    			servlet.setTestUserId("Test");
+    			servlet.doPost(request, response);
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
+	
+	@Test
+	public void editBRMSParamPolicyTest(){
+		List<Object> policyData = new ArrayList<>();
+        String policyContent = "";
+        String configData = "";
+        try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml"));
+			configData = IOUtils.toString(classLoader.getResourceAsStream("com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.txt"));
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+		}
+        PolicyEntity entity = new PolicyEntity();
+        entity.setPolicyName("Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml");
+        entity.setPolicyData(policyContent);
+        entity.setScope("com");
+        ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
+        configurationEntity.setConfigBody(configData);
+        configurationEntity.setConfigType("OTHER");
+        configurationEntity.setConfigurationName("com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.txt");
+        configurationEntity.setDescription("test");
+        entity.setConfigurationData(configurationEntity);
+        policyData.add(entity);
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class); 
+        PolicyController controller = mock(PolicyController.class);
+        List<String> list = new ArrayList<>();
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml', onlyFolders: false}}");
+        for(int i =0; i < list.size(); i++){
+        	BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
+            try {
+    			when(request.getReader()).thenReturn(reader);
+    			when(controller.getRoles("Test")).thenReturn(rolesdata);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			servlet.setPolicyController(controller);
+    			servlet.setTestUserId("Test");
+    			servlet.doPost(request, response);
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
 
+	@Test
+	public void editBRMSRawPolicyTest(){
+		List<Object> policyData = new ArrayList<>();
+        String policyContent = "";
+        String configData = "";
+        try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_BRMS_Raw_TestBRMSRawPolicy.1.xml"));
+			configData = IOUtils.toString(classLoader.getResourceAsStream("com.Config_BRMS_Raw_TestBRMSRawPolicy.1.txt"));
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+		}
+        PolicyEntity entity = new PolicyEntity();
+        entity.setPolicyName("Config_BRMS_Raw_TestBRMSRawPolicy.1.xml");
+        entity.setPolicyData(policyContent);
+        entity.setScope("com");
+        ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
+        configurationEntity.setConfigBody(configData);
+        configurationEntity.setConfigType("OTHER");
+        configurationEntity.setConfigurationName("com.Config_BRMS_Raw_TestBRMSRawPolicy.1.txt");
+        configurationEntity.setDescription("test");
+        entity.setConfigurationData(configurationEntity);
+        policyData.add(entity);
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class); 
+        PolicyController controller = mock(PolicyController.class);
+        List<String> list = new ArrayList<>();
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Raw_TestBRMSRawPolicy.1.xml', onlyFolders: false}}");
+        for(int i =0; i < list.size(); i++){
+        	BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
+            try {
+    			when(request.getReader()).thenReturn(reader);
+    			when(controller.getRoles("Test")).thenReturn(rolesdata);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_BRMS_Raw_TestBRMSRawPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			servlet.setPolicyController(controller);
+    			servlet.setTestUserId("Test");
+    			servlet.doPost(request, response);
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
+	
+	@Test
+	public void editClosedLoopFaultPolicyTest(){
+		List<Object> policyData = new ArrayList<>();
+        String policyContent = "";
+        String configData = "";
+        try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_Fault_TestClosedLoopPolicy.1.xml"));
+			configData = IOUtils.toString(classLoader.getResourceAsStream("com.Config_Fault_TestClosedLoopPolicy.1.json"));
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+		}
+        PolicyEntity entity = new PolicyEntity();
+        entity.setPolicyName("Config_Fault_TestClosedLoopPolicy.1.xml");
+        entity.setPolicyData(policyContent);
+        entity.setScope("com");
+        ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
+        configurationEntity.setConfigBody(configData);
+        configurationEntity.setConfigType("JSON");
+        configurationEntity.setConfigurationName("com.Config_Fault_TestClosedLoopPolicy.1.json");
+        configurationEntity.setDescription("test");
+        entity.setConfigurationData(configurationEntity);
+        policyData.add(entity);
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class); 
+        PolicyController controller = mock(PolicyController.class);
+        List<String> list = new ArrayList<>();
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_Fault_TestClosedLoopPolicy.1.xml', onlyFolders: false}}");
+        for(int i =0; i < list.size(); i++){
+        	BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
+            try {
+    			when(request.getReader()).thenReturn(reader);
+    			when(controller.getRoles("Test")).thenReturn(rolesdata);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_Fault_TestClosedLoopPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			servlet.setPolicyController(controller);
+    			servlet.setTestUserId("Test");
+    			servlet.doPost(request, response);
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
+	
+	@Test
+	public void editClosedLoopPMPolicyTest(){
+		List<Object> policyData = new ArrayList<>();
+        String policyContent = "";
+        String configData = "";
+        try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_PM_TestClosedLoopPMPolicy.1.xml"));
+			configData = IOUtils.toString(classLoader.getResourceAsStream("com.Config_PM_TestClosedLoopPMPolicy.1.json"));
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+		}
+        PolicyEntity entity = new PolicyEntity();
+        entity.setPolicyName("Config_PM_TestClosedLoopPMPolicy.1.xml");
+        entity.setPolicyData(policyContent);
+        entity.setScope("com");
+        ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
+        configurationEntity.setConfigBody(configData);
+        configurationEntity.setConfigType("JSON");
+        configurationEntity.setConfigurationName("com.Config_PM_TestClosedLoopPMPolicy.1.json");
+        configurationEntity.setDescription("test");
+        entity.setConfigurationData(configurationEntity);
+        policyData.add(entity);
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class); 
+        PolicyController controller = mock(PolicyController.class);
+        List<String> list = new ArrayList<>();
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_PM_TestClosedLoopPMPolicy.1.xml', onlyFolders: false}}");
+        for(int i =0; i < list.size(); i++){
+        	BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
+            try {
+    			when(request.getReader()).thenReturn(reader);
+    			when(controller.getRoles("Test")).thenReturn(rolesdata);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_PM_TestClosedLoopPMPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			servlet.setPolicyController(controller);
+    			servlet.setTestUserId("Test");
+    			servlet.doPost(request, response);
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
+	
+	@Test
+	public void editMicroServicePolicyTest(){
+		GroupPolicyScopeList groupData = new  GroupPolicyScopeList();
+		groupData.setGroupName("Test");
+		groupData.setGroupList("resource=SampleResource,service=SampleService,type=SampleType,closedLoopControlName=SampleClosedLoop");
+		List<Object> groupListData = new ArrayList<>();
+		groupListData.add(groupData);
+		commonClassDao = mock(CommonClassDao.class);
+		CreateDcaeMicroServiceController.setCommonClassDao(commonClassDao);
+		List<Object> policyData = new ArrayList<>();
+        String policyContent = "";
+        String configData = "";
+        try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_MS_vFirewall.1.xml"));
+			configData = IOUtils.toString(classLoader.getResourceAsStream("com.Config_MS_vFirewall.1.json"));
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+		}
+        PolicyEntity entity = new PolicyEntity();
+        entity.setPolicyName("Config_MS_vFirewall.1.xml");
+        entity.setPolicyData(policyContent);
+        entity.setScope("com");
+        ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
+        configurationEntity.setConfigBody(configData);
+        configurationEntity.setConfigType("JSON");
+        configurationEntity.setConfigurationName("com.Config_MS_vFirewall.1.json");
+        configurationEntity.setDescription("test");
+        entity.setConfigurationData(configurationEntity);
+        policyData.add(entity);
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class); 
+        PolicyController controller = mock(PolicyController.class);
+        List<String> list = new ArrayList<>();
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_MS_vFirewall.1.xml', onlyFolders: false}}");
+        for(int i =0; i < list.size(); i++){
+        	BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
+            try {
+    			when(request.getReader()).thenReturn(reader);
+    			when(commonClassDao.getDataById(GroupPolicyScopeList.class, "groupList", "resource=SampleResource,service=SampleService,type=SampleType,closedLoopControlName=SampleClosedLoop")).thenReturn(groupListData);
+    			when(controller.getRoles("Test")).thenReturn(rolesdata);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_MS_vFirewall.1.xml' and scope ='com'")).thenReturn(policyData);
+    			servlet.setPolicyController(controller);
+    			servlet.setTestUserId("Test");
+    			servlet.doPost(request, response);
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
+	
+	@Test
+	public void editFirewallPolicyTest(){
+		List<Object> policyData = new ArrayList<>();
+        String policyContent = "";
+        String configData = "";
+        try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_FW_TestFireWallPolicy.1.xml"));
+			configData = IOUtils.toString(classLoader.getResourceAsStream("com.Config_FW_TestFireWallPolicy.1.json"));
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+		}
+        PolicyEntity entity = new PolicyEntity();
+        entity.setPolicyName("Config_FW_TestFireWallPolicy.1.xml");
+        entity.setPolicyData(policyContent);
+        entity.setScope("com");
+        ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
+        configurationEntity.setConfigBody(configData);
+        configurationEntity.setConfigType("JSON");
+        configurationEntity.setConfigurationName("com.Config_FW_TestFireWallPolicy.1.json");
+        configurationEntity.setDescription("test");
+        entity.setConfigurationData(configurationEntity);
+        policyData.add(entity);
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class); 
+        PolicyController controller = mock(PolicyController.class);
+        List<String> list = new ArrayList<>();
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Config_FW_TestFireWallPolicy.1.xml', onlyFolders: false}}");
+        for(int i =0; i < list.size(); i++){
+        	BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
+            try {
+    			when(request.getReader()).thenReturn(reader);
+    			when(controller.getRoles("Test")).thenReturn(rolesdata);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_FW_TestFireWallPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			servlet.setPolicyController(controller);
+    			servlet.setTestUserId("Test");
+    			servlet.doPost(request, response);
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
+	
+	@Test
+	public void editActionPolicyTest(){
+		List<Object> policyData = new ArrayList<>();
+        String policyContent = "";
+        String configData = "";
+        try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			policyContent = IOUtils.toString(classLoader.getResourceAsStream("Action_TestActionPolicy.1.xml"));
+			configData = IOUtils.toString(classLoader.getResourceAsStream("com.Action_TestActionPolicy.1.json"));
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+		}
+        PolicyEntity entity = new PolicyEntity();
+        entity.setPolicyName("Action_TestActionPolicy.1.xml");
+        entity.setPolicyData(policyContent);
+        entity.setScope("com");
+        ActionBodyEntity configurationEntity = new ActionBodyEntity();
+        configurationEntity.setActionBody(configData);
+        configurationEntity.setActionBodyName("com.Action_TestActionPolicy.1.json");
+        entity.setActionBodyEntity(configurationEntity);
+        policyData.add(entity);
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class); 
+        PolicyController controller = mock(PolicyController.class);
+        List<String> list = new ArrayList<>();
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Action_TestActionPolicy.1.xml', onlyFolders: false}}");
+        for(int i =0; i < list.size(); i++){
+        	BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
+            try {
+    			when(request.getReader()).thenReturn(reader);
+    			when(controller.getRoles("Test")).thenReturn(rolesdata);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Action_TestActionPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			servlet.setPolicyController(controller);
+    			servlet.setTestUserId("Test");
+    			servlet.doPost(request, response);
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
+	
+	@Test
+	public void editDecisionPolicyTest(){
+		List<Object> policyData = new ArrayList<>();
+        String policyContent = "";
+        try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			policyContent = IOUtils.toString(classLoader.getResourceAsStream("Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml"));
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+		}
+        PolicyEntity entity = new PolicyEntity();
+        entity.setPolicyName("Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml");
+        entity.setPolicyData(policyContent);
+        entity.setScope("com");
+        policyData.add(entity);
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		HttpServletRequest request = mock(HttpServletRequest.class);       
+        HttpServletResponse response = mock(HttpServletResponse.class); 
+        PolicyController controller = mock(PolicyController.class);
+        List<String> list = new ArrayList<>();
+        list.add("{params: { mode: 'EDITFILE', path: '/com/Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml', onlyFolders: false}}");
+        for(int i =0; i < list.size(); i++){
+        	BufferedReader reader = new BufferedReader(new StringReader(list.get(i)));
+            try {
+    			when(request.getReader()).thenReturn(reader);
+    			when(controller.getRoles("Test")).thenReturn(rolesdata);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml' and scope ='com'")).thenReturn(policyData);
+    			servlet.setPolicyController(controller);
+    			servlet.setTestUserId("Test");
+    			servlet.doPost(request, response);
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
 }

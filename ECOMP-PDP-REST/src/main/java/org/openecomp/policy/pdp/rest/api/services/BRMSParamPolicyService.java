@@ -36,15 +36,14 @@ import org.openecomp.policy.xacml.std.pap.StdPAPPolicy;
  * @version 0.1
  */
 public class BRMSParamPolicyService{
-	private static Logger LOGGER = FlexLogger.getLogger(BRMSParamPolicyService.class.getName());
-	private static PAPServices papServices = null;
+	private static final Logger LOGGER = FlexLogger.getLogger(BRMSParamPolicyService.class.getName());
+	private PAPServices papServices = null;
 	
 	private PolicyParameters policyParameters = null;
 	private String message = null;
 	private String policyName = null;
 	private String policyScope = null;
-	private String date = null;
-	private boolean levelCheck = false;
+	private String date = null; 
 	private Map<AttributeType, Map<String, String>> drlRuleAndUIParams = null;
 	
 	public BRMSParamPolicyService(String policyName, String policyScope,
@@ -57,6 +56,7 @@ public class BRMSParamPolicyService{
 	}
 
 	public Boolean getValidation() {
+		boolean levelCheck = false;
 		levelCheck = PolicyApiUtils.isNumeric(policyParameters.getRiskLevel());
 		if(!levelCheck){
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect Risk Level given.";

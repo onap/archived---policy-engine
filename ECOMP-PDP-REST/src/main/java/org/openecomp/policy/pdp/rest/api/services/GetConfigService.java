@@ -20,6 +20,7 @@
 package org.openecomp.policy.pdp.rest.api.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,7 +44,7 @@ import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
 
 public class GetConfigService {
-    private static Logger LOGGER = FlexLogger.getLogger(GetConfigService.class.getName());
+    private static final Logger LOGGER = FlexLogger.getLogger(GetConfigService.class.getName());
     
     private ConfigRequestParameters configRequestParameters = null;
     private String message = null;
@@ -61,7 +62,7 @@ public class GetConfigService {
                     requestUUID = UUID.fromString(requestID);
                 } catch (IllegalArgumentException e) {
                     requestUUID = UUID.randomUUID();
-                    LOGGER.info("Generated Random UUID: " + requestUUID.toString());
+                    LOGGER.info("Generated Random UUID: " + requestUUID.toString(),e);
                 }
             }else{
                 requestUUID = UUID.randomUUID();
@@ -69,11 +70,12 @@ public class GetConfigService {
             }
             this.configRequestParameters.setRequestID(requestUUID);
         }
-        policyConfigs = new ArrayList<PolicyConfig>();
+        policyConfigs = new ArrayList<>();
         try{
             run();
             specialCheck();
         }catch(PolicyConfigException e){
+        	LOGGER.error(e);
             PolicyConfig policyConfig = new PolicyConfig();
             policyConfig.setPolicyConfigMessage(e.getMessage());
             policyConfig.setPolicyConfigStatus(PolicyConfigStatus.CONFIG_NOT_FOUND);
@@ -83,7 +85,7 @@ public class GetConfigService {
     }
     
     private void specialCheck() {
-        if(policyConfigs==null || policyConfigs.size()==0){
+        if(policyConfigs==null || policyConfigs.isEmpty()){
             responseCode = HttpStatus.BAD_REQUEST;
         }else if(policyConfigs.size()==1){
             for(PolicyConfig policyConfig: policyConfigs){
@@ -125,7 +127,7 @@ public class GetConfigService {
 
     private Collection<PolicyConfig> configResult(
             Collection<PDPResponse> generateRequest) {
-        Collection<PolicyConfig> result = new HashSet<PolicyConfig>();
+        Collection<PolicyConfig> result = new HashSet<>();
         if (generateRequest == null) {
             return null;
         }
@@ -151,7 +153,7 @@ public class GetConfigService {
     private Collection<PolicyConfig> filterResults(
             Collection<PolicyConfig> policyConfigs,
             ConfigRequestParameters configRequestParameters) {
-        List<PolicyConfig> policyConfig = new ArrayList<PolicyConfig>();
+        List<PolicyConfig> policyConfig = new ArrayList<>();
         for(PolicyConfig config: policyConfigs){
             if(config.getPolicyName()!=null && configRequestParameters.getPolicyName()!=null && configRequestParameters.getPolicyName().trim().length()>0){
                 if(!config.getPolicyName().matches(configRequestParameters.getPolicyName())){
@@ -172,9 +174,23 @@ public class GetConfigService {
                 if(configRequestParameters.getConfigAttributes()!=null && configRequestParameters.getConfigAttributes().size()>0){
                     boolean flag = false; 
                     for(String key: configRequestParameters.getConfigAttributes().keySet()){
-                        if(!config.getMatchingConditions().containsKey(key) || !config.getMatchingConditions().get(key).matches(configRequestParameters.getConfigAttributes().get(key))){
-                            flag = true;
-                            break;
+                    	if(key.equals("RiskType")||key.equals("RiskLevel")||key.equals("guard")||key.equals("TTLDate")){
+                    		continue;
+                    	}
+                        if(config.getMatchingConditions().containsKey(key)){
+                        	if(config.getMatchingConditions().get(key).contains(",")){
+                        		List<String> elements = Arrays.asList(config.getMatchingConditions().get(key).split(","));
+                        		if(!elements.contains(configRequestParameters.getConfigAttributes().get(key))){
+                        			flag=true;
+                        		}
+                        	}else if(!config.getMatchingConditions().get(key).matches(configRequestParameters.getConfigAttributes().get(key))){
+                            	flag = true;
+                        	}
+                        }else{
+                        	flag = true;
+                        }
+                        if(flag){
+                        	break;
                         }
                     }
                     if(flag){
@@ -184,7 +200,7 @@ public class GetConfigService {
             }
             policyConfig.add(config);
         }
-        if(policyConfig.size()==0){
+        if(policyConfig.isEmpty()){
             PolicyConfig pConfig = new PolicyConfig();
             pConfig.setPolicyConfigStatus(PolicyConfigStatus.CONFIG_NOT_FOUND);
             pConfig.setPolicyConfigMessage(XACMLErrorConstants.ERROR_DATA_ISSUE+"No Match Found, for the parameters sent.");
@@ -226,7 +242,7 @@ public class GetConfigService {
         }else{
             LOGGER.info("Ecomp Name is not given. ");
         }
-        JsonObject model = Json.createObjectBuilder()
+        return Json.createObjectBuilder()
                 .add("Request",Json.createObjectBuilder()
                                 .add("AccessSubject",Json.createObjectBuilder()
                                                 .add("Attribute",subjectArray))
@@ -240,7 +256,6 @@ public class GetConfigService {
                                                                         .add("Value","Config")
                                                                         .add("AttributeId","urn:oasis:names:tc:xacml:1.0:resource:resource-id")))))
                 .build();
-        return model;
     }
     
     private JsonArrayBuilder getResourceArray(Map<String, String> configAttributes) throws PolicyConfigException{
@@ -261,7 +276,7 @@ public class GetConfigService {
             }
         }else{
             // ConfigAttributes is Null. So add basic values.
-            configAttributes = new HashMap<String,String>();
+            configAttributes = new HashMap<>();
             configAttributes.put("RiskType", ".*");
             configAttributes.put("RiskLevel", ".*");
             configAttributes.put("guard", ".*");

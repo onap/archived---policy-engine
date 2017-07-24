@@ -95,13 +95,13 @@ public class PolicyManagerServlet extends HttpServlet {
 		LIST, RENAME, COPY, DELETE, EDITFILE, ADDFOLDER, DESCRIBEPOLICYFILE, VIEWPOLICY, ADDSUBSCOPE, SWITCHVERSION, EXPORT, SEARCHLIST
 	}
 
-	private PolicyController policyController;
-	public PolicyController getPolicyController() {
+	private static PolicyController policyController;
+	public synchronized PolicyController getPolicyController() {
 		return policyController;
 	}
 
-	public void setPolicyController(PolicyController policyController) {
-		this.policyController = policyController;
+	public synchronized static void setPolicyController(PolicyController policyController) {
+		PolicyManagerServlet.policyController = policyController;
 	}
 
 	private static String CONTENTTYPE = "application/json";
@@ -115,7 +115,7 @@ public class PolicyManagerServlet extends HttpServlet {
 	
 	private static Path closedLoopJsonLocation;
 	private static JsonArray policyNames;
-	private String testUserId = null;
+	private static String testUserId = null;
 	
 	public static JsonArray getPolicyNames() {
 		return policyNames;
@@ -126,7 +126,6 @@ public class PolicyManagerServlet extends HttpServlet {
 	}
 
 	private static List<String> serviceTypeNamesList = new ArrayList<>();
-	private List<Object> policyData;
 
 	public static List<String> getServiceTypeNamesList() {
 		return serviceTypeNamesList;
@@ -192,7 +191,11 @@ public class PolicyManagerServlet extends HttpServlet {
 				fileOperation(request, response);
 			}
 		} catch (Exception e) {
-			setError(e, response);
+			try {
+				setError(e, response);
+			}catch(Exception e1){
+				LOGGER.error("Exception Occured"+e1);
+			}
 		}
 	}
 
@@ -270,6 +273,7 @@ public class PolicyManagerServlet extends HttpServlet {
 			Mode mode = Mode.valueOf(params.getString("mode"));
 			switch (mode) {
 			case ADDFOLDER:
+			case ADDSUBSCOPE:
 				responseJsonObject = addFolder(params, request);
 				break;
 			case COPY:
@@ -278,12 +282,10 @@ public class PolicyManagerServlet extends HttpServlet {
 			case DELETE:
 				responseJsonObject = delete(params, request);
 				break;
-			case EDITFILE: 
+			case EDITFILE:
+			case VIEWPOLICY:
 				responseJsonObject = editFile(params);
 				break;
-			case VIEWPOLICY: 
-				responseJsonObject = editFile(params);
-				break;	
 			case LIST:
 				responseJsonObject = list(params, request);
 				break;
@@ -292,9 +294,6 @@ public class PolicyManagerServlet extends HttpServlet {
 				break;
 			case DESCRIBEPOLICYFILE:
 				responseJsonObject = describePolicy(params);
-				break;
-			case ADDSUBSCOPE:
-				responseJsonObject = addFolder(params, request);
 				break;
 			case SWITCHVERSION:
 				responseJsonObject = switchVersion(params, request);
@@ -321,7 +320,7 @@ public class PolicyManagerServlet extends HttpServlet {
 	private JSONObject searchPolicyList(JSONObject params, HttpServletRequest request) {
 		Set<String> scopes = null;
 		List<String> roles = null;
-		policyData = new ArrayList<>();
+		List<Object> policyData = new ArrayList<>();
 		JSONArray policyList = null;
 		if(params.has("policyList")){
 			policyList = (JSONArray) params.get("policyList");
@@ -1230,7 +1229,7 @@ public class PolicyManagerServlet extends HttpServlet {
 										policyEntity = (PolicyEntity) object;
 										String policyEntityName = policyEntity.getPolicyName().replace(".xml", "");
 										int policyEntityVersion = Integer.parseInt(policyEntityName.substring(policyEntityName.lastIndexOf(".")+1));
-										if(policyEntityVersion > highestVersion){
+										if(policyEntityVersion > highestVersion && policyEntityVersion != version){
 											highestVersion = policyEntityVersion;
 										}
 									}
@@ -1472,7 +1471,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		return testUserId;
 	}
 
-	public void setTestUserId(String testUserId) {
-		this.testUserId = testUserId;
+	public static void setTestUserId(String testUserId) {
+		PolicyManagerServlet.testUserId = testUserId;
 	}
 }

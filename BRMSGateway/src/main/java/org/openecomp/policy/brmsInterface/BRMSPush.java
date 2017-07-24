@@ -99,7 +99,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * BRMSPush: Application responsible to push policies to the BRMS PDP Policy Repository (PR). 
  * Mavenize and push policy to PR
  * 
- * @version 0.9 
+ * @version 1.0 
  */
 
 @SuppressWarnings("deprecation")
@@ -589,7 +589,14 @@ public class BRMSPush {
                 result = artifact;
             }
         }
-        return result;
+        return additionalNexusLatestCheck(selectedName, result);
+	}
+	
+	// Additional Check due to Limitations from Nexus API to check if the artifact is the latest.
+	private NexusArtifact additionalNexusLatestCheck(String selectedName, NexusArtifact result) {
+		String nextVersion = incrementVersion(result.getVersion());
+        List<NexusArtifact> artifact = getArtifactFromNexus(selectedName, nextVersion);
+        return artifact.isEmpty()? result: additionalNexusLatestCheck(selectedName, artifact.get(0));
 	}
 
 	private boolean checkRemoteSync(String selectedName, String version) {
@@ -630,7 +637,7 @@ public class BRMSPush {
 				}
 			}
 		}
-		return new ArrayList<NexusArtifact>();
+		return new ArrayList<>();
 	}
 
 	private void setVersion(String selectedName) {
@@ -908,7 +915,7 @@ public class BRMSPush {
 
 		Dependency controlloopDependency = new Dependency();
 		controlloopDependency.setGroupId("org.onap.policy.drools-applications");
-		controlloopDependency.setArtifactId("controlloop");
+		controlloopDependency.setArtifactId("events");
 		controlloopDependency.setVersion(version);
 		dependencyList.add(controlloopDependency);
 
