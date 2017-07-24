@@ -459,6 +459,11 @@ public class PAPServices {
                         + "Group Policy Scope List Exist Error:  The Group Policy Scope List for this Dictionary Item already exist in the database. "
                         + "Duplicate Group Policy Scope Lists for multiple groupNames is not allowed. "
                         + "Please review the request and verify that the groupPolicyScopeListData1 is unique compared to existing groups.";
+            } else if("PolicyInPDP".equals(connection.getHeaderField("error"))){
+            	response = XACMLErrorConstants.ERROR_DATA_ISSUE
+                        + "Policy Exist Error:  The Policy trying to be deleted is active in PDP. "
+                        + "Active PDP Polcies are not allowed to be deleted from PAP. "
+                        + "Please First remove the policy from PDP in order to successfully delete the Policy from PAP.";
             }
             LOGGER.error(response);
         } else if (connection.getResponseCode() == 500 && connection.getHeaderField("error") != null) {
@@ -499,7 +504,7 @@ public class PAPServices {
                         + "Could not create or update the policy for and unknown reason";
             }else{
                 response = XACMLErrorConstants.ERROR_DATA_ISSUE
-                        + "BAD REQUEST:  Error occured while attempting perform this operation.. the request may be incorrect.";
+                        + "BAD REQUEST:  Error occured while attempting perform this operation.. the request may be incorrect. " + connection.getHeaderField("error");
             }
             LOGGER.error(response);
         } else {

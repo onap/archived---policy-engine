@@ -62,17 +62,25 @@
 							<label>Building Block ID:<sup><b>*</b></sup></label>
 						</div>
 						<div class="form-group col-sm-2">
-							<input type="text" class="form-control"
-								ng-disabled="temp.policy.readOnly" ng-model="temp.policy.rainyday.bbid"
-								placeholder="Building Block ID" />
+								<select
+									class="form-control" ng-disabled="temp.policy.readOnly"
+									ng-model="temp.policy.rainyday.bbid"
+									ng-options="option for option in rainyDayDictionaryDatas track by option"
+									ng-change="getWorkstepValues(temp.policy.rainyday.bbid)">
+									<option value="">{{temp.policy.rainyday.bbid}}</option>
+								</select>
 						</div>
 						<div class="form-group col-sm-1">
 							<label>Work Step:<sup><b>*</b></sup></label>
 						</div>
 						<div class="form-group col-sm-2">
-							<input type="text" class="form-control"
-								ng-disabled="temp.policy.readOnly" ng-model="temp.policy.rainyday.workstep"
-								placeholder="Work Step" />
+							<select
+									class="form-control" ng-disabled="temp.policy.readOnly"
+									ng-model="temp.policy.rainyday.workstep"
+									ng-options="option for option in workstepDictionaryDatas track by option"
+									ng-change="getTreatmentValues(temp.policy.rainyday.bbid, temp.policy.rainyday.workstep)">
+									<option value="">{{temp.policy.rainyday.workstep}}</option>
+							</select>
 						</div>
 					</div>
 					<div class="form-group row">
@@ -100,19 +108,14 @@
 							<div class="form-group col-sm-1">
 								<label>Desired Treatment:<sup><b>*</b></sup></label>
 							</div>		
-							<div class="form-group col-sm-3">						
-								<select class="form-control" id="mySelect"
+							<div class="form-group col-sm-3">
+								<select
+									class="form-control" 
 									ng-disabled="temp.policy.readOnly"
 									ng-model="treatmentTableChoice.treatment"
-									placeholder="Desired Treatment">
-<!-- 								<option value="">{{tableChoice.desiredtreatment}}</option> -->
-									<option>Rollback</option>
-									<option>Manual Handling</option>
-									<option>Abort</option>
-									<option>Auto Rollback</option>
-									<option>Retry</option>
-									<option>Skip</option>
-								</select>
+									ng-options="option for option in allowedTreatmentsDatas track by option">
+									<option value="">{{treatmentTableChoice.treatment}}</option>
+								</select>						
 							</div>
 							<div class="form-group col-sm-1">
 								<button type="button" class="btn btn-default"
@@ -131,7 +134,7 @@
 			<div class="well">
 				<div class="form-group row">
 					<div class="form-group col-sm-1">
-						<label>Guard YAML Attributes:</label><br>
+						<label>Guard BlackList YAML Attributes:</label><br>
 					</div>
 				</div>
 				<div class="form-group row">
@@ -153,6 +156,16 @@
 								<input type="text" class="form-control"
 									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.recipe"
 									placeholder="Recipe" />
+							</div>
+						</div>
+						<div class="form-group row" style="margin-left: 2%">
+							<div class="form-group col-sm-3">
+								<label> CLName: </label>
+							</div>
+							<div class="form-group col-sm-3">
+								<input type="text" class="form-control"
+									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.clname"
+									placeholder="CLName" />
 							</div>
 						</div>
 						<div class="form-group row" style="margin-left: 2%">
@@ -235,6 +248,42 @@
 						</div>
 						<div class="form-group row" style="margin-left: 2%">
 							<div class="form-group col-sm-3">
+								<label> CLName: </label>
+							</div>
+							<div class="form-group col-sm-3">
+								<input type="text" class="form-control"
+									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.clname"
+									placeholder="CLName" />
+							</div>
+						</div>
+						<div class="form-group row" style="margin-left: 2%">
+							<div class="form-group col-sm-3">
+								<label> Targets: </label>
+								<button type="button" class="btn btn-default"
+									ng-disabled="temp.policy.readOnly" ng-click="addNewTarget()">
+									<i class="fa fa-plus"></i>
+								</button>
+							</div>
+							<div class="form-group col-sm-4">
+								<div data-ng-repeat="choice in temp.policy.yamlparams.targets track by $index">
+									<div class="form-group row">
+									<div class="form-group col-sm-9">
+										<input type="text" class="form-control"
+										ng-disabled="temp.policy.readOnly"
+										ng-model="temp.policy.yamlparams.targets[$index]" placeholder="Target" />
+									</div>
+									<div class="form-group col-sm-1">
+										<button type="button" class="btn btn-default" ng-show="$last"
+										ng-disabled="temp.policy.readOnly" ng-click="removeTarget()">
+										<i class="fa fa-minus"></i>
+										</button>
+									</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group row" style="margin-left: 2%">
+							<div class="form-group col-sm-3">
 								<label> limit: </label>
 							</div>
 							<div class="form-group col-sm-3">
@@ -247,18 +296,20 @@
 							<div class="form-group col-sm-3">
 								<label> timeWindow: </label>
 							</div>
-							<div class="form-group col-sm-3">
+							<div class="form-group col-sm-2">
+								<input type="text" class="form-control"
+									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.timeWindow"
+									placeholder="Time Window" />
+							</div>
+							<div class="form-group col-sm-1">
 								<select class="form-control" ng-disabled="temp.policy.readOnly" 
-								ng-model="temp.policy.yamlparams.timeWindow">
-								<option>tw5min</option>
-								<option>tw10min</option>
-								<option>tw30min</option>
-								<option>tw1h</option>
-								<option>tw12h</option>
-								<option>tw1d</option>
-								<option>tw5d</option>
-								<option>tw1w</option>
-								<option>tw1mon</option>
+								ng-model="temp.policy.yamlparams.timeUnits">
+								<option>minute</option>
+								<option>hour</option>
+								<option>day</option>
+								<option>week</option>
+								<option>month</option>
+								<option>year</option>
 								</select>
 							</div>
 						</div>

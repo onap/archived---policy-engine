@@ -80,6 +80,26 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
 		console.log("failed");
 	});
 
+	PolicyAppService.getData('getDictionary/get_RainyDayDictionaryDataByName').then(function (data) {
+		var j = data;
+		$scope.data = JSON.parse(j.data);
+		console.log($scope.data);
+    	$scope.rainyDayDictionaryDatas = JSON.parse($scope.data.rainyDayDictionaryDatas);
+		console.log($scope.rainyDayDictionaryDatas);
+	}, function (error) {
+		console.log("failed");
+	});
+	
+    PolicyAppService.getData('getDictionary/get_RainyDayDictionaryData').then(function (data) {
+    	var j = data;
+    	$scope.data = JSON.parse(j.data);
+    	console.log($scope.data);
+    	$scope.rainyDayDictionaryDataEntity = JSON.parse($scope.data.rainyDayDictionaryDatas);
+    	console.log($scope.rainyDayDictionaryDatasEntity);
+    }, function (error) {
+    	console.log("failed");
+    });
+
     function extend(obj, src) {
         for (var key in src) {
             if (src.hasOwnProperty(key)) obj[key] = src[key];
@@ -166,6 +186,9 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
     	if(!$scope.temp.policy.yamlparams){
     		$scope.temp.policy.yamlparams = {};
     	}
+    	if(!$scope.temp.policy.yamlparams.targets){
+    		$scope.temp.policy.yamlparams.targets = [];
+    	}
     	if(!$scope.temp.policy.yamlparams.blackList){
     		$scope.temp.policy.yamlparams.blackList = [];
     	}
@@ -178,7 +201,7 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
     
     }else if($scope.temp.policy.ruleProvider=="Custom"){
 	   if($scope.temp.policy.attributes.length == 0){
-		   $scope.temp.policy.attributes = [];
+		   $scope.temp.policy.attributes = [];    
 	   }
 	   if($scope.temp.policy.settings.length == 0){
 		   $scope.temp.policy.settings = [];
@@ -190,6 +213,10 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
 	   if($scope.temp.policy.yamlparams.blackList.length==0){
 		   $scope.temp.policy.yamlparams.blackList = [];
 	   }
+    }else if($scope.temp.policy.ruleProvider=="GUARD_YAML"){
+    	if($scope.temp.policy.yamlparams.targets.length==0){
+ 		   $scope.temp.policy.yamlparams.targets = [];
+ 	   	}
     }else if($scope.temp.policy.ruleProvider=="Rainy_Day"){
     	if($scope.temp.policy.rainyday.treatmentTableChoices == null || $scope.temp.policy.rainyday.treatmentTableChoices.length == 0){
     		$scope.temp.policy.rainyday.treatmentTableChoices = [];
@@ -215,6 +242,14 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
       $scope.temp.policy.settings.splice(lastItem);
     };
     
+    $scope.addNewTarget = function(){
+    	$scope.temp.policy.yamlparams.targets.push('');
+    };
+    $scope.removeTarget = function(){
+    	var lastItem = $scope.temp.policy.yamlparams.targets.length-1;
+    	$scope.temp.policy.yamlparams.targets.splice(lastItem);
+    };
+    
     $scope.addNewBL = function() {
     	$scope.temp.policy.yamlparams.blackList.push('');
     };
@@ -231,6 +266,29 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
     	var lastItem = $scope.temp.policy.rainyday.treatmentTableChoices.length-1;
     	$scope.temp.policy.rainyday.treatmentTableChoices.splice(lastItem);
     };
+    
+	$scope.workstepDictionaryDatas = [];
+	$scope.getWorkstepValues = function(bbidValue){
+		for (var i = 0; i < $scope.rainyDayDictionaryDataEntity.length; ++i) {
+    	    var obj = $scope.rainyDayDictionaryDataEntity[i];
+    	    if (obj.bbid == bbidValue){
+    	    	$scope.workstepDictionaryDatas.push(obj.workstep);
+    	    }
+    	}
+	};
+	
+	$scope.allowedTreatmentsDatas = [];
+	$scope.getTreatmentValues = function(bbidValue, workstepValue){
+		for (var i = 0; i < $scope.rainyDayDictionaryDataEntity.length; ++i) {
+    	    var obj = $scope.rainyDayDictionaryDataEntity[i];
+    	    if (obj.bbid == bbidValue && obj.workstep == workstepValue){
+    	    	var splitAlarm = obj.treatments.split(',');
+    	    	for (var j = 0; j < splitAlarm.length; ++j) {
+    	    		$scope.allowedTreatmentsDatas.push(splitAlarm[j]);
+    	    	}
+    	    }
+    	}	
+	};
     
     $scope.ItemNo = 0;
     $scope.ruleAlgorithmDatas = [{"ruleAlgorithms" : $scope.temp.policy.ruleAlgorithmschoices }];

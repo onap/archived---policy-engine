@@ -58,6 +58,8 @@ import org.openecomp.policy.pdp.rest.api.services.GetDecisionService;
 import org.openecomp.policy.pdp.rest.api.services.GetDictionaryService;
 import org.openecomp.policy.pdp.rest.api.services.GetMetricsService;
 import org.openecomp.policy.pdp.rest.api.services.ListConfigService;
+import org.openecomp.policy.pdp.rest.api.services.NotificationService;
+import org.openecomp.policy.pdp.rest.api.services.NotificationService.NotificationServiceType;
 import org.openecomp.policy.pdp.rest.api.services.PolicyEngineImportService;
 import org.openecomp.policy.pdp.rest.api.services.PushPolicyService;
 import org.openecomp.policy.pdp.rest.api.services.SendEventService;
@@ -81,8 +83,9 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(value = "Policy Engine Services")
 @RequestMapping("/")
 public class PolicyEngineServices {
-	private static Logger logger = FlexLogger
-			.getLogger(PolicyEngineServices.class.getName());
+	private static Logger logger = FlexLogger.getLogger(PolicyEngineServices.class.getName());
+	private static final String NOTIFICATIONPERM = "notification"; 
+	
 	private final AtomicLong configCounter = new AtomicLong();
 	private final AtomicLong configNameCounter = new AtomicLong();
 	private final AtomicLong eventCounter = new AtomicLong();
@@ -97,6 +100,7 @@ public class PolicyEngineServices {
 	private final AtomicLong policyEngineImportCounter = new AtomicLong();
 	private final AtomicLong deprecatedCounter = new AtomicLong();
 	private final AtomicLong metricCounter = new AtomicLong();
+	private final AtomicLong notificationCounter = new AtomicLong();
 
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
@@ -118,7 +122,7 @@ public class PolicyEngineServices {
 			status = getConfigService.getResponseCode();
 		}
 		configCounter.incrementAndGet();
-		return new ResponseEntity<Collection<PolicyConfig>>(policyConfig, status);
+		return new ResponseEntity<>(policyConfig, status);
 	}
 
 	@ApiImplicitParams({
@@ -135,8 +139,7 @@ public class PolicyEngineServices {
 		Collection<PolicyConfig> policyConfig = null;
 		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		// Check Permissions.
-		if (PDPApiAuth.checkPermissions(clientEncoding, requestID,
-				"getConfigByPolicyName")) {
+		if (PDPApiAuth.checkPermissions(clientEncoding, requestID,"getConfigByPolicyName")) {
 			ConfigRequestParameters configRequestParameters = new ConfigRequestParameters();
 			configRequestParameters.setPolicyName(configNameRequest
 					.getPolicyName());
@@ -193,6 +196,71 @@ public class PolicyEngineServices {
 		}	
 		metricCounter.incrementAndGet();
 		return new ResponseEntity<>(response, status);
+	}
+	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
+		@ApiImplicitParam(name = "Environment", required = true, paramType = "Header") })
+	@ApiOperation(value = "Registers DMaaP Topic to recieve notification from Policy Engine")
+	@RequestMapping(value = "/getNotification", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> getNotification(
+			@RequestBody String notificationTopic,
+			@RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
+			@RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+		String policyResponse = "Error Unauthorized to use Notification Service.";
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
+		// Check Permissions.
+		if (PDPApiAuth.checkPermissions(clientEncoding, requestID, NOTIFICATIONPERM)) {
+			NotificationService notificationService = new NotificationService(notificationTopic, requestID, NotificationServiceType.ADD);
+			policyResponse = notificationService.getResult();
+			status = notificationService.getResponseCode();
+		}
+		notificationCounter.incrementAndGet();
+		return new ResponseEntity<>(policyResponse, status);
+	}
+	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
+		@ApiImplicitParam(name = "Environment", required = true, paramType = "Header") })
+	@ApiOperation(value = "De-Registers DMaaP Topic to stop recieving notifications from Policy Engine")
+	@RequestMapping(value = "/stopNotification", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> stopNotification(
+			@RequestBody String notificationTopic,
+			@RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
+			@RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+		String policyResponse = "Error Unauthorized to use Notification Service.";
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
+		// Check Permissions.
+		if (PDPApiAuth.checkPermissions(clientEncoding, requestID, NOTIFICATIONPERM)) {
+			NotificationService notificationService = new NotificationService(notificationTopic, requestID, NotificationServiceType.REMOVE);
+			policyResponse = notificationService.getResult();
+			status = notificationService.getResponseCode();
+		}
+		notificationCounter.incrementAndGet();
+		return new ResponseEntity<>(policyResponse, status);
+	}
+	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
+		@ApiImplicitParam(name = "Environment", required = true, paramType = "Header") })
+	@ApiOperation(value = "Sends Heartbeat to DMaaP Topic Registry to continue recieving notifications from Policy Engine")
+	@RequestMapping(value = "/sendHeartbeat", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> sendHeartbeat(
+			@RequestBody String notificationTopic,
+			@RequestHeader(value = "ClientAuth", required = true) String clientEncoding,
+			@RequestHeader(value = "X-ECOMP-RequestID", required = false) String requestID) {
+		String policyResponse = "Error Unauthorized to use Heartbeat Service.";
+		HttpStatus status = HttpStatus.UNAUTHORIZED;
+		// Check Permissions.
+		if (PDPApiAuth.checkPermissions(clientEncoding, requestID, NOTIFICATIONPERM)) {
+			NotificationService notificationService = new NotificationService(notificationTopic, requestID, NotificationServiceType.HB);
+			policyResponse = notificationService.getResult();
+			status = notificationService.getResponseCode();
+		}
+		return new ResponseEntity<>(policyResponse, status);
 	}
 
 	@ApiImplicitParams({
@@ -314,7 +382,7 @@ public class PolicyEngineServices {
 				status = createPolicyService.getResponseCode();
 			} catch (InstantiationException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException e) {
-				logger.error(e.getMessage());
+				logger.error(e.getMessage(), e);
 				response = "Problem with CreateUpdate Policy Service. ";
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 			}
@@ -346,7 +414,7 @@ public class PolicyEngineServices {
 				status = updatePolicyService.getResponseCode();
 			} catch (InstantiationException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException e) {
-				logger.error(e.getMessage());
+				logger.error(e.getMessage(), e);
 				response = "Problem with CreateUpdate Policy Service. ";
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 			}
@@ -571,7 +639,8 @@ public class PolicyEngineServices {
 				+ "\nTotal PolicyEngine Import Calls: "
 				+ policyEngineImportCounter
 				+ "\nTotal Deprecated Policy Calls: " + deprecatedCounter
-				+ "\nTotal Metrics Calls:" + metricCounter;
+				+ "\nTotal Metrics Calls:" + metricCounter
+				+ "\nTotal Notification Calls:" + notificationCounter;
 	}
 
 	@ExceptionHandler({ HttpMessageNotReadableException.class })

@@ -36,8 +36,8 @@ import org.openecomp.policy.xacml.std.pap.StdPAPPolicy;
  * @version 0.1 
  */
 public class ClosedLoopFaultPolicyService{
-	private static Logger LOGGER = FlexLogger.getLogger(ClosedLoopFaultPolicyService.class.getName());
-	private static PAPServices papServices = null;
+	private static final Logger LOGGER = FlexLogger.getLogger(ClosedLoopFaultPolicyService.class.getName());
+	private PAPServices papServices = null;
 	
 	private PolicyParameters policyParameters = null;
 	private String message = null;
@@ -68,6 +68,7 @@ public class ClosedLoopFaultPolicyService{
 			configBody = PolicyApiUtils.stringToJsonObject(policyParameters.getConfigBody());
 		} catch(JsonException| IllegalStateException e){
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + policyParameters.getConfigBody();
+			LOGGER.error("Json Parse Exception.", e);
 			return false;
 		}
 		return true;
@@ -89,20 +90,25 @@ public class ClosedLoopFaultPolicyService{
 		} else {
 			operation = "create";
 		}
-		boolean levelCheck = PolicyApiUtils.isNumeric(policyParameters.getRiskLevel());
 		// get values and attributes from the JsonObject
-		String ecompName = configBody.get("ecompname").toString().replace("\"", "");
-		String jsonBody = configBody.toString();
-		if (ecompName==null||ecompName.equals("")){
+		if(!configBody.containsKey("ecompname")){
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Ecomp Name given.";
 			LOGGER.error(message);
 			return message;
 		}
+		String ecompName = configBody.get("ecompname").toString().trim().replace("\"", "");
+		if (ecompName==null||ecompName.trim().isEmpty()){
+			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Ecomp Name given.";
+			LOGGER.error(message);
+			return message;
+		}
+		boolean levelCheck = PolicyApiUtils.isNumeric(policyParameters.getRiskLevel());
 		if (!levelCheck){
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect Risk Level given.";
 			LOGGER.error(message);
 			return message;
 		}
+		String jsonBody = configBody.toString();
 		// Create Policy. 
 		StdPAPPolicy newPAPPolicy = new StdPAPPolicy("ClosedLoop_Fault", policyName, policyParameters.getPolicyDescription(), ecompName, 
 				jsonBody, false, oldPolicyName, null, updateFlag, policyScope, 0, policyParameters.getRiskLevel(),

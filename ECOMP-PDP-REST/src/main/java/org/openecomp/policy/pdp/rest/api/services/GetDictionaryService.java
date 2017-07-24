@@ -35,7 +35,7 @@ import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
 
 public class GetDictionaryService {
-    private static Logger LOGGER = FlexLogger.getLogger(GetDictionaryService.class.getName());
+    private static final Logger LOGGER = FlexLogger.getLogger(GetDictionaryService.class.getName());
     
     private DictionaryResponse dictionaryResponse = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -52,7 +52,7 @@ public class GetDictionaryService {
                     requestUUID = UUID.fromString(requestID);
                 } catch (IllegalArgumentException e) {
                     requestUUID = UUID.randomUUID();
-                    LOGGER.info("Generated Random UUID: " + requestUUID.toString());
+                    LOGGER.info("Generated Random UUID: " + requestUUID.toString(), e);
                 }
             }else{
                 requestUUID = UUID.randomUUID();
@@ -72,10 +72,8 @@ public class GetDictionaryService {
     }
 
     private void specialCheck() {
-        if(dictionaryResponse!=null){
-            if(dictionaryResponse.getResponseMessage()!=null && dictionaryResponse.getResponseMessage().contains("PE300")){
-                status = HttpStatus.BAD_REQUEST;
-            }
+        if(dictionaryResponse!=null && (dictionaryResponse.getResponseMessage()!=null && dictionaryResponse.getResponseMessage().contains("PE300"))){
+        	status = HttpStatus.BAD_REQUEST;
         }
     }
 
@@ -115,7 +113,7 @@ public class GetDictionaryService {
                 json = PolicyApiUtils.stringToJsonObject(datas);
             } catch(JsonException| IllegalStateException e){
                 message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper Dictionary JSON object : " + dictionaryParameters.getDictionaryJson();
-                LOGGER.error(message);
+                LOGGER.error(message, e);
                 response.setResponseMessage(message);
                 response.setResponseCode(400);
                 return response;
@@ -126,6 +124,11 @@ public class GetDictionaryService {
         } else {
             response.setResponseCode(400);
             response.setResponseMessage(result);
+            if(result!=null && result.contains("PE200")){
+            	status=HttpStatus.INTERNAL_SERVER_ERROR;
+            }else{
+            	status=HttpStatus.BAD_REQUEST;
+            }
         }
         return response;
     }

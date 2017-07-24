@@ -36,15 +36,14 @@ import org.openecomp.policy.xacml.std.pap.StdPAPPolicy;
  * @version 0.1
  */
 public class FirewallPolicyService {
-	private static Logger LOGGER = FlexLogger.getLogger(FirewallPolicyService.class.getName());
-	private static PAPServices papServices = null;
+	private static final Logger LOGGER = FlexLogger.getLogger(FirewallPolicyService.class.getName());
 	
+	private  PAPServices papServices = null;
 	private PolicyParameters policyParameters = null;
 	private String message = null;
 	private String policyName = null;
 	private String policyScope = null;
 	private String date = null;
-	private boolean levelCheck = false;
 	private JsonObject firewallJson = null;
 	
 	public FirewallPolicyService(String policyName, String policyScope,
@@ -65,12 +64,14 @@ public class FirewallPolicyService {
 			firewallJson = PolicyApiUtils.stringToJsonObject(policyParameters.getConfigBody());
 		} catch(JsonException| IllegalStateException e){
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + policyParameters.getConfigBody();
+			LOGGER.error("Error while parsing JSON body for creating Firewall Policy " , e);
 			return false;
 		}
-		if(firewallJson==null){
+		if(firewallJson==null|| firewallJson.isEmpty()){
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Config-Body given.";
 			return false;
 		}
+		boolean levelCheck = false;
 		levelCheck = PolicyApiUtils.isNumeric(policyParameters.getRiskLevel());
 		if (!levelCheck){
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect Risk Level given.";
@@ -92,6 +93,11 @@ public class FirewallPolicyService {
 			operation = "create";
 		}
 		//set values for basic policy information
+		if(!firewallJson.containsKey("configName")){
+			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No configName given in firwall JSON.";
+			LOGGER.error(message);
+			return message;
+		}
 		String configName = firewallJson.get("configName").toString();
 		String configDescription = "";
 		String json = firewallJson.toString();

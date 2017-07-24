@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.json.Json;
@@ -42,7 +43,7 @@ import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
 
 public class SendEventService {
-    private static Logger LOGGER = FlexLogger.getLogger(SendEventService.class.getName());
+    private static final Logger LOGGER = FlexLogger.getLogger(SendEventService.class.getName());
     
     private Collection<PolicyResponse> policyResponses = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -59,7 +60,7 @@ public class SendEventService {
                     requestUUID = UUID.fromString(requestID);
                 } catch (IllegalArgumentException e) {
                     requestUUID = UUID.randomUUID();
-                    LOGGER.info("Generated Random UUID: " + requestUUID.toString());
+                    LOGGER.info("Generated Random UUID: " + requestUUID.toString(), e);
                 }
             }else{
                 requestUUID = UUID.randomUUID();
@@ -67,7 +68,7 @@ public class SendEventService {
             }
             this.eventRequestParameters.setRequestID(requestUUID);
         }
-        policyResponses = new ArrayList<PolicyResponse>();
+        policyResponses = new ArrayList<>();
         try{
             run();
         }catch(PolicyEventException e){
@@ -104,7 +105,7 @@ public class SendEventService {
             Collection<PDPResponse> generateRequest) {
         Collection<PolicyResponse> result = new HashSet<>();
         if (generateRequest == null) {
-            return null;
+            return result;
         }
         if (!generateRequest.isEmpty()) {
             for (PDPResponse stdStatus : generateRequest) {
@@ -123,29 +124,27 @@ public class SendEventService {
     private JsonObject getModel() throws PolicyEventException{
         JsonArrayBuilder resourceArray = Json.createArrayBuilder();
         Map<String,String> eventAttributes = eventRequestParameters.getEventAttributes();
-        for (String key : eventAttributes.keySet()) {
-            if (key.isEmpty()) {
+        for (Entry<String,String> key : eventAttributes.entrySet()) {
+            if (key.getKey().isEmpty()) {
                 String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot have an Empty Key";
                 LOGGER.error(message);
                 throw new PolicyEventException(message);
             }
             JsonObjectBuilder resourceBuilder = Json.createObjectBuilder();
-            if (eventAttributes.get(key).matches("[0-9]+")) {
-                int val = Integer.parseInt(eventAttributes.get(key));
+            if (key.getValue().matches("[0-9]+")) {
+                int val = Integer.parseInt(key.getValue());
                 resourceBuilder.add("Value", val);
             } else {
-                resourceBuilder.add("Value", eventAttributes.get(key));
+                resourceBuilder.add("Value", key.getValue());
             }
-            resourceBuilder.add("AttributeId", key);
+            resourceBuilder.add("AttributeId", key.getKey());
             resourceArray.add(resourceBuilder);
         }
-        JsonObject model = Json
-                .createObjectBuilder()
+        return Json.createObjectBuilder()
                 .add("Request", Json.createObjectBuilder()
                                 .add("Resource",Json.createObjectBuilder()
                                                 .add("Attribute",resourceArray)))
                 .build();
-        return model;
     }
 
     private boolean getValidation() {

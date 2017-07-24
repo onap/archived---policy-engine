@@ -42,6 +42,7 @@ import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
+import org.openecomp.policy.pdp.rest.api.services.NotificationService;
 import org.openecomp.policy.rest.XACMLRestProperties;
 import org.openecomp.policy.utils.BusPublisher;
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
@@ -63,7 +64,7 @@ import com.att.research.xacml.util.XACMLProperties;
 @ServerEndpoint(value = "/notifications")
 public class NotificationServer {
 	private static final Logger LOGGER	= FlexLogger.getLogger(NotificationServer.class);
-	private static Queue<Session> queue = new ConcurrentLinkedQueue<Session>();
+	private static Queue<Session> queue = new ConcurrentLinkedQueue<>();
 	private static String update = null;
 	private static  String hosts = null;
 	private static URL aURL = null;
@@ -104,7 +105,7 @@ public class NotificationServer {
 
 		LOGGER.debug("Notification set to " + propNotificationType);
 		if (propNotificationType.equals("ueb")){
-			
+
 			String topic = null;
 			try {
 				aURL = new URL(pdpURL);
@@ -118,7 +119,7 @@ public class NotificationServer {
 			hosts = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_SERVERS);
 			String apiKey = XACMLProperties.getProperty(XACMLRestProperties.PROP_UEB_API_KEY);
 			String apiSecret = XACMLProperties.getProperty(XACMLRestProperties.PROP_UEB_API_SECRET);
-			
+
 			LOGGER.debug("Creating Publisher for host: " + hosts + " with topic: " + topic);
 			CambriaBatchingPublisher pub = null;
 			try {
@@ -126,7 +127,7 @@ public class NotificationServer {
 					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "UEB properties are missing from the property file ");
 					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "UEB properties are missing from the property file ");
 				}
-				
+
 				hosts.trim();
 				topic.trim();
 				apiKey.trim();
@@ -136,8 +137,8 @@ public class NotificationServer {
 						.onTopic ( topic )
 						.authenticatedBy ( apiKey, apiSecret )
 						.build ()
-					;
-				
+						;
+
 			} catch (MalformedURLException e1) {
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error creating the UEB publisher" + e1.getMessage());
 			} catch (GeneralSecurityException e1) {
@@ -147,7 +148,7 @@ public class NotificationServer {
 				try {
 					pub.send( "MyPartitionKey", notification );
 				} catch (IOException e) {
-					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error sending notification update" + e.getMessage() + e);
+					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error sending notification update" + e.getMessage());
 				}
 				// close the publisher. The batching publisher does not send events
 				// immediately, so you MUST use close to send any remaining messages.
@@ -156,7 +157,7 @@ public class NotificationServer {
 				// they're returned to your app. You could, for example, persist to disk
 				// and try again later.
 				final List<?> stuck = pub.close ( 20, TimeUnit.SECONDS );
-				
+
 				if (!stuck.isEmpty()){
 					LOGGER.error( stuck.size() + " messages unsent" );
 				}else{
@@ -184,7 +185,7 @@ public class NotificationServer {
 				
 				List<String> dmaapList = null;
 				if(dmaapServers.contains(",")) {
-					dmaapList = new ArrayList<String>(Arrays.asList(dmaapServers.split("\\s*,\\s*")));
+					dmaapList = new ArrayList<>(Arrays.asList(dmaapServers.split("\\s*,\\s*")));
 				} else {
 					dmaapList = new ArrayList<>();
 					dmaapList.add(dmaapServers);
@@ -213,9 +214,11 @@ public class NotificationServer {
 				LOGGER.info(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in sending the Event Notification: "+ e.getMessage());
 			}
 		}
+		NotificationService.sendNotification(notification);
 	}
-	
+
 	public static void setUpdate(String update) {
 		NotificationServer.update = update;
 	}
+	
 }

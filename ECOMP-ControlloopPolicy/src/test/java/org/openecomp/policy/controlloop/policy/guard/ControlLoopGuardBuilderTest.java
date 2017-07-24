@@ -66,7 +66,13 @@ public class ControlLoopGuardBuilderTest {
 			//
 			// Add a guard policy without limit constraint
 			//
-			GuardPolicy policy1 = new GuardPolicy("1111", "guardpolicy1", "guardpolicy1", "APPC", "restart");
+            String clname = "CL_vUSP123";
+            LinkedList<String> targets = new LinkedList<String>();
+            targets.add("s1");
+            targets.add("s2");
+            targets.add("s3");
+            MatchParameters matchParameters = new MatchParameters(clname, "APPC", "Restart", targets);
+            GuardPolicy policy1 = new GuardPolicy("id123", "guardpolicy1", "description aaa", matchParameters);
 			builder = builder.addGuardPolicy(policy1);
 			//
 			// Assert there is no limit constraint associated with the only guard policy
@@ -83,13 +89,16 @@ public class ControlLoopGuardBuilderTest {
 			//
 			// Add a constraint to policy1
 			//
-			Map<String, String> time_in_range = new HashMap<String, String>();
-			time_in_range.put("arg2", "PT5H");
-			time_in_range.put("arg3", "PT24H");
+            Map<String, String> active_time_range = new HashMap<String, String>();
+            active_time_range.put("start", "00:00:00-05:00");
+            active_time_range.put("end", "23:59:59-05:00");
 			List<String> blacklist = new LinkedList<String>();
 			blacklist.add("eNodeB_common_id1");
 			blacklist.add("eNodeB_common_id2");
-			Constraint cons = new Constraint(5, "PT15M", time_in_range, blacklist);
+            Map<String, String> time_window = new HashMap<String, String>();
+            time_window.put("value", "10");
+            time_window.put("units", "minute");
+            Constraint cons = new Constraint(5, time_window, active_time_range, blacklist);
 			builder = builder.addLimitConstraint(policy1.getId(), cons);
 			//
 			// Add a duplicate constraint to policy1
@@ -142,12 +151,12 @@ public class ControlLoopGuardBuilderTest {
 			fail(e.getMessage());
 		}
 	}
-
+	
 	@Test
 	public void test1() {
 		this.test("src/test/resources/v2.0.0-guard/policy_guard_OpenECOMP_demo_vDNS.yaml");
 	}
-
+	
 	@Test
 	public void test2() {
 		this.test("src/test/resources/v2.0.0-guard/policy_guard_1707_appc.yaml");

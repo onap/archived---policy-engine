@@ -42,17 +42,19 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBElement;
 
 import org.json.JSONObject;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.BRMSParamTemplate;
 import org.openecomp.policy.rest.jpa.PolicyEntity;
+import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,9 +71,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
-import org.openecomp.policy.common.logging.flexlogger.FlexLogger; 
-import org.openecomp.policy.common.logging.flexlogger.Logger;
-
 @Controller
 @RequestMapping("/")
 public class CreateBRMSParamController extends RestrictedBaseController {
@@ -79,6 +78,14 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 
 	private static CommonClassDao commonClassDao;
 
+	public static CommonClassDao getCommonClassDao() {
+		return commonClassDao;
+	}
+
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
+		CreateBRMSParamController.commonClassDao = commonClassDao;
+	}
+	
 	@Autowired
 	private CreateBRMSParamController(CommonClassDao commonClassDao){
 		CreateBRMSParamController.commonClassDao = commonClassDao;
@@ -90,35 +97,36 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 	private HashMap<String, String> dynamicLayoutMap;
 	
 	private static String brmsTemplateVlaue = "<$%BRMSParamTemplate=";
-	private static String String = "String";
+	private static String string = "String";
 
 
 	@RequestMapping(value={"/policyController/getBRMSTemplateData.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView getBRMSParamPolicyRuleData(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		dynamicLayoutMap = new HashMap<>();
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		JsonNode root = mapper.readTree(request.getReader());
-		String rule = findRule(root.get(PolicyController.getPolicydata()).toString().replaceAll("^\"|\"$", ""));
-		generateUI(rule);
-		response.setCharacterEncoding(PolicyController.getCharacterencoding());
-		response.setContentType(PolicyController.getContenttype());
-		request.setCharacterEncoding(PolicyController.getCharacterencoding());
+	public void getBRMSParamPolicyRuleData(HttpServletRequest request, HttpServletResponse response){
+		try{
+			dynamicLayoutMap = new HashMap<>();
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			JsonNode root = mapper.readTree(request.getReader());
+			String rule = findRule(root.get(PolicyController.getPolicydata()).toString().replaceAll("^\"|\"$", ""));
+			generateUI(rule);
+			response.setCharacterEncoding(PolicyController.getCharacterencoding());
+			response.setContentType(PolicyController.getContenttype());
+			request.setCharacterEncoding(PolicyController.getCharacterencoding());
 
-		PrintWriter out = response.getWriter();
-		String responseString = mapper.writeValueAsString(dynamicLayoutMap);
-		JSONObject j = new JSONObject("{policyData: " + responseString + "}");
-		out.write(j.toString());
-		return null;
+			PrintWriter out = response.getWriter();
+			String responseString = mapper.writeValueAsString(dynamicLayoutMap);
+			JSONObject j = new JSONObject("{policyData: " + responseString + "}");
+			out.write(j.toString());
+		}catch(Exception e){
+			policyLogger.error("Exception Occured while getting BRMS Rule data" , e);
+		}
 	}
 
 	protected String findRule(String ruleTemplate) {
-		List<Object> datas = commonClassDao.getData(BRMSParamTemplate.class);
-		for (Object data: datas){
-			BRMSParamTemplate  bRMSParamTemplate = (BRMSParamTemplate) data;
-			if(bRMSParamTemplate.getRuleName().equals(ruleTemplate)){
-				return bRMSParamTemplate.getRule();
-			}
+		List<Object> datas = commonClassDao.getDataById(BRMSParamTemplate.class, "ruleName", ruleTemplate);
+		if(datas != null && !datas.isEmpty()){
+			BRMSParamTemplate  bRMSParamTemplate = (BRMSParamTemplate) datas.get(0);
+			return bRMSParamTemplate.getRule();
 		}
 		return null;
 	}
@@ -197,10 +205,10 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 						policyLogger.info("Just for Logging"+e);
 						nextComponent = components[i];
 					}
-					if (nextComponent.startsWith(String)) {
+					if (nextComponent.startsWith(string)) {
 						type = "String";
 						createField(caption, type);
-						caption = nextComponent.replace(String, "");
+						caption = nextComponent.replace(string, "");
 					} else if (nextComponent.startsWith("int")) {
 						type = "int";
 						createField(caption, type);
@@ -357,7 +365,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 		return formateDate;
 	}
 	// This method generates the UI from rule configuration
-	private void paramUIGenerate(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
+	public void paramUIGenerate(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		String data = entity.getConfigurationData().getConfigBody();
 		if(data != null){
 			File file = new File(PolicyController.getConfigHome() +File.separator+ entity.getConfigurationData().getConfigurationName());
@@ -471,7 +479,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 	// set View Rule
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value={"/policyController/ViewBRMSParamPolicyRule.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView setViewRule(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void setViewRule(HttpServletRequest request, HttpServletResponse response){
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -493,7 +501,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			if(policyData.getRuleData().size() > 0){ 
 				for(Object keyValue: policyData.getRuleData().keySet()){ 
 					String key = keyValue.toString().substring(0, 1).toUpperCase() + keyValue.toString().substring(1); 
-					if (String.equals(keyValue)) { 
+					if (string.equals(keyValue)) { 
 						generatedRule.append("\n\t\tparams.set" 
 								+ key + "(\"" 
 								+ policyData.getRuleData().get(keyValue).toString() + "\");"); 
@@ -537,10 +545,8 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			String responseString = mapper.writeValueAsString(body);
 			JSONObject j = new JSONObject("{policyData: " + responseString + "}");
 			out.write(j.toString());
-			return null;
 		} catch (Exception e) {
 			policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
-		return null;	
+		}	
 	}
 }

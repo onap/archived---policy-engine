@@ -5,11 +5,15 @@ guards:
   - id: unique_guard_ONAP_vDNS_1
     name: MSO Spinup
     description: We only spin up 1 instance over a 10 minute window
-    actor: MSO
-    recipe: VF Module Create
+    match_parameters:
+      actor: MSO
+      recipe: VF Module Create
     limit_constraints:
-      - num: 1
+      - freq_limit_per_target: 1
         #
         # https://www.w3.org/TR/xmlschema-2/#duration
         #
-        duration: PT10M
+        time_window:
+          value: 10
+          units: hour
+        

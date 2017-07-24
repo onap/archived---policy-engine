@@ -33,7 +33,7 @@ import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
 
 public class CreateUpdateFirewallPolicyService {
-    private static Logger LOGGER = FlexLogger.getLogger(CreateUpdateFirewallPolicyService.class.getName());
+    private static final Logger LOGGER = FlexLogger.getLogger(CreateUpdateFirewallPolicyService.class.getName());
     
     private String response = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -73,7 +73,7 @@ public class CreateUpdateFirewallPolicyService {
         try {
             policyParameters.setTtlDate(new SimpleDateFormat("dd-MM-yyyy").parse(configFirewallPolicyAPIRequest.getTtlDate()));
         } catch (NullPointerException | ParseException e) {
-            LOGGER.warn("Error Parsing date given " + configFirewallPolicyAPIRequest.getTtlDate());
+            LOGGER.warn("Error Parsing date given " + configFirewallPolicyAPIRequest.getTtlDate(), e);
             policyParameters.setTtlDate(null);
         }
         CreateUpdatePolicyService createUpdatePolicyService = new CreateUpdatePolicyServiceImpl(policyParameters, requestID, updateFlag);

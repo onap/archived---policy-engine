@@ -19,7 +19,6 @@
  */
 
 package org.openecomp.policy.controller;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,11 +66,8 @@ import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -87,7 +83,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 @Controller
 @RequestMapping("/")
 public class CreateFirewallController extends RestrictedBaseController {
-	private static Logger logger	= FlexLogger.getLogger(CreateFirewallController.class);
+	private static Logger policyLogger	= FlexLogger.getLogger(CreateFirewallController.class);
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -110,9 +106,9 @@ public class CreateFirewallController extends RestrictedBaseController {
 
 	public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData){
 		
-		termCollectorList = new ArrayList<String>();
-		tagCollectorList = new ArrayList<String>();
-		if(policyData.getAttributes().size() > 0){
+		termCollectorList = new ArrayList<>();
+		tagCollectorList = new ArrayList<>();
+		if(!policyData.getAttributes().isEmpty()){
 			for(Object attribute : policyData.getAttributes()){
 				if(attribute instanceof LinkedHashMap<?, ?>){
 					String key = ((LinkedHashMap<?, ?>) attribute).get("key").toString();
@@ -135,16 +131,14 @@ public class CreateFirewallController extends RestrictedBaseController {
 	}
 
 	private List<String> mapping(String expandableList) {
-		String value = new String();
-		String desc =  new String();
 		List <String> valueDesc= new ArrayList<>();
 		List<Object> prefixListData = commonClassDao.getData(PrefixList.class);
 		for (int i = 0; i< prefixListData.size(); i++) {
 			PrefixList prefixList = (PrefixList) prefixListData.get(i);
 			if (prefixList.getPrefixListName().equals(expandableList)) {
-				value = prefixList.getPrefixListValue();
+				String value = prefixList.getPrefixListValue();
 				valueDesc.add(value);
-				desc= prefixList.getDescription();
+				String desc= prefixList.getDescription();
 				valueDesc.add(desc);
 				break;
 			}
@@ -198,14 +192,15 @@ public class CreateFirewallController extends RestrictedBaseController {
 			// policy name value is the policy name without any prefix and Extensions.
 			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
 			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("FW_") +3);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Prepopulating form data for Config Policy selected:"+ policyAdapter.getPolicyName());
+			if (policyLogger.isDebugEnabled()) {
+				policyLogger.debug("Prepopulating form data for Config Policy selected:"+ policyAdapter.getPolicyName());
 			}
 			policyAdapter.setPolicyName(policyNameValue);
 			String description = "";
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
+				policyLogger.info("General error", e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);
@@ -229,7 +224,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 				}
 			}
 			catch(Exception e) {
-				logger.error("Exception Caused while Retriving the JSON body data" +e);
+				policyLogger.error("Exception Caused while Retriving the JSON body data" +e);
 			}
 			
 			Map<String, String> termTagMap=null;
@@ -317,14 +312,14 @@ public class CreateFirewallController extends RestrictedBaseController {
 	}
 	
 	@RequestMapping(value={"/policyController/ViewFWPolicyRule.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView setFWViewRule(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void setFWViewRule(HttpServletRequest request, HttpServletResponse response){
 		try {
 			termCollectorList = new ArrayList<>();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			PolicyRestAdapter policyData = (PolicyRestAdapter)mapper.readValue(root.get("policyData").toString(), PolicyRestAdapter.class);
-			if(policyData.getAttributes().size() > 0){
+			if(!policyData.getAttributes().isEmpty()){
 				for(Object attribute : policyData.getAttributes()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get("key").toString();
@@ -450,7 +445,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 								}
 							}
 						}
-						displayString.append("\n");
+						displayString.append("\n");	
 					}
 
 					ruleAction=(jpaTermList).getAction();
@@ -469,11 +464,9 @@ public class CreateFirewallController extends RestrictedBaseController {
 			String responseString = mapper.writeValueAsString(displayString);
 			JSONObject j = new JSONObject("{policyData: " + responseString + "}");
 			out.write(j.toString());
-			return null;
 		} catch (Exception e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+			policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
-		return null;	
 	}
 
 	private String constructJson(PolicyRestAdapter policyData) {
@@ -847,10 +840,10 @@ public class CreateFirewallController extends RestrictedBaseController {
 							PrefixIPList targetAddressList = new PrefixIPList();
 							AddressMembers addressMembers= new AddressMembers();
 							targetAddressList.setName(prefixIP);
-							logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "PrefixList value:"+prefixIP);
+							policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "PrefixList value:"+prefixIP);
 							valueDesc = mapping(prefixIP);
 							if(!valueDesc.isEmpty()){
-								logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "PrefixList description:"+valueDesc.get(1));
+								policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "PrefixList description:"+valueDesc.get(1));
 								targetAddressList.setDescription(valueDesc.get(1));
 							}
 							
@@ -922,16 +915,12 @@ public class CreateFirewallController extends RestrictedBaseController {
 			ObjectWriter om = new ObjectMapper().writer();
 			try {
 				json = om.writeValueAsString(tc);
-			} catch (JsonGenerationException e) {
-				logger.error("Exception Occured"+e);
-			} catch (JsonMappingException e) {
-				logger.error("Exception Occured"+e);
-			} catch (IOException e) {
-				logger.error("Exception Occured"+e);
+			} catch (Exception e) {
+				policyLogger.error("Exception Occured"+e);
 			}	
 
 		}catch (Exception e) {
-			logger.error("Exception Occured"+e);
+			policyLogger.error("Exception Occured"+e);
 		}
 
 		return json;

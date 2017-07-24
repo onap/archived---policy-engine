@@ -123,7 +123,11 @@ public class PolicyElasticData {
 		this.configName = policyData.getConfigName();
 		this.configType = policyData.getConfigType();
 		this.jsonBody = policyData.getJsonBody();
-		this.jsonBodyData = policyData.getJsonBodyData(); 
+		if(configPolicyType.startsWith("ClosedLoop")){
+			this.jsonBodyData = jsonBody; 
+		}else{
+			this.jsonBodyData = policyData.getJsonBodyData(); 
+		}
 		
 		this.serviceTypePolicyName = policyData.getServiceTypePolicyName();
 		this.verticaMetrics = policyData.getVerticaMetrics();

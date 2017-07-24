@@ -36,6 +36,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -81,7 +82,7 @@ public class NotificationController {
 	private static String pdpURL = null;
 	private static Boolean notificationFlag = false; 
 	
-	public void check(PDPStatus newStatus,HashMap<String, PolicyDef> policyContainer) {
+	public void check(PDPStatus newStatus,Map<String, PolicyDef> policyContainer) {
 		boolean updated = false;
 		boolean removed = false;
 		Notification notification = new Notification();
@@ -167,15 +168,11 @@ public class NotificationController {
 					notificationJSON= record(notification);
 				}catch(Exception e){
 					LOGGER.error(e);
-					// TODO:EELF Cleanup - Remove LOGGER
-					//PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "");
 				}
 				NotificationServer.setUpdate(notificationJSON);
 				ManualNotificationUpdateThread.setUpdate(notificationJSON);
 			} catch (JsonProcessingException e) {
 				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage());
-				// TODO:EELF Cleanup - Remove LOGGER
-				//PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "");
 			}
 		}
 	}
@@ -194,15 +191,13 @@ public class NotificationController {
 	private void sendremove(PDPPolicy oldPolicy) {
 		removed = new Removed();
 		// Want to know what is removed ?
-		// LOGGER.info("The Policy removed is: " + oldPolicy.getId());
-		// LOGGER.info("The version no. is: " + oldPolicy.getVersion());
 		LOGGER.info("Policy removed: " + oldPolicy.getId()+ " with version number: " + oldPolicy.getVersion());
 		removed.setPolicyName(oldPolicy.getId());
 		removed.setVersionNo(oldPolicy.getVersion());
 		removeFile(oldPolicy);
 	}
 
-	private void sendUpdate(PDPPolicy newPolicy,HashMap<String, PolicyDef> policyContainer) {
+	private void sendUpdate(PDPPolicy newPolicy,Map<String, PolicyDef> policyContainer) {
 		updated = new Updated();
 		// Want to know what is new ?
 		LOGGER.info("The new Policy is: " + newPolicy.getId());
@@ -327,8 +322,6 @@ public class NotificationController {
 			json = om.writeValueAsString(record);
 		} catch (JsonProcessingException e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage());
-			// TODO:EELF Cleanup - Remove LOGGER
-			//PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "");
 		}
 		LOGGER.info(json);
 		return json;

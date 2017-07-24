@@ -67,6 +67,10 @@ public enum DictionaryType{
 	 * Indicates SafePolicy Dictionaries
 	 */
 	SafePolicy("SafePolicy"),
+	/**
+	 * Enum support entry to extend dictionary 
+	 */
+	Extended("Extended"),
 	;
 	
 	private String name;

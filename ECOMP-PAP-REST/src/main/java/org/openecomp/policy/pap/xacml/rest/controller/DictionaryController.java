@@ -22,6 +22,7 @@ package org.openecomp.policy.pap.xacml.rest.controller;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -204,6 +205,7 @@ public class DictionaryController {
 			}else{
 				if(!isFakeUpdate) {
 					attributeData.setUserModifiedBy(this.getUserInfo(userId));
+					attributeData.setModifiedDate(new Date());
 					commonClassDao.update(attributeData); 
 				}
 			} 
@@ -357,6 +359,7 @@ public class DictionaryController {
 			}else{
 				if(!isFakeUpdate){
 					ecompData.setUserModifiedBy(this.getUserInfo(userId));
+					ecompData.setModifiedDate(new Date());
 					commonClassDao.update(ecompData);
 				}
 			} 

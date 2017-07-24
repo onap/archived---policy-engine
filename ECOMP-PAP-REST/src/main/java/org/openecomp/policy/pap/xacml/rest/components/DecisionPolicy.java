@@ -50,6 +50,7 @@ import org.openecomp.policy.controlloop.policy.guard.Constraint;
 import org.openecomp.policy.controlloop.policy.guard.ControlLoopGuard;
 import org.openecomp.policy.controlloop.policy.guard.Guard;
 import org.openecomp.policy.controlloop.policy.guard.GuardPolicy;
+import org.openecomp.policy.controlloop.policy.guard.MatchParameters;
 import org.openecomp.policy.controlloop.policy.guard.builder.ControlLoopGuardBuilder;
 import org.openecomp.policy.pap.xacml.rest.XACMLPapServlet;
 import org.openecomp.policy.pap.xacml.rest.util.JPAUtils;
@@ -57,6 +58,7 @@ import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 import org.openecomp.policy.rest.jpa.Datatype;
 import org.openecomp.policy.rest.jpa.DecisionSettings;
 import org.openecomp.policy.rest.jpa.FunctionDefinition;
+import org.openecomp.policy.utils.PolicyUtils;
 import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.openecomp.policy.xacml.std.pip.engines.aaf.AAFEngine;
 import org.openecomp.policy.xacml.util.XACMLPolicyScanner;
@@ -86,7 +88,7 @@ public class DecisionPolicy extends Policy {
 	private static final Logger LOGGER	= FlexLogger.getLogger(DecisionPolicy.class);
 	
 	public static final String FUNCTION_NOT = "urn:oasis:names:tc:xacml:1.0:function:not";
-	private static final String AAFProvider = "AAF";
+	private static final String AAFPROVIDER = "AAF";
 	public static final String GUARD_YAML = "GUARD_YAML";
     public static final String GUARD_BL_YAML = "GUARD_BL_YAML";
     public static final String RAINY_DAY = "Rainy_Day";
@@ -200,7 +202,7 @@ public class DecisionPolicy extends Policy {
 			allOf.getMatch().add(createMatch(ECOMPNAME, (policyAdapter.getEcompName())));
 			
 			Map<String, String> dynamicFieldComponentAttributes = policyAdapter.getDynamicFieldConfigAttributes();
-			if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFProvider)){
+			if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFPROVIDER)){
 				dynamicFieldComponentAttributes = new HashMap<>();
 			}
 			
@@ -221,9 +223,7 @@ public class DecisionPolicy extends Policy {
 			decisionPolicy.setTarget(target);
 
 			Map<String, String> dynamicFieldDecisionSettings = policyAdapter.getDynamicSettingsMap();
-			
-			//dynamicVariableList = policyAdapter.getDynamicVariableList();
-			if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFProvider)){
+			if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFPROVIDER)){
 				dynamicFieldDecisionSettings = new HashMap<>();
 			}
 			
@@ -231,13 +231,10 @@ public class DecisionPolicy extends Policy {
 			for (String keyField : dynamicFieldDecisionSettings.keySet()) {
 				String key = keyField;
 				String value = dynamicFieldDecisionSettings.get(key);
-				//String dataType = (String) dynamicVariableList.get(counter);
 				String dataType = getDataType(key);
 				VariableDefinitionType dynamicVariable = createDynamicVariable(key, value, dataType);
 				decisionPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(dynamicVariable);
 			}
-			
-			
 			Map<String, String> dynamicFieldTreatmentAttributes = policyAdapter.getRainydayMap();
 			
 			if(policyAdapter.getRuleProvider().equals(RAINY_DAY)){
@@ -252,24 +249,39 @@ public class DecisionPolicy extends Policy {
 			}
 
 		}
-
 		setPreparedToSave(true);
 		return true;
 	}
 	
-	public PolicyType getGuardPolicy(Map<String, String> yamlParams, String ruleProvider) {
+	public PolicyType getGuardPolicy(Map<String, String> yamlParams, String ruleProvider) throws BuilderException{
 		try {
 			ControlLoopGuardBuilder builder = ControlLoopGuardBuilder.Factory.buildControlLoopGuard(new Guard());
-			GuardPolicy policy1 = new GuardPolicy((policyAdapter.getUuid()!=null? policyAdapter.getUuid(): UUID.randomUUID().toString()) ,yamlParams.get(POLICY_NAME), yamlParams.get(DESCRIPTION), yamlParams.get("actor"), yamlParams.get("recipe"));
+			MatchParameters matchParameters = new MatchParameters(yamlParams.get("actor"), yamlParams.get("recipe"));
+			matchParameters.setControlLoopName(yamlParams.get("clname"));
+			if(yamlParams.containsKey("targets")){
+				String targetString = yamlParams.get("targets");
+				List<String> targets = null;
+				if(targetString!=null && !targetString.isEmpty()){
+					if (targetString.contains(",")){
+						targets = Arrays.asList(targetString.split(","));
+					}
+					else{
+						targets = new ArrayList<>();
+						targets.add(targetString);
+					}	
+				}
+				matchParameters.setTargets(targets);
+			}
+			GuardPolicy policy1 = new GuardPolicy((policyAdapter.getUuid()!=null? policyAdapter.getUuid(): UUID.randomUUID().toString()) ,yamlParams.get(POLICY_NAME), yamlParams.get(DESCRIPTION), matchParameters);
 			builder = builder.addGuardPolicy(policy1);
-			Map<String, String> time_in_range = new HashMap<>();
-			time_in_range.put("arg2", yamlParams.get("guardActiveStart"));
-			time_in_range.put("arg3", yamlParams.get("guardActiveEnd"));
+            Map<String, String> activeTimeRange = new HashMap<>();
+            activeTimeRange.put("start", yamlParams.get("guardActiveStart"));
+            activeTimeRange.put("end", yamlParams.get("guardActiveEnd"));
 			String blackListString = yamlParams.get("blackList");
 			List<String> blackList = null;
 			if(blackListString!=null){
 				if (blackListString.contains(",")){
-					blackList = Arrays.asList(blackListString.split(","));
+					blackList = Arrays.asList(blackListString.split(","));								
 				}
 				else{
 					blackList = new ArrayList<>();
@@ -278,18 +290,30 @@ public class DecisionPolicy extends Policy {
 			}
 			File templateFile;
 			Path xacmlTemplatePath;
-			Constraint cons;
 			ClassLoader classLoader = getClass().getClassLoader();
+			Constraint cons = new Constraint();
 			switch (ruleProvider){
 			case GUARD_BL_YAML:
 				templateFile = new File(classLoader.getResource(XACML_BLGUARD_TEMPLATE).getFile());
 				xacmlTemplatePath = templateFile.toPath();
-				cons = new Constraint(time_in_range,blackList);
+                cons.setActive_time_range(activeTimeRange);
+                cons.setBlacklist(blackList);
 				break;
 			default:
 				templateFile = new File(classLoader.getResource(XACML_GUARD_TEMPLATE).getFile());
 				xacmlTemplatePath = templateFile.toPath();
-				cons = new Constraint(Integer.parseInt(yamlParams.get("limit")), yamlParams.get("timeWindow"), time_in_range);
+				Map<String,String> timeWindow = new HashMap<>();
+				if(!PolicyUtils.isInteger(yamlParams.get("timeWindow"))){
+					throw new BuilderException("time window is not in Integer format.");
+				}
+				String timeUnits = yamlParams.get("timeUnits");
+				if(timeUnits==null || !(timeUnits.equalsIgnoreCase("minute") || timeUnits.equalsIgnoreCase("hour") || timeUnits.equalsIgnoreCase("day") 
+						|| timeUnits.equalsIgnoreCase("week") || timeUnits.equalsIgnoreCase("month")||timeUnits.equalsIgnoreCase("year"))){
+					throw new BuilderException("time Units is not in proper format.");
+				}
+				timeWindow.put("value", yamlParams.get("timeWindow"));
+				timeWindow.put("units", yamlParams.get("timeUnits"));
+				cons = new Constraint(Integer.parseInt(yamlParams.get("limit")),timeWindow,activeTimeRange);
 				break;
 			}
 			builder = builder.addLimitConstraint(policy1.getId(), cons);
@@ -297,7 +321,6 @@ public class DecisionPolicy extends Policy {
 			Results results = builder.buildSpecification();
 			// YAML TO XACML 
 			ControlLoopGuard yamlGuardObject = SafePolicyBuilder.loadYamlGuard(results.getSpecification());
-			
 	        String xacmlTemplateContent;
 	        try {
 				xacmlTemplateContent = new String(Files.readAllBytes(xacmlTemplatePath));
@@ -305,25 +328,28 @@ public class DecisionPolicy extends Policy {
 				yamlSpecs.put(POLICY_NAME, yamlParams.get(POLICY_NAME));
 				yamlSpecs.put(DESCRIPTION, yamlParams.get(DESCRIPTION));
 				yamlSpecs.put(ECOMPNAME, yamlParams.get(ECOMPNAME));
-				yamlSpecs.put("actor", yamlGuardObject.getGuards().getFirst().getActor());
-				yamlSpecs.put("recipe", yamlGuardObject.getGuards().getFirst().getRecipe());
-				if(yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getNum()!=null){
-					yamlSpecs.put("limit", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getNum().toString());
+				yamlSpecs.put("actor", yamlGuardObject.getGuards().getFirst().getMatch_parameters().getActor());
+				yamlSpecs.put("recipe", yamlGuardObject.getGuards().getFirst().getMatch_parameters().getRecipe());
+				yamlSpecs.put("clname", yamlGuardObject.getGuards().getFirst().getMatch_parameters().getControlLoopName());
+				if(yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getFreq_limit_per_target()!=null){
+					yamlSpecs.put("limit", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getFreq_limit_per_target().toString());
 				}
-				if(yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getDuration()!=null){
-					yamlSpecs.put("timeWindow", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getDuration());
+				if(yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getTime_window()!=null){
+					yamlSpecs.put("twValue", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getTime_window().get("value"));
+					yamlSpecs.put("twUnits", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getTime_window().get("units"));
 				}
-				yamlSpecs.put("guardActiveStart", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getTime_in_range().get("arg2"));
-				yamlSpecs.put("guardActiveEnd", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getTime_in_range().get("arg3"));
-		        String xacmlPolicyContent = SafePolicyBuilder.generateXacmlGuard(xacmlTemplateContent,yamlSpecs, yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getBlacklist());
+				yamlSpecs.put("guardActiveStart", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getActive_time_range().get("start"));
+				yamlSpecs.put("guardActiveEnd", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getActive_time_range().get("end"));
+		        String xacmlPolicyContent = SafePolicyBuilder.generateXacmlGuard(xacmlTemplateContent,yamlSpecs, yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getBlacklist(), yamlGuardObject.getGuards().getFirst().getMatch_parameters().getTargets());
 		       // Convert the  Policy into Stream input to Policy Adapter. 
 		        Object policy = XACMLPolicyScanner.readPolicy(new ByteArrayInputStream(xacmlPolicyContent.getBytes(StandardCharsets.UTF_8)));
 				return (PolicyType) policy;
 			} catch (IOException e) {
-				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage() + e);
+				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage() , e);
 			}
 		} catch (BuilderException e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage() +e);
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage() ,e);
+			throw e;
 		}
 		return null;
 	}
@@ -384,7 +410,7 @@ public class DecisionPolicy extends Policy {
 		dynamicFieldTwoRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField2();
 		dropDownMap = createDropDownMap();
 		
-		if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFProvider)){
+		if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFPROVIDER)){
 			// Values for AAF Provider are here for XML Creation. 
 			ConditionType condition = new ConditionType();
 			ApplyType decisionApply = new ApplyType();
@@ -427,7 +453,7 @@ public class DecisionPolicy extends Policy {
 			if(!permitRule){
 				AdviceExpressionsType adviceExpressions = new AdviceExpressionsType();
 				AdviceExpressionType adviceExpression = new AdviceExpressionType();
-				adviceExpression.setAdviceId(AAFProvider);
+				adviceExpression.setAdviceId(AAFPROVIDER);
 				adviceExpression.setAppliesTo(EffectType.DENY);
 				AttributeAssignmentExpressionType assignment = new AttributeAssignmentExpressionType();
 				assignment.setAttributeId("aaf.response");
@@ -511,7 +537,7 @@ public class DecisionPolicy extends Policy {
 		// Create Target in Rule
 		AllOfType allOfInRule = new AllOfType();
 
-		// Creating match for ACCESS in rule target
+		// Creating match for DECIDE in rule target
 		MatchType accessMatch = new MatchType();
 		AttributeValueType accessAttributeValue = new AttributeValueType();
 		accessAttributeValue.setDataType(STRING_DATATYPE);
@@ -539,11 +565,11 @@ public class DecisionPolicy extends Policy {
 		errorcodeAttributeValue.getContent().add(errorcode);
 		errorcodeMatch.setAttributeValue(errorcodeAttributeValue);
 		AttributeDesignatorType errorcodeAttributeDesignator = new AttributeDesignatorType();
-		errorcodeAttributeDesignator.setCategory(CATEGORY_ACTION);
+		errorcodeAttributeDesignator.setCategory(CATEGORY_RESOURCE);
 		errorcodeAttributeDesignator.setDataType(STRING_DATATYPE);
 		errorcodeAttributeDesignator.setAttributeId("ErrorCode");
 		errorcodeMatch.setAttributeDesignator(errorcodeAttributeDesignator);
-		errorcodeMatch.setMatchId(FUNCTION_STRING_EQUAL_IGNORE);
+		errorcodeMatch.setMatchId(FUNCTION_STRING_REGEXP_MATCH);
 		
 		allOfInRule.getMatch().add(errorcodeMatch);
 		
@@ -707,7 +733,6 @@ public class DecisionPolicy extends Policy {
 	
 	private void populateDataTypeList(String value1) {
 		String dataType = null;
-
 		if(value1.contains("S_")) {
 			value1 = value1.substring(2, value1.length());
 			DecisionSettings decisionSettings = findDecisionSettingsBySettingId(value1.substring(2, value1.length()));
@@ -732,17 +757,16 @@ public class DecisionPolicy extends Policy {
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured"+e);
 		}
-		Map<String, String> dropDownMap = new HashMap<>();
+		Map<String, String> dropDownOptions = new HashMap<>();
 		if(jpaUtils!=null){
 			Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
 			for (Map.Entry<Datatype,List<FunctionDefinition>> map: functionMap.entrySet()) {
 				for (FunctionDefinition functionDef : map.getValue()) {
-					dropDownMap.put(functionDef.getShortname(),functionDef.getXacmlid());
+					dropDownOptions.put(functionDef.getShortname(),functionDef.getXacmlid());
 				}
 			}
 		}
-		
-		return dropDownMap;
+		return dropDownOptions;
 	}
 	
 	private String getDataType(String key) {

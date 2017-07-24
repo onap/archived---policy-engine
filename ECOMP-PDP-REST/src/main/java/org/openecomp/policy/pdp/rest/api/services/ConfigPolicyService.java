@@ -37,15 +37,14 @@ import org.openecomp.policy.xacml.std.pap.StdPAPPolicy;
  * @version 0.1
  */
 public class ConfigPolicyService {
-	private static Logger LOGGER = FlexLogger.getLogger(ConfigPolicyService.class.getName());
-	private static PAPServices papServices = null;
+	private static final Logger LOGGER = FlexLogger.getLogger(ConfigPolicyService.class.getName());
+	private PAPServices papServices = null;
 	
 	private PolicyParameters policyParameters = null;
 	private String message = null;
 	private String policyName = null;
 	private String policyScope = null;
 	private String date = null;
-	private boolean levelCheck = false;
 	private String ecompName = null;
 	private String configName = null;
 	
@@ -67,6 +66,7 @@ public class ConfigPolicyService {
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE+ "No Config Body Type given.";
 			return false;
 		}
+		boolean levelCheck = false;
 		levelCheck = PolicyApiUtils.isNumeric(policyParameters.getRiskLevel());
 		if (!levelCheck){
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect Risk Level given.";
@@ -111,7 +111,7 @@ public class ConfigPolicyService {
 		String body = policyParameters.getConfigBody();
 		String configBody = null;
 		//check body for JSON form and remove single quotes if present
-		if (configType.equalsIgnoreCase("JSON")) {
+		if ("JSON".equalsIgnoreCase(configType)) {
 			if (body.contains("'")) {
 				configBody = body.replace("'", "\"");
 			} else {

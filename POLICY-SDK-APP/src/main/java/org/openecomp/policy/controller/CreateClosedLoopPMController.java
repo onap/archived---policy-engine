@@ -63,6 +63,7 @@ public class CreateClosedLoopPMController{
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
+				LOGGER.info("General error" , e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);

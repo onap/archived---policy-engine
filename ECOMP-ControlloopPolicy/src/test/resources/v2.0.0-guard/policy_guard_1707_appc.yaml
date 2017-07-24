@@ -6,19 +6,19 @@ guards:
     name: APPC 5 Restart
     description: 
       We only allow 5 restarts over 15 minute window during the day time hours (i.e. avoid midnight to 5am)
-    actor: APPC
-    recipe: Restart
+    match_parameters:
+      controlLoopName: CL_NAME_ABC_123
+      actor: APPC
+      recipe: Restart
+      targets:
+        - s1
+          s2
+          s3
     limit_constraints:
-      - num: 5
-        #
-        # https://www.w3.org/TR/xmlschema-2/#duration
-        #
-        duration: PT15M
-        #
-        # XACML function time-in-range
-        #
-        # Assumption is that the "current time" is the 1st argument
-        #
-        time_in_range:
-          arg2: PT5H
-          arg3: PT24H
+      - freq_limit_per_target: 5
+        time_window: 
+          value: 15
+          units: minute
+        active_time_range:
+          start: 00:00:00-05:00
+          end: 23:59:59-05:00

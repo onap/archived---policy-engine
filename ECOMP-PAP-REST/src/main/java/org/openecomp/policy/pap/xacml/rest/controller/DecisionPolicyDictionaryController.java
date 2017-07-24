@@ -22,6 +22,7 @@ package org.openecomp.policy.pap.xacml.rest.controller;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -169,6 +170,7 @@ public class DecisionPolicyDictionaryController {
 			}else{
 				if(!isFakeUpdate) {
 					decisionSettings.setUserModifiedBy(this.getUserInfo(userId));
+					decisionSettings.setModifiedDate(new Date());
 					commonClassDao.update(decisionSettings); 
 				}
 			}
@@ -248,7 +250,7 @@ public class DecisionPolicyDictionaryController {
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("rainyDayDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(RainyDayTreatments.class, "bbID")));
+			model.put("rainyDayDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(RainyDayTreatments.class, "bbid")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());

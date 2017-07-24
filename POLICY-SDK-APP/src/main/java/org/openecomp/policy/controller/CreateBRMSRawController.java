@@ -72,6 +72,7 @@ public class CreateBRMSRawController{
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
+				logger.info("Not able to see the createdby in description. So, add generic description", e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);

@@ -25,11 +25,14 @@ import java.util.List;
 public class YAMLParams {
 	private String actor;
 	private String recipe;
+	private String clname;
 	private String limit;
 	private String timeWindow;
+	private String timeUnits;
 	private String guardActiveStart;
 	private String guardActiveEnd;
 	private List<String> blackList;
+	private List<String> targets;
 	
 	public String getActor() {
 		return actor;
@@ -72,5 +75,23 @@ public class YAMLParams {
 	}
 	public void setBlackList(List<String> blackList) {
 		this.blackList = blackList;
+	}
+	public String getClname() {
+		return clname;
+	}
+	public void setClname(String clname) {
+		this.clname = clname;
+	}
+	public String getTimeUnits() {
+		return timeUnits;
+	}
+	public void setTimeUnits(String timeUnits) {
+		this.timeUnits = timeUnits;
+	}
+	public List<String> getTargets() {
+		return targets;
+	}
+	public void setTargets(List<String> targets) {
+		this.targets = targets;
 	}
 }

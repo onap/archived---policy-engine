@@ -34,7 +34,7 @@ import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
 
 public class PushPolicyService {
-    private static Logger LOGGER = FlexLogger.getLogger(PushPolicyService.class.getName());
+    private static final Logger LOGGER = FlexLogger.getLogger(PushPolicyService.class.getName());
     
     private String pushResult = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -57,7 +57,7 @@ public class PushPolicyService {
                     requestUUID = UUID.fromString(requestID);
                 } catch (IllegalArgumentException e) {
                     requestUUID = UUID.randomUUID();
-                    LOGGER.info("Generated Random UUID: " + requestUUID.toString());
+                    LOGGER.info("Generated Random UUID: " + requestUUID.toString(), e);
                 }
             }else{
                 requestUUID = UUID.randomUUID();
@@ -107,31 +107,6 @@ public class PushPolicyService {
              LOGGER.error(response);
              return response;
         }
-        /* //String activeVersion = papServices.getActiveVersion(policyScope, filePrefix, policyName, clientScope, pushPolicyParameters.getRequestID());
-        LOGGER.debug("The active version of " + policyScope + File.separator + filePrefix + policyName + " is " + activeVersion);
-        String id = null;
-        if ("pe100".equalsIgnoreCase(activeVersion)) {
-            response = XACMLErrorConstants.ERROR_PERMISSIONS + "response code of the URL is 403. PEP is not Authorized for making this Request!! "
-                    + "Contact Administrator for this Scope. "; 
-            LOGGER.error(response);
-            return response;
-        } else if ("pe300".equalsIgnoreCase(activeVersion)) {
-            response = XACMLErrorConstants.ERROR_DATA_ISSUE + "response code of the URL is 404.  "
-                    + "This indicates a problem with getting the version from the PAP or the policy does not exist.";
-            LOGGER.error(response);
-            return response;
-        }
-        if (!activeVersion.equalsIgnoreCase("0")) {
-            id = policyScope + "." + filePrefix + policyName + "." + activeVersion + ".xml";
-            LOGGER.debug("The policyId is " + id);
-        } else {
-            response = XACMLErrorConstants.ERROR_DATA_ISSUE + "could not retrieve the activeVersion for this policy.  "
-                    + "This indicates the policy does not exist, please verify the policy exists."; 
-            LOGGER.error(response);
-            return response;
-        }
-        StdPDPPolicy selectedPolicy = papServices.getGitPath(policyScope, filePrefix, policyName, activeVersion, clientScope, pushPolicyParameters.getRequestID(), id);
-        */
         try {
             LOGGER.debug("StdPDPPolicy object contains: " + selectedPolicy.getId() + ", " + selectedPolicy.getName() + ", " + selectedPolicy.getLocation().toString());
             response = copyPolicy(selectedPolicy, pdpGroup, clientScope, pushPolicyParameters.getRequestID());
@@ -181,9 +156,9 @@ public class PushPolicyService {
         // While Validating, extract the required values.
         if (pushPolicyParameters.getPolicyName() != null
                 && pushPolicyParameters.getPolicyName().contains(".")) {
-            policyName = pushPolicyParameters.getPolicyName().substring(pushPolicyParameters.getPolicyName().lastIndexOf(".") + 1,
+            policyName = pushPolicyParameters.getPolicyName().substring(pushPolicyParameters.getPolicyName().lastIndexOf('.') + 1,
                     pushPolicyParameters.getPolicyName().length());
-            policyScope = pushPolicyParameters.getPolicyName().substring(0,pushPolicyParameters.getPolicyName().lastIndexOf("."));
+            policyScope = pushPolicyParameters.getPolicyName().substring(0,pushPolicyParameters.getPolicyName().lastIndexOf('.'));
             LOGGER.info("Name is " + policyName + "   scope is " + policyScope);
         } else {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Scope given.";

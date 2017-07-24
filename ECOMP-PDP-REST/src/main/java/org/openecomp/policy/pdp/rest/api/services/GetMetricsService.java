@@ -34,12 +34,11 @@ import org.openecomp.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
 
 public class GetMetricsService {
-	private static Logger LOGGER = FlexLogger
-			.getLogger(GetDictionaryService.class.getName());
+	private static final Logger LOGGER = FlexLogger
+			.getLogger(GetMetricsService.class.getName());
 
 	private MetricsResponse response = null;
 	private HttpStatus status = HttpStatus.BAD_REQUEST;
-	private String message = null;
 	private MetricsRequestParameters metricsParameters = null;
 
 	public GetMetricsService(String requestID) {
@@ -49,7 +48,7 @@ public class GetMetricsService {
 				requestUUID = UUID.fromString(requestID);
 			} catch (IllegalArgumentException e) {
 				requestUUID = UUID.randomUUID();
-				LOGGER.info("Generated Random UUID: " + requestUUID.toString());
+				LOGGER.info("Generated Random UUID: " + requestUUID.toString(), e);
 			}
 		} else {
 			requestUUID = UUID.randomUUID();
@@ -72,11 +71,9 @@ public class GetMetricsService {
 	}
 
 	private void specialCheck() {
-		if (response != null) {
-			if (response.getResponseMessage() != null
-					&& response.getResponseMessage().contains("PE300")) {
+		if (response != null && (response.getResponseMessage() != null
+					&& response.getResponseMessage().contains("PE300"))) {
 				status = HttpStatus.BAD_REQUEST;
-			}
 		}
 	}
 
@@ -100,11 +97,12 @@ public class GetMetricsService {
 				metricsParameters.getRequestID(), "metrics");
 
 		JSONObject json = null;
+		String message = null;
 		if (result != null) {
 			if (result.length() > 81 && result.contains("{")) {
 				try {
 					String responseMessage = result.substring(0, 82);
-					String jsonString = result.substring(result.indexOf("{"),
+					String jsonString = result.substring(result.indexOf('{'),
 							result.length());
 					json = new JSONObject(jsonString);
 

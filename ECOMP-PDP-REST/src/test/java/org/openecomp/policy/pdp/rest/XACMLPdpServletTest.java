@@ -95,7 +95,6 @@ public class XACMLPdpServletTest extends TestCase{
     	
 		System.setProperty("xacml.properties", "xacml.pdp.properties");
 		System.setProperty("xacml.rest.pdp.config", "config_testing");
-		System.setProperty("xacml.rest.pep.idfile", "testclient.properties"); 
 		System.setProperty("xacml.rest.pdp.webapps", "/webapps");
 		System.setProperty("xacml.rootPolicies", "test_PolicyEngine.xml");
 		System.setProperty("xacml.referencedPolicies", "test_PolicyEngine.xml");

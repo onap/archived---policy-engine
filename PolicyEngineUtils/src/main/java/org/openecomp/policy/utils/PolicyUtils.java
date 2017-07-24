@@ -52,7 +52,6 @@ public class PolicyUtils {
 	private PolicyUtils(){
 		// Private Constructor
 	}
-	
 	public static String objectToJsonString(Object o) throws JsonProcessingException{
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(o);
@@ -87,13 +86,13 @@ public class PolicyUtils {
 	}
 	
 	public static String  emptyPolicyValidator(String field){
-		String error;
+        String error;
         if ("".equals(field) || field.contains(" ") || !field.matches("^[a-zA-Z0-9_]*$")) {
             error = "The Value in Required Field will allow only '{0-9}, {a-z}, {A-Z}, _' following set of Combinations";
             return error;
         } else {
             if(CharMatcher.ASCII.matchesAllOf((CharSequence) field)){
-            	 error = SUCCESS;
+                 error = SUCCESS;
             }else{
                 error = "The Value Contains Non ASCII Characters";
                 return error;
@@ -101,7 +100,7 @@ public class PolicyUtils {
         }
         return error;   
     } 
-	
+    
 	public static String  emptyPolicyValidatorWithSpaceAllowed(String field){
         String error;
         if ("".equals(field) || !field.matches("^[a-zA-Z0-9_ ]*$")) {
@@ -117,7 +116,6 @@ public class PolicyUtils {
         }
         return error;   
     } 
-    
     public static String descriptionValidator(String field) {
         String error;
         if (field.contains("@CreatedBy:") || field.contains("@ModifiedBy:")) {
@@ -129,6 +127,15 @@ public class PolicyUtils {
         return error;   
     }
     
+    public static Boolean isInteger(String number){
+    	try{
+    		Integer.parseInt(number);
+    	}catch(NumberFormatException e){
+    		return false;
+    	}
+    	return true;
+    }
+    
     public static String validateEmailAddress(String emailAddressValue) {
         String error = SUCCESS;
         List<String> emailList = Arrays.asList(emailAddressValue.split(","));
@@ -136,7 +143,7 @@ public class PolicyUtils {
             Pattern pattern = Pattern.compile(EMAIL_PATTERN);
             Matcher matcher = pattern.matcher(emailList.get(i).trim());
             if(!matcher.matches()){
-                error = "Please check the Following Email Address is not Valid ....   " +emailList.get(i).toString();
+                error = "Please check the Following Email Address is not Valid ....   " +emailList.get(i);
                 return error;
             }else{
                 error = SUCCESS;
@@ -149,28 +156,28 @@ public class PolicyUtils {
      * Check for "[ERR" to see if there are any errors. 
      */
     public static String brmsRawValidate(String rule){
-    	VerifierBuilder vBuilder = VerifierBuilderFactory.newVerifierBuilder();
-    	Verifier verifier = vBuilder.newVerifier();
-    	verifier.addResourcesToVerify(new ReaderResource(new StringReader(rule)), ResourceType.DRL);
-    	// Check if there are any Errors in Verification. 
-    	if(!verifier.getErrors().isEmpty()){
-    		boolean ignore = false;
-    		StringBuilder message = new StringBuilder("Not a Valid DRL rule"); 
-    		for(VerifierError error: verifier.getErrors()){
-    			// Ignore annotations Error Messages
-    			if(!error.getMessage().contains("'@'") && !error.getMessage().contains(PACKAGE_ERROR)){
-    				ignore= true;
-    				message.append("\n" + error.getMessage());
-    			}
-    		}
-    		// Ignore new package names with {
-    		// More checks for message to check if its a package error.
-    		if(ignore && !message.toString().contains("Parser returned a null Package")){
-    			message.append("[ERR 107]");
-    		}
-    		return message.toString();
-    	}
-    	return "";
+        VerifierBuilder vBuilder = VerifierBuilderFactory.newVerifierBuilder();
+        Verifier verifier = vBuilder.newVerifier();
+        verifier.addResourcesToVerify(new ReaderResource(new StringReader(rule)), ResourceType.DRL);
+        // Check if there are any Errors in Verification. 
+        if(!verifier.getErrors().isEmpty()){
+        	boolean ignore = false;
+            StringBuilder message = new StringBuilder("Not a Valid DRL rule"); 
+            for(VerifierError error: verifier.getErrors()){
+                // Ignore annotations Error Messages
+                if(!error.getMessage().contains("'@'") && !error.getMessage().contains(PACKAGE_ERROR)){
+                	ignore= true;
+                    message.append("\n" + error.getMessage());
+                }
+            }
+            // Ignore new package names with {
+            // More checks for message to check if its a package error.
+            if(ignore && !message.toString().contains("Parser returned a null Package")){
+            	message.append("[ERR 107]");
+            }
+            return message.toString();
+        }
+        return "";
     }
     
     /**

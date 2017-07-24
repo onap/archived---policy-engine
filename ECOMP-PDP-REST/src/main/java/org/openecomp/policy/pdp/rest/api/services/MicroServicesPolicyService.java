@@ -36,9 +36,9 @@ import org.openecomp.policy.xacml.std.pap.StdPAPPolicy;
  * @version 0.1
  */
 public class MicroServicesPolicyService{
-	private static Logger LOGGER = FlexLogger.getLogger(MicroServicesPolicyService.class.getName());
-	private static PAPServices papServices = null;
+	private static final Logger LOGGER = FlexLogger.getLogger(MicroServicesPolicyService.class.getName());
 	
+	private PAPServices papServices = null;
 	private PolicyParameters policyParameters = null;
 	private String message = null;
 	private String policyName = null;
@@ -46,7 +46,6 @@ public class MicroServicesPolicyService{
 	private String date = null;
 	private String ecompName = null;
 	private JsonObject microServiceAttributes = null;
-	private boolean levelCheck = false;
 	
 	public MicroServicesPolicyService(String policyName, String policyScope, PolicyParameters policyParameters, String date) {
 		this.policyParameters = policyParameters;
@@ -65,6 +64,7 @@ public class MicroServicesPolicyService{
 			microServiceAttributes = PolicyApiUtils.stringToJsonObject(policyParameters.getConfigBody());
 		} catch(JsonException| IllegalStateException e){
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + policyParameters.getConfigBody();
+			LOGGER.error("Error while parsing JSON body for MicroService Policy creation. ", e);
 			return false;
 		}
 		ecompName = policyParameters.getEcompName();
@@ -72,6 +72,7 @@ public class MicroServicesPolicyService{
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Ecomp Name given.";
 			return false;
 		}
+		boolean levelCheck = false;
 		levelCheck = PolicyApiUtils.isNumeric(policyParameters.getRiskLevel());
 		if (!levelCheck){
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect Risk Level given.";
@@ -96,7 +97,13 @@ public class MicroServicesPolicyService{
         String uuid = null;
         String msLocation = null;
         String configName = null;
-        String microService = microServiceAttributes.get("service").toString().replace("\"", "");
+        String microService = null;
+        String policyDescription=null;
+        String priority=null;
+        String version=null;
+        if (microServiceAttributes.get("service")!=null){
+        	microService = microServiceAttributes.get("service").toString().replace("\"", "");
+        }
         if (microServiceAttributes.get("uuid")!=null){
             uuid = microServiceAttributes.get("uuid").toString().replace("\"", "");
         }
@@ -106,10 +113,15 @@ public class MicroServicesPolicyService{
         if (microServiceAttributes.get("configName")!=null){
             configName = microServiceAttributes.get("configName").toString().replace("\"", "");
         }
-        String policyDescription = microServiceAttributes.get("description").toString().replace("\"", "");
-        String priority = microServiceAttributes.get("priority").toString().replace("\"", "");
-        String version = microServiceAttributes.get("version").toString().replace("\"", "");
-
+        if(microServiceAttributes.containsKey("description")){
+        	policyDescription = microServiceAttributes.get("description").toString().replace("\"", "");
+        }
+        if(microServiceAttributes.containsKey("priority")){
+        	priority = microServiceAttributes.get("priority").toString().replace("\"", "");
+        }
+        if(microServiceAttributes.containsKey("version")){
+        	version = microServiceAttributes.get("version").toString().replace("\"", "");
+        }
         // Create Policy. 
         StdPAPPolicy newPAPPolicy = new StdPAPPolicy("Micro Service", policyName, policyDescription, ecompName, 
                 configName, microService, uuid, msLocation, microServiceAttributes.toString(), priority, 

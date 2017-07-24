@@ -6,7 +6,7 @@
 			"version": "1.1.0-SNAPSHOT"
 		}, {
 			"groupId": "org.onap.policy.drools-applications",
-			"artifactId": "controlloop",
+			"artifactId": "events",
 			"version": "1.1.0-SNAPSHOT"
 		}, {
 			"groupId": "org.onap.policy.drools-applications",
