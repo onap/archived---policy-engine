@@ -66,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "5a202591_096dd932",
+        "filename": "ECOMP-PDP-REST/src/main/java/org/openecomp/policy/pdp/rest/api/services/BRMSParamPolicyService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-07-25T14:16:58Z",
+      "side": 1,
+      "message": "That is true Jorge, we need Risk Level to be numeric. As per line 60 this value can change. So it should be fine.",
+      "parentUuid": "5a202591_6930cd56",
+      "revId": "13732f201384edd73a5cdda8ee8728a82a97d944",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a202591_293ad536",
         "filename": "ECOMP-PDP-REST/src/main/java/org/openecomp/policy/pdp/rest/api/services/CreateUpdateConfigPolicyService.java",
         "patchSetId": 1
@@ -77,6 +95,24 @@
       "writtenOn": "2017-07-25T13:32:43Z",
       "side": 1,
       "message": "why setConfigBodyType can throw a null pointer exception?   It indicates a bug underneath",
+      "revId": "13732f201384edd73a5cdda8ee8728a82a97d944",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a202591_69656d44",
+        "filename": "ECOMP-PDP-REST/src/main/java/org/openecomp/policy/pdp/rest/api/services/CreateUpdateConfigPolicyService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-07-25T14:16:58Z",
+      "side": 1,
+      "message": "Fixing this code, To make a null check.",
+      "parentUuid": "5a202591_293ad536",
       "revId": "13732f201384edd73a5cdda8ee8728a82a97d944",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
