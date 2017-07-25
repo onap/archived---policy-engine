@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a202591_c975a133",
+        "filename": "ECOMP-PDP-REST/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-07-25T11:10:26Z",
+      "side": 1,
+      "message": "What is the Open Source licenses for this?",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 22
+      },
+      "revId": "13732f201384edd73a5cdda8ee8728a82a97d944",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
