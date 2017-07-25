@@ -46,6 +46,57 @@
       "revId": "13732f201384edd73a5cdda8ee8728a82a97d944",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a202591_6930cd56",
+        "filename": "ECOMP-PDP-REST/src/main/java/org/openecomp/policy/pdp/rest/api/services/BRMSParamPolicyService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-25T13:32:43Z",
+      "side": 1,
+      "message": "this is always going to be true, per line 59.  Intended?",
+      "revId": "13732f201384edd73a5cdda8ee8728a82a97d944",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a202591_293ad536",
+        "filename": "ECOMP-PDP-REST/src/main/java/org/openecomp/policy/pdp/rest/api/services/CreateUpdateConfigPolicyService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-25T13:32:43Z",
+      "side": 1,
+      "message": "why setConfigBodyType can throw a null pointer exception?   It indicates a bug underneath",
+      "revId": "13732f201384edd73a5cdda8ee8728a82a97d944",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a202591_093f1927",
+        "filename": "ECOMP-PDP-REST/src/main/java/org/openecomp/policy/pdp/rest/api/services/CreateUpdateConfigPolicyService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-07-25T13:32:43Z",
+      "side": 1,
+      "message": "same question as before",
+      "revId": "13732f201384edd73a5cdda8ee8728a82a97d944",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
