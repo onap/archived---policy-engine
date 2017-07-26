@@ -261,7 +261,7 @@ public class XACMLPdpRegisterThread implements Runnable {
 						try {
 							is = connection.getInputStream();
 						} catch (Exception e1) {
-							// ignore this
+							LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Failed to get Input Stream: " + e1);
 						}
 						if (is != null) {
 							is.close();

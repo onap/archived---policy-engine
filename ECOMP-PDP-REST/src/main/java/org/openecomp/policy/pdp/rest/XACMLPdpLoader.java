@@ -116,7 +116,7 @@ public class XACMLPdpLoader {
 				LOGGER.debug("Status: " + status);
 			}
 		} catch (ConcurrentModificationException e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e.getMessage());
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e.getMessage() + e);
 		} catch (Exception e) {
 			String error = "Failed to load Policy Cache properties file: "
 					+ e.getMessage();
@@ -256,7 +256,7 @@ public class XACMLPdpLoader {
 				} catch (Exception e){
 					// This Happens if a any issue with the error policyFile. Lets remove it. 
 					try {
-						LOGGER.error("Corrupted policy file, deleting: " + location);
+						LOGGER.error("Corrupted policy file, deleting: " + location + e);
 						Files.delete(Paths.get(location));
 						properties.remove(id + ".file");
 						rougeFile = true;
@@ -290,6 +290,7 @@ public class XACMLPdpLoader {
 							try{
 								urlConnection = url.openConnection();
 							} catch (IOException e){
+								LOGGER.error("Exception Occured while opening connection" +e);
 								papUrls.failed();
 								papUrls.getNext();
 								break;
@@ -309,6 +310,7 @@ public class XACMLPdpLoader {
 									outFile.toFile())) {
 								IOUtils.copy(urlConnection.getInputStream(), fos);
 							} catch(IOException e){
+								LOGGER.error("Exception Occured while Copying  input stream" +e);
 								papUrls.failed();
 								papUrls.getNext();
 								break;
@@ -321,7 +323,7 @@ public class XACMLPdpLoader {
 								policy = DOMPolicyDef.load(fis);
 							}catch(Exception e){
 								try {
-									LOGGER.error("Corrupted policy file, deleting: " + location);
+									LOGGER.error("Corrupted policy file, deleting: " + location +e);
 									Files.delete(outFile);
 									error = true;
 									errorCount++;
@@ -589,7 +591,7 @@ public class XACMLPdpLoader {
 				Files.createFile(policyProperties);
 			} catch (IOException e) {
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create policy properties file: "
-						+ policyProperties.toAbsolutePath().toString());
+						+ policyProperties.toAbsolutePath().toString() +e);
 				throw new PAPException(
 						"Failed to create policy properties file: "
 								+ policyProperties.toAbsolutePath().toString());
@@ -612,7 +614,7 @@ public class XACMLPdpLoader {
 				Files.createFile(pipConfigProperties);
 			} catch (IOException e) {
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create pip properties file: "
-						+ pipConfigProperties.toAbsolutePath().toString());
+						+ pipConfigProperties.toAbsolutePath().toString() +e);
 				throw new PAPException("Failed to create pip properties file: "
 						+ pipConfigProperties.toAbsolutePath().toString());
 			}

@@ -183,7 +183,7 @@ public class MSModelUtils {
 		try {
 			resource.load(Collections.EMPTY_MAP);
 		} catch (IOException e) {
-			logger.error("Error loading Encore Resource for new Model");
+			logger.error("Error loading Encore Resource for new Model" + e);
 		}
 
 		EPackage root = (EPackage) resource.getContents().get(0);

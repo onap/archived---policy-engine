@@ -95,7 +95,7 @@ public class NotificationServer {
 				session.getBasicRemote().sendText(update);
 				session.close();
 			} catch (IOException e) {
-				LOGGER.info(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in sending the Event Notification: "+ e.getMessage());
+				LOGGER.info(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in sending the Event Notification: "+ e.getMessage() + e);
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error sending Message update");
 			}	
 		}
@@ -142,13 +142,13 @@ public class NotificationServer {
 			} catch (MalformedURLException e1) {
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error creating the UEB publisher" + e1.getMessage());
 			} catch (GeneralSecurityException e1) {
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error creating the UEB publisher" + e1.getMessage());
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error creating the UEB publisher" + e1.getMessage() +e1);
 			}
 			if(pub != null){
 				try {
 					pub.send( "MyPartitionKey", notification );
 				} catch (IOException e) {
-					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error sending notification update" + e.getMessage());
+					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error sending notification update" + e.getMessage() + e);
 				}
 				// close the publisher. The batching publisher does not send events
 				// immediately, so you MUST use close to send any remaining messages.
@@ -203,7 +203,7 @@ public class NotificationServer {
 				publisher.close();
 				
 			} catch (Exception e) {
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error sending notification update" + e.getMessage());
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error sending notification update" + e.getMessage() + e);
 			}
 		}
 		
@@ -211,7 +211,7 @@ public class NotificationServer {
 			try {
 				session.getBasicRemote().sendText(notification);
 			} catch (IOException e) {
-				LOGGER.info(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in sending the Event Notification: "+ e.getMessage());
+				LOGGER.info(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in sending the Event Notification: "+ e.getMessage() + e);
 			}
 		}
 		NotificationService.sendNotification(notification);

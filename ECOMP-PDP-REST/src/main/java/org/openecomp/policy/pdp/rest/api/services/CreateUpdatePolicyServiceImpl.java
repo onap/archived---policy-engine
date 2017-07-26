@@ -222,9 +222,9 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
             return false;
         }
         if (policyParameters.getPolicyName().contains(".")) {
-            policyName = policyParameters.getPolicyName().substring(policyParameters.getPolicyName().lastIndexOf(".") + 1,
+            policyName = policyParameters.getPolicyName().substring(policyParameters.getPolicyName().lastIndexOf('.') + 1,
                     policyParameters.getPolicyName().length());
-            policyScope = policyParameters.getPolicyName().substring(0,policyParameters.getPolicyName().lastIndexOf("."));
+            policyScope = policyParameters.getPolicyName().substring(0,policyParameters.getPolicyName().lastIndexOf('.'));
             LOGGER.info("Name is " + policyName + "   scope is " + policyScope);
         } else {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Scope given.";

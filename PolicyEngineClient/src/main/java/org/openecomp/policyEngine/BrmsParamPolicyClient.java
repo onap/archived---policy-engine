@@ -80,21 +80,13 @@ public class BrmsParamPolicyClient {
             PolicyChangeResponse response = policyEngine.updatePolicy(policyParameters);
 
             if(response.getResponseCode()==200){
-
                 System.out.println(response.getResponseMessage());
-
                 System.out.println("Policy Created Successfully!");
-
             }else{
-
                 System.out.println("Error! " + response.getResponseMessage());
-
             }
-
         } catch (Exception e) {
-
-            System.err.println(e.getMessage());
-
+            System.err.println(e.getMessage() + e);
         }
 		
 	}

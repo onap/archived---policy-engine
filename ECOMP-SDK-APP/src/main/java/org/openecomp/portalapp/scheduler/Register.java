@@ -55,7 +55,7 @@ public class Register implements Registerable {
 			if (SystemProperties.getProperty(SystemProperties.LOG_CRON) != null)
 				getScheduleTriggers().add(logRegistry.getTrigger());
 		} catch (IllegalStateException ies) {
-			logger.info(EELFLoggerDelegate.debugLogger, ("Log Cron not available"));
+			logger.info(EELFLoggerDelegate.debugLogger, ("Log Cron not available") + ies);
 		}
 
 	}

@@ -21,6 +21,8 @@ package org.openecomp.policy.controlloop.policy.guard.builder.impl;
 
 import java.util.LinkedList;
 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.controlloop.compiler.CompilerException;
 import org.openecomp.policy.controlloop.compiler.ControlLoopCompilerCallback;
 import org.openecomp.policy.controlloop.guard.compiler.ControlLoopGuardCompiler;
@@ -39,7 +41,7 @@ import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 
 public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
-
+	private static Logger logger = FlexLogger.getLogger(ControlLoopGuardBuilderImpl.class.getName());
 	private ControlLoopGuard cLGuard;
 	
 	public ControlLoopGuardBuilderImpl(Guard guard) {
@@ -229,6 +231,7 @@ public class ControlLoopGuardBuilderImpl implements ControlLoopGuardBuilder {
 		try {
 			ControlLoopGuardCompiler.compile(cLGuard, callback);
 		} catch (CompilerException e) {
+			logger.error(e.getMessage() + e);
 			callback.results.addMessage(new MessageImpl(e.getMessage(), MessageLevel.EXCEPTION));
 		}
 		//
