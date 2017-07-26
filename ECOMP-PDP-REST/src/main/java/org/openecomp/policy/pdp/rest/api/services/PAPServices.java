@@ -230,7 +230,7 @@ public class PAPServices {
             try {
                 throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE +"PAPs List is empty.");
             } catch (Exception e) {
-                LOGGER.error(e.getMessage());
+                LOGGER.error(e.getMessage() + e);
             }
             }else {
                 int papsCount = 0;
@@ -319,7 +319,7 @@ public class PAPServices {
                         try {
                             throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE +"ERROR in connecting to the PAP ", e);
                         } catch (Exception e1) {
-                            LOGGER.error(e1.getMessage());
+                            LOGGER.error(e1.getMessage() + e1);
                         }
                     } 
         
@@ -328,7 +328,7 @@ public class PAPServices {
                     try {
                         throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE +"ERROR in connecting to the PAP ");
                     } catch (Exception e) {
-                        LOGGER.error(e.getMessage());
+                        LOGGER.error(e.getMessage() + e);
                     }
                 }   
             }
@@ -390,7 +390,7 @@ public class PAPServices {
                         scanner.close();
                         
                     } catch (IOException e1) {
-                        LOGGER.error(e1.getMessage());
+                        LOGGER.error(e1.getMessage() + e1);
                     }
                     response = "Transaction ID: " + requestID + " --Dictionary Items Retrieved " + json;
                 } else if ("getMetrics".equals(operation)) {

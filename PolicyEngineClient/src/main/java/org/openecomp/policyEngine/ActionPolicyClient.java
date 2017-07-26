@@ -102,7 +102,7 @@ public class ActionPolicyClient {
 	            System.out.println("Error! " + response.getResponseMessage());
 	        }
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.err.println(e.getMessage() + e);
 		}
 	}
 	

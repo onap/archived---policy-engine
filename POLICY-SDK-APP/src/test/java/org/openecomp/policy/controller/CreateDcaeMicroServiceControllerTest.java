@@ -169,7 +169,6 @@ public class CreateDcaeMicroServiceControllerTest {
 		//expect: uniqueKeys should contain a string value 
 		CreateDcaeMicroServiceController controllerA = new CreateDcaeMicroServiceController();
 		String str = "testing\\.byCorrectWay\\.OfDATA";
-		String value = null;
 		assertEquals(1, controllerA.stringBetweenDots(str));
 		
 		//expect: uniqueKeys should not contain a string value 

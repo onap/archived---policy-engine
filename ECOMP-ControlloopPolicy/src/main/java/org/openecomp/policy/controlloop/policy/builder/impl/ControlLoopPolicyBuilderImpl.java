@@ -26,6 +26,8 @@ import java.util.UUID;
 
 import org.openecomp.policy.asdc.Resource;
 import org.openecomp.policy.asdc.Service;
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.controlloop.compiler.CompilerException;
 import org.openecomp.policy.controlloop.compiler.ControlLoopCompiler;
 import org.openecomp.policy.controlloop.compiler.ControlLoopCompilerCallback;
@@ -45,7 +47,7 @@ import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 
 public class ControlLoopPolicyBuilderImpl implements ControlLoopPolicyBuilder {
-
+	private static Logger logger = FlexLogger.getLogger(ControlLoopPolicyBuilderImpl.class.getName());
 	private ControlLoopPolicy policy;
 	
 	public ControlLoopPolicyBuilderImpl(String controlLoopName, Integer timeout) throws BuilderException {
@@ -253,6 +255,7 @@ public class ControlLoopPolicyBuilderImpl implements ControlLoopPolicyBuilder {
 		try {
 			ControlLoopCompiler.compile(policy, callback);
 		} catch (CompilerException e) {
+			logger.error(e.getMessage() + e);
 			callback.results.addMessage(new MessageImpl(e.getMessage(), MessageLevel.EXCEPTION));
 		}
 		//

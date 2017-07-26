@@ -46,7 +46,11 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class ControlLoopCompiler {
+public class ControlLoopCompiler implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger LOGGER = FlexLogger.getLogger(ControlLoopCompiler.class.getName());
 	
 	public static ControlLoopPolicy compile(ControlLoopPolicy policy, ControlLoopCompilerCallback callback) throws CompilerException {

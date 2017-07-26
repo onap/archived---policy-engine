@@ -51,7 +51,7 @@ public class ConstraintType implements Serializable {
 		defaults.put(RANGE_TYPE, "Set a range of min and/or max integer/double values the attribute can be set to during policy creation.");
 		defaults.put(REGEXP_TYPE, "Define a regular expression the attribute must match against during policy creation.");
 	}
-	protected static final String[] RANGE_TYPES = {"minExclusive", "minInclusive", "maxExclusive", "maxInclusive"};
+	private static final String[] RANGE_TYPES = {"minExclusive", "minInclusive", "maxExclusive", "maxInclusive"};
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -112,6 +112,10 @@ public class ConstraintType implements Serializable {
 
 	public void setAttributes(Set<Attribute> attributes) {
 		this.attributes = attributes;
+	}
+
+	public static String[] getRangeTypes() {
+		return RANGE_TYPES;
 	}
 
 }

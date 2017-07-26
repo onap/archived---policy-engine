@@ -199,7 +199,7 @@ public class XACMLRest {
 						logger.debug("Content available: " + request.getInputStream().available());
 					}
 				} catch (Exception e) {
-					logger.debug("Content: inputStream exception: " + e.getMessage() + ";  (May not be relevant)");
+					logger.debug("Content: inputStream exception: " + e.getMessage() + ";  (May not be relevant)" +e);
 				}
 			} else {
 				logger.debug("Parameters:");

@@ -22,6 +22,9 @@ package org.openecomp.policy.xacml.pdp.std.functions;
 
 import java.util.List;
 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
+
 import com.att.research.xacml.api.DataType;
 import com.att.research.xacml.api.DataTypeException;
 import com.att.research.xacml.api.Identifier;
@@ -46,7 +49,7 @@ import com.att.research.xacmlatt.pdp.std.functions.FunctionDefinitionBase;
  * @param <I> the java class for the data type of the function Input arguments
  */
 public class FunctionDefinitionCustomRegexpMatch<I> extends FunctionDefinitionBase<Boolean, I> {
-
+	private static Logger logger = FlexLogger.getLogger(FunctionDefinitionCustomRegexpMatch.class);
 	
 	/**
 	 * Constructor - need dataTypeArgs input because of java Generic type-erasure during compilation.
@@ -70,7 +73,7 @@ public class FunctionDefinitionCustomRegexpMatch<I> extends FunctionDefinitionBa
 		// get the regular expression
 		FunctionArgument regexpArgument = arguments.get(0);
 
-		ConvertedArgument<String> convertedArgument = new ConvertedArgument<String>(regexpArgument, DataTypes.DT_STRING, false);
+		ConvertedArgument<String> convertedArgument = new ConvertedArgument<>(regexpArgument, DataTypes.DT_STRING, false);
 		if ( ! convertedArgument.isOk()) {
 			return ExpressionResult.newError(getFunctionStatus(convertedArgument.getStatus()));
 		}
@@ -82,7 +85,7 @@ public class FunctionDefinitionCustomRegexpMatch<I> extends FunctionDefinitionBa
 		// now get the element to match
 		FunctionArgument elementArgument = arguments.get(1);
 		
-		ConvertedArgument<I> convertedElement = new ConvertedArgument<I>(elementArgument, this.getDataTypeArgs(), false);
+		ConvertedArgument<I> convertedElement = new ConvertedArgument<>(elementArgument, this.getDataTypeArgs(), false);
 		if ( ! convertedElement.isOk()) {
 			return ExpressionResult.newError(getFunctionStatus(convertedElement.getStatus()));
 		}
@@ -93,6 +96,7 @@ public class FunctionDefinitionCustomRegexpMatch<I> extends FunctionDefinitionBa
 		try {
 			elementValueString = this.getDataTypeArgs().toStringValue(elementValueObject);
 		} catch (DataTypeException e) {
+			logger.error(e.getMessage() +e);
 			String message = e.getMessage();
 			if (e.getCause() != null) {
 				message = e.getCause().getMessage();
