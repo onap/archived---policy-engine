@@ -139,6 +139,7 @@ public class PolicyManagerServletTest extends Mockito{
 		}
 	}
 	
+	@SuppressWarnings("static-access")
 	@Test
 	public void testDescribePolicy(){
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
@@ -159,6 +160,7 @@ public class PolicyManagerServletTest extends Mockito{
 	}
 	
 	
+	@SuppressWarnings("static-access")
 	@Test
 	public void testPolicyScopeList(){
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
@@ -186,6 +188,7 @@ public class PolicyManagerServletTest extends Mockito{
         }
 	}
 	
+	@SuppressWarnings("static-access")
 	@Test
 	public void editBasePolicyTest(){
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
@@ -210,6 +213,7 @@ public class PolicyManagerServletTest extends Mockito{
         }
 	}
 	
+	@SuppressWarnings("static-access")
 	@Test
 	public void editBRMSParamPolicyTest(){
 		List<Object> policyData = new ArrayList<>();
@@ -255,6 +259,7 @@ public class PolicyManagerServletTest extends Mockito{
         }
 	}
 
+	@SuppressWarnings("static-access")
 	@Test
 	public void editBRMSRawPolicyTest(){
 		List<Object> policyData = new ArrayList<>();
@@ -300,6 +305,7 @@ public class PolicyManagerServletTest extends Mockito{
         }
 	}
 	
+	@SuppressWarnings("static-access")
 	@Test
 	public void editClosedLoopFaultPolicyTest(){
 		List<Object> policyData = new ArrayList<>();
@@ -345,6 +351,7 @@ public class PolicyManagerServletTest extends Mockito{
         }
 	}
 	
+	@SuppressWarnings("static-access")
 	@Test
 	public void editClosedLoopPMPolicyTest(){
 		List<Object> policyData = new ArrayList<>();
@@ -390,6 +397,7 @@ public class PolicyManagerServletTest extends Mockito{
         }
 	}
 	
+	@SuppressWarnings("static-access")
 	@Test
 	public void editMicroServicePolicyTest(){
 		GroupPolicyScopeList groupData = new  GroupPolicyScopeList();
@@ -443,6 +451,7 @@ public class PolicyManagerServletTest extends Mockito{
         }
 	}
 	
+	@SuppressWarnings("static-access")
 	@Test
 	public void editFirewallPolicyTest(){
 		List<Object> policyData = new ArrayList<>();
@@ -488,6 +497,7 @@ public class PolicyManagerServletTest extends Mockito{
         }
 	}
 	
+	@SuppressWarnings("static-access")
 	@Test
 	public void editActionPolicyTest(){
 		List<Object> policyData = new ArrayList<>();
@@ -531,6 +541,7 @@ public class PolicyManagerServletTest extends Mockito{
         }
 	}
 	
+	@SuppressWarnings("static-access")
 	@Test
 	public void editDecisionPolicyTest(){
 		List<Object> policyData = new ArrayList<>();

@@ -118,6 +118,7 @@ public class PDPApiAuth {
 	                    PolicyLogger.info("Contacting AAF in : "  + environment);
 	                    result = aafClient.checkAuthPerm(userNamePass[0], userNamePass[1], resource, environment, ".*");
 	                }catch (NullPointerException e){
+	                	PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS, e);
 	                    result = false;
 	                }
 	            }
@@ -141,6 +142,7 @@ public class PDPApiAuth {
 	                    return true;
 	                }
 	            }catch(PolicyEngineException e){
+	            	PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS, e);
 	                return false;
 	            }
 	        }
@@ -169,13 +171,11 @@ public class PDPApiAuth {
 	        for (Object propKey : clientProp.keySet()) {
 	            String clientID = (String)propKey; 
 	            String clientValue = clientProp.getProperty(clientID);
-	            if (clientValue != null) {
-	                if (clientValue.contains(",")) {
-	                    ArrayList<String> clientValues = new ArrayList<String>(Arrays.asList(clientValue.split("\\s*,\\s*")));
-	                    if(clientValues.get(0)!=null || clientValues.get(1)!=null || clientValues.get(0).isEmpty() || clientValues.get(1).isEmpty()){
-	                        clientMap.put(clientID, clientValues);
-	                    }
-	                } 
+	            if (clientValue != null && clientValue.contains(",")) {
+	            	ArrayList<String> clientValues = new ArrayList<>(Arrays.asList(clientValue.split("\\s*,\\s*")));
+	            	if(clientValues.get(0)!=null || clientValues.get(1)!=null || clientValues.get(0).isEmpty() || clientValues.get(1).isEmpty()){
+	            		clientMap.put(clientID, clientValues);
+	            	}
 	            }
 	        }
 	        if (clientMap.isEmpty()) {

@@ -20,7 +20,6 @@
 package org.openecomp.policy.xacml.action;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -35,7 +34,6 @@ import javax.json.Json;
 import javax.json.JsonReader;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -272,11 +270,8 @@ public class FindAction {
 					output = output + out;
 				}
 				response = output;
-			} catch (ClientProtocolException e) {
-				LOGGER.error(e.getMessage());
-				response = e.getMessage();
-			} catch (IOException e) {
-				LOGGER.error(e.getMessage());
+			} catch (Exception e) {
+				LOGGER.error(e.getMessage()+e);
 				response = e.getMessage();
 			} finally {
 				httpClient.getConnectionManager().shutdown();
@@ -313,11 +308,8 @@ public class FindAction {
 					output = output + out;
 				}
 				response = output;
-			} catch (ClientProtocolException e) {
-				LOGGER.error(e.getMessage());
-				response = e.getMessage();
-			} catch (IOException e) {
-				LOGGER.error(e.getMessage());
+			}catch (Exception e) {
+				LOGGER.error(e.getMessage() +e);
 				response = e.getMessage();
 			} finally {
 				httpClient.getConnectionManager().shutdown();
@@ -353,13 +345,10 @@ public class FindAction {
 					output = output + out;
 				}
 				response = output;
-			} catch (ClientProtocolException e) {
-				LOGGER.error(e.getMessage());
+			} catch (Exception e) {
+				LOGGER.error(e.getMessage() +e);
 				response = e.getMessage();
-			} catch (IOException e) {
-				LOGGER.error(e.getMessage());
-				response = e.getMessage();
-			} finally {
+			}finally {
 				httpClient.getConnectionManager().shutdown();
 			}
 		}

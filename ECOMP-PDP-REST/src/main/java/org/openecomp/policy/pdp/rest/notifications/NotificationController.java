@@ -22,12 +22,10 @@ package org.openecomp.policy.pdp.rest.notifications;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -172,7 +170,7 @@ public class NotificationController {
 				NotificationServer.setUpdate(notificationJSON);
 				ManualNotificationUpdateThread.setUpdate(notificationJSON);
 			} catch (JsonProcessingException e) {
-				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage());
+				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage() +e);
 			}
 		}
 	}
@@ -182,7 +180,7 @@ public class NotificationController {
 			try {
 				NotificationServer.sendNotification(notificationJSON, propNotificationType, pdpURL);
 			} catch (Exception e) {
-				LOGGER.info(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in sending the Event Notification: "+ e.getMessage());
+				LOGGER.info(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in sending the Event Notification: "+ e.getMessage() + e);
 			}
 			notificationFlag = false;
 		}
@@ -321,7 +319,7 @@ public class NotificationController {
 		try {
 			json = om.writeValueAsString(record);
 		} catch (JsonProcessingException e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage());
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage() + e);
 		}
 		LOGGER.info(json);
 		return json;
@@ -408,11 +406,7 @@ public class NotificationController {
 					IOUtils.copy(is, os);
 					break;
 				}
-			} catch (MalformedURLException e) {
-				LOGGER.error(e + e.getMessage());
-			} catch(FileNotFoundException e){
-				LOGGER.error(e + e.getMessage());
-			} catch (IOException e) {
+			} catch (Exception e) {
 				LOGGER.error(e + e.getMessage());
 			}
 			papUrls.getNext();

@@ -24,6 +24,8 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
+import org.openecomp.policy.common.logging.flexlogger.Logger;
 import org.openecomp.policy.xacml.pdp.std.functions.FunctionDefinitionCustomRegexpMatch;
 
 import com.att.research.xacml.api.Identifier;
@@ -34,6 +36,7 @@ import com.att.research.xacmlatt.pdp.policy.FunctionDefinitionFactory;
 import com.att.research.xacmlatt.pdp.std.StdFunctions;
 
 public class EcompFunctionDefinitionFactory extends FunctionDefinitionFactory {
+	private static Logger logger = FlexLogger.getLogger(EcompFunctionDefinitionFactory.class);
 	private static Map<Identifier,FunctionDefinition> 	mapFunctionDefinitions	= new HashMap<>();
 	private static boolean								needMapInit				= true;
 
@@ -60,7 +63,7 @@ public class EcompFunctionDefinitionFactory extends FunctionDefinitionFactory {
 							try {
 								register((FunctionDefinition)(field.get(null)));
 							} catch (IllegalAccessException ex) {
-								
+								logger.error(ex.getMessage() +ex);
 							}
 						}
 					}

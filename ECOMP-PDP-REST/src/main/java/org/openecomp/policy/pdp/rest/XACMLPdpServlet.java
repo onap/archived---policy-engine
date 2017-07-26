@@ -162,7 +162,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			this.pipConfigProperties = pips;
 		}
 	}
-	public static volatile BlockingQueue<PutRequest> queue = null;
+	protected static volatile BlockingQueue<PutRequest> queue = null;
 	// For notification Delay.
 	private static int notificationDelay = 0;
 	public static int getNotificationDelay(){
@@ -277,7 +277,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			logger.info("Creating IntegrityMonitor");
 			im = IntegrityMonitor.getInstance(pdpResourceName, properties);
 		} catch (Exception e) { 
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to create IntegrityMonitor");
+			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to create IntegrityMonitor" +e);
 			throw new ServletException(e);
 		}
 
@@ -415,7 +415,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + e);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			try{
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			return;
 		}
 		//
@@ -427,28 +431,36 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		//
 		if (cache != null && request.getContentType().equals("text/x-java-properties")) {
 			loggingContext.setServiceName("PDP.putConfig");
-			if (request.getContentLength() > Integer.parseInt(XACMLProperties.getProperty("MAX_CONTENT_LENGTH", DEFAULT_MAX_CONTENT_LENGTH))) {
-				String message = "Content-Length larger than server will accept.";
-				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
+			try{
+				if (request.getContentLength() > Integer.parseInt(XACMLProperties.getProperty("MAX_CONTENT_LENGTH", DEFAULT_MAX_CONTENT_LENGTH))) {
+					String message = "Content-Length larger than server will accept.";
+					logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
+					loggingContext.transactionEnded();
+					PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, message);
+					PolicyLogger.audit("Transaction Failed - See Error.log");
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+					im.endTransaction();
+					return;
+				}
+				this.doPutConfig(cache, request, response, loggingContext);
 				loggingContext.transactionEnded();
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, message);
-				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
-				im.endTransaction();
-				return;
-			}
-			this.doPutConfig(cache, request, response, loggingContext);
-			loggingContext.transactionEnded();
-			PolicyLogger.audit("Transaction ended");
+				PolicyLogger.audit("Transaction ended");
 
-			im.endTransaction();
+				im.endTransaction();
+			}catch(Exception e){
+				logger.error("Exception Occured while getting Max Content lenght"+e);
+			}
 		} else {
 			String message = "Invalid cache: '" + cache + "' or content-type: '" + request.getContentType() + "'";
 			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + message);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+			try{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			im.endTransaction();
 			return;
 		}
@@ -552,7 +564,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to process new configuration");
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			try{
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			return;
 		}
 
@@ -613,29 +629,40 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 					//No forward progress is being made
 					String message = "GET:/pdp/test called and PDP " + pdpResourceName + " is not making forward progress."
 							+ " Exception Message: " + fpe.getMessage();
-					PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message );
+					PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + fpe);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					// PolicyLogger.audit(MessageCodes.ERROR_SYSTEM_ERROR, message );
-					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+					try{
+						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+					}catch(Exception e1){
+						logger.error("Exception occured while sending error in response" +e1);
+					}
 					return;
 				}catch (AdministrativeStateException ase){
 					//Administrative State is locked
 					String message = "GET:/pdp/test called and PDP " + pdpResourceName + " Administrative State is LOCKED "
 							+ " Exception Message: " + ase.getMessage();
-					PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message );
+					PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + ase);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+					try{
+						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+					}catch(Exception e1){
+						logger.error("Exception occured while sending error in response" +e1);
+					}
 					return;
 				}catch (StandbyStatusException sse){
 					//Administrative State is locked
 					String message = "GET:/pdp/test called and PDP " + pdpResourceName + " Standby Status is NOT PROVIDING SERVICE "
 							+ " Exception Message: " + sse.getMessage();
-					PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message );
+					PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + sse);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+					try{
+						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+					}catch(Exception e1){
+						logger.error("Exception occured while sending error in response" +e1);
+					}
 					return;
 				} catch (Exception e) {
 					//A subsystem is not making progress or is not responding
@@ -661,9 +688,13 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 						failedNodeList = "UnknownSubSystem";
 					}
 					response.addHeader("X-ECOMP-SubsystemFailure", failedNodeList);
-					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+					try{
+						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+					}catch(Exception e1){
+						logger.error("Exception occured while sending error in response" +e1);
+					}
 					loggingContext.transactionEnded();
-					PolicyLogger.audit("Transaction Failed - See Error.log");
+					PolicyLogger.audit("Transaction Failed - See Error.log" + e);
 					return;
 				}
 			}
@@ -676,8 +707,12 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			String message = e.toString();
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
 			loggingContext.transactionEnded();
-			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			PolicyLogger.audit("Transaction Failed - See Error.log" +e);
+			try{
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			return;
 		}
 		//
@@ -708,7 +743,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to copy property file");
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(400, "Failed to copy Property file");
+				try{
+					response.sendError(400, "Failed to copy Property file");
+				}catch(Exception e1){
+					logger.error("Exception occured while sending error in response" +e1);
+				}
 			}
 
 		} else if ("hb".equals(type)) {
@@ -720,7 +759,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			// convert response object to JSON and include in the response
 			synchronized(pdpStatusLock) {
 				ObjectMapper mapper = new ObjectMapper();
-				mapper.writeValue(response.getOutputStream(),  status);
+				try{
+					mapper.writeValue(response.getOutputStream(),  status);
+				}catch(Exception e1){
+					logger.error("Exception occured while writing output stream" +e1);
+				}
 			}
 			response.setStatus(HttpServletResponse.SC_OK);
 			loggingContext.transactionEnded();
@@ -732,7 +775,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "Invalid type value: " + type);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "type not 'config' or 'hb'");
+			try{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "type not 'config' or 'hb'");
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 		}
 		if (returnHB) {
 			synchronized(pdpStatusLock) {
@@ -758,7 +805,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		ECOMPLoggingContext loggingContext = ECOMPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
 		loggingContext.transactionStarted();
 		loggingContext.setServiceName("PDP.decide");
-		if ((loggingContext.getRequestID() == null) || (loggingContext.getRequestID() == "")){
+		if ((loggingContext.getRequestID() == null) || ("".equals(loggingContext.getRequestID()))){
 			UUID requestID = UUID.randomUUID();
 			loggingContext.setRequestID(requestID.toString());
 			PolicyLogger.info("requestID not provided in call to XACMLPdpSrvlet (doPost) so we generated one");
@@ -781,7 +828,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + e);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			try{
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			return;
 		}
 		//
@@ -792,7 +843,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, "Request from PEP at " + request.getRequestURI() + " for service when PDP has No Root Policies loaded");
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+			try{
+				response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			im.endTransaction();
 			return;
 		}
@@ -810,30 +865,43 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "Must specify a Content-Type");
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no content-type given");
+			try{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "no content-type given");
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			im.endTransaction();
 			return;
 		}
 		//
 		// Limit the Content-Length to something reasonable
 		//
-		if (request.getContentLength() > Integer.parseInt(XACMLProperties.getProperty("MAX_CONTENT_LENGTH", "32767"))) {
-			String message = "Content-Length larger than server will accept.";
-			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
-			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, message);
-			loggingContext.transactionEnded();
-			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
-			im.endTransaction();
-			return;
+		try{
+			if (request.getContentLength() > Integer.parseInt(XACMLProperties.getProperty("MAX_CONTENT_LENGTH", "32767"))) {
+				String message = "Content-Length larger than server will accept.";
+				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
+				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, message);
+				loggingContext.transactionEnded();
+				PolicyLogger.audit("Transaction Failed - See Error.log");
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+				im.endTransaction();
+				return;
+			}
+		}catch(Exception e){
+			logger.error("Exception occured while getting max content length"+e);
 		}
+		
 		if (request.getContentLength() <= 0) {
 			String message = "Content-Length is negative";
 			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+			try{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			im.endTransaction();
 			return;
 		}
@@ -847,7 +915,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			loggingContext.transactionEnded();
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, message);
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+			try{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			im.endTransaction();
 			return;
 		}
@@ -891,7 +963,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "Could not parse request");
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+				try{
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+				}catch(Exception e1){
+					logger.error("Exception occured while sending error in response" +e1);
+				}
 				im.endTransaction();
 				return;
 			}
@@ -901,7 +977,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+			try{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			im.endTransaction();
 			return;
 		}
@@ -914,7 +994,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+			try{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, message);
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			im.endTransaction();
 			return;
 		}
@@ -972,7 +1056,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 					PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+					try{
+						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+					}catch(Exception e1){
+						logger.error("Exception occured while sending error in response" +e1);
+					}
 					im.endTransaction();
 					return;
 				}
@@ -997,7 +1085,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			//
 			if (pdpResponse == null) {
 				requestLogger.info(lTimeStart + "=" + "{}");
-				throw new PDPException("Failed to get response from PDP engine.");
+				try{
+					throw new PDPException("Failed to get response from PDP engine.");
+				}catch(Exception e1){
+					logger.error("Exception occured while throwing Exception" +e1);
+				}
 			}
 			//
 			// Set our content-type
@@ -1008,53 +1100,57 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			// return to our caller as well as dump to our loggers.
 			//
 			String outgoingResponseString = "";
-			if (contentType.getMimeType().equalsIgnoreCase(ContentType.APPLICATION_JSON.getMimeType())) {
-				//
-				// Get it as a String. This is not very efficient but we need to log our
-				// results for auditing.
-				//
-				outgoingResponseString = JSONResponse.toString(pdpResponse, logger.isDebugEnabled());
-				if (logger.isDebugEnabled()) {
-					logger.debug(outgoingResponseString);
+			try{
+				if (contentType.getMimeType().equalsIgnoreCase(ContentType.APPLICATION_JSON.getMimeType())) {
 					//
-					// Get rid of whitespace
+					// Get it as a String. This is not very efficient but we need to log our
+					// results for auditing.
 					//
-					outgoingResponseString = JSONResponse.toString(pdpResponse, false);
+					outgoingResponseString = JSONResponse.toString(pdpResponse, logger.isDebugEnabled());
+					if (logger.isDebugEnabled()) {
+						logger.debug(outgoingResponseString);
+						//
+						// Get rid of whitespace
+						//
+						outgoingResponseString = JSONResponse.toString(pdpResponse, false);
+					}
+				} else if (	contentType.getMimeType().equalsIgnoreCase(ContentType.APPLICATION_XML.getMimeType()) ||
+						contentType.getMimeType().equalsIgnoreCase("application/xacml+xml")) {
+					//
+					// Get it as a String. This is not very efficient but we need to log our
+					// results for auditing.
+					//
+					outgoingResponseString = DOMResponse.toString(pdpResponse, logger.isDebugEnabled());
+					if (logger.isDebugEnabled()) {
+						logger.debug(outgoingResponseString);
+						//
+						// Get rid of whitespace
+						//
+						outgoingResponseString = DOMResponse.toString(pdpResponse, false);
+					}
+				}	
+				//	adding the jmx values for NA, Permit and Deny
+				//
+				if (outgoingResponseString.contains("NotApplicable") || outgoingResponseString.contains("Decision not a Permit")){
+					monitor.pdpEvaluationNA();
 				}
-			} else if (	contentType.getMimeType().equalsIgnoreCase(ContentType.APPLICATION_XML.getMimeType()) ||
-					contentType.getMimeType().equalsIgnoreCase("application/xacml+xml")) {
-				//
-				// Get it as a String. This is not very efficient but we need to log our
-				// results for auditing.
-				//
-				outgoingResponseString = DOMResponse.toString(pdpResponse, logger.isDebugEnabled());
-				if (logger.isDebugEnabled()) {
-					logger.debug(outgoingResponseString);
-					//
-					// Get rid of whitespace
-					//
-					outgoingResponseString = DOMResponse.toString(pdpResponse, false);
+
+				if (outgoingResponseString.contains("Permit") && !outgoingResponseString.contains("Decision not a Permit")){
+					monitor.pdpEvaluationPermit();
 				}
-			}
-			//	adding the jmx values for NA, Permit and Deny
-			//
-			if (outgoingResponseString.contains("NotApplicable") || outgoingResponseString.contains("Decision not a Permit")){
-				monitor.pdpEvaluationNA();
-			}
 
-			if (outgoingResponseString.contains("Permit") && !outgoingResponseString.contains("Decision not a Permit")){
-				monitor.pdpEvaluationPermit();
+				if (outgoingResponseString.contains("Deny")){
+					monitor.pdpEvaluationDeny();
+				}
+				//
+				// lTimeStart is used as an ID within the requestLogger to match up
+				// request's with responses.
+				//
+				requestLogger.info(lTimeStart + "=" + outgoingResponseString);
+				response.getWriter().print(outgoingResponseString);
+			}catch(Exception e){
+				logger.error("Exception Occured"+e );
 			}
-
-			if (outgoingResponseString.contains("Deny")){
-				monitor.pdpEvaluationDeny();
-			}
-			//
-			// lTimeStart is used as an ID within the requestLogger to match up
-			// request's with responses.
-			//
-			requestLogger.info(lTimeStart + "=" + outgoingResponseString);
-			response.getWriter().print(outgoingResponseString);
 		}
 		catch (Exception e) {
 			String message = "Exception executing request: " + e;
@@ -1062,7 +1158,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			try{
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			}catch(Exception e1){
+				logger.error("Exception occured while sending error in response" +e1);
+			}
 			return;
 		}
 
@@ -1159,7 +1259,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			Class<?> createUpdateclass = Class.forName(createUpdateResourceName);
 			createUpdatePolicyConstructor = createUpdateclass.getConstructor(PolicyParameters.class, String.class, boolean.class);
 		}catch(Exception e){
-			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, "createUpdatePolicy.impl.className", "xacml.pdp.init");
+			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, "createUpdatePolicy.impl.className", "xacml.pdp.init" +e);
 			throw new ServletException("Could not find the Class name : " +createUpdateResourceName + "\n" +e.getMessage());
 		}
 	}

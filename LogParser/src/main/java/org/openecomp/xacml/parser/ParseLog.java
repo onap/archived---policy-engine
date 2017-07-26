@@ -78,7 +78,7 @@ public class ParseLog {
 	private static String errorlogFile;
 	private static String JDBC_URL;
 	private static String JDBC_USER;
-	private static String JDBC_PASSWORD = "";
+	private static String JDBC_PASSWORD;
 	private static String JDBC_DRIVER;
 	private static int maxLength = 255;   //Max length that is allowed in the DB table
 	private static String resourceName;
@@ -108,212 +108,222 @@ public class ParseLog {
 	
 	}	
 	
-	private static void startDebugLogParser(File fileLog) throws Exception{
-		if(debuglogFile != null && !debuglogFile.isEmpty()){
-			
-			// pull the last line number 
-			String dataFileName = "debug.log";
-			String filesRead = PullLastLineRead(fileLog, dataFileName);  
-			if (filesRead!= null){			
-				filesRead = filesRead.replaceAll("(\\r\\n|\\n)", "<br />");
-				debuglastNumberRead= Integer.parseInt(filesRead.trim());
-			}else{
-				debuglastNumberRead = 0;
-			}	
-			
-			debugStartFileSize =  countLines(debuglogFile);
-			if (debugStartFileSize < debuglastNumberRead ){ 
-				logger.error("Filed Rolled: set Last debug number read to 0");
-				debuglastNumberRead = 0;
-			}
-			
-			isMissingLogFile = false; 
-			Path debugfilePath = Paths.get(debuglogFile);
-			File debugfile = new File(debuglogFile);
-			debugStartFileSize = debugfile.length();
-			// start process debug.log file
+	private static void startDebugLogParser(File fileLog){
+		try{
+			if(debuglogFile != null && !debuglogFile.isEmpty()){
 
-			Runnable  runnable = new Runnable (){
-				boolean isStop = false;
-				
-				public void run(){
-					while (!isStop){	
-			             
-						if (debugfile.isFile()){
-							// log4jlogger must use .info
-							Stream<String> lines = null;
+				// pull the last line number 
+				String dataFileName = "debug.log";
+				String filesRead = PullLastLineRead(fileLog, dataFileName);  
+				if (filesRead!= null){			
+					filesRead = filesRead.replaceAll("(\\r\\n|\\n)", "<br />");
+					debuglastNumberRead= Integer.parseInt(filesRead.trim());
+				}else{
+					debuglastNumberRead = 0;
+				}	
+
+				debugStartFileSize =  countLines(debuglogFile);
+				if (debugStartFileSize < debuglastNumberRead ){ 
+					logger.error("Filed Rolled: set Last debug number read to 0");
+					debuglastNumberRead = 0;
+				}
+
+				isMissingLogFile = false; 
+				Path debugfilePath = Paths.get(debuglogFile);
+				File debugfile = new File(debuglogFile);
+				debugStartFileSize = debugfile.length();
+				// start process debug.log file
+
+				Runnable  runnable = new Runnable (){
+					boolean isStop = false;
+
+					public void run(){
+						while (!isStop){	
+
+							if (debugfile.isFile()){
+								// log4jlogger must use .info
+								Stream<String> lines = null;
+								try {
+									lines = Files.lines(debugfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + debuglastNumberRead)).skip(debuglastNumberRead);
+									lines.forEachOrdered(line -> process(line, type, LOGTYPE.DEBUG));
+								} catch (IOException e) {
+									logger.error("Error processing line in " + dataFileName + ":" + e);
+									logger.error("break the loop.");
+									isStop = true;
+								}finally{
+									if(lines != null){
+										lines.close();
+									}
+								}
+							}
 							try {
-								lines = Files.lines(debugfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + debuglastNumberRead)).skip(debuglastNumberRead);
-								lines.forEachOrdered(line -> process(line, type, LOGTYPE.DEBUG));
-							} catch (IOException e) {
+								Thread.sleep(sleepTimer);
+								debugStartFileSize =  countLines(debuglogFile);
+							} catch (InterruptedException | IOException e) {
 								logger.error("Error processing line in " + dataFileName + ":" + e);
 								logger.error("break the loop.");
 								isStop = true;
-							}finally{
-								if(lines != null){
-									lines.close();
-								}
 							}
-						}
-						try {
-							Thread.sleep(sleepTimer);
-							debugStartFileSize =  countLines(debuglogFile);
-						} catch (InterruptedException | IOException e) {
-							logger.error("Error processing line in " + dataFileName + ":" + e);
-							logger.error("break the loop.");
-							isStop = true;
-						}
-						
-						logger.debug("File Line Count of debug.log: " + debugStartFileSize + " value read in: " + debuglastNumberRead);
-						if (debugStartFileSize < debuglastNumberRead ){
-							logger.debug("Failed Rolled: set Last number read to 0");
-							debuglastNumberRead = 0;
-						}
-					}	
-				}
-			};
-			
-			Thread thread = new Thread(runnable);
-			thread.start();
-			
-		} 	
+
+							logger.debug("File Line Count of debug.log: " + debugStartFileSize + " value read in: " + debuglastNumberRead);
+							if (debugStartFileSize < debuglastNumberRead ){
+								logger.debug("Failed Rolled: set Last number read to 0");
+								debuglastNumberRead = 0;
+							}
+						}	
+					}
+				};
+
+				Thread thread = new Thread(runnable);
+				thread.start();
+
+			}
+		}catch(Exception e){
+			logger.error("Exception occured in DebugLogParser" +e);
+		}	
 	}
 
-	private static void startErrorLogParser(File fileLog) throws Exception{
-		
-		if(errorlogFile != null && !errorlogFile.isEmpty()){
-			
-			// pull the last line number 
-			String dataFileName = "error.log";
-			String filesRead = PullLastLineRead(fileLog, dataFileName);  
-			if (filesRead!= null){			
-				filesRead = filesRead.replaceAll("(\\r\\n|\\n)", "<br />");
-				errorlastNumberRead= Integer.parseInt(filesRead.trim());
-			}else{
-				errorlastNumberRead = 0;
-			}	
-			
-			errorStartFileSize =  countLines(errorlogFile);
-			if (errorStartFileSize < errorlastNumberRead ){
-				logger.error("Filed Rolled: set Last error number read to 0");
-				errorlastNumberRead = 0;
-			}
-			
-			isMissingLogFile = false;			
-			Path errorfilePath = Paths.get(errorlogFile);
-			File errorfile = new File(errorlogFile);
-			errorStartFileSize = errorfile.length();
-			// start process error.log file
-			Runnable  runnable = new Runnable (){
-				boolean isStop = false;
-				public void run(){
-                    
-					while (!isStop){
-						if (errorfile.isFile()){
-							// log4jlogger must use .info
-							Stream<String> lines = null;
-							try{
-								lines = Files.lines(errorfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + errorlastNumberRead)).skip(errorlastNumberRead);
-								lines.forEachOrdered(line -> process(line, type, LOGTYPE.ERROR));
-							} catch (IOException e) {
+	private static void startErrorLogParser(File fileLog){
+		try{
+			if(errorlogFile != null && !errorlogFile.isEmpty()){
+
+				// pull the last line number 
+				String dataFileName = "error.log";
+				String filesRead = PullLastLineRead(fileLog, dataFileName);  
+				if (filesRead!= null){			
+					filesRead = filesRead.replaceAll("(\\r\\n|\\n)", "<br />");
+					errorlastNumberRead= Integer.parseInt(filesRead.trim());
+				}else{
+					errorlastNumberRead = 0;
+				}	
+
+				errorStartFileSize =  countLines(errorlogFile);
+				if (errorStartFileSize < errorlastNumberRead ){
+					logger.error("Filed Rolled: set Last error number read to 0");
+					errorlastNumberRead = 0;
+				}
+
+				isMissingLogFile = false;			
+				Path errorfilePath = Paths.get(errorlogFile);
+				File errorfile = new File(errorlogFile);
+				errorStartFileSize = errorfile.length();
+				// start process error.log file
+				Runnable  runnable = new Runnable (){
+					boolean isStop = false;
+					public void run(){
+
+						while (!isStop){
+							if (errorfile.isFile()){
+								// log4jlogger must use .info
+								Stream<String> lines = null;
+								try{
+									lines = Files.lines(errorfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + errorlastNumberRead)).skip(errorlastNumberRead);
+									lines.forEachOrdered(line -> process(line, type, LOGTYPE.ERROR));
+								} catch (IOException e) {
+									logger.error("Error processing line in " + dataFileName + ":" + e);
+									logger.error("break the loop.");
+									isStop = true;
+								}finally{
+									if(lines != null){
+										lines.close();
+									}
+								}
+							}
+							try {
+								Thread.sleep(sleepTimer);
+								errorStartFileSize =  countLines(errorlogFile);
+							} catch (InterruptedException | IOException e) {
 								logger.error("Error processing line in " + dataFileName + ":" + e);
 								logger.error("break the loop.");
 								isStop = true;
-							}finally{
-								if(lines != null){
-									lines.close();
-								}
 							}
-						}
-						try {
-							Thread.sleep(sleepTimer);
-							errorStartFileSize =  countLines(errorlogFile);
-						} catch (InterruptedException | IOException e) {
-							logger.error("Error processing line in " + dataFileName + ":" + e);
-							logger.error("break the loop.");
-							isStop = true;
-						}
-						
-						logger.debug("File Line Count of error.log: " + errorStartFileSize + " value read in: " + errorlastNumberRead);
-						if (errorStartFileSize < errorlastNumberRead ){
-							logger.debug("Failed Rolled: set Last error number read to 0");
-							errorlastNumberRead = 0;
-						}
-					}	
-				}
-			};
-			
-			Thread thread = new Thread(runnable);
-			thread.start();
-		}		
+
+							logger.debug("File Line Count of error.log: " + errorStartFileSize + " value read in: " + errorlastNumberRead);
+							if (errorStartFileSize < errorlastNumberRead ){
+								logger.debug("Failed Rolled: set Last error number read to 0");
+								errorlastNumberRead = 0;
+							}
+						}	
+					}
+				};
+
+				Thread thread = new Thread(runnable);
+				thread.start();
+			}
+		}catch(Exception e){
+			logger.error("Exception occured in startErrorLogParser" +e);
+		}
 	}
 	
-	private static void startAPIRestLogParser(File fileLog) throws Exception{
-		
-		if(logFile != null && !logFile.isEmpty()){
-			
-			// pull the last line number 
-			String dataFileName = type.toLowerCase()+"-rest.log";
-			String filesRead = PullLastLineRead(fileLog, dataFileName);  
-			if (filesRead!= null){			
-				filesRead = filesRead.replaceAll("(\\r\\n|\\n)", "<br />");
-				lastNumberRead= Integer.parseInt(filesRead.trim());
-			}else{
-				lastNumberRead = 0;
-			}			
-			startFileSize =  countLines(logFile);
-			if (startFileSize < lastNumberRead ){
-				logger.error("Filed Rolled: set Last number read to 0");
-				lastNumberRead = 0;
-			}
-			
-			isMissingLogFile = false;
-	        Path filePath = Paths.get(logFile);
-	        File file = new File(logFile);		
-			startFileSize = file.length();
-			// start process pap/pdp-rest.log file
-			Runnable  runnable = new Runnable () {
-				boolean isStop = false;
-				public void run(){
-					while (!isStop){		
-						
-						if (file.isFile()){
-							// log4jlogger must use .info
-							Stream<String> lines = null;;
+	private static void startAPIRestLogParser(File fileLog){
+		try{
+			if(logFile != null && !logFile.isEmpty()){
+
+				// pull the last line number 
+				String dataFileName = type.toLowerCase()+"-rest.log";
+				String filesRead = PullLastLineRead(fileLog, dataFileName);  
+				if (filesRead!= null){			
+					filesRead = filesRead.replaceAll("(\\r\\n|\\n)", "<br />");
+					lastNumberRead= Integer.parseInt(filesRead.trim());
+				}else{
+					lastNumberRead = 0;
+				}			
+				startFileSize =  countLines(logFile);
+				if (startFileSize < lastNumberRead ){
+					logger.error("Filed Rolled: set Last number read to 0");
+					lastNumberRead = 0;
+				}
+
+				isMissingLogFile = false;
+				Path filePath = Paths.get(logFile);
+				File file = new File(logFile);		
+				startFileSize = file.length();
+				// start process pap/pdp-rest.log file
+				Runnable  runnable = new Runnable () {
+					boolean isStop = false;
+					public void run(){
+						while (!isStop){		
+
+							if (file.isFile()){
+								// log4jlogger must use .info
+								Stream<String> lines = null;;
+								try {
+									lines = Files.lines(filePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + lastNumberRead)).skip(lastNumberRead);
+									lines.forEachOrdered(line -> process(line, type, LOGTYPE.INFO));
+								} catch (IOException e) {
+									logger.error("Error processing line in " + dataFileName + ":" + e);
+									logger.error("break the loop.");
+									isStop = true;
+								}finally{
+									if(lines != null){
+										lines.close();
+									}
+								}	
+							}
 							try {
-								lines = Files.lines(filePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info("Last-"+dataFileName+"-line-Read:" + lastNumberRead)).skip(lastNumberRead);
-								lines.forEachOrdered(line -> process(line, type, LOGTYPE.INFO));
-							} catch (IOException e) {
+								Thread.sleep(sleepTimer);
+								startFileSize =  countLines(logFile);
+							} catch (InterruptedException | IOException e) {
 								logger.error("Error processing line in " + dataFileName + ":" + e);
 								logger.error("break the loop.");
 								isStop = true;
-							}finally{
-								if(lines != null){
-									lines.close();
-								}
-							}	
-						}
-						try {
-							Thread.sleep(sleepTimer);
-							startFileSize =  countLines(logFile);
-						} catch (InterruptedException | IOException e) {
-							logger.error("Error processing line in " + dataFileName + ":" + e);
-							logger.error("break the loop.");
-							isStop = true;
-						}
-						
-						logger.debug("File Line Count of " + dataFileName+": " + startFileSize + " value read in: " + lastNumberRead);
-						if (startFileSize < lastNumberRead ){
-							logger.debug("Failed Rolled: set Last number read to 0");
-							lastNumberRead = 0;
-						}
-					}	
-				}
-			};
-				
-			Thread thread = new Thread(runnable);
-			thread.start();
-		}		
+							}
+
+							logger.debug("File Line Count of " + dataFileName+": " + startFileSize + " value read in: " + lastNumberRead);
+							if (startFileSize < lastNumberRead ){
+								logger.debug("Failed Rolled: set Last number read to 0");
+								lastNumberRead = 0;
+							}
+						}	
+					}
+				};
+
+				Thread thread = new Thread(runnable);
+				thread.start();
+			}	
+		}catch(Exception e){
+			logger.error("Exception occured in StartAPIRestLogParser" +e);
+		}
 	}
 	
 	public static int countLines(String filename) throws IOException {
