@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a202591_24a43c56",
+        "filename": "ECOMP-PDP-REST/src/main/java/org/openecomp/policy/pdp/rest/config/PDPApiAuth.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-07-26T14:46:16Z",
+      "side": 1,
+      "message": "We have to fix this rather than catching it.",
+      "range": {
+        "startLine": 120,
+        "startChar": 24,
+        "endLine": 120,
+        "endChar": 49
+      },
+      "revId": "f4d8e5f12ca0e490d6da8b49a5482f8b51cdbbaa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a202591_048940ca",
+        "filename": "ECOMP-PDP-REST/src/main/java/org/openecomp/policy/pdp/rest/config/PDPApiAuth.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-07-26T14:46:16Z",
+      "side": 1,
+      "message": "Use FlexLogger instead of PolicyLogger",
+      "revId": "f4d8e5f12ca0e490d6da8b49a5482f8b51cdbbaa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
