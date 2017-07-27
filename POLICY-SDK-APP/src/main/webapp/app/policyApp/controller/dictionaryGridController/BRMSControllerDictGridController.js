@@ -81,6 +81,14 @@ appDS2.controller('brmsControllerDictGridController', function ($scope, PolicyAp
 				docDefinition.styles.footerStyle = { fontSize: 10, bold: true };
 				return docDefinition;
 			},
+			exporterFieldCallback: function(grid, row, col, input) {
+				if( col.name == 'createdDate' || col.name == 'modifiedDate') {
+					var date = new Date(input);
+					return date.toString("yyyy-MM-dd HH:MM:ss a");
+				} else {
+					return input;
+				}
+			},
 			exporterPdfOrientation: 'portrait',
 			exporterPdfPageSize: 'LETTER',
 			exporterPdfMaxGridWidth: 500,
