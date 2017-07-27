@@ -63,7 +63,6 @@ public class MicroServiceDictionaryControllerTest {
 	private static Logger logger = FlexLogger.getLogger(MicroServiceDictionaryControllerTest.class);
 	private static CommonClassDao commonClassDao;
 	private String jsonString = null;
-	private String configBodyString = null;
 	private HttpServletRequest request = null;
 	private MicroServiceDictionaryController controller = null;
 	 BufferedReader br = null;
@@ -106,10 +105,6 @@ public class MicroServiceDictionaryControllerTest {
 				+ "	\"policyDescription\": \"testing input\", \"ecompName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\",\"riskLevel\": \"2\","
 				+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 				+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
-
-		configBodyString = "{\"service\":\"SniroPolicyEntityTest\",\"policyName\":\"someone\",\"description\":\"test\",\"templateVersion\":\"1607\",\"version\":\"HD\","
-				+ "\"priority\":\"2\",\"content\":{\"lastPolled\":\"1\",\"boolen-test\":\"true\",\"created\":\"test\",\"retiredDate\":\"test\",\"scope\":\"SNIRO_PLACEMENT_VDHV\","
-				+ "\"name\":\"test\",\"lastModified\":\"test\",\"state\":\"CREATED\",\"type\":\"CONFIG\",\"intent\":\"test\",\"target\":\"SNIRO\"}}";
     
         br = new BufferedReader(new StringReader(jsonString));
         //--- mock the getReader() call

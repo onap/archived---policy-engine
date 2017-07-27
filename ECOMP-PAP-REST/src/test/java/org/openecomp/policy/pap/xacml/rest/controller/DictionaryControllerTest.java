@@ -21,7 +21,8 @@
 
 package org.openecomp.policy.pap.xacml.rest.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -32,28 +33,19 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
-import org.openecomp.policy.rest.adapter.PolicyRestAdapter;
 import org.openecomp.policy.rest.dao.CommonClassDao;
 import org.openecomp.policy.rest.jpa.Attribute;
 import org.openecomp.policy.rest.jpa.MicroServiceModels;
 import org.openecomp.policy.rest.jpa.PolicyEditorScopes;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jackson.JsonLoader;
 
 /**
  * The class <code>DictionaryControllerTest</code> contains tests
@@ -68,18 +60,15 @@ public class DictionaryControllerTest {
 	private static Logger logger = FlexLogger.getLogger(DictionaryControllerTest.class);
 	private static CommonClassDao commonClassDao;
 	private String jsonString = null;
-	private String configBodyString = null;
 	private HttpServletRequest request = null;
 	private DictionaryController controller = null;
-	private BufferedReader br = null;
 
 	@Before
 	public void setUp() throws Exception {
 		logger.info("setUp: Entering");
         commonClassDao = Mockito.mock(CommonClassDao.class);
 	    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-   
-        List<Object> microServiceModelsData = new ArrayList<Object>();
+  
         MicroServiceModels testData = new MicroServiceModels();
         testData.setVersion("1707.4.1.2-Junit");        
 
@@ -102,10 +91,6 @@ public class DictionaryControllerTest {
 				+ "	\"policyDescription\": \"testing input\", \"ecompName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\",\"riskLevel\": \"2\","
 				+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 				+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
-
-		configBodyString = "{\"service\":\"SniroPolicyEntityTest\",\"policyName\":\"someone\",\"description\":\"test\",\"templateVersion\":\"1607\",\"version\":\"HD\","
-				+ "\"priority\":\"2\",\"content\":{\"lastPolled\":\"1\",\"boolen-test\":\"true\",\"created\":\"test\",\"retiredDate\":\"test\",\"scope\":\"SNIRO_PLACEMENT_VDHV\","
-				+ "\"name\":\"test\",\"lastModified\":\"test\",\"state\":\"CREATED\",\"type\":\"CONFIG\",\"intent\":\"test\",\"target\":\"SNIRO\"}}";
 
 		request = mock(HttpServletRequest.class);        
         BufferedReader br = new BufferedReader(new StringReader(jsonString));

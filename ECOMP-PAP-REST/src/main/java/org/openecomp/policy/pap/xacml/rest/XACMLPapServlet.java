@@ -72,7 +72,6 @@ import org.openecomp.policy.common.logging.eelf.MessageCodes;
 import org.openecomp.policy.common.logging.eelf.PolicyLogger;
 import org.openecomp.policy.common.logging.flexlogger.FlexLogger;
 import org.openecomp.policy.common.logging.flexlogger.Logger;
-import org.openecomp.policy.pap.xacml.rest.components.AutoPushPolicy;
 import org.openecomp.policy.pap.xacml.rest.components.PolicyDBDao;
 import org.openecomp.policy.pap.xacml.rest.components.PolicyDBDaoTransaction;
 import org.openecomp.policy.pap.xacml.rest.handler.APIRequestHandler;
@@ -187,7 +186,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 */
 	private Thread initiateThread = null;
 	private ECOMPLoggingContext baseLoggingContext = null;
-	private AutoPushPolicy autoPushPolicy;
 	
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -266,24 +264,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			//Boolean will default to false if anything is missing or unrecognized
 			papAuditFlag = Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG));
 			papFileSystemAudit = Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_FLAG));
-			//PAP Auto Push 
-			autoPushFlag = Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PUSH_FLAG));
-			// if Auto push then Load with properties. 
-			if(autoPushFlag){
-				String file;
-				try{
-					file = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PUSH_FILE);
-					if(file.endsWith(".properties")){
-						autoPushPolicy = new AutoPushPolicy(file);
-					}else{
-						throw new PAPException();
-					}
-				}catch(Exception e){
-					PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Missing property or not a proper property file check for: " + XACMLRestProperties.PROP_PAP_PUSH_FILE );  
-					LOGGER.info("Overriding the autoPushFlag to False...");
-					autoPushFlag = false;
-				}
-			}
 			papDependencyGroups = XACMLProperties.getProperty(XACMLRestProperties.PAP_DEPENDENCY_GROUPS);
 			if(papDependencyGroups == null){
 				throw new PAPException("papDependencyGroups is null");
