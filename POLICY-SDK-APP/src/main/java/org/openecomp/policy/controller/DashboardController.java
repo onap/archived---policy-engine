@@ -226,7 +226,7 @@ public class DashboardController  extends RestrictedBaseController{
 		for (PDPGroup group : this.pdpConatiner.getGroups()){	
 			for (PDP pdp : group.getPdps()){
 				naCount = -1;
-				if (pdp.getStatus().getStatus().toString() == "UP_TO_DATE" && ((EcompPDP) pdp).getJmxPort() != 0){
+				if ("UP_TO_DATE".equals(pdp.getStatus().getStatus().toString())  && ((EcompPDP) pdp).getJmxPort() != 0){
 					String pdpIpAddress = parseIPSystem(pdp.getId());
 					int port = ((EcompPDP) pdp).getJmxPort();
 					if (port != 0){
@@ -321,7 +321,6 @@ public class DashboardController  extends RestrictedBaseController{
 	 */
 	private void addPolicyToTable() {
 		policyActivityData = new ArrayList<>();
-		int i = 1;
 		String policyID = null;
 		int policyFireCount = 0;
 		Map<String, String> policyMap = new HashMap<>();
@@ -338,46 +337,42 @@ public class DashboardController  extends RestrictedBaseController{
 			}
 			
 			for (PDP pdp : group.getPdps()){		
-					// Add rows to the Policy Table
+				// Add rows to the Policy Table
 				policyList = null;
-				if (pdp.getStatus().getStatus().toString() == "UP_TO_DATE" && ((EcompPDP) pdp).getJmxPort() != 0){
+				if ("UP_TO_DATE".equals(pdp.getStatus().getStatus().toString()) && ((EcompPDP) pdp).getJmxPort() != 0){
 					String pdpIpAddress = parseIPSystem(pdp.getId());
 					policyList = getPolicy(pdpIpAddress, ((EcompPDP) pdp).getJmxPort(), "policyCount");
 				}
 				if (policyList != null && policyList.toString().length() > 3){
-						String[]  splitPolicy = policyList.toString().split(",");
-						for (String policyKeyValue : splitPolicy){	
-							policyID = urnPolicyID(policyKeyValue);	
-							policyFireCount = countPolicyID(policyKeyValue);	
-							if (policyID != null ){
-								if (policyMap.containsKey(policyID)){
-									JSONObject object = new JSONObject();
-									object.put("policyId", policyMap.get(policyID));
-									object.put("fireCount", policyFireCount);
-									object.put("system", pdp.getId());
-									policyActivityData.add(i, object);	
-									i++;
-								}
+					String[]  splitPolicy = policyList.toString().split(",");
+					for (String policyKeyValue : splitPolicy){	
+						policyID = urnPolicyID(policyKeyValue);	
+						policyFireCount = countPolicyID(policyKeyValue);	
+						if (policyID != null ){
+							if (policyMap.containsKey(policyID)){
+								JSONObject object = new JSONObject();
+								object.put("policyId", policyMap.get(policyID));
+								object.put("fireCount", policyFireCount);
+								object.put("system", pdp.getId());
+								policyActivityData.add(object);	
 							}
 						}
+					}
 				}else {
 					if (policyList != null){
 						JSONObject object = new JSONObject();
 						object.put("policyId", "Unable to retrieve policy information");
 						object.put("fireCount", "NA");
 						object.put("system", pdp.getId());
-						policyActivityData.add(i, object);
-						i++;
+						policyActivityData.add(object);
 					}else{
 						JSONObject object = new JSONObject();
 						object.put("policyId", "Unable to access PDP JMX Server");
 						object.put("fireCount", "NA");
 						object.put("system", pdp.getId());
-						policyActivityData.add(i, object);
-						i++;
+						policyActivityData.add(object);
 					}
 				}							
-	
 			}
 		}
 	}
@@ -399,20 +394,20 @@ public class DashboardController  extends RestrictedBaseController{
 			policyLogger.debug("policyMap value retreived: " + o);
 			return  o;
 		} catch (MalformedURLException e) {
-			policyLogger.error("MalformedURLException for JMX connection");
+			policyLogger.error("MalformedURLException for JMX connection" , e);
 		} catch (IOException e) {
-			policyLogger.error("AttributeNotFoundException for policyMap" );
+			policyLogger.error("AttributeNotFoundException for policyMap" , e);
 		} catch (AttributeNotFoundException e) {		
-			policyLogger.error("AttributeNotFoundException for JMX connection");
+			policyLogger.error("AttributeNotFoundException for JMX connection", e);
 		} catch (InstanceNotFoundException e) {
-			policyLogger.error("InstanceNotFoundException " + host + " for JMX connection");
+			policyLogger.error("InstanceNotFoundException " + host + " for JMX connection", e);
 		} catch (MalformedObjectNameException e) {
-			policyLogger.error("MalformedObjectNameException for JMX connection");
+			policyLogger.error("MalformedObjectNameException for JMX connection", e);
 		} catch (MBeanException e) {
-			policyLogger.error("MBeanException for JMX connection");
+			policyLogger.error("MBeanException for JMX connection", e);
 			policyLogger.error("Exception Occured"+e);
 		} catch (ReflectionException e) {
-			policyLogger.error("ReflectionException for JMX connection");
+			policyLogger.error("ReflectionException for JMX connection", e);
 		}
 		
 		return null;
