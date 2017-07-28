@@ -73,7 +73,7 @@
   .b2b-subnav-content > li li > a.active {
     color: #0574ac;
     text-decoration: none;
-    font-family: "Omnes-ECOMP-W02", Arial; } }
+    font-family: "Omnes-ONAP-W02", Arial; } }
 
 .b2b-list-box-item {
   white-space: nowrap;
@@ -404,7 +404,7 @@
       color: #009fdb;
       font-size: 18px;
       font-style: normal;
-      font-family: "Omnes-ECOMP-W02-Medium", Arial;
+      font-family: "Omnes-ONAP-W02-Medium", Arial;
       line-height: 23.9px;
       margin: 0; }
     .b2b-footer-container .footer-columns li {
@@ -414,7 +414,7 @@
     .b2b-footer-container .footer-columns li a {
       color: #fff;
       font-size: 16px;
-      font-family: "Omnes-ECOMP-W02", Arial; }
+      font-family: "Omnes-ONAP-W02", Arial; }
   .b2b-footer-container .footer-nav-content {
     padding-bottom: 10px; }
     .b2b-footer-container .footer-nav-content li {
@@ -427,7 +427,7 @@
         font-size: 14px;
         vertical-align: middle;
         margin-right: 5px;
-        font-family: "Omnes-ECOMP-W02", Arial; }
+        font-family: "Omnes-ONAP-W02", Arial; }
 
 .b2b-footer-wrapper .b2b-footer-container hr {
   background: #d2d2d2;
@@ -454,7 +454,7 @@
   color: #fff;
   font-size: 11px;
   text-align: left;
-  font-family: "Omnes-ECOMP-W02", Arial; }
+  font-family: "Omnes-ONAP-W02", Arial; }
   .b2b-footer-wrapper .copyright-text a {
     color: #fff;
     text-decoration: underline;
@@ -512,9 +512,9 @@
     top: 0;
     transition: none; }
     .btn-switch input[type="checkbox"] + .switch-overlay .btn-slider-on .activo {
-      font: 0px/0 "Omnes-ECOMP-W02", Arial; }
+      font: 0px/0 "Omnes-ONAP-W02", Arial; }
     .btn-switch input[type="checkbox"] + .switch-overlay .btn-slider-on + .btn + .btn-slider-off .inactivo {
-      font: 0px/0 "Omnes-ECOMP-W02", Arial; }
+      font: 0px/0 "Omnes-ONAP-W02", Arial; }
   .btn-switch input:checked + .switch-overlay {
     left: 0;
     transition: all .3s linear .0s; }
@@ -581,7 +581,7 @@
     .btn-switch input[type="checkbox"][disabled] + .switch-overlay .btn-slider-on .activo {
       border: medium none;
       color: #666;
-      font: 16px/32px "Omnes-ECOMP-W02", Arial;
+      font: 16px/32px "Omnes-ONAP-W02", Arial;
       height: auto;
       margin: 0 auto;
       width: auto; }
@@ -595,7 +595,7 @@
       .btn-switch input[type="checkbox"][disabled] + .switch-overlay .btn-slider-on + .switch-handle + .btn-slider-off .inactivo {
         border: medium none;
         color: #666;
-        font: 16px/32px "Omnes-ECOMP-W02", Arial;
+        font: 16px/32px "Omnes-ONAP-W02", Arial;
         height: auto;
         margin: 0 auto;
         width: auto; }
@@ -628,7 +628,7 @@
   text-align: left;
   padding-left: 12px;
   display: inline-block;
-  font-family: "Omnes-ECOMP-W02", Arial;
+  font-family: "Omnes-ONAP-W02", Arial;
   height: 32px;
   line-height: 32px;
   position: absolute;
@@ -637,7 +637,7 @@
 
 .btn-slider-off {
   display: inline-block;
-  font-family: "Omnes-ECOMP-W02", Arial;
+  font-family: "Omnes-ONAP-W02", Arial;
   height: 32px;
   line-height: 32px;
   position: absolute;
@@ -708,7 +708,7 @@
   text-align: left;
   width: auto;
   font-size: 14px;
-  font-family: "Omnes-ECOMP-W02", Arial;
+  font-family: "Omnes-ONAP-W02", Arial;
   cursor: pointer;
   padding: 0 15px 4px 15px;
   /*margin-top:-3px;*/
@@ -841,7 +841,7 @@
 
 .b2b-header-tabs .header-quarternary li {
   padding-left: 15px;
-  font-family: "Omnes-ECOMP-W02", Arial;
+  font-family: "Omnes-ONAP-W02", Arial;
   display: none; }
 
 .b2b-header-tabs .header-quarternary li.active {

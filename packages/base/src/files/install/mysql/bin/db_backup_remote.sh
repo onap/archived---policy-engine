@@ -1,7 +1,7 @@
 #!/bin/bash 
 ###
 # ============LICENSE_START=======================================================
-# ECOMP Policy Engine
+# ONAP Policy Engine
 # ================================================================================
 # Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
 # ================================================================================
@@ -23,7 +23,7 @@
 # db_backup_remote.sh: Perform database backup from remote 
 # 
 # Usage  : db_backup_remote.sh db_user     db_user_password database  db_hostname
-# Example: db_backup_remote.sh policy_user password         ecomp_sdk localhost.com
+# Example: db_backup_remote.sh policy_user password         onap_sdk localhost.com
 #
 # Note: 1. mysqldump utility must be available in the env where this script intend to run
 #       2. db_user requires at least the SELECT privilege for dumped tables
@@ -84,5 +84,5 @@ if [ $# -eq 4 ]; then
   echo "db_backup_remote.sh for [$DATABASE]@[${DB_HOSTNAME}] completed ... `date`" | tee -a $LOG
 else
   echo "Usage  : db_backup_remote.sh db_user_id  db_user_password database  db_hostname" 
-  echo "Example: db_backup_remote.sh policy_user password         ecomp_sdk localhost.com" 
+  echo "Example: db_backup_remote.sh policy_user password         onap_sdk localhost.com" 
 fi

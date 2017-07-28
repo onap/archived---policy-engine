@@ -27,7 +27,7 @@
   <property name="debugDir" value="logs" />
   
   <!--  specify the component name 
-    <ECOMP-component-name>::= "MSO" | "DCAE" | "ASDC " | "AAI" |"Policy" | "SDNC" | "AC"  -->
+    <ONAP-component-name>::= "MSO" | "DCAE" | "ASDC " | "AAI" |"Policy" | "SDNC" | "AC"  -->
   <property name="componentName" value="Policy"></property>
   <property name="subComponentName" value="PolicyEngineAPI"></property>
   
