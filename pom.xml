@@ -39,19 +39,19 @@
 
 	<modules>
 		<module>PolicyEngineUtils</module>
-		<module>ECOMP-XACML</module>
-		<module>ECOMP-REST</module>
-		<module>ECOMP-ASDC</module>
-		<module>ECOMP-ControlloopPolicy</module>
+		<module>ONAP-XACML</module>
+		<module>ONAP-REST</module>
+		<module>ONAP-ASDC</module>
+		<module>ONAP-ControlloopPolicy</module>
 		<module>PolicyEngineAPI</module>
-		<module>ECOMP-PDP</module>
-		<module>ECOMP-PDP-REST</module>
-		<module>ECOMP-PAP-REST</module>
+		<module>ONAP-PDP</module>
+		<module>ONAP-PDP-REST</module>
+		<module>ONAP-PAP-REST</module>
 		<module>LogParser</module>
 		<module>PolicyEngineClient</module>
 		<module>BRMSGateway</module>
 		<module>POLICY-SDK-APP</module>
-		<module>ECOMP-SDK-APP</module>
+		<module>ONAP-SDK-APP</module>
 		<module>packages</module>
 	</modules>
 
