@@ -170,12 +170,12 @@ public class CreateDcaeMicroServiceControllerTest {
 		CreateDcaeMicroServiceController controllerA = new CreateDcaeMicroServiceController();
 		String str = "testing\\.byCorrectWay\\.OfDATA";
 		String value = null;
-		assertEquals(1, controllerA.stringBetweenDots(str, value));
+		assertEquals(1, controllerA.stringBetweenDots(str));
 		
 		//expect: uniqueKeys should not contain a string value 
 		str = "testing\byWrongtWay.\\OfDATA";
 		CreateDcaeMicroServiceController controllerB = new CreateDcaeMicroServiceController();
-	    assertEquals(0, controllerB.stringBetweenDots(str, value));
+	    assertEquals(0, controllerB.stringBetweenDots(str));
 	    
 		logger.debug("testStringBetweenDots: exit");
 	}
