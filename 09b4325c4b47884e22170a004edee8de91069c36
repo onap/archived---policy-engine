@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a1a2d67_b3c77864",
+        "filename": "ONAP-PAP-REST/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-07-28T17:22:11Z",
+      "side": 1,
+      "message": "The Artifact name should also be changed to ONAP-PAP-REST \nto keep changes in sync while importing the projects.",
+      "revId": "09b4325c4b47884e22170a004edee8de91069c36",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a1a2d67_93c47c60",
+        "filename": "ONAP-PDP-REST/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-07-28T17:22:11Z",
+      "side": 1,
+      "message": "This artifact name should be changed to ONAP-PDP-REST",
+      "revId": "09b4325c4b47884e22170a004edee8de91069c36",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
