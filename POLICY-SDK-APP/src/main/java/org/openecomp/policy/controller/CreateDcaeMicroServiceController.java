@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -50,6 +51,12 @@ import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -87,6 +94,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
@@ -242,10 +250,20 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			JsonNode returnNode = mapper.readTree(cleanJson);
 			Iterator<Map.Entry<String, JsonNode>> fieldsIterator = rootNode.fields();
 			boolean remove = false;
+			JsonObject removed = null;
+			boolean contentChanged = false;
 			while (fieldsIterator.hasNext()) {
 				Map.Entry<String, JsonNode> field = fieldsIterator.next();
 				final String key = field.getKey();
 				final JsonNode value = field.getValue();
+				if(key.equalsIgnoreCase("content")){
+					String contentStr = value.toString();
+				    JsonObject jsonContent = Json.createReader(new StringReader(contentStr)).readObject();				    
+				    removed = removeNull(jsonContent);
+				    if(!jsonContent.toString().equals(removed.toString())){
+				    	contentChanged = true;	
+				    }
+				}
 				if  (value==null || value.isNull()){
 					((ObjectNode) returnNode).remove(key);
 					remove = true;
@@ -254,10 +272,89 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			if (remove){
 				cleanJson = returnNode.toString();
 			}
+			
+			if(contentChanged){
+				//set modified content to cleanJson
+				JSONObject  jObject  =  new JSONObject(cleanJson);	
+				jObject.put("content",removed.toString());
+				cleanJson = cleanUPJson(jObject.toString());
+			}
+			
 		} catch (IOException e) {
 			LOGGER.error("Error writing out the JsonNode",e);
 		}
 		return cleanJson;
+	}
+	
+	public static JsonArray removeNull(JsonArray array) {
+	    JsonArrayBuilder builder = Json.createArrayBuilder();
+	    int i = 0;
+	    for (Iterator<JsonValue> it = array.iterator(); it.hasNext(); ++i) {
+	        JsonValue value = it.next();
+	        switch (value.getValueType()) {
+	        case ARRAY:
+	            JsonArray a = removeNull(array.getJsonArray(i));
+	            if (!a.isEmpty())
+	                builder.add(a);
+	            break;
+	        case OBJECT:
+	            JsonObject object = removeNull(array.getJsonObject(i));
+	            if (!object.isEmpty())
+	                builder.add(object);
+	            break;
+	        case STRING:
+	            String s = array.getString(i);
+	            if (s != null && !s.isEmpty())
+	                builder.add(s);
+	            break;
+	        case NUMBER:
+	            builder.add(array.getJsonNumber(i));
+	            break;
+	        case TRUE:
+	        case FALSE:
+	            builder.add(array.getBoolean(i));
+	            break;
+	        case NULL:
+	            break;
+	        }
+	    }
+	    return builder.build();
+	}
+
+	public static JsonObject removeNull(JsonObject obj) {
+	    JsonObjectBuilder builder = Json.createObjectBuilder();
+	    for (Iterator<Entry<String, JsonValue>> it = obj.entrySet().iterator(); it.hasNext();) {
+	        Entry<String, JsonValue> e = it.next();
+	        String key = e.getKey();
+	        JsonValue value = e.getValue();
+	        switch (value.getValueType()) {
+	        case ARRAY:
+	            JsonArray array = removeNull(obj.getJsonArray(key));
+	            if (!array.isEmpty())
+	                builder.add(key, array);
+	            break;
+	        case OBJECT:
+	            JsonObject object = removeNull(obj.getJsonObject(key));
+	            if (!object.isEmpty())
+	                builder.add(key, object);
+	            break;
+	        case STRING:
+	            String s = obj.getString(key);
+	            if (s != null && !s.isEmpty())
+	                builder.add(key, s);
+	            break;
+	        case NUMBER:
+	            builder.add(key, obj.getJsonNumber(key));
+	            break;
+	        case TRUE:
+	        case FALSE:
+	            builder.add(key, obj.getBoolean(key));
+	            break;
+	        case NULL:
+	            break;
+	        }
+	    }
+	    return builder.build();
 	}
 	
 	// Second index of dot should be returned. 
@@ -846,6 +943,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		if(isArray && jsonArray.length() > 0){
 			jsonResult.put(oldValue, jsonArray);
 		}
+		
 		return jsonResult;
 	}
 	
