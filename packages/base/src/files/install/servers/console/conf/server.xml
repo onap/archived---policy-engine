@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!--
   ============LICENSE_START=======================================================
-  ECOMP Policy Engine
+  ONAP Policy Engine
   ================================================================================
   Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
   ================================================================================
@@ -106,7 +106,7 @@
          documentation
 	-->
 
-    <!-- ECOMP portal currently using http instead of https 
+    <!-- ONAP portal currently using http instead of https 
     <Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
                clientAuth="false" sslEnabledProtocols="TLSv1, TLSv1.1, TLSv1.2"

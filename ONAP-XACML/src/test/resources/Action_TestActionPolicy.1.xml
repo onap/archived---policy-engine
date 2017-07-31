@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+ <Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:xacml:policy:id:b8e180de-3dcc-4b5b-814d-925e674e573c" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
+     <Description>TestActionPolicy@CreatedBy:test@CreatedBy:@ModifiedBy:test@ModifiedBy:</Description>
+     <Target>
+         <AnyOf>
+             <AllOf>
+                 <Match MatchId="org.onap.function.regex-match">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">12</AttributeValue>
+                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="SamplTest" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                 </Match>
+             </AllOf>
+         </AnyOf>
+     </Target>
+     <Rule RuleId="" Effect="Permit">
+         <Target/>
+         <Condition>
+             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                 <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                         <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="SamplTest" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                     </Apply>
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">test</AttributeValue>
+                 </Apply>
+                 <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                         <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="SamplTest" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                     </Apply>
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Sample</AttributeValue>
+                 </Apply>
+             </Apply>
+         </Condition>
+         <ObligationExpressions>
+             <ObligationExpression ObligationId="Test" FulfillOn="Permit">
+                 <AttributeAssignmentExpression AttributeId="performer" Category="urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">PEPAction</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="type" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">REST</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="url" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">http://localhost.com</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="method" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+                 </AttributeAssignmentExpression>
+                 <AttributeAssignmentExpression AttributeId="body" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">$URL/Action/com.Action_TestActionPolicy.1.xml.json</AttributeValue>
+                 </AttributeAssignmentExpression>
+             </ObligationExpression>
+         </ObligationExpressions>
+     </Rule>
+ </Policy>

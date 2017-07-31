@@ -1,6 +1,6 @@
 <%--
   ================================================================================
-  eCOMP Portal SDK
+  onap Portal SDK
   ================================================================================
   Copyright (C) 2017 AT&T Intellectual Property
   ================================================================================
@@ -53,8 +53,8 @@
 				<div align="center" id="errorInfo" style="display:none;float:left;font-size:12px;margin-left:5px"><span style="color:red">Invaild username or password, Please try again</span></div>
 				<br/>
 				<div align="center" style="margin-left:auto;margin-right:auto;width:40%;padding:6px;opacity:0.7;background-color:white">
-	          		<img src="static/fusion/images/ecomp_trans.png"/>
-					<h2> ECOMP Portal </h2>
+	          		<img src="static/fusion/images/onap_trans.png"/>
+					<h2> ONAP Portal </h2>
 					<label>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="form-field__label">Login ID:</label>
 					</label>

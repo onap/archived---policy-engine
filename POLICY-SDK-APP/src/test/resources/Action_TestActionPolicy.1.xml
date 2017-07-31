@@ -4,7 +4,7 @@
      <Target>
          <AnyOf>
              <AllOf>
-                 <Match MatchId="org.openecomp.function.regex-match">
+                 <Match MatchId="org.onap.function.regex-match">
                      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">12</AttributeValue>
                      <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="SamplTest" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                  </Match>

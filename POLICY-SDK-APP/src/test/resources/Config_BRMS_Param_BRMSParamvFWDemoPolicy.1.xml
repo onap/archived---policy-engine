@@ -4,33 +4,33 @@
     <Target>
         <AnyOf>
             <AllOf>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="org.onap.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">com.Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="PolicyName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
             </AllOf>
             <AllOf>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="org.onap.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DROOLS</AttributeValue>
-                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ECOMPName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ONAPName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="org.onap.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">BRMS_PARAM_RULE</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ConfigName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="org.onap.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SampleRiskType</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="RiskType" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="org.onap.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">1</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="RiskLevel" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="org.onap.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">False</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="guard" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
-                <Match MatchId="org.openecomp.function.regex-match">
+                <Match MatchId="org.onap.function.regex-match">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">08-06-2017</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="TTLDate" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
@@ -66,7 +66,7 @@
                 <AttributeAssignmentExpression AttributeId="VersionNumber" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">1</AttributeValue>
                 </AttributeAssignmentExpression>
-                <AttributeAssignmentExpression AttributeId="matching:ECOMPName" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                <AttributeAssignmentExpression AttributeId="matching:ONAPName" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DROOLS</AttributeValue>
                 </AttributeAssignmentExpression>
                 <AttributeAssignmentExpression AttributeId="matching:ConfigName" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
