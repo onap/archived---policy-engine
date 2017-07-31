@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ECOMP Policy Engine
+ * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -140,7 +140,7 @@ app.controller('riskTypeDictGridController', function ($scope, PolicyAppService,
     };
 
     $scope.deleteRiskType = function(data) {
-        modalService.popupConfirmWin("Confirm","You are about to delete the Ecomp Name  "+data.riskType+". Do you want to continue?",
+        modalService.popupConfirmWin("Confirm","You are about to delete the Onap Name  "+data.riskType+". Do you want to continue?",
             function(){
                 var uuu = "deleteDictionary/sp_dictionary/remove_riskType";
                 var postData={data: data};

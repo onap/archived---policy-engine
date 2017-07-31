@@ -1,0 +1,118 @@
+ALTER TABLE PolicyEntity DROP CONSTRAINT FK_PolicyEntity_configurationDataId
+ALTER TABLE PolicyEntity DROP CONSTRAINT FK_PolicyEntity_actionBodyId
+ALTER TABLE PdpEntity DROP CONSTRAINT FK_PdpEntity_groupKey
+ALTER TABLE FunctionDefinition DROP CONSTRAINT FK_FunctionDefinition_return_datatype
+ALTER TABLE Attribute DROP CONSTRAINT FK_Attribute_category
+ALTER TABLE Attribute DROP CONSTRAINT FK_Attribute_constraint_type
+ALTER TABLE Attribute DROP CONSTRAINT FK_Attribute_created_by
+ALTER TABLE Attribute DROP CONSTRAINT FK_Attribute_modified_by
+ALTER TABLE Attribute DROP CONSTRAINT FK_Attribute_datatype
+ALTER TABLE ConstraintValues DROP CONSTRAINT FK_ConstraintValues_attribute_id
+ALTER TABLE FunctionArguments DROP CONSTRAINT FK_FunctionArguments_function_id
+ALTER TABLE FunctionArguments DROP CONSTRAINT FK_FunctionArguments_datatype_id
+ALTER TABLE ActionPolicyDict DROP CONSTRAINT FK_ActionPolicyDict_modified_by
+ALTER TABLE ActionPolicyDict DROP CONSTRAINT FK_ActionPolicyDict_created_by
+ALTER TABLE DecisionSettings DROP CONSTRAINT FK_DecisionSettings_created_by
+ALTER TABLE DecisionSettings DROP CONSTRAINT FK_DecisionSettings_datatype
+ALTER TABLE DecisionSettings DROP CONSTRAINT FK_DecisionSettings_modified_by
+ALTER TABLE MicroServiceModels DROP CONSTRAINT FK_MicroServiceModels_imported_by
+ALTER TABLE AttributeAssignment DROP CONSTRAINT FK_AttributeAssignment_OBADVICE_id
+ALTER TABLE BRMSParamTemplate DROP CONSTRAINT FK_BRMSParamTemplate_created_by
+ALTER TABLE ClosedLoopD2Services DROP CONSTRAINT FK_ClosedLoopD2Services_modified_by
+ALTER TABLE ClosedLoopD2Services DROP CONSTRAINT FK_ClosedLoopD2Services_created_by
+ALTER TABLE ClosedLoopSite DROP CONSTRAINT FK_ClosedLoopSite_modified_by
+ALTER TABLE ClosedLoopSite DROP CONSTRAINT FK_ClosedLoopSite_created_by
+ALTER TABLE DescriptiveScope DROP CONSTRAINT FK_DescriptiveScope_created_by
+ALTER TABLE DescriptiveScope DROP CONSTRAINT FK_DescriptiveScope_modified_by
+ALTER TABLE OnapName DROP CONSTRAINT FK_OnapName_created_by
+ALTER TABLE OnapName DROP CONSTRAINT FK_OnapName_modified_by
+ALTER TABLE ObadviceExpressions DROP CONSTRAINT FK_ObadviceExpressions_obadvice_id
+ALTER TABLE ObadviceExpressions DROP CONSTRAINT FK_ObadviceExpressions_attribute_id
+ALTER TABLE PEPOptions DROP CONSTRAINT FK_PEPOptions_modified_by
+ALTER TABLE PEPOptions DROP CONSTRAINT FK_PEPOptions_created_by
+ALTER TABLE PIPConfigParams DROP CONSTRAINT FK_PIPConfigParams_PIP_ID
+ALTER TABLE PIPConfiguration DROP CONSTRAINT FK_PIPConfiguration_TYPE
+ALTER TABLE PIPResolver DROP CONSTRAINT FK_PIPResolver_PIP_ID
+ALTER TABLE PIPResolverParams DROP CONSTRAINT FK_PIPResolverParams_ID_RESOLVER
+ALTER TABLE roles DROP CONSTRAINT FK_roles_loginid
+ALTER TABLE TERM DROP CONSTRAINT FK_TERM_modified_by
+ALTER TABLE TERM DROP CONSTRAINT FK_TERM_created_by
+ALTER TABLE VarbindDictionary DROP CONSTRAINT FK_VarbindDictionary_modified_by
+ALTER TABLE VarbindDictionary DROP CONSTRAINT FK_VarbindDictionary_created_by
+ALTER TABLE VNFType DROP CONSTRAINT FK_VNFType_modified_by
+ALTER TABLE VNFType DROP CONSTRAINT FK_VNFType_created_by
+ALTER TABLE VSCLAction DROP CONSTRAINT FK_VSCLAction_modified_by
+ALTER TABLE VSCLAction DROP CONSTRAINT FK_VSCLAction_created_by
+ALTER TABLE PolicyGroupEntity DROP CONSTRAINT FK_PolicyGroupEntity_policyId
+ALTER TABLE PolicyGroupEntity DROP CONSTRAINT FK_PolicyGroupEntity_groupKey
+DROP TABLE PolicyEntity
+DROP TABLE ConfigurationDataEntity
+DROP TABLE PolicyDBDaoEntity
+DROP TABLE GroupEntity
+DROP TABLE PdpEntity
+DROP TABLE ActionBodyEntity
+DROP TABLE DatabaseLockEntity
+DROP TABLE PolicyVersion
+DROP TABLE POLICYSCORE
+DROP TABLE FunctionDefinition
+DROP TABLE Attribute
+DROP TABLE Category
+DROP TABLE ConstraintType
+DROP TABLE ConstraintValues
+DROP TABLE Datatype
+DROP TABLE FunctionArguments
+DROP TABLE UserInfo
+DROP TABLE ActionPolicyDict
+DROP TABLE DecisionSettings
+DROP TABLE MicroServiceModels
+DROP TABLE actionlist
+DROP TABLE AddressGroup
+DROP TABLE AttributeAssignment
+DROP TABLE BRMSParamTemplate
+DROP TABLE ClosedLoopD2Services
+DROP TABLE ClosedLoopSite
+DROP TABLE DCAEUsers
+DROP TABLE DCAEuuid
+DROP TABLE DescriptiveScope
+DROP TABLE OnapName
+DROP TABLE EnforcingType
+DROP TABLE GlobalRoleSettings
+DROP TABLE GroupPolicyScopeList
+DROP TABLE GroupServiceList
+DROP TABLE MicroServiceConfigName
+DROP TABLE MicroServiceLocation
+DROP TABLE Obadvice
+DROP TABLE ObadviceExpressions
+DROP TABLE PEPOptions
+DROP TABLE PIPConfigParams
+DROP TABLE PIPConfiguration
+DROP TABLE PIPResolver
+DROP TABLE PIPResolverParams
+DROP TABLE PIPType
+DROP TABLE PolicyAlgorithms
+DROP TABLE policy_manangement
+DROP TABLE PolicyScopeService
+DROP TABLE PolicyScopeType
+DROP TABLE PolicyScopeResource
+DROP TABLE PolicyScopeClosedLoop
+DROP TABLE portlist
+DROP TABLE protocollist
+DROP TABLE RemoteCatalogValues
+DROP TABLE roles
+DROP TABLE RuleAlgorithms
+DROP TABLE securityzone
+DROP TABLE servicegroup
+DROP TABLE SystemLogDB
+DROP TABLE TERM
+DROP TABLE VarbindDictionary
+DROP TABLE VMType
+DROP TABLE VNFType
+DROP TABLE VSCLAction
+DROP TABLE zone
+DROP TABLE BackUpMonitorEntity
+DROP TABLE StateManagementEntity
+DROP TABLE ForwardProgressEntity
+DROP TABLE ResourceRegistrationEntity
+DROP TABLE IntegrityAuditEntity
+DROP TABLE PolicyGroupEntity
+DELETE FROM SEQUENCE WHERE SEQ_NAME = 'SEQ_GEN'

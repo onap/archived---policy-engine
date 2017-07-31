@@ -4,17 +4,17 @@
      <Target>
          <AnyOf>
              <AllOf>
-                 <Match MatchId="org.openecomp.function.regex-match">
+                 <Match MatchId="org.onap.function.regex-match">
                      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">com.Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml</AttributeValue>
                      <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="PolicyName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                  </Match>
              </AllOf>
              <AllOf>
-                 <Match MatchId="org.openecomp.function.regex-match">
+                 <Match MatchId="org.onap.function.regex-match">
                      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Test</AttributeValue>
-                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ECOMPName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ONAPName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                  </Match>
-                 <Match MatchId="org.openecomp.function.regex-match">
+                 <Match MatchId="org.onap.function.regex-match">
                      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">test</AttributeValue>
                      <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="SamplTest" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                  </Match>

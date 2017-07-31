@@ -1,6 +1,6 @@
 <!--
   ============LICENSE_START=======================================================
-  ECOMP Policy Engine
+  ONAP Policy Engine
   ================================================================================
   Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
   ================================================================================
@@ -24,7 +24,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.openecomp.policy.engine</groupId>
+		<groupId>org.onap.policy.engine</groupId>
 		<artifactId>PolicyEngineSuite</artifactId>
 		<version>1.1.0-SNAPSHOT</version>
 	</parent>
@@ -33,7 +33,7 @@
 	<packaging>pom</packaging>
 
 	<name>Policy Packages</name>
-	<description>D2 ECOMP Policy Installation Packages</description>
+	<description>D2 ONAP Policy Installation Packages</description>
 
 	<profiles>
 		<!-- DO NOT CHANGE THE *ORDER* IN WHICH THESE PROFILES ARE DEFINED! -->

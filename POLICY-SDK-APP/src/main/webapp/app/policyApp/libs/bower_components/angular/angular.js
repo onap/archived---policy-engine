@@ -25956,7 +25956,7 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
           // compile the element since there might be bindings in it
           $compile(nullOption)(scope);
 
-          // remove the class, which is added automatically because we recompile the element and it
+          // remove the class, which is added automatically because we ronapile the element and it
           // becomes the compilation root
           nullOption.removeClass('ng-scope');
 

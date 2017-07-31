@@ -1,0 +1,60 @@
+/*-
+ * ============LICENSE_START=======================================================
+ * ONAP-REST
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */
+package org.onap.policy.rest.jpa;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="PolicyGroupEntity")
+@NamedQuery(name="PolicyGroupEntity.findAll", query="SELECT p FROM PolicyGroupEntity p ")
+public class PolicyGroupEntity implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column(name="groupKey")
+	private int groupKey;
+	
+	@Id
+	@Column(name="policyid")
+	private int policyid;
+
+	public int getGroupKey() {
+		return groupKey;
+	}
+
+	public void setGroupKey(int groupKey) {
+		this.groupKey = groupKey;
+	}
+
+	public int getPolicyid() {
+		return policyid;
+	}
+
+	public void setPolicyid(int policyid) {
+		this.policyid = policyid;
+	}
+}

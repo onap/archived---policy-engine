@@ -1,7 +1,7 @@
 #!/bin/bash 
 ###
 # ============LICENSE_START=======================================================
-# ECOMP Policy Engine
+# ONAP Policy Engine
 # ================================================================================
 # Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
 # ================================================================================
@@ -23,7 +23,7 @@
 # db_backup.sh: Run this script to back database to a file
 # 
 # Usage  : db_backup.sh db_user     db_user_password database
-# Example: db_backup.sh policy_user password         ecomp_sdk
+# Example: db_backup.sh policy_user password         onap_sdk
 #
 # Note: mysqldump requires at least the SELECT privilege for dumped tables
 #
@@ -79,6 +79,6 @@ if [ $# -eq 3 ]; then
   echo "db_backup.sh completed ... `date`" | tee -a $LOG
 else
   echo "Usage  : db_backup.sh db_user_id  db_user_password database" 
-  echo "Example: db_backup.sh policy_user password         ecomp_sdk" 
+  echo "Example: db_backup.sh policy_user password         onap_sdk" 
 fi
 

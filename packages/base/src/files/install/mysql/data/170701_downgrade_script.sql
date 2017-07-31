@@ -1,6 +1,6 @@
 /*-
 * ============LICENSE_START=======================================================
-* ECOMP Policy Engine
+* ONAP Policy Engine
 * ================================================================================
 * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
 * ================================================================================
@@ -17,7 +17,7 @@
 * limitations under the License.
 * ============LICENSE_END=========================================================
 */
-use ecomp_sdk;
+use onap_sdk;
 ALTER TABLE fwtagpicker drop networkRole;
 alter table microservicemodels drop column enumValues, drop column annotation; 
 drop table if exists FWTag; 

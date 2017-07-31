@@ -4,7 +4,7 @@
   "testCaseDescription": "test GetConfig String Not valid",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "fail",
+  "ONAPName": "fail",
   "ConfigName": null,
    "configAttributes": null,
   "expectedResult":[
@@ -16,7 +16,7 @@
   "testCaseDescription": "test Get ConfigString Valid JSON",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "JSON",
+  "ONAPName": "JSON",
   "ConfigName": null,
    "configAttributes": null,
   "expectedResult":[
@@ -28,7 +28,7 @@
   "testCaseDescription": "test Get ConfigString Valid XML",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "XML",
+  "ONAPName": "XML",
   "ConfigName": null,
    "configAttributes": null,
   "expectedResult":[
@@ -40,7 +40,7 @@
   "testCaseDescription": "test Get ConfigString Valid properties",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "Properties",
+  "ONAPName": "Properties",
   "ConfigName": null,
    "configAttributes": null,
   "expectedResult":[
@@ -52,7 +52,7 @@
   "testCaseDescription": "test Get ConfigString Valid other",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "Other",
+  "ONAPName": "Other",
   "ConfigName": null,
    "configAttributes": null,
   "expectedResult":[
@@ -64,11 +64,11 @@
   "testCaseDescription": "test GetConfig String String Fail",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": null,
+  "ONAPName": null,
   "ConfigName": null,
    "configAttributes": null,
   "expectedResult":[
-  		"org.openecomp.policy.api.PolicyConfigException: No eCOMPComponentName given.",
+  		"org.onap.policy.api.PolicyConfigException: No onapComponentName given.",
  	 ]
 },
 {
@@ -76,11 +76,11 @@
   "testCaseDescription": "test GetConfig String String Fail1",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": null,
+  "ONAPName": null,
   "ConfigName": null,
    "configAttributes": null,
   "expectedResult":[
-  	"org.openecomp.policy.api.PolicyConfigException: No eCOMPComponentName given."
+  	"org.onap.policy.api.PolicyConfigException: No onapComponentName given."
   
  	 ]
 },
@@ -89,7 +89,7 @@
   "testCaseDescription": "test GetConfig String String Valid ",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "fail",
+  "ONAPName": "fail",
   "ConfigName": "fail",
    "configAttributes": null,
   "expectedResult":[
@@ -101,7 +101,7 @@
   "testCaseDescription": "test GetConfig String String Valid JSON",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "JSON",
+  "ONAPName": "JSON",
   "ConfigName": "JSONconfig",
    "configAttributes": null,
   "expectedResult":[
@@ -113,7 +113,7 @@
   "testCaseDescription": "test GetConfig String String Valid XML",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "XML",
+  "ONAPName": "XML",
   "ConfigName": "XMLconfig",
    "configAttributes": null,
   "expectedResult":[
@@ -125,7 +125,7 @@
   "testCaseDescription": "test GetConfig String String Valid properties",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "Properties",
+  "ONAPName": "Properties",
   "ConfigName": "PropConfig",
    "configAttributes": null,
   "expectedResult":[
@@ -137,7 +137,7 @@
   "testCaseDescription": "test GetConfig String String Valid other",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "Other",
+  "ONAPName": "Other",
   "ConfigName": "OtherConfig",
    "configAttributes": null,
   "expectedResult":[
@@ -149,11 +149,11 @@
   "testCaseDescription": "test GetConfig String String String fail",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": null,
+  "ONAPName": null,
   "ConfigName": null,
    "configAttributes": null,
   "expectedResult":[
-  	"org.openecomp.policy.api.PolicyConfigException: No eCOMPComponentName given."
+  	"org.onap.policy.api.PolicyConfigException: No onapComponentName given."
   	]
 },
 {
@@ -161,7 +161,7 @@
   "testCaseDescription": "test GetConfig String String String fail1",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": null,
+  "ONAPName": null,
   "ConfigName": "testFail",
    "configAttributes": [
 		{
@@ -170,7 +170,7 @@
 			},
 		],
   "expectedResult":[
-  		"org.openecomp.policy.api.PolicyConfigException: No eCOMPComponentName given.",
+  		"org.onap.policy.api.PolicyConfigException: No onapComponentName given.",
   		]
 },
 {
@@ -178,7 +178,7 @@
   "testCaseDescription": "test GetConfig String String String fail2",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "TestFail",
+  "ONAPName": "TestFail",
   "ConfigName": null,
    "configAttributes": [
 		{
@@ -195,7 +195,7 @@
   "testCaseDescription": "test GetConfig String String String fail3",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "TestFail",
+  "ONAPName": "TestFail",
   "ConfigName": "configFail",
    "configAttributes": null,
   "expectedResult":[
@@ -207,7 +207,7 @@
   "testCaseDescription": "test GetConfig String String String fail4",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "TestFail",
+  "ONAPName": "TestFail",
   "ConfigName": "configFail",
    "configAttributes": [
 		{
@@ -216,7 +216,7 @@
 		},
 	],
   "expectedResult":[
-  		"org.openecomp.policy.api.PolicyConfigException: Cannot have an empty Key",
+  		"org.onap.policy.api.PolicyConfigException: Cannot have an empty Key",
 
  	 ]
 },
@@ -225,7 +225,7 @@
   "testCaseDescription": "test GetConfig String String String Valid",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "TestFail",
+  "ONAPName": "TestFail",
   "ConfigName": "configFail",
    "configAttributes": [
 		{
@@ -242,7 +242,7 @@
   "testCaseDescription": "test GetConfig String String String Valid JSON",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "JSON",
+  "ONAPName": "JSON",
   "ConfigName": "JSONconfig",
    "configAttributes": [
 	{
@@ -267,7 +267,7 @@
   "testCaseDescription": "test GetConfig String String String Valid XML",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "XML",
+  "ONAPName": "XML",
   "ConfigName": "XMLconfig",
    "configAttributes": [
 	{
@@ -292,7 +292,7 @@
   "testCaseDescription": "test GetConfig String String String Valid properties",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "Properties",
+  "ONAPName": "Properties",
   "ConfigName": "PropConfig",
    "configAttributes": [
 	{
@@ -317,7 +317,7 @@
   "testCaseDescription": "test GetConfig String String String Valid other",
   "testFor": "getConfig",
   "PDP_URLConfigFile":  "config.properties"
-  "ECOMPName": "Other",
+  "ONAPName": "Other",
   "ConfigName": "OtherConfig",
    "configAttributes": [
 	{
@@ -344,7 +344,7 @@
   "PDP_URLConfigFile":  "config.properties",
   "eventAttributes": null,
  "expectedResult":[
- 		"org.openecomp.policy.api.PolicyEventException: No EventAttributes Given.",
+ 		"org.onap.policy.api.PolicyEventException: No EventAttributes Given.",
  ]
 },
 {
@@ -359,7 +359,7 @@
     },
   ],
  "expectedResult":[
- 		"org.openecomp.policy.api.PolicyEventException: Cannot have an empty Key",
+ 		"org.onap.policy.api.PolicyEventException: Cannot have an empty Key",
  		
  ]
 },

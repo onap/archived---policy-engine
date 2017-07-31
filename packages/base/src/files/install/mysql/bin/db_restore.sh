@@ -1,7 +1,7 @@
 #!/bin/bash 
 ###
 # ============LICENSE_START=======================================================
-# ECOMP Policy Engine
+# ONAP Policy Engine
 # ================================================================================
 # Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
 # ================================================================================
@@ -23,8 +23,8 @@
 # db_restore.sh: Restore database table(s) from database backup file
 # 
 # Usage  : db_restore.sh db_user     db_password backup_file database table_name
-# Example: db_restore.sh policy_user password    /opt/app/policy/data/mysql/20150901/backup_ecomp_sdk_20150910102030.sql ecomp_sdk attribute
-#          db_restore.sh policy_user password    /opt/app/policy/data/mysql/20150901/backup_ecomp_sdk_20150910102030.sql ecomp_sdk all
+# Example: db_restore.sh policy_user password    /opt/app/policy/data/mysql/20150901/backup_onap_sdk_20150910102030.sql onap_sdk attribute
+#          db_restore.sh policy_user password    /opt/app/policy/data/mysql/20150901/backup_onap_sdk_20150910102030.sql onap_sdk all
 #
 # Assumption: Database backup_file is created from mysqldump utility
 #
@@ -90,7 +90,7 @@ if [ $# -eq 5 ]; then
   fi
 else
   echo "Usage  : db_restore.sh db_user_id  db_password  backup_file database table_name" 
-  echo "Example: db_restore.sh policy_user password     /opt/app/policy/data/mysql/20150901/backup_ecomp_sdk_20150901102030.sql ecomp_sdk attribute" 
+  echo "Example: db_restore.sh policy_user password     /opt/app/policy/data/mysql/20150901/backup_onap_sdk_20150901102030.sql onap_sdk attribute" 
 fi
 
 rm -f $TEMP_FILE

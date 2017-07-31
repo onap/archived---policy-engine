@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.openecomp.policy.engine</groupId>
+		<groupId>org.onap.policy.engine</groupId>
 		<artifactId>PolicyEngineSuite</artifactId>
 		<version>1.1.0-SNAPSHOT</version>
 	</parent>
@@ -171,8 +171,8 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.openecomp.policy.engine</groupId>
-			<artifactId>ECOMP-PDP</artifactId>
+			<groupId>org.onap.policy.engine</groupId>
+			<artifactId>ONAP-PDP</artifactId>
 			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>

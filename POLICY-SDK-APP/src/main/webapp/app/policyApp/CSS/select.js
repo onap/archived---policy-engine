@@ -1183,7 +1183,7 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
       });
 
       scope.$watch('$select.disabled', function(newValue, oldValue) {
-        // As the search input field may now become visible, it may be necessary to recompute its size
+        // As the search input field may now become visible, it may be necessary to ronapute its size
         if (oldValue && !newValue) $select.sizeSearchInput();
       });
 
