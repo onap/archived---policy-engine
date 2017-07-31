@@ -1,1 +1,1 @@
-This source repository contains the OpenECOMP Policy Engine code. The settings file needs to support the standard Maven repositories (e.g. central = http://repo1.maven.org/maven2/), and any proxy settings needed in your environment. To build it using Maven 3, run 'mvn clean install'.
+This source repository contains the ONAP Policy Engine code. The settings file needs to support the standard Maven repositories (e.g. central = http://repo1.maven.org/maven2/), and any proxy settings needed in your environment. To build it using Maven 3, run 'mvn clean install'.

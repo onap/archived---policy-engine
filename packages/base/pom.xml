@@ -1,6 +1,6 @@
 <!--
   ============LICENSE_START=======================================================
-  ECOMP Policy Engine
+  ONAP Policy Engine
   ================================================================================
   Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
   ================================================================================
@@ -24,7 +24,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.openecomp.policy.engine</groupId>
+		<groupId>org.onap.policy.engine</groupId>
 		<artifactId>packages</artifactId>
 		<version>1.1.0-SNAPSHOT</version>
 	</parent>
@@ -33,7 +33,7 @@
 	<packaging>pom</packaging>
 
 	<name>Base Package</name>
-	<description>D2 ECOMP Policy Base Packaging</description>
+	<description>D2 ONAP Policy Base Packaging</description>
 
 	<build>
 		<plugins>
@@ -53,8 +53,8 @@
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.openecomp.policy.engine</groupId>
-									<artifactId>ECOMP-PDP-REST</artifactId>
+									<groupId>org.onap.policy.engine</groupId>
+									<artifactId>ONAP-PDP-REST</artifactId>
 									<version>${project.version}</version>
 									<type>war</type>
 									<destFileName>pdp.war</destFileName>
@@ -74,8 +74,8 @@
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.openecomp.policy.engine</groupId>
-									<artifactId>ECOMP-PAP-REST</artifactId>
+									<groupId>org.onap.policy.engine</groupId>
+									<artifactId>ONAP-PAP-REST</artifactId>
 									<version>${project.version}</version>
 									<type>war</type>
 									<destFileName>pap.war</destFileName>
@@ -84,7 +84,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>copy-ecomp</id>
+						<id>copy-onap</id>
 						<phase>prepare-package</phase>
 						<goals>
 							<goal>copy</goal>
@@ -95,11 +95,11 @@
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.openecomp.policy.engine</groupId>
-									<artifactId>ECOMP-SDK-APP</artifactId>
+									<groupId>org.onap.policy.engine</groupId>
+									<artifactId>ONAP-SDK-APP</artifactId>
 									<version>${project.version}</version>
 									<type>war</type>
-									<destFileName>ecomp.war</destFileName>
+									<destFileName>onap.war</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
@@ -137,7 +137,7 @@
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.openecomp.policy.engine</groupId>
+									<groupId>org.onap.policy.engine</groupId>
 									<artifactId>BRMSGateway</artifactId>
 									<version>${project.version}</version>
 									<type>jar</type>
@@ -159,7 +159,7 @@
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.openecomp.policy.engine</groupId>
+									<groupId>org.onap.policy.engine</groupId>
 									<artifactId>LogParser</artifactId>
 									<version>${project.version}</version>
 									<type>jar</type>
@@ -216,7 +216,7 @@
 									<executable>/bin/bash</executable>
 									<arguments>
 										<argument>-c</argument>
-										<argument>mkdir -p target ; echo -e 'version="${project.version}"\ndescription="Open ECOMP Policy Engine"\nbuildTag="'"${BUILD_TAG}"'"\ncommit="'"${GIT_COMMIT}"'"\ntimestamp="${maven.build.timestamp}"' >target/build.info</argument>
+										<argument>mkdir -p target ; echo -e 'version="${project.version}"\ndescription="Open ONAP Policy Engine"\nbuildTag="'"${BUILD_TAG}"'"\ncommit="'"${GIT_COMMIT}"'"\ntimestamp="${maven.build.timestamp}"' >target/build.info</argument>
 									</arguments>
 								</configuration>
 							</execution>

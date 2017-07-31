@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ECOMP Policy Engine
+ * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -58,11 +58,11 @@ app.controller('PolicySearchController', [
         	console.log("failed");
         });
 
-        PolicyAppService.getData('getDictionary/get_EcompNameDataByName').then(function(data){
+        PolicyAppService.getData('getDictionary/get_OnapNameDataByName').then(function(data){
         	var j = data;
         	$scope.data = JSON.parse(j.data);
         	console.log($scope.data);
-        	$scope.ecompNameDictionaryDatas = JSON.parse($scope.data.ecompNameDictionaryDatas);	
+        	$scope.onapNameDictionaryDatas = JSON.parse($scope.data.onapNameDictionaryDatas);	
         }, function (error) {
         	console.log("failed");
         });

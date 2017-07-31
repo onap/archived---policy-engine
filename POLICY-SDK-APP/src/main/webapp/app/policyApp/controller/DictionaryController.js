@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ECOMP Policy Engine
+ * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -22,7 +22,7 @@ var mainDictionarys = ["Action Policy", "BRMS Policy", "Common Dictionary", "Clo
 	 "Firewall Policy", "MicroService Policy", "Policy Scope", "Safe Policy Dictionary"];
 var subDictionarys = [["Action Dictionary"],
 	["BRMS Controller" , "BRMS Dependency", "BRMS Param Template"],
-	["Attribute Dictionary","EcompName Dictionary"],
+	["Attribute Dictionary","OnapName Dictionary"],
 	["PEP Options","Site Dictionary","Service Dictionary","Varbind Dictionary", "VNF Type","VSCL Action"],
 	["Settings Dictionary","Rainy Day Allowed Treatments"],
 	["Descriptive Scope"],
