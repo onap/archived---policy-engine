@@ -136,7 +136,7 @@
 				<configuration>
 					<nexusUrl>${nexusproxy}</nexusUrl>
 					<stagingProfileId>176c31dfe190a</stagingProfileId>
-					<serverId>onap-staging</serverId>
+					<serverId>ecomp-staging</serverId>
 				</configuration>
 			</plugin>
 			<plugin>
