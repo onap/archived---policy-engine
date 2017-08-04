@@ -23,6 +23,7 @@ package org.onap.policy.rest.jpa;
  */
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -287,6 +288,44 @@ public class PolicyEntity implements Serializable {
 	 */
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+	
+	@Override
+	public int hashCode() {
+	return Objects.hash(policyId, policyName, scope, version, policyVersion, policyData, configurationDataEntity, 
+			actionBodyEntity, createdBy, createdDate, description, modifiedBy, modifiedDate, deleted);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null){
+			return false;
+		}
+		if(obj == this){
+			return true;
+		}
+		if(!(obj instanceof PolicyEntity)){
+			return false;
+		}
+
+		PolicyEntity p = (PolicyEntity) obj;
+		
+		return (
+				policyId == p.policyId &&
+				policyName.equals(p.policyName) &&
+				scope.equals(p.scope) &&
+				version == p.version &&
+				policyVersion == p.policyVersion &&
+				policyData.equals(p.policyData) &&
+				((configurationDataEntity == null && p.configurationDataEntity == null) || configurationDataEntity.equals(p.configurationDataEntity)) &&
+				((actionBodyEntity == null && p.actionBodyEntity == null) || actionBodyEntity.equals(p.actionBodyEntity)) &&
+				createdBy.equals(p.createdBy) &&
+				createdDate.equals(p.createdDate) &&
+				description.equals(p.description) &&
+				modifiedBy.equals(p.modifiedBy) &&
+				modifiedDate.equals(p.modifiedDate) &&
+				deleted == p.deleted
+				);
 	}
 
 

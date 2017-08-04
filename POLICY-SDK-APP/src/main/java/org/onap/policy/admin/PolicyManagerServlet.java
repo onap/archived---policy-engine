@@ -45,6 +45,7 @@ import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonReader;
+import javax.script.SimpleBindings;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -371,8 +372,11 @@ public class PolicyManagerServlet extends HttpServlet {
 					if(policyName.contains("\\")){
 						policyName = policyName.replace("\\", "\\\\");
 					}
-					String policyVersionQuery = "From PolicyVersion where policy_name ='"+policyName+"'  and active_version = '"+version+"'and id >0";
-					List<Object> activeData = controller.getDataByQuery(policyVersionQuery);
+					String policyVersionQuery = "From PolicyVersion where policy_name = :policyName  and active_version = :version and id >0";
+					SimpleBindings pvParams = new SimpleBindings();
+					pvParams.put("policyName", policyName);
+					pvParams.put("version", version);
+					List<Object> activeData = controller.getDataByQuery(policyVersionQuery, pvParams);
 					if(!activeData.isEmpty()){
 						PolicyVersion policy = (PolicyVersion) activeData.get(0);
 						JSONObject el = new JSONObject();
@@ -461,8 +465,11 @@ public class PolicyManagerServlet extends HttpServlet {
 					dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
 				}
 				String[] splitDBCheckName = dbCheckName.split(":");
-				String peQuery =   "FROM PolicyEntity where policyName = '"+splitDBCheckName[1]+"' and scope ='"+splitDBCheckName[0]+"'";
-				List<Object> policyEntity = controller.getDataByQuery(peQuery);
+				String peQuery =   "FROM PolicyEntity where policyName = :splitDBCheckName_1 and scope = :splitDBCheckName_0";
+				SimpleBindings policyParams = new SimpleBindings();
+				policyParams.put("splitDBCheckName_1", splitDBCheckName[1]);
+				policyParams.put("splitDBCheckName_0", splitDBCheckName[0]);
+				List<Object> policyEntity = controller.getDataByQuery(peQuery, policyParams);
 				PolicyEntity pentity = (PolicyEntity) policyEntity.get(0);
 				if(pentity.isDeleted()){
 					return error("The Policy is Not Existing in Workspace");
@@ -520,8 +527,11 @@ public class PolicyManagerServlet extends HttpServlet {
 		}
 		PolicyController controller = getPolicyControllerInstance();
 		String[] split = path.split(":");
-		String query = "FROM PolicyEntity where policyName = '"+split[1]+"' and scope ='"+split[0]+"'";
-		List<Object> queryData = controller.getDataByQuery(query);
+		String query = "FROM PolicyEntity where policyName = :split_1 and scope = :split_0";
+		SimpleBindings peParams = new SimpleBindings();
+		peParams.put("split_1", split[1]);
+		peParams.put("split_0", split[0]);
+		List<Object> queryData = controller.getDataByQuery(query, peParams);
 		if(!queryData.isEmpty()){
 			PolicyEntity entity = (PolicyEntity) queryData.get(0);
 			File temp = null;
@@ -650,13 +660,15 @@ public class PolicyManagerServlet extends HttpServlet {
 
 	private List<Object> queryPolicyEditorScopes(String scopeName){
 		String scopeNamequery = "";
+		SimpleBindings params = new SimpleBindings();
 		if(scopeName == null){
 			scopeNamequery = "from PolicyEditorScopes";
 		}else{
-			scopeNamequery = "from PolicyEditorScopes where SCOPENAME like'" +scopeName+"%'";
+			scopeNamequery = "from PolicyEditorScopes where SCOPENAME like :scopeName";
+			params.put("scopeName", scopeName + "%");
 		}
 		PolicyController controller = getPolicyControllerInstance();
-		List<Object> scopesList = controller.getDataByQuery(scopeNamequery);
+		List<Object> scopesList = controller.getDataByQuery(scopeNamequery, params);
 		return  scopesList;
 	}
 
@@ -669,10 +681,14 @@ public class PolicyManagerServlet extends HttpServlet {
 		if(scopeName.contains("\\")){
 			scopeName = scopeName.replace("\\", "\\\\\\\\");
 		}
-		String query = "from PolicyVersion where POLICY_NAME like '" +scopeName+"%'";
-		String scopeNamequery = "from PolicyEditorScopes where SCOPENAME like '" +scopeName+"%'";
-		List<Object> activePolicies = controller.getDataByQuery(query);
-		List<Object> scopesList = controller.getDataByQuery(scopeNamequery);
+		String query = "from PolicyVersion where POLICY_NAME like :scopeName";
+		String scopeNamequery = "from PolicyEditorScopes where SCOPENAME like :scopeName";
+		
+		SimpleBindings params = new SimpleBindings();
+		params.put("scopeName", scopeName + "%");
+		
+		List<Object> activePolicies = controller.getDataByQuery(query, params);
+		List<Object> scopesList = controller.getDataByQuery(scopeNamequery, params);
 		for(Object list : scopesList){
 			PolicyEditorScopes scopeById = (PolicyEditorScopes) list;
 			String scope = scopeById.getScopeName();
@@ -773,10 +789,12 @@ public class PolicyManagerServlet extends HttpServlet {
 					newScopeName = newScopeName.replace("\\", "\\\\\\\\");
 				}
 				PolicyController controller = getPolicyControllerInstance();
-				String query = "from PolicyVersion where POLICY_NAME like'" +scopeName+"%'";
-				String scopeNamequery = "from PolicyEditorScopes where SCOPENAME like'" +scopeName+"%'";
-				List<Object> activePolicies = controller.getDataByQuery(query);
-				List<Object> scopesList = controller.getDataByQuery(scopeNamequery);
+				String query = "from PolicyVersion where POLICY_NAME like :scopeName";
+				String scopeNamequery = "from PolicyEditorScopes where SCOPENAME like :scopeName";
+				SimpleBindings pvParams = new SimpleBindings();
+				pvParams.put("scopeName", scopeName + "%");
+				List<Object> activePolicies = controller.getDataByQuery(query, pvParams);
+				List<Object> scopesList = controller.getDataByQuery(scopeNamequery, pvParams);
 				for(Object object : activePolicies){
 					PolicyVersion activeVersion = (PolicyVersion) object;
 					String policyOldPath = activeVersion.getPolicyName().replace(File.separator, "/") + "." + activeVersion.getActiveVersion() + ".xml";
@@ -866,8 +884,11 @@ public class PolicyManagerServlet extends HttpServlet {
 			String[] oldPolicySplit = oldPolicyCheck.split(":");
 
 			//Check PolicyEntity table with newPolicy Name
-			String policyEntityquery = "FROM PolicyEntity where policyName = '"+newPolicySplit[1]+"' and scope ='"+newPolicySplit[0]+"'";
-			List<Object> queryData = controller.getDataByQuery(policyEntityquery);
+			String policyEntityquery = "FROM PolicyEntity where policyName = :newPolicySplit_1 and scope = :newPolicySplit_1";
+			SimpleBindings policyParams = new SimpleBindings();
+			policyParams.put("newPolicySplit_1", newPolicySplit[1]);
+			policyParams.put("newPolicySplit_0", newPolicySplit[0]);
+			List<Object> queryData = controller.getDataByQuery(policyEntityquery, policyParams);
 			if(!queryData.isEmpty()){
 				entity = (PolicyEntity) queryData.get(0);
 				return error("Policy rename failed. Since, the policy with same name already exists.");
@@ -875,20 +896,26 @@ public class PolicyManagerServlet extends HttpServlet {
 
 			//Query the Policy Entity with oldPolicy Name
 			String policyEntityCheck = oldPolicySplit[1].substring(0, oldPolicySplit[1].indexOf("."));
-			String oldpolicyEntityquery = "FROM PolicyEntity where policyName like '"+policyEntityCheck+"%' and scope ='"+oldPolicySplit[0]+"'";
-			List<Object> oldEntityData = controller.getDataByQuery(oldpolicyEntityquery);
+			String oldpolicyEntityquery = "FROM PolicyEntity where policyName like :policyEntityCheck and scope = :oldPolicySplit_0";
+			SimpleBindings params = new SimpleBindings();
+			params.put("policyEntityCheck", policyEntityCheck + "%");
+			params.put("oldPolicySplit_0", oldPolicySplit[0]);
+			List<Object> oldEntityData = controller.getDataByQuery(oldpolicyEntityquery, params);
 			if(!oldEntityData.isEmpty()){
 				String groupQuery = "FROM PolicyGroupEntity where (";
+				SimpleBindings geParams = new SimpleBindings();
 				for(int i=0; i<oldEntityData.size(); i++){
 					entity = (PolicyEntity) oldEntityData.get(i);
 					if(i == 0){
-						groupQuery = groupQuery +  "policyid ="  + entity.getPolicyId();
+						groupQuery = groupQuery +  "policyid = :policyId";
+						geParams.put("policyId", entity.getPolicyId());
 					}else{
-						groupQuery = groupQuery +  " or policyid ="  + entity.getPolicyId();
+						groupQuery = groupQuery +  " or policyid = :policyId" + i;
+						geParams.put("policyId" + i, entity.getPolicyId());
 					}
 				}
 				groupQuery = groupQuery + ")";
-				List<Object> groupEntityData = controller.getDataByQuery(groupQuery);
+				List<Object> groupEntityData = controller.getDataByQuery(groupQuery, geParams);
 				if(groupEntityData.size() > 0){
 					return error("Policy rename failed. Since the policy or its version is active in PDP Groups.");
 				}
@@ -1077,15 +1104,21 @@ public class PolicyManagerServlet extends HttpServlet {
 			boolean success = false;
 
 			//Check PolicyEntity table with newPolicy Name
-			String policyEntityquery = "FROM PolicyEntity where policyName = '"+newPolicySplit[1]+"' and scope ='"+newPolicySplit[0]+"'";
-			List<Object> queryData = controller.getDataByQuery(policyEntityquery);
+			String policyEntityquery = "FROM PolicyEntity where policyName = :newPolicySplit_1 and scope = :newPolicySplit_0";
+			SimpleBindings policyParams = new SimpleBindings();
+			policyParams.put("newPolicySplit_1", newPolicySplit[1]);
+			policyParams.put("newPolicySplit_0", newPolicySplit[0]);
+			List<Object> queryData = controller.getDataByQuery(policyEntityquery, policyParams);
 			if(!queryData.isEmpty()){
 				return error("Policy already exists with same name");
 			}
 
 			//Query the Policy Entity with oldPolicy Name
-			policyEntityquery = "FROM PolicyEntity where policyName = '"+oldPolicySplit[1]+"' and scope ='"+oldPolicySplit[0]+"'";
-			queryData = controller.getDataByQuery(policyEntityquery);
+			policyEntityquery = "FROM PolicyEntity where policyName = :oldPolicySplit_1 and scope = :oldPolicySplit_0";
+			SimpleBindings peParams = new SimpleBindings();
+			peParams.put("oldPolicySplit_1", oldPolicySplit[1]);
+			peParams.put("oldPolicySplit_0", oldPolicySplit[0]);
+			queryData = controller.getDataByQuery(policyEntityquery, peParams);
 			if(!queryData.isEmpty()){
 				entity = (PolicyEntity) queryData.get(0);
 			}
@@ -1131,6 +1164,7 @@ public class PolicyManagerServlet extends HttpServlet {
 			String policyNamewithExtension = path.replace("/", File.separator);
 			String policyVersionName = policyNamewithExtension.replace(".xml", "");
 			String query = "";
+			SimpleBindings policyParams = new SimpleBindings();
 			if(path.endsWith(".xml")){
 				policyNamewithoutExtension = policyVersionName.substring(0, policyVersionName.lastIndexOf("."));
 				policyNamewithoutExtension = policyNamewithoutExtension.replace(File.separator, ".");
@@ -1143,13 +1177,16 @@ public class PolicyManagerServlet extends HttpServlet {
 					splitPolicyName = policyNamewithoutExtension.replace(".Decision_", ":Decision_");
 				}
 				String[] split = splitPolicyName.split(":");
-				query = "FROM PolicyEntity where policyName like '"+split[1]+"%' and scope ='"+split[0]+"'";
+				query = "FROM PolicyEntity where policyName like split_1 and scope = split_0";
+				policyParams.put("split_1", split[1] + "%");
+				policyParams.put("split_0", split[0]);
 			}else{
 				policyNamewithoutExtension = path.replace(File.separator, ".");
-				query = "FROM PolicyEntity where scope like '"+policyNamewithoutExtension+"%'";
+				query = "FROM PolicyEntity where scope like :policyNamewithoutExtension";
+				policyParams.put("policyNamewithoutExtension", policyNamewithoutExtension + "%");
 			}
 			
-			List<Object> policyEntityobjects = controller.getDataByQuery(query);
+			List<Object> policyEntityobjects = controller.getDataByQuery(query, policyParams);
 			String activePolicyName = null;
 			boolean pdpCheck = false;
 			if(path.endsWith(".xml")){
@@ -1159,8 +1196,10 @@ public class PolicyManagerServlet extends HttpServlet {
 					if(!policyEntityobjects.isEmpty()){
 						for(Object object : policyEntityobjects){
 							policyEntity = (PolicyEntity) object;
-							String groupEntityquery = "from PolicyGroupEntity where policyid = '"+policyEntity.getPolicyId()+"'";
-							List<Object> groupobject = controller.getDataByQuery(groupEntityquery);
+							String groupEntityquery = "from PolicyGroupEntity where policyid = :policyId";
+							SimpleBindings pgeParams = new SimpleBindings();
+							pgeParams.put("policyId", policyEntity.getPolicyId());
+							List<Object> groupobject = controller.getDataByQuery(groupEntityquery, pgeParams);
 							if(!groupobject.isEmpty()){
 								pdpCheck = true;
 								activePolicyName = policyEntity.getScope() +"."+ policyEntity.getPolicyName();
@@ -1202,14 +1241,21 @@ public class PolicyManagerServlet extends HttpServlet {
 				}else if("CURRENT".equals(deleteVersion)){
 					String currentVersionPolicyName = policyNamewithExtension.substring(policyNamewithExtension.lastIndexOf(File.separator)+1);
 					String currentVersionScope = policyNamewithExtension.substring(0, policyNamewithExtension.lastIndexOf(File.separator)).replace(File.separator, ".");
-					query = "FROM PolicyEntity where policyName = '"+currentVersionPolicyName+"' and scope ='"+currentVersionScope+"'";
-					List<Object> policyEntitys = controller.getDataByQuery(query);
+					query = "FROM PolicyEntity where policyName = :currentVersionPolicyName and scope = :currentVersionScope";
+					
+					SimpleBindings peParams = new SimpleBindings();
+					peParams.put("currentVersionPolicyName", currentVersionPolicyName);
+					peParams.put("currentVersionScope", currentVersionScope);
+					
+					List<Object> policyEntitys = controller.getDataByQuery(query, peParams);
 					if(!policyEntitys.isEmpty()){
 						policyEntity = (PolicyEntity) policyEntitys.get(0);
 					}
 					if(policyEntity != null){
-						String groupEntityquery = "from PolicyGroupEntity where policyid = '"+policyEntity.getPolicyId()+"' and policyid > 0";
-						List<Object> groupobject = controller.getDataByQuery(groupEntityquery);
+						String groupEntityquery = "from PolicyGroupEntity where policyid = :policyEntityId and policyid > 0";
+						SimpleBindings geParams = new SimpleBindings();
+						geParams.put("policyEntityId", policyEntity.getPolicyId());
+						List<Object> groupobject = controller.getDataByQuery(groupEntityquery, geParams);
 						if(groupobject.isEmpty()){
 							//Delete the entity from Elastic Search Database
 							String searchFileName = policyEntity.getScope() + "." + policyEntity.getPolicyName();
@@ -1260,8 +1306,10 @@ public class PolicyManagerServlet extends HttpServlet {
 				if(!policyEntityobjects.isEmpty()){
 					for(Object object : policyEntityobjects){
 						policyEntity = (PolicyEntity) object;
-						String groupEntityquery = "from PolicyGroupEntity where policyid = '"+policyEntity.getPolicyId()+"'";
-						List<Object> groupobject = controller.getDataByQuery(groupEntityquery);
+						String groupEntityquery = "from PolicyGroupEntity where policyid = :policyEntityId";
+						SimpleBindings geParams = new SimpleBindings();
+						geParams.put("policyEntityId", policyEntity.getPolicyId());
+						List<Object> groupobject = controller.getDataByQuery(groupEntityquery, geParams);
 						if(!groupobject.isEmpty()){
 							pdpCheck = true;
 							activePoliciesInPDP.add(policyEntity.getScope()+"."+policyEntity.getPolicyName());
@@ -1344,8 +1392,11 @@ public class PolicyManagerServlet extends HttpServlet {
 			}
 			
 			String[] split = dbCheckName.split(":");
-			String query = "FROM PolicyEntity where policyName = '"+split[1]+"' and scope ='"+split[0]+"'";
-			List<Object> queryData = controller.getDataByQuery(query);
+			String query = "FROM PolicyEntity where policyName = :split_1 and scope = :split_0";
+			SimpleBindings peParams = new SimpleBindings();
+			peParams.put("split_1", split[1]);
+			peParams.put("split_0", split[0]);
+			List<Object> queryData = controller.getDataByQuery(query, peParams);
 			PolicyEntity entity = (PolicyEntity) queryData.get(0);
 			InputStream stream = new ByteArrayInputStream(entity.getPolicyData().getBytes(StandardCharsets.UTF_8));
 

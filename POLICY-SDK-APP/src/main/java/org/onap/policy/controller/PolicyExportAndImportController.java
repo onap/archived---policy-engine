@@ -32,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
+import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -279,8 +280,11 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 
 				if(finalColumn){
 					scope = policyEntity.getScope().replace(".", File.separator);
-					String query = "FROM PolicyEntity where policyName = '"+policyEntity.getPolicyName()+"' and scope ='"+policyEntity.getScope()+"'";
-					List<Object> queryData = controller.getDataByQuery(query);
+					String query = "FROM PolicyEntity where policyName = :policyName and scope = :policyScope";
+					SimpleBindings params = new SimpleBindings();
+					params.put("policyName", policyEntity.getPolicyName());
+					params.put("policyScope", policyEntity.getScope());
+					List<Object> queryData = controller.getDataByQuery(query, params);
 					if(!queryData.isEmpty()){
 						continue;
 					}

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,6 +33,7 @@ import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
+import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -65,7 +66,7 @@ import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
 
@@ -75,7 +76,7 @@ public class PolicyController extends RestrictedBaseController {
 	private static final Logger	policyLogger	= FlexLogger.getLogger(PolicyController.class);
 
 	private static CommonClassDao commonClassDao;
-	
+
 	// Our authorization object
 	//
 	XacmlAdminAuthorization authorizer = new XacmlAdminAuthorization();
@@ -108,7 +109,7 @@ public class PolicyController extends RestrictedBaseController {
 	private static final String characterEncoding = "UTF-8";
 	private static final String contentType = "application/json";
 	private static final String file = "file";
-	
+
 	//Smtp Java Mail Properties
 	private static String smtpHost = null;
 	private static String smtpPort = null;
@@ -127,20 +128,20 @@ public class PolicyController extends RestrictedBaseController {
 	private static String xacmldbUserName = null;
 	private static String xacmldbPassword = null;
 
-	//AutoPush feature. 
+	//AutoPush feature.
 	private static String autoPushAvailable;
 	private static String autoPushDSClosedLoop;
 	private static String autoPushDSFirewall;
 	private static String autoPushDSMicroservice;
 	private static String autoPushPDPGroup;
-	
+
 	//papURL
 	private static String papUrl;
-	
+
 	//MicroService Model Properties
 	private static String msOnapName;
 	private static String msPolicyName;
-	
+
 	//WebApp directories
 	private static String configHome;
 	private static String actionHome;
@@ -162,7 +163,7 @@ public class PolicyController extends RestrictedBaseController {
 			// load a properties file
 			prop.load(input);
 			//pap url
-			setPapUrl(prop.getProperty("xacml.rest.pap.url")); 
+			setPapUrl(prop.getProperty("xacml.rest.pap.url"));
 			// get the property values
 			setSmtpHost(prop.getProperty("onap.smtp.host"));
 			setSmtpPort(prop.getProperty("onap.smtp.port"));
@@ -192,7 +193,7 @@ public class PolicyController extends RestrictedBaseController {
 			//WebApp directories
 			setConfigHome(prop.getProperty("xacml.rest.config.webapps") + "Config");
 			setActionHome(prop.getProperty("xacml.rest.config.webapps") + "Action");
-			//Get the Property Values for Dashboard tab Limit 
+			//Get the Property Values for Dashboard tab Limit
 			try{
 				setLogTableLimit(prop.getProperty("xacml.onap.dashboard.logTableLimit"));
 				setSystemAlertTableLimit(prop.getProperty("xacml.onap.dashboard.systemAlertTableLimit"));
@@ -214,7 +215,7 @@ public class PolicyController extends RestrictedBaseController {
 			}
 		}
 
-		//Initialize the FunctionDefinition table at Server Start up 
+		//Initialize the FunctionDefinition table at Server Start up
 		Map<Datatype, List<FunctionDefinition>> functionMap = getFunctionDatatypeMap();
 		for (Datatype id : functionMap.keySet()) {
 			List<FunctionDefinition> functionDefinations = functionMap.get(id);
@@ -225,7 +226,7 @@ public class PolicyController extends RestrictedBaseController {
 
 	}
 
-	public static  Map<Datatype, List<FunctionDefinition>>	getFunctionDatatypeMap() {				
+	public static  Map<Datatype, List<FunctionDefinition>>	getFunctionDatatypeMap() {
 		synchronized(mapAccess) {
 			if (mapDatatype2Function == null) {
 				buildFunctionMaps();
@@ -245,8 +246,8 @@ public class PolicyController extends RestrictedBaseController {
 
 	private static  void buildFunctionMaps() {
 		mapDatatype2Function = new HashMap<>();
-		mapID2Function = new  HashMap<>(); 
-		List<Object> functiondefinitions = commonClassDao.getData(FunctionDefinition.class);	
+		mapID2Function = new  HashMap<>();
+		List<Object> functiondefinitions = commonClassDao.getData(FunctionDefinition.class);
 		for (int i = 0; i < functiondefinitions.size(); i ++) {
 			FunctionDefinition value = (FunctionDefinition) functiondefinitions.get(i);
 			mapID2Function.put(value.getXacmlid(), value);
@@ -271,7 +272,7 @@ public class PolicyController extends RestrictedBaseController {
 			policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE +"Error while retriving the Function Definition data"+e);
 		}
 	}
-	
+
 	public PolicyEntity getPolicyEntityData(String scope, String policyName){
 		String key = scope + ":" + policyName;
 		List<Object> data = commonClassDao.getDataById(PolicyEntity.class, "scope:policyName", key);
@@ -319,19 +320,19 @@ public class PolicyController extends RestrictedBaseController {
 		}
 	}
 
-	//Policy tabs Model and View 
+	//Policy tabs Model and View
 	@RequestMapping(value= {"/policy", "/policy/Editor" } , method = RequestMethod.GET)
 	public ModelAndView view(HttpServletRequest request){
 		String myRequestURL = request.getRequestURL().toString();
 		try {
 			//
 			// Set the URL for the RESTful PAP Engine
-			//	
+			//
 			setPapEngine((PAPPolicyEngine) new RESTfulPAPEngine(myRequestURL));
 			new PDPGroupContainer((PAPPolicyEngine) new RESTfulPAPEngine(myRequestURL));
 		} catch (Exception e) {
 			policyLogger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR+"Exception Occured while loading PAP"+e);
-		}	
+		}
 		Map<String, Object> model = new HashMap<>();
 		return new ModelAndView("policy_Editor","model", model);
 	}
@@ -351,7 +352,7 @@ public class PolicyController extends RestrictedBaseController {
 	}
 
 	public static boolean getActivePolicy(String query) {
-		if(commonClassDao.getDataByQuery(query).size() > 0){
+		if(commonClassDao.getDataByQuery(query, new SimpleBindings()).size() > 0){
 			return true;
 		}else{
 			return false;
@@ -359,9 +360,9 @@ public class PolicyController extends RestrictedBaseController {
 	}
 
 	public void executeQuery(String query) {
-		commonClassDao.updateQuery(query);	
+		commonClassDao.updateQuery(query);
 	}
-	
+
 	public void saveData(Object cloneEntity) {
 		commonClassDao.save(cloneEntity);
 	}
@@ -373,7 +374,7 @@ public class PolicyController extends RestrictedBaseController {
 	public void deleteData(Object entity) {
 		commonClassDao.delete(entity);
 	}
-	
+
 	public List<Object> getData(@SuppressWarnings("rawtypes") Class className){
 		return commonClassDao.getData(className);
 	}
@@ -382,8 +383,8 @@ public class PolicyController extends RestrictedBaseController {
 		return (PolicyVersion) commonClassDao.getEntityItem(PolicyVersion.class, "policyName", query);
 	}
 
-	public List<Object> getDataByQuery(String query){
-		return commonClassDao.getDataByQuery(query);
+	public List<Object> getDataByQuery(String query, SimpleBindings params){
+		return commonClassDao.getDataByQuery(query, params);
 	}
 
 
@@ -391,8 +392,8 @@ public class PolicyController extends RestrictedBaseController {
 	public Object getEntityItem(Class className, String columname, String key){
 		return commonClassDao.getEntityItem(className, columname, key);
 	}
-	
-	
+
+
 	public void watchPolicyFunction(PolicyVersion entity, String policyName, String mode){
 		PolicyNotificationMail email = new PolicyNotificationMail();
 		try {
@@ -413,8 +414,11 @@ public class PolicyController extends RestrictedBaseController {
 			dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
 		}
 		String[] splitDBCheckName = dbCheckName.split(":");
-		String query =   "FROM PolicyEntity where policyName like'"+splitDBCheckName[1]+"%' and scope ='"+splitDBCheckName[0]+"'";
-		List<Object> policyEntity = commonClassDao.getDataByQuery(query);
+		String query =   "FROM PolicyEntity where policyName like :splitDBCheckName1 and scope = :splitDBCheckName0";
+		SimpleBindings params = new SimpleBindings();
+		params.put("splitDBCheckName1", splitDBCheckName[1] + "%");
+		params.put("splitDBCheckName0", splitDBCheckName[0]);
+		List<Object> policyEntity = commonClassDao.getDataByQuery(query, params);
 		List<String> av = new ArrayList<>();
 		for(Object entity : policyEntity){
 			PolicyEntity pEntity = (PolicyEntity) entity;
@@ -448,7 +452,7 @@ public class PolicyController extends RestrictedBaseController {
 	public static void setSystemAlertTableLimit(String systemAlertTableLimit) {
 		PolicyController.systemAlertTableLimit = systemAlertTableLimit;
 	}
-	
+
 	public static CommonClassDao getCommonClassDao() {
 		return commonClassDao;
 	}
@@ -693,4 +697,3 @@ public class PolicyController extends RestrictedBaseController {
 		return file;
 	}
 }
-

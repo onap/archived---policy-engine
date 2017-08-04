@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,6 +40,7 @@ import javax.management.ReflectionException;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -76,16 +77,16 @@ public class DashboardController  extends RestrictedBaseController{
 	private static final Logger policyLogger = FlexLogger.getLogger(DashboardController.class);
 	@Autowired
 	SystemLogDbDao systemDAO;
-	
+
 	@Autowired
 	CommonClassDao commonClassDao;
-	
+
 	private int pdpCount;
 	private PDPGroupContainer pdpConatiner;
 	private ArrayList<Object> pdpStatusData;
 	private ArrayList<Object> papStatusData;
 	private ArrayList<Object> policyActivityData;
-	
+
 	private PolicyController policyController;
 	public PolicyController getPolicyController() {
 		return policyController;
@@ -94,11 +95,11 @@ public class DashboardController  extends RestrictedBaseController{
 	public void setPolicyController(PolicyController policyController) {
 		this.policyController = policyController;
 	}
-	
+
 	private PolicyController getPolicyControllerInstance(){
 		return policyController != null ? getPolicyController() : new PolicyController();
 	}
-	
+
 	@RequestMapping(value={"/get_DashboardLoggingData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -113,7 +114,7 @@ public class DashboardController  extends RestrictedBaseController{
 			policyLogger.error("Exception Occured"+e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/get_DashboardSystemAlertData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSystemAlertData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -128,7 +129,7 @@ public class DashboardController  extends RestrictedBaseController{
 			policyLogger.error("Exception Occured"+e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/get_DashboardPAPStatusData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPAPStatusData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -145,7 +146,7 @@ public class DashboardController  extends RestrictedBaseController{
 			policyLogger.error("Exception Occured"+e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/get_DashboardPDPStatusData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPDPStatusData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -164,7 +165,7 @@ public class DashboardController  extends RestrictedBaseController{
 			policyLogger.error("Exception Occured"+e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/get_DashboardPolicyActivityData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPolicyActivityData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -183,7 +184,7 @@ public class DashboardController  extends RestrictedBaseController{
 			policyLogger.error("Exception Occured"+e);
 		}
 	}
-	
+
 	/*
 	 * Add the PAP information to the PAP Table
 	 */
@@ -195,7 +196,7 @@ public class DashboardController  extends RestrictedBaseController{
 			Set<OnapPDPGroup> groups = controller.getPapEngine().getOnapPDPGroups();
 			if (groups == null) {
 				papStatus = "UNKNOWN";
-				throw new PAPException("PAP not running");		
+				throw new PAPException("PAP not running");
 			}else {
 				papStatus = "IS_OK";
 			}
@@ -207,23 +208,23 @@ public class DashboardController  extends RestrictedBaseController{
 		JSONObject object = new JSONObject();
 		object.put("system", papURL);
 		object.put("status", papStatus);
-		List<Object> data = commonClassDao.getDataByQuery("from PolicyEntity");
+		List<Object> data = commonClassDao.getDataByQuery("from PolicyEntity", new SimpleBindings());
 		object.put("noOfPolicy", data.size());
 		object.put("noOfConnectedTrap", pdpCount);
 		papStatusData.add(0, object);
 	}
-	
+
 	/**
 	 * Add PDP Information to the PDP Table
-	 *  
+	 *
 	 */
-	public void addPDPToTable(){	
+	public void addPDPToTable(){
 		pdpCount = 0;
 		pdpStatusData = new ArrayList<>();
 		long naCount;
 		long denyCount = 0;
 		long permitCount = 0;
-		for (PDPGroup group : this.pdpConatiner.getGroups()){	
+		for (PDPGroup group : this.pdpConatiner.getGroups()){
 			for (PDP pdp : group.getPdps()){
 				naCount = -1;
 				if ("UP_TO_DATE".equals(pdp.getStatus().getStatus().toString())  && ((OnapPDP) pdp).getJmxPort() != 0){
@@ -247,7 +248,7 @@ public class DashboardController  extends RestrictedBaseController{
 					object.put("denyCount", "NA");
 					object.put("naCount", "NA");
 					pdpStatusData.add(object);
-				}else{	
+				}else{
 					JSONObject object = new JSONObject();
 					object.put("id", pdp.getId());
 					object.put("name", pdp.getName());
@@ -263,23 +264,23 @@ public class DashboardController  extends RestrictedBaseController{
 			}
 		}
 	}
-	
-	private static String parseIPSystem(String line) {	
+
+	private static String parseIPSystem(String line) {
 		Pattern pattern = Pattern.compile("://(.+?):");
 		Matcher ip = pattern.matcher(line);
 		if (ip.find())
 		{
 			return ip.group(1);
-		} 
+		}
 		return null;
 	}
-	
+
 	/*
 	 * Contact JMX Connector Sever and return the value of the given jmxAttribute
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private long getRequestCounts(String host, int port, String jmxAttribute) {
-		
+
 		policyLogger.debug("Create an RMI connector client and connect it to the JMX connector server");
 		HashMap map = new HashMap();
 		map = null;
@@ -295,7 +296,7 @@ public class DashboardController  extends RestrictedBaseController{
 			policyLogger.error("MalformedURLException for JMX connection" , e);
 		} catch (IOException e) {
 			policyLogger.error("Error in reteriving" + jmxAttribute + " from JMX connection", e);
-		} catch (AttributeNotFoundException e) {		
+		} catch (AttributeNotFoundException e) {
 			policyLogger.error("AttributeNotFoundException  " + jmxAttribute +  " for JMX connection", e);
 		} catch (InstanceNotFoundException e) {
 			policyLogger.error("InstanceNotFoundException " + host + " for JMX connection", e);
@@ -307,15 +308,15 @@ public class DashboardController  extends RestrictedBaseController{
 		} catch (ReflectionException e) {
 			policyLogger.error("ReflectionException for JMX connection", e);
 		}
-		
+
 		return -1;
 	}
-	
+
 	private static JMXServiceURL createConnectionURL(String host, int port) throws MalformedURLException{
 	    return new JMXServiceURL("rmi", "", 0, "/jndi/rmi://" + host + ":" + port + "/jmxrmi");
 	}
-	
-	
+
+
 	/*
 	 * Add the information to the Policy Table
 	 */
@@ -325,9 +326,9 @@ public class DashboardController  extends RestrictedBaseController{
 		int policyFireCount = 0;
 		Map<String, String> policyMap = new HashMap<>();
 		Object policyList = null;
-		//get list of policy 
-		
-		for (PDPGroup group : this.pdpConatiner.getGroups()){	
+		//get list of policy
+
+		for (PDPGroup group : this.pdpConatiner.getGroups()){
 			for (PDPPolicy policy : group.getPolicies()){
 				try{
 					policyMap.put(policy.getPolicyId().replace(" ", ""), policy.getId());
@@ -335,8 +336,8 @@ public class DashboardController  extends RestrictedBaseController{
 					policyLogger.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID+policy.getName() +e);
 				}
 			}
-			
-			for (PDP pdp : group.getPdps()){		
+
+			for (PDP pdp : group.getPdps()){
 				// Add rows to the Policy Table
 				policyList = null;
 				if ("UP_TO_DATE".equals(pdp.getStatus().getStatus().toString()) && ((OnapPDP) pdp).getJmxPort() != 0){
@@ -345,16 +346,16 @@ public class DashboardController  extends RestrictedBaseController{
 				}
 				if (policyList != null && policyList.toString().length() > 3){
 					String[]  splitPolicy = policyList.toString().split(",");
-					for (String policyKeyValue : splitPolicy){	
-						policyID = urnPolicyID(policyKeyValue);	
-						policyFireCount = countPolicyID(policyKeyValue);	
+					for (String policyKeyValue : splitPolicy){
+						policyID = urnPolicyID(policyKeyValue);
+						policyFireCount = countPolicyID(policyKeyValue);
 						if (policyID != null ){
 							if (policyMap.containsKey(policyID)){
 								JSONObject object = new JSONObject();
 								object.put("policyId", policyMap.get(policyID));
 								object.put("fireCount", policyFireCount);
 								object.put("system", pdp.getId());
-								policyActivityData.add(object);	
+								policyActivityData.add(object);
 							}
 						}
 					}
@@ -372,11 +373,11 @@ public class DashboardController  extends RestrictedBaseController{
 						object.put("system", pdp.getId());
 						policyActivityData.add(object);
 					}
-				}							
+				}
 			}
 		}
 	}
-	
+
 	/*
 	 * Contact JMX Connector Sever and return the list of {policy id , count}
 	 */
@@ -397,7 +398,7 @@ public class DashboardController  extends RestrictedBaseController{
 			policyLogger.error("MalformedURLException for JMX connection" , e);
 		} catch (IOException e) {
 			policyLogger.error("AttributeNotFoundException for policyMap" , e);
-		} catch (AttributeNotFoundException e) {		
+		} catch (AttributeNotFoundException e) {
 			policyLogger.error("AttributeNotFoundException for JMX connection", e);
 		} catch (InstanceNotFoundException e) {
 			policyLogger.error("InstanceNotFoundException " + host + " for JMX connection", e);
@@ -409,22 +410,22 @@ public class DashboardController  extends RestrictedBaseController{
 		} catch (ReflectionException e) {
 			policyLogger.error("ReflectionException for JMX connection", e);
 		}
-		
+
 		return null;
-	
+
 	}
-	
+
 	private static String urnPolicyID(String line){
-		String[]  splitLine = line.toString().split("=");	
+		String[]  splitLine = line.toString().split("=");
 		String removeSpaces = splitLine[0].replaceAll("\\s+", "");
 		return removeSpaces.replace("{", "");
 	}
-	
+
 	private static Integer countPolicyID(String line){
 		String[]  splitLine = line.toString().split("=");
 		String sCount = splitLine[1].replace("}", "");
 		int intCount = Integer.parseInt(sCount);
 		return intCount;
 	}
-	
+
 }
