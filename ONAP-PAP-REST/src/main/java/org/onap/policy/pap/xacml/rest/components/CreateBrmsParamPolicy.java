@@ -38,6 +38,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.script.SimpleBindings;
+
 import org.apache.commons.io.FilenameUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
@@ -189,8 +191,10 @@ public class CreateBrmsParamPolicy extends Policy {
 	private String getValueFromDictionary(String templateName){
 		String ruleTemplate = null;
 		CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
-		String queryString="from BRMSParamTemplate where param_template_name= '"+templateName+"'";
-		List<Object> result = dbConnection.getDataByQuery(queryString);
+		String queryString="from BRMSParamTemplate where param_template_name= :templateName";
+		SimpleBindings params = new SimpleBindings();
+		params.put("templateName", templateName);
+		List<Object> result = dbConnection.getDataByQuery(queryString, params);
 		if(!result.isEmpty()){
 			BRMSParamTemplate template = (BRMSParamTemplate) result.get(0);
 			ruleTemplate = template.getRule();

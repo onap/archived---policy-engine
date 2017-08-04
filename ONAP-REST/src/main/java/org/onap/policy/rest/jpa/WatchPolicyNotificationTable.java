@@ -25,6 +25,7 @@ package org.onap.policy.rest.jpa;
  * */
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,4 +78,29 @@ public class WatchPolicyNotificationTable implements Serializable{
 	public void setLoginIds(String loginIds) {
 		this.loginIds = loginIds;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, policyName, loginIds);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null){
+			return false;
+		}
+		if(obj == this){
+			return true;
+		}
+		if(!(obj instanceof WatchPolicyNotificationTable)){
+			return false;
+		}
+		
+		return(id == ((WatchPolicyNotificationTable)obj).id &&
+		policyName.equals(((WatchPolicyNotificationTable)obj).policyName) && 
+		loginIds.equals(((WatchPolicyNotificationTable)obj).loginIds)
+		);
+	}
+	
+	
 }

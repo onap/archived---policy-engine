@@ -22,6 +22,9 @@ package org.onap.policy.daoImp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.script.SimpleBindings;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -44,9 +47,26 @@ import org.springframework.stereotype.Service;
 public class CommonClassDaoImpl implements CommonClassDao{
 
 	private static final Logger LOGGER = FlexLogger.getLogger(CommonClassDaoImpl.class);
+	private static SessionFactory sessionfactory;
+    
+    public static SessionFactory getSessionfactory() {
+          return sessionfactory;
+    }
+
+    public static void setSessionfactory(SessionFactory sessionfactory) {
+          CommonClassDaoImpl.sessionfactory = sessionfactory;
+    }
+
+    @Autowired
+    private CommonClassDaoImpl(SessionFactory sessionfactory){
+          CommonClassDaoImpl.sessionfactory = sessionfactory;
+    }
+    
+    public CommonClassDaoImpl(){
+          //Default Constructor
+    }
+
 	
-	@Autowired
-	SessionFactory sessionfactory;
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -237,24 +257,29 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@Override
 	public void deleteAll() {}
 
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> getDataByQuery(String query) {
+	public List<Object> getDataByQuery(String query, SimpleBindings params) {
 		Session session = sessionfactory.openSession();
 		Transaction tx = session.beginTransaction();
 		List<Object> data = null;
 		try {
 			Query hbquery = session.createQuery(query);
+			for (Map.Entry<String, Object> paramPair : params.entrySet()) {
+				hbquery.setParameter(paramPair.getKey(), paramPair.getValue());
+			}
 			data = hbquery.list();
 			tx.commit();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table"+e);
+			throw e;
 		}finally{
 			try{
 				session.close();
 			}catch(Exception e1){
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				throw e1;
 			}
 		}
 		return data;

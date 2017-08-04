@@ -24,6 +24,7 @@ import java.io.Serializable;
 //import java.sql.Clob;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -177,6 +178,38 @@ public class PolicyVersion implements Serializable {
 
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+	
+	@Override
+	public int hashCode() {
+	return Objects.hash(id, policyName,	activeVersion, higherVersion, createdDate, 
+			createdBy, modifiedDate, modifiedBy);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null){
+			return false;
+		}
+		if(obj == this){
+			return true;
+		}
+		if(!(obj instanceof PolicyVersion)){
+			return false;
+		}
+
+		PolicyVersion p = (PolicyVersion) obj;
+		
+		return (
+				id == p.id &&
+				policyName.equals(p.policyName) &&
+				activeVersion == p.activeVersion &&
+				higherVersion == p.higherVersion &&
+				createdDate.equals(p.createdDate) &&
+				createdBy.equals(p.createdBy) &&
+				modifiedDate.equals(p.modifiedDate) &&
+				modifiedBy.equals(p.modifiedBy)
+				);
 	}
 
 }

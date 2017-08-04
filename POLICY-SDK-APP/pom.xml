@@ -232,5 +232,15 @@
 		    <artifactId>snakeyaml</artifactId>
 		    <version>1.16</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jdbc</artifactId>
+			<version>8.0.24</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-dbcp</artifactId>
+			<version>8.5.9</version>
+		</dependency>
 	</dependencies>
 </project>
