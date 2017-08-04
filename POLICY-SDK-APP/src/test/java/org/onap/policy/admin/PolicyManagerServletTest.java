@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.script.SimpleBindings;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -150,7 +151,7 @@ public class PolicyManagerServletTest extends Mockito{
         BufferedReader reader = new BufferedReader(new StringReader("{params: { mode: 'DESCRIBEPOLICYFILE', path: 'com.Config_SampleTest1206.1.xml'}}"));
         try {
 			when(request.getReader()).thenReturn(reader);
-			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'")).thenReturn(basePolicyData);
+			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(basePolicyData);
 			servlet.setPolicyController(controller);
 			servlet.doPost(request, response);
 		} catch (Exception e1) {
@@ -175,9 +176,9 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("from PolicyEditorScopes")).thenReturn(policyEditorScopes);
-    			when(controller.getDataByQuery("from PolicyEditorScopes where SCOPENAME like 'com%'")).thenReturn(policyEditorScopes);
-    			when(controller.getDataByQuery("from PolicyVersion where POLICY_NAME like 'com%'")).thenReturn(policyVersion);
+    			when(controller.getDataByQuery("from PolicyEditorScopes", new SimpleBindings())).thenReturn(policyEditorScopes);
+    			when(controller.getDataByQuery("from PolicyEditorScopes where SCOPENAME like 'com%'", new SimpleBindings())).thenReturn(policyEditorScopes);
+    			when(controller.getDataByQuery("from PolicyVersion where POLICY_NAME like 'com%'", new SimpleBindings())).thenReturn(policyVersion);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -202,7 +203,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'")).thenReturn(basePolicyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(basePolicyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -248,7 +249,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -294,7 +295,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_BRMS_Raw_TestBRMSRawPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_BRMS_Raw_TestBRMSRawPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -340,7 +341,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_Fault_TestClosedLoopPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_Fault_TestClosedLoopPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -386,7 +387,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_PM_TestClosedLoopPMPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_PM_TestClosedLoopPMPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -440,7 +441,7 @@ public class PolicyManagerServletTest extends Mockito{
     			when(request.getReader()).thenReturn(reader);
     			when(commonClassDao.getDataById(GroupPolicyScopeList.class, "groupList", "resource=SampleResource,service=SampleService,type=SampleType,closedLoopControlName=SampleClosedLoop")).thenReturn(groupListData);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_MS_vFirewall.1.xml' and scope ='com'")).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_MS_vFirewall.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -486,7 +487,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_FW_TestFireWallPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_FW_TestFireWallPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -530,7 +531,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Action_TestActionPolicy.1.xml' and scope ='com'")).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Action_TestActionPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -568,7 +569,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml' and scope ='com'")).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);

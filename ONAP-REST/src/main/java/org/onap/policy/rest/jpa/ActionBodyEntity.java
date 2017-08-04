@@ -22,6 +22,7 @@ package org.onap.policy.rest.jpa;
  */
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,6 +41,7 @@ import javax.persistence.Version;
 /*
  * The Entity class to persist a policy object Action Body
  */
+
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -191,5 +193,36 @@ public class ActionBodyEntity implements Serializable {
 	 */
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+	
+	@Override
+	public int hashCode() {
+	return Objects.hash(actionBodyId, actionBodyName, version, actionBody,
+			createdBy, createdDate, modifiedBy, modifiedDate, deleted);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null){
+			return false;
+		}
+		if(obj == this){
+			return true;
+		}
+		if(!(obj instanceof ActionBodyEntity)){
+			return false;
+		}
+
+		return (
+				actionBodyId == ((ActionBodyEntity) obj).actionBodyId &&
+				actionBodyName.equals(((ActionBodyEntity) obj).actionBodyName) && 
+				version == ((ActionBodyEntity) obj).version && 
+				actionBody.equals(((ActionBodyEntity) obj).actionBody) && 
+				createdBy.equals(((ActionBodyEntity) obj).createdBy) && 
+				createdDate.equals(((ActionBodyEntity) obj).createdDate) && 
+				modifiedBy.equals(((ActionBodyEntity) obj).modifiedBy) &&
+				modifiedDate.equals(((ActionBodyEntity) obj).modifiedDate) &&
+				deleted == ((ActionBodyEntity) obj).deleted
+				);
 	}
 }

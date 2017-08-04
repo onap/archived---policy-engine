@@ -21,6 +21,9 @@
 package org.onap.policy.pap.xacml.rest.daoimpl;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.script.SimpleBindings;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -228,24 +231,29 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		return data;
 	}
 
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> getDataByQuery(String query) {
+	public List<Object> getDataByQuery(String query, SimpleBindings params) {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		List<Object> data = null;
 		try {
 			Query hbquery = session.createQuery(query);
+			for (Map.Entry<String, Object> paramPair : params.entrySet()) {
+				hbquery.setParameter(paramPair.getKey(), paramPair.getValue());
+			}
 			data = hbquery.list();
 			tx.commit();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table"+e);
+			throw e;
 		}finally{
 			try{
 				session.close();
 			}catch(Exception e1){
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				throw e1;
 			}
 		}
 		return data;

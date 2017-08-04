@@ -30,6 +30,7 @@ import java.util.Properties;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.script.SimpleBindings;
 
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -116,9 +117,12 @@ public class PolicyNotificationMail{
 			policyFileName = policyFileName.replace("\\", "\\\\");
 		}
 		
-		String query = "from WatchPolicyNotificationTable where policyName like'" +policyFileName+"%'";
+		policyFileName += "%";
+		String query = "from WatchPolicyNotificationTable where policyName like:policyFileName";
 		boolean sendFlag = false;
-		List<Object> watchList = policyNotificationDao.getDataByQuery(query);
+		SimpleBindings params = new SimpleBindings();
+		params.put("policyFileName", policyFileName);
+		List<Object> watchList = policyNotificationDao.getDataByQuery(query, params);
 		if(watchList != null && !watchList.isEmpty()){
 			for(Object watch : watchList){
 				WatchPolicyNotificationTable list = (WatchPolicyNotificationTable) watch;
