@@ -17,13 +17,13 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.onap.portalapp.service;
+package org.openecomp.portalapp.service;
 
 import java.util.Set;
 
-import org.onap.policy.model.Roles;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.UserInfo;
+import org.openecomp.policy.model.Roles;
 import org.openecomp.portalapp.service.IAdminAuthExtension;
 import org.openecomp.portalsdk.core.domain.Role;
 import org.openecomp.portalsdk.core.domain.User;
@@ -48,7 +48,7 @@ public class AdminAuthExtension implements IAdminAuthExtension {
 	
 	/*
 	 * (non-Javadoc)
-	 * @see org.onap.portalapp.service.IAdminAuthExtension#saveUserExtension(org.openecomp.portalsdk.core.domain.User)
+	 * @see org.openecomp.portalapp.service.IAdminAuthExtension#saveUserExtension(org.openecomp.portalsdk.core.domain.User)
 	 */
 	public void saveUserExtension(User user) {
 		logger.debug("saveUserExtension");
@@ -57,7 +57,7 @@ public class AdminAuthExtension implements IAdminAuthExtension {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.onap.portalapp.service.IAdminAuthExtension#editUserExtension(org.openecomp.portalsdk.core.domain.User)
+	 * @see org.openecomp.portalapp.service.IAdminAuthExtension#editUserExtension(org.openecomp.portalsdk.core.domain.User)
 	 */
 	public void editUserExtension(User user) {
 		logger.debug("editUserExtension");
@@ -65,7 +65,7 @@ public class AdminAuthExtension implements IAdminAuthExtension {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.onap.portalapp.service.IAdminAuthExtension#saveUserRoleExtension(java.util.Set, org.openecomp.portalsdk.core.domain.User)
+	 * @see org.openecomp.portalapp.service.IAdminAuthExtension#saveUserRoleExtension(java.util.Set, org.openecomp.portalsdk.core.domain.User)
 	 */
 	public void saveUserRoleExtension(Set<Role> roles, User user) {
 		logger.debug("saveUserRoleExtension");

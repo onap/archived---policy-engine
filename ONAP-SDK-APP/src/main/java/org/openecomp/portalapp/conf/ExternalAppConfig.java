@@ -17,13 +17,13 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.onap.portalapp.conf;
+package org.openecomp.portalapp.conf;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.onap.portalapp.login.LoginStrategyImpl;
-import org.onap.portalapp.scheduler.RegistryAdapter;
+import org.openecomp.portalapp.login.LoginStrategyImpl;
+import org.openecomp.portalapp.scheduler.RegistryAdapter;
 import org.openecomp.portalsdk.core.auth.LoginStrategy;
 import org.openecomp.portalsdk.core.conf.AppConfig;
 import org.openecomp.portalsdk.core.conf.Configurable;
@@ -52,7 +52,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "org.onap")
+@ComponentScan(basePackages = "org.onap, org.openecomp")
 @PropertySource(value = { "${container.classpath:}/WEB-INF/conf/app/test.properties" }, ignoreResourceNotFound = true)
 @Profile("src")
 @EnableAsync

@@ -1,6 +1,6 @@
 /*-
  * ================================================================================
- * onap Portal SDK
+ * ONAP Portal SDK
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property
  * ================================================================================
@@ -17,46 +17,31 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.onap.portalapp.lm;
+package org.openecomp.portalapp.conf;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import org.openecomp.portalsdk.core.conf.AppInitializer;
 
-import org.openecomp.portalsdk.core.lm.LicenseableClass;
+public class ExternalAppInitializer extends AppInitializer {
 
-/*
- *  Please note that this class is not being used; its a dummy stub to have a qualifying bean for the interface.
- */
-
-public class LicenseableClassImpl implements LicenseableClass {
-		  
-	public String getApplicationName() {
-		return "";
+	@Override
+	protected Class<?>[] getRootConfigClasses() {
+		return super.getRootConfigClasses();
 	}
 
-	public InputStream getPublicKeystoreAsInputStream() throws FileNotFoundException {
-	  return null;
+	@Override
+	protected Class<?>[] getServletConfigClasses() {
+		Class<?> appConfigClass = ExternalAppConfig.class;
+		// Show something on stdout to indicate the app is starting.
+		System.out.println("ExternalAppInitializer: servlet configuration class is " + appConfigClass.getName());
+		return new Class[] { appConfigClass };
 	}
 
-	public String getAlias() {
-		return "";
+	/*
+	 * URL request will direct to the Spring dispatcher for processing
+	 */
+	@Override
+	protected String[] getServletMappings() {
+		return super.getServletMappings();
 	}
 
-	public String getKeyPasswd() {
-		return "";
-	}
-
-	public String getPublicKeystorePassword() {
-		return "";
-	}
-
-	public String getCipherParamPassword() {
-		return "";
-	}
-
-	@SuppressWarnings("rawtypes")
-	public Class getClassToLicense() {
-		return this.getClass();
-	}
 }
-

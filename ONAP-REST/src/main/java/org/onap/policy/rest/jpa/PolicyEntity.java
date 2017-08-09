@@ -136,21 +136,6 @@ public class PolicyEntity implements Serializable {
 	public void preUpdate() {
 		this.modifiedDate = new Date();		
 	}
-	
-	/*
-	public void resetPolicyVersion(){
-		this.policyVersion = 1;
-	}
-	public void advancePolicyVersion(){
-		this.policyVersion++;
-	}
-	public int getPolicyVersion(){
-		return this.policyVersion;
-	}
-	public void setPolicyVersion(int polVer){
-		this.policyVersion = polVer;
-	}
-	*/
 
 	/**
 	 * @return the policyId
