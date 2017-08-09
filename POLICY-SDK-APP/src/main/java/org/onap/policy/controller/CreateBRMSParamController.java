@@ -20,12 +20,7 @@
 
 package org.onap.policy.controller;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -367,25 +362,11 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 	public void paramUIGenerate(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		String data = entity.getConfigurationData().getConfigBody();
 		if(data != null){
-			File file = new File(PolicyController.getConfigHome() +File.separator+ entity.getConfigurationData().getConfigurationName());
-			if(file.exists()){
-				try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-					StringBuilder sb = new StringBuilder();
-					String line = br.readLine();
-					while (line != null) {
-						sb.append(line);
-						sb.append("\n");
-						line = br.readLine();
-					}
-				}catch(Exception e){
-					policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE+ e.getMessage() + e);
-				}
-			}
 			try {	
 				StringBuilder params = new StringBuilder("");
 				Boolean flag = false;
 				Boolean comment = false;
-				for (String line : Files.readAllLines(Paths.get(file.toString()))) {
+				for (String line : data.split("\n")) {
 					if (line.isEmpty() || line.startsWith("//")) {
 						continue;
 					}

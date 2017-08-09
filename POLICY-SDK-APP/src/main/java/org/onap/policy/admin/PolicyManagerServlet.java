@@ -66,7 +66,6 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.components.HumanPolicyComponent;
 import org.onap.policy.controller.PolicyController;
 import org.onap.policy.controller.PolicyExportAndImportController;
-import org.onap.policy.model.Roles;
 import org.onap.policy.rest.XACMLRest;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -79,6 +78,7 @@ import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
+import org.openecomp.policy.model.Roles;
 import org.openecomp.portalsdk.core.web.support.UserUtils;
 
 import com.att.research.xacml.util.XACMLProperties;

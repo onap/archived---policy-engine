@@ -17,7 +17,7 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.onap.portalapp.conf;
+package org.openecomp.portalapp.conf;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
@@ -51,7 +51,7 @@ public class HibernateMappingLocations implements HibernateMappingLocatable {
 	 */
 	@Override
 	public String[] getPackagesToScan() {
-		return new String[] { "org.onap" };
+		return new String[] { "org.onap", "org.openecomp" };
 	}
 
 }

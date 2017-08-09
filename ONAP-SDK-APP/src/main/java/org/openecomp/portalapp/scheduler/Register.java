@@ -17,12 +17,11 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.onap.portalapp.scheduler;
+package org.openecomp.portalapp.scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openecomp.portalapp.scheduler.LogRegistry;
 import org.openecomp.portalsdk.core.logging.logic.EELFLoggerDelegate;
 import org.openecomp.portalsdk.core.scheduler.Registerable;
 import org.openecomp.portalsdk.core.util.SystemProperties;

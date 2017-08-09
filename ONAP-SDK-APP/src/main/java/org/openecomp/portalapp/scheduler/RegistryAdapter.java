@@ -17,7 +17,7 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.onap.portalapp.scheduler;
+package org.openecomp.portalapp.scheduler;
 
 import java.util.ArrayList;
 import java.util.Arrays;

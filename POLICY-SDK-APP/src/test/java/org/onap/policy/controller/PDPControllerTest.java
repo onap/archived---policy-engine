@@ -34,10 +34,10 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.model.Roles;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPGroupStatus;
+import org.openecomp.policy.model.Roles;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 

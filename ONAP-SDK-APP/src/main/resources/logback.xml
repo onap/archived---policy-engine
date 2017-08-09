@@ -99,7 +99,7 @@
     <encoder>
       <pattern>${applicationLoggerPattern}</pattern>
     </encoder>
-    <filter class="org.onap.portalapp.util.CustomLoggingFilter" />
+    <filter class="org.openecomp.portalapp.util.CustomLoggingFilter" />
   </appender>
   
   <appender name="asyncEELF" class="ch.qos.logback.classic.AsyncAppender">
