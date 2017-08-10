@@ -361,10 +361,10 @@ public class NotificationController {
 			Files.deleteIfExists(removedPolicyFile);
 			boolean delete=false;
 			File dir= null;
-			if(oldPolicy.getName().startsWith("Config")){
+			if(oldPolicy.getName().contains(".Config_")){
 				delete = true;
 				dir = new File(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_WEBAPPS)+File.separator+"Config");
-			}else if(oldPolicy.getName().startsWith("Action")){
+			}else if(oldPolicy.getName().contains(".Action_")){
 				delete = true;
 				dir = new File(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_WEBAPPS)+File.separator+"Action");
 			}

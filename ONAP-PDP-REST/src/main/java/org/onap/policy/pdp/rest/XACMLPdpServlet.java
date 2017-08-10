@@ -216,6 +216,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			synchronized(pdpEngineLock) {
 				pdpEngine = engine;
 			}
+			// Notification will be Sent Here.
+			XACMLPdpLoader.sendNotification();
 		}
 		//
 		// Logging stuff....
@@ -1228,6 +1230,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 							newStatus.addLoadWarning("Unable to save configuration: " + e.getMessage());
 						}
 					}
+					// Notification will be Sent Here.
+					XACMLPdpLoader.sendNotification();
 				} else {
 					newStatus.setStatus(Status.LAST_UPDATE_FAILED);
 				}

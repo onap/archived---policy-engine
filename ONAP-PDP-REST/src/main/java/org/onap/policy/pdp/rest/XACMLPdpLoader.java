@@ -189,14 +189,12 @@ public class XACMLPdpLoader {
 			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +error, e);
 			status.addLoadError(error);
 		}
-		// Notification will be Sent Here.
-		sendNotification();
 		return engine;
 	}
 
 	private static HashMap<String, PolicyDef> policyContainer = null;
 	
-	private static void sendNotification(){ 
+	public static synchronized void sendNotification(){
 		Thread notify = new Thread(){
 			public void run(){
 				try{
