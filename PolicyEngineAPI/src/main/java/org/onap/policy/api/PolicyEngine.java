@@ -121,22 +121,22 @@ public class PolicyEngine{
 	}
 	
 	/**
-	 * Gets the configuration from the PolicyDecisionPoint(PDP) for the <code>String</code> which represents the onapComponentName 
+	 * Gets the configuration from the PolicyDecisionPoint(PDP) for the <code>String</code> which represents the onapName 
 	 * 
-	 * @param onapComponentName the <code>String</code> format of the onapComponentName whose configuration is required. 
+	 * @param onapName the <code>String</code> format of the onapName whose configuration is required. 
 	 * @return <code>Collection</code> of {@link org.onap.policy.api.PolicyConfig} which has the configuration.
 	 * @throws PolicyConfigException PolicyConfig Exception
 	 * @deprecated use {@link #getConfig(ConfigRequestParameters)} Instead.
 	 */
 	@Deprecated
-	public Collection<PolicyConfig> getConfig(String onapComponentName) throws PolicyConfigException {
-		return getConfig(setConfigRequestParameters(null, onapComponentName, null, null, null));
+	public Collection<PolicyConfig> getConfig(String onapName) throws PolicyConfigException {
+		return getConfig(setConfigRequestParameters(null, onapName, null, null, null));
 	}
 	
 	/**
-	 * Gets the configuration from the PolicyDecisionPoint(PDP) for the <code>String</code> which represents the onapComponentName 
+	 * Gets the configuration from the PolicyDecisionPoint(PDP) for the <code>String</code> which represents the onapName 
 	 * 
-	 * @param onapComponentName the <code>String</code> format of the onapComponentName whose configuration is required. 
+	 * @param onapName the <code>String</code> format of the onapName whose configuration is required. 
 	 * @return <code>Collection</code> of {@link org.onap.policy.api.PolicyConfig} which has the configuration.
 	 * @param requestID unique request ID which will be passed throughout the ONAP components to correlate logging messages.
 	 * A different request ID should be passed for each request.
@@ -144,32 +144,32 @@ public class PolicyEngine{
 	 * @deprecated use {@link #getConfig(ConfigRequestParameters)} Instead.
 	 */
 	@Deprecated
-	public Collection<PolicyConfig> getConfig(String onapComponentName, UUID requestID) throws PolicyConfigException {
-		return getConfig(setConfigRequestParameters(null, onapComponentName, null, null, requestID));
+	public Collection<PolicyConfig> getConfig(String onapName, UUID requestID) throws PolicyConfigException {
+		return getConfig(setConfigRequestParameters(null, onapName, null, null, requestID));
 	}
 	
 	/**
-	 * Requests the configuration of the <code>String</code> which represents the onapComponentName and <code>String</code>
+	 * Requests the configuration of the <code>String</code> which represents the onapName and <code>String</code>
 	 * which represents the configName and returns the configuration if different Configurations exist for the
-	 * particular onapComponentName.  
+	 * particular onapName.  
 	 * 
-	 * @param onapComponentName the <code>String</code> format of the onapComponentName whose configuration is required.
+	 * @param onapName the <code>String</code> format of the onapName whose configuration is required.
 	 * @param configName the <code>String</code> format of the configurationName whose configuration is required.
 	 * @return <code>Collection</code> of {@link org.onap.policy.api.PolicyConfig} which has the configuration. 
 	 * @throws PolicyConfigException PolicyConfig Exception
 	 * @deprecated use {@link #getConfig(ConfigRequestParameters)} Instead.
 	 */
 	@Deprecated
-	public Collection<PolicyConfig> getConfig(String onapComponentName, String configName) throws PolicyConfigException {
-		return getConfig(setConfigRequestParameters(null, onapComponentName, configName, null, null));
+	public Collection<PolicyConfig> getConfig(String onapName, String configName) throws PolicyConfigException {
+		return getConfig(setConfigRequestParameters(null, onapName, configName, null, null));
 	}
 	
 	/**
-	 * Requests the configuration of the <code>String</code> which represents the onapComponentName and <code>String</code>
+	 * Requests the configuration of the <code>String</code> which represents the onapName and <code>String</code>
 	 * which represents the configName and returns the configuration if different Configurations exist for the
-	 * particular onapComponentName.  
+	 * particular onapName.  
 	 * 
-	 * @param onapComponentName the <code>String</code> format of the onapComponentName whose configuration is required.
+	 * @param onapName the <code>String</code> format of the onapName whose configuration is required.
 	 * @param configName the <code>String</code> format of the configurationName whose configuration is required.
 	 * @param requestID unique request ID which will be passed throughout the ONAP components to correlate logging messages.
 	 * A different request ID should be passed for each request.
@@ -178,16 +178,16 @@ public class PolicyEngine{
 	 * @deprecated use {@link #getConfig(ConfigRequestParameters)} Instead.
 	 */
 	@Deprecated
-	public Collection<PolicyConfig> getConfig(String onapComponentName, String configName, UUID requestID) throws PolicyConfigException {
-		return getConfig(setConfigRequestParameters(null, onapComponentName, configName, null, requestID));
+	public Collection<PolicyConfig> getConfig(String onapName, String configName, UUID requestID) throws PolicyConfigException {
+		return getConfig(setConfigRequestParameters(null, onapName, configName, null, requestID));
 	}
 	
 	/**
-	 * Requests the configuration of the <code>String</code> which represents the onapComponentName, <code>String</code>
+	 * Requests the configuration of the <code>String</code> which represents the onapName, <code>String</code>
 	 * which represents the configName and <code>Map</code> of <code>String,String</code> which has the configAttribute and returns the specific 
 	 * configuration related to the configAttributes mentioned.
 	 * 
-	 * @param onapComponentName the <code>String</code> format of the onapComponentName whose configuration is required.
+	 * @param onapName the <code>String</code> format of the onapName whose configuration is required.
 	 * @param configName the <code>String</code> format of the configurationName whose configuration is required.
 	 * @param configAttributes the <code>Map</code> of <code>String,String</code> format of the configuration attributes which are required.
 	 * @return <code>Collection</code> of {@link org.onap.policy.api.PolicyConfig} which has the configuration.
@@ -195,16 +195,16 @@ public class PolicyEngine{
 	 * @deprecated use {@link #getConfig(ConfigRequestParameters)} Instead.
 	 */
 	@Deprecated
-	public Collection<PolicyConfig> getConfig(String onapComponentName, String configName, Map<String, String> configAttributes) throws PolicyConfigException{
-		return getConfig(setConfigRequestParameters(null, onapComponentName, configName, configAttributes, null));
+	public Collection<PolicyConfig> getConfig(String onapName, String configName, Map<String, String> configAttributes) throws PolicyConfigException{
+		return getConfig(setConfigRequestParameters(null, onapName, configName, configAttributes, null));
 	}
 	
 	/**
-	 * Requests the configuration of the <code>String</code> which represents the onapComponentName, <code>String</code>
+	 * Requests the configuration of the <code>String</code> which represents the onapName, <code>String</code>
 	 * which represents the configName and <code>Map</code> of <code>String,String</code> which has the configAttribute and returns the specific 
 	 * configuration related to the configAttributes mentioned.
 	 * 
-	 * @param onapComponentName the <code>String</code> format of the onapComponentName whose configuration is required.
+	 * @param onapName the <code>String</code> format of the onapName whose configuration is required.
 	 * @param configName the <code>String</code> format of the configurationName whose configuration is required.
 	 * @param configAttributes the <code>Map</code> of <code>String,String</code> format of the configuration attributes which are required.
 	 * @param requestID unique request ID which will be passed throughout the ONAP components to correlate logging messages.
@@ -214,8 +214,8 @@ public class PolicyEngine{
 	 * @deprecated use {@link #getConfig(ConfigRequestParameters)} Instead.
 	 */
 	@Deprecated
-	public Collection<PolicyConfig> getConfig(String onapComponentName, String configName, Map<String, String> configAttributes, UUID requestID) throws PolicyConfigException{
-		return getConfig(setConfigRequestParameters(null, onapComponentName, configName, configAttributes, requestID));
+	public Collection<PolicyConfig> getConfig(String onapName, String configName, Map<String, String> configAttributes, UUID requestID) throws PolicyConfigException{
+		return getConfig(setConfigRequestParameters(null, onapName, configName, configAttributes, requestID));
 	}
 	
 	/**
@@ -285,21 +285,21 @@ public class PolicyEngine{
 	/**
 	 * Sends the decision Attributes specified to the PEP and returns back the PolicyDecision. 
 	 * 
-	 * @param onapComponentName the <code>String</code> format of the onapComponentName whose Decision is required.
+	 * @param onapName the <code>String</code> format of the onapName whose Decision is required.
 	 * @param decisionAttributes the <code>Map</code> of <code>String,String</code> format of the decisionAttributes that must contain the ID and values.
 	 * @return {@link org.onap.policy.api.DecisionResponse} which has the Decision. 
 	 * @throws PolicyDecisionException PolicyDecision Exception
 	 * @deprecated use {@link #getDecision(DecisionRequestParameters)} Instead.
 	 */
 	@Deprecated
-	public DecisionResponse getDecision(String onapComponentName, Map<String,String> decisionAttributes) throws PolicyDecisionException {
-		return stdPolicyEngine.getDecision(onapComponentName, decisionAttributes, null);
+	public DecisionResponse getDecision(String onapName, Map<String,String> decisionAttributes) throws PolicyDecisionException {
+		return stdPolicyEngine.getDecision(onapName, decisionAttributes, null);
 	}
 	
 	/**
 	 * Sends the decision Attributes specified to the PEP and returns back the PolicyDecision. 
 	 * 
-	 * @param onapComponentName the <code>String</code> format of the onapComponentName whose Decision is required.
+	 * @param onapName the <code>String</code> format of the onapName whose Decision is required.
 	 * @param decisionAttributes the <code>Map</code> of <code>String,String</code> format of the decisionAttributes that must contain the ID and values.
 	 * @param requestID unique request ID which will be passed throughout the ONAP components to correlate logging messages.
 	 * A different request ID should be passed for each request.
@@ -308,8 +308,8 @@ public class PolicyEngine{
 	 * @deprecated use {@link #getDecision(DecisionRequestParameters)} Instead.
 	 */
 	@Deprecated
-	public DecisionResponse getDecision(String onapComponentName, Map<String,String> decisionAttributes, UUID requestID) throws PolicyDecisionException {
-		return stdPolicyEngine.getDecision(onapComponentName, decisionAttributes, requestID);
+	public DecisionResponse getDecision(String onapName, Map<String,String> decisionAttributes, UUID requestID) throws PolicyDecisionException {
+		return stdPolicyEngine.getDecision(onapName, decisionAttributes, requestID);
 	}
 	
 	/**
@@ -590,10 +590,10 @@ public class PolicyEngine{
 	}
 	
 	// Internal Setter Method to help build configRequestParameters.
-	private ConfigRequestParameters setConfigRequestParameters(String policyName, String onapComponentName, String configName, Map<String, String> configAttributes, UUID requestID){
+	private ConfigRequestParameters setConfigRequestParameters(String policyName, String onapName, String configName, Map<String, String> configAttributes, UUID requestID){
 		ConfigRequestParameters configRequestParameters = new ConfigRequestParameters();
 		configRequestParameters.setPolicyName(policyName);
-		configRequestParameters.setOnapName(onapComponentName);
+		configRequestParameters.setOnapName(onapName);
 		configRequestParameters.setConfigName(configName);
 		configRequestParameters.setConfigAttributes(configAttributes);
 		configRequestParameters.setRequestID(requestID);

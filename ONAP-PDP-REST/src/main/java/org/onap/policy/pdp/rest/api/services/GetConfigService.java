@@ -302,7 +302,7 @@ public class GetConfigService {
             return false;
         }
         if(configRequestParameters.getOnapName()==null && configRequestParameters.getPolicyName()==null){
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot proceed without onapComponentName or PolicyName";
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot proceed without onapName or PolicyName";
             return false;
         }
         return true;

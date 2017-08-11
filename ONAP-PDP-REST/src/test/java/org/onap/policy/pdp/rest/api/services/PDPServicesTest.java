@@ -73,7 +73,7 @@ public class PDPServicesTest {
 		DecisionRequestParameters pep = new DecisionRequestParameters();
 		Map<String,String> eventAttributes = new HashMap<>();
 		eventAttributes.put("TEST", "test");
-		pep.setONAPComponentName("te123");
+		pep.setOnapName("te123");
 		pep.setDecisionAttributes(eventAttributes);
 		PDPServices fixture = new PDPServices();
 
@@ -119,7 +119,7 @@ public class PDPServicesTest {
                 .add("Request", Json.createObjectBuilder()
                                 .add("AccessSubject", Json.createObjectBuilder()
                                                 .add("Attribute", Json.createObjectBuilder()
-                                                                .add("Value", pep.getONAPComponentName())
+                                                                .add("Value", pep.getOnapName())
                                                                 .add("AttributeId", "ONAPName")))
                                 .add("Resource", Json.createObjectBuilder()
                                                 .add("Attribute", resourceArray))

@@ -164,7 +164,7 @@ public class GetDecisionService {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Decision Request Paramaters";
             return false; 
         }
-        onapComponentName = decisionRequestParameters.getONAPComponentName();
+        onapComponentName = decisionRequestParameters.getOnapName();
         decisionAttributes = decisionRequestParameters.getDecisionAttributes();
         if (onapComponentName == null || onapComponentName.isEmpty()) {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No onapComponentName given : " + onapComponentName;

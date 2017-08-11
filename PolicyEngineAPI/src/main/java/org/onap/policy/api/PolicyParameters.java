@@ -53,7 +53,7 @@ public class PolicyParameters {
 	private RuleProvider ruleProvider;
 	private String controllerName;
 	private ArrayList<String> dependencyNames;
-	private Date TTLDate;
+	private Date ttlDate;
 	private boolean guard = false;
 	private String riskLevel = "5";
 	private String riskType = "default";
@@ -146,6 +146,17 @@ public class PolicyParameters {
 	public String getOnapName() {
 		return onapName;
 	}
+	
+	/**
+     * Gets the ONAP Name value of the Policy Paramters. 
+     * 
+     * @return <code>String</code> format of the ONAP Name
+     * @deprecated Use {@link #getOnapName()} instead. 
+     */
+	@Deprecated
+    public String getEcompName() {
+        return onapName;
+    }
 
 	/**
 	 * Sets the ONAP Name field of the Policy Parameters. 
@@ -155,6 +166,18 @@ public class PolicyParameters {
 	public void setOnapName(String onapName) {
 		this.onapName = onapName;
 	}
+	
+	/**
+     * Sets the ONAP Name field of the Policy Parameters. 
+     * 
+     * @param ecompName the <code>String</code> format of the ONAP Name
+     * @deprecated use {@link #setOnapName(String)} instead. 
+     */
+	@Deprecated
+    public void setEcompName(String ecompName) {
+        this.onapName = ecompName;
+    }
+    
 
 	/**
 	 * Gets the Config Name value of the Policy Parameters. 
@@ -486,10 +509,10 @@ public class PolicyParameters {
 	/**
 	 * Sets the TTLDate field of the Policy Parameters. 
 	 * 
-	 * @param TTLDate the <code>Date</code> format of the TTLDate value
+	 * @param ttlDate the <code>Date</code> format of the TTLDate value
 	 */
-	public void setTtlDate(Date TTLDate){
-		this.TTLDate = TTLDate;
+	public void setTtlDate(Date ttlDate){
+		this.ttlDate = ttlDate;
 	}
 	
 	/**
@@ -498,7 +521,7 @@ public class PolicyParameters {
 	 * @return the <code>Date</code> value of the TTLDate for Config Policies
 	 */
 	public Date getTtlDate(){
-		return TTLDate;
+		return ttlDate;
 	}
 	
 	/**

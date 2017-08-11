@@ -30,7 +30,7 @@ import java.util.UUID;
  * @version 0.1
  */
 public class DecisionRequestParameters {
-	private String onapComponentName;
+	private String onapName;
 	private Map<String,String> decisionAttributes;
 	private UUID requestID;
 	
@@ -43,32 +43,56 @@ public class DecisionRequestParameters {
 	/**
 	 * Constructor with Parameters
 	 * 
-	 * @param onapComponentName the <code>String</code> format of the onapComponentName whose Decision is required.
+	 * @param onapName the <code>String</code> format of the onapName whose Decision is required.
 	 * @param decisionAttributes the <code>Map</code> of <code>String,String</code> format of the decisionAttributes that contain the ID and values.
 	 * @param requestID unique request ID which will be passed throughout the ONAP components to correlate logging messages.
 	 */
-	public DecisionRequestParameters(String onapComponentName, Map<String,String> decisionAttributes, UUID requestID){
-		this.onapComponentName = onapComponentName;
+	public DecisionRequestParameters(String onapName, Map<String,String> decisionAttributes, UUID requestID){
+		this.onapName = onapName;
 		this.decisionAttributes = decisionAttributes;
 		this.requestID = requestID;
 	}
 	
 	/**
-	 * Gets the ONAPComponentName of the Decision Request Parameters. 
+	 * Gets the onapName of the Decision Request Parameters. 
 	 * 
-	 * @return ONAPComponentName the <code>String</code> format of the onapComponentName of the Decision Request Parameters.
+	 * @return onapName the <code>String</code> format of the onapName of the Decision Request Parameters.
 	 */
-	public String getONAPComponentName() {
-		return onapComponentName;
+	public String getOnapName() {
+		return onapName;
 	}
+	
 	/**
-	 * Sets the ONAPComponentName of the Decision Request parameters.  
+     * Gets the onapName of the Decision Request Parameters. 
+     * 
+     * @return onapName the <code>String</code> format of the onapName of the Decision Request Parameters.
+     * @deprecated use {@link #getOnapName()} instead. 
+     */
+	@Deprecated
+    public String getECOMPComponentName() {
+        return onapName;
+    }
+	
+	/**
+	 * Sets the onapName of the Decision Request parameters.  
 	 * 
-	 * @param onapComponentName the <code>String</code> format of the onapComponentName whose Decision is required.
+	 * @param onapName the <code>String</code> format of the onapName whose Decision is required.
 	 */
-	public void setONAPComponentName(String onapComponentName) {
-		this.onapComponentName = onapComponentName;
+	public void setOnapName(String onapName) {
+		this.onapName = onapName;
 	}
+	
+	/**
+     * Sets the ecompComponentName of the Decision Request parameters.  
+     * 
+     * @param ecompName the <code>String</code> format of the onapName whose Decision is required.
+     * @deprecated use {@link #setOnapName(String)} instead. 
+     */
+	@Deprecated
+    public void setECOMPComponentName(String ecompName) {
+        this.onapName = ecompName;
+    }
+	
 	/**
 	 * Gets the Decision Attributes from Decision Request Parameters. 
 	 * 

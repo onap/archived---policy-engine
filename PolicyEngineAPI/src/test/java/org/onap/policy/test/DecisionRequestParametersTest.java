@@ -51,7 +51,7 @@ public class DecisionRequestParametersTest {
 
 		// add additional test code here
 		assertNotNull(result);
-		assertEquals(null, result.getONAPComponentName());
+		assertEquals(null, result.getOnapName());
 		assertEquals(null, result.getDecisionAttributes());
 		assertEquals(null, result.getRequestID());
 	}
@@ -74,7 +74,7 @@ public class DecisionRequestParametersTest {
 
 		// add additional test code here
 		assertNotNull(result);
-		assertEquals("", result.getONAPComponentName());
+		assertEquals("", result.getOnapName());
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class DecisionRequestParametersTest {
 		throws Exception {
 		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable<String, String>(), UUID.randomUUID());
 
-		String result = fixture.getONAPComponentName();
+		String result = fixture.getOnapName();
 
 		// add additional test code here
 		assertEquals("", result);
@@ -168,7 +168,7 @@ public class DecisionRequestParametersTest {
 		DecisionRequestParameters fixture = new DecisionRequestParameters("", new Hashtable<String, String>(), UUID.randomUUID());
 		String onapComponentName = "";
 
-		fixture.setONAPComponentName(onapComponentName);
+		fixture.setOnapName(onapComponentName);
 
 		// add additional test code here
 	}

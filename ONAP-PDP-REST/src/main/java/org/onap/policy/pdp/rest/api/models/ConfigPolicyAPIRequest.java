@@ -19,10 +19,10 @@
  */
 package org.onap.policy.pdp.rest.api.models;
 
-import io.swagger.annotations.ApiModel;
-
 import java.io.Serializable;
 import java.util.Map;
+
+import io.swagger.annotations.ApiModel;
 
 @ApiModel
 public class ConfigPolicyAPIRequest implements Serializable{
@@ -63,6 +63,13 @@ public class ConfigPolicyAPIRequest implements Serializable{
      * @return the onapName
      */
     public String getOnapName() {
+        return onapName;
+    }
+    /**
+     * @return the onapName
+     */
+    @Deprecated
+    public String getEcompName() {
         return onapName;
     }
     /**
@@ -112,6 +119,13 @@ public class ConfigPolicyAPIRequest implements Serializable{
      */
     public void setOnapName(String onapName) {
         this.onapName = onapName;
+    }
+    /**
+     * @param ecompName the onapName to set
+     */
+    @Deprecated
+    public void setEcompName(String ecompName) {
+        this.onapName = ecompName;
     }
     /**
      * @param configName the configName to set

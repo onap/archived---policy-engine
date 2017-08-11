@@ -205,8 +205,8 @@ public class StdPolicyEngine {
 	/*
 	 * getDecision using the decision Attributes.
 	 */
-	public DecisionResponse getDecision(String onapComponentName, Map<String, String> decisionAttributes, UUID requestID) throws PolicyDecisionException {
-		return getDecisionImpl(onapComponentName, decisionAttributes, requestID);
+	public DecisionResponse getDecision(String onapName, Map<String, String> decisionAttributes, UUID requestID) throws PolicyDecisionException {
+		return getDecisionImpl(onapName, decisionAttributes, requestID);
 	}
 	
 	/*
@@ -218,7 +218,7 @@ public class StdPolicyEngine {
 			LOGGER.error(message);
 			throw new PolicyDecisionException(message);
 		}
-		return getDecisionImpl(decisionRequestParameters.getONAPComponentName(), decisionRequestParameters.getDecisionAttributes(), decisionRequestParameters.getRequestID());
+		return getDecisionImpl(decisionRequestParameters.getOnapName(), decisionRequestParameters.getDecisionAttributes(), decisionRequestParameters.getRequestID());
 	}
 	
 	/*
@@ -523,7 +523,7 @@ public class StdPolicyEngine {
         }
     }
 
-    public DecisionResponse getDecisionImpl(String onapComponentName,
+    public DecisionResponse getDecisionImpl(String onapName,
 											Map<String, String> decisionAttributes,
 											UUID requestID) throws PolicyDecisionException {
 		String resource= "getDecision";
@@ -533,7 +533,7 @@ public class StdPolicyEngine {
         try {
             DecisionRequestParameters decisionRequestParameters = new DecisionRequestParameters();
             decisionRequestParameters.setDecisionAttributes(decisionAttributes);
-            decisionRequestParameters.setONAPComponentName(onapComponentName);
+            decisionRequestParameters.setOnapName(onapName);
             decisionRequestParameters.setRequestID(requestID);
             body = PolicyUtils.objectToJsonString(decisionRequestParameters);
         } catch (JsonProcessingException e) {

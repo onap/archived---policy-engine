@@ -236,7 +236,7 @@ public class PolicyEngineServicesTest {
 		DecisionRequestParameters pep = new DecisionRequestParameters();
 		Map<String,String> eventAttributes = new HashMap<>();
 		eventAttributes.put("TEST", "test");
-		pep.setONAPComponentName("te123");
+		pep.setOnapName("te123");
 		pep.setDecisionAttributes(eventAttributes);
 		//Failure Tests. 
 		mockMvc.perform(post("/getDecision")).andExpect(status().isBadRequest());
@@ -245,10 +245,10 @@ public class PolicyEngineServicesTest {
 		mockMvc.perform(post("/getDecision").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
 				.headers(headers).header(UUIDHEADER, "123")).andExpect(status().isOk());
 		pep.setDecisionAttributes(null);
-		pep.setONAPComponentName(null);
+		pep.setOnapName(null);
 		mockMvc.perform(post("/getDecision").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
 				.headers(headers).header(UUIDHEADER, UUID.randomUUID())).andExpect(status().isBadRequest());
-		pep.setONAPComponentName("testing");
+		pep.setOnapName("testing");
 		mockMvc.perform(post("/getDecision").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setDecisionAttributes(eventAttributes);

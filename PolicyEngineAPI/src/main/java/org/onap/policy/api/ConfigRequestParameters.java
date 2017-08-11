@@ -31,7 +31,7 @@ import java.util.UUID;
  */
 public class ConfigRequestParameters {
 	private String policyName;
-	private String onapComponentName;
+	private String onapName;
 	private String configName;
 	private Map<String,String> configAttributes;
 	private UUID requestID;
@@ -49,11 +49,22 @@ public class ConfigRequestParameters {
 	/**
 	 * Sets the ONAP Component Name of the Config policy which needs to be retrieved. 
 	 * 
-	 * @param onapComponentName the <code>String</code> format of the onapComponentName whose configuration is required.
+	 * @param onapName the <code>String</code> format of the onapName whose configuration is required.
 	 */
-	public void setOnapName(String onapComponentName){
-		this.onapComponentName = onapComponentName;
+	public void setOnapName(String onapName){
+		this.onapName = onapName;
 	}
+	
+	/**
+     * Sets the ONAP Component Name of the Config policy which needs to be retrieved. 
+     * 
+     * @param ecompName the <code>String</code> format of the onapName whose configuration is required.
+     * @deprecated use {@link #setOnapName(String)} instead.  
+     */
+	@Deprecated
+    public void setEcompName(String ecompName){
+        this.onapName = ecompName;
+    }
 	
 	/**
 	 * Sets the Config Name of the Config policy which needs to be retrieved.  
@@ -97,8 +108,19 @@ public class ConfigRequestParameters {
 	 * @return <code>String</code> format of the ONAP Component Name. 
 	 */
 	public String getOnapName(){
-		return onapComponentName;
+		return onapName;
 	}
+	
+	/**
+     * Gets the ONAP Component Name of the Request Parameters. 
+     * 
+     * @return <code>String</code> format of the ONAP Component Name. 
+     * @deprecated use {@link #getOnapName()} instead. 
+     */
+	@Deprecated
+    public String getEcompName(){
+        return onapName;
+    }
 	
 	/**
 	 * Gets the Config name of the Request Parameters. 
