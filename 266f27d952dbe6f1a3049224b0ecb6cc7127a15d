@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_b233def5",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-14T19:16:10Z",
+      "side": 1,
+      "message": "no biggie, can autoPushFlag be removed.   Are there any changes necessary in the packages/ dir?",
+      "revId": "266f27d952dbe6f1a3049224b0ecb6cc7127a15d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
