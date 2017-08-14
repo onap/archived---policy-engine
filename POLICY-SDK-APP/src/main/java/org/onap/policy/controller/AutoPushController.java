@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -148,8 +149,11 @@ public class AutoPushController extends RestrictedBaseController{
 			}else{
 				if(!scopes.isEmpty()){
 					for(String scope : scopes){
-						String query = "From PolicyVersion where policy_name like '"+scope+"%' and id > 0";
-						List<Object> filterdatas = commonClassDao.getDataByQuery(query);
+						scope += "%";
+						String query = "From PolicyVersion where policy_name like :scope and id > 0";
+						SimpleBindings params = new SimpleBindings();
+						params.put("scope", scope);
+						List<Object> filterdatas = commonClassDao.getDataByQuery(query, params);
 						if(filterdatas != null){
 							for(int i =0; i < filterdatas.size(); i++){
 								data.add(filterdatas.get(i));
@@ -236,8 +240,11 @@ public class AutoPushController extends RestrictedBaseController{
 						dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
 					}
 					String[] split = dbCheckName.split(":");
-					String query = "FROM PolicyEntity where policyName = '"+split[1]+"' and scope ='"+split[0]+"'";
-					List<Object> queryData = controller.getDataByQuery(query);
+					String query = "FROM PolicyEntity where policyName = :split_1 and scope = :split_0";
+					SimpleBindings policyParams = new SimpleBindings();
+					policyParams.put("split_1", split[1]);
+					policyParams.put("split_0", split[0]);
+					List<Object> queryData = controller.getDataByQuery(query, policyParams);
 					PolicyEntity policyEntity = (PolicyEntity) queryData.get(0);
 					File temp = new File(name);
 					BufferedWriter bw = new BufferedWriter(new FileWriter(temp));

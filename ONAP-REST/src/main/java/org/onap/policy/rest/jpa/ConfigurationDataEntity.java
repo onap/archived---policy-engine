@@ -23,6 +23,7 @@ package org.onap.policy.rest.jpa;
  */
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +42,7 @@ import javax.persistence.Version;
 /*
  * The Entity class to persist a policy object configuration data
  */
+
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -220,5 +222,38 @@ public class ConfigurationDataEntity implements Serializable {
 	 */
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+	
+	@Override
+	public int hashCode() {
+	return Objects.hash(configurationDataId, configurationName,	version, configType,
+			configBody, createdBy, createdDate, description, modifiedBy, modifiedDate, deleted);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null){
+			return false;
+		}
+		if(obj == this){
+			return true;
+		}
+		if(!(obj instanceof ConfigurationDataEntity)){
+			return false;
+		}
+		
+		return (
+				configurationDataId == ((ConfigurationDataEntity) obj).configurationDataId &&	
+				configurationName.equals(((ConfigurationDataEntity) obj).configurationName) && 
+				version == ((ConfigurationDataEntity) obj).version &&
+				configType.equals(((ConfigurationDataEntity) obj).configType) &&
+				configBody.equals(((ConfigurationDataEntity) obj).configBody) &&
+				createdBy.equals(((ConfigurationDataEntity) obj).createdBy) &&
+				createdDate.equals(((ConfigurationDataEntity) obj).createdDate) &&
+				description.equals(((ConfigurationDataEntity) obj).description) &&
+				modifiedBy.equals(((ConfigurationDataEntity) obj).modifiedBy) &&
+				modifiedDate.equals(((ConfigurationDataEntity) obj).modifiedDate) &&
+				deleted == ((ConfigurationDataEntity) obj).deleted
+				);
 	}
 }

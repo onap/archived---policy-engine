@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.List;
 
+import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -86,8 +87,11 @@ public class PolicyNotificationController extends RestrictedBaseController {
 			if(finalName.contains("\\")){
 				finalName = finalName.replace("\\", "\\\\");
 			}
-			String query = "from WatchPolicyNotificationTable where POLICYNAME = '"+finalName+"' and LOGINIDS = '"+userId+"'";
-			List<Object> watchList = commonClassDao.getDataByQuery(query);
+			String query = "from WatchPolicyNotificationTable where POLICYNAME = :finalName and LOGINIDS = :userId";
+			SimpleBindings params = new SimpleBindings();
+			params.put("finalName", finalName);
+			params.put("userId", userId);
+			List<Object> watchList = commonClassDao.getDataByQuery(query, params);
 			if(watchList.isEmpty()){
 				if(finalName.contains("\\\\")){
 					finalName = finalName.replace("\\\\", File.separator);

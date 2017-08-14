@@ -25,6 +25,8 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.script.SimpleBindings;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +58,7 @@ public class PolicyControllerTest {
         entity.setScope("com");
         data.add(entity);
         
-        when(commonClassDao.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'")).thenReturn(data);
+        when(commonClassDao.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(data);
 	}
 	
 	@Test
