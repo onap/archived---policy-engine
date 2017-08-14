@@ -16,6 +16,24 @@
       "revId": "ce1cf85647ab1ae3c292fd1b1286ea0dbb56223f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_72e9f619",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 1759
+      },
+      "writtenOn": "2017-08-14T23:24:28Z",
+      "side": 0,
+      "message": "This code is dependent on the mojohause plugin so I took it out. Is this functionality still needed?",
+      "parentUuid": "9a437d4f_b21cfe6b",
+      "revId": "ce1cf85647ab1ae3c292fd1b1286ea0dbb56223f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
