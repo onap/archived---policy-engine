@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -65,8 +65,6 @@ import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.Invoker;
-import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.WriterFactory;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.onap.policy.api.PEDependency;
 import org.onap.policy.api.PolicyException;
@@ -96,10 +94,10 @@ import com.att.nsa.cambria.client.CambriaClientBuilders.PublisherBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
- * BRMSPush: Application responsible to push policies to the BRMS PDP Policy Repository (PR). 
+ * BRMSPush: Application responsible to push policies to the BRMS PDP Policy Repository (PR).
  * Mavenize and push policy to PR
- * 
- * @version 1.0 
+ *
+ * @version 1.0
  */
 
 @SuppressWarnings("deprecation")
@@ -115,9 +113,9 @@ public class BRMSPush {
 	private static BackUpMonitor bm;
 	private static String resourceName = null;
 	private String defaultName = null;
-	private String repID = null; 
+	private String repID = null;
 	private String repName = null;
-	private ArrayList<String> repURLs= null;  
+	private ArrayList<String> repURLs= null;
 	private String repUserName = null;
 	private String repPassword = null;
 	private String policyKeyID = null;
@@ -145,7 +143,7 @@ public class BRMSPush {
 			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE+"Config File doesn't Exist in the specified Path " + file.toString());
 		}else{
 			if(file.toString().endsWith(".properties")){
-				// Grab the Properties. 
+				// Grab the Properties.
 				setProperty(file, config, handler);
 			}
 		}
@@ -237,39 +235,39 @@ public class BRMSPush {
 		}
 		brmsdependencyversion = brmsdependencyversion.trim();
 		readGroups(config);
-		
+
 		// Setup Publisher
 		notificationType = config.getProperty("NOTIFICATION_TYPE");
 		if("dmaap".equalsIgnoreCase(notificationType)){
-			
+
 			LOGGER.info("Notification Type being used is DMaaP... creating instance of BusPublisher.");
 			// Setting up the Publisher for DMaaP MR
 			String dmaapServers = config.getProperty("NOTIFICATION_SERVERS");
 			pubTopic = config.getProperty("NOTIFICATION_TOPIC");
 			String aafLogin = config.getProperty("CLIENT_ID").trim();
 			String aafPassword = config.getProperty("CLIENT_KEY").trim();
-			
+
 			if(dmaapServers==null || pubTopic==null){
 				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
 				throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
 			}
-			
+
 			dmaapServers = dmaapServers.trim();
 			pubTopic = pubTopic.trim();
-			
+
 			if(dmaapServers.contains(",")) {
 				dmaapList = new ArrayList<>(Arrays.asList(dmaapServers.split("\\s*,\\s*")));
 			} else {
 				dmaapList = new ArrayList<>();
 				dmaapList.add(dmaapServers);
 			}
-			
-			this.publisher = 
-					new BusPublisher.DmaapPublisherWrapper(this.dmaapList, 
-							                               this.pubTopic, 
-							                               aafLogin, 
+
+			this.publisher =
+					new BusPublisher.DmaapPublisherWrapper(this.dmaapList,
+							                               this.pubTopic,
+							                               aafLogin,
 							                               aafPassword);
-			
+
 
 			String dDelay = config.getProperty("NOTIFICATION_DELAY");
 			if(dDelay!=null && !dDelay.isEmpty()){
@@ -281,7 +279,7 @@ public class BRMSPush {
 				}
 			}
 			LOGGER.info("DMAAP BusPublisher is created.");
-			
+
 		} else {
 			LOGGER.info("Notification Type being used is UEB... creating instance of PublisherBuilder.");
 			// Setting up the Publisher for UEB
@@ -297,7 +295,7 @@ public class BRMSPush {
 			pubTopic = pubTopic.trim();
 			pubBuilder = new CambriaClientBuilders.PublisherBuilder();
 			pubBuilder.usingHosts(uebList).onTopic(pubTopic);
-			if(apiKey!=null && !apiKey.isEmpty() && 
+			if(apiKey!=null && !apiKey.isEmpty() &&
 					apiSecret!=null && !apiSecret.isEmpty()) {
 				apiKey= apiKey.trim();
 				apiSecret = apiSecret.trim();
@@ -319,7 +317,7 @@ public class BRMSPush {
 	}
 
 	/**
-	 * Will Initialize the variables required for BRMSPush. 
+	 * Will Initialize the variables required for BRMSPush.
 	 */
 	public void initiate(boolean flag) {
 		modifiedGroups =  new HashMap<>();
@@ -333,14 +331,14 @@ public class BRMSPush {
 	}
 
 	/**
-	 * Will Add rules to projects. Creates necessary folders if required. 
+	 * Will Add rules to projects. Creates necessary folders if required.
 	 */
 	public void addRule(String name, String rule, Map<String, String> responseAttributes) {
-		// 1 check the response Attributes and determine if this belongs to any projects. 
+		// 1 check the response Attributes and determine if this belongs to any projects.
 		// 2 if not create folder
-		// 3 create pom. 
-		// 4 copy the rule. 
-		// 5 store the groups that have been updated. 
+		// 3 create pom.
+		// 4 copy the rule.
+		// 5 store the groups that have been updated.
 		String kSessionName=null;
 		String selectedName = null;
 		if(!responseAttributes.isEmpty()){
@@ -359,7 +357,7 @@ public class BRMSPush {
                 if (key.equals("$controller:")) {
                     try {
                         PEDependency dependency = PolicyUtils.jsonStringToObject(responseAttributes.get(key), PEDependency.class);
-                        userControllerName = key.replaceFirst("$controller:",""); 
+                        userControllerName = key.replaceFirst("$controller:","");
                         addToGroup(userControllerName, dependency);
                     } catch (Exception e) {
                         LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Error while resolving Controller: " + e);
@@ -382,14 +380,14 @@ public class BRMSPush {
                 }
 			}
 			if(userControllerName!=null){
-				// Adding custom dependencies here. 
+				// Adding custom dependencies here.
                 ArrayList<Object> values = groupMap.get(userControllerName);
                 values.add(userDependencies);
                 groupMap.put(userControllerName, values);
                 selectedName = userControllerName;
             }
 		}
-		// If no Match then pick Default. 
+		// If no Match then pick Default.
 		if(selectedName==null){
 			selectedName = defaultName;
 		}
@@ -439,7 +437,7 @@ public class BRMSPush {
 	}
 
 	private void manageProject(String selectedName, String kSessionName, String name, String rule) {
-		// Check if the Project is in Sync. If not get the latest Version. 
+		// Check if the Project is in Sync. If not get the latest Version.
 		syncProject(selectedName);
 		createProject(PROJECTSLOCATION + File.separator
 				+ getArtifactID(selectedName) + File.separator + "src"
@@ -455,7 +453,7 @@ public class BRMSPush {
 	}
 
 	/*
-	 * Add Policy to JMemory and DataBase. 
+	 * Add Policy to JMemory and DataBase.
 	 */
 	private void addToPolicy(String policyName, String controllerName) {
 		policyMap.put(policyName, controllerName);
@@ -467,7 +465,7 @@ public class BRMSPush {
 		boolean createFlag = false;
 		BRMSPolicyInfo brmsPolicyInfo = new BRMSPolicyInfo();
 		if(pList.size()>0){
-			// Already exists. 
+			// Already exists.
 			brmsPolicyInfo = (BRMSPolicyInfo) pList.get(0);
 			if(!brmsPolicyInfo.getControllerName().getControllerName().equals(controllerName)){
 				createFlag = true;
@@ -506,7 +504,7 @@ public class BRMSPush {
 				return;
 			}
 		}
-		// We are out of Sync or Project is not Present. 
+		// We are out of Sync or Project is not Present.
 		downloadProject(selectedName);
 	}
 
@@ -537,8 +535,8 @@ public class BRMSPush {
 		    File f = null;
 		    String fileName = file.getName().substring(file.getName().lastIndexOf("/")+1);
 		    if(file.getName().endsWith(".drl")){
-		    	String path = PROJECTSLOCATION+ File.separator + artifactId + File.separator + "src"+ 
-				    	File.separator+ "main" + File.separator + "resources" + File.separator+ "rules"; 
+		    	String path = PROJECTSLOCATION+ File.separator + artifactId + File.separator + "src"+
+				    	File.separator+ "main" + File.separator + "resources" + File.separator+ "rules";
 		    	new File(path).mkdirs();
 		    	if(syncFlag  && policyMap.containsKey(fileName.replace(".drl", ""))){
 		    		f = new File(path + File.separator + fileName);
@@ -546,12 +544,12 @@ public class BRMSPush {
 		    		f = new File(path + File.separator + fileName);
 		    	}
 		    }else if(file.getName().endsWith("pom.xml")){
-		    	String path = PROJECTSLOCATION+ File.separator + artifactId; 
+		    	String path = PROJECTSLOCATION+ File.separator + artifactId;
 		    	new File(path).mkdirs();
 		    	f = new File(path + File.separator + fileName);
 		    }else if(file.getName().endsWith("kmodule.xml")){
-		    	String path = PROJECTSLOCATION+ File.separator + artifactId + File.separator + "src"+ 
-				    	File.separator+ "main" + File.separator + "resources" + File.separator+ "META-INF"; 
+		    	String path = PROJECTSLOCATION+ File.separator + artifactId + File.separator + "src"+
+				    	File.separator+ "main" + File.separator + "resources" + File.separator+ "META-INF";
 		    	new File(path).mkdirs();
 		    	f = new File(path + File.separator + fileName);
 		    }
@@ -591,7 +589,7 @@ public class BRMSPush {
         }
         return additionalNexusLatestCheck(selectedName, result);
 	}
-	
+
 	// Additional Check due to Limitations from Nexus API to check if the artifact is the latest.
 	private NexusArtifact additionalNexusLatestCheck(String selectedName, NexusArtifact result) {
 		String nextVersion = incrementVersion(result.getVersion());
@@ -675,13 +673,13 @@ public class BRMSPush {
 	}
 
 	/**
-	 * Will Push policies to the PolicyRepo. 
-	 * 
-	 * @param notificationType <String> type of notification Type. 
-	 * @throws PolicyException 
+	 * Will Push policies to the PolicyRepo.
+	 *
+	 * @param notificationType <String> type of notification Type.
+	 * @throws PolicyException
 	 */
 	public void pushRules() throws PolicyException{
-		// Check how many groups have been updated. 
+		// Check how many groups have been updated.
 		// Invoke their Maven process.
 		try {
 			im.startTransaction();
@@ -732,7 +730,7 @@ public class BRMSPush {
 	}
 
 	/**
-	 * Removes a Rule from Rule Projects. 
+	 * Removes a Rule from Rule Projects.
 	 */
 	public void removeRule(String name){
 		String controllerName = getGroupName(name);
@@ -805,24 +803,24 @@ public class BRMSPush {
 	}
 
 	private void sendMessage(String message) throws IOException, GeneralSecurityException, InterruptedException {
-		
+
 		if("dmaap".equalsIgnoreCase(notificationType)) {
 			// Sending Message through DMaaP Message Router
 			LOGGER.debug("DMAAP Publishing Message");
-			
+
 			publisher.send( "MyPartitionKey", message);
-			
+
 			LOGGER.debug("Message Published on DMaaP :" + dmaapList.get(0) + "for Topic: " + pubTopic);
-			
+
 			Thread.sleep(dmaapDelay);
 			publisher.close();
 		} else {
 			// Sending Message through UEB interface.
 			LOGGER.debug("UEB Publishing Message");
-			
+
 			CambriaBatchingPublisher pub = pubBuilder.build();
 			pub.send( "MyPartitionKey", message);
-			
+
 			final List<?> stuck = pub.close ( uebDelay, TimeUnit.SECONDS );
 			if ( stuck.size () > 0 ) {
 				LOGGER.error ( stuck.size() + " messages unsent" );
@@ -847,7 +845,7 @@ public class BRMSPush {
 		repository.setUrl(repURLs.get(0));
 		distributionManagement.setRepository(repository);
 		model.setDistributionManagement(distributionManagement);
-		// Dependency Management goes here. 
+		// Dependency Management goes here.
 		List<Dependency> dependencyList= new ArrayList<>();
 		if(groupMap.get(name).size()>1){
 			@SuppressWarnings("unchecked")
@@ -856,28 +854,14 @@ public class BRMSPush {
                 dependencyList.add(dependency.getDependency());
             }
 		}else{
-			// Add Default dependencies. 
+			// Add Default dependencies.
 			dependencyList = getDependencies(name);
         }
 		model.setDependencies(dependencyList);
-		Writer writer = null;
-		try{
-			writer = WriterFactory.newXmlWriter(new File(PROJECTSLOCATION
-					+ File.separator + getArtifactID(name) + File.separator
-					+ "pom.xml"));
-			MavenXpp3Writer pomWriter = new MavenXpp3Writer();
-			pomWriter.write(writer, model);
-		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-					+ "Error while creating POM for " + getArtifactID(name)
-					+ e.getMessage());
-		}finally{
-			IOUtil.close(writer);
-		}
 	}
-	
+
 	private List<Dependency> getDependencies(String controllerName) {
-		// Read the Dependency Information from property file. 
+		// Read the Dependency Information from property file.
 		Path file = Paths.get(DEPENDENCY_FILE);
 		if(!Files.notExists(file)){
 			try {
@@ -900,10 +884,10 @@ public class BRMSPush {
 		}
 		return defaultDependencies(controllerName);
 	}
-	
-	// Default Dependency Section. Can be changed as required. 
+
+	// Default Dependency Section. Can be changed as required.
 	public List<Dependency> defaultDependencies(String controllerName) {
-		
+
 		List<Dependency> dependencyList = new ArrayList<>();
 		String version= StringEscapeUtils.escapeJava(brmsdependencyversion);
 
@@ -946,7 +930,7 @@ public class BRMSPush {
 		Dependency trafficgeneratorDependency = new Dependency();
 		trafficgeneratorDependency.setGroupId("org.onap.policy.drools-applications");
 		trafficgeneratorDependency.setArtifactId("trafficgenerator");
-		trafficgeneratorDependency.setVersion(version);	
+		trafficgeneratorDependency.setVersion(version);
 		dependencyList.add(trafficgeneratorDependency);
 		return dependencyList;
 	}
@@ -955,11 +939,11 @@ public class BRMSPush {
 		new File(path+File.separator+"rules").mkdirs();
 		new File(path+File.separator+"META-INF").mkdirs();
 		if(!Files.exists(Paths.get(path+File.separator+"META-INF"+File.separator+"kmodule.xml"))){
-			// Hard coding XML for PDP Drools to accept our Rules. 
-			String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n"+  
+			// Hard coding XML for PDP Drools to accept our Rules.
+			String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n"+
 					"<kmodule xmlns=\"http://jboss.org/kie/6.0.0/kmodule\">" +"\n"+
 					"<kbase name=\"rules\" packages=\"rules\">" + "\n" +
-					"<ksession name=\""+ ksessionName +"\"/>"+ "\n" + 
+					"<ksession name=\""+ ksessionName +"\"/>"+ "\n" +
 					"</kbase></kmodule>";
 			copyDataToFile(path+File.separator+"META-INF"+File.separator+"kmodule.xml", xml);
 		}
@@ -1034,11 +1018,11 @@ public class BRMSPush {
 	private String getArtifactID(String name){
         return ((PEDependency) groupMap.get(name).get(0)).getArtifactId();
     }
-    
+
     private String getGroupID(String name){
         return ((PEDependency) groupMap.get(name).get(0)).getGroupId();
     }
-    
+
     private String getVersion(String name){
         return ((PEDependency) groupMap.get(name).get(0)).getVersion();
     }
@@ -1061,8 +1045,8 @@ public class BRMSPush {
             addModifiedGroup(controllerName, "update");
         }
     }
-	
-    // Removes Policy from Memory and Database. 
+
+    // Removes Policy from Memory and Database.
  	private void removePolicyFromGroup(String policyName, String controllerName) {
  		policyMap.remove(policyName);
  		EntityTransaction et = em.getTransaction();
@@ -1072,7 +1056,7 @@ public class BRMSPush {
  		List<?> pList = query.getResultList();
  		BRMSPolicyInfo brmsPolicyInfo = new BRMSPolicyInfo();
  		if(pList.size()>0){
- 			// Already exists. 
+ 			// Already exists.
  			brmsPolicyInfo = (BRMSPolicyInfo) pList.get(0);
  			if(brmsPolicyInfo.getControllerName().getControllerName().equals(controllerName)){
  				em.remove(brmsPolicyInfo);
@@ -1081,18 +1065,18 @@ public class BRMSPush {
  		}
  		et.commit();
  	}
- 	
+
 	private void setVersion(String newVersion, String controllerName) {
         PEDependency userController = (PEDependency) groupMap.get(controllerName).get(0);
         userController.setVersion(newVersion);
         groupMap.get(controllerName).set(0, userController);
     }
 
-	// Return BackUpMonitor 
+	// Return BackUpMonitor
 	public static BackUpMonitor getBackUpMonitor(){
 		return bm;
 	}
-	
+
 	public void rotateURLs() {
 		if(repURLs!=null){
 			Collections.rotate(repURLs, -1);
