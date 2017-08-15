@@ -34,6 +34,24 @@
       "revId": "ce1cf85647ab1ae3c292fd1b1286ea0dbb56223f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_12ed0a8c",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-15T01:05:51Z",
+      "side": 0,
+      "message": "Yes, Removing this code will block the pom creation and hence fails to build/publish jars which breaks the closedloop flows. \nThis code doesn\u0027t fall under mojohaus plugin. \nThe library which is being used is plexus-utils which is part of maven-model jar which is licensed under Apache 2.0",
+      "parentUuid": "9a437d4f_72e9f619",
+      "revId": "ce1cf85647ab1ae3c292fd1b1286ea0dbb56223f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
