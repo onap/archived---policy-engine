@@ -45,8 +45,6 @@
 		<module>PolicyEngineUtils</module>
 		<module>ONAP-XACML</module>
 		<module>ONAP-REST</module>
-		<module>ONAP-ASDC</module>
-		<module>ONAP-ControlloopPolicy</module>
 		<module>PolicyEngineAPI</module>
 		<module>ONAP-PDP</module>
 		<module>ONAP-PDP-REST</module>
