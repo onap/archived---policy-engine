@@ -68,6 +68,29 @@
       "revId": "acdca854ce515ed7a20be9cea4a2f76c7072aa5a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_ec02a2b3",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:54:10Z",
+      "side": 1,
+      "message": "I don\u0027t think will work - it will generate a null exception. All that needs to be done is add e as a parameter to PolicyLogger call?",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 35
+      },
+      "revId": "acdca854ce515ed7a20be9cea4a2f76c7072aa5a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
