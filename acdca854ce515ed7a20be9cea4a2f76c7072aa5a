@@ -71,6 +71,23 @@
     },
     {
       "key": {
+        "uuid": "9a437d4f_ccffdea9",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DeleteHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-18T15:58:56Z",
+      "side": 1,
+      "message": "This is a Null pointer here.",
+      "revId": "acdca854ce515ed7a20be9cea4a2f76c7072aa5a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a437d4f_ec02a2b3",
         "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusPublisher.java",
         "patchSetId": 1
