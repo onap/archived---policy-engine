@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_8c6316b1",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSGateway.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:36:10Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem right, re-throw to dump the same message?",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 7
+      },
+      "revId": "acdca854ce515ed7a20be9cea4a2f76c7072aa5a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_ac05bac3",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:36:10Z",
+      "side": 1,
+      "message": "What was the sonar recommendation for this?",
+      "range": {
+        "startLine": 446,
+        "startChar": 0,
+        "endLine": 449,
+        "endChar": 5
+      },
+      "revId": "acdca854ce515ed7a20be9cea4a2f76c7072aa5a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_6c0fd2e2",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:36:10Z",
+      "side": 1,
+      "message": "I think we only need one logger, perhaps LOGGER.error(message, ae)",
+      "range": {
+        "startLine": 491,
+        "startChar": 0,
+        "endLine": 492,
+        "endChar": 20
+      },
+      "revId": "acdca854ce515ed7a20be9cea4a2f76c7072aa5a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
