@@ -20,7 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -124,12 +126,12 @@ public class MicroServiceDictionaryController {
 		catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
             response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
 		}
 	}
 	
 	@RequestMapping(value={"/ms_dictionary/save_dcaeUUID"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -205,12 +207,13 @@ public class MicroServiceDictionaryController {
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			LOGGER.error(e);
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/ms_dictionary/remove_dcaeuuid"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -272,12 +275,12 @@ public class MicroServiceDictionaryController {
 		catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
             response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
 		}
 	}
 	
 	@RequestMapping(value={"/ms_dictionary/save_configName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -354,12 +357,13 @@ public class MicroServiceDictionaryController {
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			LOGGER.error(e);
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/ms_dictionary/remove_msConfigName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -418,12 +422,12 @@ public class MicroServiceDictionaryController {
 		catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
             response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
 		}
 	}
 	
 	@RequestMapping(value={"/ms_dictionary/save_location"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response)throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -500,12 +504,13 @@ public class MicroServiceDictionaryController {
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			LOGGER.error(e);
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/ms_dictionary/remove_msLocation"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -545,7 +550,7 @@ public class MicroServiceDictionaryController {
             response.getWriter().write(j.toString());
         }
         catch (Exception e){
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
         }
     }
     
@@ -565,12 +570,12 @@ public class MicroServiceDictionaryController {
         catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
             response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
         }
     }
     
     @RequestMapping(value={"/ms_dictionary/save_modelAttribute"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-    public ModelAndView saveMicroServiceAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public ModelAndView saveMicroServiceAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
         try {
             boolean duplicateflag = false;
             boolean fromAPI = false;
@@ -645,12 +650,13 @@ public class MicroServiceDictionaryController {
             request.setCharacterEncoding("UTF-8");
             PrintWriter out = response.getWriter();
             out.write(e.getMessage());
+            LOGGER.error(e);
         }
         return null;
     }
  
     @RequestMapping(value={"/ms_dictionary/remove_modelAttribute"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-    public ModelAndView removeMicroServiceAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView removeMicroServiceAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
         try{
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -670,7 +676,7 @@ public class MicroServiceDictionaryController {
             return null;
         }
         catch (Exception e){
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
             response.setCharacterEncoding("UTF-8");
             request.setCharacterEncoding("UTF-8");
             PrintWriter out = response.getWriter();
@@ -691,7 +697,7 @@ public class MicroServiceDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			 LOGGER.error(e.getMessage());
+			 LOGGER.error(e);
 		}
 	}
 	
@@ -715,7 +721,7 @@ public class MicroServiceDictionaryController {
             response.getWriter().write(j.toString());
         }
         catch (Exception e){
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
         }
     }
     
@@ -734,7 +740,7 @@ public class MicroServiceDictionaryController {
 		catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
             response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
 		}
 	}
 	
@@ -782,12 +788,12 @@ public class MicroServiceDictionaryController {
         catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
             response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
         }
     }
     
 	@RequestMapping(value={"/ms_dictionary/save_model"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean fromAPI = false;
@@ -953,12 +959,13 @@ public class MicroServiceDictionaryController {
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			LOGGER.error(e);
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/ms_dictionary/remove_msModel"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

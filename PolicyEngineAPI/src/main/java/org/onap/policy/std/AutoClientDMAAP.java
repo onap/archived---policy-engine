@@ -34,7 +34,7 @@ public class AutoClientDMAAP implements Runnable {
 	       AutoClientDMAAP.aafPassword = aafPassword;
 	}
 
-	public void setAuto(NotificationScheme scheme,
+	public static void setAuto(NotificationScheme scheme,
 			NotificationHandler handler) {
 		AutoClientDMAAP.scheme = scheme;
 		AutoClientDMAAP.handler = handler;
@@ -94,6 +94,7 @@ public class AutoClientDMAAP implements Runnable {
 						}
 					} catch (Exception e) {
 						logger.debug("Error in processing DMAAP message");
+						logger.error(e);
 					}
 
 				}

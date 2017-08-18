@@ -84,6 +84,7 @@ public class ActionPolicyController extends RestrictedBaseController{
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
+				LOGGER.error(e.getMessage(),e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);

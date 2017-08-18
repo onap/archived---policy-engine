@@ -32,6 +32,7 @@ import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyEngine;
 import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.api.PolicyType;
+import org.slf4j.Logger;
 
 public class ConfigBasePolicyClient{
 	static Boolean isEdit = false;
@@ -85,6 +86,8 @@ public class ConfigBasePolicyClient{
                 System.out.println("Error! " + response.getResponseMessage());
             }
         } catch (Exception e) {
+        	Logger l = null;
+        	l.error(e.getMessage(), e);
             System.err.println(e.getMessage());
         }
 	}

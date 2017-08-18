@@ -20,6 +20,7 @@
 
 package org.onap.policy.std;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -29,12 +30,14 @@ import org.onap.policy.api.UpdateType;
 import org.onap.policy.std.StdLoadedPolicy;
 import org.onap.policy.std.StdPDPNotification;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class NotificationUnMarshal {
 	private static StdPDPNotification notification;
 	
-	public static StdPDPNotification notificationJSON(String json) throws Exception{
+	public static StdPDPNotification notificationJSON(String json) throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		notification = mapper.readValue(json, StdPDPNotification.class);
 		if(notification!=null){

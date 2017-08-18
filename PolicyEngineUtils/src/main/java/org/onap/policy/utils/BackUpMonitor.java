@@ -40,6 +40,7 @@ import org.onap.policy.jpa.BackUpMonitorEntity;
 import org.onap.policy.std.NotificationStore;
 import org.onap.policy.std.StdPDPNotification;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonpatch.JsonPatch;
@@ -64,7 +65,7 @@ public class BackUpMonitor {
 	private static Object lock = new Object();
 	private static Object notificationLock = new Object();
 	private static BackUpHandler handler= null;
-	private EntityManager em;
+	private static EntityManager em;
 	private EntityManagerFactory emf;
 
 	/*
@@ -75,7 +76,7 @@ public class BackUpMonitor {
 		ASTRA
 	}
 
-	private BackUpMonitor(String resourceNodeName, String resourceName, Properties properties, BackUpHandler handler) throws Exception{
+	private BackUpMonitor(String resourceNodeName, String resourceName, Properties properties, BackUpHandler handler) throws Exception {
 		if(instance == null){
 			instance = this;
 		}
@@ -106,8 +107,9 @@ public class BackUpMonitor {
 	 * @param resourceName String format of the ResourceName. This needs to be Unique. 
 	 * @param properties Properties format of the properties file. 
 	 * @return BackUpMonitor instance. 
+	 * @throws Exception 
 	 */
-	public static synchronized BackUpMonitor getInstance(String resourceNodeName, String resourceName, Properties properties, BackUpHandler handler) throws Exception {
+	public static synchronized BackUpMonitor getInstance(String resourceNodeName, String resourceName, Properties properties, BackUpHandler handler) throws Exception  {
 		if(resourceNodeName==null || resourceNodeName.trim().equals("") ||resourceName==null|| resourceName.trim().equals("") || properties == null || handler==null){
 			LOGGER.error("Error while getting Instance. Please check resourceName and/or properties file");
 			return null;
@@ -161,7 +163,7 @@ public class BackUpMonitor {
 	 * 
 	 * @return Boolean flag which if True means that the operation needs to be performed(Master mode) or if false the operation is in slave mode. 
 	 */
-	public Boolean getFlag(){
+	public static Boolean getFlag(){
 		synchronized (lock) {
 			return masterFlag;
 		}
@@ -177,7 +179,7 @@ public class BackUpMonitor {
 					TimeUnit.MILLISECONDS.sleep(pingInterval);
 					checkDataBase();
 				} catch (Exception e) {
-					LOGGER.error("Error during Thread execution " + e.getMessage());
+					LOGGER.error("Error during Thread execution " + e.getMessage(),e);
 				}
 			}
 		}
@@ -198,7 +200,7 @@ public class BackUpMonitor {
 	}
 
 	// Check Database and set the Flag. 
-	private void checkDataBase() throws Exception {
+	private static void checkDataBase() throws JsonProcessingException {
 		EntityTransaction et = em.getTransaction();
 		notificationRecord = PolicyUtils.objectToJsonString(NotificationStore.getNotificationRecord());
 		// Clear Cache. 
@@ -351,12 +353,16 @@ public class BackUpMonitor {
 			if(et.isActive()){
 				et.rollback();
 			}
-			throw new Exception(e);
+			try {
+				throw new Exception(e);
+			} catch (Exception e1) {
+				LOGGER.error("failed Database Operation " + e.getMessage(),e);
+			}
 		}
 	}
 
 	// Calculate Patch and return String JsonPatch of the notification Delta. 
-	private synchronized String calculatePatch(String oldNotificationRecord) {
+	private synchronized static String calculatePatch(String oldNotificationRecord) {
 		try{
 			JsonNode notification = JsonLoader.fromString(notificationRecord);
 			JsonNode oldNotification = JsonLoader.fromString(oldNotificationRecord);
@@ -368,11 +374,11 @@ public class BackUpMonitor {
 				LOGGER.info("Generated New Notification is : " + patched.toString());
 				return patched.toString();
 			} catch (JsonPatchException e) {
-				LOGGER.error("Error generating Patched "  +e.getMessage());
+				LOGGER.error("Error generating Patched "  +e.getMessage(),e);
 				return null;
 			}
 		}catch(IOException e){
-			LOGGER.error("Error generating Patched "  +e.getMessage());
+			LOGGER.error("Error generating Patched "  +e.getMessage(),e);
 			return null;
 		}
 	}
@@ -381,9 +387,10 @@ public class BackUpMonitor {
 	 * Updates Notification in the Database while Performing the health check. 
 	 * 
 	 * @param notification String format of notification record to store in the Database. 
+	 * @throws JsonProcessingException 
 	 * @throws Exception 
 	 */
-	public synchronized void updateNotification() throws Exception{
+	public synchronized void updateNotification() throws JsonProcessingException {
 		checkDataBase();
 	}
 
@@ -398,11 +405,12 @@ public class BackUpMonitor {
 						handler.runOnNotification(notificationObject);
 						notificationRecord = lastMasterNotification;
 					}catch (Exception e){
-						LOGGER.error("Error in Clients Handler Object : " + e.getMessage());
+						LOGGER.error("Error in Clients Handler Object : " + e.getMessage(),e);
 					}
 				}
 			} catch (IOException e) {
 				LOGGER.info("Error while notification Conversion " + e.getMessage());
+				LOGGER.error(e);
 			}
 		}
 	}

@@ -54,7 +54,7 @@ public class BRMSGateway {
 		try{
 			bRMSHandler = new BRMSHandler(configFile);
 		}catch(NullPointerException e){
-			logger.error("Check your property file: " + e.getMessage());
+			logger.error("Check your property file: " + e.getMessage(),e);
 			System.exit(1);
 		}
 		
@@ -63,7 +63,7 @@ public class BRMSGateway {
 			logger.info("Initializing policyEngine with Auto Notifications");
 			policyEngine= new PolicyEngine(configFile,NotificationScheme.AUTO_ALL_NOTIFICATIONS, bRMSHandler);
 		}catch(Exception e){
-			logger.error(XACMLErrorConstants.ERROR_UNKNOWN+"Error while Initializing Policy Engine "  + e.getMessage()); 
+			logger.error(XACMLErrorConstants.ERROR_UNKNOWN+"Error while Initializing Policy Engine "  + e.getMessage(),e); 
 		}
 		
 		//Keep Running.... 
@@ -73,7 +73,12 @@ public class BRMSGateway {
 					try {
 						Thread.sleep(30000);
 					} catch (InterruptedException e) {
-						logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR+"Thread Exception " + e.getMessage()); 
+						logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR+"Thread Exception " + e.getMessage());
+						try {
+							throw e;
+						} catch (InterruptedException e1) {
+							logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR+"Thread Exception " + e.getMessage());
+						}
 					}
 				}
 			}

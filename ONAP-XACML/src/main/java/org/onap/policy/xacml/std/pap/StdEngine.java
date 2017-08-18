@@ -46,6 +46,7 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
+import org.slf4j.Logger;
 
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDP;
@@ -69,10 +70,10 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 
 	private static Log	logger	= LogFactory.getLog(StdEngine.class);
 
-	public static String	PROP_PAP_REPO = "xacml.pap.pdps";
-	public static String	PROP_PAP_GROUPS = "xacml.pap.groups";
-	public static String	PROP_PAP_GROUPS_DEFAULT = "xacml.pap.groups.default";
-	public static String	PROP_PAP_GROUPS_DEFAULT_NAME = "default";
+	public static final String	PROP_PAP_REPO = "xacml.pap.pdps";
+	public static final String	PROP_PAP_GROUPS = "xacml.pap.groups";
+	public static final String	PROP_PAP_GROUPS_DEFAULT = "xacml.pap.groups.default";
+	public static final String	PROP_PAP_GROUPS_DEFAULT_NAME = "default";
 	//this value will be accessed from XacmlPapServlet so that we know if a default group did not exist
 	//and was just added. This way, we can add the new group to the database.
 	public boolean wasDefaultGroupJustAdded = false;
@@ -892,6 +893,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 			try {
 				((StdPDPGroup)group).saveGroupConfiguration();
 			} catch (IOException e) {
+				Logger logger = null;
+				logger.error(e.getMessage(), e);
 				throw new PAPException("Unable to save new configuration for '" + group.getName() + "': " + e.getMessage());
 			}
 			// update the group in the set by simply replacing the old instance with the new one
@@ -929,6 +932,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 			try {
 				((StdPDPGroup)group).saveGroupConfiguration();
 			} catch (IOException e) {
+				Logger logger = null;
+				logger.error(e.getMessage(), e);
 				throw new PAPException("Unable to save new configuration for '" + group.getName() + "': " + e.getMessage());
 			}
 			

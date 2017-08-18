@@ -52,7 +52,7 @@ public class XacmlAdminAuthorization {
 		return userId;
 	}
 
-	public void setUserId(UserInfo userId) {
+	public static void setUserId(UserInfo userId) {
 		XacmlAdminAuthorization.userId = userId;
 	}
 

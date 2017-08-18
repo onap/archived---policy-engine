@@ -41,6 +41,7 @@ import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyEngine;
 import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.api.PolicyType;
+import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class ClosedLoopPolicyClient {
 	//For updating a ClosedLoop_Fault policy set the "isEdit" flag to true.   
@@ -119,6 +120,8 @@ public class ClosedLoopPolicyClient {
 					System.out.println("Error! " + response.getResponseMessage());
 				}
 			} catch (Exception e) {
+				Logger l = null;
+				l.error(e);
 				System.err.println(e.getMessage());
 			}
 		}

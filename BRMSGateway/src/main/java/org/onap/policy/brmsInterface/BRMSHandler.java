@@ -91,7 +91,7 @@ public class BRMSHandler implements BackUpHandler{
 					bRMSPush.removeRule(removedPolicy.getPolicyName());
 					removed = true;
 				}catch(Exception e){
-					logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Rertriving policy failed " + e.getMessage());
+					logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Rertriving policy failed " + e.getMessage(),e);
 				}
 			}
 		}
@@ -103,7 +103,10 @@ public class BRMSHandler implements BackUpHandler{
 				try{
 					bRMSPush.pushRules();
 				}catch(PolicyException e){
+					
 					//Upon Notification failure 
+					String msg = e.getMessage();
+					logger.error(msg ,e);
 					failureFlag = true;
 					bRMSPush.rotateURLs();
 				}
@@ -136,6 +139,8 @@ public class BRMSHandler implements BackUpHandler{
 					successFlag = true;
 				}catch(PolicyException e){
 					//Upon Notification failure 
+					String msg = e.getMessage();
+					logger.error(msg ,e);
 					successFlag = false;
 					bRMSPush.rotateURLs();
 				}
@@ -171,7 +176,7 @@ public class BRMSHandler implements BackUpHandler{
 						}
 					}
 				}catch(Exception e){
-					logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Rertriving policy failed " + e.getMessage());
+					logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Rertriving policy failed " + e.getMessage(),e);
 				}
 			}
 		}

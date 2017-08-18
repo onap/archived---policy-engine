@@ -28,6 +28,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -37,7 +38,9 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,7 +52,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -217,10 +223,11 @@ public class PolicyDBDao {
 		try{
 			em.getTransaction().commit();
 		} catch(Exception e){
+			logger.error(e);
 			try{
 				em.getTransaction().rollback();
 			} catch(Exception e2){
-
+				logger.error(e2);
 			}
 		}
 		em.close();
@@ -323,15 +330,17 @@ public class PolicyDBDao {
 		return urlUserPass;
 	}
 
-	private static String encryptPassword(String password) throws Exception{
-		Cipher cipher = Cipher.getInstance("AES");		
-		cipher.init(Cipher.ENCRYPT_MODE, aesKey());
-		byte[] encryption = cipher.doFinal(password.getBytes("UTF-8"));
+	private static String encryptPassword(String password) throws InvalidKeyException,NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException{
+		Cipher cipher;
+			cipher = Cipher.getInstance("AES");
+			cipher.init(Cipher.ENCRYPT_MODE, aesKey());
+		byte[] encryption;
+			encryption = cipher.doFinal(password.getBytes("UTF-8"));
 		System.out.println(encryption);
-		return new String(Base64.getMimeEncoder().encode(encryption),"UTF-8");
+			return new String(Base64.getMimeEncoder().encode(encryption),"UTF-8");
 	}
 
-	private static String decryptPassword(String encryptedPassword) throws Exception{
+	private static String decryptPassword(String encryptedPassword) throws InvalidKeyException,NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException{
 		Cipher cipher = Cipher.getInstance("AES");
 		cipher.init(Cipher.DECRYPT_MODE, aesKey());
 		byte[] password = cipher.doFinal(Base64.getDecoder().decode(encryptedPassword.getBytes("UTF-8")));
@@ -390,11 +399,13 @@ public class PolicyDBDao {
 			try{
 				newPolicyDBDaoEntity.setPassword(encryptPassword(url[2]));
 			} catch(Exception e){
+				logger.error(e);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not encrypt PAP password");
 			}
 			try{
 				em.getTransaction().commit();
 			} catch(Exception e){
+				logger.error(e);
 				try{
 					em.getTransaction().rollback();
 				} catch(Exception e2){
@@ -480,6 +491,7 @@ public class PolicyDBDao {
 			try{
 				password = decryptPassword(dbdEntity.getPassword());
 			} catch(Exception e){
+				logger.error(e);
 				//if we can't decrypt, might as well try it anyway
 				password = dbdEntity.getPassword();
 			}
@@ -499,6 +511,7 @@ public class PolicyDBDao {
 				try{
 					ourUrl = splitPapUrlUserPass((String)o)[0];
 				}catch(Exception e){
+					logger.error(e);
 					ourUrl = o;
 				}
 				if(o == null){
@@ -524,6 +537,7 @@ public class PolicyDBDao {
 			try {
 				connection = (HttpURLConnection)url.openConnection();
 			} catch (Exception e) {
+				logger.error(e);
 				logger.warn("Caught exception on: url.openConnection()",e);
 				return;
 			}
@@ -546,6 +560,7 @@ public class PolicyDBDao {
 				readTimeout = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_NOTIFY_TIMEOUT));
 
 			} catch(Exception e){
+				logger.error(e);
 				logger.error("xacml.rest.pap.notify.timeoutms property not set, using a default.");
 				readTimeout = 10000;
 			}
@@ -647,6 +662,7 @@ public class PolicyDBDao {
 				try{
 					Thread.sleep(pauseBetweenRetries);
 				}catch(InterruptedException ie){
+					logger.error(ie);
 					break;
 				}
 			}
@@ -662,6 +678,7 @@ public class PolicyDBDao {
 				try{
 					Thread.sleep(pauseBetweenRetries);
 				}catch(InterruptedException ie){
+					logger.error(ie);
 					break;
 				}
 			}
@@ -677,6 +694,7 @@ public class PolicyDBDao {
 				try{
 					Thread.sleep(pauseBetweenRetries);
 				}catch(InterruptedException ie){
+					logger.error(ie);
 					break;
 				}
 			}
@@ -866,6 +884,7 @@ public class PolicyDBDao {
                 throw new Exception();
             }
         } catch(Exception e){
+        	logger.error(e);
             nameAndVersion[0] = originalPolicyName;         
         }
         try{
@@ -874,6 +893,7 @@ public class PolicyDBDao {
                 throw new Exception();
             }
         } catch(Exception e){
+        	logger.error(e);
             nameAndVersion[1] = "1";
         }
         return nameAndVersion;
@@ -1335,6 +1355,7 @@ public class PolicyDBDao {
 				try{
 					startTransactionSynced(this.em,transactionWaitTime);
 				} catch(Exception e){
+					logger.error(e);
 					throw new PersistenceException("Could not lock transaction within "+transactionWaitTime+" milliseconds");
 				}
 			}
@@ -1356,6 +1377,7 @@ public class PolicyDBDao {
 					try {
 						Thread.sleep(sleepTime);
 					} catch (InterruptedException e) {
+						logger.error(e);
 						//probably, the transaction was completed, the last thing we want to do is roll back
 						if(logger.isDebugEnabled()){
 							Date date= new java.util.Date();
@@ -1483,6 +1505,7 @@ public class PolicyDBDao {
 					try{
 						em.close();
 					}catch(Exception e){
+						logger.error(e);
 						logger.warn("Could not close already closed transaction");
 					}
 				}
@@ -2076,7 +2099,7 @@ public class PolicyDBDao {
 			try{
 				configPath = Paths.get(configPath).toString();
 			} catch(InvalidPathException e){
-				logger.error("Invalid config path: "+configPath);
+				logger.error("Invalid config path: "+configPath,e);
 				throw new IllegalArgumentException("Invalid config path: "+configPath);
 			}
 			return configPath;
@@ -2720,6 +2743,7 @@ public class PolicyDBDao {
 	                }
 	            }
 	            }catch(Exception e){
+	            	logger.error(e);
 	                PolicyLogger.error("Could not delete old versions for policy "+policy.getPolicyName()+", ID: "+policy.getPolicyId());
 	            }
 				group.addPolicyToGroup(policy);
@@ -2781,10 +2805,10 @@ public class PolicyDBDao {
 		String computeScope(String fullPath, String pathToExclude){
 			return PolicyDBDao.computeScope(fullPath, pathToExclude);
 		}
-		String encryptPassword(String password) throws Exception{
+		String encryptPassword(String password) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException {
 			return PolicyDBDao.encryptPassword(password);
 		}
-		String decryptPassword(String password) throws Exception{
+		String decryptPassword(String password) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException {
 			return PolicyDBDao.decryptPassword(password);
 		}
 		String getDescriptionFromXacml(String xacmlData){

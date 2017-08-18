@@ -74,7 +74,7 @@ public class APIRequestHandler {
 		}
 	}
 
-	public void doDelete(HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext, String apiflag) throws Exception {
+	public void doDelete(HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext, String apiflag) throws Exception  {
 		DeleteHandler deleteHandler = DeleteHandler.getInstance();
 		if ("deletePapApi".equalsIgnoreCase(apiflag)) {
 			deleteHandler.doAPIDeleteFromPAP(request, response, loggingContext);

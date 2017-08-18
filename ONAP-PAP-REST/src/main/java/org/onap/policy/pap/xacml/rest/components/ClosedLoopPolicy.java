@@ -80,7 +80,7 @@ public class ClosedLoopPolicy extends Policy {
 				}
 				this.policyAdapter.setJsonBody(body);
 			} catch (Exception e) {
-				LOGGER.error("Exception Occured"+e);
+				LOGGER.error("Exception Occured",e);
 			}
 
 			if(policyName.endsWith(".xml")){

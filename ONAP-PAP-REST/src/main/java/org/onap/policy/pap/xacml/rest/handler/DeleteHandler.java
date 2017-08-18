@@ -50,6 +50,7 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
+import org.slf4j.Logger;
 
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
@@ -64,7 +65,7 @@ public class DeleteHandler {
 	private static String papDbUser = null;
 	private static String papDbPassword = null;
 
-	public void doAPIDeleteFromPAP(HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext) throws Exception {
+	public static void doAPIDeleteFromPAP(HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext) throws IOException, SQLException  {
 		// get the request content into a String
 		String json = null;
 		java.util.Scanner scanner = new java.util.Scanner(request.getInputStream());
@@ -188,6 +189,8 @@ public class DeleteHandler {
 								policyVersionDeleted = true;
 								em.remove(pVersion);
 							}catch(Exception e){
+								Logger l = null;
+								l.error(e.getMessage(),e);
 								policyVersionDeleted = false;
 							}
 						}
@@ -228,6 +231,8 @@ public class DeleteHandler {
 									policyVersionDeleted = true;
 									em.persist(pVersion);
 								}catch(Exception e){
+									Logger l = null;
+									l.error(e.getMessage(),e);
 									policyVersionDeleted = false;
 								}
 							}else{
@@ -235,6 +240,8 @@ public class DeleteHandler {
 									policyVersionDeleted = true;
 									em.remove(pVersion);
 								}catch(Exception e){
+									Logger l = null;
+									l.error(e.getMessage(),e);
 									policyVersionDeleted = false;
 								}
 							}
@@ -274,7 +281,7 @@ public class DeleteHandler {
 		}
 	}
 	
-	public String deletePolicyEntityData(EntityManager em, PolicyEntity policyEntity) throws SQLException{
+	public static String deletePolicyEntityData(EntityManager em, PolicyEntity policyEntity) throws SQLException{
 		PolicyElasticSearchController controller = new PolicyElasticSearchController();
 		PolicyRestAdapter policyData = new PolicyRestAdapter();
 		String policyName = policyEntity.getPolicyName();
@@ -289,12 +296,14 @@ public class DeleteHandler {
 			controller.deleteElk(policyData);
 			em.remove(policyEntity);
 		}catch(Exception e){
+			Logger l = null;
+			l.error(e.getMessage(),e);
 			return "error";
 		}
 		return "success";
 	}
 	
-	public boolean checkPolicyGroupEntity(EntityManager em, Connection con, List<?> peResult) throws SQLException{
+	public static boolean checkPolicyGroupEntity(EntityManager em, Connection con, List<?> peResult) throws SQLException{
 		for(Object peData : peResult){
 			PolicyEntity policyEntity = (PolicyEntity) peData;
 			Statement st = null;
@@ -469,6 +478,8 @@ public class DeleteHandler {
 			DeleteHandler instance = (DeleteHandler) deleteHandler.newInstance(); 
 			return instance;
 		} catch (Exception e) {
+			Logger l = null;
+			l.error(e.getMessage(),e);
 			PolicyLogger.error(e.getMessage());
 		}
 		return null;

@@ -24,6 +24,7 @@ import org.onap.policy.api.DeletePolicyCondition;
 import org.onap.policy.api.DeletePolicyParameters;
 import org.onap.policy.api.PolicyChangeResponse;
 import org.onap.policy.api.PolicyEngine;
+import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class DeletePolicyClient {
 
@@ -52,6 +53,8 @@ public class DeletePolicyClient {
             }
 
 		} catch (Exception e) {
+			Logger l = null;
+			l.error(e);
 			System.err.println(e.getMessage());		
 			
 		}

@@ -34,11 +34,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.components.CreateBRMSRuleTemplate;
 import org.onap.policy.pap.xacml.rest.components.CreateNewMicroServiceModel;
+import org.onap.policy.pap.xacml.rest.model.PDPPolicyContainer;
 
 public class ImportService {
-
+	private static Logger logger	= FlexLogger.getLogger(ImportService.class);
 	public void doImportMicroServicePut(HttpServletRequest request, HttpServletResponse response) {
 		String importServiceCreation = request.getParameter("importService");;
 		String fileName = request.getParameter("fileName");
@@ -55,6 +58,7 @@ public class ImportService {
 				    builder.append((char)ch);
 				}
 			} catch (IOException e) {
+				logger.error(e);
 				PolicyLogger.error("Error in reading in file from API call");
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				response.addHeader("error", "missing");	
@@ -82,6 +86,7 @@ public class ImportService {
 						xmi =  scanner.hasNext() ? scanner.next() : "";
 						scanner.close();
 					} catch (IOException e1) {
+						logger.error(e1);
 						PolicyLogger.error("Error in reading in file from API call");
 						return;
 					}
@@ -90,6 +95,7 @@ public class ImportService {
 							new FileOutputStream("ExtractDir" + File.separator + randomID+".xmi"), "utf-8"))) {
 						writer.write(xmi);
 					} catch (IOException e) {
+						logger.error(e);
 						PolicyLogger.error("Error in reading in file from API call");
 						return;
 					}

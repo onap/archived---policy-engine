@@ -63,6 +63,7 @@ public class PolicyEngineImportService {
                 } catch (IllegalArgumentException e) {
                     requestUUID = UUID.randomUUID();
                     LOGGER.info("Generated Random UUID: " + requestUUID.toString());
+                    LOGGER.error(e);
                 }
             }else{
                 requestUUID = UUID.randomUUID();

@@ -180,10 +180,13 @@ public class ConfigPolicy extends Policy {
 			reader.setErrorHandler(new XMLErrorHandler());
 			reader.parse(new InputSource(new StringReader(data)));
 		} catch (ParserConfigurationException e) {
+			LOGGER.error(e);
 			return false;
 		} catch (SAXException e) {
+			LOGGER.error(e);
 			return false;
 		} catch (IOException e) {
+			LOGGER.error(e);
 			return false;
 		}
 		return true;

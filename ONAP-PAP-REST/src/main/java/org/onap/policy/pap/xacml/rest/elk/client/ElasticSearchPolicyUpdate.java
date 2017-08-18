@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class ElasticSearchPolicyUpdate {
 								+ elkURL + ":"+ databseUrl + ":"+ userName + ":"+ password + ":"+ databaseDriver + ":");
 					}
 				} catch (Exception e) {
-					LOGGER.error("Config File doesn't Exist in the specified Path " + file.toString());
+					LOGGER.error("Config File doesn't Exist in the specified Path " + file.toString(),e);
 				} 
 			}
 		}
@@ -168,9 +169,11 @@ public class ElasticSearchPolicyUpdate {
 				
 				if(!"decision".equals(_type)){
 					if(configurationdataid != null){
-						String configEntityQuery = "Select * from ConfigurationDataEntity where configurationDataId = "+configurationdataid+"";
-						Statement configstmt = conn.createStatement();
-						ResultSet configResult = configstmt.executeQuery(configEntityQuery);
+						String configEntityQuery = "Select * from ConfigurationDataEntity where configurationDataId = ?";
+						PreparedStatement pstmt = null;
+						pstmt = conn.prepareStatement(configEntityQuery);
+					    pstmt.setString(1, configurationdataid);
+						ResultSet configResult = pstmt.executeQuery();
 						while(configResult.next()){
 							String configBody = configResult.getString("configbody");
 							String configType = configResult.getString("configtype");
@@ -187,9 +190,11 @@ public class ElasticSearchPolicyUpdate {
 					}
 					
 					if(actionbodyid != null){
-						String actionEntityQuery = "Select * from ActionBodyEntity where actionBodyId = "+actionbodyid+"";
-						Statement actionstmt = conn.createStatement();
-						ResultSet actionResult = actionstmt.executeQuery(actionEntityQuery);
+						String actionEntityQuery = "Select * from ActionBodyEntity where actionBodyId = ?";
+						PreparedStatement pstmt = null;
+						pstmt = conn.prepareStatement(actionEntityQuery);
+					    pstmt.setString(1, actionbodyid);
+						ResultSet actionResult = pstmt.executeQuery();
 						while(actionResult.next()){
 							String actionBody = actionResult.getString("actionbody");
 							policyDataString.append("\"jsonBodyData\":"+actionBody+",");
@@ -212,6 +217,7 @@ public class ElasticSearchPolicyUpdate {
 					Gson gson = new Gson();
 					gson.fromJson(dataString, Object.class);
 				}catch(Exception e){
+					LOGGER.error(e);
 					continue;
 				}
 				

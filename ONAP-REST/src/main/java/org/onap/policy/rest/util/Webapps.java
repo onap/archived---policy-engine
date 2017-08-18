@@ -63,7 +63,7 @@ public class Webapps {
 		return actionHome;
 	}
 	
-	private static void loadWebapps() throws Exception{
+	private static void loadWebapps() throws Exception {
 		String errorMessageName = "Invalid Webapps Path Location property :";
 		if(actionHome == null || configHome == null){
 			Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));

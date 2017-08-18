@@ -341,7 +341,7 @@ public class PolicyController extends RestrictedBaseController {
 		return papEngine;
 	}
 
-	public void setPapEngine(PAPPolicyEngine papEngine) {
+	public static void setPapEngine(PAPPolicyEngine papEngine) {
 		PolicyController.papEngine = papEngine;
 	}
 

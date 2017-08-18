@@ -21,6 +21,7 @@ package org.onap.policy.pdp.rest.api.services;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -37,6 +38,7 @@ import javax.json.JsonReader;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -65,6 +67,7 @@ import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.Response;
 import com.att.research.xacml.api.Result;
 import com.att.research.xacml.api.pdp.PDPEngine;
+import com.att.research.xacml.api.pdp.PDPException;
 import com.att.research.xacml.std.json.JSONRequest;
 import com.att.research.xacml.std.json.JSONResponse;
 import com.att.research.xacml.util.XACMLProperties;
@@ -333,7 +336,7 @@ public class PDPServices {
     	return treatment;
     }
 
-    private PDPResponse configCall(String pdpConfigLocation) throws Exception{
+    private PDPResponse configCall(String pdpConfigLocation) throws ParserConfigurationException,IOException, MalformedURLException, FileNotFoundException, Exception  {
         PDPResponse pdpResponse = new PDPResponse();
         if(pdpConfigLocation.contains("/")){
             pdpConfigLocation = pdpConfigLocation.replace("/", File.separator);
@@ -366,7 +369,7 @@ public class PDPServices {
                         pdpResponse.setConfig(writer.toString());
                     } catch (Exception e) {
                         LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID+ e);
-                        throw new Exception(XACMLErrorConstants.ERROR_SCHEMA_INVALID+ "Unable to parse the XML config", e);
+							throw new Exception(XACMLErrorConstants.ERROR_SCHEMA_INVALID+ "Unable to parse the XML config", e);
                     }
                 } else if (pdpConfigLocation.endsWith("properties")) {
                     pdpResponse.setType(PolicyType.PROPERTIES);
@@ -396,21 +399,23 @@ public class PDPServices {
                 return pdpResponse;
             } catch (IOException e) {
                 LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-                throw new Exception(XACMLErrorConstants.ERROR_PROCESS_FLOW +
-                        "Cannot open a connection to the configURL", e);
+					throw new Exception(XACMLErrorConstants.ERROR_PROCESS_FLOW +
+					        "Cannot open a connection to the configURL", e);
             }
-        } catch (MalformedURLException e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
-            throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error in ConfigURL", e);
         }finally{
         	if(inputStream != null){
-            	inputStream.close();
+            	try {
+					inputStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         	}
         }
     }
 
     private Response callPDP(Request request,
-            UUID requestID) throws Exception{
+            UUID requestID) throws PDPException, Exception {
         Response response = null;
         // Get the PDPEngine
         if (requestID == null) {
@@ -426,13 +431,8 @@ public class PDPServices {
             return response;
         }
         // call the PDPEngine to decide and give the response on the Request.
-        try {
             response = pdpEngine.decide(request);
             LOGGER.info("Response from the PDP is: \n" + JSONResponse.toString(response));
-        } catch (Exception e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-            return null;
-        }
         return response;
     }
 

@@ -19,6 +19,7 @@
  */
 package org.onap.policy.xacml.std.pap;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +30,7 @@ import com.att.research.xacml.api.pap.PDPPIPConfig;
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class StdPDPGroupStatus implements PDPGroupStatus {
+public class StdPDPGroupStatus implements PDPGroupStatus,Serializable {
 	
 	private Status status = Status.UNKNOWN;
 	

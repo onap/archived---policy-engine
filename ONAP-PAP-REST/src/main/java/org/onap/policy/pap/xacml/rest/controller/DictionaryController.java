@@ -20,7 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -122,7 +124,7 @@ public class DictionaryController {
 	}
 	
 	@RequestMapping(value={"/attribute_dictionary/save_attribute"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -248,7 +250,7 @@ public class DictionaryController {
 	}
 
 	@RequestMapping(value={"/attribute_dictionary/remove_attribute"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeAttributeDictionary(HttpServletRequest request, HttpServletResponse response)throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -312,7 +314,7 @@ public class DictionaryController {
 	}
 
 	@RequestMapping(value={"/onap_dictionary/save_onapName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -402,7 +404,7 @@ public class DictionaryController {
 	}
 
 	@RequestMapping(value={"/onap_dictionary/remove_onap"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

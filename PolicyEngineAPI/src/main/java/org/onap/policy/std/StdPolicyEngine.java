@@ -110,8 +110,8 @@ public class StdPolicyEngine {
 	private static final String ERROR_AUTH_GET_PERM = "You are not allowed to Make this Request. Please contact PolicyAdmin to give access to: ";
 	private static final String DEFAULT_NOTIFICATION = "websocket";
 	
-	private String propertyFilePath = null;
-	private String clientEncoding = null;
+	private static String propertyFilePath = null;
+	private static String clientEncoding = null;
 	private String contentType = null;
 	private static List<String> pdps = null;
 	private static String environment= null; 
@@ -119,10 +119,10 @@ public class StdPolicyEngine {
 	private static String pass = null; 
 	private static List<String> encoding = null;
 	private static boolean junit = false;
-	private List<String> pdpDefault = null;
-	private List<String> typeDefault = null;
-	private List<String> notificationType = new ArrayList<String>();
-	private List<String> notificationURLList = new ArrayList<String>();
+	private static List<String> pdpDefault = null;
+	private static List<String> typeDefault = null;
+	private static List<String> notificationType = new ArrayList<String>();
+	private static List<String> notificationURLList = new ArrayList<String>();
 	private NotificationScheme scheme = null;
 	private NotificationHandler handler = null;
 	private AutoClientUEB uebClientThread = null;
@@ -131,9 +131,9 @@ public class StdPolicyEngine {
 	private AutoClientDMAAP dmaapClientThread = null;
 	private Thread registerDMAAPThread = null;
 	private boolean dmaapThread = false;
-	private String topic = null;
-	private String apiKey = null;
-	private String apiSecret = null;
+	private static String topic = null;
+	private static String apiKey = null;
+	private static String apiSecret = null;
 
 	private static final String UNIQUEID = UUID.randomUUID ().toString ();
 	private static final Logger LOGGER = FlexLogger.getLogger(StdPolicyConfig.class.getName());
@@ -666,6 +666,7 @@ public class StdPolicyEngine {
             LOGGER.info("StoreMatch failed for Onap:"
                     + match.getOnapName() + " Config: "
                     + match.getConfigName());
+            LOGGER.error(e);
         }
     }
 
@@ -733,7 +734,7 @@ public class StdPolicyEngine {
         return headers;
     }
 
-    private void setClientEncoding() {
+    private static void setClientEncoding() {
         Base64.Encoder encoder = Base64.getEncoder();
         clientEncoding = encoder.encodeToString((userName+":"+pass).getBytes(StandardCharsets.UTF_8));
     }
@@ -803,10 +804,10 @@ public class StdPolicyEngine {
         return eventResult;
     }
 
-	private void setProperty(String propertyFilePath, String clientKey)
+	private static void setProperty(String propertyFilePath1, String clientKey)
 			throws PolicyEngineException {
-		this.propertyFilePath = propertyFilePath;
-		if (this.propertyFilePath == null) {
+		propertyFilePath = propertyFilePath1;
+		if (propertyFilePath == null) {
 			throw new PolicyEngineException(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error NO PropertyFile Path provided");
 		} else {
 			// Adding logic for remote Properties file.
@@ -889,7 +890,7 @@ public class StdPolicyEngine {
 				try {
 					clientKey = PolicyUtils.decode(clientKey);
 				} catch (UnsupportedEncodingException|IllegalArgumentException e) {
-					LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS+" Cannot Decode the given Password Proceeding with given Password!!");
+					LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS+" Cannot Decode the given Password Proceeding with given Password!!",e);
 				}
 			}
 			if(clientID ==null || clientKey == null || clientID.isEmpty() || clientKey.isEmpty()){
@@ -957,7 +958,7 @@ public class StdPolicyEngine {
 	/*
 	 * Read the PDP_URL parameter
 	 */
-	private void readPDPParam(String pdpVal) throws PolicyEngineException{
+	private static void readPDPParam(String pdpVal) throws PolicyEngineException{
 		if(pdpVal.contains(",")){
 			List<String> pdpValues = new ArrayList<String>(Arrays.asList(pdpVal.split("\\s*,\\s*")));
 			if(pdpValues.size()==3){
@@ -1221,12 +1222,13 @@ public class StdPolicyEngine {
 			policyParameters.setTtlDate(new SimpleDateFormat("dd-MM-yyyy").parse(ttlDate));
 		} catch (NullPointerException | ParseException e) {
 			LOGGER.warn("Error Parsing date given " + ttlDate);
+			LOGGER.error(e);
 			policyParameters.setTtlDate(null);
 		}
 		return createUpdatePolicyImpl(policyParameters, updateFlag).getResponseMessage();
 	}
 	
-	public void setClientKey(String clientKey){
+	public static void setClientKey(String clientKey){
 		if(clientKey!=null && !clientKey.isEmpty()){
 			StdPolicyEngine.pass = clientKey;
 			setClientEncoding();

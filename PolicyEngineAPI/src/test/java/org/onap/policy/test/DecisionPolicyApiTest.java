@@ -63,7 +63,7 @@ public class DecisionPolicyApiTest extends TestCase {
 	 *
 	 * @see TestCase#setUp()
 	 */
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		try {
 			policyEngine = new PolicyEngine("Test/config_pass.properties");
 		} catch (PolicyEngineException e) {
@@ -106,7 +106,7 @@ public class DecisionPolicyApiTest extends TestCase {
 	 *
 	 * @see TestCase#tearDown()
 	 */
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 		// Add additional tear down code here
 	}

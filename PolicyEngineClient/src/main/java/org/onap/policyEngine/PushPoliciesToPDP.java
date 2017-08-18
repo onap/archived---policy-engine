@@ -23,6 +23,7 @@ package org.onap.policyEngine;
 import org.onap.policy.api.PolicyChangeResponse;
 import org.onap.policy.api.PolicyEngine;
 import org.onap.policy.api.PushPolicyParameters;
+import org.slf4j.Logger;
 
 public class PushPoliciesToPDP {
 	public static void main(String[] args) {
@@ -50,6 +51,8 @@ public class PushPoliciesToPDP {
             }
 
 		} catch (Exception e) {
+			Logger l = null;
+	    	l.error(e.getMessage(),e);
 			System.err.println(e.getMessage());		
 			
 		}

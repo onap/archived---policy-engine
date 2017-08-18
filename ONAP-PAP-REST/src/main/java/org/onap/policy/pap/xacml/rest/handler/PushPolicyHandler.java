@@ -34,6 +34,7 @@ import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
+import org.slf4j.Logger;
 
 import com.att.research.xacml.util.XACMLProperties;
 
@@ -116,6 +117,8 @@ public class PushPolicyHandler {
 			PushPolicyHandler instance = (PushPolicyHandler) pushPolicyHandler.newInstance(); 
 			return instance;
 		} catch (Exception e) {
+			Logger l = null;
+			l.error(e.getMessage(),e);
 			PolicyLogger.error(e.getMessage());
 		}
 		return null;

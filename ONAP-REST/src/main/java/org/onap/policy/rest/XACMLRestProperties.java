@@ -149,7 +149,7 @@ public class XACMLRestProperties extends XACMLProperties {
 	/*
 	 * Database password
 	 */
-	public static final String PROP_PAP_DB_PASSWORD = "javax.persistence.jdbc.password";
+	public static final String PROP_PAP_DB_SECRETWORD = "javax.persistence.jdbc.password";
 	
 	/*
 	 * Time in ms which a Policy DB transaction will wait to get the transaction lock object
@@ -262,7 +262,7 @@ public class XACMLRestProperties extends XACMLProperties {
 	public static final String PROP_LOG_DB_DRIVER = "xacml.log.db.driver";
 	public static final String PROP_LOG_DB_URL = "xacml.log.db.url";
 	public static final String PROP_LOG_DB_USER = "xacml.log.db.user";
-	public static final String PROP_LOG_DB_PASSWORD = "xacml.log.db.password";
+	public static final String PROP_LOG_DB_SECRETWORD = "xacml.log.db.password";
 	/*
 	 * Value for JMX port for the PDP
 	 */

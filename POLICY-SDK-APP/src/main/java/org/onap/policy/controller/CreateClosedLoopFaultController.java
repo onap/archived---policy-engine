@@ -279,6 +279,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 					}
 				}
 			} catch(Exception e){
+				Logger l = null;
+				l.error(e.getMessage(), e);
 				return "(" + trap + ")";
 			}
 		}else{
@@ -324,7 +326,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 					attrib	= getVarbindOID(attrib);
 					attributes = attributes + "("+ URLEncoder.encode(attrib, "UTF-8")+ ")";
 				} catch (UnsupportedEncodingException e) {
-					//logger.error("Caused Exception while Encoding Varbind Dictionary Values"+e);
+					Logger logger = null;
+					logger .error("Caused Exception while Encoding Varbind Dictionary Values",e);
 				}
 			}
 		}else{
@@ -356,7 +359,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 					attrib	= getVarbindOID(attrib);
 					attributes = attributes + "("+ URLEncoder.encode(attrib, "UTF-8") + ")";
 				} catch (UnsupportedEncodingException e) {
-					//logger.error("Caused Exception while Encoding Varbind Dictionary Values"+e);
+					Logger logger = null;
+					logger.error("Caused Exception while Encoding Varbind Dictionary Values",e);
 				}
 			}
 		}
@@ -369,6 +373,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 			 varbindId = (VarbindDictionary) commonclassdao.getEntityItem(VarbindDictionary.class, "varbindName", attrib);
 			 return varbindId.getVarbindOID();
 		}catch(Exception e){
+			Logger logger = null;
+			logger.error(e.getMessage(),e);
 			return attrib;
 		}
 	}
@@ -511,6 +517,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
+				Logger logger = null;
+				logger.error(e.getMessage(), e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);

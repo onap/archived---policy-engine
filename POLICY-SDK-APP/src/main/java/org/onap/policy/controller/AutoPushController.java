@@ -67,6 +67,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -116,8 +117,7 @@ public class AutoPushController extends RestrictedBaseController{
 	}
 	
 	@RequestMapping(value={"/get_AutoPushPoliciesContainerData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getPolicyGroupContainerData(HttpServletRequest request, HttpServletResponse response){
-		try{
+	public void getPolicyGroupContainerData(HttpServletRequest request, HttpServletResponse response) throws IOException,JsonProcessingException{
 			Set<String> scopes = null;
 			List<String> roles = null;
 			data = new ArrayList<Object>();
@@ -170,15 +170,10 @@ public class AutoPushController extends RestrictedBaseController{
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			logger.error("Exception Occured"+e);
-		}
 	}
 
 	@RequestMapping(value={"/auto_Push/PushPolicyToPDP.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView PushPolicyToPDPGroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
 			ArrayList<Object> selectedPDPS = new ArrayList<>();
 			ArrayList<String> selectedPoliciesInUI = new ArrayList<>();
 			PolicyController controller = getPolicyControllerInstance();
@@ -256,7 +251,7 @@ public class AutoPushController extends RestrictedBaseController{
 						// Create the policy
 						selectedPolicy = new StdPDPPolicy(name, true, id, selectedURI);
 					} catch (IOException e) {
-						logger.error("Unable to create policy '" + name + "': "+ e.getMessage());
+						logger.error("Unable to create policy '" + name + "': "+ e.getMessage(),e);
 					}
 					StdPDPGroup selectedGroup = (StdPDPGroup) pdpDestinationGroupId;
 					if (selectedPolicy != null) {
@@ -322,13 +317,6 @@ public class AutoPushController extends RestrictedBaseController{
 				out.write(j.toString());      
 				return null;
 			}
-		}
-		catch (Exception e){
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
-			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
-		}
 		return null;
 	}
 
@@ -377,6 +365,7 @@ public class AutoPushController extends RestrictedBaseController{
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
