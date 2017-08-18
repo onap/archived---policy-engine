@@ -44,6 +44,7 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPItemSetChangeNotifier.StdItemSetChangeListener;
+import org.slf4j.Logger;
 
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDP;
@@ -187,6 +188,8 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 			try (OutputStream os = Files.newOutputStream(file)) {
 				policyProperties.store(os, "");
 			} catch (Exception e) {
+				Logger l = null;
+				l.error(e.getMessage(), e);
 				throw new PAPException("Failed to create new default policy properties file '" + file +"'");
 			}
 		} else {
@@ -225,12 +228,14 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 					pipProperties.store(os, "");
 				}
 			} catch (Exception e) {
+				logger.error(e);
 				throw new PAPException("Failed to create new default pip properties file '" + file +"'");
 			}
 			//Even if we create a new pip file, we still need to parse and load the properties
 			try{
 				this.readPIPProperties(directory, pipProperties);
 			}catch(Exception e){
+				logger.error(e);
 				throw new PAPException("Failed to load the new pip properties file");
 			}
 		} else {

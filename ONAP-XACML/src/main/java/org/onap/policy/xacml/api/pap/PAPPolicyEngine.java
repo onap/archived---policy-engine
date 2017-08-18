@@ -20,13 +20,14 @@
 package org.onap.policy.xacml.api.pap;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Set;
 
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.api.pap.PDPStatus;
 
-public interface PAPPolicyEngine{
+public interface PAPPolicyEngine extends Serializable{
 	
 	public OnapPDPGroup getDefaultGroup() throws PAPException;
 	

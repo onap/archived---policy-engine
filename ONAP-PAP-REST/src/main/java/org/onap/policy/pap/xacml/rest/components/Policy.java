@@ -276,8 +276,6 @@ public abstract class Policy {
 				fileName = policyType + "_" + "PM" + "_" +java.lang.String.format(policyFileName) + "." +version +".xml";
 			}else if(policyConfigType.equals("ClosedLoop_Fault")){
 				fileName = policyType + "_" + "Fault" + "_" +java.lang.String.format(policyFileName) +  "." + version + ".xml";
-			}else if(policyConfigType.equals("ClosedLoop_Fault")){
-				fileName = policyType + "_" + "Fault" + "_" +java.lang.String.format(policyFileName) +  "." + version + ".xml";
 			}else if(policyConfigType.equals("Micro Service")){
 				fileName = policyType + "_" + "MS" + "_" + java.lang.String.format(policyFileName) + "." + version + ".xml";
 			}
@@ -336,6 +334,7 @@ public abstract class Policy {
 		try {
 			loadWebapps();
 		} catch (Exception e) {
+			LOGGER.error(e);
 			return null;
 		}
 		return configHome;
@@ -345,12 +344,13 @@ public abstract class Policy {
 		try {
 			loadWebapps();
 		} catch (Exception e) {
+			LOGGER.error(e);
 			return null;
 		}
 		return actionHome;
 	}
 
-	private static void loadWebapps() throws Exception{
+	private static void loadWebapps() throws Exception {
 		if(actionHome == null || configHome == null){
 			Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));
 			//Sanity Check

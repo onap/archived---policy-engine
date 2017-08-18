@@ -1,5 +1,7 @@
 package org.onap.policy.utils;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Properties;
 
@@ -12,9 +14,10 @@ public interface BusConsumer {
 	 * fetch messages
 	 * 
 	 * @return list of messages
+	 * @throws IOException 
 	 * @throws Exception when error encountered by underlying libraries
 	 */
-	public Iterable<String> fetch() throws Exception;
+	public Iterable<String> fetch() throws IOException, Exception ;
 	
 	/**
 	 * close underlying library consumer
@@ -44,12 +47,13 @@ public interface BusConsumer {
 		 * @param consumerInstance Consumer Instance
 		 * @param fetchTimeout Fetch Timeout
 		 * @param fetchLimit Fetch Limit
+		 * @throws MalformedURLException 
 		 */
 		public DmaapConsumerWrapper(List<String> servers, String topic, 
 								String aafLogin, String aafPassword,
 								String consumerGroup, String consumerInstance,
-								int fetchTimeout, int fetchLimit) 
-		throws Exception {
+								int fetchTimeout, int fetchLimit) throws MalformedURLException 
+		 {
 					
 			this.consumer = new MRConsumerImpl(servers, topic, 
 											   consumerGroup, consumerInstance, 
@@ -69,8 +73,10 @@ public interface BusConsumer {
 		
 		/**
 		 * {@inheritDoc}
+		 * @throws Exception 
+		 * @throws IOException 
 		 */
-		public Iterable<String> fetch() throws Exception {
+		public Iterable<String> fetch() throws IOException, Exception {
 			return this.consumer.fetch();
 		}
 		

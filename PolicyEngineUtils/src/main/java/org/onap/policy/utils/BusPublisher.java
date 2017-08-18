@@ -6,6 +6,7 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.slf4j.Logger;
 
 import com.att.nsa.mr.client.impl.MRSimplerBatchPublisher;
 import com.att.nsa.mr.test.clients.ProtocolTypeConstants;
@@ -84,6 +85,8 @@ public interface BusPublisher {
 				PolicyLogger.warn(DmaapPublisherWrapper.class.getName(), 
 				                  "CLOSE: " + this + " because of " + 
 								  e.getMessage());
+				Logger logger = null;
+				logger.error(e.getMessage(),e);
 			}
 		}
 		

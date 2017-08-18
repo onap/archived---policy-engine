@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.slf4j.Logger;
 
 import com.att.research.xacml.util.XACMLProperties;
 
@@ -38,6 +39,8 @@ public interface DictionaryHandler {
 			DictionaryHandler instance = (DictionaryHandler) dictionaryHandler.newInstance(); 
 			return instance;
 		} catch (Exception e) {
+			Logger l = null;
+			l.error(e.getMessage(),e);
 			PolicyLogger.error(e.getMessage());
 		}
 		return null;

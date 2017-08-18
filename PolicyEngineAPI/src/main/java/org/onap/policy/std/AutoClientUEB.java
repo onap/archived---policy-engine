@@ -65,7 +65,7 @@ public class AutoClientUEB implements Runnable  {
 	       AutoClientUEB.apiKey = apiKey;
 	}
 
-	public void setAuto(NotificationScheme scheme,
+	public static void setAuto(NotificationScheme scheme,
 			NotificationHandler handler) {
 		AutoClientUEB.scheme = scheme;
 		AutoClientUEB.handler = handler;
@@ -140,6 +140,7 @@ public class AutoClientUEB implements Runnable  {
 						}
 					} catch (Exception e) {
 						logger.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Error in processing UEB message" + e.getMessage());
+						logger.error(e);
 					}
 
 				}

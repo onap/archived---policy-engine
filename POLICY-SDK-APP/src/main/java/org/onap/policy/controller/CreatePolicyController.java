@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
@@ -80,6 +81,8 @@ public class CreatePolicyController extends RestrictedBaseController{
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
+				Logger l = null;
+				l.error(e.getMessage(), e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);

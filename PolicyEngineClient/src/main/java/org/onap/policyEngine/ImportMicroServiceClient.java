@@ -24,6 +24,7 @@ import java.util.UUID;
 
 import org.onap.policy.api.ImportParameters;
 import org.onap.policy.api.ImportParameters.IMPORT_TYPE;
+import org.slf4j.Logger;
 import org.onap.policy.api.PolicyChangeResponse;
 import org.onap.policy.api.PolicyEngine;
 
@@ -46,6 +47,8 @@ public class ImportMicroServiceClient {
             System.out.println(response.getResponseMessage());
 
 	    } catch (Exception e) {
+	    	Logger l = null;
+	    	l.error(e.getMessage(),e);
 	        System.err.println(e.getMessage());
 	    }
 	}

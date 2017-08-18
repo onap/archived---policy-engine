@@ -69,6 +69,9 @@ public class ParseLogTest {
 		if(configFile.startsWith("/C:/")){
 			configFile = configFile.substring(1);
 		}
+		else if(configFile.startsWith("/D:/")){
+			configFile = configFile.substring(1);
+		}
 		testFile1 = classLoader.getResource("LineTest.txt").getFile();
 		testFile2 = classLoader.getResource("LineTest2.txt").getFile();
 		

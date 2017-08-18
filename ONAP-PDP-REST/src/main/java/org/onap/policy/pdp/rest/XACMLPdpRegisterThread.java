@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -45,7 +46,7 @@ import org.onap.policy.common.logging.ONAPLoggingContext;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.*; 
 
-public class XACMLPdpRegisterThread implements Runnable {
+public class XACMLPdpRegisterThread implements Runnable,Serializable {
 	private static final Logger LOGGER	= FlexLogger.getLogger(XACMLPdpRegisterThread.class);
 	private static final Logger auditLogger = FlexLogger.getLogger("auditLogger");
 	private ONAPLoggingContext baseLoggingContext = null;

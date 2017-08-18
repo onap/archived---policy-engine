@@ -503,7 +503,7 @@ public class ActionPolicy extends Policy {
 		return dropDownMap;
 	}
 	
-	private ActionPolicyDict getActionPolicyDict(String attributeName){
+	private static ActionPolicyDict getActionPolicyDict(String attributeName){
 		ActionPolicyDict retObj = new ActionPolicyDict();
 		EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
 		Query getActionPolicyDicts = em.createNamedQuery("ActionPolicyDict.findAll");	

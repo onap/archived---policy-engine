@@ -25,7 +25,9 @@ package org.onap.policy.controller;
  * 
  * */
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.script.SimpleBindings;
@@ -37,6 +39,7 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.WatchPolicyNotificationTable;
 import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
 import org.openecomp.portalsdk.core.web.support.UserUtils;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,7 +58,7 @@ public class PolicyNotificationController extends RestrictedBaseController {
 	CommonClassDao commonClassDao;
 	
 	@RequestMapping(value={"/watchPolicy"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView watchPolicy(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView watchPolicy(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException  {
 		String path = "";
 		String responseValue = "";
 		try {
@@ -120,6 +123,8 @@ public class PolicyNotificationController extends RestrictedBaseController {
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			Logger logger = null;
+			logger .error(e.getMessage(),e);
 		}
 		return null;
 	}

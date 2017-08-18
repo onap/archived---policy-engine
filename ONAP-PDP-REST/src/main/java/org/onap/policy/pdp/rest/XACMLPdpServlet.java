@@ -130,8 +130,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	// This thread may getting invoked on startup, to let the PAP know
 	// that we are up and running.
 	//
-	private Thread registerThread = null;
-	private XACMLPdpRegisterThread registerRunnable = null;
+	private static Thread registerThread = null;
+	private static XACMLPdpRegisterThread registerRunnable = null;
 	//
 	// This is our PDP engine pointer. There is a synchronized lock used
 	// for access to the pointer. In case we are servicing PEP requests while
@@ -176,8 +176,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	// This is our configuration thread that attempts to load
 	// a new configuration request.
 	//
-	private Thread configThread = null;
-	private volatile boolean configThreadTerminate = false;
+	private static Thread configThread = null;
+	private static volatile boolean configThreadTerminate = false;
 	private ONAPLoggingContext baseLoggingContext = null;
 	private IntegrityMonitor im;
 	/**
@@ -318,8 +318,14 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 					this.registerThread.join();
 				}
 			} catch (InterruptedException e) {
-				logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
+				logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR , e);
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "");
+				try {
+					throw e;
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 		//
@@ -330,8 +336,14 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			this.configThread.interrupt();
 			this.configThread.join();
 		} catch (InterruptedException e) {
-			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
+			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR, e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "");
+			try {
+				throw e;
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		logger.info("Destroyed.");
 	}
@@ -937,7 +949,13 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			// Read in the string
 			//
 			StringBuilder buffer = new StringBuilder();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+			BufferedReader reader = null;
+			try {
+				reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 			String line;
 			try{
 				while((line = reader.readLine()) != null){

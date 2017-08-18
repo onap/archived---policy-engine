@@ -20,7 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -282,7 +284,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/save_vsclAction"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveVSCLAction(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveVSCLAction(HttpServletRequest request, HttpServletResponse response)throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -376,7 +378,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/remove_VsclAction"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeVSCLAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeVSCLAction(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -406,7 +408,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/save_vnfType"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveVnfType(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveVnfType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -498,7 +500,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/remove_vnfType"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeVnfType(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeVnfType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -528,7 +530,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/save_pepOptions"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView savePEPOptions(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView savePEPOptions(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -639,7 +641,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/remove_pepOptions"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removePEPOptions(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removePEPOptions(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -669,7 +671,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/save_service"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveServiceType(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveServiceType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -758,7 +760,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/remove_Service"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeServiceType(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeServiceType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -788,7 +790,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/save_siteName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveSiteType(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveSiteType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -878,7 +880,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/remove_site"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeSiteType(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeSiteType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -908,7 +910,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/save_varbind"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveVarbind(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveVarbind(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -998,7 +1000,7 @@ public class ClosedLoopDictionaryController{
 	}
 
 	@RequestMapping(value={"/cl_dictionary/remove_varbindDict"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeVarbind(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeVarbind(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

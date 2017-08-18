@@ -46,6 +46,7 @@ import org.onap.policy.api.PolicyEngine;
 import org.onap.policy.api.PolicyEventException;
 import org.onap.policy.api.PolicyResponse;
 import org.onap.policy.api.RemovedPolicy;
+import org.slf4j.Logger;
 
 /**
  * Class contains static functions which make call to policy engine using API.
@@ -197,7 +198,8 @@ public class PolicyEngineTestClient {
 		try {
 			System.in.read();
 		} catch (IOException e) {
-			//
+			Logger l = null;
+	    	l.error(e.getMessage(),e);
 		}
 	}
 

@@ -130,11 +130,11 @@ public class BRMSPush {
 	private Long uebDelay = Long.parseLong("20");
 	private Long dmaapDelay = Long.parseLong("5000");
 	private String notificationType = null;
-	private ArrayList<ControllerPOJO> controllers;
-	private HashMap<String, ArrayList<Object>> groupMap = new HashMap<>();
-	private Map<String, String> policyMap = new HashMap<>();
+	private static ArrayList<ControllerPOJO> controllers;
+	private static HashMap<String, ArrayList<Object>> groupMap = new HashMap<>();
+	private static Map<String, String> policyMap = new HashMap<>();
 	private String brmsdependencyversion;
-	private EntityManager em;
+	private static EntityManager em;
 	private boolean syncFlag = false;
 
 	public BRMSPush(String propertiesFile, BackUpHandler handler) throws PolicyException{
@@ -157,7 +157,7 @@ public class BRMSPush {
 			in = new FileInputStream(file.toFile());
 			config.load(in);
 		} catch (IOException e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Data/File Read Error while reading from the property file.");
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Data/File Read Error while reading from the property file.",e);
 			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "Data/File Read Error while reading from the property file.");
 		}
 		LOGGER.info("Trying to set up IntegrityMonitor");
@@ -321,13 +321,13 @@ public class BRMSPush {
 	/**
 	 * Will Initialize the variables required for BRMSPush. 
 	 */
-	public void initiate(boolean flag) {
+	public static void initiate(boolean flag) {
 		modifiedGroups =  new HashMap<>();
 		controllers = new ArrayList<>();
 		try {
 			bm.updateNotification();
 		} catch (Exception e) {
-			LOGGER.error("Error while updating Notification: "  + e.getMessage());
+			LOGGER.error("Error while updating Notification: "  + e.getMessage(),e);
 		}
 		if(flag) syncGroupInfo();
 	}
@@ -408,7 +408,7 @@ public class BRMSPush {
 		}
 	}
 
-	private void syncGroupInfo() {
+	private static void syncGroupInfo() {
 		// Sync DB to JMemory.
 		EntityTransaction et = em.getTransaction();
 		et.begin();
@@ -525,7 +525,7 @@ public class BRMSPush {
 		    extractJar(fileName, dirName);
 		    new File(fileName).delete();
 		} catch (IOException e) {
-			LOGGER.error("Error while downloading the project to File System. " + e.getMessage());
+			LOGGER.error("Error while downloading the project to File System. " + e.getMessage(),e);
 		}
 	}
 
@@ -624,12 +624,12 @@ public class BRMSPush {
 					return resultList;
 				}
 			} catch (NexusClientException | NexusConnectionException | NullPointerException e) {
-				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Connection to remote Nexus has failed. " +e.getMessage());
+				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Connection to remote Nexus has failed. " +e.getMessage(),e);
 			} finally {
 				try {
 					client.disconnect();
 				} catch (NexusClientException | NexusConnectionException e) {
-					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "failed to disconnect Connection from Nexus." +e.getMessage());
+					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "failed to disconnect Connection from Nexus." +e.getMessage(),e);
 				}
 				if(!flag){
 					Collections.rotate(repURLs, -1);
@@ -708,7 +708,7 @@ public class BRMSPush {
 						LOGGER.error("Maven Invocation failure..!");
 					}
 				}catch(Exception e){
-					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Maven Invocation issue for "+getArtifactID(group) + e.getMessage());
+					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Maven Invocation issue for "+getArtifactID(group) + e.getMessage(),e);
 				}
 				if(result!=null && result.getExitCode()==0){
 					LOGGER.info("Build Completed..!");
@@ -800,7 +800,7 @@ public class BRMSPush {
 			LOGGER.info("Sending Notification :\n" + notificationJson);
 			sendMessage(notificationJson);
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while sending notification to PDP-D " + e.getMessage());
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while sending notification to PDP-D " + e.getMessage(),e);
 		}
 	}
 
@@ -870,7 +870,7 @@ public class BRMSPush {
 		}catch(Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
 					+ "Error while creating POM for " + getArtifactID(name)
-					+ e.getMessage());
+					+ e.getMessage(),e);
 		}finally{
 			IOUtil.close(writer);
 		}
@@ -895,7 +895,7 @@ public class BRMSPush {
 			} catch (IOException| NullPointerException e) {
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
 						+ "Error while getting dependecy Information for controller: " + controllerName
-						+ e.getMessage());
+						+ e.getMessage(),e);
 			}
 		}
 		return defaultDependencies(controllerName);
@@ -969,7 +969,7 @@ public class BRMSPush {
 		try{
 			FileUtils.writeStringToFile(new File(file), rule);
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Error while creating Rule for " + file + e.getMessage());
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Error while creating Rule for " + file + e.getMessage(),e);
 		}
 	}
 

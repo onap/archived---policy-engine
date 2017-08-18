@@ -19,6 +19,8 @@
  */
 package org.onap.policy.xacml.api.pap;
 
+import java.io.Serializable;
+
 import org.onap.policy.xacml.std.pap.StdPDP;
 
 import com.att.research.xacml.api.pap.PDP;
@@ -35,7 +37,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 	    property = "PDPType")  
 @JsonSubTypes({  
 	    @Type(value = StdPDP.class, name = "StdPDP") })  
-public interface OnapPDP extends PDP {
+public interface OnapPDP extends PDP,Serializable {
 
 	public Integer 						getJmxPort();
 	

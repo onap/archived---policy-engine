@@ -40,6 +40,7 @@ import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyEngine;
 import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.api.PolicyType;
+import org.slf4j.Logger;
 public class MicroServicesPolicyClient {
      
 //For updating a Micro Services policy set the "isEdit" flag to true.   
@@ -121,6 +122,8 @@ public static void main(String[] args) {
 				System.out.println("Error! " + response.getResponseMessage());
 			}
 		} catch (Exception e) {
+			Logger l = null;
+	    	l.error(e.getMessage(),e);
 			System.err.println(e.getMessage());
 		}
 	}

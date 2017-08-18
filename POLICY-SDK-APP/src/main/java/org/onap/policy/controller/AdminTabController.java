@@ -21,7 +21,9 @@
 package org.onap.policy.controller;
 
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,7 +88,7 @@ public class AdminTabController extends RestrictedBaseController{
 	}
 	
 	@RequestMapping(value={"/adminTabController/save_LockDownValue.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveAdminTabLockdownValue(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveAdminTabLockdownValue(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -110,7 +112,12 @@ public class AdminTabController extends RestrictedBaseController{
 		catch (Exception e){
 			LOGGER.error("Exception Occured"+e);
 			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			try {
+				request.setCharacterEncoding("UTF-8");
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}

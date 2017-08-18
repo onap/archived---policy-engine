@@ -20,7 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +77,7 @@ public class EnforcerDictionaryController {
 	}
 	
 	@RequestMapping(value={"/enforcer_dictionary/save_enforcerType"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -103,12 +105,13 @@ public class EnforcerDictionaryController {
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			LOGGER.error(e);
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/enforcer_dictionary/remove_enforcer"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

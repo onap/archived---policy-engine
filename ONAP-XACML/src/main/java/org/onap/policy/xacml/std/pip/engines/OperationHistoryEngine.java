@@ -276,12 +276,13 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 		String sql = "select count(*) as count from operationshistory10 where outcome<>'Failure_Guard' and actor=?"
 				+ " and operation=?"
 				+ " and target=?"
-				+ " and endtime between date_sub(now(),interval ? "+timeUnits+") and now()";
+				+ " and endtime between date_sub(now(),interval ? ?) and now()";
 		Query nq = em.createNativeQuery(sql);
 		nq.setParameter(1, actor);
 		nq.setParameter(2, operation);
 		nq.setParameter(3, target);
 		nq.setParameter(4, timeWindow);
+		nq.setParameter(5,timeUnits);
 		int ret = ((Number)nq.getSingleResult()).intValue();
 		LOGGER.info("###########************** History count: " + ret);
 		em.close();

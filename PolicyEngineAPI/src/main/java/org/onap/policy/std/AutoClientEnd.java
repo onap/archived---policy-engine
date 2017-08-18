@@ -136,7 +136,7 @@ public class AutoClientEnd {
 					session.close();
 					session = null;
 				} catch (IOException e) {
-					//
+					logger.error(e);
 				}
 			}
 			client = null;
@@ -182,7 +182,7 @@ public class AutoClientEnd {
 
 	// WebSockets Code..
 	@OnOpen
-	public void onOpen(Session session) throws IOException {
+	public static void onOpen(Session session) throws IOException {
 		// session.getBasicRemote().sendText("Connected to Client with Session: "
 		// + session.getId());
 		logger.debug("Auto Notification Session Started... " + session.getId());
@@ -192,7 +192,7 @@ public class AutoClientEnd {
 	}
 
 	@OnError
-	public void onError(Session session, Throwable e) {
+	public static void onError(Session session, Throwable e) {
 		// trying to Restart by self.
 		logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Session Error.. "+ session.getId() + "\n Error is : " + e );
 		// logger.error("Exception Occured"+e);
@@ -206,7 +206,7 @@ public class AutoClientEnd {
 	}
 
 	@OnClose
-	public void onClose(Session session) {
+	public static void onClose(Session session) {
 		logger.info("Session ended with "+ session.getId());
 		if(!stop && !message){
 			// This Block of code is executed if there is any Network Failure or if the Notification is Down. 
@@ -222,7 +222,7 @@ public class AutoClientEnd {
 	}
 
 	@OnMessage
-	public void onMessage(String message, Session session) throws JsonParseException, JsonMappingException, IOException {
+	public static void onMessage(String message, Session session) throws JsonParseException, JsonMappingException, IOException {
 		AutoClientEnd.message = true;
 		logger.debug("Auto Notification Recieved Message " + message + " Session info is : " + session.getId());
 		try {

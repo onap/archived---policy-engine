@@ -135,7 +135,7 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	 */
 	// @Bean // ANNOTATION COMMENTED OUT
 	// APPLICATIONS REQUIRING QUARTZ SHOULD RESTORE ANNOTATION
-	public SchedulerFactoryBean schedulerFactoryBean() throws Exception {
+	public SchedulerFactoryBean schedulerFactoryBean() throws Exception  {
 		SchedulerFactoryBean scheduler = new SchedulerFactoryBean();
 		scheduler.setTriggers(schedulerRegistryAdapter.getTriggers());
 		scheduler.setConfigLocation(appApplicationContext.getResource("WEB-INF/conf/quartz.properties"));

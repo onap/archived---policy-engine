@@ -118,7 +118,7 @@ public class ManualClientEnd {
 	}
 	
 	@OnMessage
-	public void onMessage(String message, Session session){
+	public static void onMessage(String message, Session session){
 		logger.debug(" Manual Notification Recieved Message : " + message +" Session info is : "+ session.getId());
 		resultJson = message;
 		try {

@@ -151,7 +151,7 @@ public class ManualClientEndUEB {
 						}
 					}
 				}catch (Exception e) {
-					
+					logger.error(e);
 				} 
 				count++;
 			}		

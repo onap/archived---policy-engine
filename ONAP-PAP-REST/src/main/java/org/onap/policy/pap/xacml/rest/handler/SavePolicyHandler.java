@@ -34,6 +34,7 @@ import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
+import org.slf4j.Logger;
 import org.xml.sax.SAXException;
 
 import com.att.research.xacml.util.XACMLProperties;
@@ -77,6 +78,8 @@ public class SavePolicyHandler {
 					response.addHeader("operation", "create");
 				}
 			} catch (Exception e1) {
+				Logger l = null;
+				l.error(e1.getMessage(),e1);
 				PolicyLogger.error(XACMLErrorConstants.ERROR_UNKNOWN + 
 						"Could not set data to policy adapter "+ e1.getMessage());
 			}
@@ -150,6 +153,8 @@ public class SavePolicyHandler {
 			SavePolicyHandler instance = (SavePolicyHandler) savePolicyHandler.newInstance(); 
 			return instance;
 		} catch (Exception e) {
+			Logger l = null;
+			l.error(e.getMessage(),e);
 			PolicyLogger.error(e.getMessage());
 		}
 		return null;

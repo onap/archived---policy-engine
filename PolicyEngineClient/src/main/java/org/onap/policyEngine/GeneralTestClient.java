@@ -90,7 +90,7 @@ public class GeneralTestClient {
 		try {
 			System.in.read();
 		} catch (IOException e) {
-			//
+			LOGGER.error(e);
 		}
 
 	}

@@ -20,7 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -78,7 +80,7 @@ public class ActionPolicyDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			LOGGER.error(e.getMessage());
+			LOGGER.error(e.getMessage(),e);
 		}
 	}
 
@@ -95,14 +97,14 @@ public class ActionPolicyDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			LOGGER.error(e.getMessage());
+			LOGGER.error(e.getMessage(),e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
 			response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
 
 	@RequestMapping(value={"/action_dictionary/save_ActionDict"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException   {
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -208,7 +210,7 @@ public class ActionPolicyDictionaryController {
 			}
 		}
 		catch (Exception e){
-			LOGGER.error(e.getMessage());
+			LOGGER.error(e.getMessage(),e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -218,7 +220,7 @@ public class ActionPolicyDictionaryController {
 	}
 
 	@RequestMapping(value={"/action_dictionary/remove_actionPolicyDict"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -238,7 +240,7 @@ public class ActionPolicyDictionaryController {
 			return null;
 		}
 		catch (Exception e){
-			LOGGER.error(e.getMessage());
+			LOGGER.error(e.getMessage(),e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();

@@ -54,7 +54,7 @@ public class PolicyEntityTest {
     	properties.put(XACMLRestProperties.PROP_PAP_DB_DRIVER,"org.h2.Driver");
     	properties.put(XACMLRestProperties.PROP_PAP_DB_URL, "jdbc:h2:file:./sql/xacmlTest");
     	properties.put(XACMLRestProperties.PROP_PAP_DB_USER, "sa");
-    	properties.put(XACMLRestProperties.PROP_PAP_DB_PASSWORD, "");
+    	properties.put(XACMLRestProperties.PROP_PAP_DB_SECRETWORD, "");
     	EntityManagerFactory emf = Persistence.createEntityManagerFactory("testPapPU", properties);
     	EntityManager em = emf.createEntityManager();
         // Start a transaction
