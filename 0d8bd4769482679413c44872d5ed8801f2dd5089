@@ -2,6 +2,176 @@
   "comments": [
     {
       "key": {
+        "uuid": "9a437d4f_6cdd9242",
+        "filename": "LogParser/src/test/java/org/onap/xacml/parser/ParseLogTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-18T15:58:56Z",
+      "side": 1,
+      "message": "Its better to read this configuration file from test/resources",
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_4cb9aee8",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-18T15:58:56Z",
+      "side": 1,
+      "message": "One logger is sufficient here.",
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_ec9e2263",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-18T15:58:56Z",
+      "side": 1,
+      "message": "Please remove this. Don\u0027t see any use of it.",
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_cc9b5e71",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-18T15:58:56Z",
+      "side": 1,
+      "message": "Please remove this. Don\u0027t see any use of it.",
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_4cb08ef4",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-18T15:58:56Z",
+      "side": 1,
+      "message": "use Single logger as above. \nLOGGER.info(message,ae);",
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_0ccba673",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-18T15:58:56Z",
+      "side": 1,
+      "message": "No TODO\u0027s \nand remove this printStackTrace.",
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_ecc74263",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-18T15:58:56Z",
+      "side": 1,
+      "message": "Same as above",
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_aca13aab",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-18T15:58:56Z",
+      "side": 1,
+      "message": "same as above.",
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_8c8d5634",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-18T15:58:56Z",
+      "side": 1,
+      "message": "Same here",
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_2c7c2a20",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-18T15:58:56Z",
+      "side": 1,
+      "message": "Same here and any other places.",
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a437d4f_4ce2ce04",
         "filename": "PolicyEngineClient/src/main/java/org/onap/policyEngine/BrmsRawPolicyClient.java",
         "patchSetId": 2
