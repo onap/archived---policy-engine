@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_4ce2ce04",
+        "filename": "PolicyEngineClient/src/main/java/org/onap/policyEngine/BrmsRawPolicyClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:54:10Z",
+      "side": 1,
+      "message": "this will generate a null pointer exception",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 30
+      },
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_2ce78a14",
+        "filename": "PolicyEngineClient/src/main/java/org/onap/policyEngine/ClosedLoopPolicyClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:54:10Z",
+      "side": 1,
+      "message": "this will cause a null pointer exception",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 124,
+        "endChar": 15
+      },
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_0ce4c60b",
+        "filename": "PolicyEngineClient/src/main/java/org/onap/policyEngine/ConfigBasePolicyClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:54:10Z",
+      "side": 1,
+      "message": "Null pointer exception",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 1
+      },
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_cced9ef1",
+        "filename": "PolicyEngineClient/src/main/java/org/onap/policyEngine/ConfigFirewallPolicyClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:54:10Z",
+      "side": 1,
+      "message": "null pointer exception",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 33
+      },
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_8cbf96d0",
+        "filename": "PolicyEngineClient/src/main/java/org/onap/policyEngine/DecisionPolicyClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:54:10Z",
+      "side": 1,
+      "message": "null pointer exception",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 30
+      },
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_6cb472f2",
+        "filename": "PolicyEngineClient/src/main/java/org/onap/policyEngine/DeletePolicyClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:54:10Z",
+      "side": 1,
+      "message": "null pointer exception",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 14
+      },
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_2cce6a84",
+        "filename": "PolicyEngineClient/src/main/java/org/onap/policyEngine/ImportBRMSTemplate.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:54:10Z",
+      "side": 1,
+      "message": "null pointer exception",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 32
+      },
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_ccc47e61",
+        "filename": "PolicyEngineClient/src/main/java/org/onap/policyEngine/ImportMicroServiceClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:54:10Z",
+      "side": 1,
+      "message": "null pointer exception",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 32
+      },
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_8ca676c0",
+        "filename": "PolicyEngineClient/src/main/java/org/onap/policyEngine/MicroServicesPolicyClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:54:10Z",
+      "side": 1,
+      "message": "null pointer exception",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 32
+      },
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_6cab528a",
+        "filename": "PolicyEngineClient/src/main/java/org/onap/policyEngine/PolicyEngineTestClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-18T15:54:10Z",
+      "side": 1,
+      "message": "null pointer exception",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 202,
+        "endChar": 32
+      },
+      "revId": "0d8bd4769482679413c44872d5ed8801f2dd5089",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
