@@ -22,6 +22,30 @@
       "revId": "c53fa990ea27ec074859eb94bcb7ec6deaa2157b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_e44ab6ab",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/daoimpl/CommonClassDaoImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-22T13:46:21Z",
+      "side": 0,
+      "message": "This should be fine Pam. Sonar doesn\u0027t allow us to throw exceptions from finally block. Probably better would be to catch HibernateException instead of generic Exception.",
+      "parentUuid": "9a437d4f_04f25a9a",
+      "range": {
+        "startLine": 256,
+        "startChar": 4,
+        "endLine": 256,
+        "endChar": 13
+      },
+      "revId": "c53fa990ea27ec074859eb94bcb7ec6deaa2157b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
