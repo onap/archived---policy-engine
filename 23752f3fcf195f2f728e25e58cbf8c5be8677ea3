@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_c42b32ea",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/elk/client/PolicyElasticSearchController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-22T13:23:34Z",
+      "side": 1,
+      "message": "I think this causes sonar critical or less than so. If you can fix, that would be great.",
+      "range": {
+        "startLine": 96,
+        "startChar": 76,
+        "endLine": 96,
+        "endChar": 90
+      },
+      "revId": "23752f3fcf195f2f728e25e58cbf8c5be8677ea3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_84352a48",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DeleteHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-22T13:23:34Z",
+      "side": 1,
+      "message": "I know sonar flags this, do we want to rename it?? Tarun?",
+      "range": {
+        "startLine": 94,
+        "startChar": 78,
+        "endLine": 94,
+        "endChar": 90
+      },
+      "revId": "23752f3fcf195f2f728e25e58cbf8c5be8677ea3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
