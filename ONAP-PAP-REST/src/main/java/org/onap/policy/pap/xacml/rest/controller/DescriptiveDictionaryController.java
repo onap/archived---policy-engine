@@ -20,7 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -103,7 +105,7 @@ public class DescriptiveDictionaryController {
 	}
 	
 	@RequestMapping(value={"/descriptive_dictionary/save_descriptive"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response)throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -214,7 +216,7 @@ public class DescriptiveDictionaryController {
 	}
 
 	@RequestMapping(value={"/descriptive_dictionary/remove_descriptiveScope"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

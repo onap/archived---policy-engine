@@ -34,11 +34,12 @@ import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
-
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import com.att.research.xacml.util.XACMLProperties;
 
 public class PushPolicyHandler {
-	
+	private static final Logger logger = FlexLogger.getLogger(PushPolicyHandler.class);
 	/*
 	 * Get Active Version. 
 	 */
@@ -116,7 +117,7 @@ public class PushPolicyHandler {
 			PushPolicyHandler instance = (PushPolicyHandler) pushPolicyHandler.newInstance(); 
 			return instance;
 		} catch (Exception e) {
-			PolicyLogger.error(e.getMessage());
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}

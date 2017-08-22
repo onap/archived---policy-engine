@@ -20,7 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +109,7 @@ public class PolicyScopeDictionaryController {
 	}
 
 	@RequestMapping(value={"/ps_dictionary/save_psGroupPolicyScope"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView savePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView savePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -133,6 +135,7 @@ public class PolicyScopeDictionaryController {
 					groupData.setClosedloop(root.get("dictionaryFields").get("closedloop").toString().replace("\"", ""));
 					groupData.setService(root.get("dictionaryFields").get("service").toString().replace("\"", ""));
 					groupData.setType(root.get("dictionaryFields").get("type").toString().replace("\"", ""));
+					LOGGER.error(e);
 				}
 
 				if(!gpdata.getGroupName().startsWith("PolicyScope")){
@@ -164,6 +167,7 @@ public class PolicyScopeDictionaryController {
 				try{
 					groupData = (GroupPolicyScope)mapper.readValue(root.get("groupPolicyScopeListData1").toString(), GroupPolicyScope.class);
 				}catch(Exception e){
+					LOGGER.error(e);
 					groupData = new GroupPolicyScope();
 					groupData.setResource(root.get("groupPolicyScopeListData1").get("resource").toString().replace("\"", ""));
 					groupData.setClosedloop(root.get("groupPolicyScopeListData1").get("closedloop").toString().replace("\"", ""));
@@ -247,16 +251,18 @@ public class PolicyScopeDictionaryController {
 				return null;
 			}
 		}catch (Exception e){
+			LOGGER.error(e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/ps_dictionary/remove_GroupPolicyScope"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -320,7 +326,7 @@ public class PolicyScopeDictionaryController {
 	}
 
 	@RequestMapping(value={"/ps_dictionary/save_psClosedLoop"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView savePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView savePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -403,12 +409,13 @@ public class PolicyScopeDictionaryController {
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			LOGGER.error(e);
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/ps_dictionary/remove_PSClosedLoop"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -472,7 +479,7 @@ public class PolicyScopeDictionaryController {
 	}
 
 	@RequestMapping(value={"/ps_dictionary/save_psService"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView savePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView savePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -552,12 +559,13 @@ public class PolicyScopeDictionaryController {
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			LOGGER.error(e);
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/ps_dictionary/remove_PSService"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -621,7 +629,7 @@ public class PolicyScopeDictionaryController {
 	}
 
 	@RequestMapping(value={"/ps_dictionary/save_psType"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView savePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView savePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -707,12 +715,13 @@ public class PolicyScopeDictionaryController {
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			LOGGER.error(e);
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/ps_dictionary/remove_PSType"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -769,14 +778,15 @@ public class PolicyScopeDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
+			LOGGER.error(e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
 			response.addHeader("error", "dictionaryDBQuery");
-			LOGGER.error(e);
+			
 		}
 	}
 
 	@RequestMapping(value={"/ps_dictionary/save_psResource"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView savePSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView savePSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -855,16 +865,18 @@ public class PolicyScopeDictionaryController {
 			}
 
 		}catch (Exception e){
+			LOGGER.error(e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/ps_dictionary/remove_PSResource"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removePSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removePSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

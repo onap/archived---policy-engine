@@ -45,7 +45,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 public class JPAUtils {
 	private static Logger LOGGER	= FlexLogger.getLogger(JPAUtils.class);
 	
-	private EntityManagerFactory emf;
+	private static EntityManagerFactory emf;
 	private static final Object mapAccess = new Object();
 	private static Map<Datatype, List<FunctionDefinition>> mapDatatype2Function = null;
 	private static Map<String, FunctionDefinition> mapID2Function = null;
@@ -59,7 +59,7 @@ public class JPAUtils {
 	 * @return The new instance of JPAUtils or throw exception if the given emf is null.
 	 * @throws IllegalStateException if a JPAUtils has already been constructed. Call getJPAUtilsInstance() to get this.
 	 */
-	public static JPAUtils getJPAUtilsInstance(EntityManagerFactory emf) throws Exception{
+	public static JPAUtils getJPAUtilsInstance(EntityManagerFactory emf){
 		LOGGER.debug("getJPAUtilsInstance(EntityManagerFactory emf) as getJPAUtilsInstance("+emf+") called");
 		if(currentInstance == null){
 			if(emf != null){
@@ -81,7 +81,7 @@ public class JPAUtils {
 	 * @return The instance of JPAUtils or throws exception if the given instance is null.
 	 * @throws IllegalStateException if a JPAUtils instance is null. Call getJPAUtilsInstance(EntityManagerFactory emf) to get this.
 	 */
-	public static JPAUtils getJPAUtilsInstance() throws Exception{
+	public static JPAUtils getJPAUtilsInstance(){
 		LOGGER.debug("getJPAUtilsInstance() as getJPAUtilsInstance() called");
 		if(currentInstance != null){
 			return currentInstance;
@@ -89,7 +89,7 @@ public class JPAUtils {
 		throw new IllegalStateException("The JPAUtils.currentInstance is Null.  Use getJPAUtilsInstance(EntityManagerFactory emf)");
 	}
 	
-	public static AttributeDesignatorType	createDesignator(Attribute attribute) {
+	public static AttributeDesignatorType createDesignator(Attribute attribute) {
 		AttributeDesignatorType designator = new AttributeDesignatorType();
 		designator.setAttributeId(attribute.getXacmlId());
 		if (attribute.getCategoryBean() != null) {
@@ -147,7 +147,7 @@ public class JPAUtils {
 	
 	public Map<String, FunctionDefinition> getFunctionIDMap() {
 		synchronized(mapAccess) {
-			if (mapID2Function == null||mapID2Function.equals("{}")) {
+			if (mapID2Function == null||mapID2Function.isEmpty()) {
 				try {
 					buildFunctionMaps();
 				} catch (ServletException e) {
@@ -158,7 +158,7 @@ public class JPAUtils {
 		return mapID2Function;
 	}
 	
-	private void buildFunctionMaps() throws ServletException {
+	private static void buildFunctionMaps() throws ServletException {
 		mapDatatype2Function = new HashMap<>();
 		mapID2Function = new HashMap<>();
 
