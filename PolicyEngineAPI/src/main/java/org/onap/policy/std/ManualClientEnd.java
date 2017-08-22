@@ -33,7 +33,6 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
-//import org.apache.log4j.Logger;
 import org.glassfish.tyrus.client.ClientManager;
 import org.onap.policy.api.NotificationScheme;
 import org.onap.policy.api.NotificationType;
@@ -62,9 +61,7 @@ public class ManualClientEnd {
 		try {
 			client.connectToServer(ManualClientEnd.class, new URI(url+"notifications"));
 			latch.await();
-		} catch (DeploymentException | URISyntaxException | InterruptedException e) {
-			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
-		} catch (IOException e) {
+		} catch (DeploymentException | URISyntaxException | InterruptedException |IOException e) {
 			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 		}
 	}
@@ -75,7 +72,8 @@ public class ManualClientEnd {
 			return null;
 		} else {
 			if(scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)) {
-				boolean removed = false, updated = false; 
+				boolean removed = false;
+				boolean updated = false; 
 				if(notification.getRemovedPolicies()!=null && !notification.getRemovedPolicies().isEmpty()){
 					removed = true;
 				}
@@ -118,7 +116,7 @@ public class ManualClientEnd {
 	}
 	
 	@OnMessage
-	public void onMessage(String message, Session session){
+	public static void onMessage(String message, Session session){
 		logger.debug(" Manual Notification Recieved Message : " + message +" Session info is : "+ session.getId());
 		resultJson = message;
 		try {

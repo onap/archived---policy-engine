@@ -6,6 +6,8 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 
 import com.att.nsa.mr.client.impl.MRSimplerBatchPublisher;
 import com.att.nsa.mr.test.clients.ProtocolTypeConstants;
@@ -31,6 +33,7 @@ public interface BusPublisher {
 	 * DmaapClient library wrapper
 	 */
 	public static class DmaapPublisherWrapper implements BusPublisher {
+	    private static Logger logger = FlexLogger.getLogger(DmaapPublisherWrapper.class);
 		/**
 		 * MR based Publisher
 		 */		
@@ -74,16 +77,16 @@ public interface BusPublisher {
 		 */
 		@Override
 		public void close() {
-			if (PolicyLogger.isInfoEnabled())
-				PolicyLogger.info(DmaapPublisherWrapper.class.getName(), 
+			if (logger.isInfoEnabled())
+			    logger.info(DmaapPublisherWrapper.class.getName()+ 
 				                  "CREATION: " + this);
 			
 			try {
 				this.publisher.close(1, TimeUnit.SECONDS);
 			} catch (Exception e) {
-				PolicyLogger.warn(DmaapPublisherWrapper.class.getName(), 
+			    logger.warn(DmaapPublisherWrapper.class.getName()+ 
 				                  "CLOSE: " + this + " because of " + 
-								  e.getMessage());
+								  e.getMessage(), e);
 			}
 		}
 		

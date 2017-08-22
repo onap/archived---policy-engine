@@ -25,6 +25,7 @@ package org.onap.policy.controller;
  * 
  * */
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -33,6 +34,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.WatchPolicyNotificationTable;
 import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
@@ -50,12 +53,13 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 @Controller
 @RequestMapping({"/"})
 public class PolicyNotificationController extends RestrictedBaseController {
+    private static Logger logger = FlexLogger.getLogger(PolicyNotificationController.class);
 
 	@Autowired
 	CommonClassDao commonClassDao;
 	
 	@RequestMapping(value={"/watchPolicy"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView watchPolicy(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView watchPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String path = "";
 		String responseValue = "";
 		try {
@@ -118,6 +122,7 @@ public class PolicyNotificationController extends RestrictedBaseController {
 		}catch(Exception e){
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
+			logger.error("Error druing watchPolicy function " + e);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}

@@ -227,112 +227,96 @@ public class PAPServices {
         String [] parameters = {"apiflag=version","policyScope="+policyScope, "filePrefix="+filePrefix, "policyName="+policyName};
         if (paps == null || paps.isEmpty()) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "PAPs List is Empty.");
-            try {
-                throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE +"PAPs List is empty.");
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage() + e);
-            }
-            }else {
-                int papsCount = 0;
-                boolean connected = false;
-                while (papsCount < paps.size()) {
-                    try {
-                        String fullURL = getPAP();
-                        if (parameters != null && parameters.length > 0) {
-                            String queryString = "";
-                            for (String p : parameters) {
-                                queryString += "&" + p;
-                            }
-                            fullURL += "?" + queryString.substring(1);
+        }else {
+            int papsCount = 0;
+            boolean connected = false;
+            while (papsCount < paps.size()) {
+                try {
+                    String fullURL = getPAP();
+                    if (parameters != null && parameters.length > 0) {
+                        String queryString = "";
+                        for (String p : parameters) {
+                            queryString += "&" + p;
                         }
-        
-                        URL url = new URL (fullURL);
-                        
-                        //Open the connection
-                        connection = (HttpURLConnection)url.openConnection();
-                        
-                        // Setting Content-Type
-                        connection.setRequestProperty("Content-Type",
-                                "application/json");
-                        
-                        // Adding Authorization
-                        connection.setRequestProperty("Authorization", "Basic "
-                                + getPAPEncoding());
-                        
-                        connection.setRequestProperty("Environment", environment);
-                        connection.setRequestProperty("ClientScope", clientScope);
-
-                        
-                        //set the method and headers
-                        connection.setRequestMethod("GET");
-                        connection.setUseCaches(false);
-                        connection.setInstanceFollowRedirects(false);
-                        connection.setDoOutput(true);
-                        connection.setDoInput(true);
-                        connection.setRequestProperty("X-ECOMP-RequestID", requestID.toString());
-  
-                        //DO the connect
-                        connection.connect();
-        
-                        // If Connected to PAP then break from the loop and continue with the Request 
-                        if (connection.getResponseCode() > 0) {
-                            connected = true;
-                            break;
-
-                        } else {
-                            LOGGER.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PAP connection Error");
-                        }
-                    } catch (Exception e) {
-                        // This means that the PAP is not working 
-                        LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PAP connection Error : " + e);
-                        rotatePAPList();
+                        fullURL += "?" + queryString.substring(1);
                     }
-                    papsCount++;
+
+                    URL url = new URL (fullURL);
+
+                    //Open the connection
+                    connection = (HttpURLConnection)url.openConnection();
+
+                    // Setting Content-Type
+                    connection.setRequestProperty("Content-Type",
+                            "application/json");
+
+                    // Adding Authorization
+                    connection.setRequestProperty("Authorization", "Basic "
+                            + getPAPEncoding());
+
+                    connection.setRequestProperty("Environment", environment);
+                    connection.setRequestProperty("ClientScope", clientScope);
+
+
+                    //set the method and headers
+                    connection.setRequestMethod("GET");
+                    connection.setUseCaches(false);
+                    connection.setInstanceFollowRedirects(false);
+                    connection.setDoOutput(true);
+                    connection.setDoInput(true);
+                    connection.setRequestProperty("X-ECOMP-RequestID", requestID.toString());
+
+                    //DO the connect
+                    connection.connect();
+
+                    // If Connected to PAP then break from the loop and continue with the Request 
+                    if (connection.getResponseCode() > 0) {
+                        connected = true;
+                        break;
+
+                    } else {
+                        LOGGER.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PAP connection Error");
+                    }
+                } catch (Exception e) {
+                    // This means that the PAP is not working 
+                    LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PAP connection Error : " + e);
+                    rotatePAPList();
                 }
-        
-                if (connected) {
-                    //Read the Response
-                    LOGGER.debug("connected to the PAP : " + getPAP());
-                    LOGGER.debug("--- Response: ---");
-                    Map<String, List<String>> headers = connection.getHeaderFields();
-                    for (String key : headers.keySet()) {
-                        LOGGER.debug("Header :" + key + "  Value: " + headers.get(key));
-                    }
-                    try {
-                        if (connection.getResponseCode() == 200) {
-                            // Check for successful creation of policy
-                            version = connection.getHeaderField("version");
-                            LOGGER.debug("ActiveVersion from the Header: " + version);
-                        } else if (connection.getResponseCode() == 403) {
-                            LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS + "response code of the URL is " 
-                                    + connection.getResponseCode() + ". PEP is not Authorized for making this Request!! \n Contact Administrator for this Scope. ");
-                            version = "pe100";
-                        } else if (connection.getResponseCode() == 404) {
-                            LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "response code of the URL is " 
-                                        + connection.getResponseCode() + ". This indicates a problem with getting the version from the PAP");
-                            version = "pe300";
-                        } else {
-                            LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "BAD REQUEST:  Error occured while getting the version from the PAP. The request may be incorrect.");
-                        }
-                    } catch (IOException e) {
-                        LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
-                        try {
-                            throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE +"ERROR in connecting to the PAP ", e);
-                        } catch (Exception e1) {
-                            LOGGER.error(e1.getMessage() + e1);
-                        }
-                    } 
-        
-                } else {
-                    LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get valid response from PAP(s) " + paps);
-                    try {
-                        throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE +"ERROR in connecting to the PAP ");
-                    } catch (Exception e) {
-                        LOGGER.error(e.getMessage() + e);
-                    }
-                }   
+                papsCount++;
             }
-            return version;
+
+            if (connected) {
+                //Read the Response
+                LOGGER.debug("connected to the PAP : " + getPAP());
+                LOGGER.debug("--- Response: ---");
+                Map<String, List<String>> headers = connection.getHeaderFields();
+                for (String key : headers.keySet()) {
+                    LOGGER.debug("Header :" + key + "  Value: " + headers.get(key));
+                }
+                try {
+                    if (connection.getResponseCode() == 200) {
+                        // Check for successful creation of policy
+                        version = connection.getHeaderField("version");
+                        LOGGER.debug("ActiveVersion from the Header: " + version);
+                    } else if (connection.getResponseCode() == 403) {
+                        LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS + "response code of the URL is " 
+                                + connection.getResponseCode() + ". PEP is not Authorized for making this Request!! \n Contact Administrator for this Scope. ");
+                        version = "pe100";
+                    } else if (connection.getResponseCode() == 404) {
+                        LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "response code of the URL is " 
+                                + connection.getResponseCode() + ". This indicates a problem with getting the version from the PAP");
+                        version = "pe300";
+                    } else {
+                        LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "BAD REQUEST:  Error occured while getting the version from the PAP. The request may be incorrect.");
+                    }
+                } catch (IOException e) {
+                    LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
+                } 
+            } else {
+                LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get valid response from PAP(s) " + paps);
+            }   
+        }
+        return version;
     }
     
     private String checkResponse(HttpURLConnection connection, UUID requestID) throws IOException {

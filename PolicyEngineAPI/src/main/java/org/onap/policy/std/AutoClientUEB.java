@@ -51,11 +51,11 @@ public class AutoClientUEB implements Runnable  {
 	private static boolean status = false; 
 	private static Logger logger = FlexLogger.getLogger(AutoClientUEB.class.getName());
 	private static String notficatioinType = null;
-	private static CambriaConsumer CConsumer = null;
+	private static CambriaConsumer cConsumer = null;
 	private static String apiKey = null;
 	private static String apiSecret = null;
 	private static List<String> uebURLList = null; 
-	public volatile boolean isRunning = false;
+	private volatile boolean running = false;
     
 
 	public AutoClientUEB(String url, List<String> uebURLList, String apiKey, String apiSecret) {
@@ -65,7 +65,7 @@ public class AutoClientUEB implements Runnable  {
 	       AutoClientUEB.apiKey = apiKey;
 	}
 
-	public void setAuto(NotificationScheme scheme,
+	public static void setAuto(NotificationScheme scheme,
 			NotificationHandler handler) {
 		AutoClientUEB.scheme = scheme;
 		AutoClientUEB.handler = handler;
@@ -88,34 +88,31 @@ public class AutoClientUEB implements Runnable  {
 	}
 
 	public synchronized boolean isRunning() {
-		return this.isRunning;
+		return this.running;
 	}
 	
 	public synchronized void terminate() {
-		this.isRunning = false;
+		this.running = false;
 	}
 	
 	@Override
 	public void run() {
 		synchronized(this) {
-			this.isRunning = true;
+			this.running = true;
 		}
 		String group =  UUID.randomUUID ().toString ();
 		String id = "0";
-		//String topic = null;
 		// Stop and Start needs to be done.
 		if (scheme != null && handler!=null) {
 			if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) || scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) {
 				URL aURL;
 				try {
 					aURL = new URL(AutoClientUEB.topic);
-					topic = aURL.getHost() + aURL.getPort();
+					setTopic(aURL.getHost() + aURL.getPort());
 				} catch (MalformedURLException e) {
-					topic = AutoClientUEB.url.replace("[:/]", "");
+					setTopic(AutoClientUEB.url.replace("[:/]", ""));
 				}
-					
 				try {
-					//CConsumer = CambriaClientFactory.createConsumer ( null, uebURLList, topic, group, id, 15*1000, 1000 );
 					ConsumerBuilder builder = new CambriaClientBuilders.ConsumerBuilder();
 					builder.knownAs(group, id)
 					.usingHosts(uebURLList)
@@ -123,35 +120,46 @@ public class AutoClientUEB implements Runnable  {
 					.waitAtServer(15*1000)
 					.receivingAtMost(1000)
 					.authenticatedBy(apiKey, apiSecret);
-					
-					 CConsumer = builder.build();
-					
+					setConsumer(builder.build()); 
 				} catch (Exception e1) {
 					logger.error("Exception Occured" + e1);
 				} 
-				while (this.isRunning() )
-				{
-					try {
-						for ( String msg : CConsumer.fetch () )
-						{		
-							logger.debug("Auto Notification Recieved Message " + msg + " from UEB cluster : " + uebURLList.toString());
-							notification = NotificationUnMarshal.notificationJSON(msg);
-							callHandler();
-						}
-					} catch (Exception e) {
-						logger.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Error in processing UEB message" + e.getMessage());
-					}
+                while (this.isRunning()) {
+                    try {
+                        for (String msg : cConsumer.fetch()) {
+                            logger.debug("Auto Notification Recieved Message " + msg + " from UEB cluster : "
+                                    + uebURLList.toString());
+                            setNotification(NotificationUnMarshal.notificationJSON(msg));
+                            callHandler();
+                        }
+                    } catch (Exception e) {
+                        logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Error in processing UEB message"
+                                + e.getMessage(), e);
+                    }
 
-				}
+                }
 				logger.debug("Stopping UEB Consumer loop will not logger fetch messages from the cluster");
 			}
 		}
 	}
 
-	private static void callHandler() {
+	private static void setNotification(StdPDPNotification notificationJSON) {
+	    notification = notificationJSON;
+    }
+
+    private static void setConsumer(CambriaConsumer build) {
+	    cConsumer = build;
+    }
+
+    private static void setTopic(String topic) {
+	    AutoClientUEB.topic = topic;
+    }
+
+    private static void callHandler() {
 		if (handler != null && scheme != null) {
 			if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS)) {
-				boolean removed = false, updated = false;
+				boolean removed = false;
+				boolean updated = false;
 				if (notification.getRemovedPolicies() != null && !notification.getRemovedPolicies().isEmpty()) {
 					removed = true;
 				}

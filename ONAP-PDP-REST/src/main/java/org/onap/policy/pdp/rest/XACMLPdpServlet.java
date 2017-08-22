@@ -130,8 +130,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	// This thread may getting invoked on startup, to let the PAP know
 	// that we are up and running.
 	//
-	private Thread registerThread = null;
-	private XACMLPdpRegisterThread registerRunnable = null;
+	private static transient Thread registerThread = null;
+	private static transient XACMLPdpRegisterThread registerRunnable = null;
 	//
 	// This is our PDP engine pointer. There is a synchronized lock used
 	// for access to the pointer. In case we are servicing PEP requests while
@@ -176,10 +176,10 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	// This is our configuration thread that attempts to load
 	// a new configuration request.
 	//
-	private Thread configThread = null;
-	private volatile boolean configThreadTerminate = false;
-	private ONAPLoggingContext baseLoggingContext = null;
-	private IntegrityMonitor im;
+	private static transient Thread configThread = null;
+	private static volatile boolean configThreadTerminate = false;
+	private transient ONAPLoggingContext baseLoggingContext = null;
+	private transient IntegrityMonitor im;
 	/**
 	 * Default constructor. 
 	 */
@@ -198,16 +198,12 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		// Initialize
 		//
 		XACMLRest.xacmlInit(config);
-		// Load the Notification Delay. 
-		try{
-			XACMLPdpServlet.notificationDelay = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_DELAY));
-		}catch(Exception e){
-			logger.info("Notification Delay Not set. Keeping it 0 as default."+e);
-		}
+		// Load the Notification Delay.
+		setNotificationDelay();
 		// Load Queue size. 
 		int queueSize = 5; // Set default Queue Size here. 
 		queueSize = Integer.parseInt(XACMLProperties.getProperty("REQUEST_BUFFER_SIZE",String.valueOf(queueSize)));
-		queue = new LinkedBlockingQueue<PutRequest>(queueSize);
+		initQueue(queueSize);
 		// Load our engine - this will use the latest configuration
 		// that was saved to disk and set our initial status object.
 		//
@@ -250,25 +246,14 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			}
 			PolicyLogger.info("\n Properties Given : \n" + properties.toString());
 		}
-		pdpResourceName = properties.getProperty(XACMLRestProperties.PDP_RESOURCE_NAME);
-		if(pdpResourceName == null){
-			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, XACMLRestProperties.PDP_RESOURCE_NAME, "xacml.pdp");
-			throw new ServletException("pdpResourceName is null");
-		}
-
+		setPDPResourceName(properties);
 		dependencyGroups = properties.getProperty(IntegrityMonitorProperties.DEPENDENCY_GROUPS);
 		if(dependencyGroups == null){
 			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, IntegrityMonitorProperties.DEPENDENCY_GROUPS, "xacml.pdp");
 			throw new ServletException("dependency_groups is null");
 		}
-		// dependency_groups is a semicolon-delimited list of groups, and
-		// each group is a comma-separated list of nodes. For our purposes
-		// we just need a list of dependencies without regard to grouping,
-		// so split the list into nodes separated by either comma or semicolon.
-		dependencyNodes = dependencyGroups.split("[;,]");
-		for (int i = 0 ; i < dependencyNodes.length ; i++){
-			dependencyNodes[i] = dependencyNodes[i].trim();
-		}
+		setDependencyNodes(dependencyGroups);
+		
 
 		// CreateUpdatePolicy ResourceName  
 		createUpdateResourceName = properties.getProperty("createUpdatePolicy.impl.className", CREATE_UPDATE_POLICY_SERVICE);
@@ -282,25 +267,59 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to create IntegrityMonitor" +e);
 			throw new ServletException(e);
 		}
-
-		environment = XACMLProperties.getProperty("ENVIRONMENT", "DEVL");
-		//
-		// Kick off our thread to register with the PAP servlet.
-		//
-		if (Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_REGISTER))) {
-			this.registerRunnable = new XACMLPdpRegisterThread(baseLoggingContext);
-			this.registerThread = new Thread(this.registerRunnable);
-			this.registerThread.start();
-		}
-		//
-		// This is our thread that manages incoming configuration
-		// changes.
-		//
-		this.configThread = new Thread(this);
-		this.configThread.start();
+		startThreads(baseLoggingContext, new Thread(this));
 	}
 
-	/**
+	private static void startThreads(ONAPLoggingContext baseLoggingContext, Thread thread) {
+	    environment = XACMLProperties.getProperty("ENVIRONMENT", "DEVL");
+        //
+        // Kick off our thread to register with the PAP servlet.
+        //
+        if (Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_REGISTER))) {
+            XACMLPdpServlet.registerRunnable = new XACMLPdpRegisterThread(baseLoggingContext);
+            XACMLPdpServlet.registerThread = new Thread(XACMLPdpServlet.registerRunnable);
+            XACMLPdpServlet.registerThread.start();
+        }
+        //
+        // This is our thread that manages incoming configuration
+        // changes.
+        //
+        XACMLPdpServlet.configThread = thread;
+        XACMLPdpServlet.configThread.start();
+    }
+
+    private static void setDependencyNodes(String dependencyGroups) {
+	    // dependency_groups is a semicolon-delimited list of groups, and
+        // each group is a comma-separated list of nodes. For our purposes
+        // we just need a list of dependencies without regard to grouping,
+        // so split the list into nodes separated by either comma or semicolon.
+        dependencyNodes = dependencyGroups.split("[;,]");
+        for (int i = 0 ; i < dependencyNodes.length ; i++){
+            dependencyNodes[i] = dependencyNodes[i].trim();
+        }
+    }
+
+    private static void setPDPResourceName(Properties properties) throws ServletException {
+	    pdpResourceName = properties.getProperty(XACMLRestProperties.PDP_RESOURCE_NAME);
+        if(pdpResourceName == null){
+            PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, XACMLRestProperties.PDP_RESOURCE_NAME, "xacml.pdp");
+            throw new ServletException("pdpResourceName is null");
+        }
+    }
+
+    private static void initQueue(int queueSize) {
+	    queue = new LinkedBlockingQueue<>(queueSize);
+    }
+
+    private static void setNotificationDelay() {
+        try{
+            XACMLPdpServlet.notificationDelay = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_DELAY));
+        }catch(NumberFormatException e){
+            logger.error("Error in notification delay format, Taking the default value.", e);
+        }
+    }
+
+    /**
 	 * @see Servlet#destroy()
 	 */
 	@Override
@@ -310,33 +329,39 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		//
 		// Make sure the register thread is not running
 		//
-		if (this.registerRunnable != null) {
+		if (XACMLPdpServlet.registerRunnable != null) {
 			try {
-				this.registerRunnable.terminate();
-				if (this.registerThread != null) {
-					this.registerThread.interrupt();
-					this.registerThread.join();
+				XACMLPdpServlet.registerRunnable.terminate();
+				if (XACMLPdpServlet.registerThread != null) {
+					XACMLPdpServlet.registerThread.interrupt();
+					XACMLPdpServlet.registerThread.join();
 				}
 			} catch (InterruptedException e) {
 				logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "");
+				XACMLPdpServlet.registerThread.interrupt();
 			}
 		}
 		//
 		// Make sure the configure thread is not running
 		//
-		this.configThreadTerminate = true;
+		setConfigThreadTerminate(true);
 		try {
-			this.configThread.interrupt();
-			this.configThread.join();
+			XACMLPdpServlet.configThread.interrupt();
+			XACMLPdpServlet.configThread.join();
 		} catch (InterruptedException e) {
 			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "");
+			XACMLPdpServlet.configThread.interrupt();
 		}
 		logger.info("Destroyed.");
 	}
 
-	/**
+	private static void setConfigThreadTerminate(boolean value) {
+	    XACMLPdpServlet.configThreadTerminate = value;
+    }
+
+    /**
 	 * PUT - The PAP engine sends configuration information using HTTP PUT request.
 	 * 
 	 * One parameter is expected:
@@ -937,7 +962,13 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			// Read in the string
 			//
 			StringBuilder buffer = new StringBuilder();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+			BufferedReader reader = null;
+			try{
+			    reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+			}catch(IOException e){
+			    logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error during reading input stream",e);
+			    return;
+			}
 			String line;
 			try{
 				while((line = reader.readLine()) != null){
@@ -1198,7 +1229,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		//
 		try {
 			// variable not used, but constructor has needed side-effects so don't remove:
-			while (! this.configThreadTerminate) {
+			while (! XACMLPdpServlet.configThreadTerminate) {
 				PutRequest request = XACMLPdpServlet.queue.take();
 				StdPDPStatus newStatus = new StdPDPStatus();
 				

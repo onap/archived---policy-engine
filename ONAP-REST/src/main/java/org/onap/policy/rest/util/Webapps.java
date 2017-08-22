@@ -30,6 +30,8 @@ import org.apache.commons.logging.LogFactory;
 import org.onap.policy.rest.XACMLRestProperties;
 
 import org.onap.policy.xacml.api.XACMLErrorConstants;
+
+import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.util.XACMLProperties;
 
 import org.onap.policy.common.logging.eelf.MessageCodes;
@@ -46,8 +48,8 @@ public class Webapps {
 	public static String getConfigHome(){
 		try {
 			loadWebapps();
-		} catch (Exception e) {
-			logger.error("Exception Occured while loading webapps"+e);
+		} catch (PAPException e) {
+			logger.error("Exception Occured while loading webapps",e);
 			return null;
 		}
 		return configHome;
@@ -56,14 +58,14 @@ public class Webapps {
 	public static String getActionHome(){
 		try {
 			loadWebapps();
-		} catch (Exception e) {
-			logger.error("Exception Occured while loading webapps"+e);
+		} catch (PAPException e) {
+			logger.error("Exception Occured while loading webapps",e);
 			return null;
 		}
 		return actionHome;
 	}
 	
-	private static void loadWebapps() throws Exception{
+	private static void loadWebapps() throws PAPException{
 		String errorMessageName = "Invalid Webapps Path Location property :";
 		if(actionHome == null || configHome == null){
 			Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));
@@ -71,7 +73,7 @@ public class Webapps {
 			if (webappsPath == null) {
 				logger.error(errorMessageName + XACMLRestProperties.PROP_PAP_WEBAPPS);
 				PolicyLogger.error(errorMessageName + XACMLRestProperties.PROP_PAP_WEBAPPS);
-				throw new Exception(errorMessageName + XACMLRestProperties.PROP_PAP_WEBAPPS);
+				throw new PAPException(errorMessageName + XACMLRestProperties.PROP_PAP_WEBAPPS);
 			}
 			Path webappsPathConfig;
 			Path webappsPathAction;

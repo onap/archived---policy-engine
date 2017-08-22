@@ -38,7 +38,7 @@ public class LoginStrategyImpl extends LoginStrategy {
 		return userid;	
 	}
 
-	private static String getUserIdFromCookie(HttpServletRequest request) throws Exception {
+	private static String getUserIdFromCookie(HttpServletRequest request) throws PortalAPIException {
 		String userId = "";
 		Cookie[] cookies = request.getCookies();
 		Cookie userIdcookie = null;
@@ -47,8 +47,12 @@ public class LoginStrategyImpl extends LoginStrategy {
 				if (cookie.getName().equals(USER_ID))
 					userIdcookie = cookie;
 		if(userIdcookie!=null){
-			userId = CipherUtil.decrypt(userIdcookie.getValue(),
-					PortalApiProperties.getProperty(PortalApiConstants.Decryption_Key));
+			try {
+                userId = CipherUtil.decrypt(userIdcookie.getValue(),
+                		PortalApiProperties.getProperty(PortalApiConstants.Decryption_Key));
+            } catch (Exception e) {
+                throw new PortalAPIException(e);
+            }
 		}
 		return userId;
 	

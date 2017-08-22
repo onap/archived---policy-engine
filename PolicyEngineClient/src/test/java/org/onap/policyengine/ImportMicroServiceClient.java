@@ -18,42 +18,36 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policyEngine;
+package org.onap.policyengine;
 
+import java.util.UUID;
+
+import org.onap.policy.api.ImportParameters;
+import org.onap.policy.api.ImportParameters.IMPORT_TYPE;
 import org.onap.policy.api.PolicyChangeResponse;
 import org.onap.policy.api.PolicyEngine;
-import org.onap.policy.api.PushPolicyParameters;
 
-public class PushPoliciesToPDP {
+public class ImportMicroServiceClient {
+	static Boolean isEdit = false;
 	public static void main(String[] args) {
-		try {
+		try{	
+	        PolicyEngine policyEngine = new PolicyEngine("config.properties");
+	        ImportParameters importParameters = new ImportParameters();
+	        importParameters.setFilePath("C:\\Workspaces\\models\\TestingModel\\ControllerServiceSampleSdnlServiceInstance-v0.1.0-SNAPSHOT.zip");
+	        importParameters.setServiceName("ControllerServiceSampleSdnlServiceInstance");
+	  	  	
+	        importParameters.setRequestID(UUID.randomUUID());
+	        importParameters.setServiceType(IMPORT_TYPE.MICROSERVICE);
+	        importParameters.setVersion("1607-2");
 
-			PolicyEngine policyEngine = new PolicyEngine("config.properties");
-			PushPolicyParameters policyParameters = new PushPolicyParameters();			
-						
-			//Parameter arguments
-			policyParameters.setPolicyName("Mike.testCase1");
-			policyParameters.setPolicyType("Base");
-			//policyParameters.setPolicyScope("MikeAPItesting");
-			policyParameters.setPdpGroup("default");			
-			policyParameters.setRequestID(null);
-			
-            // API method to Push Policy to PDP
-            PolicyChangeResponse response = null;
-            response = policyEngine.pushPolicy(policyParameters);
+            // API method to create Policy or update policy
+	        PolicyChangeResponse response = null;
+            response = policyEngine.policyEngineImport(importParameters);
+            System.out.println(response.getResponseMessage());
 
-            if(response.getResponseCode()==204){
-                System.out.println(response.getResponseMessage());
-                System.out.println("Policy Pushed Successfully!");
-            }else{
-                System.out.println("Error! " + response.getResponseMessage());
-            }
-
-		} catch (Exception e) {
-			System.err.println(e.getMessage());		
-			
-		}
-		
+	    } catch (Exception e) {
+	        System.err.println(e.getMessage());
+	    }
 	}
-
+	
 }

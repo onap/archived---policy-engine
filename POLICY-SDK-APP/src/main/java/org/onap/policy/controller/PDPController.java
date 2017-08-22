@@ -34,11 +34,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.onap.policy.admin.RESTfulPAPEngine;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.model.PDPGroupContainer;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
+import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 import org.onap.policy.xacml.std.pap.StdPDP;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.openecomp.policy.model.Roles;
@@ -106,6 +108,9 @@ public class PDPController extends RestrictedBaseController {
 						}
 					}	
 				}
+				if(controller.getPapEngine()==null){
+				    setPAPEngine(request);
+				}
 				if (roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR) || roles.contains(SUPERGUEST) ) {
 					if(!junit){
 						this.groups.addAll(controller.getPapEngine().getOnapPDPGroups());
@@ -156,7 +161,19 @@ public class PDPController extends RestrictedBaseController {
 		}
 	}
 
-	@RequestMapping(value={"/get_PDPGroupData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	private void setPAPEngine(HttpServletRequest request) {
+	    String myRequestURL = request.getRequestURL().toString();
+        try {
+            //
+            // Set the URL for the RESTful PAP Engine
+            //
+            PolicyController.setPapEngine((PAPPolicyEngine) new RESTfulPAPEngine(myRequestURL));
+        }catch(Exception e){
+            policyLogger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR+"Exception Occured while loading PAP",e);
+        }
+    }
+
+    @RequestMapping(value={"/get_PDPGroupData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPDPGroupEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			ObjectMapper mapper = new ObjectMapper();

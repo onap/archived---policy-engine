@@ -28,6 +28,7 @@ import org.openecomp.portalsdk.core.auth.LoginStrategy;
 import org.openecomp.portalsdk.core.conf.AppConfig;
 import org.openecomp.portalsdk.core.conf.Configurable;
 import org.openecomp.portalsdk.core.objectcache.AbstractCacheManager;
+import org.openecomp.portalsdk.core.onboarding.exception.PortalAPIException;
 import org.openecomp.portalsdk.core.service.DataAccessService;
 import org.openecomp.portalsdk.core.util.CacheManager;
 import org.openecomp.portalsdk.core.util.SystemProperties;
@@ -135,11 +136,15 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	 */
 	// @Bean // ANNOTATION COMMENTED OUT
 	// APPLICATIONS REQUIRING QUARTZ SHOULD RESTORE ANNOTATION
-	public SchedulerFactoryBean schedulerFactoryBean() throws Exception {
+	public SchedulerFactoryBean schedulerFactoryBean() throws PortalAPIException {
 		SchedulerFactoryBean scheduler = new SchedulerFactoryBean();
 		scheduler.setTriggers(schedulerRegistryAdapter.getTriggers());
 		scheduler.setConfigLocation(appApplicationContext.getResource("WEB-INF/conf/quartz.properties"));
-		scheduler.setDataSource(dataSource());
+		try{
+		    scheduler.setDataSource(dataSource());
+		}catch(Exception e){
+		    throw new PortalAPIException(e);
+		}
 		return scheduler;
 	}
 

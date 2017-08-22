@@ -95,7 +95,6 @@ public class XACMLRestProperties extends XACMLProperties {
 	public static final String PROP_PAP_URLS = "xacml.rest.pap.urls";
 	public static final String PROP_PAP_FAILED_URLS = "xacml.rest.pap.failedUrls";
 	public static final String PROP_PAP_SUCCEEDED_URLS = "xacml.rest.pap.succeededUrls";
-	//public static final String PROP_PAP_FAILED_URL_TIME = "xacml.rest.pap.failedUrlTime";
 	
 	/**
 	 * Upon startup, have the PAP servlet send latest configuration information

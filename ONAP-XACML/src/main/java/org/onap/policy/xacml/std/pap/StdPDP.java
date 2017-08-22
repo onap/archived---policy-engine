@@ -45,11 +45,11 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 	
 	private Integer jmxport = 0;
 	
-	private PDPStatus status = new StdPDPStatus();
+	private transient PDPStatus status = new StdPDPStatus();
 	
-	private Set<PDPPolicy> policies = new HashSet<>();
+	private transient Set<PDPPolicy> policies = new HashSet<>();
 	
-	private Set<PDPPIPConfig> pipConfigs = new HashSet<>();
+	private transient Set<PDPPIPConfig> pipConfigs = new HashSet<>();
 	
 	public StdPDP() {
 		
@@ -89,7 +89,6 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 				} else if (key.toString().endsWith(".description")) {
 					this.description = properties.getProperty(key.toString());
 				}else if (key.toString().endsWith(".jmxport")) {
-					//todo fix this hackjob
 					if (properties.getProperty(key.toString()) != null && properties.getProperty(key.toString()).trim().length() > 0){
 						logger.debug("initialize before: " + this.jmxport);
 						this.jmxport = Integer.valueOf( properties.getProperty(key.toString()));

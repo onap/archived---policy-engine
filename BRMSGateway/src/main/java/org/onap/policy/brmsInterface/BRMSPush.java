@@ -106,14 +106,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class BRMSPush {
 	private static final Logger LOGGER = FlexLogger.getLogger(BRMSPush.class.getName());
 	private static final String PROJECTSLOCATION = "RuleProjects";
-	private static final String GOALS[] = {"clean", "deploy"};
+	private static final String[] GOALS = {"clean", "deploy"};
 	private static final String DEFAULT_VERSION = "1.1.0-SNAPSHOT";
 	private static final String DEPENDENCY_FILE = "dependency.json";
 
 	private static Map<String, String> modifiedGroups = new HashMap<>();
 	private static IntegrityMonitor im;
 	private static BackUpMonitor bm;
-	private static String resourceName = null;
 	private String defaultName = null;
 	private String repID = null; 
 	private String repName = null;
@@ -157,10 +156,11 @@ public class BRMSPush {
 			in = new FileInputStream(file.toFile());
 			config.load(in);
 		} catch (IOException e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Data/File Read Error while reading from the property file.");
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Data/File Read Error while reading from the property file.", e);
 			throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE + "Data/File Read Error while reading from the property file.");
 		}
 		LOGGER.info("Trying to set up IntegrityMonitor");
+		String resourceName = null;
 		try {
 			LOGGER.info("Trying to set up IntegrityMonitor");
 			resourceName = config.getProperty("RESOURCE_NAME");
@@ -169,13 +169,13 @@ public class BRMSPush {
 				resourceName = "brmsgw_pdp01";
 			}
 			resourceName = resourceName.trim();
-			im = IntegrityMonitor.getInstance(resourceName, config);
+			setIntegrityMonitor(IntegrityMonitor.getInstance(resourceName, config));
 		} catch (Exception e) {
 			LOGGER.error("Error starting Integerity Monitor: " + e);
 		}
 		LOGGER.info("Trying to set up BackUpMonitor");
 		try {
-			bm = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), resourceName, config, handler);
+		    setBackupMonitor(BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), resourceName, config, handler));
 		} catch (Exception e) {
 			LOGGER.error("Error starting BackUpMonitor: " + e);
 		}
@@ -318,21 +318,33 @@ public class BRMSPush {
 
 	}
 
-	/**
+	private static void setBackupMonitor(BackUpMonitor instance) {
+	    bm = instance;
+    }
+
+    private static void setIntegrityMonitor(IntegrityMonitor instance) {
+        im = instance;
+    }
+
+    /**
 	 * Will Initialize the variables required for BRMSPush. 
 	 */
 	public void initiate(boolean flag) {
-		modifiedGroups =  new HashMap<>();
+		resetModifiedGroups();
 		controllers = new ArrayList<>();
 		try {
 			bm.updateNotification();
 		} catch (Exception e) {
-			LOGGER.error("Error while updating Notification: "  + e.getMessage());
+			LOGGER.error("Error while updating Notification: "  + e.getMessage(), e);
 		}
 		if(flag) syncGroupInfo();
 	}
 
-	/**
+	private static void resetModifiedGroups() {
+	    modifiedGroups =  new HashMap<>();
+    }
+
+    /**
 	 * Will Add rules to projects. Creates necessary folders if required. 
 	 */
 	public void addRule(String name, String rule, Map<String, String> responseAttributes) {
@@ -525,7 +537,7 @@ public class BRMSPush {
 		    extractJar(fileName, dirName);
 		    new File(fileName).delete();
 		} catch (IOException e) {
-			LOGGER.error("Error while downloading the project to File System. " + e.getMessage());
+			LOGGER.error("Error while downloading the project to File System. " + e.getMessage(), e);
 		}
 	}
 
@@ -624,12 +636,12 @@ public class BRMSPush {
 					return resultList;
 				}
 			} catch (NexusClientException | NexusConnectionException | NullPointerException e) {
-				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Connection to remote Nexus has failed. " +e.getMessage());
+				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Connection to remote Nexus has failed. " +e.getMessage(), e);
 			} finally {
 				try {
 					client.disconnect();
 				} catch (NexusClientException | NexusConnectionException e) {
-					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "failed to disconnect Connection from Nexus." +e.getMessage());
+					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "failed to disconnect Connection from Nexus." +e.getMessage(),e);
 				}
 				if(!flag){
 					Collections.rotate(repURLs, -1);
@@ -708,7 +720,7 @@ public class BRMSPush {
 						LOGGER.error("Maven Invocation failure..!");
 					}
 				}catch(Exception e){
-					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Maven Invocation issue for "+getArtifactID(group) + e.getMessage());
+					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Maven Invocation issue for "+getArtifactID(group) + e.getMessage(), e);
 				}
 				if(result!=null && result.getExitCode()==0){
 					LOGGER.info("Build Completed..!");
@@ -800,7 +812,7 @@ public class BRMSPush {
 			LOGGER.info("Sending Notification :\n" + notificationJson);
 			sendMessage(notificationJson);
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while sending notification to PDP-D " + e.getMessage());
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while sending notification to PDP-D " + e.getMessage(),e);
 		}
 	}
 
@@ -870,7 +882,7 @@ public class BRMSPush {
 		}catch(Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
 					+ "Error while creating POM for " + getArtifactID(name)
-					+ e.getMessage());
+					+ e.getMessage(), e);
 		}finally{
 			IOUtil.close(writer);
 		}
@@ -895,7 +907,7 @@ public class BRMSPush {
 			} catch (IOException| NullPointerException e) {
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
 						+ "Error while getting dependecy Information for controller: " + controllerName
-						+ e.getMessage());
+						+ e.getMessage() , e);
 			}
 		}
 		return defaultDependencies(controllerName);
@@ -969,7 +981,7 @@ public class BRMSPush {
 		try{
 			FileUtils.writeStringToFile(new File(file), rule);
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Error while creating Rule for " + file + e.getMessage());
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Error while creating Rule for " + file + e.getMessage(), e);
 		}
 	}
 

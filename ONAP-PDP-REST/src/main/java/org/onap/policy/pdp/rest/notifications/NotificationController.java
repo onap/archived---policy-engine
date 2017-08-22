@@ -148,11 +148,10 @@ public class NotificationController {
 			notification = setUpdateTypes(updated, removed, notification);
 			ObjectWriter om = new ObjectMapper().writer();
 			try {
-				notificationJSON = om.writeValueAsString(notification);
+			    setNotificationJSON(om.writeValueAsString(notification));
 				LOGGER.info(notificationJSON);
 				// NotificationServer Method here.
-				propNotificationType = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TYPE);
-				pdpURL = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_ID);
+				setPropNotification();
 				if (("ueb".equals(propNotificationType)||"dmaap".equals(propNotificationType)) && !manualThreadStarted) {
 					LOGGER.debug("Starting  Thread to accept UEB or DMAAP notfications.");
 					this.registerMaunualNotificationRunnable = new ManualNotificationUpdateThread();
@@ -160,22 +159,35 @@ public class NotificationController {
 					this.manualNotificationThread.start();
 					manualThreadStarted = true;
 				}
-				String notificationJSON= null;
-				notificationFlag = true;
+				String notificationJSONString= null;
+				setNotificationFlag(true);
 				try{
-					notificationJSON= record(notification);
+					notificationJSONString= record(notification);
 				}catch(Exception e){
 					LOGGER.error(e);
 				}
-				NotificationServer.setUpdate(notificationJSON);
-				ManualNotificationUpdateThread.setUpdate(notificationJSON);
+				NotificationServer.setUpdate(notificationJSONString);
+				ManualNotificationUpdateThread.setUpdate(notificationJSONString);
 			} catch (JsonProcessingException e) {
 				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage() +e);
 			}
 		}
 	}
 	
-	public static void sendNotification(){
+	private void setNotificationFlag(boolean value) {
+	    notificationFlag = value;
+    }
+
+    private static void setNotificationJSON(String message) {
+	    notificationJSON = message;
+    }
+
+    private static void setPropNotification() {
+        propNotificationType = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TYPE);
+        pdpURL = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_ID);
+    }
+
+    public static void sendNotification(){
 		if(notificationFlag){
 			try {
 				NotificationServer.sendNotification(notificationJSON, propNotificationType, pdpURL);
@@ -246,7 +258,7 @@ public class NotificationController {
 	}
 
 	// Adding this for Recording the changes to serve Polling requests..
-	private static String record(Notification notification) throws Exception {
+	private static String record(Notification notification){
 		// Initialization with updates.
 		if (record.getRemovedPolicies() == null	|| record.getLoadedPolicies() == null) {
 			record.setRemovedPolicies(notification.getRemovedPolicies());
