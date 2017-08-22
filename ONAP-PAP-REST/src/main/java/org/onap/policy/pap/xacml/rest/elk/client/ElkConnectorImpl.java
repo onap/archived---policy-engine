@@ -322,6 +322,7 @@ public class ElkConnectorImpl implements ElkConnector{
 			String[] splitPolicyName = policyName.split(":");
 			indexType = ElkConnector.toPolicyIndexType(splitPolicyName[1]);
 		} catch (IllegalArgumentException e) {
+			LOGGER.error(e);
 			throw new IllegalStateException("ELK: Index: " + ELK_INDEX_POLICY + e.getMessage());			
 		}
 		PolicyElasticData elasticData = new PolicyElasticData(policyData);

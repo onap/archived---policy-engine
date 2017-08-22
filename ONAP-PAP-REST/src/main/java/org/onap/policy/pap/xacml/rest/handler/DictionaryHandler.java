@@ -23,10 +23,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.onap.policy.common.logging.eelf.PolicyLogger;
-
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import com.att.research.xacml.util.XACMLProperties;
 
 public interface DictionaryHandler {
+	static Logger logger = FlexLogger.getLogger(DictionaryHandler.class);
 	String DICTIONARY_DEFAULT_CLASS = DictionaryHandlerImpl.class.getName();
 
 	/*
@@ -38,6 +41,7 @@ public interface DictionaryHandler {
 			DictionaryHandler instance = (DictionaryHandler) dictionaryHandler.newInstance(); 
 			return instance;
 		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
 			PolicyLogger.error(e.getMessage());
 		}
 		return null;

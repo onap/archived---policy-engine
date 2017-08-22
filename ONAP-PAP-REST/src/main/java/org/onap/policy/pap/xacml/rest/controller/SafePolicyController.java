@@ -20,7 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -96,7 +98,7 @@ public class SafePolicyController {
             response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		} catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
             response.addHeader("error", "dictionaryDBQuery");
 		}
@@ -105,7 +107,7 @@ public class SafePolicyController {
 	@RequestMapping(value = { "/sp_dictionary/save_riskType" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.POST })
 	public ModelAndView saveRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+			throws UnsupportedEncodingException, IOException {
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -189,6 +191,7 @@ public class SafePolicyController {
                 return null;
             }
         }catch (Exception e) {
+        	LOGGER.error(e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -200,7 +203,7 @@ public class SafePolicyController {
 	@RequestMapping(value = { "/sp_dictionary/remove_riskType" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.POST })
 	public ModelAndView removeOnapDictionary(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+			throws UnsupportedEncodingException, IOException{
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -219,6 +222,7 @@ public class SafePolicyController {
 
 			return null;
 		} catch (Exception e) {
+			LOGGER.error(e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -257,16 +261,16 @@ public class SafePolicyController {
             response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		} catch (Exception e) {
+			LOGGER.error(e);
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
             response.addHeader("error", "dictionaryDBQuery");
-            LOGGER.error(e.getMessage());
 		}
 	}
 
 	@RequestMapping(value = { "/sp_dictionary/save_safePolicyWarning" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.POST })
 	public ModelAndView saveSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+			throws UnsupportedEncodingException, IOException {
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -342,6 +346,7 @@ public class SafePolicyController {
             }
  
         }catch (Exception e) {
+        	LOGGER.error(e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -353,7 +358,7 @@ public class SafePolicyController {
 	@RequestMapping(value = { "/sp_dictionary/remove_SafePolicyWarning" }, method = {
 			org.springframework.web.bind.annotation.RequestMethod.POST })
 	public ModelAndView removeSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+			throws UnsupportedEncodingException, IOException {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
