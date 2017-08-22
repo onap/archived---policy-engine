@@ -20,8 +20,10 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
@@ -112,7 +114,7 @@ public class BRMSDictionaryController{
 	}
 	
 	@RequestMapping(value={"/brms_dictionary/set_BRMSParamData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public void SetRuleData(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void SetRuleData(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(request.getInputStream() , writer, StandardCharsets.UTF_8);
 		String cleanStreamBoundary =  writer.toString().replaceFirst("------(.*)(?s).*octet-stream", "");
@@ -120,7 +122,7 @@ public class BRMSDictionaryController{
 	}
 	
 	@RequestMapping(value={"/brms_dictionary/save_BRMSParam"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try {
 			boolean duplicateflag = false;
             boolean fromAPI = false;
@@ -192,7 +194,7 @@ public class BRMSDictionaryController{
             }
 		}
 		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW , e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -202,7 +204,7 @@ public class BRMSDictionaryController{
 	}
 
 	@RequestMapping(value={"/brms_dictionary/remove_brmsParam"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response)throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -266,7 +268,7 @@ public class BRMSDictionaryController{
     }
     
     @RequestMapping(value={"/brms_dictionary/save_BRMSDependencyData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-    public ModelAndView saveBRMSDependencyDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public ModelAndView saveBRMSDependencyDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
         try {
             boolean duplicateflag = false;
             LOGGER.debug("DictionaryController:  saveBRMSDependencyDictionary() is called");
@@ -308,7 +310,7 @@ public class BRMSDictionaryController{
                 try{
                     dependency = PolicyUtils.jsonStringToObject(brmsDependency.getDependency(), PEDependency.class);
                 }catch(Exception e){
-                    LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID + "wrong data given for BRMS PEDependency Dictionary : " + brmsDependency.getDependency());
+                    LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID + "wrong data given for BRMS PEDependency Dictionary : " + brmsDependency.getDependency(),e);
                 }
                 if(dependency==null){
                     responseString = "Error";
@@ -363,7 +365,7 @@ public class BRMSDictionaryController{
     }
  
     @RequestMapping(value={"/brms_dictionary/remove_brmsDependency"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-    public ModelAndView removeBRMSDependencyDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView removeBRMSDependencyDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
         try{
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -425,7 +427,7 @@ public class BRMSDictionaryController{
     }
     
     @RequestMapping(value={"/brms_dictionary/save_BRMSControllerData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-    public ModelAndView saveBRMSControllerDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public ModelAndView saveBRMSControllerDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
         try {
             boolean duplicateflag = false;
             LOGGER.debug("DictionaryController:  saveBRMSControllerDictionary() is called");
@@ -461,7 +463,7 @@ public class BRMSDictionaryController{
                 try{
                     dependency = PolicyUtils.jsonStringToObject(brmsController.getController(), PEDependency.class);
                 }catch(Exception e){
-                    LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID + "wrong data given for BRMS Controller Dictionary : " + brmsController.getController());
+                    LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID + "wrong data given for BRMS Controller Dictionary : " + brmsController.getController(),e);
                 }
                 if(dependency==null){
                     responseString = "Error";
@@ -515,7 +517,7 @@ public class BRMSDictionaryController{
     }
  
     @RequestMapping(value={"/brms_dictionary/remove_brmsController"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-    public ModelAndView removeBRMSControllerDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView removeBRMSControllerDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
         try{
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

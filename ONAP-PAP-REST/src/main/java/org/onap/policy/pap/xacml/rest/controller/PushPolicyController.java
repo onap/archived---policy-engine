@@ -156,7 +156,7 @@ public class PushPolicyController {
 			// Create the policy Object
 			selectedPolicy = new StdPDPPolicy(policyName, true, policyID, selectedURI);
 		} catch (IOException e) {
-			LOGGER.error("Unable to create policy '" + policyName + "': "+ e.getMessage());
+			LOGGER.error("Unable to create policy '" + policyName + "': "+ e.getMessage(),e);
 		} 
 		try {
 			new ObjectOutputStream(response.getOutputStream()).writeObject(selectedPolicy);

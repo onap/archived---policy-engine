@@ -26,7 +26,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
-
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.policycontroller.PolicyCreation;
@@ -39,6 +40,7 @@ import org.xml.sax.SAXException;
 import com.att.research.xacml.util.XACMLProperties;
 
 public class SavePolicyHandler {
+	private static Logger logger = FlexLogger.getLogger(SavePolicyHandler.class);
 	private HashMap<String, String> ErrorHeaders = null;
 	
 	public void doPolicyAPIPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -77,6 +79,7 @@ public class SavePolicyHandler {
 					response.addHeader("operation", "create");
 				}
 			} catch (Exception e1) {
+				logger.error(e1.getMessage(),e1);
 				PolicyLogger.error(XACMLErrorConstants.ERROR_UNKNOWN + 
 						"Could not set data to policy adapter "+ e1.getMessage());
 			}
@@ -150,6 +153,7 @@ public class SavePolicyHandler {
 			SavePolicyHandler instance = (SavePolicyHandler) savePolicyHandler.newInstance(); 
 			return instance;
 		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
 			PolicyLogger.error(e.getMessage());
 		}
 		return null;

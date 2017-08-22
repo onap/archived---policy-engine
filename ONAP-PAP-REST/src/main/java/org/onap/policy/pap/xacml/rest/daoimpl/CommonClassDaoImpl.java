@@ -252,8 +252,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 			try{
 				session.close();
 			}catch(Exception e1){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
-				throw e1;
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement",e1);
 			}
 		}
 		return data;

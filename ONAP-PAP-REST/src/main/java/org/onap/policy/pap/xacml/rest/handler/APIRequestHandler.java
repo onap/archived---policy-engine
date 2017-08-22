@@ -20,6 +20,7 @@
 package org.onap.policy.pap.xacml.rest.handler;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -74,7 +75,7 @@ public class APIRequestHandler {
 		}
 	}
 
-	public void doDelete(HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext, String apiflag) throws Exception {
+	public void doDelete(HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext, String apiflag) throws IOException, SQLException{
 		DeleteHandler deleteHandler = DeleteHandler.getInstance();
 		if ("deletePapApi".equalsIgnoreCase(apiflag)) {
 			deleteHandler.doAPIDeleteFromPAP(request, response, loggingContext);

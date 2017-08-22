@@ -20,7 +20,9 @@
 package org.onap.policy.pap.xacml.rest.elk.client;
 
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -91,7 +93,7 @@ public class PolicyElasticSearchController{
 		psGroupPolicy, safeRisk, safePolicyWarning
 	}
 
-	public static final HashMap<String, String> name2jsonPath = new HashMap<String, String>() {
+	protected static final HashMap<String, String> name2jsonPath = new HashMap<String, String>() {
 		private static final long serialVersionUID = 1L;
 	};
 	
@@ -327,12 +329,12 @@ public class PolicyElasticSearchController{
 		}catch(Exception e){
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader("error", "Exception Occured While Performing Elastic Transaction");
-			LOGGER.error("Exception Occured While Performing Elastic Transaction"+e.getMessage());
+			LOGGER.error("Exception Occured While Performing Elastic Transaction"+e.getMessage(),e);
 		}
 	}
 	
 	@RequestMapping(value={"/searchDictionary"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView searchDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView searchDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			PolicyIndexType config = PolicyIndexType.config;
 			PolicyIndexType closedloop = PolicyIndexType.closedloop;
@@ -450,6 +452,7 @@ public class PolicyElasticSearchController{
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			LOGGER.error(e);
 		}
 		return null;
 	}
