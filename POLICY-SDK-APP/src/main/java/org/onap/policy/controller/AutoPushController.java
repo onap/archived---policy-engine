@@ -177,7 +177,7 @@ public class AutoPushController extends RestrictedBaseController{
 	}
 
 	@RequestMapping(value={"/auto_Push/PushPolicyToPDP.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView PushPolicyToPDPGroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView pushPolicyToPDPGroup(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			ArrayList<Object> selectedPDPS = new ArrayList<>();
 			ArrayList<String> selectedPoliciesInUI = new ArrayList<>();
@@ -256,7 +256,7 @@ public class AutoPushController extends RestrictedBaseController{
 						// Create the policy
 						selectedPolicy = new StdPDPPolicy(name, true, id, selectedURI);
 					} catch (IOException e) {
-						logger.error("Unable to create policy '" + name + "': "+ e.getMessage());
+						logger.error("Unable to create policy '" + name + "': "+ e.getMessage(), e);
 					}
 					StdPDPGroup selectedGroup = (StdPDPGroup) pdpDestinationGroupId;
 					if (selectedPolicy != null) {
@@ -319,7 +319,7 @@ public class AutoPushController extends RestrictedBaseController{
 				refreshGroups();
 				JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
 				JSONObject j = new JSONObject(msg);
-				out.write(j.toString());      
+				out.write(j.toString());
 				return null;
 			}
 		}
@@ -327,6 +327,7 @@ public class AutoPushController extends RestrictedBaseController{
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
+			logger.error(e);
 			out.write(e.getMessage());
 		}
 		return null;
@@ -334,7 +335,7 @@ public class AutoPushController extends RestrictedBaseController{
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value={"/auto_Push/remove_GroupPolicies.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removePDPGroup(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removePDPGroup(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			PolicyController controller = getPolicyControllerInstance();
 			this.container = new PDPGroupContainer(controller.getPapEngine());
@@ -376,6 +377,7 @@ public class AutoPushController extends RestrictedBaseController{
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
+			logger.error(e);
 			out.write(e.getMessage());
 		}
 		return null;

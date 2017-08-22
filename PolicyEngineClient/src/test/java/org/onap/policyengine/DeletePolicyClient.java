@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policyEngine;
+package org.onap.policyengine;
 
 import org.onap.policy.api.DeletePolicyCondition;
 import org.onap.policy.api.DeletePolicyParameters;

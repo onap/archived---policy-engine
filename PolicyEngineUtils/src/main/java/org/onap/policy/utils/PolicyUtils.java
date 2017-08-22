@@ -70,7 +70,7 @@ public class PolicyUtils {
 		} 
 	}
 	
-	public static String[] decodeBasicEncoding(String encodedValue) throws Exception{
+	public static String[] decodeBasicEncoding(String encodedValue) throws UnsupportedEncodingException {
 		if(encodedValue!=null && encodedValue.contains("Basic ")){
 			String encodedUserPassword = encodedValue.replaceFirst("Basic"	+ " ", "");
 			String usernameAndPassword = null;

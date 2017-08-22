@@ -10,6 +10,7 @@ import org.onap.policy.api.PDPNotification;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.utils.BusConsumer;
+import org.onap.policy.utils.BusConsumer.DmaapConsumerWrapper;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 public class AutoClientDMAAP implements Runnable {
@@ -24,7 +25,7 @@ public class AutoClientDMAAP implements Runnable {
 	private static List<String> dmaapList = null; 
 	private static String aafLogin = null;
 	private static String aafPassword = null;
-	public volatile boolean isRunning = false;
+	private volatile boolean running = false;
     
 
 	public AutoClientDMAAP(List<String> dmaapList, String topic, String aafLogin, String aafPassword) {
@@ -34,7 +35,7 @@ public class AutoClientDMAAP implements Runnable {
 	       AutoClientDMAAP.aafPassword = aafPassword;
 	}
 
-	public void setAuto(NotificationScheme scheme,
+	public static void setAuto(NotificationScheme scheme,
 			NotificationHandler handler) {
 		AutoClientDMAAP.scheme = scheme;
 		AutoClientDMAAP.handler = handler;
@@ -57,17 +58,17 @@ public class AutoClientDMAAP implements Runnable {
 	}
 
 	public synchronized boolean isRunning() {
-		return this.isRunning;
+		return this.running;
 	}
 	
 	public synchronized void terminate() {
-		this.isRunning = false;
+		this.running = false;
 	}
 	
 	@Override
 	public void run() {
 		synchronized(this) {
-			this.isRunning = true;
+			this.running = true;
 		}
 		String group =  UUID.randomUUID ().toString ();
 		String id = "0";
@@ -78,7 +79,7 @@ public class AutoClientDMAAP implements Runnable {
 					
 				// create a loop to listen for messages from DMaaP server
 				try {
-					dmaapConsumer = new BusConsumer.DmaapConsumerWrapper(dmaapList, topic, aafLogin, aafPassword, group, id, 15*1000, 1000 );
+				    setDmaapCosumer(new BusConsumer.DmaapConsumerWrapper(dmaapList, topic, aafLogin, aafPassword, group, id, 15*1000, 1000 ));
 				} catch (Exception e) {
 					logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Unable to create DMaaP Consumer: ", e);
 				} 
@@ -89,11 +90,11 @@ public class AutoClientDMAAP implements Runnable {
 						for ( String msg : dmaapConsumer.fetch () )
 						{		
 							logger.debug("Auto Notification Recieved Message " + msg + " from DMAAP server : " + dmaapList.toString());
-							notification = NotificationUnMarshal.notificationJSON(msg);
+							setNotification(NotificationUnMarshal.notificationJSON(msg));
 							callHandler();
 						}
 					} catch (Exception e) {
-						logger.debug("Error in processing DMAAP message");
+						logger.debug("Error in processing DMAAP message", e);
 					}
 
 				}
@@ -102,7 +103,15 @@ public class AutoClientDMAAP implements Runnable {
 		}
 	}
 
-	private static void callHandler() {
+	private void setNotification(StdPDPNotification notificationJSON) {
+	    notification = notificationJSON;
+    }
+
+    private static void setDmaapCosumer(DmaapConsumerWrapper dmaapConsumerWrapper) {
+	    dmaapConsumer = dmaapConsumerWrapper;
+    }
+
+    private static void callHandler() {
 		if (handler != null && scheme != null) {
 			if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS)) {
 				boolean removed = false, updated = false;

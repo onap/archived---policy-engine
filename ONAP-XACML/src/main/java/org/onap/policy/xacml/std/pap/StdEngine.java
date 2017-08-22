@@ -69,10 +69,10 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 
 	private static Log	logger	= LogFactory.getLog(StdEngine.class);
 
-	public static String	PROP_PAP_REPO = "xacml.pap.pdps";
-	public static String	PROP_PAP_GROUPS = "xacml.pap.groups";
-	public static String	PROP_PAP_GROUPS_DEFAULT = "xacml.pap.groups.default";
-	public static String	PROP_PAP_GROUPS_DEFAULT_NAME = "default";
+	public static final String	PROP_PAP_REPO = "xacml.pap.pdps";
+	public static final String	PROP_PAP_GROUPS = "xacml.pap.groups";
+	public static final String	PROP_PAP_GROUPS_DEFAULT = "xacml.pap.groups.default";
+	public static final String	PROP_PAP_GROUPS_DEFAULT_NAME = "default";
 	//this value will be accessed from XacmlPapServlet so that we know if a default group did not exist
 	//and was just added. This way, we can add the new group to the database.
 	public boolean wasDefaultGroupJustAdded = false;
@@ -892,7 +892,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 			try {
 				((StdPDPGroup)group).saveGroupConfiguration();
 			} catch (IOException e) {
-				throw new PAPException("Unable to save new configuration for '" + group.getName() + "': " + e.getMessage());
+				throw new PAPException("Unable to save new configuration for '" + group.getName() + "': " + e.getMessage(), e);
 			}
 			// update the group in the set by simply replacing the old instance with the new one
 			this.groups.remove(existingGroup);
@@ -923,13 +923,13 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 				}
 			} catch (Exception e) {
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "StdEngine", "Unable to rename directory");
-				throw new PAPException("Unable to move directory from '" + oldPath + "' to '" + newPath + "': " + e.getMessage());
+				throw new PAPException("Unable to move directory from '" + oldPath + "' to '" + newPath + "': " + e.getMessage(),e);
 			}
 			// update the disk
 			try {
 				((StdPDPGroup)group).saveGroupConfiguration();
 			} catch (IOException e) {
-				throw new PAPException("Unable to save new configuration for '" + group.getName() + "': " + e.getMessage());
+				throw new PAPException("Unable to save new configuration for '" + group.getName() + "': " + e.getMessage(), e);
 			}
 			
 			// save the new group into the Set

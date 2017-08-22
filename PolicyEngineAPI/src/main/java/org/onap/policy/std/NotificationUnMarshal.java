@@ -20,49 +20,45 @@
 
 package org.onap.policy.std;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import org.onap.policy.api.LoadedPolicy;
 import org.onap.policy.api.RemovedPolicy;
 import org.onap.policy.api.UpdateType;
-import org.onap.policy.std.StdLoadedPolicy;
-import org.onap.policy.std.StdPDPNotification;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class NotificationUnMarshal {
-	private static StdPDPNotification notification;
 	
-	public static StdPDPNotification notificationJSON(String json) throws Exception{
+	public static StdPDPNotification notificationJSON(String json) throws IOException{
 		ObjectMapper mapper = new ObjectMapper();
-		notification = mapper.readValue(json, StdPDPNotification.class);
-		if(notification!=null){
-			if(notification.getLoadedPolicies()!=null){
-				Collection<StdLoadedPolicy> stdLoadedPolicies = new ArrayList<>();
-				for(LoadedPolicy loadedPolicy: notification.getLoadedPolicies()){
-					StdLoadedPolicy stdLoadedPolicy = (StdLoadedPolicy) loadedPolicy;
-					if(notification.getRemovedPolicies()!=null){
-						Boolean updated = false;
-						for(RemovedPolicy removedPolicy: notification.getRemovedPolicies()){
-							String regex = ".(\\d)*.xml";
-							if(removedPolicy.getPolicyName().replaceAll(regex, "").equals(stdLoadedPolicy.getPolicyName().replaceAll(regex, ""))){
-								updated  = true;
-								break;
-							}
-						}
-						if(updated){
-							stdLoadedPolicy.setUpdateType(UpdateType.UPDATE);
-						}else{
-							stdLoadedPolicy.setUpdateType(UpdateType.NEW);
-						}
-					}else{
-						stdLoadedPolicy.setUpdateType(UpdateType.NEW);
-					}
-					stdLoadedPolicies.add(stdLoadedPolicy);
-				}
-				notification.setLoadedPolicies(stdLoadedPolicies);
-			}
+		StdPDPNotification notification = mapper.readValue(json, StdPDPNotification.class);
+		if(notification!=null&&notification.getLoadedPolicies()!=null){
+		    Collection<StdLoadedPolicy> stdLoadedPolicies = new ArrayList<>();
+		    for(LoadedPolicy loadedPolicy: notification.getLoadedPolicies()){
+		        StdLoadedPolicy stdLoadedPolicy = (StdLoadedPolicy) loadedPolicy;
+		        if(notification.getRemovedPolicies()!=null){
+		            Boolean updated = false;
+		            for(RemovedPolicy removedPolicy: notification.getRemovedPolicies()){
+		                String regex = ".(\\d)*.xml";
+		                if(removedPolicy.getPolicyName().replaceAll(regex, "").equals(stdLoadedPolicy.getPolicyName().replaceAll(regex, ""))){
+		                    updated  = true;
+		                    break;
+		                }
+		            }
+		            if(updated){
+		                stdLoadedPolicy.setUpdateType(UpdateType.UPDATE);
+		            }else{
+		                stdLoadedPolicy.setUpdateType(UpdateType.NEW);
+		            }
+		        }else{
+		            stdLoadedPolicy.setUpdateType(UpdateType.NEW);
+		        }
+		        stdLoadedPolicies.add(stdLoadedPolicy);
+		    }
+		    notification.setLoadedPolicies(stdLoadedPolicies);
 		}
 		return notification;
 	}

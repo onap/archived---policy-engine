@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policyEngine;
+package org.onap.policyengine;
 
 import java.util.Collection;
 

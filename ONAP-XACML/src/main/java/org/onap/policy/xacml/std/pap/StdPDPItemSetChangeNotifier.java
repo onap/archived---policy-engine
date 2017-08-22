@@ -41,7 +41,7 @@ public class StdPDPItemSetChangeNotifier {
 	
 	public void addItemSetChangeListener(StdItemSetChangeListener listener) {
 		if (this.listeners == null) {
-			this.listeners = new LinkedList<StdItemSetChangeListener>();
+			this.listeners = new LinkedList<>();
 		}
 		this.listeners.add(listener);
 	}

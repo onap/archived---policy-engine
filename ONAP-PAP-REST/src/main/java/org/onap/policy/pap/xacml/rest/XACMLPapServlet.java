@@ -128,10 +128,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 * The CopyOnWriteArrayList *should* protect from concurrency errors.
 	 * This list is seldom changed but often read, so the costs of this approach make sense.
 	 */
-	private static final CopyOnWriteArrayList<String> adminConsoleURLStringList = new CopyOnWriteArrayList<String>();	
+	private static final CopyOnWriteArrayList<String> adminConsoleURLStringList = new CopyOnWriteArrayList<>();	
 	
-	private static String CONFIG_HOME;
-	private static String ACTION_HOME;
+	private static String configHome;
+	private static String actionHome;
 	/*
 	 * This PAP instance's own URL.
 	 * Need this when creating URLs to send to the PDPs so they can GET the Policy files from this process. 
@@ -155,26 +155,13 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	private static String papDbUrl = null;
 	private static String papDbUser = null;
 	private static String papDbPassword = null;
-	private static Integer papTransWait = null;
-	private static Integer papTransTimeout = null;
-	private static Integer papAuditTimeout = null;
-	private static Boolean papAuditFlag = null;
-	private static Boolean papFileSystemAudit = null;
 	private static String papResourceName = null;
-	private static Integer fpMonitorInterval = null; 
-	private static Integer failedCounterThreshold = null;
-	private static Integer testTransInterval = null;
-	private static Integer writeFpcInterval = null;
-	private static String papSiteName=null;
-	private static String papNodeType=null;	
-	private static String papDependencyGroups = null;
 	private static String[] papDependencyGroupsFlatArray = null;
 	private static String environment = null;
 	private static String pdpFile = null;
 	
-	private String storedRequestId = null;
-	private IntegrityMonitor im;
-	private IntegrityAudit ia;
+	private transient IntegrityMonitor im;
+	private transient IntegrityAudit ia;
 	
 	//MicroService Model Properties
 	private static String msOnapName;
@@ -183,8 +170,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 * This thread may be invoked upon startup to initiate sending PDP policy/pip configuration when
 	 * this servlet starts. Its configurable by the admin.
 	 */
-	private Thread initiateThread = null;
-	private ONAPLoggingContext baseLoggingContext = null;
+	private transient static Thread initiateThread = null;
+	private transient ONAPLoggingContext baseLoggingContext = null;
 	
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -205,7 +192,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				String hostname = InetAddress.getLocalHost().getCanonicalHostName();
 				baseLoggingContext.setServer(hostname);
 			} catch (UnknownHostException e) {
-				LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get hostname for logging");
+				LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get hostname for logging", e);
 			}
 			// Initialize
 			XACMLRest.xacmlInit(config);
@@ -214,87 +201,36 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			/*
 			 * Retrieve the property values
 			 */
-			CONFIG_HOME = getConfigHome();
-			ACTION_HOME = getActionHome();
-			papDbDriver = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_DRIVER);
-			if(papDbDriver == null){
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbDriver property entry");
-				throw new PAPException("papDbDriver is null");
-			}
-			setPapDbDriver(papDbDriver);
-			papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
-			if(papDbUrl == null){
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbUrl property entry");
-				throw new PAPException("papDbUrl is null");
-			}
-			setPapDbUrl(papDbUrl);
-			papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
-			if(papDbUser == null){
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbUser property entry");
-				throw new PAPException("papDbUser is null");
-			}
-			setPapDbUser(papDbUser);
-			papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
-			if(papDbPassword == null){
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbPassword property entry");
-				throw new PAPException("papDbPassword is null");
-			}
-			setPapDbPassword(papDbPassword);
-			papResourceName = XACMLProperties.getProperty(XACMLRestProperties.PAP_RESOURCE_NAME);
-			if(papResourceName == null){
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papResourceName property entry");
-				throw new PAPException("papResourceName is null");
-			}
-			papSiteName = XACMLProperties.getProperty(XACMLRestProperties.PAP_SITE_NAME);
+			setCommonProperties();
+			String papSiteName = XACMLProperties.getProperty(XACMLRestProperties.PAP_SITE_NAME);
 			if(papSiteName == null){
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papSiteName property entry");
 				throw new PAPException("papSiteName is null");
 			}
-			papNodeType = XACMLProperties.getProperty(XACMLRestProperties.PAP_NODE_TYPE);
+			String papNodeType = XACMLProperties.getProperty(XACMLRestProperties.PAP_NODE_TYPE);
 			if(papNodeType == null){
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papNodeType property entry");
 				throw new PAPException("papNodeType is null");
 			}
-			environment = XACMLProperties.getProperty("ENVIRONMENT", "DEVL");
 			//Integer will throw an exception of anything is missing or unrecognized
-			papTransWait = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT));
-			papTransTimeout = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_TIMEOUT));
-			papAuditTimeout = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_TIMEOUT));
+			int papTransWait = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT));
+			int papTransTimeout = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_TIMEOUT));
+			int papAuditTimeout = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_TIMEOUT));
 			//Boolean will default to false if anything is missing or unrecognized
-			papAuditFlag = Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG));
-			papFileSystemAudit = Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_FLAG));
-			papDependencyGroups = XACMLProperties.getProperty(XACMLRestProperties.PAP_DEPENDENCY_GROUPS);
+			boolean papAuditFlag = Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG));
+			boolean papFileSystemAudit = Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_FLAG));
+			String papDependencyGroups = XACMLProperties.getProperty(XACMLRestProperties.PAP_DEPENDENCY_GROUPS);
 			if(papDependencyGroups == null){
 				throw new PAPException("papDependencyGroups is null");
 			}
-			try{
-				//Now we have flattened the array into a simple comma-separated list
-				papDependencyGroupsFlatArray = papDependencyGroups.split("[;,]");
-				//clean up the entries
-				for (int i = 0 ; i < papDependencyGroupsFlatArray.length ; i ++){
-					papDependencyGroupsFlatArray[i] = papDependencyGroupsFlatArray[i].trim();
-				}
-				try{
-					if(XACMLProperties.getProperty(XACMLRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS) != null){
-						papIntegrityAuditPeriodSeconds = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS).trim());
-					}
-				}catch(Exception e){
-					String msg = "integrity_audit_period_seconds ";
-					LOGGER.error("\n\nERROR: " + msg + "Bad property entry: " + e.getMessage() + "\n");
-					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "XACMLPapServlet", " ERROR: " + msg +"Bad property entry");
-					throw e;
-				}
-			}catch(Exception e){
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "XACMLPapServlet", " ERROR: Bad property entry");
-				throw e;
-			}
+			setPAPDependencyGroups(papDependencyGroups);
 			//Integer will throw an exception of anything is missing or unrecognized
-			fpMonitorInterval = Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.FP_MONITOR_INTERVAL));
-			failedCounterThreshold = Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.FAILED_COUNTER_THRESHOLD));
-			testTransInterval = Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.TEST_TRANS_INTERVAL));
-			writeFpcInterval = Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.WRITE_FPC_INTERVAL));
+			int fpMonitorInterval = Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.FP_MONITOR_INTERVAL));
+			int failedCounterThreshold = Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.FAILED_COUNTER_THRESHOLD));
+			int testTransInterval = Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.TEST_TRANS_INTERVAL));
+			int writeFpcInterval = Integer.parseInt(XACMLProperties.getProperty(IntegrityMonitorProperties.WRITE_FPC_INTERVAL));
 			LOGGER.debug("\n\n\n**************************************"
-					+ "\n**************************************"
+					+ "\n*************************************"
 					+ "\n"
 					+ "\n   papDbDriver = " + papDbDriver
 					+ "\n   papDbUrl = " + papDbUrl
@@ -314,7 +250,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					+ "\n	papNodeType = " + papNodeType
 					+ "\n	papDependencyGroupsList = " + papDependencyGroups
 					+ "\n   papIntegrityAuditPeriodSeconds = " + papIntegrityAuditPeriodSeconds
-					+ "\n\n**************************************"
+					+ "\n\n*************************************"
 					+ "\n**************************************");
 			// Pull custom persistence settings
 			Properties properties;
@@ -330,39 +266,22 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						+ "XACMLProperties.getProperties()");
 				throw new ServletException(e.getMessage(), e.getCause());
 			}
-			//Micro Service Properties
-			msOnapName=properties.getProperty("xacml.policy.msOnapName");
-			setMsOnapName(msOnapName);
-			msPolicyName=properties.getProperty("xacml.policy.msPolicyName");
-			setMsPolicyName(msPolicyName);
-			// PDPId File location 
-			XACMLPapServlet.pdpFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_IDFILE);
-			if (XACMLPapServlet.pdpFile == null) {
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " The PDP Id Authentication File Property is not valid: "
-					+ XACMLRestProperties.PROP_PDP_IDFILE);
-				throw new PAPException("The PDP Id Authentication File Property :"+ XACMLRestProperties.PROP_PDP_IDFILE+ " is not Valid. ");
-			}
 			// Create an IntegrityMonitor
 			im = IntegrityMonitor.getInstance(papResourceName,properties);
 			// Create an IntegrityAudit
 			ia = new IntegrityAudit(papResourceName, AUDIT_PAP_PERSISTENCE_UNIT, properties);
 			ia.startAuditThread();
 			// Create the entity manager factory
-			emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT, properties);
-			if (emf == null) {
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Error creating entity manager factory with persistence unit: "
-						+ PERSISTENCE_UNIT);
-				throw new ServletException("Unable to create Entity Manager Factory");
-			}
+			setEMF(properties);
 			// we are about to call the PDPs and give them their configuration.
 			// To do that we need to have the URL of this PAP so we can construct the Policy file URLs
-			XACMLPapServlet.papURL = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
+			setPAPURL(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL));
 			//Create the policyDBDao
-			policyDBDao = PolicyDBDao.getPolicyDBDaoInstance(getEmf());
+			setPolicyDBDao();
 			// Load our PAP engine, first create a factory
 			ONAPPapEngineFactory factory = ONAPPapEngineFactory.newInstance(XACMLProperties.getProperty(XACMLProperties.PROP_PAP_PAPENGINEFACTORY));
 			// The factory knows how to go about creating a PAP Engine
-			XACMLPapServlet.papEngine = (PAPPolicyEngine) factory.newEngine();
+			setPAPEngine((PAPPolicyEngine) factory.newEngine());
 			PolicyDBDaoTransaction addNewGroup = null;
 			try{
 				if(((org.onap.policy.xacml.std.pap.StdEngine)papEngine).wasDefaultGroupJustAdded){
@@ -381,7 +300,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				}
 			}
 			policyDBDao.setPapEngine((PAPPolicyEngine) XACMLPapServlet.papEngine);
-			//boolean performFileToDatabaseAudit = false;
     		if (Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG))){
     			//get an AuditTransaction to lock out all other transactions
     			PolicyDBDaoTransaction auditTrans = policyDBDao.getNewAuditTransaction();
@@ -397,13 +315,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			// Configurable - have the PAP servlet initiate sending the latest PDP policy/pip configuration
 			// to all its known PDP nodes.
 			if (Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_INITIATE_PDP_CONFIG))) {
-				this.initiateThread = new Thread(this);
-				this.initiateThread.start();
+			    startInitiateThreadService(new Thread(this));
 			}
 			// After startup, the PAP does Heartbeat's to each of the PDPs periodically
-			XACMLPapServlet.heartbeat = new Heartbeat((PAPPolicyEngine) XACMLPapServlet.papEngine);
-			XACMLPapServlet.heartbeatThread = new Thread(XACMLPapServlet.heartbeat);
-			XACMLPapServlet.heartbeatThread.start();
+			startHeartBeatService(new Heartbeat((PAPPolicyEngine) XACMLPapServlet.papEngine));
 
 		} catch (FactoryException | PAPException e) {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " Failed to create engine");
@@ -414,7 +329,114 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		}
 	}
 
-	/**
+	private static void startInitiateThreadService(Thread thread) {
+	    initiateThread = thread;
+        initiateThread.start();
+    }
+
+    private static void startHeartBeatService(Heartbeat heartbeat) {
+	    XACMLPapServlet.heartbeat = heartbeat;
+        XACMLPapServlet.heartbeatThread = new Thread(XACMLPapServlet.heartbeat);
+        XACMLPapServlet.heartbeatThread.start();
+    }
+
+    private static void setPolicyDBDao() throws ServletException {
+	    try {
+            policyDBDao = PolicyDBDao.getPolicyDBDaoInstance(getEmf());
+        } catch (Exception e) {
+            throw new ServletException("Unable to Create Policy DBDao Instance",e);
+        }
+    }
+
+    private static void setEMF(Properties properties) throws ServletException {
+	    emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT, properties);
+        if (emf == null) {
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Error creating entity manager factory with persistence unit: "
+                    + PERSISTENCE_UNIT);
+            throw new ServletException("Unable to create Entity Manager Factory");
+        }
+    }
+
+    private static void setPAPURL(String papURL) {
+	    XACMLPapServlet.papURL = papURL;
+    }
+
+    private static void setPAPEngine(PAPPolicyEngine newEngine) {
+	    XACMLPapServlet.papEngine = newEngine;
+    }
+
+    private static void setPAPDependencyGroups(String papDependencyGroups) throws PAPException {
+	    try{
+            //Now we have flattened the array into a simple comma-separated list
+            papDependencyGroupsFlatArray = papDependencyGroups.split("[;,]");
+            //clean up the entries
+            for (int i = 0 ; i < papDependencyGroupsFlatArray.length ; i ++){
+                papDependencyGroupsFlatArray[i] = papDependencyGroupsFlatArray[i].trim();
+            }
+            try{
+                if(XACMLProperties.getProperty(XACMLRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS) != null){
+                    papIntegrityAuditPeriodSeconds = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PAP_INTEGRITY_AUDIT_PERIOD_SECONDS).trim());
+                }
+            }catch(Exception e){
+                String msg = "integrity_audit_period_seconds ";
+                LOGGER.error("\n\nERROR: " + msg + "Bad property entry: " + e.getMessage() + "\n");
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "XACMLPapServlet", " ERROR: " + msg +"Bad property entry");
+                throw e;
+            }
+        }catch(Exception e){
+            PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "XACMLPapServlet", " ERROR: Bad property entry");
+            throw new PAPException(e);
+        }
+    }
+
+    private static void setCommonProperties() throws PAPException {
+	    setConfigHome();
+        setActionHome();
+        papDbDriver = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_DRIVER);
+        if(papDbDriver == null){
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbDriver property entry");
+            throw new PAPException("papDbDriver is null");
+        }
+        setPapDbDriver(papDbDriver);
+        papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
+        if(papDbUrl == null){
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbUrl property entry");
+            throw new PAPException("papDbUrl is null");
+        }
+        setPapDbUrl(papDbUrl);
+        papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
+        if(papDbUser == null){
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbUser property entry");
+            throw new PAPException("papDbUser is null");
+        }
+        setPapDbUser(papDbUser);
+        papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
+        if(papDbPassword == null){
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbPassword property entry");
+            throw new PAPException("papDbPassword is null");
+        }
+        setPapDbPassword(papDbPassword);
+        papResourceName = XACMLProperties.getProperty(XACMLRestProperties.PAP_RESOURCE_NAME);
+        if(papResourceName == null){
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papResourceName property entry");
+            throw new PAPException("papResourceName is null");
+        }
+        environment = XACMLProperties.getProperty("ENVIRONMENT", "DEVL");
+        //Micro Service Properties
+        msOnapName=XACMLProperties.getProperty("xacml.policy.msOnapName");
+        setMsOnapName(msOnapName);
+        msPolicyName=XACMLProperties.getProperty("xacml.policy.msPolicyName");
+        setMsPolicyName(msPolicyName);
+        // PDPId File location 
+        XACMLPapServlet.pdpFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_IDFILE);
+        if (XACMLPapServlet.pdpFile == null) {
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " The PDP Id Authentication File Property is not valid: "
+                + XACMLRestProperties.PROP_PDP_IDFILE);
+            throw new PAPException("The PDP Id Authentication File Property :"+ XACMLRestProperties.PROP_PDP_IDFILE+ " is not Valid. ");
+        }
+    }
+
+    /**
 	 * Thread used only during PAP startup to initiate change messages to all known PDPs.
 	 * This must be on a separate thread so that any GET requests from the PDPs during this update can be serviced.
 	 */
@@ -430,6 +452,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 * Depending on how this servlet is run, we may or may not care about cleaning up the resources.
 	 * For now we assume that we do care.
 	 */
+	@Override
 	public void destroy() {
 		// Make sure our threads are destroyed
 		if (XACMLPapServlet.heartbeatThread != null) {
@@ -441,14 +464,16 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				XACMLPapServlet.heartbeatThread.interrupt();
 				XACMLPapServlet.heartbeatThread.join();
 			} catch (InterruptedException e) {
+			    XACMLPapServlet.heartbeatThread.interrupt();
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " Error stopping heartbeat");
 			}
 		}
-		if (this.initiateThread != null) {
+		if (initiateThread != null) {
 			try {
-				this.initiateThread.interrupt();
-				this.initiateThread.join();
+				initiateThread.interrupt();
+				initiateThread.join();
 			} catch (InterruptedException e) {
+			    initiateThread.interrupt();
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " Error stopping thread");
 			}
 		}
@@ -479,21 +504,19 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			String message = "POST interface called for PAP " + papResourceName + " but it has an Administrative"
 					+ " state of " + im.getStateManager().getAdminState()
 					+ "\n Exception Message: " + ae.getMessage();
-			LOGGER.info(message);
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
+			LOGGER.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message, ae);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 			return;
 		}catch (StandbyStatusException se) {
 			String message = "POST interface called for PAP " + papResourceName + " but it has a Standby Status"
 					+ " of " + im.getStateManager().getStandbyStatus()
 					+ "\n Exception Message: " + se.getMessage();
-			LOGGER.info(message);
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
+			LOGGER.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message, se);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 			return;
 		}
 		try {
@@ -649,7 +672,16 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		im.endTransaction();
 	}
 
-	/**
+	private void setResponseError(HttpServletResponse response,int responseCode, String message) {
+	    try {
+            response.sendError(responseCode, message);
+        } catch (IOException e) {
+            LOGGER.error("Error setting Error response Header ", e);
+        }
+	    return;
+    }
+
+    /**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -827,7 +859,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 */
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ONAPLoggingContext loggingContext = ONAPLoggingUtils.getLoggingContextForRequest(request, baseLoggingContext);
-		storedRequestId = loggingContext.getRequestID();
 		loggingContext.transactionStarted();
 		loggingContext.setServiceName("PAP.put");
 		if ((loggingContext.getRequestID() == null) || (loggingContext.getRequestID() == "")){
@@ -1269,7 +1300,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 
 			if (policy != null && ((policy.getId().contains("Config_MS_")) || (policy.getId().contains("BRMS_Param")))) {
 				PushPolicyHandler pushPolicyHandler = PushPolicyHandler.getInstance();
-				if (pushPolicyHandler.preSafetyCheck(policy, CONFIG_HOME)) {
+				if (pushPolicyHandler.preSafetyCheck(policy, configHome)) {
 					LOGGER.debug("Precheck Successful.");
 				}
 			}
@@ -1813,7 +1844,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				
 				PushPolicyHandler pushPolicyHandler = PushPolicyHandler.getInstance();	
 				OnapPDPGroup updatedGroup = (StdPDPGroup)objectFromJSON;	
-				if (pushPolicyHandler.preSafetyCheck(updatedGroup, CONFIG_HOME)) {		
+				if (pushPolicyHandler.preSafetyCheck(updatedGroup, configHome)) {		
 					LOGGER.debug("Precheck Successful.");
 				}
 				
@@ -2196,7 +2227,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		// kick off a thread to do an event notification for each PDP.
 		// This needs to be on a separate thread so that PDPs that do not respond (down, non-existent, etc)
 		// do not block the PSP response to the AC, which would freeze the GUI until all PDPs sequentially respond or time-out.
-		Thread t = new Thread(new UpdatePDPThread(pdp, storedRequestId));
+		Thread t = new Thread(new UpdatePDPThread(pdp));
 		if(CheckPDP.validateID(pdp.getId())){
 			t.start();
 		}
@@ -2206,9 +2237,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		private OnapPDP pdp;
 		private String requestId;
 
-		public UpdatePDPThread(OnapPDP pdp, String storedRequestId) {
+		public UpdatePDPThread(OnapPDP pdp) {
 			this.pdp = pdp;
-			requestId = storedRequestId;
 		}
 
 		public void run() {
@@ -2246,7 +2276,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				}
 				connection.setRequestProperty("Content-Type", "text/x-java-properties");
 				connection.setRequestProperty("X-ECOMP-RequestID", loggingContext.getRequestID());
-				storedRequestId = null;
 				connection.setInstanceFollowRedirects(true);
 				connection.setDoOutput(true);
 				try (OutputStream os = connection.getOutputStream()) {
@@ -2474,7 +2503,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	}
 
 	private static void loadWebapps() throws PAPException{
-		if(ACTION_HOME == null || CONFIG_HOME == null){
+		if(actionHome == null || configHome == null){
 			Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));
 			//Sanity Check
 			if (webappsPath == null) {
@@ -2499,8 +2528,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 							+ webappsPathAction.toAbsolutePath().toString(), e);
 				}
 			}
-			ACTION_HOME = webappsPathAction.toString();
-			CONFIG_HOME = webappsPathConfig.toString();
+			actionHome = webappsPathAction.toString();
+			configHome = webappsPathConfig.toString();
 		}
 	}
 
@@ -2510,7 +2539,11 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		} catch (PAPException e) {
 			return null;
 		}
-		return CONFIG_HOME;
+		return configHome;
+	}
+	
+	private static void setConfigHome(){
+	    configHome = getConfigHome();
 	}
 
 	public static String getActionHome(){
@@ -2519,7 +2552,11 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		} catch (PAPException e) {
 			return null;
 		}
-		return ACTION_HOME;
+		return actionHome;
+	}
+	
+	private static void setActionHome(){
+	    actionHome = getActionHome();
 	}
 
 	public static EntityManagerFactory getEmf() {
