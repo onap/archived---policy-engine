@@ -20,7 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -113,14 +115,14 @@ public class FirewallDictionaryController {
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW, e);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
 			response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_prefixList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView savePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView savePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -192,7 +194,7 @@ public class FirewallDictionaryController {
 				return null;
 			}
 		}catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW, e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
@@ -202,7 +204,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_PrefixList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -230,7 +232,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/validate_prefixList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView validatePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView validatePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -240,6 +242,7 @@ public class FirewallDictionaryController {
 			try{
 				CIDR.newCIDR(prefixList.getPrefixListValue());
 			}catch(UnknownHostException e){
+				LOGGER.error(e);
 				responseValidation = "error";
 			}		
 			response.setCharacterEncoding("UTF-8");
@@ -281,7 +284,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_portName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView savePortListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView savePortListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			ObjectMapper mapper = new ObjectMapper();
@@ -326,7 +329,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_PortList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removePortListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removePortListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -388,7 +391,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_protocolList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -470,7 +473,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_protocol"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -533,7 +536,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_addressGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -641,7 +644,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_AddressGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -710,7 +713,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_ActionList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -792,7 +795,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_ActionList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -854,7 +857,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_serviceGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -963,7 +966,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_serviceGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -1027,7 +1030,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_securityZone"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -1110,7 +1113,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_securityZone"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -1175,7 +1178,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_serviceList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -1292,7 +1295,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_serviceList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -1354,7 +1357,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_zoneName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -1436,7 +1439,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_zone"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -1500,7 +1503,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_termList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
@@ -1704,7 +1707,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_termList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -1768,7 +1771,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_FWDictionaryList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveFWDictionaryList(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveFWDictionaryList(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			ObjectMapper mapper = new ObjectMapper();
@@ -1844,7 +1847,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_FWDictionaryList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeFWDictionaryListy(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeFWDictionaryListy(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -1905,7 +1908,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_fwTagPicker"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean fromAPI = false;
@@ -2010,7 +2013,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_tagPicker"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -2069,7 +2072,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_fwTag"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean fromAPI = false;
@@ -2172,7 +2175,7 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_tagList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
