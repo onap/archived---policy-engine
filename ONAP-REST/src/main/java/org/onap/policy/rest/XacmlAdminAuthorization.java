@@ -52,7 +52,7 @@ public class XacmlAdminAuthorization {
 		return userId;
 	}
 
-	public void setUserId(UserInfo userId) {
+	public static void setUserId(UserInfo userId) {
 		XacmlAdminAuthorization.userId = userId;
 	}
 
@@ -66,6 +66,7 @@ public class XacmlAdminAuthorization {
 		AdminAction(String a) {
 			this.action = a;
 		}
+		@Override
 		public String toString() {
 			return this.action;
 		}
@@ -84,6 +85,7 @@ public class XacmlAdminAuthorization {
 		AdminResource(String r) {
 			this.resource = r;
 		}
+		@Override
 		public String toString() {
 			return this.resource;
 		}
@@ -102,6 +104,7 @@ public class XacmlAdminAuthorization {
 		Role(String a) {
 			this.userRole = a;
 		}
+		@Override
 		public String toString() {
 			return this.userRole;
 		}

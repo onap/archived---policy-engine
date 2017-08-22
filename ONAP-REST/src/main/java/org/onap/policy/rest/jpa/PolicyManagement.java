@@ -62,7 +62,7 @@ public class PolicyManagement implements Serializable {
 	private String configName;
 	
 	@Column(name="XML", nullable=false)
-	private Clob xml;
+	private transient Clob xml;
 	
 	@Column(name="CREATE_DATE_TIME", nullable=false)
 	private Timestamp createDateTime;

@@ -40,6 +40,7 @@ import org.onap.policy.jpa.BackUpMonitorEntity;
 import org.onap.policy.std.NotificationStore;
 import org.onap.policy.std.StdPDPNotification;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonpatch.JsonPatch;
@@ -75,7 +76,7 @@ public class BackUpMonitor {
 		ASTRA
 	}
 
-	private BackUpMonitor(String resourceNodeName, String resourceName, Properties properties, BackUpHandler handler) throws Exception{
+	private BackUpMonitor(String resourceNodeName, String resourceName, Properties properties, BackUpHandler handler) throws BackUpMonitorException{
 		if(instance == null){
 			instance = this;
 		}
@@ -87,7 +88,7 @@ public class BackUpMonitor {
 		emf = Persistence.createEntityManagerFactory("PolicyEngineUtils", properties);
 		if(emf==null){
 			LOGGER.error("Unable to create Entity Manger Factory ");
-			throw new Exception("Unable to create Entity Manger Factory");
+			throw new BackUpMonitorException("Unable to create Entity Manger Factory");
 		}
 		em = emf.createEntityManager();
 
@@ -107,7 +108,7 @@ public class BackUpMonitor {
 	 * @param properties Properties format of the properties file. 
 	 * @return BackUpMonitor instance. 
 	 */
-	public static synchronized BackUpMonitor getInstance(String resourceNodeName, String resourceName, Properties properties, BackUpHandler handler) throws Exception {
+	public static synchronized BackUpMonitor getInstance(String resourceNodeName, String resourceName, Properties properties, BackUpHandler handler) throws BackUpMonitorException {
 		if(resourceNodeName==null || resourceNodeName.trim().equals("") ||resourceName==null|| resourceName.trim().equals("") || properties == null || handler==null){
 			LOGGER.error("Error while getting Instance. Please check resourceName and/or properties file");
 			return null;
@@ -177,7 +178,7 @@ public class BackUpMonitor {
 					TimeUnit.MILLISECONDS.sleep(pingInterval);
 					checkDataBase();
 				} catch (Exception e) {
-					LOGGER.error("Error during Thread execution " + e.getMessage());
+					LOGGER.error("Error during Thread execution " + e.getMessage(), e);
 				}
 			}
 		}
@@ -198,9 +199,9 @@ public class BackUpMonitor {
 	}
 
 	// Check Database and set the Flag. 
-	private void checkDataBase() throws Exception {
+	private void checkDataBase() throws BackUpMonitorException {
 		EntityTransaction et = em.getTransaction();
-		notificationRecord = PolicyUtils.objectToJsonString(NotificationStore.getNotificationRecord());
+		setNotificationRecord();
 		// Clear Cache. 
 		LOGGER.info("Clearing Cache");
 		em.getEntityManagerFactory().getCache().evictAll();
@@ -279,7 +280,7 @@ public class BackUpMonitor {
 				// Correct the database if any errors and perform monitor checks.
 				if(masterEntities.size()!=1 || !getFlag()){
 					// We are either not master or there are more masters or no masters. 
-					if(masterEntities.size()==0){
+					if(masterEntities.isEmpty()){
 						// No Masters is a problem Convert ourselves to Master. 
 						selfEntity = setMaster(selfEntity);
 						selfEntity.setTimeStamp(new Date());
@@ -347,15 +348,24 @@ public class BackUpMonitor {
 			}
 			et.commit();
 		}catch(Exception e){
-			LOGGER.error("failed Database Operation " + e.getMessage());
+			LOGGER.error("failed Database Operation " + e.getMessage(), e);
 			if(et.isActive()){
 				et.rollback();
 			}
-			throw new Exception(e);
+			throw new BackUpMonitorException(e);
 		}
 	}
 
-	// Calculate Patch and return String JsonPatch of the notification Delta. 
+	private static void setNotificationRecord() throws BackUpMonitorException {
+	    try {
+            notificationRecord = PolicyUtils.objectToJsonString(NotificationStore.getNotificationRecord());
+        } catch (JsonProcessingException e1) {
+            LOGGER.error("Error retrieving notification record failed. ", e1);
+            throw new BackUpMonitorException(e1);
+        }
+    }
+
+    // Calculate Patch and return String JsonPatch of the notification Delta. 
 	private synchronized String calculatePatch(String oldNotificationRecord) {
 		try{
 			JsonNode notification = JsonLoader.fromString(notificationRecord);
@@ -368,11 +378,11 @@ public class BackUpMonitor {
 				LOGGER.info("Generated New Notification is : " + patched.toString());
 				return patched.toString();
 			} catch (JsonPatchException e) {
-				LOGGER.error("Error generating Patched "  +e.getMessage());
+				LOGGER.error("Error generating Patched "  +e.getMessage(), e);
 				return null;
 			}
 		}catch(IOException e){
-			LOGGER.error("Error generating Patched "  +e.getMessage());
+			LOGGER.error("Error generating Patched "  +e.getMessage(), e);
 			return null;
 		}
 	}
@@ -383,7 +393,7 @@ public class BackUpMonitor {
 	 * @param notification String format of notification record to store in the Database. 
 	 * @throws Exception 
 	 */
-	public synchronized void updateNotification() throws Exception{
+	public synchronized void updateNotification() throws BackUpMonitorException{
 		checkDataBase();
 	}
 
@@ -398,11 +408,11 @@ public class BackUpMonitor {
 						handler.runOnNotification(notificationObject);
 						notificationRecord = lastMasterNotification;
 					}catch (Exception e){
-						LOGGER.error("Error in Clients Handler Object : " + e.getMessage());
+						LOGGER.error("Error in Clients Handler Object : " + e.getMessage(), e);
 					}
 				}
 			} catch (IOException e) {
-				LOGGER.info("Error while notification Conversion " + e.getMessage());
+				LOGGER.info("Error while notification Conversion " + e.getMessage(), e);
 			}
 		}
 	}

@@ -32,19 +32,14 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
-//import org.apache.log4j.Logger;
 import org.glassfish.tyrus.client.ClientManager;
 import org.onap.policy.api.NotificationHandler;
 import org.onap.policy.api.NotificationScheme;
 import org.onap.policy.api.NotificationType;
 import org.onap.policy.api.PDPNotification;
-import org.onap.policy.std.NotificationStore;
-import org.onap.policy.std.StdPDPNotification;
-
-import org.onap.policy.xacml.api.XACMLErrorConstants;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import org.onap.policy.common.logging.flexlogger.*; 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.xacml.api.XACMLErrorConstants; 
 
 @ClientEndpoint
 public class AutoClientEnd {
@@ -99,12 +94,10 @@ public class AutoClientEnd {
 							// The URL's will be in Sync according to design Spec. 
 							ManualClientEnd.start(AutoClientEnd.url);
 							StdPDPNotification notification = NotificationStore.getDeltaNotification((StdPDPNotification)ManualClientEnd.result(NotificationScheme.MANUAL_ALL_NOTIFICATIONS));
-							if(notification.getNotificationType()!=null){
-								if(oldNotification!=notification){
-									oldNotification= notification;
-									AutoClientEnd.notification = notification;
-									callHandler();
-								}
+							if(notification.getNotificationType()!=null&&oldNotification!=notification){
+							    oldNotification= notification;
+							    AutoClientEnd.notification = notification;
+							    callHandler();
 							}
 							error = false;
 						}
@@ -136,7 +129,7 @@ public class AutoClientEnd {
 					session.close();
 					session = null;
 				} catch (IOException e) {
-					//
+					logger.error("Error closing websocket connection", e);
 				}
 			}
 			client = null;
@@ -148,7 +141,8 @@ public class AutoClientEnd {
 	private static void callHandler() {
 		if (handler != null && scheme != null) {
 			if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS)) {
-				boolean removed = false, updated = false;
+				boolean removed = false;
+				boolean updated = false;
 				if (notification.getRemovedPolicies() != null && !notification.getRemovedPolicies().isEmpty()) {
 					removed = true;
 				}
@@ -182,9 +176,7 @@ public class AutoClientEnd {
 
 	// WebSockets Code..
 	@OnOpen
-	public void onOpen(Session session) throws IOException {
-		// session.getBasicRemote().sendText("Connected to Client with Session: "
-		// + session.getId());
+	public static void onOpen(Session session){
 		logger.debug("Auto Notification Session Started... " + session.getId());
 		if(AutoClientEnd.session == null){
 			AutoClientEnd.session = session;
@@ -192,10 +184,9 @@ public class AutoClientEnd {
 	}
 
 	@OnError
-	public void onError(Session session, Throwable e) {
+	public static void onError(Session session, Throwable e) {
 		// trying to Restart by self.
 		logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Session Error.. "+ session.getId() + "\n Error is : " + e );
-		// logger.error("Exception Occured"+e);
 		stop();
 		if (url != null) {
 			client = null;
@@ -206,7 +197,7 @@ public class AutoClientEnd {
 	}
 
 	@OnClose
-	public void onClose(Session session) {
+	public static void onClose(Session session) {
 		logger.info("Session ended with "+ session.getId());
 		if(!stop && !message){
 			// This Block of code is executed if there is any Network Failure or if the Notification is Down. 
@@ -222,7 +213,7 @@ public class AutoClientEnd {
 	}
 
 	@OnMessage
-	public void onMessage(String message, Session session) throws JsonParseException, JsonMappingException, IOException {
+	public static void onMessage(String message, Session session) throws IOException {
 		AutoClientEnd.message = true;
 		logger.debug("Auto Notification Recieved Message " + message + " Session info is : " + session.getId());
 		try {

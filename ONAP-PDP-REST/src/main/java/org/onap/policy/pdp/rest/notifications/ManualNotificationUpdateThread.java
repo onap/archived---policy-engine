@@ -46,12 +46,12 @@ public class ManualNotificationUpdateThread implements Runnable {
 
 	private static final Logger LOGGER	= FlexLogger.getLogger(ManualNotificationUpdateThread.class);
 
-	private static String topic = null;
-	private static CambriaConsumer CConsumer = null;
+	private String topic = null;
+	private CambriaConsumer cConsumer = null;
 	private static String clusterList = null;
 	private static String update = null;
-	private static BusConsumer dmaapConsumer = null;
-	private static List<String> dmaapList = null;
+	private BusConsumer dmaapConsumer = null;
+	private List<String> dmaapList = null;
 	private static String propNotificationType = null;
 	private static String aafLogin = null;
 	private static String aafPassword = null;
@@ -81,10 +81,10 @@ public class ManualNotificationUpdateThread implements Runnable {
 		String group =  UUID.randomUUID ().toString ();
 		String id = "0";
 		String returnTopic = null;
-		propNotificationType = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TYPE);
+		setPropNotification();
 		if ("ueb".equals(propNotificationType)){
 			try {
-				clusterList = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_SERVERS).trim();
+			    setCluster();
 				String url = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_ID);
 				aURL = new URL(url);
 				topic = aURL.getHost() + aURL.getPort();
@@ -96,14 +96,14 @@ public class ManualNotificationUpdateThread implements Runnable {
 			}
 			if(aURL != null){
 				String consumerTopic = aURL.getHost() + aURL.getPort() + "UpdateRequest";
-				SendMessage(consumerTopic, "Starting-Topic");
+				sendMessage(consumerTopic, "Starting-Topic");
 				final LinkedList<String> urlList = new LinkedList<> ();
 				for ( String u : clusterList.split ( "," ) ){
 					urlList.add ( u );
 				}
 
 				try {
-					CConsumer = CambriaClientFactory.createConsumer ( null, urlList, consumerTopic , group, id, 20*1000, 1000 );
+					cConsumer = CambriaClientFactory.createConsumer ( null, urlList, consumerTopic , group, id, 20*1000, 1000 );
 				} catch (MalformedURLException | GeneralSecurityException e1) {
 					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Unable to create UEB Consumer: ", e1);
 				}
@@ -111,11 +111,11 @@ public class ManualNotificationUpdateThread implements Runnable {
 				while (this.isRunning()) {
 					LOGGER.debug("While loop test _ take out ");
 					try {
-						for ( String msg : CConsumer.fetch () ){		
+						for ( String msg : cConsumer.fetch () ){		
 							LOGGER.debug("Manual Notification Recieved Message " + msg + " from UEB cluster : ");
 							returnTopic = processMessage(msg);
 							if(returnTopic != null){
-								SendMessage(returnTopic, update);
+								sendMessage(returnTopic, update);
 							}
 						}
 					} catch (IOException e) {
@@ -129,8 +129,7 @@ public class ManualNotificationUpdateThread implements Runnable {
 			try {
 				dmaapServers = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_SERVERS);
 				topic = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TOPIC);
-				aafLogin = XACMLProperties.getProperty("DMAAP_AAF_LOGIN");
-				aafPassword = XACMLProperties.getProperty("DMAAP_AAF_PASSWORD");
+				setAAFCreds();
 			} catch (Exception e) {
 				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Unable to get DMaaP servers list:", e);
 				this.isRunning = false;
@@ -138,27 +137,19 @@ public class ManualNotificationUpdateThread implements Runnable {
 			
 			if(dmaapServers==null || topic==null){
 				LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
-				try {
-					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
-				} catch (Exception e) {
-					LOGGER.error(e);
-				}
 			}
 			
-			dmaapServers.trim();
-			topic.trim();
-			aafLogin.trim();
-			aafPassword.trim();
+			dmaapServers= dmaapServers.trim();
+			topic= topic.trim();
 			
 			String consumerTopic = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TOPIC).trim();
-			SendMessage(consumerTopic, "Starting-Topic");
+			sendMessage(consumerTopic, "Starting-Topic");
 			dmaapList = new ArrayList<>();
 			for ( String u : dmaapServers.split ( "," ) ){
 				dmaapList.add ( u );
 			}
 			
-			try {
-				
+			try {				
 				dmaapConsumer = new BusConsumer.DmaapConsumerWrapper(dmaapList, consumerTopic, aafLogin, aafPassword, group, id, 20*1000, 1000);
 			} catch (Exception e1) {
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Unable to create DMaaP Consumer: ", e1);
@@ -171,7 +162,7 @@ public class ManualNotificationUpdateThread implements Runnable {
 						LOGGER.debug("Manual Notification Recieved Message " + msg + " from DMaaP server : ");
 						returnTopic = processMessage(msg);
 						if(returnTopic != null){
-							SendMessage(returnTopic, update);
+							sendMessage(returnTopic, update);
 						}
 					}
 				}catch (Exception e) {
@@ -181,7 +172,29 @@ public class ManualNotificationUpdateThread implements Runnable {
 		}
 	}
 
-	private void SendMessage( String topic, String message) {
+	private static void setAAFCreds() {
+	    aafLogin = XACMLProperties.getProperty("DMAAP_AAF_LOGIN");
+        aafPassword = XACMLProperties.getProperty("DMAAP_AAF_PASSWORD");
+        if(aafLogin!=null){
+            aafLogin= aafLogin.trim();
+        }
+        if(aafPassword!=null){
+            aafPassword= aafPassword.trim();
+        }
+    }
+
+    private static void setCluster() {
+	    clusterList = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_SERVERS);
+	    if(clusterList!=null){
+	        clusterList=clusterList.trim();
+	    }
+    }
+
+    private static void setPropNotification() {
+        propNotificationType = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_TYPE);
+    }
+
+    private void sendMessage( String topic, String message) {
 		CambriaPublisher pub = null;
 		BusPublisher publisher = null;
 		try {
@@ -214,9 +227,9 @@ public class ManualNotificationUpdateThread implements Runnable {
 
 	private String processMessage(String msg) {
 		LOGGER.debug("notification message:  " + msg);
-		String[] UID = msg.split("=")[1].split("\"");
+		String[] uID = msg.split("=")[1].split("\"");
 		
-		String returnTopic = topic + UID[0];
+		String returnTopic = topic + uID[0];
 		if(msg.contains("Starting-Topic")){
 			return null;
 		}

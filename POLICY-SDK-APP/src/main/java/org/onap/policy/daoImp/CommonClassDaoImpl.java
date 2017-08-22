@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.script.SimpleBindings;
 
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -277,9 +278,8 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		}finally{
 			try{
 				session.close();
-			}catch(Exception e1){
+			}catch(HibernateException e1){
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
-				throw e1;
 			}
 		}
 		return data;

@@ -195,6 +195,9 @@ public class PolicyEngineServicesTest {
 	
 	@Test
 	public void getNotificationTopicValidPassTest() throws Exception{
+	    XACMLProperties.reloadProperties();
+        System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/notification.xacml.pdp.properties");
+        XACMLProperties.getProperties();
 		// Add a Topic. 
 		mockMvc.perform(post("/getNotification").headers(headers).header(UUIDHEADER, "123").content("test")).andExpect(status().isOk());
 		// Try to add same topic should fail.  

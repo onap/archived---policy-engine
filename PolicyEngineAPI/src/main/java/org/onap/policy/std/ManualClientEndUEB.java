@@ -145,13 +145,12 @@ public class ManualClientEndUEB {
 						logger.debug("Manual Notification Recieved Message " + msg + " from UEB cluster : " + uebURLList.toString());
 						resultJson = msg;
 						if (!msg.contains("UEB Update")){
-//							System.out.println("Manual Notification Recieved Message " + msg + " from UEB cluster : " + uebURLList.toString());
 							notification = NotificationUnMarshal.notificationJSON(msg);
 							count = 4;
 						}
 					}
 				}catch (Exception e) {
-					
+					logger.error("Error in Manual CLient UEB notification ", e);
 				} 
 				count++;
 			}		

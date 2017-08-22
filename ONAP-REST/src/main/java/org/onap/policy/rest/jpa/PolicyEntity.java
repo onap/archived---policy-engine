@@ -317,8 +317,8 @@ public class PolicyEntity implements Serializable {
 				version == p.version &&
 				policyVersion == p.policyVersion &&
 				policyData.equals(p.policyData) &&
-				((configurationDataEntity == null && p.configurationDataEntity == null) || configurationDataEntity.equals(p.configurationDataEntity)) &&
-				((actionBodyEntity == null && p.actionBodyEntity == null) || actionBodyEntity.equals(p.actionBodyEntity)) &&
+				((configurationDataEntity == null && p.configurationDataEntity == null) || (configurationDataEntity!=null && configurationDataEntity.equals(p.configurationDataEntity))) &&
+				((actionBodyEntity == null && p.actionBodyEntity == null) || (actionBodyEntity!=null && actionBodyEntity.equals(p.actionBodyEntity))) &&
 				createdBy.equals(p.createdBy) &&
 				createdDate.equals(p.createdDate) &&
 				description.equals(p.description) &&
