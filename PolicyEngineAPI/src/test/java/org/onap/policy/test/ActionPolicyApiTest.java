@@ -51,7 +51,7 @@ public class ActionPolicyApiTest extends TestCase {
 	PolicyParameters policyParameters = new PolicyParameters();
 	
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		try {
 			policyEngine = new PolicyEngine("Test/config_pass.properties");
 		} catch (PolicyEngineException e) {
@@ -80,7 +80,7 @@ public class ActionPolicyApiTest extends TestCase {
         policyParameters.setRequestID(UUID.randomUUID());
 	}
 
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 	}
 	

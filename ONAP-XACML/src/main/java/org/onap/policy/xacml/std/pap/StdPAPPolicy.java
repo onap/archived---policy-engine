@@ -42,7 +42,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 	private List<String> dynamicRuleAlgorithmCombo;
 	private List<String> dynamicRuleAlgorithmField1;
 	private List<String> dynamicRuleAlgorithmField2;
-	private List<Object> dynamicVariableList;
+	private transient List<Object> dynamicVariableList;
 	private List<String> dataTypeList;
 	private String configBodyData = null;
 	private String policyID = null;

@@ -38,15 +38,15 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 	
 	private Set<String> loadWarnings = new HashSet<>();
 	
-	private Set<PDPPolicy> loadedPolicies = new HashSet<>();
+	private transient Set<PDPPolicy> loadedPolicies = new HashSet<>();
 	
-	private Set<PDPPolicy> loadedRootPolicies = new HashSet<>();
+	private transient Set<PDPPolicy> loadedRootPolicies = new HashSet<>();
 	
-	private Set<PDPPolicy> failedPolicies = new HashSet<>();
+	private transient Set<PDPPolicy> failedPolicies = new HashSet<>();
 	
-	private Set<PDPPIPConfig>	loadedPIPConfigs = new HashSet<>();
+	private transient Set<PDPPIPConfig>	loadedPIPConfigs = new HashSet<>();
 	
-	private Set<PDPPIPConfig>	failedPIPConfigs = new HashSet<>();
+	private transient Set<PDPPIPConfig>	failedPIPConfigs = new HashSet<>();
 	
 	public StdPDPStatus() {
 	}

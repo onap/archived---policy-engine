@@ -22,67 +22,60 @@ package org.onap.policy.brmsInterface;
 
 import org.onap.policy.api.NotificationScheme;
 import org.onap.policy.api.PolicyEngine;
-
-//import org.apache.log4j.Logger;
-
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
-
+import org.onap.policy.api.PolicyException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
-
 /**
- * BRMSGateway: This application acts as the Gateway interface between the PDP XACML and PDP Drools. 
- * The listens for BRMS based policies and pushes them to the specified Policy Repository, from where the PDP Drools reads the Rule Jar.  
+ * BRMSGateway: This application acts as the Gateway interface between the PDP XACML and PDP Drools. The listens for
+ * BRMS based policies and pushes them to the specified Policy Repository, from where the PDP Drools reads the Rule Jar.
  * 
  * @version 0.1
  */
 public class BRMSGateway {
-	
-	private static final Logger logger = FlexLogger.getLogger(BRMSGateway.class);
-	private static final String configFile = "config.properties";
-	
-	private static PolicyEngine policyEngine = null;
-	
-	public static void main(String[] args) throws Exception{
-		// Initialize Handler. 
-		logger.info("Initializing BRMS Handler");
-		BRMSHandler bRMSHandler = null;
-		try{
-			bRMSHandler = new BRMSHandler(configFile);
-		}catch(NullPointerException e){
-			logger.error("Check your property file: " + e.getMessage());
-			System.exit(1);
-		}
-		
-		// Set Handler with Auto Notification and initialize policyEngine
-		try{
-			logger.info("Initializing policyEngine with Auto Notifications");
-			policyEngine= new PolicyEngine(configFile,NotificationScheme.AUTO_ALL_NOTIFICATIONS, bRMSHandler);
-		}catch(Exception e){
-			logger.error(XACMLErrorConstants.ERROR_UNKNOWN+"Error while Initializing Policy Engine "  + e.getMessage()); 
-		}
-		
-		//Keep Running.... 
-		Runnable runnable = new Runnable(){
-			public void run(){
-				while (true){
-					try {
-						Thread.sleep(30000);
-					} catch (InterruptedException e) {
-						logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR+"Thread Exception " + e.getMessage()); 
-					}
-				}
-			}
-		};
-		Thread thread = new Thread(runnable);
-		thread.start();
-	}
-	
-	public static PolicyEngine getPolicyEngine(){
-		return policyEngine;
-	}
+
+    private static final Logger logger = FlexLogger.getLogger(BRMSGateway.class);
+    private static final String CONFIGFILE = "config.properties";
+
+    private static PolicyEngine policyEngine = null;
+
+    public static void main(String[] args) throws Exception {
+        // Initialize Handler.
+        logger.info("Initializing BRMS Handler");
+        BRMSHandler bRMSHandler = null;
+        try {
+            bRMSHandler = new BRMSHandler(CONFIGFILE);
+        } catch (PolicyException e) {
+            logger.error("Check your property file: " + e.getMessage(), e);
+            System.exit(1);
+        }
+
+        // Set Handler with Auto Notification and initialize policyEngine
+        try {
+            logger.info("Initializing policyEngine with Auto Notifications");
+            policyEngine = new PolicyEngine(CONFIGFILE, NotificationScheme.AUTO_ALL_NOTIFICATIONS, bRMSHandler);
+        } catch (Exception e) {
+            logger.error(XACMLErrorConstants.ERROR_UNKNOWN + "Error while Initializing Policy Engine " + e.getMessage(),
+                    e);
+        }
+
+        // Keep Running....
+        Runnable runnable = () -> {
+            while (true) {
+                try {
+                    Thread.sleep(30000);
+                } catch (InterruptedException e) {
+                    logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Thread Exception " + e.getMessage());
+                    Thread.currentThread().interrupt();
+                }
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
+    }
+
+    public static PolicyEngine getPolicyEngine() {
+        return policyEngine;
+    }
 }

@@ -1,4 +1,4 @@
-package org.onap.policyEngine;
+package org.onap.policyengine;
 
 import java.io.File;
 import java.util.UUID;

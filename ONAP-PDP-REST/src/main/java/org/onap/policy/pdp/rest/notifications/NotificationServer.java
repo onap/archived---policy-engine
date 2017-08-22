@@ -38,6 +38,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.onap.policy.api.PolicyEngineException;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -66,8 +67,6 @@ public class NotificationServer {
 	private static final Logger LOGGER	= FlexLogger.getLogger(NotificationServer.class);
 	private static Queue<Session> queue = new ConcurrentLinkedQueue<>();
 	private static String update = null;
-	private static  String hosts = null;
-	private static URL aURL = null;
 	
 	@OnOpen
 	public void openConnection(Session session) {
@@ -88,7 +87,7 @@ public class NotificationServer {
 	}
 	
 	@OnMessage
-	public void Message(String message, Session session) {
+	public void message(String message, Session session) {
 		
 		if(message.equalsIgnoreCase("Manual")) {
 			try {
@@ -101,14 +100,14 @@ public class NotificationServer {
 		}
 	}
 
-	public static void sendNotification(String notification, String propNotificationType, String pdpURL) throws Exception {
+	public static void sendNotification(String notification, String propNotificationType, String pdpURL) throws PolicyEngineException, IOException, InterruptedException {
 
 		LOGGER.debug("Notification set to " + propNotificationType);
 		if (propNotificationType.equals("ueb")){
 
 			String topic = null;
 			try {
-				aURL = new URL(pdpURL);
+				URL aURL = new URL(pdpURL);
 				topic = aURL.getHost() + aURL.getPort();
 			} catch (MalformedURLException e1) {
 				pdpURL = pdpURL.replace("/", "");
@@ -116,7 +115,7 @@ public class NotificationServer {
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in parsing out pdpURL for UEB notfication ");
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e1, "Error in parsing out pdpURL for UEB notfication ");
 			}
-			hosts = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_SERVERS);
+			String hosts = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_SERVERS);
 			String apiKey = XACMLProperties.getProperty(XACMLRestProperties.PROP_UEB_API_KEY);
 			String apiSecret = XACMLProperties.getProperty(XACMLRestProperties.PROP_UEB_API_SECRET);
 
@@ -125,13 +124,13 @@ public class NotificationServer {
 			try {
 				if(hosts==null || topic==null || apiKey==null || apiSecret==null){
 					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "UEB properties are missing from the property file ");
-					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "UEB properties are missing from the property file ");
+					throw new PolicyEngineException(XACMLErrorConstants.ERROR_DATA_ISSUE + "UEB properties are missing from the property file ");
 				}
 
-				hosts.trim();
-				topic.trim();
-				apiKey.trim();
-				apiSecret.trim();
+				hosts = hosts.trim();
+				topic = topic.trim();
+				apiKey = apiKey.trim();
+				apiSecret = apiSecret.trim();
 				pub = new CambriaClientBuilders.PublisherBuilder ()
 						.usingHosts ( hosts )
 						.onTopic ( topic )
@@ -175,13 +174,13 @@ public class NotificationServer {
 			try {
 				if(dmaapServers==null || topic==null){
 					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
-					throw new Exception(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
+					throw new PolicyEngineException(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
 				}
 				
-				dmaapServers.trim();
-				topic.trim();
-				aafLogin.trim();
-				aafPassword.trim();
+				dmaapServers= dmaapServers.trim();
+				topic= topic.trim();
+				aafLogin= aafLogin.trim();
+				aafPassword= aafPassword.trim();
 				
 				List<String> dmaapList = null;
 				if(dmaapServers.contains(",")) {

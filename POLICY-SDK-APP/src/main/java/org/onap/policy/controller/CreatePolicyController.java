@@ -27,6 +27,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
@@ -45,7 +47,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 @Controller
 @RequestMapping("/")
 public class CreatePolicyController extends RestrictedBaseController{
-
+    private static Logger policyLogger = FlexLogger.getLogger(CreatePolicyController.class);
 	protected PolicyRestAdapter policyAdapter = null;
 	private ArrayList<Object> attributeList;
 	boolean isValidForm = false;
@@ -74,12 +76,13 @@ public class CreatePolicyController extends RestrictedBaseController{
 			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
 			policyAdapter.setConfigType(entity.getConfigurationData().getConfigType());
 			policyAdapter.setConfigBodyData(entity.getConfigurationData().getConfigBody());
-			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("_") + 1);
+			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf(' ') + 1);
 			policyAdapter.setPolicyName(policyNameValue);
 			String description = "";
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
+			    policyLogger.error("Error while collecting the desciption tag in ActionPolicy " + policyNameValue ,e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);

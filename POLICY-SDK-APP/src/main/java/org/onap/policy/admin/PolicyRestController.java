@@ -361,7 +361,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	}
 	
 	@RequestMapping(value={"/saveDictionary/*/*"}, method={RequestMethod.POST})
-	public ModelAndView saveDictionaryController(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String uri = request.getRequestURI().replace("/saveDictionary", "");
 		if(uri.contains(importDictionary)){
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
@@ -373,7 +373,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	}
 	
 	@RequestMapping(value={"/deleteDictionary/*/*"}, method={RequestMethod.POST})
-	public ModelAndView deletetDictionaryController(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView deletetDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String uri = request.getRequestURI().replace("/deleteDictionary", "");
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
 		response.getWriter().write(body);
@@ -381,7 +381,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	}
 	
 	@RequestMapping(value={"/searchDictionary"}, method={RequestMethod.POST})
-	public ModelAndView searchDictionaryController(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView searchDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Object resultList = null;
 		String uri = request.getRequestURI();
 		try{
@@ -410,7 +410,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	}
 	
 	@RequestMapping(value={"/searchPolicy"}, method={RequestMethod.POST})
-	public ModelAndView searchPolicy(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView searchPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		Object resultList = null;
 		String uri = request.getRequestURI()+"?action=search";
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
