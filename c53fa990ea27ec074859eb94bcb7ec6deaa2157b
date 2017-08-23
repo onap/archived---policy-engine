@@ -70,6 +70,30 @@
       "revId": "c53fa990ea27ec074859eb94bcb7ec6deaa2157b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_156f2294",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/daoimpl/CommonClassDaoImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 967
+      },
+      "writtenOn": "2017-08-23T12:58:47Z",
+      "side": 0,
+      "message": "Ok. Done.",
+      "parentUuid": "9a437d4f_e4e1969b",
+      "range": {
+        "startLine": 256,
+        "startChar": 4,
+        "endLine": 256,
+        "endChar": 13
+      },
+      "revId": "c53fa990ea27ec074859eb94bcb7ec6deaa2157b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
