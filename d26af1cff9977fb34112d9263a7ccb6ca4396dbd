@@ -1,0 +1,293 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_f5f13e96",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSGateway.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "I don\u0027t think catching NullPointerException is recommended practice over checking for null is recommended.  No action asked since not the purpose of this code inspection.   I wonder if sonar flags this?",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_555fea72",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSGateway.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "It seems that this thread will never end, and does not do anything.  Is this intended?",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_d54abaab",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "format",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_f5e49ead",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/PapUrlResolver.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "I am not sure why you would need these methods if you are calling the superclass, in this case \"Object\" ?",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_b5ee168a",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PolicyEngineImportService.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "Missing same change here with the exception for the sonar",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_95f31273",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/notifications/ManualNotificationUpdateThread.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "formatting",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_55edaa8a",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/notifications/NotificationController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "formatting",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_f5fb7e45",
+        "filename": "ONAP-SDK-APP/src/main/java/org/openecomp/portalapp/login/LoginStrategyImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "formatting",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_b595f6e5",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ActionPolicyController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "formatting",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_959af212",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/AutoClientDMAAP.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "formatting",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_759f8e04",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 934,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "formatting",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_55a48a56",
+        "filename": "PolicyEngineAPI/src/test/java/org/onap/policy/std/test/AutoClientUEBTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "why not removing these 2 lines, they really seem unused, stack variable ..",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_358906cb",
+        "filename": "PolicyEngineClient/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "Reformat",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_158602ba",
+        "filename": "PolicyEngineClient/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "Why skipping tests?  It didn\u0027t before",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_d58f5acb",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BackUpMonitor.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "formatting",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_b5bcd66d",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusConsumer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "License missing",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_95c1d2e6",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusPublisher.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T15:54:04Z",
+      "side": 1,
+      "message": "License missing",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
