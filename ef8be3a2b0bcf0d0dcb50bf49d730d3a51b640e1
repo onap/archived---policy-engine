@@ -1,0 +1,208 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_3577c6d6",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DeleteHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": "This policyLogger.error line should be deleted",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_d57d1ab3",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DictionaryHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": "Prefix this with\n\npublic static final Logger logger \u003d ..",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_b54a9681",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DictionaryHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": "unnecessary",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_55492a8a",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/PushPolicyHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": "mark it \"final\"",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_954f9292",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/PushPolicyHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": "remove",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_155ba255",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/SavePolicyHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": "final",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_f557fe24",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/SavePolicyHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": "delete below line, add the \"Could not set data to policy adapter \" in above line",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_d554fa22",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/SavePolicyHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": "delete",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_95367202",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/policycontroller/PolicyCreation.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": ".. + e.getMessage(), e)",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_352586c2",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/service/ImportService.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": "final",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_152282b9",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/util/JPAUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": "I think having IllegalStateException sonar will flag it as major issue, just remove the throws and should be fine",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_f52edea4",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/util/JPAUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:09:07Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "ef8be3a2b0bcf0d0dcb50bf49d730d3a51b640e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
