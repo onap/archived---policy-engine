@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a437d4f_b531760d",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSGateway.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-23T16:24:03Z",
+      "side": 1,
+      "message": "Yes Jorge, will fix this",
+      "parentUuid": "9a437d4f_f5f13e96",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a437d4f_555fea72",
         "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSGateway.java",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2017-08-23T15:54:04Z",
       "side": 1,
       "message": "It seems that this thread will never end, and does not do anything.  Is this intended?",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_f5a93e25",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSGateway.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-23T16:24:03Z",
+      "side": 1,
+      "message": "This is intended Jorge. we want the brmsgw to be running always.",
+      "parentUuid": "9a437d4f_555fea72",
       "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -64,6 +100,24 @@
       "writtenOn": "2017-08-23T15:54:04Z",
       "side": 1,
       "message": "I am not sure why you would need these methods if you are calling the superclass, in this case \"Object\" ?",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_55400a56",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/PapUrlResolver.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-23T16:24:03Z",
+      "side": 1,
+      "message": "Sonar was asking to override these classes. Hence, did this.",
+      "parentUuid": "9a437d4f_f5e49ead",
       "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -206,6 +260,24 @@
     },
     {
       "key": {
+        "uuid": "9a437d4f_951d5276",
+        "filename": "PolicyEngineAPI/src/test/java/org/onap/policy/std/test/AutoClientUEBTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-23T16:24:03Z",
+      "side": 1,
+      "message": "Yes, did\u0027t check that will remove it Jorge.",
+      "parentUuid": "9a437d4f_55a48a56",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a437d4f_358906cb",
         "filename": "PolicyEngineClient/pom.xml",
         "patchSetId": 3
@@ -234,6 +306,24 @@
       "writtenOn": "2017-08-23T15:54:04Z",
       "side": 1,
       "message": "Why skipping tests?  It didn\u0027t before",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_350c6642",
+        "filename": "PolicyEngineClient/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-23T16:24:03Z",
+      "side": 1,
+      "message": "Policy Engine Client is sample code which is present as example. So, I have moved them from main to test package. So that Sonar doesn\u0027t consider this code in coverage and other perspectives. But i will revert these changes to pom. It should be fine without it.",
+      "parentUuid": "9a437d4f_158602ba",
       "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -274,6 +364,24 @@
     },
     {
       "key": {
+        "uuid": "9a437d4f_b0ff4401",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusConsumer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-23T16:24:03Z",
+      "side": 1,
+      "message": "Will be adding it Jorge.",
+      "parentUuid": "9a437d4f_b5bcd66d",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a437d4f_95c1d2e6",
         "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusPublisher.java",
         "patchSetId": 3
@@ -285,6 +393,24 @@
       "writtenOn": "2017-08-23T15:54:04Z",
       "side": 1,
       "message": "License missing",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_90044016",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/BusPublisher.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-23T16:24:03Z",
+      "side": 1,
+      "message": "Didn\u0027t check this Will add this Jorge.",
+      "parentUuid": "9a437d4f_95c1d2e6",
       "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
