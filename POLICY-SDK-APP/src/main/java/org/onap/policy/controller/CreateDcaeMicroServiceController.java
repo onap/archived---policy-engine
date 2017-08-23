@@ -55,6 +55,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
@@ -850,7 +851,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	}
 	
 	@RequestMapping(value={"/policyController/getDCAEMSTemplateData.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView getDCAEMSTemplateData(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView getDCAEMSTemplateData(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		JsonNode root = mapper.readTree(request.getReader());
@@ -980,7 +981,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
 	
 	@RequestMapping(value={"/policyController/getModelServiceVersioneData.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView getModelServiceVersionData(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView getModelServiceVersionData(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		JsonNode root = mapper.readTree(request.getReader());
@@ -1068,6 +1069,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
+			    LOGGER.error("Error while collecting the desciption tag in ActionPolicy " + policyNameValue ,e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);
@@ -1270,7 +1272,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	}
 	
 	@RequestMapping(value={"/ms_dictionary/set_MSModelData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public void SetMSModelData(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void SetMSModelData(HttpServletRequest request, HttpServletResponse response) throws IOException, FileUploadException{
 		List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 		boolean zip = false;
 		boolean yml= false;
@@ -1425,7 +1427,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		        }
 		    }
 	    } catch (IOException e) {
-	    	LOGGER.error("Failed to unzip model file " + zipFile);
+	    	LOGGER.error("Failed to unzip model file " + zipFile, e);
 		}finally{
 			try {
 				if(zip != null)
@@ -1470,7 +1472,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
             try {
                 FileUtils.forceDelete(new File(path));
             } catch (IOException e) {
-            	LOGGER.error("Failed to delete folder " + path);
+            	LOGGER.error("Failed to delete folder " + path, e);
             }  
         }
     }

@@ -22,6 +22,7 @@ package org.onap.policy.controller;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -97,7 +98,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 	CommonClassDao commonClassDao;
 
 	@RequestMapping(value={"/policyController/validate_policy.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView validatePolicy(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView validatePolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			boolean valid = true;
 			StringBuilder responseString = new StringBuilder();
@@ -266,6 +267,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 							valid = false; 
 						}
 					}catch(Exception e){
+					    LOGGER.error("ERROR in ClosedLoop_PM PolicyName" , e);
 						responseString.append("<b>ServiceType PolicyName</b>:<i>ServiceType PolicyName is required</i><br>");
 						valid = false;
 					}

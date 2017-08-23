@@ -21,6 +21,7 @@
 package org.onap.policy.controller;
 
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +87,7 @@ public class AdminTabController extends RestrictedBaseController{
 	}
 	
 	@RequestMapping(value={"/adminTabController/save_LockDownValue.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveAdminTabLockdownValue(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveAdminTabLockdownValue(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

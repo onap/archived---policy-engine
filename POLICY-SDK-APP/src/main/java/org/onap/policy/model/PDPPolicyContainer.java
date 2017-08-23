@@ -27,67 +27,68 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.utils.PolicyContainer;
 import org.onap.policy.utils.PolicyItemSetChangeNotifier;
-import org.onap.policy.common.logging.flexlogger.*;
-
 import org.onap.policy.xacml.api.XACMLErrorConstants;
+import org.onap.policy.xacml.std.pap.StdPDPPolicy;
+
 import com.att.research.xacml.api.pap.PDP;
 import com.att.research.xacml.api.pap.PDPGroup;
 import com.att.research.xacml.api.pap.PDPPolicy;
-import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements PolicyContainer.Indexed {
 	private static final long serialVersionUID = 1L;
-	private static Logger LOGGER	= FlexLogger.getLogger(PDPPolicyContainer.class);
+	private static final Logger LOGGER	= FlexLogger.getLogger(PDPPolicyContainer.class);
 	
 	 /**
      * String identifier of a file's "Id" property.
      */
-	private static String PROPERTY_ID = "Id";
+	private static final String PROPERTY_ID = "Id";
 
    /**
      * String identifier of a file's "name" property.
      */
-	private static String PROPERTY_NAME = "Name";
+	private static final String PROPERTY_NAME = "Name";
 
     /**
       * String identifier of a file's "name" property.
       */
-	private static String PROPERTY_VERSION = "Version";
+	private static final String PROPERTY_VERSION = "Version";
      
     /**
      * String identifier of a file's "Description" property.
      */
-	private static String PROPERTY_DESCRIPTION = "Description";
+	private static final String PROPERTY_DESCRIPTION = "Description";
     
     /**
      * String identifier of a file's "IsRoot" property.
      */
-	private static String PROPERTY_ISROOT = "Root";
+	private static final String PROPERTY_ISROOT = "Root";
 
     /**
      * List of the string identifiers for the available properties.
      */
-	private static Collection<String> PDPPOLICY_PROPERTIES;
+	private static Collection<String> pDPPolicyProperties;
  
-    private final Object data;
-    private List<PDPPolicy> policies;
+    private final transient Object data;
+    private transient List<PDPPolicy> policies;
     
 	@SuppressWarnings("unchecked")
 	public PDPPolicyContainer(Object data) {
 		super();
 		this.data = data;
 		if (this.data instanceof PDPGroup) {
-			policies = new ArrayList<PDPPolicy> (((PDPGroup) this.data).getPolicies());
+			policies = new ArrayList<> (((PDPGroup) this.data).getPolicies());
 		}
 		if (this.data instanceof PDP) {
-			policies = new ArrayList<PDPPolicy> (((PDP) this.data).getPolicies());
+			policies = new ArrayList<> (((PDP) this.data).getPolicies());
 		}
 		if (this.data instanceof Set) {
-			policies = new ArrayList<PDPPolicy> ((Set<PDPPolicy>)data);
+			policies = new ArrayList<> ((Set<PDPPolicy>)data);
 		}
 		if (this.policies == null) {
 			LOGGER.info("NULL policies");
@@ -172,7 +173,7 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 
 	@Override
 	public Collection<?> getContainerPropertyIds() {
-		return PDPPOLICY_PROPERTIES;
+		return pDPPolicyProperties;
 	}
 
 	@Override

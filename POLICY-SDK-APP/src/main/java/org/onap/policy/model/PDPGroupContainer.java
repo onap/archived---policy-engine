@@ -40,66 +40,64 @@ import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDP;
-//import com.att.research.xacml.api.pap.PDP;
-//import com.att.research.xacml.api.pap.PDPGroup;
 import com.att.research.xacml.api.pap.PDPPIPConfig;
 import com.att.research.xacml.api.pap.PDPPolicy;
 
 public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements PolicyContainer.Indexed, PolicyContainer.ItemSetChangeNotifier {
 	private static final long serialVersionUID = 1L;
-	private static Logger LOGGER	= FlexLogger.getLogger(PDPGroupContainer.class);
+	private static final Logger LOGGER	= FlexLogger.getLogger(PDPGroupContainer.class);
 	
     /**
      * String identifier of a file's "Id" property.
      */
-	private static String PROPERTY_ID = "Id";
+	private static final String PROPERTY_ID = "Id";
 
    /**
      * String identifier of a file's "name" property.
      */
-	private static String PROPERTY_NAME = "Name";
+	private static final String PROPERTY_NAME = "Name";
 
     /**
      * String identifier of a file's "Description" property.
      */
-	private static String PROPERTY_DESCRIPTION = "Description";
+	private static final String PROPERTY_DESCRIPTION = "Description";
 
     /**
      * String identifier of a file's "Default" property.
      */
-	private static String PROPERTY_DEFAULT = "Default";
+	private static final String PROPERTY_DEFAULT = "Default";
     /**
      * String identifier of a file's "Status" property.
      */
-	private static String PROPERTY_STATUS = "Status";
+	private static final String PROPERTY_STATUS = "Status";
 
     /**
      * String identifier of a file's "PDPs" property.
      */
-	private static String PROPERTY_PDPS = "PDPs";
+	private static final String PROPERTY_PDPS = "PDPs";
 
     /**
      * String identifier of a file's "Policies" property.
      */
-	private static String PROPERTY_POLICIES = "Policies";
+	private static final String PROPERTY_POLICIES = "Policies";
 
     /**
      * String identifier of a file's "PIP Configurations" property.
      */
-	private static String PROPERTY_PIPCONFIG = "PIP Configurations";
+	private static final String PROPERTY_PIPCONFIG = "PIP Configurations";
     
     /**
      * String identifier of a file's "Selected" property.
      */
-	private static String PROPERTY_SELECTED = "Selected";
+	private static final String PROPERTY_SELECTED = "Selected";
 
     /**
      * List of the string identifiers for the available properties.
      */
-	private static Collection<String> PDP_PROPERTIES;
+	private static Collection<String> pDPProperties;
 
- 	private PAPPolicyEngine papEngine = null;
- 	protected List<OnapPDPGroup> groups = Collections.synchronizedList(new ArrayList<OnapPDPGroup>());
+ 	private transient PAPPolicyEngine papEngine = null;
+ 	protected transient List<OnapPDPGroup> groups = Collections.synchronizedList(new ArrayList<OnapPDPGroup>());
  	
     public PDPGroupContainer(PAPPolicyEngine papPolicyEngine) {
 		super();
@@ -107,7 +105,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 		//
 		//
 		//
-		this.papEngine = (PAPPolicyEngine) papPolicyEngine;
+		this.papEngine = papPolicyEngine;
 		//
 		//
 		//
@@ -197,7 +195,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	
 	@Override
 	public Collection<?> getContainerPropertyIds() {
-		return PDP_PROPERTIES;
+		return pDPProperties;
 	}
 
 	@Override

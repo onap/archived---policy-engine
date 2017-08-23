@@ -70,20 +70,20 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 	
 	private String description;
 	
-	private StdPDPGroupStatus status = new StdPDPGroupStatus(Status.UNKNOWN);
+	private transient StdPDPGroupStatus status = new StdPDPGroupStatus(Status.UNKNOWN);
 	
-	private Set<OnapPDP>	pdps = new HashSet<>();
+	private transient Set<OnapPDP>	pdps = new HashSet<>();
 	
-	private Set<PDPPolicy> policies = new HashSet<>();
+	private transient Set<PDPPolicy> policies = new HashSet<>();
 	
-	private Set<PDPPolicy> selectedPolicies = new HashSet<>();
+	private transient Set<PDPPolicy> selectedPolicies = new HashSet<>();
 	
-	private Set<PDPPIPConfig> pipConfigs = new HashSet<>();
+	private transient Set<PDPPIPConfig> pipConfigs = new HashSet<>();
 	
 	private String operation;
 	
 	@JsonIgnore
-	private  Path directory;
+	private  transient Path directory;
 	
 	@JsonIgnore
 	private Integer jmxport;
@@ -187,7 +187,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 			try (OutputStream os = Files.newOutputStream(file)) {
 				policyProperties.store(os, "");
 			} catch (Exception e) {
-				throw new PAPException("Failed to create new default policy properties file '" + file +"'");
+				throw new PAPException("Failed to create new default policy properties file '" + file +"'", e);
 			}
 		} else {
 			// load previously existing file
@@ -225,13 +225,13 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 					pipProperties.store(os, "");
 				}
 			} catch (Exception e) {
-				throw new PAPException("Failed to create new default pip properties file '" + file +"'");
+				throw new PAPException("Failed to create new default pip properties file '" + file +"'", e);
 			}
 			//Even if we create a new pip file, we still need to parse and load the properties
 			try{
 				this.readPIPProperties(directory, pipProperties);
 			}catch(Exception e){
-				throw new PAPException("Failed to load the new pip properties file");
+				throw new PAPException("Failed to load the new pip properties file", e);
 			}
 		} else {
 			try {

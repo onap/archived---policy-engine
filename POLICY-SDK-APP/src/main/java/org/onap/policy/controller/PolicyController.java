@@ -40,6 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 import org.onap.policy.admin.PolicyNotificationMail;
 import org.onap.policy.admin.RESTfulPAPEngine;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.model.PDPGroupContainer;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.XacmlAdminAuthorization;
@@ -49,6 +51,8 @@ import org.onap.policy.rest.jpa.FunctionDefinition;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
+import org.onap.policy.xacml.api.XACMLErrorConstants;
+import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 import org.openecomp.policy.model.Roles;
 import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
 import org.openecomp.portalsdk.core.web.support.JsonMessage;
@@ -60,14 +64,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import org.onap.policy.xacml.api.XACMLErrorConstants;
-import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
-
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
 
 
 @Controller
@@ -321,7 +319,7 @@ public class PolicyController extends RestrictedBaseController {
 	}
 
 	//Policy tabs Model and View
-	@RequestMapping(value= {"/policy", "/policy/Editor" } , method = RequestMethod.GET)
+    @RequestMapping(value= {"/policy", "/policy/Editor" } , method = RequestMethod.GET)
 	public ModelAndView view(HttpServletRequest request){
 		String myRequestURL = request.getRequestURL().toString();
 		try {
@@ -341,7 +339,7 @@ public class PolicyController extends RestrictedBaseController {
 		return papEngine;
 	}
 
-	public void setPapEngine(PAPPolicyEngine papEngine) {
+	public static void setPapEngine(PAPPolicyEngine papEngine) {
 		PolicyController.papEngine = papEngine;
 	}
 

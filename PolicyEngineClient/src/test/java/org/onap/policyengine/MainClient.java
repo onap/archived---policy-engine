@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policyEngine;
+package org.onap.policyengine;
 
 import java.io.IOException;
 import java.io.OutputStream;

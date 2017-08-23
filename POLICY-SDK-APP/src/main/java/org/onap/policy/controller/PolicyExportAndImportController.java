@@ -24,6 +24,7 @@ package org.onap.policy.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -116,7 +117,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 	public PolicyExportAndImportController(){}
 
 	@RequestMapping(value={"/policy_download/exportPolicy.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public void exportPolicy(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void exportPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			String file = null;
 			selectedPolicy = new ArrayList<>();
@@ -202,7 +203,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 	}
 
 	//Policy Import 
-	public JSONObject importRepositoryFile(String file, HttpServletRequest request) throws Exception{
+	public JSONObject importRepositoryFile(String file, HttpServletRequest request) throws IOException{
 		boolean configExists = false;
 		boolean actionExists = false;
 		String configName = null;

@@ -28,7 +28,7 @@
  *              Unpublished and Not for Publication
  *                     All Rights Reserved
  */
-package org.onap.policyEngine;
+package org.onap.policyengine;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
