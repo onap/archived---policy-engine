@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_958d5234",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-23T13:22:42Z",
+      "side": 1,
+      "message": "Not major, But seems like we are doing the same under all these 3 exceptions. Its better to catch these three exception in a single catch.",
+      "revId": "e02bceb861c04721fdd74e38230a71c234bcfbc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
