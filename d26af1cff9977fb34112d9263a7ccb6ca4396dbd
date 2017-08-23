@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "9a437d4f_b09bc4c8",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSGateway.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:44:25Z",
+      "side": 1,
+      "message": "OK I see, no action required, but fyi, if you mark any other \"long lived\" threads in this process as daemon, I think this won\u0027t be needed.  This also implies that there is no graceful shut down for this process, other that sending a signal thorugh OS that I will assume will be done by the \"app init.d\" script that does the start stop of the process.",
+      "parentUuid": "9a437d4f_f5a93e25",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a437d4f_d54abaab",
         "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
         "patchSetId": 3
@@ -324,6 +342,24 @@
       "side": 1,
       "message": "Policy Engine Client is sample code which is present as example. So, I have moved them from main to test package. So that Sonar doesn\u0027t consider this code in coverage and other perspectives. But i will revert these changes to pom. It should be fine without it.",
       "parentUuid": "9a437d4f_158602ba",
+      "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_d047684a",
+        "filename": "PolicyEngineClient/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-23T16:44:25Z",
+      "side": 1,
+      "message": "I see, thanks Tarun.  I think best to leave in test directory if no usage (or remove).   If it is not marked as JUnit @Test annotation (or @Ignore if they are marked as such) I believe sonar won\u0027t take into account for coverage metrics, and test won\u0027t be run.  Unless you found out otherwise.   In any case, if the code is for sample purposes, better to have it in test, or remove.",
+      "parentUuid": "9a437d4f_350c6642",
       "revId": "d26af1cff9977fb34112d9263a7ccb6ca4396dbd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
