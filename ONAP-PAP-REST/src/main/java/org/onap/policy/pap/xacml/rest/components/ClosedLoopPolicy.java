@@ -76,7 +76,7 @@ public class ClosedLoopPolicy extends Policy {
 					//Remove the trapMaxAge in Verification Signature
 					body = body.replace(",\"trapMaxAge\":null", "");
 				}catch(Exception e){
-					LOGGER.debug("No Trap Max Age in JSON body");
+					LOGGER.debug("No Trap Max Age in JSON body"+e);
 				}
 				this.policyAdapter.setJsonBody(body);
 			} catch (Exception e) {

@@ -205,7 +205,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				String hostname = InetAddress.getLocalHost().getCanonicalHostName();
 				baseLoggingContext.setServer(hostname);
 			} catch (UnknownHostException e) {
-				LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get hostname for logging");
+				LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get hostname for logging"+e);
 			}
 			// Initialize
 			XACMLRest.xacmlInit(config);
@@ -478,7 +478,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		} catch (AdministrativeStateException ae){
 			String message = "POST interface called for PAP " + papResourceName + " but it has an Administrative"
 					+ " state of " + im.getStateManager().getAdminState()
-					+ "\n Exception Message: " + ae.getMessage();
+					+ "\n Exception Message: " + ae;
 			LOGGER.info(message);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
@@ -488,7 +488,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		}catch (StandbyStatusException se) {
 			String message = "POST interface called for PAP " + papResourceName + " but it has a Standby Status"
 					+ " of " + im.getStateManager().getStandbyStatus()
-					+ "\n Exception Message: " + se.getMessage();
+					+ "\n Exception Message: " + se;
 			LOGGER.info(message);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
