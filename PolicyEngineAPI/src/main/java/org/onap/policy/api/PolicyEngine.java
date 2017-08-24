@@ -586,7 +586,7 @@ public class PolicyEngine{
 	 * @param clientKey depicts String format of Password/ Client_Key.  
 	 */
 	public void setClientKey(String clientKey){
-		stdPolicyEngine.setClientKey(clientKey);
+		StdPolicyEngine.setClientKey(clientKey);
 	}
 	
 	// Internal Setter Method to help build configRequestParameters.

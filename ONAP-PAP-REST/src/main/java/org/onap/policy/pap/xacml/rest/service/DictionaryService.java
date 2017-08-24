@@ -20,12 +20,10 @@
 package org.onap.policy.pap.xacml.rest.service;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.controller.ActionPolicyDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.BRMSDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.ClosedLoopDictionaryController;
@@ -37,20 +35,17 @@ import org.onap.policy.pap.xacml.rest.controller.FirewallDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.MicroServiceDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.PolicyScopeDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.SafePolicyController;
-import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 
 @Service("DictionaryService")
 public class DictionaryService {
-	
-	private static final Logger LOGGER	= FlexLogger.getLogger(DictionaryService.class);
 
 	/*
 	 * Methods that call the controller method directly to Save and Update dictionary data
 	 */
-	public String saveOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+	public String saveOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		DictionaryController dictionary = new DictionaryController();
 		String responseString = null;
@@ -60,7 +55,7 @@ public class DictionaryService {
 		
 	}
 	
-	public String saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		DictionaryController dictionary = new DictionaryController();
 		String responseString = null;
@@ -69,7 +64,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+	public String saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		ActionPolicyDictionaryController action = new ActionPolicyDictionaryController();
 		String responseString = null;
@@ -78,7 +73,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+	public String saveBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		BRMSDictionaryController dictionary = new BRMSDictionaryController();
 		String responseString = null;
@@ -87,7 +82,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveVSCLAction(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveVSCLAction(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 		String responseString = null;
@@ -96,7 +91,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveVnfType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveVnfType(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 		String responseString = null;
@@ -105,7 +100,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String savePEPOptions(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String savePEPOptions(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 		String responseString = null;
@@ -114,7 +109,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveVarbind(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveVarbind(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 		String responseString = null;
@@ -123,7 +118,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveServiceType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveServiceType(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 		String responseString = null;
@@ -132,7 +127,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveSiteType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveSiteType(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 		String responseString = null;
@@ -141,7 +136,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		DecisionPolicyDictionaryController dictionary = new DecisionPolicyDictionaryController();
 		String responseString = null;
@@ -150,7 +145,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		DescriptiveDictionaryController dictionary = new DescriptiveDictionaryController();
 		String responseString = null;
@@ -159,7 +154,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		EnforcerDictionaryController dictionary = new EnforcerDictionaryController();
 		String responseString = null;
@@ -168,7 +163,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 		String responseString = null;
@@ -177,7 +172,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 		String responseString = null;
@@ -186,7 +181,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 		String responseString = null;
@@ -195,7 +190,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 		String responseString = null;
@@ -204,7 +199,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String savePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String savePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 		String responseString = null;
@@ -213,7 +208,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 		String responseString = null;
@@ -222,7 +217,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 		String responseString = null;
@@ -231,7 +226,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 		String responseString = null;
@@ -240,7 +235,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 		String responseString = null;
@@ -252,7 +247,7 @@ public class DictionaryService {
 	
 	
 	
-	public String saveMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 		String responseString = null;
@@ -261,7 +256,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 		String responseString = null;
@@ -270,7 +265,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 		String responseString = null;
@@ -279,7 +274,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 		String responseString = null;
@@ -288,7 +283,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveMicroServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveMicroServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 		String responseString = null;
@@ -297,7 +292,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String savePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String savePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 		String responseString = null;
@@ -306,7 +301,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String savePSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String savePSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 		String responseString = null;
@@ -315,7 +310,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String savePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String savePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 		String responseString = null;
@@ -324,7 +319,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String savePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String savePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 		String responseString = null;
@@ -333,7 +328,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String savePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String savePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 		String responseString = null;
@@ -342,7 +337,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		SafePolicyController dictionary = new SafePolicyController();
 		String responseString = null;
@@ -351,7 +346,7 @@ public class DictionaryService {
 		return responseString;
 	}
 	
-	public String saveSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public String saveSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		SafePolicyController dictionary = new SafePolicyController();
 		String responseString = null;
 			ModelAndView result = dictionary.saveSafePolicyWarningDictionary(request, response);
@@ -363,173 +358,173 @@ public class DictionaryService {
 	/*
 	 * Methods that call the controller get methods directly to get dictionary data
 	 */
-	public void getOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getOnapDictionary(HttpServletRequest request, HttpServletResponse response){
 		DictionaryController dictionary = new DictionaryController();
 			dictionary.getOnapNameDictionaryEntityData(request, response);					
 	}
 	
-	public void getAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getAttributeDictionary(HttpServletRequest request, HttpServletResponse response){
 		DictionaryController dictionary = new DictionaryController();
 			dictionary.getAttributeDictionaryEntityData(request, response);
 	}
 	
-	public void getActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response){
 		ActionPolicyDictionaryController action = new ActionPolicyDictionaryController();
 			action.getActionPolicyDictionaryEntityData(request, response);	
 	}
 	
-	public void getBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response){
 		BRMSDictionaryController dictionary = new BRMSDictionaryController();
 			dictionary.getBRMSParamDictionaryEntityData(request, response);
 	}
 	
-	public void getVSCLAction(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getVSCLAction(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getVSCLActionDictionaryEntityData(request, response);
 	}
 	
-	public void getVnfType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getVnfType(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getVNFTypeDictionaryEntityData(request, response);
 	}
 	
-	public void getPEPOptions(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getPEPOptions(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getPEPOptionsDictionaryEntityData(request, response);
 	}
 	
-	public void getVarbind(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getVarbind(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getVarbindDictionaryEntityData(request, response);
 	}
 	
-	public void getServiceType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getServiceType(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getClosedLoopServiceDictionaryEntityData(request, response);
 	}
 	
-	public void getSiteType(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getSiteType(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getClosedLoopSiteDictionaryEntityData(request, response);	
 	}
 	
-	public void getSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getSettingsDictionary(HttpServletRequest request, HttpServletResponse response){
 		DecisionPolicyDictionaryController dictionary = new DecisionPolicyDictionaryController();
 			dictionary.getSettingsDictionaryEntityData(request, response);
 	}
 	
-	public void getDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response){
 		DescriptiveDictionaryController dictionary = new DescriptiveDictionaryController();
 			dictionary.getDescriptiveDictionaryEntityData(request, response);
 	}
 	
-	public void getEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getEnforcerDictionary(HttpServletRequest request, HttpServletResponse response){
 		EnforcerDictionaryController dictionary = new EnforcerDictionaryController();
 			dictionary.getEnforcerDictionaryEntityData(request, response);
 	}
 	
-	public void getActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getActionListDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getActionListDictionaryEntityData(request, response);
 	}
 	
-	public void getProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getProtocolListDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getProtocolListDictionaryEntityData(request, response);
 	}
 	
-	public void getZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getZoneDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getZoneDictionaryEntityData(request, response);
 	}
 	
-	public void getSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getSecurityZoneDictionaryEntityData(request, response);
 	}
 	
-	public void getPrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getPrefixListDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getPrefixListDictionaryEntityData(request, response);
 	}
 	
-	public void getAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getAddressGroupDictionaryEntityData(request, response);
 	}
 	
-	public void getServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getServiceGroupDictionaryEntityData(request, response);
 	}
 	
-	public void getServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getServiceListDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getServiceListDictionaryEntityData(request, response);
 	}
 	
-	public void getTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getTermListDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getTermListDictionaryEntityData(request, response);
 	}
 	
 	
-	public void getMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 			dictionary.getMicroServiceLocationDictionaryEntityData(request, response);
 	}
 	
-	public void getMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 			dictionary.getMicroServiceConfigNameDictionaryEntityData(request, response);
 	}
 	
-	public void getDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 			dictionary.getDCAEUUIDDictionaryEntityData(request, response);
 	}
 	
-	public void getMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 			dictionary.getMicroServiceModelsDictionaryEntityData(request, response);
 	}
 	
-	public void getMicroServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getMicroServiceDictionary(HttpServletRequest request, HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 			dictionary.getMicroServiceModelsDictionaryEntityData(request, response);
 	}
 	
-	public void getPSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getPSServiceDictionary(HttpServletRequest request, HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 			dictionary.getPSServiceEntityData(request, response);
 	}
 	
-	public void getPSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getPSResourceDictionary(HttpServletRequest request, HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 			dictionary.getPSResourceEntityData(request, response);
 	}
 	
-	public void getPSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getPSTypeDictionary(HttpServletRequest request, HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 			dictionary.getPSTypeEntityData(request, response);
 	}
 	
-	public void getPSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getPSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 			dictionary.getPSClosedLoopEntityData(request, response);
 	}
 	
-	public void getPSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getPSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 			dictionary.getGroupPolicyScopeEntityData(request, response);
 	}
 	
-	public void getRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void getRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response){
 		SafePolicyController dictionary = new SafePolicyController();
 			dictionary.getOnapNameDictionaryEntityData(request, response);
 	}
 	
-	public void getSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response)  throws UnsupportedEncodingException, IOException{
+	public void getSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response) {
 		SafePolicyController dictionary = new SafePolicyController();
 			dictionary.getSafePolicyWarningeEntityData(request, response);
 	}

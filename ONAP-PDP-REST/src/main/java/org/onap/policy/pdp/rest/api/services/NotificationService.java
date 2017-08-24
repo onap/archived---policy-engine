@@ -118,6 +118,13 @@ public class NotificationService {
 			callThread();
 		}
 	}
+	
+	public static void reloadProps(){
+	    dmaapServers = null;
+	    aafLogin = null;
+	    aafPassword = null;
+	    backUpthread = null;
+	}
 
 	private void run(String notificationTopic, NotificationServiceType serviceType) throws PolicyException{
 		// Check Validation

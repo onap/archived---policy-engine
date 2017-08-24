@@ -55,6 +55,7 @@ import org.onap.policy.pdp.rest.api.models.ConfigFirewallPolicyAPIRequest;
 import org.onap.policy.pdp.rest.api.models.ConfigNameRequest;
 import org.onap.policy.pdp.rest.api.models.ConfigPolicyAPIRequest;
 import org.onap.policy.pdp.rest.api.services.CreateUpdatePolicyServiceImpl;
+import org.onap.policy.pdp.rest.api.services.NotificationService;
 import org.onap.policy.pdp.rest.config.PDPRestConfig;
 import org.onap.policy.utils.PolicyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,9 +196,11 @@ public class PolicyEngineServicesTest {
 	
 	@Test
 	public void getNotificationTopicValidPassTest() throws Exception{
+        // Values can be polluted due to failure tests and need to be reloaded. 
 	    XACMLProperties.reloadProperties();
         System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/notification.xacml.pdp.properties");
         XACMLProperties.getProperties();
+        NotificationService.reloadProps();
 		// Add a Topic. 
 		mockMvc.perform(post("/getNotification").headers(headers).header(UUIDHEADER, "123").content("test")).andExpect(status().isOk());
 		// Try to add same topic should fail.  

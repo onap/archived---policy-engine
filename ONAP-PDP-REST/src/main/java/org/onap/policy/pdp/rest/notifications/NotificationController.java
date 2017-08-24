@@ -175,7 +175,7 @@ public class NotificationController {
         }
     }
 
-    private void setNotificationFlag(boolean value) {
+    private static void setNotificationFlag(boolean value) {
         notificationFlag = value;
     }
 

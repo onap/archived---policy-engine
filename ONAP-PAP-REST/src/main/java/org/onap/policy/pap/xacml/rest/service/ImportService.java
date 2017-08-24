@@ -38,7 +38,6 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.components.CreateBRMSRuleTemplate;
 import org.onap.policy.pap.xacml.rest.components.CreateNewMicroServiceModel;
-import org.onap.policy.pap.xacml.rest.model.PDPPolicyContainer;
 
 public class ImportService {
 	private static final Logger logger = FlexLogger.getLogger(ImportService.class);
