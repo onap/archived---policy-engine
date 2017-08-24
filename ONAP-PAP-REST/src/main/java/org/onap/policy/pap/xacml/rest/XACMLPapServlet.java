@@ -1092,7 +1092,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			String message = "DELETE interface called for PAP " + papResourceName + " but it has an Administrative"
 					+ " state of " + im.getStateManager().getAdminState()
 					+ "\n Exception Message: " + ae.getMessage();
-			LOGGER.info(message);
+			LOGGER.info(message, ae);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
@@ -1102,7 +1102,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			String message = "PUT interface called for PAP " + papResourceName + " but it has a Standby Status"
 					+ " of " + im.getStateManager().getStandbyStatus()
 					+ "\n Exception Message: " + se.getMessage();
-			LOGGER.info(message);
+			LOGGER.info(message, se);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
