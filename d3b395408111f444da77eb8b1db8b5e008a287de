@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_ea639818",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-08-24T12:56:08Z",
+      "side": 1,
+      "message": "probably sonar will complain too about not logging this outer exception catch here ..",
+      "revId": "d3b395408111f444da77eb8b1db8b5e008a287de",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
