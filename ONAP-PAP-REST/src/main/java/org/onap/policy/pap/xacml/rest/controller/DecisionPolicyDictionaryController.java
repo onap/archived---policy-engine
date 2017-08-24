@@ -20,7 +20,9 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -106,7 +108,7 @@ public class DecisionPolicyDictionaryController {
 	}
 	
 	@RequestMapping(value={"/decision_dictionary/save_Settings"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -214,7 +216,7 @@ public class DecisionPolicyDictionaryController {
 	}
 
 	@RequestMapping(value={"/settings_dictionary/remove_settings"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -281,7 +283,7 @@ public class DecisionPolicyDictionaryController {
 	}
 	
 	@RequestMapping(value={"/decision_dictionary/save_RainyDay"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -382,7 +384,7 @@ public class DecisionPolicyDictionaryController {
 	}
 
 	@RequestMapping(value={"/decision_dictionary/remove_rainyDay"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

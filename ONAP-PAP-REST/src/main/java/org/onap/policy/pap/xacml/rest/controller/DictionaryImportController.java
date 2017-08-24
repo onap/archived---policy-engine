@@ -26,7 +26,9 @@ package org.onap.policy.pap.xacml.rest.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,7 +83,7 @@ public class DictionaryImportController {
 
 
 	@RequestMapping(value={"/dictionary/import_dictionary"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public void ImportDictionaryData(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void ImportDictionaryData(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		//JsonNode root = mapper.readTree(request.getReader());

@@ -512,13 +512,14 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					response.addHeader("error", "error");							
 				}
 			}catch(Exception e){
+				LOGGER.error("Exception Occured : ",e);
 				if(policyDBDaoTransaction != null){
 					policyDBDaoTransaction.rollbackTransaction();
 				}
 			}
 		}
 		catch (Exception e){
-			LOGGER.error("Exception Occured : "+e);
+			LOGGER.error("Exception Occured : "+e.getMessage(),e);
 			body = "error";
 			response.addHeader("error", e.getMessage());	
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
