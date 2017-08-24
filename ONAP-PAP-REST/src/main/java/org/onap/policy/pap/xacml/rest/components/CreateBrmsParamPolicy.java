@@ -231,6 +231,7 @@ public class CreateBrmsParamPolicy extends Policy {
 								line = line.split("\\/\\*")[0]
 										+ line.split("\\*\\/")[1].replace("*/", "");
 							} catch (Exception e) {
+								LOGGER.debug(e);
 								line = line.split("\\/\\*")[0];
 							}
 						} else {
@@ -242,6 +243,7 @@ public class CreateBrmsParamPolicy extends Policy {
 						try {
 							line = line.split("\\*\\/")[1].replace("*/", "");
 						} catch (Exception e) {
+							LOGGER.debug(e);
 							line = "";
 						}
 					}
@@ -275,6 +277,7 @@ public class CreateBrmsParamPolicy extends Policy {
 					try {
 						nextComponent = components[i + 1];
 					} catch (Exception e) {
+						LOGGER.debug(e);
 						nextComponent = components[i];
 					}
 					//If the type is of type String then we add the UI Item and type to the map. 

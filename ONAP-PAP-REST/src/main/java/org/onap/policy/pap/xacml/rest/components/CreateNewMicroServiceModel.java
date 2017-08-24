@@ -90,7 +90,7 @@ public class CreateNewMicroServiceModel {
 				File deleteFile = new File(cleanUpFile); 
 				FileUtils.forceDelete(deleteFile);
 			} catch (IOException e) {
-				logger.error("Failed to unzip model file " + randomID);
+				logger.error("Failed to unzip model file " + randomID, e);
 			}
 	    }else {
 		    tempMap = utils.processEpackage("ExtractDir" + File.separator + randomID+".xmi", MODEL_TYPE.XMI);

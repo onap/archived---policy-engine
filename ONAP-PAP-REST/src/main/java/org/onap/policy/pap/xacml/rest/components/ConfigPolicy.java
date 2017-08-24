@@ -179,11 +179,8 @@ public class ConfigPolicy extends Policy {
 			XMLReader reader = parser.getXMLReader();
 			reader.setErrorHandler(new XMLErrorHandler());
 			reader.parse(new InputSource(new StringReader(data)));
-		} catch (ParserConfigurationException e) {
-			return false;
-		} catch (SAXException e) {
-			return false;
-		} catch (IOException e) {
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			LOGGER.debug(e);
 			return false;
 		}
 		return true;
