@@ -212,7 +212,7 @@ public class PolicyDBDao {
 
 		} catch(Exception e){
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Exception querying for other registered PolicyDBDaos");
-			logger.warn("List of remote PolicyDBDaos will be empty");
+			logger.warn("List of remote PolicyDBDaos will be empty", e);
 		}
 		try{
 			em.getTransaction().commit();
@@ -220,7 +220,7 @@ public class PolicyDBDao {
 			try{
 				em.getTransaction().rollback();
 			} catch(Exception e2){
-
+				logger.debug("List of remote PolicyDBDaos will be empty", e2);
 			}
 		}
 		em.close();
@@ -500,6 +500,7 @@ public class PolicyDBDao {
 					ourUrl = splitPapUrlUserPass((String)o)[0];
 				}catch(Exception e){
 					ourUrl = o;
+					logger.debug(e);
 				}
 				if(o == null){
 					o = "undefined";
@@ -867,6 +868,7 @@ public class PolicyDBDao {
             }
         } catch(Exception e){
             nameAndVersion[0] = originalPolicyName;         
+            logger.debug(e);
         }
         try{
             nameAndVersion[1] = policyName.substring(policyName.lastIndexOf('.')+1);
@@ -875,6 +877,7 @@ public class PolicyDBDao {
             }
         } catch(Exception e){
             nameAndVersion[1] = "1";
+            logger.debug(e);
         }
         return nameAndVersion;
     }
