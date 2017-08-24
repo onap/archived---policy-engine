@@ -26,14 +26,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.policycontroller.PolicyCreation;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.utils.PolicyUtils;
-import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 import org.xml.sax.SAXException;
 

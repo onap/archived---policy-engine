@@ -22,10 +22,9 @@ package org.onap.policy.pap.xacml.rest.handler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+
 import com.att.research.xacml.util.XACMLProperties;
 
 public interface DictionaryHandler {

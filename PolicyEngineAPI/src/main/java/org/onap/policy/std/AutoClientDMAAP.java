@@ -102,7 +102,7 @@ public class AutoClientDMAAP implements Runnable {
         }
     }
 
-    private void setNotification(StdPDPNotification notificationJSON) {
+    private static void setNotification(StdPDPNotification notificationJSON) {
         notification = notificationJSON;
     }
 

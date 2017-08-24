@@ -28,7 +28,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
@@ -108,8 +107,12 @@ import com.google.gson.GsonBuilder;
 public class StdPolicyEngine {
     private static final String ERROR_AUTH_GET_PERM = "You are not allowed to Make this Request. Please contact PolicyAdmin to give access to: ";
     private static final String DEFAULT_NOTIFICATION = "websocket";
-
-    private String clientEncoding = null;
+    private static final String ERROR_DATA_ISSUE = "Invalid Data is given."; 
+    private static final String DMAAP = "dmaap";
+    private static final String ERROR_INVALID_PDPS = "Unable to get valid Response from  PDP(s) ";
+    private static final String ERROR_WHILE_CONNECTING = "Error while connecting to ";
+    
+    private static String clientEncoding = null;
     private String contentType = null;
     private static List<String> pdps = null;
     private static String environment = null;
@@ -117,8 +120,6 @@ public class StdPolicyEngine {
     private static String pass = null;
     private static List<String> encoding = null;
     private static boolean junit = false;
-    private List<String> pdpDefault = null;
-    private List<String> typeDefault = null;
     private List<String> notificationType = new ArrayList<>();
     private List<String> notificationURLList = new ArrayList<>();
     private NotificationScheme scheme = null;
@@ -151,7 +152,7 @@ public class StdPolicyEngine {
         setProperty(propertyFilePath, null);
         this.scheme = scheme;
         this.handler = handler;
-        if ((!"ueb".equals(notificationType.get(0))) || (!"dmaap".equals(notificationType.get(0)))) {
+        if ((!"ueb".equals(notificationType.get(0))) || (!DMAAP.equals(notificationType.get(0)))) {
             AutoClientEnd.setAuto(scheme, handler);
         }
         notification(scheme, handler);
@@ -365,12 +366,12 @@ public class StdPolicyEngine {
                 return response;
             }
             if (exception.getCause().getMessage().contains("400")) {
-                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Data is given.";
+                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + ERROR_DATA_ISSUE;
                 response.setResponseMessage(message);
                 response.setResponseCode(400);
                 return response;
             }
-            String message = XACMLErrorConstants.ERROR_PERMISSIONS + "Unable to get valid Response from  PDP(s) "
+            String message = XACMLErrorConstants.ERROR_PERMISSIONS + ERROR_INVALID_PDPS
                     + pdps;
             LOGGER.error(message, exception);
             response.setResponseMessage(message);
@@ -449,7 +450,7 @@ public class StdPolicyEngine {
     public PolicyChangeResponse policyEngineImportImpl(ImportParameters importParameters) throws PolicyException {
         StdPolicyChangeResponse response = new StdPolicyChangeResponse();
         String resource = "policyEngineImport";
-        LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
+        LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         // Create Request.
         try {
             String body = PolicyUtils.objectToJsonString(importParameters);
@@ -563,11 +564,11 @@ public class StdPolicyEngine {
                 throw new PolicyDecisionException(message, exception);
             }
             if (exception.getCause().getMessage().contains("400")) {
-                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Data is given.";
+                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + ERROR_DATA_ISSUE;
                 LOGGER.error(message);
                 throw new PolicyDecisionException(message, exception);
             }
-            String message = XACMLErrorConstants.ERROR_PERMISSIONS + "Unable to get valid Response from  PDP(s) "
+            String message = XACMLErrorConstants.ERROR_PERMISSIONS + ERROR_INVALID_PDPS
                     + pdps;
             LOGGER.error(message, exception);
             throw new PolicyDecisionException(message, exception);
@@ -578,7 +579,7 @@ public class StdPolicyEngine {
     public Collection<PolicyConfig> getConfigImpl(ConfigRequestParameters configRequestParameters)
             throws PolicyConfigException {
         String resource = "getConfig";
-        ArrayList<PolicyConfig> response = new ArrayList<>();
+        ArrayList<PolicyConfig> response = null;
         String body = null;
         // Create Request.
         try {
@@ -601,11 +602,11 @@ public class StdPolicyEngine {
                 throw new PolicyConfigException(message, exception);
             }
             if (exception.getCause().getMessage().contains("400")) {
-                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Data is given.";
+                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + ERROR_DATA_ISSUE;
                 LOGGER.error(message);
                 throw new PolicyConfigException(message, exception);
             }
-            String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + "Unable to get valid Response from  PDP(s) "
+            String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + ERROR_INVALID_PDPS
                     + pdps;
             LOGGER.error(message, exception);
             throw new PolicyConfigException(message, exception);
@@ -668,13 +669,13 @@ public class StdPolicyEngine {
         Matches match = new Matches();
         HashMap<String, String> configAttributes = new HashMap<>();
         try {
-            for (String key : matchingConditions.keySet()) {
-                if (key.equalsIgnoreCase("ONAPName")) {
-                    match.setOnapName(matchingConditions.get(key));
-                } else if (key.equalsIgnoreCase("ConfigName")) {
-                    match.setConfigName(matchingConditions.get(key));
+            for (Map.Entry<String,String> entry : matchingConditions.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase("ONAPName")) {
+                    match.setOnapName(entry.getValue());
+                } else if (entry.getKey().equalsIgnoreCase("ConfigName")) {
+                    match.setConfigName(entry.getValue());
                 } else {
-                    configAttributes.put(key, matchingConditions.get(key));
+                    configAttributes.put(entry.getKey(), entry.getValue());
                 }
             }
             if (!configAttributes.isEmpty()) {
@@ -700,10 +701,10 @@ public class StdPolicyEngine {
             try {
                 result = restTemplate.exchange(pdps.get(0) + "/api/" + resource, method, requestEntity, responseType);
             } catch (HttpClientErrorException e) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + pdps.get(0), e);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + ERROR_WHILE_CONNECTING + pdps.get(0), e);
                 exception = e;
             } catch (Exception e) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + pdps.get(0), e);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + ERROR_WHILE_CONNECTING + pdps.get(0), e);
                 exception = new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
             }
             if (result == null) {
@@ -728,7 +729,7 @@ public class StdPolicyEngine {
                 throw new PolicyException(message, exception);
             }
             if (exception.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-                String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + pdps
+                String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + ERROR_WHILE_CONNECTING + pdps
                         + exception;
                 LOGGER.error(message);
                 throw new PolicyException(message, exception);
@@ -746,7 +747,7 @@ public class StdPolicyEngine {
         headers.set("ClientAuth", "Basic " + clientEncoding);
         headers.set("Authorization", "Basic " + encoding.get(0));
         if (contentType != null) {
-            headers.set("Content-Type", contentType.toString());
+            headers.set("Content-Type", contentType);
         } else {
             headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
         }
@@ -754,7 +755,7 @@ public class StdPolicyEngine {
         return headers;
     }
 
-    private void setClientEncoding() {
+    private static void setClientEncoding() {
         Base64.Encoder encoder = Base64.getEncoder();
         clientEncoding = encoder.encodeToString((userName + ":" + pass).getBytes(StandardCharsets.UTF_8));
     }
@@ -780,8 +781,8 @@ public class StdPolicyEngine {
     public Collection<PolicyResponse> sendEventImpl(Map<String, String> eventAttributes, UUID requestID)
             throws PolicyEventException {
         String resource = "sendEvent";
-        ArrayList<PolicyResponse> response = new ArrayList<PolicyResponse>();
-        String body = new String();
+        ArrayList<PolicyResponse> response = null;
+        String body = null;
         // Create Request.
         try {
             // Long way here, can be shortened and will be done.
@@ -807,11 +808,11 @@ public class StdPolicyEngine {
                 throw new PolicyEventException(message, exception);
             }
             if (exception.getCause().getMessage().contains("400")) {
-                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Data is given.";
+                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + ERROR_DATA_ISSUE;
                 LOGGER.error(message);
                 throw new PolicyEventException(message, exception);
             }
-            String message = XACMLErrorConstants.ERROR_PERMISSIONS + "Unable to get valid Response from  PDP(s) "
+            String message = XACMLErrorConstants.ERROR_PERMISSIONS + ERROR_INVALID_PDPS
                     + pdps;
             LOGGER.error(message, exception);
             throw new PolicyEventException(message, exception);
@@ -819,7 +820,7 @@ public class StdPolicyEngine {
         return response;
     }
 
-    private ArrayList<PolicyResponse> eventResult(StdPolicyResponse[] response) throws PolicyEventException {
+    private ArrayList<PolicyResponse> eventResult(StdPolicyResponse[] response){
         ArrayList<PolicyResponse> eventResult = new ArrayList<>();
         if (response != null && response.length > 0) {
             for (StdPolicyResponse policyConfigResponse : response) {
@@ -850,7 +851,7 @@ public class StdPolicyEngine {
                 }
             } else {
                 Path file = Paths.get(propertyFilePath);
-                if (Files.notExists(file)) {
+                if (!file.toFile().exists()) {
                     throw new PolicyEngineException(XACMLErrorConstants.ERROR_DATA_ISSUE
                             + "File doesn't exist in the specified Path " + file.toString());
                 }
@@ -884,8 +885,7 @@ public class StdPolicyEngine {
             } else {
                 checkType = checkType.trim();
                 if (checkType.contains(",")) {
-                    typeDefault = new ArrayList<>(Arrays.asList(prop.getProperty("NOTIFICATION_TYPE").split(",")));
-                    notificationType = typeDefault;
+                    notificationType = new ArrayList<>(Arrays.asList(prop.getProperty("NOTIFICATION_TYPE").split(",")));
                 } else {
                     notificationType = new ArrayList<>();
                     notificationType.add(checkType);
@@ -899,7 +899,7 @@ public class StdPolicyEngine {
             } else {
                 serverList = serverList.trim();
                 if (serverList.contains(",")) {
-                    notificationURLList = new ArrayList<String>(Arrays.asList(serverList.split(",")));
+                    notificationURLList = new ArrayList<>(Arrays.asList(serverList.split(",")));
                 } else {
                     notificationURLList = new ArrayList<>();
                     notificationURLList.add(serverList);
@@ -948,7 +948,7 @@ public class StdPolicyEngine {
                                 + "Properties file doesn't have the PDP_URL parameter");
                     }
                     if (checkVal.contains(";")) {
-                        pdpDefault = new ArrayList<>(Arrays.asList(checkVal.split("\\s*;\\s*")));
+                        List<String> pdpDefault = new ArrayList<>(Arrays.asList(checkVal.split("\\s*;\\s*")));
                         int pdpCount = 0;
                         while (pdpCount < pdpDefault.size()) {
                             String pdpVal = pdpDefault.get(pdpCount);
@@ -1008,15 +1008,15 @@ public class StdPolicyEngine {
      */
     private void readPDPParam(String pdpVal) throws PolicyEngineException {
         if (pdpVal.contains(",")) {
-            List<String> pdpValues = new ArrayList<String>(Arrays.asList(pdpVal.split("\\s*,\\s*")));
+            List<String> pdpValues = new ArrayList<>(Arrays.asList(pdpVal.split("\\s*,\\s*")));
             if (pdpValues.size() == 3) {
                 // 0 - PDPURL
                 pdps.add(pdpValues.get(0));
                 // 1:2 will be UserID:Password
                 String userID = pdpValues.get(1);
-                String pass = pdpValues.get(2);
+                String userPas = pdpValues.get(2);
                 Base64.Encoder encoder = Base64.getEncoder();
-                encoding.add(encoder.encodeToString((userID + ":" + pass).getBytes(StandardCharsets.UTF_8)));
+                encoding.add(encoder.encodeToString((userID + ":" + userPas).getBytes(StandardCharsets.UTF_8)));
             } else {
                 LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "No Credentials to send Request: " + pdpValues);
                 throw new PolicyEngineException(
@@ -1044,7 +1044,7 @@ public class StdPolicyEngine {
                 AutoClientUEB.setAuto(scheme, handler);
                 this.uebThread = registerUEBThread.isAlive();
             }
-        } else if (notificationType.get(0).equals("dmaap")) {
+        } else if (notificationType.get(0).equals(DMAAP)) {
             if (this.dmaapThread) {
                 AutoClientDMAAP.setAuto(scheme, handler);
                 this.dmaapThread = registerDMAAPThread.isAlive();
@@ -1064,7 +1064,7 @@ public class StdPolicyEngine {
                 this.registerUEBThread = new Thread(this.uebClientThread);
                 this.registerUEBThread.start();
                 this.uebThread = true;
-            } else if (notificationType.get(0).equals("dmaap") && !this.dmaapThread) {
+            } else if (notificationType.get(0).equals(DMAAP) && !this.dmaapThread) {
                 this.dmaapClientThread = new AutoClientDMAAP(notificationURLList, topic, userName, pass);
                 AutoClientDMAAP.setAuto(scheme, handler);
                 this.registerDMAAPThread = new Thread(this.dmaapClientThread);
@@ -1094,7 +1094,7 @@ public class StdPolicyEngine {
             if (notificationType.get(0).equals("ueb")) {
                 ManualClientEndUEB.start(pdps.get(0), notificationURLList, UNIQUEID);
                 notification = ManualClientEndUEB.result(scheme);
-            } else if (notificationType.get(0).equals("dmaap")) {
+            } else if (notificationType.get(0).equals(DMAAP)) {
                 ManualClientEndDMAAP.start(notificationURLList, topic, UNIQUEID, userName, pass);
                 notification = ManualClientEndDMAAP.result(scheme);
             } else {
@@ -1123,7 +1123,7 @@ public class StdPolicyEngine {
             if (this.scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)) {
                 ManualClientEndUEB.createTopic(pdps.get(0), UNIQUEID, notificationURLList);
             }
-        } else if (notificationType.get(0).equals("dmaap")) {
+        } else if (notificationType.get(0).equals(DMAAP)) {
             AutoClientDMAAP.setScheme(this.scheme);
             if (this.scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)) {
                 ManualClientEndDMAAP.createTopic(topic, UNIQUEID, notificationURLList, userName, pass);
@@ -1151,19 +1151,17 @@ public class StdPolicyEngine {
      * Stop the Notification Service if its running.
      */
     public void stopNotification() {
-        if (this.scheme != null && this.handler != null) {
-            if (this.scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS)
-                    || this.scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) {
-                LOGGER.info("Clear Notification called.. ");
-                if (notificationType.get(0).equals("ueb")) {
-                    this.uebClientThread.terminate();
-                    this.uebThread = false;
-                } else if (notificationType.get(0).equals("dmaap")) {
-                    this.dmaapClientThread.terminate();
-                    this.dmaapThread = false;
-                } else {
-                    AutoClientEnd.stop();
-                }
+        if (this.scheme != null && this.handler != null && (this.scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS)
+                || this.scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS))) {
+            LOGGER.info("Clear Notification called.. ");
+            if (notificationType.get(0).equals("ueb")) {
+                this.uebClientThread.terminate();
+                this.uebThread = false;
+            } else if (notificationType.get(0).equals(DMAAP)) {
+                this.dmaapClientThread.terminate();
+                this.dmaapThread = false;
+            } else {
+                AutoClientEnd.stop();
             }
         }
     }
@@ -1276,13 +1274,13 @@ public class StdPolicyEngine {
         try {
             policyParameters.setTtlDate(new SimpleDateFormat("dd-MM-yyyy").parse(ttlDate));
         } catch (NullPointerException | ParseException e) {
-            LOGGER.warn("Error Parsing date given " + ttlDate);
+            LOGGER.warn("Error Parsing date given " + ttlDate, e);
             policyParameters.setTtlDate(null);
         }
         return createUpdatePolicyImpl(policyParameters, updateFlag).getResponseMessage();
     }
 
-    public void setClientKey(String clientKey) {
+    public static void setClientKey(String clientKey) {
         if (clientKey != null && !clientKey.isEmpty()) {
             StdPolicyEngine.pass = clientKey;
             setClientEncoding();

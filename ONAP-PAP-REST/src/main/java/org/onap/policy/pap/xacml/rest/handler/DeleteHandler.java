@@ -37,6 +37,7 @@ import org.onap.policy.common.logging.ONAPLoggingContext;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTransaction;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyElasticSearchController;
@@ -51,8 +52,7 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
+
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.util.XACMLProperties;
@@ -62,12 +62,7 @@ public class DeleteHandler {
 	private OnapPDPGroup newgroup;
 	private static Logger logger = FlexLogger.getLogger(DeleteHandler.class);
 
-	private static String papDbDriver = null;
-	private static String papDbUrl = null;
-	private static String papDbUser = null;
-	private static String papDbPassword = null;
-
-	public static void doAPIDeleteFromPAP(HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext) throws IOException, SQLException  {
+	public void doAPIDeleteFromPAP(HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext) throws IOException, SQLException  {
 		// get the request content into a String
 		String json = null;
 		java.util.Scanner scanner = new java.util.Scanner(request.getInputStream());
@@ -88,10 +83,10 @@ public class DeleteHandler {
 		PolicyEntity policyEntity = null;
 		JPAUtils jpaUtils = null;
 
-		papDbDriver = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_DRIVER);
-		papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
-		papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
-		papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
+		String papDbDriver = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_DRIVER);
+		String papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
+		String papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
+		String papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
 		Connection con = null;
 		
 		try {
@@ -110,7 +105,7 @@ public class DeleteHandler {
 			response.setStatus(HttpServletResponse.SC_ACCEPTED);
 			return;
 		}
-		EntityManager em = (EntityManager) XACMLPapServlet.getEmf().createEntityManager();
+		EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
 		Query policyEntityQuery = null;
 		try{
 			if(policyName.endsWith(".xml")){
@@ -280,7 +275,7 @@ public class DeleteHandler {
 		}
 	}
 	
-	public static String deletePolicyEntityData(EntityManager em, PolicyEntity policyEntity) throws SQLException{
+	public static String deletePolicyEntityData(EntityManager em, PolicyEntity policyEntity){
 		PolicyElasticSearchController controller = new PolicyElasticSearchController();
 		PolicyRestAdapter policyData = new PolicyRestAdapter();
 		String policyName = policyEntity.getPolicyName();
@@ -473,8 +468,7 @@ public class DeleteHandler {
 	public static DeleteHandler getInstance() {
 		try {
 			Class<?> deleteHandler = Class.forName(XACMLProperties.getProperty("deletePolicy.impl.className", DeleteHandler.class.getName()));
-			DeleteHandler instance = (DeleteHandler) deleteHandler.newInstance(); 
-			return instance;
+			return (DeleteHandler) deleteHandler.newInstance(); 
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);
 		}

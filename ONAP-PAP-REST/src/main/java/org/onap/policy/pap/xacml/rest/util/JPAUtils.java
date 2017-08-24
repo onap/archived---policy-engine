@@ -43,7 +43,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class JPAUtils {
-	private static Logger LOGGER	= FlexLogger.getLogger(JPAUtils.class);
+	private static final Logger LOGGER	= FlexLogger.getLogger(JPAUtils.class);
 	
 	private static EntityManagerFactory emf;
 	private static final Object mapAccess = new Object();
@@ -73,7 +73,7 @@ public class JPAUtils {
 	
 	private JPAUtils(EntityManagerFactory emf){
 		LOGGER.debug("JPAUtils(EntityManagerFactory emf) as JPAUtils("+emf+") called");
-		this.emf = emf;	
+		JPAUtils.emf = emf;	
 	}
 	
 	/**
@@ -169,7 +169,7 @@ public class JPAUtils {
 		for (Object id : functionList) {
 			FunctionDefinition value = (FunctionDefinition)id;
 			mapID2Function.put(value.getXacmlid(), value);
-			if (mapDatatype2Function.containsKey(value.getDatatypeBean()) == false) {
+			if (!mapDatatype2Function.containsKey(value.getDatatypeBean())) {
 				mapDatatype2Function.put(value.getDatatypeBean(), new ArrayList<FunctionDefinition>());
 			}
 			mapDatatype2Function.get(value.getDatatypeBean()).add(value);
