@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_14b95b2e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-28T11:25:12Z",
+      "side": 1,
+      "message": "Please move the JIRA ID into the external references section:\n\nIssue-Id: POLICY-193\n\nhttps://wiki.onap.org/display/DW/Commit+Messages",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "758272b417da3649a8fe314c0d2e4ad595f2a239",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_f4b5b731",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/CleanUpSystemLogDB.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-28T11:25:12Z",
+      "side": 1,
+      "message": "Can we use try with resources to simplify and take advantage of auto-cleanup of handles?\n\nhttps://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html",
+      "revId": "758272b417da3649a8fe314c0d2e4ad595f2a239",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
