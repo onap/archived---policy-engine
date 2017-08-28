@@ -115,9 +115,9 @@ public abstract class Policy {
 	public static final String EMPTY_STRING = "";
 	private static final String String = null;
 
-	public static String CONFIG_HOME = null;
-	public static String ACTION_HOME = null;
-	public static String CONFIG_URL = null;
+	public static final String CONFIG_HOME = getConfigHome();
+	public static final String ACTION_HOME = getActionHome();
+	public static final String CONFIG_URL = "$URL";
 
 	protected Map<String, String> performer = new HashMap<>();
 
@@ -128,9 +128,6 @@ public abstract class Policy {
 	String ruleID = "";
 
 	public Policy() {
-		CONFIG_HOME = getConfigHome();
-		ACTION_HOME = getActionHome();
-		CONFIG_URL = "$URL";
 		performer.put("PDP", "PDPAction");
 		performer.put("PEP", "PEPAction");
 	}
@@ -213,7 +210,6 @@ public abstract class Policy {
 	protected static boolean isJSONValid(String data) {
 		JsonReader jsonReader = null;
 		try {
-			new JSONObject(data);
 			InputStream stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
 			jsonReader = Json.createReader(stream);
 			LOGGER.info("Json Value is: " + jsonReader.read().toString() );
@@ -276,8 +272,6 @@ public abstract class Policy {
 				fileName = policyType + "_" + "PM" + "_" +java.lang.String.format(policyFileName) + "." +version +".xml";
 			}else if(policyConfigType.equals("ClosedLoop_Fault")){
 				fileName = policyType + "_" + "Fault" + "_" +java.lang.String.format(policyFileName) +  "." + version + ".xml";
-			}else if(policyConfigType.equals("ClosedLoop_Fault")){
-				fileName = policyType + "_" + "Fault" + "_" +java.lang.String.format(policyFileName) +  "." + version + ".xml";
 			}else if(policyConfigType.equals("Micro Service")){
 				fileName = policyType + "_" + "MS" + "_" + java.lang.String.format(policyFileName) + "." + version + ".xml";
 			}
@@ -336,6 +330,7 @@ public abstract class Policy {
 		try {
 			loadWebapps();
 		} catch (Exception e) {
+			LOGGER.debug(e);
 			return null;
 		}
 		return configHome;
@@ -345,6 +340,7 @@ public abstract class Policy {
 		try {
 			loadWebapps();
 		} catch (Exception e) {
+			LOGGER.debug(e);
 			return null;
 		}
 		return actionHome;
