@@ -113,6 +113,7 @@ import com.google.common.base.Splitter;
 		})
 public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeListener, Runnable {
 	private static final long serialVersionUID = 1L;
+	private static final String localIp = "127.0.0.1";
 	private static final Logger LOGGER	= FlexLogger.getLogger(XACMLPapServlet.class);
 	// audit (transaction) LOGGER
 	private static final Logger auditLogger = FlexLogger.getLogger("auditLogger");
@@ -535,7 +536,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + " " + message);
 						loggingContext.transactionEnded();
 						PolicyLogger.audit("Transaction Failed - See Error.log");
-						response.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+						setResponseError(response,HttpServletResponse.SC_FORBIDDEN, message);
 						im.endTransaction();
 						return;
 					}
@@ -569,7 +570,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " " + message);
 						loggingContext.transactionEnded();
 						PolicyLogger.audit("Transaction Failed - See Error.log");
-						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+						setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 						im.endTransaction();
 						return;
 					}
@@ -583,7 +584,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW + " " + message);
 						loggingContext.transactionEnded();
 						PolicyLogger.audit("Transaction Failed - See Error.log");
-						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+						setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 						im.endTransaction();
 						return;
 					}
@@ -591,7 +592,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					String message = "PDP is Unauthorized to Connect to PAP: "+ id;
 					PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + " " + message);
 					loggingContext.transactionEnded();
-					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "PDP not Authorized to connect to this PAP. Please contact the PAP Admin for registration.");
+					setResponseError(response, HttpServletResponse.SC_UNAUTHORIZED, "PDP not Authorized to connect to this PAP. Please contact the PAP Admin for registration.");
 					PolicyLogger.audit("Transaction Failed - See Error.log");
 					im.endTransaction();
 					return;
@@ -611,7 +612,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW + " PDP not associated with any group, even the default");
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "PDP not associated with any group, even the default");
+				setResponseError(response, HttpServletResponse.SC_UNAUTHORIZED, "PDP not associated with any group, even the default");
 				im.endTransaction();
 				return;
 			}
@@ -655,14 +656,14 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			loggingContext.transactionEnded();
 			auditLogger.info("Success");
 			PolicyLogger.audit("Transaction Ended Successfully");
-		} catch (PAPException e) {
+		} catch (PAPException | IOException | NumberFormatException e) {
 			if(pdpTransaction != null){
 				pdpTransaction.rollbackTransaction();
 			}
 			LOGGER.debug(XACMLErrorConstants.ERROR_PROCESS_FLOW + "POST exception: " + e, e);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(500, e.getMessage());
+			setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			im.endTransaction();
 			return;
 		}
@@ -702,7 +703,11 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			if (pathInfo != null){
 				//DO NOT do a im.startTransaction for the test request
 				if (pathInfo.equals("/pap/test")) {
-					testService(loggingContext, response);
+					try {
+						testService(loggingContext, response);
+					} catch (IOException e) {
+						LOGGER.debug(e);
+					}
 					return;
 				}
 			}
@@ -713,21 +718,21 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				String message = "GET interface called for PAP " + papResourceName + " but it has an Administrative"
 						+ " state of " + im.getStateManager().getAdminState()
 						+ "\n Exception Message: " + ae.getMessage();
-				LOGGER.info(message);
+				LOGGER.info(message, ae);
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+				setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 				return;
 			}catch (StandbyStatusException se) {
 				String message = "GET interface called for PAP " + papResourceName + " but it has a Standby Status"
 						+ " of " + im.getStateManager().getStandbyStatus()
 						+ "\n Exception Message: " + se.getMessage();
-				LOGGER.info(message);
+				LOGGER.info(message, se);
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+				setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 				return;
 			}
 			// Request from the API to get the gitPath
@@ -745,7 +750,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + " " + message);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					response.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+					setResponseError(response, HttpServletResponse.SC_FORBIDDEN, message);
 					im.endTransaction();
 					return;
 				}
@@ -769,7 +774,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			if (pdp == null) {
 				// Check if request came from localhost
 				if (request.getRemoteHost().equals("localhost") ||
-						request.getRemoteHost().equals("127.0.0.1") ||
+						request.getRemoteHost().equals(localIp) ||
 						request.getRemoteHost().equals(request.getLocalAddr())) {
 					// Return status information - basically all the groups
 					loggingContext.setServiceName("PAP.getGroups");
@@ -788,7 +793,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + " " + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, message);
+				setResponseError(response, HttpServletResponse.SC_UNAUTHORIZED, message);
 				im.endTransaction();
 				return;
 			}
@@ -800,7 +805,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				LOGGER.warn(XACMLErrorConstants.ERROR_PERMISSIONS + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, message);
+				setResponseError(response, HttpServletResponse.SC_UNAUTHORIZED, message);
 				im.endTransaction();
 				return;
 			}
@@ -811,7 +816,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				LOGGER.warn(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, message);
+				setResponseError(response,HttpServletResponse.SC_NOT_FOUND, message);
 				im.endTransaction();
 				return;
 			}
@@ -821,7 +826,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				LOGGER.warn(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, message);
+				setResponseError(response,HttpServletResponse.SC_NOT_FOUND, message);
 				im.endTransaction();
 				return;
 			}
@@ -836,16 +841,18 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.audit("Transaction Ended Successfully");
 			} catch (IOException e) {
 				String message = "Failed to open policy id " + policyId;
+				LOGGER.debug(e);
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, message);
+				setResponseError(response,HttpServletResponse.SC_NOT_FOUND, message);
 			}
-		}  catch (PAPException e) {
+		}  catch (PAPException | IOException e) {
+			LOGGER.debug(e);
 			PolicyLogger.error(MessageCodes.ERROR_UNKNOWN, e, "XACMLPapServlet", " GET exception");
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(500, e.getMessage());
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			im.endTransaction();
 			return;
 		}
@@ -870,27 +877,26 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		}
 		try {
 			im.startTransaction();
-		} catch (AdministrativeStateException ae){
-			String message = "PUT interface called for PAP " + papResourceName + " but it has an Administrative"
-					+ " state of " + im.getStateManager().getAdminState()
-					+ "\n Exception Message: " + ae.getMessage();
-			LOGGER.info(message +ae);
+		} catch (AdministrativeStateException | StandbyStatusException e) {
+			String message = "PUT interface called for PAP " + papResourceName;
+			if (e instanceof AdministrativeStateException) {
+				message += " but it has an Administrative state of "
+					+ im.getStateManager().getAdminState();
+			} else if (e instanceof StandbyStatusException) {
+				message += " but it has a Standby Status of "
+					+ im.getStateManager().getStandbyStatus();
+
+			}
+			message += "\n Exception Message: " + e.getMessage();
+
+			LOGGER.info(message, e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-			return;
-		}catch (StandbyStatusException se) {
-			String message = "PUT interface called for PAP " + papResourceName + " but it has a Standby Status"
-					+ " of " + im.getStateManager().getStandbyStatus()
-					+ "\n Exception Message: " + se.getMessage();
-			LOGGER.info(message  +se);
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
-			loggingContext.transactionEnded();
-			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 			return;
 		}
+
 		XACMLRest.dumpRequest(request);
 		//need to check if request is from the API or Admin console
 		String apiflag = request.getParameter("apiflag");
@@ -902,7 +908,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			String policyDBDaoRequestEntityType = request.getParameter("entitytype");
 			String policyDBDaoRequestExtraData = request.getParameter("extradata");
 			if(policyDBDaoRequestEntityId == null || policyDBDaoRequestEntityType == null){
-				response.sendError(400, "entityid or entitytype not supplied");
+				setResponseError(response,400, "entityid or entitytype not supplied");
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Ended Successfully");
 				im.endTransaction();
@@ -930,7 +936,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS + message );
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+				setResponseError(response,HttpServletResponse.SC_FORBIDDEN, message);
 				return;
 			}
 		}
@@ -953,7 +959,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			} catch(UnsupportedEncodingException e){
 				PolicyLogger.error("\nXACMLPapServlet.doPut() - Unsupported URL encoding of policyToCreateUpdate (UTF-8)"
 						+ "\npolicyToCreateUpdate = " + " ");
-				response.sendError(500,"policyToCreateUpdate encoding not supported"
+				setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"policyToCreateUpdate encoding not supported"
 						+ "\nfailure with the following exception: " + e);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See error.log");
@@ -966,7 +972,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				renameTransaction.renamePolicy(oldPolicyName,newPolicyName, "XACMLPapServlet.doPut");
 			}catch(Exception e){
 				renameTransaction.rollbackTransaction();
-				response.sendError(500,"createUpdateTransaction.createPolicy(policyToCreateUpdate, XACMLPapServlet.doPut) "
+				setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"createUpdateTransaction.createPolicy(policyToCreateUpdate, XACMLPapServlet.doPut) "
 						+ "\nfailure with the following exception: " + e);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See error.log");
@@ -1013,7 +1019,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + " " + message);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					response.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+					setResponseError(response,HttpServletResponse.SC_FORBIDDEN, message);
 					return;
 				}
 				if(apiflag.equalsIgnoreCase("addPolicyToGroup")){
@@ -1056,7 +1062,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + " " + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+				setResponseError(response,HttpServletResponse.SC_FORBIDDEN, message);
 				im.endTransaction();
 				return;
 			}
@@ -1066,7 +1072,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Request does not have groupId or apiflag");
 		loggingContext.transactionEnded();
 		PolicyLogger.audit("Transaction Failed - See Error.log");
-		response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Request does not have groupId or apiflag");
+		setResponseError(response,HttpServletResponse.SC_BAD_REQUEST, "Request does not have groupId or apiflag");
 		loggingContext.transactionEnded();
 		PolicyLogger.audit("Transaction Failed - See error.log");
 		im.endTransaction();
@@ -1096,7 +1102,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 			return;
 		}catch (StandbyStatusException se) {
 			String message = "PUT interface called for PAP " + papResourceName + " but it has a Standby Status"
@@ -1106,7 +1112,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 			return;
 		}
 		XACMLRest.dumpRequest(request);
@@ -1120,7 +1126,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + " " + message);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					response.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+					setResponseError(response,HttpServletResponse.SC_FORBIDDEN, message);
 					return;
 				}
 				APIRequestHandler apiRequestHandler = new APIRequestHandler();
@@ -1145,7 +1151,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Request does not have groupId");
 		loggingContext.transactionEnded();
 		PolicyLogger.audit("Transaction Failed - See Error.log");
-		response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Request does not have groupId");
+		setResponseError(response,HttpServletResponse.SC_BAD_REQUEST, "Request does not have groupId");
 		im.endTransaction();
 	}
 
@@ -1313,7 +1319,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
 			String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + "Exception in request to update group from API - See Error.log on on the PAP.";
-			response.sendError(500, e.getMessage());
+			setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.addHeader("error","addGroupError");
 			response.addHeader("message", message);
@@ -1353,7 +1359,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					loggingContext.transactionEnded();
 	
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					response.sendError(500, "Unable to create new group '" + groupId + "'");
+					setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to create new group '" + groupId + "'");
 					return;
 				}
 				response.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -1382,7 +1388,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					response.addHeader("message", message);
 					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				} else {
-					response.sendError(HttpServletResponse.SC_NOT_FOUND, message);
+					setResponseError(response,HttpServletResponse.SC_NOT_FOUND, message);
 				}
 				return;
 			}
@@ -1445,7 +1451,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						response.addHeader("message", message);
 						response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 					} else {
-						response.sendError(500, message);
+						setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 					}
 					return;
 				}
@@ -1478,7 +1484,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					loggingContext.transactionEnded();
 	
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					response.sendError(500, "Unable to set group '" + groupId + "' to default");
+					setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to set group '" + groupId + "' to default");
 					return;
 				}
 				response.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -1533,7 +1539,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " AC POST exception");
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(500, e.getMessage());
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			return;
 		}
 	}
@@ -1637,7 +1643,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				loggingContext.transactionEnded();
 
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, message);
+				setResponseError(response,HttpServletResponse.SC_NOT_FOUND, message);
 				return;
 			}
 			// Figure out which request this is based on the parameters
@@ -1649,7 +1655,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " GET Policy not implemented");
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "GET Policy not implemented");
+				setResponseError(response,HttpServletResponse.SC_BAD_REQUEST, "GET Policy not implemented");
 			} else {
 				// No other parameters, so return the identified Group
 				loggingContext.setServiceName("AC:PAP.getGroup");
@@ -1676,12 +1682,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " UNIMPLEMENTED ");
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
+			setResponseError(response,HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
 		} catch (PAPException e) {
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " AC Get exception");
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(500, e.getMessage());
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			return;
 		}
 	}
@@ -1708,7 +1714,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, message);
+				setResponseError(response,HttpServletResponse.SC_NOT_FOUND, message);
 				return;
 			}
 			if (request.getParameter("policy") != null) {
@@ -1748,7 +1754,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " PDP new/update had bad input. pdpId=" + pdpId + " objectFromJSON="+objectFromJSON);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					response.sendError(500, "Bad input, pdpid="+pdpId+" object="+objectFromJSON);
+					setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Bad input, pdpid="+pdpId+" object="+objectFromJSON);
 				}
 				StdPDP pdp = (StdPDP) objectFromJSON;
 				if(pdp != null){
@@ -1804,7 +1810,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " UNIMPLEMENTED");
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
+				setResponseError(response,HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
 				return;
 			} else {
 				// Assume that this is an update of an existing PDP Group
@@ -1826,7 +1832,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Group update had bad input. id=" + group.getId() + " objectFromJSON="+objectFromJSON);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					response.sendError(500, "Bad input, id="+group.getId() +" object="+objectFromJSON);
+					setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Bad input, id="+group.getId() +" object="+objectFromJSON);
 				}
 				// The Path on the PAP side is not carried on the RESTful interface with the AC
 				// (because it is local to the PAP)
@@ -1865,11 +1871,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				return;
 			}
 		} catch (PAPException e) {
+			LOGGER.debug(e);
 			acPutTransaction.rollbackTransaction();
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " AC PUT exception");
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(500, e.getMessage());
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			return;
 		}
 	}
@@ -1893,7 +1900,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				policyToDelete = URLDecoder.decode(policyToDelete,"UTF-8");
 			} catch(UnsupportedEncodingException e){
 				PolicyLogger.error("Unsupported URL encoding of policyToDelete (UTF-8");
-				response.sendError(500,"policyToDelete encoding not supported");
+				setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"policyToDelete encoding not supported");
 				return;
 			}
 			PolicyDBDaoTransaction deleteTransaction = policyDBDao.getNewTransaction();
@@ -1901,7 +1908,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				deleteTransaction.deletePolicy(policyToDelete);
 			} catch(Exception e){
 				deleteTransaction.rollbackTransaction();
-				response.sendError(500,"deleteTransaction.deleteTransaction(policyToDelete) "
+				setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"deleteTransaction.deleteTransaction(policyToDelete) "
 						+ "\nfailure with the following exception: " + e);
 				return;
 			}
@@ -1919,7 +1926,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown groupId '" + groupId +"'");
+				setResponseError(response,HttpServletResponse.SC_NOT_FOUND, "Unknown groupId '" + groupId +"'");
 				return;
 			}
 			// determine the operation needed based on the parameters in the request
@@ -1929,7 +1936,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " UNIMPLEMENTED");
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
+				setResponseError(response,HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
 				return;
 			} else if (request.getParameter("pdpId") != null) {
 				// ARGS:        group=<groupId> pdpId=<pdpId>                  <= delete PDP 
@@ -1958,7 +1965,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " UNIMPLEMENTED");
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
+				setResponseError(response,HttpServletResponse.SC_BAD_REQUEST, "UNIMPLEMENTED");
 				return;
 			} else {
 				// ARGS:      group=<groupId> movePDPsToGroupId=<movePDPsToGroupId>            <= delete a group and move all its PDPs to the given group
@@ -1995,7 +2002,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " AC DELETE exception");
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(500, e.getMessage());
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			return;
 		}
 	}
@@ -2169,6 +2176,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			} catch (InterruptedException e) {
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " Heartbeat interrupted.  Shutting down");
 				this.terminate();
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
@@ -2328,12 +2336,14 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					setPDPSummaryStatus(pdp, PDPStatus.Status.UNKNOWN);
 				}
 			} catch (Exception e) {
+				LOGGER.debug(e);
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " Unable to sync config with PDP '" + pdp.getId() + "'");
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed: Unable to sync config with PDP '" + pdp.getId() + "': " + e);
 				try {
 					setPDPSummaryStatus(pdp, PDPStatus.Status.UNKNOWN);
 				} catch (PAPException e1) {
+					LOGGER.debug(e1);
 					PolicyLogger.audit("Transaction Failed: Unable to set status of PDP " + pdp.getId() + " to UNKNOWN: " + e);
 					PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " Unable to set status of PDP '" + pdp.getId() + "' to UNKNOWN");
 				}
@@ -2427,35 +2437,23 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.audit("Transaction Failed - See Error.log");
 			response.setStatus(HttpServletResponse.SC_OK);
 			return;
-		}catch (ForwardProgressException fpe){
-			//No forward progress is being made
-			String message = "GET:/pap/test called and PAP " + papResourceName + " is not making forward progress."
-					+ " Exception Message: " + fpe.getMessage();
-			LOGGER.info(message);
+		}catch (ForwardProgressException | AdministrativeStateException | StandbyStatusException e){
+			String submsg;
+			if (e instanceof ForwardProgressException) {
+				submsg = " is not making forward progress.";
+			} else if (e instanceof AdministrativeStateException) {
+				submsg = " Administrative State is LOCKED.";
+			} else {
+				submsg = " Standby Status is NOT PROVIDING SERVICE.";
+			}
+
+			String message = "GET:/pap/test called and PAP " + papResourceName + submsg
+					+ " Exception Message: " + e.getMessage();
+			LOGGER.info(message, e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-			return;
-		}catch (AdministrativeStateException ase){
-			//Administrative State is locked
-			String message = "GET:/pap/test called and PAP " + papResourceName + " Administrative State is LOCKED "
-					+ " Exception Message: " + ase.getMessage();
-			LOGGER.info(message);
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
-			loggingContext.transactionEnded();
-			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-			return;
-		}catch (StandbyStatusException sse){
-			//Administrative State is locked
-			String message = "GET:/pap/test called and PAP " + papResourceName + " Standby Status is NOT PROVIDING SERVICE "
-					+ " Exception Message: " + sse.getMessage();
-			LOGGER.info(message);
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
-			loggingContext.transactionEnded();
-			PolicyLogger.audit("Transaction Failed - See Error.log");
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 			return;
 		}catch (Exception e) {
 			//A subsystem is not making progress, is locked, standby or is not responding
@@ -2484,7 +2482,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				ssFailureList = "UnknownSubSystem";
 			}
 			response.addHeader("X-ONAP-SubsystemFailure", ssFailureList);
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 			return;
 		}
 	}
@@ -2537,6 +2535,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		try {
 			loadWebapps();
 		} catch (PAPException e) {
+			LOGGER.debug(e);
 			return null;
 		}
 		return configHome;
@@ -2550,6 +2549,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		try {
 			loadWebapps();
 		} catch (PAPException e) {
+			LOGGER.debug(e);
 			return null;
 		}
 		return actionHome;

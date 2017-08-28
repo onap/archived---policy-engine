@@ -86,9 +86,6 @@ public class ActionPolicy extends Policy {
 	public static final String URL_ATTRIBUTEID = "url";
 	public static final String BODY_ATTRIBUTEID = "body";
 	
-	private static boolean isAttribute = false;
-
-	
 	List<String> dynamicLabelRuleAlgorithms = new LinkedList<>();
 	List<String> dynamicFieldFunctionRuleAlgorithms = new LinkedList<>();
 	List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<>();
@@ -96,6 +93,14 @@ public class ActionPolicy extends Policy {
 	
 	protected Map<String, String> dropDownMap = new HashMap<>();
 	
+	private static boolean isAttribute = false;
+	private static synchronized boolean getAttribute () {
+		return isAttribute;
+
+	}
+	private static synchronized void setAttribute (boolean att) {
+		isAttribute = att;
+	}
 	
 	public ActionPolicy() {
 		super();
@@ -114,7 +119,7 @@ public class ActionPolicy extends Policy {
 			return successMap;
 		}
 		
-		if(!ActionPolicy.isAttribute) {
+		if(!ActionPolicy.getAttribute()) {
 			successMap.put("invalidAttribute", "Action Attrbute was not in the database.");
 			return successMap;
 		}
@@ -164,7 +169,7 @@ public class ActionPolicy extends Policy {
 			if(!(actionBody==null || "".equals(actionBody))){	
 				saveActionBody(policyName, actionBody);
 			} else {
-				if(!isAttribute){
+				if(!getAttribute()){
 					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Could not find " + comboDictValue + " in the ActionPolicyDict table.");
 					return false;
 				}
@@ -512,7 +517,7 @@ public class ActionPolicy extends Policy {
 		for (Object id : actionPolicyDicts) {
 			ActionPolicyDict actionPolicy = (ActionPolicyDict) id;
 			if(attributeName.equals(actionPolicy.getAttributeName())){
-				isAttribute = true;
+				setAttribute(true);
 				retObj = actionPolicy;
 				break;
 			}
