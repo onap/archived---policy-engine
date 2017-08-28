@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_b4872f61",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/Policy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-08-28T11:28:53Z",
+      "side": 0,
+      "message": "I think this is needed for verification. We could ignore the Sonar or add a statement to ignore unused variable.",
+      "range": {
+        "startLine": 216,
+        "startChar": 3,
+        "endLine": 216,
+        "endChar": 24
+      },
+      "revId": "ed3acdbb2d22e819218eea730932950d69d985fe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
