@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_6fb0d2f4",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-28T18:43:42Z",
+      "side": 1,
+      "message": "Don\u0027t throw generic Exceptions. This would be a sonar Critical.",
+      "revId": "6c08fc0c1b136e2f779c981f9bc3afdb4938d5eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_4f950e3f",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-28T18:43:42Z",
+      "side": 1,
+      "message": "After Interrupted Exception the Sonar recommends to either re interrupt the thread or throw the exception. This can be a sonar critical.",
+      "revId": "6c08fc0c1b136e2f779c981f9bc3afdb4938d5eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_2f92ca57",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-28T18:43:42Z",
+      "side": 1,
+      "message": "Same here do not throw generic exceptions and at any other occurrences.",
+      "range": {
+        "startLine": 192,
+        "startChar": 62,
+        "endLine": 192,
+        "endChar": 71
+      },
+      "revId": "6c08fc0c1b136e2f779c981f9bc3afdb4938d5eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_0f9f0661",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-28T18:43:42Z",
+      "side": 1,
+      "message": "Same message goes here for interrupted Exception",
+      "revId": "6c08fc0c1b136e2f779c981f9bc3afdb4938d5eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_cf88de24",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-28T18:43:42Z",
+      "side": 1,
+      "message": "Same here do not throw generic exceptions",
+      "range": {
+        "startLine": 261,
+        "startChar": 64,
+        "endLine": 261,
+        "endChar": 73
+      },
+      "revId": "6c08fc0c1b136e2f779c981f9bc3afdb4938d5eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_af8d9a33",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-28T18:43:42Z",
+      "side": 1,
+      "message": "Interrupted Exception",
+      "revId": "6c08fc0c1b136e2f779c981f9bc3afdb4938d5eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
