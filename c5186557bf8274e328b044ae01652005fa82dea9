@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_b463afb0",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-28T13:55:00Z",
+      "side": 1,
+      "message": "This is a duplicate of line 896. \nAny how you can replace this and use the private method \nsetResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);",
+      "revId": "c5186557bf8274e328b044ae01652005fa82dea9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_d40513c3",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 967,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-28T13:55:00Z",
+      "side": 1,
+      "message": "Use the same private method (setResponseError) for all these try/catch for response.sendError(..",
+      "revId": "c5186557bf8274e328b044ae01652005fa82dea9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_341d7f10",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/Policy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-08-28T13:55:00Z",
+      "side": 1,
+      "message": "getConfigHome() requires loaded properties and assigning these values here could be an issue. It may fail intermittently. \n\nI think its better to create a private method init() called from policy constructor and assign these values there.",
+      "revId": "c5186557bf8274e328b044ae01652005fa82dea9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
