@@ -17,7 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-app.controller('editFWPrefixListController' ,  function ($scope, $modalInstance, message, Notification, UserInfoServiceDS2, Notification){
+app.controller('editFWPrefixListController' ,  function ($scope, $modalInstance, message, Notification, UserInfoServiceDS2){
 	$scope.validate = 'false';
     if(message.prefixListDictionaryData==null)
         $scope.label='Add PrefixList'
