@@ -19,11 +19,10 @@
  */
 package org.onap.policy.pap.xacml.rest.service;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.controller.ActionPolicyDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.BRMSDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.ClosedLoopDictionaryController;
@@ -35,961 +34,428 @@ import org.onap.policy.pap.xacml.rest.controller.FirewallDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.MicroServiceDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.PolicyScopeDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.SafePolicyController;
-import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 
 @Service("DictionaryService")
 public class DictionaryService {
-	
-	private static final Logger LOGGER	= FlexLogger.getLogger(DictionaryService.class);
 
 	/*
 	 * Methods that call the controller method directly to Save and Update dictionary data
 	 */
-	public String saveOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		DictionaryController dictionary = new DictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveOnapDictionary(request, response);
-			responseString = result.getViewName();
-			
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
-		
-		return responseString;
-		
+		return result.getViewName();
 	}
 	
-	public String saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		DictionaryController dictionary = new DictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveAttributeDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+		return result.getViewName();
 		}
-		
-		return responseString;
-	}
 	
-	public String saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		ActionPolicyDictionaryController action = new ActionPolicyDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = action.saveActionPolicyDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		BRMSDictionaryController dictionary = new BRMSDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveBRMSParamDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveVSCLAction(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveVSCLAction(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveVSCLAction(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveVnfType(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveVnfType(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveVnfType(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String savePEPOptions(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String savePEPOptions(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.savePEPOptions(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveVarbind(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveVarbind(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveVarbind(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveServiceType(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveServiceType(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveServiceType(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveSiteType(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveSiteType(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveSiteType(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		DecisionPolicyDictionaryController dictionary = new DecisionPolicyDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveSettingsDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		DescriptiveDictionaryController dictionary = new DescriptiveDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveDescriptiveDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		EnforcerDictionaryController dictionary = new EnforcerDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveEnforcerDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveActionListDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveProtocolListDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveZoneDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveSecurityZoneDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String savePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String savePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.savePrefixListDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveAddressGroupDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveServiceGroupDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveServiceListDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveTermListDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
 	
 	
 	
-	public String saveMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveMicroServiceLocationDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveMicroServiceConfigNameDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveDCAEUUIDDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveMicroServiceModelsDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveMicroServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveMicroServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveMicroServiceAttributeDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String savePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String savePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.savePSServiceDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String savePSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String savePSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.savePSResourceDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String savePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String savePSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.savePSTypeDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String savePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String savePSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.savePSClosedLoopDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String savePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String savePSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.savePSGroupScopeDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		SafePolicyController dictionary = new SafePolicyController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveRiskTypeDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
-	public String saveSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public String saveSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		SafePolicyController dictionary = new SafePolicyController();
-		String responseString = null;
-		try {
 			ModelAndView result = dictionary.saveSafePolicyWarningDictionary(request, response);
-			responseString = result.getViewName();
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
-		return responseString;
+		return result.getViewName();
 	}
 	
 	
 	/*
 	 * Methods that call the controller get methods directly to get dictionary data
 	 */
-	public void getOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getOnapDictionary(HttpServletRequest request, HttpServletResponse response){
 		DictionaryController dictionary = new DictionaryController();
-		try {
-			dictionary.getOnapNameDictionaryEntityData(request, response);					
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}		
+			dictionary.getOnapNameDictionaryEntityData(response);					
 	}
 	
-	public void getAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getAttributeDictionary(HttpServletRequest request, HttpServletResponse response){
 		DictionaryController dictionary = new DictionaryController();
-		try {
-			dictionary.getAttributeDictionaryEntityData(request, response);
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getAttributeDictionaryEntityData(response);
 	}
 	
-	public void getActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response){
 		ActionPolicyDictionaryController action = new ActionPolicyDictionaryController();
-		try {
-			action.getActionPolicyDictionaryEntityData(request, response);	
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			action.getActionPolicyDictionaryEntityData(response);	
 	}
 	
-	public void getBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response){
 		BRMSDictionaryController dictionary = new BRMSDictionaryController();
-		try {
-			dictionary.getBRMSParamDictionaryEntityData(request, response);
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
+			dictionary.getBRMSParamDictionaryEntityData(response);
 	}
 	
-	public void getVSCLAction(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getVSCLAction(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		try {
-			dictionary.getVSCLActionDictionaryEntityData(request, response);
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getVSCLActionDictionaryEntityData(response);
 	}
 	
-	public void getVnfType(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getVnfType(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		try {
-			dictionary.getVNFTypeDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
+			dictionary.getVNFTypeDictionaryEntityData(response);
 	}
 	
-	public void getPEPOptions(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getPEPOptions(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		try {
-			dictionary.getPEPOptionsDictionaryEntityData(request, response);
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getPEPOptionsDictionaryEntityData(response);
 	}
 	
-	public void getVarbind(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getVarbind(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		try {
-			dictionary.getVarbindDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
-		
+			dictionary.getVarbindDictionaryEntityData(response);
 	}
 	
-	public void getServiceType(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getServiceType(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		try {
-			dictionary.getClosedLoopServiceDictionaryEntityData(request, response);
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getClosedLoopServiceDictionaryEntityData(response);
 	}
 	
-	public void getSiteType(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getSiteType(HttpServletRequest request, HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
-		try {
-			dictionary.getClosedLoopSiteDictionaryEntityData(request, response);	
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getClosedLoopSiteDictionaryEntityData(response);	
 	}
 	
-	public void getSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getSettingsDictionary(HttpServletRequest request, HttpServletResponse response){
 		DecisionPolicyDictionaryController dictionary = new DecisionPolicyDictionaryController();
-		try {
-			dictionary.getSettingsDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}		
+			dictionary.getSettingsDictionaryEntityData(response);
 	}
 	
-	public void getDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response){
 		DescriptiveDictionaryController dictionary = new DescriptiveDictionaryController();
-		try {
-			dictionary.getDescriptiveDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			
-		}
+			dictionary.getDescriptiveDictionaryEntityData(response);
 	}
 	
-	public void getEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getEnforcerDictionary(HttpServletRequest request, HttpServletResponse response){
 		EnforcerDictionaryController dictionary = new EnforcerDictionaryController();
-		try {
-			dictionary.getEnforcerDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getEnforcerDictionaryEntityData(response);
 	}
 	
-	public void getActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getActionListDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		try {
-			dictionary.getActionListDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getActionListDictionaryEntityData(response);
 	}
 	
-	public void getProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getProtocolListDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		try {
-			dictionary.getProtocolListDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getProtocolListDictionaryEntityData(response);
 	}
 	
-	public void getZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getZoneDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		try {
-			dictionary.getZoneDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getZoneDictionaryEntityData(response);
 	}
 	
-	public void getSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		try {
-			dictionary.getSecurityZoneDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getSecurityZoneDictionaryEntityData(response);
 	}
 	
-	public void getPrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getPrefixListDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		try {
-			dictionary.getPrefixListDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getPrefixListDictionaryEntityData(response);
 	}
 	
-	public void getAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		try {
-			dictionary.getAddressGroupDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getAddressGroupDictionaryEntityData(response);
 	}
 	
-	public void getServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		try {
-			dictionary.getServiceGroupDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getServiceGroupDictionaryEntityData(response);
 	}
 	
-	public void getServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getServiceListDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		try {
-			dictionary.getServiceListDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getServiceListDictionaryEntityData(response);
 	}
 	
-	public void getTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getTermListDictionary(HttpServletRequest request, HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
-		try {
-			dictionary.getTermListDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getTermListDictionaryEntityData(response);
 	}
 	
 	
-	public void getMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
-		try {
-			dictionary.getMicroServiceLocationDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getMicroServiceLocationDictionaryEntityData(response);
 	}
 	
-	public void getMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
-		try {
-			dictionary.getMicroServiceConfigNameDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getMicroServiceConfigNameDictionaryEntityData(response);
 	}
 	
-	public void getDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
-		try {
-			dictionary.getDCAEUUIDDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getDCAEUUIDDictionaryEntityData(response);
 	}
 	
-	public void getMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
-		try {
-			dictionary.getMicroServiceModelsDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getMicroServiceModelsDictionaryEntityData(response);
 	}
 	
-	public void getMicroServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getMicroServiceDictionary(HttpServletRequest request, HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
-		try {
-			dictionary.getMicroServiceModelsDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getMicroServiceModelsDictionaryEntityData(response);
 	}
 	
-	public void getPSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getPSServiceDictionary(HttpServletRequest request, HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
-		try {
-			dictionary.getPSServiceEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getPSServiceEntityData(response);
 	}
 	
-	public void getPSResourceDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getPSResourceDictionary(HttpServletRequest request, HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
-		try {
-			dictionary.getPSResourceEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getPSResourceEntityData(response);
 	}
 	
-	public void getPSTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getPSTypeDictionary(HttpServletRequest request, HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
-		try {
-			dictionary.getPSTypeEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getPSTypeEntityData(response);
 	}
 	
-	public void getPSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getPSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
-		try {
-			dictionary.getPSClosedLoopEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getPSClosedLoopEntityData(response);
 	}
 	
-	public void getPSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getPSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
-		try {
-			dictionary.getGroupPolicyScopeEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getGroupPolicyScopeEntityData(response);
 	}
 	
-	public void getRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response){
 		SafePolicyController dictionary = new SafePolicyController();
-		try {
-			dictionary.getOnapNameDictionaryEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getOnapNameDictionaryEntityData(response);
 	}
 	
-	public void getSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		
+	public void getSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response) {
 		SafePolicyController dictionary = new SafePolicyController();
-		try {
-			dictionary.getSafePolicyWarningeEntityData(request, response);
-		
-		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			
-		}
+			dictionary.getSafePolicyWarningeEntityData(response);
 	}
 }

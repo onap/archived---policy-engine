@@ -20,6 +20,7 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,40 +63,52 @@ public class MicroServiceDictionaryController {
 	private static final Logger LOGGER  = FlexLogger.getLogger(MicroServiceDictionaryController.class);
 
 	private static CommonClassDao commonClassDao;
-
-	public static void setCommonClassDao(CommonClassDao commonClassDao) {
-		MicroServiceDictionaryController.commonClassDao = commonClassDao;
-	}
-
+	
+    private static String successMapKey= "successMapKey";
+    private static String successMsg = "success";
+    private static String operation = "operation";
+    private static String getDictionary = "getDictionary";
+    private static String errorMsg = "error";
+    private static String dictionaryDBQuery = "dictionaryDBQuery";
+    private HashMap<String,MSAttributeObject > classMap;
+    private List<String> modelList = new ArrayList<>();
+    private static String apiflag = "apiflag";
+	private static String dictionaryFields ="dictionaryFields";
+	private static String update = "update";
+	private static String duplicateResponseString = "Duplicate";
+	private static String successMessage = "Success";
+	private static String utf8 = "UTF-8";
+	private static String applicationJsonContentType = "application / json";
+	private static String existsResponseString = "Exists";
+	private static String microServiceModelsDictionaryDatas = "microServiceModelsDictionaryDatas";
+	private static String modelName = "modelName";
+	private static String microServiceModelsDictionaryData = "microServiceModelsDictionaryData";
+	private static String description = "description";
+	private static String version = "version";
+	private static String classMapData = "classMap";
+	/*
+	 * This is an empty constructor
+	 */
+    public MicroServiceDictionaryController(){}	
+	
 	@Autowired
 	public MicroServiceDictionaryController(CommonClassDao commonClassDao){
 		MicroServiceDictionaryController.commonClassDao = commonClassDao;
 	}
-	
-	public MicroServiceDictionaryController(){}	
-	
-	public UserInfo getUserInfo(String loginId){
-		UserInfo name = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
-		return name;	
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
+		MicroServiceDictionaryController.commonClassDao = commonClassDao;
 	}
 	
-    private static String SUCCESSKEY= "successMapKey";
-    private static String SUCCESS = "success";
-    private static String OPERATION = "operation";
-    private static String GETDICTIONARY = "getDictionary";
-    private static String ERROR = "error";
-    private static String DICTIONARYDBQUERY = "dictionaryDBQuery";
-    private HashMap<String,MSAttributeObject > classMap;
-    private List<String> modelList = new ArrayList<>();
-    
-	
+	public UserInfo getUserInfo(String loginId){
+		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
+	}
 
 	MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
 	private MicroServiceModels newModel;
 	
 	
 	@RequestMapping(value={"/get_DCAEUUIDDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getDCAEUUIDDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getDCAEUUIDDictionaryByNameEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -110,31 +123,31 @@ public class MicroServiceDictionaryController {
 	}
 
 	@RequestMapping(value={"/get_DCAEUUIDData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getDCAEUUIDDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getDCAEUUIDDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("dcaeUUIDDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(DCAEuuid.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-            response.addHeader(SUCCESSKEY, SUCCESS);    
-            response.addHeader(OPERATION, GETDICTIONARY);
+            response.addHeader(successMapKey, successMsg);    
+            response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-            response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            response.addHeader(errorMsg, dictionaryDBQuery);
+            LOGGER.error(e);
 		}
 	}
 	
 	@RequestMapping(value={"/ms_dictionary/save_dcaeUUID"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
             boolean fromAPI = false;
-            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+            if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
                 fromAPI = true;
             }
 			ObjectMapper mapper = new ObjectMapper();
@@ -142,14 +155,13 @@ public class MicroServiceDictionaryController {
 			JsonNode root = mapper.readTree(request.getReader());
             DCAEuuid dCAEuuid;
             if (fromAPI) {
-                dCAEuuid = (DCAEuuid)mapper.readValue(root.get("dictionaryFields").toString(), DCAEuuid.class);
+                dCAEuuid = (DCAEuuid)mapper.readValue(root.get(dictionaryFields).toString(), DCAEuuid.class);
                 
                 //check if update operation or create, get id for data to be updated and update attributeData
-                if (request.getParameter(OPERATION).equals("update")) {
+                if ((update).equals(request.getParameter(operation))) {
                 	List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(dCAEuuid.getName(), "name", DCAEuuid.class);
-                	int id = 0;
                 	DCAEuuid data = (DCAEuuid) duplicateData.get(0);
-                	id = data.getId();
+                	int id = data.getId();
                 	if(id==0){
                 		isFakeUpdate=true;
                 		dCAEuuid.setId(1);
@@ -174,26 +186,26 @@ public class MicroServiceDictionaryController {
 			} 
             String responseString = "";
             if(duplicateflag){
-                responseString = "Duplicate";
+                responseString = duplicateResponseString;
             }else{
                 responseString = mapper.writeValueAsString(commonClassDao.getData(DCAEuuid.class));
             } 
             
             if (fromAPI) {
-                if (responseString!=null && !responseString.equals("Duplicate")) {
+                if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
                     if(isFakeUpdate){
-                        responseString = "Exists";
+                        responseString = existsResponseString;
                     } else {
-                        responseString = "Success";
+                        responseString = successMessage;
                     }
                 }
                 ModelAndView result = new ModelAndView();
                 result.setViewName(responseString);
                 return result;
             } else {
-                response.setCharacterEncoding("UTF-8");
-                response.setContentType("application / json");
-                request.setCharacterEncoding("UTF-8");
+                response.setCharacterEncoding(utf8);
+                response.setContentType(applicationJsonContentType);
+                request.setCharacterEncoding(utf8);
  
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{dcaeUUIDDictionaryDatas: " + responseString + "}");
@@ -201,8 +213,8 @@ public class MicroServiceDictionaryController {
                 return null;
             }
         }catch (Exception e){
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -210,16 +222,16 @@ public class MicroServiceDictionaryController {
 	}
 
 	@RequestMapping(value={"/ms_dictionary/remove_dcaeuuid"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			DCAEuuid dCAEuuid = (DCAEuuid)mapper.readValue(root.get("data").toString(), DCAEuuid.class);
 			commonClassDao.delete(dCAEuuid);
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			response.setContentType(applicationJsonContentType);
+			request.setCharacterEncoding(utf8);
 
 			PrintWriter out = response.getWriter();
 
@@ -231,8 +243,8 @@ public class MicroServiceDictionaryController {
 		}
 		catch (Exception e){
 			LOGGER.error(e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -241,7 +253,7 @@ public class MicroServiceDictionaryController {
 	
 	
 	@RequestMapping(value={"/get_MicroServiceConfigNameDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceConfigNameByNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getMicroServiceConfigNameByNameDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -258,31 +270,31 @@ public class MicroServiceDictionaryController {
 	
 	
 	@RequestMapping(value={"/get_MicroServiceConfigNameData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceConfigNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getMicroServiceConfigNameDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("microServiceCongigNameDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(MicroServiceConfigName.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-            response.addHeader(SUCCESSKEY, SUCCESS);    
-            response.addHeader(OPERATION, GETDICTIONARY);
+            response.addHeader(successMapKey, successMsg);    
+            response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-            response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            response.addHeader(errorMsg, dictionaryDBQuery);
+            LOGGER.error(e);
 		}
 	}
 	
 	@RequestMapping(value={"/ms_dictionary/save_configName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
             boolean fromAPI = false;
-            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+            if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
                 fromAPI = true;
             }
 			ObjectMapper mapper = new ObjectMapper();
@@ -290,14 +302,13 @@ public class MicroServiceDictionaryController {
 			JsonNode root = mapper.readTree(request.getReader());
             MicroServiceConfigName microServiceConfigName;
             if (fromAPI) {
-                microServiceConfigName = (MicroServiceConfigName)mapper.readValue(root.get("dictionaryFields").toString(), MicroServiceConfigName.class);
+                microServiceConfigName = (MicroServiceConfigName)mapper.readValue(root.get(dictionaryFields).toString(), MicroServiceConfigName.class);
                 
                 //check if update operation or create, get id for data to be updated and update attributeData
-                if (request.getParameter(OPERATION).equals("update")) {
+                if ((update).equals(request.getParameter(operation))) {
                     List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(microServiceConfigName.getName(), "name", MicroServiceConfigName.class);
-                    int id = 0;
                     MicroServiceConfigName data = (MicroServiceConfigName) duplicateData.get(0);
-                    id = data.getId();
+                    int id = data.getId();
                 
                     if(id==0){
                         isFakeUpdate=true;
@@ -323,26 +334,26 @@ public class MicroServiceDictionaryController {
 			} 
             String responseString = "";
             if(duplicateflag){
-                responseString = "Duplicate";
+                responseString = duplicateResponseString;
             }else{
                 responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceConfigName.class));
             }
             
             if (fromAPI) {
-                if (responseString!=null && !responseString.equals("Duplicate")) {
+                if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
                     if(isFakeUpdate){
-                        responseString = "Exists";
+                        responseString = existsResponseString;
                     } else {
-                        responseString = "Success";
+                        responseString = successMessage;
                     }
                 }
                 ModelAndView result = new ModelAndView();
                 result.setViewName(responseString);
                 return result;
             } else {
-                response.setCharacterEncoding("UTF-8");
-                response.setContentType("application / json");
-                request.setCharacterEncoding("UTF-8");
+                response.setCharacterEncoding(utf8);
+                response.setContentType(applicationJsonContentType);
+                request.setCharacterEncoding(utf8);
  
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{microServiceCongigNameDictionaryDatas: " + responseString + "}");
@@ -350,8 +361,8 @@ public class MicroServiceDictionaryController {
                 return null;
             }
         }catch (Exception e){
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -359,16 +370,16 @@ public class MicroServiceDictionaryController {
 	}
 
 	@RequestMapping(value={"/ms_dictionary/remove_msConfigName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			MicroServiceConfigName microServiceConfigName = (MicroServiceConfigName)mapper.readValue(root.get("data").toString(), MicroServiceConfigName.class);
 			commonClassDao.delete(microServiceConfigName);
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			response.setContentType(applicationJsonContentType);
+			request.setCharacterEncoding(utf8);
 
 			PrintWriter out = response.getWriter();
 
@@ -380,8 +391,8 @@ public class MicroServiceDictionaryController {
 		}
 		catch (Exception e){
 			LOGGER.error(e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -389,7 +400,7 @@ public class MicroServiceDictionaryController {
 	}
 	
 	@RequestMapping(value={"/get_MicroServiceLocationDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceLocationByNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getMicroServiceLocationByNameDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -404,31 +415,31 @@ public class MicroServiceDictionaryController {
 	}
 	
 	@RequestMapping(value={"/get_MicroServiceLocationData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceLocationDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getMicroServiceLocationDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("microServiceLocationDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(MicroServiceLocation.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-            response.addHeader(SUCCESSKEY, SUCCESS);    
-            response.addHeader(OPERATION, GETDICTIONARY);
+            response.addHeader(successMapKey, successMsg);    
+            response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-            response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            response.addHeader(errorMsg, dictionaryDBQuery);
+            LOGGER.error(e);
 		}
 	}
 	
 	@RequestMapping(value={"/ms_dictionary/save_location"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response)throws IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
             boolean fromAPI = false;
-            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+            if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
                 fromAPI = true;
             }
 			ObjectMapper mapper = new ObjectMapper();
@@ -436,14 +447,13 @@ public class MicroServiceDictionaryController {
 			JsonNode root = mapper.readTree(request.getReader());
             MicroServiceLocation microServiceLocation;
             if (fromAPI) {
-                microServiceLocation = (MicroServiceLocation)mapper.readValue(root.get("dictionaryFields").toString(), MicroServiceLocation.class);
+                microServiceLocation = (MicroServiceLocation)mapper.readValue(root.get(dictionaryFields).toString(), MicroServiceLocation.class);
                 
                 //check if update operation or create, get id for data to be updated and update attributeData
-                if (request.getParameter(OPERATION).equals("update")) {
+                if ((update).equals(request.getParameter(operation))) {
                     List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(microServiceLocation.getName(), "name", MicroServiceLocation.class);
-                    int id = 0;
                     MicroServiceLocation data = (MicroServiceLocation) duplicateData.get(0);
-                    id = data.getId();
+                    int id = data.getId();
                   
                     if(id==0){
                         isFakeUpdate=true;
@@ -469,26 +479,26 @@ public class MicroServiceDictionaryController {
 			} 
             String responseString = "";
             if(duplicateflag){
-                responseString = "Duplicate";
+                responseString = duplicateResponseString;
             }else{
                 responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceLocation.class));
             }
             
             if (fromAPI) {
-                if (responseString!=null && !responseString.equals("Duplicate")) {
+                if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
                     if(isFakeUpdate){
-                        responseString = "Exists";
+                        responseString = existsResponseString;
                     } else {
-                        responseString = "Success";
+                        responseString = successMessage;
                     }
                 }
                 ModelAndView result = new ModelAndView();
                 result.setViewName(responseString);
                 return result;
             } else {
-                response.setCharacterEncoding("UTF-8");
-                response.setContentType("application / json");
-                request.setCharacterEncoding("UTF-8");
+                response.setCharacterEncoding(utf8);
+                response.setContentType(applicationJsonContentType);
+                request.setCharacterEncoding(utf8);
  
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{microServiceLocationDictionaryDatas: " + responseString + "}");
@@ -496,25 +506,26 @@ public class MicroServiceDictionaryController {
                 return null;
             }
 		}catch (Exception e){
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			LOGGER.error(e);
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/ms_dictionary/remove_msLocation"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			MicroServiceLocation microServiceLocation = (MicroServiceLocation)mapper.readValue(root.get("data").toString(), MicroServiceLocation.class);
 			commonClassDao.delete(microServiceLocation);
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			response.setContentType(applicationJsonContentType);
+			request.setCharacterEncoding(utf8);
 
 			PrintWriter out = response.getWriter();
 
@@ -526,8 +537,8 @@ public class MicroServiceDictionaryController {
 		}
 		catch (Exception e){
 			LOGGER.error(e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -535,7 +546,7 @@ public class MicroServiceDictionaryController {
 	}
 	
     @RequestMapping(value={"/get_MicroServiceAttributeDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-    public void getMicroServiceAttributeByNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+    public void getMicroServiceAttributeByNameDictionaryEntityData(HttpServletResponse response){
         try{
             Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
@@ -545,36 +556,36 @@ public class MicroServiceDictionaryController {
             response.getWriter().write(j.toString());
         }
         catch (Exception e){
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
         }
     }
     
     @RequestMapping(value={"/get_MicroServiceAttributeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-    public void getMicroServiceAttributeDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+    public void getMicroServiceAttributeDictionaryEntityData(HttpServletResponse response){
         try{
             Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("microServiceAttributeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(MicroServiceAttribute.class)));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
             JSONObject j = new JSONObject(msg);
-            response.addHeader(SUCCESSKEY, SUCCESS);    
-            response.addHeader(OPERATION, GETDICTIONARY);
+            response.addHeader(successMapKey, successMsg);    
+            response.addHeader(operation, getDictionary);
             response.getWriter().write(j.toString());
  
         }
         catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-            response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            response.addHeader(errorMsg, dictionaryDBQuery);
+            LOGGER.error(e);
         }
     }
     
     @RequestMapping(value={"/ms_dictionary/save_modelAttribute"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-    public ModelAndView saveMicroServiceAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public ModelAndView saveMicroServiceAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
         try {
             boolean duplicateflag = false;
             boolean fromAPI = false;
-            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+            if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
                 fromAPI = true;
             }
             
@@ -584,10 +595,10 @@ public class MicroServiceDictionaryController {
             
             MicroServiceAttribute microServiceAttribute;
             if (fromAPI) {
-                microServiceAttribute = (MicroServiceAttribute)mapper.readValue(root.get("dictionaryFields").toString(), MicroServiceAttribute.class);
+                microServiceAttribute = (MicroServiceAttribute)mapper.readValue(root.get(dictionaryFields).toString(), MicroServiceAttribute.class);
                 
                 //check if update operation or create, get id for data to be updated and update attributeData
-                if (request.getParameter(OPERATION).equals("update")) {
+                if ((update).equals(request.getParameter(operation))) {
                     MicroServiceAttribute initialAttribute = (MicroServiceAttribute)mapper.readValue(root.get("initialFields").toString(), MicroServiceAttribute.class);
  
                     String checkValue = initialAttribute.getName() + ":" + initialAttribute.getValue() + ":" + initialAttribute.getModelName();
@@ -617,22 +628,22 @@ public class MicroServiceDictionaryController {
  
             String responseString = "";
             if(duplicateflag){
-                responseString = "Duplicate";
+                responseString = duplicateResponseString;
             }else{
                 responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceAttribute.class));
             }
             
             if (fromAPI) {
-                if (responseString!=null && !responseString.equals("Duplicate")) {
-                    responseString = "Success";
+                if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
+                    responseString = successMessage;
                 }
                 ModelAndView result = new ModelAndView();
                 result.setViewName(responseString);
                 return result;
             } else {
-                response.setCharacterEncoding("UTF-8");
-                response.setContentType("application / json");
-                request.setCharacterEncoding("UTF-8");
+                response.setCharacterEncoding(utf8);
+                response.setContentType(applicationJsonContentType);
+                request.setCharacterEncoding(utf8);
  
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{microServiceAttributeDictionaryDatas: " + responseString + "}");
@@ -641,25 +652,26 @@ public class MicroServiceDictionaryController {
             }
         }
         catch (Exception e){
-            response.setCharacterEncoding("UTF-8");
-            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding(utf8);
+            request.setCharacterEncoding(utf8);
             PrintWriter out = response.getWriter();
             out.write(e.getMessage());
+            LOGGER.error(e);
         }
         return null;
     }
  
     @RequestMapping(value={"/ms_dictionary/remove_modelAttribute"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-    public ModelAndView removeMicroServiceAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView removeMicroServiceAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
         try{
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
             MicroServiceAttribute microServiceAttribute = (MicroServiceAttribute)mapper.readValue(root.get("data").toString(), MicroServiceAttribute.class);
             commonClassDao.delete(microServiceAttribute);
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application / json");
-            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding(utf8);
+            response.setContentType(applicationJsonContentType);
+            request.setCharacterEncoding(utf8);
  
             PrintWriter out = response.getWriter();
  
@@ -670,9 +682,9 @@ public class MicroServiceDictionaryController {
             return null;
         }
         catch (Exception e){
-            LOGGER.error(e.getMessage());
-            response.setCharacterEncoding("UTF-8");
-            request.setCharacterEncoding("UTF-8");
+            LOGGER.error(e);
+            response.setCharacterEncoding(utf8);
+            request.setCharacterEncoding(utf8);
             PrintWriter out = response.getWriter();
             out.write(e.getMessage());
         }
@@ -681,17 +693,17 @@ public class MicroServiceDictionaryController {
  
 	
 	@RequestMapping(value={"/get_MicroServiceModelsDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceModelsDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getMicroServiceModelsDictionaryByNameEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("microServiceModelsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(MicroServiceModels.class, "modelName")));
+			model.put(microServiceModelsDictionaryDatas, mapper.writeValueAsString(commonClassDao.getDataByColumn(MicroServiceModels.class, modelName)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			 LOGGER.error(e.getMessage());
+			 LOGGER.error(e);
 		}
 	}
 	
@@ -702,44 +714,44 @@ public class MicroServiceDictionaryController {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(request.getReader());
             String modelName = null;
-            if (root.get("microServiceModelsDictionaryData").has("modelName")){
-                modelName = root.get("microServiceModelsDictionaryData").get("modelName").asText().replace("\"", "");
+            if (root.get(microServiceModelsDictionaryData).has(modelName)){
+                modelName = root.get(microServiceModelsDictionaryData).get(modelName).asText().replace("\"", "");
             }
              if (modelName!=null){
-                    model.put("microServiceModelsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataById(MicroServiceModels.class, "modelName", modelName)));
+                    model.put(microServiceModelsDictionaryDatas, mapper.writeValueAsString(commonClassDao.getDataById(MicroServiceModels.class, modelName, modelName)));
              } else{
-                 model.put(ERROR, "No model name given");
+                 model.put(errorMsg, "No model name given");
              }
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
             JSONObject j = new JSONObject(msg);
             response.getWriter().write(j.toString());
         }
         catch (Exception e){
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e);
         }
     }
     
 	@RequestMapping(value={"/get_MicroServiceModelsData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceModelsDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getMicroServiceModelsDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("microServiceModelsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(MicroServiceModels.class)));
+			model.put(microServiceModelsDictionaryDatas, mapper.writeValueAsString(commonClassDao.getData(MicroServiceModels.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-            response.addHeader(SUCCESSKEY, SUCCESS);    
-            response.addHeader(OPERATION, GETDICTIONARY);
+            response.addHeader(successMapKey, successMsg);    
+            response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-            response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            response.addHeader(errorMsg, dictionaryDBQuery);
+            LOGGER.error(e);
 		}
 	}
 	
     @RequestMapping(value={"/get_MicroServiceModelsDataServiceVersion"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-    public void getMicroServiceModelsDictionaryEntityDataServiceVersion(HttpServletRequest request, HttpServletResponse response){
+    public void getMicroServiceModelsDictionaryEntityDataServiceVersion(HttpServletResponse response){
         try{
             Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
@@ -751,7 +763,7 @@ public class MicroServiceDictionaryController {
                 	data.add(msmodel.getModelName() + "-v" + msmodel.getVersion());
                 }
             }
-            model.put("microServiceModelsDictionaryDatas", mapper.writeValueAsString(data));
+            model.put(microServiceModelsDictionaryDatas, mapper.writeValueAsString(data));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
             JSONObject j = new JSONObject(msg);
             response.addHeader("successMapKey", "success"); 
@@ -767,32 +779,32 @@ public class MicroServiceDictionaryController {
     }
     
     @RequestMapping(value={"/get_MicroServiceModelsDataByClass"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-    public void getMicroServiceModelsDictionaryClassEntityData(HttpServletRequest request, HttpServletResponse response){
+    public void getMicroServiceModelsDictionaryClassEntityData(HttpServletResponse response){
         try{
             Map<String, Object> model = new HashMap<>();
             ObjectMapper mapper = new ObjectMapper();
             model.put("microServiceModelsDictionaryClassDatas", mapper.writeValueAsString(modelList));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
             JSONObject j = new JSONObject(msg);
-            response.addHeader(SUCCESSKEY, SUCCESS);    
-            response.addHeader(OPERATION, GETDICTIONARY);
+            response.addHeader(successMapKey, successMsg);    
+            response.addHeader(operation, getDictionary);
             response.getWriter().write(j.toString());
  
         }
         catch (Exception e){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-            response.addHeader(ERROR, DICTIONARYDBQUERY);
-            LOGGER.error(e.getMessage());
+            response.addHeader(errorMsg, dictionaryDBQuery);
+            LOGGER.error(e);
         }
     }
     
 	@RequestMapping(value={"/ms_dictionary/save_model"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean fromAPI = false;
 			this.newModel = new MicroServiceModels();
-			if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
 				fromAPI = true;
 			}
 			ObjectMapper mapper = new ObjectMapper();
@@ -805,23 +817,22 @@ public class MicroServiceDictionaryController {
 				JsonNode dataType = root.get("modelType");
 				String modelType= dataType.toString();
 				if(modelType.contains("yml")){
-					if (root.has("microServiceModelsDictionaryData")){
-						if (root.get("microServiceModelsDictionaryData").has("description")){
-							microServiceModels.setDescription(root.get("microServiceModelsDictionaryData").get("description").asText().replace("\"", ""));
+					if (root.has(microServiceModelsDictionaryData)){
+						if (root.get(microServiceModelsDictionaryData).has(description)){
+							microServiceModels.setDescription(root.get(microServiceModelsDictionaryData).get(description).asText().replace("\"", ""));
 						}
-						if (root.get("microServiceModelsDictionaryData").has("modelName")){
-							microServiceModels.setModelName(root.get("microServiceModelsDictionaryData").get("modelName").asText().replace("\"", ""));
+						if (root.get(microServiceModelsDictionaryData).has(modelName)){
+							microServiceModels.setModelName(root.get(microServiceModelsDictionaryData).get(modelName).asText().replace("\"", ""));
 							this.newModel.setModelName(microServiceModels.getModelName());
 						}
-						if (root.get("microServiceModelsDictionaryData").has("version")){
-							microServiceModels.setVersion(root.get("microServiceModelsDictionaryData").get("version").asText().replace("\"", ""));
+						if (root.get(microServiceModelsDictionaryData).has(version)){
+							microServiceModels.setVersion(root.get(microServiceModelsDictionaryData).get(version).asText().replace("\"", ""));
 							this.newModel.setVersion(microServiceModels.getVersion());
 						}
 					}
 
-					MSAttributeObject mainClass  = null;
 					classMap = new HashMap<>();
-					JsonNode data = root.get("classMap");
+					JsonNode data = root.get(classMapData);
 					ObjectMapper mapper1 = new ObjectMapper();
 					String data1 = data.toString().substring(1, data.toString().length()-1);
 					data1 = data1.replace("\\", "");
@@ -836,7 +847,7 @@ public class MicroServiceDictionaryController {
 					}
 
 					userId = root.get("userid").textValue();
-					mainClass = classMap.get(this.newModel.getModelName());
+					MSAttributeObject mainClass = classMap.get(this.newModel.getModelName());
 					this.newModel.setDependency("[]");
 					String value = new Gson().toJson(mainClass.getSubClass());
 					this.newModel.setSub_attributes(value);
@@ -853,11 +864,11 @@ public class MicroServiceDictionaryController {
 
 				}else{
 					if (fromAPI) {
-						microServiceModels = (MicroServiceModels)mapper.readValue(root.get("dictionaryFields").toString(), MicroServiceModels.class);
+						microServiceModels = (MicroServiceModels)mapper.readValue(root.get(dictionaryFields).toString(), MicroServiceModels.class);
 						userId = "API";
 
 						//check if update operation or create, get id for data to be updated and update attributeData
-						if (request.getParameter(OPERATION).equals("update")) {
+						if ((update).equals(request.getParameter(operation))) {
 							String checkName = microServiceModels.getModelName() + ":" + microServiceModels.getVersion();
 							List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(checkName, "modelName:version", MicroServiceModels.class);
 							int id = 0;
@@ -870,22 +881,22 @@ public class MicroServiceDictionaryController {
 
 						}
 					} else {
-						if (root.has("microServiceModelsDictionaryData")){
-							if (root.get("microServiceModelsDictionaryData").has("description")){
-								microServiceModels.setDescription(root.get("microServiceModelsDictionaryData").get("description").asText().replace("\"", ""));
+						if (root.has(microServiceModelsDictionaryData)){
+							if (root.get(microServiceModelsDictionaryData).has(description)){
+								microServiceModels.setDescription(root.get(microServiceModelsDictionaryData).get(description).asText().replace("\"", ""));
 							}
-							if (root.get("microServiceModelsDictionaryData").has("modelName")){
-								microServiceModels.setModelName(root.get("microServiceModelsDictionaryData").get("modelName").asText().replace("\"", ""));
+							if (root.get(microServiceModelsDictionaryData).has(modelName)){
+								microServiceModels.setModelName(root.get(microServiceModelsDictionaryData).get(modelName).asText().replace("\"", ""));
 								this.newModel.setModelName(microServiceModels.getModelName());
 							}
-							if (root.get("microServiceModelsDictionaryData").has("version")){
-								microServiceModels.setVersion(root.get("microServiceModelsDictionaryData").get("version").asText().replace("\"", ""));
+							if (root.get(microServiceModelsDictionaryData).has(version)){
+								microServiceModels.setVersion(root.get(microServiceModelsDictionaryData).get(version).asText().replace("\"", ""));
 								this.newModel.setVersion(microServiceModels.getVersion());
 							}
 						}
-						if(root.has("classMap")){
+						if(root.has(classMapData)){
 							classMap = new HashMap<>();
-							JsonNode data = root.get("classMap");
+							JsonNode data = root.get(classMapData);
 							ObjectMapper mapper1 = new ObjectMapper();
 							String data1 = data.toString().substring(1, data.toString().length()-1);
 							data1 = data1.replace("\\", "");
@@ -926,22 +937,22 @@ public class MicroServiceDictionaryController {
 			} 
 			String responseString = "";
 			if(duplicateflag){
-				responseString = "Duplicate";
+				responseString = duplicateResponseString;
 			}else{
 				responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceModels.class));
 			} 
 
 			if (fromAPI) {
-				if (responseString!=null && !responseString.equals("Duplicate")) {
-					responseString = "Success";
+				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
+					responseString = successMessage;
 				}
 				ModelAndView result = new ModelAndView();
 				result.setViewName(responseString);
 				return result;
 			} else {
-				response.setCharacterEncoding("UTF-8");
-				response.setContentType("application / json");
-				request.setCharacterEncoding("UTF-8");
+				response.setCharacterEncoding(utf8);
+				response.setContentType(applicationJsonContentType);
+				request.setCharacterEncoding(utf8);
 
 				PrintWriter out = response.getWriter();
 				JSONObject j = new JSONObject("{microServiceModelsDictionaryDatas: " + responseString + "}");
@@ -949,25 +960,26 @@ public class MicroServiceDictionaryController {
 				return null;
 			}
 		}catch (Exception e){
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
+			LOGGER.error(e);
 		}
 		return null;
 	}
 
 	@RequestMapping(value={"/ms_dictionary/remove_msModel"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView removeMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			MicroServiceModels microServiceModels = (MicroServiceModels)mapper.readValue(root.get("data").toString(), MicroServiceModels.class);
 			commonClassDao.delete(microServiceModels);
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			response.setContentType(applicationJsonContentType);
+			request.setCharacterEncoding(utf8);
 
 			PrintWriter out = response.getWriter();
 
@@ -979,8 +991,8 @@ public class MicroServiceDictionaryController {
 		}
 		catch (Exception e){
 			LOGGER.error(e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -988,17 +1000,14 @@ public class MicroServiceDictionaryController {
 	}
 		
 	private void addValuesToNewModel(HashMap<String,MSAttributeObject > classMap) {
-		new MicroServiceModels();
 		//Loop  through the classmap and pull out the required info for the new file.
-		MSAttributeObject mainClass  = null;
-		ArrayList<String> dependency = null;
 		String subAttribute = null;
 		
-		mainClass = classMap.get(this.newModel.getModelName());
+		MSAttributeObject mainClass = classMap.get(this.newModel.getModelName());
 		
 		if (mainClass !=null){
 			String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[]{"[", "]", " "}, new String[]{"", "", ""});
-			dependency = new ArrayList<String>(Arrays.asList(dependTemp.split(",")));	
+			ArrayList<String> dependency = new ArrayList<>(Arrays.asList(dependTemp.split(",")));	
 			dependency = getFullDependencyList(dependency);
 			for (String element : dependency){
 				MSAttributeObject temp = new MSAttributeObject();
@@ -1035,7 +1044,7 @@ public class MicroServiceDictionaryController {
 			if (classMap.containsKey(element)){
 				MSAttributeObject value = classMap.get(element);			
 				String rawValue = StringUtils.replaceEach(value.getDependency(), new String[]{"[", "]"}, new String[]{"", ""});
-				workingList = new ArrayList<String>(Arrays.asList(rawValue.split(",")));	
+				workingList = new ArrayList<>(Arrays.asList(rawValue.split(",")));	
 				for(String depend : workingList){
 					if (!returnList.contains(depend) && !depend.isEmpty()){
 						returnList.add(depend.trim());
