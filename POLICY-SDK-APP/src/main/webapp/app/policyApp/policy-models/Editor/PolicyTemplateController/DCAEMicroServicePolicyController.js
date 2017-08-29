@@ -323,25 +323,23 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 
                        	}
 
-                       	if (dictionary!= null || dictionary>1){
-                    		if (dictionary!= null || dictionary.length>1){
-                    			for (m=0; m < dictionary.length; m += 1){
-                    				var keyCompare = dictionary[m].name;
-                    				var valueCompare = dictionary[m].value;
-                    				var valueModel = dictionary[m].modelName;
-                    				var conpairService = serviceName;
-                    				if (valueModel.includes('-v')){
-                    					conpairService = service;
-                    				}
-                    				if(valueModel.localeCompare(conpairService) == 0){
-                    					console.log(valueCompare);	
-                    					dictionaryList.push(dictionary[m]);
-                    					if (!dictionaryNameList.includes(dictionary[m].name)){
-                    						dictionaryNameList.push(dictionary[m].name)
-                    					}
-                    				}
-                    			}
-                    		}
+                       	if (dictionary!= null && dictionary.length>1){
+                       		for (m=0; m < dictionary.length; m += 1){
+                       			var keyCompare = dictionary[m].name;
+                       			var valueCompare = dictionary[m].value;
+                       			var valueModel = dictionary[m].modelName;
+                       			var conpairService = serviceName;
+                       			if (valueModel.includes('-v')){
+                       				conpairService = service;
+                       			}
+                       			if(valueModel.localeCompare(conpairService) == 0){
+                       				console.log(valueCompare);	
+                       				dictionaryList.push(dictionary[m]);
+                       				if (!dictionaryNameList.includes(dictionary[m].name)){
+                       					dictionaryNameList.push(dictionary[m].name)
+                       				}
+                       			}
+                       		}
                        	}
 
                 		$scope.temp.policy.ruleGridData = [];

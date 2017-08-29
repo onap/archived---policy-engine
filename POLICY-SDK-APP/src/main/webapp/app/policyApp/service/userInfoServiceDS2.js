@@ -23,7 +23,7 @@ appDS2.factory('UserInfoServiceDS2', function ($http, $q,$log) {
 			var deferred = $q.defer();
 			$http({
                 method: "GET",
-                url: "get_PolicyUserInfo",    
+                url: "get_PolicyUserInfo"  
 			}).success(function(res) {    
 				if(res==null || res==''){
 					$log.error('userInfoServiceDs2: failed to get top menu info'); 
