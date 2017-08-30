@@ -22,7 +22,6 @@ package org.onap.policy.pap.xacml.rest.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,25 +55,29 @@ public class ActionPolicyDictionaryController {
 	private static final Logger LOGGER  = FlexLogger.getLogger(ActionPolicyDictionaryController.class);
 
 	private static CommonClassDao commonClassDao;
-	
+	private static String utf8 = "UTF-8";
+	private static String attributeName = "attributeName";
 	@Autowired
 	public ActionPolicyDictionaryController(CommonClassDao commonClassDao){
 		ActionPolicyDictionaryController.commonClassDao = commonClassDao;
 	}
-	
-	public ActionPolicyDictionaryController(){}
+	/*
+	 * This is an empty constructor
+	 */	
+	public ActionPolicyDictionaryController(){
+		
+	}
 
 	public UserInfo getUserInfo(String loginId){
-		UserInfo name = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
-		return name;	
+		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
 	}
 
 	@RequestMapping(value={"/get_ActionPolicyDictDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getActionEntitybyName(HttpServletRequest request, HttpServletResponse response){
+	public void getActionEntitybyName(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("actionPolicyDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(ActionPolicyDict.class, "attributeName")));
+			model.put("actionPolicyDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(ActionPolicyDict.class, attributeName)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -85,7 +88,7 @@ public class ActionPolicyDictionaryController {
 	}
 
 	@RequestMapping(value={"/get_ActionPolicyDictData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getActionPolicyDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getActionPolicyDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -104,13 +107,13 @@ public class ActionPolicyDictionaryController {
 	}
 
 	@RequestMapping(value={"/action_dictionary/save_ActionDict"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException   {
+	public ModelAndView saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException   {
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
 			boolean fromAPI = false;
 
-			if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+			if (request.getParameter("apiflag")!=null && ("api").equalsIgnoreCase(request.getParameter("apiflag"))) {
 				fromAPI = true;
 			}
 			ObjectMapper mapper = new ObjectMapper();
@@ -126,11 +129,10 @@ public class ActionPolicyDictionaryController {
 				userId = "API";
 
 				//check if update operation or create, get id for data to be updated and update attributeData
-				if (request.getParameter("operation").equals("update")) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionPolicyDict.getAttributeName(), "attributeName", ActionPolicyDict.class);
-					int id = 0;
+				if (("update").equals(request.getParameter("operation"))) {
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionPolicyDict.getAttributeName(), attributeName, ActionPolicyDict.class);
 					ActionPolicyDict data = (ActionPolicyDict) duplicateData.get(0);
-					id = data.getId();
+					int id = data.getId();
 					if(id==0){
 						isFakeUpdate=true;
 						actionPolicyDict.setId(1);
@@ -146,7 +148,7 @@ public class ActionPolicyDictionaryController {
 			}
 			String header = "";
 			int counter = 0;
-			if(adapter.getHeaders().size() > 0){
+			if(!adapter.getHeaders().isEmpty()){
 				for(Object attribute : adapter.getHeaders()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get("option").toString();
@@ -162,7 +164,7 @@ public class ActionPolicyDictionaryController {
 			}
 			actionPolicyDict.setHeader(header);
 			if(actionPolicyDict.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionPolicyDict.getAttributeName(), "attributeName", ActionPolicyDict.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionPolicyDict.getAttributeName(), attributeName, ActionPolicyDict.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
@@ -186,7 +188,7 @@ public class ActionPolicyDictionaryController {
 			}
 
 			if (fromAPI) {
-				if (responseString!=null && !responseString.equals("Duplicate")) {
+				if (responseString!=null && !("Duplicate").equals(responseString)) {
 					if(isFakeUpdate) {
 						responseString = "Exists";
 					} else {
@@ -198,9 +200,9 @@ public class ActionPolicyDictionaryController {
 				result.setViewName(responseString);
 				return result;
 			} else {
-				response.setCharacterEncoding("UTF-8");
+				response.setCharacterEncoding(utf8);
 				response.setContentType("application / json");
-				request.setCharacterEncoding("UTF-8"); 
+				request.setCharacterEncoding(utf8); 
 
 				PrintWriter out = response.getWriter();
 				JSONObject j = new JSONObject("{actionPolicyDictionaryDatas: " + responseString + "}");
@@ -210,9 +212,9 @@ public class ActionPolicyDictionaryController {
 			}
 		}
 		catch (Exception e){
-			LOGGER.error(e.getMessage(),e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			LOGGER.error(e.getMessage());
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -220,16 +222,16 @@ public class ActionPolicyDictionaryController {
 	}
 
 	@RequestMapping(value={"/action_dictionary/remove_actionPolicyDict"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+	public ModelAndView removeActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			ActionPolicyDict actionPolicyDict = (ActionPolicyDict)mapper.readValue(root.get("data").toString(), ActionPolicyDict.class);
 			commonClassDao.delete(actionPolicyDict);
-			response.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
 			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
+			request.setCharacterEncoding(utf8);
 
 			PrintWriter out = response.getWriter();
 
@@ -240,9 +242,9 @@ public class ActionPolicyDictionaryController {
 			return null;
 		}
 		catch (Exception e){
-			LOGGER.error(e.getMessage(),e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			LOGGER.error(e.getMessage());
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -251,13 +253,13 @@ public class ActionPolicyDictionaryController {
 }
 
 class ActionAdapter{
-	private ArrayList<Object> headers;
+	private List<Object> headers;
 
-	public ArrayList<Object> getHeaders() {
+	public List<Object> getHeaders() {
 		return headers;
 	}
 
-	public void setHeaders(ArrayList<Object> headers) {
+	public void setHeaders(List<Object> headers) {
 		this.headers = headers;
 	}
 }

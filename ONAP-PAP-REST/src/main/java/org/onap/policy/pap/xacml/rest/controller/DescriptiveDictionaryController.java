@@ -86,7 +86,7 @@ public class DescriptiveDictionaryController {
 	}
 	
 	@RequestMapping(value={"/get_DescriptiveScope"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getDescriptiveDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getDescriptiveDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
