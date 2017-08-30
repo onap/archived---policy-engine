@@ -111,7 +111,7 @@ public class DictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 
-		controller.getAttributeDictionaryEntityDatabyAttributeName(request, response);
+		controller.getAttributeDictionaryEntityDatabyAttributeName(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("attributeDictionaryDatas"));
@@ -129,7 +129,7 @@ public class DictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 
-		controller.getAttributeDictionaryEntityData(request, response);
+		controller.getAttributeDictionaryEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("attributeDictionaryDatas"));
@@ -208,7 +208,7 @@ public class DictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 
-		controller.getOnapNameDictionaryByNameEntityData(request, response);
+		controller.getOnapNameDictionaryByNameEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("onapNameDictionaryDatas"));
@@ -226,7 +226,7 @@ public class DictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 
-		controller.getOnapNameDictionaryEntityData(request, response);
+		controller.getOnapNameDictionaryEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("onapNameDictionaryDatas"));

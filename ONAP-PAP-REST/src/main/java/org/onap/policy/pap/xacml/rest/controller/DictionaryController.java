@@ -22,7 +22,6 @@ package org.onap.policy.pap.xacml.rest.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -61,17 +60,25 @@ public class DictionaryController {
 	private static final Log LOGGER	= LogFactory.getLog(DictionaryController.class);
 
 	private static CommonClassDao commonClassDao;
-	
+	private static String xacmlId = "xacmlId";
+	private static String apiflag = "apiflag";
+	private static String operation = "operation";
+	private static String dictionaryFields ="dictionaryFields";
+	private static String duplicateResponseString = "Duplicate";
+	private static String utf8 = "UTF-8";
+	private static String applicationJsonContentType = "application / json";
+	private static String onapName = "onapName";
 	@Autowired
 	public DictionaryController(CommonClassDao commonClassDao){
 		DictionaryController.commonClassDao = commonClassDao;
 	}
-	
+	/*
+	 * This is an empty constructor
+	 */
 	public DictionaryController(){}
 	
 	public UserInfo getUserInfo(String loginId){
-		UserInfo name = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
-		return name;	
+		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
 	}
 	
 	
@@ -79,7 +86,7 @@ public class DictionaryController {
 		List<Object> list = commonClassDao.getData(Category.class);
 		for (int i = 0; i < list.size() ; i++) {
 			Category value = (Category) list.get(i);
-			if (value.getShortName().equals("resource")) {
+			if (("resource").equals(value.getShortName())) {
 				return value;
 			}
 		}
@@ -87,12 +94,11 @@ public class DictionaryController {
 	}
 
 	@RequestMapping(value={"/get_AttributeDatabyAttributeName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getAttributeDictionaryEntityDatabyAttributeName(HttpServletRequest request, HttpServletResponse response){
+	public void getAttributeDictionaryEntityDatabyAttributeName(HttpServletResponse response){
 		try{
-			System.out.println();
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("attributeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(Attribute.class, "xacmlId")));
+			model.put("attributeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(Attribute.class, xacmlId)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -104,16 +110,15 @@ public class DictionaryController {
 	
 	//Attribute Dictionary
 	@RequestMapping(value="/get_AttributeData", method= RequestMethod.GET , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getAttributeDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getAttributeDictionaryEntityData(HttpServletResponse response){
 		try{
-			System.out.println();
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			model.put("attributeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(Attribute.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
             response.addHeader("successMapKey", "success"); 
-            response.addHeader("operation", "getDictionary");
+            response.addHeader(operation, "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
@@ -124,12 +129,12 @@ public class DictionaryController {
 	}
 	
 	@RequestMapping(value={"/attribute_dictionary/save_attribute"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public ModelAndView saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
             boolean fromAPI = false;
-            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+            if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
                 fromAPI = true;
             }
 			ObjectMapper mapper = new ObjectMapper();
@@ -139,17 +144,15 @@ public class DictionaryController {
             AttributeValues attributeValueData = null;
             String userId = null;
             if (fromAPI) {
-                //JsonNode json = root.get("dictionaryFields");
-                attributeData = (Attribute)mapper.readValue(root.get("dictionaryFields").toString(), Attribute.class);
-                attributeValueData = (AttributeValues)mapper.readValue(root.get("dictionaryFields").toString(), AttributeValues.class);
+                attributeData = (Attribute)mapper.readValue(root.get(dictionaryFields).toString(), Attribute.class);
+                attributeValueData = (AttributeValues)mapper.readValue(root.get(dictionaryFields).toString(), AttributeValues.class);
                 userId = "API";
                 
                 //check if update operation or create, get id for data to be updated and update attributeData
-                if (request.getParameter("operation").equals("update")) {
-                	List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(attributeData.getXacmlId(), "xacmlId", Attribute.class);
-                	int id = 0;
+                if (("update").equals(request.getParameter(operation))) {
+                	List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(attributeData.getXacmlId(), xacmlId, Attribute.class);
                 	Attribute data = (Attribute) duplicateData.get(0);
-                	id = data.getId();
+                	int id = data.getId();
                 	if(id==0){
                 		isFakeUpdate=true;
                 		attributeData.setId(1);
@@ -165,7 +168,7 @@ public class DictionaryController {
             }
 			String userValue = "";
 			int counter = 0;
-			if(attributeValueData.getUserDataTypeValues().size() > 0){
+			if(!attributeValueData.getUserDataTypeValues().isEmpty()){
 				for(Object attribute : attributeValueData.getUserDataTypeValues()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get("attributeValues").toString();
@@ -181,21 +184,21 @@ public class DictionaryController {
 			if(attributeData.getDatatypeBean().getShortName() != null){
 				String datatype = attributeData.getDatatypeBean().getShortName();
 				Datatype a = new Datatype();
-				if(datatype.equalsIgnoreCase("string")){
+				if(("string").equalsIgnoreCase(datatype)){
 					a.setId(26);	
-				}else if(datatype.equalsIgnoreCase("integer")){
+				}else if(("integer").equalsIgnoreCase(datatype)){
 					a.setId(12);	
-				}else if(datatype.equalsIgnoreCase("boolean")){
+				}else if(("boolean").equalsIgnoreCase(datatype)){
 					a.setId(18);	
-				}else if(datatype.equalsIgnoreCase("double")){
+				}else if(("double").equalsIgnoreCase(datatype)){
 					a.setId(25);	
-				}else if(datatype.equalsIgnoreCase("user")){
+				}else if(("user").equalsIgnoreCase(datatype)){
 					a.setId(29);	
 				}
 				attributeData.setDatatypeBean(a);
 			}
 			if(attributeData.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(attributeData.getXacmlId(), "xacmlId", Attribute.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(attributeData.getXacmlId(), xacmlId, Attribute.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
@@ -213,13 +216,13 @@ public class DictionaryController {
 			} 
             String responseString = null;
             if(duplicateflag) {
-                responseString = "Duplicate";
+                responseString = duplicateResponseString;
             } else {
                 responseString = mapper.writeValueAsString(commonClassDao.getData(Attribute.class));
             }
             
             if (fromAPI) {
-                if (responseString!=null && !responseString.equals("Duplicate")) {
+                if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
                     if(isFakeUpdate) {
                         responseString = "Exists";
                     } else {
@@ -230,9 +233,9 @@ public class DictionaryController {
                 result.setViewName(responseString);
                 return result;
             } else {
-                response.setCharacterEncoding("UTF-8");
-                response.setContentType("application / json");
-                request.setCharacterEncoding("UTF-8");
+                response.setCharacterEncoding(utf8);
+                response.setContentType(applicationJsonContentType);
+                request.setCharacterEncoding(utf8);
  
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{attributeDictionaryDatas: " + responseString + "}");
@@ -241,8 +244,8 @@ public class DictionaryController {
             }
         }catch (Exception e){
         	LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -250,16 +253,16 @@ public class DictionaryController {
 	}
 
 	@RequestMapping(value={"/attribute_dictionary/remove_attribute"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeAttributeDictionary(HttpServletRequest request, HttpServletResponse response)throws UnsupportedEncodingException, IOException {
+	public ModelAndView removeAttributeDictionary(HttpServletRequest request, HttpServletResponse response)throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			Attribute attributeData = (Attribute)mapper.readValue(root.get("data").toString(), Attribute.class);
 			commonClassDao.delete(attributeData);
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			response.setContentType(applicationJsonContentType);
+			request.setCharacterEncoding(utf8);
 
 			PrintWriter out = response.getWriter();
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(Attribute.class));
@@ -269,8 +272,8 @@ public class DictionaryController {
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -279,12 +282,12 @@ public class DictionaryController {
 	
 	//OnapName Dictionary
 	@RequestMapping(value={"/get_OnapNameDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getOnapNameDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getOnapNameDictionaryByNameEntityData(HttpServletResponse response){
 		LOGGER.info("get_OnapNameDataByName is called");
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put("onapNameDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(OnapName.class, "onapName")));
+			model.put("onapNameDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(OnapName.class, onapName)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -295,7 +298,7 @@ public class DictionaryController {
 	}
 	
 	@RequestMapping(value={"/get_OnapNameData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getOnapNameDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getOnapNameDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -303,7 +306,7 @@ public class DictionaryController {
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
             response.addHeader("successMapKey", "success"); 
-            response.addHeader("operation", "getDictionary");
+            response.addHeader(operation, "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
@@ -314,12 +317,12 @@ public class DictionaryController {
 	}
 
 	@RequestMapping(value={"/onap_dictionary/save_onapName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public ModelAndView saveOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			boolean duplicateflag = false;
 			boolean isFakeUpdate = false;
 			boolean fromAPI = false;
-			if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
 				fromAPI = true;
 			}
 			ObjectMapper mapper = new ObjectMapper();
@@ -328,15 +331,14 @@ public class DictionaryController {
 			OnapName onapData;
 			String userId = null;
 			if (fromAPI) {
-				onapData = (OnapName)mapper.readValue(root.get("dictionaryFields").toString(), OnapName.class);
+				onapData = (OnapName)mapper.readValue(root.get(dictionaryFields).toString(), OnapName.class);
 				userId = "API";
 
 				//check if update operation or create, get id for data to be updated
-				if (request.getParameter("operation").equals("update")) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(onapData.getOnapName(), "onapName", OnapName.class);
-					int id = 0;
+				if (("update").equals(request.getParameter(operation))) {
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(onapData.getOnapName(), onapName, OnapName.class);
 					OnapName data = (OnapName) duplicateData.get(0);
-					id = data.getId();
+					int id = data.getId();
 					if(id==0){
 						isFakeUpdate=true;
 						onapData.setId(1);
@@ -350,7 +352,7 @@ public class DictionaryController {
 				userId = root.get("userid").textValue();
 			}
 			if(onapData.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(onapData.getOnapName(), "onapName", OnapName.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(onapData.getOnapName(), onapName, OnapName.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
@@ -367,12 +369,12 @@ public class DictionaryController {
 			} 
 			String responseString = null;
 			if(duplicateflag) {
-				responseString = "Duplicate";
+				responseString = duplicateResponseString;
 			} else {
 				responseString = mapper.writeValueAsString(commonClassDao.getData(OnapName.class));
 			}
 			if (fromAPI) {
-				if (responseString!=null && !responseString.equals("Duplicate")) {
+				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
 					if(isFakeUpdate){
 						responseString = "Exists";
 					} else {
@@ -384,9 +386,9 @@ public class DictionaryController {
 				result.setViewName(responseString);
 				return result;
 			} else {
-				response.setCharacterEncoding("UTF-8");
-				response.setContentType("application / json");
-				request.setCharacterEncoding("UTF-8");
+				response.setCharacterEncoding(utf8);
+				response.setContentType(applicationJsonContentType);
+				request.setCharacterEncoding(utf8);
 
 				PrintWriter out = response.getWriter();
 				JSONObject j = new JSONObject("{onapNameDictionaryDatas: " + responseString + "}");
@@ -395,8 +397,8 @@ public class DictionaryController {
 			}
 		}catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -404,16 +406,16 @@ public class DictionaryController {
 	}
 
 	@RequestMapping(value={"/onap_dictionary/remove_onap"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+	public ModelAndView removeOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			OnapName onapData = (OnapName)mapper.readValue(root.get("data").toString(), OnapName.class);
 			commonClassDao.delete(onapData);
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			response.setContentType(applicationJsonContentType);
+			request.setCharacterEncoding(utf8);
 
 			PrintWriter out = response.getWriter();
 
@@ -425,8 +427,8 @@ public class DictionaryController {
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(utf8);
+			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
@@ -436,13 +438,13 @@ public class DictionaryController {
 }
 
 class AttributeValues{
-	private ArrayList<Object> userDataTypeValues;
+	private List<Object> userDataTypeValues;
 
-	public ArrayList<Object> getUserDataTypeValues() {
+	public List<Object> getUserDataTypeValues() {
 		return userDataTypeValues;
 	}
 
-	public void setUserDataTypeValues(ArrayList<Object> userDataTypeValues) {
+	public void setUserDataTypeValues(List<Object> userDataTypeValues) {
 		this.userDataTypeValues = userDataTypeValues;
 	}
 }

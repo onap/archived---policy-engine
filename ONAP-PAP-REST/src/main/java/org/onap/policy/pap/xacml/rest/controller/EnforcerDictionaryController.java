@@ -56,7 +56,7 @@ public class EnforcerDictionaryController {
 	CommonClassDao commonClassDao;
 
 	@RequestMapping(value={"/get_EnforcerTypeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getEnforcerDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getEnforcerDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();

@@ -138,7 +138,7 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 
-		controller.getDCAEUUIDDictionaryByNameEntityData(request, response);
+		controller.getDCAEUUIDDictionaryByNameEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("dcaeUUIDDictionaryDatas"));
@@ -157,7 +157,7 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		
-		controller.getDCAEUUIDDictionaryEntityData(request, response);
+		controller.getDCAEUUIDDictionaryEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("dcaeUUIDDictionaryDatas"));
@@ -235,7 +235,7 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		
-		controller.getMicroServiceConfigNameByNameDictionaryEntityData(request, response);
+		controller.getMicroServiceConfigNameByNameDictionaryEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
@@ -253,7 +253,7 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		
-		controller.getMicroServiceConfigNameDictionaryEntityData(request, response);
+		controller.getMicroServiceConfigNameDictionaryEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
@@ -332,7 +332,7 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		
-		controller.getMicroServiceLocationByNameDictionaryEntityData(request, response);
+		controller.getMicroServiceLocationByNameDictionaryEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceLocationDictionaryDatas"));
@@ -350,7 +350,7 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		
-		controller.getMicroServiceLocationDictionaryEntityData(request, response);
+		controller.getMicroServiceLocationDictionaryEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceLocationDictionaryDatas"));
@@ -429,7 +429,7 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		
-		controller.getMicroServiceAttributeByNameDictionaryEntityData(request, response);
+		controller.getMicroServiceAttributeByNameDictionaryEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceAttributeDictionaryDatas"));
@@ -447,7 +447,7 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		
-		controller.getMicroServiceAttributeDictionaryEntityData(request, response);
+		controller.getMicroServiceAttributeDictionaryEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceAttributeDictionaryDatas"));
@@ -525,7 +525,7 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		
-		controller.getMicroServiceModelsDictionaryByNameEntityData(request, response);
+		controller.getMicroServiceModelsDictionaryByNameEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceModelsDictionaryDatas"));
@@ -574,7 +574,7 @@ public class MicroServiceDictionaryControllerTest {
 		try {
 		    // mock the getReader() call
 			when(request.getReader()).thenReturn(br); 		    
-			controller.getMicroServiceModelsDictionaryEntityData(request, response);
+			controller.getMicroServiceModelsDictionaryEntityData(response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceModelsDictionaryDatas"));
 
@@ -598,7 +598,7 @@ public class MicroServiceDictionaryControllerTest {
 		try {
 		    // mock the getReader() call
 			when(request.getReader()).thenReturn(br); 		    
-			controller.getMicroServiceModelsDictionaryEntityDataServiceVersion(request, response);
+			controller.getMicroServiceModelsDictionaryEntityDataServiceVersion(response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceModelsDictionaryDatas"));
 
@@ -622,7 +622,7 @@ public class MicroServiceDictionaryControllerTest {
 		try {
 		    // mock the getReader() call
 			when(request.getReader()).thenReturn(br); 		    
-			controller.getMicroServiceModelsDictionaryClassEntityData(request, response);
+			controller.getMicroServiceModelsDictionaryClassEntityData(response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceModelsDictionaryClassDatas"));
 

@@ -89,7 +89,7 @@ public class DecisionPolicyDictionaryController {
 
 	
 	@RequestMapping(value={"/get_SettingsDictionaryData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getSettingsDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getSettingsDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
