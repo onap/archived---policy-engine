@@ -161,26 +161,13 @@ public class ParseLogTest {
 	}
 
 	@Test
-	public  void  testParseDateFail(){
-		
-		logger.debug("testParseDateFail: enter");
-		
-		String line = "2016-02-23 08:07:30";
-		Date returnValue = ParseLog.parseDate(line, "yyyy-MM-dd HH:mm:ss", true);
-		logger.debug("testParseDateFail: returnValue: " + returnValue);
-		assertEquals(null, returnValue);
-		
-		logger.debug("testParseDateFail: exit");
-	}
-
-	@Test
 	public void testPullLastLineRead(){
 		
 		logger.debug("testPullLastLineRead: enter");
 		File file = new File(testFile1);
 		String returnValue = null;
 		try {
-			returnValue = ParseLog.PullLastLineRead(file, "pap-rest.log");
+			returnValue = ParseLog.pullLastLineRead(file, "pap-rest.log");
 			logger.debug("testPullLastLineRead: returnValue for pap-rest.log: " + returnValue);
 		} catch (IOException e) {
 			fail();
@@ -188,7 +175,7 @@ public class ParseLogTest {
 		assertEquals("52", returnValue);
 		
 		try {
-			returnValue = ParseLog.PullLastLineRead(file, "debug.log");
+			returnValue = ParseLog.pullLastLineRead(file, "debug.log");
 			logger.debug("testPullLastLineRead: returnValue for debug.log: " + returnValue);
 		} catch (IOException e) {
 			fail();
@@ -196,7 +183,7 @@ public class ParseLogTest {
 		assertEquals("17", returnValue);
 		
 		try {
-			returnValue = ParseLog.PullLastLineRead(file, "error.log");
+			returnValue = ParseLog.pullLastLineRead(file, "error.log");
 			logger.debug("testPullLastLineRead: returnValue for error.log: " + returnValue);
 		} catch (IOException e) {
 			fail();
@@ -213,7 +200,7 @@ public class ParseLogTest {
 		
 		File file = new File("nonExistFile.txt");
 		try {
-			assertEquals(null, ParseLog.PullLastLineRead(file, "pap-rest"));
+			assertEquals(null, ParseLog.pullLastLineRead(file, "pap-rest"));
 		} catch (IOException e) {
 			fail();
 		}
@@ -228,7 +215,7 @@ public class ParseLogTest {
 		
 		File file = new File(testFile2);
 		try {
-			assertEquals(null, ParseLog.PullLastLineRead(file, "pap-rest"));
+			assertEquals(null, ParseLog.pullLastLineRead(file, "pap-rest"));
 		} catch (IOException e) {
 			fail();
 		}
