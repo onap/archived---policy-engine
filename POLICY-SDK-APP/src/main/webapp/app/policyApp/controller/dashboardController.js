@@ -74,17 +74,17 @@ app.controller('policyDashboardHealthController', function ($scope, PolicyAppSer
 		console.log("failed");
 	});
 	
-	$scope.availableGridHealthDatas = {
-			data : 'systemAlertsTableDatas',
-			    enableFiltering: true,
-			    columnDefs: [{ field: 'id'},
-			      { field: 'type'},
-			      { field: 'system'},
-			      {field: 'logtype'},
-			      {field : 'date' ,type: 'date', cellFilter: 'date:\'yyyy-MM-dd\'' },
-			      {field : 'description'}
-			  ],	  
-	};
+    $scope.availableGridHealthDatas = {
+    		data : 'systemAlertsTableDatas',
+    		enableFiltering: true,
+    		columnDefs: [{ field: 'id'},
+    			{ field: 'type'},
+    			{ field: 'system'},
+    			{field: 'logtype'},
+    			{field : 'date' ,type: 'date', cellFilter: 'date:\'yyyy-MM-dd\'' },
+    			{field : 'description'}
+    			]  
+    };
 
 	$scope.papStatusDatas = {
 		data : 'papTableDatas',
@@ -93,7 +93,7 @@ app.controller('policyDashboardHealthController', function ($scope, PolicyAppSer
 			{ field: 'status'},
 			{ field: 'noOfPolicy'},
 			{field: 'noOfConnectedTrap'}
-		],
+		]
 	};
 
 	$scope.pdpStatusDatas = {
@@ -107,7 +107,7 @@ app.controller('policyDashboardHealthController', function ($scope, PolicyAppSer
 			{field : 'permitCount'},
 			{field : 'denyCount'},
 			{field : 'naCount'}
-		],
+		]
 	};
 
 	$scope.policyActivityDatas = {
@@ -116,6 +116,6 @@ app.controller('policyDashboardHealthController', function ($scope, PolicyAppSer
 		columnDefs: [{ field: 'policyId'},
 			{ field: 'fireCount'},
 			{ field: 'system'}
-		],
+		]
 	};
 });

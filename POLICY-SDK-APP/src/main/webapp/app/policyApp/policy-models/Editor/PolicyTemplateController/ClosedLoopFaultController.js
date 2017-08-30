@@ -234,7 +234,7 @@ angular.module("abs").controller('clFaultController', ['$scope', '$window', 'Pol
 			}
 			if($scope.jsonData.verificationSignaturesUsedForUI != null){
 				if($scope.jsonData.verificationSignaturesUsedForUI.signatures != null){
-					$scope.temp.policy.triggerfaultSignatures = {Fault1 : [], Fault2 : [],  Fault3 : [],  Fault4 : [],  Fault5 : [],  Fault6 : [],};
+					$scope.temp.policy.triggerfaultSignatures = {Fault1 : [], Fault2 : [],  Fault3 : [],  Fault4 : [],  Fault5 : [],  Fault6 : []};
 					var splitTraps = $scope.jsonData.verificationSignaturesUsedForUI.signatures.split("#!?!"); 
 					if(splitTraps.length > 1){
 						$scope.verificationdisabled = false;
@@ -530,7 +530,7 @@ angular.module("abs").controller('clFaultController', ['$scope', '$window', 'Pol
 		}
 		if($scope.temp.policy.triggerTrapSignatures.length == 3 || $scope.temp.policy.triggerTrapSignatures["Trap3"] != null){
 			var data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2,
-					trap2 : $scope.temp.policy.triggerTrapSignatures.Trap3}
+					trap3 : $scope.temp.policy.triggerTrapSignatures.Trap3}
 		}
 		if($scope.temp.policy.triggerTrapSignatures.length == 4 || $scope.temp.policy.triggerTrapSignatures["Trap4"] != null){
 			var data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2,
@@ -555,7 +555,7 @@ angular.module("abs").controller('clFaultController', ['$scope', '$window', 'Pol
 		}
 		if($scope.temp.policy.triggerfaultSignatures.length == 3 || $scope.temp.policy.triggerfaultSignatures["Fault3"] != null){
 			var faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2,
-					trap2 : $scope.temp.policy.triggerfaultSignatures.Fault3}
+					trap3 : $scope.temp.policy.triggerfaultSignatures.Fault3}
 		}
 		if($scope.temp.policy.triggerTrapSignatures.length == 4 || $scope.temp.policy.triggerfaultSignatures["Fault4"] != null){
 			var faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2,
