@@ -36,8 +36,14 @@ import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import com.att.research.xacml.api.pap.PDPPolicy;
 
 public class MetricService {
-
-	public static void doGetPolicyMetrics(HttpServletRequest request, HttpServletResponse response) {
+	private static String errorMsg	= "error";
+	/*
+	 * This is a private constructor
+	 * */
+	public MetricService(){
+		
+	}
+	public static void doGetPolicyMetrics(HttpServletResponse response) {
 		Set<OnapPDPGroup> groups = new HashSet<>();
 		try {
 			//get the count of policies on the PDP
@@ -52,12 +58,12 @@ public class MetricService {
 			//get the count of policies on the PAP
 			EntityManager em = null;
 			if(XACMLPapServlet.getEmf()!=null){
-				em = (EntityManager) XACMLPapServlet.getEmf().createEntityManager();
+				em = XACMLPapServlet.getEmf().createEntityManager();
 			}
 			if (em==null){
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Error creating entity manager with persistence unit: " + XACMLPapServlet.getPersistenceUnit());
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);								
-				response.addHeader("error", "Error creating entity manager with persistence unit");
+				response.addHeader(errorMsg, "Error creating entity manager with persistence unit");
 				return;
 			}
 			int papCount = ((Number) em.createNamedQuery("PolicyVersion.findAllCount").getSingleResult()).intValue();
@@ -78,14 +84,14 @@ public class MetricService {
 			}else{
 				String message = "The policy count on the PAP and PDP is 0.  Please check the database and file system to correct this error.";
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);								
-				response.addHeader("error", message);
+				response.addHeader(errorMsg, message);
 				return;
 			}
 		} catch (Exception e) {
 			String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Error Querying the Database: " + e.getMessage();
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPapServlet", " Error Querying the Database.");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);								
-			response.addHeader("error", message);
+			response.addHeader(errorMsg, message);
 			return;			
 		}
 	}

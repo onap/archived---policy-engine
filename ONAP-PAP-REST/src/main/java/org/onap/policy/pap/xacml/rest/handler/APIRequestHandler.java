@@ -54,7 +54,7 @@ public class APIRequestHandler {
 			return;
 		}
 		if ("getMetrics".equalsIgnoreCase(apiflag)){
-			MetricService.doGetPolicyMetrics(request, response);
+			MetricService.doGetPolicyMetrics(response);
 			return;
 		}
 	}

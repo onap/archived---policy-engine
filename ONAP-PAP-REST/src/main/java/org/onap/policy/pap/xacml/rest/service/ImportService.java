@@ -41,6 +41,13 @@ import org.onap.policy.pap.xacml.rest.components.CreateNewMicroServiceModel;
 
 public class ImportService {
 	private static final Logger logger = FlexLogger.getLogger(ImportService.class);
+	private static String errorMessage = "Error in reading in file from API call";
+	private static String errorMsg	= "error";
+	private static String operation = "operation";
+	private static String importHeader = "import";
+	private static String service = "service";
+	private static String extractDir = "ExtractDir";
+	private static String successMessage = "success";
 	public void doImportMicroServicePut(HttpServletRequest request, HttpServletResponse response) {
 		String importServiceCreation = request.getParameter("importService");;
 		String fileName = request.getParameter("fileName");
@@ -48,8 +55,7 @@ public class ImportService {
 		String serviceName = request.getParameter("serviceName");
 		String description = request.getParameter("description");
 		Map<String, String> successMap = new HashMap<>();
-		switch(importServiceCreation){
-		case "BRMSPARAM":
+		if(("BRMSPARAM").equals(importServiceCreation)){
 			StringBuilder builder = new StringBuilder();
 			int ch;
 			try {
@@ -58,20 +64,20 @@ public class ImportService {
 				}
 			} catch (IOException e) {
 				logger.error(e);
-				PolicyLogger.error("Error in reading in file from API call");
+				PolicyLogger.error(errorMessage);
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				response.addHeader("error", "missing");	
-				response.addHeader("operation", "import");
-				response.addHeader("service", serviceName);
+				response.addHeader(errorMsg, "missing");	
+				response.addHeader(operation, importHeader);
+				response.addHeader(service, serviceName);
 			}
 			CreateBRMSRuleTemplate brmsRuleTemplate = new CreateBRMSRuleTemplate();
 			successMap = brmsRuleTemplate.addRule(builder.toString(), serviceName, description, "API");
-			break;
-		case "MICROSERVICE":
+		}
+		else if(("MICROSERVICE").equals(importServiceCreation)){
 			CreateNewMicroServiceModel newMS = null;
 			String randomID = UUID.randomUUID().toString();
 			if ( fileName != null) {
-				File extracDir = new File("ExtractDir");
+				File extracDir = new File(extractDir);
 				if (!extracDir.exists()){
 					extracDir.mkdirs();
 				}
@@ -86,21 +92,21 @@ public class ImportService {
 						scanner.close();
 					} catch (IOException e1) {
 						logger.error(e1);
-						PolicyLogger.error("Error in reading in file from API call");
+						PolicyLogger.error(errorMessage);
 						return;
 					}
 					PolicyLogger.info("XML request from API for import new Service"); 
 					try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-							new FileOutputStream("ExtractDir" + File.separator + randomID+".xmi"), "utf-8"))) {
+							new FileOutputStream(extractDir + File.separator + randomID+".xmi"), "utf-8"))) {
 						writer.write(xmi);
 					} catch (IOException e) {
 						logger.error(e);
-						PolicyLogger.error("Error in reading in file from API call");
+						PolicyLogger.error(errorMessage);
 						return;
 					}
 				}else{ 
 					InputStream inputStream = null;
-					try(FileOutputStream outputStream = new FileOutputStream("ExtractDir" + File.separator + randomID+".zip")) {	
+					try(FileOutputStream outputStream = new FileOutputStream(extractDir + File.separator + randomID+".zip")) {	
 						inputStream = request.getInputStream();
 						byte[] buffer = new byte[4096];
 						int bytesRead = -1 ; 
@@ -122,40 +128,40 @@ public class ImportService {
 				}
 				newMS =  new CreateNewMicroServiceModel(fileName, serviceName, "API", version, randomID);
 				successMap = newMS.addValuesToNewModel();
-				if (successMap.containsKey("success")) {
+				if (successMap.containsKey(successMessage)) {
 					successMap.clear();
 					successMap = newMS.saveImportService();
 				}
 			}
-			break;
 		}
+		
 		// return a response to the PAP		    
-		if (successMap.containsKey("success")) {							
+		if (successMap.containsKey(successMessage)) {							
 			response.setStatus(HttpServletResponse.SC_OK);								
-			response.addHeader("successMapKey", "success");								
-			response.addHeader("operation", "import");
-			response.addHeader("service", serviceName);
+			response.addHeader("successMapKey", successMessage);								
+			response.addHeader(operation, importHeader);
+			response.addHeader(service, serviceName);
 		} else if (successMap.containsKey("DBError")) {
 			if (successMap.get("DBError").contains("EXISTS")){
 				response.setStatus(HttpServletResponse.SC_CONFLICT);
-				response.addHeader("service", serviceName);
-				response.addHeader("error", "modelExistsDB");
+				response.addHeader(service, serviceName);
+				response.addHeader(errorMsg, "modelExistsDB");
 			}else{
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				response.addHeader("error", "importDB");
+				response.addHeader(errorMsg, "importDB");
 			}
-			response.addHeader("operation", "import");
-			response.addHeader("service", serviceName);
-		}else if (successMap.get("error").contains("MISSING")){
+			response.addHeader(operation, importHeader);
+			response.addHeader(service, serviceName);
+		}else if (successMap.get(errorMsg).contains("MISSING")){
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.addHeader("error", "missing");	
-			response.addHeader("operation", "import");
-			response.addHeader("service", serviceName);
-		}else if (successMap.get("error").contains("VALIDATION")){
+			response.addHeader(errorMsg, "missing");	
+			response.addHeader(operation, importHeader);
+			response.addHeader(service, serviceName);
+		}else if (successMap.get(errorMsg).contains("VALIDATION")){
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.addHeader("error", "validation");	
-			response.addHeader("operation", "import");
-			response.addHeader("service", serviceName);
+			response.addHeader(errorMsg, "validation");	
+			response.addHeader(operation, importHeader);
+			response.addHeader(service, serviceName);
 		}
 	}
 
