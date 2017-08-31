@@ -213,7 +213,7 @@ public abstract class Policy {
 	protected static boolean isJSONValid(String data) {
 		JsonReader jsonReader = null;
 		try {
-			JSONObject j = new JSONObject(data);
+			new JSONObject(data);
 			InputStream stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
 			jsonReader = Json.createReader(stream);
 			LOGGER.info("Json Value is: " + jsonReader.read().toString() );

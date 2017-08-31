@@ -31,9 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
@@ -53,7 +50,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.util.JPAUtils;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.jpa.ActionPolicyDict;
 import org.onap.policy.rest.jpa.Datatype;
 import org.onap.policy.rest.jpa.FunctionDefinition;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
@@ -97,9 +93,6 @@ public class ActionPolicy extends Policy {
 	private static synchronized boolean getAttribute () {
 		return isAttribute;
 
-	}
-	private static synchronized void setAttribute (boolean att) {
-		isAttribute = att;
 	}
 	
 	public ActionPolicy() {
@@ -165,9 +158,13 @@ public class ActionPolicy extends Policy {
 		if (policyAdapter.getData() != null) {
 			// Action body is optional so checking value provided or not
 			String comboDictValue = policyAdapter.getActionAttribute();
-	        String actionBody = getActionPolicyDict(comboDictValue).getBody();
+	        String actionBody = policyAdapter.getActionBody();
+	        isAttribute = false;
+
+	        //if actionBody is null or empty then we know the ActionAttribute in the request does not exist in the dictionary
 			if(!(actionBody==null || "".equals(actionBody))){	
 				saveActionBody(policyName, actionBody);
+				isAttribute = true;
 			} else {
 				if(!getAttribute()){
 					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Could not find " + comboDictValue + " in the ActionPolicyDict table.");
@@ -299,7 +296,7 @@ public class ActionPolicy extends Policy {
 
 		AttributeValueType typeAttributeValue = new AttributeValueType();
 		typeAttributeValue.setDataType(STRING_DATATYPE);
-		String actionDictType = getActionPolicyDict(comboDictValue).getType();
+		String actionDictType = policyAdapter.getActionDictType();
 		typeAttributeValue.getContent().add(actionDictType);
 
 		assignmentType.setExpression(new ObjectFactory().createAttributeValue(typeAttributeValue));
@@ -312,7 +309,7 @@ public class ActionPolicy extends Policy {
 
 		AttributeValueType actionURLAttributeValue = new AttributeValueType();
 		actionURLAttributeValue.setDataType(URI_DATATYPE);
-		String actionDictUrl = getActionPolicyDict(comboDictValue).getUrl();
+		String actionDictUrl = policyAdapter.getActionDictUrl();
 		actionURLAttributeValue.getContent().add(actionDictUrl);
 
 		assignmentURL.setExpression(new ObjectFactory().createAttributeValue(actionURLAttributeValue));
@@ -325,14 +322,14 @@ public class ActionPolicy extends Policy {
 
 		AttributeValueType methodAttributeValue = new AttributeValueType();
 		methodAttributeValue.setDataType(STRING_DATATYPE);
-		String actionDictMethod = getActionPolicyDict(comboDictValue).getMethod();
+		String actionDictMethod = policyAdapter.getActionDictMethod();
 		methodAttributeValue.getContent().add(actionDictMethod);
 
 		assignmentMethod.setExpression(new ObjectFactory().createAttributeValue(methodAttributeValue));
 		obligation.getAttributeAssignmentExpression().add(assignmentMethod);
 
 		// Add JSON_URL Assignment:
-		String actionBody = getActionPolicyDict(comboDictValue).getBody();
+		String actionBody = policyAdapter.getActionBody();		
 		if (actionBody != null) {
 			AttributeAssignmentExpressionType assignmentJsonURL = new AttributeAssignmentExpressionType();
 			assignmentJsonURL.setAttributeId(BODY_ATTRIBUTEID);
@@ -346,8 +343,8 @@ public class ActionPolicy extends Policy {
 			obligation.getAttributeAssignmentExpression().add(assignmentJsonURL);
 		}
 
-		if(getActionPolicyDict(comboDictValue).getHeader() != null){
-			String headerVal = getActionPolicyDict(comboDictValue).getHeader();
+		String headerVal = policyAdapter.getActionDictHeader();
+		if(headerVal != null){
 			if(headerVal != null && !headerVal.equals("")){
 				// parse it on : to get number of headers
 				String[] result = headerVal.split(":");
@@ -507,7 +504,7 @@ public class ActionPolicy extends Policy {
 		}
 		return dropDownMap;
 	}
-	
+/*	
 	private ActionPolicyDict getActionPolicyDict(String attributeName){
 		ActionPolicyDict retObj = new ActionPolicyDict();
 		EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
@@ -524,7 +521,7 @@ public class ActionPolicy extends Policy {
 		}
 		em.close();
 		return retObj;
-	}
+	}*/
 
 	@Override
 	public Object getCorrectPolicyDataObject() {
