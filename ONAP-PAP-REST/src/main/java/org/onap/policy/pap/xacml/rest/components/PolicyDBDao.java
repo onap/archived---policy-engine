@@ -217,6 +217,7 @@ public class PolicyDBDao {
 		try{
 			em.getTransaction().commit();
 		} catch(Exception e){
+			logger.warn("List of remote PolicyDBDaos will be empty", e);
 			try{
 				em.getTransaction().rollback();
 			} catch(Exception e2){
@@ -390,14 +391,17 @@ public class PolicyDBDao {
 			try{
 				newPolicyDBDaoEntity.setPassword(encryptPassword(url[2]));
 			} catch(Exception e){
+				logger.debug(e);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not encrypt PAP password");
 			}
 			try{
 				em.getTransaction().commit();
 			} catch(Exception e){
+				logger.debug(e);
 				try{
 					em.getTransaction().rollback();
 				} catch(Exception e2){
+					logger.debug(e2);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Could not add new PolicyDBDao to the database");
 				}
 			}
@@ -407,6 +411,7 @@ public class PolicyDBDao {
 			try{
 				encryptedPassword = encryptPassword(url[2]);
 			} catch(Exception e){
+				logger.debug(e);
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not encrypt PAP password");
 			}
 			if(url[1] != null && !stringEquals(url[1], foundPolicyDBDaoEntity.getUsername())){
@@ -419,9 +424,11 @@ public class PolicyDBDao {
 			try{
 				em.getTransaction().commit();
 			} catch(Exception e){
+				logger.debug(e);
 				try{
 					em.getTransaction().rollback();
 				} catch(Exception e2){
+					logger.debug(e2);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, "PolicyDBDao", "Could not update PolicyDBDao in the database");
 				}
 			}
@@ -480,6 +487,7 @@ public class PolicyDBDao {
 			try{
 				password = decryptPassword(dbdEntity.getPassword());
 			} catch(Exception e){
+				logger.debug(e);
 				//if we can't decrypt, might as well try it anyway
 				password = dbdEntity.getPassword();
 			}
@@ -547,7 +555,7 @@ public class PolicyDBDao {
 				readTimeout = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_NOTIFY_TIMEOUT));
 
 			} catch(Exception e){
-				logger.error("xacml.rest.pap.notify.timeoutms property not set, using a default.");
+				logger.error("xacml.rest.pap.notify.timeoutms property not set, using a default.", e);
 				readTimeout = 10000;
 			}
 			connection.setReadTimeout(readTimeout);
@@ -643,11 +651,13 @@ public class PolicyDBDao {
 					handleIncomingPolicyChange(url, entityId,extraData);
 					break;
 				} catch(Exception e){
+					logger.debug(e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught exception on handleIncomingPolicyChange("+url+", "+entityId+", "+extraData+")");
 				}
 				try{
 					Thread.sleep(pauseBetweenRetries);
 				}catch(InterruptedException ie){
+					Thread.currentThread().interrupt();
 					break;
 				}
 			}
@@ -658,11 +668,13 @@ public class PolicyDBDao {
 					handleIncomingPdpChange(url, entityId, transaction);
 					break;
 				} catch(Exception e){
+					logger.debug(e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught exception on handleIncomingPdpChange("+url+", "+entityId+", "+transaction+")");
 				}
 				try{
 					Thread.sleep(pauseBetweenRetries);
 				}catch(InterruptedException ie){
+					Thread.currentThread().interrupt();
 					break;
 				}
 			}
@@ -673,11 +685,13 @@ public class PolicyDBDao {
 					handleIncomingGroupChange(url, entityId, extraData, transaction, xacmlPapServlet);
 					break;
 				}catch(Exception e){
+					logger.debug(e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught exception on handleIncomingGroupChange("+url+", "+entityId+", "+extraData+", "+transaction+", "+xacmlPapServlet+")");
 				}
 				try{
 					Thread.sleep(pauseBetweenRetries);
 				}catch(InterruptedException ie){
+					Thread.currentThread().interrupt();
 					break;
 				}
 			}
@@ -1338,6 +1352,7 @@ public class PolicyDBDao {
 				try{
 					startTransactionSynced(this.em,transactionWaitTime);
 				} catch(Exception e){
+					logger.debug(e);
 					throw new PersistenceException("Could not lock transaction within "+transactionWaitTime+" milliseconds");
 				}
 			}
@@ -1366,6 +1381,7 @@ public class PolicyDBDao {
 									+ "\n   TimeStamp = " + date.getTime()
 									+ "\n\n");
 						}
+						Thread.currentThread().interrupt();
 						return;
 					}
 					if(logger.isDebugEnabled()){
@@ -1486,7 +1502,7 @@ public class PolicyDBDao {
 					try{
 						em.close();
 					}catch(Exception e){
-						logger.warn("Could not close already closed transaction");
+						logger.warn("Could not close already closed transaction", e);
 					}
 				}
 
@@ -2079,7 +2095,7 @@ public class PolicyDBDao {
 			try{
 				configPath = Paths.get(configPath).toString();
 			} catch(InvalidPathException e){
-				logger.error("Invalid config path: "+configPath);
+				logger.error("Invalid config path: "+configPath, e);
 				throw new IllegalArgumentException("Invalid config path: "+configPath);
 			}
 			return configPath;
@@ -2701,6 +2717,7 @@ public class PolicyDBDao {
 				try{
 					policyQueryList = policyQuery.getResultList();
 				} catch(Exception e){
+					logger.debug(e);
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check if policy exists policyQuery.getResultList()");
 					throw new PersistenceException("Query failed trying to check if policy "+policyNameScopeAndVersion[0]+" exists");
 				}
@@ -2723,6 +2740,7 @@ public class PolicyDBDao {
 	                }
 	            }
 	            }catch(Exception e){
+			logger.debug(e);
 	                PolicyLogger.error("Could not delete old versions for policy "+policy.getPolicyName()+", ID: "+policy.getPolicyId());
 	            }
 				group.addPolicyToGroup(policy);

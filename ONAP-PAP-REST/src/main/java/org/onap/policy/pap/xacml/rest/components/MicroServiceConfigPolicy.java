@@ -66,7 +66,15 @@ public class MicroServiceConfigPolicy extends Policy {
 	private static final Logger LOGGER = FlexLogger.getLogger(MicroServiceConfigPolicy.class);
 	
     private static Map<String, String> mapAttribute = new HashMap<>();
-    private static Map<String, String> matchMap = new HashMap<>();
+    private static Map<String, String> mapMatch = new HashMap<>();
+
+	private static synchronized Map<String, String> getMatchMap () {
+		return mapMatch;
+	}
+
+	private static synchronized void setMatchMap(Map<String, String> mm) {
+		mapMatch = mm;
+	}
 
 	public MicroServiceConfigPolicy() {
 		super();
@@ -176,9 +184,11 @@ public class MicroServiceConfigPolicy extends Policy {
                 String jsonVersion  = StringUtils.replaceEach(rootNode.get("version").toString(), new String[]{"\""}, new String[]{""});
                 matching = getValueFromDictionary(policyAdapter.getServiceType() + "-v" + jsonVersion);
             }
-            
+
+            Map<String, String> matchMap = null;
             if (matching != null && !matching.isEmpty()){
                 matchMap = Splitter.on(",").withKeyValueSeparator("=").split(matching);
+		setMatchMap(matchMap);
                 if(policyAdapter.getJsonBody() != null){
                     pullMatchValue(rootNode);           
                 }
@@ -422,7 +432,8 @@ public class MicroServiceConfigPolicy extends Policy {
         assignment7.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue7));
  
         advice.getAttributeAssignmentExpression().add(assignment7);
-        
+
+        Map<String, String> matchMap = getMatchMap();
         if (matchMap==null || matchMap.isEmpty()){
         	AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
         	assignment6.setAttributeId("matching:" + CONFIGID);
