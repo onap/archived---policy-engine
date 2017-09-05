@@ -73,7 +73,7 @@ public class DecisionPolicyDictionaryController {
 	}
 	
 	@RequestMapping(value={"/get_SettingsDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getSettingsDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getSettingsDictionaryByNameEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -108,12 +108,12 @@ public class DecisionPolicyDictionaryController {
 	}
 	
 	@RequestMapping(value={"/decision_dictionary/save_Settings"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public ModelAndView saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
             boolean fromAPI = false;
-            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+            if (request.getParameter("apiflag")!=null && ("api").equalsIgnoreCase(request.getParameter("apiflag"))) {
                 fromAPI = true;
             }
 			ObjectMapper mapper = new ObjectMapper();
@@ -127,11 +127,10 @@ public class DecisionPolicyDictionaryController {
             	userId = "API";
 
             	//check if update operation or create, get id for data to be updated and update attributeData
-            	if (request.getParameter("operation").equals("update")) {
+            	if (("update").equals(request.getParameter("operation"))) {
             		List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionSettings.getXacmlId(), "xacmlId", DecisionSettings.class);
-            		int id = 0;
             		DecisionSettings data = (DecisionSettings) duplicateData.get(0);
-            		id = data.getId();
+            		int id = data.getId();
             		if(id==0){
             			isFakeUpdate=true;
             			decisionSettings.setId(1);
@@ -147,15 +146,15 @@ public class DecisionPolicyDictionaryController {
 			if(decisionSettings.getDatatypeBean().getShortName() != null){
 				String datatype = decisionSettings.getDatatypeBean().getShortName();
 				Datatype a = new Datatype();
-				if(datatype.equalsIgnoreCase("string")){
+				if(("string").equalsIgnoreCase(datatype)){
 					a.setId(26);	
-				}else if(datatype.equalsIgnoreCase("integer")){
+				}else if(("integer").equalsIgnoreCase(datatype)){
 					a.setId(12);	
-				}else if(datatype.equalsIgnoreCase("boolean")){
+				}else if(("boolean").equalsIgnoreCase(datatype)){
 					a.setId(18);	
-				}else if(datatype.equalsIgnoreCase("double")){
+				}else if(("double").equalsIgnoreCase(datatype)){
 					a.setId(25);	
-				}else if(datatype.equalsIgnoreCase("user")){
+				}else if(("user").equalsIgnoreCase(datatype)){
 					a.setId(29);	
 				}
 				decisionSettings.setDatatypeBean(a);
@@ -184,7 +183,7 @@ public class DecisionPolicyDictionaryController {
             }
           
             if (fromAPI) {
-                if (responseString!=null && !responseString.equals("Duplicate")) {
+                if (responseString!=null && !("Duplicate").equals(responseString)) {
                     if(isFakeUpdate){
                         responseString = "Exists";
                     } else {
@@ -216,7 +215,7 @@ public class DecisionPolicyDictionaryController {
 	}
 
 	@RequestMapping(value={"/settings_dictionary/remove_settings"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+	public ModelAndView removeSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -248,7 +247,7 @@ public class DecisionPolicyDictionaryController {
 	
 	
 	@RequestMapping(value={"/get_RainyDayDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getRainyDayDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getRainyDayDictionaryByNameEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -264,7 +263,7 @@ public class DecisionPolicyDictionaryController {
 
 	
 	@RequestMapping(value={"/get_RainyDayDictionaryData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getRainyDayDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getRainyDayDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -288,7 +287,7 @@ public class DecisionPolicyDictionaryController {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
             boolean fromAPI = false;
-            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+            if (request.getParameter("apiflag")!=null && ("api").equalsIgnoreCase(request.getParameter("apiflag"))) {
                 fromAPI = true;
             }
 			ObjectMapper mapper = new ObjectMapper();
@@ -300,11 +299,10 @@ public class DecisionPolicyDictionaryController {
             	decisionRainyDay = (RainyDayTreatments)mapper.readValue(root.get("dictionaryFields").toString(), RainyDayTreatments.class);
             	treatmentsData = (TreatmentValues)mapper.readValue(root.get("dictionaryFields").toString(), TreatmentValues.class);
             	//check if update operation or create, get id for data to be updated and update attributeData
-            	if (request.getParameter("operation").equals("update")) {
+            	if (("update").equals(request.getParameter("operation"))) {
             		List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionRainyDay.getBbid()+":"+decisionRainyDay.getWorkstep(), "bbid:workstep", RainyDayTreatments.class);
-            		int id = 0;
             		RainyDayTreatments data = (RainyDayTreatments) duplicateData.get(0);
-            		id = data.getId();
+            		int id = data.getId();
             		if(id==0){
             			isFakeUpdate=true;
             		} else {
@@ -318,7 +316,7 @@ public class DecisionPolicyDictionaryController {
             
 			String userValue = "";
 			int counter = 0;
-			if(treatmentsData.getUserDataTypeValues().size() > 0){
+			if(!treatmentsData.getUserDataTypeValues().isEmpty()){
 				for(Object treatment : treatmentsData.getUserDataTypeValues()){
 					if(treatment instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) treatment).get("treatment").toString();
@@ -352,7 +350,7 @@ public class DecisionPolicyDictionaryController {
             }
           
             if (fromAPI) {
-                if (responseString!=null && !responseString.equals("Duplicate")) {
+                if (responseString!=null && !("Duplicate").equals(responseString)) {
                     if(isFakeUpdate){
                         responseString = "Exists";
                     } else {
@@ -384,7 +382,7 @@ public class DecisionPolicyDictionaryController {
 	}
 
 	@RequestMapping(value={"/decision_dictionary/remove_rainyDay"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+	public ModelAndView removeRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -416,13 +414,13 @@ public class DecisionPolicyDictionaryController {
 }
 
 class TreatmentValues { 
-	private ArrayList<Object> userDataTypeValues;
+	private List<Object> userDataTypeValues;
 
-	public ArrayList<Object> getUserDataTypeValues() {
+	public List<Object> getUserDataTypeValues() {
 		return userDataTypeValues;
 	}
 
-	public void setUserDataTypeValues(ArrayList<Object> userDataTypeValues) {
+	public void setUserDataTypeValues(List<Object> userDataTypeValues) {
 		this.userDataTypeValues = userDataTypeValues;
 	}
 }

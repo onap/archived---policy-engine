@@ -71,7 +71,7 @@ public class DescriptiveDictionaryController {
 	}
 
 	@RequestMapping(value={"/get_DescriptiveScopeByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getDescriptiveDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getDescriptiveDictionaryByNameEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -105,12 +105,12 @@ public class DescriptiveDictionaryController {
 	}
 	
 	@RequestMapping(value={"/descriptive_dictionary/save_descriptive"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response)throws UnsupportedEncodingException, IOException{
+	public ModelAndView saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response)throws IOException{
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
             boolean fromAPI = false;
-            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
+            if (request.getParameter("apiflag")!=null && ("api").equalsIgnoreCase(request.getParameter("apiflag"))) {
                 fromAPI = true;
             }
 			ObjectMapper mapper = new ObjectMapper();
@@ -125,11 +125,10 @@ public class DescriptiveDictionaryController {
                 userId = "API";
                 
                 //check if update operation or create, get id for data to be updated and update attributeData
-                if (request.getParameter("operation").equals("update")) {
+                if (("update").equals(request.getParameter("operation"))) {
                 	List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(descriptiveScope.getScopeName(), "descriptiveScopeName", DescriptiveScope.class);
-                	int id = 0;
                 	DescriptiveScope dbdata = (DescriptiveScope) duplicateData.get(0);
-                	id = dbdata.getId();
+                	int id = dbdata.getId();
                 	if(id==0){
                 		isFakeUpdate=true;
                 		descriptiveScope.setId(1);
@@ -145,7 +144,7 @@ public class DescriptiveDictionaryController {
             }
 			String header = "";
 			int counter = 0;
-			if(data.getAttributes().size() > 0){
+			if(!data.getAttributes().isEmpty()){
 				for(Object attribute : data.getAttributes()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get("option").toString();
@@ -184,7 +183,7 @@ public class DescriptiveDictionaryController {
             }
             
             if (fromAPI) {
-            	if (responseString!=null && !responseString.equals("Duplicate")) {
+            	if (responseString!=null && !("Duplicate").equals(responseString)) {
             		if(isFakeUpdate){
             			responseString = "Exists";
             		} else {
@@ -216,7 +215,7 @@ public class DescriptiveDictionaryController {
 	}
 
 	@RequestMapping(value={"/descriptive_dictionary/remove_descriptiveScope"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public ModelAndView removeDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

@@ -288,168 +288,168 @@ public class DictionaryService {
 	/*
 	 * Methods that call the controller get methods directly to get dictionary data
 	 */
-	public void getOnapDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getOnapDictionary(HttpServletResponse response){
 		DictionaryController dictionary = new DictionaryController();
 			dictionary.getOnapNameDictionaryEntityData(response);					
 	}
 	
-	public void getAttributeDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getAttributeDictionary(HttpServletResponse response){
 		DictionaryController dictionary = new DictionaryController();
 			dictionary.getAttributeDictionaryEntityData(response);
 	}
 	
-	public void getActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getActionPolicyDictionary(HttpServletResponse response){
 		ActionPolicyDictionaryController action = new ActionPolicyDictionaryController();
 			action.getActionPolicyDictionaryEntityData(response);	
 	}
 	
-	public void getBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getBRMSParamDictionary(HttpServletResponse response){
 		BRMSDictionaryController dictionary = new BRMSDictionaryController();
 			dictionary.getBRMSParamDictionaryEntityData(response);
 	}
 	
-	public void getVSCLAction(HttpServletRequest request, HttpServletResponse response){
+	public void getVSCLAction(HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getVSCLActionDictionaryEntityData(response);
 	}
 	
-	public void getVnfType(HttpServletRequest request, HttpServletResponse response){
+	public void getVnfType(HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getVNFTypeDictionaryEntityData(response);
 	}
 	
-	public void getPEPOptions(HttpServletRequest request, HttpServletResponse response){
+	public void getPEPOptions(HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getPEPOptionsDictionaryEntityData(response);
 	}
 	
-	public void getVarbind(HttpServletRequest request, HttpServletResponse response){
+	public void getVarbind(HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getVarbindDictionaryEntityData(response);
 	}
 	
-	public void getServiceType(HttpServletRequest request, HttpServletResponse response){
+	public void getServiceType(HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getClosedLoopServiceDictionaryEntityData(response);
 	}
 	
-	public void getSiteType(HttpServletRequest request, HttpServletResponse response){
+	public void getSiteType(HttpServletResponse response){
 		ClosedLoopDictionaryController dictionary = new ClosedLoopDictionaryController();
 			dictionary.getClosedLoopSiteDictionaryEntityData(response);	
 	}
 	
-	public void getSettingsDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getSettingsDictionary(HttpServletResponse response){
 		DecisionPolicyDictionaryController dictionary = new DecisionPolicyDictionaryController();
 			dictionary.getSettingsDictionaryEntityData(response);
 	}
 	
-	public void getDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getDescriptiveDictionary(HttpServletResponse response){
 		DescriptiveDictionaryController dictionary = new DescriptiveDictionaryController();
 			dictionary.getDescriptiveDictionaryEntityData(response);
 	}
 	
-	public void getEnforcerDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getEnforcerDictionary(HttpServletResponse response){
 		EnforcerDictionaryController dictionary = new EnforcerDictionaryController();
 			dictionary.getEnforcerDictionaryEntityData(response);
 	}
 	
-	public void getActionListDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getActionListDictionary(HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getActionListDictionaryEntityData(response);
 	}
 	
-	public void getProtocolListDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getProtocolListDictionary(HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getProtocolListDictionaryEntityData(response);
 	}
 	
-	public void getZoneDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getZoneDictionary(HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getZoneDictionaryEntityData(response);
 	}
 	
-	public void getSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getSecurityZoneDictionary(HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getSecurityZoneDictionaryEntityData(response);
 	}
 	
-	public void getPrefixListDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getPrefixListDictionary(HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getPrefixListDictionaryEntityData(response);
 	}
 	
-	public void getAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getAddressGroupDictionary(HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getAddressGroupDictionaryEntityData(response);
 	}
 	
-	public void getServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getServiceGroupDictionary(HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getServiceGroupDictionaryEntityData(response);
 	}
 	
-	public void getServiceListDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getServiceListDictionary(HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getServiceListDictionaryEntityData(response);
 	}
 	
-	public void getTermListDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getTermListDictionary(HttpServletResponse response){
 		FirewallDictionaryController dictionary = new FirewallDictionaryController();
 			dictionary.getTermListDictionaryEntityData(response);
 	}
 	
 	
-	public void getMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getMicroServiceLocationDictionary(HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 			dictionary.getMicroServiceLocationDictionaryEntityData(response);
 	}
 	
-	public void getMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getMicroServiceConfigNameDictionary(HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 			dictionary.getMicroServiceConfigNameDictionaryEntityData(response);
 	}
 	
-	public void getDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getDCAEUUIDDictionary(HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 			dictionary.getDCAEUUIDDictionaryEntityData(response);
 	}
 	
-	public void getMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getMicroServiceModelsDictionary(HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 			dictionary.getMicroServiceModelsDictionaryEntityData(response);
 	}
 	
-	public void getMicroServiceDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getMicroServiceDictionary(HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 			dictionary.getMicroServiceModelsDictionaryEntityData(response);
 	}
 	
-	public void getPSServiceDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getPSServiceDictionary(HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 			dictionary.getPSServiceEntityData(response);
 	}
 	
-	public void getPSResourceDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getPSResourceDictionary(HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 			dictionary.getPSResourceEntityData(response);
 	}
 	
-	public void getPSTypeDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getPSTypeDictionary(HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 			dictionary.getPSTypeEntityData(response);
 	}
 	
-	public void getPSClosedLoopDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getPSClosedLoopDictionary(HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 			dictionary.getPSClosedLoopEntityData(response);
 	}
 	
-	public void getPSGroupScopeDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getPSGroupScopeDictionary(HttpServletResponse response){
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
 			dictionary.getGroupPolicyScopeEntityData(response);
 	}
 	
-	public void getRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response){
+	public void getRiskTypeDictionary(HttpServletResponse response){
 		SafePolicyController dictionary = new SafePolicyController();
 			dictionary.getOnapNameDictionaryEntityData(response);
 	}
