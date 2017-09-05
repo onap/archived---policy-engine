@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9a437d4f_c93fa224",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/DecisionPolicyDictionaryController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 967
+      },
+      "writtenOn": "2017-09-05T12:34:36Z",
+      "side": 1,
+      "message": "Ok Pam, please let me know if so being modified. I can revert this for now.",
+      "parentUuid": "9a437d4f_89ad1a8b",
+      "range": {
+        "startLine": 116,
+        "startChar": 16,
+        "endLine": 116,
+        "endChar": 53
+      },
+      "revId": "d74151a5d3ee96320f750a33941366b1e01f8273",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a437d4f_69aaf671",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/DecisionPolicyDictionaryController.java",
         "patchSetId": 1
