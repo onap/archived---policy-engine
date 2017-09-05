@@ -37,109 +37,109 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 			DictionaryService dictionary = new DictionaryService();
 			switch (dictionaryType) {
 			case "OnapName":
-				dictionary.getOnapDictionary(request, response);
+				dictionary.getOnapDictionary(response);
 				break;
 			case "Attribute":
-				dictionary.getAttributeDictionary(request, response);
+				dictionary.getAttributeDictionary(response);
 				break;
 			case "Action":
-				dictionary.getActionPolicyDictionary(request, response);
+				dictionary.getActionPolicyDictionary(response);
 				break;
 			case "BRMSParamTemplate":
-				dictionary.getBRMSParamDictionary(request, response);
+				dictionary.getBRMSParamDictionary(response);
 				break;
 			case "VSCLAction":
-				dictionary.getVSCLAction(request, response);
+				dictionary.getVSCLAction(response);
 				break;
 			case "VNFType":
-				dictionary.getVnfType(request, response);
+				dictionary.getVnfType(response);
 				break;
 			case "PEPOptions":
-				dictionary.getPEPOptions(request, response);
+				dictionary.getPEPOptions(response);
 				break;
 			case "Varbind":
-				dictionary.getVarbind(request, response);
+				dictionary.getVarbind(response);
 				break;
 			case "Service":
-				dictionary.getServiceType(request, response);
+				dictionary.getServiceType(response);
 				break;
 			case "Site":
-				dictionary.getSiteType(request, response);
+				dictionary.getSiteType(response);
 				break;
 			case "Settings":
-				dictionary.getSettingsDictionary(request, response);
+				dictionary.getSettingsDictionary(response);
 				break;
 			case "DescriptiveScope":
-				dictionary.getDescriptiveDictionary(request, response);
+				dictionary.getDescriptiveDictionary(response);
 				break;
 			case "Enforcer":
-				dictionary.getEnforcerDictionary(request, response);
+				dictionary.getEnforcerDictionary(response);
 				break;
 			case "ActionList":
-				dictionary.getActionListDictionary(request, response);
+				dictionary.getActionListDictionary(response);
 				break;
 			case "ProtocolList":
-				dictionary.getProtocolListDictionary(request, response);
+				dictionary.getProtocolListDictionary(response);
 				break;
 			case "Zone":
-				dictionary.getZoneDictionary(request, response);
+				dictionary.getZoneDictionary(response);
 				break;
 			case "SecurityZone":
-				dictionary.getSecurityZoneDictionary(request, response);
+				dictionary.getSecurityZoneDictionary(response);
 				break;
 			case "PrefixList":
-				dictionary.getPrefixListDictionary(request, response);
+				dictionary.getPrefixListDictionary(response);
 				break;
 			case "AddressGroup":
-				dictionary.getAddressGroupDictionary(request, response);
+				dictionary.getAddressGroupDictionary(response);
 				break;
 			case "ServiceGroup":
-				dictionary.getServiceGroupDictionary(request, response);
+				dictionary.getServiceGroupDictionary(response);
 				break;
 			case "ServiceList":
-				dictionary.getServiceListDictionary(request, response);
+				dictionary.getServiceListDictionary(response);
 				break;
 			case "TermList":
 			case "RuleList":
 			case "FirewallRuleList":
 			case "Term":
-				dictionary.getTermListDictionary(request, response);
+				dictionary.getTermListDictionary(response);
 				break;
 			case "MicroServiceLocation":
-				dictionary.getMicroServiceLocationDictionary(request, response);
+				dictionary.getMicroServiceLocationDictionary(response);
 				break;
 			case "MicroServiceConfigName":
-				dictionary.getMicroServiceConfigNameDictionary(request, response);
+				dictionary.getMicroServiceConfigNameDictionary(response);
 				break;
 			case "DCAEUUID":
-				dictionary.getDCAEUUIDDictionary(request, response);
+				dictionary.getDCAEUUIDDictionary(response);
 				break;
 			case "MicroServiceModels":
-				dictionary.getMicroServiceModelsDictionary(request, response);
+				dictionary.getMicroServiceModelsDictionary(response);
 				break;
 			case "PolicyScopeService":
-				dictionary.getPSServiceDictionary(request, response);
+				dictionary.getPSServiceDictionary(response);
 				break;
 			case "PolicyScopeResource":
-				dictionary.getPSResourceDictionary(request, response);
+				dictionary.getPSResourceDictionary(response);
 				break;
 			case "PolicyScopeType":
-				dictionary.getPSTypeDictionary(request, response);
+				dictionary.getPSTypeDictionary(response);
 				break;
 			case "PolicyScopeClosedLoop":
-				dictionary.getPSClosedLoopDictionary(request, response);
+				dictionary.getPSClosedLoopDictionary(response);
 				break;
 			case "GroupPolicyScopeList":
-				dictionary.getPSGroupScopeDictionary(request, response);
+				dictionary.getPSGroupScopeDictionary(response);
 				break;
 			case "RiskType":
-				dictionary.getRiskTypeDictionary(request, response);
+				dictionary.getRiskTypeDictionary(response);
 				break;
 			case "SafePolicyWarning":
 				dictionary.getSafePolicyWarningDictionary(request, response);
 				break;
 			case "MicroServiceDictionary":
-				dictionary.getMicroServiceDictionary(request, response);
+				dictionary.getMicroServiceDictionary(response);
 				break;
 			default:
 				extendedOptions(dictionaryType, request, response, true);
