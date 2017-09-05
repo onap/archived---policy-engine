@@ -77,7 +77,7 @@ public class EnforcerDictionaryController {
 	}
 	
 	@RequestMapping(value={"/enforcer_dictionary/save_enforcerType"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public ModelAndView saveEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -111,7 +111,7 @@ public class EnforcerDictionaryController {
 	}
 
 	@RequestMapping(value={"/enforcer_dictionary/remove_enforcer"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
+	public ModelAndView removeEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -131,7 +131,7 @@ public class EnforcerDictionaryController {
 			return null;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			LOGGER.error(e);
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
