@@ -40,7 +40,7 @@ public class MetricService {
 	/*
 	 * This is a private constructor
 	 * */
-	public MetricService(){
+	private MetricService(){
 		
 	}
 	public static void doGetPolicyMetrics(HttpServletResponse response) {

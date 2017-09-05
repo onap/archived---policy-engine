@@ -212,7 +212,7 @@ public class ActionPolicyDictionaryController {
 			}
 		}
 		catch (Exception e){
-			LOGGER.error(e.getMessage());
+			LOGGER.error(e);
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
@@ -242,7 +242,7 @@ public class ActionPolicyDictionaryController {
 			return null;
 		}
 		catch (Exception e){
-			LOGGER.error(e.getMessage());
+			LOGGER.error(e);
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();

@@ -130,7 +130,7 @@ public class BRMSDictionaryController{
 	}
 	
 	@RequestMapping(value={"/brms_dictionary/set_BRMSParamData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public void SetRuleData(HttpServletRequest request) throws IOException{
+	public static void setRuleData(HttpServletRequest request) throws IOException{
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(request.getInputStream() , writer, StandardCharsets.UTF_8);
 		String cleanStreamBoundary =  writer.toString().replaceFirst("------(.*)(?s).*octet-stream", "");
@@ -306,9 +306,8 @@ public class BRMSDictionaryController{
                 //check if update operation or create, get id for data to be updated
                 if ((update).equals(request.getParameter(operation))) {
                 	List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(brmsDependency.getDependencyName(), dependencyName, BRMSDependency.class);
-                	int id = 0;
                 	BRMSDependency data = (BRMSDependency) duplicateData.get(0);
-                	id = data.getId();
+                	int id = data.getId();
                 	brmsDependency.setId(id);
                 	brmsDependency.setUserCreatedBy(this.getUserInfo(userId));
                 }
@@ -461,9 +460,8 @@ public class BRMSDictionaryController{
                 //check if update operation or create, get id for data to be updated
                 if ((update).equals(request.getParameter(operation))) {
                 	List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(brmsController.getControllerName(), controllerName, BRMSController.class);
-                	int id = 0;
                 	BRMSController data = (BRMSController) duplicateData.get(0);
-                	id = data.getId();
+                	int id = data.getId();
                 	brmsController.setId(id);
                 	brmsController.setUserCreatedBy(this.getUserInfo(userId));
                 }

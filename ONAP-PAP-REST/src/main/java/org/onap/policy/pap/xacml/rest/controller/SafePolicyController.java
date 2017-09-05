@@ -377,7 +377,7 @@ public class SafePolicyController {
 
 			return null;
 		} catch (Exception e) {
-			System.out.println(e);
+			LOGGER.error(e);
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();

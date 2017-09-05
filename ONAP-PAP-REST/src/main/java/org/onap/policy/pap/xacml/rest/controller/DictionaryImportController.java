@@ -83,10 +83,9 @@ public class DictionaryImportController {
 
 
 	@RequestMapping(value={"/dictionary/import_dictionary"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public void ImportDictionaryData(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void ImportDictionaryData(HttpServletRequest request) throws IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		//JsonNode root = mapper.readTree(request.getReader());
 		String userId = request.getParameter("userId");
 		String dictionaryName = request.getParameter("dictionaryName");
 
@@ -106,26 +105,26 @@ public class DictionaryImportController {
 				attribute.setUserModifiedBy(userinfo);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("xacml_id") || dictSheet.get(0)[j].equalsIgnoreCase("Attribute ID")){
+					if(("xacml_id").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Attribute ID").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setXacmlId(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("priority")){
+					if(("priority").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setPriority(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("datatype") || dictSheet.get(0)[j].equalsIgnoreCase("Data Type")){
+					if(("datatype").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Data Type").equalsIgnoreCase(dictSheet.get(0)[j])){
 						Datatype dataType = new Datatype();
-						if(rows[j].equalsIgnoreCase("string")){
+						if(("string").equalsIgnoreCase(rows[j])){
 							dataType.setId(26);
-						}else if(rows[j].equalsIgnoreCase("integer")){
+						}else if(("integer").equalsIgnoreCase(rows[j])){
 							dataType.setId(12);
-						}else if(rows[j].equalsIgnoreCase("double")){
+						}else if(("double").equalsIgnoreCase(rows[j])){
 							dataType.setId(25);
-						}else if(rows[j].equalsIgnoreCase("boolean")){
+						}else if(("boolean").equalsIgnoreCase(rows[j])){
 							dataType.setId(18);
-						}else if(rows[j].equalsIgnoreCase("user")){
+						}else if(("user").equalsIgnoreCase(rows[j])){
 							dataType.setId(29);
 						}
 						attribute.setDatatypeBean(dataType);
@@ -133,7 +132,7 @@ public class DictionaryImportController {
 						category.setId(5);
 						attribute.setCategoryBean(category);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("attribute_value") || dictSheet.get(0)[j].equalsIgnoreCase("Attribute Value")){
+					if(("attribute_value").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Attribute Value").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setAttributeValue(rows[j]);
 					}
 				}
@@ -149,25 +148,25 @@ public class DictionaryImportController {
 				attribute.setUserModifiedBy(userinfo);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("attribute_name") || dictSheet.get(0)[j].equalsIgnoreCase("Attribute Name")){
+					if(("attribute_name").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Attribute Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setAttributeName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("body")){
+					if(("body").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setBody(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("headers")){
+					if(("headers").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setHeader(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("method")){
+					if(("method").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setMethod(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("type")){
+					if(("type").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setMethod(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("url")){
+					if(("url").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setMethod(rows[j]);
 					}
 				}
@@ -183,10 +182,10 @@ public class DictionaryImportController {
 				attribute.setUserModifiedBy(userinfo);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("onap_name") || dictSheet.get(0)[j].equalsIgnoreCase("Onap Name")){
+					if(("onap_name").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Onap Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setOnapName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
 				}
@@ -202,10 +201,10 @@ public class DictionaryImportController {
 				attribute.setUserModifiedBy(userinfo);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("vnf_type") || dictSheet.get(0)[j].equalsIgnoreCase("VNF Type")){
+					if(("vnf_type").equalsIgnoreCase(dictSheet.get(0)[j]) || ("VNF Type").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setVnftype(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
 				}
@@ -221,10 +220,10 @@ public class DictionaryImportController {
 				attribute.setUserModifiedBy(userinfo);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("vscl_action") || dictSheet.get(0)[j].equalsIgnoreCase("VSCL Action")){
+					if(("vscl_action").equalsIgnoreCase(dictSheet.get(0)[j]) || ("VSCL Action").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setVsclaction(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
 				}
@@ -240,13 +239,13 @@ public class DictionaryImportController {
 				attribute.setUserModifiedBy(userinfo);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("PEP_NAME") || dictSheet.get(0)[j].equalsIgnoreCase("PEP Name")){
+					if(("PEP_NAME").equalsIgnoreCase(dictSheet.get(0)[j]) || ("PEP Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setPepName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("Actions")){
+					if(("Actions").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setActions(rows[j]);
 					}
 				}
@@ -262,13 +261,13 @@ public class DictionaryImportController {
 				attribute.setUserModifiedBy(userinfo);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("varbind_Name") || dictSheet.get(0)[j].equalsIgnoreCase("Varbind Name")){
+					if(("varbind_Name").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Varbind Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setVarbindName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("varbind_Description") || dictSheet.get(0)[j].equalsIgnoreCase("Varbind Description")){
+					if(("varbind_Description").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Varbind Description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setVarbindDescription(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("varbind_oid") || dictSheet.get(0)[j].equalsIgnoreCase("Varbind OID")){
+					if(("varbind_oid").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Varbind OID").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setVarbindOID(rows[j]);
 					}
 				}
@@ -283,13 +282,13 @@ public class DictionaryImportController {
 				attribute.setUserCreatedBy(userinfo);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("param_template_name") || dictSheet.get(0)[j].equalsIgnoreCase("Rule Name")){
+					if(("param_template_name").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Rule Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setRuleName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("DESCRIPTION") || dictSheet.get(0)[j].equalsIgnoreCase("Description")){
+					if(("DESCRIPTION").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("rule")){
+					if(("rule").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setRule(rows[j]);
 					}
 				}
@@ -305,26 +304,26 @@ public class DictionaryImportController {
 				attribute.setUserModifiedBy(userinfo);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("xacml_id") || dictSheet.get(0)[j].equalsIgnoreCase("Settings ID")){
+					if(("xacml_id").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Settings ID").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setXacmlId(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("priority")){
+					if(("priority").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setPriority(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("datatype") || dictSheet.get(0)[j].equalsIgnoreCase("Data Type")){
+					if(("datatype").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Data Type").equalsIgnoreCase(dictSheet.get(0)[j])){
 						Datatype dataType = new Datatype();
-						if(rows[j].equalsIgnoreCase("string")){
+						if(("string").equalsIgnoreCase(rows[j])){
 							dataType.setId(26);
-						}else if(rows[j].equalsIgnoreCase("integer")){
+						}else if(("integer").equalsIgnoreCase(rows[j])){
 							dataType.setId(12);
-						}else if(rows[j].equalsIgnoreCase("double")){
+						}else if(("double").equalsIgnoreCase(rows[j])){
 							dataType.setId(25);
-						}else if(rows[j].equalsIgnoreCase("boolean")){
+						}else if(("boolean").equalsIgnoreCase(rows[j])){
 							dataType.setId(18);
-						}else if(rows[j].equalsIgnoreCase("user")){
+						}else if(("user").equalsIgnoreCase(rows[j])){
 							dataType.setId(29);
 						}
 						attribute.setDatatypeBean(dataType);
@@ -338,13 +337,13 @@ public class DictionaryImportController {
 				PrefixList attribute = new PrefixList("",  userId);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("prefixListName") || dictSheet.get(0)[j].equalsIgnoreCase("PrefixList Name")){
+					if(("prefixListName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("PrefixList Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setPrefixListName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setPrefixListValue(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("prefixListValue") || dictSheet.get(0)[j].equalsIgnoreCase("PrefixList Value")){
+					if(("prefixListValue").equalsIgnoreCase(dictSheet.get(0)[j]) || ("PrefixList Value").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
 				}
@@ -356,10 +355,10 @@ public class DictionaryImportController {
 				SecurityZone attribute = new SecurityZone("",  userId);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("zoneName") || dictSheet.get(0)[j].equalsIgnoreCase("Zone Name")){
+					if(("zoneName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Zone Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setZoneName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("zoneValue")  || dictSheet.get(0)[j].equalsIgnoreCase("Zone Value")){
+					if(("zoneValue").equalsIgnoreCase(dictSheet.get(0)[j])  || ("Zone Value").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setZoneValue(rows[j]);
 					}
 				}
@@ -371,10 +370,10 @@ public class DictionaryImportController {
 				Zone attribute = new Zone("",  userId);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("zoneName") || dictSheet.get(0)[j].equalsIgnoreCase("Zone Name")){
+					if(("zoneName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Zone Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setZoneName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("zoneValue")  || dictSheet.get(0)[j].equalsIgnoreCase("Zone Value")){
+					if(("zoneValue").equalsIgnoreCase(dictSheet.get(0)[j])  || ("Zone Value").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setZoneValue(rows[j]);
 					}
 				}
@@ -386,22 +385,22 @@ public class DictionaryImportController {
 				ServiceList attribute = new ServiceList("",  userId);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("serviceName") || dictSheet.get(0)[j].equalsIgnoreCase("Service Name")){
+					if(("serviceName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Service Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setServiceName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("serviceDesc")  || dictSheet.get(0)[j].equalsIgnoreCase("Description")){
+					if(("serviceDesc").equalsIgnoreCase(dictSheet.get(0)[j])  || ("Description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setServiceDescription(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("serviceType")  || dictSheet.get(0)[j].equalsIgnoreCase("Service Type")){
+					if(("serviceType").equalsIgnoreCase(dictSheet.get(0)[j])  || ("Service Type").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setServiceType(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("serviceTrasProtocol")  || dictSheet.get(0)[j].equalsIgnoreCase("Transport Protocol")){
+					if(("serviceTrasProtocol").equalsIgnoreCase(dictSheet.get(0)[j])  || ("Transport Protocol").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setServiceTransProtocol(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("serviceAppProtocol")  || dictSheet.get(0)[j].equalsIgnoreCase("APP Protocol")){
+					if(("serviceAppProtocol").equalsIgnoreCase(dictSheet.get(0)[j])  || ("APP Protocol").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setServiceAppProtocol(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("servicePorts")  || dictSheet.get(0)[j].equalsIgnoreCase("Ports")){
+					if(("servicePorts").equalsIgnoreCase(dictSheet.get(0)[j])  || ("Ports").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setServicePorts(rows[j]);
 					}
 				}
@@ -413,10 +412,10 @@ public class DictionaryImportController {
 				GroupServiceList attribute = new GroupServiceList("",  userId);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("name") || dictSheet.get(0)[j].equalsIgnoreCase("Group Name")){
+					if(("name").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Group Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setGroupName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("serviceList")  || dictSheet.get(0)[j].equalsIgnoreCase("Service List")){
+					if(("serviceList").equalsIgnoreCase(dictSheet.get(0)[j])  || ("Service List").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setServiceList(rows[j]);
 					}
 				}
@@ -428,13 +427,13 @@ public class DictionaryImportController {
 				AddressGroup attribute = new AddressGroup("",  userId);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("name") || dictSheet.get(0)[j].equalsIgnoreCase("Group Name")){
+					if(("name").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Group Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setGroupName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("serviceList")  || dictSheet.get(0)[j].equalsIgnoreCase("Prefix List")){
+					if(("serviceList").equalsIgnoreCase(dictSheet.get(0)[j])  || ("Prefix List").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setServiceList(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
 				}
@@ -446,10 +445,10 @@ public class DictionaryImportController {
 				ProtocolList attribute = new ProtocolList("",  userId);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("protocolName") || dictSheet.get(0)[j].equalsIgnoreCase("Protocol Name")){
+					if(("protocolName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Protocol Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setProtocolName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
 				}
@@ -461,10 +460,10 @@ public class DictionaryImportController {
 				ActionList attribute = new ActionList("",  userId);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("actionName") || dictSheet.get(0)[j].equalsIgnoreCase("Action Name")){
+					if(("actionName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Action Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setActionName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
 				}
@@ -480,31 +479,31 @@ public class DictionaryImportController {
 				attribute.setUserModifiedBy(userinfo);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("termName") || dictSheet.get(0)[j].equalsIgnoreCase("Term-Name")){
+					if(("termName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Term-Name").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setTermName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("Term-Description") || dictSheet.get(0)[j].equalsIgnoreCase("termDescription")){
+					if(("Term-Description").equalsIgnoreCase(dictSheet.get(0)[j]) || ("termDescription").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("fromZone")  || dictSheet.get(0)[j].equalsIgnoreCase("From Zone")){
+					if(("fromZone").equalsIgnoreCase(dictSheet.get(0)[j])  || ("From Zone").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setFromZones(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("toZone") || dictSheet.get(0)[j].equalsIgnoreCase("To Zone")){
+					if(("toZone").equalsIgnoreCase(dictSheet.get(0)[j]) || ("To Zone").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setToZones(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("srcIPList") || dictSheet.get(0)[j].equalsIgnoreCase("Source-IP-List")){
+					if(("srcIPList").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Source-IP-List").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setSrcIPList(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("destIPList") || dictSheet.get(0)[j].equalsIgnoreCase("Destination-IP-List")){
+					if(("destIPList").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Destination-IP-List").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDestIPList(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("srcPortList") || dictSheet.get(0)[j].equalsIgnoreCase("Source-Port-List")){
+					if(("srcPortList").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Source-Port-List").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setSrcPortList(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("destPortList") || dictSheet.get(0)[j].equalsIgnoreCase("Destination-Port-List")){
+					if(("destPortList").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Destination-Port-List").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDestPortList(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("action") || dictSheet.get(0)[j].equalsIgnoreCase("Action List")){
+					if(("action").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Action List").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setAction(rows[j]);
 					}
 				}
@@ -520,13 +519,13 @@ public class DictionaryImportController {
 				attribute.setUserModifiedBy(userinfo);
 				String[] rows = dictSheet.get(i);
 				for (int j=0 ; j<rows.length; j++ ){
-					if(dictSheet.get(0)[j].equalsIgnoreCase("descriptiveScopeName") || dictSheet.get(0)[j].equalsIgnoreCase("Descriptive ScopeName")){
+					if(("descriptiveScopeName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Descriptive ScopeName").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setScopeName(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("description")){
+					if(("description").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setDescription(rows[j]);
 					}
-					if(dictSheet.get(0)[j].equalsIgnoreCase("search") || dictSheet.get(0)[j].equalsIgnoreCase("Search Criteria")){
+					if(("search").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Search Criteria").equalsIgnoreCase(dictSheet.get(0)[j])){
 						attribute.setSearch(rows[j]);
 					}
 				}
