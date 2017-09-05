@@ -161,6 +161,30 @@
       "revId": "d74151a5d3ee96320f750a33941366b1e01f8273",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_7cb9922d",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/EnforcerDictionaryController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-09-05T15:48:38Z",
+      "side": 1,
+      "message": "Yes Pam, they are not required we are already setting data in response. We will clean this.",
+      "parentUuid": "9a437d4f_a9c7be44",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 1
+      },
+      "revId": "d74151a5d3ee96320f750a33941366b1e01f8273",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
