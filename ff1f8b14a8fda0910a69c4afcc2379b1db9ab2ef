@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_d09e1f56",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/EnforcerDictionaryController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-06T16:59:10Z",
+      "side": 1,
+      "message": "This should be LOGGER.error(e)",
+      "range": {
+        "startLine": 134,
+        "startChar": 3,
+        "endLine": 134,
+        "endChar": 24
+      },
+      "revId": "ff1f8b14a8fda0910a69c4afcc2379b1db9ab2ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
