@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.After;
 import org.junit.Before;
@@ -57,6 +59,7 @@ public class ParseLogTest {
 	public void setUp() throws Exception {
 		System.setProperty("com.sun.management.jmxremote.port", "9998");
 		im = Mockito.mock(IntegrityMonitor.class);
+		String regex = "^\\/[a-zA-Z]\\:\\/";
 		
 		try {
 			Mockito.doNothing().when(im).startTransaction();
@@ -66,7 +69,10 @@ public class ParseLogTest {
 		Mockito.doNothing().when(im).endTransaction();
 		ClassLoader classLoader = getClass().getClassLoader();
 		configFile = classLoader.getResource("test_config.properties").getFile();
-		if(configFile.startsWith("/C:/")){
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(configFile);
+		
+		if (matcher.find()) {
 			configFile = configFile.substring(1);
 		}
 		testFile1 = classLoader.getResource("LineTest.txt").getFile();
