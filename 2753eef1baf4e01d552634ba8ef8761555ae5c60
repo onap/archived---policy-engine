@@ -22,6 +22,30 @@
       "revId": "2753eef1baf4e01d552634ba8ef8761555ae5c60",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_76a64612",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-09-07T17:05:30Z",
+      "side": 1,
+      "message": "right, seems like a problem ...",
+      "parentUuid": "9a437d4f_3027a614",
+      "range": {
+        "startLine": 341,
+        "startChar": 12,
+        "endLine": 341,
+        "endChar": 28
+      },
+      "revId": "2753eef1baf4e01d552634ba8ef8761555ae5c60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
