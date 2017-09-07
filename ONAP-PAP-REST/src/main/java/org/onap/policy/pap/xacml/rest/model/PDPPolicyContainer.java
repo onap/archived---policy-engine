@@ -71,23 +71,23 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
     /**
      * List of the string identifiers for the available properties.
      */
-    public static Collection<String> PDPPOLICY_PROPERTIES;
+    private static Collection<String> pdpPolicyProperties;
  
-    private final Object data;
-    private List<PDPPolicy> policies;
+    private final transient Object data;
+    private transient List<PDPPolicy> policies;
     
 	@SuppressWarnings("unchecked")
 	public PDPPolicyContainer(Object data) {
 		super();
 		this.data = data;
 		if (this.data instanceof PDPGroup) {
-			policies = new ArrayList<PDPPolicy> (((PDPGroup) this.data).getPolicies());
+			policies = new ArrayList<> (((PDPGroup) this.data).getPolicies());
 		}
 		if (this.data instanceof PDP) {
-			policies = new ArrayList<PDPPolicy> (((PDP) this.data).getPolicies());
+			policies = new ArrayList<> (((PDP) this.data).getPolicies());
 		}
 		if (this.data instanceof Set) {
-			policies = new ArrayList<PDPPolicy> ((Set<PDPPolicy>)data);
+			policies = new ArrayList<> ((Set<PDPPolicy>)data);
 		}
 		if (this.policies == null) {
 			logger.info("NULL policies");
@@ -165,14 +165,13 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 	}
 
 	@Override
-	public Object addItemAfter(Object previousItemId)
-			throws UnsupportedOperationException {
+	public Object addItemAfter(Object previousItemId){
 		return null;
 	}
 
 	@Override
 	public Collection<?> getContainerPropertyIds() {
-		return PDPPOLICY_PROPERTIES;
+		return pdpPolicyProperties;
 	}
 
 	@Override
@@ -220,13 +219,12 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 	}
 
 	@Override
-	public Object addItem() throws UnsupportedOperationException {
+	public Object addItem(){
 		throw new UnsupportedOperationException("Cannot add an empty policy.");
 	}
 
 	@Override
-	public boolean removeItem(Object itemId)
-			throws UnsupportedOperationException {
+	public boolean removeItem(Object itemId){
 		if (logger.isTraceEnabled()) {
 			logger.trace("removeItem: " + itemId);
 		}
@@ -248,18 +246,17 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 
 	@Override
 	public boolean addContainerProperty(Object propertyId, Class<?> type,
-			Object defaultValue) throws UnsupportedOperationException {
+			Object defaultValue){
 		return false;
 	}
 
 	@Override
-	public boolean removeContainerProperty(Object propertyId)
-			throws UnsupportedOperationException {
+	public boolean removeContainerProperty(Object propertyId){
 		return false;
 	}
 
 	@Override
-	public boolean removeAllItems() throws UnsupportedOperationException {
+	public boolean removeAllItems(){
 		return false;
 	}
 
@@ -291,7 +288,7 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 	}
 
 	@Override
-	public Object addItemAt(int index) throws UnsupportedOperationException {
+	public Object addItemAt(int index) {
 		if (logger.isTraceEnabled()) {
 			logger.trace("addItemAt: " + index);
 		}

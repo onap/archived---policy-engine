@@ -62,6 +62,7 @@ import org.onap.policy.rest.jpa.ServiceList;
 import org.onap.policy.rest.jpa.TermList;
 import org.onap.policy.rest.jpa.UserInfo;
 
+import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.IdentifierImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
@@ -129,7 +130,7 @@ public class FirewallConfigPolicy extends Policy {
 	}
 
 	@Override
-	public Map<String, String> savePolicies() throws Exception {
+	public Map<String, String> savePolicies() throws PAPException {
 		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
@@ -147,7 +148,11 @@ public class FirewallConfigPolicy extends Policy {
 			if (policyAdapter.isEditPolicy()) {
 				dbIsUpdated = updateFirewallDictionaryData(policyAdapter.getJsonBody(), policyAdapter.getPrevJsonBody());
 			} else {
-				dbIsUpdated = insertFirewallDicionaryData(policyAdapter.getJsonBody());
+				try {
+                    dbIsUpdated = insertFirewallDicionaryData(policyAdapter.getJsonBody());
+                } catch (SQLException e) {
+                    throw new PAPException(e);
+                }
 			}
 		} else {
 			dbIsUpdated = true;
@@ -174,7 +179,7 @@ public class FirewallConfigPolicy extends Policy {
 	//This is the method for preparing the policy for saving.  We have broken it out
 	//separately because the fully configured policy is used for multiple things
 	@Override
-	public boolean prepareToSave() throws Exception{
+	public boolean prepareToSave() throws PAPException{
 
 		if(isPreparedToSave()){
 			//we have already done this

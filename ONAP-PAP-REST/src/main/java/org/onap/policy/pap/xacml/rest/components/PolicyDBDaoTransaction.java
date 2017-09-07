@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
 import org.onap.policy.xacml.api.pap.OnapPDP;
@@ -48,7 +49,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PersistenceException If a database error occurs
 	 * @throws IllegalArgumentException If the Policy's PolicyRestAdapter contains incorrect data.
 	 */
-	public void createPolicy(Policy policy, String username) throws IllegalStateException, PersistenceException, IllegalArgumentException;
+	public void createPolicy(Policy policy, String username) throws PolicyDBException;
 	
 	/**
 	 * Check if the PolicyDBDaoTransaction is currently open
@@ -63,9 +64,9 @@ public interface PolicyDBDaoTransaction {
 	 * @param policyToDelete The file path of the policy to delete
 	 * @throws IllegalArgumentException If the file path given can not be parsed
 	 * @throws IllegalStateException If a transaction is open that has not yet been committed
-	 * @throws PersistenceException If a database error occurs
+	 * @throws PolicyDBException If a database error occurs
 	 */
-	public void deletePolicy(String policyToDelete) throws IllegalStateException, PersistenceException, IllegalArgumentException;
+	public void deletePolicy(String policyToDelete) throws PolicyDBException;
 	
 	/**
 	 * Rollback (undo) the current transaction.
@@ -88,7 +89,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws IllegalStateException If a transaction is already open
 	 * @throws PersistenceException If a database error occurs
 	 */
-	public void createGroup(String groupID, String groupName, String groupDescription, String username) throws IllegalArgumentException, IllegalStateException, PersistenceException;
+	public void createGroup(String groupID, String groupName, String groupDescription, String username) throws PolicyDBException;
 	
 	/**
 	 * Updates a group in the database with a new name of description
@@ -98,7 +99,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws IllegalStateException If a transaction is already open
 	 * @throws PersistenceException If a database error occurs or if the group can not be found
 	 */
-	public void updateGroup(OnapPDPGroup group, String username) throws IllegalArgumentException, IllegalStateException, PersistenceException;
+	public void updateGroup(OnapPDPGroup group, String username) throws PolicyDBException;
 	
 	/**
 	 * Updates a PDP in the database with new information
@@ -108,7 +109,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws IllegalStateException If a transaction is already open
 	 * @throws PersistenceException If a database error occurs or if the pdp can not be found
 	 */
-	public void updatePdp(OnapPDP pdp, String username) throws IllegalArgumentException, IllegalStateException, PersistenceException;
+	public void updatePdp(OnapPDP pdp, String username) throws PolicyDBException;
 	
 	/**
 	 * Change the default group in the database to the group provided.
@@ -118,7 +119,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws IllegalStateException If a transaction is already open
 	 * @throws PersistenceException If a database error occurs
 	 */
-	public void changeDefaultGroup(OnapPDPGroup group, String username) throws IllegalArgumentException, IllegalStateException, PersistenceException;
+	public void changeDefaultGroup(OnapPDPGroup group, String username) throws PolicyDBException;
 	
 	/**
 	 * Moves a PDP to a new group.
@@ -129,7 +130,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws IllegalStateException If a transaction is already open
 	 * @throws PersistenceException If a database error occurs
 	 */
-	public void movePdp(OnapPDP pdp, OnapPDPGroup group, String username) throws IllegalArgumentException, IllegalStateException, PersistenceException;
+	public void movePdp(OnapPDP pdp, OnapPDPGroup group, String username) throws PolicyDBException;
 	
 	/**
 	 * Add a new PDP to an existing group
@@ -143,7 +144,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws IllegalStateException If a transaction is already open
 	 * @throws PersistenceException If a database error occurs
 	 */
-	public void addPdpToGroup(String pdpID, String groupID, String pdpName, String pdpDescription, int pdpJmxPort, String username) throws IllegalArgumentException, IllegalStateException, PersistenceException;
+	public void addPdpToGroup(String pdpID, String groupID, String pdpName, String pdpDescription, int pdpJmxPort, String username) throws PolicyDBException;
 	
 	/**
 	 * Add an existing policy to an existing group
@@ -152,12 +153,13 @@ public interface PolicyDBDaoTransaction {
 	 * @throws IllegalArgumentException If non-optional parameters are null or empty strings
 	 * @throws IllegalStateException If a transaction is already open
 	 * @throws PersistenceException If a database error occurs
+	 * @throws PolicyDBException 
 	 */
-	public void addPolicyToGroup(String group, String policyID, String username) throws IllegalArgumentException, IllegalStateException, PersistenceException;
+	public void addPolicyToGroup(String group, String policyID, String username) throws PolicyDBException;
 	
 	
 	/**
-	 * Delete an existing PDP group
+	 * Delete an existing PDP groupPolicyDBException
 	 * @param group A PDPGroup object representing the group to delete
 	 * @param moveToGroup A PDPGroup object representing another existing group which PDPs in the group being deleted should be moved to
 	 * @throws IllegalArgumentException If non-optional parameters are null or empty strings
@@ -165,7 +167,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PersistenceException If a database error occurs
 	 * @throws PAPException If an error relating to how groups are handled occurs
 	 */
-	public void deleteGroup(OnapPDPGroup group, OnapPDPGroup moveToGroup, String username)throws IllegalArgumentException, IllegalStateException, PersistenceException, PAPException;
+	public void deleteGroup(OnapPDPGroup group, OnapPDPGroup moveToGroup, String username)throws PolicyDBException;
 	
 	/**
 	 * Removes an existing PDP from its group and deletes it.
@@ -174,7 +176,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws IllegalStateException If a transaction is already open
 	 * @throws PersistenceException If a database error occurs
 	 */
-	public void removePdpFromGroup(String pdpID, String username) throws IllegalArgumentException, IllegalStateException, PersistenceException;
+	public void removePdpFromGroup(String pdpID, String username) throws PolicyDBException;
 	
 	public GroupEntity getGroup(long groupKey);
 	public GroupEntity getGroup(String groupId);

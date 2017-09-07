@@ -126,20 +126,13 @@ public class ParseLog {
 	
 	private static boolean processLine(Path debugfilePath, String dataFileName, int lastNmRead, LOGTYPE logType){
 		// log4jlogger must use .info
-		Stream<String> lines = null;
-		try {
-			lines = Files.lines(debugfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info(last+dataFileName+ lineRead + lastNmRead)).skip(lastNmRead);
+		try(Stream<String> lines = Files.lines(debugfilePath, Charset.defaultCharset()).onClose(() -> log4jlogger.info(last+dataFileName+ lineRead + lastNmRead)).skip(lastNmRead)){
 			lines.forEachOrdered(line -> process(line, type, logType));
 		} catch (IOException e) {
 			logger.error(loggingProcess + dataFileName, e);
 			logger.error(breakLoop);
 			return true;
-		}finally{
-			if(lines != null){
-				lines.close();
-			}
 		}
-         
 		return false;
 	}
 	private static void processDebugLogParser(File debugfile, Path debugfilePath, String dataFileName){

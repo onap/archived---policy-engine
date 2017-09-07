@@ -63,6 +63,7 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pip.engines.aaf.AAFEngine;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
 
+import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.IdentifierImpl;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
@@ -118,7 +119,7 @@ public class DecisionPolicy extends Policy {
 	}
 	
 	@Override
-	public Map<String, String> savePolicies() throws Exception {
+	public Map<String, String> savePolicies() throws PAPException {
 
 		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
@@ -142,7 +143,7 @@ public class DecisionPolicy extends Policy {
 	//This is the method for preparing the policy for saving.  We have broken it out
 	//separately because the fully configured policy is used for multiple things
 	@Override
-	public boolean prepareToSave() throws Exception{
+	public boolean prepareToSave() throws PAPException{
 
 		if(isPreparedToSave()){
 			//we have already done this
@@ -176,12 +177,17 @@ public class DecisionPolicy extends Policy {
 			yamlParams.put(ONAPNAME, policyAdapter.getOnapName());
 			Map<String, String> params = policyAdapter.getDynamicFieldConfigAttributes();
 			yamlParams.putAll(params);
-			// Call YAML to XACML 
-			PolicyType decisionPolicy = getGuardPolicy(yamlParams, policyAdapter.getRuleProvider());
-			decisionPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
-			decisionPolicy.setVersion(Integer.toString(version));
-			policyAdapter.setPolicyData(decisionPolicy);
-			policyAdapter.setData(decisionPolicy);
+			// Call YAML to XACML
+            try {
+                PolicyType decisionPolicy = getGuardPolicy(yamlParams, policyAdapter.getRuleProvider());
+                decisionPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
+                decisionPolicy.setVersion(Integer.toString(version));
+                policyAdapter.setPolicyData(decisionPolicy);
+                policyAdapter.setData(decisionPolicy);
+            } catch (BuilderException e) {
+                LOGGER.error(e);
+                throw new PAPException(e);
+            }
 		}else if (policyAdapter.getData() != null) {
 			PolicyType decisionPolicy = (PolicyType)  policyAdapter.getData();
 			

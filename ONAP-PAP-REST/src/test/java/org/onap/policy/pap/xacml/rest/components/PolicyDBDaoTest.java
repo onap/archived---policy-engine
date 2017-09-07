@@ -46,6 +46,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.components.PolicyDBDao.PolicyDBDaoTestClass;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
 import org.onap.policy.rest.jpa.PolicyEntity;
@@ -53,7 +54,6 @@ import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
 
-import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.util.XACMLProperties;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
@@ -396,7 +396,7 @@ public class PolicyDBDaoTest {
 			group.deleteGroup(groupToDelete, groupToMoveTo,"testuser");
 			group.commitTransaction();
 			Assert.fail();
-		} catch(PAPException pe){
+		} catch(PolicyDBException pe){
 			//good, can't delete group with pdps
 			group.rollbackTransaction();
 		} catch(Exception e){

@@ -21,6 +21,7 @@
 package org.onap.policy.pap.xacml.rest.components;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,6 +43,7 @@ import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.jpa.MicroServiceModels;
 
+import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.IdentifierImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -100,7 +102,7 @@ public class MicroServiceConfigPolicy extends Policy {
 	
 	
 	@Override
-	public Map<String, String> savePolicies() throws Exception {
+	public Map<String, String> savePolicies() throws PAPException {
 
 		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
@@ -125,7 +127,7 @@ public class MicroServiceConfigPolicy extends Policy {
 	//This is the method for preparing the policy for saving.  We have broken it out
 	//separately because the fully configured policy is used for multiple things
 	@Override
-	public boolean prepareToSave() throws Exception{
+	public boolean prepareToSave() throws PAPException{
 
 		if(isPreparedToSave()){
 			//we have already done this
@@ -172,26 +174,28 @@ public class MicroServiceConfigPolicy extends Policy {
 			
             //setup values for pulling out matching attributes
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode rootNode = mapper.readTree(policyAdapter.getJsonBody());
             String matching = null;
-            
-            if (policyAdapter.getTtlDate()==null){
-                policyAdapter.setTtlDate("NA");
-            }
-            if (policyAdapter.getServiceType().contains("-v")){
-                matching = getValueFromDictionary(policyAdapter.getServiceType());
-            } else {
-                String jsonVersion  = StringUtils.replaceEach(rootNode.get("version").toString(), new String[]{"\""}, new String[]{""});
-                matching = getValueFromDictionary(policyAdapter.getServiceType() + "-v" + jsonVersion);
-            }
-
             Map<String, String> matchMap = null;
-            if (matching != null && !matching.isEmpty()){
-                matchMap = Splitter.on(",").withKeyValueSeparator("=").split(matching);
-		setMatchMap(matchMap);
-                if(policyAdapter.getJsonBody() != null){
-                    pullMatchValue(rootNode);           
+            try {
+                JsonNode rootNode = mapper.readTree(policyAdapter.getJsonBody());
+                if (policyAdapter.getTtlDate()==null){
+                    policyAdapter.setTtlDate("NA");
                 }
+                if (policyAdapter.getServiceType().contains("-v")){
+                    matching = getValueFromDictionary(policyAdapter.getServiceType());
+                } else {
+                    String jsonVersion  = StringUtils.replaceEach(rootNode.get("version").toString(), new String[]{"\""}, new String[]{""});
+                    matching = getValueFromDictionary(policyAdapter.getServiceType() + "-v" + jsonVersion);
+                }
+                if (matching != null && !matching.isEmpty()){
+                    matchMap = Splitter.on(",").withKeyValueSeparator("=").split(matching);
+            setMatchMap(matchMap);
+                    if(policyAdapter.getJsonBody() != null){
+                        pullMatchValue(rootNode);           
+                    }
+                }
+            } catch (IOException e1) {
+                throw new PAPException(e1);
             }
             
 			// Match for policyName

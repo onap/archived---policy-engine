@@ -40,6 +40,7 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.pap.xacml.rest.controller.BRMSDictionaryController;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 
+import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.IdentifierImpl;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
@@ -115,7 +116,7 @@ public class CreateBrmsRawPolicy extends Policy {
 	}
 
 	@Override
-	public Map<String, String> savePolicies() throws Exception {
+	public Map<String, String> savePolicies() throws PAPException {
 		
 		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
@@ -146,7 +147,7 @@ public class CreateBrmsRawPolicy extends Policy {
 	// separately because the fully configured policy is used for multiple
 	// things
 	@Override
-	public boolean prepareToSave() throws Exception {
+	public boolean prepareToSave() throws PAPException {
 
 		if (isPreparedToSave()) {
 			// we have already done this

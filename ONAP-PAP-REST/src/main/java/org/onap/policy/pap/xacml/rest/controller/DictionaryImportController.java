@@ -28,11 +28,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.compress.utils.IOUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
@@ -45,8 +43,8 @@ import org.onap.policy.rest.jpa.Category;
 import org.onap.policy.rest.jpa.Datatype;
 import org.onap.policy.rest.jpa.DecisionSettings;
 import org.onap.policy.rest.jpa.DescriptiveScope;
-import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.GroupServiceList;
+import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.PEPOptions;
 import org.onap.policy.rest.jpa.PrefixList;
 import org.onap.policy.rest.jpa.ProtocolList;

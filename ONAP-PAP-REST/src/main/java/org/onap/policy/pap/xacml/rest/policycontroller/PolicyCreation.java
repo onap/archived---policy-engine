@@ -99,7 +99,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 	
 	@RequestMapping(value="/policycreation/save_policy", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> savePolicy(@RequestBody PolicyRestAdapter policyData, HttpServletResponse response) throws Exception{
+	public ResponseEntity<String> savePolicy(@RequestBody PolicyRestAdapter policyData, HttpServletResponse response){
 		String body = null;
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		Map<String, String> successMap = new HashMap<>();

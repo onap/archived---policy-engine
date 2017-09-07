@@ -45,6 +45,7 @@ import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
 
+import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.util.XACMLProperties;
 import com.att.research.xacmlatt.pdp.policy.PolicyDef;
@@ -144,11 +145,11 @@ public abstract class Policy {
 	 * @return Either the PolicyAdapter.getData() or PolicyAdapter.getPolicyData()
 	 */
 	public abstract Object getCorrectPolicyDataObject();
-	public abstract Map<String, String>  savePolicies() throws Exception;
+	public abstract Map<String, String>  savePolicies() throws PAPException;
 
 	//This is the method for preparing the policy for saving.  We have broken it out
 	//separately because the fully configured policy is used for multiple things
-	public abstract boolean prepareToSave() throws Exception;
+	public abstract boolean prepareToSave() throws PAPException;
 
 
 	// create match for onap and config name
@@ -213,7 +214,7 @@ public abstract class Policy {
 	protected static boolean isJSONValid(String data) {
 		JsonReader jsonReader = null;
 		try {
-			JSONObject j = new JSONObject(data);
+		    new JSONObject(data);
 			InputStream stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
 			jsonReader = Json.createReader(stream);
 			LOGGER.info("Json Value is: " + jsonReader.read().toString() );
@@ -350,13 +351,13 @@ public abstract class Policy {
 		return actionHome;
 	}
 
-	private static void loadWebapps() throws Exception{
+	private static void loadWebapps() throws PAPException{
 		if(actionHome == null || configHome == null){
 			Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));
 			//Sanity Check
 			if (webappsPath == null) {
 				PolicyLogger.error("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
-				throw new Exception("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
+				throw new PAPException("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
 			}
 			Path webappsPathConfig;
 			Path webappsPathAction;
@@ -367,14 +368,14 @@ public abstract class Policy {
 				webappsPathConfig = Paths.get(webappsPath.toString()+"/Config");
 				webappsPathAction = Paths.get(webappsPath.toString()+"/Action");
 			}
-			if(Files.notExists(webappsPathConfig)){
+			if(!webappsPathConfig.toFile().exists()){
 				try {
 					Files.createDirectories(webappsPathConfig);
 				} catch (IOException e) {
 					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Policy", "Failed to create config directory");
 				}
 			}
-			if(Files.notExists(webappsPathAction)){
+			if(!webappsPathAction.toFile().exists()){
 				try {
 					Files.createDirectories(webappsPathAction);
 				} catch (IOException e) {

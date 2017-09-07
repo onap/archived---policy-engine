@@ -28,6 +28,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -37,7 +38,9 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,7 +52,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -71,6 +77,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
 import org.onap.policy.rest.jpa.DatabaseLockEntity;
@@ -115,7 +122,7 @@ public class PolicyDBDao {
 	 * @return The new instance of PolicyDBDao or throw exception if the given emf is null.
 	 * @throws IllegalStateException if a PolicyDBDao has already been constructed. Call getPolicyDBDaoInstance() to get this.
 	 */
-	public static PolicyDBDao getPolicyDBDaoInstance(EntityManagerFactory emf) throws Exception{
+	public static PolicyDBDao getPolicyDBDaoInstance(EntityManagerFactory emf){
 		logger.debug("getPolicyDBDaoInstance(EntityManagerFactory emf) as getPolicyDBDaoInstance("+emf+") called");
 		if(currentInstance == null){
 			if(emf != null){
@@ -132,7 +139,7 @@ public class PolicyDBDao {
 	 * @return The instance of PolicyDBDao or throws exception if the given instance is null.
 	 * @throws IllegalStateException if a PolicyDBDao instance is null. Call createPolicyDBDaoInstance(EntityManagerFactory emf) to get this.
 	 */
-	public static PolicyDBDao getPolicyDBDaoInstance() throws Exception{
+	public static PolicyDBDao getPolicyDBDaoInstance(){
 		logger.debug("getPolicyDBDaoInstance() as getPolicyDBDaoInstance() called");
 		if(currentInstance != null){
 			return currentInstance;
@@ -324,15 +331,15 @@ public class PolicyDBDao {
 		return urlUserPass;
 	}
 
-	private static String encryptPassword(String password) throws Exception{
+	private static String encryptPassword(String password) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
 		Cipher cipher = Cipher.getInstance("AES");		
 		cipher.init(Cipher.ENCRYPT_MODE, aesKey());
 		byte[] encryption = cipher.doFinal(password.getBytes("UTF-8"));
-		System.out.println(encryption);
+		logger.debug("Encryption value is " + encryption);
 		return new String(Base64.getMimeEncoder().encode(encryption),"UTF-8");
 	}
 
-	private static String decryptPassword(String encryptedPassword) throws Exception{
+	private static String decryptPassword(String encryptedPassword) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException{
 		Cipher cipher = Cipher.getInstance("AES");
 		cipher.init(Cipher.DECRYPT_MODE, aesKey());
 		byte[] password = cipher.doFinal(Base64.getDecoder().decode(encryptedPassword.getBytes("UTF-8")));
@@ -700,7 +707,7 @@ public class PolicyDBDao {
 		//no changes should be being made in this function, we still need to close
 		transaction.rollbackTransaction();
 	}
-	private void handleIncomingGroupChange(String url, String groupId, String extraData,PolicyDBDaoTransaction transaction,XACMLPapServlet xacmlPapServlet) throws PAPException{
+	private void handleIncomingGroupChange(String url, String groupId, String extraData,PolicyDBDaoTransaction transaction,XACMLPapServlet xacmlPapServlet) throws PAPException, PolicyDBException{
 		GroupEntity groupRecord = null;
 		long groupIdLong = -1;
 		try{
@@ -824,7 +831,7 @@ public class PolicyDBDao {
 		//call command that corresponds to the change that was made
 	}
 	//this will also handle removes, since incoming pdpGroup has no policies internally, we are just going to add them all in from the db
-	private boolean updateGroupPoliciesInFileSystem(OnapPDPGroup pdpGroup,OnapPDPGroup oldPdpGroup, GroupEntity groupRecord, PolicyDBDaoTransaction transaction) throws PAPException{
+	private boolean updateGroupPoliciesInFileSystem(OnapPDPGroup pdpGroup,OnapPDPGroup oldPdpGroup, GroupEntity groupRecord, PolicyDBDaoTransaction transaction) throws PAPException, PolicyDBException{
 		if(!(pdpGroup instanceof StdPDPGroup)){
 			throw new PAPException("group is not a StdPDPGroup");
 		}
@@ -862,7 +869,7 @@ public class PolicyDBDao {
 		return didUpdate;
 
 	}
-	private String removeExtensionAndVersionFromPolicyName(String originalPolicyName){
+	private String removeExtensionAndVersionFromPolicyName(String originalPolicyName) throws PolicyDBException{
         return getPolicyNameAndVersionFromPolicyFileName(originalPolicyName)[0];
     }
 
@@ -871,14 +878,14 @@ public class PolicyDBDao {
      * @param originalPolicyName: a policy file name ex: Config_policy.2.xml
      * @return An array [0]: The policy name, [1]: the policy version, as a string
      */
-    private String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName){
+    private String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName) throws PolicyDBException{
         String policyName = originalPolicyName;
         String[] nameAndVersion = new String[2];
         try{
             policyName = removeFileExtension(policyName);
             nameAndVersion[0] = policyName.substring(0,policyName.lastIndexOf('.'));
             if(isNullOrEmpty(nameAndVersion[0])){
-                throw new Exception();
+                throw new PolicyDBException();
             }
         } catch(Exception e){
             nameAndVersion[0] = originalPolicyName;         
@@ -887,7 +894,7 @@ public class PolicyDBDao {
         try{
             nameAndVersion[1] = policyName.substring(policyName.lastIndexOf('.')+1);
             if(isNullOrEmpty(nameAndVersion[1])){
-                throw new Exception();
+                throw new PolicyDBException();
             }
         } catch(Exception e){
             nameAndVersion[1] = "1";
@@ -2584,7 +2591,7 @@ public class PolicyDBDao {
 
 
 		@Override
-		public void deleteGroup(OnapPDPGroup group, OnapPDPGroup moveToGroup, String username) throws PAPException {
+		public void deleteGroup(OnapPDPGroup group, OnapPDPGroup moveToGroup, String username) throws PolicyDBException {
 			logger.debug("deleteGroup(PDPGroup group, PDPGroup moveToGroup, String username) as deleteGroup("+group+", "+moveToGroup+","+username+") called");
 			if(group == null){
 				throw new IllegalArgumentException("PDPGroup group cannot be null");
@@ -2595,7 +2602,7 @@ public class PolicyDBDao {
 
 			if(group.isDefaultGroup()){
 				PolicyLogger.error("The default group "+group.getId()+" was attempted to be deleted. It cannot be.");
-				throw new PAPException("You cannot delete the default group.");
+				throw new PolicyDBException("You cannot delete the default group.");
 			}
 			synchronized(emLock){
 				checkBeforeOperationRun();
@@ -2665,7 +2672,7 @@ public class PolicyDBDao {
 						}
 					} else {
 						PolicyLogger.error("Group "+group.getId()+" is trying to be delted with PDPs. No group was provided to move them to");
-						throw new PAPException("Group has PDPs. Must provide a group for them to move to");
+						throw new PolicyDBException("Group has PDPs. Must provide a group for them to move to");
 					}
 				} 
 
@@ -2681,7 +2688,7 @@ public class PolicyDBDao {
 		}
 
 		@Override
-		public void addPolicyToGroup(String groupID, String policyID, String username) {
+		public void addPolicyToGroup(String groupID, String policyID, String username) throws PolicyDBException {
 			logger.debug("addPolicyToGroup(String groupID, String policyID, String username) as addPolicyToGroup("+groupID+", "+policyID+","+username+") called");
 			if(isNullOrEmpty(groupID, policyID, username)){
 				throw new IllegalArgumentException("groupID, policyID, and username must not be null or empty");
@@ -2802,16 +2809,16 @@ public class PolicyDBDao {
 		String computeScope(String fullPath, String pathToExclude){
 			return PolicyDBDao.computeScope(fullPath, pathToExclude);
 		}
-		String encryptPassword(String password) throws Exception{
+		String encryptPassword(String password) throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
 			return PolicyDBDao.encryptPassword(password);
 		}
-		String decryptPassword(String password) throws Exception{
+		String decryptPassword(String password) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException{
 			return PolicyDBDao.decryptPassword(password);
 		}
 		String getDescriptionFromXacml(String xacmlData){
 			return PolicyDBDao.getDescriptionFromXacml(xacmlData);
 		}
-        String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName){
+        String[] getPolicyNameAndVersionFromPolicyFileName(String originalPolicyName) throws PolicyDBException{
             return PolicyDBDao.this.getPolicyNameAndVersionFromPolicyFileName(originalPolicyName);
         }
 	}

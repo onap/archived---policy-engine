@@ -97,7 +97,7 @@ public class PolicyElasticSearchController{
 		private static final long serialVersionUID = 1L;
 	};
 	
-	public static CommonClassDao commonClassDao;
+	private static CommonClassDao commonClassDao;
 
 	@Autowired
 	public PolicyElasticSearchController(CommonClassDao commonClassDao) {

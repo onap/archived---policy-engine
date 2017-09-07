@@ -43,6 +43,8 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
+import com.att.research.xacml.api.pap.PAPException;
+
 public class CheckPDP {
 
 	private static Path pdpPath = null;
@@ -67,23 +69,23 @@ public class CheckPDP {
 		return false;
 	}
 
-	private static void readFile() throws Exception {
+	private static void readFile() throws PAPException {
 		String pdpFile = XACMLPapServlet.getPDPFile();
 		if (pdpFile == null) {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + "PDP File name is undefined");
-			throw new Exception(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"PDP File name not Valid : " + pdpFile);
+			throw new PAPException(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"PDP File name not Valid : " + pdpFile);
 		}
 		if (pdpPath == null) {
 			pdpPath = Paths.get(pdpFile);
 			if (Files.notExists(pdpPath)) {
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + "File doesn't exist in the specified Path");
-				throw new Exception(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"File doesn't exist in the specified Path : "+ pdpPath.toString());
+				throw new PAPException(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"File doesn't exist in the specified Path : "+ pdpPath.toString());
 			} 
 			if (pdpPath.toString().endsWith(".properties")) {
 				readProps();
 			} else {
 				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + "Not a .properties file");
-				throw new Exception(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Not a .properties file");
+				throw new PAPException(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Not a .properties file");
 			}
 		}
 		// Check if File is updated recently
@@ -97,7 +99,7 @@ public class CheckPDP {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static void readProps() throws Exception {
+	private static void readProps() throws PAPException {
 		InputStream in;
 		pdpProp = new Properties();
 		try {
@@ -106,7 +108,7 @@ public class CheckPDP {
 			pdpProp.load(in);
 		} catch (IOException e) {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "CheckPDP", "Cannot load the Properties file");
-			throw new Exception("Cannot Load the Properties file", e);
+			throw new PAPException("Cannot Load the Properties file", e);
 		}
 		// Read the Properties and Load the PDPs and encoding.
 		pdpMap = new HashMap<>();
@@ -118,7 +120,7 @@ public class CheckPDP {
 			if (propKey.startsWith("PDP_URL")) {
 				String check_val = pdpProp.getProperty(propKey);
 				if (check_val == null) {
-					throw new Exception("Properties file doesn't have the PDP_URL parameter");
+					throw new PAPException("Properties file doesn't have the PDP_URL parameter");
 				}
 				if (check_val.contains(";")) {
 					List<String> pdp_default = new ArrayList<>(Arrays.asList(check_val.split("\\s*;\\s*")));
@@ -135,11 +137,11 @@ public class CheckPDP {
 		}
 		if (pdpMap == null || pdpMap.isEmpty()) {
 			logger.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Cannot Proceed without PDP_URLs");
-			throw new Exception(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Cannot Proceed without PDP_URLs");
+			throw new PAPException(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"Cannot Proceed without PDP_URLs");
 		}
 	}
 
-	private static void readPDPParam(String pdpVal) throws Exception{
+	private static void readPDPParam(String pdpVal) throws PAPException{
 		if(pdpVal.contains(",")){
 			List<String> pdpValues = new ArrayList<>(Arrays.asList(pdpVal.split("\\s*,\\s*")));
 			if(pdpValues.size()==3){
@@ -151,11 +153,11 @@ public class CheckPDP {
 				pdpMap.put(pdpValues.get(0), encoder.encodeToString((userID+":"+pass).getBytes(StandardCharsets.UTF_8)));
 			}else{
 				PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + "No Credentials to send Request");
-				throw new Exception(XACMLErrorConstants.ERROR_PERMISSIONS + "No enough Credentials to send Request. " + pdpValues);
+				throw new PAPException(XACMLErrorConstants.ERROR_PERMISSIONS + "No enough Credentials to send Request. " + pdpValues);
 			}
 		}else{
 			PolicyLogger.error(MessageCodes.ERROR_PERMISSIONS + "No Credentials to send Request: " + pdpVal);
-			throw new Exception(XACMLErrorConstants.ERROR_PERMISSIONS +"No enough Credentials to send Request.");
+			throw new PAPException(XACMLErrorConstants.ERROR_PERMISSIONS +"No enough Credentials to send Request.");
 		}
 	}
 	

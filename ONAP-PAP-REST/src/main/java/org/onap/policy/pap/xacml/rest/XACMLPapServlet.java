@@ -80,6 +80,7 @@ import org.onap.policy.pap.xacml.rest.handler.SavePolicyHandler;
 import org.onap.policy.pap.xacml.restAuth.CheckPDP;
 import org.onap.policy.rest.XACMLRest;
 import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.rest.dao.PolicyDBException;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.ONAPPapEngineFactory;
@@ -113,7 +114,6 @@ import com.google.common.base.Splitter;
 		})
 public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeListener, Runnable {
 	private static final long serialVersionUID = 1L;
-	private static final String localIp = "127.0.0.1";
 	private static final Logger LOGGER	= FlexLogger.getLogger(XACMLPapServlet.class);
 	// audit (transaction) LOGGER
 	private static final Logger auditLogger = FlexLogger.getLogger("auditLogger");
@@ -171,7 +171,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 * This thread may be invoked upon startup to initiate sending PDP policy/pip configuration when
 	 * this servlet starts. Its configurable by the admin.
 	 */
-	private transient static Thread initiateThread = null;
+	private static transient Thread initiateThread = null;
 	private transient ONAPLoggingContext baseLoggingContext = null;
 	
 	/**
@@ -284,22 +284,24 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			// The factory knows how to go about creating a PAP Engine
 			setPAPEngine((PAPPolicyEngine) factory.newEngine());
 			PolicyDBDaoTransaction addNewGroup = null;
-			try{
-				if(((org.onap.policy.xacml.std.pap.StdEngine)papEngine).wasDefaultGroupJustAdded){
-					addNewGroup = policyDBDao.getNewTransaction();
-					OnapPDPGroup group = papEngine.getDefaultGroup();
-					addNewGroup.createGroup(group.getId(), group.getName(), group.getDescription(), "automaticallyAdded");
-					addNewGroup.commitTransaction();
-					addNewGroup = policyDBDao.getNewTransaction();
-					addNewGroup.changeDefaultGroup(group, "automaticallyAdded");
-					addNewGroup.commitTransaction();
-				}
-			} catch(Exception e){
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "XACMLPapServlet", " Error creating new default group in the database");
-				if(addNewGroup != null){
-					addNewGroup.rollbackTransaction();
-				}
-			}
+            if (((org.onap.policy.xacml.std.pap.StdEngine) papEngine).wasDefaultGroupJustAdded) {
+                try {
+                    addNewGroup = policyDBDao.getNewTransaction();
+                    OnapPDPGroup group = papEngine.getDefaultGroup();
+                    addNewGroup.createGroup(group.getId(), group.getName(), group.getDescription(),
+                            "automaticallyAdded");
+                    addNewGroup.commitTransaction();
+                    addNewGroup = policyDBDao.getNewTransaction();
+                    addNewGroup.changeDefaultGroup(group, "automaticallyAdded");
+                    addNewGroup.commitTransaction();
+                } catch (Exception e) {
+                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "XACMLPapServlet",
+                            " Error creating new default group in the database");
+                    if (addNewGroup != null) {
+                        addNewGroup.rollbackTransaction();
+                    }
+                }
+            }
 			policyDBDao.setPapEngine((PAPPolicyEngine) XACMLPapServlet.papEngine);
     		if (Boolean.parseBoolean(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_RUN_AUDIT_FLAG))){
     			//get an AuditTransaction to lock out all other transactions
@@ -564,7 +566,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					try {
 						pdpTransaction.addPdpToGroup(id, XACMLPapServlet.papEngine.getDefaultGroup().getId(), id, "Registered on first startup", Integer.parseInt(jmxport), "PDP autoregister");
 						XACMLPapServlet.papEngine.newPDP(id, XACMLPapServlet.papEngine.getDefaultGroup(), id, "Registered on first startup", Integer.parseInt(jmxport));
-					} catch (NullPointerException | PAPException | IllegalArgumentException | IllegalStateException | PersistenceException e) {
+					} catch (NullPointerException | PAPException | IllegalArgumentException | IllegalStateException | PersistenceException | PolicyDBException e) {
 						pdpTransaction.rollbackTransaction();
 						String message = "Failed to create new PDP for id: " + id;
 						PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " " + message);
@@ -575,7 +577,11 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						return;
 					}
 					// get the PDP we just created
-					pdp = XACMLPapServlet.papEngine.getPDP(id);
+		            try{
+		                pdp = XACMLPapServlet.papEngine.getPDP(id);
+		            }catch(PAPException e){
+		                LOGGER.error(e);
+		            }
 					if (pdp == null) {
 						if(pdpTransaction != null){
 							pdpTransaction.rollbackTransaction();
@@ -604,10 +610,19 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				}
 			}
 			if (jmxport != null && jmxport != ""){
-				((StdPDP) pdp).setJmxPort(Integer.valueOf(jmxport));
+			    try{
+	                ((StdPDP) pdp).setJmxPort(Integer.valueOf(jmxport));
+			    }catch(NumberFormatException e){
+			        LOGGER.error(e);
+			    }
 			}
 			// Get the PDP's Group
-			OnapPDPGroup group = XACMLPapServlet.papEngine.getPDPGroup((OnapPDP) pdp);
+			OnapPDPGroup group =null;
+			try{
+	            group= XACMLPapServlet.papEngine.getPDPGroup((OnapPDP) pdp);
+			}catch(PAPException e){
+			    LOGGER.error(e);
+			}
 			if (group == null) {
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW + " PDP not associated with any group, even the default");
 				loggingContext.transactionEnded();
@@ -622,7 +637,11 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			Properties pipconfig = group.getPipConfigProperties();
 			// Get the current policy/pip configuration that the PDP has
 			Properties pdpProperties = new Properties();
-			pdpProperties.load(request.getInputStream());
+			try{
+	            pdpProperties.load(request.getInputStream());
+			}catch(IOException e){
+			    LOGGER.error(e);
+			}
 			LOGGER.info("PDP Current Properties: " + pdpProperties.toString());
 			LOGGER.info("Policies: " + (policies != null ? policies.toString() : "null"));
 			LOGGER.info("Pip config: " + (pipconfig != null ? pipconfig.toString() : "null"));
@@ -637,19 +656,35 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					// retrieve them.
 					this.populatePolicyURL(request.getRequestURL(), policies);
 					// Copy the properties to the output stream
-					policies.store(response.getOutputStream(), "");
+					try{
+					    policies.store(response.getOutputStream(), "");
+					}catch(IOException e){
+		                LOGGER.error(e);
+		            }
 				}
 				if (pipconfig != null) {
 					// Copy the properties to the output stream
-					pipconfig.store(response.getOutputStream(), "");
+					try{
+					    pipconfig.store(response.getOutputStream(), "");
+					}catch(IOException e){
+		                LOGGER.error(e);
+		            }
 				}
 				// We are good - and we are sending them information
 				response.setStatus(HttpServletResponse.SC_OK);
-				setPDPSummaryStatus(pdp, PDPStatus.Status.OUT_OF_SYNCH);
+				try{
+				    setPDPSummaryStatus(pdp, PDPStatus.Status.OUT_OF_SYNCH);
+				}catch(PAPException e){
+	                LOGGER.error(e);
+	            }
 			} else {
 				// Tell them they are good
 				response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-				setPDPSummaryStatus(pdp, PDPStatus.Status.UP_TO_DATE);
+				try{
+				    setPDPSummaryStatus(pdp, PDPStatus.Status.UP_TO_DATE);
+				}catch(PAPException e){
+	                LOGGER.error(e);
+	            }
 			}
 			// tell the AC that something changed
 			notifyAC();
@@ -769,12 +804,16 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			String id = this.getPDPID(request);
 			LOGGER.info("doGet from: " + id);
 			// Get the PDP Object
-			OnapPDP pdp = XACMLPapServlet.papEngine.getPDP(id);
+			OnapPDP pdp = null;
+			try{
+			    pdp = XACMLPapServlet.papEngine.getPDP(id);
+			}catch(PAPException e){
+			    LOGGER.error(e);
+			}
 			// Is it known?
 			if (pdp == null) {
 				// Check if request came from localhost
 				if (request.getRemoteHost().equals("localhost") ||
-						request.getRemoteHost().equals(localIp) ||
 						request.getRemoteHost().equals(request.getLocalAddr())) {
 					// Return status information - basically all the groups
 					loggingContext.setServiceName("PAP.getGroups");
@@ -1845,6 +1884,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				} catch(Exception e){
 					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW + " Error while updating group in the database: "
 							+"group="+group.getId());
+					LOGGER.error(e);
 					throw new PAPException(e.getMessage());
 				}
 				
@@ -1899,7 +1939,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			try{
 				policyToDelete = URLDecoder.decode(policyToDelete,"UTF-8");
 			} catch(UnsupportedEncodingException e){
-				PolicyLogger.error("Unsupported URL encoding of policyToDelete (UTF-8");
+				LOGGER.error("Unsupported URL encoding of policyToDelete (UTF-8", e);
 				setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"policyToDelete encoding not supported");
 				return;
 			}
@@ -1945,7 +1985,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				try{
 					removePdpOrGroupTransaction.removePdpFromGroup(pdp.getId(),"XACMLPapServlet.doACDelete");
 				} catch(Exception e){
-					throw new PAPException();
+					throw new PAPException(e);
 				}
 				papEngine.removePDP((OnapPDP) pdp);
 				// adjust the status of the group, which may have changed when we removed this PDP
@@ -2215,7 +2255,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			groups = papEngine.getOnapPDPGroups();
 		} catch (PAPException e) {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "XACMLPapServlet", " getPDPGroups failed");
-			throw new RuntimeException(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get Groups: " + e);
+			throw new IllegalAccessError(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get Groups: " + e);
 		}
 		for (OnapPDPGroup group : groups) {
 			groupChanged(group);
@@ -2463,7 +2503,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			}
 			String message = "GET:/pap/test called and PAP " + papResourceName + " has had a subsystem failure."
 					+ " Exception Message: " + eMsg;
-			LOGGER.info(message);
+			LOGGER.info(message, e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
@@ -2514,7 +2554,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				try {
 					Files.createDirectories(webappsPathConfig);
 				} catch (IOException e) {
-					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " Failed to create config directory: "
+					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", "Failed to create config directory: "
 							+ webappsPathConfig.toAbsolutePath().toString());
 				}
 			}
@@ -2522,7 +2562,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				try {
 					Files.createDirectories(webappsPathAction);
 				} catch (IOException e) {
-					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create config directory: "
+					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to create action directory: "
 							+ webappsPathAction.toAbsolutePath().toString(), e);
 				}
 			}

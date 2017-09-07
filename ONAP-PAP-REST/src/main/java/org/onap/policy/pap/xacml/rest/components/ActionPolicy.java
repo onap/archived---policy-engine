@@ -57,6 +57,9 @@ import org.onap.policy.rest.jpa.ActionPolicyDict;
 import org.onap.policy.rest.jpa.Datatype;
 import org.onap.policy.rest.jpa.FunctionDefinition;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
+
+import com.att.research.xacml.api.pap.PAPException;
+
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger; 
@@ -94,7 +97,7 @@ public class ActionPolicy extends Policy {
 	protected Map<String, String> dropDownMap = new HashMap<>();
 	
 	private static boolean isAttribute = false;
-	private static synchronized boolean getAttribute () {
+	private synchronized static boolean getAttribute () {
 		return isAttribute;
 
 	}
@@ -111,7 +114,7 @@ public class ActionPolicy extends Policy {
 	}
 	
 	@Override
-	public Map<String, String> savePolicies() throws Exception {
+	public Map<String, String> savePolicies() throws PAPException {
 		
 		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
@@ -139,7 +142,7 @@ public class ActionPolicy extends Policy {
 	//This is the method for preparing the policy for saving.  We have broken it out
 	//separately because the fully configured policy is used for multiple things
 	@Override
-	public boolean prepareToSave() throws Exception{
+	public boolean prepareToSave() throws PAPException{
 
 		if(isPreparedToSave()){
 			//we have already done this

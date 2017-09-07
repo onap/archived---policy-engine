@@ -35,7 +35,7 @@ public class RemoveGroupPolicy {
 	//Container from where we are fetching the policies
 	private static PDPPolicyContainer policyContainer;
 		
-	private final RemoveGroupPolicy self = this;
+	private RemoveGroupPolicy self = this;
 	private StdPDPGroup updatedObject;
 	private final StdPDPGroup group;
 	private boolean isSaved = false;
@@ -51,8 +51,7 @@ public class RemoveGroupPolicy {
 		if (this.group == null) {
 			return;
 		}
-
-		RemoveGroupPolicy.policyContainer = new PDPPolicyContainer(group);
+		setRemoveGroupPolicy(new PDPPolicyContainer(group));
 
 		RemoveGroupPolicy.policyContainer.removeItem(policy);
 									
@@ -62,13 +61,16 @@ public class RemoveGroupPolicy {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
+	private static void setRemoveGroupPolicy(PDPPolicyContainer pdpPolicyContainer) {
+        RemoveGroupPolicy.policyContainer = pdpPolicyContainer;
+    }
+
+    @SuppressWarnings("unchecked")
 	protected void doSave() {
 		if (this.group == null) {
 			return;
 		}
 		
-		//StdPDPGroup pdpGroup = (StdPDPGroup) group;
 		StdPDPGroup updatedGroupObject = new StdPDPGroup(
 				group.getId(), 
 				group.isDefaultGroup(), 

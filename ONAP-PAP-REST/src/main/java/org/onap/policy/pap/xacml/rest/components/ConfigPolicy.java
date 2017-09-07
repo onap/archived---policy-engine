@@ -63,6 +63,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
+import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.IdentifierImpl;
 
 public class ConfigPolicy extends Policy {
@@ -231,7 +232,7 @@ public class ConfigPolicy extends Policy {
 	}
 
 	@Override
-	public Map<String, String> savePolicies() throws Exception {
+	public Map<String, String> savePolicies() throws PAPException {
 		
 		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
@@ -254,7 +255,7 @@ public class ConfigPolicy extends Policy {
 	//This is the method for preparing the policy for saving.  We have broken it out
 	//separately because the fully configured policy is used for multiple things
 	@Override
-	public boolean prepareToSave() throws Exception{
+	public boolean prepareToSave() throws PAPException{
 
 		if(isPreparedToSave()){
 			return true;

@@ -626,6 +626,9 @@ public class BRMSPush {
 
     // Additional Check due to Limitations from Nexus API to check if the artifact is the latest.
     private NexusArtifact additionalNexusLatestCheck(String selectedName, NexusArtifact result) {
+        if(result==null){
+            return result;
+        }
         String nextVersion = incrementVersion(result.getVersion());
         List<NexusArtifact> artifact = getArtifactFromNexus(selectedName, nextVersion);
         return artifact.isEmpty() ? result : additionalNexusLatestCheck(selectedName, artifact.get(0));
