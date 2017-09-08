@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
