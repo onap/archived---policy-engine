@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_b3083b92",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/ActionPolicyTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-08T12:47:09Z",
+      "side": 1,
+      "message": "I know its a junit, but I think sonar will flag not logging the exception.",
+      "range": {
+        "startLine": 120,
+        "startChar": 3,
+        "endLine": 120,
+        "endChar": 23
+      },
+      "revId": "d5974f2924dff425ff531ca79400667d662425f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_7302d370",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/ActionPolicyTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-08T12:47:09Z",
+      "side": 1,
+      "message": "same as above",
+      "range": {
+        "startLine": 136,
+        "startChar": 3,
+        "endLine": 136,
+        "endChar": 23
+      },
+      "revId": "d5974f2924dff425ff531ca79400667d662425f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_53f90f7f",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/DecisionPolicyTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-08T12:47:09Z",
+      "side": 1,
+      "message": "log exception",
+      "range": {
+        "startLine": 150,
+        "startChar": 3,
+        "endLine": 150,
+        "endChar": 22
+      },
+      "revId": "d5974f2924dff425ff531ca79400667d662425f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_33f44b86",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/DecisionPolicyTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-08T12:47:09Z",
+      "side": 1,
+      "message": "log exception",
+      "range": {
+        "startLine": 168,
+        "startChar": 3,
+        "endLine": 168,
+        "endChar": 22
+      },
+      "revId": "d5974f2924dff425ff531ca79400667d662425f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_d32cdf04",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/FirewallConfigPolicyTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-08T12:47:09Z",
+      "side": 1,
+      "message": "log exception",
+      "range": {
+        "startLine": 106,
+        "startChar": 3,
+        "endLine": 106,
+        "endChar": 22
+      },
+      "revId": "d5974f2924dff425ff531ca79400667d662425f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_93365751",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/components/FirewallConfigPolicyTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-08T12:47:09Z",
+      "side": 1,
+      "message": "log exception",
+      "range": {
+        "startLine": 122,
+        "startChar": 3,
+        "endLine": 122,
+        "endChar": 23
+      },
+      "revId": "d5974f2924dff425ff531ca79400667d662425f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_333b2b3a",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DecisionPolicyDictionaryControllerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-08T12:47:09Z",
+      "side": 1,
+      "message": "Let\u0027s just be safe and add logging exceptions in this also.",
+      "revId": "d5974f2924dff425ff531ca79400667d662425f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
