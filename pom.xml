@@ -13,7 +13,7 @@
 	<artifactId>PolicyEngineSuite</artifactId>
 	<version>1.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Policy Engine - Policy Engine Suite</name>
+	<name>policy-engine</name>
 
 	<description>The ONAP Policy Engine main pom</description>
 
