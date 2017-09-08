@@ -53,6 +53,7 @@ import javax.persistence.PersistenceException;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -333,6 +334,14 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	private static void startInitiateThreadService(Thread thread) {
 	    initiateThread = thread;
         initiateThread.start();
+    }
+
+    private static void mapperWriteValue(ObjectMapper mapper,  ServletOutputStream out, Object value) {
+        try {
+            mapper.writeValue(out, value);
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
     }
 
     private static void startHeartBeatService(Heartbeat heartbeat) {
@@ -780,8 +789,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					loggingContext.setServiceName("PAP.getGroups");
 					Set<OnapPDPGroup> groups = papEngine.getOnapPDPGroups();
 					// convert response object to JSON and include in the response
-					ObjectMapper mapper = new ObjectMapper();
-					mapper.writeValue(response.getOutputStream(),  groups);
+					mapperWriteValue(new ObjectMapper(), response.getOutputStream(),  groups);
 					response.setHeader("content-type", "application/json");
 					response.setStatus(HttpServletResponse.SC_OK);
 					loggingContext.transactionEnded();
@@ -1566,8 +1574,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					loggingContext.setServiceName("AC:PAP.getDefaultGroup");
 					OnapPDPGroup group = papEngine.getDefaultGroup();
 					// convert response object to JSON and include in the response
-					ObjectMapper mapper = new ObjectMapper();
-					mapper.writeValue(response.getOutputStream(),  group);
+					mapperWriteValue(new ObjectMapper(), response.getOutputStream(),  group);
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("GET Default group req from '" + request.getRequestURL() + "'");
 					}
@@ -1585,8 +1592,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						loggingContext.setServiceName("AC:PAP.getPDP");
 						OnapPDP pdp = papEngine.getPDP(pdpId);
 						// convert response object to JSON and include in the response
-						ObjectMapper mapper = new ObjectMapper();
-						mapper.writeValue(response.getOutputStream(),  pdp);
+						mapperWriteValue(new ObjectMapper(), response.getOutputStream(),  pdp);
 						if (LOGGER.isDebugEnabled()) {
 							LOGGER.debug("GET pdp '" + pdpId + "' req from '" + request.getRequestURL() + "'");
 						}
@@ -1603,8 +1609,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						OnapPDP pdp = papEngine.getPDP(pdpId);
 						OnapPDPGroup group = papEngine.getPDPGroup((OnapPDP) pdp);
 						// convert response object to JSON and include in the response
-						ObjectMapper mapper = new ObjectMapper();
-						mapper.writeValue(response.getOutputStream(),  group);
+						mapperWriteValue(new ObjectMapper(), response.getOutputStream(),  group);
 						if (LOGGER.isDebugEnabled()) {
 							LOGGER.debug("GET PDP '" + pdpId + "' Group req from '" + request.getRequestURL() + "'");
 						}
@@ -1621,8 +1626,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					loggingContext.setServiceName("AC:PAP.getAllGroups");
 					Set<OnapPDPGroup> groups = papEngine.getOnapPDPGroups();
 					// convert response object to JSON and include in the response
-					ObjectMapper mapper = new ObjectMapper();
-					mapper.writeValue(response.getOutputStream(),  groups);
+					mapperWriteValue(new ObjectMapper(), response.getOutputStream(),  groups);
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("GET All groups req");
 					}
@@ -1660,8 +1664,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				// No other parameters, so return the identified Group
 				loggingContext.setServiceName("AC:PAP.getGroup");
 				// convert response object to JSON and include in the response
-				ObjectMapper mapper = new ObjectMapper();
-				mapper.writeValue(response.getOutputStream(),  group);
+				mapperWriteValue(new ObjectMapper(), response.getOutputStream(),  group);
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("GET group '" + group.getId() + "' req from '" + request.getRequestURL() + "'");
 				}
