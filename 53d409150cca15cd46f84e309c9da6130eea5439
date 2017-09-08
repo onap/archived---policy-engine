@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_b364bb49",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 793,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-09-08T13:14:31Z",
+      "side": 1,
+      "message": "I think its better we change these two lines into single line as ObjectMapper mapper \u003d mapperWriteValue(new ObjectMapper(),..",
+      "range": {
+        "startLine": 792,
+        "startChar": 5,
+        "endLine": 793,
+        "endChar": 67
+      },
+      "revId": "53d409150cca15cd46f84e309c9da6130eea5439",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
