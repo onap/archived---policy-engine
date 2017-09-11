@@ -347,8 +347,7 @@ public class ActionPolicy extends Policy {
 		}
 
 		String headerVal = policyAdapter.getActionDictHeader();
-		if(headerVal != null){
-			if(headerVal != null && !headerVal.equals("")){
+		if(headerVal != null && !headerVal.equals("")){
 				// parse it on : to get number of headers
 				String[] result = headerVal.split(":");
 				for (String eachString : result){
@@ -356,8 +355,6 @@ public class ActionPolicy extends Policy {
 					String[] textFieldVals = eachString.split("=");
 					obligation.getAttributeAssignmentExpression().add(addDynamicHeaders(textFieldVals[0], textFieldVals[1]));
 				}
-			}
-
 		}
 			
 		obligations.getObligationExpression().add(obligation);
