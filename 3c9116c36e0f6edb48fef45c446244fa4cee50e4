@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_2dde1f40",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-11T16:43:49Z",
+      "side": 1,
+      "message": "Swap this around to avoid sonar.\n\"content\".equalsIgnoreCase(key)",
+      "range": {
+        "startLine": 274,
+        "startChar": 7,
+        "endLine": 274,
+        "endChar": 38
+      },
+      "revId": "3c9116c36e0f6edb48fef45c446244fa4cee50e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
