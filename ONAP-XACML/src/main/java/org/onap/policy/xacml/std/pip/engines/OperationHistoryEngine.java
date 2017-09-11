@@ -32,9 +32,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 
 import com.att.research.xacml.api.Attribute;
 import com.att.research.xacml.api.AttributeValue;
@@ -64,7 +64,7 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 	public static final String DEFAULT_DESCRIPTION		= "PIP for retrieving Operations History from DB";
 	public static final String DEFAULT_ISSUER			= "org:onap:xacml:guard:historydb";
 	
-	private static final Log LOGGER= LogFactory.getLog(OperationHistoryEngine.class);
+	private static final Logger LOGGER= FlexLogger.getLogger(OperationHistoryEngine.class);
 	
 	private static final PIPRequest PIP_REQUEST_ACTOR	= new StdPIPRequest(
 			XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 

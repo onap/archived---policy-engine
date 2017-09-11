@@ -62,452 +62,455 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger; 
 
 public class ActionPolicy extends Policy {
-	
-	/**
-	 * ActionPolicy Fields
-	 */
-	private static final Logger LOGGER = FlexLogger.getLogger(ActionPolicy.class);
-	
-	public static final String JSON_CONFIG = "JSON";
-	
-	public static final String PDP_ACTION = "PDP";
-	public static final String PEP_ACTION = "PEP";
-	public static final String TYPE_ACTION = "REST";
+    
+    /**
+     * ActionPolicy Fields
+     */
+    private static final Logger LOGGER = FlexLogger.getLogger(ActionPolicy.class);
+    
+    public static final String JSON_CONFIG = "JSON";
+    
+    public static final String PDP_ACTION = "PDP";
+    public static final String PEP_ACTION = "PEP";
+    public static final String TYPE_ACTION = "REST";
 
-	public static final String GET_METHOD = "GET";
-	public static final String PUT_METHOD = "PUT";
-	public static final String POST_METHOD = "POST";
+    public static final String GET_METHOD = "GET";
+    public static final String PUT_METHOD = "PUT";
+    public static final String POST_METHOD = "POST";
 
-	public static final String PERFORMER_ATTRIBUTEID = "performer";
-	public static final String TYPE_ATTRIBUTEID = "type";
-	public static final String METHOD_ATTRIBUTEID = "method";
-	public static final String HEADERS_ATTRIBUTEID = "headers";
-	public static final String URL_ATTRIBUTEID = "url";
-	public static final String BODY_ATTRIBUTEID = "body";
-	
-	List<String> dynamicLabelRuleAlgorithms = new LinkedList<>();
-	List<String> dynamicFieldFunctionRuleAlgorithms = new LinkedList<>();
-	List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<>();
-	List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<>();
-	
-	protected Map<String, String> dropDownMap = new HashMap<>();
-	
-	private static boolean isAttribute = false;
-	private synchronized static boolean getAttribute () {
-		return isAttribute;
+    public static final String PERFORMER_ATTRIBUTEID = "performer";
+    public static final String TYPE_ATTRIBUTEID = "type";
+    public static final String METHOD_ATTRIBUTEID = "method";
+    public static final String HEADERS_ATTRIBUTEID = "headers";
+    public static final String URL_ATTRIBUTEID = "url";
+    public static final String BODY_ATTRIBUTEID = "body";
+    
+    List<String> dynamicLabelRuleAlgorithms = new LinkedList<>();
+    List<String> dynamicFieldFunctionRuleAlgorithms = new LinkedList<>();
+    List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<>();
+    List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<>();
+    
+    protected Map<String, String> dropDownMap = new HashMap<>();
+    
+    private static boolean isAttribute = false;
+    private synchronized static boolean getAttribute () {
+        return isAttribute;
 
-	}
-	
-	public ActionPolicy() {
-		super();
-	}
-	
-	public ActionPolicy(PolicyRestAdapter policyAdapter){
-		this.policyAdapter = policyAdapter;
-	}
-	
-	@Override
-	public Map<String, String> savePolicies() throws PAPException {
-		
-		Map<String, String> successMap = new HashMap<>();
-		if(isPolicyExists()){
-			successMap.put("EXISTS", "This Policy already exist on the PAP");
-			return successMap;
-		}
-		
-		if(!ActionPolicy.getAttribute()) {
-			successMap.put("invalidAttribute", "Action Attrbute was not in the database.");
-			return successMap;
-		}
-		
-		if(!isPreparedToSave()){
-			//Prep and configure the policy for saving
-			prepareToSave();
-		}
+    }
+    
+    public ActionPolicy() {
+        super();
+    }
+    
+    public ActionPolicy(PolicyRestAdapter policyAdapter){
+        this.policyAdapter = policyAdapter;
+    }
+    
+    @Override
+    public Map<String, String> savePolicies() throws PAPException {
+        
+        Map<String, String> successMap = new HashMap<>();
+        if(isPolicyExists()){
+            successMap.put("EXISTS", "This Policy already exist on the PAP");
+            return successMap;
+        }
+        
+        if(!ActionPolicy.getAttribute()) {
+            successMap.put("invalidAttribute", "Action Attrbute was not in the database.");
+            return successMap;
+        }
+        
+        if(!isPreparedToSave()){
+            //Prep and configure the policy for saving
+            prepareToSave();
+        }
 
-		// Until here we prepared the data and here calling the method to create xml.
-		Path newPolicyPath = null;
-		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
-		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject() );		
-		return successMap;		
-	}
-	
-	//This is the method for preparing the policy for saving.  We have broken it out
-	//separately because the fully configured policy is used for multiple things
-	@Override
-	public boolean prepareToSave() throws PAPException{
+        // Until here we prepared the data and here calling the method to create xml.
+        Path newPolicyPath = null;
+        newPolicyPath = Paths.get(policyAdapter.getNewFileName());
+        successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject() );     
+        return successMap;      
+    }
+    
+    //This is the method for preparing the policy for saving.  We have broken it out
+    //separately because the fully configured policy is used for multiple things
+    @Override
+    public boolean prepareToSave() throws PAPException{
 
-		if(isPreparedToSave()){
-			//we have already done this
-			return true;
-		}
-		
-		int version = 0;
-		String policyID = policyAdapter.getPolicyID();
-		version = policyAdapter.getHighestVersion();
-		
-		// Create the Instance for pojo, PolicyType object is used in marshalling.
-		if (policyAdapter.getPolicyType().equals("Action")) {
-			PolicyType policyConfig = new PolicyType();
+        if(isPreparedToSave()){
+            //we have already done this
+            return true;
+        }
+        
+        int version = 0;
+        String policyID = policyAdapter.getPolicyID();
+        version = policyAdapter.getHighestVersion();
+        
+        // Create the Instance for pojo, PolicyType object is used in marshalling.
+        if (policyAdapter.getPolicyType().equals("Action")) {
+            PolicyType policyConfig = new PolicyType();
 
-			policyConfig.setVersion(Integer.toString(version));
-			policyConfig.setPolicyId(policyID);
-			policyConfig.setTarget(new TargetType());
-			policyAdapter.setData(policyConfig);
-		}
-		
-		policyName = policyAdapter.getNewFileName();
-		
-		if (policyAdapter.getData() != null) {
-			// Action body is optional so checking value provided or not
-			String comboDictValue = policyAdapter.getActionAttribute();
-	        String actionBody = policyAdapter.getActionBody();
-	        isAttribute = false;
+            policyConfig.setVersion(Integer.toString(version));
+            policyConfig.setPolicyId(policyID);
+            policyConfig.setTarget(new TargetType());
+            policyAdapter.setData(policyConfig);
+        }
+        
+        policyName = policyAdapter.getNewFileName();
+        
+        if (policyAdapter.getData() != null) {
+            // Action body is optional so checking value provided or not
+            String comboDictValue = policyAdapter.getActionAttribute();
+            String actionBody = policyAdapter.getActionBody();
+            setAttribute(false);
 
-	        //if actionBody is null or empty then we know the ActionAttribute in the request does not exist in the dictionary
-			if(!(actionBody==null || "".equals(actionBody))){	
-				saveActionBody(policyName, actionBody);
-				isAttribute = true;
-			} else {
-				if(!getAttribute()){
-					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Could not find " + comboDictValue + " in the ActionPolicyDict table.");
-					return false;
-				}
-			}
-			
-			PolicyType actionPolicy = (PolicyType) policyAdapter.getData();
-			actionPolicy.setDescription(policyAdapter.getPolicyDescription());
-			actionPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
+            //if actionBody is null or empty then we know the ActionAttribute in the request does not exist in the dictionary
+            if(!(actionBody==null || "".equals(actionBody))){   
+                saveActionBody(policyName, actionBody);
+                setAttribute(true);
+            } else {
+                if(!getAttribute()){
+                    LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Could not find " + comboDictValue + " in the ActionPolicyDict table.");
+                    return false;
+                }
+            }
+            
+            PolicyType actionPolicy = (PolicyType) policyAdapter.getData();
+            actionPolicy.setDescription(policyAdapter.getPolicyDescription());
+            actionPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
 
-			AllOfType allOf = new AllOfType();
-			
-			Map<String, String> dynamicFieldComponentAttributes = policyAdapter.getDynamicFieldConfigAttributes();
-			
-			// If there is any dynamic field attributes create the matches here
-			for (String keyField : dynamicFieldComponentAttributes.keySet()) {
-				String key = keyField;
-				String value = dynamicFieldComponentAttributes.get(key);
-				MatchType dynamicMatch = createDynamicMatch(key, value);
-				allOf.getMatch().add(dynamicMatch);
-			}
+            AllOfType allOf = new AllOfType();
+            
+            Map<String, String> dynamicFieldComponentAttributes = policyAdapter.getDynamicFieldConfigAttributes();
+            
+            // If there is any dynamic field attributes create the matches here
+            for (String keyField : dynamicFieldComponentAttributes.keySet()) {
+                String key = keyField;
+                String value = dynamicFieldComponentAttributes.get(key);
+                MatchType dynamicMatch = createDynamicMatch(key, value);
+                allOf.getMatch().add(dynamicMatch);
+            }
 
-			AnyOfType anyOf = new AnyOfType();
-			anyOf.getAllOf().add(allOf);
+            AnyOfType anyOf = new AnyOfType();
+            anyOf.getAllOf().add(allOf);
 
-			TargetType target = new TargetType();
-			target.getAnyOf().add(anyOf);
-			
-			// Adding the target to the policy element
-			actionPolicy.setTarget(target);
-			
-			RuleType rule = new RuleType();
-			rule.setRuleId(policyAdapter.getRuleID());
+            TargetType target = new TargetType();
+            target.getAnyOf().add(anyOf);
+            
+            // Adding the target to the policy element
+            actionPolicy.setTarget(target);
+            
+            RuleType rule = new RuleType();
+            rule.setRuleId(policyAdapter.getRuleID());
 
-			rule.setEffect(EffectType.PERMIT);
-			rule.setTarget(new TargetType());
-			
-			dynamicLabelRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmLabels();
-			dynamicFieldFunctionRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmCombo();
-			dynamicFieldOneRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField1();
-			dynamicFieldTwoRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField2();
-			//dropDownMap = policyAdapter.getDropDownMap();
-			dropDownMap = createDropDownMap();
-						
-			// Rule attributes are optional and dynamic so check and add them to condition.
-			if (dynamicLabelRuleAlgorithms != null && dynamicLabelRuleAlgorithms.size() > 0) {
-				boolean isCompound = false;
-				ConditionType condition = new ConditionType();
-				int index = dynamicFieldOneRuleAlgorithms.size() - 1;
+            rule.setEffect(EffectType.PERMIT);
+            rule.setTarget(new TargetType());
+            
+            dynamicLabelRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmLabels();
+            dynamicFieldFunctionRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmCombo();
+            dynamicFieldOneRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField1();
+            dynamicFieldTwoRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField2();
+            dropDownMap = createDropDownMap();
+                        
+            // Rule attributes are optional and dynamic so check and add them to condition.
+            if (dynamicLabelRuleAlgorithms != null && dynamicLabelRuleAlgorithms.size() > 0) {
+                boolean isCompound = false;
+                ConditionType condition = new ConditionType();
+                int index = dynamicFieldOneRuleAlgorithms.size() - 1;
 
-				for (String labelAttr : dynamicLabelRuleAlgorithms) {
-					// if the rule algorithm as a label means it is a compound
-					if (dynamicFieldOneRuleAlgorithms.get(index).toString().equals(labelAttr)) {
-						ApplyType actionApply = new ApplyType();
+                for (String labelAttr : dynamicLabelRuleAlgorithms) {
+                    // if the rule algorithm as a label means it is a compound
+                    if (dynamicFieldOneRuleAlgorithms.get(index).toString().equals(labelAttr)) {
+                        ApplyType actionApply = new ApplyType();
 
-						String selectedFunction = (String) dynamicFieldFunctionRuleAlgorithms.get(index).toString();
-						String value1 = (String) dynamicFieldOneRuleAlgorithms.get(index).toString();
-						String value2 = dynamicFieldTwoRuleAlgorithms.get(index).toString();
-						actionApply.setFunctionId(dropDownMap.get(selectedFunction));
-						actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value1)));
-						actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value2)));
-						condition.setExpression(new ObjectFactory().createApply(actionApply));
-						isCompound = true;
-					}
-				}
-				// if rule algorithm not a compound
-				if (!isCompound) {
-					condition.setExpression(new ObjectFactory().createApply(getInnerActionApply(dynamicLabelRuleAlgorithms.get(index).toString())));
-				}
-				rule.setCondition(condition);
-			}
-			// set the obligations to rule
-			rule.setObligationExpressions(getObligationExpressions());
-			actionPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
-			policyAdapter.setPolicyData(actionPolicy);
-		}  else {
-			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
-		}	
+                        String selectedFunction = (String) dynamicFieldFunctionRuleAlgorithms.get(index).toString();
+                        String value1 = (String) dynamicFieldOneRuleAlgorithms.get(index).toString();
+                        String value2 = dynamicFieldTwoRuleAlgorithms.get(index).toString();
+                        actionApply.setFunctionId(dropDownMap.get(selectedFunction));
+                        actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value1)));
+                        actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value2)));
+                        condition.setExpression(new ObjectFactory().createApply(actionApply));
+                        isCompound = true;
+                    }
+                }
+                // if rule algorithm not a compound
+                if (!isCompound) {
+                    condition.setExpression(new ObjectFactory().createApply(getInnerActionApply(dynamicLabelRuleAlgorithms.get(index).toString())));
+                }
+                rule.setCondition(condition);
+            }
+            // set the obligations to rule
+            rule.setObligationExpressions(getObligationExpressions());
+            actionPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
+            policyAdapter.setPolicyData(actionPolicy);
+        }  else {
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
+        }   
 
-		setPreparedToSave(true);
-		return true;
-	}
-	
-	// Saving the json Configurations file if exists at server location for action policy.
-	private void saveActionBody(String policyName, String actionBodyData) {
-		try {
-			if(policyName.endsWith(".xml")){
-				policyName = policyName.replace(".xml", "");
-			}
-			File file = new File(ACTION_HOME+ File.separator + policyName + ".json");
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(actionBodyData);
-			bw.close();
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("Action Body is succesfully saved at " + file.getAbsolutePath());
-			}
-		} catch (IOException e) {
-			LOGGER.error("Exception Occured"+e);
-		}
-	}
-	
-	// Data required for obligation part is setting here.
-	private ObligationExpressionsType getObligationExpressions() {
-		ObligationExpressionsType obligations = new ObligationExpressionsType();
+        setPreparedToSave(true);
+        return true;
+    }
+    
+    private static synchronized void setAttribute(boolean b) {
+        isAttribute = b;
+    }
 
-		ObligationExpressionType obligation = new ObligationExpressionType();
+    // Saving the json Configurations file if exists at server location for action policy.
+    private void saveActionBody(String policyName, String actionBodyData) {
+        try {
+            if(policyName.endsWith(".xml")){
+                policyName = policyName.replace(".xml", "");
+            }
+            File file = new File(ACTION_HOME+ File.separator + policyName + ".json");
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(actionBodyData);
+            bw.close();
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Action Body is succesfully saved at " + file.getAbsolutePath());
+            }
+        } catch (IOException e) {
+            LOGGER.error("Exception Occured"+e);
+        }
+    }
+    
+    // Data required for obligation part is setting here.
+    private ObligationExpressionsType getObligationExpressions() {
+        ObligationExpressionsType obligations = new ObligationExpressionsType();
+
+        ObligationExpressionType obligation = new ObligationExpressionType();
         String comboDictValue = policyAdapter.getActionAttribute();
-		obligation.setObligationId(comboDictValue);
-		obligation.setFulfillOn(EffectType.PERMIT);
+        obligation.setObligationId(comboDictValue);
+        obligation.setFulfillOn(EffectType.PERMIT);
 
-		// Add Action Assignment:
-		AttributeAssignmentExpressionType assignment1 = new AttributeAssignmentExpressionType();
-		assignment1.setAttributeId(PERFORMER_ATTRIBUTEID);
-		assignment1.setCategory(CATEGORY_RECIPIENT_SUBJECT);
+        // Add Action Assignment:
+        AttributeAssignmentExpressionType assignment1 = new AttributeAssignmentExpressionType();
+        assignment1.setAttributeId(PERFORMER_ATTRIBUTEID);
+        assignment1.setCategory(CATEGORY_RECIPIENT_SUBJECT);
 
-		AttributeValueType actionNameAttributeValue = new AttributeValueType();
-		actionNameAttributeValue.setDataType(STRING_DATATYPE);
-		actionNameAttributeValue.getContent().add(performer.get(policyAdapter.getActionPerformer()));
+        AttributeValueType actionNameAttributeValue = new AttributeValueType();
+        actionNameAttributeValue.setDataType(STRING_DATATYPE);
+        actionNameAttributeValue.getContent().add(performer.get(policyAdapter.getActionPerformer()));
 
-		assignment1.setExpression(new ObjectFactory().createAttributeValue(actionNameAttributeValue));
-		obligation.getAttributeAssignmentExpression().add(assignment1);
+        assignment1.setExpression(new ObjectFactory().createAttributeValue(actionNameAttributeValue));
+        obligation.getAttributeAssignmentExpression().add(assignment1);
 
-		// Add Type Assignment:
-		AttributeAssignmentExpressionType assignmentType = new AttributeAssignmentExpressionType();
-		assignmentType.setAttributeId(TYPE_ATTRIBUTEID);
-		assignmentType.setCategory(CATEGORY_RESOURCE);
+        // Add Type Assignment:
+        AttributeAssignmentExpressionType assignmentType = new AttributeAssignmentExpressionType();
+        assignmentType.setAttributeId(TYPE_ATTRIBUTEID);
+        assignmentType.setCategory(CATEGORY_RESOURCE);
 
-		AttributeValueType typeAttributeValue = new AttributeValueType();
-		typeAttributeValue.setDataType(STRING_DATATYPE);
-		String actionDictType = policyAdapter.getActionDictType();
-		typeAttributeValue.getContent().add(actionDictType);
+        AttributeValueType typeAttributeValue = new AttributeValueType();
+        typeAttributeValue.setDataType(STRING_DATATYPE);
+        String actionDictType = policyAdapter.getActionDictType();
+        typeAttributeValue.getContent().add(actionDictType);
 
-		assignmentType.setExpression(new ObjectFactory().createAttributeValue(typeAttributeValue));
-		obligation.getAttributeAssignmentExpression().add(assignmentType);
+        assignmentType.setExpression(new ObjectFactory().createAttributeValue(typeAttributeValue));
+        obligation.getAttributeAssignmentExpression().add(assignmentType);
 
-		// Add Rest_URL Assignment:
-		AttributeAssignmentExpressionType assignmentURL = new AttributeAssignmentExpressionType();
-		assignmentURL.setAttributeId(URL_ATTRIBUTEID);
-		assignmentURL.setCategory(CATEGORY_RESOURCE);
+        // Add Rest_URL Assignment:
+        AttributeAssignmentExpressionType assignmentURL = new AttributeAssignmentExpressionType();
+        assignmentURL.setAttributeId(URL_ATTRIBUTEID);
+        assignmentURL.setCategory(CATEGORY_RESOURCE);
 
-		AttributeValueType actionURLAttributeValue = new AttributeValueType();
-		actionURLAttributeValue.setDataType(URI_DATATYPE);
-		String actionDictUrl = policyAdapter.getActionDictUrl();
-		actionURLAttributeValue.getContent().add(actionDictUrl);
+        AttributeValueType actionURLAttributeValue = new AttributeValueType();
+        actionURLAttributeValue.setDataType(URI_DATATYPE);
+        String actionDictUrl = policyAdapter.getActionDictUrl();
+        actionURLAttributeValue.getContent().add(actionDictUrl);
 
-		assignmentURL.setExpression(new ObjectFactory().createAttributeValue(actionURLAttributeValue));
-		obligation.getAttributeAssignmentExpression().add(assignmentURL);
+        assignmentURL.setExpression(new ObjectFactory().createAttributeValue(actionURLAttributeValue));
+        obligation.getAttributeAssignmentExpression().add(assignmentURL);
 
-		// Add Method Assignment:
-		AttributeAssignmentExpressionType assignmentMethod = new AttributeAssignmentExpressionType();
-		assignmentMethod.setAttributeId(METHOD_ATTRIBUTEID);
-		assignmentMethod.setCategory(CATEGORY_RESOURCE);
+        // Add Method Assignment:
+        AttributeAssignmentExpressionType assignmentMethod = new AttributeAssignmentExpressionType();
+        assignmentMethod.setAttributeId(METHOD_ATTRIBUTEID);
+        assignmentMethod.setCategory(CATEGORY_RESOURCE);
 
-		AttributeValueType methodAttributeValue = new AttributeValueType();
-		methodAttributeValue.setDataType(STRING_DATATYPE);
-		String actionDictMethod = policyAdapter.getActionDictMethod();
-		methodAttributeValue.getContent().add(actionDictMethod);
+        AttributeValueType methodAttributeValue = new AttributeValueType();
+        methodAttributeValue.setDataType(STRING_DATATYPE);
+        String actionDictMethod = policyAdapter.getActionDictMethod();
+        methodAttributeValue.getContent().add(actionDictMethod);
 
-		assignmentMethod.setExpression(new ObjectFactory().createAttributeValue(methodAttributeValue));
-		obligation.getAttributeAssignmentExpression().add(assignmentMethod);
+        assignmentMethod.setExpression(new ObjectFactory().createAttributeValue(methodAttributeValue));
+        obligation.getAttributeAssignmentExpression().add(assignmentMethod);
 
-		// Add JSON_URL Assignment:
-		String actionBody = policyAdapter.getActionBody();		
-		if (actionBody != null) {
-			AttributeAssignmentExpressionType assignmentJsonURL = new AttributeAssignmentExpressionType();
-			assignmentJsonURL.setAttributeId(BODY_ATTRIBUTEID);
-			assignmentJsonURL.setCategory(CATEGORY_RESOURCE);
+        // Add JSON_URL Assignment:
+        String actionBody = policyAdapter.getActionBody();      
+        if (actionBody != null) {
+            AttributeAssignmentExpressionType assignmentJsonURL = new AttributeAssignmentExpressionType();
+            assignmentJsonURL.setAttributeId(BODY_ATTRIBUTEID);
+            assignmentJsonURL.setCategory(CATEGORY_RESOURCE);
 
-			AttributeValueType jsonURLAttributeValue = new AttributeValueType();
-			jsonURLAttributeValue.setDataType(URI_DATATYPE);
-			jsonURLAttributeValue.getContent().add(CONFIG_URL + "/Action/"  + policyName + ".json");
+            AttributeValueType jsonURLAttributeValue = new AttributeValueType();
+            jsonURLAttributeValue.setDataType(URI_DATATYPE);
+            jsonURLAttributeValue.getContent().add(CONFIG_URL + "/Action/"  + policyName + ".json");
 
-			assignmentJsonURL.setExpression(new ObjectFactory().createAttributeValue(jsonURLAttributeValue));
-			obligation.getAttributeAssignmentExpression().add(assignmentJsonURL);
-		}
+            assignmentJsonURL.setExpression(new ObjectFactory().createAttributeValue(jsonURLAttributeValue));
+            obligation.getAttributeAssignmentExpression().add(assignmentJsonURL);
+        }
 
-		String headerVal = policyAdapter.getActionDictHeader();
-		if(headerVal != null && !headerVal.equals("")){
-				// parse it on : to get number of headers
-				String[] result = headerVal.split(":");
-				for (String eachString : result){
-					// parse each value on =
-					String[] textFieldVals = eachString.split("=");
-					obligation.getAttributeAssignmentExpression().add(addDynamicHeaders(textFieldVals[0], textFieldVals[1]));
-				}
-		}
-			
-		obligations.getObligationExpression().add(obligation);
-		return obligations;
-	}
+        String headerVal = policyAdapter.getActionDictHeader();
+        if(headerVal != null && !headerVal.trim().equals("")){
+            // parse it on : to get number of headers
+            String[] result = headerVal.split(":");
+            for (String eachString : result){
+                // parse each value on =
+                String[] textFieldVals = eachString.split("=");
+                obligation.getAttributeAssignmentExpression().add(addDynamicHeaders(textFieldVals[0], textFieldVals[1]));
+            }
+        }
+            
+        obligations.getObligationExpression().add(obligation);
+        return obligations;
+    }
 
-	
-	// if compound setting the inner apply here
-	protected ApplyType getInnerActionApply(String value1Label) {
-		ApplyType actionApply = new ApplyType();
-		int index = 0;
-		// check the index for the label.
-		for (String labelAttr : dynamicLabelRuleAlgorithms) {
-			if (labelAttr.equals(value1Label)) {
-				String value1 = dynamicFieldOneRuleAlgorithms.get(index).toString();
-				// check if the row contains label again
-				for (String labelValue : dynamicLabelRuleAlgorithms) {
-					if (labelValue.equals(value1)) {
-						return getCompoundApply(index);
-					}
-				}
+    
+    // if compound setting the inner apply here
+    protected ApplyType getInnerActionApply(String value1Label) {
+        ApplyType actionApply = new ApplyType();
+        int index = 0;
+        // check the index for the label.
+        for (String labelAttr : dynamicLabelRuleAlgorithms) {
+            if (labelAttr.equals(value1Label)) {
+                String value1 = dynamicFieldOneRuleAlgorithms.get(index).toString();
+                // check if the row contains label again
+                for (String labelValue : dynamicLabelRuleAlgorithms) {
+                    if (labelValue.equals(value1)) {
+                        return getCompoundApply(index);
+                    }
+                }
 
-				// Getting the values from the form.
-				String functionKey = dynamicFieldFunctionRuleAlgorithms.get(index).toString();
-				String value2 = dynamicFieldTwoRuleAlgorithms.get(index).toString();
-				actionApply.setFunctionId(dropDownMap.get(functionKey));
-				// if two text field are rule attributes.
-				if ((value1.contains(RULE_VARIABLE)) && (value2.contains(RULE_VARIABLE))) {
-					ApplyType innerActionApply1 = new ApplyType();
-					ApplyType innerActionApply2 = new ApplyType();
-					AttributeDesignatorType attributeDesignator1 = new AttributeDesignatorType();
-					AttributeDesignatorType attributeDesignator2 = new AttributeDesignatorType();
-					// If selected function is Integer function set integer functionID
-					if (functionKey.toLowerCase().contains("integer")) {
-						innerActionApply1.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
-						innerActionApply2.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
-						attributeDesignator1.setDataType(INTEGER_DATATYPE);
-						attributeDesignator2.setDataType(INTEGER_DATATYPE);
-					} else {
-						// If selected function is not a Integer function
-						// set String functionID
-						innerActionApply1.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
-						innerActionApply2.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
-						attributeDesignator1.setDataType(STRING_DATATYPE);
-						attributeDesignator2.setDataType(STRING_DATATYPE);
-					}
-					attributeDesignator1.setCategory(CATEGORY_RESOURCE);
-					attributeDesignator2.setCategory(CATEGORY_RESOURCE);
+                // Getting the values from the form.
+                String functionKey = dynamicFieldFunctionRuleAlgorithms.get(index).toString();
+                String value2 = dynamicFieldTwoRuleAlgorithms.get(index).toString();
+                actionApply.setFunctionId(dropDownMap.get(functionKey));
+                // if two text field are rule attributes.
+                if ((value1.contains(RULE_VARIABLE)) && (value2.contains(RULE_VARIABLE))) {
+                    ApplyType innerActionApply1 = new ApplyType();
+                    ApplyType innerActionApply2 = new ApplyType();
+                    AttributeDesignatorType attributeDesignator1 = new AttributeDesignatorType();
+                    AttributeDesignatorType attributeDesignator2 = new AttributeDesignatorType();
+                    // If selected function is Integer function set integer functionID
+                    if (functionKey.toLowerCase().contains("integer")) {
+                        innerActionApply1.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
+                        innerActionApply2.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
+                        attributeDesignator1.setDataType(INTEGER_DATATYPE);
+                        attributeDesignator2.setDataType(INTEGER_DATATYPE);
+                    } else {
+                        // If selected function is not a Integer function
+                        // set String functionID
+                        innerActionApply1.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
+                        innerActionApply2.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
+                        attributeDesignator1.setDataType(STRING_DATATYPE);
+                        attributeDesignator2.setDataType(STRING_DATATYPE);
+                    }
+                    attributeDesignator1.setCategory(CATEGORY_RESOURCE);
+                    attributeDesignator2.setCategory(CATEGORY_RESOURCE);
 
-					// Here set actual field values
-					attributeDesignator1.setAttributeId(value1.contains("resource:") ? value1.substring(9): value1.substring(8));
-					attributeDesignator2.setAttributeId(value1.contains("resource:") ? value1.substring(9): value1.substring(8));
+                    // Here set actual field values
+                    attributeDesignator1.setAttributeId(value1.contains("resource:") ? value1.substring(9): value1.substring(8));
+                    attributeDesignator2.setAttributeId(value1.contains("resource:") ? value1.substring(9): value1.substring(8));
 
-					innerActionApply1.getExpression().add(new ObjectFactory().createAttributeDesignator(attributeDesignator1));
-					innerActionApply2.getExpression().add(new ObjectFactory().createAttributeDesignator(attributeDesignator2));
+                    innerActionApply1.getExpression().add(new ObjectFactory().createAttributeDesignator(attributeDesignator1));
+                    innerActionApply2.getExpression().add(new ObjectFactory().createAttributeDesignator(attributeDesignator2));
 
-					actionApply.getExpression().add(new ObjectFactory().createApply(innerActionApply1));
-					actionApply.getExpression().add(new ObjectFactory().createApply(innerActionApply2));
+                    actionApply.getExpression().add(new ObjectFactory().createApply(innerActionApply1));
+                    actionApply.getExpression().add(new ObjectFactory().createApply(innerActionApply2));
 
-				} else {// if either of one text field is rule attribute.
-					ApplyType innerActionApply = new ApplyType();
-					AttributeDesignatorType attributeDesignator = new AttributeDesignatorType();
-					AttributeValueType actionConditionAttributeValue = new AttributeValueType();
+                } else {// if either of one text field is rule attribute.
+                    ApplyType innerActionApply = new ApplyType();
+                    AttributeDesignatorType attributeDesignator = new AttributeDesignatorType();
+                    AttributeValueType actionConditionAttributeValue = new AttributeValueType();
 
-					if (functionKey.toLowerCase().contains("integer")) {
-						innerActionApply.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
-						actionConditionAttributeValue.setDataType(INTEGER_DATATYPE);
-						attributeDesignator.setDataType(INTEGER_DATATYPE);
-					} else {
-						innerActionApply.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
-						actionConditionAttributeValue.setDataType(STRING_DATATYPE);
-						attributeDesignator.setDataType(STRING_DATATYPE);
-					}
+                    if (functionKey.toLowerCase().contains("integer")) {
+                        innerActionApply.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
+                        actionConditionAttributeValue.setDataType(INTEGER_DATATYPE);
+                        attributeDesignator.setDataType(INTEGER_DATATYPE);
+                    } else {
+                        innerActionApply.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
+                        actionConditionAttributeValue.setDataType(STRING_DATATYPE);
+                        attributeDesignator.setDataType(STRING_DATATYPE);
+                    }
 
-					String attributeId = null;
-					String attributeValue = null;
+                    String attributeId = null;
+                    String attributeValue = null;
 
-					// Find which textField has rule attribute and set it as
-					attributeId = value1;
-					attributeValue = value2;
+                    // Find which textField has rule attribute and set it as
+                    attributeId = value1;
+                    attributeValue = value2;
 
-					if (attributeId != null) {
-						attributeDesignator.setCategory(CATEGORY_RESOURCE);
-						attributeDesignator.setAttributeId(attributeId);
-					}
-					actionConditionAttributeValue.getContent().add(attributeValue);
-					innerActionApply.getExpression().add(new ObjectFactory().createAttributeDesignator(attributeDesignator));
-					// Decide the order of element based the values.
-					if (attributeId.equals(value1)) {
-						actionApply.getExpression().add(new ObjectFactory().createApply(innerActionApply));
-						actionApply.getExpression().add(new ObjectFactory().createAttributeValue(actionConditionAttributeValue));
-					} else {
-						actionApply.getExpression().add(new ObjectFactory().createAttributeValue(actionConditionAttributeValue));
-						actionApply.getExpression().add(new ObjectFactory().createApply(innerActionApply));
-					}
-				}
-			}
-			index++;
-		}
-		return actionApply;
-	}
+                    if (attributeId != null) {
+                        attributeDesignator.setCategory(CATEGORY_RESOURCE);
+                        attributeDesignator.setAttributeId(attributeId);
+                    }
+                    actionConditionAttributeValue.getContent().add(attributeValue);
+                    innerActionApply.getExpression().add(new ObjectFactory().createAttributeDesignator(attributeDesignator));
+                    // Decide the order of element based the values.
+                    if (attributeId.equals(value1)) {
+                        actionApply.getExpression().add(new ObjectFactory().createApply(innerActionApply));
+                        actionApply.getExpression().add(new ObjectFactory().createAttributeValue(actionConditionAttributeValue));
+                    } else {
+                        actionApply.getExpression().add(new ObjectFactory().createAttributeValue(actionConditionAttributeValue));
+                        actionApply.getExpression().add(new ObjectFactory().createApply(innerActionApply));
+                    }
+                }
+            }
+            index++;
+        }
+        return actionApply;
+    }
 
-	// if the rule algorithm is multiple compound one setting the apply
-	protected ApplyType getCompoundApply(int index) {
-		ApplyType actionApply = new ApplyType();
-		String selectedFunction = dynamicFieldFunctionRuleAlgorithms.get(index).toString();
-		String value1 = dynamicFieldOneRuleAlgorithms.get(index).toString();
-		String value2 = dynamicFieldTwoRuleAlgorithms.get(index).toString();
-		actionApply.setFunctionId(dropDownMap.get(selectedFunction));
-		actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value1)));
-		actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value2)));
-		return actionApply;
-	}
-		
-	// Adding the dynamic headers if any
-	private AttributeAssignmentExpressionType addDynamicHeaders(String header, String value) {
-		AttributeAssignmentExpressionType assignmentHeaders = new AttributeAssignmentExpressionType();
-		assignmentHeaders.setAttributeId("headers:" + header);
-		assignmentHeaders.setCategory(CATEGORY_RESOURCE);
+    // if the rule algorithm is multiple compound one setting the apply
+    protected ApplyType getCompoundApply(int index) {
+        ApplyType actionApply = new ApplyType();
+        String selectedFunction = dynamicFieldFunctionRuleAlgorithms.get(index).toString();
+        String value1 = dynamicFieldOneRuleAlgorithms.get(index).toString();
+        String value2 = dynamicFieldTwoRuleAlgorithms.get(index).toString();
+        actionApply.setFunctionId(dropDownMap.get(selectedFunction));
+        actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value1)));
+        actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value2)));
+        return actionApply;
+    }
+        
+    // Adding the dynamic headers if any
+    private AttributeAssignmentExpressionType addDynamicHeaders(String header, String value) {
+        AttributeAssignmentExpressionType assignmentHeaders = new AttributeAssignmentExpressionType();
+        assignmentHeaders.setAttributeId("headers:" + header);
+        assignmentHeaders.setCategory(CATEGORY_RESOURCE);
 
-		AttributeValueType headersAttributeValue = new AttributeValueType();
-		headersAttributeValue.setDataType(STRING_DATATYPE);
-		headersAttributeValue.getContent().add(value);
+        AttributeValueType headersAttributeValue = new AttributeValueType();
+        headersAttributeValue.setDataType(STRING_DATATYPE);
+        headersAttributeValue.getContent().add(value);
 
-		assignmentHeaders.setExpression(new ObjectFactory().createAttributeValue(headersAttributeValue));
-		return assignmentHeaders;
-	}
-	
-	private Map<String,String> createDropDownMap(){
-		JPAUtils jpaUtils = null;
-		Map<String, String> dropDownMap = new HashMap<>();
-		try {
-			jpaUtils = JPAUtils.getJPAUtilsInstance(XACMLPapServlet.getEmf());
-		} catch (Exception e) {
-			LOGGER.error("Exception Occured"+e);
-		}
-		if(jpaUtils != null){
-			Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
-			
-			for (Datatype id : functionMap.keySet()) {
-				List<FunctionDefinition> functionDefinitions = (List<FunctionDefinition>) functionMap
-						.get(id);
-				for (FunctionDefinition functionDef : functionDefinitions) {
-					dropDownMap.put(functionDef.getShortname(),functionDef.getXacmlid());
-				}
-			}
-		}
-		return dropDownMap;
-	}
+        assignmentHeaders.setExpression(new ObjectFactory().createAttributeValue(headersAttributeValue));
+        return assignmentHeaders;
+    }
+    
+    private Map<String,String> createDropDownMap(){
+        JPAUtils jpaUtils = null;
+        Map<String, String> dropDownMap = new HashMap<>();
+        try {
+            jpaUtils = JPAUtils.getJPAUtilsInstance(XACMLPapServlet.getEmf());
+        } catch (Exception e) {
+            LOGGER.error("Exception Occured"+e);
+        }
+        if(jpaUtils != null){
+            Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
+            
+            for (Datatype id : functionMap.keySet()) {
+                List<FunctionDefinition> functionDefinitions = (List<FunctionDefinition>) functionMap
+                        .get(id);
+                for (FunctionDefinition functionDef : functionDefinitions) {
+                    dropDownMap.put(functionDef.getShortname(),functionDef.getXacmlid());
+                }
+            }
+        }
+        return dropDownMap;
+    }
 
-	@Override
-	public Object getCorrectPolicyDataObject() {
-		return policyAdapter.getPolicyData();
-	}
+    @Override
+    public Object getCorrectPolicyDataObject() {
+        return policyAdapter.getPolicyData();
+    }
 
 }
