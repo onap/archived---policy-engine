@@ -30,11 +30,11 @@ public interface PAPPolicyEngine{
 	
 	public OnapPDPGroup getDefaultGroup() throws PAPException;
 	
-	public void						SetDefaultGroup(OnapPDPGroup group) throws PAPException;
+	public void						setDefaultGroup(OnapPDPGroup group) throws PAPException;
 	
-	public void		newPDP(String id, OnapPDPGroup group, String name, String description, int jmxport) throws PAPException, NullPointerException;
+	public void		newPDP(String id, OnapPDPGroup group, String name, String description, int jmxport) throws PAPException;
 	
-	public void						newGroup(String name, String description) throws PAPException, NullPointerException;
+	public void						newGroup(String name, String description) throws PAPException;
 	
 	public OnapPDPGroup getGroup(String id) throws PAPException;
 	
@@ -54,7 +54,7 @@ public interface PAPPolicyEngine{
 	
 	public void						updateGroup(OnapPDPGroup group) throws PAPException;
 	
-	public void						removeGroup(OnapPDPGroup group, OnapPDPGroup newGroup) throws PAPException, NullPointerException;
+	public void						removeGroup(OnapPDPGroup group, OnapPDPGroup newGroup) throws PAPException;
 	
 public void						publishPolicy(String id, String name, boolean isRoot, InputStream policy, OnapPDPGroup group) throws PAPException;
 	

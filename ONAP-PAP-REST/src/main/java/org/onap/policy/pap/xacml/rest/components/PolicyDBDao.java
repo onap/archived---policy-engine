@@ -796,7 +796,7 @@ public class PolicyDBDao {
 			//set default if it should be
 			if(!localGroupClone.isDefaultGroup() && groupRecord.isDefaultGroup()){
 				try {
-					papEngine.SetDefaultGroup(localGroup);
+					papEngine.setDefaultGroup(localGroup);
 					return;
 				} catch (PAPException e) {
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught PAPException trying to set default group with papEngine.SetDefaultGroup("+localGroupClone+");");

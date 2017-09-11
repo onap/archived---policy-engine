@@ -1574,7 +1574,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyDBDaoTransaction setDefaultGroupTransaction = policyDBDao.getNewTransaction();
 				try {
 					setDefaultGroupTransaction.changeDefaultGroup(group, "XACMLPapServlet.doACPost");
-					papEngine.SetDefaultGroup(group);
+					papEngine.setDefaultGroup(group);
 					setDefaultGroupTransaction.commitTransaction();
 				} catch (Exception e) {
 					setDefaultGroupTransaction.rollbackTransaction();
@@ -1652,7 +1652,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void doACGet(HttpServletRequest request, HttpServletResponse response, String groupId, ONAPLoggingContext loggingContext) throws ServletException, IOException {
+	private void doACGet(HttpServletRequest request, HttpServletResponse response, String groupId, ONAPLoggingContext loggingContext) throws IOException {
 		try {
 			String parameterDefault = request.getParameter("default");
 			String pdpId = request.getParameter("pdpId");
@@ -1684,7 +1684,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					if (pdpGroup == null) {
 						// Request is for the (unspecified) group containing a given PDP
 						loggingContext.setServiceName("AC:PAP.getPDP");
-						OnapPDP pdp = papEngine.getPDP(pdpId);
+						OnapPDP pdp = null;
+						try{
+						    pdp = papEngine.getPDP(pdpId);
+						}catch(PAPException e){
+						    LOGGER.error(e);
+						}
 						// convert response object to JSON and include in the response
 						mapperWriteValue(new ObjectMapper(), response,  pdp);
 						if (LOGGER.isDebugEnabled()) {
@@ -1692,7 +1697,11 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						}
 						response.setStatus(HttpServletResponse.SC_OK);
 						response.setHeader("content-type", "application/json");
-						response.getOutputStream().close();
+						try{
+                            response.getOutputStream().close();
+                        } catch (IOException e){
+                            LOGGER.error(e);
+                        }
 						loggingContext.transactionEnded();
 						auditLogger.info("Success");
 						PolicyLogger.audit("Transaction Ended Successfully");
@@ -1700,8 +1709,13 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					} else {
 						// Request is for the group containing a given PDP
 						loggingContext.setServiceName("AC:PAP.getGroupForPDP");
-						OnapPDP pdp = papEngine.getPDP(pdpId);
-						OnapPDPGroup group = papEngine.getPDPGroup((OnapPDP) pdp);
+						OnapPDPGroup group =null;
+						try{
+						    OnapPDP pdp = papEngine.getPDP(pdpId);
+	                        group = papEngine.getPDPGroup((OnapPDP) pdp);
+						}catch(PAPException e){
+						    LOGGER.error(e);
+						}
 						// convert response object to JSON and include in the response
 						mapperWriteValue(new ObjectMapper(), response,  group);
 						if (LOGGER.isDebugEnabled()) {
@@ -1742,7 +1756,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				}
 			}
 			// for all other GET operations the group must exist before the operation can be done
-			OnapPDPGroup group = papEngine.getGroup(groupId);
+			OnapPDPGroup group = null;
+			try{
+			    group = papEngine.getGroup(groupId);
+			} catch(PAPException e){
+			    LOGGER.error(e);
+			}
 			if (group == null) {
 				String message = "Unknown groupId '" + groupId + "'";
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
@@ -1810,7 +1829,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void doACPut(HttpServletRequest request, HttpServletResponse response, String groupId, ONAPLoggingContext loggingContext) throws ServletException, IOException {
+	private void doACPut(HttpServletRequest request, HttpServletResponse response, String groupId, ONAPLoggingContext loggingContext) throws IOException {
 		PolicyDBDaoTransaction acPutTransaction = policyDBDao.getNewTransaction();
 		try {
 			// for PUT operations the group may or may not need to exist before the operation can be done
@@ -1846,15 +1865,14 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				// get the request content into a String
 				String json = null;
 				// read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)
-				Scanner scanner = null;
 				try{
-				    scanner = new Scanner(request.getInputStream());
+				    Scanner scanner = new Scanner(request.getInputStream());
+				    scanner.useDelimiter("\\A");
+	                json =  scanner.hasNext() ? scanner.next() : "";
+	                scanner.close();
 				}catch(IOException e){
 				    LOGGER.error(e);
 				}
-				scanner.useDelimiter("\\A");
-				json =  scanner.hasNext() ? scanner.next() : "";
-				scanner.close();
 				LOGGER.info("JSON request from AC: " + json);
 				// convert Object sent as JSON into local object
 				ObjectMapper mapper = new ObjectMapper();
@@ -1871,7 +1889,13 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				}
 				StdPDP pdp = (StdPDP) objectFromJSON;
 				if(pdp != null){
-					if (papEngine.getPDP(pdpId) == null) {
+				    OnapPDP oPDP = null;
+				    try{
+				        oPDP = papEngine.getPDP(pdpId);
+				    }catch (PAPException e){
+				        LOGGER.error(e);
+				    }
+					if (oPDP == null) {
 						// this is a request to create a new PDP object
 						try{
 							acPutTransaction.addPdpToGroup(pdp.getId(), group.getId(), pdp.getName(), 
@@ -1940,15 +1964,14 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				// get the request content into a String
 				String json = null;
 				// read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)
-				Scanner scanner = null;
                 try{
-                    scanner = new Scanner(request.getInputStream());
+                    Scanner scanner = new Scanner(request.getInputStream());
+                    scanner.useDelimiter("\\A");
+                    json =  scanner.hasNext() ? scanner.next() : "";
+                    scanner.close();
                 }catch(IOException e){
                     LOGGER.error(e);
                 }
-				scanner.useDelimiter("\\A");
-				json =  scanner.hasNext() ? scanner.next() : "";
-				scanner.close();
 				LOGGER.info("JSON request from AC: " + json);
 				// convert Object sent as JSON into local object
 				ObjectMapper mapper = new ObjectMapper();
@@ -2020,7 +2043,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void doACDelete(HttpServletRequest request, HttpServletResponse response, String groupId, ONAPLoggingContext loggingContext) throws ServletException, IOException {
+	private void doACDelete(HttpServletRequest request, HttpServletResponse response, String groupId, ONAPLoggingContext loggingContext) throws IOException {
 		//This code is to allow deletes to propagate to the database since delete is not implemented
 		String isDeleteNotify = request.getParameter("isDeleteNotify");
 		if(isDeleteNotify != null){

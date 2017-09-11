@@ -119,7 +119,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 	}
 
 	@Override
-	public void SetDefaultGroup(OnapPDPGroup group) throws PAPException {
+	public void setDefaultGroup(OnapPDPGroup group) throws PAPException {
 		sendToPAP("POST", null, null, null, groupID + group.getId(), "default=true");
 	}
 

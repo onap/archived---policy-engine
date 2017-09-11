@@ -142,7 +142,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	
 	public void makeDefault(OnapPDPGroup group) {
 		try {
-			this.papEngine.SetDefaultGroup(group);
+			this.papEngine.setDefaultGroup(group);
 		} catch (PAPException e) {
 			String message = "Unable to set Default Group on server: " + e;
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);

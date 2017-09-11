@@ -810,7 +810,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 	}
 
 	@Override
-	public void SetDefaultGroup(OnapPDPGroup group) throws PAPException {
+	public void setDefaultGroup(OnapPDPGroup group) throws PAPException {
 		boolean changesMade = false;
 		for (OnapPDPGroup aGroup : groups) {
 			if (aGroup.getId().equals(group.getId())) {
