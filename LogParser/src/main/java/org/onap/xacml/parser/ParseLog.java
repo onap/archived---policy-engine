@@ -77,22 +77,21 @@ public class ParseLog {
 	private static String logFile;
 	private static String debuglogFile;
 	private static String errorlogFile;
-	private static String JDBC_URL;
-	private static String JDBC_USER;
-	private static String JDBC_PASSWORD;
-	private static String JDBC_DRIVER;
+	private static String jdbcUrl;
+	private static String jdbcUser;
+	private static String jdbcPassword;
+	private static String jdbcDriver;
 	private static int maxLength = 255;   //Max length that is allowed in the DB table
 	private static String resourceName;
 	private static long sleepTimer = 50000;
 	static  IntegrityMonitor im;
 	private static boolean isMissingLogFile;
 	//Default:Timer initial delay and the delay between in milliseconds before task is to be execute
-	private static int TIMER_DELAY_TIME = 1000;	
+	private static final int TIMER_DELAY_TIME = 1000;	
 	//Default:Timer scheduleAtFixedRate period - time in milliseconds between successive task executions
-	private static int CHECK_INTERVAL = 86400000;  // run this clean up once a day
-	private static RandomAccessFile randomAccessFile;	
+	private static int checkInterval = 86400000;  // run this clean up once a day	
 	private static String loggingProcess = "Error processing line in ";
-	private static int TIME_FRAME = 5;	
+	private static int defaultTimeFrame = 5;	
 	private static String message =" value read in: ";	
 	private static String lineFormat = "(\\r\\n|\\n)";	
 	private static String lineRead = "-line-Read:";	
@@ -344,30 +343,32 @@ public class ParseLog {
 			file.createNewFile();
 			return null;
 		}
-		randomAccessFile = new RandomAccessFile(file, "r");
-        StringBuilder builder = new StringBuilder();
-        long length = file.length();
-        logger.debug("dataFileName: " +dataFileName);
-        if(length > 0){
-	        length--;	        
-	        randomAccessFile.seek(length);
-	        for(long seek = length; seek >= 0; --seek){
-	            randomAccessFile.seek(seek);
-	            char c = (char)randomAccessFile.read();
-	            builder.append(c);
-	            if(c == '\n'){
-	                builder = builder.reverse();
-	                logger.debug("builder.toString(): " +builder.toString());
-	                if (builder.toString().contains(last+dataFileName+lineRead)){
-	            		String[] parseString = builder.toString().split(last+dataFileName+lineRead);
-	            		String returnValue = parseString[1].replace("\r", "");
-	            		return returnValue.trim();
-	            	}
-	                builder = new StringBuilder();
-	             }	
-	        }
-        }
-        
+		try(RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");){
+		    StringBuilder builder = new StringBuilder();
+		    long length = file.length();
+		    logger.debug("dataFileName: " +dataFileName);
+		    if(length > 0){
+		        length--;	        
+		        randomAccessFile.seek(length);
+		        for(long seek = length; seek >= 0; --seek){
+		            randomAccessFile.seek(seek);
+		            char c = (char)randomAccessFile.read();
+		            builder.append(c);
+		            if(c == '\n'){
+		                builder = builder.reverse();
+		                logger.debug("builder.toString(): " +builder.toString());
+		                if (builder.toString().contains(last+dataFileName+lineRead)){
+		                    String[] parseString = builder.toString().split(last+dataFileName+lineRead);
+		                    String returnValue = parseString[1].replace("\r", "");
+		                    randomAccessFile.close();
+		                    return returnValue.trim();
+		                }
+		                builder = new StringBuilder();
+		            }	
+		        }
+		    }
+		    randomAccessFile.close();
+		}
 		return null;
 	}
 
@@ -602,7 +603,7 @@ public class ParseLog {
 	
 	private static void writeDB(LogEntryObject returnLogValue) {
 
-		Connection conn = dbConnection(JDBC_DRIVER, JDBC_URL, JDBC_USER,JDBC_PASSWORD);
+		Connection conn = dbConnection(jdbcDriver, jdbcUrl, jdbcUser,jdbcPassword);
 		dbAccesss(conn, returnLogValue.getSystem(), returnLogValue.getDescription(),  
 						returnLogValue.getDate(), returnLogValue.getRemote(), 
 						returnLogValue.getSystemType(), returnLogValue.getLogType().toString());
@@ -613,8 +614,7 @@ public class ParseLog {
         
         try {
         	Class.forName(driver);
-			Connection conn = DriverManager.getConnection(jdbc, user, pass);
-			return conn;
+			return DriverManager.getConnection(jdbc, user, pass);
 		} catch ( Exception e) {
 			logger.error("Error connecting to DB: " + e);
 		}
@@ -713,19 +713,24 @@ public class ParseLog {
 		if(cleanupInterval != null && !cleanupInterval.isEmpty()){
 			int intCheckInterval = Integer.parseInt(cleanupInterval);
 			if(intCheckInterval > 300000) {//must be longer than 5 minutes
-					CHECK_INTERVAL = intCheckInterval;
+					checkInterval = intCheckInterval;
 			}
 		}else{
-			 logger.debug("No value defined for CHECK_INTERVAL in parserlog.properties, so use its default value:" + CHECK_INTERVAL + " milliseconds");
+			 logger.debug("No value defined for CHECK_INTERVAL in parserlog.properties, so use its default value:" + checkInterval + " milliseconds");
 		}
 		
-		if(timeFrame != null && !timeFrame.isEmpty()){
-			int intTimeFrame = Integer.parseInt(timeFrame);
+		if(timeFrame != null && !timeFrame.trim().isEmpty()){
+		    int intTimeFrame = defaultTimeFrame;
+		    try{
+		        intTimeFrame = Integer.parseInt(timeFrame);
+		    }catch(NumberFormatException e){
+		        logger.debug("Improper value defined for TIME_FRAME in parserlog.properties, so use its default value:" + defaultTimeFrame + " days");
+		    }
 			if(intTimeFrame > 0){
-				TIME_FRAME = intTimeFrame;
+				defaultTimeFrame = intTimeFrame;
 			}
 		}else{
-			 logger.debug("No value defined for TIME_FRAME in parserlog.properties, so use its default value:" + TIME_FRAME + " days");
+			 logger.debug("No value defined for TIME_FRAME in parserlog.properties, so use its default value:" + defaultTimeFrame + " days");
 		}
 	}
 	
@@ -800,17 +805,17 @@ public class ParseLog {
 					
 					setLogFileProperties(splitString);
 					
-					JDBC_URL = config.getProperty("JDBC_URL").replace("'", "");
-					JDBC_USER = config.getProperty("JDBC_USER");
-					JDBC_DRIVER =  config.getProperty("JDBC_DRIVER");
-					JDBC_PASSWORD = config.getProperty("JDBC_PASSWORD");
+					jdbcUrl = config.getProperty("JDBC_URL").replace("'", "");
+					jdbcUser = config.getProperty("JDBC_USER");
+					jdbcDriver =  config.getProperty("JDBC_DRIVER");
+					jdbcPassword = config.getProperty("JDBC_PASSWORD");
 					return config;
 
 				} catch (IOException e) {					
 					logger.error("Error porcessing Config file will be unable to create Health Check" + e);
 				}catch(Exception e){
 					logger.error("Error getPropertiesValue on TIME_FRAME", e);
-					logger.debug("Error getPropertiesValue on TIME_FRAME, so use its default value:" + TIME_FRAME + " days");
+					logger.debug("Error getPropertiesValue on TIME_FRAME, so use its default value:" + defaultTimeFrame + " days");
 				}				
 			}
 
@@ -822,13 +827,13 @@ public class ParseLog {
 	}
 	
 	public static Connection getDbConnection(){
-		return dbConnection(JDBC_DRIVER, JDBC_URL, JDBC_USER,JDBC_PASSWORD);
+		return dbConnection(jdbcDriver, jdbcUrl, jdbcUser,jdbcPassword);
 	}
 	private static void startCleanUp(){
-		Connection conn = dbConnection(JDBC_DRIVER, JDBC_URL, JDBC_USER,JDBC_PASSWORD);
-		CleanUpSystemLogDB cleanUp = new CleanUpSystemLogDB(conn, TIME_FRAME); 
+		Connection conn = dbConnection(jdbcDriver, jdbcUrl, jdbcUser,jdbcPassword);
+		CleanUpSystemLogDB cleanUp = new CleanUpSystemLogDB(conn, defaultTimeFrame); 
 		Timer timer = new Timer(true);
-		timer.scheduleAtFixedRate(cleanUp, TIMER_DELAY_TIME, CHECK_INTERVAL);
+		timer.scheduleAtFixedRate(cleanUp, TIMER_DELAY_TIME, checkInterval);
 		logger.info("startCleanUp begins! : " + new Date());
 	}
 }
