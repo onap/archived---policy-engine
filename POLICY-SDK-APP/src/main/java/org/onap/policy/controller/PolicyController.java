@@ -694,4 +694,12 @@ public class PolicyController extends RestrictedBaseController {
 	public static String getFile() {
 		return file;
 	}
+	
+	public String convertDate(String dateTTL) {
+		String formateDate = null;
+		if(dateTTL.contains("-")){
+			formateDate = dateTTL.replace("-", "/");
+		}
+		return formateDate;
+	}
 }

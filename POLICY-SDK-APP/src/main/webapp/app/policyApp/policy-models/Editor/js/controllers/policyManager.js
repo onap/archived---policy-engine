@@ -186,7 +186,7 @@ app.controller('PolicyManagerController', [
             return currentPath.indexOf(path) !== -1;
         };
          
-       $scope.watch = function(item){
+       $scope.watchPolicy = function(item){
            var uuu = "watchPolicy";
            var data = {name : item.model.name,
         		   path : item.model.path};
