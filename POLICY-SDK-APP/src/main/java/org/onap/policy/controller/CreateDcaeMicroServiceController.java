@@ -57,6 +57,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,6 +73,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.controller.PolicyController;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
@@ -96,7 +98,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
@@ -273,10 +274,12 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				final JsonNode value = field.getValue();
 				if("content".equalsIgnoreCase(key)){
 					String contentStr = value.toString();
-				    JsonObject jsonContent = Json.createReader(new StringReader(contentStr)).readObject();				    
-				    removed = removeNull(jsonContent);
-				    if(!jsonContent.toString().equals(removed.toString())){
-				    	contentChanged = true;	
+				    try (JsonReader jsonReader = Json.createReader(new StringReader(contentStr))) {		
+				    	JsonObject jsonContent = jsonReader.readObject();
+					    removed = removeNull(jsonContent);
+					    if(!jsonContent.toString().equals(removed.toString())){
+					    	contentChanged = true;	
+					    }
 				    }
 				}
 				if  (value==null || value.isNull()){

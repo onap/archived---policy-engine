@@ -153,11 +153,13 @@
 			<artifactId>elasticsearch</artifactId>
 			<version>2.2.0</version>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20160212</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>io.searchbox</groupId>
 			<artifactId>jest</artifactId>
