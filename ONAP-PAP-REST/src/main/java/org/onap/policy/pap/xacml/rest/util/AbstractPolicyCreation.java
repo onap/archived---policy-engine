@@ -40,18 +40,10 @@ public abstract class AbstractPolicyCreation {
 				getDomain().replaceAll("[/\\\\.]", ":"), "xacml", "policy", "id", UUID.randomUUID());
 	}
 	
-	public String convertDate(String dateTTL, boolean portalType) {
+	public String convertDate(String dateTTL) {
 		String formateDate = null;
-		String[] date;
-		String[] parts;
-		
-		if (portalType){
-			parts = dateTTL.split("-");
-			formateDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-		} else {
-			date  = dateTTL.split("T");
-			parts = date[0].split("-");
-			formateDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+		if(dateTTL.contains("/")){
+			formateDate = dateTTL.replace("/", "-");
 		}
 		return formateDate;
 	}

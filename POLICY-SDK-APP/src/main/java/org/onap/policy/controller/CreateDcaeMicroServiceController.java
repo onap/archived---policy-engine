@@ -1236,7 +1236,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 											policyAdapter.setGuard(value);
 										}
 										if (attributeId.equals("TTLDate") && !value.contains("NA")){
-											String newDate = convertDate(value, true);
+											PolicyController controller = new PolicyController();
+											String newDate = controller.convertDate(value);
 											policyAdapter.setTtlDate(newDate);
 										}
 									}
@@ -1248,15 +1249,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				}
 			}
 		}
-	}
-
-	private String convertDate(String dateTTL, boolean portalType) {
-		String formateDate = null;
-		String[] date  = dateTTL.split("T");
-		String[] parts = date[0].split("-");
-			
-		formateDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-		return formateDate;
 	}
 	
 	public static Map<String, String> convert(String str, String split) {

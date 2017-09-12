@@ -37,6 +37,15 @@ app.controller('baseConfigController', ['$scope', 'PolicyAppService', 'policyNav
         return $('#' + id).modal(hide ? 'hide' : 'show');
     };
     
+    $('#ttlDate').datepicker({
+    	dateFormat: 'dd/mm/yy',
+    	changeMonth: true,
+    	changeYear: true,
+    	onSelect: function(date) {
+    		angular.element($('#ttlDate')).triggerHandler('input');
+    	}
+    });
+    
     PolicyAppService.getData('getDictionary/get_OnapNameDataByName').then(function (data) {
     	var j = data;  
     	$scope.data = JSON.parse(j.data);
