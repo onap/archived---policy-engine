@@ -16,6 +16,24 @@
       "revId": "2de8477f588794822301cfe694c24171974ea5c8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_9b965cef",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-09-12T19:33:01Z",
+      "side": 1,
+      "message": "Sure Jorge, will add the fix and update the pull request.",
+      "parentUuid": "9a437d4f_db774401",
+      "revId": "2de8477f588794822301cfe694c24171974ea5c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
