@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_db774401",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-09-12T19:21:49Z",
+      "side": 1,
+      "message": "to avoid sonars, log the exception with \"logger.error(\"\",e);   Even better, do try()\n- try with resources, so don\u0027t need to worry about this specific exception handling when closing.\nthis is a general comment that applies below and to all files using similar mechanism",
+      "revId": "2de8477f588794822301cfe694c24171974ea5c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
