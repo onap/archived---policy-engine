@@ -35,6 +35,15 @@ angular.module('abs').controller('fwPolicyController', ['$scope', '$window', 'Po
     $scope.modal = function(id, hide) {
         return $('#' + id).modal(hide ? 'hide' : 'show');
     };
+    
+    $('#ttlDate').datepicker({
+    	dateFormat: 'dd/mm/yy',
+    	changeMonth: true,
+    	changeYear: true,
+    	onSelect: function(date) {
+    		angular.element($('#ttlDate')).triggerHandler('input');
+    	}
+    });
 		
     PolicyAppService.getData('getDictionary/get_SecurityZoneDataByName').then(function (data) {
     	var j = data;

@@ -115,7 +115,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 				policyData.setTtlDate("NA");
 			}else{
 				String dateTTL = policyData.getTtlDate();
-				String newDate = convertDate(dateTTL, false);
+				String newDate = convertDate(dateTTL);
 				policyData.setTtlDate(newDate);
 			}
 

@@ -37,6 +37,15 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
         return $('#' + id).modal(hide ? 'hide' : 'show');
     };
     
+    $('#ttlDate').datepicker({
+    	dateFormat: 'dd/mm/yy',
+    	changeMonth: true,
+    	changeYear: true,
+    	onSelect: function(date) {
+    		angular.element($('#ttlDate')).triggerHandler('input');
+    	}
+    });
+    
 	if ($scope.temp.policy.editPolicy != undefined|| $scope.temp.policy.readOnly  != undefined){
 		if ($scope.temp.policy.configName == undefined){
 			$scope.isCheck = false;

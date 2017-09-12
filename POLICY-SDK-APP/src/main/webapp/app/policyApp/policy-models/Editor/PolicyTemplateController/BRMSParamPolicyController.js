@@ -36,6 +36,15 @@ angular.module('abs').controller('brmsParamPolicyController', ['$scope', '$windo
         return $('#' + id).modal(hide ? 'hide' : 'show');
     };
     
+    $('#ttlDate').datepicker({
+    	dateFormat: 'dd/mm/yy',
+    	changeMonth: true,
+    	changeYear: true,
+    	onSelect: function(date) {
+    		angular.element($('#ttlDate')).triggerHandler('input');
+    	}
+    });
+    
     $scope.validateSuccess = true;
     var readValue = $scope.temp.policy.readOnly;
     if(readValue){

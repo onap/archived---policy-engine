@@ -35,6 +35,15 @@ angular.module("abs").controller('clFaultController', ['$scope', '$window', 'Pol
     $scope.modal = function(id, hide) {
         return $('#' + id).modal(hide ? 'hide' : 'show');
     };
+    
+    $('#ttlDate').datepicker({
+    	dateFormat: 'dd/mm/yy',
+    	changeMonth: true,
+    	changeYear: true,
+    	onSelect: function(date) {
+    		angular.element($('#ttlDate')).triggerHandler('input');
+    	}
+    });
 	
 	if($scope.temp.policy.triggerTrapSignatures == undefined){
 		$scope.temp.policy.triggerTrapSignatures = [];

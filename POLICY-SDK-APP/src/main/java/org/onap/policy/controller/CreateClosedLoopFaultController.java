@@ -564,7 +564,8 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 											policyAdapter.setGuard(value);
 										}
 										if (attributeId.equals("TTLDate") && !value.contains("NA")){
-											String newDate = convertDate(value, true);
+											PolicyController controller = new PolicyController();
+											String newDate = controller.convertDate(value);
 											policyAdapter.setTtlDate(newDate);
 										}
 									}
@@ -577,22 +578,6 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 			readClosedLoopJSONFile(policyAdapter, entity);
 		}	
 
-	}
-
-	private String convertDate(String dateTTL, boolean portalType) {
-		String formateDate = null;
-		String[] date;
-		String[] parts;
-
-		if (portalType){
-			parts = dateTTL.split("-");
-			formateDate = parts[2] + "-" + parts[1] + "-" + parts[0] + "T05:00:00.000Z";
-		} else {
-			date  = dateTTL.split("T");
-			parts = date[0].split("-");
-			formateDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-		}
-		return formateDate;
 	}
 
 	private String readClosedLoopJSONFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {

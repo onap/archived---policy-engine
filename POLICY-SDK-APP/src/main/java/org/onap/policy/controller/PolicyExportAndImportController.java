@@ -21,9 +21,11 @@
 package org.onap.policy.controller;
 
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -237,6 +239,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 		Iterator<Row> rowIterator = datatypeSheet.iterator();
 
 		while (rowIterator.hasNext()) {
+			finalColumn = false;
 			policyEntity = new PolicyEntity();
 			configurationDataEntity = new ConfigurationDataEntity();
 			actionBodyEntity = new ActionBodyEntity();
@@ -343,12 +346,26 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 						configurationDataEntity.setCreatedBy(userId);
 						configurationDataEntity.setModifiedBy(userId);
 						commonClassDao.save(configurationDataEntity);
+						try(FileWriter fw = new FileWriter(PolicyController.getConfigHome() + File.separator + configName)){
+							BufferedWriter bw = new BufferedWriter(fw);
+							bw.write(configurationDataEntity.getConfigBody());
+							bw.close();
+						} catch (IOException e) {
+							logger.error("Exception Occured While cloning the configuration file"+e);
+						}
 					}
 					if(actionExists){
 						actionBodyEntity.setDeleted(false);
 						actionBodyEntity.setCreatedBy(userId);
 						actionBodyEntity.setModifiedBy(userId);
 						commonClassDao.save(actionBodyEntity);
+						try(FileWriter fw = new FileWriter(PolicyController.getActionHome() + File.separator + actionBodyEntity.getActionBodyName())) {
+							BufferedWriter bw = new BufferedWriter(fw);
+							bw.write(actionBodyEntity.getActionBody());
+							bw.close();
+						} catch (IOException e) {
+							logger.error("Exception Occured While cloning the configuration file"+e);
+						}
 					}
 					if(configName != null){
 						if(configName.contains("Config_")){
