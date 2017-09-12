@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_823b959b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/CheckPDP.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 15
+      },
+      "writtenOn": "2017-09-12T08:16:20Z",
+      "side": 1,
+      "message": "Replace by a simple : \nreturn pdpMap.containsKey(id);\n?",
+      "revId": "9d3fc3a93176f9f83a7ed85e3a07b2161b64cd45",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
