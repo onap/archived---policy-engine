@@ -61,7 +61,7 @@ public class CheckPDP {
 			return false;
 		}
 		// Check ID
-		return (pdpMap.containsKey(id))? true: false;
+		return pdpMap.containsKey(id);
 	}
 
 	private static void readFile(){
