@@ -43,6 +43,7 @@ import org.onap.policy.common.ia.DbAudit;
 import org.onap.policy.common.ia.DbDAO;
 import org.onap.policy.common.ia.IntegrityAuditProperties;
 import org.onap.policy.common.ia.jpa.IntegrityAuditEntity;
+import org.onap.policy.common.ia.test.TestUtils;
 import org.onap.policy.common.im.jpa.ForwardProgressEntity;
 import org.onap.policy.common.im.jpa.ResourceRegistrationEntity;
 import org.onap.policy.common.im.jpa.StateManagementEntity;
@@ -61,23 +62,27 @@ public class DbAuditCompareEntriesTest {
 	private String dbPwd;
 	private String siteName;
 	private String nodeType;
+	private static final String DEFAULT_DB_DRIVER = "org.h2.Driver";
+	private static final String DEFAULT_DB_URL = "jdbc:h2:file:./sql/iaTest";
+	private static final String DEFAULT_DB_USER = "sa";
+	private static final String DEFAULT_DB_PWD = "";
 	
 	@Before
 	public void setUp() throws Exception {
 		logger.info("setUp: Entering");
 
 		properties = new Properties();
-		properties.put(IntegrityAuditProperties.DB_DRIVER, IntegrityAuditProperties.DEFAULT_DB_DRIVER);
+		properties.put(IntegrityAuditProperties.DB_DRIVER, DbAuditCompareEntriesTest.DEFAULT_DB_DRIVER);
 		properties.put(IntegrityAuditProperties.DB_URL, "jdbc:h2:file:./sql/xacmlTest");
-		properties.put(IntegrityAuditProperties.DB_USER, IntegrityAuditProperties.DEFAULT_DB_USER);
-		properties.put(IntegrityAuditProperties.DB_PWD, IntegrityAuditProperties.DEFAULT_DB_PWD);
+		properties.put(IntegrityAuditProperties.DB_USER, DbAuditCompareEntriesTest.DEFAULT_DB_USER);
+		properties.put(IntegrityAuditProperties.DB_PWD, DbAuditCompareEntriesTest.DEFAULT_DB_PWD);
 		properties.put(IntegrityAuditProperties.SITE_NAME, "SiteA");
 		properties.put(IntegrityAuditProperties.NODE_TYPE, "pap");
 
-		dbDriver = IntegrityAuditProperties.DEFAULT_DB_DRIVER;
+		dbDriver = DbAuditCompareEntriesTest.DEFAULT_DB_DRIVER;
 		dbUrl = "jdbc:h2:file:./sql/xacmlTest";
-		dbUser = IntegrityAuditProperties.DEFAULT_DB_USER;
-		dbPwd = IntegrityAuditProperties.DEFAULT_DB_PWD;
+		dbUser = DbAuditCompareEntriesTest.DEFAULT_DB_USER;
+		dbPwd = DbAuditCompareEntriesTest.DEFAULT_DB_PWD;
 		siteName = "SiteA";
 		nodeType = "pap";
 		persistenceUnit = "testPapPU";
