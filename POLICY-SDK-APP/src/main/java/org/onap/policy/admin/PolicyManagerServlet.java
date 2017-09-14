@@ -736,8 +736,7 @@ public class PolicyManagerServlet extends HttpServlet {
 					el.put("modifiedBy", getUserName(policy.getModifiedBy()));
 					resultList.add(el);
 				}
-			}else if(!scopes.isEmpty()){
-				if(scopes.contains(scopeNameValue)){
+			}else if(!scopes.isEmpty() && scopes.contains(scopeNameValue)){
 					JSONObject el = new JSONObject();
 					el.put("name", policy.getPolicyName().substring(policy.getPolicyName().lastIndexOf(File.separator)+1));	
 					el.put("date", policy.getModifiedDate());
@@ -747,7 +746,6 @@ public class PolicyManagerServlet extends HttpServlet {
 					el.put("createdBy", getUserName(policy.getCreatedBy()));
 					el.put("modifiedBy", getUserName(policy.getModifiedBy()));
 					resultList.add(el);
-				}
 			}
 		}	
 	}
