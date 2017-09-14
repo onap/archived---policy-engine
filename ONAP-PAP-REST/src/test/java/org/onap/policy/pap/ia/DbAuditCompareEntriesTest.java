@@ -43,6 +43,7 @@ import org.onap.policy.common.ia.DbAudit;
 import org.onap.policy.common.ia.DbDAO;
 import org.onap.policy.common.ia.IntegrityAuditProperties;
 import org.onap.policy.common.ia.jpa.IntegrityAuditEntity;
+import org.onap.policy.common.ia.test.TestUtils;
 import org.onap.policy.common.im.jpa.ForwardProgressEntity;
 import org.onap.policy.common.im.jpa.ResourceRegistrationEntity;
 import org.onap.policy.common.im.jpa.StateManagementEntity;
@@ -67,17 +68,17 @@ public class DbAuditCompareEntriesTest {
 		logger.info("setUp: Entering");
 
 		properties = new Properties();
-		properties.put(IntegrityAuditProperties.DB_DRIVER, IntegrityAuditProperties.DEFAULT_DB_DRIVER);
+		properties.put(IntegrityAuditProperties.DB_DRIVER, TestUtils.DEFAULT_DB_DRIVER);
 		properties.put(IntegrityAuditProperties.DB_URL, "jdbc:h2:file:./sql/xacmlTest");
-		properties.put(IntegrityAuditProperties.DB_USER, IntegrityAuditProperties.DEFAULT_DB_USER);
-		properties.put(IntegrityAuditProperties.DB_PWD, IntegrityAuditProperties.DEFAULT_DB_PWD);
+		properties.put(IntegrityAuditProperties.DB_USER, TestUtils.DEFAULT_DB_USER);
+		properties.put(IntegrityAuditProperties.DB_PWD, TestUtils.DEFAULT_DB_PWD);
 		properties.put(IntegrityAuditProperties.SITE_NAME, "SiteA");
 		properties.put(IntegrityAuditProperties.NODE_TYPE, "pap");
 
-		dbDriver = IntegrityAuditProperties.DEFAULT_DB_DRIVER;
+		dbDriver = TestUtils.DEFAULT_DB_DRIVER;
 		dbUrl = "jdbc:h2:file:./sql/xacmlTest";
-		dbUser = IntegrityAuditProperties.DEFAULT_DB_USER;
-		dbPwd = IntegrityAuditProperties.DEFAULT_DB_PWD;
+		dbUser = TestUtils.DEFAULT_DB_USER;
+		dbPwd = TestUtils.DEFAULT_DB_PWD;
 		siteName = "SiteA";
 		nodeType = "pap";
 		persistenceUnit = "testPapPU";
