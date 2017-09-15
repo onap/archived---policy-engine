@@ -70,7 +70,7 @@ public interface BusConsumer {
 		public DmaapConsumerWrapper(List<String> servers, String topic, 
 								String aafLogin, String aafPassword,
 								String consumerGroup, String consumerInstance,
-								int fetchTimeout, int fetchLimit)  throws MalformedURLException{
+								int fetchTimeout, int fetchLimit) throws MalformedURLException{
 					
 			this.consumer = new MRConsumerImpl(servers, topic, 
 											   consumerGroup, consumerInstance, 

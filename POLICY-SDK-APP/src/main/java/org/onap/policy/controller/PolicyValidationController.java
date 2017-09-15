@@ -21,32 +21,19 @@
 package org.onap.policy.controller;
 
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.json.Json;
-import javax.json.JsonReader;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang.StringUtils;
-import org.dom4j.util.XMLErrorHandler;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -63,13 +50,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 
@@ -86,13 +70,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 	public static final String CLOSEDLOOP_PM = "ClosedLoop_PM";
 	public static final String ENFORCER_CONFIG_POLICY= "Enforcer Config";
 	public static final String MICROSERVICES="Micro Service";
-	private Pattern pattern;
-	private Matcher matcher;
 	private static Map<String, String> mapAttribute = new HashMap<>();
-
-	private static final String EMAIL_PATTERN = 
-			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-					+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
 	@Autowired
 	CommonClassDao commonClassDao;
@@ -107,7 +85,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 			JsonNode root = mapper.readTree(request.getReader());
 			PolicyRestAdapter policyData = (PolicyRestAdapter)mapper.readValue(root.get("policyData").toString(), PolicyRestAdapter.class);
 			if(policyData.getPolicyName() != null){
-				String policyNameValidate = emptyValidator(policyData.getPolicyName());
+				String policyNameValidate = PolicyUtils.policySpecialCharValidator(policyData.getPolicyName());
 				if(!policyNameValidate.contains("success")){
 					responseString.append("PolicyName:" +  policyNameValidate + "<br>");
 					valid = false;
@@ -117,7 +95,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 				valid = false;
 			}
 			if(policyData.getPolicyDescription() != null){
-				String descriptionValidate = descriptionValidator(policyData.getPolicyDescription());
+				String descriptionValidate = PolicyUtils.descriptionValidator(policyData.getPolicyDescription());
 				if(!descriptionValidate.contains("success")){
 					responseString.append("Description:" +  descriptionValidate + "<br>");
 					valid = false;
@@ -128,7 +106,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 				if (policyData.getConfigPolicyType().equals("Base") || policyData.getConfigPolicyType().equals(CLOSEDLOOP_POLICY) 
 						||  policyData.getConfigPolicyType().equals(CLOSEDLOOP_PM) || policyData.getConfigPolicyType().equals(ENFORCER_CONFIG_POLICY) || policyData.getConfigPolicyType().equals(MICROSERVICES)) {
 					if(policyData.getOnapName() != null){
-						String onapNameValidate = emptyValidator(policyData.getOnapName());
+						String onapNameValidate = PolicyUtils.policySpecialCharValidator(policyData.getOnapName());
 						if(!onapNameValidate.contains("success")){
 							responseString.append("OnapName:" +  onapNameValidate + "<br>");
 							valid = false;
@@ -140,7 +118,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 				}
 
 				if(policyData.getRiskType() != null){
-					String riskTypeValidate = emptyValidator(policyData.getRiskType());
+					String riskTypeValidate = PolicyUtils.policySpecialCharValidator(policyData.getRiskType());
 					if(!riskTypeValidate.contains("success")){
 						responseString.append("RiskType:" +  riskTypeValidate + "<br>");
 						valid = false;
@@ -151,7 +129,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 				}
 
 				if(policyData.getRiskLevel() != null){
-					String validateRiskLevel = emptyValidator(policyData.getRiskLevel());
+					String validateRiskLevel = PolicyUtils.policySpecialCharValidator(policyData.getRiskLevel());
 					if(!validateRiskLevel.contains("success")){
 						responseString.append("RiskLevel:" +  validateRiskLevel + "<br>");
 						valid = false;
@@ -162,7 +140,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 				}
 
 				if(policyData.getGuard() != null){
-					String validateGuard = emptyValidator(policyData.getGuard());
+					String validateGuard = PolicyUtils.policySpecialCharValidator(policyData.getGuard());
 					if(!validateGuard.contains("success")){
 						responseString.append("Guard:" +  validateGuard + "<br>");
 						valid = false;
@@ -174,7 +152,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 
 				if(policyData.getConfigPolicyType().equals("Base")){
 					if(policyData.getConfigName() != null){
-						String configNameValidate = emptyValidator(policyData.getConfigName());
+						String configNameValidate = PolicyUtils.policySpecialCharValidator(policyData.getConfigName());
 						if(!configNameValidate.contains("success")){
 							responseString.append("ConfigName:" +  configNameValidate + "<br>");
 							valid = false;
@@ -184,7 +162,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 						valid = false;
 					}
 					if(policyData.getConfigType() != null){
-						String configTypeValidate = emptyValidator(policyData.getConfigType());
+						String configTypeValidate = PolicyUtils.policySpecialCharValidator(policyData.getConfigType());
 						if(!configTypeValidate.contains("success")){
 							responseString.append("ConfigType:" +  configTypeValidate + "<br>");
 							valid = false;
@@ -198,17 +176,17 @@ public class PolicyValidationController extends RestrictedBaseController {
 						String policyType = policyData.getConfigType();
 						if (policyType != null) {
 							if (policyType.equals("JSON")) {
-								if (!isJSONValid(configBodyData)) {
+								if (!PolicyUtils.isJSONValid(configBodyData)) {
 									responseString.append("Config Body: JSON Content is not valid" + "<br>");
 									valid = false;
 								}
 							} else if (policyType.equals("XML")) {
-								if (!isXMLValid(configBodyData)) {
+								if (!PolicyUtils.isXMLValid(configBodyData)) {
 									responseString.append("Config Body: XML Content data is not valid" + "<br>");
 									valid = false;
 								}
 							} else if (policyType.equals("PROPERTIES")) {
-								if (!isPropValid(configBodyData)||configBodyData.equals("")) {
+								if (!PolicyUtils.isPropValid(configBodyData)||configBodyData.equals("")) {
 									responseString.append("Config Body: Property data is not valid" + "<br>");
 									valid = false;
 								} 
@@ -227,7 +205,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 
 				if(policyData.getConfigPolicyType().equals("Firewall Config")){
 					if(policyData.getConfigName() != null){
-						String configNameValidate = PolicyUtils.emptyPolicyValidator(policyData.getConfigName());
+						String configNameValidate = PolicyUtils.policySpecialCharValidator(policyData.getConfigName());
 						if(!configNameValidate.contains("success")){
 							responseString.append("<b>ConfigName</b>:<i>" +  configNameValidate + "</i><br>");
 							valid = false;
@@ -282,7 +260,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 							}
 						}
 						if(pmBody.getGeoLink() != null){
-							String result = PolicyUtils.emptyPolicyValidator(pmBody.getGeoLink());
+							String result = PolicyUtils.policySpecialCharValidator(pmBody.getGeoLink());
 							if(!result.contains("success")){
 								responseString.append("<b>GeoLink</b>:<i>" +  result + "</i><br>");
 								valid = false;
@@ -293,7 +271,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 								String key = entry.getKey();
 								String value = entry.getValue();
 								if(!key.contains("Message")){
-									String attributeValidate = PolicyUtils.emptyPolicyValidator(value);
+									String attributeValidate = PolicyUtils.policySpecialCharValidator(value);
 									if(!attributeValidate.contains("success")){
 										responseString.append("<b>Attributes</b>:<i>" +  key + " : value has spaces</i><br>");
 										valid = false;
@@ -308,7 +286,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 				}
 				if(policyData.getConfigPolicyType().equals("ClosedLoop_Fault")){
 					if(root.get("policyData").get("jsonBodyData") != null){
-						ClosedLoopFaultBody faultBody = (ClosedLoopFaultBody)mapper.readValue(root.get("policyData").get("jsonBodyData").toString(), ClosedLoopFaultBody.class);
+						ClosedLoopFaultBody faultBody = mapper.readValue(root.get("policyData").get("jsonBodyData").toString(), ClosedLoopFaultBody.class);
 						if(faultBody.getEmailAddress() != null){
 							String result = emailValidation(faultBody.getEmailAddress(), responseString.toString());
 							if(result != "success"){
@@ -333,11 +311,11 @@ public class PolicyValidationController extends RestrictedBaseController {
 							valid = false;
 						}
 						if(faultBody.getGeoLink() != null){
-							String result = PolicyUtils.emptyPolicyValidatorWithSpaceAllowed(faultBody.getGeoLink());
+							String result = PolicyUtils.policySpecialCharWithSpaceValidator(faultBody.getGeoLink());
 							if(!result.contains("success")){
 								responseString.append("<b>GeoLink</b>:<i>" +  result + "</i><br>");
 								valid = false;
-							};
+							}
 						}
 
 						if(faultBody.getTimeInterval() == 0){
@@ -429,7 +407,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 			}
 			if (policyData.getPolicyType().equals(DECISION_POLICY)){
 				if(policyData.getOnapName() != null){
-					String onapNameValidate = emptyValidator(policyData.getOnapName());
+					String onapNameValidate = PolicyUtils.policySpecialCharValidator(policyData.getOnapName());
 					if(!onapNameValidate.contains("success")){
 						responseString.append("OnapName:" +  onapNameValidate + "<br>");
 						valid = false;
@@ -513,7 +491,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 								valid = false;
 							}else{
 								for(String blackList: policyData.getYamlparams().getBlackList()){
-									if(blackList==null || !("success".equals(emptyValidator(blackList)))){
+									if(blackList==null || !("success".equals(PolicyUtils.policySpecialCharValidator(blackList)))){
 										responseString.append(" Guard Params <b>BlackList</b> Should be valid String" + "<br>");
 										valid = false;
 										break;
@@ -527,11 +505,11 @@ public class PolicyValidationController extends RestrictedBaseController {
 
 			if(policyData.getPolicyType().equals(ACTION_POLICY)){
 				if(policyData.getActionPerformer() != null){
-					String actionPerformer = emptyValidator(policyData.getActionPerformer());
+					String actionPerformer = PolicyUtils.policySpecialCharValidator(policyData.getActionPerformer());
 					if(!actionPerformer.contains("success")){
 						responseString.append("ActionPerformer:" +  actionPerformer + "<br>");
 						valid = false;
-					};
+					}
 				}else{
 					responseString.append("ActionPerformer: ActionPerformer Should not be empty" + "<br>");
 					valid = false;
@@ -561,7 +539,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 					valid = false;
 				}
 				if(policyData.getActionAttributeValue() != null){
-					String actionAttribute = emptyValidator(policyData.getActionAttributeValue());
+					String actionAttribute = PolicyUtils.policySpecialCharValidator(policyData.getActionAttributeValue());
 					if(!actionAttribute.contains("success")){
 						responseString.append("ActionAttribute:" +  actionAttribute + "<br>");
 						valid = false;
@@ -630,49 +608,6 @@ public class PolicyValidationController extends RestrictedBaseController {
 		return null;
 	}
 
-	protected String  emptyValidator(String field){
-		String error;
-		if ("".equals(field) || field.contains(" ") || !field.matches("^[a-zA-Z0-9_]*$")) {
-			error = "The Value in Required Field will allow only '{0-9}, {a-z}, {A-Z}, _' following set of Combinations";
-			return error;
-		} else {
-			if(CharMatcher.ASCII.matchesAllOf((CharSequence) field)){
-				error = "success";
-			}else{
-				error = "The Value Contains Non ASCII Characters";
-				return error;
-			}	
-		}
-		return error;	
-	}
-
-	protected String descriptionValidator(String field) {
-		String error;
-		if (field.contains("@CreatedBy:") || field.contains("@ModifiedBy:")) {
-			error = "The value in the description shouldn't contain @CreatedBy: or @ModifiedBy:";
-			return error;
-		} else {
-			error = "success";
-		}
-		return error;	
-	}
-
-	public String validateEmailAddress(String emailAddressValue) {
-		String error = "success";
-		List<String> emailList = Arrays.asList(emailAddressValue.toString().split(","));
-		for(int i =0 ; i < emailList.size() ; i++){
-			pattern = Pattern.compile(EMAIL_PATTERN);
-			matcher = pattern.matcher(emailList.get(i).trim());
-			if(!matcher.matches()){
-				error = "Please check the Following Email Address is not Valid ....   " +emailList.get(i).toString();
-				return error;
-			}else{
-				error = "success";
-			}
-		}
-		return error;		
-	}
-
 	protected String emailValidation(String email, String response){
 		if(email != null){
 			String validateEmail = PolicyUtils.validateEmailAddress(email.replace("\"", ""));
@@ -713,66 +648,4 @@ public class PolicyValidationController extends RestrictedBaseController {
 			}
 		}
 	}
-
-	// Validation for json.
-	protected static boolean isJSONValid(String data) {
-		JsonReader jsonReader = null;
-		try {
-			new JSONObject(data);
-			InputStream stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
-			jsonReader = Json.createReader(stream);
-			LOGGER.info("Json Value is: " + jsonReader.read().toString() );
-		} catch (Exception e) {
-			LOGGER.error("Exception Occured While Validating"+e);
-			return false;
-		}finally{
-			if(jsonReader != null){
-				jsonReader.close();
-			}
-		}
-		return true;
-	}
-
-	// Validation for XML.
-	private boolean isXMLValid(String data) {
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setValidating(false);
-		factory.setNamespaceAware(true);
-		try {
-			SAXParser parser = factory.newSAXParser();
-			XMLReader reader = parser.getXMLReader();
-			reader.setErrorHandler(new XMLErrorHandler());
-			reader.parse(new InputSource(new StringReader(data)));
-		} catch (Exception e) {
-			LOGGER.error("Exception Occured While Validating"+e);
-			return false;
-		}
-		return true;
-	}
-
-	// Validation for Properties file.
-	public boolean isPropValid(String prop) {
-		Scanner scanner = new Scanner(prop);
-		while (scanner.hasNextLine()) {
-			String line = scanner.nextLine();
-			line = line.replaceAll("\\s+", "");
-			if (line.startsWith("#")) {
-				continue;
-			} else {
-				if (line.contains("=")) {
-					String[] parts = line.split("=");
-					if (parts.length < 2) {
-						scanner.close();
-						return false;
-					}
-				} else {
-					scanner.close();
-					return false;
-				}
-			}
-		}
-		scanner.close();
-		return true;
-	}
-
 }

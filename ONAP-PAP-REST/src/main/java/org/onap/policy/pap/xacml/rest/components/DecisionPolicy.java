@@ -285,7 +285,7 @@ public class DecisionPolicy extends Policy {
             activeTimeRange.put("end", yamlParams.get("guardActiveEnd"));
 			String blackListString = yamlParams.get("blackList");
 			List<String> blackList = null;
-			if(blackListString!=null){
+            if(blackListString!=null && !blackListString.trim().isEmpty()){
 				if (blackListString.contains(",")){
 					blackList = Arrays.asList(blackListString.split(","));								
 				}
@@ -303,6 +303,9 @@ public class DecisionPolicy extends Policy {
 				templateFile = new File(classLoader.getResource(XACML_BLGUARD_TEMPLATE).getFile());
 				xacmlTemplatePath = templateFile.toPath();
                 cons.setActive_time_range(activeTimeRange);
+                if(blackList==null || blackList.isEmpty()){
+                    throw new BuilderException("blackList is required");
+                }
                 cons.setBlacklist(blackList);
 				break;
 			default:

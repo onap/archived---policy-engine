@@ -99,7 +99,7 @@ public class NotificationService {
 			dmaapServers = XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_SERVERS);
 			aafLogin = XACMLProperties.getProperty("DMAAP_AAF_LOGIN");
 			aafPassword = XACMLProperties.getProperty("DMAAP_AAF_PASSWORD");
-			interval = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_NOTIFICATION_DELAY, Integer.toString(interval)));
+            interval = Integer.parseInt(XACMLProperties.getProperty("CLIENT_INTERVAL", Integer.toString(interval)));
 			if(dmaapServers==null || aafLogin==null || aafPassword==null){
 				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
 				return;
@@ -269,7 +269,7 @@ public class NotificationService {
 					Date currentTime = new Date();
 					long timeDiff = 0;
 					timeDiff = currentTime.getTime()-map.getValue().getTime();
-					if(timeDiff < (interval+1500)){
+					if(timeDiff > (interval+1500)){
 						removeTopic(map.getKey());
 					}
 				}

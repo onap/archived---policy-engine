@@ -53,8 +53,11 @@ import com.github.fge.jsonpatch.diff.JsonDiff;
  */
 public class BackUpMonitor {
     private static final Logger LOGGER = Logger.getLogger(BackUpMonitor.class.getName());
-    private static final int DEFAULT_PING = 15000; // Value is in milliseconds.
-
+    private static final int DEFAULT_PING = 500; // Value is in milliseconds.
+    private static final String PING_INTERVAL = "ping_interval";
+    private static final String MASTER = "MASTER";
+    private static final String SLAVE = "SLAVE";
+    
     private static BackUpMonitor instance = null;
     private static String resourceName = null;
     private static String resourceNodeName = null;
@@ -65,6 +68,8 @@ public class BackUpMonitor {
     private static Object lock = new Object();
     private static Object notificationLock = new Object();
     private static BackUpHandler handler = null;
+    private static Boolean stopFlag = false;
+    private static Thread t = null;
     private EntityManager em;
     private EntityManagerFactory emf;
 
@@ -77,14 +82,11 @@ public class BackUpMonitor {
 
     private BackUpMonitor(String resourceNodeName, String resourceName, Properties properties, BackUpHandler handler)
             throws BackUpMonitorException {
-        if (instance == null) {
-            instance = this;
-        }
-        BackUpMonitor.resourceNodeName = resourceNodeName;
-        BackUpMonitor.resourceName = resourceName;
-        BackUpMonitor.handler = handler;
+        init(resourceName, resourceNodeName, handler);
         // Create Persistence Entity
-        properties.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistencePU.xml");
+        if(!properties.containsKey(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML)){
+            properties.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistencePU.xml");
+        }
         emf = Persistence.createEntityManagerFactory("PolicyEngineUtils", properties);
         if (emf == null) {
             LOGGER.error("Unable to create Entity Manger Factory ");
@@ -94,10 +96,29 @@ public class BackUpMonitor {
 
         // Check Database if this is Master or Slave.
         checkDataBase();
-
         // Start thread.
-        Thread t = new Thread(new BMonitor());
+        startThread(new BMonitor());
+    }
+    
+    private static void startThread(BMonitor bMonitor) {
+        t = new Thread(bMonitor);
         t.start();
+    }
+
+    public static void stop() throws InterruptedException{
+        stopFlag = true;
+        if(t!=null){
+            t.interrupt();
+            t.join();
+        }
+        instance = null;
+    }
+
+    private static void init(String resourceName, String resourceNodeName, BackUpHandler handler) {
+        BackUpMonitor.resourceNodeName = resourceNodeName;
+        BackUpMonitor.resourceName = resourceName;
+        BackUpMonitor.handler = handler;
+        stopFlag = false;
     }
 
     /**
@@ -142,17 +163,12 @@ public class BackUpMonitor {
             LOGGER.error("javax.persistence.jdbc.user property is empty");
             return false;
         }
-        if (properties.getProperty("javax.persistence.jdbc.password") == null
-                || properties.getProperty("javax.persistence.jdbc.password").trim().equals("")) {
-            LOGGER.error("javax.persistence.jdbc.password property is empty");
-            return false;
-        }
-        if (properties.getProperty("ping_interval") == null
-                || properties.getProperty("ping_interval").trim().equals("")) {
+        if (properties.getProperty(PING_INTERVAL) == null
+                || properties.getProperty(PING_INTERVAL).trim().equals("")) {
             LOGGER.info("ping_interval property not specified. Taking default value");
         } else {
             try {
-                pingInterval = Integer.parseInt(properties.getProperty("ping_interval").trim());
+                pingInterval = Integer.parseInt(properties.getProperty(PING_INTERVAL).trim());
             } catch (NumberFormatException e) {
                 LOGGER.warn("Ignored invalid proeprty ping_interval. Taking default value: " + pingInterval);
                 pingInterval = DEFAULT_PING;
@@ -185,7 +201,7 @@ public class BackUpMonitor {
         @Override
         public void run() {
             LOGGER.info("Starting BackUpMonitor Thread.. ");
-            while (true) {
+            while (!stopFlag) {
                 try {
                     TimeUnit.MILLISECONDS.sleep(pingInterval);
                     checkDataBase();
@@ -198,26 +214,27 @@ public class BackUpMonitor {
 
     // Set Master
     private static BackUpMonitorEntity setMaster(BackUpMonitorEntity bMEntity) {
-        bMEntity.setFlag("MASTER");
+        bMEntity.setFlag(MASTER);
         setFlag(true);
         return bMEntity;
     }
 
     // Set Slave
     private static BackUpMonitorEntity setSlave(BackUpMonitorEntity bMEntity) {
-        bMEntity.setFlag("SLAVE");
+        bMEntity.setFlag(SLAVE);
         setFlag(false);
         return bMEntity;
     }
 
     // Check Database and set the Flag.
     private void checkDataBase() throws BackUpMonitorException {
-        EntityTransaction et = em.getTransaction();
-        setNotificationRecord();
-        // Clear Cache.
-        LOGGER.info("Clearing Cache");
-        em.getEntityManagerFactory().getCache().evictAll();
+        EntityTransaction et = null;
         try {
+            et = em.getTransaction();
+            setNotificationRecord();
+            // Clear Cache.
+            LOGGER.info("Clearing Cache");
+            em.getEntityManagerFactory().getCache().evictAll();
             LOGGER.info("Checking Datatbase for BackUpMonitor.. ");
             et.begin();
             Query query = em.createQuery("select b from BackUpMonitorEntity b where b.resourceNodeName = :nn");
@@ -247,7 +264,7 @@ public class BackUpMonitor {
                     BackUpMonitorEntity bMEntity = (BackUpMonitorEntity) bMList.get(i);
                     LOGGER.info("Refreshing Entity. ");
                     em.refresh(bMEntity);
-                    if (bMEntity.getFlag().equalsIgnoreCase("MASTER")) {
+                    if (bMEntity.getFlag().equalsIgnoreCase(MASTER)) {
                         masterEntities.add(bMEntity);
                     }
                     if (bMEntity.getResourceName().equals(resourceName)) {
@@ -256,7 +273,7 @@ public class BackUpMonitor {
                 }
                 if (selfEntity != null) {
                     LOGGER.info("Resource Name already Exists: " + resourceName);
-                    if (selfEntity.getFlag().equalsIgnoreCase("MASTER")) {
+                    if (selfEntity.getFlag().equalsIgnoreCase(MASTER)) {
                         // Already Master Mode.
                         setFlag(true);
                         LOGGER.info(resourceName + " is on Master Mode");
@@ -306,19 +323,19 @@ public class BackUpMonitor {
                             // Slave.
                             BackUpMonitorEntity masterEntity = null;
                             for (BackUpMonitorEntity currentEntity : masterEntities) {
-                                if (currentEntity.getFlag().equalsIgnoreCase("MASTER")) {
+                                if (currentEntity.getFlag().equalsIgnoreCase(MASTER)) {
                                     if (masterEntity == null) {
                                         masterEntity = currentEntity;
                                     } else if (currentEntity.getTimeStamp().getTime() > masterEntity.getTimeStamp()
                                             .getTime()) {
                                         // False Master, Update master to slave and take currentMaster as Master.
-                                        masterEntity.setFlag("SLAVE");
+                                        masterEntity.setFlag(SLAVE);
                                         masterEntity.setTimeStamp(new Date());
                                         em.persist(masterEntity);
                                         em.flush();
                                         masterEntity = currentEntity;
                                     } else {
-                                        currentEntity.setFlag("SLAVE");
+                                        currentEntity.setFlag(SLAVE);
                                         currentEntity.setTimeStamp(new Date());
                                         em.persist(currentEntity);
                                         em.flush();
@@ -339,7 +356,7 @@ public class BackUpMonitor {
                                 if (timeDiff > (pingInterval + 1500)) {
                                     // This is down or has an issue and we need to become Master while turning the
                                     // Master to slave.
-                                    masterEntity.setFlag("SLAVE");
+                                    masterEntity.setFlag(SLAVE);
                                     String lastNotification = null;
                                     if (masterEntity.getNotificationRecord() != null) {
                                         lastNotification = calculatePatch(masterEntity.getNotificationRecord());
@@ -366,7 +383,7 @@ public class BackUpMonitor {
             et.commit();
         } catch (Exception e) {
             LOGGER.error("failed Database Operation " + e.getMessage(), e);
-            if (et.isActive()) {
+            if (et!=null && et.isActive()) {
                 et.rollback();
             }
             throw new BackUpMonitorException(e);
