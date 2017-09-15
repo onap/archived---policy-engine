@@ -26,9 +26,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.drools.core.io.impl.ReaderResource;
 import org.drools.verifier.Verifier;
@@ -36,86 +40,128 @@ import org.drools.verifier.VerifierError;
 import org.drools.verifier.builder.VerifierBuilder;
 import org.drools.verifier.builder.VerifierBuilderFactory;
 import org.kie.api.io.ResourceType;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
+import com.att.aft.dme2.internal.gson.JsonParser;
+import com.att.aft.dme2.internal.gson.JsonSyntaxException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.CharMatcher;
 
 public class PolicyUtils {
-	
-	public static final String EMAIL_PATTERN =
+    private static final Logger LOGGER = FlexLogger.getLogger(PolicyUtils.class);
+    
+    public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-	private static final String PACKAGE_ERROR = "mismatched input '{' expecting one of the following tokens: '[package";
-	private static final String SUCCESS = "success";
-	
-	private PolicyUtils(){
-		// Private Constructor
-	}
-	public static String objectToJsonString(Object o) throws JsonProcessingException{
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.writeValueAsString(o);
-	}
-	
-	public static <T> T jsonStringToObject(String jsonString, Class<T> className) throws IOException{
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(jsonString, className);
-	}
-	
-	public static String decode(String encodedString) throws UnsupportedEncodingException { 
-		if(encodedString!=null && !encodedString.isEmpty()){ 
-			return new String(Base64.getDecoder().decode(encodedString) ,"UTF-8"); 
-		}else{ 
-			return null; 
-		} 
-	}
-	
-	public static String[] decodeBasicEncoding(String encodedValue) throws UnsupportedEncodingException {
-		if(encodedValue!=null && encodedValue.contains("Basic ")){
-			String encodedUserPassword = encodedValue.replaceFirst("Basic"	+ " ", "");
-			String usernameAndPassword = null;
-			byte[] decodedBytes = Base64.getDecoder().decode(encodedUserPassword);
-			usernameAndPassword = new String(decodedBytes, "UTF-8");
-			StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-			String username = tokenizer.nextToken();
-			String password = tokenizer.nextToken();
-			return new String[]{username, password};
-		}else{
-			return new String[]{};
-		}
-	}
-	
-	public static String  emptyPolicyValidator(String field){
+    private static final String PACKAGE_ERROR = "mismatched input '{' expecting one of the following tokens: '[package";
+    private static final String SUCCESS = "success";
+    
+    private PolicyUtils(){
+        // Private Constructor
+    }
+    
+    /**
+     * Converts an Object to JSON String 
+     * 
+     * @param o Object 
+     * @return String format of Object JSON. 
+     * @throws JsonProcessingException
+     */
+    public static String objectToJsonString(Object o) throws JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(o);
+    }
+    
+    /**
+     * Converts JSON string into Object
+     * 
+     * @param jsonString 
+     * @param className equivalent Class of the given JSON string 
+     * @return T instance of the class given. 
+     * @throws IOException
+     */
+    public static <T> T jsonStringToObject(String jsonString, Class<T> className) throws IOException{
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(jsonString, className);
+    }
+    
+    /**
+     * Decode a base64 string 
+     * 
+     * @param encodedString
+     * @return String
+     * @throws UnsupportedEncodingException
+     */
+    public static String decode(String encodedString) throws UnsupportedEncodingException { 
+        if(encodedString!=null && !encodedString.isEmpty()){ 
+            return new String(Base64.getDecoder().decode(encodedString) ,"UTF-8"); 
+        }else{ 
+            return null; 
+        } 
+    }
+    
+    /**
+     * Decodes Basic Authentication 
+     * 
+     * @param encodedValue
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public static String[] decodeBasicEncoding(String encodedValue) throws UnsupportedEncodingException {
+        if(encodedValue!=null && encodedValue.contains("Basic ")){
+            String encodedUserPassword = encodedValue.replaceFirst("Basic"  + " ", "");
+            String usernameAndPassword = null;
+            byte[] decodedBytes = Base64.getDecoder().decode(encodedUserPassword);
+            usernameAndPassword = new String(decodedBytes, "UTF-8");
+            StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
+            String username = tokenizer.nextToken();
+            String password = tokenizer.nextToken();
+            return new String[]{username, password};
+        }else{
+            return new String[]{};
+        }
+    }
+    
+    /**
+     * Validate a field if contains space or unacceptable policy input and return "success" if good. 
+     * 
+     * @param field
+     * @return
+     */
+    public static String  policySpecialCharValidator(String field){
         String error;
         if ("".equals(field) || field.contains(" ") || !field.matches("^[a-zA-Z0-9_]*$")) {
             error = "The Value in Required Field will allow only '{0-9}, {a-z}, {A-Z}, _' following set of Combinations";
-            return error;
-        } else {
-            if(CharMatcher.ASCII.matchesAllOf((CharSequence) field)){
-                 error = SUCCESS;
-            }else{
-                error = "The Value Contains Non ASCII Characters";
-                return error;
-            }   
+            return error; 
         }
-        return error;   
+        return SUCCESS;   
     } 
     
-	public static String  emptyPolicyValidatorWithSpaceAllowed(String field){
+    /**
+     * Validate a field (accepts space) if it contains unacceptable policy input and return "success" if good. 
+     * 
+     * @param field
+     * @return
+     */
+    public static String  policySpecialCharWithSpaceValidator(String field){
         String error;
         if ("".equals(field) || !field.matches("^[a-zA-Z0-9_ ]*$")) {
             error = "The Value in Required Field will allow only '{0-9}, {a-z}, {A-Z}, _' following set of Combinations";
             return error;
-        } else {
-            if(CharMatcher.ASCII.matchesAllOf((CharSequence) field)){
-                 error = SUCCESS;
-            }else{
-                error = "The Value Contains Non ASCII Characters";
-                return error;
-            }   
         }
-        return error;   
+        return SUCCESS;   
     } 
+    
+    /**
+     * Validate the XACML description tag and return "success" if good. 
+     * 
+     * @param field
+     * @return
+     */
     public static String descriptionValidator(String field) {
         String error;
         if (field.contains("@CreatedBy:") || field.contains("@ModifiedBy:")) {
@@ -127,15 +173,38 @@ public class PolicyUtils {
         return error;   
     }
     
-    public static Boolean isInteger(String number){
-    	try{
-    		Integer.parseInt(number);
-    	}catch(NumberFormatException e){
-    		return false;
-    	}
-    	return true;
+    /**
+     * Validate if string contains non ASCII characters 
+     * 
+     * @param value
+     * @return
+     */
+    public static boolean containsNonAsciiEmptyChars(String value) {
+        return (value == null|| value.contains(" ") || "".equals(value.trim())|| !CharMatcher.ASCII.matchesAllOf((CharSequence) value))? true:false;
     }
     
+    /**
+     * Validate if given string is an integer. 
+     * 
+     * @param number
+     * @return
+     */
+    public static Boolean isInteger(String number){
+        if(number==null) {
+            return false;
+        }
+        for (char c : number.toCharArray()){
+            if (!Character.isDigit(c)) return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Validate Email Address and return "success" if good. 
+     * 
+     * @param emailAddressValue
+     * @return
+     */
     public static String validateEmailAddress(String emailAddressValue) {
         String error = SUCCESS;
         List<String> emailList = Arrays.asList(emailAddressValue.split(","));
@@ -152,8 +221,11 @@ public class PolicyUtils {
         return error;       
     }
     
-    /*
-     * Check for "[ERR" to see if there are any errors. 
+    /**
+     * Validates BRMS rule as per Policy Platform and return string contains "[ERR" if there are any errors.
+     * 
+     * @param rule
+     * @return String error message
      */
     public static String brmsRawValidate(String rule){
         VerifierBuilder vBuilder = VerifierBuilderFactory.newVerifierBuilder();
@@ -161,19 +233,19 @@ public class PolicyUtils {
         verifier.addResourcesToVerify(new ReaderResource(new StringReader(rule)), ResourceType.DRL);
         // Check if there are any Errors in Verification. 
         if(!verifier.getErrors().isEmpty()){
-        	boolean ignore = false;
+            boolean ignore = false;
             StringBuilder message = new StringBuilder("Not a Valid DRL rule"); 
             for(VerifierError error: verifier.getErrors()){
                 // Ignore annotations Error Messages
                 if(!error.getMessage().contains("'@'") && !error.getMessage().contains(PACKAGE_ERROR)){
-                	ignore= true;
+                    ignore= true;
                     message.append("\n" + error.getMessage());
                 }
             }
-            // Ignore new package names with {
+            // Ignore new package names with '{'
             // More checks for message to check if its a package error.
             if(ignore && !message.toString().contains("Parser returned a null Package")){
-            	message.append("[ERR 107]");
+                message.append("[ERR 107]");
             }
             return message.toString();
         }
@@ -181,21 +253,90 @@ public class PolicyUtils {
     }
     
     /**
-	 * Given a version string consisting of integers with dots between them, convert it into an array of ints.
-	 * 
-	 * @param version
-	 * @return
-	 * @throws NumberFormatException
-	 */
-	public static int[] versionStringToArray(String version) throws NumberFormatException {
-		if (version == null || version.length() == 0) {
-			return new int[0];
-		}
-		String[] stringArray = version.split("\\.");
-		int[] resultArray = new int[stringArray.length];
-		for (int i = 0; i < stringArray.length; i++) {
-			resultArray[i] = Integer.parseInt(stringArray[i]);
-		}
-		return resultArray;
-	}
+     * Validates if the given string is proper JSON format. 
+     * 
+     * @param data
+     * @return
+     */
+    public static boolean isJSONValid(String data) {
+        try{
+            JsonParser parser = new JsonParser();
+            parser.parse(data);
+        }catch(JsonSyntaxException e){
+            LOGGER.error("Exception Occurred While Validating"+e);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Validates if the given string is proper XML format. 
+     * 
+     * @param data
+     * @return
+     */
+    public static boolean isXMLValid(String data) {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setValidating(false);
+        factory.setNamespaceAware(true);
+        try {
+            SAXParser parser = factory.newSAXParser();
+            XMLReader reader = parser.getXMLReader();
+            reader.setErrorHandler(new XMLErrorHandler());
+            reader.parse(new InputSource(new StringReader(data)));
+        } catch (Exception e) {
+            LOGGER.error("Exception Occured While Validating"+e);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Validates if given string is valid Properties format. 
+     * 
+     * @param prop
+     * @return
+     */
+    public static boolean isPropValid(String prop) {
+        Scanner scanner = new Scanner(prop);
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            line = line.replaceAll("\\s+", "");
+            if (line.startsWith("#")) {
+                continue;
+            } else {
+                if (line.contains("=")) {
+                    String[] parts = line.split("=");
+                    if (parts.length < 2) {
+                        scanner.close();
+                        return false;
+                    }
+                } else if(!line.trim().isEmpty()){
+                    scanner.close();
+                    return false;
+                }
+            }
+        }
+        scanner.close();
+        return true;
+    }
+    
+    /**
+     * Given a version string consisting of integers with dots between them, convert it into an array of integers.
+     * 
+     * @param version
+     * @return 
+     * @throws NumberFormatException
+     */
+    public static int[] versionStringToArray(String version){
+        if (version == null || version.length() == 0) {
+            return new int[0];
+        }
+        String[] stringArray = version.split("\\.");
+        int[] resultArray = new int[stringArray.length];
+        for (int i = 0; i < stringArray.length; i++) {
+            resultArray[i] = Integer.parseInt(stringArray[i].trim());
+        }
+        return resultArray;
+    }
 }

@@ -15,11 +15,11 @@
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ONAPName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
                 <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${actor}</AttributeValue>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">(?i)${actor}</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="actor" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
                 <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${recipe}</AttributeValue>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">(?i)${recipe}</AttributeValue>
                     <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="recipe" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
                 </Match>
                 <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">

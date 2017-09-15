@@ -18,32 +18,21 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.std;
+package org.onap.policy.utils.test;
 
-import org.onap.policy.api.RemovedPolicy;
+import org.onap.policy.api.PDPNotification;
+import org.onap.policy.utils.BackUpHandler;
 
-public class StdRemovedPolicy implements RemovedPolicy{
-	private String policyName = null;
-	private String versionNo = null;
-	
+public class Handler implements BackUpHandler{
+
 	@Override
-	public String getVersionNo() {
-		return this.versionNo;
+	public void notificationReceived(PDPNotification notification) {
+		System.out.println("Received Notification from PDP. ");
 	}
-	
-	public void setVersionNo(String versionNo) {
-		this.versionNo = versionNo;
-	}
-	
+
 	@Override
-	public String getPolicyName() {
-		if(policyName!=null && policyName.contains(".xml")){
-			return (policyName.substring(0, policyName.substring(0, policyName.lastIndexOf('.')).lastIndexOf('.')));
-		}
-		return this.policyName;
+	public void runOnNotification(PDPNotification notification) {
+		System.out.println("Running main Notification Function. ");
 	}
 	
-	public void setPolicyName(String policyName) {
-		this.policyName = policyName;
-	}
-}	
+}

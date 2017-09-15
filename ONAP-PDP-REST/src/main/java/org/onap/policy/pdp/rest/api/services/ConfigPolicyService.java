@@ -82,12 +82,12 @@ public class ConfigPolicyService {
 			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Config Name given.";
 			return false;
 		}
-		message = PolicyUtils.emptyPolicyValidator(onapName);
+		message = PolicyUtils.policySpecialCharValidator(onapName);
         if(!message.contains("success")){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE+ message;
             return false;
         }
-        message = PolicyUtils.emptyPolicyValidator(configName);
+        message = PolicyUtils.policySpecialCharValidator(configName);
         if(!message.contains("success")){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE+ message;
             return false;
