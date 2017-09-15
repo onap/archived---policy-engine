@@ -20,7 +20,6 @@
 
 package org.onap.policy.utils;
 
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Properties;
 
@@ -70,7 +69,7 @@ public interface BusConsumer {
 		public DmaapConsumerWrapper(List<String> servers, String topic, 
 								String aafLogin, String aafPassword,
 								String consumerGroup, String consumerInstance,
-								int fetchTimeout, int fetchLimit)  throws MalformedURLException{
+								int fetchTimeout, int fetchLimit){
 					
 			this.consumer = new MRConsumerImpl(servers, topic, 
 											   consumerGroup, consumerInstance, 

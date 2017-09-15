@@ -24,18 +24,23 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import org.apache.commons.io.FilenameUtils;
+import org.onap.policy.common.logging.eelf.MessageCodes;
+import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.utils.PolicyUtils;
+
+import com.att.research.xacml.api.pap.PAPException;
+import com.att.research.xacml.std.IdentifierImpl;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -50,21 +55,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
-import org.apache.commons.io.FilenameUtils;
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.IdentifierImpl;
 
 public class ConfigPolicy extends Policy {
 
@@ -148,15 +138,15 @@ public class ConfigPolicy extends Policy {
 		String id = policyAdapter.getConfigType();
 		if (id != null) {
 			if (id.equals(JSON_CONFIG)) {
-				if (!isJSONValid(configBodyData)) {
+				if (!PolicyUtils.isJSONValid(configBodyData)) {
 					isValidForm = false;
 				}
 			} else if (id.equals(XML_CONFIG)) {
-				if (!isXMLValid(configBodyData)) {
+				if (!PolicyUtils.isXMLValid(configBodyData)) {
 					isValidForm = false;
 				}
 			} else if (id.equals(PROPERTIES_CONFIG)) {
-				if (!isPropValid(configBodyData)||configBodyData.equals("")) {
+				if (!PolicyUtils.isPropValid(configBodyData)||configBodyData.equals("")) {
 					isValidForm = false;
 				} 
 			} else if (id.equals(OTHER_CONFIG)) {
@@ -166,68 +156,6 @@ public class ConfigPolicy extends Policy {
 			}
 		}
 		return isValidForm;
-
-	}
-
-	// Validation for XML.
-	private boolean isXMLValid(String data) {
-
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setValidating(false);
-		factory.setNamespaceAware(true);
-		try {
-			SAXParser parser = factory.newSAXParser();
-			XMLReader reader = parser.getXMLReader();
-			reader.setErrorHandler(new XMLErrorHandler());
-			reader.parse(new InputSource(new StringReader(data)));
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			LOGGER.debug(e);
-			return false;
-		}
-		return true;
-
-	}
-
-	// Validation for Properties file.
-	public boolean isPropValid(String prop) {
-
-		Scanner scanner = new Scanner(prop);
-		while (scanner.hasNextLine()) {
-			String line = scanner.nextLine();
-			line.replaceAll("\\s+", "");
-			if (line.startsWith("#")) {
-				continue;
-			} else {
-				if (line.contains("=")) {
-					String[] parts = line.split("=");
-					if (parts.length < 2) {
-						scanner.close();
-						return false;
-					}
-				} else {
-					scanner.close();
-					return false;
-				}
-			}
-		}
-		scanner.close();
-		return true;
-
-	}
-
-	public class XMLErrorHandler implements ErrorHandler {
-
-		public void warning(SAXParseException e) throws SAXException {
-			System.out.println(e.getMessage());
-		}
-
-		public void error(SAXParseException e) throws SAXException {
-			System.out.println(e.getMessage());
-		}
-
-		public void fatalError(SAXParseException e) throws SAXException {
-			System.out.println(e.getMessage());
-		}
 
 	}
 

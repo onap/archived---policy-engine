@@ -20,23 +20,17 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.json.Json;
-import javax.json.JsonReader;
-
 import org.apache.commons.io.FilenameUtils;
-import org.json.JSONObject;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -200,33 +194,6 @@ public abstract class Policy {
 		dynamicMatch.setMatchId(FUNCTION_STRING_REGEX_MATCH);
 
 		return dynamicMatch;
-	}
-
-	//validation for numeric
-	protected boolean isNumeric(String str){
-		for (char c : str.toCharArray()){
-			if (!Character.isDigit(c)) return false;
-		}
-		return true;
-	}
-
-	// Validation for json.
-	protected static boolean isJSONValid(String data) {
-		JsonReader jsonReader = null;
-		try {
-		    new JSONObject(data);
-			InputStream stream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
-			jsonReader = Json.createReader(stream);
-			LOGGER.info("Json Value is: " + jsonReader.read().toString() );
-		} catch (Exception e) {
-			LOGGER.error("Exception Occured while reading json"+e);
-			return false;
-		}finally{
-			if(jsonReader != null){
-				jsonReader.close();
-			}
-		}
-		return true;
 	}
 
 	//  the Policy Name as Unique One throws error

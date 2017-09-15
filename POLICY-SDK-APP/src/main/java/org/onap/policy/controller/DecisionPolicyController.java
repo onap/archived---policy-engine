@@ -120,6 +120,9 @@ public class DecisionPolicyController extends RestrictedBaseController {
 										//
 										AttributeValueType attributeValue = match.getAttributeValue();
 										String value = (String) attributeValue.getContent().get(0);
+                                        if(value!=null){
+                                            value = value.replaceAll("\\(\\?i\\)", "");
+                                        }
 										AttributeDesignatorType designator = match.getAttributeDesignator();
 										String attributeId = designator.getAttributeId();
 										// First match in the target is OnapName, so set that value.
@@ -203,13 +206,13 @@ public class DecisionPolicyController extends RestrictedBaseController {
 									YAMLParams yamlParams = new YAMLParams();
 									for(int i=0; i<attributeList.size() ; i++){
 										Map<String, String> map = (Map<String,String>)attributeList.get(i);
-										if(map.get("key").equals("actor")){
+										if("actor".equals(map.get("key"))){
 											yamlParams.setActor(map.get("value"));
-										}else if(map.get("key").equals("recipe")){
+										}else if("recipe".equals(map.get("key"))){
 											yamlParams.setRecipe(map.get("value"));
-										}else if(map.get("key").equals("targets")){
+										}else if("target".equals(map.get("key"))){
 											yamlParams.setTargets(Arrays.asList(map.get("value").split("\\|")));
-										}else if(map.get("key").equals("clname")){
+										}else if("clname".equals(map.get("key"))){
 											yamlParams.setClname(map.get("value"));
 										}
 									}

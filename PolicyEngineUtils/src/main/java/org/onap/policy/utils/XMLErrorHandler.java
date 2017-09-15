@@ -18,21 +18,30 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.test;
+package org.onap.policy.utils;
 
-import org.onap.policy.api.PDPNotification;
-import org.onap.policy.utils.BackUpHandler;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
-public class Handler implements BackUpHandler{
+public class XMLErrorHandler implements ErrorHandler {
+    private static final Logger LOGGER = FlexLogger.getLogger(XMLErrorHandler.class);
+    
+    @Override
+    public void warning(SAXParseException exception) throws SAXException {
+        LOGGER.debug(exception);
+    }
 
-	@Override
-	public void notificationReceived(PDPNotification notification) {
-		System.out.println("Received Notification from PDP. ");
-	}
+    @Override
+    public void error(SAXParseException exception) throws SAXException {
+        LOGGER.error(exception);
+    }
 
-	@Override
-	public void runOnNotification(PDPNotification notification) {
-		System.out.println("Running main Notification Function. ");
-	}
-	
+    @Override
+    public void fatalError(SAXParseException exception) throws SAXException {
+        LOGGER.error(exception);
+    }
+
 }

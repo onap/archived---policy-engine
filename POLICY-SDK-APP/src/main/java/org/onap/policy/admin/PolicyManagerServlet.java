@@ -1458,7 +1458,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				validateName = name;
 			}
 			if(!name.isEmpty()){
-				String validate = PolicyUtils.emptyPolicyValidator(validateName);
+				String validate = PolicyUtils.policySpecialCharValidator(validateName);
 				if(!validate.contains("success")){
 					return error(validate);
 				} 

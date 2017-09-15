@@ -65,9 +65,6 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 	private static Access access = null;
 
 	private AAFPolicyClientImpl(Properties properties) throws AAFPolicyException{
-		if(instance == null){
-			instance = this;
-		}
 		setup(properties);
 	}
 
@@ -93,7 +90,6 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 			props.setProperty("AFT_LATITUDE", properties.getProperty("AFT_LATITUDE", DEFAULT_AFT_LATITUDE));
 			props.setProperty("AFT_LONGITUDE", properties.getProperty("AFT_LONGITUDE", DEFAULT_AFT_LONGITUDE));
 			String aftEnv = TEST_AFT_ENVIRONMENT;
-			//props.setProperty(Config.CADI_KEYFILE,"keyfile");
 			props.setProperty("aaf_id",properties.getProperty("aaf_id", "aafID"));
 			props.setProperty("aaf_password", properties.getProperty("aaf_password", "aafPass"));
 			if(properties.containsKey(Config.AAF_URL)){
@@ -203,8 +199,8 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 	private static boolean setUpAAF(){
 		try {
 			aafCon = new AAFConDME2(access);
-			aafLurPerm = aafCon.newLur();//new AAFLurPerm(aafCon);
-			aafAuthn = aafCon.newAuthn(aafLurPerm);//new AAFAuthn(aafCon, aafLurPerm);
+			aafLurPerm = aafCon.newLur();
+			aafAuthn = aafCon.newAuthn(aafLurPerm);
 			return true;
 		} catch (Exception e) {
 			logger.error("Error while setting up AAF Connection " + e.getMessage() + e);

@@ -117,10 +117,6 @@
 					<groupId>org.powermock</groupId>
 					<artifactId>powermock-api-mockito</artifactId>
 				</exclusion>
-				<exclusion>
-					<groupId>com.att.aft</groupId>
-    				<artifactId>dme2</artifactId>
-				</exclusion>
 			</exclusions>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->

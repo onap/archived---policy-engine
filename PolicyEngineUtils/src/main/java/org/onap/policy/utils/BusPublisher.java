@@ -42,7 +42,7 @@ public interface BusPublisher {
 	 * @return true if success, false otherwise
 	 * @throws IllegalArgumentException if no message provided
 	 */
-	public boolean send(String partitionId, String message) throws IllegalArgumentException;
+	public boolean send(String partitionId, String message);
 	
 	/**
 	 * closes the publisher
@@ -114,8 +114,7 @@ public interface BusPublisher {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public boolean send(String partitionId, String message) 
-				throws IllegalArgumentException {
+		public boolean send(String partitionId, String message){
 			if (message == null)
 				throw new IllegalArgumentException("No message provided");
 			

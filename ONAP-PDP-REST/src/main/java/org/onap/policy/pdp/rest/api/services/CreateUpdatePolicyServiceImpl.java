@@ -234,12 +234,12 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Name given.";
             return false;
         }
-        message = PolicyUtils.emptyPolicyValidator(policyScope);
+        message = PolicyUtils.policySpecialCharValidator(policyScope);
         if(!message.contains("success")){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE+ message;
             return false;
         }
-        message = PolicyUtils.emptyPolicyValidator(policyName);
+        message = PolicyUtils.policySpecialCharValidator(policyName);
         if(!message.contains("success")){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE+ message;
             return false;
