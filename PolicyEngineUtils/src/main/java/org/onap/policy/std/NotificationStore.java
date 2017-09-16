@@ -181,6 +181,7 @@ public class NotificationStore {
 						sUPolicy.setMatches(uPolicy.getMatches());
 						sUPolicy.setPolicyName(uPolicy.getPolicyName());
 						sUPolicy.setVersionNo(uPolicy.getVersionNo());
+						sUPolicy.setUpdateType(uPolicy.getUpdateType());
 						updatedPolicies.add(sUPolicy);
 					}
 					
@@ -211,6 +212,7 @@ public class NotificationStore {
 							sUPolicy.setMatches(newUpdatedPolicy.getMatches());
 							sUPolicy.setPolicyName(newUpdatedPolicy.getPolicyName());
 							sUPolicy.setVersionNo(newUpdatedPolicy.getVersionNo());
+							sUPolicy.setUpdateType(newUpdatedPolicy.getUpdateType());
 							updatedPolicies.add(sUPolicy);
 						}
 					}

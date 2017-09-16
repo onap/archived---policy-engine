@@ -137,6 +137,9 @@ public class BRMSPush {
     private boolean syncFlag = false;
 
     public BRMSPush(String propertiesFile, BackUpHandler handler) throws PolicyException {
+        if(propertiesFile==null || handler==null){
+            throw new PolicyException("Error no propertiesFile or handler");
+        }
         Properties config = new Properties();
         Path file = Paths.get(propertiesFile);
         if (Files.notExists(file)) {
@@ -185,7 +188,9 @@ public class BRMSPush {
         } catch (Exception e) {
             LOGGER.error("Error starting BackUpMonitor: " + e);
         }
-        config.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistenceBRMS.xml");
+        if(!config.containsKey(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML)){
+            config.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistenceBRMS.xml");
+        }
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("BRMSGW", config);
         em = emf.createEntityManager();
         defaultName = config.getProperty("defaultName");
@@ -1014,6 +1019,10 @@ public class BRMSPush {
 
     private void readGroups(Properties config) throws PolicyException {
         String[] groupNames = null;
+        if (!config.containsKey("groupNames") || config.getProperty("groupNames")==null){
+            throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE
+                    + "groupNames property is missing or empty from the property file ");
+        }
         if (config.getProperty("groupNames").contains(",")) {
             groupNames = config.getProperty("groupNames").replaceAll(" ", "").split(",");
         } else {
