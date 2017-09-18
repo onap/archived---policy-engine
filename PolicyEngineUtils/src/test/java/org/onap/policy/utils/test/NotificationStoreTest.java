@@ -21,8 +21,8 @@
 package org.onap.policy.utils.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,34 +35,24 @@ import org.onap.policy.std.NotificationStore;
 import org.onap.policy.std.StdLoadedPolicy;
 import org.onap.policy.std.StdPDPNotification;
 import org.onap.policy.std.StdRemovedPolicy;
+import org.onap.policy.utils.PolicyUtils;
 
 public class NotificationStoreTest {
     
     @Test
-    public void notificationTest(){
+    public void notificationTest() throws IOException{
+        // Notification Delta test first. 
+        NotificationStore.recordNotification(new StdPDPNotification());
+        assertEquals("{\"removedPolicies\":null,\"loadedPolicies\":null,\"notificationType\":null}", PolicyUtils.objectToJsonString(NotificationStore.getDeltaNotification(new StdPDPNotification())));
+        // Initialize test 
         StdPDPNotification notification = new StdPDPNotification();
-        notification.setNotificationType(NotificationType.UPDATE);
+        notification.setNotificationType(NotificationType.BOTH);
         List<StdLoadedPolicy> loadedPolicies = new ArrayList<>();
         StdLoadedPolicy loadedPolicy = new StdLoadedPolicy();
         loadedPolicy.setPolicyName("com.testing");
-        loadedPolicy.setUpdateType(UpdateType.NEW);
-        loadedPolicy.setVersionNo("1");
-        Map<String, String> matches = new HashMap<>();
-        matches.put("test", "test");
-        loadedPolicy.setMatches(matches);
-        loadedPolicies.add(loadedPolicy);
-        notification.setLoadedPolicies(loadedPolicies);
-        NotificationStore.recordNotification(notification);
-        assertEquals(notification, NotificationStore.getNotificationRecord());
-        // Add new Notifications. 
-        notification = new StdPDPNotification();
-        notification.setNotificationType(NotificationType.BOTH);
-        loadedPolicies = new ArrayList<>();
-        loadedPolicy = new StdLoadedPolicy();
-        loadedPolicy.setPolicyName("com.testing");
         loadedPolicy.setUpdateType(UpdateType.UPDATE);
         loadedPolicy.setVersionNo("2");
-        matches = new HashMap<>();
+        Map<String, String> matches = new HashMap<>();
         matches.put("test", "test");
         loadedPolicy.setMatches(matches);
         loadedPolicies.add(loadedPolicy);
@@ -71,17 +61,18 @@ public class NotificationStoreTest {
         StdRemovedPolicy removedPolicy = new StdRemovedPolicy();
         removedPolicy.setPolicyName("com.testing");
         removedPolicy.setVersionNo("1");
+        removedPolicies.add(removedPolicy);
         notification.setRemovedPolicies(removedPolicies);
         NotificationStore.recordNotification(notification);
-        assertNotNull(NotificationStore.getNotificationRecord());
+        assertEquals("{\"removedPolicies\":[{\"policyName\":\"com.testing\",\"versionNo\":\"1\"}],\"loadedPolicies\":[{\"policyName\":\"com.testing\",\"versionNo\":\"2\",\"matches\":{\"test\":\"test\"},\"updateType\":\"UPDATE\"}],\"notificationType\":\"BOTH\"}", PolicyUtils.objectToJsonString(NotificationStore.getNotificationRecord()));
         // Add new Notifications. 
         notification = new StdPDPNotification();
         notification.setNotificationType(NotificationType.BOTH);
         loadedPolicies = new ArrayList<>();
         loadedPolicy = new StdLoadedPolicy();
-        loadedPolicy.setPolicyName("com.test.xml");
+        loadedPolicy.setPolicyName("com.test.3.xml");
         loadedPolicy.setUpdateType(UpdateType.NEW);
-        loadedPolicy.setVersionNo("2");
+        loadedPolicy.setVersionNo("3");
         matches = new HashMap<>();
         matches.put("test", "test");
         loadedPolicy.setMatches(matches);
@@ -89,11 +80,92 @@ public class NotificationStoreTest {
         notification.setLoadedPolicies(loadedPolicies);
         removedPolicies = new ArrayList<>();
         removedPolicy = new StdRemovedPolicy();
-        removedPolicy.setPolicyName("com.testing.xml");
+        removedPolicy.setPolicyName("com.testing.2.xml");
         removedPolicy.setVersionNo("2");
+        removedPolicies.add(removedPolicy);
         notification.setRemovedPolicies(removedPolicies);
         NotificationStore.recordNotification(notification);
-        assertNotNull(NotificationStore.getNotificationRecord());
+        StdPDPNotification check = NotificationStore.getDeltaNotification(PolicyUtils.jsonStringToObject("{\"removedPolicies\":[{\"policyName\":\"com.testing\",\"versionNo\":\"1\"},{\"policyName\":\"com.testing\",\"versionNo\":\"2\"}],\"loadedPolicies\":[{\"policyName\":\"com.test\",\"versionNo\":\"3\",\"matches\":{\"test\":\"test\"},\"updateType\":\"NEW\"}],\"notificationType\":\"BOTH\"}", StdPDPNotification.class));
+        assertEquals("{\"removedPolicies\":[],\"loadedPolicies\":[],\"notificationType\":null}", PolicyUtils.objectToJsonString(check));
+        // Remove Notifications. 
+        notification = new StdPDPNotification();
+        notification.setNotificationType(NotificationType.REMOVE);
+        removedPolicies = new ArrayList<>();
+        removedPolicy = new StdRemovedPolicy();
+        removedPolicy.setPolicyName("com.test.3.xml");
+        removedPolicy.setVersionNo("3");
+        removedPolicies.add(removedPolicy);
+        notification.setRemovedPolicies(removedPolicies);
+        NotificationStore.recordNotification(notification);
+        check = NotificationStore.getDeltaNotification(PolicyUtils.jsonStringToObject("{\"removedPolicies\":[{\"policyName\":\"com.test\",\"versionNo\":\"3\"},{\"policyName\":\"com.testing\",\"versionNo\":\"1\"},{\"policyName\":\"com.testing\",\"versionNo\":\"2\"}],\"loadedPolicies\":[],\"notificationType\":\"REMOVE\"}", StdPDPNotification.class));
+        assertEquals("{\"removedPolicies\":[],\"loadedPolicies\":[],\"notificationType\":null}", PolicyUtils.objectToJsonString(check));
+        // Remove on remove duplicate  Notifications. 
+        notification = new StdPDPNotification();
+        notification.setNotificationType(NotificationType.REMOVE);
+        removedPolicies = new ArrayList<>();
+        removedPolicy = new StdRemovedPolicy();
+        removedPolicy.setPolicyName("com.test.3.xml");
+        removedPolicy.setVersionNo("3");
+        removedPolicies.add(removedPolicy);
+        notification.setRemovedPolicies(removedPolicies);
+        NotificationStore.recordNotification(notification);
+        check = NotificationStore.getDeltaNotification(PolicyUtils.jsonStringToObject("{\"removedPolicies\":[{\"policyName\":\"com.test\",\"versionNo\":\"3\"},{\"policyName\":\"com.testing\",\"versionNo\":\"1\"},{\"policyName\":\"com.testing\",\"versionNo\":\"2\"}],\"loadedPolicies\":[],\"notificationType\":\"REMOVE\"}", StdPDPNotification.class));
+        assertEquals("{\"removedPolicies\":[],\"loadedPolicies\":[],\"notificationType\":null}", PolicyUtils.objectToJsonString(check));
+        // Update  Notification 
+        notification = new StdPDPNotification();
+        notification.setNotificationType(NotificationType.UPDATE);
+        loadedPolicies = new ArrayList<>();
+        loadedPolicy = new StdLoadedPolicy();
+        loadedPolicy.setPolicyName("com.test.3.xml");
+        loadedPolicy.setUpdateType(UpdateType.NEW);
+        loadedPolicy.setVersionNo("3");
+        matches = new HashMap<>();
+        matches.put("test", "test");
+        loadedPolicy.setMatches(matches);
+        loadedPolicies.add(loadedPolicy);
+        notification.setLoadedPolicies(loadedPolicies);
+        NotificationStore.recordNotification(notification);
+        check = NotificationStore.getDeltaNotification(PolicyUtils.jsonStringToObject("{\"removedPolicies\":[{\"policyName\":\"com.testing\",\"versionNo\":\"1\"},{\"policyName\":\"com.testing\",\"versionNo\":\"2\"}],\"loadedPolicies\":[{\"policyName\":\"com.test\",\"versionNo\":\"3\",\"matches\":{\"test\":\"test\"},\"updateType\":\"NEW\"}],\"notificationType\":\"BOTH\"}", StdPDPNotification.class));
+        assertEquals("{\"removedPolicies\":[],\"loadedPolicies\":[],\"notificationType\":null}", PolicyUtils.objectToJsonString(check));
+        // Update  on update duplicate Notification 
+        notification = new StdPDPNotification();
+        notification.setNotificationType(NotificationType.UPDATE);
+        loadedPolicies = new ArrayList<>();
+        loadedPolicy = new StdLoadedPolicy();
+        loadedPolicy.setPolicyName("com.test.3.xml");
+        loadedPolicy.setUpdateType(UpdateType.NEW);
+        loadedPolicy.setVersionNo("3");
+        matches = new HashMap<>();
+        matches.put("test", "test");
+        loadedPolicy.setMatches(matches);
+        loadedPolicies.add(loadedPolicy);
+        notification.setLoadedPolicies(loadedPolicies);
+        NotificationStore.recordNotification(notification);
+        check = NotificationStore.getDeltaNotification(PolicyUtils.jsonStringToObject("{\"removedPolicies\":[{\"policyName\":\"com.testing\",\"versionNo\":\"1\"},{\"policyName\":\"com.testing\",\"versionNo\":\"2\"}],\"loadedPolicies\":[{\"policyName\":\"com.test\",\"versionNo\":\"3\",\"matches\":{\"test\":\"test\"},\"updateType\":\"NEW\"}],\"notificationType\":\"BOTH\"}", StdPDPNotification.class));
+        assertEquals("{\"removedPolicies\":[],\"loadedPolicies\":[],\"notificationType\":null}", PolicyUtils.objectToJsonString(check));
+        // 
+        // Notification Delta Tests
+        //
+        notification = new StdPDPNotification();
+        notification.setNotificationType(NotificationType.BOTH);
+        loadedPolicies = new ArrayList<>();
+        loadedPolicy = new StdLoadedPolicy();
+        loadedPolicy.setPolicyName("com.testing");
+        loadedPolicy.setUpdateType(UpdateType.NEW);
+        loadedPolicy.setVersionNo("3");
+        matches = new HashMap<>();
+        matches.put("test", "test");
+        loadedPolicy.setMatches(matches);
+        loadedPolicies.add(loadedPolicy);
+        notification.setLoadedPolicies(loadedPolicies);
+        removedPolicies = new ArrayList<>();
+        removedPolicy = new StdRemovedPolicy();
+        removedPolicy.setPolicyName("com.test.3.xml");
+        removedPolicy.setVersionNo("3");
+        removedPolicies.add(removedPolicy);
+        notification.setRemovedPolicies(removedPolicies);
+        check = NotificationStore.getDeltaNotification(notification);
+        assertEquals("{\"removedPolicies\":[{\"policyName\":\"com.test\",\"versionNo\":\"3\"}],\"loadedPolicies\":[{\"policyName\":\"com.testing\",\"versionNo\":\"3\",\"matches\":{\"test\":\"test\"},\"updateType\":\"NEW\"}],\"notificationType\":\"BOTH\"}", PolicyUtils.objectToJsonString(check));
     }
 
 }
