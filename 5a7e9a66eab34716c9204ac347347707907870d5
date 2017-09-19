@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_6a8509ac",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-19T11:09:04Z",
+      "side": 1,
+      "message": "Add space and provide description. Eg. why are all the other tests being removed.",
+      "revId": "5a7e9a66eab34716c9204ac347347707907870d5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_aaa3f14d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-19T11:09:04Z",
+      "side": 1,
+      "message": "Remove space so Issue resides in correct section.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 1
+      },
+      "revId": "5a7e9a66eab34716c9204ac347347707907870d5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_ea99f91f",
+        "filename": "ONAP-PDP/src/test/java/org/onap/policy/xacml/action/FindActionTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-19T11:09:04Z",
+      "side": 1,
+      "message": "sonar",
+      "range": {
+        "startLine": 93,
+        "startChar": 46,
+        "endLine": 93,
+        "endChar": 52
+      },
+      "revId": "5a7e9a66eab34716c9204ac347347707907870d5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_caa07545",
+        "filename": "ONAP-PDP/src/test/java/org/onap/policy/xacml/action/FindActionTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-19T11:09:04Z",
+      "side": 1,
+      "message": "sonar",
+      "range": {
+        "startLine": 94,
+        "startChar": 46,
+        "endLine": 94,
+        "endChar": 52
+      },
+      "revId": "5a7e9a66eab34716c9204ac347347707907870d5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_0a979ded",
+        "filename": "ONAP-PDP/src/test/java/org/onap/policy/xacml/action/FindActionTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-19T11:09:04Z",
+      "side": 1,
+      "message": "sonar",
+      "range": {
+        "startLine": 118,
+        "startChar": 26,
+        "endLine": 118,
+        "endChar": 32
+      },
+      "revId": "5a7e9a66eab34716c9204ac347347707907870d5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
