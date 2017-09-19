@@ -17,30 +17,47 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.policy.xacml.pdp.std.functions;
 
-package org.onap.policy.pdp.test;
+import static org.junit.Assert.*;
 
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TestRunner {
-	private static Result results;
+public class PolicyListTest {
 
-	public static void main(String[] args) {
-		Result result = JUnitCore.runClasses(PDPTest.class);
-		for(Failure failure: result.getFailures()) {
-			System.out.println("Failed Test: " + failure.toString());
-		}
-		results = null;
-		if(result.wasSuccessful()) {
-			System.out.println("Test Results... ");
-			System.out.println("Stats:  \nRun Time: " + (results.getRunTime()+result.getRunTime()) + "\nTotal Tests:" + results.getRunCount()+ result.getRunCount()
-					+ "\nFailures: " + results.getFailureCount()+ result.getFailureCount());
-			System.exit(1);
-		}
-		System.out.println("Tests Failed...");
-		System.out.println("Stats:  \nRun Time: " + result.getRunTime() + "\nTests:" + result.getRunCount()
-				+ "\nFailures: " + result.getFailureCount());
+	@Before
+	public void setUp() throws Exception {
+		PolicyList.addPolicyID("Test");
 	}
+
+	@Test
+	public final void testGetpolicyList() {
+		try{
+			assertTrue(PolicyList.getpolicyList().size() ==1);
+		}catch(Exception e){
+			fail("operation failed, e="+e);
+		}
+	}
+
+	@Test
+	public final void testAddPolicyID() {
+		try{
+			PolicyList.addPolicyID("Test");
+			assertTrue(PolicyList.getpolicyList().size() == 1);
+		}catch(Exception e){
+			fail("operation failed, e="+e);
+		}
+	}
+
+	@Test
+	public final void testClearPolicyList() {
+		try{
+			PolicyList.clearPolicyList();
+			assertTrue(PolicyList.getpolicyList().size() == 0);
+		}catch(Exception e){
+			fail("operation failed, e="+e);
+		}
+	}
+
 }

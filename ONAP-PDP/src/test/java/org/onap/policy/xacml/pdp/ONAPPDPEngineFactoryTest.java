@@ -17,20 +17,36 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.policy.xacml.pdp;
 
-package org.onap.policy.pdp.test;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.Properties;
 
-import static org.junit.Assert.assertNull;
-//import static org.junit.Assert.fail;
+import org.junit.Test;
 
-import org.junit.Test; 
+public class ONAPPDPEngineFactoryTest {
 
-public class PDPTest {
-		
 	@Test
-	public void testDummy() {
-		assertNull(null);
+	public final void testNewEngine() {
+		ONAPPDPEngineFactory pdpEngine = new ONAPPDPEngineFactory();
+		try{
+			assertTrue(pdpEngine.newEngine() != null);
+		}catch (Exception e) {
+			fail("operation failed, e="+e);
+		}
+
 	}
-	
+
+	@Test
+	public final void testNewEngineProperties() {
+		ONAPPDPEngineFactory pdpEngine = new ONAPPDPEngineFactory();
+		Properties properties = new Properties();
+		try{
+			assertTrue(pdpEngine.newEngine(properties) != null);
+		}catch (Exception e) {
+			fail("operation failed, e="+e);
+		}
+	}
 }
