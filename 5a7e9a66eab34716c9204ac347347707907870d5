@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a437d4f_9e806e47",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-09-19T15:40:20Z",
+      "side": 1,
+      "message": "Added comments regarding on removing the Junits from ONAP-PDP",
+      "parentUuid": "9a437d4f_6a8509ac",
+      "revId": "5a7e9a66eab34716c9204ac347347707907870d5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a437d4f_aaa3f14d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2017-09-19T11:09:04Z",
       "side": 1,
       "message": "Remove space so Issue resides in correct section.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 1
+      },
+      "revId": "5a7e9a66eab34716c9204ac347347707907870d5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_3e918299",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-09-19T15:40:20Z",
+      "side": 1,
+      "message": "Removed Space between change id and issue id",
+      "parentUuid": "9a437d4f_aaa3f14d",
       "range": {
         "startLine": 10,
         "startChar": 0,
