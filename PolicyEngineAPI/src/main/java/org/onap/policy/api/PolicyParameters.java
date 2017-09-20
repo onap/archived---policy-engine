@@ -545,18 +545,18 @@ public class PolicyParameters {
     /**
      * Gets Dependency Names for your policy. 
      * 
-     * @return ArrayList of String(s) format of dependency names.
+     * @return List of String(s) format of dependency names.
      */
-    public ArrayList<String> getDependencyNames() {
+    public List<String> getDependencyNames() {
         return dependencyNames;
     }
 
     /**
      * Sets Dependency that your policy is dependent on. 
      * 
-     * @param dependencyNames ArrayList of String(s). 
+     * @param dependencyNames List of String(s). 
      */
-    public void setDependencyNames(ArrayList<String> dependencyNames) {
+    public void setDependencyNames(List<String> dependencyNames) {
         this.dependencyNames = dependencyNames;
     }
 	
@@ -568,6 +568,7 @@ public class PolicyParameters {
 		this.extendedOption = extendedOption;
 	}
 	
+	@Override
 	public String toString() {
 		return "PolicyParameters [ policyName=" + policyName + ", policyDescription=" + policyDescription + ", onapName="+ onapName 
 				+ ", configName=" + configName + ", attributes=" + attributes + ", configBody=" + configBody 
