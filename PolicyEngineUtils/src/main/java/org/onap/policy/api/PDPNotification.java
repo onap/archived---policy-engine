@@ -24,29 +24,29 @@ import java.util.Collection;
 
 /**
  * Defines the <code>Notification</code> event sent from PDP to Client PEP.  
- * 
+ *
  * @version 0.2
  */
 public interface PDPNotification {
-	/**
-	 * Gets the <code>Collection</code> of {@link org.onap.policy.api.RemovedPolicy} objects received. 
-	 * 
-	 * @return the <code>Collection</code> which consists of <code>RemovedPolicy</code> objects.
-	 */
-	public Collection<RemovedPolicy> getRemovedPolicies();
-	
-	/**
-	 * Gets the <code>Collection</code> of {@link org.onap.policy.api.LoadedPolicy} objects receieved.
-	 *
-	 * @return the <code>Collection</code> which consists of <code>UpdatedPolicy</code> objects.
-	 */
-	public Collection<LoadedPolicy> getLoadedPolicies();
-	
-	/**
-	 * Gets the <code>NotificationType</code> of {@link org.onap.policy.api.NotificationType} received.
-	 * 
-	 * @return <code>NotificationType</code> associated with this <code>PDPNotification</code>
-	 */
-	public NotificationType getNotificationType();
-	
+
+    /**
+     * Gets the <code>Collection</code> of {@link org.onap.policy.api.RemovedPolicy} objects received.
+     *
+     * @return the <code>Collection</code> which consists of <code>RemovedPolicy</code> objects.
+     */
+    Collection<RemovedPolicy> getRemovedPolicies();
+
+    /**
+     * Gets the <code>Collection</code> of {@link org.onap.policy.api.LoadedPolicy} objects receieved.
+     *
+     * @return the <code>Collection</code> which consists of <code>UpdatedPolicy</code> objects.
+     */
+    Collection<LoadedPolicy> getLoadedPolicies();
+
+    /**
+     * Gets the <code>NotificationType</code> of {@link org.onap.policy.api.NotificationType} received.
+     *
+     * @return <code>NotificationType</code> associated with this <code>PDPNotification</code>
+     */
+    NotificationType getNotificationType();
 }
