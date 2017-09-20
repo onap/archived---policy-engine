@@ -24,6 +24,7 @@ package org.onap.policy.api;
  *  
  * @version 0.1
  */
+@FunctionalInterface
 public interface NotificationHandler {
 	/**
 	 * <code>notificationReceived</code> method will be triggered automatically whenever a Notification is received by the PEP.
