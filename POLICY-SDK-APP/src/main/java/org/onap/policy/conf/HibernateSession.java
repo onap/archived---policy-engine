@@ -59,5 +59,7 @@ public class HibernateSession{
 	public static Session getSession(){
 		return logSessionFactory.openSession();
 	}
+	private HibernateSession(){
+	}
 
 }
