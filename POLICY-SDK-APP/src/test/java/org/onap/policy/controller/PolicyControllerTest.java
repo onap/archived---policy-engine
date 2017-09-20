@@ -19,6 +19,8 @@
  */
 package org.onap.policy.controller;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +35,8 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.Datatype;
+import org.onap.policy.rest.jpa.FunctionDefinition;
 import org.onap.policy.rest.jpa.PolicyEntity;
 
 public class PolicyControllerTest {
@@ -44,6 +48,7 @@ public class PolicyControllerTest {
 	public void setUp() throws Exception{
 		logger.info("setUp: Entering");
         commonClassDao = mock(CommonClassDao.class);
+        PolicyController.setCommonClassDao(commonClassDao);
         List<Object> data = new ArrayList<>();
         String policyData = "";
         try {
@@ -57,12 +62,30 @@ public class PolicyControllerTest {
         entity.setPolicyData(policyData);
         entity.setScope("com");
         data.add(entity);
-        
+   
         when(commonClassDao.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(data);
+        
+        FunctionDefinition fnDefinition = new FunctionDefinition();
+        fnDefinition.setXacmlid("Test");
+        fnDefinition.setShortname("Test");
+        Datatype dataType = new Datatype();
+        dataType.setXacmlId("Test");
+        fnDefinition.setDatatypeBean(dataType);
+        List<Object> fnObjects = new ArrayList<>();
+        fnObjects.add(fnDefinition);
+        when(commonClassDao.getData(FunctionDefinition.class)).thenReturn(fnObjects);
 	}
 	
 	@Test
-	public void dummy(){
-		System.out.println("Dummy");
+	public void testInit(){
+		PolicyController controller = new PolicyController();
+		PolicyController.setjUnit(true);
+		controller.init();
+		try{
+			assertTrue(PolicyController.dropDownMap.size() > 0);
+		}catch(Exception e){
+			logger.error("Exception Occured"+e);
+			fail();
+		}
 	}
 }

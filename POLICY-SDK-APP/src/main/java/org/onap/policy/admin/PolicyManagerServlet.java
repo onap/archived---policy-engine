@@ -91,6 +91,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class PolicyManagerServlet extends HttpServlet {
 	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyManagerServlet.class);
 	private static final long serialVersionUID = -8453502699403909016L;
+	
+	private static boolean jUnit = false;
+
+	public static boolean isjUnit() {
+		return jUnit;
+	}
+
+	public static void setjUnit(boolean jUnit) {
+		PolicyManagerServlet.jUnit = jUnit;
+	}
 
 	private enum Mode {
 		LIST, RENAME, COPY, DELETE, EDITFILE, ADDFOLDER, DESCRIBEPOLICYFILE, VIEWPOLICY, ADDSUBSCOPE, SWITCHVERSION, EXPORT, SEARCHLIST
@@ -531,7 +541,12 @@ public class PolicyManagerServlet extends HttpServlet {
 		SimpleBindings peParams = new SimpleBindings();
 		peParams.put("split_1", split[1]);
 		peParams.put("split_0", split[0]);
-		List<Object> queryData = controller.getDataByQuery(query, peParams);
+		List<Object> queryData = null;
+		if(jUnit){
+			queryData = controller.getDataByQuery(query, null);
+		}else{
+			queryData = controller.getDataByQuery(query, peParams);
+		}
 		if(!queryData.isEmpty()){
 			PolicyEntity entity = (PolicyEntity) queryData.get(0);
 			File temp = null;
@@ -668,7 +683,12 @@ public class PolicyManagerServlet extends HttpServlet {
 			params.put("scopeName", scopeName + "%");
 		}
 		PolicyController controller = getPolicyControllerInstance();
-		List<Object> scopesList = controller.getDataByQuery(scopeNamequery, params);
+		List<Object> scopesList = null;
+		if(jUnit){
+			scopesList = controller.getDataByQuery(scopeNamequery, null);
+		}else{
+			scopesList = controller.getDataByQuery(scopeNamequery, params);
+		}
 		return  scopesList;
 	}
 
@@ -687,8 +707,15 @@ public class PolicyManagerServlet extends HttpServlet {
 		SimpleBindings params = new SimpleBindings();
 		params.put("scopeName", scopeName + "%");
 		
-		List<Object> activePolicies = controller.getDataByQuery(query, params);
-		List<Object> scopesList = controller.getDataByQuery(scopeNamequery, params);
+		List<Object> activePolicies = null;
+		List<Object> scopesList = null;
+		if(jUnit){
+			activePolicies = controller.getDataByQuery(query, null);
+			scopesList = controller.getDataByQuery(scopeNamequery, null);
+		}else{
+			activePolicies = controller.getDataByQuery(query, params);
+			scopesList = controller.getDataByQuery(scopeNamequery, params);
+		}
 		for(Object list : scopesList){
 			PolicyEditorScopes scopeById = (PolicyEditorScopes) list;
 			String scope = scopeById.getScopeName();
@@ -1394,7 +1421,12 @@ public class PolicyManagerServlet extends HttpServlet {
 			SimpleBindings peParams = new SimpleBindings();
 			peParams.put("split_1", split[1]);
 			peParams.put("split_0", split[0]);
-			List<Object> queryData = controller.getDataByQuery(query, peParams);
+			List<Object> queryData = null;
+			if(jUnit){
+				queryData = controller.getDataByQuery(query, null);
+			}else{
+				queryData = controller.getDataByQuery(query, peParams);
+			}
 			PolicyEntity entity = (PolicyEntity) queryData.get(0);
 			InputStream stream = new ByteArrayInputStream(entity.getPolicyData().getBytes(StandardCharsets.UTF_8));
 

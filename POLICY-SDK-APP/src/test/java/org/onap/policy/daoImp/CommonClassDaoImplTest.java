@@ -37,10 +37,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.conf.HibernateSession;
+import org.onap.policy.controller.PolicyController;
 import org.onap.policy.daoImp.CommonClassDaoImpl;
 import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
+import org.onap.policy.rest.jpa.SystemLogDB;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.jpa.WatchPolicyNotificationTable;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
@@ -79,7 +82,22 @@ public class CommonClassDaoImplTest{
 			// Set up dao with SessionFactory
 			commonClassDao = new CommonClassDaoImpl();
 			CommonClassDaoImpl.setSessionfactory(sessionFactory);
-
+			PolicyController.setLogTableLimit("1");
+			HibernateSession.setSession(sessionFactory);
+			SystemLogDB data1 = new SystemLogDB();
+			data1.setDate(new Date());
+			data1.setLogtype("INFO");
+			data1.setRemote("Test");
+			data1.setSystem("Test");
+			data1.setType("Test");
+			SystemLogDB data2 = new SystemLogDB();
+			data2.setDate(new Date());
+			data2.setLogtype("error");
+			data2.setRemote("Test");
+			data2.setSystem("Test");
+			data2.setType("Test");
+			HibernateSession.getSession().save(data1);
+			HibernateSession.getSession().save(data2);
 			// Create TCP server for troubleshooting
 			server = Server.createTcpServer("-tcpAllowOthers").start();
 			System.out.println("URL: jdbc:h2:" + server.getURL() + "/mem:test");
@@ -329,10 +347,10 @@ public class CommonClassDaoImplTest{
 		}
 	}
 
-	/*
-	 * Test for SQL Injection Protection
-	 *
+	
+	 /* Test for SQL Injection Protection
 	 */
+	 
 	@Test
 	@Transactional
     @Rollback(true)
@@ -375,6 +393,27 @@ public class CommonClassDaoImplTest{
 		}
 	}
 
+	@Test
+	public final void testGetLoggingData() {
+		SystemLogDbDaoImpl system = new SystemLogDbDaoImpl();
+		SystemLogDbDaoImpl.setjUnit(true);
+		try{
+			assertTrue(system.getLoggingData() != null);
+		}catch(Exception e){
+			fail();
+		}
+	}
+
+	@Test
+	public final void testGetSystemAlertData() {
+		SystemLogDbDaoImpl system = new SystemLogDbDaoImpl();
+		SystemLogDbDaoImpl.setjUnit(true);
+		try{
+			assertTrue(system.getSystemAlertData() != null);
+		}catch(Exception e){
+			fail();
+		}
+	}
 
 	@After
 	public void deleteDB(){

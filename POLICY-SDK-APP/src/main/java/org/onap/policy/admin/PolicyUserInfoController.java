@@ -44,7 +44,7 @@ public class PolicyUserInfoController extends RestrictedBaseController{
 	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyUserInfoController.class);
 	
 	@RequestMapping(value="/get_PolicyUserInfo", method = RequestMethod.GET)
-	private void getPolicyUserInfo(HttpServletRequest request, HttpServletResponse response){
+	public void getPolicyUserInfo(HttpServletRequest request, HttpServletResponse response){
 		JsonMessage msg = null;
 		try {
 			String userId =  UserUtils.getUserSession(request).getOrgUserId();
