@@ -41,7 +41,7 @@ public class PolicyAdapter {
 	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyAdapter.class);
 	
 	public void configure(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-		String	policyNameValue = null ;
+		String	policyNameValue;
 		String	configPolicyName = null ;
 		if(extendedOptions(policyAdapter, entity)){
 			return;
