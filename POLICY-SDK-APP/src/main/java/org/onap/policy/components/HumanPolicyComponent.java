@@ -202,7 +202,7 @@ class HtmlProcessor extends SimpleCallback {
 		combiningAlgo2human.put("only-one-applicable", "to honour the result of the first successfully evaluated $placeholder$ in order");
 	}	
 	
-	private Map<String, AttributeIdentifiers> attributeIdentifiersMap = new HashMap<String, AttributeIdentifiers>();
+	private Map<String, AttributeIdentifiers> attributeIdentifiersMap = new HashMap<>();
 	
 	private final StringWriter stringWriter = new StringWriter();
 	private final PrintWriter htmlOut = new PrintWriter(stringWriter);
@@ -357,7 +357,7 @@ class HtmlProcessor extends SimpleCallback {
 		else
 			policySet(policySet, "li");
 		
-		if (policySet.getPolicySetOrPolicyOrPolicySetIdReference().size() > 0)
+		if (!policySet.getPolicySetOrPolicyOrPolicySetIdReference().isEmpty())
 			htmlOut.println("<ol>");
 
 		return super.onPreVisitPolicySet(parent, policySet);
@@ -377,7 +377,7 @@ class HtmlProcessor extends SimpleCallback {
 			LOGGER.trace("PolicySet: " + policySet.getPolicySetId() + 
 					     " Description: " + policySet.getDescription());	
 		
-		if (policySet.getPolicySetOrPolicyOrPolicySetIdReference().size() > 0)
+		if (!policySet.getPolicySetOrPolicyOrPolicySetIdReference().isEmpty())
 			htmlOut.println("</ol>");
 		
 		htmlOut.println("<p></p>");
@@ -421,7 +421,7 @@ class HtmlProcessor extends SimpleCallback {
 		}
 		
 		if (policySet.getPolicySetOrPolicyOrPolicySetIdReference() != null &&
-			policySet.getPolicySetOrPolicyOrPolicySetIdReference().size() > 0) {
+			!policySet.getPolicySetOrPolicyOrPolicySetIdReference().isEmpty()) {
 			String algoDesc = combiningAlgo2human.get(combiningAlgorithm);
 			if (algoDesc != null) {
 				algoDesc = algoDesc.replace("$placeholder$", "policy") + " (" + "<i>" + combiningAlgorithm + "</i>)";
@@ -449,7 +449,7 @@ class HtmlProcessor extends SimpleCallback {
 		
 		policy(policy);
 		
-		if (policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().size() > 0)
+		if (!policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().isEmpty())
 			htmlOut.println("<ol type=\"i\">");
 		
 		return super.onPreVisitPolicy(parent, policy);
@@ -464,7 +464,7 @@ class HtmlProcessor extends SimpleCallback {
 			LOGGER.trace("PolicySet: " + policy.getPolicyId() + 
 					     "Parent PolicySet: " + parent.getPolicySetId() + " Version: " + parent.getVersion());
 		
-		if (policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().size() > 0)
+		if (!policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().isEmpty())
 			htmlOut.println("</ol>");
 		
 		htmlOut.println("<p></p>");
@@ -506,7 +506,7 @@ class HtmlProcessor extends SimpleCallback {
 		}
 		
 		if (policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition() != null &&
-			policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().size() > 0) {
+			!policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().isEmpty()) {
 			String algoDesc = combiningAlgo2human.get(combiningAlgorithm);
 			if (algoDesc != null) {
 				algoDesc = algoDesc.replace("$placeholder$", "rule") + " (<i>" + combiningAlgorithm + "</i>)";
@@ -710,7 +710,7 @@ class HtmlProcessor extends SimpleCallback {
 								//
 								StdAttribute attribute = null;
 								AttributeValueType value = match.getAttributeValue();
-								String attributeDataType = null;
+								String attributeDataType;
 								if (match.getAttributeDesignator() != null && value != null) {
 									AttributeDesignatorType designator = match.getAttributeDesignator();
 									attribute = new StdAttribute(new IdentifierImpl(designator.getCategory()),
@@ -822,11 +822,12 @@ class HtmlProcessor extends SimpleCallback {
 	}
 	
 	private String removePrimitives(String in) {
-		in = in.replace("string-", "");
-		in = in.replace("integer-", "");
-		in = in.replace("double-", "");
-		in = in.replace("boolean-", "");
-		return in;
+		String newIn = in;
+		newIn = newIn.replace("string-", "");
+		newIn = newIn.replace("integer-", "");
+		newIn = newIn.replace("double-", "");
+		newIn = newIn.replace("boolean-", "");
+		return newIn;
 	}
 	
 	private String stringifyCondition(ConditionType condition) {
