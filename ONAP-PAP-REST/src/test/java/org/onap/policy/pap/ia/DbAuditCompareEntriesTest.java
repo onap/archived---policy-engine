@@ -233,7 +233,7 @@ public class DbAuditCompareEntriesTest {
 		 
 		
 		entry1.setFlag("flag1");
-		entry1.setResoruceNodeName("node1");
+		entry1.setResourceNodeName("node1");
 		entry1.setResourceName("resourceName");
 		entry1.setTimeStamp(new Date());
 		

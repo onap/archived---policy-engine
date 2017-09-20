@@ -22,59 +22,53 @@ package org.onap.policy.std;
 
 import java.util.Collection;
 import java.util.HashSet;
-
 import org.onap.policy.api.LoadedPolicy;
 import org.onap.policy.api.NotificationType;
 import org.onap.policy.api.PDPNotification;
 import org.onap.policy.api.RemovedPolicy;
 
-public class StdPDPNotification implements PDPNotification{
-	private Collection<StdRemovedPolicy> removedPolicies = null;
-	private Collection<StdLoadedPolicy> loadedPolicies = null;
-	private Collection<RemovedPolicy> removed = null;
-	private Collection<LoadedPolicy> updated = null;
-	private NotificationType notificationType= null;
-	
-	@Override
-	public Collection<RemovedPolicy> getRemovedPolicies() {
-		removed = new HashSet<RemovedPolicy>();
-		if(removedPolicies!=null){
-			for(RemovedPolicy removedPolicy: removedPolicies){
-				removed.add(removedPolicy);
-			}
-			return this.removed;
-		}else{
-			return null;
-		}
-	}
+public class StdPDPNotification implements PDPNotification {
 
-	@Override
-	public Collection<LoadedPolicy> getLoadedPolicies() {
-		updated = new HashSet<LoadedPolicy>();
-		if(loadedPolicies!=null){
-			for(LoadedPolicy updatedPolicy: loadedPolicies){
-				updated.add(updatedPolicy);
-			}
-			return updated;
-		}else{
-			return null;
-		}
-	}
+    private Collection<StdRemovedPolicy> removedPolicies = null;
+    private Collection<StdLoadedPolicy> loadedPolicies = null;
+    private Collection<RemovedPolicy> removed = null;
+    private Collection<LoadedPolicy> updated = null;
+    private NotificationType notificationType = null;
 
-	@Override
-	public NotificationType getNotificationType() {
-		return notificationType;
-	}
+    @Override
+    public Collection<RemovedPolicy> getRemovedPolicies() {
+        removed = new HashSet<>();
+        if (removedPolicies != null) {
+            removed.addAll(removedPolicies);
+            return this.removed;
+        }
+        return null;
+    }
 
-	public void setNotificationType(NotificationType notificationType){
-		this.notificationType= notificationType;
-	}
-	
-	public void setLoadedPolicies(Collection<StdLoadedPolicy> loadedPolicies) {
-		this.loadedPolicies = loadedPolicies;
-	}
-	
-	public void setRemovedPolicies(Collection<StdRemovedPolicy> removedPolicies) {
-		this.removedPolicies = removedPolicies;
-	}
+    @Override
+    public Collection<LoadedPolicy> getLoadedPolicies() {
+        updated = new HashSet<>();
+        if (loadedPolicies != null) {
+            updated.addAll(loadedPolicies);
+            return updated;
+        }
+        return null;
+    }
+
+    @Override
+    public NotificationType getNotificationType() {
+        return notificationType;
+    }
+
+    public void setNotificationType(NotificationType notificationType) {
+        this.notificationType = notificationType;
+    }
+
+    public void setLoadedPolicies(Collection<StdLoadedPolicy> loadedPolicies) {
+        this.loadedPolicies = loadedPolicies;
+    }
+
+    public void setRemovedPolicies(Collection<StdRemovedPolicy> removedPolicies) {
+        this.removedPolicies = removedPolicies;
+    }
 }

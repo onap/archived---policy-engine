@@ -23,32 +23,31 @@ package org.onap.policy.api;
 /**
  * Enumeration of the Update Type that has occurred in the <code>UpdatedPolicy</code> of 
  * {@link org.onap.policy.api.LoadedPolicy}
- * 
+ *
  * @version 0.1
  */
 public enum UpdateType {
-	/**
-	 * Indicates that a policy has been updated
-	 */
-	UPDATE("update"),
-	/**
-	 * Indicates that a policy is new
-	 */
-	NEW("new")
-	;
-	
-	private String name;
-	
-	private UpdateType(String name){
-		this.name = name;
-	}
-	
-	/**
-	 * Returns the <code>String</code> format of the Type for this <code>UpdateType</code>
-	 * @return the <code>String</code> Type of <code>UpdateType</code>
-	 */
-	@Override
-	public String toString(){
-		return this.name;
-	}
+    /**
+     * Indicates that a policy has been updated
+     */
+    UPDATE("update"),
+    /**
+     * Indicates that a policy is new
+     */
+    NEW("new");
+
+    private String name;
+
+    UpdateType(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the <code>String</code> format of the Type for this <code>UpdateType</code>
+     * @return the <code>String</code> Type of <code>UpdateType</code>
+     */
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

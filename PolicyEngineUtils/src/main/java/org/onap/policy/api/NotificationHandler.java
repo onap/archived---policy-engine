@@ -19,17 +19,20 @@
  */
 
 package org.onap.policy.api;
+
 /**
  * Defines the methods which need to run when an Event or Notification is received.
- *  
+ *
  * @version 0.1
  */
 @FunctionalInterface
 public interface NotificationHandler {
-	/**
-	 * <code>notificationReceived</code> method will be triggered automatically whenever a Notification is received by the PEP.
-	 * 
-	 * @param notification <code>PDPNotification</code> of {@link org.onap.policy.api.PDPNotification} is the object that has information of the notification.
-	 */
-	public void notificationReceived(PDPNotification notification);
+
+    /**
+     * <code>notificationReceived</code> method will be triggered automatically whenever a Notification is received by the PEP.
+     *
+     * @param notification <code>PDPNotification</code> of {@link org.onap.policy.api.PDPNotification}
+     * is the object that has information of the notification.
+     */
+    void notificationReceived(PDPNotification notification);
 }
