@@ -19,23 +19,25 @@
  */
 
 package org.onap.policy.api;
+
 /**
  * <code>RemovedPolicy</code> defines the Policy that has been removed 
- * 
+ *
  * @version 0.1
  */
 public interface RemovedPolicy {
-	/**
-	 * Gets the <code>String</code> format of the Policy Name that has been removed.
-	 * 
-	 * @return <code>String</code> format of Policy Name
-	 */
-	public String getPolicyName();
-	
-	/**
-	 * Gets the <code>String</code> format of the Policy Version that has been removed.
-	 * 
-	 * @return <code>String</code> format of Policy Version
-	 */
-	public String getVersionNo();
+
+    /**
+     * Gets the <code>String</code> format of the Policy Name that has been removed.
+     *
+     * @return <code>String</code> format of Policy Name
+     */
+    String getPolicyName();
+
+    /**
+     * Gets the <code>String</code> format of the Policy Version that has been removed.
+     *
+     * @return <code>String</code> format of Policy Version
+     */
+    String getVersionNo();
 }
