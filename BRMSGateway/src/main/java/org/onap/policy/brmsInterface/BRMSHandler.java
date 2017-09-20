@@ -95,7 +95,7 @@ public class BRMSHandler implements BackUpHandler{
 				}
 			}
 		}
-		Boolean failureFlag = false;
+		Boolean failureFlag;
 		int i = 0;
 		do{
 			failureFlag = false;
@@ -118,6 +118,7 @@ public class BRMSHandler implements BackUpHandler{
 	 * (non-Javadoc)
 	 * @see org.onap.policy.utils.BackUpHandler#runOnNotification(org.onap.policy.api.PDPNotification)
 	 */
+	@Override
 	public void runOnNotification(PDPNotification notification){
 		if(notification.getNotificationType().equals(NotificationType.REMOVE)){
 			removedPolicies(notification.getRemovedPolicies());
