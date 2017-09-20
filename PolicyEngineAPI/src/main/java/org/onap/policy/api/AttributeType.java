@@ -62,6 +62,7 @@ public enum AttributeType {
 	 * Returns the <code>String</code> format of Type for this <code>AttributeType</code>
 	 * @return the <code>String</code> of the Type for this <code>AttributeType</code>
 	 */
+	@Override
 	public String toString() {
 		return this.name;
 	}
