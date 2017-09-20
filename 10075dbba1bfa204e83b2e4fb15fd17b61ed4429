@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_a3b557ef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-20T11:18:35Z",
+      "side": 1,
+      "message": "Please use correct JIRA POLICY-239 with header Issue-ID and make sure it is in the references section.\n\nIssue-ID: POLICY-239",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 0
+      },
+      "revId": "10075dbba1bfa204e83b2e4fb15fd17b61ed4429",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
