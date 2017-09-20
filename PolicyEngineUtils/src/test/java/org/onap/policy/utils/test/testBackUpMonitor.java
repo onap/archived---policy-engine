@@ -252,7 +252,7 @@ public class testBackUpMonitor {
 	    origBM.setFlag("SLAVE");
 	    origBM.setTimeStamp(new Date());
 	    BackUpMonitorEntity bMEntity = new BackUpMonitorEntity();
-        bMEntity.setResoruceNodeName(ResourceNode.BRMS.toString());
+        bMEntity.setResourceNodeName(ResourceNode.BRMS.toString());
         bMEntity.setResourceName("brms_test2");
         bMEntity.setFlag("MASTER");
         bMEntity.setTimeStamp(new Date());        

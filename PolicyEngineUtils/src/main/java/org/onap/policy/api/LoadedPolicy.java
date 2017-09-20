@@ -21,37 +21,39 @@
 package org.onap.policy.api;
 
 import java.util.Map;
+
 /**
  * <code>LoadedPolicy</code> defines the Policy that has been Loaded into the PDP. 
- * 
- * @version 0.2 
+ *
+ * @version 0.2
  */
 public interface LoadedPolicy {
-	/**
-	 * Gets the <code>String</code> format of the Policy Name that has been Loaded into the PDP. 
-	 * 
-	 * @return <code>String</code> format of Policy Name
-	 */
-	public String getPolicyName();
-	
-	/**
-	 * Gets the <code>String</code> format of the Policy Version that has been Loaded into the PDP. 
-	 * 
-	 * @return <code>String</code> format of the Policy Version. 
-	 */
-	public String getVersionNo();
-	
-	/**
-	 * Gets the <code>Map</code> of <code>String,String</code> format of the Matches if the policy Loaded is of Config Type. 
-	 * 
-	 * @return the <code>Map</code> of <code>String,String</code> format of the matches in the policy. 
-	 */
-	public Map<String, String> getMatches();
-	
-	/**
-	 * Gets the <code>UpdateType</code> of {@link org.onap.policy.api.UpdateType} received.
-	 * 
-	 * @return <code>UpdateType</code> associated with this <code>PDPNotification</code>
-	 */
-	public UpdateType getUpdateType();
+
+    /**
+     * Gets the <code>String</code> format of the Policy Name that has been Loaded into the PDP.
+     *
+     * @return <code>String</code> format of Policy Name
+     */
+    String getPolicyName();
+
+    /**
+     * Gets the <code>String</code> format of the Policy Version that has been Loaded into the PDP.
+     *
+     * @return <code>String</code> format of the Policy Version.
+     */
+    String getVersionNo();
+
+    /**
+     * Gets the <code>Map</code> of <code>String,String</code> format of the Matches if the policy Loaded is of Config Type.
+     *
+     * @return the <code>Map</code> of <code>String,String</code> format of the matches in the policy.
+     */
+    Map<String, String> getMatches();
+
+    /**
+     * Gets the <code>UpdateType</code> of {@link org.onap.policy.api.UpdateType} received.
+     *
+     * @return <code>UpdateType</code> associated with this <code>PDPNotification</code>
+     */
+    UpdateType getUpdateType();
 }
