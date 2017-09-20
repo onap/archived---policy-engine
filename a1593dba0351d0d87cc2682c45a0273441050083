@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_6512d258",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 764,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-09-20T17:14:47Z",
+      "side": 1,
+      "message": "We can replace this with entry.getValue()",
+      "range": {
+        "startLine": 764,
+        "startChar": 47,
+        "endLine": 764,
+        "endChar": 72
+      },
+      "revId": "a1593dba0351d0d87cc2682c45a0273441050083",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
