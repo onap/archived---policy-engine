@@ -16,6 +16,23 @@
       "revId": "07f02ae74126b02d3d34430c0826b3d46e5ca33a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_1f8eb3d0",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-09-20T14:25:54Z",
+      "side": 1,
+      "message": "directly return this value instead of assigning it to one.",
+      "revId": "07f02ae74126b02d3d34430c0826b3d46e5ca33a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
