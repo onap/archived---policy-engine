@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_e53ec28b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-20T18:06:45Z",
+      "side": 1,
+      "message": "Remove new line due to LF tools to link JIRA to gerrit reviews.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 0
+      },
+      "revId": "864705aef669103868b4bc7a7f0c42c415e14c04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_456a2e82",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/api/LoadedPolicy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-20T18:06:45Z",
+      "side": 1,
+      "message": "So these are now private, I didn\u0027t see a sonar major issue flagged for that. Or is this to solve the redundant code?",
+      "revId": "864705aef669103868b4bc7a7f0c42c415e14c04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_c50dfee9",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/jpa/BackUpMonitorEntity.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-20T18:06:45Z",
+      "side": 1,
+      "message": "looks like just spacing changed here. Its hard to see what the change is.",
+      "revId": "864705aef669103868b4bc7a7f0c42c415e14c04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_65f892c3",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/std/NotificationStore.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-20T18:06:45Z",
+      "side": 1,
+      "message": "Looks like you are eliminating nested if\u0027s here and no more than 3 nested etc.",
+      "revId": "864705aef669103868b4bc7a7f0c42c415e14c04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
