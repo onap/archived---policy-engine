@@ -2156,7 +2156,7 @@ public class PolicyDBDao {
 				String prefix = null;
 				if (policy.policyAdapter.getPolicyType().equalsIgnoreCase("Config")) {
 
-					prefix = configPath.substring(configPath.indexOf(policyScope+".")+policyScope.concat(".").length(), configPath.indexOf(policy.policyAdapter.getPolicyName()));
+					prefix = configPath.substring(configPath.indexOf(policyScope+".")+policyScope.concat(".").length(), configPath.lastIndexOf(policy.policyAdapter.getPolicyName()));
 					if(isNullOrEmpty(policy.policyAdapter.getConfigBodyData())){
 						String configData = "";
 						try{

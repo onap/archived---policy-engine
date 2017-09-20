@@ -448,4 +448,8 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		return null;
 	}
 
+    public static void setSessionfactory(SessionFactory sessionfactory) {
+        sessionFactory = sessionfactory;
+    }
+
 }

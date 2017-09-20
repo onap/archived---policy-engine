@@ -68,7 +68,7 @@ public class PolicyDBDaoTest {
 	EntityManagerFactory emf;
 	@Before
 	public void init(){
-		System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME,"xacml.pap.properties");
+	    System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME,"src/test/resources/xacml.pap.properties");
 		emf = Persistence.createEntityManagerFactory("testPapPU");
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();

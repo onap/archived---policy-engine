@@ -54,7 +54,7 @@ public class FirewallConfigPolicyTest {
 	@Before
 	public void setUp() throws Exception {
 		logger.info("setup: enter");
-		System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME,"xacml.pap.properties");
+		System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME,"src/test/resources/xacml.pap.properties");
 
 		policyAdapter.setPolicyName("FWjunitTest");
 		policyAdapter.setPolicyDescription("test");

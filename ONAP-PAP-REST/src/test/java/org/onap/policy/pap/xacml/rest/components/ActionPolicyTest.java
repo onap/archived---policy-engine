@@ -57,7 +57,7 @@ public class ActionPolicyTest {
 	@Before
 	public void setUp() throws Exception {
 		logger.info("setUp: Entering");
-		System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME,"xacml.pap.properties");
+		System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME,"src/test/resources/xacml.pap.properties");
 
 		dynamicRuleAlgorithmLabels.add("test");
 		dynamicRuleAlgorithmField1.add("testField1");

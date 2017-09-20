@@ -190,8 +190,8 @@
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="javax.persistence.schema-generation.scripts.action" value="drop-and-create"/>
-            <property name="javax.persistence.schema-generation.scripts.create-target" value="./src/main/resources/META-INF/generatedCreate.ddl"/>
-            <property name="javax.persistence.schema-generation.scripts.drop-target" value="./src/main/resources/META-INF/generatedDrop.ddl"/>
+            <property name="javax.persistence.schema-generation.scripts.create-target" value="./src/test/resources/generatedCreate.ddl"/>
+            <property name="javax.persistence.schema-generation.scripts.drop-target" value="./src/test/resources/generatedDrop.ddl"/>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
 			<property name="javax.persistence.schema-generation.create-source" value="metadata-then-script"/>
 			<property name="javax.persistence.schema-generation.drop-source" value="script"/>

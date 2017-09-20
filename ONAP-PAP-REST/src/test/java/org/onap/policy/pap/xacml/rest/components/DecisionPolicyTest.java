@@ -65,7 +65,7 @@ public class DecisionPolicyTest {
 	@Before
 	public void setUp() throws Exception {
 		logger.info("setUp: Entering");
-		System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME,"xacml.pap.properties");
+		System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME,"src/test/resources/xacml.pap.properties");
 
 		policyAdapter.setPolicyName("Test.Decision_junitTest.1.xml");
 		policyAdapter.setPolicyDescription("testing");

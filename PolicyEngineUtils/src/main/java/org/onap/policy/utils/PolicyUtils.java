@@ -45,11 +45,11 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import com.att.aft.dme2.internal.gson.JsonParser;
-import com.att.aft.dme2.internal.gson.JsonSyntaxException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.CharMatcher;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 public class PolicyUtils {
     private static final Logger LOGGER = FlexLogger.getLogger(PolicyUtils.class);
