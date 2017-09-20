@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_83ced3b2",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-20T11:00:41Z",
+      "side": 1,
+      "message": "Ravi, I made need some help with understanding this code change in here. I\u0027m leery about adding it to production code as it exposes (although unlikely) the code to malicious intent if someone where to set the jUnit to true.",
+      "revId": "a342c15e49481499ee224c205227c28c370a0a27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
