@@ -383,16 +383,17 @@ public class BRMSPush {
             // Pick selected Value
             String userControllerName = null;
             ArrayList<PEDependency> userDependencies = new ArrayList<>();
-            for (String key : responseAttributes.keySet()) {
+            for (Map.Entry<String,Object> entry : responseAttributes.entrySet()) {
+		String key = entry.getKey();
                 if (key.equals(policyKeyID)) {
                     selectedName = responseAttributes.get(key);
                 }
                 // kmodule configurations
-                else if (key.equals("kSessionName")) {
+                else if ("kSessionName".equals(key)) {
                     kSessionName = responseAttributes.get(key);
                 }
                 // Check User Specific values.
-                if (key.equals("$controller:")) {
+                if ("$controller:".equals(key)) {
                     try {
                         PEDependency dependency = PolicyUtils.jsonStringToObject(responseAttributes.get(key),
                                 PEDependency.class);
@@ -402,7 +403,7 @@ public class BRMSPush {
                         LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while resolving Controller: " + e);
                     }
 
-                } else if (key.equals("$dependency$")) {
+                } else if ("$dependency$".equals(key)) {
                     String value = responseAttributes.get(key);
                     if (value.startsWith("[") && value.endsWith("]")) {
                         value = value.substring(1, value.length() - 1).trim();
@@ -500,7 +501,7 @@ public class BRMSPush {
         List<?> pList = query.getResultList();
         boolean createFlag = false;
         BRMSPolicyInfo brmsPolicyInfo = new BRMSPolicyInfo();
-        if (pList.size() > 0) {
+        if (!pList.isEmpty()) {
             // Already exists.
             brmsPolicyInfo = (BRMSPolicyInfo) pList.get(0);
             if (!brmsPolicyInfo.getControllerName().getControllerName().equals(controllerName)) {
@@ -514,7 +515,7 @@ public class BRMSPush {
             query.setParameter("cn", controllerName);
             List<?> bList = query.getResultList();
             BRMSGroupInfo brmsGroupInfo = new BRMSGroupInfo();
-            if (bList.size() > 0) {
+            if (!bList.isEmpty()) {
                 brmsGroupInfo = (BRMSGroupInfo) bList.get(0);
             }
             brmsPolicyInfo.setPolicyName(policyName);
@@ -528,7 +529,7 @@ public class BRMSPush {
     private void syncProject(String selectedName) {
         boolean projectExists = checkProject(selectedName);
         if (projectExists) {
-            String version = null;
+            String version;
             version = getVersion(selectedName);
             if (version == null) {
                 LOGGER.error("Error getting local version for the given Controller Name:" + selectedName
@@ -599,7 +600,6 @@ public class BRMSPush {
                 }
                 fos.close();
                 is.close();
-                f = null;
                 LOGGER.info(fileName + " Created..");
             }
         }
@@ -641,7 +641,7 @@ public class BRMSPush {
 
     private boolean checkRemoteSync(String selectedName, String version) {
         List<NexusArtifact> artifacts = getArtifactFromNexus(selectedName, version);
-        return (artifacts.size() == 0) ? false : true;
+        return (artifacts.isEmpty()) ? false : true;
     }
 
     private List<NexusArtifact> getArtifactFromNexus(String selectedName, String version) {
@@ -690,7 +690,7 @@ public class BRMSPush {
         if (artifact != null) {
             newVersion = incrementVersion(artifact.getVersion());
         }
-        if (newVersion.equals("0.1.0")) {
+        if ("0.1.0".equals(newVersion)) {
             createFlag = true;
         }
         setVersion(newVersion, selectedName);
@@ -729,15 +729,14 @@ public class BRMSPush {
         // Invoke their Maven process.
         try {
             im.startTransaction();
-        } catch (AdministrativeStateException e) {
-            LOGGER.error("Error while starting Transaction " + e);
-        } catch (Exception e) {
+        } catch (AdministrativeStateException | Exception e) {
             LOGGER.error("Error while starting Transaction " + e);
         }
         if (!modifiedGroups.isEmpty()) {
             Boolean flag = false;
-            for (String group : modifiedGroups.keySet()) {
+            for (Map.Entry<String, String> entry : modifiedGroups.entrySet()) {
                 InvocationResult result = null;
+		String group = entry.getKey();
                 try {
                     InvocationRequest request = new DefaultInvocationRequest();
                     setVersion(group);
@@ -795,7 +794,7 @@ public class BRMSPush {
             return policyMap.get(name);
         } else {
             syncGroupInfo();
-            return (policyMap.containsKey(name)) ? policyMap.get(name) : null;
+            return policyMap.containsKey(name) ? policyMap.get(name) : null;
         }
     }
 
@@ -869,7 +868,7 @@ public class BRMSPush {
             pub.send("MyPartitionKey", message);
 
             final List<?> stuck = pub.close(uebDelay, TimeUnit.SECONDS);
-            if (stuck.size() > 0) {
+            if (!stuck.isEmpty()) {
                 LOGGER.error(stuck.size() + " messages unsent");
             } else {
                 LOGGER.debug("Clean exit; Message Published on UEB : " + uebList + "for Topic: " + pubTopic);
@@ -1018,7 +1017,7 @@ public class BRMSPush {
     }
 
     private void readGroups(Properties config) throws PolicyException {
-        String[] groupNames = null;
+        String[] groupNames;
         if (!config.containsKey("groupNames") || config.getProperty("groupNames")==null){
             throw new PolicyException(XACMLErrorConstants.ERROR_DATA_ISSUE
                     + "groupNames property is missing or empty from the property file ");
@@ -1069,7 +1068,7 @@ public class BRMSPush {
         query.setParameter("cn", name);
         List<?> groupList = query.getResultList();
         BRMSGroupInfo brmsGroupInfo = null;
-        if (groupList.size() > 0) {
+        if (!groupList.isEmpty()) {
             LOGGER.info("Controller name already Existing in DB. Will be updating the DB Values" + name);
             brmsGroupInfo = (BRMSGroupInfo) groupList.get(0);
         }
@@ -1122,8 +1121,8 @@ public class BRMSPush {
         Query query = em.createQuery("select b from BRMSPolicyInfo as b where b.policyName = :pn");
         query.setParameter("pn", policyName);
         List<?> pList = query.getResultList();
-        BRMSPolicyInfo brmsPolicyInfo = new BRMSPolicyInfo();
-        if (pList.size() > 0) {
+        BRMSPolicyInfo brmsPolicyInfo;
+        if (!pList.isEmpty()) {
             // Already exists.
             brmsPolicyInfo = (BRMSPolicyInfo) pList.get(0);
             if (brmsPolicyInfo.getControllerName().getControllerName().equals(controllerName)) {
