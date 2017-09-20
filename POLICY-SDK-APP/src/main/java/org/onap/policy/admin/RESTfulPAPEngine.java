@@ -160,6 +160,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 	 * @return
 	 * @throws PAPException
 	 */
+	@Override
 	public void updateGroup(OnapPDPGroup group) throws PAPException {
 
 		try {
@@ -242,7 +243,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 	
 	//Validate the Policy Data
 	public boolean validatePolicyRequest(PolicyRestAdapter policyAdapter, String policyType) throws PAPException {
-		Boolean isValidData = false;
+		Boolean isValidData;
 		StdPAPPolicy newPAPPolicy = new StdPAPPolicy(policyAdapter.getPolicyName(), policyAdapter.getConfigBodyData(), policyAdapter.getConfigType(), "Base");
 		
 		//send JSON object to PAP
@@ -321,7 +322,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 	 * @return
 	 * @throws PAPException 
 	 */
-	
+	@Override
 	public PDPStatus getStatus(OnapPDP pdp) throws PAPException {
 		return (StdPDPStatus)sendToPAP("GET", pdp, null, StdPDPStatus.class);
 	}
@@ -355,6 +356,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 		String papPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
+		Object contentObj = content;
 		LOGGER.info("Encoding for the PAP is: " + encoding);
 		try {
 			String fullURL = papServletURLString;
@@ -367,11 +369,11 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 			}
 			
 			// special case - Status (actually the detailed status) comes from the PDP directly, not the PAP
-			if (method.equals("GET") &&	(content instanceof OnapPDP) &&	responseContentClass == StdPDPStatus.class) {
+			if ("GET".equals(method) &&	(contentObj instanceof OnapPDP) &&	responseContentClass == StdPDPStatus.class) {
 				// Adjust the url and properties appropriately
-				String pdpID =((OnapPDP)content).getId(); 
+				String pdpID =((OnapPDP)contentObj).getId(); 
 				fullURL = pdpID + "?type=Status";
-				content = null;
+				contentObj = null;
 				if(CheckPDP.validateID(pdpID)){
 					encoding = CheckPDP.getEncoding(pdpID);
 				}
@@ -401,14 +403,14 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			
-			if (content != null) {
-				if (content instanceof InputStream) {
+			if (contentObj != null) {
+				if (contentObj instanceof InputStream) {
 		    		try {
 		    			//
 		    			// Send our current policy configuration
 		    			//
 		    			try (OutputStream os = connection.getOutputStream()) {
-		    				int count = IOUtils.copy((InputStream)content, os);
+						int count = IOUtils.copy((InputStream)contentObj, os);
 		    				if (LOGGER.isDebugEnabled()) {
 		    					LOGGER.debug("copied to output, bytes="+count);
 		    				}
@@ -417,9 +419,9 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 		    			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to write content in '" + method + "'", e);
 		    		}
 				} else {
-					// The content is an object to be encoded in JSON
+					// The contentObj is an object to be encoded in JSON
 		            ObjectMapper mapper = new ObjectMapper();
-		            mapper.writeValue(connection.getOutputStream(),  content);
+		            mapper.writeValue(connection.getOutputStream(),  contentObj);
 				}
 			}
             //
@@ -434,18 +436,18 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
             	String isValidData = connection.getHeaderField("isValidData");
             	String isSuccess = connection.getHeaderField("successMapKey");
             	Map<String, String> successMap = new HashMap<>();
-            	if (isValidData != null && isValidData.equalsIgnoreCase("true")){
+		if (isValidData != null && "true".equalsIgnoreCase(isValidData)){
     	            LOGGER.info("Policy Data is valid.");	
             		return true;
-            	} else if (isValidData != null && isValidData.equalsIgnoreCase("false")) {
+		} else if (isValidData != null && "false".equalsIgnoreCase(isValidData)) {
     	            LOGGER.info("Policy Data is invalid.");	
             		return false;
-            	} else if (isSuccess != null && isSuccess.equalsIgnoreCase("success")) {
+		} else if (isSuccess != null && "success".equalsIgnoreCase(isSuccess)) {
             		LOGGER.info("Policy Created Successfully!" );
             		String finalPolicyPath = connection.getHeaderField("finalPolicyPath");
             		successMap.put("success", finalPolicyPath);
             		return successMap;
-            	} else if (isSuccess != null && isSuccess.equalsIgnoreCase("error")) {
+		} else if (isSuccess != null && "error".equalsIgnoreCase(isSuccess)) {
             		LOGGER.info("There was an error while creating the policy!");
             		successMap.put("error", "error");
             		return successMap;
