@@ -66,7 +66,7 @@ public class CheckPDP {
 
 	private static void readFile(){
 		String pdpFile = null;
-		Long newModified = null;
+		Long newModified;
 		try{
 			pdpFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_IDFILE);	
 		}catch (Exception e){
@@ -100,7 +100,7 @@ public class CheckPDP {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void readProps() {
-		Properties pdpProp = null;
+		Properties pdpProp;
 		pdpProp = new Properties();
 		try {
 			InputStream in = new FileInputStream(pdpPath.toFile());
@@ -126,15 +126,15 @@ public class CheckPDP {
 	
 	private static void loadPDPProperties(String propKey, Properties pdpProp){
 		if (propKey.startsWith("PDP_URL")) {
-			String check_val = pdpProp.getProperty(propKey);
-			if (check_val == null) {
+			String checkVal = pdpProp.getProperty(propKey);
+			if (checkVal == null) {
 				LOGGER.error("Properties file doesn't have the PDP_URL parameter");
 			}
-			if (check_val != null && check_val.contains(";")) {
-				List<String> pdp_default = new ArrayList<>(Arrays.asList(check_val.split("\\s*;\\s*")));
+			if (checkVal != null && checkVal.contains(";")) {
+				List<String> pdpDefault = new ArrayList<>(Arrays.asList(checkVal.split("\\s*;\\s*")));
 				int pdpCount = 0;
-				while (pdpCount < pdp_default.size()) {
-					String pdpVal = pdp_default.get(pdpCount);
+				while (pdpCount < pdpDefault.size()) {
+					String pdpVal = pdpDefault.get(pdpCount);
 					readPDPParam(pdpVal);
 					pdpCount++;
 				}
