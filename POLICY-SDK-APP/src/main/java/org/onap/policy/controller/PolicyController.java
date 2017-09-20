@@ -143,6 +143,17 @@ public class PolicyController extends RestrictedBaseController {
 	//WebApp directories
 	private static String configHome;
 	private static String actionHome;
+	
+	private static boolean jUnit = false;
+	
+
+	public static boolean isjUnit() {
+		return jUnit;
+	}
+
+	public static void setjUnit(boolean jUnit) {
+		PolicyController.jUnit = jUnit;
+	}
 
 	@Autowired
 	private PolicyController(CommonClassDao commonClassDao){
@@ -157,7 +168,12 @@ public class PolicyController extends RestrictedBaseController {
 		Properties prop = new Properties();
 		InputStream input = null;
 		try {
-			input = new FileInputStream("xacml.admin.properties");
+			if(jUnit){
+				File file = new File(new File(".").getCanonicalPath() + File.separator + "src"+ File.separator + "test" + File.separator + "resources" + File.separator + "JSONConfig.json");
+				input = new FileInputStream(file);
+			}else{
+				input = new FileInputStream("xacml.admin.properties");
+			}
 			// load a properties file
 			prop.load(input);
 			//pap url
@@ -350,7 +366,7 @@ public class PolicyController extends RestrictedBaseController {
 	}
 
 	public static boolean getActivePolicy(String query) {
-		if(commonClassDao.getDataByQuery(query, new SimpleBindings()).size() > 0){
+		if(!commonClassDao.getDataByQuery(query, new SimpleBindings()).isEmpty()){
 			return true;
 		}else{
 			return false;

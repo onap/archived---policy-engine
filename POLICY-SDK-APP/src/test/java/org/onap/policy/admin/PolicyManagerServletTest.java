@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.script.SimpleBindings;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -147,11 +146,12 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class);  
         PolicyController controller = mock(PolicyController.class);
-        
+        PolicyManagerServlet.setjUnit(true);
         BufferedReader reader = new BufferedReader(new StringReader("{params: { mode: 'DESCRIBEPOLICYFILE', path: 'com.Config_SampleTest1206.1.xml'}}"));
         try {
 			when(request.getReader()).thenReturn(reader);
-			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(basePolicyData);
+			String query = "FROM PolicyEntity where policyName = :split_1 and scope = :split_0";
+			when(controller.getDataByQuery(query, null)).thenReturn(basePolicyData);
 			servlet.setPolicyController(controller);
 			servlet.doPost(request, response);
 		} catch (Exception e1) {
@@ -168,6 +168,7 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
+        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'LIST', path: '/', onlyFolders: false}}");
         list.add("{params: { mode: 'LIST', path: '/com', onlyFolders: false}}");
@@ -176,9 +177,9 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("from PolicyEditorScopes", new SimpleBindings())).thenReturn(policyEditorScopes);
-    			when(controller.getDataByQuery("from PolicyEditorScopes where SCOPENAME like 'com%'", new SimpleBindings())).thenReturn(policyEditorScopes);
-    			when(controller.getDataByQuery("from PolicyVersion where POLICY_NAME like 'com%'", new SimpleBindings())).thenReturn(policyVersion);
+    			when(controller.getDataByQuery("from PolicyEditorScopes", null)).thenReturn(policyEditorScopes);
+    			when(controller.getDataByQuery("from PolicyEditorScopes where SCOPENAME like :scopeName", null)).thenReturn(policyEditorScopes);
+    			when(controller.getDataByQuery("from PolicyVersion where POLICY_NAME like :scopeName", null)).thenReturn(policyVersion);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -196,6 +197,7 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
+        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_SampleTest1206.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -203,7 +205,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(basePolicyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null)).thenReturn(basePolicyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -242,6 +244,7 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
+        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -249,7 +252,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null)).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -288,6 +291,7 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
+        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Raw_TestBRMSRawPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -295,7 +299,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_BRMS_Raw_TestBRMSRawPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null)).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -334,6 +338,7 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
+        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_Fault_TestClosedLoopPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -341,7 +346,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_Fault_TestClosedLoopPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null)).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -380,6 +385,7 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
+        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_PM_TestClosedLoopPMPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -387,7 +393,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_PM_TestClosedLoopPMPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null)).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -433,6 +439,7 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
+        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_MS_vFirewall.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -441,7 +448,7 @@ public class PolicyManagerServletTest extends Mockito{
     			when(request.getReader()).thenReturn(reader);
     			when(commonClassDao.getDataById(GroupPolicyScopeList.class, "groupList", "resource=SampleResource,service=SampleService,type=SampleType,closedLoopControlName=SampleClosedLoop")).thenReturn(groupListData);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_MS_vFirewall.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null)).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -480,6 +487,7 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
+        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_FW_TestFireWallPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -487,7 +495,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Config_FW_TestFireWallPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null)).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -524,6 +532,7 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
+        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Action_TestActionPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -531,7 +540,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Action_TestActionPolicy.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null)).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
@@ -562,6 +571,7 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
+        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -569,7 +579,7 @@ public class PolicyManagerServletTest extends Mockito{
             try {
     			when(request.getReader()).thenReturn(reader);
     			when(controller.getRoles("Test")).thenReturn(rolesdata);
-    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = 'Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(policyData);
+    			when(controller.getDataByQuery("FROM PolicyEntity where policyName = :split_1 and scope = :split_0", null)).thenReturn(policyData);
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);

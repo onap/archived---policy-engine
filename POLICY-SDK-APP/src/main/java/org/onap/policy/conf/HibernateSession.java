@@ -59,5 +59,9 @@ public class HibernateSession{
 	public static Session getSession(){
 		return logSessionFactory.openSession();
 	}
+	
+	public static void setSession(SessionFactory logSessionFactory1){
+		logSessionFactory = logSessionFactory1;
+	}
 
 }
