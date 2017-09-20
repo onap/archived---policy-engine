@@ -52,7 +52,7 @@ public enum PolicyConfigStatus {
 	 * if no match is found
 	 */
 	public static PolicyConfigStatus getStatus(String configStatus) {
-		if(configStatus.equalsIgnoreCase("retrieved")) {
+		if("retrieved".equalsIgnoreCase(configStatus)) {
 			return CONFIG_RETRIEVED;
 		}else {
 			return CONFIG_NOT_FOUND;
@@ -64,6 +64,7 @@ public enum PolicyConfigStatus {
 	 * 
 	 * @return the <code>String</code> name for this <code>PolicyConfigStatus</code>
 	 */
+	@Override
 	public String toString(){
 		return this.name;
 	}
