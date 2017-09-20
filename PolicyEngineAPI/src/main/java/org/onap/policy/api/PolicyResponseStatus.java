@@ -55,9 +55,9 @@ public enum PolicyResponseStatus {
 	 * @return the <code>PolicyResponseStatus</code> with the name matching <code>ACTION_ADVISED</code> or <code>ACTION_TAKEN</code> or <code>NO_ACTION_REQUIRED</code>
 	 */
 	public static PolicyResponseStatus getStatus(String responseStatus) {
-		if(responseStatus.equalsIgnoreCase("action_advised")) {
+		if("action_advised".equalsIgnoreCase(responseStatus)) {
 			return ACTION_ADVISED;
-		}else if(responseStatus.equalsIgnoreCase("action_taken")) {
+		}else if("action_taken".equalsIgnoreCase(responseStatus)) {
 			return ACTION_TAKEN;
 		}else {
 			return NO_ACTION_REQUIRED;
@@ -69,6 +69,7 @@ public enum PolicyResponseStatus {
 	 * 
 	 * @return the <code>String</code> name for this <code>PolicyResponseStatus</code>
 	 */
+	@Override
 	public String toString(){
 		return this.name;
 	}
