@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_5ff8bbc2",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/CheckPDP.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-09-20T13:40:49Z",
+      "side": 1,
+      "message": "I don\u0027t see any references to newModified until here (?) ..   I this is the case I think is better to remove line 69 and have instead line 93 with\n\nLong newModified \u003d pdpPath.toFile().lastModified();",
+      "revId": "07f02ae74126b02d3d34430c0826b3d46e5ca33a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
