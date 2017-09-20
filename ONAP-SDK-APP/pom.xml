@@ -38,6 +38,7 @@
 		<skipassembly>true</skipassembly>
 		<!-- Tests usually require some setup that maven cannot do, so skip. -->
 		<jackson.version>2.6.0</jackson.version>
+ 	    <sonar.exclusions>**/gen/**,**/generated-sources/**,**/yang-gen**,**/pax/**,src/main/webapp/**/*</sonar.exclusions>
 	</properties>
 	<profiles>
 		<!-- disable doclint, a new feature in Java 8, when generating javadoc -->
