@@ -57,6 +57,7 @@ public enum PolicyType {
 	 * Returns the <code>String</code> format of Type for this <code>PolicyType</code>
 	 * @return the <code>String</code> of the Type for this <code>PolicyType</code>
 	 */
+	@Override
 	public String toString() {
 		return this.name;
 	}
