@@ -20,7 +20,7 @@
 
 package org.onap.policy.rest;
 
-/*import java.io.IOException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -104,4 +104,3 @@ public class XACMLRestTest extends TestCase{
 
 	}
 }
-*/
