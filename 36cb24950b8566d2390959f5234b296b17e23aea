@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_01c2d158",
+        "filename": "ONAP-XACML/src/test/java/org/onap/policy/xacml/test/std/pap/StdPDPGroupStatusTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-21T21:29:18Z",
+      "side": 1,
+      "message": "Remove sonar will flag it",
+      "range": {
+        "startLine": 49,
+        "startChar": 53,
+        "endLine": 49,
+        "endChar": 65
+      },
+      "revId": "36cb24950b8566d2390959f5234b296b17e23aea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_e1b22d05",
+        "filename": "ONAP-XACML/src/test/java/org/onap/policy/xacml/test/std/pap/StdPDPGroupStatusTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-21T21:29:18Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 59,
+        "startChar": 48,
+        "endLine": 59,
+        "endChar": 51
+      },
+      "revId": "36cb24950b8566d2390959f5234b296b17e23aea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_c1b729f4",
+        "filename": "ONAP-XACML/src/test/java/org/onap/policy/xacml/test/std/pap/StdPDPGroupStatusTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-21T21:29:18Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 69,
+        "startChar": 47,
+        "endLine": 69,
+        "endChar": 53
+      },
+      "revId": "36cb24950b8566d2390959f5234b296b17e23aea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_a1d0a51f",
+        "filename": "ONAP-XACML/src/test/java/org/onap/policy/xacml/test/std/pap/StdPDPGroupTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-21T21:29:18Z",
+      "side": 1,
+      "message": "remove",
+      "range": {
+        "startLine": 222,
+        "startChar": 46,
+        "endLine": 222,
+        "endChar": 58
+      },
+      "revId": "36cb24950b8566d2390959f5234b296b17e23aea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
