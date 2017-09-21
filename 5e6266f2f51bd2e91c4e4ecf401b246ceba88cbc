@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_148b3220",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-21T12:22:06Z",
+      "side": 1,
+      "message": "This could result in useless parentheses. No need for it right?",
+      "range": {
+        "startLine": 643,
+        "startChar": 15,
+        "endLine": 643,
+        "endChar": 36
+      },
+      "revId": "5e6266f2f51bd2e91c4e4ecf401b246ceba88cbc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
