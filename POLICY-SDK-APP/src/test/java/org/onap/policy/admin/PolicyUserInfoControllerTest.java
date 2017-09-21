@@ -41,12 +41,12 @@ public class PolicyUserInfoControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		HttpSession mockSession = mock(HttpSession.class);
-		 request = mock(HttpServletRequest.class);  
-		 response =  new MockHttpServletResponse();
-		 User user = new User();
-		 user.setOrgUserId("Test");
-		 Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name"))).thenReturn(user);
-		 Mockito.when(request.getSession(false)).thenReturn(mockSession);
+		request = mock(HttpServletRequest.class);  
+		response =  new MockHttpServletResponse();
+		User user = new User();
+		user.setOrgUserId("Test");
+		Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name"))).thenReturn(user);
+		Mockito.when(request.getSession(false)).thenReturn(mockSession);
 	}
 
 	@Test

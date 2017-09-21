@@ -61,8 +61,8 @@ public class testBackUpMonitor {
 	@Test (expected = PersistenceException.class)
 	public void backUpMonitorTestFail() throws Exception{
 		Properties properties = new Properties();
-		properties.setProperty("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
-		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/xacml");
+		properties.setProperty("javax.persistence.jdbc.driver", "org.mariadb.jdbc.Driver");
+		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mariadb://localhost:3306/onap_sdk");
 		properties.setProperty("javax.persistence.jdbc.user", "policy_user");
 		properties.setProperty("javax.persistence.jdbc.password", "");
 		BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
@@ -71,8 +71,8 @@ public class testBackUpMonitor {
 	@Test
 	public void backUpMonitorTestFailNoUser() throws Exception{
 		Properties properties = new Properties();
-		properties.setProperty("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
-		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/xacml");
+		properties.setProperty("javax.persistence.jdbc.driver", "org.mariadb.jdbc.Driver");
+		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mariadb://localhost:3306/onap_sdk");
 		properties.setProperty("javax.persistence.jdbc.user", "");
 		properties.setProperty("javax.persistence.jdbc.password", "password");
 		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
@@ -82,7 +82,7 @@ public class testBackUpMonitor {
 	@Test
 	public void backUpMonitorTestFailNoURL() throws Exception{
 		Properties properties = new Properties();
-		properties.setProperty("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
+		properties.setProperty("javax.persistence.jdbc.driver", "org.mariadb.jdbc.Driver");
 		properties.setProperty("javax.persistence.jdbc.url", "");
 		properties.setProperty("javax.persistence.jdbc.user", "test");
 		properties.setProperty("javax.persistence.jdbc.password", "password");
@@ -95,7 +95,7 @@ public class testBackUpMonitor {
 	public void backUpMonitorTestFailNoDriver() throws Exception{
 		Properties properties = new Properties();
 		properties.setProperty("javax.persistence.jdbc.driver", "");
-		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/xacml");
+		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mariadb://localhost:3306/onap_sdk");
 		properties.setProperty("javax.persistence.jdbc.user", "test");
 		properties.setProperty("javax.persistence.jdbc.password", "password");
 		properties.setProperty("ping_interval", "500");
@@ -106,8 +106,8 @@ public class testBackUpMonitor {
 	@Test
 	public void backUpMonitorTestFailNoNode() throws Exception{
 		Properties properties = new Properties();
-		properties.setProperty("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
-		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/xacml");
+		properties.setProperty("javax.persistence.jdbc.driver", "org.mariadb.jdbc.Driver");
+		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mariadb://localhost:3306/onap_sdk");
 		properties.setProperty("javax.persistence.jdbc.user", "test");
 		properties.setProperty("javax.persistence.jdbc.password", "password");
 		properties.setProperty("ping_interval", "");
@@ -118,8 +118,8 @@ public class testBackUpMonitor {
 	@Test
 	public void backUpMonitorTestFailNoResource() throws Exception{
 		Properties properties = new Properties();
-		properties.setProperty("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
-		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/xacml");
+		properties.setProperty("javax.persistence.jdbc.driver", "org.mariadb.jdbc.Driver");
+		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mariadb://localhost:3306/onap_sdk");
 		properties.setProperty("javax.persistence.jdbc.user", "test");
 		properties.setProperty("javax.persistence.jdbc.password", "password");
 		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), null , properties, new Handler());
@@ -135,8 +135,8 @@ public class testBackUpMonitor {
 	@Test
 	public void backUpMonitorTestFailNoHandler() throws Exception{
 		Properties properties = new Properties();
-		properties.setProperty("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
-		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mysql://localhost:3306/xacml");
+		properties.setProperty("javax.persistence.jdbc.driver", "org.mariadb.jdbc.Driver");
+		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mariadb://localhost:3306/onap_sdk");
 		properties.setProperty("javax.persistence.jdbc.user", "test");
 		properties.setProperty("javax.persistence.jdbc.password", "password");
 		properties.setProperty("ping_interval", "500");

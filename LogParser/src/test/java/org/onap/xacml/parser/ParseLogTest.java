@@ -122,8 +122,8 @@ public class ParseLogTest {
 		
 		config = new Properties();
 		config.put("RESOURCE_NAME", "logparser_pap01");
-		config.put("JDBC_DRIVER" ,"com.mysql.jdbc.Driver");
-		config.put("JDBC_URL", "jdbc:mysql://localhost:3306/");
+		config.put("JDBC_DRIVER" ,"org.mariadb.jdbc.Driver");
+		config.put("JDBC_URL", "jdbc:mariadb://localhost:3306/");
 		config.put("JDBC_USER", "root");
 		config.put("JDBC_PASSWORD", "password");
 		config.put("JMX_URL", "service:jmx:rmi:///jndi/rmi://localhost:9998/jmxrmi");
