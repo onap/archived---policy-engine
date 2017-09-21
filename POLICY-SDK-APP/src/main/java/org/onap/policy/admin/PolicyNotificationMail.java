@@ -122,7 +122,12 @@ public class PolicyNotificationMail{
 		boolean sendFlag = false;
 		SimpleBindings params = new SimpleBindings();
 		params.put("policyFileName", policyFileName);
-		List<Object> watchList = policyNotificationDao.getDataByQuery(query, params);
+		List<Object> watchList = null;
+		if(PolicyController.isjUnit()){
+			watchList = policyNotificationDao.getDataByQuery(query, null);
+		}else{
+			watchList = policyNotificationDao.getDataByQuery(query, params);
+		}
 		if(watchList != null && !watchList.isEmpty()){
 			for(Object watch : watchList){
 				WatchPolicyNotificationTable list = (WatchPolicyNotificationTable) watch;

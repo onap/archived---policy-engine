@@ -43,16 +43,6 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 public class SystemLogDbDaoImpl implements SystemLogDbDao {
 	private static final Logger logger = FlexLogger.getLogger(SystemLogDbDaoImpl.class);
 	
-	private static boolean jUnit = false;
-	
-	public static boolean isjUnit() {
-		return jUnit;
-	}
-
-	public static void setjUnit(boolean jUnit) {
-		SystemLogDbDaoImpl.jUnit = jUnit;
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SystemLogDB> getLoggingData() {
@@ -61,7 +51,7 @@ public class SystemLogDbDaoImpl implements SystemLogDbDao {
 		List<SystemLogDB> system = null;
         try {
         	String sqlWhere = null;
-        	if(jUnit){
+        	if(PolicyController.isjUnit()){
         		sqlWhere = "";
         	}else{
         		sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) ORDER BY date DESC limit "+PolicyController.getLogTableLimit()+"";
@@ -90,7 +80,7 @@ public class SystemLogDbDaoImpl implements SystemLogDbDao {
 		List<SystemLogDB> system = null;
         try {
         	String sqlWhere = null;
-        	if(jUnit){
+        	if(PolicyController.isjUnit()){
         		sqlWhere = "";
         	}else{
         		sqlWhere = "date > DATE_SUB(curdate(), INTERVAL 5 DAY) and logtype = 'error' ORDER BY date DESC limit "+PolicyController.getSystemAlertTableLimit()+"";
