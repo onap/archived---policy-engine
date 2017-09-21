@@ -64,4 +64,6 @@ public class HibernateSession{
 		logSessionFactory = logSessionFactory1;
 	}
 
+	private HibernateSession(){
+	}
 }
