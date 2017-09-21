@@ -92,16 +92,6 @@ public class PolicyManagerServlet extends HttpServlet {
 	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyManagerServlet.class);
 	private static final long serialVersionUID = -8453502699403909016L;
 	
-	private static boolean jUnit = false;
-
-	public static boolean isjUnit() {
-		return jUnit;
-	}
-
-	public static void setjUnit(boolean jUnit) {
-		PolicyManagerServlet.jUnit = jUnit;
-	}
-
 	private enum Mode {
 		LIST, RENAME, COPY, DELETE, EDITFILE, ADDFOLDER, DESCRIBEPOLICYFILE, VIEWPOLICY, ADDSUBSCOPE, SWITCHVERSION, EXPORT, SEARCHLIST
 	}
@@ -542,7 +532,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		peParams.put("split_1", split[1]);
 		peParams.put("split_0", split[0]);
 		List<Object> queryData = null;
-		if(jUnit){
+		if(PolicyController.isjUnit()){
 			queryData = controller.getDataByQuery(query, null);
 		}else{
 			queryData = controller.getDataByQuery(query, peParams);
@@ -684,7 +674,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		}
 		PolicyController controller = getPolicyControllerInstance();
 		List<Object> scopesList = null;
-		if(jUnit){
+		if(PolicyController.isjUnit()){
 			scopesList = controller.getDataByQuery(scopeNamequery, null);
 		}else{
 			scopesList = controller.getDataByQuery(scopeNamequery, params);
@@ -709,7 +699,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		
 		List<Object> activePolicies = null;
 		List<Object> scopesList = null;
-		if(jUnit){
+		if(PolicyController.isjUnit()){
 			activePolicies = controller.getDataByQuery(query, null);
 			scopesList = controller.getDataByQuery(scopeNamequery, null);
 		}else{
@@ -1422,7 +1412,7 @@ public class PolicyManagerServlet extends HttpServlet {
 			peParams.put("split_1", split[1]);
 			peParams.put("split_0", split[0]);
 			List<Object> queryData = null;
-			if(jUnit){
+			if(PolicyController.isjUnit()){
 				queryData = controller.getDataByQuery(query, null);
 			}else{
 				queryData = controller.getDataByQuery(query, peParams);

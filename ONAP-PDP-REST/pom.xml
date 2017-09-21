@@ -212,6 +212,10 @@
 					<groupId>javax.persistence</groupId>
 					<artifactId>persistence-api</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>com.att.aft</groupId>
+					<artifactId>dme2</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 	</dependencies>

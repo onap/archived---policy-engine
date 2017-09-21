@@ -64,6 +64,7 @@ public class PolicyManagerServletTest extends Mockito{
 	@Before
 	public void setUp() throws Exception{
 		logger.info("setUp: Entering");
+		PolicyController.setjUnit(true);
 		UserInfo userinfo = new UserInfo();
 		userinfo.setUserLoginId("Test");
 		userinfo.setUserName("Test");
@@ -146,7 +147,6 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class);  
         PolicyController controller = mock(PolicyController.class);
-        PolicyManagerServlet.setjUnit(true);
         BufferedReader reader = new BufferedReader(new StringReader("{params: { mode: 'DESCRIBEPOLICYFILE', path: 'com.Config_SampleTest1206.1.xml'}}"));
         try {
 			when(request.getReader()).thenReturn(reader);
@@ -168,7 +168,6 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
-        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'LIST', path: '/', onlyFolders: false}}");
         list.add("{params: { mode: 'LIST', path: '/com', onlyFolders: false}}");
@@ -197,7 +196,6 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
-        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_SampleTest1206.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -244,7 +242,6 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
-        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -291,7 +288,6 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
-        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Raw_TestBRMSRawPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -338,7 +334,6 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
-        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_Fault_TestClosedLoopPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -385,7 +380,6 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
-        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_PM_TestClosedLoopPMPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -439,7 +433,6 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
-        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_MS_vFirewall.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -487,7 +480,6 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
-        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_FW_TestFireWallPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -532,7 +524,6 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
-        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Action_TestActionPolicy.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
@@ -571,7 +562,6 @@ public class PolicyManagerServletTest extends Mockito{
 		HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class); 
         PolicyController controller = mock(PolicyController.class);
-        PolicyManagerServlet.setjUnit(true);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml', onlyFolders: false}}");
         for(int i =0; i < list.size(); i++){
