@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_c1e049fc",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-21T21:26:28Z",
+      "side": 1,
+      "message": "Let\u0027s remove this sonar will flag it",
+      "range": {
+        "startLine": 176,
+        "startChar": 1,
+        "endLine": 196,
+        "endChar": 1
+      },
+      "revId": "3252655ee9a20b832a80999ce54b18bd4b0c22e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
