@@ -60,6 +60,24 @@
     },
     {
       "key": {
+        "uuid": "9a437d4f_4b50f8d3",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/api/LoadedPolicy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2079
+      },
+      "writtenOn": "2017-09-21T15:08:29Z",
+      "side": 1,
+      "message": "java interface provides public api\u0027s by default so we don\u0027t need to explicitly tell that. So yes it was redundant code.",
+      "parentUuid": "9a437d4f_080d56e9",
+      "revId": "864705aef669103868b4bc7a7f0c42c415e14c04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a437d4f_c50dfee9",
         "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/jpa/BackUpMonitorEntity.java",
         "patchSetId": 2
@@ -77,6 +95,24 @@
     },
     {
       "key": {
+        "uuid": "9a437d4f_6b6a9c82",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/jpa/BackUpMonitorEntity.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2079
+      },
+      "writtenOn": "2017-09-21T15:08:29Z",
+      "side": 1,
+      "message": "it is more like typo mistake for \u0027resource\u0027 word in methods. my settings removes tabs and convert them to spaces. so that why it is getting difficult",
+      "parentUuid": "9a437d4f_c50dfee9",
+      "revId": "864705aef669103868b4bc7a7f0c42c415e14c04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a437d4f_65f892c3",
         "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/std/NotificationStore.java",
         "patchSetId": 2
@@ -88,6 +124,24 @@
       "writtenOn": "2017-09-20T18:06:45Z",
       "side": 1,
       "message": "Looks like you are eliminating nested if\u0027s here and no more than 3 nested etc.",
+      "revId": "864705aef669103868b4bc7a7f0c42c415e14c04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_8bf820c4",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/std/NotificationStore.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2079
+      },
+      "writtenOn": "2017-09-21T15:08:29Z",
+      "side": 1,
+      "message": "yes it was removing nested if and also i added some local variable for policy name and version so we don\u0027t need to call api at every line. other are just tab to space conversion.",
+      "parentUuid": "9a437d4f_65f892c3",
       "revId": "864705aef669103868b4bc7a7f0c42c415e14c04",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
