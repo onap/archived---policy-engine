@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "9a437d4f_080d56e9",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/api/LoadedPolicy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-09-21T13:51:03Z",
+      "side": 1,
+      "message": "I am assuming this to be check style fix.",
+      "parentUuid": "9a437d4f_456a2e82",
+      "revId": "864705aef669103868b4bc7a7f0c42c415e14c04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a437d4f_c50dfee9",
         "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/jpa/BackUpMonitorEntity.java",
         "patchSetId": 2
