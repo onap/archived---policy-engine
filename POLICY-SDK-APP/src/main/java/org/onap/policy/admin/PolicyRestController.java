@@ -82,8 +82,24 @@ public class PolicyRestController extends RestrictedBaseController{
 	private static final String modal = "model";
 	private static final String importDictionary = "import_dictionary";
 	
+	private static CommonClassDao commonClassDao;
+	
+	public static CommonClassDao getCommonClassDao() {
+		return commonClassDao;
+	}
+
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
+		PolicyRestController.commonClassDao = commonClassDao;
+	}
+	
 	@Autowired
-	CommonClassDao commonClassDao;
+	private PolicyRestController(CommonClassDao commonClassDao){
+		PolicyRestController.commonClassDao = commonClassDao;
+	}
+	
+	public PolicyRestController(){
+		//default constructor
+	}
 
 	@RequestMapping(value={"/policycreation/save_policy"}, method={RequestMethod.POST})
 	public void policyCreationController(HttpServletRequest request, HttpServletResponse response) {

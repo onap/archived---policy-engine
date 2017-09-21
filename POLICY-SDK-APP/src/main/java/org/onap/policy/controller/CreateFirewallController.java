@@ -90,6 +90,14 @@ public class CreateFirewallController extends RestrictedBaseController {
 	
 	private static CommonClassDao commonClassDao;
 
+	public static CommonClassDao getCommonClassDao() {
+		return commonClassDao;
+	}
+
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
+		CreateFirewallController.commonClassDao = commonClassDao;
+	}
+	
 	private List<String> tagCollectorList;
 	private String jsonBody;
 	List<String> expandablePrefixIPList = new ArrayList<>();

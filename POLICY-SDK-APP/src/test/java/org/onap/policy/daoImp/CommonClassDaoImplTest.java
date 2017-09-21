@@ -20,9 +20,13 @@
 
 package org.onap.policy.daoImp;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -39,9 +43,9 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.conf.HibernateSession;
 import org.onap.policy.controller.PolicyController;
-import org.onap.policy.daoImp.CommonClassDaoImpl;
 import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.PolicyEntity;
+import org.onap.policy.rest.jpa.PolicyRoles;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.SystemLogDB;
 import org.onap.policy.rest.jpa.UserInfo;
@@ -392,11 +396,49 @@ public class CommonClassDaoImplTest{
 			fail();
 		}
 	}
+	
+	@Test
+	public void testCommonClassDaoImplMethods(){
+		try{
+			UserInfo userInfo = new UserInfo();
+			userInfo.setUserLoginId("TestID");
+			userInfo.setUserName("Test");
+			commonClassDao.save(userInfo);
+			List<Object> data = commonClassDao.getDataById(UserInfo.class, "userLoginId:userName", "TestID:Test");
+			assertTrue(data.size() == 1);
+			UserInfo userInfoUpdate = (UserInfo) data.get(0);
+			userInfoUpdate.setUserName("Test1");
+			commonClassDao.update(userInfoUpdate);
+			List<String> data1 = commonClassDao.getDataByColumn(UserInfo.class, "userLoginId");
+			assertTrue(data1.size() == 1);
+			UserInfo data2 = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId:userName", "TestID:Test1");
+			assertTrue("TestID".equals(data2.getUserLoginId()));
+			List<Object> data3 = commonClassDao.checkDuplicateEntry("TestID:Test1", "userLoginId:userName", UserInfo.class);
+			assertTrue(data3.size() == 1);
+			PolicyRoles roles = new PolicyRoles();
+			roles.setRole("admin");
+			roles.setLoginId(userInfo);
+			roles.setScope("test");
+			commonClassDao.save(roles);
+			List<PolicyRoles> roles1 = commonClassDao.getUserRoles();
+			assertTrue(roles1.size() == 1);
+			List<String> multipleData = new ArrayList<>();
+			multipleData.add("TestID:Test1");
+			List<Object> data4 = commonClassDao.getMultipleDataOnAddingConjunction(UserInfo.class, "userLoginId:userName", multipleData);
+			assertTrue(data4.size() == 1);
+			commonClassDao.delete(data2);
+		}catch(Exception e){
+			logger.debug("Exception Occured"+e);
+			fail();
+		}
+	}
+	
 
+	
 	@Test
 	public final void testGetLoggingData() {
 		SystemLogDbDaoImpl system = new SystemLogDbDaoImpl();
-		SystemLogDbDaoImpl.setjUnit(true);
+		PolicyController.setjUnit(true);
 		try{
 			assertTrue(system.getLoggingData() != null);
 		}catch(Exception e){
@@ -407,7 +449,7 @@ public class CommonClassDaoImplTest{
 	@Test
 	public final void testGetSystemAlertData() {
 		SystemLogDbDaoImpl system = new SystemLogDbDaoImpl();
-		SystemLogDbDaoImpl.setjUnit(true);
+		PolicyController.setjUnit(true);
 		try{
 			assertTrue(system.getSystemAlertData() != null);
 		}catch(Exception e){
