@@ -180,6 +180,14 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	private static volatile boolean configThreadTerminate = false;
 	private transient ONAPLoggingContext baseLoggingContext = null;
 	private transient IntegrityMonitor im;
+	public IntegrityMonitor getIm() {
+		return im;
+	}
+
+	public void setIm(IntegrityMonitor im) {
+		this.im = im;
+	}
+
 	/**
 	 * Default constructor. 
 	 */
