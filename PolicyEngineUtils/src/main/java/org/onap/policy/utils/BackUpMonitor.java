@@ -248,7 +248,7 @@ public class BackUpMonitor {
                 // This is New. create an entry as Master.
                 LOGGER.info("Adding resource " + resourceName + " to Database");
                 BackUpMonitorEntity bMEntity = new BackUpMonitorEntity();
-                bMEntity.setResoruceNodeName(resourceNodeName);
+                bMEntity.setResourceNodeName(resourceNodeName);
                 bMEntity.setResourceName(resourceName);
                 bMEntity = setMaster(bMEntity);
                 bMEntity.setTimeStamp(new Date());
@@ -297,7 +297,7 @@ public class BackUpMonitor {
                 } else {
                     // Resource name is null -> No resource with same name.
                     selfEntity = new BackUpMonitorEntity();
-                    selfEntity.setResoruceNodeName(resourceNodeName);
+                    selfEntity.setResourceNodeName(resourceNodeName);
                     selfEntity.setResourceName(resourceName);
                     selfEntity.setTimeStamp(new Date());
                     selfEntity = setSlave(selfEntity);
