@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.adapters.GridData;
+import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.pap.xacml.rest.util.JsonMessage;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ClosedLoopD2Services;
@@ -1042,6 +1043,10 @@ public class ClosedLoopDictionaryController{
 		}
 		return null;
 	}
+	
+    public static void setCommonClassDao(CommonClassDaoImpl commonClassDaoImpl) {
+        commonClassDao = commonClassDaoImpl;
+    }
 
 }
 

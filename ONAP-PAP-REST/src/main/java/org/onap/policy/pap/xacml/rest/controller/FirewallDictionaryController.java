@@ -103,6 +103,11 @@ public class FirewallDictionaryController {
 	public FirewallDictionaryController(CommonClassDao commonClassDao){
 		FirewallDictionaryController.commonClassDao = commonClassDao;
 	}
+	
+	public static void setCommonClassDao(CommonClassDao clDao){
+	    commonClassDao = clDao;
+	}
+	
 	/*
 	 * This is an empty constructor
 	 */

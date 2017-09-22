@@ -63,6 +63,7 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pip.engines.aaf.AAFEngine;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
 
+import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.IdentifierImpl;
 
@@ -423,7 +424,6 @@ public class DecisionPolicy extends Policy {
 			// Values for AAF Provider are here for XML Creation. 
 			ConditionType condition = new ConditionType();
 			ApplyType decisionApply = new ApplyType();
-			String selectedFunction = "boolean-equal";
 			
 			AttributeValueType value1 = new AttributeValueType();
 			value1.setDataType(BOOLEAN_DATATYPE);
@@ -439,7 +439,7 @@ public class DecisionPolicy extends Policy {
 			innerDecisionApply.setFunctionId(FUNCTION_BOOLEAN_ONE_AND_ONLY);
 			innerDecisionApply.getExpression().add(new ObjectFactory().createAttributeDesignator(value2));
 			
-			decisionApply.setFunctionId(dropDownMap.get(selectedFunction));
+			decisionApply.setFunctionId(XACML3.ID_FUNCTION_BOOLEAN_EQUAL.stringValue());
 			decisionApply.getExpression().add(new ObjectFactory().createAttributeValue(value1));
 			decisionApply.getExpression().add(new ObjectFactory().createApply(innerDecisionApply));
 			condition.setExpression(new ObjectFactory().createApply(decisionApply));
