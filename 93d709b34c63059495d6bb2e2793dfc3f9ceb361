@@ -22,6 +22,30 @@
       "revId": "93d709b34c63059495d6bb2e2793dfc3f9ceb361",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_37f18e02",
+        "filename": "docs/platform/offeredapis.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1755
+      },
+      "writtenOn": "2017-09-22T19:27:31Z",
+      "side": 1,
+      "message": "I don\u0027t see Saryu\u0027s comment here. Should I?",
+      "parentUuid": "9a437d4f_d76a42b2",
+      "range": {
+        "startLine": 12,
+        "startChar": 18,
+        "endLine": 12,
+        "endChar": 45
+      },
+      "revId": "93d709b34c63059495d6bb2e2793dfc3f9ceb361",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
