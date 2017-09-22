@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a437d4f_d76a42b2",
+        "filename": "docs/platform/offeredapis.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-09-22T18:59:32Z",
+      "side": 1,
+      "message": "Where is this server hosted? Will it always be up?",
+      "range": {
+        "startLine": 12,
+        "startChar": 18,
+        "endLine": 12,
+        "endChar": 45
+      },
+      "revId": "93d709b34c63059495d6bb2e2793dfc3f9ceb361",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
