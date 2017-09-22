@@ -365,7 +365,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	@Override
 	public Object firstItemId() {
 		synchronized (this.groups) {
-			if (this.groups.size() > 0) {
+			if (!this.groups.isEmpty()) {
 				return this.groups.get(0);
 			}
 		}
@@ -375,7 +375,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	@Override
 	public Object lastItemId() {
 		synchronized (this.groups) {
-			if (this.groups.size() > 0) {
+			if (!this.groups.isEmpty()) {
 				return this.groups.get(this.groups.size() - 1);
 			}
 		}
@@ -385,8 +385,8 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	@Override
 	public boolean isFirstId(Object itemId) {
 		synchronized (this.groups) {
-			if (this.groups.size() > 0) {
-				return (this.groups.get(0).equals(itemId));
+			if (!this.groups.isEmpty()) {
+				return this.groups.get(0).equals(itemId);
 			}
 		}
 		return false;
@@ -395,8 +395,8 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	@Override
 	public boolean isLastId(Object itemId) {
 		synchronized (this.groups) {
-			if (this.groups.size() > 0) {
-				return (this.groups.get(this.groups.size() - 1).equals(itemId));
+			if (!this.groups.isEmpty()) {
+				return this.groups.get(this.groups.size() - 1).equals(itemId);
 			}
 		}
 		return false;
@@ -444,7 +444,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 		//
 		// You cannot remove the default group
 		//
-		if (((OnapPDPGroup) itemId).getId().equals("Default")) {
+		if ("Default".equals(((OnapPDPGroup) itemId).getId())) {
 			throw new UnsupportedOperationException("You can't remove the Default Group.");
 		}
 		//
