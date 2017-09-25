@@ -64,13 +64,13 @@ public class PolicyNotificationController extends RestrictedBaseController {
 		String responseValue = "";
 		try {
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
-			System.out.println(userId);
+			logger.info("userid info: " + userId);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			String name = root.get("watchData").get("name").toString();
 			JsonNode pathList = root.get("watchData").get("path");
-			String finalName = "";
+			String finalName;
 			if(pathList.isArray()){
 				ArrayNode arrayNode = (ArrayNode) pathList;
 				for (int i = 0; i < arrayNode.size(); i++) {
