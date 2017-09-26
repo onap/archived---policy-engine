@@ -44,7 +44,11 @@ public enum RuleProvider {
 	/**
 	 * Indicates Guard BLACKLIST YAML 
 	 */
-	GUARD_BL_YAML("GUARD_BL_YAML")
+	GUARD_BL_YAML("GUARD_BL_YAML"),
+	/**
+	 * Indicates Guard BLACKLIST YAML 
+	 */
+	RAINY_DAY("Rainy_Day")
 	;
 	
 	private String name;

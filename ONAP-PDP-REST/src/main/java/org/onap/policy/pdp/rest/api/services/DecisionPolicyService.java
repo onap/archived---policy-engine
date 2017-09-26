@@ -80,6 +80,8 @@ public class DecisionPolicyService{
 		}
 		Map<String,String> matchingAttributes = null;
 		Map<String,String> settingsAttributes = null;
+		
+		//Get the MATCHING and/or SETTINGS attributes
 		if (policyParameters.getAttributes()!=null && policyParameters.getAttributes().containsKey(AttributeType.MATCHING) && policyParameters.getAttributes().containsKey(AttributeType.SETTINGS)) {
 			matchingAttributes = policyParameters.getAttributes().get(AttributeType.MATCHING);
 			settingsAttributes = policyParameters.getAttributes().get(AttributeType.SETTINGS);
@@ -88,9 +90,10 @@ public class DecisionPolicyService{
 		}else if(policyParameters.getAttributes()!=null && policyParameters.getAttributes().containsKey(AttributeType.MATCHING) && !policyParameters.getAttributes().containsKey(AttributeType.SETTINGS)){
 			matchingAttributes = policyParameters.getAttributes().get(AttributeType.MATCHING);
 		}
-		// Create Policy. 
-		StdPAPPolicy newPAPPolicy = new StdPAPPolicy(policyName, policyParameters.getPolicyDescription(), onapName, ruleProvider.toString(), matchingAttributes, settingsAttributes, policyParameters.getDynamicRuleAlgorithmLabels(), 
-				policyParameters.getDynamicRuleAlgorithmFunctions(), policyParameters.getDynamicRuleAlgorithmField1(), policyParameters.getDynamicRuleAlgorithmField2(), null, null, null, updateFlag, policyScope, 0);
+		// Create StdPAPPolicy object used to send policy data to PAP-REST. 
+		StdPAPPolicy newPAPPolicy = new StdPAPPolicy(policyName, policyParameters.getPolicyDescription(), onapName, ruleProvider.toString(), matchingAttributes, settingsAttributes, 
+				policyParameters.getTreatments(), policyParameters.getDynamicRuleAlgorithmLabels(), policyParameters.getDynamicRuleAlgorithmFunctions(), 
+				policyParameters.getDynamicRuleAlgorithmField1(), policyParameters.getDynamicRuleAlgorithmField2(), null, null, null, updateFlag, policyScope, 0);
 		// Send JSON to PAP. 
 		response = (String) papServices.callPAP(newPAPPolicy, new String[] {"operation="+operation, "apiflag=api", "policyType=Decision"}, policyParameters.getRequestID(), "Decision");
 		LOGGER.info(message);

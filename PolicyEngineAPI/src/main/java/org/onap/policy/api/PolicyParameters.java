@@ -40,6 +40,7 @@ public class PolicyParameters {
 	private String onapName;
 	private String configName;
 	private Map<AttributeType, Map<String,String>> attributes;
+	private Map<String, String> treatments;
 	private String configBody;
 	private PolicyType configBodyType;
 	private String actionPerformer;
@@ -568,6 +569,24 @@ public class PolicyParameters {
 		this.extendedOption = extendedOption;
 	}
 	
+	/**
+     * Gets Allowed Treatments Map for Rainy Day Decision Policy
+     * 
+     * @return Map of String format for treatments per errorcode
+     */
+	public Map<String, String> getTreatments() {
+		return treatments;
+	}
+
+	/**
+	 * Sets Allowed Treatments Map for Rainy Day Decision Policy 
+	 * 
+	 * @param treatments Map that contains the treatment per errorcode 
+	 */
+	public void setTreatments(Map<String, String> treatments) {
+		this.treatments = treatments;
+	}
+	
 	@Override
 	public String toString() {
 		return "PolicyParameters [ policyName=" + policyName + ", policyDescription=" + policyDescription + ", onapName="+ onapName 
@@ -576,6 +595,6 @@ public class PolicyParameters {
 				+ ",dynamicRuleAlgorithmField1=" + dynamicRuleAlgorithmField1 + ",dynamicRuleAlgorithmField2=" + dynamicRuleAlgorithmField2 
 				+ ", actionPerformer=" + actionPerformer + ", actionAttribute=" + actionAttribute + ", priority=" + priority  
 				+ ", ruleProvider= " + ruleProvider + ", riskLevel= " + riskLevel + ", riskType= " + riskType + ", extendedOption= " + extendedOption
-				+ "]";
+				+ ", treatments= " + treatments + "]";
 	}
 }
