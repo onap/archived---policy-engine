@@ -36,6 +36,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 	private String onapName = null;
 	private String configName = null;
 	private Map<String, String> dyanamicFieldConfigAttributes = new HashMap<>();
+	private Map<String, String> treatments = new HashMap<>();
 	private Map<String, String> dropDownMap = new HashMap<>();
 	private Map<String, String> dynamicSettingsMap = new HashMap<>();
 	private List<String> dynamicRuleAlgorithmLabels;
@@ -125,8 +126,9 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 
 	}
 
-	//Constructor for Create/Update Decision Policies from Admin Console
-	public StdPAPPolicy(String policyName, String description, String onapName, String providerComboBox, Map<String, String> attributes, Map<String, String> settings, 
+	//Constructor for Create/Update Decision Policies
+	public StdPAPPolicy(String policyName, String description, String onapName, String providerComboBox, 
+			Map<String, String> attributes, Map<String, String> settings, Map<String, String> treatments,
 			List<String> dynamicRuleAlgorithmLabels, List<String> dynamicRuleAlgorithmCombo, List<String> dynamicRuleAlgorithmField1, 
 			List<String> dynamicRuleAlgorithmField2, Map<String, String> dropDownMap, List<Object> dynamicVariableList, 
 			List<String> dataTypeList, Boolean editPolicy, String domain, int highestVersion) {
@@ -147,9 +149,9 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 		this.editPolicy = editPolicy;
 		this.domain = domain;
 		this.highestVersion = highestVersion;	
+		this.treatments = treatments;
 
 	}
-
 
 	//Constructor for Create Config Policies from API and Admin Console
 	//Constructor for Updating Config Policies from the API
@@ -675,6 +677,11 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 	}
 
 	@Override
+	public Map<String, String> getTreatments() {
+		return treatments;
+	}
+	
+	@Override
 	public String toString() {
 		return "StdPAPPolicy [policyName=" + policyName + ", policyDescription=" + policyDescription + ", onapName="
 				+ onapName + ", configName=" + configName + ", dyanamicFieldConfigAttributes=" + dyanamicFieldConfigAttributes + ", configBodyData=" + configBodyData
@@ -688,9 +695,10 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 				+ ",dataTypeList=" + dataTypeList + ",draft=" + ",oldPolicyFileName=" + oldPolicyFileName + ",serviceType=" + serviceType
 				+ ",uuid=" + uuid + ",msLocation=" + msLocation + ",priority=" + priority + ",deleteCondition=" + deleteCondition + ",dictionaryType=" + dictionaryType 
 				+ ",dictionary=" + dictionary + ",dictionaryFields=" + dictionaryFields + ",uuid=" + uuid + ",msLocation=" + msLocation + ",priority=" 
-				+ priority + ",deleteCondition=" + deleteCondition + ",riskType="+riskType + ",riskLevel="+riskLevel + ",guard="+ guard + ",ttlDate="+ ttlDate + "]";
+				+ priority + ",deleteCondition=" + deleteCondition + ",riskType="+riskType + ",riskLevel="+riskLevel + ",guard="+ guard + ",ttlDate="+ ttlDate 
+				+ ",treatments=" + treatments + "]";
 	}
-
+	
 	// Methods needed for JSON Deserialization
 	public void setPolicyName(String policyName) {
 		this.policyName = policyName;
@@ -906,5 +914,9 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 
 	public void setBrmsDependency(ArrayList<String> brmsDependency) {
 		this.brmsDependency = brmsDependency;
+	}
+	
+	public void setTreatments(Map<String, String> treatments) {
+		this.treatments = treatments;
 	}
 }

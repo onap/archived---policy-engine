@@ -230,7 +230,8 @@ public class DecisionPolicy extends Policy {
 			decisionPolicy.setTarget(target);
 
 			Map<String, String> dynamicFieldDecisionSettings = policyAdapter.getDynamicSettingsMap();
-			if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFPROVIDER)){
+			if(policyAdapter.getRuleProvider()!=null && (policyAdapter.getRuleProvider().equals(AAFPROVIDER)||
+					policyAdapter.getRuleProvider().equals(RAINY_DAY))){
 				dynamicFieldDecisionSettings = new HashMap<>();
 			}
 			
@@ -242,8 +243,8 @@ public class DecisionPolicy extends Policy {
 				VariableDefinitionType dynamicVariable = createDynamicVariable(key, value, dataType);
 				decisionPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(dynamicVariable);
 			}
-			Map<String, String> dynamicFieldTreatmentAttributes = policyAdapter.getRainydayMap();
 			
+			Map<String, String> dynamicFieldTreatmentAttributes = policyAdapter.getRainydayMap();
 			if(policyAdapter.getRuleProvider().equals(RAINY_DAY)){
 				for(String keyField : dynamicFieldTreatmentAttributes.keySet()) {
 					String errorcode = keyField;
