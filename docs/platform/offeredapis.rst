@@ -18,12 +18,22 @@ The Policy subsystem of ONAP maintains, distributes, and operates on the set of 
 * Import Micro Services Models
 * Retrieve Metrics for policy counts from PDP and PAP
 
-.. SStodo need to include the swaggerv2doc for the api
 
-Example Swagger Displayed with swaggerv2doc directive
------------------------------------------------------
+POLICY API Details
+^^^^^^^^^^^^^^^^^^
 
-.. SStodo add swaggerv2doc directive here
+.. SStodo THIS URL NEEDS TO CHANGE - Just testing for now
+
+.. swaggerv2doc:: https://wiki.onap.org/download/attachments/15994235/api-docs.json?api=v2
+
+
+
+Additional information can be found at `PolicyApi link`_.
+
+.. _PolicyApi link: https://wiki.onap.org/display/DW/Policy
+
+
+
 
 End of document
 
