@@ -60,7 +60,7 @@ public class CreatePolicyController extends RestrictedBaseController{
 			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
 			policyAdapter.setConfigType(entity.getConfigurationData().getConfigType());
 			policyAdapter.setConfigBodyData(entity.getConfigurationData().getConfigBody());
-			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf(' ') + 1);
+			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf('_') + 1);
 			policyAdapter.setPolicyName(policyNameValue);
 			String description = "";
 			try{
