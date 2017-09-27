@@ -109,6 +109,7 @@ public class BRMSPush {
     private static final String[] GOALS = { "clean", "deploy" };
     private static final String DEFAULT_VERSION = "1.1.0-SNAPSHOT";
     private static final String DEPENDENCY_FILE = "dependency.json";
+    private static final String BRMSPERSISTENCE = "brmsEclipselink.persistencexml";
 
     private static Map<String, String> modifiedGroups = new HashMap<>();
     private static IntegrityMonitor im;
@@ -188,8 +189,10 @@ public class BRMSPush {
         } catch (Exception e) {
             LOGGER.error("Error starting BackUpMonitor: " + e);
         }
-        if(!config.containsKey(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML)){
+        if(!config.containsKey(BRMSPERSISTENCE)){
             config.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistenceBRMS.xml");
+        } else {
+            config.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, config.getProperty(BRMSPERSISTENCE,"META-INF/persistenceBRMS.xml"));
         }
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("BRMSGW", config);
         em = emf.createEntityManager();
