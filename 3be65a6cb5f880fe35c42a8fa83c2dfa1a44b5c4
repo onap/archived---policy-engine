@@ -16,6 +16,24 @@
       "revId": "3be65a6cb5f880fe35c42a8fa83c2dfa1a44b5c4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a437d4f_b34337ae",
+        "filename": "packages/base/src/files/install/servers/brmsgw/config.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-09-27T17:19:25Z",
+      "side": 1,
+      "message": "Sure Jorge.",
+      "parentUuid": "9a437d4f_9306f384",
+      "revId": "3be65a6cb5f880fe35c42a8fa83c2dfa1a44b5c4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
