@@ -28,6 +28,75 @@
 			"groupId": "org.onap.policy.drools-applications",
 			"artifactId": "trafficgenerator",
 			"version": "${{BRMS_DEPENDENCY_VERSION}}"
-		}]
-	}
+		}],
+        "amsterdam": [{
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "events",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "appc",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "appclcm",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "vfc",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "so",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "aai",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "sdc",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "trafficgenerator",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "eventmanager",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "guard",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "actorServiceProvider",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "actor.appc",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "actor.appclcm",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "actor.so",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "actor.vfc",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications",
+            "artifactId": "policy-yaml",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "com.att.research.xacml",
+            "artifactId": "xacml-pdp",
+            "version": "1.0.0"
+        }]
+    }
 }
