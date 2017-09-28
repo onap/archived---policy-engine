@@ -121,6 +121,13 @@ public class DictionaryService {
 		return result.getViewName();
 	}
 	
+	public String saveRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		
+		DecisionPolicyDictionaryController dictionary = new DecisionPolicyDictionaryController();
+			ModelAndView result = dictionary.saveRainyDayDictionary(request, response);
+		return result.getViewName();
+	}
+	
 	public String saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		DescriptiveDictionaryController dictionary = new DescriptiveDictionaryController();
@@ -341,6 +348,11 @@ public class DictionaryService {
 	public void getSettingsDictionary(HttpServletResponse response){
 		DecisionPolicyDictionaryController dictionary = new DecisionPolicyDictionaryController();
 			dictionary.getSettingsDictionaryEntityData(response);
+	}
+	
+	public void getRainyDayDictionary(HttpServletResponse response){
+		DecisionPolicyDictionaryController dictionary = new DecisionPolicyDictionaryController();
+			dictionary.getRainyDayDictionaryEntityData(response);
 	}
 	
 	public void getDescriptiveDictionary(HttpServletResponse response){

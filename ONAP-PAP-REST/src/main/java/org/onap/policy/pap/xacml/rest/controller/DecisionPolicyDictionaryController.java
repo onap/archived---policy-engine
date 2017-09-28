@@ -264,7 +264,7 @@ public class DecisionPolicyDictionaryController {
 
 	
 	@RequestMapping(value={"/get_RainyDayDictionaryData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getRainyDayDictionaryEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getRainyDayDictionaryEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -329,8 +329,8 @@ public class DecisionPolicyDictionaryController {
 						counter ++;
 					}
 				}
+				decisionRainyDay.setTreatments(userValue);
 			}
-			decisionRainyDay.setTreatments(userValue);
 			
 			if(decisionRainyDay.getId() == 0){
         		List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionRainyDay.getBbid()+":"+decisionRainyDay.getWorkstep(), "bbid:workstep", RainyDayTreatments.class);
@@ -416,7 +416,7 @@ public class DecisionPolicyDictionaryController {
 }
 
 class TreatmentValues { 
-	private ArrayList<Object> userDataTypeValues;
+	private ArrayList<Object> userDataTypeValues = new ArrayList<>();
 
 	public ArrayList<Object> getUserDataTypeValues() {
 		return userDataTypeValues;

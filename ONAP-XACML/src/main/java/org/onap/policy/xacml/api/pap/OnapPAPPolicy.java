@@ -46,6 +46,7 @@ public interface OnapPAPPolicy {
 	public String getOnapName();
 	public String getConfigName();
 	public Map<String, String> getDynamicFieldConfigAttributes();
+	public Map<String, String> getTreatments();
 	public Map<String, String> getDynamicSettingsMap();
 	public List<String> getDynamicRuleAlgorithmLabels();
 	public List<String> getDynamicRuleAlgorithmCombo();
@@ -81,7 +82,6 @@ public interface OnapPAPPolicy {
     public String getDictionaryType();
     public String getDictionary();
     public String getDictionaryFields();
-    
 	public String getRiskLevel();
 	public String getGuard();
 	public String getRiskType();

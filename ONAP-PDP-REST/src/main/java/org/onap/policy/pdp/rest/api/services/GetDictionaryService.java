@@ -171,6 +171,9 @@ public class GetDictionaryService {
         case "Settings":
             jsonString = jsonString.replace("settingsDictionaryDatas", "DictionaryDatas");
             break;
+        case "RainyDayTreatments":
+        	jsonString = jsonString.replace("rainyDayDictionaryDatas", "DictionaryDatas");
+        	break;
         case "DescriptiveScope":
             jsonString = jsonString.replace("descriptiveScopeDictionaryDatas", "DictionaryDatas");
             break;

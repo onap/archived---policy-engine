@@ -69,6 +69,9 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 			case "Settings":
 				dictionary.getSettingsDictionary(response);
 				break;
+			case "RainyDayTreatments":
+				dictionary.getRainyDayDictionary(response);
+				break;
 			case "DescriptiveScope":
 				dictionary.getDescriptiveDictionary(response);
 				break;
@@ -211,6 +214,9 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 				break;
 			case "Settings":
 				result = dictionary.saveSettingsDictionary(request, response);
+				break;
+			case "RainyDayTreatments":
+				result = dictionary.saveRainyDayDictionary(request, response);
 				break;
 			case "DescriptiveScope":
 				result = dictionary.saveDescriptiveDictionary(request, response);

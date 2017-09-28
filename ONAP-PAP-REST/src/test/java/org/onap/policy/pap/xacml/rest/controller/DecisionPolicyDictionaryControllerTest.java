@@ -198,7 +198,7 @@ public class DecisionPolicyDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 
-		controller.getRainyDayDictionaryEntityData(request, response);
+		controller.getRainyDayDictionaryEntityData(response);
 		
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("rainyDayDictionaryDatas"));

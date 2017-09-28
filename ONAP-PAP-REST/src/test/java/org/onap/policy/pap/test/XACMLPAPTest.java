@@ -206,7 +206,7 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getParameter("operation")).thenReturn("create");
         Mockito.when(httpServletRequest.getParameter("policyType")).thenReturn("Decision");
         StdPAPPolicy newPAPPolicy = new StdPAPPolicy("test", "test rule", "ONAP", "AAF", null, null, null, 
-                null, null, null, null, null, null, false, "test", 0);
+                null, null, null, null, null, null, null, false, "test", 0);
         MockServletInputStream mockInput = new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
         
@@ -238,7 +238,7 @@ public class XACMLPAPTest {
         matchingAttributes.put("guardActiveStart","05:00");
         matchingAttributes.put("guardActiveEnd","10:00");
         StdPAPPolicy newPAPPolicy = new StdPAPPolicy("testGuard", "test rule", "PDPD", "GUARD_YAML", matchingAttributes , null, null, 
-                null, null, null, null, null, null, false, "test", 0);
+                null, null, null, null, null, null, null, false, "test", 0);
         MockServletInputStream mockInput = new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
         
@@ -267,7 +267,7 @@ public class XACMLPAPTest {
         matchingAttributes.put("guardActiveEnd","10:00");
         matchingAttributes.put("blackList","bl1,bl2");
         StdPAPPolicy newPAPPolicy = new StdPAPPolicy("testblGuard", "test rule", "PDPD", "GUARD_BL_YAML", matchingAttributes , null, null, 
-                null, null, null, null, null, null, false, "test", 0);
+                null, null, null, null, null, null, null, false, "test", 0);
         MockServletInputStream mockInput = new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
         
