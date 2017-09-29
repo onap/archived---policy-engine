@@ -4,6 +4,10 @@
 
 Offered APIs
 ============
+
+.. contents:: 
+    :depth: 2
+
 The Policy subsystem of ONAP maintains, distributes, and operates on the set of rules that underlie ONAP’s control, orchestration, and management functions. Policy provides a centralized environment for the creation and management of easily-updatable conditional rules. It enables users to validate policies and rules, identify and resolve overlaps and conflicts, and derive additional policies where needed.  The following operations are supported by the policy API:
 
 * Create policies on the PAP 
@@ -22,10 +26,7 @@ The Policy subsystem of ONAP maintains, distributes, and operates on the set of 
 POLICY Engine Services
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The figure below represents the target POLICY Architecture.
-
 .. image:: https://wiki.onap.org/download/attachments/1015898/PolicyEngineApiList.png?api=v2
-
 
 
 POLICY API Details
@@ -36,8 +37,10 @@ POLICY API Details
 .. swaggerv2doc:: https://wiki.onap.org/download/attachments/1015898/api-docs-09192017.json?api=v2
 
 
+Additional Information
+^^^^^^^^^^^^^^^^^^^^^^
 
-Additional information can be found at `PolicyApi link`_.
+Additional information, including examples, can be found at `PolicyApi link`_.
 
 .. _PolicyApi link: https://wiki.onap.org/display/DW/Policy+API
 

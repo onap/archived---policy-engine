@@ -4,6 +4,10 @@
 
 Architecture
 ------------
+
+.. contents:: 
+    :depth: 3
+
 POLICY is a subsystem of ONAP that maintains, distributes, and operates on the set of rules that underlie ONAP’s control, orchestration, and management functions. 
 
 POLICY provides a logically centralized environment for the creation and management of policies, including conditional rules.  This provides the capability to **create** and **validate** policies/rules, **identify overlaps**, **resolve conflicts**, and **derive** additional policies as needed.  Policies are used to **control**, **influence**, and help **ensure compliance** with goals.  Policies can support infrastructure, products and services, operation automation, and security.  Users, including network and service designers, operations engineers, and security experts, can easily **create**, **change**, and **manage** policy rules from the POLICY Manager in the ONAP Portal.
