@@ -57,7 +57,7 @@ public class CreateBRMSRawController{
 	
 	@SuppressWarnings("unchecked")
 	public void prePopulateBRMSRawPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-		attributeList = new ArrayList<Object>();
+		attributeList = new ArrayList<>();
 		if (policyAdapter.getPolicyData() instanceof PolicyType) {
 			PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
 			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
@@ -68,7 +68,7 @@ public class CreateBRMSRawController{
 				logger.debug("Prepopulating form data for BRMS RAW Policy selected:" + policyAdapter.getPolicyName());
 			}
 			policyAdapter.setPolicyName(policyNameValue);
-			String description = "";
+			String description;
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
@@ -131,16 +131,16 @@ public class CreateBRMSRawController{
 										AttributeDesignatorType designator = match.getAttributeDesignator();
 										String attributeId = designator.getAttributeId();
 										
-										if (attributeId.equals("RiskType")){
+										if ("RiskType".equals(attributeId)){
 											policyAdapter.setRiskType(value);
 										}
-										if (attributeId.equals("RiskLevel")){
+										if ("RiskLevel".equals(attributeId)){
 											policyAdapter.setRiskLevel(value);
 										}
-										if (attributeId.equals("guard")){
+										if ("guard".equals(attributeId)){
 											policyAdapter.setGuard(value);
 										}
-										if (attributeId.equals("TTLDate") && !value.contains("NA")){
+										if ("TTLDate".equals(attributeId) && !value.contains("NA")){
 											PolicyController controller = new PolicyController();
 											String newDate = controller.convertDate(value);
 											policyAdapter.setTtlDate(newDate);
