@@ -268,7 +268,12 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		try {
 			Query hbquery = session.createQuery(query);
 			for (Map.Entry<String, Object> paramPair : params.entrySet()) {
-				hbquery.setParameter(paramPair.getKey(), paramPair.getValue());
+				if(paramPair.getValue() instanceof java.lang.Long){
+					hbquery.setLong(paramPair.getKey(), (long) paramPair.getValue());
+				}
+				else{
+					hbquery.setParameter(paramPair.getKey(), paramPair.getValue());
+				}
 			}
 			data = hbquery.list();
 			tx.commit();
