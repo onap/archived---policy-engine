@@ -4,7 +4,7 @@ Release Notes
 =============
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     new-features.rst
     bug-fixes.rst
