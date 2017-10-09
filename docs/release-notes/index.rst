@@ -9,7 +9,3 @@ Release Notes
     new-features.rst
     bug-fixes.rst
     known-issues.rst
-    security-issues.rst
-    upgrade-notes.rst
-    deprecation-notes.rst
-    other.rst
