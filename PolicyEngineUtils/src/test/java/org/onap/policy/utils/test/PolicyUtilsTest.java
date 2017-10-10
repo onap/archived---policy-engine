@@ -148,7 +148,7 @@ public class PolicyUtilsTest {
 	public void testBRMSValidate(){
 	    String rule = "package com.sample;\n"
 	            + "import com.sample.DroolsTest.Message;\n"
-	            + "declare Params\n"
+	            + "declare PapParams\n"
 	            + "samPoll : int\n"
 	            + "value : String\n"
 	            + "end\n"

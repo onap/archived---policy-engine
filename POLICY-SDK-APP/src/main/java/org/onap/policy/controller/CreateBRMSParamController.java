@@ -173,7 +173,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 					if (flag) {
 						params.append(line);
 					}
-					if (line.contains("declare Params")) {
+					if (line.contains("declare PapParams")) {
 						params.append(line);
 						flag = true;
 					}
@@ -181,7 +181,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 						break;
 					}
 				}
-				params = new StringBuilder(params.toString().replace("declare Params", "").replace("end", "").replaceAll("\\s+", ""));
+				params = new StringBuilder(params.toString().replace("declare PapParams", "").replace("end", "").replaceAll("\\s+", ""));
 				String[] components = params.toString().split(":");
 				String caption = "";
 				for (int i = 0; i < components.length; i++) {
@@ -400,7 +400,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 					if (flag) {
 						params.append(line);
 					}
-					if (line.contains("rule") && line.contains(".Params\"")) {
+					if (line.contains("rule") && line.contains(".PapParams\"")) {
 						params.append(line);
 						flag = true;
 					}
@@ -408,8 +408,8 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 						break;
 					}
 				}
-				params = new StringBuilder(params.substring(params.indexOf(".Params\"")+ 8));
-				params = new StringBuilder(params.toString().replaceAll("\\s+", "").replace("salience1000whenthenParamsparams=newParams();","")
+				params = new StringBuilder(params.substring(params.indexOf(".PapParams\"")+ 11));
+				params = new StringBuilder(params.toString().replaceAll("\\s+", "").replace("salience1000whenthenPapParamsparams=newPapParams();","")
                         .replace("insert(params);end", "")
                         .replace("params.set", ""));
 				String[] components = params.toString().split("\\);");
@@ -462,7 +462,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 					brmsTemplateVlaue + policyData.getRuleName() + "%$> \n */ \n";
 			body = body + findRule((String) policyData.getRuleName()) + "\n";
 			StringBuilder generatedRule = new StringBuilder();
-			generatedRule.append("rule \""+ policyData.getDomainDir().replace("\\", ".") +".Config_BRMS_Param_" + policyData.getPolicyName()+".Params\" \n\tsalience 1000 \n\twhen\n\tthen\n\t\tParams params = new Params();");
+			generatedRule.append("rule \""+ policyData.getDomainDir().replace("\\", ".") +".Config_BRMS_Param_" + policyData.getPolicyName()+".PapParams\" \n\tsalience 1000 \n\twhen\n\tthen\n\t\tPapParams params = new PapParams();");
 
 			if(policyData.getRuleData().size() > 0){ 
 				for(Object keyValue: policyData.getRuleData().keySet()){ 
