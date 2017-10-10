@@ -3,11 +3,14 @@
 New Features
 ------------
 
-**Release Notes for Policy Framework** 
+ONAP POLICY Framework items for: (Last Updated: 10/10/2017)
 
-* Version: Amsterdam Release
-* Release Date: 02 November, 2017
-* Description: R1
+*    **Version**: Amsterdam Release
+*    **Release Date**: 02 November, 2017
+*    **Description**: R1
+
+.. contents::
+    :depth: 2
 
 Epic
 ^^^^
@@ -43,5 +46,62 @@ Story
 * [POLICY-161] - Security Event Logging
 * [POLICY-173] - Deployment of Operational Policies Documentation
 * [POLICY-210] - Independent Versioning and Release Process
+
+
+Task
+^^^^
+
+* [POLICY-6] - Updates to License and Trademark in the Policy Source Code
+* [POLICY-8] - Fix PDP-D Sonar Blocker Issues
+* [POLICY-53] - Update drools-application docker scripts to find reorganized pom changes
+* [POLICY-55] - Ensure drools-application JUnit test works on ONAP JJB using in memory database
+* [POLICY-70] - Add vagrant functionality to build/setup policy
+* [POLICY-78] - Update Drools version to 6.5.0.Final
+* [POLICY-80] - Policy Guard
+* [POLICY-87] - Implement Recommended Fix for Portal
+* [POLICY-88] - Delete the yaml sdk and sdc projects located in policy/engine
+* [POLICY-95] - Fix policy/commons sonar blocker issues with exception of integrity-monitor/audit
+* [POLICY-96] - Fix policy/common integrity-[monitor/audit] sonar blockers
+* [POLICY-97] - Fix policy/engine sonar blockers
+* [POLICY-98] - policy/commons critical sonar issues - NON integrity/monitor related
+* [POLICY-100] - fix policy/common critical sonar items - integrity monitor/audit related
+* [POLICY-105] - Common-Modules changes to RefreshStateAudit
+* [POLICY-111] - policy/drools-applications: sonar blockers
+* [POLICY-113] - policy/engine: sonar critical
+* [POLICY-114] - policy/drools-pdp: sonar critical
+* [POLICY-115] - policy/drools-application: sonar critical
+* [POLICY-116] - Remove MojoHaus Maven plug-in from pom file
+* [POLICY-117] - Resolve Policy Sonar Critical issues
+* [POLICY-125] - Update Project FOSS Table
+* [POLICY-126] - Identify and outline the set of documentations to be delivered in this Release
+* [POLICY-133] - Addition of policy-persistence feature
+* [POLICY-154] - policy/engine finish eclipse warnings for unused imports/variables
+* [POLICY-155] - Addition of state-management feature
+* [POLICY-156] - Addition of active-standby-management feature
+* [POLICY-163] - Add 'install' and 'uninstall' option to DroolsPDP 'features' script
+* [POLICY-167] - Clean additional pom warnings policy/engine
+* [POLICY-168] - Clean pom warnings policy/drools-applications
+* [POLICY-171] - Update policy/docker README to reflect current project paths
+* [POLICY-177] - test-transaction feature to check on the healthiness of policy controllers
+* [POLICY-178] - policy/common: convert integrity monitor to use slf4j/logback as in drools-pdp
+* [POLICY-196] - Enhancement on MS JSON File
+* [POLICY-218] - LF Open Source License Issues
+* [POLICY-228] - Create common object to consolidate AAI response 
+* [POLICY-237] - Address remaining sonar/critical for policy/common
+* [POLICY-239] - Address sonar major issues
+* [POLICY-247] - Modify docker push-policies to push the Amsterdam Template and latest policies
+* [POLICY-253] - Modify policy/engine pom.xml to remove sonar scan on 3rd party code.
+* [POLICY-261] - policy/drools-pdp last remaining sonar critical
+* [POLICY-273] - Revert the SDK properties from onap to ecomp
+* [POLICY-274] - .gitignore policy/engine directories/files created after running mvn clean install or mvn test
+* [POLICY-304] - Add ability for Docker scripts to NOT pre-load policies for testing
+
+
+Additional Information
+^^^^^^^^^^^^^^^^^^^^^^
+
+Latest details for Policy Framework Amsterdam Release can be found at `PolicyReleaseNotes`_.
+
+.. _PolicyReleaseNotes: https://jira.onap.org/secure/ReleaseNote.jspa?projectId=10106&version=10300
 
 

@@ -3,6 +3,15 @@
 Bug Fixes
 ---------
 
+ONAP POLICY Framework items for: (Last Updated: 10/10/2017)
+
+*    **Version**: Amsterdam Release
+*    **Release Date**: 02 November, 2017
+*    **Description**: R1
+
+Bug
+^^^
+
 * [POLICY-74] - policy-engine build failure
 * [POLICY-75] - KieScanner repeatedly updating Drools container
 * [POLICY-84] - Query Name validation before execution
