@@ -128,7 +128,7 @@ public class PDPServices {
                 LOGGER.info("Decision not a Permit. "  + result.getDecision().toString());
                 PDPResponse pdpResponse = new PDPResponse();
                 if (decide) {
-                	String indeterminatePropValue = XACMLProperties.getProperty("decision.inStringdeterminate.response");
+                	String indeterminatePropValue = XACMLProperties.getProperty("decision.indeterminate.response");
                 	if(result.getDecision().equals(Decision.INDETERMINATE)&& indeterminatePropValue != null){
                 		if("PERMIT".equalsIgnoreCase(indeterminatePropValue)){
                 			pdpResponse.setDecision(PolicyDecision.PERMIT);
