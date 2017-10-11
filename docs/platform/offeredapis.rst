@@ -26,8 +26,7 @@ The Policy subsystem of ONAP maintains, distributes, and operates on the set of 
 POLICY Engine Services
 ^^^^^^^^^^^^^^^^^^^^^^
 
-.. image:: https://wiki.onap.org/download/attachments/1015898/PolicyEngineApiList.png?api=v2
-
+.. image:: PolicyEngineApiList.png
 
 POLICY API Details
 ^^^^^^^^^^^^^^^^^^
