@@ -3,12 +3,12 @@
 
 Installation
 ------------
-Describe the environment and steps to install.
+The installation of ONAP Policy is **automated** by design.  
+
+It can be done via Docker as a standalone system (see `Standalone Quick Start`_) or via the ONAP system installation.  
+
+Various tools, including healthcheck, logs, and Swagger can be used to ensure proper operation.
+
+.. _Standalone Quick Start : https://wiki.onap.org/display/DW/ONAP+Policy+Framework%3A+Standalone+Quick+Start
 
 
-Environment
-+++++++++++
-
-
-Steps
-+++++

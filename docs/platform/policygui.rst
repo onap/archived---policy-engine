@@ -28,16 +28,17 @@ from the GUI:
 Target Users
 ^^^^^^^^^^^^
 
-To be completed
+The typical targetted users are operations people who have the responsibility and authority to create and manage policies that control network operations, 
+including policy based network configuration and auto-corrective actions.
 
 Interface Type
 ^^^^^^^^^^^^^^
 
-To be completed
+The POLICY GUI is a graphical user interface available via web-access.
 
 Access
 ^^^^^^
 
-To be completed
+The POLICY GUI can be accessed via the ONAP Portal.
 
 
