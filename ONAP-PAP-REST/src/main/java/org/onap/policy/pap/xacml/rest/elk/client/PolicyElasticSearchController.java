@@ -388,17 +388,17 @@ public class PolicyElasticSearchController{
 			case clVarbind :
 				VarbindDictionary varbindDictionary = (VarbindDictionary)mapper.readValue(root.get("data").toString(), VarbindDictionary.class);
 				value = varbindDictionary.getVarbindName();
-				policyList = searchElkDatabase(closedloop, "jsonBodyData.triggerSignaturesUsedForUI.signatures",value);
+				policyList = searchElkDatabase(closedloop, "jsonBodyData","*"+value+"*");
 				break;
 			case clVnf :
 				VNFType vNFType = (VNFType)mapper.readValue(root.get("data").toString(), VNFType.class);
 				value = vNFType.getVnftype();
-				policyList = searchElkDatabase(closedloop, "jsonBodyData.vnfType",value);
+				policyList = searchElkDatabase(closedloop, "jsonBodyData","*"+value+"*");
 				break;
 			case clVSCL :
 				VSCLAction vsclAction = (VSCLAction)mapper.readValue(root.get("data").toString(), VSCLAction.class);
 				value = vsclAction.getVsclaction();
-				policyList = searchElkDatabase(closedloop, "jsonBodyData.actions",value);
+				policyList = searchElkDatabase(closedloop, "jsonBodyData","*"+value+"*");
 				break;
 			case decision :
 				DecisionSettings decisionSettings = (DecisionSettings)mapper.readValue(root.get("data").toString(), DecisionSettings.class);

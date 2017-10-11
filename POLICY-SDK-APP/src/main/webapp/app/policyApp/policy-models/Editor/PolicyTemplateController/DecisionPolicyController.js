@@ -24,6 +24,12 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
     $scope.savebutton = true;
     $scope.refreshCheck = false;
     
+    if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
+    	$scope.temp.policy = {
+    			policyType : "Decision"
+    	}
+    };
+    
     $scope.refresh = function(){
     	if($scope.refreshCheck){
     		$scope.policyNavigator.refresh();

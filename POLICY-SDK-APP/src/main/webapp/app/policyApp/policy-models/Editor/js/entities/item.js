@@ -26,7 +26,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
                 path: path || [],
                 type: model && model.type || 'file',
                 size: model && parseInt(model.size || 0),
-                date: parseMySQLDate(model && model.date),
+                date: model && model.date,
                 version: model && model.version || '',
                 createdBy: model && model.createdBy || '',
                 modifiedBy: model && model.modifiedBy || '',
@@ -139,6 +139,11 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             self.inprocess = true;
             self.error = '';
             $http.post(policyManagerConfig.renameUrl, data).success(function(data) {
+            	if(data.result.error != undefined){
+            		var value = data.result.error;
+            		value = value.replace("rename" , "move");
+            		data.result.error = value;
+            	}
                 self.deferredHandler(data, deferred);
             }).error(function(data) {
                 self.deferredHandler(data, deferred, 'Error Occured While Moving');
