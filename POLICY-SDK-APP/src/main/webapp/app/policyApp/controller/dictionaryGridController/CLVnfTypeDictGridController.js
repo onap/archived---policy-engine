@@ -140,7 +140,7 @@ app.controller('vnfTypeDictGridController', function ($scope, PolicyAppService, 
 
     $scope.deleteVnfType = function(data) {
     	var uuu = "searchDictionary";
-    	var postData={data: data, type: "attribute"};
+    	var postData={data: data, type: "clVnf"};
     	var searchString = "\n";
     	$.ajax({
     		type : 'POST',

@@ -24,6 +24,13 @@ angular.module("abs").controller('clFaultController', ['$scope', '$window', 'Pol
 	$scope.savebutton = true;
 	$scope.refreshCheck = false;
     
+	if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
+    	$scope.temp.policy = {
+    		policyType : "Config",
+    		configPolicyType : "ClosedLoop_Fault"
+    	}
+    };
+    
     $scope.refresh = function(){
     	if($scope.refreshCheck){
     		$scope.policyNavigator.refresh();

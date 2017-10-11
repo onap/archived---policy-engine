@@ -24,6 +24,12 @@ app.controller('actionPolicyController', ['$scope', 'PolicyAppService', 'policyN
     $scope.savebutton = true;
     $scope.refreshCheck = false;
 	
+    if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
+    	$scope.temp.policy = {
+    			policyType : "Action"
+    	}
+    };
+    
     $scope.refresh = function(){
     	if($scope.refreshCheck){
     		$scope.policyNavigator.refresh();

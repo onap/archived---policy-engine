@@ -25,6 +25,13 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
     $scope.savebutton = true;
     $scope.refreshCheck = false;
     
+    if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
+    	$scope.temp.policy = {
+    			policyType : "Config",
+    			configPolicyType : "Micro Service"
+    	}
+    };
+    
     $scope.refresh = function(){
     	if($scope.refreshCheck){
     		$scope.policyNavigator.refresh();

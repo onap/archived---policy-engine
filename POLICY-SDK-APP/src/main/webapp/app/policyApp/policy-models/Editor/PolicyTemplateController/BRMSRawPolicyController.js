@@ -24,6 +24,13 @@ angular.module('abs').controller('brmsRawPolicyController', ['$scope', '$window'
     $scope.savebutton = true;
     $scope.refreshCheck = false;
     
+    if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
+    	$scope.temp.policy = {
+    		policyType : "Config",
+    		configPolicyType : "BRMS_Raw"
+    	}
+    };
+    
     $scope.refresh = function(){
     	if($scope.refreshCheck){
     		$scope.policyNavigator.refresh();

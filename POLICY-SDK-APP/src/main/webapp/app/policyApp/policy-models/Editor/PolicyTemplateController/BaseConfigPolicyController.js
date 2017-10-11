@@ -25,6 +25,13 @@ app.controller('baseConfigController', ['$scope', 'PolicyAppService', 'policyNav
     $scope.savebutton = true;
     $scope.refreshCheck = false;
     
+    if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
+    	$scope.temp.policy = {
+    		policyType : "Config",
+    		configPolicyType : "Base"
+    	}
+    };
+    
     $scope.refresh = function(){
     	if($scope.refreshCheck){
     		$scope.policyNavigator.refresh();
