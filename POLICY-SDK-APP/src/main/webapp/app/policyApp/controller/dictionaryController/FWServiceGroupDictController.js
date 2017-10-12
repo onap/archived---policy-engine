@@ -35,8 +35,8 @@ app.controller('editFWServiceGroupController' ,  function ($scope, $modalInstanc
         			$scope.slchoices.push({'id':'choice'+i+1, 'option': key});
         		}
         	}else{
-        		var key  = headers;
-    			$scope.slchoices.push({'id':'choice'+1, 'option': key});
+        		var temp  = headers;
+    			$scope.slchoices.push({'id':'choice'+1, 'option': temp});
         	}
         }
     }

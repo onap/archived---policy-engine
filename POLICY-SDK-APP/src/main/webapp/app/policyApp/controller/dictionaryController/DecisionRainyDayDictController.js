@@ -36,8 +36,8 @@ app.controller('editRainyDayDictController' , function ($scope, $modalInstance, 
         			$scope.treatments.push({'treatment': key});
         		}
         	}else{
-            	 var key  = headers;
-                 $scope.treatments.push({'treatment': key});
+            	 var temp  = headers;
+                 $scope.treatments.push({'treatment': temp});
             }
         }
     }
