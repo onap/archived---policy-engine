@@ -66,7 +66,6 @@ app.controller('removeGroupPoliciesController' ,  function ($scope, $modalInstan
                  success : function(data){
                      $scope.$apply(function(){
                          $scope.data=data.data;});
-                     console.log($scope.data);
                      $modalInstance.close({data:$scope.data});
                      Notification.success("Policy Removed Successfully");
                  },
