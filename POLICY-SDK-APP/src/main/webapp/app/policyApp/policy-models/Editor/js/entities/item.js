@@ -36,7 +36,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
                     return Math.round(this.size / 1024, 1);
                 },
                 fullPath: function() {
-                    if(this.version == ""){
+                    if(this.version === ""){
                         return ('/' + this.path.join('/') + '/' + this.name).replace(/\/\//, '/');
                     }else{
                         return ('/' + this.path.join('/') + '/' + this.name + '.' + this.version + '.xml').replace(/\/\//, '/');
@@ -84,7 +84,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             this.update();
             return deferred.resolve(data);
         };
-		
+
         Item.prototype.createFolder = function() {
             var self = this;
             var deferred = $q.defer();
@@ -103,7 +103,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             })['finally'](function() {
                 self.inprocess = false;
             });
-        
+
             return deferred.promise;
         };
 
@@ -127,7 +127,6 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             return deferred.promise;
         };
 
-        
         Item.prototype.move = function() {
             var self = this;
             var deferred = $q.defer();
@@ -139,7 +138,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             self.inprocess = true;
             self.error = '';
             $http.post(policyManagerConfig.renameUrl, data).success(function(data) {
-            	if(data.result.error != undefined){
+            	if(data.result.error !== undefined){
             		var value = data.result.error;
             		value = value.replace("rename" , "move");
             		data.result.error = value;
@@ -174,7 +173,6 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             return deferred.promise;
         };
 
-        
         Item.prototype.getContent = function(policyNavigator) {
             var self = this;
             var deferred = $q.defer();
@@ -191,7 +189,6 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
                 var policy = JSON.parse(json);
                 self.policy = policy;
                 self.itemContent = policyNavigator;
-                console.log(policy);
                 self.deferredHandler(data, deferred);
             }).error(function(data) {
                 self.deferredHandler(data, deferred, 'Error Occured While retrieving the Policy Data');
@@ -216,8 +213,6 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
                 var json = data.result;
                 var policy = JSON.parse(json);
                 self.policy = policy;
-                console.log(data.result);
-                console.log(policy);
                 self.deferredHandler(data, deferred);
             }).error(function(data) {
                 self.deferredHandler(data, deferred, 'Error Occured While retrieving the Policy Data');
@@ -249,7 +244,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             });
             return deferred.promise;
         };
-        
+
         Item.prototype.getDescribePolicyContent = function() {
             var self = this;
             var deferred = $q.defer();
@@ -262,8 +257,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             self.error = '';
             $http.post(policyManagerConfig.describePolicyUrl, data).success(function(data) {
                 self.tempModel.content =  self.model.content = data.html;
-                var describeTemplate =  self.tempModel.content;
-             
+
                 self.deferredHandler(data, deferred);
             }).error(function(data) {
                 self.deferredHandler(data, deferred, 'Error Occured While retrieving the Policy Data to Describe');
@@ -315,7 +309,7 @@ angular.module('abs').factory('item', ['$http', '$q', 'policyManagerConfig', fun
             });
             return deferred.promise;
         };
-        
+
         Item.prototype.removePolicy = function() {
             var self = this;
             var deferred = $q.defer();
