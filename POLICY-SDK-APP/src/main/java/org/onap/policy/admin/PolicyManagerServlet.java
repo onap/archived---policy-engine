@@ -118,6 +118,8 @@ public class PolicyManagerServlet extends HttpServlet {
 	private static JsonArray policyNames;
 	private static String testUserId = null;
 
+	private static List<String> serviceTypeNamesList = new ArrayList<>();
+
 	public static JsonArray getPolicyNames() {
 		return policyNames;
 	}
@@ -125,8 +127,6 @@ public class PolicyManagerServlet extends HttpServlet {
 	public static void setPolicyNames(JsonArray policyNames) {
 		PolicyManagerServlet.policyNames = policyNames;
 	}
-
-	private static List<String> serviceTypeNamesList = new ArrayList<>();
 
 	public static List<String> getServiceTypeNamesList() {
 		return serviceTypeNamesList;
@@ -319,8 +319,8 @@ public class PolicyManagerServlet extends HttpServlet {
 	}
 
 	private JSONObject searchPolicyList(JSONObject params, HttpServletRequest request) {
-		Set<String> scopes = null;
-		List<String> roles = null;
+		Set<String> scopes;
+		List<String> roles;
 		List<Object> policyData = new ArrayList<>();
 		JSONArray policyList = null;
 		if(params.has("policyList")){
@@ -447,7 +447,7 @@ public class PolicyManagerServlet extends HttpServlet {
 			policyName = removeExtension.substring(0, removeExtension.lastIndexOf("."));
 		}
 
-		String activePolicy = null;
+		String activePolicy;
 		PolicyController controller = getPolicyControllerInstance();
 		if(params.toString().contains("activeVersion")){
 			String activeVersion = params.getString("activeVersion");
@@ -664,7 +664,7 @@ public class PolicyManagerServlet extends HttpServlet {
 	}
 
 	private List<Object> queryPolicyEditorScopes(String scopeName){
-		String scopeNamequery = "";
+		String scopeNamequery;
 		SimpleBindings params = new SimpleBindings();
 		if(scopeName == null){
 			scopeNamequery = "from PolicyEditorScopes";
@@ -673,7 +673,7 @@ public class PolicyManagerServlet extends HttpServlet {
 			params.put("scopeName", scopeName + "%");
 		}
 		PolicyController controller = getPolicyControllerInstance();
-		List<Object> scopesList = null;
+		List<Object> scopesList;
 		if(PolicyController.isjUnit()){
 			scopesList = controller.getDataByQuery(scopeNamequery, null);
 		}else{
@@ -697,8 +697,8 @@ public class PolicyManagerServlet extends HttpServlet {
 		SimpleBindings params = new SimpleBindings();
 		params.put("scopeName", scopeName + "%");
 
-		List<Object> activePolicies = null;
-		List<Object> scopesList = null;
+		List<Object> activePolicies;
+		List<Object> scopesList;
 		if(PolicyController.isjUnit()){
 			activePolicies = controller.getDataByQuery(query, null);
 			scopesList = controller.getDataByQuery(scopeNamequery, null);
@@ -732,7 +732,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				}
 			}
 		}
-		String scopeNameCheck = null;
+		String scopeNameCheck;
 		for (Object list : activePolicies) {
 			PolicyVersion policy = (PolicyVersion) list;
 			String scopeNameValue = policy.getPolicyName().substring(0, policy.getPolicyName().lastIndexOf(File.separator));
@@ -829,7 +829,7 @@ public class PolicyManagerServlet extends HttpServlet {
 
 				UserInfo userInfo = new UserInfo();
 				userInfo.setUserLoginId(userId);
-				if(policyActiveInPDP.size() == 0){
+				if(policyActiveInPDP.isEmpty()){
 					renameScope(scopesList, scopeName, newScopeName, controller);
 				}else if(rename){
 					renameScope(scopesList, scopeName, newScopeName, controller);
@@ -867,7 +867,7 @@ public class PolicyManagerServlet extends HttpServlet {
 
 	private JSONObject policyRename(String oldPath, String newPath, String userId) throws ServletException {
 		try {
-			PolicyEntity entity = null;
+			PolicyEntity entity;
 			PolicyController controller = getPolicyControllerInstance();
 
 			String policyVersionName = newPath.replace(".xml", "");
@@ -931,7 +931,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				}
 				groupQuery = groupQuery + ")";
 				List<Object> groupEntityData = controller.getDataByQuery(groupQuery, geParams);
-				if(groupEntityData.size() > 0){
+				if(groupEntityData.isEmpty()){
 					return error("Policy rename failed. Since the policy or its version is active in PDP Groups.");
 				}
 				for(int i=0; i<oldEntityData.size(); i++){
