@@ -35,8 +35,8 @@ app.controller('editFWAddressGroupController' , function ($scope, $modalInstance
         			$scope.apchoices.push({'id':'choice'+i+1, 'option': key});
         		}
         	}else{
-        		var key  = headers;
-    			$scope.apchoices.push({'id':'choice'+1, 'option': key});
+        		var temp  = headers;
+    			$scope.apchoices.push({'id':'choice'+1, 'option': temp});
         	}
         }
     }
