@@ -12,14 +12,14 @@ Various tools, including healthcheck, logs, and Swagger can be used to ensure pr
 
 ONAP Policy Framework: Standalone Quick Start
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This proceedure explains how build the ONAP Policy Framework and get it running in Docker as a standalone system. 
-This proceedure assumes that:
+This procedure explains how build the ONAP Policy Framework and get it running in Docker as a standalone system. 
+This procedure assumes that:
 
 * You are using a *\*nix* operating system such as linux or macOS.
 * You are using a directory called *git* off your home directory *(~/git)* for your git repositories
 * Your local maven repository is in the location *~/.m2/repository*
 
-The procedure documented in this article has been verified to work on a MacBook laptop running macOS Sierra Version 10.12.6 and a HP Z600 desktop running Ubuntu 16.04.3 LTS.
+The procedure documented here has been verified to work on a MacBook laptop running macOS Sierra Version 10.12.6 and a HP Z600 desktop running Ubuntu 16.04.3 LTS.
 
 
 **Typical ONAP Policy Framework Clone Script**
@@ -128,19 +128,19 @@ The procedure documented in this article has been verified to work on a MacBook 
 
 Execution of the script above results in the following directory hierarchy in your *~/git* directory:
 
-        * ~/git/onap
-        * ~/git/onap/ecompsdkos
-        * ~/git/onap/oparent
-        * ~/git/onap/policy
-        * ~/git/onap/policy/api
-        * ~/git/onap/policy/common
-        * ~/git/onap/policy/docker
-        * ~/git/onap/policy/drools-applications
-        * ~/git/onap/policy/drools-pdp
-        * ~/git/onap/policy/engine
-        * ~/git/onap/policy/gui
-        * ~/git/onap/policy/pap
-        * ~/git/onap/policy/pdp    
+    *  ~/git/onap
+    *  ~/git/onap/ecompsdkos
+    *  ~/git/onap/oparent
+    *  ~/git/onap/policy
+    *  ~/git/onap/policy/api
+    *  ~/git/onap/policy/common
+    *  ~/git/onap/policy/docker
+    *  ~/git/onap/policy/drools-applications
+    *  ~/git/onap/policy/drools-pdp
+    *  ~/git/onap/policy/engine
+    *  ~/git/onap/policy/gui
+    *  ~/git/onap/policy/pap
+    *  ~/git/onap/policy/pdp    
 
 
 
@@ -230,7 +230,7 @@ Building ONAP
         </modules>
     </project>
 
-**Step 4**. The build cannot currently find the * org.onap.oparent:version-check-maven-plugin* plugin so, for now, comment that plugin out in the POMs *policy/drools-pdp/pom.xml* and *policy/drools-applications/pom.xml*.
+**Step 4**. The build cannot currently find the *org.onap.oparent:version-check-maven-plugin* plugin so, for now, comment that plugin out in the POMs *policy/drools-pdp/pom.xml* and *policy/drools-applications/pom.xml*.
 
 **Step 5**. Build the ONAP dependencies that are required for the ONAP policy framework and which must be built first to be available to the ONAP Policy Framework proper.
 
@@ -239,16 +239,16 @@ Building ONAP
 
 **Step 6**. You can now build the ONAP framework
 
-a.	On *Ubuntu*, just build the Policy Framework tests and all
+   *  On *Ubuntu*, just build the Policy Framework tests and all
 
-        * cd ~/git/onap
-        * mvn clean install 
+        - cd ~/git/onap
+        - mvn clean install 
 
-b.    On *macOS*, you must build build the ONAP framework with tests turned off first. Then rebuild the framework with tests turned on and all tests will pass. Note: The reason for this behaviour will be explored later. 
-
-        * cd ~/git/onap
-        * mvn clean install -DskipTests
-        * mvn install
+   *  On *macOS*, you must build build the ONAP framework with tests turned off first. Then rebuild the framework with tests turned on and all tests will pass. Note: The reason for this behaviour will be explored later. 
+    
+        - cd ~/git/onap
+        - mvn clean install -DskipTests
+        - mvn install
  
 
 Building the ONAP Policy Framework Docker Images
@@ -268,7 +268,8 @@ The instructions here are based on the instructions in the file *~/git/onap/poli
 
     * cp policy-drools/* target/policy-drools
 
-**Step 4**. Run the *docker build* command on the following directories in the order below. Note that on some systems you may have to run the *docker* command as root or using *sudo*.
+**Step 4**. Run the *docker build* command on the following directories in the order below. 
+Note that on some systems you may have to run the *docker* command as root or using *sudo*.
 
     * docker build -t onap/policy/policy-os     policy-os
     * docker build -t onap/policy/policy-db     policy-db

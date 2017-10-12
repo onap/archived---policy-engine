@@ -31,9 +31,7 @@ POLICY Engine Services
 POLICY API Details
 ^^^^^^^^^^^^^^^^^^
 
-.. SStodo Check with Pam about if using onap wiki urls are okay.  
-
-.. swaggerv2doc:: https://wiki.onap.org/download/attachments/1015898/api-docs-09192017.json?api=v2
+.. swaggerv2doc:: api-docs.json
 
 
 Additional Information

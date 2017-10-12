@@ -14,12 +14,12 @@ POLICY provides a logically centralized environment for the creation and managem
 
 The figure below represents the target POLICY Architecture.
 
-.. image:: https://wiki.onap.org/download/attachments/1015858/PolicyTargetArchitecture.png?api=v2
+.. image:: PolicyTargetArchitecture.png
 
 
 The figure below represents the current POLICY Architecture.
 
-.. image:: https://wiki.onap.org/download/attachments/1015858/PolicyR1Architecture.png?api=v2
+.. image:: PolicyR1Architecture.png
 
 
 A policy is defined to create a condition, requirement, constraint, decision, or a need that must be provided, evaluated, maintained, and/or enforced.  The policy is validated and corrected for any conflicts, and then placed in the appropriate repository, and made available for use by other subsystems and components.  Alternately, some policies are directly distributed to policy decision engines such as Drools or XACML.   In this manner, the constraints, decisions and actions to be taken are distributed.
@@ -32,7 +32,7 @@ ONAP POLICY is composed of several subcomponents: the **Policy Administration Po
 
 As illustrated in the Figure below, the POLICY components are supported by a number of interfaces and subsystems.  The ONAP Portal provides a human interface for the creation, management and deployment of policies.  It is a web-based system that utilizes internal APIs in the PAP.
 
-.. image:: https://wiki.onap.org/download/attachments/1015858/PolicyArchitectureDetails.png?api=v2
+.. image:: PolicyArchitectureDetails.png
 
 
 The PAP provides interfaces for the management of policies.  It utilizes the XACML database to store policies, which are then distributed to the PDPs.
