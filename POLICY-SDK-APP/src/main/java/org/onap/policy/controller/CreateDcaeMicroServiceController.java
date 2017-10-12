@@ -334,6 +334,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	            break;
 	        case NULL:
 	            break;
+	        default:
+	            break;
 	        }
 	    }
 	    return builder.build();
@@ -369,6 +371,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	            builder.add(key, obj.getBoolean(key));
 	            break;
 	        case NULL:
+	            break;
+	        default:
 	            break;
 	        }
 	    }
@@ -810,7 +814,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
 		ObjectNode node = nodeFactory.objectNode();
 		String prevKey = null;
-		String presKey = null;
+		String presKey;
 		for(String key: element.keySet()){
 			if(key.contains(".")){
 				presKey = key.substring(0,key.indexOf("."));
@@ -971,10 +975,10 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		JsonNode root = mapper.readTree(request.getReader());
 
 		String value = root.get("policyData").toString().replaceAll("^\"|\"$", "");
-		String  servicename = value.toString().split("-v")[0];
+		String  servicename = value.split("-v")[0];
 		String version = null;
-		if (value.toString().contains("-v")){
-			version = value.toString().split("-v")[1];
+		if (value.contains("-v")){
+			version = value.split("-v")[1];
 		}
 		MicroServiceModels returnModel = getAttributeObject(servicename, version);
 		
@@ -1343,7 +1347,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	//Convert the map values and set into JSON body
 	public Map<String, String> convertMap(Map<String, String> attributesMap, Map<String, String> attributesRefMap) {
 		Map<String, String> attribute = new HashMap<>();
-		String temp = null;
+		String temp;
 		String key;
 		String value;
 		for (Entry<String, String> entry : attributesMap.entrySet()) {
@@ -1353,12 +1357,12 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 		for (Entry<String, String> entryRef : attributesRefMap.entrySet()) {
 			key = entryRef.getKey();
-			value = entryRef.getValue().toString();
+			value = entryRef.getValue();
 			attribute.put(key, value);
 		}
 		for (Entry<String, String> entryList : attributesListRefMap.entrySet()) {
 			key = entryList.getKey();
-			value = entryList.getValue().toString();
+			value = entryList.getValue();
 			attribute.put(key, value);
 		}
 		for (Entry<String, LinkedList<String>> arrayList : arrayTextList.entrySet()){
@@ -1391,18 +1395,18 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					IOUtils.copy(item.getInputStream(), outputStream);
 					outputStream.close();
 					this.newFile = file.toString();
-					this.newModel.setModelName(this.newFile.toString().split("-v")[0]);
+					this.newModel.setModelName(this.newFile.split("-v")[0]);
 				
-					if (this.newFile.toString().contains("-v")){
+					if (this.newFile.contains("-v")){
 						if (item.getName().endsWith(".zip")){
-							this.newModel.setVersion(this.newFile.toString().split("-v")[1].replace(".zip", ""));
+							this.newModel.setVersion(this.newFile.split("-v")[1].replace(".zip", ""));
 							zip = true;
 						}else if(item.getName().endsWith(".yml")){
-							this.newModel.setVersion(this.newFile.toString().split("-v")[1].replace(".yml", ""));
+							this.newModel.setVersion(this.newFile.split("-v")[1].replace(".yml", ""));
 							yml = true;
 						}
 						else {
-							this.newModel.setVersion(this.newFile.toString().split("-v")[1].replace(".xmi", ""));
+							this.newModel.setVersion(this.newFile.split("-v")[1].replace(".xmi", ""));
 						}
 					}
 				
@@ -1417,13 +1421,13 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		if (zip){
 			extractFolder(this.newFile);
 			fileList = listModelFiles(this.directory);
-		}else if (yml==true){
+		}else if (yml){
 			parseTosca(this.newFile);
 		}else {
 			File file = new File(this.newFile);
 			fileList.add(file);
 		}
-		String modelType= "";
+		String modelType;
 		if(yml==false){
 			modelType="xmi";
 			//Process Main Model file first
@@ -1452,7 +1456,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			msAttributes.setSubClass(this.retmap);
 			
 			HashMap<String, String> returnReferenceList =new HashMap<>();
-			//String[] referenceArray=this.referenceAttributes.split("=");
 			returnReferenceList.put(className, this.referenceAttributes);
 			msAttributes.setRefAttribute(returnReferenceList);
 			
@@ -1517,7 +1520,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		        if (!entry.isDirectory()){
 		            BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry));
 		            int currentByte;
-		            byte data[] = new byte[BUFFER];
+		            byte[] data = new byte[BUFFER];
 		            FileOutputStream fos = new FileOutputStream(destFile);
 		            BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
 		            while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
@@ -1559,9 +1562,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	}
 		
 	private List<File> listModelFiles(String directoryName) {
-		File directory = new File(directoryName);
+		File directry = new File(directoryName);
 		List<File> resultList = new ArrayList<>();
-		File[] fList = directory.listFiles();
+		File[] fList = directry.listFiles();
 		for (File file : fList) {
 			if (file.isFile()) {
 				resultList.add(file);
@@ -1622,6 +1625,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
 class DCAEMicroServiceObject {
 
+	private Object content;
 	private String service;
 	private String location;
 	private String uuid;
@@ -1673,8 +1677,6 @@ class DCAEMicroServiceObject {
 	public void setVersion(String version) {
 		this.version = version;
 	}
-	private Object content;
-
 
 	public String getPolicyName() {
 		return policyName;
