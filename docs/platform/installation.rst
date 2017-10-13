@@ -22,9 +22,9 @@ This procedure assumes that:
 The procedure documented here has been verified to work on a MacBook laptop running macOS Sierra Version 10.12.6 and a HP Z600 desktop running Ubuntu 16.04.3 LTS.
 
 
-**Typical ONAP Policy Framework Clone Script**
-
-.. code-block:: none
+.. code-block:: bash
+   :caption: Typical ONAP Policy Framework Clone Script
+   :linenos:
 
     #!/usr/bin/env bash
     
@@ -152,13 +152,17 @@ Building ONAP
     * rm -fr ~/.m2/repository/org/onap
     * rm -fr ~/.m2/repository/org/openecomp
 
+
 **Step 2**. A pom such as the one below can be used to build all the ONAP policy modules and their dependencies. Create the *pom.xml* file in the directory *~/git/onap*.
 
-**Typical pom.xml to build the ONAP Policy Framework**
+.. code-block:: xml 
+   :caption: Typical pom.xml to build the ONAP Policy Framework
+   :linenos:
 
-.. code-block:: none
+    <project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <modelVersion>4.0.0</modelVersion>
       <groupId>org.onap</groupId>
       <artifactId>onap-policy_standalone</artifactId>
@@ -201,11 +205,14 @@ Building ONAP
 
 **Step 3**.  A pom such as the one below can be used to build the ONAP Policy Framework modules. Create the *pom.xml* file in the directory *~/git/onap/policy*
 
-**Typical pom.xml to build the ONAP Policy Framework Policy Modules**
+.. code-block:: xml 
+   :caption: Typical pom.xml to build the ONAP Policy Framework Policy Modules
+   :linenos:
 
-.. code-block:: none
+    <project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <modelVersion>4.0.0</modelVersion>
         <groupId>org.onap</groupId>
         <artifactId>onap-policy</artifactId>
