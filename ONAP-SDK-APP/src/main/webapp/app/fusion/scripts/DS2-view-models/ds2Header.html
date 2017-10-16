@@ -1,0 +1,68 @@
+<div class="header-main-div" >
+	<header class="b2b-header-tabs" b2b-header-responsive ng-show="{{showHeader}}">
+		<ul class="header__items" role="navigation">
+			<li class="header__item icon__item" tabindex="0" ng-click="returnToPortal()">
+				<span class="globe-text">ONAP Portal</span>
+			</li>
+			<li b2b-header-menu class="header__item b2b-headermenu"	ng-repeat="item in menuItems" role="presentation">
+				<a href="javascript:void(0);"	class="menu__item" role="menuitem" ng-bind="item.text"></a>
+				<div class="header-secondary-wrapper">
+					<ul class="header-secondary" role="menu">
+						<li class="header-subitem" b2b-header-submenu
+							ng-repeat="secondLevMenu in item.children" role="presentation">
+							<a href="{{secondLevMenu.action}}" 	ng-if="secondLevMenu.childMenus.length==0" class="menu__item"	role="menuitem" ng-bind="secondLevMenu.label"></a> 
+							<a href="javascript:void(0);" ng-if="secondLevMenu.childMenus.length!=0" class="menu__item"	role="menuitem" ng-bind="secondLevMenu.label" ></a>
+							<div class="header-tertiary-wrapper">
+								<ul class="header-tertiary" role="menu">
+									<li b2b-header-tertiarymenu ng-repeat="thirdLevMenu in secondLevMenu.childMenus"role="presentation">
+										<a href="{{thirdLevMenu.action}}"role="menuitem" aria-haspopup="true" ng-bind="thirdLevMenu.label"></a> 
+									</li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div></li>
+			<li class="header__item profile">
+			<b2b-flyout>
+				<div b2b-flyout-toggler class="header-profile" >
+					<div class="icon-people-oneperson" id="header-user-icon" tabindex="0" b2b-accessibility-click="13,32" aria-label="notifications" aria-haspopup="true" aria-expanded="{{flyoutOpened}}" role="button"></div>
+	          		<div id="login-snippet-text" class="login-snippet-text">{{userFirstName}}</div>                  
+				</div>					
+	            <b2b-flyout-content horizontal-placement="center" vertical-placement="below">
+					<div>
+						<div id="reg-header-snippet">
+							<div tabindex="0" class="reg-profileDetails" id="reg-profiledetails-id">
+								<ul class="reg-Details-table">
+									<li>
+				                        <div class="reg-userName-table">
+				                            <div id="reg-userName-table-row">
+				                                <div id="reg-userName-table-cell">
+				                                    <h3 ng-bind="userName">&nbsp;</h3>
+				                                    <span>&nbsp;</span>
+				                                </div>
+				                            </div>
+				                        </div>
+				                    </li>
+									<li><div class="reg-userEmail-label"><span class="reg-userEmail-label-spn" style=font-weight:bold>Email<span class="visuallyhidden">:
+				                    </span></span></div></li>
+									<li><div class="reg-userEmail-value"><span class="reg-userEmail-value-spn">
+				                        {{userEmail}}</span></div></li>
+				                    <li>&nbsp;</li>
+									<li><div class="reg-userRole-label"><span class="reg-userRole-label-spn" style=font-weight:bold>
+				                        User Id<span class="visuallyhidden">:</span></span></div></li>
+									<li><div class="reg-userRole-value"><span class="reg-userRole-value-spn">
+				                        {{userId}}<span class="visuallyhidden"></span></span></div></li>
+								</ul>
+				                <div id="reg-logout-div" style="padding-top: 8px">
+				                      <a href="logout.htm" id="allLogout" class="btn btn-alt btn-small">
+										Log out
+									</a>
+				                </div>
+					        </div>
+						</div>
+					</div>		
+	            </b2b-flyout-content>
+       		</b2b-flyout>
+		</ul>
+	</header>
+</div>
