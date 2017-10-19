@@ -102,6 +102,10 @@
 					<groupId>com.google.guava</groupId>
 					<artifactId>guava</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>com.lowagie</groupId>
+    				<artifactId>itext</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
