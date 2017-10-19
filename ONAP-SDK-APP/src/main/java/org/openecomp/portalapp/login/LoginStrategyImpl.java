@@ -26,10 +26,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.openecomp.portalsdk.core.auth.LoginStrategy;
+import org.openecomp.portalsdk.core.logging.logic.EELFLoggerDelegate;
 import org.openecomp.portalsdk.core.onboarding.exception.PortalAPIException;
 import org.openecomp.portalsdk.core.onboarding.util.CipherUtil;
-import org.openecomp.portalsdk.core.onboarding.util.PortalApiConstants;
-import org.openecomp.portalsdk.core.onboarding.util.PortalApiProperties;
+import org.openecomp.portalsdk.core.util.SystemProperties;
 import org.springframework.web.servlet.ModelAndView;
 
 public class LoginStrategyImpl extends LoginStrategy {
@@ -58,23 +58,21 @@ public class LoginStrategyImpl extends LoginStrategy {
     }
 
     private static String getUserIdFromCookie(HttpServletRequest request) throws PortalAPIException {
-        String userId = "";
-        Cookie[] cookies = request.getCookies();
-        Cookie userIdcookie = null;
-        if (cookies != null)
-            for (Cookie cookie : cookies)
-                if (cookie.getName().equals(USER_ID))
-                    userIdcookie = cookie;
-        if (userIdcookie != null) {
-            try {
-                userId = CipherUtil.decrypt(userIdcookie.getValue(),
-                        PortalApiProperties.getProperty(PortalApiConstants.Decryption_Key));
-            } catch (Exception e) {
-                throw new PortalAPIException(e);
-            }
-        }
-        return userId;
-
+    	String userId = ""; 
+		Cookie userIdCookie = getCookie(request, USER_ID); 
+		if (userIdCookie != null) { 
+			final String cookieValue = userIdCookie.getValue(); 
+			if (!SystemProperties.containsProperty(SystemProperties.Decryption_Key)) 
+				throw new IllegalStateException("Failed to find property " + SystemProperties.Decryption_Key); 
+			final String decryptionKey = SystemProperties.getProperty(SystemProperties.Decryption_Key); 
+			try {
+				userId = CipherUtil.decrypt(cookieValue, decryptionKey);
+				LOGGER.debug("getUserIdFromCookie: decrypted as {}" +userId); 
+			} catch (Exception e) {
+				LOGGER.error("Exception Occured in getUserIdFromCookie" + e);
+			} 
+		} 
+		return userId;
     }
 
     private static boolean isLoginCookieExist(HttpServletRequest request) {
