@@ -129,7 +129,7 @@ POLICY Admin
 POLICY Dashboard 
 ^^^^^^^^^^^^^^^^
 
-| The POLICY **Dashboard** shows the **status** and **health** of the system through metrics logs and status update messages.  The dashboard consists of two tabs, a Logging tab and a Health tab. 
+| The POLICY **Dashboard** shows the **status** and **health** of the system through metrics logs and status update messages.  The dashboard consists of two tabs, a **Logging** tab and a **Health** tab. 
 
 .. image:: PolicyGUI_Dashboard.png
 
