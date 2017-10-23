@@ -89,6 +89,9 @@ POLICY PDP
 | The POLICY PDP tab is used to managing **PDP Groups**.  
 | This tab provides the capability to create, edit and delete PDP groups.  This tab also provides the ability to check status and view policies in a PDP groups.
 
+.. image:: PolicyGUI_PDP.png
+
+|
 
 POLICY Push
 ^^^^^^^^^^^
@@ -96,6 +99,9 @@ POLICY Push
 | The POLICY PUSH tab allows policies to be selectively pushed to the all PDPs.
 | Once pushed, the policies can be seen on the PDP tab.  A Status of the PDPs indicate “UP-TO-DATE” if the policy has been pushed correctly.  A Status of “LAST-UPDATE-FAILED” indicates an error occurred in pushing the policies.
 
+.. image:: PolicyGUI_Push.png
+
+|
 
 POLICY Roles
 ^^^^^^^^^^^^
@@ -134,6 +140,9 @@ POLICY Dashboard
 |     • Policy Activity : The Policy Activity Shows the list of Policies in PDP's.
 |     • System Alerts : The System Alerts table shows the logs on filtering logtype with Error.
 
+.. image:: PolicyGUI_Dashboard.png
+
+|
 
 
 
