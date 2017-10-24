@@ -12,7 +12,7 @@ Policy GUI
 |
 | The targetted users are those responsible for creating and managing policies that control network operations, including policy based network configuration and auto-corrective actions.  This typically includes network and service designers, operations engineers and security experts. 
 |
-| The GUI consists of the **Editor, Dictionary, PDP, Push, Roles, Admin and Dashboard** Tabs; which provide an intuitive manner for policy rules to be created, changed, and managed.  
+| The GUI consists of the **Editor, Dictionary, PDP, Push, Roles, Admin** and **Dashboard** Tabs; which provide an intuitive manner for policy rules to be created, changed, and managed.  
 
 
 Access to the POLICY GUI
@@ -61,12 +61,12 @@ Managing a Policy
 -----------------
 
 The GUI provides actions (Edit, Clone, Move, Rename, Describe, View etc) to support maintaining 
-the policy after it has been created.  The figures below specify how to initiate an action.
+the policy after it has been created.  The figure below specifies how to initiate an action.
 
 .. image:: PolicyGUI_Editor_PolicyActions.png
 
-|
-|
+
+The next step of the selected action is shown below.
 
 .. image:: PolicyGUI_Editor_PolicyActionsDetail.png
 
