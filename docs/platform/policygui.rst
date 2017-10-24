@@ -39,7 +39,6 @@ The POLICY **Editor** tab supports the following **key** functionality:
 
 .. image:: PolicyGUI_Editor.png
 
-|
 
 Scope
 -----
@@ -48,7 +47,6 @@ A Scope must exist before a policy can be created.  The figure below shows how t
 
 .. image:: PolicyGUI_Editor_Scope.png
 
-|
 
 Policy Creation
 ---------------
@@ -58,7 +56,6 @@ The figure below specifies how a policy can be created.
 
 .. image:: PolicyGUI_Editor_CreatePolicy.png
 
-|
 
 Managing a Policy 
 -----------------
@@ -105,19 +102,24 @@ POLICY Push
 
 |
 
+POLICY Dashboard 
+^^^^^^^^^^^^^^^^
+
+| The POLICY **Dashboard** shows the **status** and **health** of the system through metrics logs and status update messages.  The dashboard consists of two tabs, a **Logging** tab and a **Health** tab. 
+
+.. image:: PolicyGUI_Dashboard.png
+
+|
+
 POLICY Roles
 ^^^^^^^^^^^^
 
 | The POLICY **Roles** tab allows system administrators to assign roles for system access.  
-| The GUI options vary depending on the role.  The roles for POLICY are:
+| The GUI options vary depending on the role.  
 
-•	Policy Super Admin
-•	Policy Super Editor
-•	Policy Super Guest
-•	Policy Admin
-•	Policy Editor
-•	Policy Guest
+.. image:: PolicyGUI_Roles.png
 
+|
 
 POLICY Admin
 ^^^^^^^^^^^^
@@ -129,14 +131,6 @@ POLICY Admin
 
 |
 
-POLICY Dashboard 
-^^^^^^^^^^^^^^^^
-
-| The POLICY **Dashboard** shows the **status** and **health** of the system through metrics logs and status update messages.  The dashboard consists of two tabs, a **Logging** tab and a **Health** tab. 
-
-.. image:: PolicyGUI_Dashboard.png
-
-|
 
 
 
