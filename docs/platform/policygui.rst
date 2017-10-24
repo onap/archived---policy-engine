@@ -37,11 +37,14 @@ The POLICY **Editor** tab supports the following **key** functionality:
 •	Export and Import Policies
 •	Search for Policies 
 
+.. image:: PolicyGUI_Editor.png
+
+|
 
 Scope
 -----
 
-This is the POLICY Editor landing page.  Existing Scopes and their associated policies are displayed.  The diagram below show the functionality available on the screen and also how to add and manage Scopes.
+A Scope must exist before a policy can be created.  The figure below shows how to add and manage Scopes.
 
 .. image:: PolicyGUI_Editor_Scope.png
 
