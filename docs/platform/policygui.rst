@@ -12,7 +12,7 @@ Policy GUI
 |
 | The targetted users are those responsible for creating and managing policies that control network operations, including policy based network configuration and auto-corrective actions.  This typically includes network and service designers, operations engineers and security experts. 
 |
-| The GUI consists of the **Editor, Dictionary, PDP, Push, Roles, Admin** and **Dashboard** Tabs; which provide an intuitive manner for policy rules to be created, changed, and managed.  
+| The GUI consists of the **Editor, Dictionary, PDP, Push, Roles, Admin** and **Dashboard** Tabs; which provide for an intuitive manner for policy rules to be created, changed, and managed.  
 
 
 Access to the POLICY GUI
@@ -111,16 +111,6 @@ POLICY Dashboard
 
 |
 
-POLICY Roles
-^^^^^^^^^^^^
-
-| The POLICY **Roles** tab allows system administrators to assign roles for system access.  
-| The GUI options vary depending on the role.  
-
-.. image:: PolicyGUI_Roles.png
-
-|
-
 POLICY Admin
 ^^^^^^^^^^^^
 
@@ -131,6 +121,15 @@ POLICY Admin
 
 |
 
+POLICY Roles
+^^^^^^^^^^^^
+
+| The POLICY **Roles** tab allows system administrators to assign roles for system access.  
+| The GUI options vary depending on the role.  
+
+.. image:: PolicyGUI_Roles.png
+
+|
 
 
 
