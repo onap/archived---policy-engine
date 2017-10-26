@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a2f8d8d_be680abb",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1389,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-10-26T18:32:32Z",
+      "side": 1,
+      "message": "Doesn\u0027t seem like these get used? Or am I missing how this code works?",
+      "range": {
+        "startLine": 1382,
+        "startChar": 2,
+        "endLine": 1389,
+        "endChar": 38
+      },
+      "revId": "381e7a284bfa5dfb6dd2325b573f6f3e5f349019",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
