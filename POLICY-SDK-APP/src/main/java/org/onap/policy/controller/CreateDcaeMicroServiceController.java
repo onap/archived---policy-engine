@@ -1379,6 +1379,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	
 	@RequestMapping(value={"/ms_dictionary/set_MSModelData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public void SetMSModelData(HttpServletRequest request, HttpServletResponse response) throws IOException, FileUploadException{
+		modelList = new ArrayList<>();
+		dirDependencyList = new ArrayList<>();
+		classMap = new HashMap<>();
+		retmap = new HashMap<>();
+		uniqueKeys= new HashSet<>();
+		uniqueDataKeys= new HashSet<>();
+		dataListBuffer=new StringBuilder();
+		dataConstraints= new ArrayList <>();
 		List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 		boolean zip = false;
 		boolean yml= false;
