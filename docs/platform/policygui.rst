@@ -85,8 +85,8 @@ POLICY Dictionary
 POLICY PDP
 ^^^^^^^^^^
 
-| The POLICY **PDP** tab is used to manage **PDP Groups**.  
-| This tab provides the capability to create, edit and delete PDP groups.  This tab also provides the ability to check status and view policies in a PDP groups.
+| The POLICY **PDP** tab is used to manage **PDP Groups** and **PDPs in the group**.  
+| This tab provides the capability to create, edit and delete PDP groups and associated PDPs.  This tab also provides the ability to check status and view policies in a PDP groups.
 
 .. image:: PolicyGUI_PDP.png
 
