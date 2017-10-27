@@ -10,7 +10,7 @@ Policy GUI
 
 | The POLICY GUI is a graphical user interface, available via web-access, for **creating and managing** policies.   
 |
-| The targetted users are those responsible for creating and managing policies that control network operations, including policy based network configuration and auto-corrective actions.  This typically includes network and service designers, operations engineers and security experts. 
+| The targeted users are those responsible for creating and managing policies that control network operations, including policy based network configuration and auto-corrective actions.  This typically includes network and service designers, operations engineers and security experts. 
 |
 | The GUI consists of the **Editor, Dictionary, PDP, Push, Roles, Admin** and **Dashboard** Tabs; which provide for an intuitive manner for policy rules to be created, changed, and managed.  
 
@@ -40,8 +40,8 @@ The POLICY **Editor** tab supports the following **key** functionality:
 .. image:: PolicyGUI_Editor.png
 
 
-Scope
------
+Scope Management
+----------------
 
 A Scope must exist before a policy can be created.  The figure below shows how to add and manage Scopes.
 
