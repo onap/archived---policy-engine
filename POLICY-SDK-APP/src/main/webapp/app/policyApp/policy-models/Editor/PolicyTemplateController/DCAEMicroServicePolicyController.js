@@ -219,7 +219,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 								plainAttributeKeys.push(inputs[i].id);
 							}
 						} else {
-//							removeValues.push(inputs[i].id);
 							plainAttributeKeys.push(inputs[i].id);
 						}
 					}else {
@@ -258,6 +257,12 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	 $scope.removeChoice = function(value) {
 		 console.log(value);
 		 if(value != undefined){
+			 var c = document.getElementById("div."+value).childElementCount;
+			 
+			 if(c == 1){
+				 Notification.error("The original one is not removable.");
+				 return;
+			 }	
 			 document.getElementById("div."+value).removeChild(document.getElementById("div."+value).lastChild);	 
 		 }
 	 };
@@ -315,12 +320,14 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                     	var plainAttributeKeys = [];
                     	$scope.dcaeModelData = data[0].dcaeModelData;
                     	$scope.dcaeJsonDate = data[0].jsonValue;
+                    	$scope.allManyTrueKeys =  data[0].allManyTrueKeys;
+                    	console.log("$scope.allManyTrueKeys: " + $scope.allManyTrueKeys);
                     	console.log("$scope.dcaeJsonDate: " + $scope.dcaeJsonDate);	
                     	var attributes = $scope.dcaeModelData.attributes;
                     	var refAttributes = $scope.dcaeModelData.ref_attributes;
                     	var subAttributes = 	$scope.dcaeModelData.sub_attributes;                    	
                     	console.log("subAttributes: " + subAttributes);	
-                    	
+                    	console.log("refAttributes: " + refAttributes);	
                        	var enumAttributes = $scope.dcaeModelData.enumValues;
                        	var annotation = $scope.dcaeModelData.annotation;
                        	var dictionary = $scope.microServiceAttributeDictionaryDatas;
@@ -363,29 +370,45 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                 		$scope.jsonLayout($scope.dcaeJsonDate);
                 		
                     });
+                    
                     if($scope.temp.policy.editPolicy || $scope.temp.policy.readOnly){
                     	var checkData = [];
                     	var data = [];
-                    	if($scope.temp.policy.ruleData != null){
-                    		var propNames = Object.getOwnPropertyNames($scope.temp.policy.ruleData);
-                    		propNames.forEach(function(name) {
-                    			data.push(name);
-                    		});
-                    		for(a = 0; a < data.length; a++){
-                    			var splitPlainAttributeKey1 = data[a].split(".");
-                    			if(splitPlainAttributeKey1[0].indexOf("@") != -1){
-                    				var key = splitPlainAttributeKey1[0];
-                        			checkData.push(key);
-                    			}
-                    		}
-                    		var unique = checkData.filter(onlyUnique);
-                    		for(i =0; i < unique.length; i++){
-                    			if(unique[i].indexOf("@0") == -1){
-                    				var finalkey = unique[i].split("@")[0];
-                    				$scope.addNewChoice(finalkey);
-                    			}	
-                    		}
-                    	}
+	                    	if($scope.temp.policy.ruleData != null){
+	                    		var propNames = Object.getOwnPropertyNames($scope.temp.policy.ruleData);
+	                    		propNames.forEach(function(name) {
+	                    			data.push(name);
+	                    		});
+	                    		
+	                    		var extraElements = data;
+	                    		
+	            		    	if(plainAttributeKeys != null){
+	            		    		for(b = 0; b < plainAttributeKeys.length; b++){ // remove already populated elements from extraElements array
+	            		    			var newValue = plainAttributeKeys[b].split("*");
+	            		    			for(a = 0; a < data.length; a++){
+		            		    			if(data[a] === newValue[0]){
+		            		    				extraElements.splice(a, 1);
+		            		    			}
+	            		    			}
+	            		    	}
+	                    		
+	            		    	//--- populate these extral elements generated from clicking add button
+	                    		for(a = 0; a < extraElements.length; a++){            			
+	                    			if(extraElements[a].includes("@")){
+			                    			var n = extraElements[a].lastIndexOf("@");
+			                    			var key = extraElements[a].substring(0, n+2); //include @x in key also by n+2 since x can be  1, or 2, or 3
+				                            checkData.push(key);
+	                    			}
+	                    		}
+	                    		var unique = checkData.filter(onlyUnique);
+	                    		for(i =0; i < unique.length; i++){
+	                    			//remove @x and let addNewChoice add @1 or @2...
+	                    			var newKey = unique[i].substring(0, unique[i].length-2);
+	                    			$scope.addNewChoice(newKey);
+	                    		}
+	                    	}
+	                    }
+
                     }
                     var ele = angular.element(document.getElementById("DynamicTemplate"));
             		$compile(ele.contents())($scope);
@@ -469,6 +492,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			 var stringValue = "java.lang.String";
 			 var string = "string";
 			 var intValue = "int";
+			 var integerValue = "integer";
 			 var double = "double";
 			 var boolean = "boolean";
 			 var baseLevel = level;
@@ -546,16 +570,19 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		    		
 		        	switch (dataTest[key].split(splitcolon)[0]){
 		        		case stringValue:
-			        		$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired);
+			        		$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "text");
 		        			break;
 		        		case string:
-			        		$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired);
+			        		$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "text");
 		        			break;		        			
 		        		case intValue: 
-		        			$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired);
+		        			$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "number");
 		        			break;
+		        		case integerValue: 
+		        			$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "number");
+		        			break;		        			
 		        		case double:
-		        			$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired);
+		        			$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "double");
 		        			break;
 		        		case boolean:
 		        			$scope.dropBoxLayout(attirbuteLabel, attributekey, array, dataTest[key], getBooleanList());
@@ -564,10 +591,11 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		        			if (dataTest[key].includes('dictionary-')){
 		        				var list = getDictionary(dataTest[key].split('dictionary-')[1]);
 		        			}else{
+		        				//--- get dropdown values from enumValues
 		        				var list = getList(dataTest[key]);
 		        			}
-		        			if (list.length===0){
-		        				$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired);
+		        			if (list.length===0){ //not dropdown element
+		        				$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "text");
 		        			}else{
 		        				$scope.dropBoxLayout(attirbuteLabel, attributekey, array, dataTest[key], list);
 		        			}
@@ -582,7 +610,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	    }
 	    
 	    
-	    $scope.attributeBox = function(attibuteKey, attributeManyKey, labelValue, defaultValue, isRequired){
+	    $scope.attributeBox = function(attibuteKey, attributeManyKey, labelValue, defaultValue, isRequired, dataType ){
 			$scope.temp.policy.ruleGridData.push(attibuteKey);			
 		var br = document.createElement("BR");
 		
@@ -615,7 +643,14 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		var textField = document.createElement("INPUT");
 		
 		textField.setAttribute("class" , "form-control");
-		textField.setAttribute("type" , "text");
+		if(dataType){
+			   if(dataType == "double"){
+				   textField.setAttribute("type" , "number");
+				   textField.setAttribute("step" , "any");
+			   }else{
+			      textField.setAttribute("type" , dataType);
+			   }
+		}
 		textField.setAttribute("style" , "width:300px;");
 		textField.setAttribute("ng-disabled" , "temp.policy.readOnly");
 		var checkKey;
@@ -639,9 +674,13 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			removeButton.setAttribute("ng-disabled" , "temp.policy.readOnly");
 			document.getElementById(divID).appendChild(addButton); 
 			document.getElementById(divID).appendChild(removeButton); 
-			document.getElementById(divID).appendChild(label);  
-			document.getElementById(divID).appendChild(textField); 
-			document.getElementById(divID).appendChild(br); 
+			document.getElementById(divID).appendChild(label); 
+			var id = "div."+labelValue+attibuteKey;
+			var divTag = document.createElement("div");
+			divTag.setAttribute("id", id); 
+			document.getElementById(divID).appendChild(divTag);
+			textField.className += ' first_child';			
+			divTag.appendChild(textField); 			
 			document.getElementById(divID).appendChild(divTag); 
 			
 		}else{
@@ -743,7 +782,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			document.getElementById(divID).appendChild(divTag);
 			
 			var divTag = document.createElement("div");
-			divTag.setAttribute("id", id +'@0');
+			divTag.setAttribute("id", id +'@0');  
 			
 			divTag.className += ' children_group'; //here is div with a group of children.
 			
@@ -757,7 +796,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		}
     };
 
-    $scope.dropBoxLayout = function(labelLevel, attributeName, many , refValue, listemunerateValues){
+    $scope.dropBoxLayout = function(labelLevel, attributeName, many , refValue, listemunerateValues, isRequired){
 		var br = document.createElement("BR");
 
 		if (labelLevel.length  < 1){
@@ -770,8 +809,30 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	var label = document.createElement("Label")
 	if (matching.includes(attributeName)){
 		var labeltext = document.createTextNode(attributeName + "*!");
+		label.appendChild(labeltext);
 	}else {
 		var labeltext = document.createTextNode(attributeName);
+		var isRequired = false;
+		var refAttributes = $scope.dcaeModelData.ref_attributes;
+		if(refAttributes){		
+       		var refAttributesList = refAttributes.split(splitComma);
+       		for (k = 0; k < refAttributesList.length; k++){
+           		var refAttribute = refAttributesList[k].split(splitEqual);
+           		
+           		if (attributeName == refAttribute[0].trim() && refAttribute[1].includes("required-true")){
+           			isRequired = true;
+           		}
+       		}	    			
+		}
+		
+		if(isRequired){
+			requiredLabName = attributeName+ " *";
+			labeltext = document.createTextNode(requiredLabName);
+		}else{
+		    labeltext = document.createTextNode(attributeName);	
+		}
+	
+	    label.appendChild(labeltext);		
 	}
 	label.appendChild(labeltext);
 
@@ -780,10 +841,18 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	listField.setAttribute("style" , "width:300px;");
 	listField.setAttribute("ng-disabled" , "temp.policy.readOnly");
 	
+	if(isRequired){
+	   listField.setAttribute("required", true);
+	}
+	var optionFirst = document.createElement('option');
+	optionFirst.setAttribute('value', "");
+	listField.appendChild(optionFirst);	
+	
 	for (i=0; i < listemunerateValues.length; i += 1) {
 	    option = document.createElement('option');
 	    option.setAttribute('value', listemunerateValues[i]);
 	    option.appendChild(document.createTextNode(listemunerateValues[i]));
+	    option.setAttribute('value', listemunerateValues[i]);
 	    listField.appendChild(option);
 	}
 	listField.setAttribute("id" , ''+ labelLevel + attributeName + '');
@@ -847,7 +916,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
     	if(plainAttributeKeys != null){
     		for(a = 0; a < plainAttributeKeys.length; a++){
     			var splitPlainAttributeKey = plainAttributeKeys[a].split(splitAt);
-    			console.log(splitPlainAttributeKey[1]);	
+    			console.log("splitPlainAttributeKey: " + splitPlainAttributeKey);	
     			var searchElement = document.getElementById(splitPlainAttributeKey[0]);
     			var key = splitPlainAttributeKey[0];
                 if(searchElement == null){
@@ -864,8 +933,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
     				if (elumentLocation > 1){
     					enumKey = keySplit[keySplit.length - 1];
     				}
-    				if (enumKeyList.indexOf(enumKey) != -1){
-						if (splitPlainAttributeKey[1].indexOf("true") !== -1){
+    				//check it is undefined or not
+    				if (enumKeyList != undefined && enumKeyList.indexOf(enumKey) != -1){
+						if (splitPlainAttributeKey[1]!= undefined && splitPlainAttributeKey[1].indexOf("true") !== -1){
 							var multiSlect = [];
 							for ( var i = 0; i < searchElement.selectedOptions.length; i++) {
 								multiSlect.push(searchElement.selectedOptions[i].value);
@@ -948,6 +1018,11 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 						}else{
 							jsonPolicy[key]= searchElement.value;
 						}
+    					if(searchElement.getAttribute("required")){
+    						if(!searchElement.value){
+    							return;
+    						}
+    					} 
     				} else {
         				if(searchElement.value != null){
         					jsonPolicy[key]= searchElement.value;
@@ -962,6 +1037,32 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
     		}
     	}
         var uuu = "policyController/validate_policy.htm";
+
+        console.log("$scope.isCheck:" + $scope.isCheck);
+        
+        if($scope.isCheck == true){
+        	if(("configName" in policy) == false){
+ 				Notification.error("Validation Failed: configName is required");
+ 				$scope.savebutton = true;
+ 				return;
+        	}
+        	if(("location" in policy) == false){
+ 				Notification.error("Validation Failed: location is required");
+ 				$scope.savebutton = true;
+ 				return;
+        	}
+        	if(("uuid" in policy) == false){
+ 				Notification.error("Validation Failed: uuid is required");
+ 				$scope.savebutton = true;
+ 				return;
+        	}
+        	if(("policyScope" in policy) == false){
+ 				Notification.error("Validation Failed: policyScope is required");
+ 				$scope.savebutton = true;
+ 				return;
+        	}
+        }        
+        
         var postData={policyData: policy, policyJSON : jsonPolicy};
  		$.ajax({
  			type : 'POST',
