@@ -1,0 +1,156 @@
+----WebKitFormBoundaryWcRUaIbC8kXgjr3p
+Content-Disposition: form-data; name="file"; filename="schedulerPolicies1707.xmi"
+
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="scheduler" nsURI="org.onap.test.scheduler" nsPrefix="scheduler">
+  <eAnnotations source="http://www.eclipse.org/emf/2011/Xcore">
+    <details key="onap" value="http://onap.org.com"/>
+    <details key="policy" value="http://onap.org.com/policy"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="TimeLimitAndVerticalTopology" eSuperTypes="//SniroPolicyMetaInfo">
+    <eAnnotations source="http://onap.org.com/policy">
+      <details key="policyTemplate" value="SNIRO-SCHEDULER"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" unique="false" eType="//TimeLimitNVerticalTopologyType">
+      <eAnnotations source="http://onap.org.com/policy">
+        <details key="matching" value="true"/>
+      </eAnnotations>
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="serviceType" unique="false">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nodeType" unique="false" upperBound="-1" eType="//EntityType">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conflictScope" unique="false" eType="//ConflictScope">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="timeSchedule" eType="//TimeSchedule" containment="true" resolveProxies="false">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TimeSchedule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="allowedPeriodicTime" upperBound="-1" eType="//AllowedPeriodicTime" containment="true" resolveProxies="false">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TimeRange">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="start_time" unique="false">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="end_time" unique="false">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AllowedPeriodicTime">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" unique="false" eType="//DayType">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="timeRange" upperBound="-1" eType="//TimeRange" containment="true" resolveProxies="false">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SniroPolicyMetaInfo">
+    <eAnnotations source="http://onap.org.com/policy">
+      <details key="policyTemplate" value="SNIRO"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="identity" unique="false">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="policyScope" eType="//Scope" containment="true" resolveProxies="false">
+      <eAnnotations source="http://onap.org.com/policy">
+        <details key="matching" value="true"/>
+      </eAnnotations>
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Scope">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="serviceType" unique="false" upperBound="-1" eType="//ServiceType">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entityType" unique="false" upperBound="-1" eType="//EntityType">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="aicZone" unique="false" upperBound="-1">
+      <eAnnotations source="http://onap.org.com">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="WorkflowType">
+    <eLiterals name="softwareDownload" value="1"/>
+    <eLiterals name="softwareUpgrade" value="2"/>
+    <eLiterals name="configurationChange" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ServiceType">
+    <eLiterals name="networkOnDemand" value="1"/>
+    <eLiterals name="changeManagement" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ConflictScope">
+    <eLiterals name="vnf" value="1"/>
+    <eLiterals name="vnf_pserver" value="2"/>
+    <eLiterals name="vnf_zone" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EntityType">
+    <eLiterals name="vnf" value="1"/>
+    <eLiterals name="pServer" value="2"/>
+    <eLiterals name="vServer" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="DayType">
+    <eLiterals name="weekday" value="1"/>
+    <eLiterals name="weekend" value="2"/>
+    <eLiterals name="holiday" value="3"/>
+    <eLiterals name="mon" value="4"/>
+    <eLiterals name="tue" value="5"/>
+    <eLiterals name="wed" value="6"/>
+    <eLiterals name="thu" value="7"/>
+    <eLiterals name="fri" value="8"/>
+    <eLiterals name="sat" value="9"/>
+    <eLiterals name="sun" value="10"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TimeLimitNVerticalTopologyType">
+    <eLiterals name="timeLimitAndVerticalTopology"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="UUID" instanceClassName="java.util.UUID"/>
+</ecore:EPackage>
+
+------WebKitFormBoundaryWcRUaIbC8kXgjr3p
+Content-Disposition: form-data; name="file"; filename="schedulerPolicies1707.xmi"
+Content-Type: application/octet-stream
+
+
+------WebKitFormBoundaryWcRUaIbC8kXgjr3p--
