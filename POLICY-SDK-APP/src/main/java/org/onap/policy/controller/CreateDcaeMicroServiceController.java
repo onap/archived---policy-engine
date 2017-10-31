@@ -175,6 +175,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			
 			//---replace empty value with the value below before calling decodeContent method.
 			String dummyValue = "*empty-value*" + UUID.randomUUID().toString();
+			LOGGER.info("dummyValue:" + dummyValue);
 			tempJson = StringUtils.replaceEach(tempJson, new String[]{"\"\""}, new String[]{"\""+dummyValue+"\""});
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode tempJsonNode = mapper.readTree(tempJson);
@@ -274,13 +275,21 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				final JsonNode value = field.getValue();
 				if("content".equalsIgnoreCase(key)){
 					String contentStr = value.toString();
-				    try (JsonReader jsonReader = Json.createReader(new StringReader(contentStr))) {		
-				    	JsonObject jsonContent = jsonReader.readObject();
-					    removed = removeNull(jsonContent);
-					    if(!jsonContent.toString().equals(removed.toString())){
-					    	contentChanged = true;	
-					    }
-				    }
+					try(JsonReader reader = Json.createReader(new StringReader(contentStr))){
+	                        JsonObject jsonContent = reader.readObject();                 
+							removed = removeNull(jsonContent);
+							if(!jsonContent.toString().equals(removed.toString())){
+							contentChanged = true;  
+						}
+                    }
+
+					if  (value==null || value.isNull()){
+						((ObjectNode) returnNode).remove(key);
+						remove = true;
+					}
+				}
+				if (remove){
+					cleanJson = returnNode.toString();
 				}
 				if  (value==null || value.isNull()){
 					((ObjectNode) returnNode).remove(key);
@@ -412,8 +421,13 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 
 		Yaml yaml = new Yaml();
-		@SuppressWarnings("unchecked")
-		Map<Object, Object> yamlMap = (Map<Object, Object>) yaml.load(is); 
+
+		Map<Object, Object> yamlMap = null;
+		try{
+		    yamlMap = (Map<Object, Object>) yaml.load(is); 
+		}catch(Exception e){
+			LOGGER.error("load:", e);
+		}
 		StringBuilder sb = new StringBuilder(); 
 		Map<String, String> settings = new HashMap<>(); 
 		if (yamlMap == null) { 
@@ -517,7 +531,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				String findType=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+TYPE;
 				String typeValue=map.get(findType);
 				LOGGER.info(typeValue);
-				if(typeValue.equalsIgnoreCase(STRING)||
+				if(typeValue != null && typeValue.equalsIgnoreCase(STRING)||
 						typeValue.equalsIgnoreCase(INTEGER)
 				  )
 				{
@@ -535,7 +549,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					attributeIndividualStringBuilder.append(requiredValue+MANYFALSE);
 					dataMapForJson.put(uniqueDataKey, attributeIndividualStringBuilder.toString());		
 				}
-				else if(typeValue.equalsIgnoreCase(LIST)){
+				else if(typeValue != null && typeValue.equalsIgnoreCase(LIST)){
 					String findList= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.type";
 					String listValue=map.get(findList);
 					if(listValue!=null){
@@ -677,8 +691,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		for(Map.Entry<String,HashMap<String,String>> entry: mapKey.entrySet()){
 			String keySetString= entry.getKey();
 			HashMap<String,String> keyValues=mapKey.get(keySetString);
-			if(keyValues.get("type").equalsIgnoreCase(STRING)||
-					keyValues.get("type").equalsIgnoreCase(INTEGER)
+			if(keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(STRING)||
+					keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(INTEGER)
 					){
 				StringBuilder attributeIndividualStringBuilder= new StringBuilder();
 				attributeIndividualStringBuilder.append(keySetString+"=");
@@ -688,7 +702,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				attributeStringBuilder.append(attributeIndividualStringBuilder+",");	
 
 			}
-			else if(keyValues.get("type").equalsIgnoreCase(LIST)){
+			else if(keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(LIST)){
 				//List Datatype
 				Set<String> keys= keyValues.keySet();
 				Iterator<String> itr=keys.iterator();
@@ -714,10 +728,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			}else{
 				//User defined Datatype. 
 				String value=keyValues.get("type");
-				String trimValue=value.substring(value.lastIndexOf('.')+1);
-				StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-				referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-false");
-				referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+				if(value != null && !value.isEmpty()){
+					String trimValue=value.substring(value.lastIndexOf('.')+1);
+					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+					referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-false");
+					referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+				}else{
+					LOGGER.info("keyValues.get(type) is null/empty");
+				}
 
 			}
 			if(constraints!=null &&constraints.isEmpty()==false){
@@ -953,7 +971,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				}
 				jsonArray.put(decodeContent(node));
 				jsonResult.put(arryKey, jsonArray);
-				isArray = false;;
+				isArray = false;
 			}else{
 				jsonResult.put(nodeKey, decodeContent(node));
 			}
@@ -978,7 +996,53 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 		MicroServiceModels returnModel = getAttributeObject(servicename, version);
 		
-		String jsonModel = createMicroSeriveJson(returnModel);
+		
+		//get all keys with "MANY-true" defined in their value from subAttribute
+		Set<String> allkeys = null;
+		if(returnModel.getSub_attributes() != null && !returnModel.getSub_attributes().isEmpty()){
+			JSONObject json = new JSONObject(returnModel.getSub_attributes());		
+			allkeys = getAllKeys(json);
+			LOGGER.info("allkeys : " + allkeys);
+		}
+		
+		String allManyTrueKeys = "";
+		if(allkeys != null){
+			allManyTrueKeys = allkeys.toString();
+		}
+		
+		String jsonModel = createMicroSeriveJson(returnModel, allkeys);
+		
+		JSONObject jsonObject = new JSONObject(jsonModel);
+		
+		JSONObject finalJsonObject = null;
+		if(allkeys != null){
+			Iterator<String> iter = allkeys.iterator();
+			while(iter.hasNext()){
+				//convert to array values for MANY-true keys
+				finalJsonObject = convertToArrayElement(jsonObject, iter.next());
+			}
+		}
+
+		if(finalJsonObject != null){
+		    LOGGER.info(finalJsonObject.toString());
+		    jsonModel  = finalJsonObject.toString();
+		}
+		
+		//get all properties with "MANY-true" defined in Ref_attributes
+		Set<String> manyTrueProperties = getManyTrueProperties(returnModel.getRef_attributes());
+		if(manyTrueProperties != null){
+			JSONObject jsonObj = new JSONObject(jsonModel);
+			for (String s : manyTrueProperties) {
+				LOGGER.info(s);
+				//convert to array element for MANY-true properties
+				finalJsonObject = convertToArrayElement(jsonObj, s.trim());
+			}
+			
+			if(finalJsonObject != null){
+			    LOGGER.info(finalJsonObject.toString());
+			    jsonModel  = finalJsonObject.toString();
+			}
+		}
 		
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application / json");
@@ -986,14 +1050,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		List<Object>  list = new ArrayList<>();
 		PrintWriter out = response.getWriter();
 		String responseString = mapper.writeValueAsString(returnModel);
-		JSONObject j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + "}");
+		JSONObject j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + ",allManyTrueKeys: " + allManyTrueKeys+ "}");
 		list.add(j);
 		out.write(list.toString());
 		return null;
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private String createMicroSeriveJson(MicroServiceModels returnModel) {
+	private String createMicroSeriveJson(MicroServiceModels returnModel, Set<String> allkeys) {
 		Map<String, String> attributeMap = new HashMap<>();
 		Map<String, String> refAttributeMap = new HashMap<>();
 		String attribute = returnModel.getAttributes();
@@ -1058,6 +1122,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				}
 			}
 		}
+		
+		
 
 		return object.toString();
 	}
@@ -1091,6 +1157,101 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		  }  
 		
 		return object;
+	}
+	
+	//call this method to check if the key is in the many-true key set 
+	private boolean isKeyFound(Set<String> allManyTruekeys, String key){
+		
+	     if(allManyTruekeys != null && key != null){
+	    	Iterator<String> iter = allManyTruekeys.iterator();
+	    	while(iter.hasNext()){
+	    		if(key.equals(iter.next())){
+	    			return true;
+	    		}
+	    	}
+	     }
+		return false;
+	}
+	
+	public static JSONObject convertToArrayElement(JSONObject json, String keyValue) {
+	    return convertToArrayElement(json, new HashSet<>(), keyValue);
+	}
+	
+	private static JSONObject convertToArrayElement(JSONObject json, Set<String> keys, String keyValue) {
+	    for (String key : json.keySet()) {
+	        Object obj = json.get(key);
+	        if(key.equals(keyValue.trim())){
+	        	if(!(obj instanceof JSONArray)){
+	        		JSONArray newJsonArray = new JSONArray();
+	        		newJsonArray.put(obj);
+	        		json.put(key, newJsonArray);
+	        	}
+	        	LOGGER.info("key : " + key);
+	        	LOGGER.info("obj : " + obj);
+	        	LOGGER.info("json.get(key) : " + json.get(key));
+	        	LOGGER.info("keyValue : " + keyValue);
+	    	    keys.addAll(json.keySet());
+	    	    
+	    	    return json;
+	        }
+
+	        if (obj instanceof JSONObject) convertToArrayElement(json.getJSONObject(key), keyValue);	    
+	    }
+
+	    return json;
+	}
+	
+	// call this method to get all MANY-true properties 
+	public static Set<String> getManyTrueProperties(String referAttributes){
+		LOGGER.info("referAttributes : " + referAttributes);
+		Set<String> manyTrueProperties = new HashSet<>();
+		
+		if(referAttributes != null){
+			String[] referAarray = referAttributes.split(",");
+			String []element= null;
+			for(int i=0; i<referAarray.length; i++){
+				element = referAarray[i].split("=");	  
+				if(element.length > 1 && element[1].contains("MANY-true")){
+					manyTrueProperties.add(element[0]);
+				}
+			}		
+		}
+		
+		return manyTrueProperties;
+	}
+	
+	//call this method to start the recursive
+	private Set<String> getAllKeys(JSONObject json) {
+	    return getAllKeys(json, new HashSet<>());
+	}
+
+	private Set<String> getAllKeys(JSONArray arr) {
+	    return getAllKeys(arr, new HashSet<>());
+	}
+
+	private Set<String> getAllKeys(JSONArray arr, Set<String> keys) {
+	    for (int i = 0; i < arr.length(); i++) {
+	        Object obj = arr.get(i);
+	        if (obj instanceof JSONObject) keys.addAll(getAllKeys(arr.getJSONObject(i)));
+	        if (obj instanceof JSONArray) keys.addAll(getAllKeys(arr.getJSONArray(i)));
+	    }
+
+	    return keys;
+	}
+    // this method returns a set of keys with "MANY-true" defined in their value.
+	private Set<String> getAllKeys(JSONObject json, Set<String> keys) {
+	    for (String key : json.keySet()) {
+	        Object obj = json.get(key);
+	        if(obj instanceof String && ((String) obj).contains("MANY-true")){
+	        	LOGGER.info("key : " + key);
+	        	LOGGER.info("obj : " + obj);
+	    	    keys.addAll(json.keySet());
+	        }
+	        if (obj instanceof JSONObject) keys.addAll(getAllKeys(json.getJSONObject(key)));
+	        if (obj instanceof JSONArray) keys.addAll(getAllKeys(json.getJSONArray(key)));
+	    }
+
+	    return keys;
 	}
 
 	
@@ -1390,6 +1551,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 		boolean zip = false;
 		boolean yml= false;
+		String errorMsg = "";
 		for (FileItem item : items) {
 			if(item.getName().endsWith(".zip") || item.getName().endsWith(".xmi")||item.getName().endsWith(".yml")){
 				this.newModel = new MicroServiceModels();
@@ -1412,14 +1574,33 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 						else {
 							this.newModel.setVersion(this.newFile.toString().split("-v")[1].replace(".xmi", ""));
 						}
+					}else{
+						errorMsg = "Upload error: The file name should contain '-v', such as xxx-v1802.yml";
 					}
 				
 				}catch(Exception e){
-					LOGGER.error("Upload error : " + e);
+					LOGGER.error("Upload error : ", e);
+					errorMsg = "Upload error:" + e.getMessage();
 				}
 			}
 			
 		}
+		
+		if(!errorMsg.isEmpty()){
+			
+			PrintWriter out = response.getWriter();
+			
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application / json");
+			request.setCharacterEncoding("UTF-8");
+			
+			ObjectMapper mapper = new ObjectMapper();
+			JSONObject j = new JSONObject();
+			j.put("errorMsg", errorMsg);
+			out.write(j.toString());
+			return;
+		}
+		
 		List<File> fileList = new ArrayList<>();;
 		this.directory = "model";
 		if (zip){
