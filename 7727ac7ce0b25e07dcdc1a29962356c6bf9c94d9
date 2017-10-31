@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a2f8d8d_2f9f3c52",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-10-31T19:49:33Z",
+      "side": 0,
+      "message": "I think the change should be to remove common-modules.version property and use ${project.version} instead on the affected pom.xmls.\n\nThe problem with this change is while it will work for staging builds, and release builds (which we don\u0027t have none for 1.1.0).   It won\u0027t be accurate for snapshot builds. It will also require maintenance when we go to next release.\n\nSo, I think, provided that as of now, in ONAP, the version number of commons move along with the same number as the other engine, drools, ..  ${project.version} is the one to be used.",
+      "revId": "7727ac7ce0b25e07dcdc1a29962356c6bf9c94d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
