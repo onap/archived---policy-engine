@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a2f8d8d_af30cc9e",
+        "filename": "ONAP-SDK-APP/src/main/webapp/static/fusion/sample/html/data/worddata.csv",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-10-31T18:04:47Z",
+      "side": 1,
+      "message": "Is there a real change here?",
+      "revId": "1763d684ff96dec4f67a4d3b4252c1c5ed3df026",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
