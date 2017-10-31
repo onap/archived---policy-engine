@@ -46,6 +46,11 @@ app.controller('editMSModelController' ,  function ($scope, $modalInstance, mess
     			headers: {'Content-Type': undefined },
     			transformRequest: angular.identity
     		}).success(function(data){
+    			if(data.errorMsg != undefined){
+    				Notification.error(data.errorMsg);
+    				valid = false;
+    				return;
+    			}     			
                 if(data.classListDatas  == "EMPTY"){
                 	Notification.error("No Micro Services Avaialble.")
                 }else{      
