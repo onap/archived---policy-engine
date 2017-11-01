@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>org.onap.policy.common</groupId>
 			<artifactId>ONAP-Logging</artifactId>
-			<version>${common-modules.version}</version>
+			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.powermock</groupId>
@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>org.onap.policy.common</groupId>
 			<artifactId>integrity-monitor</artifactId>
-			<version>${common-modules.version}</version>			
+			<version>${project.version}</version>			
 			<exclusions>
 				<exclusion>
 					<groupId>org.powermock</groupId>
