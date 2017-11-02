@@ -411,23 +411,17 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	}
 	
  
+	@SuppressWarnings("unchecked")
 	public Map<String, String> load(String fileName) throws IOException { 
 		File newConfiguration = new File(fileName);
-		InputStream is = null;
-		try {
-			is = new FileInputStream(newConfiguration);
+		Yaml yaml = new Yaml();
+		Map<Object, Object> yamlMap = null;
+		try(InputStream is = new FileInputStream(newConfiguration)){
+			yamlMap = (Map<Object, Object>) yaml.load(is); 
 		} catch (FileNotFoundException e) {
 			LOGGER.error(e);
 		}
 
-		Yaml yaml = new Yaml();
-
-		Map<Object, Object> yamlMap = null;
-		try{
-		    yamlMap = (Map<Object, Object>) yaml.load(is); 
-		}catch(Exception e){
-			LOGGER.error("load:", e);
-		}
 		StringBuilder sb = new StringBuilder(); 
 		Map<String, String> settings = new HashMap<>(); 
 		if (yamlMap == null) { 
