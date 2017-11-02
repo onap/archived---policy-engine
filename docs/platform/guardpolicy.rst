@@ -25,22 +25,20 @@ GUI Method
 
 The GUARD policy can be created from the POLICY GUI as shown below.
 
-.. note::  
-	* The Onap Name must be empty for the policy to work.  To do this, **clone** the policy provided and then edit.
-	* Even though the number of requests exceeds the limit, the request is not denied.
-
 .. image:: PolicyGUI_GuardPolicy.png
 
-|
+.. note::  The Onap Name must be empty for the policy to work.  To accomplish this,  instead of creating a new policy, **clone** the provided policy first and then **edit** it.
+
+.. warning::  The request does not get denied, even though the number of requests exceeds the limit.
+
 
 API Method
 ----------
 
-PUT /createPolicy to create a policy
-
+Use PUT /createPolicy to create a policy.  
 The request should be in the following form for regular guard policy:
 
-.. code-block:: bash
+.. code-block:: json
    :caption: Regular Guard Policy Creation
    :linenos:
 
@@ -67,7 +65,7 @@ The request should be in the following form for regular guard policy:
 
 The request should be in the following form for blacklist guard policy:
 
-.. code-block:: bash
+.. code-block:: json
    :caption: Blacklist Guard Policy Creation
    :linenos:
 
@@ -102,9 +100,9 @@ In order to use the guard policies just make an http request. For example:
      Environment:<environment> Content-Type:application/json < guard_request.json
     
 | where:
-|     <yourAuth> is the string generated from user:pass converted to base64 encoding.
-|     <yourClientAuth> is generated the same way but from the client user and pass.
-|     <environment> is the context of the request. For example: TEST
+|     *<yourAuth>*       is the string generated from user:pass converted to base64 encoding.
+|     *<yourClientAuth>* is generated the same way but from the client user and pass.
+|     *<environment>*    is the context of the request. For example: TEST
 
 The guard_request.json should be in the form of the following:
 
@@ -121,7 +119,7 @@ The guard_request.json should be in the form of the following:
       "onapName": "PDPD"
     }
 
-A response should be received that contains a "PERMIT" or "DENY" in all caps, like the following:
+A response containing a "PERMIT" or "DENY" in uppercase is returned as follows:
 
 .. code-block:: json
    :caption: Response
