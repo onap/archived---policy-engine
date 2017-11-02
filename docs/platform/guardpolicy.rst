@@ -132,10 +132,6 @@ A response should be received that contains a "PERMIT" or "DENY" in all caps, li
     }
 
 
-Additional Information
-^^^^^^^^^^^^^^^^^^^^^^
 
-Additional information can be found at `GuardPolicy link`_
-
-.. _GuardPolicy link: https://wiki.onap.org/display/DW/Creating+and+Using+Guard+Policies
+End of Document
 
