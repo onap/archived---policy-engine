@@ -10,3 +10,4 @@ Policy Engine
    offeredapis.rst
    installation.rst
    policygui.rst
+   guardpolicy.rst
