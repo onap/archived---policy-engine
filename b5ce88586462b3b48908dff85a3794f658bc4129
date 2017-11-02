@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a4e6583_6bb695de",
+        "filename": "docs/platform/guardpolicy.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-11-02T12:17:22Z",
+      "side": 1,
+      "message": "Its not a good idea to point back to the wiki as that page may change/move and be updated for newer release which would not be applicable here. No one would know that anything in the documentation points to the wiki.",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 141,
+        "endChar": 0
+      },
+      "revId": "b5ce88586462b3b48908dff85a3794f658bc4129",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
