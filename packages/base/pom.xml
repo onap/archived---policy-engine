@@ -200,6 +200,29 @@
 				</os>
 			</activation>
 			<build>
+				<plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>create-version-file</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                                <configuration>
+                                    <executable>/bin/bash</executable>
+                                    <arguments>
+                                        <argument>-c</argument>
+                                        <argument>mkdir -p target ; echo -e 'version="${project.version}"\ndescription="Open ONAP Policy Engine"\nbuildTag="'"${BUILD_TAG}"'"\ncommit="'"${GIT_COMMIT}"'"\ntimestamp="${maven.build.timestamp}"' >target/build.info</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
 			</build>
 		</profile>
 	</profiles>
