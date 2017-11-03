@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a4e6583_da6e7196",
+        "filename": "docs/platform/guardpolicy.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-11-03T21:23:49Z",
+      "side": 1,
+      "message": "entries",
+      "range": {
+        "startLine": 18,
+        "startChar": 129,
+        "endLine": 18,
+        "endChar": 136
+      },
+      "revId": "bbef5a1f6a50f2c5c8791cd0999ac598b17d2719",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
