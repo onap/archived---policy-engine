@@ -3,10 +3,10 @@
 Known Issues
 ------------
 
-ONAP POLICY Framework items for: (Last Updated: 10/10/2017)
+ONAP POLICY Framework items for: (Last Updated: 11/06/2017)
 
 *    **Version**: Amsterdam Release
-*    **Release Date**: 02 November, 2017
+*    **Release Date**: 17 November, 2017
 *    **Description**: R1
 
 Issues

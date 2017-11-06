@@ -129,6 +129,8 @@ A response containing a “PERMIT” or “DENY” in uppercase is returned as f
     }
 
 
-
 End of Document
+
+.. SSNote: Wiki page ref.  https://wiki.onap.org/display/DW/Creating+and+Using+Guard+Policies
+
 
