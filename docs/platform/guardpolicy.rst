@@ -13,7 +13,9 @@ Background
 
 Guard policies are used to limit what operations shall be permitted. These policies are specified in the Policy GUI or restful API and either return "PERMIT" or "DENY" on request.
 
-There are 2 types of policies, guard policies and blacklist guard policies. The blacklist describes what is not allowed to be permitted and guard policies describe what is allowed to be permitted. Note: as of 1802 release, Policy PDP behaves as a PERMIT overrides fashion so if any policy permits, it will override any denies.
+There are 2 types of policies, guard policies and blacklist guard policies. The blacklist describes what is not allowed to be permitted and guard policies describe what is allowed to be permitted.  The Policy PDP behaves in a PERMIT overrides fashion, that is,  if any policy permits, it will override any denies.
+
+.. note:: *Limit Functionality*: The determination to deny a request because it has exceeded the limit is based on the number of entries in the **database**.  
 
 Creating Guard Policies
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -27,16 +29,13 @@ The GUARD policy can be created from the POLICY GUI as shown below.
 
 .. image:: PolicyGUI_GuardPolicy.png
 
-.. note::  The Onap Name must be empty for the policy to work.  To accomplish this,  instead of creating a new policy, **clone** the provided policy first and then **edit** it.
-
-.. warning::  The request does not get denied, even though the number of requests exceeds the limit.
-
 
 API Method
 ----------
 
-Use PUT /createPolicy to create a policy.  
-The request should be in the following form for regular guard policy:
+To create the policy, use the PUT /createPolicy API. This request uses Basic Access Authentication. 
+
+The request should be in the following form for the regular guard policy:
 
 .. code-block:: json
    :caption: Regular Guard Policy Creation
@@ -119,7 +118,7 @@ The guard_request.json should be in the form of the following:
       "onapName": "PDPD"
     }
 
-A response containing a "PERMIT" or "DENY" in uppercase is returned as follows:
+A response containing a “PERMIT” or “DENY” in uppercase is returned as follows:
 
 .. code-block:: json
    :caption: Response
