@@ -1,7 +1,7 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 
-Policy Engine
--------------
+Policy Engine Platform
+----------------------
 
 .. toctree::
    :maxdepth: 1
@@ -12,3 +12,5 @@ Policy Engine
    policygui.rst
    guardpolicy.rst
    deployPDPPAP.rst
+   guardpdp.rst
+
