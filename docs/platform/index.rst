@@ -11,3 +11,4 @@ Policy Engine
    installation.rst
    policygui.rst
    guardpolicy.rst
+   deployPDPPAP.rst

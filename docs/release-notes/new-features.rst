@@ -3,10 +3,10 @@
 New Features
 ------------
 
-ONAP POLICY Framework items for: (Last Updated: 10/23/2017)
+ONAP POLICY Framework items for: (Last Updated: 11/06/2017)
 
 *    **Version**: Amsterdam Release
-*    **Release Date**: 02 November, 2017
+*    **Release Date**: 17 November, 2017
 *    **Description**: R1
 
 .. contents::
@@ -19,9 +19,12 @@ Epic
     * [POLICY-33] - This epic covers the body of work involved in deploying the Policy Platform components
     * [POLICY-34] - This epic covers the work required to support a Policy developer environment in which Policy Developers can create, update policy templates/rules separate from the policy Platform runtime platform.
     * [POLICY-35] - This epic covers the body of work involved in supporting policy that is platform specific.
+    * [POLICY-36] - This epic covers the work required to capture policy during VNF on-boarding.
     * [POLICY-37] - This epic covers the work required to capture, update, extend Policy(s) during Service Design.
+    * [POLICY-38] - This epic covers the work required to support service distribution by SDC.
     * [POLICY-39] - This epic covers the work required to support the Policy Platform during runtime.
     * [POLICY-76] - This epic covers the body of work involved in supporting R1 Amsterdam Milestone Release Planning Milestone Tasks.
+
 
 Story
 ^^^^^
@@ -49,7 +52,7 @@ Story
     * [POLICY-119] - PDP-D: noop sinks
     * [POLICY-121] - Update POM to inherit from oparent
     * [POLICY-124] - Integration with oparent
-    * [POLICY-158] - policy/engine:  SQL injection Mitigation
+    * [POLICY-158] - policy/engine: SQL injection Mitigation
     * [POLICY-161] - Security Event Logging
     * [POLICY-173] - Deployment of Operational Policies Documentation
     * [POLICY-210] - Independent Versioning and Release Process
@@ -57,7 +60,7 @@ Story
     * [POLICY-320] - VOLTE Use Case - Runtime Testing
     * [POLICY-324] - vFW Use Case - Runtime Testing
     * [POLICY-328] - vDNS Use Case - Runtime Testing
-
+    * [POLICY-387] - Deliver the released policy artifacts
 
 Task
 ^^^^
@@ -128,6 +131,7 @@ Task
     * [POLICY-335] - Add more documentation details
     * [POLICY-337] - Update CSIT Integration Tests with latest Config/Operational Policies
     * [POLICY-355] - Exclude dependencies for mysql and iText
+    * [POLICY-372] - Update the DCAE TCA Model
 
 
 Additional Information
