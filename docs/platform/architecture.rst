@@ -96,3 +96,5 @@ Attributes can be specified for each dimension. In addition to being defined for
 Policy writers can define attributes so that policy events or requests self-indicate their scope. The scope is then examined by a suitable function and subsequently acted upon accordingly. Policy decisions and enforcement functions can self-indicate their scope of decision-making, enforcement, or other capabilities. Virtual functions can be automatically attached to the appropriate POLICY Framework and distribution mechanisms.
 
 
+End of Document
+
