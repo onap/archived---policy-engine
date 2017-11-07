@@ -17,60 +17,60 @@ Accessing and Starting PAP
 
 - To access the PAP docker use 
 
-.. code-block:: bash
+    .. code-block:: bash
 
-    docker exec -it -u 0 pap su - policy
+        docker exec -it -u 0 pap su - policy
 
 - All Policy related software are installed under the policy account, the policy root directory is under *${POLICY_HOME}* environment variable and it may be changed on a per installation basis. It is typically set up under the */opt/app/policy* directory but can be changed during installation. All Policy software runs with non-root privileges as *policy* is a regular user account. 
 
 - Once within the PAP Container the running status can be checked using the following policy status command.
 
-.. code-block:: bash
+    .. code-block:: bash
 
-    policy [--debug] status|start|stop
+        policy [--debug] status|start|stop
 
 - To get the current status of Policy use *policy.sh status*
 
-.. code-block:: bash
+    .. code-block:: bash
 
-    policy@pap:~$ policy.sh status
-        pap: UP: running with pid 2114
-        console: UP: running with pid 2135
-        paplp: UP: running with pid 2155
-        3 cron jobs installed.
+        policy@pap:~$ policy.sh status
+            pap: UP: running with pid 2114
+            console: UP: running with pid 2135
+            paplp: UP: running with pid 2155
+            3 cron jobs installed.
 
 - To Stop the components use *policy.sh stop*
 
-.. code-block:: bash
-
-    policy@pap:~$ policy.sh stop
-        paplp: STOPPING ..
-        console: STOPPING ..
-        pap: STOPPING ..
+    .. code-block:: bash
+    
+        policy@pap:~$ policy.sh stop
+            paplp: STOPPING ..
+            console: STOPPING ..
+            pap: STOPPING ..
 
 - To Start use *policy.sh start* 
 
-.. code-block:: bash
-
-    policy@pap:~$ policy.sh start
-        pap: STARTING ..
-        console: STARTING ..
-        paplp: STARTING ..
+    .. code-block:: bash
+    
+        policy@pap:~$ policy.sh start
+            pap: STARTING ..
+            console: STARTING ..
+            paplp: STARTING ..
 
 Healthcheck
 -----------
 
 - To perform Health check on policy components you can follow the generic procedure documented as below. 
 
-.. code-block:: bash
-
-    # Assuming the healthcheck service credentials have not been changed
-    # post-installation within the drools container
-
-    source /opt/policy/config/drools/feature-healthcheck.conf
-
-    curl --silent --user "${HEALTHCHECK_USER}:${HEALTHCHECK_PASSWORD}" 
-                   -X GET http://localhost:6969/healthcheck | python -m json.tool
+    .. code-block:: bash
+    
+        # Assuming the healthcheck service credentials have not been changed
+        # post-installation within the drools container
+    
+        source /opt/policy/config/drools/feature-healthcheck.conf
+    
+        curl --silent --user "${HEALTHCHECK_USER}:${HEALTHCHECK_PASSWORD}" 
+                       -X GET http://localhost:6969/healthcheck | python -m json.tool
 
 - Additional information can be found in the documentation for Testing, Deploying, and debugging on a PDP-D Healthcheck. 
 
@@ -89,15 +89,15 @@ Accessing and Starting PDP
 
 - To access the PDP docker : 
 
-.. code-block:: bash
+    .. code-block:: bash
 
-    docker exec -it -u 0 pdp su - policy
+        docker exec -it -u 0 pdp su - policy
 
 - To start and stop the PDP components the same procedure can be followed as documented for PAP. 
 
-.. code-block:: bash
+    .. code-block:: bash
 
-    policy [--debug] status|start|stop
+        policy [--debug] status|start|stop
 
 Healthcheck / Testing
 ---------------------
