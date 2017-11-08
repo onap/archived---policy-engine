@@ -53,13 +53,26 @@ Next, we're going to create a file named *dcae.vdns.onset.json* and edit it to p
     .. code-block:: bash
     
         touch dcae.vdns.onset.json
-        vi dcae.vdns.onset json
+        vi dcae.vdns.onset.json
 
 Here are the contents of the vDNS ONSET message. Copy/paste this into dcae.vdns.onset.json:
 
-    .. code-block:: bash
+    .. code-block:: json
     
-        {  "closedLoopEventClient": "DCAE_INSTANCE_ID.dcae-tca",  "target_type": "VNF",  "AAI": {   "vserver.vserver-name": "vlb-lb-32c8",   "vserver.is-closed-loop-disabled": "false"  },  "closedLoopAlarmStart": 1484677482204798,  "closedLoopEventStatus": "ONSET",  "closedLoopControlName": "ControlLoop-vDNS-6f37f56d-a87d-4b85-b6a9-cc953cf779b3",  "version": "1.0.2",  "target": "vserver.vserver-name",  "requestID": "99999999-686e-4790-8c45-bdfa61df770f",  "from": "DCAE" }
+        {  "closedLoopEventClient": "DCAE_INSTANCE_ID.dcae-tca",  
+           "target_type": "VNF",  
+           "AAI": {   
+               "vserver.vserver-name": "vlb-lb-32c8",   
+               "vserver.is-closed-loop-disabled": "false"  
+           },  
+           "closedLoopAlarmStart": 1484677482204798,  
+           "closedLoopEventStatus": "ONSET",  
+           "closedLoopControlName": "ControlLoop-vDNS-6f37f56d-a87d-4b85-b6a9-cc953cf779b3",  
+           "version": "1.0.2",  
+           "target": "vserver.vserver-name",  
+           "requestID": "99999999-686e-4790-8c45-bdfa61df770f",  
+           "from": "DCAE" 
+        }
 
 
 Enabling the AAI and SO Simulators
