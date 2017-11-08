@@ -13,4 +13,5 @@ Policy Engine Platform
    guardpolicy.rst
    deployPDPPAP.rst
    guardpdp.rst
+   tutorial_vDNS.rst
 
