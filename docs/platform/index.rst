@@ -15,6 +15,7 @@ Policy Engine Platform
    guardpdp.rst
    tutorial_vDNS.rst
    tutorial_VOLTE.rst
+   tutorial_vFW.rst
    feature_testtransaction.rst
    feature_healthcheck.rst
    feature_eelf.rst
