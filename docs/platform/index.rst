@@ -16,5 +16,7 @@ Policy Engine Platform
    tutorial_vDNS.rst
    tutorial_VOLTE.rst
    feature_testtransaction.rst
+   feature_healthcheck.rst
+   feature_eelf.rst
 
 
