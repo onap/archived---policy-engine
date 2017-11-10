@@ -13,11 +13,14 @@ Policy Engine Platform
    guardpolicy.rst
    deployPDPPAP.rst
    guardpdp.rst
-   tutorial_vDNS.rst
-   tutorial_VOLTE.rst
-   tutorial_vFW.rst
    feature_testtransaction.rst
    feature_healthcheck.rst
    feature_eelf.rst
+   feature_statemgmt.rst
+   feature_activestdbymgmt.rst
+   tutorial_vDNS.rst
+   tutorial_VOLTE.rst
+   tutorial_vFW.rst
+   tutorial_vCPE.rst
 
 

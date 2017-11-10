@@ -17,10 +17,7 @@ The vFW flow begins with an onset message that is sent from DCAE notifying the P
 Initial Setup
 ^^^^^^^^^^^^^ 
 
-For this tutorial, a feature for simulating components involved in the flow outside of Policy will be turned on. Run "features enable controlloop-utils".
-
-
-The first step is to access the docker container of name *drools*.
+For this tutorial, a feature for simulating components involved in the flow outside of Policy will be turned on. Run "*features enable controlloop-utils*".
 
     .. image:: Tut_vFW_simulators_enabled.JPG
 
@@ -53,11 +50,11 @@ Inject the onset using the Telemetry API.
 
     .. image:: Tut_vFW_onset_injected.JPG
 
-Now check the facts in memory, there should be 7 objects present. Two timers exist to put a time limit on the operation and on the overall control loop (in the case of retries or policy chaining). The event and it's assciated manager and operation manager are also present in memory. A lock on the target entity is inserted to ensure no other events try to take action on the VNF that is currently processing.
+Now check the facts in memory, there should be 7 objects present. Two timers exist to put a time limit on the operation and on the overall control loop (in the case of retries or policy chaining). The event and it's associated manager and operation manager are also present in memory. A lock on the target entity is inserted to ensure no other events try to take action on the VNF that is currently processing.
 
     .. image:: Tut_vFW_get_facts_2.JPG
 
-The network log will be used to monitor the activity coming in and out of the PDP-D. This log is located at $POLICY_HOME/logs/network.log. This will show the notifications that the PDP-D sends out at different stages of processing. The order of successful processing begins with an ACTIVE notification to show that the onset was acknowledged and the operation is beginning transit.
+The network log will be used to monitor the activity coming in and out of the PDP-D. This log is located at *$POLICY_HOME/logs/network.log*. This will show the notifications that the PDP-D sends out at different stages of processing. The order of successful processing begins with an ACTIVE notification to show that the onset was acknowledged and the operation is beginning transit.
  
     .. image:: Tut_vFW_policy_active.JPG
 
