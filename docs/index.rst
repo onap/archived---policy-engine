@@ -7,4 +7,4 @@ Policy Engine
    :maxdepth: 2
 
    platform/index
-   release-notes/index
+..    release-notes/index
