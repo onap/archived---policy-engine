@@ -10,12 +10,14 @@ Policy Engine Platform
    offeredapis.rst
    installation.rst
    policygui.rst
-   guardpolicy.rst
+   swarch_pap.rst
+   swarch_pdpx.rst
    deployPDPPAP.rst
+   guardpolicy.rst
    guardpdp.rst
+   feature_eelf.rst
    feature_testtransaction.rst
    feature_healthcheck.rst
-   feature_eelf.rst
    feature_statemgmt.rst
    feature_activestdbymgmt.rst
    tutorial_vDNS.rst
