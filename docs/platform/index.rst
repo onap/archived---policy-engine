@@ -10,19 +10,32 @@ Policy Engine Platform
    offeredapis.rst
    installation.rst
    policygui.rst
+
+Policy Software Architecture
+----------------------------
+
+.. toctree::
+   :maxdepth: 1
+
    swarch_pap.rst
    swarch_pdpx.rst
-   deployPDPPAP.rst
-   guardpolicy.rst
-   guardpdp.rst
    feature_eelf.rst
    feature_testtransaction.rst
    feature_healthcheck.rst
    feature_statemgmt.rst
    feature_activestdbymgmt.rst
+
+Policy Platform Tutorials
+-------------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   deployPDPPAP.rst
+   guardpolicy.rst
+   guardpdp.rst
    tutorial_vDNS.rst
    tutorial_VOLTE.rst
    tutorial_vFW.rst
    tutorial_vCPE.rst
-
 
