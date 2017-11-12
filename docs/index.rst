@@ -4,7 +4,7 @@ Policy Engine
 -------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    platform/index
 ..    release-notes/index
