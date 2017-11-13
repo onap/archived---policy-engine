@@ -10,6 +10,7 @@ Policy Engine Platform
    offeredapis.rst
    installation.rst
    policygui.rst
+   modAmsterTemplate.rst
 
 Policy Software Architecture
 ----------------------------
