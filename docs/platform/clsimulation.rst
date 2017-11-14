@@ -524,9 +524,9 @@ Responses
 
 
     .. code-block:: bash
-       :caption: permit-response
+       :caption: deny-response
 
-        //This is returned if the closed loop name is deny guard
+        //This is returned if the closed loop name is denyGuard
         {
          "decision": "DENY",
          "details": "Decision Deny. You asked for it"
