@@ -18,15 +18,16 @@ Policy Software Architecture
 .. toctree::
    :maxdepth: 1
 
-   swarch_pap.rst
-   swarch_pdpx.rst
-   swarch_brmsgw.rst
+   swarch_pdp.rst
    feature_eelf.rst
-   clsimulation.rst
    feature_testtransaction.rst
    feature_healthcheck.rst
+   feature_sesspersist.rst
    feature_statemgmt.rst
    feature_activestdbymgmt.rst
+   swarch_pdpx.rst
+   swarch_pap.rst
+   swarch_brmsgw.rst
 
 Policy Platform Tutorials
 -------------------------
@@ -37,6 +38,8 @@ Policy Platform Tutorials
    deployPDPPAP.rst
    guardpolicy.rst
    guardpdp.rst
+   runningEclipse.rst
+   clsimulation.rst
    tutorial_cl.rst
    tutorial_vDNS.rst
    tutorial_VOLTE.rst
