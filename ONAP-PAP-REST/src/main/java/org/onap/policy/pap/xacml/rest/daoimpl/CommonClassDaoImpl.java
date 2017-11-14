@@ -44,15 +44,19 @@ import org.onap.policy.rest.jpa.GroupPolicyScopeList;
 import org.onap.policy.rest.jpa.PolicyRoles;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service("CommonClassDao")
+@Primary
 public class CommonClassDaoImpl implements CommonClassDao{
 
 	private static final Log LOGGER = LogFactory.getLog(CommonClassDaoImpl.class);
 	
 	
 	private static SessionFactory sessionFactory;
+	
 	
 	@Autowired
 	private CommonClassDaoImpl(SessionFactory sessionFactory){

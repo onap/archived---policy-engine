@@ -1326,7 +1326,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			scanner.useDelimiter("\\A");
 			json =  scanner.hasNext() ? scanner.next() : "";
 			scanner.close();
-			PolicyLogger.info("JSON request from PolicyEngine API: " + json);
+			PolicyLogger.info("pushPolicy request from API: " + json);
 			// convert Object sent as JSON into local object
 			StdPDPPolicy policy = PolicyUtils.jsonStringToObject(json, StdPDPPolicy.class);
 			Set<PDPPolicy> policies = new HashSet<>();
