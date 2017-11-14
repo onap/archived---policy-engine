@@ -23,14 +23,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+import org.glassfish.jersey.spi.Contract;
 import org.onap.policy.api.PolicyException;
 import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.api.utils.PolicyApiUtils;
-import org.onap.policy.utils.PolicyUtils;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.util.PolicyValidation;
+import org.onap.policy.rest.util.PolicyValidationRequestWrapper;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+
+import com.google.common.base.Strings;
 
 public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService {
 	private static final Logger LOGGER = FlexLogger.getLogger(CreateUpdatePolicyServiceImpl.class.getName());
@@ -213,54 +219,79 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
     }
 
     protected boolean getValidation() {
-        if(policyParameters == null){
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy parameters given. ";
-            return false;
-        }
-        if(policyParameters.getPolicyName() == null){
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Name given.";
-            return false;
-        }
-        if (policyParameters.getPolicyName().contains(".")) {
-            policyName = policyParameters.getPolicyName().substring(policyParameters.getPolicyName().lastIndexOf('.') + 1,
-                    policyParameters.getPolicyName().length());
-            policyScope = policyParameters.getPolicyName().substring(0,policyParameters.getPolicyName().lastIndexOf('.'));
-            LOGGER.info("Name is " + policyName + "   scope is " + policyScope);
-        } else {
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Scope given.";
-            return false;
-        }
-        if (policyName==null||policyName.trim().isEmpty()){
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Name given.";
-            return false;
-        }
-        message = PolicyUtils.policySpecialCharValidator(policyScope);
-        if(!message.contains("success")){
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE+ message;
-            return false;
-        }
-        message = PolicyUtils.policySpecialCharValidator(policyName);
-        if(!message.contains("success")){
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE+ message;
-            return false;
-        }
-        if(policyParameters.getPolicyDescription()!=null){
-            message = PolicyUtils.descriptionValidator(policyParameters.getPolicyDescription());
-            if(!message.contains("success")){
-                message = XACMLErrorConstants.ERROR_DATA_ISSUE+ message;
-                return false;
-            }
-        }
-        if(!PolicyApiUtils.validateNONASCIICharactersAndAllowSpaces(policyParameters.toString())){
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE+ "This requests contains Non ASCII Characters. Please review your input parameter"
-                    + " values and correct the illegal characters.";
-            return false;
-        }
+    	
+    	PolicyValidation validation = new PolicyValidation();
+    	
+		StringBuilder responseString;
+		
+    	if (policyParameters != null) {
+    		
+    		if (!Strings.isNullOrEmpty(policyParameters.getPolicyName())){
+                if (policyParameters.getPolicyName().contains(".")) {
+                    policyName = policyParameters.getPolicyName().substring(policyParameters.getPolicyName().lastIndexOf('.') + 1,
+                            policyParameters.getPolicyName().length());
+                    policyScope = policyParameters.getPolicyName().substring(0,policyParameters.getPolicyName().lastIndexOf('.'));
+                    policyParameters.setPolicyName(policyName);
+                    LOGGER.info("Name is " + policyName + "   scope is " + policyScope);
+                } else {
+                    message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Policy Scope: No Policy Scope given";
+            		LOGGER.error("Common validation did not return success:  " + message);
+                    return false;
+                }
+    		} else {
+    			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "PolicyName: PolicyName Should not be empty";
+        		LOGGER.error("Common validation did not return success:  " + message);
+    			return false;
+    		}
+    		
+    		if ("Config".equals(policyParameters.getPolicyClass().toString())){
+    			String policyConfigType = policyParameters.getPolicyConfigType().toString();
+    			if(!"BRMS_Param".equalsIgnoreCase(policyConfigType)){
+        			if(Strings.isNullOrEmpty(policyParameters.getConfigBody())){
+        				message = XACMLErrorConstants.ERROR_DATA_ISSUE + "ConfigBody: No Config Body given";
+                		LOGGER.error("Common validation did not return success:  " + message);
+                        return false;
+        			}
+    			}
+    		}
+
+    		try {
+    			PolicyValidationRequestWrapper wrapper = new PolicyValidationRequestWrapper();    			
+    			PolicyRestAdapter policyData = wrapper.populateRequestParameters(policyParameters);
+				responseString = validation.validatePolicy(policyData);
+			} catch (Exception e) {
+				LOGGER.error("Exception Occured during Policy Validation" +e);
+				if("Action".equals(policyParameters.getPolicyClass().toString()) && e.getMessage().contains("Index:")){
+					message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Rule Algorithms: One or more Fields in Rule Algorithms is Empty.";
+				} else {
+					message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Exception Occured During Policy Validation: " + e;
+				}
+				return false;
+			}
+    	} else {
+    		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy parameters given. ";
+    		return false;
+    	}
+
         // Set some default Values. 
         if (policyParameters.getTtlDate()!=null){
             date = convertDate(policyParameters.getTtlDate());
         }
-        return true;
+        
+        if (responseString!=null){
+        	if("success".equals(responseString.toString())||"success@#".equals(responseString.toString())){
+        		return true;
+        	} else {
+    			message = XACMLErrorConstants.ERROR_DATA_ISSUE + PolicyApiUtils.formatResponse(responseString);
+        		LOGGER.error("Common validation did not return success:  " + message);
+        		return false;
+        	}
+        } else {
+			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Unknown Error Occured During Policy Validation";
+			LOGGER.error(message);
+			return false;
+        }
+
     }
     
     protected String convertDate(Date date) {
