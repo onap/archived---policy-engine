@@ -33,7 +33,7 @@ Guard Properties
     - For testing this URL before running policy, see Verification below.
 
 **guard.jdbc.url** - URL of the database location to which the operations history will be written.
-    - For example, *mariadb://mariadb:3306/onap_sdk*.
+    - For example, *jdbc:mariadb://mariadb:3306/onap_sdk*.
     - Note that the port is included.
     - Note that at the end, the database name is used.
 
