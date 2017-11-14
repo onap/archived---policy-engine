@@ -17,8 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
-package org.onap.policy.daoImp;
+package org.onap.policy.rest.daoimpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +41,13 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyRoles;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service("CommonClassDao")
-@Primary
-public class CommonClassDaoImpl implements CommonClassDao{
+@Component
+public class PolicyValidationDaoImpl implements CommonClassDao{
 
-	private static final Logger LOGGER = FlexLogger.getLogger(CommonClassDaoImpl.class);
+	private static final Logger LOGGER = FlexLogger.getLogger(PolicyValidationDaoImpl.class);
 	private static SessionFactory sessionfactory;
     
     public static SessionFactory getSessionfactory() {
@@ -58,20 +55,18 @@ public class CommonClassDaoImpl implements CommonClassDao{
     }
 
     public static void setSessionfactory(SessionFactory sessionfactory) {
-          CommonClassDaoImpl.sessionfactory = sessionfactory;
+          PolicyValidationDaoImpl.sessionfactory = sessionfactory;
     }
 
     @Autowired
-    private CommonClassDaoImpl(SessionFactory sessionfactory){
-          CommonClassDaoImpl.sessionfactory = sessionfactory;
+    private PolicyValidationDaoImpl(SessionFactory sessionfactory){
+          PolicyValidationDaoImpl.sessionfactory = sessionfactory;
     }
     
-    public CommonClassDaoImpl(){
+    public PolicyValidationDaoImpl(){
           //Default Constructor
     }
 
-	
-	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Object> getData(Class className) {

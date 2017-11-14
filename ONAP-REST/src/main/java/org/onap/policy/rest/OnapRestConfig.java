@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PDP-REST
+ * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -16,8 +16,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END=========================================================
- */
-package org.onap.policy.pdp.rest.config;
+ 
+package org.onap.policy.rest;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,41 +25,30 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.MultipartConfigElement;
 import javax.sql.DataSource;
 
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.pdp.rest.api.controller.PolicyEngineServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableWebMvc
-@EnableSwagger2
+@EnableTransactionManagement
 @ComponentScan(basePackages = { "org.onap.*", "com.*" })
-public class PDPRestConfig extends WebMvcConfigurerAdapter{
+public class OnapRestConfig extends WebMvcConfigurerAdapter {
 	
-	private static final Logger LOGGER	= FlexLogger.getLogger(PDPRestConfig.class);
-
+	private static final Logger LOGGER	= FlexLogger.getLogger(OnapRestConfig.class);
+	
 	private static String dbDriver = null;
 	private static String dbUrl = null;
 	private static String dbUserName = null;
@@ -70,7 +59,7 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
 		Properties prop = new Properties();
 		InputStream input = null;
 		try {
-			input = new FileInputStream("xacml.pdp.properties");
+			input = new FileInputStream("xacml.pap.properties");
 			// load a properties file
 			prop.load(input);
 			setDbDriver(prop.getProperty("javax.persistence.jdbc.driver"));
@@ -90,38 +79,13 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
 		}
 	}
 	
-	@Override 
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
-    
-    private ApiInfo apiInfo(){
-        return new ApiInfoBuilder()
-                .title("Policy Engine REST API")
-                .description("This API helps to make queries against Policy Engine")
-                .version("3.0")
-                .build();
-    }
-    
-    @Bean
-    public Docket policyAPI(){
-        PolicyLogger.info("Setting up Swagger... ");
-        return new Docket(DocumentationType.SWAGGER_2)                
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("org.onap.policy.pdp.rest.api"))
-                .paths(PathSelectors.any())
-                .build()
-                .apiInfo(apiInfo());
-    }
-    
 	@Bean(name = "dataSource")
 	public DataSource getDataSource() {
 	    BasicDataSource dataSource = new BasicDataSource();
-	    dataSource.setDriverClassName(PDPRestConfig.getDbDriver());
-	    dataSource.setUrl(PDPRestConfig.getDbUrl());
-	    dataSource.setUsername(PDPRestConfig.getDbUserName());
-	    dataSource.setPassword(PDPRestConfig.getDbPassword());
+	    dataSource.setDriverClassName(OnapRestConfig.getDbDriver());
+	    dataSource.setUrl(OnapRestConfig.getDbUrl());
+	    dataSource.setUsername(OnapRestConfig.getDbUserName());
+	    dataSource.setPassword(OnapRestConfig.getDbPassword());
 	    return dataSource;
 	}
 	
@@ -146,20 +110,13 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
 	public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
 		return new HibernateTransactionManager(sessionFactory);
 	}
-    
-    @Bean
-    public MultipartConfigElement multipartConfigElement(){
-        String location = System.getProperty("java.io.tmpdir");
-        MultipartConfigElement mp = new MultipartConfigElement(location);
-        return mp;
-    }
 
 	public static String getDbDriver() {
 		return dbDriver;
 	}
 
 	public static void setDbDriver(String dbDriver) {
-		PDPRestConfig.dbDriver = dbDriver;
+		OnapRestConfig.dbDriver = dbDriver;
 	}
 
 	public static String getDbUrl() {
@@ -167,7 +124,7 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
 	}
 
 	public static void setDbUrl(String dbUrl) {
-		PDPRestConfig.dbUrl = dbUrl;
+		OnapRestConfig.dbUrl = dbUrl;
 	}
 
 	public static String getDbUserName() {
@@ -175,7 +132,7 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
 	}
 
 	public static void setDbUserName(String dbUserName) {
-		PDPRestConfig.dbUserName = dbUserName;
+		OnapRestConfig.dbUserName = dbUserName;
 	}
 
 	public static String getDbPassword() {
@@ -183,6 +140,9 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
 	}
 
 	public static void setDbPassword(String dbPassword) {
-		PDPRestConfig.dbPassword = dbPassword;
+		OnapRestConfig.dbPassword = dbPassword;
 	}
+	
+
 }
+*/

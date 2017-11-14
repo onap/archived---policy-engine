@@ -139,6 +139,7 @@ public class PolicyRestAdapter {
 	private String location = null;
     private String priority = null;
     private String msLocation = null;
+    private Object policyJSON = null;
     
     //BRMS Policies
     private String ruleName;
@@ -892,5 +893,17 @@ public class PolicyRestAdapter {
 		 */
 		public void setRainydayMap(Map<String,String> rainydayMap) {
 			this.rainydayMap = rainydayMap;
+		}
+		/**
+		 * @return the policyJSON
+		 */
+		public Object getPolicyJSON() {
+			return policyJSON;
+		}
+		/**
+		 * @param policyJSON the policyJSON to set
+		 */
+		public void setPolicyJSON(Object policyJSON) {
+			this.policyJSON = policyJSON;
 		}
 }
