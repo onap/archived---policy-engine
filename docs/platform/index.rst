@@ -20,7 +20,9 @@ Policy Software Architecture
 
    swarch_pap.rst
    swarch_pdpx.rst
+   swarch_brmsgw.rst
    feature_eelf.rst
+   clsimulation.rst
    feature_testtransaction.rst
    feature_healthcheck.rst
    feature_statemgmt.rst
@@ -35,8 +37,12 @@ Policy Platform Tutorials
    deployPDPPAP.rst
    guardpolicy.rst
    guardpdp.rst
+   tutorial_cl.rst
    tutorial_vDNS.rst
    tutorial_VOLTE.rst
    tutorial_vFW.rst
    tutorial_vCPE.rst
+   modAAIdata.rst
+
+
 
