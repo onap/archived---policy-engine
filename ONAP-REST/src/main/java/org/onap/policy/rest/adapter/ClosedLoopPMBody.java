@@ -28,7 +28,7 @@ public class ClosedLoopPMBody {
 	private boolean trinity;
 	private boolean vUSP;
 	private boolean mcr;
-	private boolean gama;
+	private boolean gamma;
 	private boolean vDNS;
 	private String geoLink;
 	private String vServices;
@@ -97,11 +97,11 @@ public class ClosedLoopPMBody {
 		this.serviceTypePolicyName = serviceTypePolicyName;
 	}
 	
-	public boolean isGama() {
-		return gama;
+	public boolean isGamma() {
+		return gamma;
 	}
-	public void setGama(boolean gama) {
-		this.gama = gama;
+	public void setGamma(boolean gamma) {
+		this.gamma = gamma;
 	}
 	public boolean isvDNS() {
 		return vDNS;

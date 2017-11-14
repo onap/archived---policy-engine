@@ -19,13 +19,27 @@
  */
 package org.onap.policy.pdp.rest.config;
 
-import javax.servlet.MultipartConfigElement;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
+import javax.annotation.PostConstruct;
+import javax.servlet.MultipartConfigElement;
+import javax.sql.DataSource;
+
+import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
+import org.hibernate.SessionFactory;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.api.controller.PolicyEngineServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -41,8 +55,31 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableWebMvc
 @EnableSwagger2
-@ComponentScan(basePackageClasses = PolicyEngineServices.class)
+@ComponentScan(basePackages = { "org.onap.*", "com.*" })
 public class PDPRestConfig extends WebMvcConfigurerAdapter{
+	
+	private static final Logger LOGGER	= FlexLogger.getLogger(PDPRestConfig.class);
+
+	private static String dbDriver = null;
+	private static String dbUrl = null;
+	private static String dbUserName = null;
+	private static String dbPassword = null;
+	
+	@PostConstruct
+	public void init(){
+		Properties prop = new Properties();
+		try (InputStream input = new FileInputStream("xacml.pdp.properties")){
+			// load a properties file
+			prop.load(input);
+			setDbDriver(prop.getProperty("javax.persistence.jdbc.driver"));
+			setDbUrl(prop.getProperty("javax.persistence.jdbc.url"));
+			setDbUserName(prop.getProperty("javax.persistence.jdbc.user"));
+			setDbPassword(prop.getProperty("javax.persistence.jdbc.password"));
+		}catch(Exception e){
+			LOGGER.error("Exception Occured while loading properties file"+e);
+		}
+	}
+	
 	@Override 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
@@ -68,10 +105,74 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
                 .apiInfo(apiInfo());
     }
     
+	@Bean(name = "dataSource")
+	public DataSource getDataSource() {
+	    BasicDataSource dataSource = new BasicDataSource();
+	    dataSource.setDriverClassName(PDPRestConfig.getDbDriver());
+	    dataSource.setUrl(PDPRestConfig.getDbUrl());
+	    dataSource.setUsername(PDPRestConfig.getDbUserName());
+	    dataSource.setPassword(PDPRestConfig.getDbPassword());
+	    return dataSource;
+	}
+	
+	@Autowired
+	@Bean(name = "sessionFactory")
+	public SessionFactory getSessionFactory(DataSource dataSource) {
+	    LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
+	    sessionBuilder.scanPackages("org.onap.*", "com.*");
+	    sessionBuilder.addProperties(getHibernateProperties());
+	    return sessionBuilder.buildSessionFactory();
+	}
+	
+	private Properties getHibernateProperties() {
+		Properties properties = new Properties();
+		properties.put("hibernate.show_sql", "true");
+		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+		return properties;
+	}
+	
+	@Autowired
+	@Bean(name = "transactionManager")
+	public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
+		return new HibernateTransactionManager(sessionFactory);
+	}
+    
     @Bean
     public MultipartConfigElement multipartConfigElement(){
         String location = System.getProperty("java.io.tmpdir");
         MultipartConfigElement mp = new MultipartConfigElement(location);
         return mp;
     }
+
+	public static String getDbDriver() {
+		return dbDriver;
+	}
+
+	public static void setDbDriver(String dbDriver) {
+		PDPRestConfig.dbDriver = dbDriver;
+	}
+
+	public static String getDbUrl() {
+		return dbUrl;
+	}
+
+	public static void setDbUrl(String dbUrl) {
+		PDPRestConfig.dbUrl = dbUrl;
+	}
+
+	public static String getDbUserName() {
+		return dbUserName;
+	}
+
+	public static void setDbUserName(String dbUserName) {
+		PDPRestConfig.dbUserName = dbUserName;
+	}
+
+	public static String getDbPassword() {
+		return dbPassword;
+	}
+
+	public static void setDbPassword(String dbPassword) {
+		PDPRestConfig.dbPassword = dbPassword;
+	}
 }

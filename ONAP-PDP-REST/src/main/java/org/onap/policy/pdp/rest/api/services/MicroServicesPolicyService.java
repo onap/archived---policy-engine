@@ -101,6 +101,7 @@ public class MicroServicesPolicyService{
         String policyDescription=null;
         String priority=null;
         String version=null;
+        
         if (microServiceAttributes.get("service")!=null){
         	microService = microServiceAttributes.get("service").toString().replace("\"", "");
         }
