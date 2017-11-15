@@ -12,32 +12,33 @@ PDP-D Software Architecture
 Overview
 ^^^^^^^^
 
-In ONAP, PDP-D is the Policy component that executes Operational Policies (see `Control Loop Operational Policy`_ ).  It uses `drools`_ as the underlying rule based engine to execute policies.
-
-The PDP-D name may not be reflective of its nature, as it is generic middleware, a maven based drools rules based application container. 
-
-The PDP-D generic application container is maintained in the policy/drools-pdp repository (https://git.onap.org/policy/drools-pdp).
-
-The Control Loop Operational Policies and support libraries applications are maintained in the policy/drools-applications repository (https://git.onap.org/policy/drools-applications/).
+| In ONAP, PDP-D is the Policy component that executes Operational Policies (see `Control Loop Operational Policy`_ ).  It uses `drools`_ as the underlying rule based engine to execute policies.
+|
+| The PDP-D name may not be reflective of its nature, as it is generic middleware, a maven based drools rules based application container. 
+|
+| The PDP-D generic application container is maintained in the policy/drools-pdp repository (https://git.onap.org/policy/drools-pdp).
+|
+| The Control Loop Operational Policies and support libraries applications are maintained in the policy/drools-applications repository (https://git.onap.org/policy/drools-applications/).
 
 
 PDP-D application container
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The PDP-D lightweight application container provides generic services to the drools applications (0..n) running on it.  (https://git.onap.org/policy/drools-pdp)
+| The PDP-D lightweight application container provides generic services to the drools applications (0..n) running on it.  (https://git.onap.org/policy/drools-pdp)
 
 There is the distinction of **core** software and optional **extensions** to the core functionality.
 
 Core Software
 -------------
 
-The core critical functionality that always runs in any PDP-D container is maintained in those projects named with the "policy-" prefix.   These are:
+The core critical functionality that always runs in any PDP-D container is maintained in those projects named with the "*policy-*" prefix.   These are:
+
 - policy-utils (utilities)
 - policy-core (drools libraries interfaces)
 - policy-endpoints (networking)
 - policy-management. (management of the platform)
 
-This is the minimum set of services that any PDP-D application provides to their executing drools-applications.
+This is the **minimum** set of services that any PDP-D application provides to their executing drools-applications.
 
 The intent is that this functionality is kept stable, fast, and minimal.   As new development is added, the intent is that this functionality is resilient to breakage as side effects to new development.
 
