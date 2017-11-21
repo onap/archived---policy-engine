@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da87b5cf_c01c736d",
+        "filename": "version.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-11-21T15:05:33Z",
+      "side": 1,
+      "message": "should be 0",
+      "range": {
+        "startLine": 7,
+        "startChar": 6,
+        "endLine": 7,
+        "endChar": 7
+      },
+      "revId": "5bae23da863dcbde8a5db4f08ebb72ca8b750c25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
