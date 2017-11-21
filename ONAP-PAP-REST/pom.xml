@@ -76,7 +76,7 @@
 					<artifactId>json</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>com.att.nsa</groupId>
+					<groupId>org.onap.dmaap.messagerouter.dmaapclient</groupId>
 					<artifactId>dmaapClient</artifactId>
 				</exclusion>
 				<exclusion>
