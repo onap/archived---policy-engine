@@ -30,6 +30,7 @@
 		<releases.path>content/repositories/releases/</releases.path>
 		<snapshots.path>content/repositories/snapshots/</snapshots.path>
 		<staging.path>content/repositories/staging/</staging.path>
+		<dmaap.version>1.0.0</dmaap.version>
 	</properties>
 
 

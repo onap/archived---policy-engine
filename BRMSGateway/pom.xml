@@ -83,9 +83,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.att.nsa</groupId>
+			<groupId>org.onap.dmaap.messagerouter.dmaapclient</groupId>
 			<artifactId>dmaapClient</artifactId>
-			<version>0.2.12</version>
+			<version>${dmaap.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
