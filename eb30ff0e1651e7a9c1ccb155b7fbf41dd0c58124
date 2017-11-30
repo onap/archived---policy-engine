@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_293e68b9",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/config/PDPRestConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-11-30T13:47:11Z",
+      "side": 1,
+      "message": "Please use try-with-resources if possible going forward, sonar will flag this.",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 2
+      },
+      "revId": "eb30ff0e1651e7a9c1ccb155b7fbf41dd0c58124",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e947204a",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/OnapRestConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-11-30T13:47:11Z",
+      "side": 1,
+      "message": "Change to try-with-resources",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 2
+      },
+      "revId": "eb30ff0e1651e7a9c1ccb155b7fbf41dd0c58124",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
