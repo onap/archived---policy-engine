@@ -41,6 +41,7 @@ public class CreateUpdateDictionaryService {
     private String message = null;
     private Boolean updateFlag = false;
     private DictionaryParameters dictionaryParameters = null;
+    private JsonObject json = null;
 
     public CreateUpdateDictionaryService(
             DictionaryParameters dictionaryParameters, String requestID,
@@ -62,6 +63,7 @@ public class CreateUpdateDictionaryService {
             }
             this.dictionaryParameters.setRequestID(requestUUID);
         }
+
         try{
             run();
             specialCheck();
@@ -105,20 +107,14 @@ public class CreateUpdateDictionaryService {
         } else {
             operation = "create";
         }
-        JsonObject json = null;
-        try{
-            json = PolicyApiUtils.stringToJsonObject(dictionaryParameters.getDictionaryJson());
-        } catch(JsonException| IllegalStateException e){
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper Dictionary JSON object : " + dictionaryParameters.getDictionaryJson();
-            LOGGER.error(message, e);
-            return message;
-        }
+        
         String dictionaryFields = json.toString();
         PAPServices papServices = new PAPServices();
         return (String) papServices.callPAP(new ByteArrayInputStream(dictionaryFields.getBytes()), new String[] {"operation="+operation, "apiflag=api", "dictionaryType="+dictionaryParameters.getDictionary()}, dictionaryParameters.getRequestID(), "dictionaryItem");
     }
 
     private boolean getValidation() {
+    	LOGGER.info("Start validating create or update dictionary request.");
         if(dictionaryParameters==null){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Dictionary Parameters are not given.";
             return false;
@@ -134,11 +130,28 @@ public class CreateUpdateDictionaryService {
         if(dictionaryParameters.getDictionaryJson()==null || dictionaryParameters.getDictionaryJson().isEmpty()){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Dictionary JSON given.";
             return false;
-        }
+        } 
         if (updateFlag && "MicroServiceDictionary".equalsIgnoreCase(dictionaryParameters.getDictionary())&& !dictionaryParameters.getDictionaryJson().contains("initialFields")){
         	message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Mising the required field initialFields.";
         	return false;
         }
+        
+        try{
+            json = PolicyApiUtils.stringToJsonObject(dictionaryParameters.getDictionaryJson());
+            String result = PolicyApiUtils.validateDictionaryJsonFields(json.getJsonObject("dictionaryFields"), dictionaryParameters.getDictionary());
+            
+            if(!"success".equals(result)) {
+            	message = result;
+                return false;
+            }
+            
+        }catch(JsonException| IllegalStateException e){
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper Dictionary JSON object : " + dictionaryParameters.getDictionaryJson();
+            LOGGER.error(message, e);
+            return false;
+        }
+        
+        LOGGER.info("dictionary API request validation complete and valid.");
         return true;
     }
 

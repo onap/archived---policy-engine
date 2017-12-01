@@ -420,6 +420,9 @@ public class PAPServices {
                         + connection.getHeaderField("message")
                         + " Please check the pdpGroup you are requesting to move the policy to.";
                 LOGGER.error(response);
+            } else if ("policyNotAvailableForEdit".equals(connection.getHeaderField("error"))) {
+            	response = XACMLErrorConstants.ERROR_DATA_ISSUE
+            			+ connection.getHeaderField("message");
             }
         } else if (connection.getResponseCode() == 409  && connection.getHeaderField("error") != null) {
             if ("modelExistsDB".equals(connection.getHeaderField("error"))) {
