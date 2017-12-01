@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.onap.policy.api.ConfigRequestParameters;
+import org.onap.policy.api.PolicyConfigStatus;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.api.models.PolicyConfig;
@@ -43,11 +44,12 @@ public class ListConfigService {
             results = new ArrayList<String>();
             status = HttpStatus.OK;
             for(PolicyConfig policyConfig : policyConfigs){
-                if(policyConfig.getPolicyConfigMessage()!=null && policyConfig.getPolicyConfigMessage().contains("PE300")){
+                if(policyConfig.getPolicyConfigMessage()!=null && policyConfig.getPolicyConfigMessage().contains("PE300")
+                		&& policyConfigs.size()<=1 && policyConfig.getPolicyConfigStatus().equals(PolicyConfigStatus.CONFIG_NOT_FOUND)){
                     results.add(policyConfig.getPolicyConfigMessage());
                     status = HttpStatus.BAD_REQUEST;
                 } else {
-                    results.add("Policy Name: " + policyConfig.getPolicyName());
+                    results.add(policyConfig.getPolicyName());
                 }
             }
         }

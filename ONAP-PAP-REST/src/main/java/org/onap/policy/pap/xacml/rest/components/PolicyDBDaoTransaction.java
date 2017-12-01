@@ -29,6 +29,7 @@ import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
+import org.onap.policy.xacml.std.pap.StdPDPGroup;
 
 import com.att.research.xacml.api.pap.PAPException;
 
@@ -150,12 +151,13 @@ public interface PolicyDBDaoTransaction {
 	 * Add an existing policy to an existing group
 	 * @param group The ID of the existing group to add the policy to
 	 * @param policyID The ID of an existing policy
+	 * @return 
 	 * @throws IllegalArgumentException If non-optional parameters are null or empty strings
 	 * @throws IllegalStateException If a transaction is already open
 	 * @throws PersistenceException If a database error occurs
 	 * @throws PolicyDBException 
 	 */
-	public void addPolicyToGroup(String group, String policyID, String username) throws PolicyDBException;
+	public StdPDPGroup addPolicyToGroup(String group, String policyID, String username) throws PolicyDBException;
 	
 	
 	/**

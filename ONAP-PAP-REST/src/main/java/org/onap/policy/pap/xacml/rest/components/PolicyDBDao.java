@@ -32,6 +32,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -68,6 +69,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
@@ -91,6 +93,7 @@ import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
+import org.onap.policy.xacml.util.XACMLPolicyScanner;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -586,10 +589,10 @@ public class PolicyDBDao {
 			}
 			try {
 				if (connection.getResponseCode() == 200) {
-					logger.info("Received response 200 from pap server on notify");
+					logger.info("PolicyDBDao: NotifyOtherThread received response 200 from pap server on notify");
 					//notified = true;
 				} else {
-					logger.warn("connection response code not 200, received: "+connection.getResponseCode());
+					logger.warn("PolicyDBDao: NotifyOtherThread connection response code not 200, received: "+connection.getResponseCode());
 				}
 			} catch (Exception e) {
 				logger.warn("Caught Exception on: connection.getResponseCode() ", e);
@@ -850,9 +853,10 @@ public class PolicyDBDao {
 				if(currentPolicySet.containsKey(pdpPolicyName)){
 					newPolicySet.add(currentPolicySet.get(pdpPolicyName));
 				} else{
+					logger.info("PolicyDBDao: Adding the new policy to the PDP group after notification: " + pdpPolicyName);
 					InputStream policyStream = new ByteArrayInputStream(policy.getPolicyData().getBytes());
 					group.copyPolicyToFile(pdpPolicyName,policyStream);
-					((StdPDPPolicy)(group.getPolicy(pdpPolicyName))).setName(removeExtensionAndVersionFromPolicyName(policy.getPolicyName()));
+					((StdPDPPolicy)(group.getPolicy(pdpPolicyName))).setName(removeExtensionAndVersionFromPolicyName(pdpPolicyName));
 					try {
 						policyStream.close();
 					} catch (IOException e) {
@@ -862,6 +866,7 @@ public class PolicyDBDao {
 				}
 			}
 		}
+		logger.info("PolicyDBDao: Adding updated policies to group after notification.");
 		if(didUpdate){
 			newPolicySet.addAll(group.getPolicies());
 			group.setPolicies(newPolicySet);
@@ -869,6 +874,67 @@ public class PolicyDBDao {
 		return didUpdate;
 
 	}
+	
+	/*
+	 *  This method is called during all pushPolicy transactions and makes sure the file system
+	 *  group is in sync with the database groupentity 
+	 */
+	private StdPDPGroup synchronizeGroupPoliciesInFileSystem(StdPDPGroup pdpGroup, GroupEntity groupentity) throws PAPException, PolicyDBException{
+
+		HashMap<String,PDPPolicy> currentPolicyMap = new HashMap<>();
+		HashSet<String> newPolicyIdSet = new HashSet<>();
+		HashSet<PDPPolicy> newPolicySet = new HashSet<>();
+		
+		for(PDPPolicy pdpPolicy : pdpGroup.getPolicies()){
+			currentPolicyMap.put(pdpPolicy.getId(), pdpPolicy);
+		}
+		
+		for(PolicyEntity policy : groupentity.getPolicies()){
+			String pdpPolicyId = getPdpPolicyName(policy.getPolicyName(), policy.getScope());
+			//StdPDPPolicy newPolicy = new StdPDPPolicy(pdpPolicyId, true, removeExtensionAndVersionFromPolicyName(pdpPolicyId));
+			newPolicyIdSet.add(pdpPolicyId);
+
+			if(currentPolicyMap.containsKey(pdpPolicyId)){
+				newPolicySet.add(currentPolicyMap.get(pdpPolicyId));
+			} else {
+				
+				//convert PolicyEntity object to PDPPolicy
+				String name = null;
+            	name = pdpPolicyId.replace(".xml", "");
+            	name = name.substring(0, name.lastIndexOf("."));
+				InputStream policyStream = new ByteArrayInputStream(policy.getPolicyData().getBytes());
+				pdpGroup.copyPolicyToFile(pdpPolicyId,name,policyStream);
+				URI location = Paths.get(pdpGroup.getDirectory().toAbsolutePath().toString(), pdpPolicyId).toUri();
+				StdPDPPolicy newPolicy = null;
+				try {
+					newPolicy = new StdPDPPolicy(pdpPolicyId, true, removeExtensionAndVersionFromPolicyName(pdpPolicyId),location);
+					newPolicySet.add(newPolicy);
+				} catch (Exception e) {
+					logger.debug(e);
+					PolicyLogger.error("PolicyDBDao: Exception occurred while creating the StdPDPPolicy newPolicy object " + e.getMessage());
+				}
+				
+			}
+			
+		}
+
+		for(String id : currentPolicyMap.keySet()) {
+			if(!newPolicyIdSet.contains(id)){
+				try {
+					Files.delete(Paths.get(currentPolicyMap.get(id).getLocation()));
+				} catch (Exception e) {
+					logger.debug(e);
+					PolicyLogger.error("PolicyDBDao: Exception occurred while attempting to delete the old version of the policy file from the group. " + e.getMessage());
+				}
+			}
+		}
+		
+		logger.info("PolicyDBDao: Adding new policy set to group to keep filesystem and DB in sync");
+		pdpGroup.setPolicies(newPolicySet);
+		
+		return pdpGroup;
+	}
+	
 	private String removeExtensionAndVersionFromPolicyName(String originalPolicyName) throws PolicyDBException{
         return getPolicyNameAndVersionFromPolicyFileName(originalPolicyName)[0];
     }
@@ -1144,6 +1210,46 @@ public class PolicyDBDao {
 		}
 	}
 
+	
+	public StdPDPGroup auditLocalFileSystem(StdPDPGroup group){
+		
+		logger.info("Starting Local File System group audit");
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		
+		Query groupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
+		groupQuery.setParameter("groupId", group.getId());
+		groupQuery.setParameter("deleted", false);
+		List<?> groupQueryList;
+		try{
+			groupQueryList = groupQuery.getResultList();
+		}catch(Exception e){
+			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check if group exists groupQuery.getResultList()");
+			throw new PersistenceException("Query failed trying to check if group "+group.getId()+" exists");
+		}
+		
+		GroupEntity dbgroup = null;
+		if(groupQueryList!=null){
+			dbgroup = (GroupEntity)groupQueryList.get(0);
+		}
+		
+		
+		em.getTransaction().commit();
+		em.close();
+		
+		StdPDPGroup updatedGroup = null;
+		try {
+			updatedGroup = synchronizeGroupPoliciesInFileSystem(group, dbgroup);
+		} catch (PAPException e) {
+			logger.error(e);
+		} catch (PolicyDBException e) {
+			logger.error(e);
+		}
+		logger.info("Group was updated during file system audit: " + updatedGroup.toString());
+		return updatedGroup;
+		
+	}
+	
 	public void deleteAllGroupTables(){
 		logger.debug("PolicyDBDao.deleteAllGroupTables() called");
 		EntityManager em = emf.createEntityManager();
@@ -2688,8 +2794,8 @@ public class PolicyDBDao {
 		}
 
 		@Override
-		public void addPolicyToGroup(String groupID, String policyID, String username) throws PolicyDBException {
-			logger.debug("addPolicyToGroup(String groupID, String policyID, String username) as addPolicyToGroup("+groupID+", "+policyID+","+username+") called");
+		public StdPDPGroup addPolicyToGroup(String groupID, String policyID, String username) throws PolicyDBException {
+			logger.info("PolicyDBDao: addPolicyToGroup(String groupID, String policyID, String username) as addPolicyToGroup("+groupID+", "+policyID+","+username+") called");
 			if(isNullOrEmpty(groupID, policyID, username)){
 				throw new IllegalArgumentException("groupID, policyID, and username must not be null or empty");
 			}
@@ -2713,6 +2819,7 @@ public class PolicyDBDao {
 					PolicyLogger.error("Somehow, more than one group with the id "+groupID+" were found in the database that are not deleted");
 					throw new PersistenceException("Somehow, more than one group with the id "+groupID+" were found in the database that are not deleted");
 				}
+								
 				//we need to convert the form of the policy id that is used groups into the form that is used 
 				//for the database. (com.Config_mypol.1.xml) to (Config_mypol.xml)
 				String[] policyNameScopeAndVersion = getNameScopeAndVersionFromPdpPolicy(policyID);			
@@ -2735,23 +2842,39 @@ public class PolicyDBDao {
 					PolicyLogger.error("Somehow, more than one policy with the id "+policyNameScopeAndVersion[0]+" were found in the database that are not deleted");
 					throw new PersistenceException("Somehow, more than one group with the id "+policyNameScopeAndVersion[0]+" were found in the database that are not deleted");
 				}
+				logger.info("PolicyDBDao: Getting group and policy from database");
 				GroupEntity group = (GroupEntity)groupQueryList.get(0);
 				PolicyEntity policy = (PolicyEntity)policyQueryList.get(0);
 	            Iterator<PolicyEntity> policyIt = group.getPolicies().iterator();
 	            String policyName = getPolicyNameAndVersionFromPolicyFileName(policy.getPolicyName())[0];
+	            
+	            logger.info("PolicyDBDao: policyName retrieved is " + policyName);
 	            try{
-	            while(policyIt.hasNext()){
-	                PolicyEntity pol = policyIt.next();
-	                if(getPolicyNameAndVersionFromPolicyFileName(pol.getPolicyName())[0].equals(policyName)){
-	                    policyIt.remove();
-	                }
-	            }
+		            while(policyIt.hasNext()){
+	            		PolicyEntity pol = policyIt.next();
+	            		if(getPolicyNameAndVersionFromPolicyFileName(pol.getPolicyName())[0].equals(policyName)){
+	            			policyIt.remove();
+	            		}  
+	            	}
 	            }catch(Exception e){
-			logger.debug(e);
+	            	logger.debug(e);
 	                PolicyLogger.error("Could not delete old versions for policy "+policy.getPolicyName()+", ID: "+policy.getPolicyId());
 	            }
 				group.addPolicyToGroup(policy);
 				em.flush();
+				
+				// After adding policy to the db group we need to make sure the filesytem group is in sync with the db group
+				StdPDPGroup pdpGroup = null;
+				StdPDPGroup updatedGroup = null;
+				try {
+					pdpGroup = (StdPDPGroup) papEngine.getGroup(group.getGroupId());
+					updatedGroup = synchronizeGroupPoliciesInFileSystem(pdpGroup, group);
+				} catch (PAPException e) {
+					logger.debug(e);
+					PolicyLogger.error("PolicyDBDao: Could not synchronize the filesystem group with the database group. " + e.getMessage());
+				}
+
+				return updatedGroup;
 			}
 		}
 
