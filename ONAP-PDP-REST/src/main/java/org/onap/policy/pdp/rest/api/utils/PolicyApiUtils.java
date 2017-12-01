@@ -22,6 +22,7 @@ package org.onap.policy.pdp.rest.api.utils;
 import java.io.StringReader;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
@@ -29,13 +30,17 @@ import javax.json.stream.JsonParsingException;
 
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.utils.PolicyUtils;
+import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 import com.google.common.base.CharMatcher;
 
 public class PolicyApiUtils {
     private static Logger LOGGER = FlexLogger.getLogger(PolicyApiUtils.class
             .getName());
+    private static final String SUCCESS = "success";
 
+		
     public static Boolean validateNONASCIICharactersAndAllowSpaces(
             String jsonString) {
         Boolean isValidForm = false;
@@ -68,5 +73,106 @@ public class PolicyApiUtils {
         JsonObject object = jsonReader.readObject();
         jsonReader.close();
         return object;
+    }
+    
+    public static String validateDictionaryJsonFields(JsonObject json, String dictionary) {
+    	
+    	LOGGER.info("Validating DictionaryJsonField values");
+    	String message;
+    	
+    	if("Action".equals(dictionary.trim())){
+        	if(json.containsKey("attributeName")){
+        		if(json.getString("attributeName")==null || json.getString("attributeName").trim().isEmpty()){
+        			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Attribute Name provided.";
+        			return message;
+        		}
+        		if(!SUCCESS.equals(PolicyUtils.policySpecialCharValidator(json.getString("attributeName").trim()))){
+        			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Attribute Name value.";
+        			return message;
+        		}
+        	}else{
+        		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing attributeName key in the dictionaryJson parameter.";
+        		return message;
+        	}
+        	if(json.containsKey("type")){
+        		if(json.getString("type")==null || json.getString("type").trim().isEmpty()){
+        			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Type provided.";
+        			return message;
+        		}
+        		if(!"REST".equals(json.getString("type").trim())){
+        			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Type value.";
+        			return message;
+        		}
+        	}else{
+        		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing type key in the dictionaryJson parameter.";
+        		return message;
+        	}
+        	if(json.containsKey("method")){
+        		if(json.getString("method")==null || json.getString("method").trim().isEmpty()){
+        			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Method provided.";
+        			return message;
+        		}
+        		if("GET".equals(json.getString("method").trim()) 
+        				|| "PUT".equals(json.getString("method").trim()) 
+        				|| "POST".equals(json.getString("method").trim())){
+        			
+        			message = SUCCESS;
+    				
+        		}else{
+        			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Method value.";
+    				return message;	
+        		}
+        	}else{
+        		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing method key in the dictionaryJson parameter.";
+        		return message;
+        	}
+        	if(json.containsKey("url")){
+        		if(json.getString("url")==null || json.getString("url").trim().isEmpty()){
+        			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No URL provided.";
+        			return message;
+        		}
+        	}else{
+        		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing url key in the dictionaryJson parameter.";
+        		return message;
+        	}
+        	if(json.containsKey("body")){
+        		if(json.getString("body")==null || json.getString("body").trim().isEmpty()){
+        			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Body provided.";
+        			return message;
+        		}
+        	}else{
+        		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing body key in the dictionaryJson parameter.";
+        		return message;
+        	}
+        	if(json.containsKey("headers")){
+        		JsonArray array = json.getJsonArray("headers");
+        		
+        		for (int i = 0;i<array.size(); i++) { 
+    				JsonObject jsonObj = array.getJsonObject(i);
+    				if(jsonObj.containsKey("option")){
+        				if(jsonObj.getString("option")==null || jsonObj.getString("option").trim().isEmpty()){
+        					message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing required Option value";
+        	    			return message;
+        				}
+    				}else{
+    	        		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing option key in the headers list of the dictionaryJson parameter.";
+    	        		return message;
+    				}
+
+    				if(jsonObj.containsKey("number")){
+        				if(jsonObj.getString("number")==null || jsonObj.getString("number").trim().isEmpty()){
+        					message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing required Number value";
+        	    			return message;
+        				}
+    				}else{
+    	        		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing number key in the headers list of the dictionaryJson parameter.";
+    	        		return message;
+    				}
+        		}
+        	}
+
+    	}
+
+    	return SUCCESS;
     }
 }

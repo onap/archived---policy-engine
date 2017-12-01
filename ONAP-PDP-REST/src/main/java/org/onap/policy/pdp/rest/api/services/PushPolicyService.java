@@ -109,46 +109,12 @@ public class PushPolicyService {
         }
         try {
             LOGGER.debug("StdPDPPolicy object contains: " + selectedPolicy.getId() + ", " + selectedPolicy.getName() + ", " + selectedPolicy.getLocation().toString());
-            response = copyPolicy(selectedPolicy, pdpGroup, clientScope, pushPolicyParameters.getRequestID());
+            response = (String) papServices.callPAP(selectedPolicy, new String[]{"groupId=" + pdpGroup, "policyId="+selectedPolicy.getId(), "apiflag=api", "operation=POST"}, pushPolicyParameters.getRequestID(), clientScope);
         } catch (PAPException e) {
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+e.getMessage());
             throw new PolicyException(e);
         }
-        LOGGER.debug("copyPolicy response:  " + response);
-        if(response.contains("successfully")){
-            response = (String) papServices.callPAP(selectedPolicy, new String[]{"groupId=" + pdpGroup, "policyId="+selectedPolicy.getId(), "apiflag=addPolicyToGroup", "operation=PUT"}, pushPolicyParameters.getRequestID(), clientScope);
-        }
         LOGGER.debug("Final API response: " + response);
-        return response;
-    }
-
-    private String copyPolicy(PDPPolicy policy, String group, String policyType, UUID requestID) throws PAPException {
-        String response = null;
-        if (policy == null || group == null) {
-            throw new PAPException("Null input policy="+policy+"  group="+group);
-        }
-        try {
-            StdPAPPolicy location = new StdPAPPolicy(policy.getLocation());
-            response = copyFile(policy.getId(), group, location, policyType, requestID);
-        } catch (Exception e) {
-            String message = "Unable to PUT policy '" + policy.getId() + "', e:" + e;
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);
-            throw new PAPException(message);
-        }
-        return response;
-    }
-    
-    private String copyFile(String policyId, String group, StdPAPPolicy location, String clientScope, UUID requestID) throws PAPException {
-        String response = null;
-        // send the policy file to the PAP Servlet
-        PAPServices papService = new PAPServices();
-        try {
-            response = (String) papService.callPAP(location, new String[] {"groupId=" + group, "policyId="+policyId, "apiflag=api", "operation=post"}, requestID, clientScope);
-        } catch (Exception e) {
-            String message = "Unable to PUT policy '" + policyId + "', e:" + e;
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + message, e);
-            throw new PAPException(message);
-        }
         return response;
     }
 
