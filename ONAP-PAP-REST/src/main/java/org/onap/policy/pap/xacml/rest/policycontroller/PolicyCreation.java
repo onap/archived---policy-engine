@@ -193,6 +193,15 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					return new ResponseEntity<String>(body, status);
 				}		
 			}else{
+				// if policy does not exist and the request is updatePolicy return error
+				if(policyData.isEditPolicy()){
+					body = "policyNotAvailableForEdit";
+					status = HttpStatus.NOT_FOUND;
+					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+					response.addHeader("error", body);
+					response.addHeader("message", policyData.getPolicyName() + " does not exist on the PAP and cannot be updated.");
+					return new ResponseEntity<String>(body, status);
+				}
 				version = 1;
 				if(userId == null){
 					createdBy = "API";

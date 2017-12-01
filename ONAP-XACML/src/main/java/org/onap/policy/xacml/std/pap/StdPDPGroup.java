@@ -668,7 +668,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 	}
 	
 	public boolean removePolicy(PDPPolicy policy) {
-		StdPDPPolicy currentPolicy = (StdPDPPolicy) this.getPolicy(policy.getId());
+		PDPPolicy currentPolicy = this.getPolicy(policy.getId());
 		if (currentPolicy == null) {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Policy " + policy.getId() + " does not exist.");
 			return false;
