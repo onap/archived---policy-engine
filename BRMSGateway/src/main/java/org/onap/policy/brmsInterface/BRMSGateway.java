@@ -33,13 +33,17 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
  * 
  * @version 0.1
  */
-public class BRMSGateway {
-
+class BRMSGateway {
+	
     private static final Logger logger = FlexLogger.getLogger(BRMSGateway.class);
     private static final String CONFIGFILE = "config.properties";
 
     private static PolicyEngine policyEngine = null;
 
+    private BRMSGateway() {
+    	
+    }
+    
     public static void main(String[] args) throws Exception {
         // Initialize Handler.
         logger.info("Initializing BRMS Handler");
