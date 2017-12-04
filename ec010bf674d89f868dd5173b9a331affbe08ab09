@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_d0c3e536",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2017-12-04T19:14:40Z",
+      "side": 1,
+      "message": "This needs to be value rather than key.",
+      "revId": "ec010bf674d89f868dd5173b9a331affbe08ab09",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f0c0612c",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2017-12-04T19:14:40Z",
+      "side": 1,
+      "message": "This needs to be value rather than key.",
+      "revId": "ec010bf674d89f868dd5173b9a331affbe08ab09",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b0e2d9d3",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2017-12-04T19:14:40Z",
+      "side": 1,
+      "message": "This needs to be value rather than key.",
+      "revId": "ec010bf674d89f868dd5173b9a331affbe08ab09",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_70ec51c8",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2017-12-04T19:14:40Z",
+      "side": 1,
+      "message": "This needs to be value rather than key.",
+      "revId": "ec010bf674d89f868dd5173b9a331affbe08ab09",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
