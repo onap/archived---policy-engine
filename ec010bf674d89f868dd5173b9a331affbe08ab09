@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_90b6bddb",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSGateway.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-12-04T19:15:01Z",
+      "side": 1,
+      "message": "Add comments for // Empty or private constructor \nor else will be marked as a Sonar issue.",
+      "revId": "ec010bf674d89f868dd5173b9a331affbe08ab09",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_d0c3e536",
         "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
         "patchSetId": 1
@@ -13,6 +30,23 @@
       "writtenOn": "2017-12-04T19:14:40Z",
       "side": 1,
       "message": "This needs to be value rather than key.",
+      "revId": "ec010bf674d89f868dd5173b9a331affbe08ab09",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_90047d7f",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1075
+      },
+      "writtenOn": "2017-12-04T19:15:01Z",
+      "side": 1,
+      "message": "key and not value. Do a getValue() and use it in place.",
       "revId": "ec010bf674d89f868dd5173b9a331affbe08ab09",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
