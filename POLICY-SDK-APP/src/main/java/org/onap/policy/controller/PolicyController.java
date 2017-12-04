@@ -43,6 +43,7 @@ import org.onap.policy.admin.RESTfulPAPEngine;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.model.PDPGroupContainer;
+import org.onap.policy.model.Roles;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.XacmlAdminAuthorization;
 import org.onap.policy.rest.dao.CommonClassDao;
@@ -53,10 +54,9 @@ import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
-import org.openecomp.policy.model.Roles;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
-import org.openecomp.portalsdk.core.web.support.JsonMessage;
-import org.openecomp.portalsdk.core.web.support.UserUtils;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.web.support.JsonMessage;
+import org.onap.portalsdk.core.web.support.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -203,7 +203,12 @@ public class PolicyController extends RestrictedBaseController {
 			setAutoPushPDPGroup(prop.getProperty("xacml.autopush.pdpGroup"));
 			//Micro Service Properties
 			setMsOnapName(prop.getProperty("xacml.policy.msOnapName"));
+			if(getMsOnapName() == null){
+				setMsOnapName(prop.getProperty("xacml.policy.msEcompName"));
+			}
+			policyLogger.info("getMsOnapName => " + getMsOnapName());
 			setMsPolicyName(prop.getProperty("xacml.policy.msPolicyName"));
+			policyLogger.info("setMsPolicyName => " + getMsPolicyName());
 			//WebApp directories
 			setConfigHome(prop.getProperty("xacml.rest.config.webapps") + "Config");
 			setActionHome(prop.getProperty("xacml.rest.config.webapps") + "Action");

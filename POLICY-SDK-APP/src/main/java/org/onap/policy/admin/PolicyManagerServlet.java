@@ -33,9 +33,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -67,6 +69,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.components.HumanPolicyComponent;
 import org.onap.policy.controller.PolicyController;
 import org.onap.policy.controller.PolicyExportAndImportController;
+import org.onap.policy.model.Roles;
 import org.onap.policy.rest.XACMLRest;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -79,8 +82,7 @@ import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
-import org.openecomp.policy.model.Roles;
-import org.openecomp.portalsdk.core.web.support.UserUtils;
+import org.onap.portalsdk.core.web.support.UserUtils;
 
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -272,6 +274,12 @@ public class PolicyManagerServlet extends HttpServlet {
 			JSONObject jObj = new JSONObject(sb.toString());
 			JSONObject params = jObj.getJSONObject("params");
 			Mode mode = Mode.valueOf(params.getString("mode"));
+			
+			String userId = UserUtils.getUserSession(request).getOrgUserId();
+			LOGGER.info("****************************************Logging UserID while doing actions on Editor tab*******************************************");
+			LOGGER.info("UserId:  " + userId + "Action Mode:  "+ mode.toString() + "Action Params: "+params.toString());
+			LOGGER.info("***********************************************************************************************************************************");
+			
 			switch (mode) {
 			case ADDFOLDER:
 			case ADDSUBSCOPE:
@@ -623,7 +631,7 @@ public class PolicyManagerServlet extends HttpServlet {
 						if(!(scope.getScopeName().contains(File.separator))){
 							JSONObject el = new JSONObject();
 							el.put("name", scope.getScopeName());
-							el.put("date", scope.getCreatedDate());
+							el.put("date", scope.getModifiedDate());
 							el.put("size", "");
 							el.put("type", "dir");
 							el.put("createdBy", scope.getUserCreatedBy().getUserName());
@@ -638,7 +646,7 @@ public class PolicyManagerServlet extends HttpServlet {
 						if(!scopesList.isEmpty()){
 							PolicyEditorScopes scopeById = (PolicyEditorScopes) scopesList.get(0);
 							el.put("name", scopeById.getScopeName());
-							el.put("date", scopeById.getCreatedDate());
+							el.put("date", scopeById.getModifiedDate());
 							el.put("size", "");
 							el.put("type", "dir");
 							el.put("createdBy", scopeById.getUserCreatedBy().getUserName());
@@ -1149,6 +1157,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				entityItem.setPolicyName(policyName);
 				entityItem.setCreatedBy(userId);
 				entityItem.setModifiedBy(userId);
+				entityItem.setModifiedDate(new Date());
 				controller.saveData(entityItem);
 			}
 
@@ -1212,9 +1221,9 @@ public class PolicyManagerServlet extends HttpServlet {
 					if(!policyEntityobjects.isEmpty()){
 						for(Object object : policyEntityobjects){
 							policyEntity = (PolicyEntity) object;
-							String groupEntityquery = "from PolicyGroupEntity where policyid = :policyId";
+							String groupEntityquery = "from PolicyGroupEntity where policyid ='"+policyEntity.getPolicyId()+"'";
 							SimpleBindings pgeParams = new SimpleBindings();
-							pgeParams.put("policyId", policyEntity.getPolicyId());
+							//pgeParams.put("policyIdValue", policyEntity.getPolicyId());
 							List<Object> groupobject = controller.getDataByQuery(groupEntityquery, pgeParams);
 							if(!groupobject.isEmpty()){
 								pdpCheck = true;
@@ -1226,8 +1235,10 @@ public class PolicyManagerServlet extends HttpServlet {
 								//Delete the entity from Policy Entity table
 								controller.deleteData(policyEntity);
 								if(policyNamewithoutExtension.contains("Config_")){
+									Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator + policyEntity.getConfigurationData().getConfigurationName()));
 									controller.deleteData(policyEntity.getConfigurationData());
 								}else if(policyNamewithoutExtension.contains("Action_")){
+									Files.deleteIfExists(Paths.get(PolicyController.getActionHome() + File.separator + policyEntity.getActionBodyEntity().getActionBodyName()));
 									controller.deleteData(policyEntity.getActionBodyEntity());
 								}
 							}
@@ -1279,8 +1290,10 @@ public class PolicyManagerServlet extends HttpServlet {
 							//Delete the entity from Policy Entity table
 							controller.deleteData(policyEntity);
 							if(policyNamewithoutExtension.contains("Config_")){
+								Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator + policyEntity.getConfigurationData().getConfigurationName()));
 								controller.deleteData(policyEntity.getConfigurationData());
 							}else if(policyNamewithoutExtension.contains("Action_")){
+								Files.deleteIfExists(Paths.get(PolicyController.getActionHome() + File.separator + policyEntity.getActionBodyEntity().getActionBodyName()));
 								controller.deleteData(policyEntity.getActionBodyEntity());
 							}
 
@@ -1337,8 +1350,10 @@ public class PolicyManagerServlet extends HttpServlet {
 							controller.deleteData(policyEntity);
 							policyNamewithoutExtension = policyEntity.getPolicyName();
 							if(policyNamewithoutExtension.contains("Config_")){
+								Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator + policyEntity.getConfigurationData().getConfigurationName()));
 								controller.deleteData(policyEntity.getConfigurationData());
 							}else if(policyNamewithoutExtension.contains("Action_")){
+								Files.deleteIfExists(Paths.get(PolicyController.getActionHome() + File.separator + policyEntity.getActionBodyEntity().getActionBodyName()));
 								controller.deleteData(policyEntity.getActionBodyEntity());
 							}
 						}

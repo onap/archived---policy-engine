@@ -45,29 +45,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.dao.SystemLogDbDao;
 import org.onap.policy.model.PDPGroupContainer;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.dao.CommonClassDao;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
-import org.openecomp.portalsdk.core.web.support.JsonMessage;
+import org.onap.policy.xacml.api.XACMLErrorConstants;
+import org.onap.policy.xacml.api.pap.OnapPDP;
+import org.onap.policy.xacml.api.pap.OnapPDPGroup;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.web.support.JsonMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import org.onap.policy.xacml.api.XACMLErrorConstants;
-import org.onap.policy.xacml.api.pap.OnapPDP;
-import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDP;
 import com.att.research.xacml.api.pap.PDPGroup;
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.util.XACMLProperties;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

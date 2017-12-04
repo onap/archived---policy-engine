@@ -52,8 +52,8 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
-import org.openecomp.portalsdk.core.web.support.UserUtils;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.web.support.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -108,7 +108,11 @@ public class PolicyRestController extends RestrictedBaseController{
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		try{
 			JsonNode root = mapper.readTree(request.getReader());
-
+			
+			policyLogger.info("****************************************Logging UserID while Create/Update Policy**************************************************");
+			policyLogger.info("UserId:  " + userId + "Policy Data Object:  "+ root.get(PolicyController.getPolicydata()).get("policy").toString());
+			policyLogger.info("***********************************************************************************************************************************");
+			
 			PolicyRestAdapter policyData = mapper.readValue(root.get(PolicyController.getPolicydata()).get("policy").toString(), PolicyRestAdapter.class);
 
 			if("file".equals(root.get(PolicyController.getPolicydata()).get(modal).get("type").toString().replace("\"", ""))){
@@ -204,9 +208,13 @@ public class PolicyRestController extends RestrictedBaseController{
 		HttpEntity<?> requestEntity = new HttpEntity<>(body, headers);
 		ResponseEntity<?> result = null;
 		HttpClientErrorException exception = null;
-	
+		String uri = requestURI;
+		if(uri.startsWith("/")){
+			uri = uri.substring(uri.indexOf('/')+1);
+		}
+		uri = "onap" + uri.substring(uri.indexOf('/'));
 		try{
-			result = restTemplate.exchange(papUrl + requestURI, method, requestEntity, String.class);
+			result = restTemplate.exchange(papUrl + uri, method, requestEntity, String.class);
 		}catch(Exception e){
 			policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + papUrl, e);
 			exception = new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -378,11 +386,21 @@ public class PolicyRestController extends RestrictedBaseController{
 	
 	@RequestMapping(value={"/saveDictionary/*/*"}, method={RequestMethod.POST})
 	public ModelAndView saveDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String userId = "";
 		String uri = request.getRequestURI().replace("/saveDictionary", "");
+		if(uri.startsWith("/")){
+			uri = uri.substring(uri.indexOf('/')+1);
+		}
+		uri = "/onap" + uri.substring(uri.indexOf('/'));
 		if(uri.contains(importDictionary)){
-			String userId = UserUtils.getUserSession(request).getOrgUserId();
+			userId = UserUtils.getUserSession(request).getOrgUserId();
 			uri = uri+ "?userId=" +userId;
 		}
+		
+		policyLogger.info("****************************************Logging UserID while Saving Dictionary*****************************************************");
+		policyLogger.info("UserId:  " + userId);
+		policyLogger.info("***********************************************************************************************************************************");
+		
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
 		response.getWriter().write(body);
 		return null;
@@ -391,6 +409,16 @@ public class PolicyRestController extends RestrictedBaseController{
 	@RequestMapping(value={"/deleteDictionary/*/*"}, method={RequestMethod.POST})
 	public ModelAndView deletetDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String uri = request.getRequestURI().replace("/deleteDictionary", "");
+		if(uri.startsWith("/")){
+			uri = uri.substring(uri.indexOf('/')+1);
+		}
+		uri = "/onap" + uri.substring(uri.indexOf('/'));
+		
+		String userId = UserUtils.getUserSession(request).getOrgUserId();
+		policyLogger.info("****************************************Logging UserID while Deleting Dictionary*****************************************************");
+		policyLogger.info("UserId:  " + userId);
+		policyLogger.info("*************************************************************************************************************************************");
+		
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
 		response.getWriter().write(body);
 		return null;
@@ -400,6 +428,10 @@ public class PolicyRestController extends RestrictedBaseController{
 	public ModelAndView searchDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Object resultList = null;
 		String uri = request.getRequestURI();
+		if(uri.startsWith("/")){
+			uri = uri.substring(uri.indexOf('/')+1);
+		}
+		uri = "/onap" + uri.substring(uri.indexOf('/'));
 		try{
 			String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
 			if(body.contains("CouldNotConnectException")){
@@ -429,6 +461,10 @@ public class PolicyRestController extends RestrictedBaseController{
 	public ModelAndView searchPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		Object resultList = null;
 		String uri = request.getRequestURI()+"?action=search";
+		if(uri.startsWith("/")){
+			uri = uri.substring(uri.indexOf('/')+1);
+		}
+		uri = "/onap" + uri.substring(uri.indexOf('/'));
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
 
 		JSONObject json = new JSONObject(body);

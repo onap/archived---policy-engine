@@ -29,9 +29,11 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.jpa.PolicyEntity;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -48,8 +50,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
 
 @Controller
 @RequestMapping({ "/" })

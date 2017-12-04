@@ -44,7 +44,7 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.BRMSParamTemplate;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -33,8 +33,8 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.util.PolicyValidation;
 import org.onap.policy.rest.util.PolicyValidationRequestWrapper;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
-import org.openecomp.portalsdk.core.web.support.JsonMessage;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.web.support.JsonMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -63,7 +63,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 			PolicyValidationRequestWrapper wrapper = new PolicyValidationRequestWrapper();
 			StringBuilder responseString;
 			ObjectMapper mapper = new ObjectMapper();
-			
+
 			PolicyRestAdapter policyData = wrapper.populateRequestParameters(request);
 			responseString = validation.validatePolicy(policyData);
 			

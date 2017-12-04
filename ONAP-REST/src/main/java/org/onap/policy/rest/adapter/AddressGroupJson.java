@@ -28,7 +28,7 @@ public class AddressGroupJson {
 
 	protected String name;
 	protected String description;
-	protected List<AddressMembers> members;
+	protected List<AddressMembersJson> members;
 	
 	// name
 	public String getName() {
@@ -66,16 +66,16 @@ public class AddressGroupJson {
 		this.description = value;
 	}
 	
-	public List<AddressMembers> getMembers() 
+	public List<AddressMembersJson> getMembers() 
     {
     	if(members==null)
     	{
-    		members= new ArrayList<AddressMembers>();
+    		members= new ArrayList<AddressMembersJson>();
     	}
         return this.members;
     }
 
-	public void setMembers(List<AddressMembers> members) 
+	public void setMembers(List<AddressMembersJson> members) 
 	{
 	        this.members = members;
 	}

@@ -40,6 +40,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.controller.CreateDcaeMicroServiceController;
 import org.onap.policy.controller.PolicyController;
+import org.onap.policy.model.Roles;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
@@ -48,7 +49,6 @@ import org.onap.policy.rest.jpa.PolicyEditorScopes;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
-import org.openecomp.policy.model.Roles;
 
 public class PolicyManagerServletTest extends Mockito{
 	
