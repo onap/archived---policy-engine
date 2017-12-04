@@ -22,12 +22,11 @@ package org.onap.policy.rest.adapter;
 
 
 
-public class AddressMembers {
+public class AddressMembersJson {
    
     protected String type;
     protected String name;
-    protected String value;
-    
+
     public String getType() {
         return type;
     }
@@ -35,7 +34,7 @@ public class AddressMembers {
     public void setType(String type) {
         this.type = type;
     }
-
+    
     public String getName() {
 		return name;
 	}
@@ -43,13 +42,5 @@ public class AddressMembers {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
     
 }

@@ -29,8 +29,8 @@ import javax.servlet.http.HttpSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.openecomp.portalsdk.core.domain.User;
-import org.openecomp.portalsdk.core.util.SystemProperties;
+import org.onap.portalsdk.core.domain.User;
+import org.onap.portalsdk.core.util.SystemProperties;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 public class PolicyUserInfoControllerTest {

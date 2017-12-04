@@ -37,8 +37,9 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyEditorScopes;
 import org.onap.policy.rest.jpa.PolicyRoles;
 import org.onap.policy.rest.jpa.UserInfo;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
-import org.openecomp.portalsdk.core.web.support.JsonMessage;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.web.support.JsonMessage;
+import org.onap.portalsdk.core.web.support.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -83,6 +84,7 @@ public class PolicyRolesController extends RestrictedBaseController{
 			String scopeName = null;
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			String userId = UserUtils.getUserSession(request).getOrgUserId();
 		    JsonNode root = mapper.readTree(request.getReader());
 		    ReadScopes adapter = mapper.readValue(root.get("editRoleData").toString(), ReadScopes.class);
 		    for(int i = 0; i < adapter.getScope().size(); i++){
@@ -92,6 +94,9 @@ public class PolicyRolesController extends RestrictedBaseController{
 		    		scopeName	= 	scopeName + "," + adapter.getScope().get(i);
 		    	}	
 		    }
+		    LOGGER.info("****************************************Logging UserID for Roles Function********************************************************");
+			LOGGER.info("UserId:  " + userId + "Updating the Scope for following user" + adapter.getLoginId() + "ScopeNames" + adapter.getScope());
+			LOGGER.info("*********************************************************************************************************************************");
 		    PolicyRoles roles = new PolicyRoles();
 		    roles.setId(adapter.getId());
 		    roles.setLoginId(adapter.getLoginId());

@@ -1219,13 +1219,12 @@ public class PolicyDBDao {
 			groupQuery.setParameter("groupId", group.getId());
 			groupQuery.setParameter("deleted", false);
 			List<?> groupQueryList = groupQuery.getResultList();
-			if(groupQueryList!=null){
+			if(groupQueryList!=null && !groupQueryList.isEmpty()){
 				GroupEntity dbgroup = (GroupEntity)groupQueryList.get(0);
 				updatedGroup = synchronizeGroupPoliciesInFileSystem(group, dbgroup);
+				logger.info("Group was updated during file system audit: " + updatedGroup.toString());
 			}
-		} catch (PAPException e) {
-			logger.error(e);
-		} catch (PolicyDBException e) {
+		} catch (PAPException | PolicyDBException e) {
 			logger.error(e);
 		} catch (Exception e) {
 			logger.error(e);
@@ -1236,7 +1235,6 @@ public class PolicyDBDao {
 		em.getTransaction().commit();
 		em.close();
 		
-		logger.info("Group was updated during file system audit: " + updatedGroup.toString());
 		return updatedGroup;
 		
 	}

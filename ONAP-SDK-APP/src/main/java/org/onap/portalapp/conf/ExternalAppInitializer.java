@@ -17,9 +17,9 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.openecomp.portalapp.conf;
+package org.onap.portalapp.conf;
 
-import org.openecomp.portalsdk.core.conf.AppInitializer;
+import org.onap.portalsdk.core.conf.AppInitializer;
 
 public class ExternalAppInitializer extends AppInitializer {
 

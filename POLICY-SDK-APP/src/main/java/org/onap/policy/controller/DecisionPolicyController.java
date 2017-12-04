@@ -36,7 +36,7 @@ import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.adapter.RainyDayParams;
 import org.onap.policy.rest.adapter.YAMLParams;
 import org.onap.policy.rest.jpa.PolicyEntity;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -82,7 +82,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 			Object policyData = policyAdapter.getPolicyData();
 			PolicyType policy = (PolicyType) policyData;
 			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("_") + 1);
+			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf('_') + 1);
 			policyAdapter.setPolicyName(policyNameValue);
 			String description = "";
 			try{

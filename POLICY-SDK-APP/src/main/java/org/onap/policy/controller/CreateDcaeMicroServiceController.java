@@ -73,7 +73,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.controller.PolicyController;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
@@ -83,8 +82,8 @@ import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.util.MSAttributeObject;
 import org.onap.policy.rest.util.MSModelUtils;
 import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
-import org.openecomp.portalsdk.core.web.support.JsonMessage;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.web.support.JsonMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -141,6 +140,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	Set<String> uniqueDataKeys= new HashSet<>();
 	StringBuilder dataListBuffer=new StringBuilder();
 	List<String> dataConstraints= new ArrayList <>();
+	Set<String> allManyTrueKeys= new HashSet <>();
 	
 	public static final String DATATYPE  = "data_types.policy.data.";
 	public static final String PROPERTIES=".properties.";
@@ -991,11 +991,13 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		MicroServiceModels returnModel = getAttributeObject(servicename, version);
 		
 		
-		//get all keys with "MANY-true" defined in their value from subAttribute
+		//Get all keys with "MANY-true" defined in their value from subAttribute 
 		Set<String> allkeys = null;
 		if(returnModel.getSub_attributes() != null && !returnModel.getSub_attributes().isEmpty()){
-			JSONObject json = new JSONObject(returnModel.getSub_attributes());		
-			allkeys = getAllKeys(json);
+			JSONObject json = new JSONObject(returnModel.getSub_attributes());	
+			getAllKeys(json); 
+			allkeys = allManyTrueKeys;
+			allManyTrueKeys = new  HashSet <>();
 			LOGGER.info("allkeys : " + allkeys);
 		}
 		
@@ -1044,7 +1046,12 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		List<Object>  list = new ArrayList<>();
 		PrintWriter out = response.getWriter();
 		String responseString = mapper.writeValueAsString(returnModel);
-		JSONObject j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + ",allManyTrueKeys: " + allManyTrueKeys+ "}");
+		JSONObject j = null;
+		if("".equals(allManyTrueKeys)){
+			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + "}");	
+		}else{
+			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + ",allManyTrueKeys: " + allManyTrueKeys+ "}");	
+		}
 		list.add(j);
 		out.write(list.toString());
 		return null;
@@ -1153,19 +1160,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return object;
 	}
 	
-	//call this method to check if the key is in the many-true key set 
-	private boolean isKeyFound(Set<String> allManyTruekeys, String key){
-		
-	     if(allManyTruekeys != null && key != null){
-	    	Iterator<String> iter = allManyTruekeys.iterator();
-	    	while(iter.hasNext()){
-	    		if(key.equals(iter.next())){
-	    			return true;
-	    		}
-	    	}
-	     }
-		return false;
-	}
 	
 	public static JSONObject convertToArrayElement(JSONObject json, String keyValue) {
 	    return convertToArrayElement(json, new HashSet<>(), keyValue);
@@ -1239,7 +1233,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	        if(obj instanceof String && ((String) obj).contains("MANY-true")){
 	        	LOGGER.info("key : " + key);
 	        	LOGGER.info("obj : " + obj);
-	    	    keys.addAll(json.keySet());
+	        	allManyTrueKeys.add(key);
 	        }
 	        if (obj instanceof JSONObject) keys.addAll(getAllKeys(json.getJSONObject(key)));
 	        if (obj instanceof JSONArray) keys.addAll(getAllKeys(json.getJSONArray(key)));
@@ -1579,23 +1573,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			}
 			
 		}
-		
-		if(!errorMsg.isEmpty()){
-			
-			PrintWriter out = response.getWriter();
-			
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-			
-			ObjectMapper mapper = new ObjectMapper();
-			JSONObject j = new JSONObject();
-			j.put("errorMsg", errorMsg);
-			out.write(j.toString());
-			return;
-		}
-		
-		List<File> fileList = new ArrayList<>();;
+		List<File> fileList = new ArrayList<>();
 		this.directory = "model";
 		if (zip){
 			extractFolder(this.newFile);
