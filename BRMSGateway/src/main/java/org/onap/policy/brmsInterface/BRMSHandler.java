@@ -110,7 +110,7 @@ public class BRMSHandler implements BackUpHandler{
 				}
 			}
 			i++;
-		}while(failureFlag && i< bRMSPush.URLListSize());
+		}while(failureFlag && i< bRMSPush.urlListSize());
 	}
 	
 	/*
@@ -126,7 +126,7 @@ public class BRMSHandler implements BackUpHandler{
 			logger.info("Updated Policies: \n");
 			ArrayList<PolicyConfig> brmsPolicies = addedPolicies(notification);
 			Boolean successFlag = false;
-			for(int i=0; !successFlag && i< bRMSPush.URLListSize(); i++){
+			for(int i=0; !successFlag && i< bRMSPush.urlListSize(); i++){
 				if(i!=0){
 					for(PolicyConfig policyConfig: brmsPolicies){
 						logger.info("Policy Retry with this Name notified: " + policyConfig.getPolicyName());
