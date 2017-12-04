@@ -45,8 +45,8 @@ import org.onap.policy.rest.jpa.PrefixList;
 import org.onap.policy.rest.jpa.SecurityZone;
 import org.onap.policy.rest.jpa.ServiceList;
 import org.onap.policy.rest.jpa.TermList;
-import org.openecomp.portalsdk.core.domain.User;
-import org.openecomp.portalsdk.core.util.SystemProperties;
+import org.onap.portalsdk.core.domain.User;
+import org.onap.portalsdk.core.util.SystemProperties;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 public class PolicyRestControllerTest {

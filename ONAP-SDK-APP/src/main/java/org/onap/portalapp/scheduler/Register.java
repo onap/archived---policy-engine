@@ -17,14 +17,14 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.openecomp.portalapp.scheduler;
+package org.onap.portalapp.scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openecomp.portalsdk.core.logging.logic.EELFLoggerDelegate;
-import org.openecomp.portalsdk.core.scheduler.Registerable;
-import org.openecomp.portalsdk.core.util.SystemProperties;
+import org.onap.portalsdk.core.logging.logic.EELFLoggerDelegate;
+import org.onap.portalsdk.core.scheduler.Registerable;
+import org.onap.portalsdk.core.util.SystemProperties;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -34,10 +34,10 @@ import org.springframework.stereotype.Component;
 @DependsOn({ "logRegistry", "systemProperties" })
 public class Register implements Registerable {
 
-	EELFLoggerDelegate logger = EELFLoggerDelegate.getLogger(Register.class);
+	private static final EELFLoggerDelegate logger = EELFLoggerDelegate.getLogger(Register.class);
 
 	private List<Trigger> scheduleTriggers = new ArrayList<>();
-	Trigger trigger[] = new Trigger[1];
+	Trigger[] trigger = new Trigger[1];
 
 	@Autowired
 	private LogRegistry logRegistry;
@@ -49,15 +49,12 @@ public class Register implements Registerable {
 
 	@Override
 	public void registerTriggers() {
-		// if the property value is not available; the cron will not be added
-		// and can be ignored. its safe to ignore the exceptions
-		try {
-			if (SystemProperties.getProperty(SystemProperties.LOG_CRON) != null)
-				getScheduleTriggers().add(logRegistry.getTrigger());
-		} catch (IllegalStateException ies) {
-			logger.info(EELFLoggerDelegate.debugLogger, ("Log Cron not available") + ies);
+		// if the property value is not available; the cron will not be added.
+		if (SystemProperties.containsProperty(SystemProperties.LOG_CRON)) {
+			logger.debug(EELFLoggerDelegate.debugLogger,
+					"Adding log registry for cron property {}", SystemProperties.getProperty(SystemProperties.LOG_CRON));
+			getScheduleTriggers().add(logRegistry.getTrigger());
 		}
-
 	}
 
 	public List<Trigger> getScheduleTriggers() {

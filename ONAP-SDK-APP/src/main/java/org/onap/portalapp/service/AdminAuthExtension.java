@@ -17,17 +17,17 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.openecomp.portalapp.service;
+package org.onap.portalapp.service;
 
 import java.util.Set;
 
+import org.onap.policy.model.Roles;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.UserInfo;
-import org.openecomp.policy.model.Roles;
-import org.openecomp.portalapp.service.IAdminAuthExtension;
-import org.openecomp.portalsdk.core.domain.Role;
-import org.openecomp.portalsdk.core.domain.User;
-import org.openecomp.portalsdk.core.logging.logic.EELFLoggerDelegate;
+import org.onap.portalapp.service.IAdminAuthExtension;
+import org.onap.portalsdk.core.domain.Role;
+import org.onap.portalsdk.core.domain.User;
+import org.onap.portalsdk.core.logging.logic.EELFLoggerDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
