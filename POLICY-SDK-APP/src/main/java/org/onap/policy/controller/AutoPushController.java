@@ -47,6 +47,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.model.PDPGroupContainer;
 import org.onap.policy.model.PDPPolicyContainer;
+import org.onap.policy.model.Roles;
 import org.onap.policy.rest.adapter.AutoPushTabAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyEntity;
@@ -55,10 +56,9 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
-import org.openecomp.policy.model.Roles;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
-import org.openecomp.portalsdk.core.web.support.JsonMessage;
-import org.openecomp.portalsdk.core.web.support.UserUtils;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.web.support.JsonMessage;
+import org.onap.portalsdk.core.web.support.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -187,6 +187,12 @@ public class AutoPushController extends RestrictedBaseController{
 			this.container = new PDPGroupContainer(controller.getPapEngine());
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
+			
+			String userId = UserUtils.getUserSession(request).getOrgUserId();
+			logger.info("****************************************Logging UserID while Pushing  Policy to PDP Group*****************************************");
+			logger.info("UserId:  " + userId + "Push Policy Data:  "+ root.get("pushTabData").toString());
+			logger.info("***********************************************************************************************************************************");
+			
 			AutoPushTabAdapter adapter = mapper.readValue(root.get("pushTabData").toString(), AutoPushTabAdapter.class);
 			for (Object pdpGroupId :  adapter.getPdpDatas()) {
 				LinkedHashMap<?, ?> selectedPDP = (LinkedHashMap<?, ?>)pdpGroupId;
@@ -344,6 +350,12 @@ public class AutoPushController extends RestrictedBaseController{
 			JsonNode root = mapper.readTree(request.getReader());  
 			StdPDPGroup group = (StdPDPGroup)mapper.readValue(root.get("activePdpGroup").toString(), StdPDPGroup.class);
 			JsonNode removePolicyData = root.get("data");
+			
+			String userId = UserUtils.getUserSession(request).getOrgUserId();
+			logger.info("****************************************Logging UserID while Removing Policy from PDP Group*****************************************");
+			logger.info("UserId:  " + userId + "PDP Group Data:  "+ root.get("activePdpGroup").toString() + "Remove Policy Data: "+root.get("data"));
+			logger.info("***********************************************************************************************************************************");
+			
 			policyContainer = new PDPPolicyContainer(group);
 			if(removePolicyData.size() > 0){
 				for(int i = 0 ; i < removePolicyData.size(); i++){
