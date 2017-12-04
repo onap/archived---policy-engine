@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.openecomp.policy.model;
+package org.onap.policy.model;
 
 
 import java.io.Serializable;

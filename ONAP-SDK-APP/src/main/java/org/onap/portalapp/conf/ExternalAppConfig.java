@@ -17,21 +17,20 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.openecomp.portalapp.conf;
+package org.onap.portalapp.conf;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openecomp.portalapp.login.LoginStrategyImpl;
-import org.openecomp.portalapp.scheduler.RegistryAdapter;
-import org.openecomp.portalsdk.core.auth.LoginStrategy;
-import org.openecomp.portalsdk.core.conf.AppConfig;
-import org.openecomp.portalsdk.core.conf.Configurable;
-import org.openecomp.portalsdk.core.objectcache.AbstractCacheManager;
-import org.openecomp.portalsdk.core.onboarding.exception.PortalAPIException;
-import org.openecomp.portalsdk.core.service.DataAccessService;
-import org.openecomp.portalsdk.core.util.CacheManager;
-import org.openecomp.portalsdk.core.util.SystemProperties;
+import org.onap.portalapp.login.LoginStrategyImpl;
+import org.onap.portalapp.scheduler.RegistryAdapter;
+import org.onap.portalsdk.core.auth.LoginStrategy;
+import org.onap.portalsdk.core.conf.AppConfig;
+import org.onap.portalsdk.core.conf.Configurable;
+import org.onap.portalsdk.core.objectcache.AbstractCacheManager;
+import org.onap.portalsdk.core.service.DataAccessService;
+import org.onap.portalsdk.core.util.CacheManager;
+import org.onap.portalsdk.core.util.SystemProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -48,12 +47,12 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 /**
- * ONAP Portal SDK sample application. ONAP Portal SDK core AppConfig class to
+ * ONAP Portal SDK sample application. Extends core AppConfig class to
  * reuse interceptors, view resolvers and other features defined there.
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "org.onap, org.openecomp")
+@ComponentScan(basePackages = "org.onap")
 @PropertySource(value = { "${container.classpath:}/WEB-INF/conf/app/test.properties" }, ignoreResourceNotFound = true)
 @Profile("src")
 @EnableAsync
@@ -68,24 +67,27 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	}
 
 	/**
-	 * @see org.openecomp.portalsdk.core.conf.AppConfig#viewResolver()
+	 * @see org.onap.portalsdk.core.conf.AppConfig#viewResolver()
 	 */
+	@Override
 	public ViewResolver viewResolver() {
 		return super.viewResolver();
 	}
 
 	/**
-	 * @see org.openecomp.portalsdk.core.conf.AppConfig#addResourceHandlers(ResourceHandlerRegistry)
+	 * @see org.onap.portalsdk.core.conf.AppConfig#addResourceHandlers(ResourceHandlerRegistry)
 	 * 
 	 * @param registry
 	 */
+	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		super.addResourceHandlers(registry);
 	}
 
 	/**
-	 * @see org.openecomp.portalsdk.core.conf.AppConfig#dataAccessService()
+	 * @see org.onap.portalsdk.core.conf.AppConfig#dataAccessService()
 	 */
+	@Override
 	public DataAccessService dataAccessService() {
 		// Echo the JDBC URL to assist developers when starting the app.
 		System.out.println("ExternalAppConfig: " + SystemProperties.DB_CONNECTIONURL + " is "
@@ -99,6 +101,7 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	 * 
 	 * @return List of String, size 1
 	 */
+	@Override
 	public List<String> addTileDefinitions() {
 		List<String> definitions = new ArrayList<>();
 		definitions.add("/WEB-INF/defs/definitions.xml");
@@ -136,15 +139,11 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	 */
 	// @Bean // ANNOTATION COMMENTED OUT
 	// APPLICATIONS REQUIRING QUARTZ SHOULD RESTORE ANNOTATION
-	public SchedulerFactoryBean schedulerFactoryBean() throws PortalAPIException {
+	public SchedulerFactoryBean schedulerFactoryBean() throws Exception {
 		SchedulerFactoryBean scheduler = new SchedulerFactoryBean();
 		scheduler.setTriggers(schedulerRegistryAdapter.getTriggers());
 		scheduler.setConfigLocation(appApplicationContext.getResource("WEB-INF/conf/quartz.properties"));
-		try{
-		    scheduler.setDataSource(dataSource());
-		}catch(Exception e){
-		    throw new PortalAPIException(e);
-		}
+		scheduler.setDataSource(dataSource());
 		return scheduler;
 	}
 
@@ -160,7 +159,6 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 
 	@Bean
 	public LoginStrategy loginStrategy() {
-
 		return new LoginStrategyImpl();
 	}
 }

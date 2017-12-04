@@ -99,7 +99,7 @@
     <encoder>
       <pattern>${applicationLoggerPattern}</pattern>
     </encoder>
-    <filter class="org.openecomp.portalapp.util.CustomLoggingFilter" />
+    <filter class="org.onap.portalapp.util.CustomLoggingFilter" />
   </appender>
   
   <appender name="asyncEELF" class="ch.qos.logback.classic.AsyncAppender">
@@ -324,44 +324,27 @@
   </appender>
  
   
-  <!-- ============================================================================ -->
-  <!--  EELF loggers -->
-  <!-- ============================================================================ -->
-  <logger name="org.onap.epsdk.eelf" level="debug" additivity="false">
+ 
+
+  <logger name="org.onap.eelf" level="info" additivity="false">
     <appender-ref ref="asyncEELF" />
   </logger>
-  
-  <!--
-  <logger name="org.onap.epsdk.eelf.security" level="info" additivity="false">
-    <appender-ref ref="asyncEELFSecurity" />
-  </logger>
-  <logger name="org.onap.epsdk.eelf.perf" level="info" additivity="false">
-    <appender-ref ref="asyncEELFPerformance" />
-  </logger>
-  <logger name="org.onap.epsdk.eelf.server" level="info" additivity="false">
-    <appender-ref ref="asyncEELFServer" />
-  </logger>
-  <logger name="org.onap.epsdk.eelf.policy" level="info" additivity="false">
-    <appender-ref ref="asyncEELFPolicy" />
-  </logger>
-  -->
-  
-  <logger name="org.onap.epsdk.eelf.audit" level="info" additivity="false">
+
+  <logger name="org.onap.eelf.audit" level="info" additivity="false">
     <appender-ref ref="asyncEELFAudit" />
   </logger>
   
-  <logger name="org.onap.epsdk.eelf.metrics" level="info" additivity="false">
-        <appender-ref ref="asyncEELFMetrics" />
+  <logger name="org.onap.eelf.debug" level="debug" additivity="false">
+    <appender-ref ref="asyncEELFDebug" />
   </logger>
-    
-  <logger name="org.onap.epsdk.eelf.error" level="info" additivity="false">
-  	<appender-ref ref="asyncEELFError" />
+	
+  <logger name="org.onap.eelf.error" level="info" additivity="false">
+    <appender-ref ref="asyncEELFError" />
   </logger>
-  
-   <logger name="org.onap.epsdk.eelf.debug" level="debug" additivity="false">
-        <appender-ref ref="asyncEELFDebug" />
-  </logger>
-  
+
+  <logger name="org.onap.eelf.metrics" level="info" additivity="false">
+    <appender-ref ref="asyncEELFMetrics" />
+  </logger>      
     
   <root level="DEBUG">
     <appender-ref ref="asyncEELF" />

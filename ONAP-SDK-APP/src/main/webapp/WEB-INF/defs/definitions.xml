@@ -3,12 +3,16 @@
        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
        
-<!-- This tiles definitions file is defs/definitions.xml. It maps 
-	tokens used by example SDK-app controllers to JSP file paths.
-	Applications that use JSP pages should modify this file. -->
+<!--
+	This tiles definitions file is defs/definitions.xml.
+	It maps	tokens used by app controllers to JSP file paths.
+	Applications that use JSP pages should modify this file. 
+	Configured by ExternalAppConfig#addTileDefinitions().
+-->
 
 <tiles-definitions>
 
 	<definition name="tileKey" template="/path/to/page_template.html"/>
 	<definition name="policy_Editor" template="/app/policyApp/main/policyEditor.html"/>
+		
 </tiles-definitions>

@@ -17,14 +17,14 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.openecomp.portalapp.scheduler;
+package org.onap.portalapp.scheduler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.openecomp.portalsdk.core.scheduler.Registerable;
-import org.openecomp.portalsdk.workflow.services.WorkflowScheduleService;
+import org.onap.portalsdk.core.scheduler.Registerable;
+import org.onap.portalsdk.workflow.services.WorkflowScheduleService;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
@@ -41,20 +41,15 @@ public class RegistryAdapter {
 
 	private SchedulerFactoryBean schedulerBean;
 
-	Trigger trigger[] = new Trigger[1];
+	Trigger [] trigger = new Trigger[1];
 
 	public Trigger[] getTriggers() {
-
 		registry.registerTriggers();
-
 		List<Trigger> allTriggers = new ArrayList<>();
-
 		List<Trigger> coreTriggers = addCoreTriggers();
 		final Trigger[] extTriggerArray = registry.getTriggers();
-
 		allTriggers.addAll(Arrays.asList(extTriggerArray));
 		allTriggers.addAll(coreTriggers);
-
 		return allTriggers.toArray(trigger);
 	}
 
@@ -65,8 +60,8 @@ public class RegistryAdapter {
 		return triggers;
 	}
 
-	public void setSchedulerBean(SchedulerFactoryBean _schedulerBean) {
-		schedulerBean = _schedulerBean;
+	public void setSchedulerBean(final SchedulerFactoryBean schedulerBean) {
+		this.schedulerBean = schedulerBean;
 	}
 
 	public SchedulerFactoryBean getSchedulerBean() {

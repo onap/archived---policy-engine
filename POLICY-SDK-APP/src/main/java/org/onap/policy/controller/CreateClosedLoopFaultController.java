@@ -39,7 +39,7 @@ import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.VarbindDictionary;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -120,7 +120,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 				}			
 				jsonBody.setTriggerSignaturesUsedForUI(uiTriggerSignatures);
 				jsonBody.setTriggerTimeWindowUsedForUI(Integer.parseInt(policyData.getClearTimeOut()));
-				jsonBody.setTrapMaxAgeUsedForUI(Integer.parseInt(policyData.getTrapMaxAge()));
+				jsonBody.setTrapMaxAge(Integer.parseInt(policyData.getTrapMaxAge()));
 			}
 
 			jsonBody.setTriggerSignatures(triggerSignatures);
@@ -150,7 +150,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 				}
 
 				jsonBody.setVerificationSignaturesUsedForUI(uifaultSignatures);
-				jsonBody.setVerfificationTimeWindowUsedForUI(Integer.parseInt(policyData.getVerificationclearTimeOut()));
+				jsonBody.setVerificationTimeWindowUsedForUI(Integer.parseInt(policyData.getVerificationclearTimeOut()));
 			}		
 			jsonBody.setVerificationSignatures(faultSignatures);
 			ObjectWriter om = new ObjectMapper().writer();
@@ -590,14 +590,14 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 				closedLoopBody.setClosedLoopPolicyStatus("InActive");
 			}
 			policyAdapter.setJsonBodyData(closedLoopBody);
-			if(closedLoopBody.getTrapMaxAgeUsedForUI() != null){
-				policyAdapter.setTrapMaxAge(closedLoopBody.getTrapMaxAgeUsedForUI().toString());
+			if(closedLoopBody.getTrapMaxAge() != null){
+				policyAdapter.setTrapMaxAge(closedLoopBody.getTrapMaxAge().toString());
 			}
 			if(closedLoopBody.getTriggerTimeWindowUsedForUI() != null){
 				policyAdapter.setClearTimeOut(closedLoopBody.getTriggerTimeWindowUsedForUI().toString());
 			}
-			if(closedLoopBody.getVerfificationTimeWindowUsedForUI() != null){
-				policyAdapter.setVerificationclearTimeOut(closedLoopBody.getVerfificationTimeWindowUsedForUI().toString());
+			if(closedLoopBody.getVerificationTimeWindowUsedForUI() != null){
+				policyAdapter.setVerificationclearTimeOut(closedLoopBody.getVerificationTimeWindowUsedForUI().toString());
 			}
 
 		} catch (Exception e) {

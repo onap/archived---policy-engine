@@ -19,7 +19,8 @@
  */
 package org.onap.policy.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,13 +31,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.GlobalRoleSettings;
+import org.onap.portalsdk.core.domain.User;
+import org.onap.portalsdk.core.util.SystemProperties;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 public class AdminTabControllerTest {
@@ -54,6 +59,12 @@ public class AdminTabControllerTest {
         
         request = mock(HttpServletRequest.class);       
 		response =  new MockHttpServletResponse();
+		
+		HttpSession mockSession = mock(HttpSession.class);
+		User user = new User();
+		user.setOrgUserId("Test");
+		Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name"))).thenReturn(user);
+		Mockito.when(request.getSession(false)).thenReturn(mockSession);
 		
 		AdminTabController.setCommonClassDao(commonClassDao);
 		
