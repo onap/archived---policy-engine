@@ -168,7 +168,7 @@ public class PolicyVersion implements Serializable {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(Timestamp modifiedDate) {
+	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 

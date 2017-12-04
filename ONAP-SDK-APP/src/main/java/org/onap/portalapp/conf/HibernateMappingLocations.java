@@ -1,6 +1,6 @@
 /*-
  * ================================================================================
- * onap Portal SDK
+ * ONAP Portal SDK
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property
  * ================================================================================
@@ -17,46 +17,28 @@
  * limitations under the License.
  * ================================================================================
  */
-package org.openecomp.portalapp.lm;
+package org.onap.portalapp.conf;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import org.onap.portalsdk.core.conf.HibernateMappingLocatable;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
-import org.openecomp.portalsdk.core.lm.LicenseableClass;
+@Component
+@Profile("src")
+public class HibernateMappingLocations implements HibernateMappingLocatable {
 
-/*
- *  Please note that this class is not being used; its a dummy stub to have a qualifying bean for the interface.
- */
-
-public class LicenseableClassImpl implements LicenseableClass {
-		  
-	public String getApplicationName() {
-		return "";
+	@Override
+	public Resource[] getMappingLocations() {
+		return new Resource[] { new ClassPathResource("../fusion/orm/Fusion.hbm.xml"),
+				new ClassPathResource("../fusion/orm/Workflow.hbm.xml"),
+				new ClassPathResource("../fusion/orm/RNoteBookIntegration.hbm.xml") };
 	}
 
-	public InputStream getPublicKeystoreAsInputStream() throws FileNotFoundException {
-	  return null;
+	@Override
+	public String[] getPackagesToScan() {
+		return new String[] { "org.onap" };
 	}
 
-	public String getAlias() {
-		return "";
-	}
-
-	public String getKeyPasswd() {
-		return "";
-	}
-
-	public String getPublicKeystorePassword() {
-		return "";
-	}
-
-	public String getCipherParamPassword() {
-		return "";
-	}
-
-	@SuppressWarnings("rawtypes")
-	public Class getClassToLicense() {
-		return this.getClass();
-	}
 }
-

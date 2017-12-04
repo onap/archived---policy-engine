@@ -34,8 +34,9 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.GlobalRoleSettings;
-import org.openecomp.portalsdk.core.controller.RestrictedBaseController;
-import org.openecomp.portalsdk.core.web.support.JsonMessage;
+import org.onap.portalsdk.core.controller.RestrictedBaseController;
+import org.onap.portalsdk.core.web.support.JsonMessage;
+import org.onap.portalsdk.core.web.support.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -91,6 +92,10 @@ public class AdminTabController extends RestrictedBaseController{
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			String userId = UserUtils.getUserSession(request).getOrgUserId();
+			LOGGER.info("****************************************Logging UserID for Application Lockdown Function*****************************************");
+			LOGGER.info("UserId:  " + userId);
+			LOGGER.info("*********************************************************************************************************************************");
 			JsonNode root = mapper.readTree(request.getReader());
 			GlobalRoleSettings globalRole = mapper.readValue(root.get("lockdowndata").toString(), GlobalRoleSettings.class);
 			globalRole.setRole("super-admin");
