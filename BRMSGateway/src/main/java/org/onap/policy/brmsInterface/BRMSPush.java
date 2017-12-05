@@ -73,7 +73,6 @@ import org.onap.policy.api.PolicyException;
 import org.onap.policy.brmsInterface.jpa.BRMSGroupInfo;
 import org.onap.policy.brmsInterface.jpa.BRMSPolicyInfo;
 import org.onap.policy.brmsInterface.jpa.DependencyInfo;
-import org.onap.policy.common.im.AdministrativeStateException;
 import org.onap.policy.common.im.IntegrityMonitor;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
@@ -415,18 +414,16 @@ public class BRMSPush {
                         LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while resolving Controller: " + e);
                     }
 
-                } else if ("$dependency$".equals(key)) {
-                    if (value.startsWith("[") && value.endsWith("]")) {
-                        value = value.substring(1, value.length() - 1).trim();
-                        List<String> dependencyStrings = Arrays.asList(value.split("},{"));
-                        for (String dependencyString : dependencyStrings) {
-                            try {
-                                userDependencies
-                                        .add(PolicyUtils.jsonStringToObject(dependencyString, PEDependency.class));
-                            } catch (Exception e) {
-                                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
-                                        + "Error while resolving Dependencies: " + e);
-                            }
+                } else if ("$dependency$".equals(key) && value.startsWith("[") && value.endsWith("]")) {
+                    value = value.substring(1, value.length() - 1).trim();
+                    List<String> dependencyStrings = Arrays.asList(value.split("},{"));
+                    for (String dependencyString : dependencyStrings) {
+                        try {
+                            userDependencies
+                                    .add(PolicyUtils.jsonStringToObject(dependencyString, PEDependency.class));
+                        } catch (Exception e) {
+                            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW
+                                    + "Error while resolving Dependencies: " + e);
                         }
                     }
                 }
