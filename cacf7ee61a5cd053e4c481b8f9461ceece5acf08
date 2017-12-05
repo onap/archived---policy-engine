@@ -65,6 +65,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_9531cf0d",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2017-12-05T21:48:39Z",
+      "side": 1,
+      "message": "Most of this code already existed in PolicyValidationController of the POLICY-SDK-APP project... I just moved the functionality to a common class so both API and UI use the same validation.  I agree, this needs to be refactored eventually but with the time crunch I was unable to break it out into separate methods or classes but I don\u0027t think it will ADD any technical debt.",
+      "parentUuid": "5a93c517_9560ef36",
+      "revId": "cacf7ee61a5cd053e4c481b8f9461ceece5acf08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_f5737313",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
         "patchSetId": 2
@@ -76,6 +94,30 @@
       "writtenOn": "2017-12-04T13:43:17Z",
       "side": 1,
       "message": "Add comment so we avoid sonar flagging. Eg.\n\n// empty constructor",
+      "range": {
+        "startLine": 76,
+        "startChar": 24,
+        "endLine": 76,
+        "endChar": 28
+      },
+      "revId": "cacf7ee61a5cd053e4c481b8f9461ceece5acf08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f5a61353",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2017-12-05T21:48:39Z",
+      "side": 1,
+      "message": "Hi Pam, it looks like I already have a comment for \"empty constructor here",
+      "parentUuid": "5a93c517_f5737313",
       "range": {
         "startLine": 76,
         "startChar": 24,
