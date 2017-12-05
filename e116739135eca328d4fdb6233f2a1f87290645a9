@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_ae26f5b8",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-12-05T20:44:22Z",
+      "side": 1,
+      "message": "Remove",
+      "range": {
+        "startLine": 593,
+        "startChar": 5,
+        "endLine": 593,
+        "endChar": 23
+      },
+      "revId": "e116739135eca328d4fdb6233f2a1f87290645a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ce2b4181",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 894,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-12-05T20:44:22Z",
+      "side": 1,
+      "message": "Remove",
+      "range": {
+        "startLine": 894,
+        "startChar": 3,
+        "endLine": 894,
+        "endChar": 68
+      },
+      "revId": "e116739135eca328d4fdb6233f2a1f87290645a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6e20ed9b",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 902,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-12-05T20:44:22Z",
+      "side": 1,
+      "message": "Do not initialize - remove",
+      "range": {
+        "startLine": 902,
+        "startChar": 4,
+        "endLine": 902,
+        "endChar": 23
+      },
+      "revId": "e116739135eca328d4fdb6233f2a1f87290645a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ee339df4",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1231,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-12-05T20:44:22Z",
+      "side": 1,
+      "message": "Remove",
+      "range": {
+        "startLine": 1231,
+        "startChar": 22,
+        "endLine": 1231,
+        "endChar": 28
+      },
+      "revId": "e116739135eca328d4fdb6233f2a1f87290645a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0e3129ec",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2867,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-12-05T20:44:22Z",
+      "side": 1,
+      "message": "Remove",
+      "range": {
+        "startLine": 2867,
+        "startChar": 24,
+        "endLine": 2867,
+        "endChar": 31
+      },
+      "revId": "e116739135eca328d4fdb6233f2a1f87290645a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ae4d9574",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2868,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2017-12-05T20:44:22Z",
+      "side": 1,
+      "message": "Remove",
+      "range": {
+        "startLine": 2868,
+        "startChar": 28,
+        "endLine": 2868,
+        "endChar": 35
+      },
+      "revId": "e116739135eca328d4fdb6233f2a1f87290645a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
