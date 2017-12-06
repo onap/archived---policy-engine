@@ -453,9 +453,9 @@ public class PolicyEngineServicesTest {
 		pep.setAttributes(attributes);
 		pep.setRiskLevel("5");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		// Checks for BRMS Raw Policy
 		pep.setPolicyConfigType(PolicyConfigType.BRMS_RAW);
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
@@ -469,9 +469,9 @@ public class PolicyEngineServicesTest {
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setRiskLevel("5");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 	}
 	
 	@Test
@@ -505,11 +505,11 @@ public class PolicyEngineServicesTest {
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setConfigName("configName");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setConfigBody("{'test':'test}");
 		pep.setConfigBodyType(PolicyType.JSON);
 		mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		Map<AttributeType, Map<String,String>> attributes = new HashMap<>();
 		Map<String,String> matching = new HashMap<>();
 		matching.put("key", "value");
@@ -517,7 +517,7 @@ public class PolicyEngineServicesTest {
 		pep.setAttributes(attributes);
 		pep.setConfigBody("testBody");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 	}
 	
 	@Test
@@ -546,15 +546,15 @@ public class PolicyEngineServicesTest {
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setConfigBody("{\"onapname\":\"test\"}");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setRiskLevel("test");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setRiskLevel("4");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 	}
 	
 	@Test
@@ -588,15 +588,15 @@ public class PolicyEngineServicesTest {
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setConfigBody("{\"onapname\":\"test\", \"serviceTypePolicyName\":\"value\"}");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setRiskLevel("test");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setRiskLevel("4");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 	}
 	
 	@Test
@@ -626,9 +626,9 @@ public class PolicyEngineServicesTest {
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setConfigBody("{\"configName\":\"test\"}");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 	}
 	
 	@Test
@@ -659,10 +659,10 @@ public class PolicyEngineServicesTest {
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setRiskLevel("4");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setConfigBody("{\"service\":\"test\",\"uuid\":\"test\",\"location\":\"test\",\"configName\":\"test\",\"description\":\"test\",\"priority\":\"test\",\"version\":\"test\"}");
 		mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 	}
 	
 	@Test
@@ -708,18 +708,18 @@ public class PolicyEngineServicesTest {
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setOnapName("xyz");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		attributes.remove(AttributeType.MATCHING);
 		attributes.put(AttributeType.SETTINGS, matching);
 		pep.setAttributes(attributes);
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		attributes.put(AttributeType.MATCHING, matching);
 		pep.setAttributes(attributes);
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 	}
 	
 	@Test

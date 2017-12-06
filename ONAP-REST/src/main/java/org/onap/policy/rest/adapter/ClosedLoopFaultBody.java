@@ -27,7 +27,7 @@ public class ClosedLoopFaultBody {
 	private boolean trinity;
 	private boolean vUSP;
 	private boolean mcr;
-	private boolean gama;
+	private boolean gamma;
 	private boolean vDNS;
 	
 	private String vnfType;
@@ -49,19 +49,19 @@ public class ClosedLoopFaultBody {
 	private ClosedLoopFaultTriggerUISignatures triggerSignaturesUsedForUI;
 	private ClosedLoopFaultTriggerUISignatures verificationSignaturesUsedForUI;
 	private int triggerTimeWindowUsedForUI;
-	private int verfificationTimeWindowUsedForUI;
+	private int verificationTimeWindowUsedForUI;
 	private String pepName;
 	private String pepAction;
 	private String templateVersion;
-	private int trapMaxAgeUsedForUI;
+	private int trapMaxAge;
 	
 	
-	public Integer getTrapMaxAgeUsedForUI() {
-		return trapMaxAgeUsedForUI;
+	public Integer getTrapMaxAge() {
+		return trapMaxAge;
 	}
 
-	public void setTrapMaxAgeUsedForUI(int trapMaxAgeUsedForUI) {
-		this.trapMaxAgeUsedForUI = trapMaxAgeUsedForUI;
+	public void setTrapMaxAge(int trapMaxAge) {
+		this.trapMaxAge = trapMaxAge;
 	}
 
 	public String getTemplateVersion() {
@@ -105,13 +105,13 @@ public class ClosedLoopFaultBody {
 		this.triggerTimeWindowUsedForUI = triggerTimeWindowUsedForUI;
 	}
 
-	public Integer getVerfificationTimeWindowUsedForUI() {
-		return verfificationTimeWindowUsedForUI;
+	public Integer getVerificationTimeWindowUsedForUI() {
+		return verificationTimeWindowUsedForUI;
 	}
 
-	public void setVerfificationTimeWindowUsedForUI(
-			int verfificationTimeWindowUsedForUI) {
-		this.verfificationTimeWindowUsedForUI = verfificationTimeWindowUsedForUI;
+	public void setVerificationTimeWindowUsedForUI(
+			int verificationTimeWindowUsedForUI) {
+		this.verificationTimeWindowUsedForUI = verificationTimeWindowUsedForUI;
 	}
 
 	public String getONAPname(){
@@ -269,12 +269,12 @@ public class ClosedLoopFaultBody {
 		this.mcr = mcr;
 	}
 
-	public boolean isGama() {
-		return gama;
+	public boolean isGamma() {
+		return gamma;
 	}
 
-	public void setGama(boolean gama) {
-		this.gama = gama;
+	public void setGamma(boolean gamma) {
+		this.gamma = gamma;
 	}
 }
 

@@ -58,7 +58,17 @@ public class PolicyApiUtils {
         }
         return isValidForm;
     }
-
+    
+    public static String formatResponse(StringBuilder responseString){
+    	
+    	LOGGER.info("Formatting response message from Policy Validator");
+		String response = null;
+    	response = responseString.toString().replace("<br>", " | ");		
+		response = response.replaceAll("(<b>|<\\/b>|<br>|<i>|<\\/i>|@#)", "");
+				
+    	return response;
+    }
+    
     public static boolean isNumeric(String str) {
         for (char c : str.toCharArray()) {
             if (!Character.isDigit(c))
