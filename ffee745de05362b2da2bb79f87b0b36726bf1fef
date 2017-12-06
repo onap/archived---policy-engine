@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Praveen Augustus <pa834y@att.com>
+Code-Review+1: Tarun Tej <tt3868@att.com>
+Code-Review+2: Jorge Hernandez <jh1730@att.com>
+Submitted-by: Jorge Hernandez <jh1730@att.com>
+Submitted-at: Wed, 06 Dec 2017 13:47:01 +0000
+Reviewed-on: https://gerrit.onap.org/r/25553
+Project: policy/engine
+Branch: refs/heads/master
