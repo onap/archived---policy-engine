@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_5f835dcc",
+        "filename": "ONAP-SDK-APP/README.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 681
+      },
+      "writtenOn": "2017-12-07T19:00:10Z",
+      "side": 1,
+      "message": "Probably should drop this file from the Policy app",
+      "revId": "d4097d1c50c90395402d2f3c2594c1ba64b48a62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_3f23f106",
+        "filename": "ONAP-SDK-APP/src/main/webapp/WEB-INF/conf/system.properties",
+        "patchSetId": 5
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 681
+      },
+      "writtenOn": "2017-12-07T19:00:10Z",
+      "side": 1,
+      "message": "Please generate a new UUID for this app",
+      "revId": "d4097d1c50c90395402d2f3c2594c1ba64b48a62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9f79e5fe",
+        "filename": "ONAP-SDK-APP/src/main/webapp/app/fusion/scripts/DS2-view-models/ds2-samplePages/samplePage.html",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 681
+      },
+      "writtenOn": "2017-12-07T19:00:10Z",
+      "side": 1,
+      "message": "Probably you can drop this file entirely; same goes for many other files under ONAP-SDK-APP/",
+      "revId": "d4097d1c50c90395402d2f3c2594c1ba64b48a62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
