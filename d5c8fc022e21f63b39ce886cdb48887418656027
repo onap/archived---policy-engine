@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_5fca7da2",
+        "filename": "ONAP-SDK-APP/src/main/resources/key.properties",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-12-07T14:58:21Z",
+      "side": 1,
+      "message": "Changed to ONAP framework",
+      "parentUuid": "5a93c517_5486e4ba",
+      "revId": "d5c8fc022e21f63b39ce886cdb48887418656027",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_94a46c58",
         "filename": "ONAP-SDK-APP/src/main/resources/portal.properties",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_9fd00555",
+        "filename": "ONAP-SDK-APP/src/main/resources/portal.properties",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-12-07T14:58:21Z",
+      "side": 1,
+      "message": "Still Portal has all jar names has epsdk-* or ecompFw etc.,",
+      "parentUuid": "5a93c517_94a46c58",
+      "revId": "d5c8fc022e21f63b39ce886cdb48887418656027",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_f49290f5",
         "filename": "ONAP-SDK-APP/src/main/resources/portal.properties",
         "patchSetId": 4
@@ -47,6 +83,24 @@
       "writtenOn": "2017-12-07T05:12:39Z",
       "side": 1,
       "message": "\"ecompportal\" ?",
+      "revId": "d5c8fc022e21f63b39ce886cdb48887418656027",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_bfd5c144",
+        "filename": "ONAP-SDK-APP/src/main/resources/portal.properties",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2017-12-07T14:58:21Z",
+      "side": 1,
+      "message": "Yes, all there properties has ecomp_",
+      "parentUuid": "5a93c517_f49290f5",
       "revId": "d5c8fc022e21f63b39ce886cdb48887418656027",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
