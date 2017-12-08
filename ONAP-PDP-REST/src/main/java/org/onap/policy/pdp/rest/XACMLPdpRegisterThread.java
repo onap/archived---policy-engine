@@ -248,8 +248,8 @@ public class XACMLPdpRegisterThread implements Runnable {
 				}
 			} catch (Exception e) {
 				LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
+				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
-            	loggingContext.transactionEnded();
 				papUrls.failed();
 			} finally {
 				// cleanup the connection
