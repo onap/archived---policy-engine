@@ -93,26 +93,26 @@
 					class="form-control"  class="form-control"
 					ng-disabled="temp.policy.readOnly"
 					ng-model="temp.policy.configName"
-					ng-options="option for option in microServiceCongigNameDictionaryDatas track by option"></select>
+					ng-options="option for option in microServiceCongigNameDictionaryDatas track by option" required="true"></select>
 			</div>
 			<div class="form-group col-sm-3" ng-show="isCheck">
 				<label>Location:<sup><b>*!</b></sup></label><br> <select
 					class="form-control"  class="form-control"
 					ng-disabled="temp.policy.readOnly" ng-model="temp.policy.location"
-					ng-options="option for option in microServiceLocationDictionaryDatas track by option"></select>
+					ng-options="option for option in microServiceLocationDictionaryDatas track by option" required="true"></select>
 			</div>
 			<div class="form-group col-sm-3" ng-show="isCheck">
 				<label>UUID:<sup><b>*!</b></sup></label><br> <select
 					class="form-control"  class="form-control"
 					ng-disabled="temp.policy.readOnly" ng-model="temp.policy.uuid"
-					ng-options="option for option in dcaeUUIDDictionaryDatas track by option"></select>
+					ng-options="option for option in dcaeUUIDDictionaryDatas track by option" required="true"></select>
 			</div>
 			<div class="form-group col-sm-3" ng-show="isCheck">
 				<label>Policy Scope:<sup><b>*</b></sup></label><br> <select
 					class="form-control"  class="form-control"
 					ng-disabled="temp.policy.readOnly"
 					ng-model="temp.policy.policyScope"
-					ng-options="option for option in groupPolicyScopeListDatas track by option"></select>
+					ng-options="option for option in groupPolicyScopeListDatas track by option" required="true"></select>
 			</div>
 		</div>
 		</div>

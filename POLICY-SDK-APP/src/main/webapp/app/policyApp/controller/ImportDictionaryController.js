@@ -45,10 +45,14 @@ app.controller('importDictionaryController' ,  function ($scope, $modalInstance,
 			withCredentials: false,
 			headers: {'Content-Type': undefined},
 			transformRequest: angular.identity
-		}).success(function(){
-			Notification.success("Dictionary Uploaded Successfully");
+		}).success(function(data){
+			if(data.includes("Success")){
+				Notification.success("Dictionary Uploaded Successfully");
+			}else{
+				Notification.error(data);
+			}
 			$scope.importButton = true;
-		}).error(function(){
+		}).error(function(data){
 			 Notification.error("Dictionary Upload Failed");
 		});
 	};

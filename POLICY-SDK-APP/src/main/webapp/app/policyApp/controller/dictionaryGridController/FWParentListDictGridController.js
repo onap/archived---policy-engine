@@ -49,7 +49,6 @@ app.controller('parentDictGridController', function ($scope, PolicyAppService,mo
 			data : 'fwDictListDictionaryDatas',
 			enableFiltering: true,
 			exporterCsvFilename: 'ParentList.csv',
-			enableGridMenu: true,
 			enableSelectAll: true,
 			columnDefs: [{
 				field: 'id', enableFiltering: false, headerCellTemplate: '' +

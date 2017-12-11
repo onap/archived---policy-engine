@@ -49,7 +49,6 @@ app.controller('tagListDictGridController', function ($scope, PolicyAppService, 
         data : 'fwTagDictionaryDatas',
         enableFiltering: true,
         exporterCsvFilename: 'FWTag.csv',
-        enableGridMenu: true,
         enableSelectAll: true,
         columnDefs: [{
             field: 'id', enableFiltering: false, headerCellTemplate: '' +

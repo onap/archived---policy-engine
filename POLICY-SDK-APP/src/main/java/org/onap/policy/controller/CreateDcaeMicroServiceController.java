@@ -708,17 +708,25 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 						//The "." in the value determines if its a string or a user defined type.  
 						if (!value.contains(".")){
 							//This is string
-							constraints.add(keyValues.get(key));
+							if(StringUtils.isNumeric(key) ){  //only integer key for the value of Constrains 
+							    constraints.add(keyValues.get(key));
+							}
 						}else{
-							//This is userdefined string
+							//This is user defined string
 							String trimValue=value.substring(value.lastIndexOf('.')+1);
 							StringBuilder referenceIndividualStringBuilder= new StringBuilder();
 							referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-true");
 							referenceStringBuilder.append(referenceIndividualStringBuilder+",");
 						}
-					}
+					}				
+
 				}
 
+				if(keyValues.get("type").equalsIgnoreCase(LIST)){
+					if(constraints == null || constraints.isEmpty()){
+						referenceStringBuilder.append(keySetString+"=MANY-true"+",");
+					}
+				}
 			}else{
 				//User defined Datatype. 
 				String value=keyValues.get("type");
@@ -1014,7 +1022,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		if(allkeys != null){
 			Iterator<String> iter = allkeys.iterator();
 			while(iter.hasNext()){
-				//convert to array values for MANY-true keys
+				//Convert to array values for MANY-true keys
 				finalJsonObject = convertToArrayElement(jsonObject, iter.next());
 			}
 		}
@@ -1036,7 +1044,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			
 			if(finalJsonObject != null){
 			    LOGGER.info(finalJsonObject.toString());
-			    jsonModel  = finalJsonObject.toString();
+			    jsonModel = finalJsonObject.toString();
 			}
 		}
 		
@@ -1562,10 +1570,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 						else {
 							this.newModel.setVersion(this.newFile.toString().split("-v")[1].replace(".xmi", ""));
 						}
-					}else{
-						errorMsg = "Upload error: The file name should contain '-v', such as xxx-v1802.yml";
-					}
-				
+					}				
 				}catch(Exception e){
 					LOGGER.error("Upload error : ", e);
 					errorMsg = "Upload error:" + e.getMessage();
@@ -1573,6 +1578,21 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			}
 			
 		}
+		
+		if(!errorMsg.isEmpty()){
+			
+			PrintWriter out = response.getWriter();
+			
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application / json");
+			request.setCharacterEncoding("UTF-8");
+			
+			JSONObject j = new JSONObject();
+			j.put("errorMsg", errorMsg);
+			out.write(j.toString());
+			return;
+		}
+		
 		List<File> fileList = new ArrayList<>();
 		this.directory = "model";
 		if (zip){

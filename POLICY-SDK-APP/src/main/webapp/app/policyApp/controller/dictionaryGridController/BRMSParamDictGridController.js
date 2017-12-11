@@ -59,6 +59,7 @@ app.controller('brmsParamDictGridController', function ($scope, PolicyAppService
 			},
 			{ field: 'ruleName', displayName : 'Rule Name', sort: { direction: 'asc', priority: 0 }},
 			{ field: 'description'},
+			{ field: 'rule', visible : false},
 			{field: 'userCreatedBy.userName', displayName : 'Created By'},
 			{field: 'createdDate',type: 'date', cellFilter: 'date:\'yyyy-MM-dd\'' }
 			],

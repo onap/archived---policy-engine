@@ -20,21 +20,22 @@
 var app = appDS2;
 app.controller('exportPolicyController', function ($scope, $window, PolicyAppService, modalService, $modal, Notification){
     $( "#dialog" ).hide();
+    $scope.policydatas = [];
      $scope.linkEnable = true;  
-    $scope.gridOptions = {
-    		data : 'policydatas',
-   		 onRegisterApi: function(gridApi) {
-   	            $scope.gridPolicyApi = gridApi;
-   	        },
-   		enableSorting: true,
-   		enableFiltering: true,
-   		showTreeExpandNoChildren: true,
-   		paginationPageSizes: [10, 20, 50, 100],
-    	paginationPageSize: 20,
-    	columnDefs: [{name: 'policyName', displayName : 'Policy Name', sort: { direction: 'asc', priority: 0 }}, 
-		             {name: 'activeVersion', displayName : 'Version'}, 
-		             {name: 'modifiedDate', displayName : 'Last Modified',type: 'date', cellFilter: 'date:\'yyyy-MM-dd HH:MM:ss a\'' }]
-   };
+     $scope.gridExportOptions = {
+    		 data : 'policydatas',
+    		 onRegisterApi: function(gridApi) {
+    			 $scope.gridPolicyApi = gridApi;
+    		 },
+    		 enableSorting: true,
+    		 enableFiltering: true,
+    		 showTreeExpandNoChildren: true,
+    		 paginationPageSizes: [10, 20, 50, 100],
+    		 paginationPageSize: 20,
+    		 columnDefs: [{name: 'policyName', displayName : 'Policy Name', sort: { direction: 'asc', priority: 0 }}, 
+    			 {name: 'activeVersion', displayName : 'Version'}, 
+    			 {name: 'modifiedDate', displayName : 'Last Modified',type: 'date', cellFilter: 'date:\'yyyy-MM-dd HH:MM:ss a\'' }]
+     };
     
     $scope.files;
     PolicyAppService.getData('get_AutoPushPoliciesContainerData').then(function (data) {

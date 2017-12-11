@@ -43,7 +43,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-click="refresh();" ng-disabled="temp.inprocess">Cancel</button>
-        <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess" autofocus="autofocus">Delete</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="!temp.model.versions" autofocus="autofocus">Delete</button>
       </div>
       </form>
     </div>
@@ -140,7 +140,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-disabled="temp.inprocess">Cancel</button>
-              <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess">Save</button>
+              <button type="submit" class="btn btn-primary" ng-disabled="temp.tempModel.content.highestVersion === temp.tempModel.content.activeVersion">Save</button>
             </div>
         </form>
     </div>
@@ -160,6 +160,7 @@
             <div class="modal-body">
               <label class="radio">Enter new Policy Name to Clone <b>{{temp.model.name}}</b></label>
               <input class="form-control" ng-model="temp.tempModel.name" autofocus="autofocus">
+              <div ng-include data-src="'error-bar'" class="clearfix"></div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-disabled="temp.inprocess">Cancel</button>
@@ -277,7 +278,7 @@
         </div>
         <div class="detail-sources">
           <code class="mr5"><b>Destination:</b>{{temp.tempModel.fullPath()}}</code>
-          <a href=""  ng-click="openNavigator(temp)"><span class="label label-primary">move</span></a>
+          <a href=""  ng-click="openNavigator(temp)"><span class="label label-primary">change</span></a>
         </div>
     </div>
   </div>

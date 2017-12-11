@@ -74,7 +74,9 @@ app.controller('editBRMSParamController' , function ($scope, $modalInstance, mes
                             $scope.brmsParamDictionaryDatas=data.brmsParamDictionaryDatas;});
         					if($scope.brmsParamDictionaryDatas == "Duplicate"){
         						Notification.error("BRMSParan Dictionary exists with Same Name.")
-        					}else{      
+        					}else if($scope.brmsParamDictionaryDatas == "Validation"){
+        						Notification.error("BRMSParan Dictionary failed rule Validation.")
+        					}else {
         						console.log($scope.brmsParamDictionaryDatas);
         						$modalInstance.close({brmsParamDictionaryDatas:$scope.brmsParamDictionaryDatas});
         					}

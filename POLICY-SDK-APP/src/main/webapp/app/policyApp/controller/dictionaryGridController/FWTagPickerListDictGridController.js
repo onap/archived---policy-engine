@@ -49,7 +49,6 @@ app.controller('tagPickerListDictGridController', function ($scope, PolicyAppSer
         data : 'fwTagPickerDictionaryDatas',
         enableFiltering: true,
         exporterCsvFilename: 'SearchCriteria.csv',
-        enableGridMenu: true,
         enableSelectAll: true,
         columnDefs: [{
             field: 'id', enableFiltering: false, headerCellTemplate: '' +

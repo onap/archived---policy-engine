@@ -62,6 +62,7 @@ app.controller('brmsDependencyDictGridController', function ($scope, PolicyAppSe
 			},
 			{ field: 'dependencyName', displayName : 'Dependency Name', sort: { direction: 'asc', priority: 0 }},
 			{ field: 'description'},
+			{ field: 'dependency' , visible : false},
 			{field: 'userCreatedBy.userName', displayName : 'Created By'},
 			{field: 'createdDate',type: 'date', cellFilter: 'date:\'yyyy-MM-dd\'' },
 			{field: 'userModifiedBy.userName', displayName : 'Modified By'},

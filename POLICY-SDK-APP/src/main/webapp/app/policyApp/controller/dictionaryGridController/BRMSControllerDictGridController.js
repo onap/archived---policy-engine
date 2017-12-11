@@ -63,6 +63,7 @@ appDS2.controller('brmsControllerDictGridController', function ($scope, PolicyAp
 			},
 			{ field: 'controllerName', displayName : 'Controller Name', sort: { direction: 'asc', priority: 0 }},
 			{ field: 'description'},
+			{ field: 'controller' , visible : false},
 			{field: 'userCreatedBy.userName', displayName : 'Created By'},
 			{field: 'createdDate',type: 'date', cellFilter: 'date:\'yyyy-MM-dd\'' },
 			{field: 'userModifiedBy.userName', displayName : 'Modified By'},

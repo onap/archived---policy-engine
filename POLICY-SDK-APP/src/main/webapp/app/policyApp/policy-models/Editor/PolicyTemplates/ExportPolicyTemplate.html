@@ -1,16 +1,14 @@
-<div class="modal fadeIn" id="exportPolicy"
+<div class="modal" id="exportPolicy" style="margin-bottom: 20px; width: 100%; height: 100%"
 	ng-controller="exportPolicyController" data-toggle="modal"
 	data-backdrop="static" data-keyboard="false">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h2 style="text-align: left; color: #157bb2">Export Policies</h2>
+				<h2 class="modal-title" style="color: #157bb2">Export Policies</h2>
 			</div>
-			<div class="divider-container">
-				<hr>
-			</div>
+			<div class="well">
 			<div>
-				<div id="grid1" style="width: 100%; height: 500px;" ui-grid="gridOptions" 
+				<div id="grid1" ui-grid="gridExportOptions" 
 					ui-grid-pagination ui-grid-selection ui-grid-resize-columns class="grid"></div>
 			</div>
 			<div class="modal-footer">
@@ -18,6 +16,7 @@
 					ng-click="download();">Download</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal"
 					ng-disabled="temp.inprocess">Close</button>
+			</div>
 			</div>
 		</div>
 	</div>

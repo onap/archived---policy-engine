@@ -48,6 +48,9 @@ app.controller('serviceDictGridController', function ($scope, PolicyAppService, 
 	$scope.serviceDictionaryGrid = {
 			data : 'closedLoopServiceDictionaryDatas',
 			enableFiltering: true,
+			exporterCsvFilename: 'ClosedLoopService.csv',
+			enableGridMenu: true,
+			enableSelectAll: true,
 			columnDefs: [{
 				field: 'id', enableFiltering: false, headerCellTemplate: '' +
 				'<button id=\'New\' ng-click="grid.appScope.createNewServiceDictWindow()" class="btn btn-success">' + 'Create</button>',
@@ -61,7 +64,35 @@ app.controller('serviceDictGridController', function ($scope, PolicyAppService, 
 			{field: 'userModifiedBy.userName', displayName : 'Modified By'},
 			{field: 'createdDate',type: 'date', cellFilter: 'date:\'yyyy-MM-dd\'' },
 			{field: 'modifiedDate',type: 'date', cellFilter: 'date:\'yyyy-MM-dd\'' }
-			]
+			],
+			exporterMenuPdf: false,
+			exporterPdfDefaultStyle: {fontSize: 9},
+			exporterPdfTableStyle: {margin: [30, 30, 30, 30]},
+			exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, italics: true, color: 'red'},
+			exporterPdfHeader: { text: "My Header", style: 'headerStyle' },
+			exporterPdfFooter: function ( currentPage, pageCount ) {
+				return { text: currentPage.toString() + ' of ' + pageCount.toString(), style: 'footerStyle' };
+			},
+			exporterPdfCustomFormatter: function ( docDefinition ) {
+				docDefinition.styles.headerStyle = { fontSize: 22, bold: true };
+				docDefinition.styles.footerStyle = { fontSize: 10, bold: true };
+				return docDefinition;
+			},
+			exporterFieldCallback: function(grid, row, col, input) {
+           	 if( col.name == 'createdDate' || col.name == 'modifiedDate') {
+           		 var date = new Date(input);
+           		 return date.toString("yyyy-MM-dd HH:MM:ss a");
+           	 } else {
+           		 return input;
+           	 }
+            },
+			exporterPdfOrientation: 'portrait',
+			exporterPdfPageSize: 'LETTER',
+			exporterPdfMaxGridWidth: 500,
+			exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
+			onRegisterApi: function(gridApi){
+				$scope.gridApi = gridApi;
+			}
 	};
 
 	$scope.editCLService = null;
