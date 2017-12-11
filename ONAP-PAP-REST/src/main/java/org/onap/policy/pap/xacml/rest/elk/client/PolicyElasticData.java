@@ -113,7 +113,7 @@ public class PolicyElasticData {
 	private YAMLParams yamlparams; 
 
 	public PolicyElasticData(PolicyRestAdapter policyData) {
-		this.scope = policyData.getDomain();
+		this.scope = policyData.getDomainDir();
 		this.policyType = policyData.getPolicyType();
 		this.configPolicyType = policyData.getConfigPolicyType();
 		this.configBodyData = policyData.getConfigBodyData();

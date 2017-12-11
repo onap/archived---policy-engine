@@ -20,6 +20,7 @@
 package org.onap.policy.rest.daoimpl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -42,12 +43,13 @@ import org.onap.policy.rest.jpa.PolicyRoles;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class PolicyValidationDaoImpl implements CommonClassDao{
 
 	private static final Logger LOGGER = FlexLogger.getLogger(PolicyValidationDaoImpl.class);
+	private static final String DB_CONNECTION_CLOSING_ERROR = "Error While Closing Connection/Statement";
+	private static final String DBTABLE_QUERY_ERROR = "Error While Querying Table";
 	private static SessionFactory sessionfactory;
     
     public static SessionFactory getSessionfactory() {
@@ -76,12 +78,12 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			Criteria cr = session.createCriteria(className);
 			data = cr.list();
 		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DBTABLE_QUERY_ERROR + e);	
 		}finally{
 			try{
 				session.close();
 			}catch(Exception e){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR+e);
 			}
 		}
 		return data;
@@ -106,12 +108,12 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			}
 			data = cr.list();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Table"+e);		
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DBTABLE_QUERY_ERROR + e);	
 		}finally{
 			try{
 				session.close();
 			}catch(Exception e1){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR + e1);
 			}
 		}
 		return data;
@@ -125,12 +127,12 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			session.persist(entity);
 			tx.commit();	
 		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Saving  data to Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Saving data to Table"+e);	
 		}finally{
 			try{
 				session.close();
 			}catch(Exception e1){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR + e1);
 			}
 		}
 		
@@ -149,7 +151,7 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			try{
 				session.close();
 			}catch(Exception e1){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR + e1);
 			}
 		}
 		
@@ -169,7 +171,7 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			try{
 				session.close();
 			}catch(Exception e1){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR + e1);
 			}
 		}
 		
@@ -207,7 +209,7 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			try{
 				session.close();
 			}catch(Exception e1){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR + e1);
 			}
 		}
 		return data;
@@ -240,7 +242,7 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			try{
 				session.close();
 			}catch(Exception e1){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR + e1);
 			}
 		}
 		return rolesData;
@@ -249,12 +251,14 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 
 	@Override
 	public List<Object> checkExistingGroupListforUpdate(String arg0, String arg1) {
-		return null;
+		return Collections.emptyList();
 	}
 
 
 	@Override
-	public void deleteAll() {}
+	public void deleteAll() {
+		// Do nothing because this method is not used and is a placeholder to avoid 'Unimplemented Method' error
+	}
 
 	
 	@SuppressWarnings("unchecked")
@@ -276,13 +280,13 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			data = hbquery.list();
 			tx.commit();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table"+e);
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DBTABLE_QUERY_ERROR + e);	
 			throw e;
 		}finally{
 			try{
 				session.close();
 			}catch(HibernateException e1){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR + e1);
 			}
 		}
 		return data;
@@ -309,12 +313,12 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			data = cr.list().get(0);
 			tx.commit();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DBTABLE_QUERY_ERROR + e);	
 		}finally{
 			try{
 				session.close();
 			}catch(Exception e1){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR + e1);
 			}
 		}
 		return data;
@@ -322,11 +326,15 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 
 
 	@Override
-	public void updateClAlarms(String arg0, String arg1) {}
+	public void updateClAlarms(String arg0, String arg1) {
+		// Do nothing because this method is not used and is a placeholder to avoid 'Unimplemented Method' error
+	}
 
 
 	@Override
-	public void updateClYaml(String arg0, String arg1) {}
+	public void updateClYaml(String arg0, String arg1) {
+		// Do nothing because this method is not used and is a placeholder to avoid 'Unimplemented Method' error
+	}
 
 
 	@Override
@@ -343,7 +351,7 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			try{
 				session.close();
 			}catch(Exception e1){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR + e1);
 			}
 		}
 		
@@ -360,12 +368,12 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			cr.setProjection(Projections.property(columnName));
 			data = cr.list();
 		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DBTABLE_QUERY_ERROR + e);	
 		}finally{
 			try{
 				session.close();
 			}catch(Exception e){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR + e);
 			}
 		}
 		return data;
@@ -396,12 +404,12 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 			entityData = cr.add(disjunction).list();
 			tx.commit();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Table" +className +e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DBTABLE_QUERY_ERROR + className + e);	
 		}finally{
 			try{
 				session.close();
 			}catch(Exception e1){
-				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
+				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + DB_CONNECTION_CLOSING_ERROR + e1);
 			}
 		}
 		return entityData;

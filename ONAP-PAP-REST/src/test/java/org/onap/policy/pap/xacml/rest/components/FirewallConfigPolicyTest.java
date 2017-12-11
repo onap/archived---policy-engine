@@ -63,8 +63,7 @@ public class FirewallConfigPolicyTest {
 		policyAdapter.setPolicyType("Config");
 		policyAdapter.setConfigPolicyType("Firewall Config");
 		policyAdapter.setEditPolicy(false);
-		policyAdapter.setDomainDir("src/test/resources/client.properties");
-		policyAdapter.setDomain("Test");
+		policyAdapter.setDomainDir("Test");
 		policyAdapter.setNewFileName("Test.Config_FW_junitTest.1.xml");
 		policyAdapter.setHighestVersion(1);
 		policyAdapter.setVersion(String.valueOf(1));

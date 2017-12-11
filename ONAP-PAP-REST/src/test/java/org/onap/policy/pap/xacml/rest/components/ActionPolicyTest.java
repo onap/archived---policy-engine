@@ -69,8 +69,7 @@ public class ActionPolicyTest {
 		policyAdapter.setRuleCombiningAlgId("urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides");
 		policyAdapter.setPolicyType("Action");
 		policyAdapter.setEditPolicy(false);
-		policyAdapter.setDomainDir("src/test/resources/client.properties");
-		policyAdapter.setDomain("Test");
+		policyAdapter.setDomainDir("Test");
 		policyAdapter.setNewFileName("Test.Action_junitTest.1.xml");
 		policyAdapter.setHighestVersion(1);
 		policyAdapter.setPolicyID("urn:xacml:policy:id:"+UUID.randomUUID());

@@ -342,12 +342,6 @@ public class PolicyRestAdapter {
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
 	}
-	public String getUserGitPath() {
-		return gitPath;
-	}
-	public void setUserGitPath(String gitPath) {
-		this.gitPath = gitPath;
-	}
 	public boolean isValidData() {
 		return isValidData;
 	}
@@ -629,281 +623,274 @@ public class PolicyRestAdapter {
 	public void setNewFileName(String newFileName) {
 		this.newFileName = newFileName;
 	}
-	
-	 public String getDomain() {
-			return domain;
-		}
-		public void setDomain(String domain) {
-			this.domain = domain;
-		}
-		public OnapName getOnapNameField() {
-			return onapNameField;
-		}
-		public void setOnapNameField(OnapName onapNameField) {
-			this.onapNameField = onapNameField;
-		}
-		public Object getJsonBodyData() {
-			return jsonBodyData;
-		}
-		public void setJsonBodyData(Object jsonBodyData) {
-			this.jsonBodyData = jsonBodyData;
-		}
-		public String getDirPath() {
-			return dirPath;
-		}
-		public void setDirPath(String dirPath) {
-			this.dirPath = dirPath;
-		}
-		public String getConfigBodyPath() {
-			return configBodyPath;
-		}
-		public void setConfigBodyPath(String configBodyPath) {
-			this.configBodyPath = configBodyPath;
-		}
-		public ArrayList<Object> getAttributes() {
-			return attributes;
-		}
-		public void setAttributes(ArrayList<Object> attributes) {
-			this.attributes = attributes;
-		}
-		public ArrayList<Object> getSettings() {
-			return settings;
-		}
-		public void setSettings(ArrayList<Object> settings) {
-			this.settings = settings;
-		}
-		public ArrayList<Object> getRuleAlgorithmschoices() {
-			return ruleAlgorithmschoices;
-		}
-		public void setRuleAlgorithmschoices(ArrayList<Object> ruleAlgorithmschoices) {
-			this.ruleAlgorithmschoices = ruleAlgorithmschoices;
-		}
-		public LinkedHashMap<?, ?> getServiceTypePolicyName() {
-			return serviceTypePolicyName;
-		}
-		public void setServiceTypePolicyName(LinkedHashMap<?, ?> serviceTypePolicyName) {
-			this.serviceTypePolicyName = serviceTypePolicyName;
-		}
-		public LinkedHashMap<?, ?> getVerticaMetrics() {
-			return verticaMetrics;
-		}
-		public void setVerticaMetrics(LinkedHashMap<?, ?> verticaMetrics) {
-			this.verticaMetrics = verticaMetrics;
-		}
-		public LinkedHashMap<?, ?> getDescription() {
-			return description;
-		}
-		public void setDescription(LinkedHashMap<?, ?> description) {
-			this.description = description;
-		}
-		public LinkedHashMap<?, ?> getAttributeFields() {
-			return attributeFields;
-		}
-		public void setAttributeFields(LinkedHashMap<?, ?> attributeFields) {
-			this.attributeFields = attributeFields;
-		}
-		public String getClearTimeOut() {
-			return clearTimeOut;
-		}
-		public void setClearTimeOut(String clearTimeOut) {
-			this.clearTimeOut = clearTimeOut;
-		}
-		public String getTrapMaxAge() {
-			return trapMaxAge;
-		}
-		public void setTrapMaxAge(String trapMaxAge) {
-			this.trapMaxAge = trapMaxAge;
-		}
-		public String getVerificationclearTimeOut() {
-			return verificationclearTimeOut;
-		}
-		public void setVerificationclearTimeOut(String verificationclearTimeOut) {
-			this.verificationclearTimeOut = verificationclearTimeOut;
-		}
-		public Map<String, String> getDynamicLayoutMap() {
-			return dynamicLayoutMap;
-		}
-		public void setDynamicLayoutMap(Map<String, String> dynamicLayoutMap) {
-			this.dynamicLayoutMap = dynamicLayoutMap;
-		}
-		public String getFwPolicyType() {
-			return fwPolicyType;
-		}
-		public void setFwPolicyType(String fwPolicyType) {
-			this.fwPolicyType = fwPolicyType;
-		}
-		public ArrayList<Object> getFwattributes() {
-			return fwattributes;
-		}
-		public void setFwattributes(ArrayList<Object> fwattributes) {
-			this.fwattributes = fwattributes;
-		}
-		public String getParentForChild() {
-			return parentForChild;
-		}
-		public void setParentForChild(String parentForChild) {
-			this.parentForChild = parentForChild;
-		}
-		public String getRuleName() {
-			return ruleName;
-		}
-		public void setRuleName(String ruleName) {
-			this.ruleName = ruleName;
-		}
-		public LinkedHashMap<?, ?> getRuleData() {
-			return ruleData;
-		}
-		public void setRuleData(LinkedHashMap<?, ?> ruleData) {
-			this.ruleData = ruleData;
-		}
-		public LinkedHashMap<?, ?> getRuleListData() {
-			return ruleListData;
-		}
-		public void setRuleListData(LinkedHashMap<?, ?> ruleListData) {
-			this.ruleListData = ruleListData;
-		}
-		public String getSecurityZone() {
-			return securityZone;
-		}
-		public void setSecurityZone(String securityZone) {
-			this.securityZone = securityZone;
-		}
-		public String getActionAttributeValue() {
-			return actionAttributeValue;
-		}
-		public void setActionAttributeValue(String actionAttributeValue) {
-			this.actionAttributeValue = actionAttributeValue;
-		}
-		public String getRuleProvider() {
-			return ruleProvider;
-		}
-		public void setRuleProvider(String ruleProvider) {
-			this.ruleProvider = ruleProvider;
-		}
-		public String getMsLocation() {
-			return msLocation;
-		}
-		public void setMsLocation(String msLocation) {
-			this.msLocation = msLocation;
-		}
-		public Map<String,String> getDrlRuleAndUIParams() {
-			return drlRuleAndUIParams;
-		}
-		public void setDrlRuleAndUIParams(Map<String,String> drlRuleAndUIParams) {
-			this.drlRuleAndUIParams = drlRuleAndUIParams;
-		}
-		public String getActionBody() {
-			return actionBody;
-		}
-		public void setActionBody(String actionBody) {
-			this.actionBody = actionBody;
-		}
-		public String getActionDictHeader() {
-			return actionDictHeader;
-		}
-		public void setActionDictHeader(String actionDictHeader) {
-			this.actionDictHeader = actionDictHeader;
-		}
-		public String getActionDictType() {
-			return actionDictType;
-		}
-		public void setActionDictType(String actionDictType) {
-			this.actionDictType = actionDictType;
-		}
-		public String getActionDictUrl() {
-			return actionDictUrl;
-		}
-		public void setActionDictUrl(String actionDictUrl) {
-			this.actionDictUrl = actionDictUrl;
-		}
-		public String getActionDictMethod() {
-			return actionDictMethod;
-		}
-		public void setActionDictMethod(String actionDictMethod) {
-			this.actionDictMethod = actionDictMethod;
-		}
-		public String getClWarning() {
-			return clWarning;
-		}
-		public void setClWarning(String clWarning) {
-			this.clWarning = clWarning;
-		}
-		public String getNewCLName() {
-			return newCLName;
-		}
-		public void setNewCLName(String newCLName) {
-			this.newCLName = newCLName;
-		}
-		public String getExistingCLName() {
-			return existingCLName;
-		}
-		public void setExistingCLName(String existingCLName) {
-			this.existingCLName = existingCLName;
-		}
-		public YAMLParams getYamlparams() {
-			return yamlparams;
-		}
-		public void setYamlparams(YAMLParams yamlparams) {
-			this.yamlparams = yamlparams;
-		}
-		/**
-		 * @return the rainyday
-		 */
-		public RainyDayParams getRainyday() {
-			return rainyday;
-		}
-		/**
-		 * @param rainyday the rainyday to set
-		 */
-		public void setRainyday(RainyDayParams rainyday) {
-			this.rainyday = rainyday;
-		}
-		/**
-		 * @return the errorCodeList
-		 */
-		public List<String> getErrorCodeList() {
-			return errorCodeList;
-		}
-		/**
-		 * @param errorCodeList the errorCodeList to set
-		 */
-		public void setErrorCodeList(List<String> errorCodeList) {
-			this.errorCodeList = errorCodeList;
-		}
-		/**
-		 * @return the treatmentList
-		 */
-		public List<String> getTreatmentList() {
-			return treatmentList;
-		}
-		/**
-		 * @param treatmentList the treatmentList to set
-		 */
-		public void setTreatmentList(List<String> treatmentList) {
-			this.treatmentList = treatmentList;
-		}
-		/**
-		 * @return the rainydayMap
-		 */
-		public Map<String,String> getRainydayMap() {
-			return rainydayMap;
-		}
-		/**
-		 * @param rainydayMap the rainydayMap to set
-		 */
-		public void setRainydayMap(Map<String,String> rainydayMap) {
-			this.rainydayMap = rainydayMap;
-		}
-		/**
-		 * @return the policyJSON
-		 */
-		public Object getPolicyJSON() {
-			return policyJSON;
-		}
-		/**
-		 * @param policyJSON the policyJSON to set
-		 */
-		public void setPolicyJSON(Object policyJSON) {
-			this.policyJSON = policyJSON;
-		}
+	public OnapName getOnapNameField() {
+		return onapNameField;
+	}
+	public void setOnapNameField(OnapName onapNameField) {
+		this.onapNameField = onapNameField;
+	}
+	public Object getJsonBodyData() {
+		return jsonBodyData;
+	}
+	public void setJsonBodyData(Object jsonBodyData) {
+		this.jsonBodyData = jsonBodyData;
+	}
+	public String getDirPath() {
+		return dirPath;
+	}
+	public void setDirPath(String dirPath) {
+		this.dirPath = dirPath;
+	}
+	public String getConfigBodyPath() {
+		return configBodyPath;
+	}
+	public void setConfigBodyPath(String configBodyPath) {
+		this.configBodyPath = configBodyPath;
+	}
+	public ArrayList<Object> getAttributes() {
+		return attributes;
+	}
+	public void setAttributes(ArrayList<Object> attributes) {
+		this.attributes = attributes;
+	}
+	public ArrayList<Object> getSettings() {
+		return settings;
+	}
+	public void setSettings(ArrayList<Object> settings) {
+		this.settings = settings;
+	}
+	public ArrayList<Object> getRuleAlgorithmschoices() {
+		return ruleAlgorithmschoices;
+	}
+	public void setRuleAlgorithmschoices(ArrayList<Object> ruleAlgorithmschoices) {
+		this.ruleAlgorithmschoices = ruleAlgorithmschoices;
+	}
+	public LinkedHashMap<?, ?> getServiceTypePolicyName() {
+		return serviceTypePolicyName;
+	}
+	public void setServiceTypePolicyName(LinkedHashMap<?, ?> serviceTypePolicyName) {
+		this.serviceTypePolicyName = serviceTypePolicyName;
+	}
+	public LinkedHashMap<?, ?> getVerticaMetrics() {
+		return verticaMetrics;
+	}
+	public void setVerticaMetrics(LinkedHashMap<?, ?> verticaMetrics) {
+		this.verticaMetrics = verticaMetrics;
+	}
+	public LinkedHashMap<?, ?> getDescription() {
+		return description;
+	}
+	public void setDescription(LinkedHashMap<?, ?> description) {
+		this.description = description;
+	}
+	public LinkedHashMap<?, ?> getAttributeFields() {
+		return attributeFields;
+	}
+	public void setAttributeFields(LinkedHashMap<?, ?> attributeFields) {
+		this.attributeFields = attributeFields;
+	}
+	public String getClearTimeOut() {
+		return clearTimeOut;
+	}
+	public void setClearTimeOut(String clearTimeOut) {
+		this.clearTimeOut = clearTimeOut;
+	}
+	public String getTrapMaxAge() {
+		return trapMaxAge;
+	}
+	public void setTrapMaxAge(String trapMaxAge) {
+		this.trapMaxAge = trapMaxAge;
+	}
+	public String getVerificationclearTimeOut() {
+		return verificationclearTimeOut;
+	}
+	public void setVerificationclearTimeOut(String verificationclearTimeOut) {
+		this.verificationclearTimeOut = verificationclearTimeOut;
+	}
+	public Map<String, String> getDynamicLayoutMap() {
+		return dynamicLayoutMap;
+	}
+	public void setDynamicLayoutMap(Map<String, String> dynamicLayoutMap) {
+		this.dynamicLayoutMap = dynamicLayoutMap;
+	}
+	public String getFwPolicyType() {
+		return fwPolicyType;
+	}
+	public void setFwPolicyType(String fwPolicyType) {
+		this.fwPolicyType = fwPolicyType;
+	}
+	public ArrayList<Object> getFwattributes() {
+		return fwattributes;
+	}
+	public void setFwattributes(ArrayList<Object> fwattributes) {
+		this.fwattributes = fwattributes;
+	}
+	public String getParentForChild() {
+		return parentForChild;
+	}
+	public void setParentForChild(String parentForChild) {
+		this.parentForChild = parentForChild;
+	}
+	public String getRuleName() {
+		return ruleName;
+	}
+	public void setRuleName(String ruleName) {
+		this.ruleName = ruleName;
+	}
+	public LinkedHashMap<?, ?> getRuleData() {
+		return ruleData;
+	}
+	public void setRuleData(LinkedHashMap<?, ?> ruleData) {
+		this.ruleData = ruleData;
+	}
+	public LinkedHashMap<?, ?> getRuleListData() {
+		return ruleListData;
+	}
+	public void setRuleListData(LinkedHashMap<?, ?> ruleListData) {
+		this.ruleListData = ruleListData;
+	}
+	public String getSecurityZone() {
+		return securityZone;
+	}
+	public void setSecurityZone(String securityZone) {
+		this.securityZone = securityZone;
+	}
+	public String getActionAttributeValue() {
+		return actionAttributeValue;
+	}
+	public void setActionAttributeValue(String actionAttributeValue) {
+		this.actionAttributeValue = actionAttributeValue;
+	}
+	public String getRuleProvider() {
+		return ruleProvider;
+	}
+	public void setRuleProvider(String ruleProvider) {
+		this.ruleProvider = ruleProvider;
+	}
+	public String getMsLocation() {
+		return msLocation;
+	}
+	public void setMsLocation(String msLocation) {
+		this.msLocation = msLocation;
+	}
+	public Map<String,String> getDrlRuleAndUIParams() {
+		return drlRuleAndUIParams;
+	}
+	public void setDrlRuleAndUIParams(Map<String,String> drlRuleAndUIParams) {
+		this.drlRuleAndUIParams = drlRuleAndUIParams;
+	}
+	public String getActionBody() {
+		return actionBody;
+	}
+	public void setActionBody(String actionBody) {
+		this.actionBody = actionBody;
+	}
+	public String getActionDictHeader() {
+		return actionDictHeader;
+	}
+	public void setActionDictHeader(String actionDictHeader) {
+		this.actionDictHeader = actionDictHeader;
+	}
+	public String getActionDictType() {
+		return actionDictType;
+	}
+	public void setActionDictType(String actionDictType) {
+		this.actionDictType = actionDictType;
+	}
+	public String getActionDictUrl() {
+		return actionDictUrl;
+	}
+	public void setActionDictUrl(String actionDictUrl) {
+		this.actionDictUrl = actionDictUrl;
+	}
+	public String getActionDictMethod() {
+		return actionDictMethod;
+	}
+	public void setActionDictMethod(String actionDictMethod) {
+		this.actionDictMethod = actionDictMethod;
+	}
+	public String getClWarning() {
+		return clWarning;
+	}
+	public void setClWarning(String clWarning) {
+		this.clWarning = clWarning;
+	}
+	public String getNewCLName() {
+		return newCLName;
+	}
+	public void setNewCLName(String newCLName) {
+		this.newCLName = newCLName;
+	}
+	public String getExistingCLName() {
+		return existingCLName;
+	}
+	public void setExistingCLName(String existingCLName) {
+		this.existingCLName = existingCLName;
+	}
+	public YAMLParams getYamlparams() {
+		return yamlparams;
+	}
+	public void setYamlparams(YAMLParams yamlparams) {
+		this.yamlparams = yamlparams;
+	}
+	/**
+	 * @return the rainyday
+	 */
+	public RainyDayParams getRainyday() {
+		return rainyday;
+	}
+	/**
+	 * @param rainyday the rainyday to set
+	 */
+	public void setRainyday(RainyDayParams rainyday) {
+		this.rainyday = rainyday;
+	}
+	/**
+	 * @return the errorCodeList
+	 */
+	public List<String> getErrorCodeList() {
+		return errorCodeList;
+	}
+	/**
+	 * @param errorCodeList the errorCodeList to set
+	 */
+	public void setErrorCodeList(List<String> errorCodeList) {
+		this.errorCodeList = errorCodeList;
+	}
+	/**
+	 * @return the treatmentList
+	 */
+	public List<String> getTreatmentList() {
+		return treatmentList;
+	}
+	/**
+	 * @param treatmentList the treatmentList to set
+	 */
+	public void setTreatmentList(List<String> treatmentList) {
+		this.treatmentList = treatmentList;
+	}
+	/**
+	 * @return the rainydayMap
+	 */
+	public Map<String,String> getRainydayMap() {
+		return rainydayMap;
+	}
+	/**
+	 * @param rainydayMap the rainydayMap to set
+	 */
+	public void setRainydayMap(Map<String,String> rainydayMap) {
+		this.rainydayMap = rainydayMap;
+	}
+	/**
+	 * @return the policyJSON
+	 */
+	public Object getPolicyJSON() {
+		return policyJSON;
+	}
+	/**
+	 * @param policyJSON the policyJSON to set
+	 */
+	public void setPolicyJSON(Object policyJSON) {
+		this.policyJSON = policyJSON;
+	}
 }

@@ -62,8 +62,7 @@ public class PolicyApiUtils {
     public static String formatResponse(StringBuilder responseString){
     	
     	LOGGER.info("Formatting response message from Policy Validator");
-		String response = null;
-    	response = responseString.toString().replace("<br>", " | ");		
+    	String response = responseString.toString().replace("<br>", " | ");		
 		response = response.replaceAll("(<b>|<\\/b>|<br>|<i>|<\\/i>|@#)", "");
 				
     	return response;
@@ -126,8 +125,8 @@ public class PolicyApiUtils {
         				|| "PUT".equals(json.getString("method").trim()) 
         				|| "POST".equals(json.getString("method").trim())){
         			
-        			message = SUCCESS;
-    				
+        			//Successful Validation
+        			
         		}else{
         			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Method value.";
     				return message;	
