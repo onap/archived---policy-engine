@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_6dac6aee",
+        "filename": "packages/base/src/files/install/elk/config/elasticsearch.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1759
+      },
+      "writtenOn": "2017-12-12T20:33:58Z",
+      "side": 1,
+      "message": "I\u0027ve tested on ecomp machines, but still need to test on an onap install. I included ipv6 because sometimes \"localhost\" resolves to ::1 based on the /etc/hosts file. I can restrict to ipv4 if you like.",
+      "parentUuid": "5a93c517_4a8954c9",
+      "revId": "57cf75de110fbf03d84f51c2ed9c2a5353a2a39e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_8a9f5c03",
         "filename": "packages/base/src/files/install/elk/config/elasticsearch.yml",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2017-12-12T17:58:11Z",
       "side": 1,
       "message": "network.publish_host seems to be related to \"cluster\" activities, but I understand that we don\u0027t have cluster configuration of elastic search currently.   What is therefore the purpose of this change below?",
+      "revId": "57cf75de110fbf03d84f51c2ed9c2a5353a2a39e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_adaa72d2",
+        "filename": "packages/base/src/files/install/elk/config/elasticsearch.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1759
+      },
+      "writtenOn": "2017-12-12T20:33:58Z",
+      "side": 1,
+      "message": "Yes this is to publish for the cluster communication. I was not sure either, but the previous configuration had this behavior. I was just preserving it. If we don\u0027t use it, then I can remove.",
+      "parentUuid": "5a93c517_8a9f5c03",
       "revId": "57cf75de110fbf03d84f51c2ed9c2a5353a2a39e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
