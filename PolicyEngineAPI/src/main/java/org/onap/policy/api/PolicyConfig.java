@@ -111,6 +111,13 @@ public interface PolicyConfig {
 	 * @return <code>Map</code> of <code>String, String</code> which consists of the Response Attributes of the Policy retrieved. 
 	 */
 	public Map<String,String> getResponseAttributes();
+	
+	/**
+	 * Gets the {@link PolicyConfigType} of the policy that has been retrieved. 
+	 * 
+	 * @return the <code>PolicyConfigType</code> of the policy that has been retrieved. 
+	 */
+	public PolicyConfigType getPolicyType();
  	
 	/**
 	 * Returns the <code>String</code> version of the <code>PolicyConfig</code> object.

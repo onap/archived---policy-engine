@@ -22,12 +22,14 @@ package org.onap.policy.models;
 import java.util.Map;
 
 import org.onap.policy.api.PolicyConfigStatus;
+import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyType;
 
 public class APIPolicyConfigResponse implements APIConfigResponse {
     private String policyConfigMessage;
     private PolicyConfigStatus policyConfigStatus;
     private PolicyType type;
+    private PolicyConfigType policyType;
     private String config;
     private String policyName;
     private String policyVersion;
@@ -87,5 +89,11 @@ public class APIPolicyConfigResponse implements APIConfigResponse {
     }
     public Map<String,String> getResponseAttributes(){
         return responseAttributes;
+    }
+    public PolicyConfigType getPolicyType() {
+        return policyType;
+    }
+    public void setPolicyType(PolicyConfigType policyType) {
+        this.policyType = policyType;
     }
 }

@@ -69,7 +69,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
@@ -93,7 +92,6 @@ import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
-import org.onap.policy.xacml.util.XACMLPolicyScanner;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;

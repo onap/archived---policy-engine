@@ -625,6 +625,7 @@ public class StdPolicyEngine {
                 policyConfig.setPolicyName(policyConfigResponse.getPolicyName());
                 policyConfig.setPolicyType(policyConfigResponse.getType());
                 policyConfig.setPolicyVersion(policyConfigResponse.getPolicyVersion());
+                policyConfig.setPolicyType(policyConfigResponse.getPolicyType());
                 policyConfig.setResponseAttributes(policyConfigResponse.getResponseAttributes());
                 setMatches(policyConfig.getMatchingConditions());
                 if (policyConfigResponse.getType() != null) {
