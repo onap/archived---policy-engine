@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_4a8954c9",
+        "filename": "packages/base/src/files/install/elk/config/elasticsearch.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-12-12T17:58:11Z",
+      "side": 1,
+      "message": "have this been tested in ONAP, I don\u0027t recall having an IPv6 interface for localhost in the container.   Can you verify if this will work?",
+      "revId": "57cf75de110fbf03d84f51c2ed9c2a5353a2a39e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8a9f5c03",
+        "filename": "packages/base/src/files/install/elk/config/elasticsearch.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2017-12-12T17:58:11Z",
+      "side": 1,
+      "message": "network.publish_host seems to be related to \"cluster\" activities, but I understand that we don\u0027t have cluster configuration of elastic search currently.   What is therefore the purpose of this change below?",
+      "revId": "57cf75de110fbf03d84f51c2ed9c2a5353a2a39e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
