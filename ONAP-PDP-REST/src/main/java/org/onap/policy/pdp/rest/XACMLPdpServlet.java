@@ -229,8 +229,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		baseLoggingContext = new ONAPLoggingContext();
 		// fixed data that will be the same in all logging output goes here
 		try {
-			String ipaddress = InetAddress.getLocalHost().getHostAddress();
-			baseLoggingContext.setServer(ipaddress);
+			String hostname = InetAddress.getLocalHost().getCanonicalHostName();
+			baseLoggingContext.setServer(hostname);
 		} catch (UnknownHostException e) {
 			logger.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get hostname for logging"+e);
 		}

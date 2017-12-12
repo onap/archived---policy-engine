@@ -373,6 +373,7 @@ public class DeleteHandler {
 			}			
 		}
 		if (responseString.equals("success")) {
+			loggingContext.transactionEnded();
 			PolicyLogger.info("Policy successfully deleted!");
 			PolicyLogger.audit("Policy successfully deleted!");
 			response.setStatus(HttpServletResponse.SC_OK);
@@ -449,8 +450,8 @@ public class DeleteHandler {
 		}
 		if (response==null){
 			response = "success";
+			loggingContext.transactionEnded();
 			PolicyLogger.audit("Policy successfully deleted!");
-			PolicyLogger.audit("Transaction Ended Successfully");
 		}
 		loggingContext.transactionEnded();
 		PolicyLogger.audit("Transaction Ended");
