@@ -177,13 +177,10 @@ public class ElasticSearchPolicyUpdate {
 						while(configResult.next()){
 							String configBody = configResult.getString("configbody");
 							String configType = configResult.getString("configtype");
-							if("JSON".equalsIgnoreCase(configType)){
-								policyDataString.append("\"jsonBodyData\":"+configBody+",\"configType\":\""+configType+"\",");
-							}else if("OTHER".equalsIgnoreCase(configType)){
-								if(configBody!=null){
-									configBody= configBody.replaceAll("\"", "");
-									policyDataString.append("\"jsonBodyData\":\""+configBody+"\",\"configType\":\""+configType+"\",");
-								}
+							if(configBody!=null){
+								configBody = configBody.replace("null", "\"\"");
+								configBody= configBody.replace("\"", "\\\"");
+								policyDataString.append("\"jsonBodyData\":\""+configBody+"\",\"configType\":\""+configType+"\",");
 							}
 						}
 						configResult.close();
@@ -197,7 +194,9 @@ public class ElasticSearchPolicyUpdate {
 						ResultSet actionResult = pstmt.executeQuery();
 						while(actionResult.next()){
 							String actionBody = actionResult.getString("actionbody");
-							policyDataString.append("\"jsonBodyData\":"+actionBody+",");
+							actionBody = actionBody.replace("null", "\"\"");
+							actionBody = actionBody.replace("\"", "\\\"");
+							policyDataString.append("\"jsonBodyData\":\""+actionBody+"\",");
 						}
 						actionResult.close();
 					}	
@@ -205,13 +204,11 @@ public class ElasticSearchPolicyUpdate {
 				
 				String _id = policyWithScopeName;
 				
-				policyDataString.append(constructPolicyData(policyData, policyDataString));
-				
-				String dataString = policyDataString.toString();
+				String dataString = constructPolicyData(policyData, policyDataString);
 				dataString = dataString.substring(0, dataString.length()-1);
 				dataString = dataString.trim().replace(System.getProperty("line.separator"), "") + "}";
 				dataString = dataString.replace("null", "\"\"");
-				dataString = dataString.replaceAll(" ", "").replaceAll("\n", "");
+				dataString = dataString.replaceAll("\n", "");
 				
 				try{
 					Gson gson = new Gson();
