@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiModel;
 import java.util.Map;
 
 import org.onap.policy.api.PolicyConfigStatus;
+import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyType;
 import org.onap.policy.models.APIConfigResponse;
 
@@ -34,6 +35,7 @@ public class PolicyConfig implements APIConfigResponse{
     private PolicyType type;
     private String config;
     private String policyName;
+    private PolicyConfigType policyType;
     private String policyVersion;
     private Map<String, String> matchingConditions;
     private Map<String, String> responseAttributes;
@@ -91,5 +93,11 @@ public class PolicyConfig implements APIConfigResponse{
     }
     public Map<String,String> getResponseAttributes(){
         return responseAttributes;
+    }
+    public PolicyConfigType getPolicyType() {
+        return policyType;
+    }
+    public void setPolicyType(PolicyConfigType policyType) {
+        this.policyType = policyType;
     }
 }

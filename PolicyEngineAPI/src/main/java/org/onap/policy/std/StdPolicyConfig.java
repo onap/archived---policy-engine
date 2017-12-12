@@ -28,6 +28,7 @@ import javax.json.JsonObject;
 
 import org.onap.policy.api.PolicyConfig;
 import org.onap.policy.api.PolicyConfigStatus;
+import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyType;
 import org.w3c.dom.Document;
 
@@ -48,6 +49,7 @@ public class StdPolicyConfig implements PolicyConfig{
 	private String configStatus;
 	private String policyName;
 	private String policyVersion;
+	private PolicyConfigType type;
 	private Map<String,String> matchingConditions; 
 	private Map<String,String> responseAttributes;
 	
@@ -89,7 +91,7 @@ public class StdPolicyConfig implements PolicyConfig{
 	@Override
 	public String getPolicyName() {
 		if(policyName!=null && policyName.contains(".xml")){
-			return (policyName.substring(0, policyName.substring(0, policyName.lastIndexOf(".")).lastIndexOf(".")));
+			return (policyName.substring(0, policyName.substring(0, policyName.lastIndexOf('.')).lastIndexOf('.')));
 		}
 		return policyName;
 	}
@@ -158,7 +160,16 @@ public class StdPolicyConfig implements PolicyConfig{
 		this.responseAttributes = responseAttributes;
 	}
 	
-	@Override
+	
+	public void setPolicyType(PolicyConfigType policyType) {
+        this.type = policyType;
+    }
+	
+	public PolicyConfigType getPolicyType(){
+	    return this.type;
+	}
+
+    @Override
 	public String toString() {
 		return "PolicyConfig [ policyConfigStatus=" + policyConfigStatus + ", policyConfigMessage=" + configStatus + ", policyName=" + policyName + 
 				""

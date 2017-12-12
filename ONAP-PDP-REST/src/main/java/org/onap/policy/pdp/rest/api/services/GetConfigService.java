@@ -36,6 +36,7 @@ import javax.json.JsonObjectBuilder;
 import org.onap.policy.api.ConfigRequestParameters;
 import org.onap.policy.api.PolicyConfigException;
 import org.onap.policy.api.PolicyConfigStatus;
+import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.api.models.PDPResponse;
@@ -143,10 +144,46 @@ public class GetConfigService {
                 policyConfig.setProperty(stdStatus.getProperty());
                 policyConfig.setResponseAttributes(stdStatus.getResponseAttributes());
                 policyConfig.setType(stdStatus.getType());
+                policyConfig.setPolicyType(getPolicyType(stdStatus.getPolicyName()));
                 result.add(policyConfig);
             }
         }
         return result;
+    }
+    
+    // Returns PolicyConfigType based on policyName. 
+    private PolicyConfigType getPolicyType(String policyName) {
+        if(policyName != null) {
+            String name = policyName;
+            if(name.endsWith(".xml")){
+                name = name.substring(0, name.substring(0, name.lastIndexOf('.')).lastIndexOf('.'));
+            }
+            name = name.substring(name.lastIndexOf('.')+1);
+            switch (name.substring(0, name.lastIndexOf('_'))){
+                case "Config":
+                    return PolicyConfigType.Base;
+                case "Config_FW":
+                    return PolicyConfigType.Firewall;
+                case "Config_Fault":
+                    return PolicyConfigType.ClosedLoop_Fault;
+                case "Config_PM":
+                    return PolicyConfigType.ClosedLoop_PM;
+                case "Config_MS":
+                    return PolicyConfigType.MicroService;
+                case "Config_BRMS_Raw":
+                    return PolicyConfigType.BRMS_RAW;
+                case "Config_BRMS_Param":
+                    return PolicyConfigType.BRMS_PARAM;
+                default:
+                    return extendedServices(name);
+            }
+        }
+        return null;
+    }
+
+    public PolicyConfigType extendedServices(String policyName) {
+        // For extended services policyName will be required. 
+        return null;
     }
 
     // Filter logic required for results comparing with requests. 
