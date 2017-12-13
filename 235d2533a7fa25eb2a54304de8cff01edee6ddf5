@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_e87e28e4",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/GetConfigService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1949
+      },
+      "writtenOn": "2017-12-13T18:00:55Z",
+      "side": 1,
+      "message": "retrieving the policy-type by parsing the policyName is an error prone practice because there are no restrictions on the intrinsic policy-name values that allows having the \"_\" and \".\" inside any part of the name.\n\nFor instance, if I have policy with policyName \u003d DCAE_alex.Config_alex_was_here.5.xml\nthis parsing will return \"Config_alex_was\" - instead of \"Config\"\n\nAnother example is DCAE_alex.Config_alex_was.here_today.5.xml that will return \"here\" - totally not related piece of policyName...\n\nSorry :-(",
+      "range": {
+        "startLine": 154,
+        "startChar": 0,
+        "endLine": 182,
+        "endChar": 5
+      },
+      "revId": "235d2533a7fa25eb2a54304de8cff01edee6ddf5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_082034f6",
         "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyConfig.java",
         "patchSetId": 1
