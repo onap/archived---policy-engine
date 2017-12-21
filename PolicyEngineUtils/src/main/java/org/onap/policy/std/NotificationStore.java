@@ -40,6 +40,11 @@ public class NotificationStore {
 
     private static StdPDPNotification notificationRecord = new StdPDPNotification();
 
+    public NotificationStore () {
+    	// Sonar prefers that we have an empty public constructor
+    	// as opposed to an implicit public constructor.
+    }
+    
     public static StdPDPNotification getDeltaNotification(StdPDPNotification newNotification) {
         StdPDPNotification notificationDelta = new StdPDPNotification();
         ArrayList<StdRemovedPolicy> removedDelta = new ArrayList<>();

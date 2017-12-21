@@ -134,8 +134,8 @@ public class BackUpMonitor {
      */
     public static synchronized BackUpMonitor getInstance(String resourceNodeName, String resourceName,
             Properties properties, BackUpHandler handler) throws BackUpMonitorException {
-        if (resourceNodeName == null || resourceNodeName.trim().equals("") || resourceName == null
-                || resourceName.trim().equals("") || properties == null || handler == null) {
+        if (resourceNodeName == null || "".equals(resourceNodeName.trim()) || resourceName == null
+                || "".equals(resourceName.trim()) || properties == null || handler == null) {
             LOGGER.error("Error while getting Instance. Please check resourceName and/or properties file");
             return null;
         } else if ((resourceNodeName.equals(ResourceNode.ASTRA.toString())
@@ -149,22 +149,22 @@ public class BackUpMonitor {
     // This is to validate given Properties with required values.
     private static Boolean validate(Properties properties) {
         if (properties.getProperty("javax.persistence.jdbc.driver") == null
-                || properties.getProperty("javax.persistence.jdbc.driver").trim().equals("")) {
+                || "".equals(properties.getProperty("javax.persistence.jdbc.driver").trim())) {
             LOGGER.error("javax.persistence.jdbc.driver property is empty");
             return false;
         }
         if (properties.getProperty("javax.persistence.jdbc.url") == null
-                || properties.getProperty("javax.persistence.jdbc.url").trim().equals("")) {
+                || "".equals(properties.getProperty("javax.persistence.jdbc.url").trim())) {
             LOGGER.error("javax.persistence.jdbc.url property is empty");
             return false;
         }
         if (properties.getProperty("javax.persistence.jdbc.user") == null
-                || properties.getProperty("javax.persistence.jdbc.user").trim().equals("")) {
+                || "".equals(properties.getProperty("javax.persistence.jdbc.user").trim())) {
             LOGGER.error("javax.persistence.jdbc.user property is empty");
             return false;
         }
         if (properties.getProperty(PING_INTERVAL) == null
-                || properties.getProperty(PING_INTERVAL).trim().equals("")) {
+                || "".equals(properties.getProperty(PING_INTERVAL).trim())) {
             LOGGER.info("ping_interval property not specified. Taking default value");
         } else {
             try {
@@ -351,7 +351,7 @@ public class BackUpMonitor {
                             BackUpMonitorEntity masterEntity = masterEntities.get(0);
                             if (!masterEntity.getResourceName().equals(selfEntity.getResourceName())) {
                                 Date currentTime = new Date();
-                                long timeDiff = 0;
+                                long timeDiff;
                                 timeDiff = currentTime.getTime() - masterEntity.getTimeStamp().getTime();
                                 if (timeDiff > (pingInterval + 1500)) {
                                     // This is down or has an issue and we need to become Master while turning the
@@ -407,21 +407,25 @@ public class BackUpMonitor {
             JsonNode patchNode = JsonDiff.asJson(oldNotification, notification);
             LOGGER.info("Generated JSON Patch is " + patchNode.toString());
             JsonPatch patch = JsonPatch.fromJson(patchNode);
-            try {
-                JsonNode patched = patch.apply(oldNotification);
-                LOGGER.info("Generated New Notification is : " + patched.toString());
-                return patched.toString();
-            } catch (JsonPatchException e) {
-                LOGGER.error("Error generating Patched " + e.getMessage(), e);
-                return null;
-            }
+            return generatePatchNotification(patch, oldNotification);
         } catch (IOException e) {
             LOGGER.error("Error generating Patched " + e.getMessage(), e);
             return null;
         }
     }
 
-    /**
+    private String generatePatchNotification(JsonPatch patch, JsonNode oldNotification) {
+        try {
+            JsonNode patched = patch.apply(oldNotification);
+            LOGGER.info("Generated New Notification is : " + patched.toString());
+            return patched.toString();
+        } catch (JsonPatchException e) {
+            LOGGER.error("Error generating Patched " + e.getMessage(), e);
+            return null;
+        }
+	}
+
+	/**
      * Updates Notification in the Database while Performing the health check.
      * 
      * @param notification
@@ -440,12 +444,8 @@ public class BackUpMonitor {
                         StdPDPNotification.class);
                 if (notificationObject.getNotificationType() != null) {
                     LOGGER.info("Performing Patched notification ");
-                    try {
-                        handler.runOnNotification(notificationObject);
-                        notificationRecord = lastMasterNotification;
-                    } catch (Exception e) {
-                        LOGGER.error("Error in Clients Handler Object : " + e.getMessage(), e);
-                    }
+                    performPatchNotification(notificationObject);
+
                 }
             } catch (IOException e) {
                 LOGGER.info("Error while notification Conversion " + e.getMessage(), e);
@@ -453,11 +453,21 @@ public class BackUpMonitor {
         }
     }
 
-    // Used to set LastMasterNotification Record.
+    private static void performPatchNotification(PDPNotification notificationObject) {
+        try {
+            handler.runOnNotification(notificationObject);
+            notificationRecord = lastMasterNotification;
+        } catch (Exception e) {
+            LOGGER.error("Error in Clients Handler Object : " + e.getMessage(), e);
+        }
+		
+	}
+
+	// Used to set LastMasterNotification Record.
     private static void setLastNotification(String notification) {
         synchronized (notificationLock) {
             lastMasterNotification = notification;
-            if (lastMasterNotification != null && !lastMasterNotification.equals("\"notificationType\":null")) {
+            if (lastMasterNotification != null && !"\"notificationType\":null".equals(lastMasterNotification)) {
                 if (lastMasterNotification.equals(notificationRecord)) {
                     return;
                 }

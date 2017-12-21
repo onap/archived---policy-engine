@@ -21,6 +21,7 @@
 package org.onap.policy.std.test;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 
 import org.junit.*;
@@ -115,7 +116,7 @@ public class StdPDPNotificationTest {
 		Collection<LoadedPolicy> result = fixture.getLoadedPolicies();
 
 		// add additional test code here
-		assertEquals(null, result);
+		assertEquals(Collections.EMPTY_LIST, result);
 	}
 
 	/**
@@ -204,7 +205,7 @@ public class StdPDPNotificationTest {
 		Collection<RemovedPolicy> result = fixture.getRemovedPolicies();
 
 		// add additional test code here
-		assertEquals(null, result);
+		assertEquals(Collections.EMPTY_LIST, result);
 	}
 
 	/**

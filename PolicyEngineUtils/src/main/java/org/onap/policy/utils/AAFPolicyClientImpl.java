@@ -123,6 +123,7 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 	 * @param properties  Properties with CLIENT_ID, CLIENT_KEY and ENVIRONMENT
 	 * @throws AAFPolicyException exceptions if any.
 	 */
+	@Override
 	public void updateProperties(Properties properties) throws AAFPolicyException{
 		setup(properties);
 	}
@@ -137,6 +138,7 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 	 * @param action Permissions Action. 
 	 * @return
 	 */
+	@Override
 	public boolean checkAuthPerm(String mechID, String pass, String type, String instance, String action){
 		return checkAuth(mechID, pass) && checkPerm(mechID, pass, type, instance, action);
 	}
@@ -148,6 +150,7 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 	 * @param pass Password.
 	 * @return True or False. 
 	 */
+	@Override
 	public boolean checkAuth(String userName, String pass){
 		if(aafAuthn!=null){
 			try {
@@ -176,6 +179,7 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 	 * @param action Permissions Action. 
 	 * @return True or False. 
 	 */
+	@Override
 	public boolean checkPerm(String userName, String pass, String type, String instance, String action){
 		int i =0;
 		Boolean result= false;
