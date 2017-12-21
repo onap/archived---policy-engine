@@ -21,6 +21,7 @@
 package org.onap.policy.std;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import org.onap.policy.api.LoadedPolicy;
 import org.onap.policy.api.NotificationType;
@@ -42,7 +43,7 @@ public class StdPDPNotification implements PDPNotification {
             removed.addAll(removedPolicies);
             return this.removed;
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
@@ -52,7 +53,7 @@ public class StdPDPNotification implements PDPNotification {
             updated.addAll(loadedPolicies);
             return updated;
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
