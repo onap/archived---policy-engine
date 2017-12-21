@@ -71,14 +71,14 @@ public class PolicyAccess implements Access {
 		if (logLevel.compareTo(level) > 0) {
             return;
         }
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
         sb.append(new Date()).append(' ').append(level);
         logtail(sb, args);
 	}
 
 	@Override
 	public void log(Exception e, Object... args) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
         sb.append(new Date()).append(" EXCEPTION ").append(e.getMessage());
         logtail(sb, args);
         logger.error(e.getMessage() + e);
@@ -89,7 +89,7 @@ public class PolicyAccess implements Access {
 		logLevel = level;
 	}
 	
-	private void logtail(StringBuffer sb, Object[] args) {
+	private void logtail(StringBuilder sb, Object[] args) {
         for (Object o: args) {
             String s = o.toString();
             if (s.length() > 0) {

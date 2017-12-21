@@ -114,7 +114,7 @@ public class PolicyUtils {
     public static String[] decodeBasicEncoding(String encodedValue) throws UnsupportedEncodingException {
         if(encodedValue!=null && encodedValue.contains("Basic ")){
             String encodedUserPassword = encodedValue.replaceFirst("Basic"  + " ", "");
-            String usernameAndPassword = null;
+            String usernameAndPassword;
             byte[] decodedBytes = Base64.getDecoder().decode(encodedUserPassword);
             usernameAndPassword = new String(decodedBytes, "UTF-8");
             StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
