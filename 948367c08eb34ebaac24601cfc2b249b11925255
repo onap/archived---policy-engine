@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_c37778d3",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/GetConfigService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1949
+      },
+      "writtenOn": "2018-01-03T21:38:54Z",
+      "side": 1,
+      "message": "this is much better !!!\n\n- the only concern left is if I create a \"Base\" type policy with the name that starts with pieces like \"MS_\".  \n\nFor instance, /createPolicy policyName\u003dDCAE_alex.MS_alex that is converted by PAP to DCAE_alex.Config_MS_alex.5.xml.  In this case this function will return \"MS\" type instead of the \"Base\"...\n\nI guess we will have to live with this",
+      "range": {
+        "startLine": 154,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 5
+      },
+      "revId": "948367c08eb34ebaac24601cfc2b249b11925255",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
