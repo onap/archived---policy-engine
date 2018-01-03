@@ -244,17 +244,13 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
     			return false;
     		}
     		
-    		if(policyParameters.getPolicyClass() != null){
-        		if ("Config".equals(policyParameters.getPolicyClass().toString())){
-        			String policyConfigType = policyParameters.getPolicyConfigType().toString();
-        			if(!"BRMS_Param".equalsIgnoreCase(policyConfigType)){
-            			if(Strings.isNullOrEmpty(policyParameters.getConfigBody())){
-            				message = XACMLErrorConstants.ERROR_DATA_ISSUE + "ConfigBody: No Config Body given";
-                    		LOGGER.error("Common validation did not return success:  " + message);
-                            return false;
-            			}
-        			}
-        		}
+    		if(policyParameters.getPolicyClass() != null && "Config".equals(policyParameters.getPolicyClass().toString())){
+    			String policyConfigType = policyParameters.getPolicyConfigType().toString();
+    			if(!"BRMS_Param".equalsIgnoreCase(policyConfigType) && Strings.isNullOrEmpty(policyParameters.getConfigBody())){
+    				message = XACMLErrorConstants.ERROR_DATA_ISSUE + "ConfigBody: No Config Body given";
+            		LOGGER.error("Common validation did not return success:  " + message);
+                    return false;
+    			}
     		}
 
     		try {

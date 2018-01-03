@@ -1421,12 +1421,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			//If the selected policy is in the group we must remove the old version of it
 			LOGGER.info("Removing old version of the policy");
 			for(PDPPolicy existingPolicy : currentPoliciesInGroup) {
-				if (existingPolicy.getName().equals(policy.getName())){
-					if (!existingPolicy.getId().equals(policy.getId())) {
-						group.removePolicy(existingPolicy);
-						LOGGER.info("Removing policy: " + existingPolicy);
-						break;
-					}
+				if (existingPolicy.getName().equals(policy.getName()) && !existingPolicy.getId().equals(policy.getId())){
+					group.removePolicy(existingPolicy);
+					LOGGER.info("Removing policy: " + existingPolicy);
+					break;
 				}
 			}
 			
@@ -1620,12 +1618,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					 */
 					if(apiflag != null){
 
-						// get the request content into a String
-						String json = null;
 						// read the inputStream into a buffer
 						java.util.Scanner scanner = new java.util.Scanner(request.getInputStream());
 						scanner.useDelimiter("\\A");
-						json =  scanner.hasNext() ? scanner.next() : "";
+						String json =  scanner.hasNext() ? scanner.next() : "";
 						scanner.close();
 						LOGGER.info("PushPolicy API request: " + json);
 						
@@ -1673,7 +1669,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						}
 						
 						//delete temporary policy file from the bin directory
-						Files.deleteIfExists(Paths.get(policy.getId()));
+						if(policy != null) {
+							Files.deleteIfExists(Paths.get(policy.getId()));
+						}
 						
 					}
 				} catch (Exception e) {
@@ -2624,10 +2622,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 
 		public UpdatePDPThread(OnapPDP pdp, ONAPLoggingContext loggingContext) {
 			this.pdp = pdp;
-			if (!(loggingContext == null)) {
-				if (!(loggingContext.getRequestID() == null) || (loggingContext.getRequestID() == "")) {
+			if ((loggingContext != null) && (loggingContext.getRequestID() != null || loggingContext.getRequestID() == "")) {
 					this.requestId = loggingContext.getRequestID();
-				}
 			}
 			this.loggingContext = loggingContext;
 		}
@@ -2637,7 +2633,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			HttpURLConnection connection = null;
 			// get a new logging context for the thread
 			try {
-				if (this.loggingContext.equals(null)) {
+				if (this.loggingContext == null) {
 				     loggingContext = new ONAPLoggingContext(baseLoggingContext);
 				} 
 			} catch (Exception e) {

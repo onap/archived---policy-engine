@@ -200,7 +200,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					response.addHeader("error", body);
 					response.addHeader("message", policyData.getPolicyName() + " does not exist on the PAP and cannot be updated.");
-					return new ResponseEntity<String>(body, status);
+					return new ResponseEntity<>(body, status);
 				}
 				version = 1;
 				if(userId == null){

@@ -63,16 +63,14 @@ public class PolicyValidationRequestWrapper {
 			policyData = mapper.readValue(root.get("policyData").toString(), PolicyRestAdapter.class);
 			
 			JsonObject json = null;
-			if(root != null){
-				json = stringToJsonObject(root.toString());
-				
-				if(json != null){
-					if(json.containsKey("policyJSON")){
-						policyData.setPolicyJSON(root.get("policyJSON"));
-					}else{
-						String jsonBodyData = json.getJsonObject("policyData").get("jsonBodyData").toString();
-						policyData.setJsonBody(jsonBodyData);
-					}
+			json = stringToJsonObject(root.toString());
+			
+			if(json != null){
+				if(json.containsKey("policyJSON")){
+					policyData.setPolicyJSON(root.get("policyJSON"));
+				}else{
+					String jsonBodyData = json.getJsonObject("policyData").get("jsonBodyData").toString();
+					policyData.setJsonBody(jsonBodyData);
 				}
 			}			
 						
@@ -127,13 +125,13 @@ public class PolicyValidationRequestWrapper {
 					// Set Matching attributes in RainyDayParams in adapter
 					RainyDayParams rainyday = new RainyDayParams();
 					
-					rainyday.setServiceType(matching.get("ServiceType"));
-					rainyday.setVnfType(matching.get("VNFType"));
-					rainyday.setBbid(matching.get("BB_ID"));
-					rainyday.setWorkstep(matching.get("WorkStep"));
-					
-					
-					
+					if(matching != null) {
+						rainyday.setServiceType(matching.get("ServiceType"));
+						rainyday.setVnfType(matching.get("VNFType"));
+						rainyday.setBbid(matching.get("BB_ID"));
+						rainyday.setWorkstep(matching.get("WorkStep"));
+					}
+
 					Map<String, String> treatments = parameters.getTreatments();
 					ArrayList<Object> treatmentsTableChoices = new ArrayList<>();
 					
@@ -153,32 +151,32 @@ public class PolicyValidationRequestWrapper {
 					// Set Matching attributes in YAMLParams in adapter
 					YAMLParams yamlparams = new YAMLParams();
 					
-					yamlparams.setActor(matching.get("actor"));
-					yamlparams.setRecipe(matching.get("recipe"));
-					yamlparams.setGuardActiveStart(matching.get("guardActiveStart"));
-					yamlparams.setGuardActiveEnd(matching.get("guardActiveEnd"));
-					
-					if("GUARD_YAML".equals(ruleProvider)){
-						yamlparams.setLimit(matching.get("limit"));
-						yamlparams.setTimeWindow(matching.get("timeWindow"));
-						yamlparams.setTimeUnits(matching.get("timeUnits"));	
-					}else{
+					if (matching != null) {
+						yamlparams.setActor(matching.get("actor"));
+						yamlparams.setRecipe(matching.get("recipe"));
+						yamlparams.setGuardActiveStart(matching.get("guardActiveStart"));
+						yamlparams.setGuardActiveEnd(matching.get("guardActiveEnd"));
 						
-						List<String> blackList = new ArrayList<>();
+						if("GUARD_YAML".equals(ruleProvider)){
+							yamlparams.setLimit(matching.get("limit"));
+							yamlparams.setTimeWindow(matching.get("timeWindow"));
+							yamlparams.setTimeUnits(matching.get("timeUnits"));	
+						}else{
+							
+							List<String> blackList = new ArrayList<>();
 
-						if(!Strings.isNullOrEmpty(matching.get("blackList"))){
-							String[] blackListArray = matching.get("blackList").split(",");
-							for(String element : blackListArray){
-								blackList.add(element);
-							}					
-						}	
-						
-						yamlparams.setBlackList(blackList);
+							if(!Strings.isNullOrEmpty(matching.get("blackList"))){
+								String[] blackListArray = matching.get("blackList").split(",");
+								for(String element : blackListArray){
+									blackList.add(element);
+								}					
+							}	
+							
+							yamlparams.setBlackList(blackList);
 
-					}					
-					
+						}					
+					}
 					policyData.setYamlparams(yamlparams);
-;					
 				}
 				
 			} else if("Action".equals(parameters.getPolicyClass().toString())){
@@ -216,15 +214,16 @@ public class PolicyValidationRequestWrapper {
 	            policyData.setRuleAlgorithmschoices(ruleAlgorithmChoices);
 	            
 	            ArrayList<Object> attributeList = new ArrayList<>();
-	            
-	            for (String keyField : matching.keySet()) {
-					LinkedHashMap<String, String> attributeMap = new LinkedHashMap<>();
-					String key = keyField;
-					String value = matching.get(keyField);
-					attributeMap.put("key", key);
-					attributeMap.put("value", value);
-					attributeList.add(attributeMap);
-				}	            
+	            if (matching != null) {
+		            for (String keyField : matching.keySet()) {
+						LinkedHashMap<String, String> attributeMap = new LinkedHashMap<>();
+						String key = keyField;
+						String value = matching.get(keyField);
+						attributeMap.put("key", key);
+						attributeMap.put("value", value);
+						attributeList.add(attributeMap);
+					}	
+	            }
 	            
 	            policyData.setAttributes(attributeList);	    
 	            policyData.setActionAttributeValue(parameters.getActionAttribute());

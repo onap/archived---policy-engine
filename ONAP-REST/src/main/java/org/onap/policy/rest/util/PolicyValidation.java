@@ -60,6 +60,9 @@ public class PolicyValidation {
 	public static final String ENFORCER_CONFIG_POLICY= "Enforcer Config";
 	public static final String MICROSERVICES="Micro Service";
 	public static final String FIREWALL="Firewall Config";
+	public static final String HTML_ITALICS_LNBREAK = "</i><br>";
+	public static final String SUCCESS = "success";
+	public static final String EMPTY_COMPONENT_ATTR = "Component Attributes: One or more Fields in Component Attributes is Empty.";
 	
 	private static Map<String, String> mapAttribute = new HashMap<>();
 	
@@ -84,7 +87,7 @@ public class PolicyValidation {
 			
 			if(policyData.getPolicyName() != null){
 				String policyNameValidate = PolicyUtils.policySpecialCharValidator(policyData.getPolicyName());
-				if(!policyNameValidate.contains("success")){
+				if(!policyNameValidate.contains(SUCCESS)){
 					responseString.append("PolicyName:" +  policyNameValidate + "<br>");
 					valid = false;
 				};
@@ -94,7 +97,7 @@ public class PolicyValidation {
 			}
 			if(policyData.getPolicyDescription() != null){
 				String descriptionValidate = PolicyUtils.descriptionValidator(policyData.getPolicyDescription());
-				if(!descriptionValidate.contains("success")){
+				if(!descriptionValidate.contains(SUCCESS)){
 					responseString.append("Description:" +  descriptionValidate + "<br>");
 					valid = false;
 				}	
@@ -107,7 +110,7 @@ public class PolicyValidation {
 					
 					if(!Strings.isNullOrEmpty(policyData.getOnapName())) {
 						String onapNameValidate = PolicyUtils.policySpecialCharValidator(policyData.getOnapName());
-						if(!onapNameValidate.contains("success")){
+						if(!onapNameValidate.contains(SUCCESS)){
 							responseString.append("OnapName:" +  onapNameValidate + "<br>");
 							valid = false;
 						}
@@ -119,7 +122,7 @@ public class PolicyValidation {
 
 				if(!Strings.isNullOrEmpty(policyData.getRiskType())) {
 					String riskTypeValidate = PolicyUtils.policySpecialCharValidator(policyData.getRiskType());
-					if(!riskTypeValidate.contains("success")){
+					if(!riskTypeValidate.contains(SUCCESS)){
 						responseString.append("RiskType:" +  riskTypeValidate + "<br>");
 						valid = false;
 					}
@@ -130,7 +133,7 @@ public class PolicyValidation {
 
 				if(!Strings.isNullOrEmpty(policyData.getRiskLevel())) {
 					String validateRiskLevel = PolicyUtils.policySpecialCharValidator(policyData.getRiskLevel());
-					if(!validateRiskLevel.contains("success")){
+					if(!validateRiskLevel.contains(SUCCESS)){
 						responseString.append("RiskLevel:" +  validateRiskLevel + "<br>");
 						valid = false;
 					}
@@ -141,7 +144,7 @@ public class PolicyValidation {
 
 				if(!Strings.isNullOrEmpty(policyData.getGuard())) {
 					String validateGuard = PolicyUtils.policySpecialCharValidator(policyData.getGuard());
-					if(!validateGuard.contains("success")){
+					if(!validateGuard.contains(SUCCESS)){
 						responseString.append("Guard:" +  validateGuard + "<br>");
 						valid = false;
 					}
@@ -153,7 +156,7 @@ public class PolicyValidation {
 				if("Base".equalsIgnoreCase(policyData.getConfigPolicyType())){
 					if(!Strings.isNullOrEmpty(policyData.getConfigName())) {
 						String configNameValidate = PolicyUtils.policySpecialCharValidator(policyData.getConfigName());
-						if(!configNameValidate.contains("success")){
+						if(!configNameValidate.contains(SUCCESS)){
 							responseString.append("ConfigName:" +  configNameValidate + "<br>");
 							valid = false;
 						}
@@ -163,7 +166,7 @@ public class PolicyValidation {
 					}
 					if(!Strings.isNullOrEmpty(policyData.getConfigType())) {
 						String configTypeValidate = PolicyUtils.policySpecialCharValidator(policyData.getConfigType());
-						if(!configTypeValidate.contains("success")){
+						if(!configTypeValidate.contains(SUCCESS)){
 							responseString.append("ConfigType:" +  configTypeValidate + "<br>");
 							valid = false;
 						}
@@ -190,11 +193,9 @@ public class PolicyValidation {
 									responseString.append("Config Body: Property data is not valid" + "<br>");
 									valid = false;
 								} 
-							} else if (configType.equals("OTHER")) {
-								if (configBodyData.equals("")) {
-									responseString.append("Config Body: Config Body Should not be Empty" + "<br>");
-									valid = false;
-								}
+							} else if ("OTHER".equals(configType) && ("".equals(configBodyData))) {
+								responseString.append("Config Body: Config Body Should not be Empty" + "<br>");
+								valid = false;
 							}
 						}
 					}else{
@@ -203,27 +204,25 @@ public class PolicyValidation {
 					}
 				}
 
-				if("Firewall Config".equalsIgnoreCase(policyData.getConfigPolicyType())){
+				if(FIREWALL.equalsIgnoreCase(policyData.getConfigPolicyType())){
 					if(policyData.getConfigName() != null && !policyData.getConfigName().isEmpty()){
 						String configNameValidate = PolicyUtils.policySpecialCharValidator(policyData.getConfigName());
-						if(!configNameValidate.contains("success")){
-							responseString.append("<b>ConfigName</b>:<i>" +  configNameValidate + "</i><br>");
+						if(!configNameValidate.contains(SUCCESS)){
+							responseString.append("<b>ConfigName</b>:<i>" +  configNameValidate + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 					}else{
-						responseString.append("<b>Config Name</b>:<i> Config Name is required" + "</i><br>");
+						responseString.append("<b>Config Name</b>:<i> Config Name is required" + HTML_ITALICS_LNBREAK);
 						valid = false;
 					}
 					if(policyData.getSecurityZone() == null || policyData.getSecurityZone().isEmpty()){
-						responseString.append("<b>Security Zone</b>:<i> Security Zone is required" + "</i><br>");
+						responseString.append("<b>Security Zone</b>:<i> Security Zone is required" + HTML_ITALICS_LNBREAK);
 						valid = false;
 					}
 				}
-				if("BRMS_Param".equalsIgnoreCase(policyData.getConfigPolicyType())){
-					if(policyData.getRuleName() == null || policyData.getRuleName().isEmpty()){
-						responseString.append("<b>BRMS Template</b>:<i>BRMS Template is required</i><br>");
-						valid = false;
-					}
+				if("BRMS_Param".equalsIgnoreCase(policyData.getConfigPolicyType()) && Strings.isNullOrEmpty(policyData.getRuleName())){
+					responseString.append("<b>BRMS Template</b>:<i>BRMS Template is required" + HTML_ITALICS_LNBREAK);
+					valid = false;
 				}
 				if("BRMS_Raw".equalsIgnoreCase(policyData.getConfigPolicyType())){
 					if(policyData.getConfigBodyData() != null && !policyData.getConfigBodyData().isEmpty()){
@@ -231,44 +230,45 @@ public class PolicyValidation {
 						
 						// If there are any error other than Annotations then this is not Valid
 						if(message.contains("[ERR")){
-							responseString.append("<b>Raw Rule Validate</b>:<i>Raw Rule has error"+ message +"</i><br>");
+							responseString.append("<b>Raw Rule Validate</b>:<i>Raw Rule has error"+ message + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 					}else{
-						responseString.append("<b>Raw Rule</b>:<i>Raw Rule is required</i><br>");
+						responseString.append("<b>Raw Rule</b>:<i>Raw Rule is required" + HTML_ITALICS_LNBREAK);
 						valid = false;
 					}
 				}
-				if("ClosedLoop_PM".equalsIgnoreCase(policyData.getConfigPolicyType())){
+				if(CLOSEDLOOP_PM.equalsIgnoreCase(policyData.getConfigPolicyType())){
 					try{
 						if(Strings.isNullOrEmpty(policyData.getServiceTypePolicyName().get("serviceTypePolicyName").toString())){
-							responseString.append("<b>ServiceType PolicyName</b>:<i>ServiceType PolicyName is required</i><br>");
+							responseString.append("<b>ServiceType PolicyName</b>:<i>ServiceType PolicyName is required" + HTML_ITALICS_LNBREAK);
 							valid = false; 
 						}
 						
 					}catch(Exception e){
 					    LOGGER.error("ERROR in ClosedLoop_PM PolicyName" , e);
-						responseString.append("<b>ServiceType PolicyName</b>:<i>ServiceType PolicyName is required</i><br>");
+						responseString.append("<b>ServiceType PolicyName</b>:<i>ServiceType PolicyName is required" + HTML_ITALICS_LNBREAK);
 						valid = false;
 					}
 
 					if(policyData.getJsonBody() != null){
-						ClosedLoopPMBody pmBody = (ClosedLoopPMBody)mapper.readValue(policyData.getJsonBody(), ClosedLoopPMBody.class);
+						
+						ClosedLoopPMBody pmBody = mapper.readValue(policyData.getJsonBody(), ClosedLoopPMBody.class);
 						if(pmBody.getEmailAddress() != null){
 							String result = emailValidation(pmBody.getEmailAddress(), responseString.toString());
-							if(result != "success"){
+							if(result != SUCCESS){
 								responseString.append(result + "<br>");
 								valid = false;
 							}
 						}
 						if((pmBody.isGamma() || pmBody.isMcr() || pmBody.isTrinity() || pmBody.isvDNS() || pmBody.isvUSP()) != true){
-							responseString.append("<b>D2/Virtualized Services</b>: <i>Select at least one D2/Virtualized Services</i><br>");
+							responseString.append("<b>D2/Virtualized Services</b>: <i>Select at least one D2/Virtualized Services" + HTML_ITALICS_LNBREAK);
 							valid = false; 
 						}
 						if(pmBody.getGeoLink() != null && !pmBody.getGeoLink().isEmpty()){
 							String result = PolicyUtils.policySpecialCharValidator(pmBody.getGeoLink());
-							if(!result.contains("success")){
-								responseString.append("<b>GeoLink</b>:<i>" +  result + "</i><br>");
+							if(!result.contains(SUCCESS)){
+								responseString.append("<b>GeoLink</b>:<i>" +  result + HTML_ITALICS_LNBREAK);
 								valid = false;
 							};
 						}
@@ -278,19 +278,19 @@ public class PolicyValidation {
 								String value = entry.getValue();
 								if(!key.contains("Message")){
 									String attributeValidate = PolicyUtils.policySpecialCharValidator(value);
-									if(!attributeValidate.contains("success")){
-										responseString.append("<b>Attributes</b>:<i>" +  key + " : value has spaces or invalid characters</i><br>");
+									if(!attributeValidate.contains(SUCCESS)){
+										responseString.append("<b>Attributes</b>:<i>" +  key + " : value has spaces or invalid characters" + HTML_ITALICS_LNBREAK);
 										valid = false;
 									};
 								}
 							}	
 						}
 					}else{
-						responseString.append("<b>D2/Virtualized Services</b>:<i>Select atleast one D2/Virtualized Services</i><br>");
+						responseString.append("<b>D2/Virtualized Services</b>:<i>Select atleast one D2/Virtualized Services" + HTML_ITALICS_LNBREAK);
 						valid = false;
 					}
 				}
-				if("ClosedLoop_Fault".equalsIgnoreCase(policyData.getConfigPolicyType())){
+				if(CLOSEDLOOP_POLICY.equalsIgnoreCase(policyData.getConfigPolicyType())){
 					if(policyData.getJsonBody() != null){
 
 						// For API we need to get the conditions key from the Json request and check it before deserializing to POJO due to the enum
@@ -299,11 +299,11 @@ public class PolicyValidation {
 							if(!json.isNull("conditions")){
 								String apiCondition = (String) json.get("conditions");
 								if(Strings.isNullOrEmpty(apiCondition)){
-									responseString.append("<b>Conditions</b>: <i>Select At least one Condition</i><br>");
+									responseString.append("<b>Conditions</b>: <i>Select At least one Condition" + HTML_ITALICS_LNBREAK);
 									return responseString;
 								}
 							} else {
-								responseString.append("<b>Conditions</b>: <i>There were no conditions provided in configBody json</i><br>");
+								responseString.append("<b>Conditions</b>: <i>There were no conditions provided in configBody json" + HTML_ITALICS_LNBREAK);
 								return responseString;
 							}
 						}
@@ -311,79 +311,79 @@ public class PolicyValidation {
 						ClosedLoopFaultBody faultBody = mapper.readValue(policyData.getJsonBody(), ClosedLoopFaultBody.class);
 						if(faultBody.getEmailAddress() != null && !faultBody.getEmailAddress().isEmpty()){
 							String result = emailValidation(faultBody.getEmailAddress(), responseString.toString());
-							if(result != "success"){
+							if(result != SUCCESS){
 								responseString.append(result+ "<br>");
 								valid = false;
 							}
 						}
 						if((faultBody.isGamma() || faultBody.isMcr() || faultBody.isTrinity() || faultBody.isvDNS() || faultBody.isvUSP()) != true){
-							responseString.append("<b>D2/Virtualized Services</b>: <i>Select at least one D2/Virtualized Services</i><br>");
+							responseString.append("<b>D2/Virtualized Services</b>: <i>Select at least one D2/Virtualized Services" + HTML_ITALICS_LNBREAK);
 							valid = false; 
 						}
 						if(faultBody.getActions() == null || faultBody.getActions().isEmpty()){
-							responseString.append("<b>vPRO Actions</b>: <i>vPRO Actions is required</i><br>");
+							responseString.append("<b>vPRO Actions</b>: <i>vPRO Actions is required" + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 						if(faultBody.getClosedLoopPolicyStatus() == null || faultBody.getClosedLoopPolicyStatus().isEmpty()){
-							responseString.append("<b>Policy Status</b>: <i>Policy Status is required</i><br>");
+							responseString.append("<b>Policy Status</b>: <i>Policy Status is required" + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 						if(faultBody.getConditions() == null){
-							responseString.append("<b>Conditions</b>: <i>Select At least one Condition</i><br>");
+							responseString.append("<b>Conditions</b>: <i>Select At least one Condition" + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 						if(faultBody.getGeoLink() != null && !faultBody.getGeoLink().isEmpty()){
 							String result = PolicyUtils.policySpecialCharWithSpaceValidator(faultBody.getGeoLink());
-							if(!result.contains("success")){
-								responseString.append("<b>GeoLink</b>:<i>" +  result + "</i><br>");
+							if(!result.contains(SUCCESS)){
+								responseString.append("<b>GeoLink</b>:<i>" +  result + HTML_ITALICS_LNBREAK);
 								valid = false;
 							}
 						}
 						if(faultBody.getAgingWindow() == 0){
-							responseString.append("<b>Aging Window</b>: <i>Aging Window is required</i><br>");
+							responseString.append("<b>Aging Window</b>: <i>Aging Window is required" + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 						if(faultBody.getTimeInterval() == 0){
-							responseString.append("<b>Time Interval</b>: <i>Time Interval is required</i><br>");
+							responseString.append("<b>Time Interval</b>: <i>Time Interval is required" + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 						if(faultBody.getRetrys() == 0){
-							responseString.append("<b>Number of Retries</b>: <i>Number of Retries is required</i><br>");
+							responseString.append("<b>Number of Retries</b>: <i>Number of Retries is required" + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 						if(faultBody.getTimeOutvPRO() == 0){
-							responseString.append("<b>APP-C Timeout</b>: <i>APP-C Timeout is required</i><br>");
+							responseString.append("<b>APP-C Timeout</b>: <i>APP-C Timeout is required" + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 						if(faultBody.getTimeOutRuby() == 0){
-							responseString.append("<b>TimeOutRuby</b>: <i>TimeOutRuby is required</i><br>");
+							responseString.append("<b>TimeOutRuby</b>: <i>TimeOutRuby is required" + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 						if(faultBody.getVnfType() == null || faultBody.getVnfType().isEmpty()){
-							responseString.append("<b>Vnf Type</b>: <i>Vnf Type is required</i><br>");
+							responseString.append("<b>Vnf Type</b>: <i>Vnf Type is required" + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 					}else{
-						responseString.append("<b>D2/Virtualized Services</b>: <i>Select atleast one D2/Virtualized Services</i><br>");
-						responseString.append("<b>vPRO Actions</b>: <i>vPRO Actions is required</i><br>");
-						responseString.append("<b>Aging Window</b>: <i>Aging Window is required</i><br>");
-						responseString.append("<b>Policy Status</b>: <i>Policy Status is required</i><br>");
-						responseString.append("<b>Conditions</b>: <i>Select Atleast one Condition</i><br>");
-						responseString.append("<b>PEP Name</b>: <i>PEP Name is required</i><br>");
-						responseString.append("<b>PEP Action</b>: <i>PEP Action is required</i><br>");
-						responseString.append("<b>Time Interval</b>: <i>Time Interval is required</i><br>");
-						responseString.append("<b>Number of Retries</b>: <i>Number of Retries is required</i><br>");
-						responseString.append("<b>APP-C Timeout</b>: <i>APP-C Timeout is required</i><br>");
-						responseString.append("<b>TimeOutRuby</b>: <i>TimeOutRuby is required</i><br>");
-						responseString.append("<b>Vnf Type</b>: <i>Vnf Type is required</i><br>");
+						responseString.append("<b>D2/Virtualized Services</b>: <i>Select atleast one D2/Virtualized Services" + HTML_ITALICS_LNBREAK);
+						responseString.append("<b>vPRO Actions</b>: <i>vPRO Actions is required" + HTML_ITALICS_LNBREAK);
+						responseString.append("<b>Aging Window</b>: <i>Aging Window is required" + HTML_ITALICS_LNBREAK);
+						responseString.append("<b>Policy Status</b>: <i>Policy Status is required" + HTML_ITALICS_LNBREAK);
+						responseString.append("<b>Conditions</b>: <i>Select Atleast one Condition" + HTML_ITALICS_LNBREAK);
+						responseString.append("<b>PEP Name</b>: <i>PEP Name is required" + HTML_ITALICS_LNBREAK);
+						responseString.append("<b>PEP Action</b>: <i>PEP Action is required" + HTML_ITALICS_LNBREAK);
+						responseString.append("<b>Time Interval</b>: <i>Time Interval is required" + HTML_ITALICS_LNBREAK);
+						responseString.append("<b>Number of Retries</b>: <i>Number of Retries is required" + HTML_ITALICS_LNBREAK);
+						responseString.append("<b>APP-C Timeout</b>: <i>APP-C Timeout is required" + HTML_ITALICS_LNBREAK);
+						responseString.append("<b>TimeOutRuby</b>: <i>TimeOutRuby is required" + HTML_ITALICS_LNBREAK);
+						responseString.append("<b>Vnf Type</b>: <i>Vnf Type is required" + HTML_ITALICS_LNBREAK);
 						valid = false; 
 					}
 				}
 
-				if ("Micro Service".equals(policyData.getConfigPolicyType())){
+				if (MICROSERVICES.equals(policyData.getConfigPolicyType())){
 					if(!Strings.isNullOrEmpty(policyData.getServiceType())){
 						pullJsonKeyPairs((JsonNode) policyData.getPolicyJSON());
-						MicroServiceModels returnModel = new MicroServiceModels();
+
 						String service = null;
 						String version = null;
 						if (policyData.getServiceType().contains("-v")){
@@ -395,13 +395,12 @@ public class PolicyValidation {
 						}
 						
 						if(!Strings.isNullOrEmpty(version)) {
-							returnModel = getAttributeObject(service, version);
+							MicroServiceModels returnModel = getAttributeObject(service, version);
 							
 							if(returnModel != null) {
 								String annotation = returnModel.getAnnotation();
 								if (!Strings.isNullOrEmpty(annotation)){ 
-									Map<String, String> rangeMap = new HashMap<>();
-									rangeMap = Splitter.on(",").withKeyValueSeparator("=").split(annotation);
+									Map<String, String> rangeMap = Splitter.on(",").withKeyValueSeparator("=").split(annotation);
 									for (Entry<String, String> rMap : rangeMap.entrySet()){
 										if (rMap.getValue().contains("range::")){
 											String value = mapAttribute.get(rMap.getKey().trim());
@@ -424,7 +423,7 @@ public class PolicyValidation {
 												}
 											} else {
 												responseString.append("<b>"+rMap.getKey()+"</b>:<i>" + rMap.getKey() 
-												+ " is required for the MicroService model " + service + "</i><br>");
+												+ " is required for the MicroService model " + service + HTML_ITALICS_LNBREAK);
 												valid = false;
 											}
 
@@ -433,20 +432,20 @@ public class PolicyValidation {
 								}
 							} else {
 								responseString.append("<b>Micro Service Model</b>:<i> Invalid Model. The model name, " + service + 
-										" of version, " + version + " was not found in the dictionary</i><br>");
+										" of version, " + version + " was not found in the dictionary" + HTML_ITALICS_LNBREAK);
 								valid = false;
 							}
 						} else {
-							responseString.append("<b>Micro Version</b>:<i> Micro Service Version is required" + "</i><br>");
+							responseString.append("<b>Micro Version</b>:<i> Micro Service Version is required" + HTML_ITALICS_LNBREAK);
 							valid = false;
 						}
 					} else {
-						responseString.append("<b>Micro Service</b>:<i> Micro Service is required" + "</i><br>");
+						responseString.append("<b>Micro Service</b>:<i> Micro Service is required" + HTML_ITALICS_LNBREAK);
 						valid = false;
 					}
 
 					if(Strings.isNullOrEmpty(policyData.getPriority())){
-						responseString.append("<b>Priority</b>:<i> Priority is required" + "</i><br>");
+						responseString.append("<b>Priority</b>:<i> Priority is required" + HTML_ITALICS_LNBREAK);
 						valid = false;
 					}
 				}	
@@ -454,7 +453,7 @@ public class PolicyValidation {
 			if (DECISION_POLICY.equalsIgnoreCase(policyData.getPolicyType())){
 				if(!Strings.isNullOrEmpty(policyData.getOnapName())){
 					String onapNameValidate = PolicyUtils.policySpecialCharValidator(policyData.getOnapName());
-					if(!onapNameValidate.contains("success")){
+					if(!onapNameValidate.contains(SUCCESS)){
 						responseString.append("OnapName:" +  onapNameValidate + "<br>");
 						valid = false;
 					}
@@ -570,7 +569,7 @@ public class PolicyValidation {
 								valid = false;
 							}else{
 								for(String blackList: policyData.getYamlparams().getBlackList()){
-									if(blackList==null || !("success".equals(PolicyUtils.policySpecialCharValidator(blackList)))){
+									if(blackList==null || !(SUCCESS.equals(PolicyUtils.policySpecialCharValidator(blackList)))){
 										responseString.append(" Guard Params <b>BlackList</b> Should be valid String" + "<br>");
 										valid = false;
 										break;
@@ -585,7 +584,7 @@ public class PolicyValidation {
 			if(ACTION_POLICY.equalsIgnoreCase(policyData.getPolicyType())){
 				if(!Strings.isNullOrEmpty(policyData.getActionPerformer())){
 					String actionPerformer = PolicyUtils.policySpecialCharValidator(policyData.getActionPerformer());
-					if(!actionPerformer.contains("success")){
+					if(!actionPerformer.contains(SUCCESS)){
 						responseString.append("ActionPerformer:" +  actionPerformer + "<br>");
 						valid = false;
 					}
@@ -601,25 +600,25 @@ public class PolicyValidation {
 								String key = ((LinkedHashMap<?, ?>) attribute).get("key").toString();
 								String value =  ((LinkedHashMap<?, ?>) attribute).get("value").toString();
 								if("".equals(key) || "".equals(value)){
-									responseString.append("Component Attributes: One or more Fields in Component Attributes is Empty." + "<br>");
+									responseString.append(EMPTY_COMPONENT_ATTR + "<br>");
 									valid = false;
 									break;	
 								}
 							}catch(Exception e){
 								LOGGER.error("This is a Policy Validation check" +e);
-								responseString.append("Component Attributes: One or more Fields in Component Attributes is Empty." + "<br>");
+								responseString.append(EMPTY_COMPONENT_ATTR + "<br>");
 								valid = false;
 								break;
 							}
 						}
 					}
 				}else{
-					responseString.append("Component Attributes: One or more Fields in Component Attributes is Empty." + "<br>");
+					responseString.append(EMPTY_COMPONENT_ATTR + "<br>");
 					valid = false;
 				}
 				if(!Strings.isNullOrEmpty(policyData.getActionAttributeValue())){
 					String actionAttribute = PolicyUtils.policySpecialCharValidator(policyData.getActionAttributeValue());
-					if(!actionAttribute.contains("success")){
+					if(!actionAttribute.contains(SUCCESS)){
 						responseString.append("ActionAttribute:" +  actionAttribute + "<br>");
 						valid = false;
 					};
@@ -662,11 +661,11 @@ public class PolicyValidation {
 							value = "Message:" +  safePolicyWarningData.getMessage();
 						}
 					}
-					responseString.append("success" + "@#"+ value);
+					responseString.append(SUCCESS + "@#"+ value);
 				}
 			}else{
 				if(valid){
-					responseString.append("success");
+					responseString.append(SUCCESS);
 				}
 			}
 
@@ -681,10 +680,10 @@ public class PolicyValidation {
 	protected String emailValidation(String email, String response){
 		if(email != null){
 			String validateEmail = PolicyUtils.validateEmailAddress(email.replace("\"", ""));
-			if(!validateEmail.contains("success")){
-				response += "<b>Email</b>:<i>" +  validateEmail+ "</i><br>";
+			if(!validateEmail.contains(SUCCESS)){
+				response += "<b>Email</b>:<i>" +  validateEmail + HTML_ITALICS_LNBREAK;
 			}else{
-				return "success";
+				return SUCCESS;
 			}
 		}
 		return response;

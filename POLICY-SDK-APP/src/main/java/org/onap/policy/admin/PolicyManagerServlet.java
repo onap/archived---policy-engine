@@ -1448,7 +1448,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				policyAdapter.setReadOnly(false);
 				policyAdapter.setEditPolicy(true);
 			}
-			policyAdapter.setDomain(domain);
+			
 			policyAdapter.setDomainDir(domain);
 			policyAdapter.setPolicyData(policy);
 			String policyName = path.replace(".xml", "");

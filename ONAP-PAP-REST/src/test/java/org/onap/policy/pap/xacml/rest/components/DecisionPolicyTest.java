@@ -72,8 +72,7 @@ public class DecisionPolicyTest {
 		policyAdapter.setRuleCombiningAlgId("urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides");
 		policyAdapter.setPolicyType("Decision");
 		policyAdapter.setEditPolicy(false);
-		policyAdapter.setDomainDir("src/test/resources/client.properties");
-		policyAdapter.setDomain("Test");
+		policyAdapter.setDomainDir("Test");
 		policyAdapter.setNewFileName("/src/test/resources/Test/client.properties");
 		policyAdapter.setHighestVersion(1);
 		policyAdapter.setPolicyID("urn:xacml:policy:id:"+UUID.randomUUID());

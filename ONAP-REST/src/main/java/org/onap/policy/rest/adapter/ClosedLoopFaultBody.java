@@ -221,22 +221,6 @@ public class ClosedLoopFaultBody {
 		this.verificationSignatures = verificationSignatures;
 	}
 	
-	/*public ArrayList<String> getD2Services() {
-		return d2Services;
-	}
-
-	public void setD2Services(ArrayList<String> d2Services) {
-		this.d2Services = d2Services;
-	}
-
-	public ArrayList<String> getSiteNames() {
-		return siteNames;
-	}
-
-	public void setSiteNames(ArrayList<String> siteNames) {
-		this.siteNames = siteNames;
-	}*/
-	
 	public boolean isvDNS() {
 		return vDNS;
 	}

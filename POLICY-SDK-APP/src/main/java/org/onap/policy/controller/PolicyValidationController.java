@@ -46,14 +46,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class PolicyValidationController extends RestrictedBaseController {
 
 	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyValidationController.class);
-	
-	public static final String CONFIG_POLICY = "Config";
-	public static final String ACTION_POLICY = "Action";
-	public static final String DECISION_POLICY = "Decision";
-	public static final String CLOSEDLOOP_POLICY = "ClosedLoop_Fault";
-	public static final String CLOSEDLOOP_PM = "ClosedLoop_PM";
-	public static final String ENFORCER_CONFIG_POLICY= "Enforcer Config";
-	public static final String MICROSERVICES="Micro Service";
 
 	@RequestMapping(value={"/policyController/validate_policy.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView validatePolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
