@@ -26,12 +26,10 @@ import org.onap.policy.api.PushPolicyParameters;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
-import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.springframework.http.HttpStatus;
 
 import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.api.pap.PDPPolicy;
 
 public class PushPolicyService {
     private static final Logger LOGGER = FlexLogger.getLogger(PushPolicyService.class.getName());

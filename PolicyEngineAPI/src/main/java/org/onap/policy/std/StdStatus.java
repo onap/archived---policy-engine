@@ -29,6 +29,7 @@ import javax.json.JsonObject;
 import org.onap.policy.api.DecisionResponse;
 import org.onap.policy.api.PolicyConfig;
 import org.onap.policy.api.PolicyConfigStatus;
+import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyDecision;
 import org.onap.policy.api.PolicyResponse;
 import org.onap.policy.api.PolicyResponseStatus;
@@ -39,6 +40,7 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	private PolicyType policyType;
 	private Properties properties;
 	private JsonObject jsonObject;
+	private PolicyConfigType type;
 	private Document document;
 	private String other;
 	private PolicyConfigStatus policyConfigStatus;
@@ -232,4 +234,12 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	public String getDetails(){
 		return details;
 	}
+	
+    public PolicyConfigType getPolicyType() {
+        return type;
+    }
+    
+    public void setPolicyType(PolicyConfigType policyType) {
+        this.type = policyType;
+    }
 }

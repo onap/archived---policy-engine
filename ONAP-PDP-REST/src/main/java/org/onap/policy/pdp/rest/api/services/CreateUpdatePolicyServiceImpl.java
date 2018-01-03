@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import org.glassfish.jersey.spi.Contract;
 import org.onap.policy.api.PolicyException;
 import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -34,7 +33,6 @@ import org.onap.policy.rest.util.PolicyValidation;
 import org.onap.policy.rest.util.PolicyValidationRequestWrapper;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 
 import com.google.common.base.Strings;
 
