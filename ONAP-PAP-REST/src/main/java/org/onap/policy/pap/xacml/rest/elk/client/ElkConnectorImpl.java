@@ -101,6 +101,9 @@ public class ElkConnectorImpl implements ElkConnector{
 			throw e;
 		}
 	}
+	private boolean isAlphaNumeric(String query){
+		return query.matches("[a-zA-Z_0-9]+");
+	}
 
 	@Override
 	public JestResult search(PolicyIndexType type, String text) throws IllegalStateException, IllegalArgumentException {
@@ -110,6 +113,10 @@ public class ElkConnectorImpl implements ElkConnector{
 
 		if (text == null || text.isEmpty()) {
 			throw new IllegalArgumentException("No search string provided");
+		}
+
+		if(!isAlphaNumeric(text)){
+			throw new IllegalArgumentException("Search must be alpha numeric");
 		}
 
 		QueryStringQueryBuilder mQ = QueryBuilders.queryStringQuery("*"+text+"*");
@@ -196,6 +203,10 @@ public class ElkConnectorImpl implements ElkConnector{
 
 		if (filter_s == null || filter_s.size() == 0) {
 			return search(type, text);
+		}
+
+		if(!isAlphaNumeric(text)){
+			throw new IllegalArgumentException("Search must be alpha numeric");
 		}
 
 		String matches_s = "";

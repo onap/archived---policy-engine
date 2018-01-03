@@ -89,3 +89,8 @@ network.bind_host: ["_local_"]
 # Require explicit names when deleting indices:
 #
 #action.destructive_requires_name: true
+#--------------------------------- Scripting -----------------------------------
+# These will be removed in v6.0
+script.inline: false
+script.stored: false
+script.file: false

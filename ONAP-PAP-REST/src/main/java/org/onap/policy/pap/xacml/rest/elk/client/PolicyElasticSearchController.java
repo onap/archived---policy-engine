@@ -231,7 +231,7 @@ public class PolicyElasticSearchController{
 								if(searchData.getPolicyType() != null && "closedLoop".equals(searchData.getPolicyType())){
 									searchKeyValue.put("jsonBodyData", "*" +entry[1] +"*");
 								}else{
-									searchKeyValue.put(entry[0], entry[1]);
+									searchText = entry[1];
 								}
 							}
 						}
@@ -265,13 +265,13 @@ public class PolicyElasticSearchController{
 						searchKeyValue.put("jsonBodyData."+d2Service+"", "true");
 					}	
 					if(searchData.getVnfType() != null){
-						searchKeyValue.put("jsonBodyData", "*" +searchData.getVnfType() +"*");					
+						searchKeyValue.put("jsonBodyData", "*"+searchData.getVnfType()+"*");					
 					}
 					if(searchData.getPolicyStatus() != null){
-						searchKeyValue.put("jsonBodyData", "*" +searchData.getPolicyStatus()+"*");
+						searchKeyValue.put("jsonBodyData", "*"+searchData.getPolicyStatus()+"*");
 					}
 					if(searchData.getVproAction() != null){
-						searchKeyValue.put("jsonBodyData", "*" +searchData.getVproAction()+"*");
+						searchKeyValue.put("jsonBodyData", "*"+searchData.getVproAction()+"*");
 					}
 					if(searchData.getServiceType() != null){
 						searchKeyValue.put("serviceType", searchData.getServiceType());
@@ -288,8 +288,10 @@ public class PolicyElasticSearchController{
 							type = ElkConnector.PolicyIndexType.decision;
 						}else if(policyType.equalsIgnoreCase("config")){
 							type = ElkConnector.PolicyIndexType.config;
-						}else {
+						}else if(policyType.equalsIgnoreCase("closedloop")){
 							type = ElkConnector.PolicyIndexType.closedloop;
+						}else{
+							type = ElkConnector.PolicyIndexType.all;
 						}
 					}else{
 						type = ElkConnector.PolicyIndexType.all;
