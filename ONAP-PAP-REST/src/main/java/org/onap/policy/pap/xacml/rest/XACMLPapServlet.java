@@ -40,6 +40,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
@@ -81,12 +82,14 @@ import org.onap.policy.pap.xacml.restAuth.CheckPDP;
 import org.onap.policy.rest.XACMLRest;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.dao.PolicyDBException;
+import org.onap.policy.utils.CryptoUtils;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.ONAPPapEngineFactory;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
+import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDP;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPItemSetChangeNotifier.StdItemSetChangeListener;
@@ -235,7 +238,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					+ "\n   papDbDriver = " + papDbDriver
 					+ "\n   papDbUrl = " + papDbUrl
 					+ "\n   papDbUser = " + papDbUser
-					+ "\n   papDbPassword = " + papDbPassword
 					+ "\n   papTransWait = " + papTransWait
 					+ "\n   papTransTimeout = " + papTransTimeout
 					+ "\n   papAuditTimeout = " + papAuditTimeout
@@ -267,6 +269,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				throw new ServletException(e.getMessage(), e.getCause());
 			}
 			// Create an IntegrityMonitor
+			if(properties.getProperty("javax.persistence.jdbc.password") != null ){
+				properties.setProperty("javax.persistence.jdbc.password", CryptoUtils.decryptTxtNoExStr(properties.getProperty("javax.persistence.jdbc.password", "")));
+			}
 			im = IntegrityMonitor.getInstance(papResourceName,properties);
 			// Create an IntegrityAudit
 			ia = new IntegrityAudit(papResourceName, AUDIT_PAP_PERSISTENCE_UNIT, properties);
@@ -434,7 +439,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             throw new PAPException("papDbUser is null");
         }
         setPapDbUser(papDbUser);
-        papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
+        papDbPassword = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD, ""));
         if(papDbPassword == null){
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbPassword property entry");
             throw new PAPException("papDbPassword is null");
@@ -530,7 +535,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		} catch (AdministrativeStateException ae){
 			String message = "POST interface called for PAP " + papResourceName + " but it has an Administrative"
 					+ " state of " + im.getStateManager().getAdminState()
-					+ "\n Exception Message: " + ae.getMessage();
+					+ "\n Exception Message: " +  PolicyUtils.CATCH_EXCEPTION;
 			LOGGER.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message, ae);
 			loggingContext.metricEnded();
 			PolicyLogger.metrics("XACMLPapServlet doPost im startTransaction");
@@ -750,7 +755,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 
 	private void setResponseError(HttpServletResponse response,int responseCode, String message) {
 	    try {
-            response.sendError(responseCode, message);
+	    	if(message != null && !message.isEmpty()){
+	               response.sendError(responseCode, message);
+	    	}
         } catch (IOException e) {
             LOGGER.error("Error setting Error response Header ", e);
         }
@@ -1407,8 +1414,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			scanner.useDelimiter("\\A");
 			json =  scanner.hasNext() ? scanner.next() : "";
 			scanner.close();
-
 			PolicyLogger.info("pushPolicy request from API: " + json);
+			LOGGER.info("JSON request from API: " + json);
 			
 			// convert Object sent as JSON into local object
 			StdPDPPolicy policy = PolicyUtils.jsonStringToObject(json, StdPDPPolicy.class);
@@ -1416,13 +1423,16 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			//Get the current policies from the Group and Add the new one
 			Set<PDPPolicy> currentPoliciesInGroup = new HashSet<>();
 			currentPoliciesInGroup = group.getPolicies();
+			
 			//If the selected policy is in the group we must remove the old version of it
 			LOGGER.info("Removing old version of the policy");
 			for(PDPPolicy existingPolicy : currentPoliciesInGroup) {
-				if (existingPolicy.getName().equals(policy.getName()) && !existingPolicy.getId().equals(policy.getId())){
-					group.removePolicy(existingPolicy);
-					LOGGER.info("Removing policy: " + existingPolicy);
-					break;
+				if (existingPolicy.getName().equals(policy.getName())){
+					if (!existingPolicy.getId().equals(policy.getId())) {
+						group.removePolicy(existingPolicy);
+						LOGGER.info("Removing policy: " + existingPolicy);
+						break;
+					}
 				}
 			}
 			
@@ -1442,6 +1452,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			String policyId = "empty";
 			if(policy!=null){
 				policyId = policy.getId();
+				//for fixing Header Manipulation of Fortify issue
+				policyId = policyId.replace("\n", "");
+				policyId = policyId.replace("\r", "");
 			}
 			response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 			response.addHeader("operation", "push");
@@ -1458,7 +1471,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			notifyAC();
 			loggingContext.metricEnded();
 			PolicyLogger.metrics("XACMLPapServlet updateGroupsFromAPI notifyAC");
-
+			
 			// Group changed, which might include changing the policies	
 			groupChanged(group, loggingContext);
 			loggingContext.transactionEnded();
@@ -1555,6 +1568,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			}
 			if (group == null) {
 				String message = "Unknown groupId '" + groupId + "'";
+				//for fixing Header Manipulation of Fortify issue
+				message = message.replace("\n", "");
+				message = message.replace("\r", "");
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
@@ -1582,9 +1598,11 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyDBDaoTransaction addPolicyToGroupTransaction = policyDBDao.getNewTransaction();
 				StdPDPGroup updatedGroup = null;
 				try {
+					
 					//Copying the policy to the file system and updating groups in database
 					LOGGER.info("PapServlet: calling PolicyDBDao.addPolicyToGroup()");
 					updatedGroup = addPolicyToGroupTransaction.addPolicyToGroup(group.getId(), policyId,"XACMLPapServlet.doACPost");
+					
 					loggingContext.metricStarted();
 					addPolicyToGroupTransaction.commitTransaction();
 					loggingContext.metricEnded();
@@ -1594,6 +1612,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				} catch (Exception e) {
 					addPolicyToGroupTransaction.rollbackTransaction();
 					String message = "Policy '" + policyId + "' not copied to group '" + groupId +"': " + e;
+					//for fixing Header Manipulation of Fortify issue
+					message = message.replace("\n", "");
+					message = message.replace("\r", "");
 					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW + " " + message);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
@@ -1616,10 +1637,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					 */
 					if(apiflag != null){
 
+						// get the request content into a String
+						String json = null;
 						// read the inputStream into a buffer
 						java.util.Scanner scanner = new java.util.Scanner(request.getInputStream());
 						scanner.useDelimiter("\\A");
-						String json =  scanner.hasNext() ? scanner.next() : "";
+						json =  scanner.hasNext() ? scanner.next() : "";
 						scanner.close();
 						LOGGER.info("PushPolicy API request: " + json);
 						
@@ -1655,7 +1678,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						PolicyLogger.metrics("XACMLPapServlet updateGroupsFromAPI notifyAC");
 						
 						// Group changed to send notification to PDPs, which might include changing the policies	
-						groupChanged(updatedGroup,loggingContext);
+						groupChanged(updatedGroup, loggingContext);
 						loggingContext.transactionEnded();
 						LOGGER.info("Success");
 
@@ -1910,6 +1933,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			}
 			if (group == null) {
 				String message = "Unknown groupId '" + groupId + "'";
+				//for fixing Header Manipulation of Fortify issue
+				message = message.replace("\n", "");
+				message = message.replace("\r", "");
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction Failed - See Error.log");
@@ -2031,7 +2057,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " PDP new/update had bad input. pdpId=" + pdpId + " objectFromJSON="+objectFromJSON);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Bad input, pdpid="+pdpId+" object="+objectFromJSON);
+					setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Bad input pdpid for object:"+objectFromJSON);
 				}
 				StdPDP pdp = (StdPDP) objectFromJSON;
 				if(pdp != null){
@@ -2133,7 +2159,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Group update had bad input. id=" + group.getId() + " objectFromJSON="+objectFromJSON);
 					loggingContext.transactionEnded();
 					PolicyLogger.audit("Transaction Failed - See Error.log");
-					setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Bad input, id="+group.getId() +" object="+objectFromJSON);
+					setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Bad input id for object:"+objectFromJSON);
 				}
 				// The Path on the PAP side is not carried on the RESTful interface with the AC
 				// (because it is local to the PAP)
