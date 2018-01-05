@@ -69,7 +69,8 @@ public class BackUpMonitor {
     private static Object notificationLock = new Object();
     private static BackUpHandler handler = null;
     private static Boolean stopFlag = false;
-    private static Thread t = null;
+    private static Thread monitorThread = null;
+    private static Thread handlerThread = null;
     private EntityManager em;
     private EntityManagerFactory emf;
 
@@ -101,15 +102,15 @@ public class BackUpMonitor {
     }
     
     private static void startThread(BMonitor bMonitor) {
-        t = new Thread(bMonitor);
-        t.start();
+        monitorThread = new Thread(bMonitor);
+        monitorThread.start();
     }
 
     public static void stop() throws InterruptedException{
         stopFlag = true;
-        if(t!=null){
-            t.interrupt();
-            t.join();
+        if(monitorThread!=null){
+            monitorThread.interrupt();
+            monitorThread.join();
         }
         instance = null;
     }
@@ -371,6 +372,9 @@ public class BackUpMonitor {
                                     selfEntity.setNotificationRecord(notificationRecord);
                                     em.persist(selfEntity);
                                     em.flush();
+                                    if(handlerThread!=null) {
+                                    	handlerThread.start();
+                                    }
                                 }
                             }
                         } else {
@@ -461,7 +465,12 @@ public class BackUpMonitor {
                 if (lastMasterNotification.equals(notificationRecord)) {
                     return;
                 }
-                callHandler(notification);
+                // Call Handler Thread. 
+                Runnable task = () -> {
+    				LOGGER.info("BackUpThread not set. Starting now !");
+    				callHandler(notification);
+    			};
+    			handlerThread = new Thread(task);
             }
         }
     }

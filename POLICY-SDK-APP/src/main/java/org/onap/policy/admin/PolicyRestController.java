@@ -402,7 +402,11 @@ public class PolicyRestController extends RestrictedBaseController{
 		policyLogger.info("***********************************************************************************************************************************");
 		
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
-		response.getWriter().write(body);
+		if(body != null && !body.isEmpty()){
+			response.getWriter().write(body);
+		}else{
+			response.getWriter().write("Failed");
+		}		
 		return null;
 	}
 	
@@ -420,7 +424,11 @@ public class PolicyRestController extends RestrictedBaseController{
 		policyLogger.info("*************************************************************************************************************************************");
 		
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
-		response.getWriter().write(body);
+		if(body != null && !body.isEmpty()){
+			response.getWriter().write(body);
+		}else{
+			response.getWriter().write("Failed");
+		}		
 		return null;
 	}
 	

@@ -48,7 +48,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.entity.ContentType;
+import org.onap.policy.api.DeletePolicyParameters;
+import org.onap.policy.api.DictionaryParameters;
 import org.onap.policy.api.PolicyParameters;
+import org.onap.policy.api.PushPolicyParameters;
 import org.onap.policy.common.im.AdministrativeStateException;
 import org.onap.policy.common.im.ForwardProgressException;
 import org.onap.policy.common.im.IntegrityMonitor;
@@ -58,9 +61,14 @@ import org.onap.policy.common.logging.ONAPLoggingContext;
 import org.onap.policy.common.logging.ONAPLoggingUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.pdp.rest.api.services.CreateUpdatePolicyServiceImpl;
+import org.onap.policy.pdp.rest.api.services.DeletePolicyService;
+import org.onap.policy.pdp.rest.api.services.GetDictionaryService;
+import org.onap.policy.pdp.rest.api.services.PushPolicyService;
 import org.onap.policy.pdp.rest.jmx.PdpRestMonitor;
 import org.onap.policy.rest.XACMLRest;
 import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.utils.CryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.pdp.std.functions.PolicyList;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
@@ -110,7 +118,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private static final String DEFAULT_MAX_CONTENT_LENGTH = "999999999"; //32767
-	private static final String CREATE_UPDATE_POLICY_SERVICE = "org.onap.policy.pdp.rest.api.services.CreateUpdatePolicyServiceImpl";
+	private static final String CREATE_UPDATE_POLICY_SERVICE = CreateUpdatePolicyServiceImpl.class.getCanonicalName();
+	private static final String DELETE_POLICY_SERVICE = DeletePolicyService.class.getCanonicalName();
+	private static final String GET_POLICY_SERVICE = GetDictionaryService.class.getCanonicalName();
+	private static final String PUSH_POLICY_SERVICE = PushPolicyService.class.getCanonicalName();
 	//
 	// Our application debug log
 	//
@@ -147,8 +158,12 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	private static volatile StdPDPStatus status = new StdPDPStatus();
 	private static final Object pdpStatusLock = new Object();
 	private static Constructor<?> createUpdatePolicyConstructor;
+	private static Constructor<?> deletePolicyConstructor;
+	private static Constructor<?> getPolicyConstructor;
+	private static Constructor<?> pushPolicyConstructor;
 
 	private static final String ENVIORNMENT_HEADER = "Environment";
+	
 	private static String environment = null;
 	//
 	// Queue of PUT requests
@@ -266,10 +281,25 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		// CreateUpdatePolicy ResourceName  
 		createUpdateResourceName = properties.getProperty("createUpdatePolicy.impl.className", CREATE_UPDATE_POLICY_SERVICE);
 		setCreateUpdatePolicyConstructor(createUpdateResourceName);
-
+		
+		// DeletePolicy ResourceName 
+		String deletePolicyResourceName = properties.getProperty("deletePolicy.impl.className", DELETE_POLICY_SERVICE);
+		setDeletePolicyConstructor(deletePolicyResourceName);
+		
+		// getPolicy ResourceName 
+		String getPolicyResourceName = properties.getProperty("getPolicy.impl.className", GET_POLICY_SERVICE);
+		setGetPolicyConstructor(getPolicyResourceName);
+		
+		// PushPolicy ResourceName 
+		String pushPolicyResourceName = properties.getProperty("pushPolicy.impl.className", PUSH_POLICY_SERVICE);
+		setPushPolicyConstructor(pushPolicyResourceName);
+		
 		// Create an IntegrityMonitor
 		try {
 			logger.info("Creating IntegrityMonitor");
+			if(properties.getProperty("javax.persistence.jdbc.password") != null ){
+				properties.setProperty("javax.persistence.jdbc.password", CryptoUtils.decryptTxtNoExStr(properties.getProperty("javax.persistence.jdbc.password", "")));
+			}
 			im = IntegrityMonitor.getInstance(pdpResourceName, properties);
 		} catch (Exception e) { 
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to create IntegrityMonitor" +e);
@@ -486,7 +516,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				logger.error("Exception Occured while getting Max Content lenght"+e);
 			}
 		} else {
-			String message = "Invalid cache: '" + cache + "' or content-type: '" + request.getContentType() + "'";
+			String message = "Invalid cache or content-type";
 			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + message);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
 			loggingContext.transactionEnded();
@@ -1240,7 +1270,6 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			while (! XACMLPdpServlet.configThreadTerminate) {
 				PutRequest request = XACMLPdpServlet.queue.take();
 				StdPDPStatus newStatus = new StdPDPStatus();
-				
 				PDPEngine newEngine = null;
 				synchronized(pdpStatusLock) {
 					XACMLPdpServlet.status.setStatus(Status.UPDATING_CONFIGURATION);
@@ -1269,13 +1298,15 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 							newStatus.addLoadWarning("Unable to save configuration: " + e.getMessage());
 						}
 					}
-					// Notification will be Sent Here.
-					XACMLPdpLoader.sendNotification();
 				} else {
 					newStatus.setStatus(Status.LAST_UPDATE_FAILED);
 				}
 				synchronized(pdpStatusLock) {
 					XACMLPdpServlet.status.set(newStatus);
+				}
+				if (Status.UP_TO_DATE.equals(newStatus.getStatus())) {
+					// Notification will be Sent Here.
+					XACMLPdpLoader.sendNotification();
 				}
 			}
 		} catch (InterruptedException e) {
@@ -1305,5 +1336,52 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, "createUpdatePolicy.impl.className", "xacml.pdp.init" +e);
 			throw new ServletException("Could not find the Class name : " +createUpdateResourceName + "\n" +e.getMessage());
 		}
+	}
+	
+	private static void setDeletePolicyConstructor(String deletePolicyResourceName) throws ServletException{		
+		try{
+			Class<?> deleteClass = Class.forName(deletePolicyResourceName);
+			deletePolicyConstructor = deleteClass.getConstructor(DeletePolicyParameters.class, String.class);
+		}catch(Exception e){
+			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, "deletePolicy.impl.className", "xacml.pdp.init");
+			throw new ServletException("Could not find the Class name : " +deletePolicyResourceName + "\n" +e.getMessage());
+		} 
+	}
+	
+	private static void setGetPolicyConstructor(String getPolicyResourceName) throws ServletException{		
+		try{
+			Class<?> getClass = Class.forName(getPolicyResourceName);
+			getPolicyConstructor = getClass.getConstructor(DictionaryParameters.class, String.class);
+		}catch(Exception e){
+			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, "getPolicy.impl.className", "xacml.pdp.init");
+			throw new ServletException("Could not find the Class name : " +getPolicyResourceName + "\n" +e.getMessage());
+		} 
+	}
+	
+	private static void setPushPolicyConstructor(String pushPolicyResourceName) throws ServletException{
+		try{
+			Class<?> pushClass = Class.forName(pushPolicyResourceName);
+			pushPolicyConstructor = pushClass.getConstructor(PushPolicyParameters.class, String.class);
+		}catch(Exception e){
+			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, "pushPolicy.impl.className", "xacml.pdp.init");
+			throw new ServletException("Could not find the Class name : " +pushPolicyResourceName + "\n" +e.getMessage());
+		} 
+	}
+	
+	public static Constructor<?> getGetPolicyConstructor() {
+		return getPolicyConstructor;
+	}
+	
+	public static Constructor<?> getDeletePolicyConstructor() {
+		return deletePolicyConstructor;
+	}
+	
+
+	public static Constructor<?> getPushPolicyConstructor() {
+		return pushPolicyConstructor;
+	}
+	
+	public static Object getPDPEngineLock() {
+		return pdpEngineLock;
 	}
 }

@@ -408,7 +408,7 @@ public class XACMLPdpServletTest extends TestCase{
 			
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPut(httpServletRequest, httpServletResponse);
-			Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid cache: 'policies' or content-type: 'text/json'");
+			Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid cache or content-type");
 			assertTrue(true);
 		}catch (Exception e){
 			System.out.println("Unexpected exception in testDoPutInvalidContentType");

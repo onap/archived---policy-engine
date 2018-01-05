@@ -35,6 +35,7 @@ import javax.persistence.Query;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.utils.CryptoUtils;
 
 import com.att.research.xacml.api.Attribute;
 import com.att.research.xacml.api.AttributeValue;
@@ -79,6 +80,11 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 	private static final PIPRequest PIP_REQUEST_TARGET	= new StdPIPRequest(
 			XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
 			new IdentifierImpl("target"), 
+			XACML.ID_DATATYPE_STRING);
+	
+	private static final PIPRequest PIP_REQUEST_CLNAME = new StdPIPRequest(
+			XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+			new IdentifierImpl("clname"), 
 			XACML.ID_DATATYPE_STRING);
 
 	private void addIntegerAttribute(StdMutablePIPResponse stdPIPResponse, Identifier category, Identifier attributeId, int value, PIPRequest pipRequest) {
@@ -130,12 +136,13 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 		String[] s2 = s1[1].split(":");
 		int timeWindowVal = Integer.parseInt(s2[0]);// number [of minutes, hours, days...]
 		String timeWindowScale = s2[1];//e.g., minute, hour, day, week, month, year
-		String actor = getActor(pipFinder).iterator().next();
-		String operation = getRecipe(pipFinder).iterator().next();
-		String target = getTarget(pipFinder).iterator().next();
+		String actor = getOperationAttribute(PIP_REQUEST_ACTOR, pipFinder).iterator().next();
+		String operation = getOperationAttribute(PIP_REQUEST_RECIPE, pipFinder).iterator().next();
+		String target = getOperationAttribute(PIP_REQUEST_TARGET, pipFinder).iterator().next();
+		String clname = getOperationAttribute(PIP_REQUEST_CLNAME, pipFinder).iterator().next();
 		String timeWindow = timeWindowVal + " " + timeWindowScale;
 		LOGGER.info("Going to query DB about: "+actor + " " + operation + " " + target + " " + timeWindow);
-		int countFromDB = getCountFromDB(actor, operation, target, timeWindowVal, timeWindowScale);
+		int countFromDB = getCountFromDB(actor, operation, target, clname, timeWindowVal, timeWindowScale);
 		StdMutablePIPResponse stdPIPResponse	= new StdMutablePIPResponse();
 		this.addIntegerAttribute(stdPIPResponse,
 				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
@@ -175,89 +182,31 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 	}
 
 
-	private Set<String> getActor(PIPFinder pipFinder) {
-		/*
-		 * Get the AT&T UID from either the subject id or the attuid property
-		 */
-		PIPResponse pipResponseATTUID	= this.getAttribute(PIP_REQUEST_ACTOR, pipFinder);
-		if (pipResponseATTUID == null) {
+	private Set<String> getOperationAttribute(PIPRequest request, PIPFinder pipFinder) {
+		PIPResponse pipResponseUID	= this.getAttribute(request, pipFinder);
+		if (pipResponseUID == null) {
 			return new HashSet<>();
 		}
 		/*
 		 * Iterate over all of the returned results and do the LDAP requests
 		 */
-		Collection<Attribute> listATTUIDs	= pipResponseATTUID.getAttributes();
-		Set<String> setATTUIDs			= new HashSet<>();
-		for (Attribute attributeATTUID: listATTUIDs) {
-			Iterator<AttributeValue<String>> iterAttributeValues	= attributeATTUID.findValues(DataTypes.DT_STRING);
+		Collection<Attribute> listIDs	= pipResponseUID.getAttributes();
+		Set<String> setUIDs			= new HashSet<>();
+		for (Attribute attributeUID: listIDs) {
+			Iterator<AttributeValue<String>> iterAttributeValues	= attributeUID.findValues(DataTypes.DT_STRING);
 			if (iterAttributeValues != null) {
 				while (iterAttributeValues.hasNext()) {
-					String attuid	= iterAttributeValues.next().getValue();
-					if (attuid != null) {
-						setATTUIDs.add(attuid);
+					String uid	= iterAttributeValues.next().getValue();
+					if (uid != null) {
+						setUIDs.add(uid);
 					}
 				}
 			}
 		}
-		return setATTUIDs;
+		return setUIDs;
 	}
 
-	private Set<String> getRecipe(PIPFinder pipFinder) {
-		/*
-		 * Get the AT&T UID from either the subject id or the attuid property
-		 */
-		PIPResponse pipResponseATTUID	= this.getAttribute(PIP_REQUEST_RECIPE, pipFinder);
-		if (pipResponseATTUID == null) {
-			return new HashSet<>();
-		}
-		/*
-		 * Iterate over all of the returned results and do the LDAP requests
-		 */
-		Collection<Attribute> listATTUIDs	= pipResponseATTUID.getAttributes();
-		Set<String> setATTUIDs			= new HashSet<>();
-		for (Attribute attributeATTUID: listATTUIDs) {
-			Iterator<AttributeValue<String>> iterAttributeValues	= attributeATTUID.findValues(DataTypes.DT_STRING);
-			if (iterAttributeValues != null) {
-				while (iterAttributeValues.hasNext()) {
-					String attuid	= iterAttributeValues.next().getValue();
-					if (attuid != null) {
-						setATTUIDs.add(attuid);
-					}
-				}
-			}
-		}
-		return setATTUIDs;
-	}
-
-
-	private Set<String> getTarget(PIPFinder pipFinder) {
-		/*
-		 * Get the AT&T UID from either the subject id or the attuid property
-		 */
-		PIPResponse pipResponseATTUID	= this.getAttribute(PIP_REQUEST_TARGET, pipFinder);
-		if (pipResponseATTUID == null) {
-			return new HashSet<>();
-		}
-		/*
-		 * Iterate over all of the returned results and do the LDAP requests
-		 */
-		Collection<Attribute> listATTUIDs	= pipResponseATTUID.getAttributes();
-		Set<String> setATTUIDs			= new HashSet<>();
-		for (Attribute attributeATTUID: listATTUIDs) {
-			Iterator<AttributeValue<String>> iterAttributeValues	= attributeATTUID.findValues(DataTypes.DT_STRING);
-			if (iterAttributeValues != null) {
-				while (iterAttributeValues.hasNext()) {
-					String attuid	= iterAttributeValues.next().getValue();
-					if (attuid != null) {
-						setATTUIDs.add(attuid);
-					}
-				}
-			}
-		}
-		return setATTUIDs;
-	}
-
-	private static int getCountFromDB(String actor, String operation, String target, int timeWindow, String timeUnits){
+	private static int getCountFromDB(String actor, String operation, String target, String clname, int timeWindow, String timeUnits){
 		EntityManager em;
 		try{
 			Properties properties = XACMLProperties.getProperties();
@@ -276,12 +225,14 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 		String sql = "select count(*) as count from operationshistory10 where outcome<>'Failure_Guard' and actor=?"
 				+ " and operation=?"
 				+ " and target=?"
+				+ " and clname=?"
 				+ " and endtime between date_sub(now(),interval ? "+timeUnits+") and now()";
 		Query nq = em.createNativeQuery(sql);
 		nq.setParameter(1, actor);
 		nq.setParameter(2, operation);
 		nq.setParameter(3, target);
-		nq.setParameter(4, timeWindow);
+		nq.setParameter(4, clname);
+		nq.setParameter(5, timeWindow);
 		int ret = ((Number)nq.getSingleResult()).intValue();
 		LOGGER.info("###########************** History count: " + ret);
 		em.close();
