@@ -127,6 +127,9 @@ public class PushPolicyController {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
 			response.addHeader(errorMsg, "unknownGroupId");
 			response.addHeader(operation, "push");
+			//for fixing Header Manipulation of Fortify issue
+			message = message.replace("\n", "");
+			message = message.replace("\r", "");
 			response.addHeader(messageContent, message);
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return;
