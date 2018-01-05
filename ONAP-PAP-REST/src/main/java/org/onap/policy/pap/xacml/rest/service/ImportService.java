@@ -48,11 +48,25 @@ public class ImportService {
 	private static String service = "service";
 	private static String extractDir = "ExtractDir";
 	private static String successMessage = "success";
+	private static String invalidServiceName = "Invalid ServiceName";
 	public void doImportMicroServicePut(HttpServletRequest request, HttpServletResponse response) {
-		String importServiceCreation = request.getParameter("importService");;
+		String importServiceCreation = request.getParameter("importService");
 		String fileName = request.getParameter("fileName");
 		String version = request.getParameter("version");
 		String serviceName = request.getParameter("serviceName");
+		
+		if(serviceName == null || serviceName.isEmpty()){
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.addHeader(errorMsg, "missing");	
+			response.addHeader(operation, importHeader);
+			response.addHeader(service, invalidServiceName);
+			return;
+		}else{
+			//for fixing Header Manipulation of Fortify issue
+			serviceName = serviceName.replace("\n", "");
+			serviceName = serviceName.replace("\r", "");
+		}
+
 		String description = request.getParameter("description");
 		Map<String, String> successMap = new HashMap<>();
 		if(("BRMSPARAM").equals(importServiceCreation)){
