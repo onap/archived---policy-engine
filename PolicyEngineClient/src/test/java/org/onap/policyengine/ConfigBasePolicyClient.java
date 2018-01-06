@@ -74,8 +74,6 @@ public class ConfigBasePolicyClient{
             PolicyChangeResponse response = null;
             if (!isEdit) {
                 response = policyEngine.createPolicy(policyParameters);
-            } else {
-            	response = policyEngine.updatePolicy(policyParameters);
             }
             
             if(response.getResponseCode()==200){
