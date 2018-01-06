@@ -73,6 +73,7 @@ public class ConfigBasePolicyClient{
             PolicyChangeResponse response = null;
             if (!isEdit) {
                 response = policyEngine.createPolicy(policyParameters);
+                isEdit = true;
             } else {
             	response = policyEngine.updatePolicy(policyParameters);
             }
