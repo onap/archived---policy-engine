@@ -47,6 +47,7 @@ import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
+import org.onap.policy.utils.CryptoUtils;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
@@ -86,7 +87,7 @@ public class DeleteHandler {
 		String papDbDriver = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_DRIVER);
 		String papDbUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_URL);
 		String papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
-		String papDbPassword = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD);
+		String papDbPassword = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD, ""));	
 		Connection con = null;
 		
 		try {

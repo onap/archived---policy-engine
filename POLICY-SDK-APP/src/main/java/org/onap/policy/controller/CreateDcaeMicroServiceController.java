@@ -700,6 +700,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				//List Datatype
 				Set<String> keys= keyValues.keySet();
 				Iterator<String> itr=keys.iterator();
+				boolean isDefinedType = false;
 				while(itr.hasNext()){
 					String key= itr.next();
 					if((!("type").equals(key) ||("required").equals(key)))
@@ -712,17 +713,18 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 							    constraints.add(keyValues.get(key));
 							}
 						}else{
-							//This is user defined string
+							//This is user defined type
 							String trimValue=value.substring(value.lastIndexOf('.')+1);
 							StringBuilder referenceIndividualStringBuilder= new StringBuilder();
 							referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-true");
 							referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+							isDefinedType = true;
 						}
 					}				
 
 				}
 
-				if(keyValues.get("type").equalsIgnoreCase(LIST)){
+				if(!isDefinedType && keyValues.get("type").equalsIgnoreCase(LIST)){ //type is not user defined and is a list but no constraints defined.
 					if(constraints == null || constraints.isEmpty()){
 						referenceStringBuilder.append(keySetString+"=MANY-true"+",");
 					}

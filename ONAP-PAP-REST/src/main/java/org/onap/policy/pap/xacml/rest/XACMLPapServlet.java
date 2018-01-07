@@ -433,7 +433,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
             throw new PAPException("papDbUrl is null");
         }
         setPapDbUrl(papDbUrl);
-        papDbUser = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_USER);
+        papDbPassword = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_DB_PASSWORD, ""));
         if(papDbUser == null){
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE,"XACMLPapServlet", " ERROR: Bad papDbUser property entry");
             throw new PAPException("papDbUser is null");
