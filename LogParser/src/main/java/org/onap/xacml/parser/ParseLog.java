@@ -51,7 +51,10 @@ import org.onap.policy.common.im.IntegrityMonitor;
 import org.onap.policy.common.im.StandbyStatusException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.utils.CryptoUtils;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.xacml.parser.LogEntryObject.LOGTYPE;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * Parse log files and store the information in a H2 database.
@@ -777,6 +780,7 @@ public class ParseLog {
 	}
 	
 	public static Properties getPropertiesValue(String fileName) {
+
 		Properties config = new Properties();
 		Path file = Paths.get(fileName);
 		if (file.toFile().exists()) {
@@ -809,8 +813,10 @@ public class ParseLog {
 					jdbcUrl = config.getProperty("JDBC_URL").replace("'", "");
 					jdbcUser = config.getProperty("JDBC_USER");
 					jdbcDriver =  config.getProperty("JDBC_DRIVER");
+					
 					jdbcPassword = CryptoUtils.decryptTxtNoExStr(config.getProperty("JDBC_PASSWORD", ""));
 					config.setProperty("javax.persistence.jdbc.password", CryptoUtils.decryptTxtNoExStr(config.getProperty("javax.persistence.jdbc.password", "")));
+					
 					return config;
 
 				} catch (IOException e) {					

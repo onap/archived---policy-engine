@@ -165,7 +165,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 
 	 $scope.choices = [];
 	 $scope.attributeDatas = [{"attributes" : $scope.choices}];
-	 
+	 $scope.isInitEditTemplate = true;  //just initially create the edit template, didn't click add button yet.
 	 $scope.addNewChoice = function(value) {
 		 console.log(value);
 		 if(value != undefined){
@@ -176,12 +176,23 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			var div = document.getElementById(value+"@0");
 			if(div != null){
 				var clone = div.cloneNode(true); 
-				var addElement = parentElement.childElementCount + 1;
+				var addElement = parentElement.childElementCount;
 				clone.id = ''+value+'@'+addElement;
 				clone.value = '';
-				clone.className += ' child_single'; //here cloned is single element
-				document.getElementById("div."+value).appendChild(clone);
-				plainAttributeKeys.push(''+value+'@'+addElement);
+				if($scope.temp.policy.editPolicy || $scope.temp.policy.readOnly){ //if it's view or edit
+					if($scope.temp.policy.ruleData[clone.id] || ($scope.temp.policy.editPolicy && !$scope.isInitEditTemplate)){  // Only append child if its value found in ruleData or edit mode
+						if($scope.temp.policy.ruleData[clone.id]){
+						    clone.value = $scope.temp.policy.ruleData[clone.id];
+						}
+						clone.className += ' child_single'; //here cloned is single element
+						document.getElementById("div."+value).appendChild(clone);
+						plainAttributeKeys.push(''+value+'@'+addElement);
+					}
+				}else{ //not view or edit
+					clone.className += ' child_single'; //here cloned is single element
+					document.getElementById("div."+value).appendChild(clone);
+					plainAttributeKeys.push(''+value+'@'+addElement);
+				}
 			}else{
 				div = document.getElementById("div."+value+"@0");
 				
@@ -219,6 +230,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 								plainAttributeKeys.push(inputs[i].id);
 							}
 						} else {
+//							removeValues.push(inputs[i].id);
 							plainAttributeKeys.push(inputs[i].id);
 						}
 					}else {
@@ -320,8 +332,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                     	var plainAttributeKeys = [];
                     	$scope.dcaeModelData = data[0].dcaeModelData;
                     	$scope.dcaeJsonDate = data[0].jsonValue;
-                    	$scope.allManyTrueKeys =  data[0].allManyTrueKeys;
-                    	console.log("$scope.allManyTrueKeys: " + $scope.allManyTrueKeys);
+                    	if(data[0].allManyTrueKeys){
+	                    	console.log("$scope.allManyTrueKeys: " + $scope.allManyTrueKeys);
+                    	}
                     	console.log("$scope.dcaeJsonDate: " + $scope.dcaeJsonDate);	
                     	var attributes = $scope.dcaeModelData.attributes;
                     	var refAttributes = $scope.dcaeModelData.ref_attributes;
@@ -371,9 +384,15 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                 		
                     });
                     
-                    if($scope.temp.policy.editPolicy || $scope.temp.policy.readOnly){
+                    if($scope.temp.policy.editPolicy || $scope.temp.policy.readOnly){  // If it's veiw or edit
+                    	
+                    	if($scope.temp.policy.editPolicy){
+                        	$scope.isInitEditTemplate = true;
+                    	}
+                    	
                     	var checkData = [];
                     	var data = [];
+                    	    // If ruleData contains extra elements created by clicked add button 
 	                    	if($scope.temp.policy.ruleData != null){
 	                    		var propNames = Object.getOwnPropertyNames($scope.temp.policy.ruleData);
 	                    		propNames.forEach(function(name) {
@@ -383,32 +402,36 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	                    		var extraElements = data;
 	                    		
 	            		    	if(plainAttributeKeys != null){
-	            		    		for(b = 0; b < plainAttributeKeys.length; b++){ // remove already populated elements from extraElements array
+	            		    		for(b = 0; b < plainAttributeKeys.length; b++){ // Remove already populated elements from data array
 	            		    			var newValue = plainAttributeKeys[b].split("*");
 	            		    			for(a = 0; a < data.length; a++){
-		            		    			if(data[a] === newValue[0]){
+		            		    			if(data[a] === newValue[0] || data[a] === (newValue[0]+"@0")){
 		            		    				extraElements.splice(a, 1);
 		            		    			}
 	            		    			}
 	            		    	}
 	                    		
-	            		    	//--- populate these extral elements generated from clicking add button
+	            		    	//--- Populate these extra elements created by clicked add button 
 	                    		for(a = 0; a < extraElements.length; a++){            			
 	                    			if(extraElements[a].includes("@")){
 			                    			var n = extraElements[a].lastIndexOf("@");
-			                    			var key = extraElements[a].substring(0, n+2); //include @x in key also by n+2 since x can be  1, or 2, or 3
-				                            checkData.push(key);
+			                    			if(n > 0){
+				                    			var key = extraElements[a].substring(0, n+2); //include @x in key also by n+2 since x can be  1, or 2, or 3
+					                            checkData.push(key);
+			                    			}
 	                    			}
 	                    		}
 	                    		var unique = checkData.filter(onlyUnique);
 	                    		for(i =0; i < unique.length; i++){
 	                    			//remove @x and let addNewChoice add @1 or @2...
 	                    			var newKey = unique[i].substring(0, unique[i].length-2);
+	                    			console.log("newKey: " + newKey);	
 	                    			$scope.addNewChoice(newKey);
 	                    		}
 	                    	}
 	                    }
-
+                        //After initially create the edit template, reset it to false.
+	                    $scope.isInitEditTemplate = false;
                     }
                     var ele = angular.element(document.getElementById("DynamicTemplate"));
             		$compile(ele.contents())($scope);
@@ -517,7 +540,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		    		if (lableList.length > 0){
 		    			array = true;
 		    		}
-		    		if ( key=="0"){
+		    		if ( key==="0"){
 		    			var newKey = lableList.pop();
 		    			$scope.labelLayout(baseLevel, newKey, array );
 		    			if (array){
@@ -597,7 +620,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		        			if (list.length===0){ //not dropdown element
 		        				$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "text");
 		        			}else{
-		        				$scope.dropBoxLayout(attirbuteLabel, attributekey, array, dataTest[key], list);
+		        				$scope.dropBoxLayout(attirbuteLabel, attributekey, array, dataTest[key], list, isRequired);
 		        			}
 		        			break;
 		        	}
@@ -618,9 +641,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		var labeltext = null;
 		var requiredLabName = "";
 		if (matching.includes(attibuteKey)){
-			labeltext = document.createTextNode(attibuteKey + "*!");		
+			labeltext = document.createTextNode(attibuteKey + "*!");	
+			isRequired = true;  //set required as true for matching element
 		}else {
-			//var labeltext = document.createTextNode(refattributeLabel);
 			if(isRequired){
 				requiredLabName = attibuteKey + " *";
 				labeltext = document.createTextNode(requiredLabName);
@@ -656,7 +679,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		var checkKey;
 		if(attributeManyKey){
 			checkKey = labelValue + attibuteKey+'@0';
-			textField.setAttribute("id" , ''+labelValue + attibuteKey+'@0'+'');
+			textField.setAttribute("id" , ''+labelValue + attibuteKey+'@0'+''); 
 			var divTag = document.createElement("div");
 			divTag.setAttribute("id", "div."+ labelValue +attibuteKey);
 			var addButton = document.createElement("BUTTON");
@@ -679,7 +702,10 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			var divTag = document.createElement("div");
 			divTag.setAttribute("id", id); 
 			document.getElementById(divID).appendChild(divTag);
-			textField.className += ' first_child';			
+			textField.className += ' first_child';	
+			if(isRequired){
+				textField.setAttribute("required", "true");
+			}			
 			divTag.appendChild(textField); 			
 			document.getElementById(divID).appendChild(divTag); 
 			
@@ -720,18 +746,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			if (attributeManyKey){
 				var newCheckKey = checkKey.replace(attibuteKey + '@0',attibuteKey);
 				document.getElementById(newCheckKey +'@0').value = $scope.temp.policy.ruleData[newCheckKey +'@0'];
-				var i =1 ;
-				while(true){
-					var newValue = $scope.temp.policy.ruleData[newCheckKey+'@'+i];
-					if(newValue==null){
-						break;
-					}else{
-						$scope.addNewChoice(newCheckKey);
-						document.getElementById(newCheckKey+'@'+i).value = newValue;
-						i = i+1;
-					}
-				}		
-		
 			}else{
 				document.getElementById(checkKey).value = $scope.temp.policy.ruleData[checkKey];
 			}
@@ -807,24 +821,24 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 
 
 	var label = document.createElement("Label")
+	
+	var refAttributes = $scope.dcaeModelData.ref_attributes;
+	if(isRequired != true && refAttributes){ //check refAttributes also		
+	   		var refAttributesList = refAttributes.split(splitComma);
+	   		for (k = 0; k < refAttributesList.length; k++){
+	       		var refAttribute = refAttributesList[k].split(splitEqual);	       		
+	       		if (attributeName == refAttribute[0].trim() && refAttribute[1].includes("required-true")){
+	       			isRequired = true;
+	       		}
+	   		}
+	}
+	
 	if (matching.includes(attributeName)){
 		var labeltext = document.createTextNode(attributeName + "*!");
 		label.appendChild(labeltext);
+		isRequired = true;  //set required as true for matching element
 	}else {
-		var labeltext = document.createTextNode(attributeName);
-		var isRequired = false;
-		var refAttributes = $scope.dcaeModelData.ref_attributes;
-		if(refAttributes){		
-       		var refAttributesList = refAttributes.split(splitComma);
-       		for (k = 0; k < refAttributesList.length; k++){
-           		var refAttribute = refAttributesList[k].split(splitEqual);
-           		
-           		if (attributeName == refAttribute[0].trim() && refAttribute[1].includes("required-true")){
-           			isRequired = true;
-           		}
-       		}	    			
-		}
-		
+		var labeltext = document.createTextNode(attributeName);		
 		if(isRequired){
 			requiredLabName = attributeName+ " *";
 			labeltext = document.createTextNode(requiredLabName);
@@ -844,9 +858,11 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	if(isRequired){
 	   listField.setAttribute("required", true);
 	}
-	var optionFirst = document.createElement('option');
-	optionFirst.setAttribute('value', "");
-	listField.appendChild(optionFirst);	
+	if( many != true || isRequired != true){ // add an empty option for not required or not multiple select element
+		var optionFirst = document.createElement('option');
+		optionFirst.setAttribute('value', "");
+		listField.appendChild(optionFirst);	
+	}
 	
 	for (i=0; i < listemunerateValues.length; i += 1) {
 	    option = document.createElement('option');
