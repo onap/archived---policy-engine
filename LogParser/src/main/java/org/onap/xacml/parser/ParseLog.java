@@ -50,6 +50,7 @@ import org.onap.policy.common.im.AdministrativeStateException;
 import org.onap.policy.common.im.IntegrityMonitor;
 import org.onap.policy.common.im.StandbyStatusException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.utils.CryptoUtils;
 import org.onap.xacml.parser.LogEntryObject.LOGTYPE;
 
 /**
@@ -808,7 +809,8 @@ public class ParseLog {
 					jdbcUrl = config.getProperty("JDBC_URL").replace("'", "");
 					jdbcUser = config.getProperty("JDBC_USER");
 					jdbcDriver =  config.getProperty("JDBC_DRIVER");
-					jdbcPassword = config.getProperty("JDBC_PASSWORD");
+					jdbcPassword = CryptoUtils.decryptTxtNoExStr(config.getProperty("JDBC_PASSWORD", ""));
+					config.setProperty("javax.persistence.jdbc.password", CryptoUtils.decryptTxtNoExStr(config.getProperty("javax.persistence.jdbc.password", "")));
 					return config;
 
 				} catch (IOException e) {					
