@@ -52,6 +52,7 @@ import org.onap.policy.rest.jpa.FunctionDefinition;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
+import org.onap.policy.utils.CryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
@@ -182,7 +183,7 @@ public class PolicyController extends RestrictedBaseController {
 			setSmtpHost(prop.getProperty("onap.smtp.host"));
 			setSmtpPort(prop.getProperty("onap.smtp.port"));
 			setSmtpUsername(prop.getProperty("onap.smtp.userName"));
-			setSmtpPassword(prop.getProperty("onap.smtp.password"));
+			setSmtpPassword(CryptoUtils.decryptTxtNoExStr(prop.getProperty("onap.smtp.password")));
 			setSmtpApplicationName(prop.getProperty("onap.application.name"));
 			setSmtpEmailExtension(prop.getProperty("onap.smtp.emailExtension"));
 			//Log Database Properties
@@ -194,7 +195,7 @@ public class PolicyController extends RestrictedBaseController {
 			//Xacml Database Properties
 			setXacmldbUrl(prop.getProperty("javax.persistence.jdbc.url"));
 			setXacmldbUserName(prop.getProperty("javax.persistence.jdbc.user"));
-			setXacmldbPassword(prop.getProperty("javax.persistence.jdbc.password"));
+			setXacmldbPassword(CryptoUtils.decryptTxtNoExStr(prop.getProperty("javax.persistence.jdbc.password", "")));
 			//AutoPuh
 			setAutoPushAvailable(prop.getProperty("xacml.automatic.push"));
 			setAutoPushDSClosedLoop(prop.getProperty("xacml.autopush.closedloop"));

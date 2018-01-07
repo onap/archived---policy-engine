@@ -36,6 +36,7 @@ import java.util.Properties;
 
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.utils.CryptoUtils;
 
 import com.google.gson.Gson;
 
@@ -77,7 +78,7 @@ public class ElasticSearchPolicyUpdate {
 		String elkURL = null;
 		String databseUrl = null;
 		String userName = null;
-		String password = null;
+		String txt = null;
 		String databaseDriver = null; 
 		
 		String propertyFile = System.getProperty("PROPERTY_FILE");
@@ -93,11 +94,11 @@ public class ElasticSearchPolicyUpdate {
 					elkURL = config.getProperty("policy.elk.url");
 					databseUrl = config.getProperty("policy.database.url");
 					userName = config.getProperty("policy.database.username");
-					password = config.getProperty("policy.database.password");
+					txt = CryptoUtils.decryptTxtNoExStr(config.getProperty("policy.database.password"));
 					databaseDriver = config.getProperty("policy.database.driver");
-					if(elkURL == null || databseUrl == null || userName == null || password == null || databaseDriver == null){
-						LOGGER.error("One of the Property is null in policyelk.properties = elkurl:databaseurl:username:password:databasedriver  " 
-								+ elkURL + ":"+ databseUrl + ":"+ userName + ":"+ password + ":"+ databaseDriver + ":");
+
+					if(elkURL == null || databseUrl == null || userName == null || txt == null || databaseDriver == null){
+						LOGGER.error("please check the elk configuration");
 					}
 				} catch (Exception e) {
 					LOGGER.error("Config File doesn't Exist in the specified Path " + file.toString(),e);
@@ -118,7 +119,7 @@ public class ElasticSearchPolicyUpdate {
 		
 		try {
 			Class.forName(databaseDriver);
-			conn = DriverManager.getConnection(databseUrl, userName, password);
+			conn = DriverManager.getConnection(databseUrl, userName, txt);
 			stmt = conn.createStatement();
 			
 			String policyEntityQuery = "Select * from PolicyEntity";

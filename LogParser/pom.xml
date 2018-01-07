@@ -103,7 +103,8 @@
 		    <groupId>org.mockito</groupId>
 		    <artifactId>mockito-all</artifactId>
 		    <version>1.10.19</version>
-		</dependency>  
+		</dependency>
+		<!-- For using new CryptoUtils -->   
 		<dependency>
 			<groupId>org.onap.policy.engine</groupId>
 			<artifactId>PolicyEngineUtils</artifactId>
