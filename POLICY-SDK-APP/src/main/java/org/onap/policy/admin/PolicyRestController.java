@@ -84,6 +84,15 @@ public class PolicyRestController extends RestrictedBaseController{
 	
 	private static CommonClassDao commonClassDao;
 	
+	public PolicyRestController(){
+		//default constructor
+	}
+
+	@Autowired
+	private PolicyRestController(CommonClassDao commonClassDao){
+		PolicyRestController.commonClassDao = commonClassDao;
+	}
+	
 	public static CommonClassDao getCommonClassDao() {
 		return commonClassDao;
 	}
@@ -92,14 +101,7 @@ public class PolicyRestController extends RestrictedBaseController{
 		PolicyRestController.commonClassDao = commonClassDao;
 	}
 	
-	@Autowired
-	private PolicyRestController(CommonClassDao commonClassDao){
-		PolicyRestController.commonClassDao = commonClassDao;
-	}
-	
-	public PolicyRestController(){
-		//default constructor
-	}
+
 
 	@RequestMapping(value={"/policycreation/save_policy"}, method={RequestMethod.POST})
 	public void policyCreationController(HttpServletRequest request, HttpServletResponse response) {

@@ -1,4 +1,4 @@
-/*-
+    /*-
  * ============LICENSE_START=======================================================
  * PolicyEngineClient
  * ================================================================================
@@ -47,8 +47,7 @@ public class ConfigBasePolicyClient{
             policyParameters.setConfigName("testBase"); //required
             policyParameters.setConfigBodyType(PolicyType.OTHER); //required
             policyParameters.setConfigBody("testing");  //required
-            //policyParameters.setPolicyScope("MikeConsole"); //Directory will be created where the Policies are saved... this displays a a subscope on the GUI
-            
+                        
             //Set the Config Attributes... These are Optional
             Map<String, String> configAttributes = new HashMap<>(); 
             configAttributes.put("Template", "SampleTemplate");
