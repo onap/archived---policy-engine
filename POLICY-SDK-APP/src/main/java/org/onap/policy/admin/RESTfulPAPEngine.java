@@ -467,12 +467,10 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 		            	final CollectionType javaType = 
 		            	      mapper.getTypeFactory().constructCollectionType(collectionTypeClass, responseContentClass);
 	
-		            	Object objectFromJSON = mapper.readValue(json, javaType);
-						return objectFromJSON;
+		            	return (Object)mapper.readValue(json, javaType);
 		            } else {
 		            	// single value object expected
-			            Object objectFromJSON = mapper.readValue(json, responseContentClass);
-						return objectFromJSON;
+			            return (Object)mapper.readValue(json, responseContentClass);
 		            }
             	}
 
