@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_27a2dfae",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/ConfigBasePolicyClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-08T23:15:34Z",
+      "side": 1,
+      "message": "It\u0027s not obvious to me why the \"updatePolicy\" call is removed on this review.   I suspect it is sonar flagged.  Can you briefly explain the reason why unnecessary?   Thank you",
+      "revId": "330fcfe76ad504ff5a33e15c421e0dd258ddffa6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
