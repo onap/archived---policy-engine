@@ -257,7 +257,7 @@ public class ActionPolicyController extends RestrictedBaseController {
             ruleMap.put("dynamicRuleAlgorithmField2", attributeValue);
         }
         // Rule Attribute added as value
-        else if (((jaxbActionTypes.get(0).getValue()) instanceof AttributeValueType)) {
+        else if ((jaxbActionTypes.get(0).getValue()) instanceof AttributeValueType) {
             AttributeValueType actionConditionAttributeValue = (AttributeValueType) jaxbActionTypes.get(0).getValue();
             String attributeValue = (String) actionConditionAttributeValue.getContent().get(0);
             ruleMap.put("dynamicRuleAlgorithmField2", attributeValue);
