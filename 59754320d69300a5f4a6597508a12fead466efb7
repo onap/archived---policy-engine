@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_fdd6c8c4",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/ConfigBasePolicyClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-01-09T21:21:05Z",
+      "side": 1,
+      "message": "This is not functional code for the application, it is an exmample we give to clients as a starting point to help setup their own client or test.  Here if isEdit is false then we call createPolicy() and if isEdit is true then we call updatePolicy().  So this change will do nothing.  isEdit is set at the top before the main() to either false or true depending on what you want to do.  Most clients probably take this and create separate classes for create and update but like I said its an example we give to them.",
+      "range": {
+        "startLine": 76,
+        "startChar": 16,
+        "endLine": 76,
+        "endChar": 30
+      },
+      "revId": "59754320d69300a5f4a6597508a12fead466efb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
