@@ -22,6 +22,30 @@
       "revId": "59754320d69300a5f4a6597508a12fead466efb7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b59ff8b3",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/ConfigBasePolicyClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-09T23:28:46Z",
+      "side": 1,
+      "message": "I see, isEdit is hardcoded above, therefore the else would have never been hit as it was in Srinivas original submission.   \n\nMike, what Srinivas is trying to do is to clean the base as this is very likely reported by sonar (as probably as well as System.out in lines 81-85), so I think is better to change this to reduce code debt.\n\nI think to correct this can do something like:\n\nstatic Boolean isEdit \u003d new Random().nextBoolean();\n\nand leave the code as is, with that change, both the if and else statements will be reachable (as it was before the else was dead code and surely sonar would flag it)",
+      "parentUuid": "5a93c517_fdd6c8c4",
+      "range": {
+        "startLine": 76,
+        "startChar": 16,
+        "endLine": 76,
+        "endChar": 30
+      },
+      "revId": "59754320d69300a5f4a6597508a12fead466efb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
