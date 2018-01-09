@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_e799576f",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/service/ImportService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-09T01:06:43Z",
+      "side": 1,
+      "message": "Not sure if this will fix fortify reports all together (?).   Does the service name conform to a pattern that can be validated against through a regex or a whitelist mechanism?",
+      "revId": "03835006cf33ff12d430513d68fbd00e61572cd7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
