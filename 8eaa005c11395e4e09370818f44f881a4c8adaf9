@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_dd6e6cc9",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1621
+      },
+      "writtenOn": "2018-01-09T16:44:09Z",
+      "side": 1,
+      "message": "(Common Modules)IntegrityMonitor requires the properties to be passed to the constructor.  It does not directly read properties from the file system.\n\n(Common Modules) StateManagement does not deal with properties at all. The JPA ElementManagementFactory (which uses DB credentials) is passed to the constructor.\n\nIn ActiveStandbyFeature, the getDroolsPdpsConnector()creates a JpaDroolsPdpsConnector which requires DB credentials to create a JPA ElementManagementFactory.\n\nIn StateManagementFeature, the creation of a DroolsPDPIntegrityMonitor reads the DB credential properties.\n\nThere, of course, is also usage of credentials in JUnit tests, but, I assume that is no issue.",
+      "parentUuid": "5a93c517_478e0b30",
+      "revId": "8eaa005c11395e4e09370818f44f881a4c8adaf9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_a77caf21",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
         "patchSetId": 3
