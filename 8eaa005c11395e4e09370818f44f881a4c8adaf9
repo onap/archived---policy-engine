@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_bdc12082",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1621
+      },
+      "writtenOn": "2018-01-09T16:55:24Z",
+      "side": 1,
+      "message": "Also...in PersistenceFeature, the creation of a KieSession calls getDroolsSessionConnector() which reads the DB credentials.",
+      "parentUuid": "5a93c517_478e0b30",
+      "revId": "8eaa005c11395e4e09370818f44f881a4c8adaf9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_a77caf21",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
         "patchSetId": 3
