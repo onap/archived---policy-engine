@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_478e0b30",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-09T00:12:56Z",
+      "side": 1,
+      "message": "Kevin M., any other changes in integrity monitor affected?  In other words, is the properties file accessed without going through the decryption process in the password?",
+      "revId": "8eaa005c11395e4e09370818f44f881a4c8adaf9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a77caf21",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-09T00:12:56Z",
+      "side": 1,
+      "message": "By quickly looking at code, it seems to me, you\u0027ll never have a \"null\" here, I think it is possible to end up with empty string instead.",
+      "revId": "8eaa005c11395e4e09370818f44f881a4c8adaf9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_07b1e3f7",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-09T00:12:56Z",
+      "side": 1,
+      "message": "why the pdp group id is considered as sensitive information that should not be logged ?",
+      "revId": "8eaa005c11395e4e09370818f44f881a4c8adaf9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a7958f41",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-09T00:12:56Z",
+      "side": 1,
+      "message": "The logging messages do not add any value, as they are identical as in lines 341, 361, and this line.   Further since eelf does not honor code location information, the provide no much feedback to the person looking at the logs.   The comments is make the logging statements more meaningful.",
+      "revId": "8eaa005c11395e4e09370818f44f881a4c8adaf9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_679f8760",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/CryptoUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-09T00:12:56Z",
+      "side": 1,
+      "message": "JUnits should be created for this class",
+      "revId": "8eaa005c11395e4e09370818f44f881a4c8adaf9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c7921b57",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/CryptoUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-09T00:12:56Z",
+      "side": 1,
+      "message": "Add general description about class",
+      "revId": "8eaa005c11395e4e09370818f44f881a4c8adaf9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
