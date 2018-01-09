@@ -56,6 +56,13 @@ public class HibernateSession{
 			LOGGER.error("Exception Occured while creating Log database Hibernate session"+ex);
 		}
 	}
+
+	private HibernateSession(){
+          /**
+           empty implementation
+          */
+	}
+
 	public static Session getSession(){
 		return logSessionFactory.openSession();
 	}
@@ -64,6 +71,5 @@ public class HibernateSession{
 		logSessionFactory = logSessionFactory1;
 	}
 
-	private HibernateSession(){
-	}
+
 }
