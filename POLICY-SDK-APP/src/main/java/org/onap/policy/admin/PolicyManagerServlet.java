@@ -227,7 +227,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				if (!item.isFormField()) {
 					// Process form file field (input type="file").
 					files.put(item.getName(), item.getInputStream());
-					if(item.getName().endsWith(".xls")){
+					if(item.getName().endsWith(".xls") && item.getSize() <= PolicyController.getFileSizeLimit()){
 						OutputStream outputStream = null;
 						try{
 							File file = new File(item.getName());
@@ -244,6 +244,15 @@ public class PolicyManagerServlet extends HttpServlet {
 								outputStream.close();
 							}
 						}
+					}
+					else if (!item.getName().endsWith(".xls")) {
+						LOGGER.error("Non .xls filetype uploaded: " + item.getName());
+					} 
+					else if (item.getSize() > PolicyController.getFileSizeLimit()) {
+						LOGGER.error("Upload file size limit exceeded! File size (Bytes) is: " + item.getSize());
+					} 
+					else {
+						;
 					}
 				}
 			}
