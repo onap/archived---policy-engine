@@ -144,6 +144,9 @@ public class PolicyController extends RestrictedBaseController {
 	private static String configHome;
 	private static String actionHome;
 	
+	//File upload size
+	private static long fileSizeLimit;
+	
 	private static boolean jUnit = false;
 	
 
@@ -176,6 +179,8 @@ public class PolicyController extends RestrictedBaseController {
 			}
 			// load a properties file
 			prop.load(input);
+			//file upload size limit property
+			setFileSizeLimit(prop.getProperty("file.size.limit"));
 			//pap url
 			setPapUrl(prop.getProperty("xacml.rest.pap.url"));
 			// get the property values
@@ -716,6 +721,19 @@ public class PolicyController extends RestrictedBaseController {
 		return file;
 	}
 	
+	public static void setFileSizeLimit(String uploadSize) {
+		//Default size limit is 30MB
+		if (uploadSize == null || uploadSize.isEmpty()) {
+			fileSizeLimit = 30000000;
+		}
+		else {
+			fileSizeLimit = Long.parseLong(uploadSize);
+		}
+	}
+	
+	public static long getFileSizeLimit() {
+		return fileSizeLimit;
+	}
 	public String convertDate(String dateTTL) {
 		String formateDate = null;
 		if(dateTTL.contains("-")){
