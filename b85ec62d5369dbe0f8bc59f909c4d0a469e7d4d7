@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_1821414d",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/conf/HibernateSession.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-10T13:31:54Z",
+      "side": 1,
+      "message": "I think we should add an empty comment - else sonar will add a major flag as to why this is empty.",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 2
+      },
+      "revId": "b85ec62d5369dbe0f8bc59f909c4d0a469e7d4d7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
