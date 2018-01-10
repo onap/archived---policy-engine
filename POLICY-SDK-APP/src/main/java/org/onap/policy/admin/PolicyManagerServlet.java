@@ -227,9 +227,10 @@ public class PolicyManagerServlet extends HttpServlet {
 				if (!item.isFormField()) {
 					// Process form file field (input type="file").
 					files.put(item.getName(), item.getInputStream());
-					if(item.getName().endsWith(".xls")){
-						OutputStream outputStream = null;
+					if(item.getName().endsWith(".xls") && item.getSize() <= PolicyController.getFileSizeLimit()){
 						try{
+							OutputStream outputStream = null;
+							
 							File file = new File(item.getName());
 							outputStream = new FileOutputStream(file);
 							IOUtils.copy(item.getInputStream(), outputStream);
@@ -239,11 +240,16 @@ public class PolicyManagerServlet extends HttpServlet {
 							importController.importRepositoryFile(newFile, request);
 						}catch(Exception e){
 							LOGGER.error("Upload error : " + e);
-						}finally{
-							if(outputStream != null){
-								outputStream.close();
-							}
 						}
+					}
+					else if (!item.getName().endsWith(".xls")) {
+						LOGGER.error("Non .xls filetype uploaded: " + item.getName());
+					} 
+					else if (item.getSize() > PolicyController.getFileSizeLimit()) {
+						LOGGER.error("Upload file size limit exceeded! File size (Bytes) is: " + item.getSize());
+					} 
+					else {
+						;
 					}
 				}
 			}
