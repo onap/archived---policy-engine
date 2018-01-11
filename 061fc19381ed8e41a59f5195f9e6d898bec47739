@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_09725149",
+        "filename": "ONAP-SDK-APP/xacml.admin.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-11T21:40:40Z",
+      "side": 1,
+      "message": "The size in the comment does not match the size in the code.   If the intent is to change it to 32GB, it is definitely excessive, will run out of space, and could be used maliciously, at least in the onap environment.",
+      "revId": "061fc19381ed8e41a59f5195f9e6d898bec47739",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a990fd43",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-11T21:40:40Z",
+      "side": 1,
+      "message": "This is outside scope but ideally, there some degree of verification that the file is indeed an .xls file and not a binary of some sort used to be uploaded for malicious purposes.",
+      "revId": "061fc19381ed8e41a59f5195f9e6d898bec47739",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c993094e",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-11T21:40:40Z",
+      "side": 1,
+      "message": "try-with-resources is preferred here",
+      "revId": "061fc19381ed8e41a59f5195f9e6d898bec47739",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
