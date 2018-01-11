@@ -2839,7 +2839,8 @@ public class PolicyDBDao {
 	            try{
 		            while(policyIt.hasNext()){
 	            		PolicyEntity pol = policyIt.next();
-	            		if(getPolicyNameAndVersionFromPolicyFileName(pol.getPolicyName())[0].equals(policyName)){
+	            		if(policy.getScope().equals(pol.getScope()) && 
+	            				getPolicyNameAndVersionFromPolicyFileName(pol.getPolicyName())[0].equals(policyName)) {
 	            			policyIt.remove();
 	            		}  
 	            	}
