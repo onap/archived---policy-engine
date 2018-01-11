@@ -171,6 +171,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		//
 		PDPGroup group = this.getDefaultGroup();
 		if (group != null) {
+			wasDefaultGroupJustAdded = true;
 			return group;
 		}
 		//
