@@ -359,8 +359,8 @@ public class AutoPushController extends RestrictedBaseController{
 			policyContainer = new PDPPolicyContainer(group);
 			if(removePolicyData.size() > 0){
 				for(int i = 0 ; i < removePolicyData.size(); i++){
-					String data = removePolicyData.get(i).toString();
-					this.policyContainer.removeItem(data);
+					String polData = removePolicyData.get(i).toString();
+					this.policyContainer.removeItem(polData);
 				}
 				Set<PDPPolicy> changedPolicies = new HashSet<>();
 				changedPolicies.addAll((Collection<PDPPolicy>) this.policyContainer.getItemIds());
