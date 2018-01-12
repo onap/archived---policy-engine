@@ -91,6 +91,7 @@ public interface BusConsumer {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public Iterable<String> fetch() throws MRApiException {
 			try {
                 return this.consumer.fetch();
@@ -102,6 +103,7 @@ public interface BusConsumer {
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		public void close() {
 			this.consumer.close();
 		}

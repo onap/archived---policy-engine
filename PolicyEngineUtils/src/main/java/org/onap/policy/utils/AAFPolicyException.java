@@ -28,6 +28,8 @@ public class AAFPolicyException extends Exception {
 	private static final long serialVersionUID = 1910606668038621L;
 	
 	public AAFPolicyException() {
+		// Empty constructor.
+		// Nothing needs to be initialized in this exception class.
 	}
 	
 	public AAFPolicyException(String message) {

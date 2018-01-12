@@ -43,7 +43,7 @@ public class NotificationStoreTest {
     public void notificationTest() throws IOException{
         // Notification Delta test first. 
         NotificationStore.recordNotification(new StdPDPNotification());
-        assertEquals("{\"removedPolicies\":null,\"loadedPolicies\":null,\"notificationType\":null}", PolicyUtils.objectToJsonString(NotificationStore.getDeltaNotification(new StdPDPNotification())));
+        assertEquals("{\"removedPolicies\":[],\"loadedPolicies\":[],\"notificationType\":null}", PolicyUtils.objectToJsonString(NotificationStore.getDeltaNotification(new StdPDPNotification())));
         // Initialize test 
         StdPDPNotification notification = new StdPDPNotification();
         notification.setNotificationType(NotificationType.BOTH);

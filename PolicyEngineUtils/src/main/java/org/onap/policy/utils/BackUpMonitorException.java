@@ -24,6 +24,8 @@ public class BackUpMonitorException extends Exception{
     private static final long serialVersionUID = 6778134503685443473L;
     
     public BackUpMonitorException() {
+    	// Nothing for this constructor to initialize 
+    	// in an exception class.
     }
     
     public BackUpMonitorException(String message) {
