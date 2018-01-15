@@ -55,7 +55,16 @@ public class AdminTabController extends RestrictedBaseController{
 	
 	private static CommonClassDao commonClassDao;
 	
-	public static CommonClassDao getCommonClassDao() {
+        public AdminTabController() {
+		//default constructor
+	}
+
+	@Autowired
+	private AdminTabController(CommonClassDao commonClassDao){
+		AdminTabController.commonClassDao = commonClassDao;
+	}
+
+        public static CommonClassDao getCommonClassDao() {
 		return commonClassDao;
 	}
 
@@ -63,15 +72,6 @@ public class AdminTabController extends RestrictedBaseController{
 		AdminTabController.commonClassDao = commonClassDao;
 	}
 	
-	@Autowired
-	private AdminTabController(CommonClassDao commonClassDao){
-		AdminTabController.commonClassDao = commonClassDao;
-	}
-		
-	public AdminTabController() {
-		//default constructor
-	}
-
 	@RequestMapping(value={"/get_LockDownData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getAdminTabEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
