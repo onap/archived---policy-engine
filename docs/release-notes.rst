@@ -12,7 +12,20 @@ Policy Release Notes
 ..      * one section describing the purpose of this new release.  
 ..      * This note must be removed after content has been added.
 
-Version: 1.2.0
+
+Version: 1.1.3
+--------------
+
+:Release Date: 2018-01-18 (Amsterdam Maintenance Release)
+
+**Bug Fixes**
+
+The following bugs were deployed with the Amsterdam Maintenance Release:
+
+    * `[POLICY-486] <https://jira.onap.org/browse/POLICY-486>`_ - pdp-x api pushPolicy fails to push latest version
+
+
+Version: 1.1.1
 --------------
 
 :Release Date: 2017-11-16 (Amsterdam Release)
@@ -83,8 +96,8 @@ The Amsterdam release continued evolving the design driven architecture of and f
        	-  Create a Service Instance via VID.
         -  Create a VNF Instance via VID.
         -  Preload SDNC with topology data used for the actual VNF instantiation (both base and DNS scaling modules). NOTE: you may want to set “vlb_name_0” in the base VF module data to something unique. This is the vLB server name that DCAE will pass to Policy during closed loop. If the same name is used multiple times, the Policy name-query to AAI will show multiple entries, one for each occurrence of that vLB VM name in the OpenStack zone. Note that this is not a limitation, typically server names in a domain are supposed to be unique.
-        -  Instantiate the base VF module (vLB, vPacketGen, and one vDNS) via VID. NOTE: The name of the VF module MUST start with Vfmodule_. The same name MUST appear in the SDNC preload of the base VF module topology. We’ll relax this naming requirement for Beijing Release.
-        -  Run heatbridge from the Robot VM using Vfmodule_ … as stack name (it is the actual stack name in OpenStack)
+        -  Instantiate the base VF module (vLB, vPacketGen, and one vDNS) via VID. NOTE: The name of the VF module MUST start with ``Vfmodule_``. The same name MUST appear in the SDNC preload of the base VF module topology. We’ll relax this naming requirement for Beijing Release.
+        -  Run heatbridge from the Robot VM using ``Vfmodule_`` … as stack name (it is the actual stack name in OpenStack)
         -  Populate AAI with a dummy VF module for vDNS scaling.
 
 **Security Issues**
@@ -92,6 +105,13 @@ The Amsterdam release continued evolving the design driven architecture of and f
 
 **Other**
     - None at this time
+
+
+.. note
+..      CHANGE  HISTORY
+..      01/15/2018 - Added change for version 1.1.3 to the Amsterdam branch.  Also corrected prior version (1.2.0) to (1.1.1)
+..      11/16/2017 - Initial document for Amsterdam release.
+ 
 
 End of Release Notes
 
