@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_9e3f74d6",
+        "filename": "ONAP-SDK-APP/xacml.admin.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1645
+      },
+      "writtenOn": "2018-01-15T16:29:46Z",
+      "side": 1,
+      "message": "While I was working on this issue, Temoc was working on another CSO item involving the SWEET32 64bit block size vulnerability. He recommended I add the comment about the 32GB maximum limit in light of his research into that issue. I just removed the comment in my next patch because a 32GB .xls file isn\u0027t even possible.",
+      "parentUuid": "5a93c517_09725149",
+      "revId": "061fc19381ed8e41a59f5195f9e6d898bec47739",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_a990fd43",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
         "patchSetId": 1
