@@ -106,14 +106,38 @@
          documentation
 	-->
 
-    <!-- ONAP portal currently using http instead of https 
+    <!-- ONAP portal currently using https instead of http
+    <Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               maxThreads="150" />
+     -->
+
+    <!--  Use above commented Connector instead, to switch to http if necessary-->
+    <!-- Use certtool.sh init <FQDN> in POLICY_HOME/etc/ssl dir to create keystore -->
     <Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
                clientAuth="false" sslEnabledProtocols="TLSv1, TLSv1.1, TLSv1.2"
-               keystoreFile="${{POLICY_HOME}}/etc/ssl/policy-keystore" keystorePass="${{KEYSTORE_PASSWD}}"/>
-    -->
-    <Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="org.apache.coyote.http11.Http11NioProtocol"
-               maxThreads="150" />
+               keystoreFile="${{POLICY_HOME}}/etc/ssl/policy-keystore.tmp" keystorePass="${{KEYSTORE_PASSWD}}"
+               ciphers="TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
+                        TLS_DHE_DSS_WITH_AES_128_CBC_SHA256,
+                        TLS_DHE_DSS_WITH_AES_128_GCM_SHA256,
+                        TLS_DHE_RSA_WITH_AES_128_CBC_SHA,
+                        TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
+                        TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
+                        TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+                        TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+                        TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
+                        TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256,
+                        TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDH_RSA_WITH_AES_128_CBC_SHA,
+                        TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256,
+                        TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256,
+                        TLS_RSA_WITH_AES_128_CBC_SHA,
+                        TLS_RSA_WITH_AES_128_CBC_SHA256,
+                        TLS_RSA_WITH_AES_128_GCM_SHA256"/>
 
 
 
