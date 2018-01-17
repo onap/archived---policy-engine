@@ -1,0 +1,44 @@
+use onap_sdk;
+
+alter table configurationdataentity modify configBody mediumtext;
+
+insert into fn_restricted_url values('admin','menu_admin');
+insert into fn_restricted_url values('get_role','menu_admin');
+insert into fn_restricted_url values('get_role_functions','menu_admin');
+insert into fn_restricted_url values('role_list/*','menu_admin');
+insert into fn_restricted_url values('role_function_list/*','menu_admin');
+insert into fn_restricted_url values('addRole','menu_admin');
+insert into fn_restricted_url values('addRoleFunction','menu_admin');
+insert into fn_restricted_url values('removeRole','menu_admin');
+insert into fn_restricted_url values('removeRoleFunction','menu_admin');
+insert into fn_restricted_url values('profile/*','menu_admin');
+
+insert into fn_restricted_url values('welcome.htm','menu_home');
+insert into fn_restricted_url values('policy','menu_home');
+insert into fn_restricted_url values('policy','menu_policy');
+insert into fn_restricted_url values('get_RolesData','menu_home');
+insert into fn_restricted_url values('get_LockDownData','menu_home');
+insert into fn_restricted_url values('adminTabController/*','menu_home');
+insert into fn_restricted_url values('get_AutoPushPoliciesContainerData','menu_home');
+insert into fn_restricted_url values('auto_Push/*','menu_home');
+insert into fn_restricted_url values('get_PDPGroupData','menu_home');
+insert into fn_restricted_url values('pdp_Group/*','menu_home');
+insert into fn_restricted_url values('policy_download/*','menu_home');
+insert into fn_restricted_url values('watchPolicy','menu_home');
+insert into fn_restricted_url values('save_NonSuperRolesData','menu_home');
+insert into fn_restricted_url values('get_PolicyRolesScopeData','menu_home');
+insert into fn_restricted_url values('policyController/*','menu_home');
+insert into fn_restricted_url values('get_FunctionDefinitionDataByName','menu_home');
+insert into fn_restricted_url values('get_DashboardLoggingData','menu_home');
+insert into fn_restricted_url values('get_DashboardSystemAlertData','menu_home');
+insert into fn_restricted_url values('get_DashboardPDPStatusData','menu_home');
+insert into fn_restricted_url values('get_DashboardPolicyActivityData','menu_home');
+insert into fn_restricted_url values('get_DCAEPriorityValues','menu_home');
+insert into fn_restricted_url values('ms_dictionary/*','menu_home');
+insert into fn_restricted_url values('policycreation/*','menu_home');
+insert into fn_restricted_url values('getDictionary/*','menu_home');
+insert into fn_restricted_url values('saveDictionary/*/*','menu_home');
+insert into fn_restricted_url values('deleteDictionary/*/*','menu_home');
+insert into fn_restricted_url values('searchDictionary','menu_home');
+insert into fn_restricted_url values('searchPolicy','menu_home');
+insert into fn_restricted_url values('get_PolicyUserInfo','menu_home');
