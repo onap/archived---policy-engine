@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_6683f656",
+        "filename": "packages/base/src/files/install/servers/console/conf/server.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-18T21:20:18Z",
+      "side": 1,
+      "message": "Thanks Temoc for the explanation.   For ONAP, we should come up and running without human intervention, so installation scripts should ensure that without manual intervention.\n\nRight now, ONAP uses self signed certificates for automated, test purpose installation, using trusted root CA certificates is out of the scope for at least the initial phases of Beijing.\n\nFirst step is to consult with Portal team because the use of self signed certificates implies that the client side is able to deal with them.\n\nThis discussion can take a bit offline.  \n\nI think for the purpose of this code inspection, I suggest to update the ciphers section in the commented out configuration above (and undo all other changes) until we have resolution on how to proceed.\n\nThe issue being again is that if we let these changes in as they are, they will break the UI for folks using it.",
+      "parentUuid": "5a93c517_266f2ec7",
+      "revId": "3d8f5c80306ae8b97a0fd9c767a582ff2063eb20",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_43ba6c6f",
         "filename": "packages/install/src/files/console.conf",
         "patchSetId": 1
