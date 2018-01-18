@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_43ba6c6f",
+        "filename": "packages/install/src/files/console.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-18T18:48:43Z",
+      "side": 1,
+      "message": "Which component uses this value? I don\u0027t think tomcat uses this config file, am I wrong?",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 16
+      },
+      "revId": "3d8f5c80306ae8b97a0fd9c767a582ff2063eb20",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
