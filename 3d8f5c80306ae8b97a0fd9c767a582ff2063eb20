@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_86516210",
+        "filename": "packages/base/src/files/install/servers/console/conf/server.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-18T20:47:32Z",
+      "side": 1,
+      "message": "This wouldn\u0027t work without a keystore, it will break automated installation if not existing, I believe.   Right now, drools-pdp packages keystore to talk to aai with certificate.   Can the same be done be here?   The issue being is that this keystore I think it has to exist for correct functioning.",
+      "revId": "3d8f5c80306ae8b97a0fd9c767a582ff2063eb20",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_43ba6c6f",
         "filename": "packages/install/src/files/console.conf",
         "patchSetId": 1
