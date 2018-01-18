@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_266f2ec7",
+        "filename": "packages/base/src/files/install/servers/console/conf/server.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1759
+      },
+      "writtenOn": "2018-01-18T21:01:14Z",
+      "side": 1,
+      "message": "Jorge, you are correct, it would not work if the keystore does not exist. Automated installation should be fine but the console would not be able to start, tomcat will complain that the file does not exist. However, there already exists a script to create the keystore, created by Pam, see the comment in xml \"Use certtool.sh init \u003cFQDN\u003e in POLICY_HOME/etc/ssl dir to create keystore\". I\u0027m not sure how this will be automated since the FQDN must be the correct one for the host, it\u0027s not generic. Additionally, this would install a self-signed certification which is not suitable for a production environment. Thus if you want a CA signed cert I can help with the process, but I cannot actually place the order for it. I\u0027m not sure of what the onap process is for obtaining such certs so you\u0027ll have to fill me in on that.",
+      "parentUuid": "5a93c517_86516210",
+      "revId": "3d8f5c80306ae8b97a0fd9c767a582ff2063eb20",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_43ba6c6f",
         "filename": "packages/install/src/files/console.conf",
         "patchSetId": 1
