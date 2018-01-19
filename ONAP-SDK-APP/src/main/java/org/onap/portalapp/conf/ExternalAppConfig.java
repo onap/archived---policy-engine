@@ -27,7 +27,9 @@ import org.onap.portalapp.scheduler.RegistryAdapter;
 import org.onap.portalsdk.core.auth.LoginStrategy;
 import org.onap.portalsdk.core.conf.AppConfig;
 import org.onap.portalsdk.core.conf.Configurable;
+import org.onap.portalsdk.core.logging.logic.EELFLoggerDelegate;
 import org.onap.portalsdk.core.objectcache.AbstractCacheManager;
+import org.onap.portalsdk.core.onboarding.exception.PortalAPIException;
 import org.onap.portalsdk.core.service.DataAccessService;
 import org.onap.portalsdk.core.util.CacheManager;
 import org.onap.portalsdk.core.util.SystemProperties;
@@ -59,6 +61,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 @EnableScheduling
 public class ExternalAppConfig extends AppConfig implements Configurable {
 
+	EELFLoggerDelegate logger = EELFLoggerDelegate.getLogger(ExternalAppConfig.class);
+	
 	private RegistryAdapter schedulerRegistryAdapter;
 
 	@Configuration
@@ -139,11 +143,16 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	 */
 	// @Bean // ANNOTATION COMMENTED OUT
 	// APPLICATIONS REQUIRING QUARTZ SHOULD RESTORE ANNOTATION
-	public SchedulerFactoryBean schedulerFactoryBean() throws Exception {
+	public SchedulerFactoryBean schedulerFactoryBean(){
 		SchedulerFactoryBean scheduler = new SchedulerFactoryBean();
 		scheduler.setTriggers(schedulerRegistryAdapter.getTriggers());
 		scheduler.setConfigLocation(appApplicationContext.getResource("WEB-INF/conf/quartz.properties"));
-		scheduler.setDataSource(dataSource());
+		try {
+			scheduler.setDataSource(dataSource());
+		} catch (Exception e) {
+			logger.error("Exception occured While Setting DataSource for schedulerfactorybean"+e);
+			return null;
+		}
 		return scheduler;
 	}
 
