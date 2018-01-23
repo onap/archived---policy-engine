@@ -43,7 +43,6 @@ import org.onap.policy.rest.jpa.PolicyRoles;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service("CommonClassDao")

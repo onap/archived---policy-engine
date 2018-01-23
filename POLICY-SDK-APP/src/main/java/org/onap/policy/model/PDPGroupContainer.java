@@ -113,10 +113,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	}
     
     public boolean isSupported(Object itemId) {
-    	if (itemId instanceof OnapPDPGroup) {
-    		return true;
-    	}
-    	return false;
+    	return (itemId instanceof OnapPDPGroup);
     }
 	
 	public synchronized void refreshGroups() {
@@ -250,25 +247,25 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("containsId: " + itemId);
 		}
-		if (this.isSupported(itemId) == false) {
+		if (! this.isSupported(itemId)) {
 			return false;
 		}
 		return this.groups.contains(itemId);
 	}
 
 	@Override
-	public Object addItem() throws UnsupportedOperationException {
+	public Object addItem() {
 		throw new UnsupportedOperationException("PDP Container cannot add a given item.");
 	}
 	
-	public void addNewGroup(String name, String description) throws NullPointerException, PAPException {
+	public void addNewGroup(String name, String description) throws PAPException {
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("addNewGroup " + name + " " + description);
 		}
 		this.papEngine.newGroup(name, description);
 	}
 	
-	public void addNewPDP(String id, OnapPDPGroup group, String name, String description, int jmxport) throws NullPointerException, PAPException {
+	public void addNewPDP(String id, OnapPDPGroup group, String name, String description, int jmxport) throws PAPException {
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("addNewPDP " + id + " " + name + " " + description + " " + jmxport);
 		}
@@ -286,17 +283,17 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	}
 
 	@Override
-	public boolean addContainerProperty(Object propertyId, Class<?> type, Object defaultValue) throws UnsupportedOperationException {
+	public boolean addContainerProperty(Object propertyId, Class<?> type, Object defaultValue) {
 		throw new UnsupportedOperationException("Cannot add a container property.");
 	}
 
 	@Override
-	public boolean removeContainerProperty(Object propertyId) throws UnsupportedOperationException {
+	public boolean removeContainerProperty(Object propertyId) {
 		throw new UnsupportedOperationException("Cannot remove a container property.");
 	}
 
 	@Override
-	public boolean removeAllItems() throws UnsupportedOperationException {
+	public boolean removeAllItems() {
 		throw new UnsupportedOperationException("PDP Container cannot remove all items. You must have at least the Default group.");
 	}
 
@@ -310,7 +307,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 
 	@Override
 	public Object nextItemId(Object itemId) {
-		if (this.isSupported(itemId) == false) {
+		if (! this.isSupported(itemId)) {
 			return null;
 		}
 		int index = this.groups.indexOf(itemId);
@@ -337,7 +334,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 
 	@Override
 	public Object prevItemId(Object itemId) {
-		if (this.isSupported(itemId) == false) {
+		if (! this.isSupported(itemId)) {
 			return null;
 		}
 		int index = this.groups.indexOf(itemId);
@@ -403,7 +400,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	}
 
 	@Override
-	public Object addItemAfter(Object previousItemId) throws UnsupportedOperationException {
+	public Object addItemAfter(Object previousItemId) {
 		throw new UnsupportedOperationException("Cannot addItemAfter, there really is no real ordering.");
 	}
 
@@ -429,22 +426,22 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	}
 
 	@Override
-	public Object addItemAt(int index) throws UnsupportedOperationException {
+	public Object addItemAt(int index) {
 		throw new UnsupportedOperationException("Cannot addItemAt");
 	}
 
 	@Override
-	public boolean removeItem(Object itemId) throws UnsupportedOperationException {
+	public boolean removeItem(Object itemId) {
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("removeItem: " + itemId);
 		}
-		if (this.isSupported(itemId) == false) {
+		if (! this.isSupported(itemId)) {
 			return false;
 		}
 		//
 		// You cannot remove the default group
 		//
-		if ("Default".equals(((OnapPDPGroup) itemId).getId())) {
+		if (PROPERTY_DEFAULT.equals(((OnapPDPGroup) itemId).getId())) {
 			throw new UnsupportedOperationException("You can't remove the Default Group.");
 		}
 		//

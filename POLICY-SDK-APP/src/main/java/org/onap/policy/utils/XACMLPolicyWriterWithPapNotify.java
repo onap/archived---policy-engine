@@ -56,6 +56,10 @@ import org.onap.policy.common.logging.flexlogger.Logger;
  */
 public class XACMLPolicyWriterWithPapNotify{
 	private static final Logger LOGGER = FlexLogger.getLogger(XACMLPolicyWriterWithPapNotify.class);
+	
+	private XACMLPolicyWriterWithPapNotify() {
+		// Add private constructor to hide the implicit public one
+	}
 
 	/**
 	 * Helper static class that does the work to write a policy set to a file on disk and notify PAP
@@ -295,8 +299,6 @@ public class XACMLPolicyWriterWithPapNotify{
 		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)).getBytes(StandardCharsets.UTF_8));
 		HttpURLConnection connection = null;
 		UUID requestID = UUID.randomUUID();
-		//loggingContext.setRequestID(requestID.toString());
-		//loggingContext.transactionStarted();
 		String papUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
 		if(papUrl == null){
 			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + 
@@ -397,8 +399,6 @@ public class XACMLPolicyWriterWithPapNotify{
 		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)).getBytes(StandardCharsets.UTF_8));
 		HttpURLConnection connection = null;
 		UUID requestID = UUID.randomUUID();
-		//loggingContext.setRequestID(requestID.toString());
-		//loggingContext.transactionStarted();
 		URL url;
 		try {
 			url = new URL(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL)+"?policyToCreateUpdate="+ URLEncoder.encode(policyToCreateUpdate, "UTF-8"));

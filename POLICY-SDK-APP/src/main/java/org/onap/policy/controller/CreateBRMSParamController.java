@@ -131,7 +131,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 				StringBuilder params = new StringBuilder("");
 				Boolean flag = false;
 				Boolean comment = false;
-				String lines[] = rule.split("\n");
+				String[] lines = rule.split("\n");
 				for(String line : lines){
 					if (line.isEmpty() || line.startsWith("//")) {
 						continue;

@@ -131,7 +131,7 @@ public class HumanPolicyComponent{
 		return null;
 	}
 	
-	private static String processPolicy() throws IllegalArgumentException {	
+	private static String processPolicy() {	
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("ENTER");
 		
@@ -209,8 +209,7 @@ class HtmlProcessor extends SimpleCallback {
 	private final String policyName;
 	private final Object rootPolicyObject;
 	
-	public HtmlProcessor(File policyFile, Object policyObject) 
-		   throws IllegalArgumentException {
+	public HtmlProcessor(File policyFile, Object policyObject) {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("ENTER");
 		
@@ -409,7 +408,7 @@ class HtmlProcessor extends SimpleCallback {
 		
 		if (policySet.getTarget() == null || 
 			policySet.getTarget().getAnyOf() == null ||
-			policySet.getTarget().getAnyOf().size() <= 0) {
+			policySet.getTarget().getAnyOf().isEmpty()) {
 				htmlOut.println("<p>This policy set applies to all requests.</p>");
 		} else {	
 			htmlOut.print("<p>");
@@ -494,7 +493,7 @@ class HtmlProcessor extends SimpleCallback {
 		
 		if (policy.getTarget() == null || 
 			policy.getTarget().getAnyOf() == null ||
-			policy.getTarget().getAnyOf().size() <= 0) {
+			policy.getTarget().getAnyOf().isEmpty()) {
 			htmlOut.println("<p>This policy applies to all requests.</p>");
 		} else {	
 			htmlOut.print("<p>");
@@ -566,7 +565,7 @@ class HtmlProcessor extends SimpleCallback {
 		
 		if (rule.getTarget() == null || 
 				rule.getTarget().getAnyOf() == null ||
-				rule.getTarget().getAnyOf().size() <= 0) {
+				rule.getTarget().getAnyOf().isEmpty()) {
 				htmlOut.print(" for all requests");
 		} else {	
 			List<AnyOfType> anyOf_s = rule.getTarget().getAnyOf();
@@ -855,7 +854,7 @@ class HtmlProcessor extends SimpleCallback {
 				}
 				
 				List<JAXBElement<?>> exps = apply.getExpression();
-				if (exps == null || exps.size() == 0)
+				if (exps == null || exps.isEmpty())
 					return "";
 				else {
 					String forResult = "";
@@ -865,7 +864,6 @@ class HtmlProcessor extends SimpleCallback {
 							LOGGER.debug("one-and-only children: " + v);
 						}
 						if (v != null) {
-							// C: return stringifyExpression(v, result);
 							forResult += stringifyExpression(v);
 						}
 					}

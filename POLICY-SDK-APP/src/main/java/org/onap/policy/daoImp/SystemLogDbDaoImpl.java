@@ -75,7 +75,7 @@ public class SystemLogDbDaoImpl implements SystemLogDbDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SystemLogDB> getSystemAlertData() {
-		Session session = HibernateSession.getSession();;
+		Session session = HibernateSession.getSession();
 		Transaction tx = session.beginTransaction();
 		List<SystemLogDB> system = null;
         try {

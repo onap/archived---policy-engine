@@ -77,7 +77,7 @@ public class ActionPolicyController extends RestrictedBaseController {
             PolicyType policy = (PolicyType) policyData;
             policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
             String policyNameValue = policyAdapter.getPolicyName()
-                    .substring(policyAdapter.getPolicyName().indexOf("_") + 1);
+                    .substring(policyAdapter.getPolicyName().indexOf('_') + 1);
             policyAdapter.setPolicyName(policyNameValue);
             String description = "";
             try {
@@ -210,7 +210,7 @@ public class ActionPolicyController extends RestrictedBaseController {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Prepopulating Compound rule algorithm: " + index);
             }
-            Map<String, String> rule = new HashMap<String, String>();
+            Map<String, String> rule = new HashMap<>();
             for (String key : PolicyController.getDropDownMap().keySet()) {
                 String keyValue = PolicyController.getDropDownMap().get(key);
                 if (keyValue.equals(actionApply.getFunctionId())) {
@@ -231,7 +231,7 @@ public class ActionPolicyController extends RestrictedBaseController {
     }
 
     private void prePopulateRuleAlgorithms(int index, ApplyType actionApply, List<JAXBElement<?>> jaxbActionTypes) {
-        Map<String, String> ruleMap = new HashMap<String, String>();
+        Map<String, String> ruleMap = new HashMap<>();
         ruleMap.put("id", "A" + (index + 1));
         // Populate combo box
         Map<String, String> dropDownMap = PolicyController.getDropDownMap();

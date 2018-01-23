@@ -50,14 +50,14 @@ public class CheckPDP {
 	private static HashMap<String, String> pdpMap = null;
 	private static final Logger LOGGER = FlexLogger.getLogger(CheckPDP.class);
 	
+	private CheckPDP(){
+		//default constructor
+	}
+	
 	public static Map<String, String> getPdpMap() {
 		return pdpMap;
 	}
 
-	public CheckPDP(){
-		//default constructor
-	}
-	
 	public static boolean validateID(String id) {
 		// ReadFile
 		try {

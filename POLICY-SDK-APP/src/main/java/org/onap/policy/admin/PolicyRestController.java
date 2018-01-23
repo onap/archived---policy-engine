@@ -131,7 +131,7 @@ public class PolicyRestController extends RestrictedBaseController{
 					policyData.setDomainDir(dirName + root.get(PolicyController.getPolicydata()).get(modal).get("name").toString().replace("\"", ""));
 				}
 			}else{
-				String domain = root.get(PolicyController.getPolicydata()).get("model").get("name").toString();
+				String domain = root.get(PolicyController.getPolicydata()).get(modal).get("name").toString();
 				if(domain.contains("/")){
 					domain = domain.substring(0, domain.lastIndexOf('/')).replace("/", File.separator);
 				}

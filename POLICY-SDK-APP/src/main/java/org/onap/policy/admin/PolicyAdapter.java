@@ -47,27 +47,27 @@ public class PolicyAdapter {
 			return;
 		}
 		if(policyAdapter.getPolicyName().startsWith("Config_PM")){
-			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf("_"));
+			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
 			configPolicyName = "ClosedLoop_PM";
 		}else if(policyAdapter.getPolicyName().startsWith("Config_Fault")){
-			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf("_"));
+			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
 			configPolicyName = "ClosedLoop_Fault";
 		}else if(policyAdapter.getPolicyName().startsWith("Config_FW")){
-			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf("_"));
+			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
 			configPolicyName = "Firewall Config";
 		}else if(policyAdapter.getPolicyName().startsWith("Config_BRMS_Raw")){
-			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf("_"));
+			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
 			configPolicyName = "BRMS_Raw";
 		}else if(policyAdapter.getPolicyName().startsWith("Config_BRMS_Param")){
-			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf("_"));
+			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
 			configPolicyName = "BRMS_Param";
 		}else if(policyAdapter.getPolicyName().startsWith("Config_MS")){
-			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf("_"));
+			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
 			configPolicyName = "Micro Service";
 		}else if(policyAdapter.getPolicyName().startsWith("Action") || policyAdapter.getPolicyName().startsWith("Decision") ){
-			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf("_"));
+			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
 		}else{
-			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf("_"));
+			policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
 			configPolicyName = "Base";
 		}
 		if (policyNameValue != null) {

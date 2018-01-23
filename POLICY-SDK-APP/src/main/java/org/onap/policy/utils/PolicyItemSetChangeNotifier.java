@@ -37,6 +37,7 @@ public class PolicyItemSetChangeNotifier implements PolicyContainer.ItemSetChang
     private PolicyContainer container = null;
     
     public PolicyItemSetChangeNotifier() {
+    	// Empty constructor
     }
     
     protected void setContainer(PolicyContainer c) {

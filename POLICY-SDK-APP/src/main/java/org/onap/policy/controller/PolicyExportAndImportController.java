@@ -195,7 +195,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 			request.setCharacterEncoding("UTF-8");
 
 			PrintWriter out = response.getWriter();
-			String successMap = file.toString().substring(file.toString().lastIndexOf("webapps")+8);
+			String successMap = file.substring(file.lastIndexOf("webapps")+8);
 			String responseString = mapper.writeValueAsString(successMap);
 			JSONObject j = new JSONObject("{data: " + responseString + "}");
 			out.write(j.toString());
@@ -316,7 +316,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 						}else{
 							//1. if Role contains admin, then check if parent scope has role admin, if not don't create a scope and add to list.
 							if(roles.contains(ADMIN)){
-								String scopeCheck = scope.substring(0, scope.lastIndexOf("."));
+								String scopeCheck = scope.substring(0, scope.lastIndexOf('.'));
 								if(scopes.contains(scopeCheck)){
 									PolicyEditorScopes policyEditorScopeEntity = new PolicyEditorScopes();
 									policyEditorScopeEntity.setScopeName(scope);
@@ -383,8 +383,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 					
 					policyVersion = new PolicyVersion();
 					String policyName = policyEntity.getPolicyName().replace(".xml", "");
-					int version = Integer.parseInt(policyName.substring(policyName.lastIndexOf(".")+1));
-					policyName = policyName.substring(0, policyName.lastIndexOf("."));
+					int version = Integer.parseInt(policyName.substring(policyName.lastIndexOf('.')+1));
+					policyName = policyName.substring(0, policyName.lastIndexOf('.'));
 					
 					policyVersion.setPolicyName(scope.replace(".", File.separator) + File.separator + policyName);
 					policyVersion.setActiveVersion(version);
@@ -400,7 +400,6 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 
 	//return the column header name value
 	private String getCellHeaderName(Cell cell){
-		String cellHeaderName = cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
-		return cellHeaderName;
+		return cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
 	}
 }

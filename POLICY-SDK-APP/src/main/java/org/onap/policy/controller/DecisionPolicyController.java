@@ -60,7 +60,9 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 public class DecisionPolicyController extends RestrictedBaseController {
 	private static final Logger policyLogger = FlexLogger.getLogger(DecisionPolicyController.class);
 	
-	public DecisionPolicyController(){}
+	public DecisionPolicyController(){
+		// This constructor is empty
+	}
 
 	protected PolicyRestAdapter policyAdapter = null;
 	private ArrayList<Object> attributeList;
@@ -186,12 +188,12 @@ public class DecisionPolicyController extends RestrictedBaseController {
 						// get the condition data under the rule for rule Algorithms.
 						if(((RuleType) object).getEffect().equals(EffectType.DENY)) {
 							if(((RuleType) object).getAdviceExpressions()!=null){
-								if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().toString().equalsIgnoreCase("AAF")){
+								if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().equalsIgnoreCase("AAF")){
 									policyAdapter.setRuleProvider("AAF");
 									break;
-								}else if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().toString().equalsIgnoreCase("GUARD_YAML")){
+								}else if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().equalsIgnoreCase("GUARD_YAML")){
 									policyAdapter.setRuleProvider("GUARD_YAML");
-								}else if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().toString().equalsIgnoreCase("GUARD_BL_YAML")){
+								}else if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().equalsIgnoreCase("GUARD_BL_YAML")){
 									policyAdapter.setRuleProvider("GUARD_BL_YAML");
 								}
 							}else{

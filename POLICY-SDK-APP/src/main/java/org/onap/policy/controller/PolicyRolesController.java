@@ -142,7 +142,7 @@ class ReadScopes{
 	private int id;
 	private UserInfo loginId;
 	private String role;
-	private ArrayList<String> scope;
+	private List<String> scope;
 	
 	public int getId() {
 		return id;
@@ -162,10 +162,10 @@ class ReadScopes{
 	public void setRole(String role) {
 		this.role = role;
 	}
-	public ArrayList<String> getScope() {
+	public List<String> getScope() {
 		return scope;
 	}
-	public void setScope(ArrayList<String> scope) {
+	public void setScope(List<String> scope) {
 		this.scope = scope;
 	}
 

@@ -139,7 +139,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 
 	@Override
 	public void newGroup(String name, String description)
-			throws PAPException, NullPointerException {
+			throws PAPException {
 		String escapedName = null;
 		String escapedDescription = null;
 		try {
@@ -190,7 +190,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 	
 	@Override
 	public void removeGroup(OnapPDPGroup group, OnapPDPGroup newGroup)
-			throws PAPException, NullPointerException {
+			throws PAPException {
 		String moveToGroupString = null;
 		if (newGroup != null) {
 			moveToGroupString = "movePDPsToGroupId=" + newGroup.getId();
@@ -214,8 +214,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 	}
 	
 	@Override
-	public void newPDP(String id, OnapPDPGroup group, String name, String description, int jmxport) throws PAPException,
-			NullPointerException {
+	public void newPDP(String id, OnapPDPGroup group, String name, String description, int jmxport) throws PAPException {
 		StdPDP newPDP = new StdPDP(id, name, description, jmxport);
 		sendToPAP("PUT", newPDP, null, null, groupID + group.getId(), "pdpId=" + id);
 		return;
@@ -467,10 +466,10 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 		            	final CollectionType javaType = 
 		            	      mapper.getTypeFactory().constructCollectionType(collectionTypeClass, responseContentClass);
 	
-		            	return (Object)mapper.readValue(json, javaType);
+		            	return mapper.readValue(json, javaType);
 		            } else {
 		            	// single value object expected
-			            return (Object)mapper.readValue(json, responseContentClass);
+			            return mapper.readValue(json, responseContentClass);
 		            }
             	}
 
@@ -481,7 +480,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
             		LOGGER.error("No Location header to redirect to when response code="+connection.getResponseCode());
             		throw new IOException("No redirect Location header when response code="+connection.getResponseCode());
             	}
-            	int qIndex = newURL.indexOf("?");
+            	int qIndex = newURL.indexOf('?');
             	if (qIndex > 0) {
             		newURL = newURL.substring(0, qIndex);
             	}

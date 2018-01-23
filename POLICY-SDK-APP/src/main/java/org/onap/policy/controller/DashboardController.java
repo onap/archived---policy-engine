@@ -415,16 +415,15 @@ public class DashboardController  extends RestrictedBaseController{
 	}
 
 	private static String urnPolicyID(String line){
-		String[]  splitLine = line.toString().split("=");
+		String[]  splitLine = line.split("=");
 		String removeSpaces = splitLine[0].replaceAll("\\s+", "");
 		return removeSpaces.replace("{", "");
 	}
 
 	private static Integer countPolicyID(String line){
-		String[]  splitLine = line.toString().split("=");
+		String[]  splitLine = line.split("=");
 		String sCount = splitLine[1].replace("}", "");
-		int intCount = Integer.parseInt(sCount);
-		return intCount;
+		return Integer.parseInt(sCount);
 	}
 
 }

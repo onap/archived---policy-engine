@@ -120,7 +120,7 @@ public class AutoPushController extends RestrictedBaseController{
 		try{
 			Set<String> scopes = null;
 			List<String> roles = null;
-			data = new ArrayList<Object>();
+			data = new ArrayList<>();
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -230,7 +230,7 @@ public class AutoPushController extends RestrictedBaseController{
 					String id = name;
 					if (id.endsWith(".xml")) {
 						id = id.replace(".xml", "");
-						id = id.substring(0, id.lastIndexOf("."));
+						id = id.substring(0, id.lastIndexOf('.'));
 					}
 					
 					// Default policy to be Root policy; user can change to deferred
@@ -348,7 +348,7 @@ public class AutoPushController extends RestrictedBaseController{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());  
-			StdPDPGroup group = (StdPDPGroup)mapper.readValue(root.get("activePdpGroup").toString(), StdPDPGroup.class);
+			StdPDPGroup group = mapper.readValue(root.get("activePdpGroup").toString(), StdPDPGroup.class);
 			JsonNode removePolicyData = root.get("data");
 			
 			String userId = UserUtils.getUserSession(request).getOrgUserId();

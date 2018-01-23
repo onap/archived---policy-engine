@@ -548,7 +548,6 @@ public class CreateFirewallController extends RestrictedBaseController {
 			for (int tl = 0 ; tl< termCollectorList.size(); tl++) {
 				expandableList.add(termCollectorList.get(tl));
 				Term targetTerm = new Term();
-				//targetSl= new ServiceListJson();
 				targetTerm.setRuleName(termCollectorList.get(tl));
 				List<Object> termListData = commonClassDao.getData(TermList.class);
 				for (int j =0; j < termListData.size(); j++) {
@@ -882,7 +881,6 @@ public class CreateFirewallController extends RestrictedBaseController {
 							addressMembers.setName(groupString);
 							addrMembersList.add(addressMembers);
 							//Expand the group Name
-							PrefixIPList expandGroupPrefix;
 							addressMembersJson= new AddressMembers();
 							valueDesc= mapping (groupString);
 							

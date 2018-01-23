@@ -54,7 +54,7 @@ public class Roles implements Serializable{
 	private String role;
 
 	public Roles(){
-		
+		// Empty constructor
 	}
 	
 	public int getId() {

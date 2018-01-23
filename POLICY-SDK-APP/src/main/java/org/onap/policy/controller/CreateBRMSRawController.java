@@ -57,7 +57,7 @@ public class CreateBRMSRawController{
 	
 	@SuppressWarnings("unchecked")
 	public void prePopulateBRMSRawPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-		attributeList = new ArrayList<Object>();
+		attributeList = new ArrayList<>();
 		if (policyAdapter.getPolicyData() instanceof PolicyType) {
 			PolicyType policy = (PolicyType) policyAdapter.getPolicyData();
 			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
@@ -89,7 +89,7 @@ public class CreateBRMSRawController{
 						attribute.put("value", value);
 						attributeList.add(attribute);
 					}else if(attributeAssignment.getAttributeId().startsWith("dependencies:")){
-                        ArrayList<String> dependencies = new ArrayList<String>(Arrays.asList(attributeAssignment.getAttributeId().replace("dependencies:", "").split(",")));
+                        ArrayList<String> dependencies = new ArrayList<>(Arrays.asList(attributeAssignment.getAttributeId().replace("dependencies:", "").split(",")));
                         if(dependencies.contains("")){
                             dependencies.remove("");
                         }

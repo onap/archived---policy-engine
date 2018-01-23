@@ -447,7 +447,7 @@ public class PolicyController extends RestrictedBaseController {
 		for(Object entity : policyEntity){
 			PolicyEntity pEntity = (PolicyEntity) entity;
 			String removeExtension = pEntity.getPolicyName().replace(".xml", "");
-			String version = removeExtension.substring(removeExtension.lastIndexOf(".")+1);
+			String version = removeExtension.substring(removeExtension.lastIndexOf('.')+1);
 			av.add(version);
 		}
 		if(policyName.contains("/")){

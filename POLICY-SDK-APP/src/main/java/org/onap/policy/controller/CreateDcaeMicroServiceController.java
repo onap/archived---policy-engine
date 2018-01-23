@@ -740,7 +740,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				}
 
 			}
-			if(constraints!=null &&constraints.isEmpty()==false){
+			if(constraints!=null && ! constraints.isEmpty()){
 				//List handling. 
 				listBuffer.append(keySetString.toUpperCase()+"=[");
 				for(String str:constraints){
@@ -833,16 +833,16 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		String presKey = null;
 		for(String key: element.keySet()){
 			if(key.contains(".")){
-				presKey = key.substring(0,key.indexOf("."));
+				presKey = key.substring(0,key.indexOf('.'));
 			}else if(key.contains("@")){
-				presKey = key.substring(0,key.indexOf("@"));
+				presKey = key.substring(0,key.indexOf('@'));
 			}else{
 				presKey = key;
 			}
 			// first check if we are different from old.
 			LOGGER.info(key+"\n");
 			if(jsonArray!=null && jsonArray.length()>0 && key.contains("@") && !key.contains(".") && oldValue!=null){
-				if(!oldValue.equals(key.substring(0,key.indexOf("@")))){
+				if(!oldValue.equals(key.substring(0,key.indexOf('@')))){
 					jsonResult.put(oldValue, jsonArray);
 					jsonArray = new JSONArray();
 				}
@@ -856,55 +856,55 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			// 
 			if(key.contains(".")){
 				if(nodeKey==null){
-					nodeKey = key.substring(0,key.indexOf("."));
+					nodeKey = key.substring(0,key.indexOf('.'));
 				}
-				if(nodeKey.equals(key.substring(0,key.indexOf(".")))){
-					node.put(key.substring(key.indexOf(".")+1), element.get(key));
+				if(nodeKey.equals(key.substring(0,key.indexOf('.')))){
+					node.put(key.substring(key.indexOf('.')+1), element.get(key));
 				}else{
 					if(node.size()!=0){
 						if(nodeKey.contains("@")){
 							if(arryKey==null){
-								arryKey = nodeKey.substring(0,nodeKey.indexOf("@"));
+								arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
 							}
 							if(nodeKey.endsWith("@0")){
 								isArray = true;
 								jsonArray = new JSONArray();
 							}
-							if(jsonArray != null && arryKey.equals(nodeKey.substring(0,nodeKey.indexOf("@")))){
+							if(jsonArray != null && arryKey.equals(nodeKey.substring(0,nodeKey.indexOf('@')))){
 								jsonArray.put(decodeContent(node));
 							} 
-							if((key.contains("@") && !arryKey.equals(key.substring(0,nodeKey.indexOf("@")))) || !key.contains("@")){
+							if((key.contains("@") && !arryKey.equals(key.substring(0,nodeKey.indexOf('@')))) || !key.contains("@")){
 								jsonResult.put(arryKey, jsonArray);
 								jsonArray = new JSONArray();
 							}
-							arryKey = nodeKey.substring(0,nodeKey.indexOf("@"));
+							arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
 						}else{
 							isArray = false;
 							jsonResult.put(nodeKey, decodeContent(node));
 						}
 						node = nodeFactory.objectNode();
 					}
-					nodeKey = key.substring(0,key.indexOf("."));
+					nodeKey = key.substring(0,key.indexOf('.'));
 					if(nodeKey.contains("@")){
-						arryKey = nodeKey.substring(0,nodeKey.indexOf("@"));
+						arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
 					}
-					node.put(key.substring(key.indexOf(".")+1), element.get(key));
+					node.put(key.substring(key.indexOf('.')+1), element.get(key));
 				}
 			}else if(node.size()!=0){
 				if(nodeKey.contains("@")){
 					if(arryKey==null){
-						arryKey = nodeKey.substring(0,nodeKey.indexOf("@"));
+						arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
 					}
 					if(nodeKey.endsWith("@0")){
 						isArray = true;
 						jsonArray = new JSONArray();
 					}
-					if(jsonArray != null && arryKey.equals(nodeKey.substring(0,nodeKey.indexOf("@")))){
+					if(jsonArray != null && arryKey.equals(nodeKey.substring(0,nodeKey.indexOf('@')))){
 						jsonArray.put(decodeContent(node));
 					}
 					jsonResult.put(arryKey, jsonArray);
 					jsonArray = new JSONArray();
-					arryKey = nodeKey.substring(0,nodeKey.indexOf("@"));
+					arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
 				}else{
 					isArray = false;
 					jsonResult.put(nodeKey, decodeContent(node));
@@ -920,18 +920,18 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				}
 				if(isArray){
 					if(oldValue==null){
-						oldValue = key.substring(0,key.indexOf("@"));
+						oldValue = key.substring(0,key.indexOf('@'));
 					}
 					if(oldValue!=prevKey){
-						oldValue = key.substring(0,key.indexOf("@"));
+						oldValue = key.substring(0,key.indexOf('@'));
 					}
-					if(oldValue.equals(key.substring(0,key.indexOf("@")))){
+					if(oldValue.equals(key.substring(0,key.indexOf('@')))){
 						jsonArray.put(element.get(key));
 					}else{
 						jsonResult.put(oldValue, jsonArray);
 						jsonArray = new JSONArray();
 					}
-					oldValue = key.substring(0,key.indexOf("@"));
+					oldValue = key.substring(0,key.indexOf('@'));
 				}else{
 					jsonResult.put(key, element.get(key));
 				}
@@ -946,18 +946,18 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				}
 				if(isArray){
 					if(oldValue==null){
-						oldValue = key.substring(0,key.indexOf("@"));
+						oldValue = key.substring(0,key.indexOf('@'));
 					}
 					if(oldValue!=prevKey){
-						oldValue = key.substring(0,key.indexOf("@"));
+						oldValue = key.substring(0,key.indexOf('@'));
 					}
-					if(oldValue.equals(key.substring(0,key.indexOf("@")))){
+					if(oldValue.equals(key.substring(0,key.indexOf('@')))){
 						jsonArray.put(element.get(key));
 					}else{
 						jsonResult.put(oldValue, jsonArray);
 						jsonArray = new JSONArray();
 					}
-					oldValue = key.substring(0,key.indexOf("@"));
+					oldValue = key.substring(0,key.indexOf('@'));
 				}else{
 					jsonResult.put(key, element.get(key));
 				}
@@ -969,7 +969,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					jsonArray = new JSONArray();
 				}
 				if(arryKey==null){
-					arryKey = nodeKey.substring(0,nodeKey.indexOf("@"));
+					arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
 				}
 				jsonArray.put(decodeContent(node));
 				jsonResult.put(arryKey, jsonArray);
@@ -991,10 +991,10 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		JsonNode root = mapper.readTree(request.getReader());
 
 		String value = root.get("policyData").toString().replaceAll("^\"|\"$", "");
-		String  servicename = value.toString().split("-v")[0];
+		String  servicename = value.split("-v")[0];
 		String version = null;
-		if (value.toString().contains("-v")){
-			version = value.toString().split("-v")[1];
+		if (value.contains("-v")){
+			version = value.split("-v")[1];
 		}
 		MicroServiceModels returnModel = getAttributeObject(servicename, version);
 		
@@ -1510,12 +1510,12 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 		for (Entry<String, String> entryRef : attributesRefMap.entrySet()) {
 			key = entryRef.getKey();
-			value = entryRef.getValue().toString();
+			value = entryRef.getValue();
 			attribute.put(key, value);
 		}
 		for (Entry<String, String> entryList : attributesListRefMap.entrySet()) {
 			key = entryList.getKey();
-			value = entryList.getValue().toString();
+			value = entryList.getValue();
 			attribute.put(key, value);
 		}
 		for (Entry<String, LinkedList<String>> arrayList : arrayTextList.entrySet()){
@@ -1557,18 +1557,18 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					IOUtils.copy(item.getInputStream(), outputStream);
 					outputStream.close();
 					this.newFile = file.toString();
-					this.newModel.setModelName(this.newFile.toString().split("-v")[0]);
+					this.newModel.setModelName(this.newFile.split("-v")[0]);
 				
-					if (this.newFile.toString().contains("-v")){
+					if (this.newFile.contains("-v")){
 						if (item.getName().endsWith(".zip")){
-							this.newModel.setVersion(this.newFile.toString().split("-v")[1].replace(".zip", ""));
+							this.newModel.setVersion(this.newFile.split("-v")[1].replace(".zip", ""));
 							zip = true;
 						}else if(item.getName().endsWith(".yml")){
-							this.newModel.setVersion(this.newFile.toString().split("-v")[1].replace(".yml", ""));
+							this.newModel.setVersion(this.newFile.split("-v")[1].replace(".yml", ""));
 							yml = true;
 						}
 						else {
-							this.newModel.setVersion(this.newFile.toString().split("-v")[1].replace(".xmi", ""));
+							this.newModel.setVersion(this.newFile.split("-v")[1].replace(".xmi", ""));
 						}
 					}				
 				}catch(Exception e){
@@ -1598,14 +1598,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		if (zip){
 			extractFolder(this.newFile);
 			fileList = listModelFiles(this.directory);
-		}else if (yml==true){
+		}else if (yml){
 			parseTosca(this.newFile);
 		}else {
 			File file = new File(this.newFile);
 			fileList.add(file);
 		}
 		String modelType= "";
-		if(yml==false){
+		if(! yml){
 			modelType="xmi";
 			//Process Main Model file first
 			classMap = new HashMap<>();
@@ -1633,7 +1633,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			msAttributes.setSubClass(this.retmap);
 			
 			HashMap<String, String> returnReferenceList =new HashMap<>();
-			//String[] referenceArray=this.referenceAttributes.split("=");
 			returnReferenceList.put(className, this.referenceAttributes);
 			msAttributes.setRefAttribute(returnReferenceList);
 			

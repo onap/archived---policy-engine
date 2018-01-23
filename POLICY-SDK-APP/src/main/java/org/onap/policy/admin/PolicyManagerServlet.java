@@ -103,7 +103,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		return policyController;
 	}
 
-	public synchronized static void setPolicyController(PolicyController policyController) {
+	public static synchronized void setPolicyController(PolicyController policyController) {
 		PolicyManagerServlet.policyController = policyController;
 	}
 
@@ -375,8 +375,8 @@ public class PolicyManagerServlet extends HttpServlet {
 			if(policyList!= null){
 				for(int i = 0; i < policyList.length(); i++){
 					String policyName = policyList.get(i).toString().replace(".xml", "");
-					String version = policyName.substring(policyName.lastIndexOf(".")+1);
-					policyName = policyName.substring(0, policyName.lastIndexOf(".")).replace(".", File.separator);
+					String version = policyName.substring(policyName.lastIndexOf('.')+1);
+					policyName = policyName.substring(0, policyName.lastIndexOf('.')).replace(".", File.separator);
 					if(policyName.contains("\\")){
 						policyName = policyName.replace("\\", "\\\\");
 					}
@@ -450,9 +450,9 @@ public class PolicyManagerServlet extends HttpServlet {
 		String policyName;
 		String removeExtension = path.replace(".xml", "");
 		if(path.startsWith("/")){
-			policyName = removeExtension.substring(1, removeExtension.lastIndexOf("."));
+			policyName = removeExtension.substring(1, removeExtension.lastIndexOf('.'));
 		}else{
-			policyName = removeExtension.substring(0, removeExtension.lastIndexOf("."));
+			policyName = removeExtension.substring(0, removeExtension.lastIndexOf('.'));
 		}
 
 		String activePolicy = null;
@@ -520,7 +520,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		String policyName = null;
 		if(path.startsWith("/")){
 			path = path.substring(1);
-			policyName = path.substring(path.lastIndexOf("/") +1);
+			policyName = path.substring(path.lastIndexOf('/') +1);
 			path = path.replace("/", ".");
 		}else{
 			path = path.replace("/", ".");
@@ -657,7 +657,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				}
 			}else{
 				try{
-					String scopeName = path.substring(path.indexOf("/") +1);
+					String scopeName = path.substring(path.indexOf('/') +1);
 					activePolicyList(scopeName, resultList, roles, scopes, onlyFolders);
 				} catch (Exception ex) {
 					LOGGER.error("Error Occured While reading Policy Files List"+ex );
@@ -793,8 +793,8 @@ public class PolicyManagerServlet extends HttpServlet {
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			String oldPath = params.getString("path");
 			String newPath = params.getString("newPath");
-			oldPath = oldPath.substring(oldPath.indexOf("/")+1);
-			newPath = newPath.substring(newPath.indexOf("/")+1);
+			oldPath = oldPath.substring(oldPath.indexOf('/')+1);
+			newPath = newPath.substring(newPath.indexOf('/')+1);
 			if(oldPath.endsWith(".xml")){
 				JSONObject result = policyRename(oldPath, newPath, userId);
 				if(!(Boolean)(result.getJSONObject("result").get("success"))){
@@ -826,7 +826,7 @@ public class PolicyManagerServlet extends HttpServlet {
 					if(!(Boolean)(result.getJSONObject("result").get("success"))){
 						isActive = true;
 						policyActiveInPDP.add(policyOldPath);
-						String scope = policyOldPath.substring(0, policyOldPath.lastIndexOf("/"));
+						String scope = policyOldPath.substring(0, policyOldPath.lastIndexOf('/'));
 						scopeOfPolicyActiveInPDP.add(scope.replace("/", File.separator));
 					}
 				}
@@ -837,7 +837,7 @@ public class PolicyManagerServlet extends HttpServlet {
 
 				UserInfo userInfo = new UserInfo();
 				userInfo.setUserLoginId(userId);
-				if(policyActiveInPDP.size() == 0){
+				if(policyActiveInPDP.isEmpty()){
 					renameScope(scopesList, scopeName, newScopeName, controller);
 				}else if(rename){
 					renameScope(scopesList, scopeName, newScopeName, controller);
@@ -879,10 +879,10 @@ public class PolicyManagerServlet extends HttpServlet {
 			PolicyController controller = getPolicyControllerInstance();
 
 			String policyVersionName = newPath.replace(".xml", "");
-			String policyName = policyVersionName.substring(0, policyVersionName.lastIndexOf(".")).replace("/", File.separator);
+			String policyName = policyVersionName.substring(0, policyVersionName.lastIndexOf('.')).replace("/", File.separator);
 
 			String oldpolicyVersionName = oldPath.replace(".xml", "");
-			String oldpolicyName = oldpolicyVersionName.substring(0, oldpolicyVersionName.lastIndexOf(".")).replace("/", File.separator);
+			String oldpolicyName = oldpolicyVersionName.substring(0, oldpolicyVersionName.lastIndexOf('.')).replace("/", File.separator);
 
 			String newpolicyName = newPath.replace("/", ".");
 			String newPolicyCheck = newpolicyName;
@@ -918,7 +918,7 @@ public class PolicyManagerServlet extends HttpServlet {
 			}
 
 			//Query the Policy Entity with oldPolicy Name
-			String policyEntityCheck = oldPolicySplit[1].substring(0, oldPolicySplit[1].indexOf("."));
+			String policyEntityCheck = oldPolicySplit[1].substring(0, oldPolicySplit[1].indexOf('.'));
 			String oldpolicyEntityquery = "FROM PolicyEntity where policyName like :policyEntityCheck and scope = :oldPolicySplit_0";
 			SimpleBindings params = new SimpleBindings();
 			params.put("policyEntityCheck", policyEntityCheck + "%");
@@ -939,7 +939,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				}
 				groupQuery = groupQuery + ")";
 				List<Object> groupEntityData = controller.getDataByQuery(groupQuery, geParams);
-				if(groupEntityData.size() > 0){
+				if(! groupEntityData.isEmpty()){
 					return error("Policy rename failed. Since the policy or its version is active in PDP Groups.");
 				}
 				for(int i=0; i<oldEntityData.size(); i++){
@@ -967,8 +967,8 @@ public class PolicyManagerServlet extends HttpServlet {
 			String oldPolicyNameWithoutExtension = removeoldPolicyExtension;
 			String newPolicyNameWithoutExtension = removenewPolicyExtension;
 			if(removeoldPolicyExtension.endsWith(".xml")){
-				oldPolicyNameWithoutExtension = oldPolicyNameWithoutExtension.substring(0, oldPolicyNameWithoutExtension.indexOf("."));
-				newPolicyNameWithoutExtension = newPolicyNameWithoutExtension.substring(0, newPolicyNameWithoutExtension.indexOf("."));
+				oldPolicyNameWithoutExtension = oldPolicyNameWithoutExtension.substring(0, oldPolicyNameWithoutExtension.indexOf('.'));
+				newPolicyNameWithoutExtension = newPolicyNameWithoutExtension.substring(0, newPolicyNameWithoutExtension.indexOf('.'));
 			}
 			entity.setPolicyName(entity.getPolicyName().replace(oldPolicyNameWithoutExtension, newPolicyNameWithoutExtension));
 			entity.setPolicyData(entity.getPolicyData().replace(oldScope +"."+oldPolicyNameWithoutExtension, newScope+"."+newPolicyNameWithoutExtension));
@@ -1090,12 +1090,12 @@ public class PolicyManagerServlet extends HttpServlet {
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			String oldPath = params.getString("path");
 			String newPath = params.getString("newPath");
-			oldPath = oldPath.substring(oldPath.indexOf("/")+1);
-			newPath = newPath.substring(newPath.indexOf("/")+1);
+			oldPath = oldPath.substring(oldPath.indexOf('/')+1);
+			newPath = newPath.substring(newPath.indexOf('/')+1);
 
 			String policyVersionName = newPath.replace(".xml", "");
-			String version = policyVersionName.substring(policyVersionName.indexOf(".")+1);
-			String policyName = policyVersionName.substring(0, policyVersionName.lastIndexOf(".")).replace("/", File.separator);
+			String version = policyVersionName.substring(policyVersionName.indexOf('.')+1);
+			String policyName = policyVersionName.substring(0, policyVersionName.lastIndexOf('.')).replace("/", File.separator);
 
 			String newpolicyName = newPath.replace("/", ".");
 
@@ -1184,13 +1184,13 @@ public class PolicyManagerServlet extends HttpServlet {
 			if(params.has("deleteVersion")){
 				deleteVersion  = params.getString("deleteVersion");
 			}
-			path = path.substring(path.indexOf("/")+1);
+			path = path.substring(path.indexOf('/')+1);
 			String policyNamewithExtension = path.replace("/", File.separator);
 			String policyVersionName = policyNamewithExtension.replace(".xml", "");
 			String query = "";
 			SimpleBindings policyParams = new SimpleBindings();
 			if(path.endsWith(".xml")){
-				policyNamewithoutExtension = policyVersionName.substring(0, policyVersionName.lastIndexOf("."));
+				policyNamewithoutExtension = policyVersionName.substring(0, policyVersionName.lastIndexOf('.'));
 				policyNamewithoutExtension = policyNamewithoutExtension.replace(File.separator, ".");
 				String splitPolicyName = null;
 				if(policyNamewithoutExtension.contains("Config_")){
@@ -1216,14 +1216,13 @@ public class PolicyManagerServlet extends HttpServlet {
 			boolean pdpCheck = false;
 			if(path.endsWith(".xml")){
 				policyNamewithoutExtension = policyNamewithoutExtension.replace(".", File.separator);
-				int version = Integer.parseInt(policyVersionName.substring(policyVersionName.indexOf(".")+1));
+				int version = Integer.parseInt(policyVersionName.substring(policyVersionName.indexOf('.')+1));
 				if("ALL".equals(deleteVersion)){
 					if(!policyEntityobjects.isEmpty()){
 						for(Object object : policyEntityobjects){
 							policyEntity = (PolicyEntity) object;
 							String groupEntityquery = "from PolicyGroupEntity where policyid ='"+policyEntity.getPolicyId()+"'";
 							SimpleBindings pgeParams = new SimpleBindings();
-							//pgeParams.put("policyIdValue", policyEntity.getPolicyId());
 							List<Object> groupobject = controller.getDataByQuery(groupEntityquery, pgeParams);
 							if(!groupobject.isEmpty()){
 								pdpCheck = true;
@@ -1252,7 +1251,7 @@ public class PolicyManagerServlet extends HttpServlet {
 					if(pdpCheck){
 						//Delete from policyVersion table
 						String getActivePDPPolicyVersion = activePolicyName.replace(".xml", "");
-						getActivePDPPolicyVersion = getActivePDPPolicyVersion.substring(getActivePDPPolicyVersion.lastIndexOf(".")+1);
+						getActivePDPPolicyVersion = getActivePDPPolicyVersion.substring(getActivePDPPolicyVersion.lastIndexOf('.')+1);
 						String policyVersionQuery = "update PolicyVersion set active_version='"+getActivePDPPolicyVersion+"' , highest_version='"+getActivePDPPolicyVersion+"'  where policy_name ='" +policyNamewithoutExtension.replace("\\", "\\\\")+"' and id >0";
 						if(policyVersionQuery != null){
 							controller.executeQuery(policyVersionQuery);
@@ -1303,7 +1302,7 @@ public class PolicyManagerServlet extends HttpServlet {
 									for(Object object : policyEntityobjects){
 										policyEntity = (PolicyEntity) object;
 										String policyEntityName = policyEntity.getPolicyName().replace(".xml", "");
-										int policyEntityVersion = Integer.parseInt(policyEntityName.substring(policyEntityName.lastIndexOf(".")+1));
+										int policyEntityVersion = Integer.parseInt(policyEntityName.substring(policyEntityName.lastIndexOf('.')+1));
 										if(policyEntityVersion > highestVersion && policyEntityVersion != version){
 											highestVersion = policyEntityVersion;
 										}
@@ -1371,8 +1370,8 @@ public class PolicyManagerServlet extends HttpServlet {
 						//Add Active Policies List to PolicyVersionTable
 						for(int i =0; i < activePoliciesInPDP.size(); i++){
 							String activePDPPolicyName = activePoliciesInPDP.get(i).replace(".xml", "");
-							int activePDPPolicyVersion = Integer.parseInt(activePDPPolicyName.substring(activePDPPolicyName.lastIndexOf(".")+1));
-							activePDPPolicyName = activePDPPolicyName.substring(0, activePDPPolicyName.lastIndexOf(".")).replace(".", File.separator);
+							int activePDPPolicyVersion = Integer.parseInt(activePDPPolicyName.substring(activePDPPolicyName.lastIndexOf('.')+1));
+							activePDPPolicyName = activePDPPolicyName.substring(0, activePDPPolicyName.lastIndexOf('.')).replace(".", File.separator);
 							PolicyVersion insertactivePDPVersion = new PolicyVersion();
 							insertactivePDPVersion.setPolicyName(activePDPPolicyName);
 							insertactivePDPVersion.setHigherVersion(activePDPPolicyVersion);
@@ -1408,7 +1407,7 @@ public class PolicyManagerServlet extends HttpServlet {
 			String path = params.getString("path");
 			LOGGER.debug("editFile path: {}"+ path);
 
-			String domain = path.substring(1, path.lastIndexOf("/"));
+			String domain = path.substring(1, path.lastIndexOf('/'));
 			domain = domain.replace("/", ".");
 
 			path = path.substring(1);
@@ -1452,8 +1451,8 @@ public class PolicyManagerServlet extends HttpServlet {
 			policyAdapter.setDomainDir(domain);
 			policyAdapter.setPolicyData(policy);
 			String policyName = path.replace(".xml", "");
-			policyName = policyName.substring(0, policyName.lastIndexOf("."));
-			policyAdapter.setPolicyName(policyName.substring(policyName.lastIndexOf(".")+1));
+			policyName = policyName.substring(0, policyName.lastIndexOf('.'));
+			policyAdapter.setPolicyName(policyName.substring(policyName.lastIndexOf('.')+1));
 
 			PolicyAdapter setpolicyAdapter = PolicyAdapter.getInstance();
 			setpolicyAdapter.configure(policyAdapter,entity);

@@ -294,7 +294,7 @@ public class PDPController extends RestrictedBaseController {
 			PolicyController controller = getPolicyControllerInstance();
 			this.container = new PDPGroupContainer(controller.getPapEngine()); 
 			String update = root.get("update").toString();
-			PdpData pdpGroupData = (PdpData)mapper.readValue(root.get("pdpInGroup").toString(), PdpData.class);
+			PdpData pdpGroupData = mapper.readValue(root.get("pdpInGroup").toString(), PdpData.class);
 			StdPDPGroup activeGroupData =  mapper.readValue(root.get("activePDP").toString(), StdPDPGroup.class);
 			
 			String userId = UserUtils.getUserSession(request).getOrgUserId();

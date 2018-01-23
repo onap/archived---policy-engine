@@ -109,14 +109,14 @@ public class PolicyNotificationMail{
 		String policyFileName = entityItem.getPolicyName();
 		String checkPolicyName = policyName;
 		if(checkPolicyName.endsWith(".xml") || checkPolicyName.contains(".")){
-			checkPolicyName = checkPolicyName.substring(0, checkPolicyName.indexOf("."));
+			checkPolicyName = checkPolicyName.substring(0, checkPolicyName.indexOf('.'));
 		}
 		if(policyFileName.contains("/")){
-			policyFileName = policyFileName.substring(0, policyFileName.indexOf("/"));
+			policyFileName = policyFileName.substring(0, policyFileName.indexOf('/'));
 			policyFileName = policyFileName.replace("/", File.separator);
 		}
 		if(policyFileName.contains("\\")){
-			policyFileName = policyFileName.substring(0, policyFileName.indexOf("\\"));
+			policyFileName = policyFileName.substring(0, policyFileName.indexOf('\\'));
 			policyFileName = policyFileName.replace("\\", "\\\\");
 		}
 		
