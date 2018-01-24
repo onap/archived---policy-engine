@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_cf6216d8",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-24T01:48:47Z",
+      "side": 1,
+      "message": "No compile issues so I think logically this will still work.",
+      "range": {
+        "startLine": 365,
+        "startChar": 21,
+        "endLine": 365,
+        "endChar": 46
+      },
+      "revId": "e44a43f3dbb1dbaa182122f66961c55d3b96b824",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6f72e2ae",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/components/HumanPolicyComponent.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-24T01:48:47Z",
+      "side": 1,
+      "message": "Ravi, please make sure this is correct logic.",
+      "range": {
+        "startLine": 783,
+        "startChar": 0,
+        "endLine": 784,
+        "endChar": 62
+      },
+      "revId": "e44a43f3dbb1dbaa182122f66961c55d3b96b824",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0f69debd",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1526,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-24T01:48:47Z",
+      "side": 1,
+      "message": "Again, please verify the logic.",
+      "range": {
+        "startLine": 1525,
+        "startChar": 5,
+        "endLine": 1526,
+        "endChar": 33
+      },
+      "revId": "e44a43f3dbb1dbaa182122f66961c55d3b96b824",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2f64dae3",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyRolesController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-24T01:48:47Z",
+      "side": 1,
+      "message": "I think this is ok.",
+      "range": {
+        "startLine": 92,
+        "startChar": 8,
+        "endLine": 92,
+        "endChar": 52
+      },
+      "revId": "e44a43f3dbb1dbaa182122f66961c55d3b96b824",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
