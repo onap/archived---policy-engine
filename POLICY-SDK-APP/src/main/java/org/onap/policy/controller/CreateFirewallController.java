@@ -122,7 +122,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 		String jsonBody="";
 		termCollectorList = new ArrayList <>();
 		tagCollectorList = new ArrayList <>();
-		if(policyData.getAttributes().size() > 0){
+		if(! policyData.getAttributes().isEmpty()){
 			for(Object attribute : policyData.getAttributes()){
 				if(attribute instanceof LinkedHashMap<?, ?>){
 					String key = ((LinkedHashMap<?, ?>) attribute).get("key").toString();
@@ -321,7 +321,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			PolicyRestAdapter policyData = mapper.readValue(root.get("policyData").toString(), PolicyRestAdapter.class);
-			if(policyData.getAttributes().size() > 0){
+			if(! policyData.getAttributes().isEmpty()){
 				for(Object attribute : policyData.getAttributes()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get("key").toString();

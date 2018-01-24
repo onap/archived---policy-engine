@@ -189,8 +189,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	}
 	
 	private GroupPolicyScopeList getPolicyObject(String policyScope) {
-		GroupPolicyScopeList groupList= (GroupPolicyScopeList) commonClassDao.getEntityItem(GroupPolicyScopeList.class, "name", policyScope);
-		return groupList;
+		return (GroupPolicyScopeList) commonClassDao.getEntityItem(GroupPolicyScopeList.class, "name", policyScope);
 	}
 	
 	private PolicyRestAdapter constructJson(PolicyRestAdapter policyAdapter, String jsonContent, String dummyValue) {
@@ -1099,7 +1098,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		Map gsonObject = (Map) gson.fromJson(subAttributes, Object.class);
 		
 		JSONObject object = new JSONObject();
-		JSONArray array = new JSONArray();
+		JSONArray array;
 		
 		for (Entry<String, String> keySet : attributeMap.entrySet()){
 			array = new JSONArray();
@@ -1140,10 +1139,10 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	@SuppressWarnings("unchecked")
 	private JSONObject recursiveReference(String name, Map<String,String> subAttributeMap, String enumAttribute) {
 		JSONObject object = new JSONObject();
-		Map<String, String> map = new HashMap<>();
+		Map<String, String> map;
 		Object returnClass = subAttributeMap.get(name);
 		map = (Map<String, String>) returnClass; 
-		JSONArray array = new JSONArray();
+		JSONArray array;
 		
 		for( Entry<String, String> m:map.entrySet()){  
 			String[] splitValue = m.getValue().split(":");
@@ -1258,7 +1257,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		JsonNode root = mapper.readTree(request.getReader());
 
 		String value = root.get("policyData").toString().replaceAll("^\"|\"$", "");
-		String  servicename = value.toString().split("-v")[0];
+		String  servicename = value.split("-v")[0];
 		Set<String> returnList = getVersionList(servicename);
 		
 		response.setCharacterEncoding("UTF-8");
@@ -1274,7 +1273,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	}
 
 	private Set<String> getVersionList(String name) {	
-		MicroServiceModels workingModel = new MicroServiceModels();
+		MicroServiceModels workingModel;
 		Set<String> list = new HashSet<>();
 		List<Object> microServiceModelsData = commonClassDao.getDataById(MicroServiceModels.class, "modelName", name);
 		for (int i = 0; i < microServiceModelsData.size(); i++) {
@@ -1426,7 +1425,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		String policyScopeName = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			DCAEMicroServiceObject msBody = (DCAEMicroServiceObject) mapper.readValue(entity.getConfigurationData().getConfigBody(), DCAEMicroServiceObject.class);
+			DCAEMicroServiceObject msBody = mapper.readValue(entity.getConfigurationData().getConfigBody(), DCAEMicroServiceObject.class);
 			policyScopeName = getPolicyScope(msBody.getPolicyScope());
 			policyAdapter.setPolicyScope(policyScopeName);
 
@@ -1500,7 +1499,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	//Convert the map values and set into JSON body
 	public Map<String, String> convertMap(Map<String, String> attributesMap, Map<String, String> attributesRefMap) {
 		Map<String, String> attribute = new HashMap<>();
-		String temp = null;
+		StringBuilder temp = null;
 		String key;
 		String value;
 		for (Entry<String, String> entry : attributesMap.entrySet()) {
@@ -1523,9 +1522,10 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			temp = null;
 			for (Object textList : arrayList.getValue()){
 				if (temp == null){
-					temp = "[" + textList;
+					temp = new StringBuilder();
+					temp.append("[" + textList);
 				}else{
-					temp = temp + "," + textList;
+					temp.append("," + textList);
 				}
 			}
 			attribute.put(key, temp+ "]");			
@@ -1727,7 +1727,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	private void retreiveDependency(String workingFile, Boolean modelClass) {
 		
 		MSModelUtils utils = new MSModelUtils(PolicyController.getMsOnapName(), PolicyController.getMsPolicyName());
-	    HashMap<String, MSAttributeObject> tempMap = new HashMap<>();
+	    HashMap<String, MSAttributeObject> tempMap;
 	    
 	    tempMap = utils.processEpackage(workingFile, MODEL_TYPE.XMI);
 	    

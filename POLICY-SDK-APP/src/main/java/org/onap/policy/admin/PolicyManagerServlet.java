@@ -248,7 +248,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				}
 			}
 
-			JSONObject responseJsonObject = null;
+			JSONObject responseJsonObject;
 			responseJsonObject = this.success();
 			response.setContentType(CONTENTTYPE);
 			PrintWriter out = response.getWriter();
@@ -913,7 +913,6 @@ public class PolicyManagerServlet extends HttpServlet {
 			policyParams.put("newPolicySplit_0", newPolicySplit[0]);
 			List<Object> queryData = controller.getDataByQuery(policyEntityquery, policyParams);
 			if(!queryData.isEmpty()){
-				entity = (PolicyEntity) queryData.get(0);
 				return error("Policy rename failed. Since, the policy with same name already exists.");
 			}
 
@@ -925,20 +924,21 @@ public class PolicyManagerServlet extends HttpServlet {
 			params.put("oldPolicySplit_0", oldPolicySplit[0]);
 			List<Object> oldEntityData = controller.getDataByQuery(oldpolicyEntityquery, params);
 			if(!oldEntityData.isEmpty()){
-				String groupQuery = "FROM PolicyGroupEntity where (";
+				StringBuilder groupQuery = new StringBuilder();
+				groupQuery.append("FROM PolicyGroupEntity where (");
 				SimpleBindings geParams = new SimpleBindings();
 				for(int i=0; i<oldEntityData.size(); i++){
 					entity = (PolicyEntity) oldEntityData.get(i);
 					if(i == 0){
-						groupQuery = groupQuery +  "policyid = :policyId";
+						groupQuery.append("policyid = :policyId");
 						geParams.put("policyId", entity.getPolicyId());
 					}else{
-						groupQuery = groupQuery +  " or policyid = :policyId" + i;
+						groupQuery.append(" or policyid = :policyId" + i);
 						geParams.put("policyId" + i, entity.getPolicyId());
 					}
 				}
-				groupQuery = groupQuery + ")";
-				List<Object> groupEntityData = controller.getDataByQuery(groupQuery, geParams);
+				groupQuery.append(")");
+				List<Object> groupEntityData = controller.getDataByQuery(groupQuery.toString(), geParams);
 				if(! groupEntityData.isEmpty()){
 					return error("Policy rename failed. Since the policy or its version is active in PDP Groups.");
 				}
@@ -1478,7 +1478,7 @@ public class PolicyManagerServlet extends HttpServlet {
 			String path = params.getString("path");
 			try{
 				if(params.has("subScopename")){
-					if(!params.getString("subScopename").equals("")){
+					if(! "".equals(params.getString("subScopename"))) {
 						name = params.getString("path").replace("/", File.separator) + File.separator +params.getString("subScopename");
 					}
 				}else{
@@ -1501,7 +1501,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				}
 			}
 			LOGGER.debug("addFolder path: {} name: {}" + path +name);
-			if(!name.equals("")){
+			if(! "".equals(name)){
 				if(name.startsWith(File.separator)){
 					name = name.substring(1);
 				}

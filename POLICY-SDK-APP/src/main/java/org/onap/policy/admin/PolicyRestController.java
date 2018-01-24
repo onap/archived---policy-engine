@@ -372,7 +372,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	@RequestMapping(value={"/getDictionary/*"}, method={RequestMethod.GET})
 	public void getDictionaryController(HttpServletRequest request, HttpServletResponse response){
 		String uri = request.getRequestURI().replace("/getDictionary", "");
-		String body = null;
+		String body;
 		ResponseEntity<?> responseEntity = sendToPAP(null, uri, HttpMethod.GET);
 		if(responseEntity != null){
 			body = responseEntity.getBody().toString();
@@ -428,7 +428,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	
 	@RequestMapping(value={"/searchDictionary"}, method={RequestMethod.POST})
 	public ModelAndView searchDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		Object resultList = null;
+		Object resultList;
 		String uri = request.getRequestURI();
 		if(uri.startsWith("/")){
 			uri = uri.substring(uri.indexOf('/')+1);
@@ -461,7 +461,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	
 	@RequestMapping(value={"/searchPolicy"}, method={RequestMethod.POST})
 	public ModelAndView searchPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		Object resultList = null;
+		Object resultList;
 		String uri = request.getRequestURI()+"?action=search";
 		if(uri.startsWith("/")){
 			uri = uri.substring(uri.indexOf('/')+1);

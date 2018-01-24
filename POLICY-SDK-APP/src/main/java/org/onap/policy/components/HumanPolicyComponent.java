@@ -689,7 +689,7 @@ class HtmlProcessor extends SimpleCallback {
 		
 		if (anyOfList != null) {
 			Iterator<AnyOfType> iterAnyOf = anyOfList.iterator();
-			String targetInHuman = "";
+			StringBuilder targetInHuman = new StringBuilder();
 			while (iterAnyOf.hasNext()) {
 				AnyOfType anyOf = iterAnyOf.next();
 				List<AllOfType> allOfList = anyOf.getAllOf();
@@ -701,7 +701,7 @@ class HtmlProcessor extends SimpleCallback {
 						if (matchList != null) {
 							Iterator<MatchType> iterMatch = matchList.iterator();
 							if (matchList.size() > 1)
-								targetInHuman += "(";
+								targetInHuman.append("(");
 							while (iterMatch.hasNext()) {
 								MatchType match = iterMatch.next();
 								//
@@ -740,7 +740,7 @@ class HtmlProcessor extends SimpleCallback {
 											attribute.getAttributeId().stringValue());
 									this.attributeIdentifiersMap.put(succintIdentifier,ai);
 
-									targetInHuman += "<i><a href=\"#" + succintIdentifier + "\">" + succintIdentifier + "</a></i> " + functionName + " ";
+									targetInHuman.append("<i><a href=\"#" + succintIdentifier + "\">" + succintIdentifier + "</a></i> " + functionName + " ");
 
 									int numAttributes = attribute.getValues().size();
 									int count = 0;
@@ -752,38 +752,39 @@ class HtmlProcessor extends SimpleCallback {
 											int countValues = 0;
 											for (Object o : value_s) {
 												countValues++;
-												targetInHuman += " <I>" + o + "</I>";
+												targetInHuman.append(" <I>" + o + "</I>");
 												if (countValues < numValues) {
-													targetInHuman += ", or";
+													targetInHuman.append(", or");
 												}
 											}
 										} else {
-											targetInHuman += " <I>" + v.getValue() + "</I>";
+											targetInHuman.append(" <I>" + v.getValue() + "</I>");
 											if (count < numAttributes) {
-												targetInHuman += ", or ";
+												targetInHuman.append(", or ");
 											}
 										}
 									}
 								}
 								
 								if (iterMatch.hasNext()) {
-									targetInHuman += " and ";
+									targetInHuman.append(" and ");
 								}
 							} // end iterMatch
 							if (matchList.size() > 1) {
-								targetInHuman += ")";
+								targetInHuman.append(")");
 							}
 						}
 						if (iterAllOf.hasNext()) {
-							targetInHuman += " or ";
+							targetInHuman.append(" or ");
 						}
 					} // end iterAllOf 
 				}
 				if (iterAnyOf.hasNext()) {
-					targetInHuman = "(" + targetInHuman + ")" + " or ";
+					targetInHuman = new StringBuilder();
+					targetInHuman.append("(" + targetInHuman + ")" + " or ");
 				} else {
 					if (anyOfList.size() > 1) {
-						targetInHuman += ")";
+						targetInHuman.append(")");
 					}
 				}
 			} // end iterAnyOf
@@ -857,17 +858,17 @@ class HtmlProcessor extends SimpleCallback {
 				if (exps == null || exps.isEmpty())
 					return "";
 				else {
-					String forResult = "";
+					StringBuilder forResult = new StringBuilder();
 					for (JAXBElement<?> e : exps) {
 						Object v = e.getValue();
 						if (LOGGER.isDebugEnabled()) {
 							LOGGER.debug("one-and-only children: " + v);
 						}
 						if (v != null) {
-							forResult += stringifyExpression(v);
+							forResult.append(stringifyExpression(v));
 						}
 					}
-					return forResult; 
+					return forResult.toString(); 
 				}
 			}
 			
@@ -882,20 +883,20 @@ class HtmlProcessor extends SimpleCallback {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug(functionName + " 1 expression: " + numExpr);
 				}
-				String applySubresult = "";
+				StringBuilder applySubresult = new StringBuilder();
 				for (JAXBElement<?> e : apply.getExpression()) {
 					Object v = e.getValue();
 					if (v != null) {
-						applySubresult += this.stringifyExpression(e.getValue());
+						applySubresult.append(this.stringifyExpression(e.getValue()));
 					}
 				}
-				return " " + removePrimitives(functionName) + " (" + applySubresult + ")";
+				return " " + removePrimitives(functionName) + " (" + applySubresult.toString() + ")";
 			} else { 
 				// > 1 arguments
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug(functionName + " > 1 expressions: " + numExpr);
 				}
-				String applySubresult = "";
+				StringBuilder applySubresult = new StringBuilder();
 				int exprCount = 0;
 				for (JAXBElement<?> e : apply.getExpression()) {
 					exprCount++;
@@ -903,20 +904,20 @@ class HtmlProcessor extends SimpleCallback {
 					if (ev != null) {
 						if (ev instanceof ApplyType) {
 							if (((ApplyType) ev).getFunctionId().contains("one-and-only")) {
-								applySubresult += this.stringifyExpression(e.getValue());
+								applySubresult.append(this.stringifyExpression(e.getValue()));
 							} else {
-								applySubresult += "(" + this.stringifyExpression(e.getValue()) + ")";
+								applySubresult.append("(" + this.stringifyExpression(e.getValue()) + ")");
 							}
 						} else {
-							applySubresult += this.stringifyExpression(e.getValue());
+							applySubresult.append(this.stringifyExpression(e.getValue()));
 						}
 						
 						if (exprCount < numExpr) {
-							applySubresult += " " + removePrimitives(functionName) + " ";
+							applySubresult.append(" " + removePrimitives(functionName) + " ");
 						}
 					}
 				}
-				return applySubresult;
+				return applySubresult.toString();
 			}
 		}
 		if (expression instanceof AttributeDesignatorType) {
@@ -951,11 +952,11 @@ class HtmlProcessor extends SimpleCallback {
 		if (expression instanceof AttributeValueType) {
 			AttributeValueType avt = (AttributeValueType) expression;
 			List<Object> content = avt.getContent();
-			String value_s = "";
+			StringBuilder value_s = new StringBuilder();
 			for (Object o: content) {
-				value_s += " " + o.toString();
+				value_s.append(" " + o.toString());
 			}
-			return " " + value_s;
+			return " " + value_s.toString();
 		}
 		if (expression instanceof VariableReferenceType) {
 			//

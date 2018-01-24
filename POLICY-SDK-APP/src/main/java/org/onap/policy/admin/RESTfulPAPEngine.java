@@ -81,7 +81,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 	 * Set up link with PAP Servlet and get our initial set of Groups
 	 * @throws Exception 
 	 */
-	public RESTfulPAPEngine (String myURLString) throws PAPException, IOException  {
+	public RESTfulPAPEngine (String myURLString) throws PAPException  {
 		//
 		// Get our URL to the PAP servlet
 		//
@@ -358,9 +358,9 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 		try {
 			String fullURL = papServletURLString;
 			if (parameters != null && parameters.length > 0) {
-				String queryString = "";
+				StringBuilder queryString = new StringBuilder();
 				for (String p : parameters) {
-					queryString += "&" + p;
+					queryString.append("&" + p);
 				}
 				fullURL += "?" + queryString.substring(1);
 			}

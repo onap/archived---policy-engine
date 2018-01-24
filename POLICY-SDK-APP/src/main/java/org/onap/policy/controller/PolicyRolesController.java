@@ -81,7 +81,7 @@ public class PolicyRolesController extends RestrictedBaseController{
 	@RequestMapping(value={"/save_NonSuperRolesData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView SaveRolesEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			String scopeName = null;
+			StringBuilder scopeName = new StringBuilder();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
@@ -89,9 +89,9 @@ public class PolicyRolesController extends RestrictedBaseController{
 		    ReadScopes adapter = mapper.readValue(root.get("editRoleData").toString(), ReadScopes.class);
 		    for(int i = 0; i < adapter.getScope().size(); i++){
 		    	if(i == 0){
-		    		scopeName	= 	adapter.getScope().get(0);
+		    		scopeName.append(adapter.getScope().get(0));
 		    	}else{
-		    		scopeName	= 	scopeName + "," + adapter.getScope().get(i);
+		    		scopeName.append("," + adapter.getScope().get(i));
 		    	}	
 		    }
 		    LOGGER.info("****************************************Logging UserID for Roles Function********************************************************");
@@ -101,7 +101,7 @@ public class PolicyRolesController extends RestrictedBaseController{
 		    roles.setId(adapter.getId());
 		    roles.setLoginId(adapter.getLoginId());
 		    roles.setRole(adapter.getRole());
-		    roles.setScope(scopeName);
+		    roles.setScope(scopeName.toString());
 		    commonClassDao.update(roles);
 		    response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");

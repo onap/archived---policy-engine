@@ -60,7 +60,7 @@ public class PolicyNotificationController extends RestrictedBaseController {
 	
 	@RequestMapping(value={"/watchPolicy"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView watchPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String path = "";
+		StringBuilder path = new StringBuilder();
 		String responseValue = "";
 		try {
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
@@ -76,9 +76,9 @@ public class PolicyNotificationController extends RestrictedBaseController {
 				for (int i = 0; i < arrayNode.size(); i++) {
 					JsonNode individualElement = arrayNode.get(i);
 					if(i == 0){
-						path = path + individualElement.toString().replace("\"", "").trim();
+						path.append(individualElement.toString().replace("\"", "").trim());
 					}else{
-						path = path + File.separator + individualElement.toString().replace("\"", "").trim();
+						path.append(File.separator + individualElement.toString().replace("\"", "").trim());
 					}
 				}
 			}

@@ -194,7 +194,6 @@ public class DashboardController  extends RestrictedBaseController{
 			PolicyController controller = getPolicyControllerInstance();
 			Set<OnapPDPGroup> groups = controller.getPapEngine().getOnapPDPGroups();
 			if (groups == null) {
-				papStatus = "UNKNOWN";
 				throw new PAPException("PAP not running");
 			}else {
 				papStatus = "IS_OK";
@@ -281,8 +280,7 @@ public class DashboardController  extends RestrictedBaseController{
 	private long getRequestCounts(String host, int port, String jmxAttribute) {
 
 		policyLogger.debug("Create an RMI connector client and connect it to the JMX connector server");
-		HashMap map = new HashMap();
-		map = null;
+		HashMap map = null;
 		JMXConnector jmxConnection;
 		try {
 			jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionURL(host, port), map);
@@ -383,8 +381,7 @@ public class DashboardController  extends RestrictedBaseController{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Object getPolicy(String host, int port, String jmxAttribute){
 		policyLogger.debug("Create an RMI connector client and connect it to the JMX connector server for Policy: " + host);
-		HashMap map = new HashMap();
-		map = null;
+		HashMap map = null;
 		JMXConnector jmxConnection;
 		try {
 			jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionURL(host, port), map);
