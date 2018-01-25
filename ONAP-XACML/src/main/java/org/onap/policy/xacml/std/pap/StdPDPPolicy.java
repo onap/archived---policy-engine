@@ -329,9 +329,9 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 		}
 		String versionString = "";
 		if (array.length > 0) {
-			versionString = "" + array[0];
+			versionString = "" + Integer.toString(array[0]);
 			for (int i = 1; i < array.length; i++) {
-				versionString += "." + array[i];
+				versionString += "." + Integer.toString(array[i]);
 			}
 		}
 		return versionString;
@@ -339,10 +339,11 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 	
 
 	
-	//
-	// Methods needed for JSON Deserialization
-	//
-	public StdPDPPolicy() {}
+	public StdPDPPolicy() {
+		//
+		// Methods needed for JSON Deserialization
+		//
+	}
 	
 	public void setPolicyId(String policyId) {
 		this.policyId = policyId;

@@ -208,18 +208,18 @@ public class XACMLPolicyScanner {
 		//
 		List<JAXBElement<?>> list = policySet.getPolicySetOrPolicyOrPolicySetIdReference();
 		for (JAXBElement<?> element: list) {
-			if (element.getName().getLocalPart().equals("PolicySet")) {
+			if ("PolicySet".equals(element.getName().getLocalPart())) {
 				if (this.scanPolicySet(policySet, (PolicySetType)element.getValue()) == CallbackResult.STOP) {
 					return CallbackResult.STOP;
 				}
-			} else if (element.getName().getLocalPart().equals("Policy")) {
+			} else if ("Policy".equals(element.getName().getLocalPart())) {
 				if (this.scanPolicy(policySet, (PolicyType)element.getValue()) == CallbackResult.STOP) {
 					return CallbackResult.STOP;
 				}
 			} else if (element.getValue() instanceof IdReferenceType) {
-				if (element.getName().getLocalPart().equals("PolicySetIdReference")) {
+				if ("PolicySetIdReference".equals(element.getName().getLocalPart())) {
 					
-				} else if (element.getName().getLocalPart().equals("PolicyIdReference")) {
+				} else if ("PolicyIdReference".equals(element.getName().getLocalPart())) {
 					
 				}
 			} else {
@@ -395,7 +395,7 @@ public class XACMLPolicyScanner {
 			return CallbackResult.CONTINUE;
 		}
 		List<ObligationExpressionType> expressions = obligationExpressionsType.getObligationExpression();
-		if (expressions == null || expressions.size() == 0) {
+		if (expressions == null || expressions.isEmpty()) {
 			return CallbackResult.CONTINUE;
 		}
 		for (ObligationExpressionType expression : expressions) {
@@ -439,7 +439,7 @@ public class XACMLPolicyScanner {
 			return CallbackResult.CONTINUE;
 		}
 		List<AdviceExpressionType> expressions = adviceExpressionstype.getAdviceExpression();
-		if (expressions == null || expressions.size() == 0) {
+		if (expressions == null || expressions.isEmpty()) {
 			return CallbackResult.CONTINUE;
 		}
 		for (AdviceExpressionType expression : expressions) {
@@ -658,13 +658,12 @@ public class XACMLPolicyScanner {
 		    //
 			NodeList nodes = doc.getChildNodes();
 			Node node = nodes.item(0);
-			Element e = null;
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				e = (Element) node;
+				Element e = (Element) node;
 				//
 				// Is it a 3.0 policy?
 				//
-				if (e.getNamespaceURI().equals("urn:oasis:names:tc:xacml:3.0:core:schema:wd-17")) {
+				if ("urn:oasis:names:tc:xacml:3.0:core:schema:wd-17".equals(e.getNamespaceURI())) {
 					//
 					// A policyset or policy could be the root
 					//

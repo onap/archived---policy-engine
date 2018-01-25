@@ -66,7 +66,7 @@ public class PDPControllerTest extends Mockito{
 		groups = new HashSet<>();
 		StdPDPGroup group = new StdPDPGroup();
 		group.setId("default");
-		group.setDefault(true);
+		group.setDefaultGroup(true);
 		group.setName("default");
 		group.setDescription("The default group where new PDP's are put.");
 		group.setStatus(new StdPDPGroupStatus());

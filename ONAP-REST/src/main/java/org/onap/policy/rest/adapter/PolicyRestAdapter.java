@@ -602,8 +602,8 @@ public class PolicyRestAdapter {
     public ArrayList<String> getBrmsDependency() {
         return brmsDependency;
     }
-    public void setBrmsDependency(ArrayList<String> brmsDependency) {
-        this.brmsDependency = brmsDependency;
+    public void setBrmsDependency(List<String> brmsDependency) {
+        this.brmsDependency = (ArrayList<String>)brmsDependency;
     }
     public Map<String, String> getMatching() {
 		return matching;
