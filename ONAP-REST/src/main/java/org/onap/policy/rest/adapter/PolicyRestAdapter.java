@@ -145,7 +145,7 @@ public class PolicyRestAdapter {
     private String ruleName;
 	private Map<String,String> brmsParamBody=null;
 	private String brmsController = null;
-    private ArrayList<String> brmsDependency = null;
+    private List<String> brmsDependency = null;
     private LinkedHashMap<?, ?>  ruleData;
 	private LinkedHashMap<?,?>   ruleListData;
 	private Map<String,String> drlRuleAndUIParams=null;
@@ -602,7 +602,7 @@ public class PolicyRestAdapter {
     public ArrayList<String> getBrmsDependency() {
         return brmsDependency;
     }
-    public void setBrmsDependency(ArrayList<String> brmsDependency) {
+    public void setBrmsDependency(List<String> brmsDependency) {
         this.brmsDependency = brmsDependency;
     }
     public Map<String, String> getMatching() {

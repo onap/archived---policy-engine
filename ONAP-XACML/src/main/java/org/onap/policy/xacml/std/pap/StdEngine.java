@@ -66,8 +66,10 @@ import com.google.common.collect.Sets;
  */
 public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyEngine {
 	public static final String pipPropertyFile = "pip.properties";
+	
+	private static final String addGroup = "addGroup ";
 
-	private static Log	logger	= LogFactory.getLog(StdEngine.class);
+    private static Log	logger	= LogFactory.getLog(StdEngine.class);
 
 	public static final String	PROP_PAP_REPO = "xacml.pap.pdps";
 	public static final String	PROP_PAP_GROUPS = "xacml.pap.groups";
@@ -181,14 +183,14 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		if(defaultId == null){
 			defaultId = PROP_PAP_GROUPS_DEFAULT_NAME;
 		}
-		if(defaultId.equals("")){
+		if("".equals(defaultId)){
 			defaultId = PROP_PAP_GROUPS_DEFAULT_NAME;
 		}
 		//we're going to check one more time in case the PROP_PAP_GROUPS_DEFAULT_NAME doesn't exist
 		if(defaultId == null){
 			defaultId = "default";
 		}
-		if(defaultId.equals("")){
+		if("".equals(defaultId)){
 			defaultId = "default";
 		}
 		logger.warn("Default group does NOT exist, creating " + defaultId);
@@ -318,7 +320,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		// If it exists already
 		//
 		if (Files.exists(groupPath)) {
-			logger.warn("addGroup " + id + " directory exists" + groupPath.toString());
+			logger.warn(addGroup + id + " directory exists" + groupPath.toString());
 		} else {
 			try {
 				//
@@ -336,7 +338,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 
 		Path policyProperties = Paths.get(groupPath.toString(), "xacml.policy.properties");
 		if (Files.exists(policyProperties)) {
-			logger.warn("addGroup " + id + " file exists: " + policyProperties.toString());
+			logger.warn(addGroup + id + " file exists: " + policyProperties.toString());
 		} else {
 			Properties props = new Properties();
 			props.setProperty(XACMLProperties.PROP_REFERENCEDPOLICIES, "");
@@ -357,7 +359,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		Path pipProperties = Paths.get(groupPath.toString(), "xacml.pip.properties");
 		Properties props = new Properties();
 		if (Files.exists(pipProperties)) {
-			logger.warn("addGroup " + id + " file exists: " + pipProperties.toString());
+			logger.warn(addGroup + id + " file exists: " + pipProperties.toString());
 		} else {
 			try {
 				props = setPIPProperties(props);
@@ -536,10 +538,13 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		throw new PAPException("Unknown PDP Group: " + group.getId());
 	}
 
-	// Currently not used on the PAP side.  This is done by ((StdPDPGroup) group).copyPolicyToFile
+	
 	@Override
 	public void copyPolicy(PDPPolicy policy, OnapPDPGroup group)
 			throws PAPException {
+		//
+		// Currently not used on the PAP side.  This is done by ((StdPDPGroup) group).copyPolicyToFile
+		//
 	}
 	
 	
@@ -562,7 +567,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 	//
 	
 	private Set<StdPDPGroup>	readProperties(Path repository, Properties properties) throws PAPException {
-		Set<StdPDPGroup> groups = new HashSet<>();
+		Set<StdPDPGroup> pdpGroups = new HashSet<>();
 		//
 		// See if there is a groups property
 		//
@@ -589,15 +594,15 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 			//
 			// Add it in
 			//
-			groups.add(g);
+			pdpGroups.add(g);
 		}
 		//
 		// Dump what we got
 		//
 		if (logger.isDebugEnabled()) {
-			logger.debug("PDP Group List: " + groups.toString());
+			logger.debug("PDP Group List: " + pdpGroups.toString());
 		}
-		return groups;
+		return pdpGroups;
 	}
 	
 	private void saveConfiguration() throws PAPException, IOException {
@@ -693,10 +698,10 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 				inList = true;
 			}
 		}
-		if (inList == false) {
+		if (!inList) {
 			Set<String> grps = Sets.newHashSet(groups);
 			grps.add(group.getId());
-			String newGroupList = "";;
+			String newGroupList;
 			if (grps.size() == 1) {
 				newGroupList = grps.iterator().next();
 			} else if (grps.size() > 1) {
@@ -713,7 +718,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		//
 		// Set its PDP list
 		//
-		if (group.getPdps().size() > 0) {
+		if (!group.getPdps().isEmpty()) {
 			String pdpList = "";
 			if (group.getPdps().size() == 1) {
 				pdpList = group.getPdps().iterator().next().getId();
@@ -785,7 +790,6 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 			} catch (IOException e) {
 				PolicyLogger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "can not load the pip properties from file" +e);
 			}
-			props = prop;
 		}
 		return props;
 	}
@@ -849,7 +853,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		if (group == null) {
 			throw new PAPException("You must specify which group the PDP will belong to.");
 		}
-		if (this.groups.contains(group) == false) {
+		if (!this.groups.contains(group)) {
 			throw new PAPException("Unknown group, not in our list.");
 		}
 		for (OnapPDP p : group.getOnapPdps()) {
@@ -953,7 +957,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		//
 		// Does this group exist?
 		//
-		if (this.groups.contains(group) == false) {
+		if (!this.groups.contains(group)) {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "This group doesn't exist.");
 			throw new PAPException("The group '" + group.getId() + "' does not exist");
 		}
@@ -967,13 +971,13 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		//
 		// Are there PDPs? If so, then we need a target group
 		//
-		if (pdps.isEmpty() == false && newGroup == null) {
+		if (!pdps.isEmpty() && newGroup == null) {
 			throw new NullPointerException("Group targeted for deletion has PDPs, you must provide a new group for them.");
 		}
 		//
 		// Move the PDPs
 		//
-		if (pdps.isEmpty() == false) {
+		if (!pdps.isEmpty()) {
 			if (! (newGroup instanceof StdPDPGroup)) {
 				throw new PAPException("Unexpected class for newGroup: " + newGroup.getClass().getCanonicalName());
 			}

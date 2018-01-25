@@ -49,7 +49,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 	private String policyID = null;
 	private String ruleID = null;
 	private String brmsController;
-	private ArrayList<String> brmsDependency;
+	private List<String> brmsDependency;
 	private String configType = null;
 	private Boolean editPolicy = false;
 	private Boolean draft = false;
@@ -83,7 +83,9 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 
 
 	public StdPAPPolicy() {
-
+		//
+		// Default empty constructor
+		//
 	}
 
 	//Constructor for sending location when pushing policies
@@ -249,7 +251,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 	public StdPAPPolicy (String configPolicyType, String policyName, String description, 
 			String configName, Boolean editPolicy, String domain, 
 			Map<String,String> dyanamicFieldConfigAttributes, Integer highestVersion, String eCompName, 
-			String configBodyData, String riskLevel, String riskType, String guard, String ttlDate, String brmsController, ArrayList<String> brmsDependency) {
+			String configBodyData, String riskLevel, String riskType, String guard, String ttlDate, String brmsController, List<String> brmsDependency) {
 
 		this.configPolicyType = configPolicyType;
 		this.policyName = policyName;
@@ -273,7 +275,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 	public StdPAPPolicy (String configPolicyType, String policyName, String description, 
 			String configName, Boolean editPolicy, String domain, 
 			Map<String,String> dyanamicFieldConfigAttributes, Integer highestVersion, String eCompName, 
-			String configBodyData,Map<String,String> drlRuleAndUIParams, String riskLevel, String riskType, String guard, String ttlDate, String brmsController, ArrayList<String> brmsDependency) {
+			String configBodyData,Map<String,String> drlRuleAndUIParams, String riskLevel, String riskType, String guard, String ttlDate, String brmsController, List<String> brmsDependency) {
 
 		this.configPolicyType = configPolicyType;
 		this.policyName = policyName;
@@ -908,11 +910,11 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 		this.brmsController = brmsController;
 	}
 
-	public ArrayList<String> getBrmsDependency() {
+	public List<String> getBrmsDependency() {
 		return brmsDependency;
 	}
 
-	public void setBrmsDependency(ArrayList<String> brmsDependency) {
+	public void setBrmsDependency(List<String> brmsDependency) {
 		this.brmsDependency = brmsDependency;
 	}
 	
