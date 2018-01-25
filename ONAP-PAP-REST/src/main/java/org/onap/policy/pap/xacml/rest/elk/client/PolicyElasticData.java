@@ -73,7 +73,7 @@ public class PolicyElasticData {
 	private String ruleName;
 	private Map<String,String> brmsParamBody;
 	private String brmsController;
-	private ArrayList<String> brmsDependency;
+	private List<String> brmsDependency;
 	private LinkedHashMap<?, ?>  ruleData;
 	private LinkedHashMap<?,?>   ruleListData;
 	private Map<String,String> drlRuleAndUIParams;
@@ -419,7 +419,7 @@ public class PolicyElasticData {
 	public void setBrmsController(String brmsController) {
 		this.brmsController = brmsController;
 	}
-	public ArrayList<String> getBrmsDependency() {
+	public List<String> getBrmsDependency() {
 		return brmsDependency;
 	}
 	public void setBrmsDependency(ArrayList<String> brmsDependency) {

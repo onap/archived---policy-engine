@@ -49,6 +49,9 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 	private transient Set<PDPPIPConfig>	failedPIPConfigs = new HashSet<>();
 	
 	public StdPDPStatus() {
+		//
+		// Default constructor
+		//
 	}
 
 	public void set(StdPDPStatus newStatus) {
@@ -151,7 +154,7 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 
 	@Override
 	public boolean policiesOK() {
-		if (this.failedPolicies.size() > 0) {
+		if (!this.failedPolicies.isEmpty()) {
 			return false;
 		}
 		return true;
@@ -185,7 +188,7 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 
 	@Override
 	public boolean pipConfigOK() {
-		if (this.failedPIPConfigs.size() > 0) {
+		if (!this.failedPIPConfigs.isEmpty()) {
 			return false;
 		}
 		return true;
@@ -194,13 +197,13 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 	@Override
 	@JsonIgnore
 	public boolean isOk() {
-		if (this.policiesOK() == false) {
+		if (!this.policiesOK()) {
 			return false;
 		}
-		if (this.pipConfigOK() == false) {
+		if (!this.pipConfigOK()) {
 			return false;
 		}
-		return (this.status == Status.UP_TO_DATE);
+		return this.status == Status.UP_TO_DATE;
 	}
 
 	@Override

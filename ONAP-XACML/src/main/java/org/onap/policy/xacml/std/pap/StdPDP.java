@@ -52,7 +52,9 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 	private transient Set<PDPPIPConfig> pipConfigs = new HashSet<>();
 	
 	public StdPDP() {
-		
+		//
+		// Default constructor
+		//
 	}
 	
 	public StdPDP(String id, Integer  jmxport) {
@@ -158,6 +160,8 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 	public void setPipConfigs(Set<PDPPIPConfig> pipConfigs) {
 		this.pipConfigs = pipConfigs;
 	}
+	
+	@Override
 	public void setJmxPort(Integer jmxport) {
 		this.jmxport = jmxport;
 	}
@@ -209,13 +213,13 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 		if ( ! (o instanceof StdPDP)) {
 			return -1;
 		}
-		if (((StdPDP)o).name == null) {
+		if (o.name == null) {
 			return -1;
 		}
 		if (name == null) {
 			return 1;
 		}
-		return name.compareTo(((StdPDP)o).name);
+		return name.compareTo(o.name);
 	}
 	
 }
