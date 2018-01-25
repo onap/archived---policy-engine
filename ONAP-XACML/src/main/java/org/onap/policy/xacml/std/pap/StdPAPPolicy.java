@@ -83,7 +83,9 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 
 
 	public StdPAPPolicy() {
-
+		//
+		// Default empty constructor
+		//
 	}
 
 	//Constructor for sending location when pushing policies
@@ -249,7 +251,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 	public StdPAPPolicy (String configPolicyType, String policyName, String description, 
 			String configName, Boolean editPolicy, String domain, 
 			Map<String,String> dyanamicFieldConfigAttributes, Integer highestVersion, String eCompName, 
-			String configBodyData, String riskLevel, String riskType, String guard, String ttlDate, String brmsController, ArrayList<String> brmsDependency) {
+			String configBodyData, String riskLevel, String riskType, String guard, String ttlDate, String brmsController, List<String> brmsDependency) {
 
 		this.configPolicyType = configPolicyType;
 		this.policyName = policyName;
@@ -266,14 +268,14 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 		this.guard = guard;	
 		this.ttlDate = ttlDate;
 		this.brmsController = brmsController;
-		this.brmsDependency = brmsDependency;
+		this.brmsDependency = (ArrayList<String>) brmsDependency;
 	}
 
 	//Constructor for Creating BRMS Param Policies from the Admin Console
 	public StdPAPPolicy (String configPolicyType, String policyName, String description, 
 			String configName, Boolean editPolicy, String domain, 
 			Map<String,String> dyanamicFieldConfigAttributes, Integer highestVersion, String eCompName, 
-			String configBodyData,Map<String,String> drlRuleAndUIParams, String riskLevel, String riskType, String guard, String ttlDate, String brmsController, ArrayList<String> brmsDependency) {
+			String configBodyData,Map<String,String> drlRuleAndUIParams, String riskLevel, String riskType, String guard, String ttlDate, String brmsController, List<String> brmsDependency) {
 
 		this.configPolicyType = configPolicyType;
 		this.policyName = policyName;
@@ -291,7 +293,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 		this.guard = guard;	
 		this.ttlDate = ttlDate;
 		this.brmsController = brmsController;
-		this.brmsDependency = brmsDependency;
+		this.brmsDependency = (ArrayList<String>) brmsDependency;
 	}
 
 	//Constructor for Creating CloseLoop_Fault and Performance Metric Policies
@@ -908,12 +910,12 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 		this.brmsController = brmsController;
 	}
 
-	public ArrayList<String> getBrmsDependency() {
+	public List<String> getBrmsDependency() {
 		return brmsDependency;
 	}
 
-	public void setBrmsDependency(ArrayList<String> brmsDependency) {
-		this.brmsDependency = brmsDependency;
+	public void setBrmsDependency(List<String> brmsDependency) {
+		this.brmsDependency = (ArrayList<String>) brmsDependency;
 	}
 	
 	public void setTreatments(Map<String, String> treatments) {

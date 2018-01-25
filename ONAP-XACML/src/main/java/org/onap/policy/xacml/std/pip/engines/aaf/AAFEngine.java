@@ -224,7 +224,7 @@ public class AAFEngine extends StdConfigurableEngine {
 		/*
 		 * Drop the issuer and see if the request matches any of our supported queries
 		 */
-		PIPRequest pipRequestSupported	= (pipRequest.getIssuer() == null ? pipRequest : new StdPIPRequest(pipRequest.getCategory(), pipRequest.getAttributeId(), pipRequest.getDataTypeId()));
+		PIPRequest pipRequestSupported	= pipRequest.getIssuer() == null ? pipRequest : new StdPIPRequest(pipRequest.getCategory(), pipRequest.getAttributeId(), pipRequest.getDataTypeId());
 		if (!mapSupportedAttributes.containsKey(pipRequestSupported)) {
 			this.logger.debug("Requested attribute '" + pipRequest.toString() + "' is not supported");
 			return StdPIPResponse.PIP_RESPONSE_EMPTY;
