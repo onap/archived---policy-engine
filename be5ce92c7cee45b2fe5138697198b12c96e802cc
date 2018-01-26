@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f9131b64",
+        "filename": "packages/install/src/files/console.conf",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-26T15:39:21Z",
+      "side": 1,
+      "message": "probably good to set a default, otherwise expanded config files (tomcat -server.xml I assume) may be invalid and give problems coming up, if this one is used.\n\nI\u0027ve seen it set up like this:\n\nKEYSTORE_PASSWD\u003dPolicyR0ck$",
+      "revId": "be5ce92c7cee45b2fe5138697198b12c96e802cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
