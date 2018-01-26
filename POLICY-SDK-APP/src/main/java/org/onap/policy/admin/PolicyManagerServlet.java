@@ -25,7 +25,6 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -150,34 +149,22 @@ public class PolicyManagerServlet extends HttpServlet {
 	protected static void initializeJSONLoad() {
 		closedLoopJsonLocation = Paths.get(XACMLProperties
 				.getProperty(XACMLRestProperties.PROP_ADMIN_CLOSEDLOOP));
-		FileInputStream inputStream = null;
-		JsonReader jsonReader = null;
 		String location = closedLoopJsonLocation.toString();
-		try {
-			inputStream = new FileInputStream(location);
-			if (location.endsWith("json")) {
-				jsonReader = Json.createReader(inputStream);
-				policyNames = jsonReader.readArray();
-				serviceTypeNamesList = new ArrayList<>();
-				for (int i = 0; i < policyNames.size(); i++) {
-					javax.json.JsonObject policyName = policyNames.getJsonObject(i);
-					String name = policyName.getJsonString("serviceTypePolicyName").getString();
-					serviceTypeNamesList.add(name);
-				}
+		if (! location.endsWith("json")) {
+			LOGGER.warn("JSONConfig file does not end with extension .json");
+			return;
+		}
+		try (FileInputStream inputStream = new FileInputStream(location);
+			JsonReader jsonReader = Json.createReader(inputStream)) {
+			policyNames = jsonReader.readArray();
+			serviceTypeNamesList = new ArrayList<>();
+			for (int i = 0; i < policyNames.size(); i++) {
+				javax.json.JsonObject policyName = policyNames.getJsonObject(i);
+				String name = policyName.getJsonString("serviceTypePolicyName").getString();
+				serviceTypeNamesList.add(name);
 			}
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			LOGGER.error("Exception Occured while initializing the JSONConfig file"+e);
-		}finally{
-			try {
-				if(inputStream != null){
-					inputStream.close();
-				}
-				if(jsonReader != null){
-					jsonReader.close();
-				}
-			} catch (IOException e) {
-				LOGGER.error("Exception Occured while closing the File InputStream"+e);
-			}
 		}
 	}
 

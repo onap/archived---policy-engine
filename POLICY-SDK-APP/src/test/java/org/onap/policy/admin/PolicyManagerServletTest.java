@@ -19,6 +19,7 @@
  */
 package org.onap.policy.admin;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
@@ -134,12 +135,46 @@ public class PolicyManagerServletTest extends Mockito{
         	when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.admin.properties");
         	System.setProperty("xacml.rest.admin.closedLoopJSON", new File(".").getCanonicalPath() + File.separator + "src"+ File.separator + "test" + File.separator + "resources" + File.separator + "JSONConfig.json");
 			servlet.init(servletConfig);
+			
+			assertTrue(PolicyManagerServlet.getServiceTypeNamesList().size() > 0);
+			assertTrue(PolicyManagerServlet.getPolicyNames().size() > 0);
+			
 		} catch (Exception e1) {
 			logger.error("Exception Occured"+e1);
 			fail();
 		}
 	}
 	
+	@Test
+	public void testBadInitJson() {
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		ServletConfig servletConfig = mock(ServletConfig.class);       
+        try {
+        	when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
+        	when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.admin.properties");
+        	System.setProperty("xacml.rest.admin.closedLoopJSON", new File(".").getCanonicalPath() + File.separator + "src"+ File.separator + "test" + File.separator + "resources" + File.separator + "JSONConfig.foo");
+			servlet.init(servletConfig);
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+			fail();
+		}
+	}
+	
+	@Test
+	public void testBadInitJsonInvalidFile() {
+		PolicyManagerServlet servlet = new PolicyManagerServlet();
+		ServletConfig servletConfig = mock(ServletConfig.class);       
+        try {
+        	when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
+        	when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.admin.properties");
+        	System.setProperty("xacml.rest.admin.closedLoopJSON", new File(".").getCanonicalPath() + File.separator + "src"+ File.separator + "test" + File.separator + "resources" + File.separator + "IDonotExist.json");
+			servlet.init(servletConfig);
+		} catch (Exception e1) {
+			logger.error("Exception Occured"+e1);
+			fail();
+		}
+	}
+
 	@SuppressWarnings("static-access")
 	@Test
 	public void testDescribePolicy(){
