@@ -53,8 +53,6 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 public class VNFType implements Serializable  {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -62,7 +60,7 @@ public class VNFType implements Serializable  {
 	
 	@Column(name="vnf_type", nullable=false, unique=true)
 	@OrderBy("asc")
-	private String vnftype;
+	private String typeVnf;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_date", updatable=false)
@@ -102,23 +100,19 @@ public class VNFType implements Serializable  {
 	private static Log LOGGER = LogFactory.getLog(VNFType.class);
 	
 	public VNFType() {
-		
+		// An empty constructor
 	}
 	
 	public String getVnftype() {
-		return vnftype;
+		return typeVnf;
 	}
 
 	public void setVnftype(String vnftype) {
-		this.vnftype = vnftype;
+		this.typeVnf = vnftype;
 	}
 
-	public VNFType(String string, String userid) {
-		this(domain);
-	}
-	
 	public VNFType(String domain) {
-		this.vnftype = domain;
+		this.typeVnf = domain;
 	}	
 
 	@PrePersist

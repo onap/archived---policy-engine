@@ -87,12 +87,9 @@ public class BRMSParamTemplate implements Serializable{
 	}
 	
 	public BRMSParamTemplate(){
+		// An empty constructor
 	}
-	
-	public BRMSParamTemplate(String userid){
-		
-	}
-	
+
 	@PrePersist
 	public void	prePersist() {
 		Date date = new Date();

@@ -69,7 +69,7 @@ public class ConstraintType implements Serializable {
 	private Set<Attribute> attributes = new HashSet<>();
 
 	public ConstraintType() {
-		
+		// An empty constructor
 	}
 
 	public ConstraintType(String constraintType) {

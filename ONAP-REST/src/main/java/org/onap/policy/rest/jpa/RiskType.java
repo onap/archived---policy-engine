@@ -52,8 +52,6 @@ import org.onap.policy.rest.XacmlAdminAuthorization;
 public class RiskType implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -101,13 +99,9 @@ public class RiskType implements Serializable {
 	private static Log LOGGER = LogFactory.getLog(RiskType.class);
 	
 	public RiskType() {
-		
+		// An empty constructor
 	}
-	
-	public RiskType(String string, String userid) {
-		this(domain);
-	}
-	
+
 	public RiskType(String domain) {
 		this.name = domain;
 	}	

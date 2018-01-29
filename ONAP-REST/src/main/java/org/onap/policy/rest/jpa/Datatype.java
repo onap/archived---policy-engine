@@ -222,12 +222,12 @@ public class Datatype implements Serializable {
 
 	@Transient
 	public boolean isStandard() {
-		return (this.isStandard == Datatype.STANDARD);
+		return this.isStandard == Datatype.STANDARD;
 	}
 	
 	@Transient
 	public boolean isCustom() {
-		return (this.isStandard == Datatype.CUSTOM);
+		return this.isStandard == Datatype.CUSTOM;
 	}
 
 	@Transient
@@ -237,8 +237,6 @@ public class Datatype implements Serializable {
 				+ ", xacmlId=" + xacmlId + ", shortName=" + shortName
 				+ ", attributes=" + attributes + ", functions=" + functions
 				+ ", arguments=" + arguments + "]";
-				
-		//return "Datatype [shortName=" + shortName + "]";
 	}
 
 }

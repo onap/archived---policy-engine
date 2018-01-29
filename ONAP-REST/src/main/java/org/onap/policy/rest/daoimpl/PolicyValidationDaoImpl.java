@@ -41,7 +41,6 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyRoles;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -51,22 +50,17 @@ public class PolicyValidationDaoImpl implements CommonClassDao{
 	private static final String DB_CONNECTION_CLOSING_ERROR = "Error While Closing Connection/Statement";
 	private static final String DBTABLE_QUERY_ERROR = "Error While Querying Table";
 	private static SessionFactory sessionfactory;
-    
+
+	public PolicyValidationDaoImpl(){
+		//Default Constructor
+	}
+
     public static SessionFactory getSessionfactory() {
           return sessionfactory;
     }
 
     public static void setSessionfactory(SessionFactory sessionfactory) {
           PolicyValidationDaoImpl.sessionfactory = sessionfactory;
-    }
-
-    @Autowired
-    private PolicyValidationDaoImpl(SessionFactory sessionfactory){
-          PolicyValidationDaoImpl.sessionfactory = sessionfactory;
-    }
-    
-    public PolicyValidationDaoImpl(){
-          //Default Constructor
     }
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

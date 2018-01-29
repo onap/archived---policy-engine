@@ -50,8 +50,6 @@ import org.onap.policy.rest.XacmlAdminAuthorization;
 public class OnapName implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -59,7 +57,7 @@ public class OnapName implements Serializable {
 	
 	@Column(name="onap_Name", nullable=false, unique=true)
 	@OrderBy("asc")
-	private String onapName;
+	private String nameOnap;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_date", updatable=false)
@@ -97,15 +95,11 @@ public class OnapName implements Serializable {
 	}
 	
 	public OnapName() {
-		
+		// An empty constructor
 	}
-	
-	public OnapName(String string, String userid) {
-		this(domain);
-	}
-	
+
 	public OnapName(String domain) {
-		this.onapName = domain;
+		this.nameOnap = domain;
 	}	
 
 	@PrePersist
@@ -125,11 +119,11 @@ public class OnapName implements Serializable {
 		}
 	}
 	public String getOnapName() {
-		return this.onapName;
+		return this.nameOnap;
 	}
 
 	public void setOnapName(String onapName) {
-		this.onapName = onapName;
+		this.nameOnap = onapName;
 
 	}
 	public int getId() {

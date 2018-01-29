@@ -104,11 +104,7 @@ public class PEPOptions implements Serializable {
 	private static Log LOGGER = LogFactory.getLog(PEPOptions.class);
 	
 	public PEPOptions(){
-		
-	}
-	
-	public PEPOptions(String string, String userid) {
-		this(string);
+		// An empty constructor
 	}
 
 	public PEPOptions(String domain) {
@@ -126,7 +122,7 @@ public class PEPOptions implements Serializable {
 	public void preUpdate() {
 		this.modifiedDate = new Date();
 		try {
-			this.userModifiedBy =XacmlAdminAuthorization.getUserId();;
+			this.userModifiedBy =XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
 			LOGGER.error("Exception caused While adding Modified by Role"+e);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PEPOptions", "Exception caused While adding Modified by Role");

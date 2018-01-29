@@ -118,16 +118,13 @@ public class ActionPolicyDict implements Serializable {
 
 	private static Log logger = LogFactory.getLog(ActionPolicyDict.class);
 	public ActionPolicyDict() {
-		
+		// An empty constructor
 	}
-	
-	public ActionPolicyDict(String string, String userid) {
-		this(string);
-	}
-	
+
 	public ActionPolicyDict(String domain) {
 		this.type = domain;
-	}	
+	}
+
 	@PrePersist
 	public void	prePersist() {
 		Date date = new Date();
@@ -138,10 +135,9 @@ public class ActionPolicyDict implements Serializable {
 	public void preUpdate() {
 		this.modifiedDate = new Date();
 		try {
-			this.userModifiedBy =XacmlAdminAuthorization.getUserId();;
+			this.userModifiedBy =XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
 			logger.error("Exception caused While adding Modified by Role"+e);
-			//PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "ActionPolicyDict", "Exception caused While adding Modified by Role");
 		}
 	}
 	public int getId() {

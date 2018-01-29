@@ -57,6 +57,7 @@ public class FunctionArgument implements Serializable {
 	private Datatype datatypeBean;
 
 	public FunctionArgument() {
+		// An empty constructor
 	}
 
 	public FunctionArgument(final FunctionArgument argument) {

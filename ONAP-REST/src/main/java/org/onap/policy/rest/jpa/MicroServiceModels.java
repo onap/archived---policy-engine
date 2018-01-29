@@ -117,10 +117,7 @@ public class MicroServiceModels implements Serializable{
 	}
 	
 	public MicroServiceModels(){
-	}
-	
-	public MicroServiceModels(String userid){
-	
+		// An empty constructor
 	}
 
 	public String getAttributes() {

@@ -52,8 +52,6 @@ public class PolicyEditorScopes implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private static Log logger = LogFactory.getLog(PolicyEditorScopes.class);
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -79,13 +77,10 @@ public class PolicyEditorScopes implements Serializable{
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
 	
-	public PolicyEditorScopes() {		
+	public PolicyEditorScopes() {
+		// An empty constructor
 	}
-	
-	public PolicyEditorScopes(String string, String userid) {
-		this(domain);
-	}
-	
+
 	public PolicyEditorScopes(String domain) {
 		this.scopeName = domain;
 	}	

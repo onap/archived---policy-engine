@@ -26,18 +26,18 @@ import java.util.Map;
 public class MSAttributeObject {
 
 	private String className;
-	private HashMap<String, String> attribute = new HashMap<>();
-	private HashMap<String, String> refAttribute = new HashMap<>();
-	private HashMap<String, Object> subClass = new HashMap<>();
+	private Map<String, String> attribute = new HashMap<>();
+	private Map<String, String> refAttribute = new HashMap<>();
+	private Map<String, Object> subClass = new HashMap<>();
 	private String dependency;
-	private HashMap<String, String> enumType = new HashMap<>();
-	private HashMap<String, String> matchingSet = new HashMap<>();
+	private Map<String, String> enumType = new HashMap<>();
+	private Map<String, String> matchingSet = new HashMap<>();
 	private boolean policyTempalate; 
 	
 	public Map<String, String> getRefAttribute() {
 		return refAttribute;
 	}
-	public void setRefAttribute(HashMap<String, String> refAttribute) {
+	public void setRefAttribute(Map<String, String> refAttribute) {
 		this.refAttribute = refAttribute;
 	}
 	public String getClassName() {
@@ -49,13 +49,13 @@ public class MSAttributeObject {
 	public Map<String, String> getAttribute() {
 		return attribute;
 	}
-	public void setAttribute(HashMap<String, String> attribute) {
+	public void setAttribute(Map<String, String> attribute) {
 		this.attribute = attribute;
 	}
-	public HashMap<String, String> getEnumType() {
+	public Map<String, String> getEnumType() {
 		return enumType;
 	}
-	public void setEnumType(HashMap<String, String> enumType) {
+	public void setEnumType(Map<String, String> enumType) {
 		this.enumType = enumType;
 	}
 	public void addAttribute(String key, String value){
@@ -70,13 +70,13 @@ public class MSAttributeObject {
 	public void addAllRefAttribute(Map<String, String> map){
 		this.refAttribute.putAll(map);
 	}
-	public HashMap<String, Object> getSubClass() {
+	public Map<String, Object> getSubClass() {
 		return subClass;
 	}
-	public void setSubClass(HashMap<String, Object> subClass) {
+	public void setSubClass(Map<String, Object> subClass) {
 		this.subClass = subClass;
 	}
-	public void addAllSubClass(HashMap<String, Object> subClass){
+	public void addAllSubClass(Map<String, Object> subClass){
 		this.subClass.putAll(subClass);
 	}
 	public String getDependency() {
@@ -88,16 +88,16 @@ public class MSAttributeObject {
 	public void addSingleEnum(String key, String value){
 		this.enumType.put(key, value);
 	}
-	public HashMap<String, String> getMatchingSet() {
+	public Map<String, String> getMatchingSet() {
 		return matchingSet;
 	}
-	public void setMatchingSet(HashMap<String, String> matchingSet) {
+	public void setMatchingSet(Map<String, String> matchingSet) {
 		this.matchingSet = matchingSet;
 	}
 	public void addMatchingSet(String key, String value){
 		this.matchingSet.put(key, value);
 	}
-	public void addMatchingSet(HashMap<String, String> matchingSet){
+	public void addMatchingSet(Map<String, String> matchingSet){
 		this.matchingSet.putAll(matchingSet);
 	}
 	public boolean isPolicyTempalate() {

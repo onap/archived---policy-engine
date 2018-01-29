@@ -52,8 +52,6 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 public class VSCLAction implements Serializable  {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -61,7 +59,7 @@ public class VSCLAction implements Serializable  {
 	
 	@Column(name="vscl_action", nullable=false, unique=true)
 	@OrderBy("asc")
-	private String vsclaction;
+	private String actionVscl;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_date", updatable=false)
@@ -101,15 +99,11 @@ public class VSCLAction implements Serializable  {
 	private static Log LOGGER = LogFactory.getLog(VSCLAction.class);
 	
 	public VSCLAction() {
-		
+		// An empty constructor
 	}
-	
-	public VSCLAction(String string, String userid) {
-		this(domain);
-	}
-	
+
 	public VSCLAction(String domain) {
-		this.vsclaction = domain;
+		this.actionVscl = domain;
 	}	
 
 	@PrePersist
@@ -123,7 +117,7 @@ public class VSCLAction implements Serializable  {
 	public void preUpdate() {
 		this.modifiedDate = new Date();
 		try {
-			this.userModifiedBy =XacmlAdminAuthorization.getUserId();;
+			this.userModifiedBy =XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
 			LOGGER.error("Exception caused While adding Modified by Role"+e);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "VSCLAction", "Exception caused While adding Modified by Role");
@@ -139,11 +133,11 @@ public class VSCLAction implements Serializable  {
 	}
 	
 	public String getVsclaction() {
-		return vsclaction;
+		return actionVscl;
 	}
 
 	public void setVsclaction(String vsclaction) {
-		this.vsclaction = vsclaction;
+		this.actionVscl = vsclaction;
 	}
 	
 

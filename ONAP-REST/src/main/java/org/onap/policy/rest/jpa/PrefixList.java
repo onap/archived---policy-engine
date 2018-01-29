@@ -40,8 +40,6 @@ import javax.persistence.Table;
 public class PrefixList implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -56,28 +54,18 @@ public class PrefixList implements Serializable {
 	
 	@Column(name="pl_value", nullable=false)
 	private String prefixListValue;
-/*
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;*/
 
 	public PrefixList() {
-		
+		// An empty constructor
 	}
-	public PrefixList(String string, String userid) {
-		this(domain);
-		
-	}
-	public PrefixList(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 	public String getPrefixListName() {
 		return this.prefixListName;

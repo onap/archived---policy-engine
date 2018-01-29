@@ -40,8 +40,6 @@ import javax.persistence.Table;
 public class ActionList implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -53,28 +51,18 @@ public class ActionList implements Serializable {
 	
 	@Column(name="description")
 	private String description;
-/*
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;*/
 
 	public ActionList() {
-		
+		// An empty constructor
 	}
-	public ActionList(String string, String userid) {
-		this(domain);
-		
-	}
-	public ActionList(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 	public String getActionName() {
 		return this.actionName;

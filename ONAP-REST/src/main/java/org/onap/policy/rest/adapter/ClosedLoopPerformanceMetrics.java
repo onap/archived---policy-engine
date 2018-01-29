@@ -33,4 +33,8 @@ public class ClosedLoopPerformanceMetrics {
 	
 	public static final String CLPM_UIFIELD_GEOLINK = "Geo Link";	
 	public static final String CLPM_UIJSON_GEOLINK = "geoLink";
+
+	private ClosedLoopPerformanceMetrics(){
+		throw new IllegalStateException("Utility class");
+	}
 }

@@ -110,15 +110,17 @@ public class DecisionSettings implements Serializable {
 	}
 	
 	public DecisionSettings() {
+		// An empty constructor
 	}
 	
 	public DecisionSettings(String domain) {
 		this.xacmlId = domain;
 	}
-	
+
 	public DecisionSettings(String domain, String user) {
 		this(domain);
 	}
+
 	public DecisionSettings(DecisionSettings copy, String user) {
 		this(copy.getXacmlId() + ":(0)", user);
 		this.datatypeBean = copy.getDatatypeBean();
@@ -144,7 +146,7 @@ public class DecisionSettings implements Serializable {
 	public void preUpdate() {
 		this.modifiedDate = new Date();
 		try {
-			this.userModifiedBy = XacmlAdminAuthorization.getUserId();;
+			this.userModifiedBy = XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "DecisionSettings", "Exception caused While adding Modified by Role");
 		}
@@ -186,11 +188,6 @@ public class DecisionSettings implements Serializable {
 	public String getXacmlId() {
 		return this.xacmlId;
 	}
-	
-/*	@Transient
-	public Identifier getXacmlIdentifier() {
-		return new IdentifierImpl(this.xacmlId);
-	}*/
 
 	public void setXacmlId(String xacmlId) {
 		this.xacmlId = xacmlId;

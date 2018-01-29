@@ -39,8 +39,6 @@ import javax.persistence.Table;
 public class MicroServiceAttribute implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -58,22 +56,16 @@ public class MicroServiceAttribute implements Serializable {
 	
 
 	public MicroServiceAttribute() {
-		
+		// An empty constructor
 	}
-	public MicroServiceAttribute(String string, String userid) {
-		this(domain);
-		
-	}
-	public MicroServiceAttribute(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 
 	

@@ -20,8 +20,6 @@
 
 package org.onap.policy.rest.adapter;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,15 +81,16 @@ public class PolicyRestAdapter {
 	private Object jsonBodyData;
 	private String dirPath;
 	private String configBodyPath;
-	private ArrayList<Object> attributes;
-	private ArrayList<Object> settings;
-	private ArrayList<Object> ruleAlgorithmschoices;
+	private List<Object> attributes;
+	private List<Object> settings;
+	private List<Object> ruleAlgorithmschoices;
 	
-	private LinkedHashMap<?, ?> serviceTypePolicyName;
+	private Map<Object, Object> serviceTypePolicyName;
    
-	private LinkedHashMap<?, ?> verticaMetrics;
-    private LinkedHashMap<?, ?> description;
-    private LinkedHashMap<?, ?> attributeFields;
+	private Map<Object, Object> verticaMetrics;
+    private Map<Object, Object> description;
+    private Map<Object, Object> attributeFields;
+
     
     //ClosedLoop
 	private String clearTimeOut;
@@ -101,7 +100,7 @@ public class PolicyRestAdapter {
 	
     //FireWall
     private String fwPolicyType;
-	private ArrayList<Object> fwattributes;
+	private List<Object> fwattributes;
 	private String parentForChild;
 	private String securityZone;
 	
@@ -145,9 +144,9 @@ public class PolicyRestAdapter {
     private String ruleName;
 	private Map<String,String> brmsParamBody=null;
 	private String brmsController = null;
-    private ArrayList<String> brmsDependency = null;
-    private LinkedHashMap<?, ?>  ruleData;
-	private LinkedHashMap<?,?>   ruleListData;
+    private List<String> brmsDependency = null;
+    private Map<Object, Object>  ruleData;
+	private Map<Object,Object>   ruleListData;
 	private Map<String,String> drlRuleAndUIParams=null;
     
 	//Safe Policy
@@ -159,24 +158,24 @@ public class PolicyRestAdapter {
 	private String ttlDate;
 	private Map<String,String> matching; 
 	
-	private ArrayList<Object> triggerSignatures;
-    private ArrayList<Object> symptomSignatures;
+	private List<Object> triggerSignatures;
+    private List<Object> symptomSignatures;
     private String logicalConnector;
     private String policyStatus;
     private String gocServerScope;
     private String supressionType;
     
     
-	public ArrayList<Object> getTriggerSignatures() {
+	public List<Object> getTriggerSignatures() {
 		return triggerSignatures;
 	}
-	public void setTriggerSignatures(ArrayList<Object> triggerSignatures) {
+	public void setTriggerSignatures(List<Object> triggerSignatures) {
 		this.triggerSignatures = triggerSignatures;
 	}
-	public ArrayList<Object> getSymptomSignatures() {
+	public List<Object> getSymptomSignatures() {
 		return symptomSignatures;
 	}
-	public void setSymptomSignatures(ArrayList<Object> symptomSignatures) {
+	public void setSymptomSignatures(List<Object> symptomSignatures) {
 		this.symptomSignatures = symptomSignatures;
 	}
 	public String getLogicalConnector() {
@@ -599,10 +598,10 @@ public class PolicyRestAdapter {
     public void setBrmsController(String brmsController) {
         this.brmsController = brmsController;
     }
-    public ArrayList<String> getBrmsDependency() {
+    public List<String> getBrmsDependency() {
         return brmsDependency;
     }
-    public void setBrmsDependency(ArrayList<String> brmsDependency) {
+    public void setBrmsDependency(List<String> brmsDependency) {
         this.brmsDependency = brmsDependency;
     }
     public Map<String, String> getMatching() {
@@ -647,46 +646,46 @@ public class PolicyRestAdapter {
 	public void setConfigBodyPath(String configBodyPath) {
 		this.configBodyPath = configBodyPath;
 	}
-	public ArrayList<Object> getAttributes() {
+	public List<Object> getAttributes() {
 		return attributes;
 	}
-	public void setAttributes(ArrayList<Object> attributes) {
+	public void setAttributes(List<Object> attributes) {
 		this.attributes = attributes;
 	}
-	public ArrayList<Object> getSettings() {
+	public List<Object> getSettings() {
 		return settings;
 	}
-	public void setSettings(ArrayList<Object> settings) {
+	public void setSettings(List<Object> settings) {
 		this.settings = settings;
 	}
-	public ArrayList<Object> getRuleAlgorithmschoices() {
+	public List<Object> getRuleAlgorithmschoices() {
 		return ruleAlgorithmschoices;
 	}
-	public void setRuleAlgorithmschoices(ArrayList<Object> ruleAlgorithmschoices) {
+	public void setRuleAlgorithmschoices(List<Object> ruleAlgorithmschoices) {
 		this.ruleAlgorithmschoices = ruleAlgorithmschoices;
 	}
-	public LinkedHashMap<?, ?> getServiceTypePolicyName() {
+	public Map<Object, Object> getServiceTypePolicyName() {
 		return serviceTypePolicyName;
 	}
-	public void setServiceTypePolicyName(LinkedHashMap<?, ?> serviceTypePolicyName) {
+	public void setServiceTypePolicyName(Map<Object, Object> serviceTypePolicyName) {
 		this.serviceTypePolicyName = serviceTypePolicyName;
 	}
-	public LinkedHashMap<?, ?> getVerticaMetrics() {
+	public Map<Object, Object> getVerticaMetrics() {
 		return verticaMetrics;
 	}
-	public void setVerticaMetrics(LinkedHashMap<?, ?> verticaMetrics) {
+	public void setVerticaMetrics(Map<Object, Object> verticaMetrics) {
 		this.verticaMetrics = verticaMetrics;
 	}
-	public LinkedHashMap<?, ?> getDescription() {
+	public Map<Object, Object> getDescription() {
 		return description;
 	}
-	public void setDescription(LinkedHashMap<?, ?> description) {
+	public void setDescription(Map<Object, Object> description) {
 		this.description = description;
 	}
-	public LinkedHashMap<?, ?> getAttributeFields() {
+	public Map<Object, Object> getAttributeFields() {
 		return attributeFields;
 	}
-	public void setAttributeFields(LinkedHashMap<?, ?> attributeFields) {
+	public void setAttributeFields(Map<Object, Object> attributeFields) {
 		this.attributeFields = attributeFields;
 	}
 	public String getClearTimeOut() {
@@ -719,10 +718,10 @@ public class PolicyRestAdapter {
 	public void setFwPolicyType(String fwPolicyType) {
 		this.fwPolicyType = fwPolicyType;
 	}
-	public ArrayList<Object> getFwattributes() {
+	public List<Object> getFwattributes() {
 		return fwattributes;
 	}
-	public void setFwattributes(ArrayList<Object> fwattributes) {
+	public void setFwattributes(List<Object> fwattributes) {
 		this.fwattributes = fwattributes;
 	}
 	public String getParentForChild() {
@@ -737,16 +736,16 @@ public class PolicyRestAdapter {
 	public void setRuleName(String ruleName) {
 		this.ruleName = ruleName;
 	}
-	public LinkedHashMap<?, ?> getRuleData() {
+	public Map<Object, Object> getRuleData() {
 		return ruleData;
 	}
-	public void setRuleData(LinkedHashMap<?, ?> ruleData) {
+	public void setRuleData(Map<Object, Object> ruleData) {
 		this.ruleData = ruleData;
 	}
-	public LinkedHashMap<?, ?> getRuleListData() {
+	public Map<Object, Object> getRuleListData() {
 		return ruleListData;
 	}
-	public void setRuleListData(LinkedHashMap<?, ?> ruleListData) {
+	public void setRuleListData(Map<Object, Object> ruleListData) {
 		this.ruleListData = ruleListData;
 	}
 	public String getSecurityZone() {

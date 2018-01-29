@@ -61,7 +61,7 @@ public class ClosedLoops implements Serializable {
 	private String yaml;
 		
 	public ClosedLoops() {
-		
+		// An empty constructor
 	}
 
 	public int getId() {

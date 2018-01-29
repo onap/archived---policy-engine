@@ -124,9 +124,10 @@ public class PIPConfiguration implements Serializable {
 	private Set<PIPResolver> pipresolvers = new HashSet<>();
 
 	public PIPConfiguration() {
+		// An empty constructor
 	}
 	
-	public PIPConfiguration(PIPConfiguration config, String user) {
+	public PIPConfiguration(PIPConfiguration config) {
 		this.description = config.description;
 		this.name = config.name;
 		this.classname = config.classname;
@@ -316,7 +317,7 @@ public class PIPConfiguration implements Serializable {
 
 	@Transient
 	public boolean isReadOnly() {
-		return (this.readOnly == '1');
+		return this.readOnly == '1';
 	}
 	
 	@Transient
@@ -330,7 +331,7 @@ public class PIPConfiguration implements Serializable {
 	
 	@Transient
 	public boolean requiresResolvers() {
-		return (this.requiresResolvers == '1');
+		return this.requiresResolvers == '1';
 	}
 	
 	@Transient
@@ -390,21 +391,21 @@ public class PIPConfiguration implements Serializable {
 		//
 		// Go through each property
 		//
-		for (Object name : properties.keySet()) {
-			if (name.toString().startsWith(id) == false) {
+		for (Object nme : properties.keySet()) {
+			if (nme.toString().startsWith(id) == false) {
 				continue;
 			}
-			if (name.equals(id + ".classname")) {
+			if (nme.equals(id + ".classname")) {
 				//
 				// We already saved this
 				//
-			} else if (name.equals(id + "." + StdConfigurableEngine.PROP_NAME)) {
-				this.name = properties.getProperty(name.toString());
-			} else if (name.equals(id + "." + StdConfigurableEngine.PROP_DESCRIPTION)) {
-				this.description = properties.getProperty(name.toString());
-			} else if (name.equals(id + "." + StdConfigurableEngine.PROP_ISSUER)) {
-				this.issuer = properties.getProperty(name.toString());
-			} else if (name.equals(id + ".resolvers")) {
+			} else if (nme.equals(id + "." + StdConfigurableEngine.PROP_NAME)) {
+				this.name = properties.getProperty(nme.toString());
+			} else if (nme.equals(id + "." + StdConfigurableEngine.PROP_DESCRIPTION)) {
+				this.description = properties.getProperty(nme.toString());
+			} else if (nme.equals(id + "." + StdConfigurableEngine.PROP_ISSUER)) {
+				this.issuer = properties.getProperty(nme.toString());
+			} else if (nme.equals(id + ".resolvers")) {
 				//
 				// It has resolvers, make sure this is set to true if
 				// it has been already.
@@ -414,13 +415,13 @@ public class PIPConfiguration implements Serializable {
 				// Parse the resolvers
 				//
 				Collection<PIPResolver> resolvers = PIPResolver.importResolvers(id + ".resolver",
-																		properties.getProperty(name.toString()),
+																		properties.getProperty(nme.toString()),
 																		properties,"super-admin"
 																		);
 				for (PIPResolver resolver : resolvers) {
 					this.addPipresolver(resolver);
 				}
-			} else if (name.toString().startsWith(id + ".resolver")) {
+			} else if (nme.toString().startsWith(id + ".resolver")) {
 				//
 				// Ignore, the PIPResolver will parse these values
 				//
@@ -428,8 +429,8 @@ public class PIPConfiguration implements Serializable {
 				//
 				// Config Parameter
 				//
-				this.addPipconfigParam(new PIPConfigParam(name.toString().substring(id.length() + 1), 
-													properties.getProperty(name.toString())));
+				this.addPipconfigParam(new PIPConfigParam(nme.toString().substring(id.length() + 1),
+													properties.getProperty(nme.toString())));
 			}
 		}
 		//
@@ -470,12 +471,12 @@ public class PIPConfiguration implements Serializable {
 		Iterator<PIPResolver> iter = this.pipresolvers.iterator();
 		while (iter.hasNext()) {
 			PIPResolver resolver = iter.next();
-			String id = Integer.toString(resolver.getId());
-			Map<String, String> resolverMap = resolver.getConfiguration(prefix + "resolver." + id);
+			String idd = Integer.toString(resolver.getId());
+			Map<String, String> resolverMap = resolver.getConfiguration(prefix + "resolver." + idd);
 			map.putAll(resolverMap);
-			ids.add(id);
+			ids.add(idd);
 		}
-		if (ids.size() > 0) {
+		if (!ids.isEmpty()) {
 			map.put(prefix + "resolvers", Joiner.on(',').join(ids));
 		}
 		return map;
@@ -512,11 +513,11 @@ public class PIPConfiguration implements Serializable {
 		Iterator<PIPResolver> iter = this.pipresolvers.iterator();
 		while (iter.hasNext()) {
 			PIPResolver resolver = iter.next();
-			String id = Integer.toString(resolver.getId());
-			resolver.generateProperties(props, prefix + "resolver." + id);
-			ids.add(id);
+			String idd = Integer.toString(resolver.getId());
+			resolver.generateProperties(props, prefix + "resolver." + idd);
+			ids.add(idd);
 		}
-		if (ids.size() > 0) {
+		if (!ids.isEmpty()) {
 			props.setProperty(prefix + "resolvers", Joiner.on(',').join(ids));
 		}
 		return props;

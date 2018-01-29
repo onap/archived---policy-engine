@@ -32,16 +32,16 @@ import javax.persistence.Table;
 public class DatabaseLockEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@Column(name="lock_key")
-	private int lock_key = 1;
+	@Column(name="lockKey")
+	private int lockKey = 1;
 	public DatabaseLockEntity(){
-		
+		// An empty constructor
 	}
 	public int getKey(){
-		return lock_key;
+		return lockKey;
 	}
 	public void setKey(int key){
-		this.lock_key = key;
+		this.lockKey = key;
 	}
 	
 }

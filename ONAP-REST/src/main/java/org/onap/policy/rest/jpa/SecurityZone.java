@@ -40,8 +40,6 @@ import javax.persistence.Table;
 public class SecurityZone implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -56,22 +54,16 @@ public class SecurityZone implements Serializable {
 
 
 	public SecurityZone() {
-		
+		// An empty constructor
 	}
-	public SecurityZone(String string, String userid) {
-		this(domain);
-		
-	}
-	public SecurityZone(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 
 	

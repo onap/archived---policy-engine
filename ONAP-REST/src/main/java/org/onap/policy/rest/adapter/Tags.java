@@ -26,7 +26,7 @@ import java.util.List;
 
 public class Tags {
 	String ruleName;
-	List<TagDefines> tags;
+	List<TagDefines> tagsName;
 	String tagPickerName;
 	String networkRole;
 	
@@ -37,10 +37,10 @@ public class Tags {
 		this.ruleName = ruleName;
 	}
 	public List<TagDefines> getTags() {
-		return tags;
+		return tagsName;
 	}
 	public void setTags(List<TagDefines> tags) {
-		this.tags = tags;
+		this.tagsName = tags;
 	}
 	public String getTagPickerName() {
 		return tagPickerName;

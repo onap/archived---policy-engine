@@ -60,6 +60,7 @@ public class ConstraintValue implements Serializable {
 	private Attribute attribute;
 
 	public ConstraintValue() {
+		// An empty constructor
 	}
 
 	public ConstraintValue(String property, String value) {
@@ -70,6 +71,8 @@ public class ConstraintValue implements Serializable {
 	public ConstraintValue(ConstraintValue value) {
 		this.property = value.getProperty();
 		this.value = value.getValue();
+		this.attribute = value.getAttribute();
+		this.id = value.getId();
 	}
 
 	public int getId() {
@@ -103,14 +106,5 @@ public class ConstraintValue implements Serializable {
 	public void setAttribute(Attribute attribute) {
 		this.attribute = attribute;
 	}
-	
-	public ConstraintValue clone() {
-		ConstraintValue constraint = new ConstraintValue();
-		
-		constraint.property = this.property;
-		constraint.value = this.value;
-		constraint.attribute = this.attribute;
-		
-		return constraint;
-	}
+
 }

@@ -52,10 +52,7 @@ import org.onap.policy.rest.XacmlAdminAuthorization;
 @NamedQuery(name="ClosedLoopD2Services.findAll", query="SELECT c FROM ClosedLoopD2Services c ")
 public class ClosedLoopD2Services implements Serializable{
 	private static final long serialVersionUID = 1L;
-	
-	private static String domain;
 
-	
 	@Id
 	@Column(name ="id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -103,13 +100,9 @@ public class ClosedLoopD2Services implements Serializable{
 	private static Log LOGGER = LogFactory.getLog(ClosedLoopD2Services.class);
 	
 	public ClosedLoopD2Services(){
-		
+		// An empty constructor
 	}
-	
-	public ClosedLoopD2Services(String string, String userid) {
-		this(domain);
-	}
-	
+
 	public ClosedLoopD2Services(String domain) {
 		this.serviceName = domain;
 	}	
@@ -125,7 +118,7 @@ public class ClosedLoopD2Services implements Serializable{
 	public void preUpdate() {
 		this.modifiedDate = new Date();
 		try {
-			this.userModifiedBy = XacmlAdminAuthorization.getUserId();;
+			this.userModifiedBy = XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
 			LOGGER.error("Exception caused While adding Modified by Role"+e);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "ClosedLoopD2Services", "Exception caused While adding Modified by Role");

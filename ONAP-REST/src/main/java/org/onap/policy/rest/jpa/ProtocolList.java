@@ -40,8 +40,6 @@ import javax.persistence.Table;
 public class ProtocolList implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -53,28 +51,18 @@ public class ProtocolList implements Serializable {
 	
 	@Column(name="description")
 	private String description;
-/*
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;*/
 
 	public ProtocolList() {
-		
+		// An empty constructor
 	}
-	public ProtocolList(String string, String userid) {
-		this(domain);
-		
-	}
-	public ProtocolList(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 	public String getProtocolName() {
 		return this.protocolName;

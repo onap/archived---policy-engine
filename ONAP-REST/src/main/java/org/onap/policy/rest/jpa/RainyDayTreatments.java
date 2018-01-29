@@ -61,7 +61,7 @@ public class RainyDayTreatments implements Serializable {
 	private String treatments;
 		
 	public RainyDayTreatments() {
-		
+		// An empty constructor
 	}
 
 	public int getId() {

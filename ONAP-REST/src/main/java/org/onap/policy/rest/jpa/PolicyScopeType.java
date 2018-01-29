@@ -41,8 +41,6 @@ import javax.persistence.Table;
 public class PolicyScopeType implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -56,22 +54,16 @@ public class PolicyScopeType implements Serializable {
 	private String description ;
 
 	public PolicyScopeType() {
-		
+		// An empty constructor
 	}
-	public PolicyScopeType(String string, String userid) {
-		this(domain);
-		
-	}
-	public PolicyScopeType(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 
 	

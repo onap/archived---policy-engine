@@ -52,8 +52,6 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 public class TermList implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -128,15 +126,12 @@ public class TermList implements Serializable {
 	private static Log LOGGER = LogFactory.getLog(TermList.class);
 	
 	public TermList() {
-		
+		// An empty constructor
 	}
 	
 	private static final Log auditLogger = LogFactory
 			.getLog("auditLogger");
-	
-	public TermList(String string, String userid) {
-		this(domain);
-	}
+
 	public TermList(String domain) {
 		this.termName = domain;
 	}	
@@ -153,7 +148,7 @@ public class TermList implements Serializable {
 	public void preUpdate() {
 		this.modifiedDate = new Date();
 		try {
-			this.userModifiedBy =XacmlAdminAuthorization.getUserId();;
+			this.userModifiedBy =XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
 			LOGGER.error("Exception caused While adding Modified by Role"+e);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "TermList", "Exception caused While adding Modified by Role");

@@ -41,8 +41,6 @@ import javax.persistence.Table;
 public class SafePolicyWarning implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -65,22 +63,16 @@ public class SafePolicyWarning implements Serializable {
 		this.riskType = riskType;
 	}
 	public SafePolicyWarning() {
-		
+		// An empty constructor
 	}
-	public SafePolicyWarning(String string, String userid) {
-		this(domain);
-		
-	}
-	public SafePolicyWarning(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 
 	

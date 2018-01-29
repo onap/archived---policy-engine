@@ -38,7 +38,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import com.att.research.xacml.api.Identifier;
 
@@ -208,20 +207,16 @@ public class Obadvice implements Serializable {
 		this.obadviceExpressions.clear();
 	}
 
-	@Transient
-	public Obadvice clone() {
-		Obadvice obadvice = new Obadvice();
-		
-		obadvice.type = this.type;
-		obadvice.xacmlId = this.xacmlId;
-		obadvice.fulfillOn = this.fulfillOn;
-		obadvice.description = this.description;
-		obadvice.createdBy = this.createdBy;
-		obadvice.modifiedBy = this.modifiedBy;
-		for (ObadviceExpression exp: this.obadviceExpressions) {
-			obadvice.addObadviceExpression(exp.clone());
-		}
-
-		return obadvice;
+	public Obadvice(Obadvice obadvice) {
+		this.type = obadvice.type;
+		this.xacmlId = obadvice.xacmlId;
+		this.fulfillOn = obadvice.fulfillOn;
+		this.description = obadvice.description;
+		this.createdBy = obadvice.createdBy;
+		this.modifiedBy = obadvice.modifiedBy;
+		this.createdDate = obadvice.createdDate;
+		this.id = obadvice.id;
+		this.modifiedDate = obadvice.modifiedDate;
+		this.obadviceExpressions = obadvice.obadviceExpressions;
 	}
 }

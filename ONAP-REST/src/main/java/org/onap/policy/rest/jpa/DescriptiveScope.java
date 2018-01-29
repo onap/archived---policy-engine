@@ -102,11 +102,7 @@ public class DescriptiveScope implements Serializable {
 	private static Log LOGGER = LogFactory.getLog(DescriptiveScope.class);
 	
 	public DescriptiveScope(){
-		
-	}
-	
-	public DescriptiveScope(String string, String userid) {
-		this(string);
+		// An empty constructor
 	}
 
 	public DescriptiveScope(String domain) {
@@ -124,7 +120,7 @@ public class DescriptiveScope implements Serializable {
 	public void preUpdate() {
 		this.modifiedDate = new Date();
 		try {
-			this.userModifiedBy =XacmlAdminAuthorization.getUserId();;
+			this.userModifiedBy =XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
 			LOGGER.error("Exception caused While adding Modified by Role"+e);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "DescriptiveScope", "Exception caused While adding Modified by Role");

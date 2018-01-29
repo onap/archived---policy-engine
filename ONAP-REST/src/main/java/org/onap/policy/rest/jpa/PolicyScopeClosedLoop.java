@@ -41,8 +41,6 @@ import javax.persistence.Table;
 public class PolicyScopeClosedLoop implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -56,22 +54,16 @@ public class PolicyScopeClosedLoop implements Serializable {
 	private String description ;
 
 	public PolicyScopeClosedLoop() {
-		
+		// An empty constructor
 	}
-	public PolicyScopeClosedLoop(String string, String userid) {
-		this(domain);
-		
-	}
-	public PolicyScopeClosedLoop(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 
 	

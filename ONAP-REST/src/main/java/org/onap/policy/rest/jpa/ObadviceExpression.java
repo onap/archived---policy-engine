@@ -63,12 +63,6 @@ public class ObadviceExpression implements Serializable {
 
 	@Column(name="type", nullable=false)
 	private String type;
-	
-	/*
-	@Lob
-	@Column(name="expression", nullable=false)
-	private byte[] expression;
-	*/
 
 	//bi-directional many-to-one association to Obadvice
 	@ManyToOne
@@ -111,13 +105,10 @@ public class ObadviceExpression implements Serializable {
 		this.obadvice = obadvice;
 	}
 
-	public ObadviceExpression clone() {
-		ObadviceExpression expression = new ObadviceExpression();
-		
-		expression.attribute = this.attribute;
-		expression.type = this.type;
-		expression.obadvice = this.obadvice;
-		
-		return expression;
+	public ObadviceExpression(ObadviceExpression obadviceExpression){
+		this.attribute = obadviceExpression.attribute;
+		this.id = obadviceExpression.id;
+		this.type = obadviceExpression.type;
+		this.obadvice = obadviceExpression.obadvice;
 	}
 }

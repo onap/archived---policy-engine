@@ -151,6 +151,7 @@ public class Attribute implements Serializable {
 
 	
 	public Attribute() {
+		// An empty constructor
 	}
 	
 	public Attribute(String domain) {
@@ -230,11 +231,6 @@ public class Attribute implements Serializable {
 	public String getXacmlId() {
 		return this.xacmlId;
 	}
-	
-/*	@Transient
-	public Identifier getXacmlIdentifier() {
-		return new IdentifierImpl(this.xacmlId);
-	}*/
 
 	public void setXacmlId(String xacmlId) {
 		this.xacmlId = xacmlId;
@@ -332,7 +328,7 @@ public class Attribute implements Serializable {
 
 	@Transient
 	public boolean isDesignator() {
-		return (this.isDesignator == '1');
+		return this.isDesignator == '1';
 	}
 	
 	@Transient

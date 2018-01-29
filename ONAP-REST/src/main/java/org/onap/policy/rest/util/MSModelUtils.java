@@ -63,7 +63,7 @@ public class MSModelUtils {
 
 	private static final Log logger	= LogFactory.getLog(MSModelUtils.class);
 
-	private HashMap<String,MSAttributeObject > classMap = new HashMap<>();
+	private Map<String,MSAttributeObject > classMap = new HashMap<>();
 	private HashMap<String, String> enumMap = new HashMap<>();
 	private HashMap<String, String> matchingClass = new HashMap<>();
 	private String configuration = "configuration";
@@ -86,7 +86,7 @@ public class MSModelUtils {
 	};
 
 
-	public HashMap<String, MSAttributeObject> processEpackage(String file, MODEL_TYPE model){
+	public Map<String, MSAttributeObject> processEpackage(String file, MODEL_TYPE model){
 		if (model == MODEL_TYPE.XMI ){
 			processXMIEpackage(file);
 		}
@@ -97,21 +97,18 @@ public class MSModelUtils {
 	private void processXMIEpackage(String xmiFile){
 		EPackage root = getEpackage(xmiFile);
 		TreeIterator<EObject> treeItr = root.eAllContents();
-		String className = null;
-		String returnValue = null;
-
 		//    Pulling out dependency from file
 		while (treeItr.hasNext()) {	    
 			EObject obj = (EObject) treeItr.next();
 			if (obj instanceof EClassifier) {
 				EClassifier eClassifier = (EClassifier) obj;
-				className = eClassifier.getName();
+				String className = eClassifier.getName();
 
 				if (obj instanceof EEnum) {
 					enumMap.putAll(getEEnum(obj));
 				}else if (obj instanceof EClass) {
-					String temp = getDependencyList(eClassifier, className).toString();
-					returnValue = StringUtils.replaceEach(temp, new String[]{"[", "]"}, new String[]{"", ""});
+					String temp = getDependencyList(eClassifier).toString();
+					String returnValue = StringUtils.replaceEach(temp, new String[]{"[", "]"}, new String[]{"", ""});
 					getAttributes(className, returnValue, root);
 				}        		   		
 			}
@@ -151,15 +148,13 @@ public class MSModelUtils {
 
 
 	private void UpdateMatching(HashMap<String, String> tempAttribute, String key) {
-		Map<String, MSAttributeObject> newClass = null;
-
-		newClass = classMap;
+		Map<String, MSAttributeObject> newClass = classMap;
 
 		for (Entry<String, MSAttributeObject> updateClass :  newClass.entrySet()){
-			HashMap<String, String> valueMap = updateClass.getValue().getMatchingSet();
+			Map<String, String> valueMap = updateClass.getValue().getMatchingSet();
 			String keymap = updateClass.getKey();
 			if (valueMap.containsKey(key)){
-				HashMap<String, String> modifyMap = classMap.get(keymap).getMatchingSet();
+				Map<String, String> modifyMap = classMap.get(keymap).getMatchingSet();
 				modifyMap.remove(key);
 				modifyMap.putAll(tempAttribute);
 				classMap.get(keymap).setMatchingSet(modifyMap);
@@ -181,7 +176,7 @@ public class MSModelUtils {
 		m.put("xmi", new XMIResourceFactoryImpl());
 		Resource resource = resSet.getResource(URI.createFileURI(xmiFile), true);
 		try {
-			resource.load(Collections.EMPTY_MAP);
+			resource.load(Collections.emptyMap());
 		} catch (IOException e) {
 			logger.error("Error loading Encore Resource for new Model" + e);
 		}
@@ -210,13 +205,13 @@ public class MSModelUtils {
 	public void getAttributes(String className, String dependency, EPackage root) {
 		List<String> dpendList = new ArrayList<>();
 		if (dependency!=null){
-			dpendList = new ArrayList<String>(Arrays.asList(dependency.split(",")));
+			dpendList = new ArrayList<>(Arrays.asList(dependency.split(",")));
 		}
 		MSAttributeObject msAttributeObject = new MSAttributeObject();
 		msAttributeObject.setClassName(className);
 		String extendClass = getSubTypes(root, className);
-		HashMap<String, String> returnRefList = getRefAttributeList(root, className, extendClass);
-		HashMap<String, String> returnAttributeList = getAttributeList(root, className, extendClass);
+		Map<String, String> returnRefList = getRefAttributeList(root, className, extendClass);
+		Map<String, String> returnAttributeList = getAttributeList(root, className, extendClass);
 		HashMap<String, Object> returnSubList = getSubAttributeList(root, className, extendClass);
 		HashMap<String, String> returnAnnotation = getAnnotation(root, className, extendClass);
 		msAttributeObject.setAttribute(returnAttributeList);
@@ -234,9 +229,6 @@ public class MSModelUtils {
 		boolean requiredAttribute = false; 
 		boolean requiredMatchAttribute = false;
 		HashMap<String, String> annotationSet = new HashMap<>();
-		String  matching  = null;
-		String range   = null;
-		String dictionary = null;
 
 		//    Pulling out dependency from file
 		while (treeItr.hasNext()) {	    
@@ -249,16 +241,16 @@ public class MSModelUtils {
 			if (requiredAttribute){
 				if (obj instanceof EStructuralFeature) {
 					EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
-					if (eStrucClassifier.getEAnnotations().size() != 0) {
-						matching  = annotationValue(eStrucClassifier, ANNOTATION_TYPE.MATCHING, policy);
+					if (!eStrucClassifier.getEAnnotations().isEmpty()) {
+						String matching  = annotationValue(eStrucClassifier, ANNOTATION_TYPE.MATCHING, policy);
 						if (matching!=null){
 							annotationSet.put(eStrucClassifier.getName(), matching);
 						}
-						range  = annotationValue(eStrucClassifier, ANNOTATION_TYPE.VALIDATION, policy);
+						String range  = annotationValue(eStrucClassifier, ANNOTATION_TYPE.VALIDATION, policy);
 						if (range!=null){
 							annotationSet.put(eStrucClassifier.getName(), range);
 						}
-						dictionary = annotationValue(eStrucClassifier, ANNOTATION_TYPE.DICTIONARY, policy);
+						String dictionary = annotationValue(eStrucClassifier, ANNOTATION_TYPE.DICTIONARY, policy);
 						if (dictionary!=null){
 							annotationSet.put(eStrucClassifier.getName(), dictionary);
 						}
@@ -267,8 +259,8 @@ public class MSModelUtils {
 			} else if (requiredMatchAttribute){
 				if (obj instanceof EStructuralFeature) {
 					EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
-					if (eStrucClassifier.getEAnnotations().size() != 0) {
-						matching  = annotationValue(eStrucClassifier, ANNOTATION_TYPE.MATCHING, policy);
+					if (!eStrucClassifier.getEAnnotations().isEmpty()) {
+						String matching  = annotationValue(eStrucClassifier, ANNOTATION_TYPE.MATCHING, policy);
 						if (matching!=null){
 							if (obj instanceof EReference){
 								EClass refType = ((EReference) obj).getEReferenceType();
@@ -288,10 +280,9 @@ public class MSModelUtils {
 	private HashMap<String, Object> getSubAttributeList(EPackage root, String className , String superClass) {
 		TreeIterator<EObject> treeItr = root.eAllContents();
 		boolean requiredAttribute = false; 
-		HashMap<String, Object> subAttribute = new HashMap<String, Object>();
+		HashMap<String, Object> subAttribute = new HashMap<>();
 		int rollingCount = 0;
 		int processClass = 0;
-		boolean annotation = false;
 
 		//    Pulling out dependency from file
 		while (treeItr.hasNext() && rollingCount < 2) {	 
@@ -312,8 +303,8 @@ public class MSModelUtils {
 			if (requiredAttribute)   {
 				if (obj instanceof EStructuralFeature) {
 					EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
-					if (eStrucClassifier.getEAnnotations().size() != 0) {
-						annotation = annotationTest(eStrucClassifier, configuration, onap);
+					if (!eStrucClassifier.getEAnnotations().isEmpty()) {
+						boolean annotation = annotationTest(eStrucClassifier, configuration, onap);
 						if (annotation &&  obj instanceof EReference) {
 							EClass refType = ((EReference) obj).getEReferenceType();
 							if(!refType.toString().contains(eProxyURI)){
@@ -348,7 +339,7 @@ public class MSModelUtils {
 		return ":required-false";
 	}
 
-	public JSONObject buildJavaObject(HashMap<String, String> map, String attributeType){
+	public JSONObject buildJavaObject(Map<String, String> map){
 
 		JSONObject returnValue = new JSONObject(map);
 
@@ -356,14 +347,14 @@ public class MSModelUtils {
 
 	}
 
-	public HashMap<String, String> getRefAttributeList(EPackage root, String className, String superClass){
+	public Map<String, String> getRefAttributeList(EPackage root, String className, String superClass){
 
 		TreeIterator<EObject> treeItr = root.eAllContents();
 		boolean requiredAttribute = false; 
 		HashMap<String, String> refAttribute = new HashMap<>();
 		int rollingCount = 0;
 		int processClass = 0;
-		boolean annotation = false;
+
 		//    Pulling out dependency from file
 		while (treeItr.hasNext()) {	    
 			EObject obj = treeItr.next();
@@ -382,8 +373,8 @@ public class MSModelUtils {
 			if (requiredAttribute)   {
 				if (obj instanceof EStructuralFeature) {
 					EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
-					if (eStrucClassifier.getEAnnotations().size() != 0) {
-						annotation = annotationTest(eStrucClassifier, configuration, onap);
+					if (!eStrucClassifier.getEAnnotations().isEmpty()) {
+						boolean annotation = annotationTest(eStrucClassifier, configuration, onap);
 						if ( annotation &&  obj instanceof EReference) {
 							EClass refType = ((EReference) obj).getEReferenceType();
 							if(refType.toString().contains(eProxyURI)){
@@ -408,18 +399,13 @@ public class MSModelUtils {
 	}
 
 	private boolean annotationTest(EStructuralFeature eStrucClassifier, String annotation, String type) {
-		String annotationType = null;
-		EAnnotation eAnnotation = null;
-		String onapType = null;
-		String onapValue = null;
-
 		EList<EAnnotation> value = eStrucClassifier.getEAnnotations();
 
 		for (int i = 0; i < value.size(); i++){
-			annotationType = value.get(i).getSource();
-			eAnnotation = eStrucClassifier.getEAnnotations().get(i);
-			onapType = eAnnotation.getDetails().get(0).getValue();
-			onapValue = eAnnotation.getDetails().get(0).getKey();
+			String annotationType = value.get(i).getSource();
+			EAnnotation eAnnotation = eStrucClassifier.getEAnnotations().get(i);
+			String onapType = eAnnotation.getDetails().get(0).getValue();
+			String onapValue = eAnnotation.getDetails().get(0).getKey();
 			if (annotationType.contains(type) && onapType.contains(annotation)){
 				return true;
 			} else if (annotationType.contains(type) && onapValue.contains(annotation)){
@@ -432,17 +418,13 @@ public class MSModelUtils {
 
 
 	private String annotationValue(EStructuralFeature eStrucClassifier, ANNOTATION_TYPE annotation, String type) {
-		String annotationType = null;
-		EAnnotation eAnnotation = null;
-		String onapType = null;
 		String onapValue = null;
-
 		EList<EAnnotation> value = eStrucClassifier.getEAnnotations();
 
 		for (int i = 0; i < value.size(); i++){
-			annotationType = value.get(i).getSource();
-			eAnnotation = eStrucClassifier.getEAnnotations().get(i);
-			onapType = eAnnotation.getDetails().get(0).getKey();
+			String annotationType = value.get(i).getSource();
+			EAnnotation eAnnotation = eStrucClassifier.getEAnnotations().get(i);
+			String onapType = eAnnotation.getDetails().get(0).getKey();
 			if (annotationType.contains(type) && onapType.compareToIgnoreCase(annotation.toString())==0){
 				onapValue = eAnnotation.getDetails().get(0).getValue();
 				if (annotation == ANNOTATION_TYPE.VALIDATION){
@@ -501,16 +483,11 @@ public class MSModelUtils {
 		return returnSubTypes;
 	} 
 
-	public HashMap<String, String> getAttributeList(EPackage root, String className, String superClass){
+	public Map<String, String> getAttributeList(EPackage root, String className, String superClass){
 
 		TreeIterator<EObject> treeItr = root.eAllContents();
-		boolean requiredAttribute = false; 
+		boolean requiredAttribute = false;
 		HashMap<String, String> refAttribute = new HashMap<>();
-		boolean annotation = false;
-		boolean dictionaryTest = false;
-		String defaultValue = null;
-		String eType = null;
-
 		//    Pulling out dependency from file
 		while (treeItr.hasNext()) {	    
 			EObject obj = treeItr.next();
@@ -520,24 +497,23 @@ public class MSModelUtils {
 				}else {
 					requiredAttribute = false;
 				}
-
 			}
-
 			if (requiredAttribute){
 				if (obj instanceof EStructuralFeature) {
 					EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
-					if (eStrucClassifier.getEAnnotations().size() != 0) {
-						annotation = annotationTest(eStrucClassifier, configuration, onap);
-						dictionaryTest = annotationTest(eStrucClassifier, dictionary, policy);
+					if (!eStrucClassifier.getEAnnotations().isEmpty()) {
+						boolean annotation = annotationTest(eStrucClassifier, configuration, onap);
+						boolean dictionaryTest = annotationTest(eStrucClassifier, dictionary, policy);
 						EClassifier refType = ((EStructuralFeature) obj).getEType();
 						if (annotation && !(obj instanceof EReference) && !(refType instanceof EEnumImpl)) {
 							String name = eStrucClassifier.getName();
+							String eType;
 							if (dictionaryTest){
 								eType = annotationValue(eStrucClassifier, ANNOTATION_TYPE.DICTIONARY, policy);
 							}else {
 								eType = eStrucClassifier.getEType().getInstanceClassName();
 							}
-							defaultValue = checkDefultValue(((EStructuralFeature) obj).getDefaultValueLiteral());
+							String defaultValue = checkDefultValue(((EStructuralFeature) obj).getDefaultValueLiteral());
 
 							String array = arrayCheck(((EStructuralFeature) obj).getUpperBound());
 							String required = checkRequiredPattern(((EStructuralFeature) obj).getUpperBound(), ((EStructuralFeature) obj).getLowerBound());
@@ -561,7 +537,7 @@ public class MSModelUtils {
 		return ":MANY-false";
 	}
 
-	public List<String> getDependencyList(EClassifier eClassifier, String className){
+	public List<String> getDependencyList(EClassifier eClassifier){
 		List<String> returnValue = new ArrayList<>();;
 		EList<EClass> somelist = ((EClass) eClassifier).getEAllSuperTypes();
 		if (somelist.isEmpty()){
@@ -578,9 +554,9 @@ public class MSModelUtils {
 		return returnValue;
 	}
 
-	public Map<String, String> buildSubList(HashMap<String, String> subClassAttributes, HashMap<String, MSAttributeObject> classMap, String className){
+	public Map<String, String> buildSubList(Map<String, String> subClassAttributes, Map<String, MSAttributeObject> classMap, String className){
 		Map<String, String> missingValues = new HashMap<>();
-		Map<String, String> workingMap = new HashMap<>();
+		Map<String, String> workingMap;
 		boolean enumType;
 
 		for ( Entry<String, String> map : classMap.get(className).getRefAttribute().entrySet()){
@@ -604,10 +580,10 @@ public class MSModelUtils {
 		return missingValues;
 	}
 
-	public Map<String, HashMap<String, String>> recursiveReference(HashMap<String, MSAttributeObject> classMap, String className){
+	public Map<String, Map<String, String>> recursiveReference(Map<String, MSAttributeObject> classMap, String className){
 
-		Map<String, HashMap<String, String>> returnObject = new HashMap<>();
-		HashMap<String, String> returnClass = getRefclass(classMap, className);
+		Map<String, Map<String, String>> returnObject = new HashMap<>();
+		Map<String, String> returnClass = getRefclass(classMap, className);
 		returnObject.put(className, returnClass);
 		for (Entry<String, String> reAttribute :returnClass.entrySet()){
 			if (reAttribute.getValue().split(":")[1].contains("MANY")){
@@ -622,16 +598,16 @@ public class MSModelUtils {
 
 	}
 
-	public String createJson(HashMap<String, Object> subClassAttributes, HashMap<String, MSAttributeObject> classMap, String className) { 
+	public String createJson(Map<String, Object> subClassAttributes, Map<String, MSAttributeObject> classMap, String className) {
 		boolean enumType;
-		Map<String, HashMap<String, String>> myObject = new HashMap<>();
+		Map<String, Map<String, String>> myObject = new HashMap<>();
 		for ( Entry<String, String> map : classMap.get(className).getRefAttribute().entrySet()){
 			String value = map.getValue().split(":")[0];
 			if (value!=null){
 				enumType = classMap.get(className).getEnumType().containsKey(value);
 				if (!enumType){
 					if (map.getValue().split(":")[1].contains("MANY")){
-						Map<String, HashMap<String, String>> testRecursive = recursiveReference(classMap, map.getValue().split(":")[0] );
+						Map<String, Map<String, String>> testRecursive = recursiveReference(classMap, map.getValue().split(":")[0] );
 						myObject.putAll(testRecursive);
 					}
 				}
@@ -644,7 +620,7 @@ public class MSModelUtils {
 		return json;		
 	}
 
-	public HashMap<String, String> getRefclass(HashMap<String, MSAttributeObject> classMap, String className){
+	public Map<String, String> getRefclass(Map<String, MSAttributeObject> classMap, String className){
 		HashMap<String, String> missingValues = new HashMap<>();
 
 		if (classMap.get(className).getAttribute()!=null || !classMap.get(className).getAttribute().isEmpty()){
@@ -658,12 +634,12 @@ public class MSModelUtils {
 		return missingValues;	
 	}
 
-	public String createSubAttributes(ArrayList<String> dependency, HashMap<String, MSAttributeObject> classMap, String modelName) {
+	public String createSubAttributes(List<String> dependency, Map<String, MSAttributeObject> classMap, String modelName) {
 
 		HashMap <String,  Object>  workingMap = new HashMap<>();
-		MSAttributeObject tempObject = new MSAttributeObject();
+		MSAttributeObject tempObject;
 		if (dependency!=null){
-			if (dependency.size()==0){
+			if (dependency.isEmpty()){
 				return "{}";
 			}	
 			dependency.add(modelName);
@@ -679,15 +655,15 @@ public class MSModelUtils {
 		return returnValue;
 	}
 
-	public ArrayList<String> getFullDependencyList(ArrayList<String> dependency, HashMap<String,MSAttributeObject > classMap) {
+	public List<String> getFullDependencyList(List<String> dependency, Map<String,MSAttributeObject > classMap) {
 		ArrayList<String> returnList = new ArrayList<>();
-		ArrayList<String> workingList = new ArrayList<>();
+		ArrayList<String> workingList;
 		returnList.addAll(dependency);
 		for (String element : dependency ){
 			if (classMap.containsKey(element)){
 				MSAttributeObject value = classMap.get(element);
 				String rawValue = StringUtils.replaceEach(value.getDependency(), new String[]{"[", "]"}, new String[]{"", ""});
-				workingList = new ArrayList<String>(Arrays.asList(rawValue.split(",")));	
+				workingList = new ArrayList<>(Arrays.asList(rawValue.split(",")));
 				for(String depend : workingList){
 					if (!returnList.contains(depend) && !depend.isEmpty()){
 						returnList.add(depend.trim());

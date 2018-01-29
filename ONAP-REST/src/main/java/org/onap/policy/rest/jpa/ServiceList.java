@@ -40,8 +40,6 @@ import javax.persistence.Table;
 public class ServiceList implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -65,31 +63,18 @@ public class ServiceList implements Serializable {
 	
 	@Column(name="ports")
 	private String servicePorts;
-	
-	
-	
-/*
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;*/
 
 	public ServiceList() {
-		
+		// An empty constructor
 	}
-	public ServiceList(String string, String userid) {
-		this(domain);
-		
-	}
-	public ServiceList(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 
 	

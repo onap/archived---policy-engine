@@ -41,8 +41,6 @@ import javax.persistence.Table;
 public class GroupPolicyScopeList implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -59,22 +57,16 @@ public class GroupPolicyScopeList implements Serializable {
 	private String description;
 
 	public GroupPolicyScopeList() {
-		
+		// An empty constructor
 	}
-	public GroupPolicyScopeList(String string, String userid) {
-		this(domain);
-		
-	}
-	public GroupPolicyScopeList(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 
 	

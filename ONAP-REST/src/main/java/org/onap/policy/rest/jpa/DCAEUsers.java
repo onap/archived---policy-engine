@@ -41,8 +41,6 @@ import javax.persistence.Table;
 public class DCAEUsers implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -57,22 +55,16 @@ public class DCAEUsers implements Serializable {
 
 
 	public DCAEUsers() {
-		
+		// An empty constructor
 	}
-	public DCAEUsers(String string, String userid) {
-		this(domain);
-		
-	}
-	public DCAEUsers(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 
 	

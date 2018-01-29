@@ -41,8 +41,6 @@ import javax.persistence.Table;
 public class RemoteCatalogValues implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -57,22 +55,16 @@ public class RemoteCatalogValues implements Serializable {
 
 
 	public RemoteCatalogValues() {
-		
+		// An empty constructor
 	}
-	public RemoteCatalogValues(String string, String userid) {
-		this(domain);
-		
-	}
-	public RemoteCatalogValues(String domain) {
-		
-	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		throw new UnsupportedOperationException();
 	}
 	@PreUpdate
 	public void preUpdate() {
+		throw new UnsupportedOperationException();
 	}
 
 	public String getValue() {

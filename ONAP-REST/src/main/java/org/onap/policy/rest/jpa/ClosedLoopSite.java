@@ -54,10 +54,7 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 @NamedQuery(name="ClosedLoopSite.findAll", query="SELECT c FROM ClosedLoopSite c ")
 public class ClosedLoopSite implements Serializable{
 	private static final long serialVersionUID = 1L;
-	
-	private static String domain;
 
-	
 	@Id
 	@Column(name ="id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -105,13 +102,9 @@ public class ClosedLoopSite implements Serializable{
 	private static Log LOGGER = LogFactory.getLog(ClosedLoopSite.class);
 	
 	public ClosedLoopSite(){
-		
+		// An empty constructor
 	}
-	
-	public ClosedLoopSite(String string, String userid) {
-		this(domain);
-	}
-	
+
 	public ClosedLoopSite(String domain) {
 		this.siteName = domain;
 	}	
@@ -127,7 +120,7 @@ public class ClosedLoopSite implements Serializable{
 	public void preUpdate() {
 		this.modifiedDate = new Date();
 		try {
-			this.userModifiedBy = XacmlAdminAuthorization.getUserId();;
+			this.userModifiedBy = XacmlAdminAuthorization.getUserId();
 		} catch (Exception e) {
 			LOGGER.error("Exception caused While adding Modified by Role"+e);
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "ClosedLoopSite", "Exception caused While adding Modified by Role");

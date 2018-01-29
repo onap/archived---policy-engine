@@ -35,16 +35,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name="POLICYSCORE")
 @NamedQueries({
-	@NamedQuery(name="POLICYSCORE.findAll", query="SELECT p FROM PolicyScore p"),
-	@NamedQuery(name="POLICYSCORE.deleteAll", query="DELETE FROM PolicyScore WHERE 1=1"),
-	@NamedQuery(name="POLICYSCORE.findByPolicyName", query="Select p from PolicyScore p where p.PolicyName=:pname")
+	@NamedQuery(name="POLICYSCORE.findAll", query="SELECT p FROM scorePolicy p"),
+	@NamedQuery(name="POLICYSCORE.deleteAll", query="DELETE FROM scorePolicy WHERE 1=1"),
+	@NamedQuery(name="POLICYSCORE.findByPolicyName", query="Select p from scorePolicy p where p.policyName=:pname")
 })
 public class PolicyScore implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -52,27 +50,19 @@ public class PolicyScore implements Serializable {
 	
 	@Column(name="POLICY_NAME", nullable=false)
 	@OrderBy("asc")
-	private String PolicyName;
+	private String policyName;
 	
 	@Column(name="VERSIONEXTENSION", nullable=false)
 	@OrderBy("asc")
-	private String VersionExtension;
+	private String versionExtension;
 	
 	@Column(name="POLICY_SCORE", nullable=true)
-	private String PolicyScore;
+	private String scorePolicy;
 	
 	public PolicyScore() {
-		
+		// An empty constructor
 	}
-	
-	public PolicyScore(String pName, String pScore) {
-		this(domain);
-		
-	}
-	public PolicyScore(String domain) {
-		
-	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -81,23 +71,23 @@ public class PolicyScore implements Serializable {
 		this.id = id;
 	}
 	public String getPolicyName() {
-		return PolicyName;
+		return policyName;
 	}
 	public void setPolicyName(String policyName) {
-		PolicyName = policyName;
+		this.policyName = policyName;
 	}
 	public String getVersionExtension() {
-		return VersionExtension;
+		return versionExtension;
 	}
 
 	public void setVersionExtension(String versionExtension) {
-		VersionExtension = versionExtension;
+		this.versionExtension = versionExtension;
 	}
 	public String getPolicyScore() {
-		return PolicyScore;
+		return scorePolicy;
 	}
 	public void setPolicyScore(String policyScore) {
-		PolicyScore = policyScore;
+		scorePolicy = policyScore;
 	}
 		
 

@@ -29,6 +29,7 @@ public class PolicyDBException extends Exception {
     private static final long serialVersionUID = -6162444281003852781L;
 
     public PolicyDBException() {
+        throw new UnsupportedOperationException();
     }
     
     public PolicyDBException(String message) {

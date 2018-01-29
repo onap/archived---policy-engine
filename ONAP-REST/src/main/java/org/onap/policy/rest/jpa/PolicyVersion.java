@@ -21,7 +21,6 @@
 package org.onap.policy.rest.jpa;
 
 import java.io.Serializable;
-//import java.sql.Clob;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
@@ -109,7 +108,7 @@ public class PolicyVersion implements Serializable {
 	}
 	
 	public PolicyVersion(){
-		
+		// An empty constructor
 	}
 	
 	@PrePersist
@@ -122,14 +121,6 @@ public class PolicyVersion implements Serializable {
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate =  new Date();
-		/*
-		 * The modifiedBy must be set via the setModifiedBy() method since PolicyVersion
-		 * has been moved to XACML-REST module for access from the XACML-PAP-REST module
-		 
-		   String userid = ((XacmlAdminUI) UI.getCurrent()).getLoginUserId();
-		   this.modifiedBy =userid;
-		 * 
-		 */
 	}
 	
 	public int getId() {
@@ -200,16 +191,14 @@ public class PolicyVersion implements Serializable {
 
 		PolicyVersion p = (PolicyVersion) obj;
 		
-		return (
-				id == p.id &&
+		return id == p.id &&
 				policyName.equals(p.policyName) &&
 				activeVersion == p.activeVersion &&
 				higherVersion == p.higherVersion &&
 				createdDate.equals(p.createdDate) &&
 				createdBy.equals(p.createdBy) &&
 				modifiedDate.equals(p.modifiedDate) &&
-				modifiedBy.equals(p.modifiedBy)
-				);
+				modifiedBy.equals(p.modifiedBy);
 	}
 
 }
