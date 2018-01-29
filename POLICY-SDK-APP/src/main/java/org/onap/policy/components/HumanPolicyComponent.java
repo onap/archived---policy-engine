@@ -24,7 +24,6 @@ package org.onap.policy.components;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
@@ -132,12 +131,10 @@ public class HumanPolicyComponent{
 	}
 	
 	private static String processPolicy() {	
-		if (LOGGER.isTraceEnabled())
+		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("ENTER");
-		
-		FileInputStream pIS = null;
-		try {
-			pIS = new FileInputStream(policyFile);
+		}
+		try (FileInputStream pIS = new FileInputStream(policyFile)){
 			Object policy = XACMLPolicyScanner.readPolicy(pIS);
 			if (policy == null)
 				throw new IllegalArgumentException("Policy File " +  policyFile.getName() + 
@@ -160,14 +157,6 @@ public class HumanPolicyComponent{
 					     ": " + e.getMessage();
 			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + msg, e);	
 			throw new IllegalArgumentException(msg);
-		} finally {
-			if (pIS != null) {
-				try {
-					pIS.close();
-				} catch (IOException e) {
-					LOGGER.warn(e.getMessage(), e);
-				}
-			}
 		}
 	}
 	

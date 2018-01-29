@@ -128,7 +128,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 										AttributeDesignatorType designator = match.getAttributeDesignator();
 										String attributeId = designator.getAttributeId();
 										// First match in the target is OnapName, so set that value.
-										if (attributeId.equals("ONAPName")) {
+										if ("ONAPName".equals(attributeId)) {
 											policyAdapter.setOnapName(value);
 										}
 										// Component attributes are saved under Target here we are fetching  them back.
@@ -151,16 +151,16 @@ public class DecisionPolicyController extends RestrictedBaseController {
 					if(!attributeList.isEmpty()) {
 						for(int i=0; i<attributeList.size() ; i++){
 							Map<String, String> map = (Map<String,String>)attributeList.get(i);
-							if(map.get("key").equals("WorkStep")){
+							if("WorkStep".equals(map.get("key"))){
 								rainydayParams.setWorkstep(map.get("value"));
 								rainy=true;
-							}else if(map.get("key").equals("BB_ID")){
+							}else if("BB_ID".equals(map.get("key"))){
 								rainydayParams.setBbid(map.get("value"));
 								rainy=true;
-							}else if(map.get("key").equals("ServiceType")){
+							}else if("ServiceType".equals(map.get("key"))){
 								rainydayParams.setServiceType(map.get("value"));
 								rainy=true;
-							}else if(map.get("key").equals("VNFType")){
+							}else if("VNFType".equals(map.get("key"))){
 								rainydayParams.setVnfType(map.get("value"));
 								rainy=true;
 							}
@@ -188,12 +188,12 @@ public class DecisionPolicyController extends RestrictedBaseController {
 						// get the condition data under the rule for rule Algorithms.
 						if(((RuleType) object).getEffect().equals(EffectType.DENY)) {
 							if(((RuleType) object).getAdviceExpressions()!=null){
-								if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().equalsIgnoreCase("AAF")){
+								if("AAF".equalsIgnoreCase(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId())){
 									policyAdapter.setRuleProvider("AAF");
 									break;
-								}else if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().equalsIgnoreCase("GUARD_YAML")){
+								}else if("GUARD_YAML".equalsIgnoreCase(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId())){
 									policyAdapter.setRuleProvider("GUARD_YAML");
-								}else if(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId().equalsIgnoreCase("GUARD_BL_YAML")){
+								}else if("GUARD_BL_YAML".equalsIgnoreCase(((RuleType) object).getAdviceExpressions().getAdviceExpression().get(0).getAdviceId())){
 									policyAdapter.setRuleProvider("GUARD_BL_YAML");
 								}
 							}else{
@@ -204,7 +204,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 								ApplyType decisionApply = (ApplyType) condition.getExpression().getValue();
 								decisionApply = (ApplyType) decisionApply.getExpression().get(0).getValue();
 								ruleAlgoirthmTracker = new LinkedList<>();
-								if(policyAdapter.getRuleProvider()!=null && (policyAdapter.getRuleProvider().equals("GUARD_YAML")||(policyAdapter.getRuleProvider().equals("GUARD_BL_YAML")))){
+								if(policyAdapter.getRuleProvider()!=null && ("GUARD_YAML".equals(policyAdapter.getRuleProvider())||(policyAdapter.getRuleProvider().equals("GUARD_BL_YAML")))){
 									YAMLParams yamlParams = new YAMLParams();
 									for(int i=0; i<attributeList.size() ; i++){
 										Map<String, String> map = (Map<String,String>)attributeList.get(i);
@@ -218,10 +218,10 @@ public class DecisionPolicyController extends RestrictedBaseController {
 											yamlParams.setClname(map.get("value"));
 										}
 									}
-									ApplyType apply = ((ApplyType)((ApplyType)decisionApply.getExpression().get(0).getValue()).getExpression().get(0).getValue());
+									ApplyType apply = (ApplyType)((ApplyType)decisionApply.getExpression().get(0).getValue()).getExpression().get(0).getValue();
 									yamlParams.setGuardActiveStart(((AttributeValueType)apply.getExpression().get(1).getValue()).getContent().get(0).toString());
 									yamlParams.setGuardActiveEnd(((AttributeValueType)apply.getExpression().get(2).getValue()).getContent().get(0).toString());
-									if(policyAdapter.getRuleProvider().equals("GUARD_BL_YAML")){
+									if("GUARD_BL_YAML".equals(policyAdapter.getRuleProvider())){
 										apply = (ApplyType)((ApplyType)((ApplyType)decisionApply.getExpression().get(0).getValue()).getExpression().get(1).getValue()).getExpression().get(2).getValue();
 										Iterator<JAXBElement<?>> attributes = apply.getExpression().iterator();
 										List<String> blackList = new ArrayList<>();
@@ -245,7 +245,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 								prePopulateDecisionCompoundRuleAlgorithm(index, decisionApply);
 								policyAdapter.setRuleAlgorithmschoices(ruleAlgorithmList);
 							}
-						} else if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals("Rainy_Day")&& ((RuleType) object).getEffect().equals(EffectType.PERMIT)) {
+						} else if(policyAdapter.getRuleProvider()!=null && "Rainy_Day".equals(policyAdapter.getRuleProvider())&& ((RuleType) object).getEffect().equals(EffectType.PERMIT)) {
 							
 							TargetType ruleTarget = ((RuleType) object).getTarget();
 							AdviceExpressionsType adviceExpression = ((RuleType) object).getAdviceExpressions();
@@ -290,7 +290,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 			}
 		}
 		// Populate the key and value fields
-		if (((jaxbDecisionTypes.get(0).getValue()) instanceof AttributeValueType)) {
+		if ((jaxbDecisionTypes.get(0).getValue() instanceof AttributeValueType)) {
 			ApplyType innerDecisionApply = (ApplyType) jaxbDecisionTypes.get(1).getValue();
 			List<JAXBElement<?>> jaxbInnerDecisionTypes = innerDecisionApply.getExpression();
 			if (jaxbInnerDecisionTypes.get(0).getValue() instanceof AttributeDesignatorType) {

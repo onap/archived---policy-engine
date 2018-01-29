@@ -113,7 +113,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	}
     
     public boolean isSupported(Object itemId) {
-    	return (itemId instanceof OnapPDPGroup);
+    	return itemId instanceof OnapPDPGroup;
     }
 	
 	public synchronized void refreshGroups() {

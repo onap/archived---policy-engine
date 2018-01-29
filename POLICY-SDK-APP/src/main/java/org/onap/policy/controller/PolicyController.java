@@ -164,6 +164,7 @@ public class PolicyController extends RestrictedBaseController {
 	}
 
 	public PolicyController() {
+		// Empty constructor
 	}
 
 	@PostConstruct

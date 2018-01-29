@@ -88,8 +88,8 @@ public class PDPController extends RestrictedBaseController {
 			try {
 				PolicyController controller = getPolicyControllerInstance();
 				Set<PDPPolicy> filteredPolicies = new HashSet<>();
-				Set<String> scopes = null;
-				List<String> roles = null;
+				Set<String> scopes;
+				List<String> roles;
 				String userId =  isJunit()  ? "Test" : UserUtils.getUserSession(request).getOrgUserId();
 				List<Object> userRoles = controller.getRoles(userId);
 				roles = new ArrayList<>();
@@ -118,39 +118,37 @@ public class PDPController extends RestrictedBaseController {
 						this.groups.addAll(this.getGroupsData());
 					}	
 				}else{
-					if(!userRoles.isEmpty()){
-						if(!scopes.isEmpty()){
-							this.groups.addAll(controller.getPapEngine().getOnapPDPGroups());
-							List<OnapPDPGroup> tempGroups = new ArrayList<>();
-							if(!groups.isEmpty()){
-								Iterator<OnapPDPGroup> pdpGroup = groups.iterator();
-								while(pdpGroup.hasNext()){
-									OnapPDPGroup group = pdpGroup.next();
-									Set<PDPPolicy> policies = group.getPolicies();
-									for(PDPPolicy policy : policies){
-										for(String scope : scopes){
-											scope = scope.replace(File.separator, ".");
-											String policyName = policy.getId();
-											if(policyName.contains(".Config_")){
-												policyName = policyName.substring(0, policyName.lastIndexOf(".Config_"));
-											}else if(policyName.contains(".Action_")){
-												policyName = policyName.substring(0, policyName.lastIndexOf(".Action_"));
-											}else if(policyName.contains(".Decision_")){
-												policyName = policyName.substring(0, policyName.lastIndexOf(".Decision_"));
-											}
-											if(policyName.startsWith(scope)){
-												filteredPolicies.add(policy);
-											}
+					if(!userRoles.isEmpty() && !scopes.isEmpty()){
+						this.groups.addAll(controller.getPapEngine().getOnapPDPGroups());
+						List<OnapPDPGroup> tempGroups = new ArrayList<>();
+						if(!groups.isEmpty()){
+							Iterator<OnapPDPGroup> pdpGroup = groups.iterator();
+							while(pdpGroup.hasNext()){
+								OnapPDPGroup group = pdpGroup.next();
+								Set<PDPPolicy> policies = group.getPolicies();
+								for(PDPPolicy policy : policies){
+									for(String scope : scopes){
+										scope = scope.replace(File.separator, ".");
+										String policyName = policy.getId();
+										if(policyName.contains(".Config_")){
+											policyName = policyName.substring(0, policyName.lastIndexOf(".Config_"));
+										}else if(policyName.contains(".Action_")){
+											policyName = policyName.substring(0, policyName.lastIndexOf(".Action_"));
+										}else if(policyName.contains(".Decision_")){
+											policyName = policyName.substring(0, policyName.lastIndexOf(".Decision_"));
+										}
+										if(policyName.startsWith(scope)){
+											filteredPolicies.add(policy);
 										}
 									}
-									pdpGroup.remove();
-									StdPDPGroup newGroup = (StdPDPGroup) group;
-									newGroup.setPolicies(filteredPolicies);
-									tempGroups.add(newGroup);
-								}	
-								groups.clear();
-								groups = tempGroups;	
-							}
+								}
+								pdpGroup.remove();
+								StdPDPGroup newGroup = (StdPDPGroup) group;
+								newGroup.setPolicies(filteredPolicies);
+								tempGroups.add(newGroup);
+							}	
+							groups.clear();
+							groups = tempGroups;	
 						}
 					}
 				}
@@ -254,7 +252,7 @@ public class PDPController extends RestrictedBaseController {
 			policyLogger.info("*****************************************************************************************************************************");
 			
 			StdPDPGroup pdpGroupData =  mapper.readValue(root.get("pdpGroupData").toString(), StdPDPGroup.class);
-			if(pdpGroupData.getName().equals("Default")) {
+			if("Default".equals(pdpGroupData.getName())) {
 				throw new UnsupportedOperationException("You can't remove the Default Group.");
 			}else{
 				this.container.removeGroup(pdpGroupData, null);

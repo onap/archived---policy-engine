@@ -151,7 +151,7 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 		if (this.policies.isEmpty()) {
 			return false;
 		}
-		return (itemId.equals(this.policies.get(0)));
+		return itemId.equals(this.policies.get(0));
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 		if (this.policies.isEmpty()) {
 			return false;
 		}
-		return (itemId.equals(this.policies.get(this.policies.size() - 1)));
+		return itemId.equals(this.policies.get(this.policies.size() - 1));
 	}
 
 	@Override

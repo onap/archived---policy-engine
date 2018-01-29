@@ -281,12 +281,9 @@ public class DashboardController  extends RestrictedBaseController{
 
 		policyLogger.debug("Create an RMI connector client and connect it to the JMX connector server");
 		HashMap map = null;
-		JMXConnector jmxConnection;
-		try {
-			jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionURL(host, port), map);
+		try (JMXConnector jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionURL(host, port), map)){
 			jmxConnection.connect();
 			Object o = jmxConnection.getMBeanServerConnection().getAttribute(new ObjectName("PdpRest:type=PdpRestMonitor"), jmxAttribute);
-			jmxConnection.close();
 			policyLogger.debug("pdpEvaluationNA value retreived: " + o);
 			return (long) o;
 		} catch (MalformedURLException e) {
@@ -319,10 +316,10 @@ public class DashboardController  extends RestrictedBaseController{
 	 */
 	private void addPolicyToTable() {
 		policyActivityData = new ArrayList<>();
-		String policyID = null;
-		int policyFireCount = 0;
+		String policyID;
+		int policyFireCount;
 		Map<String, String> policyMap = new HashMap<>();
-		Object policyList = null;
+		Object policyList;
 		//get list of policy
 
 		for (PDPGroup group : this.pdpConatiner.getGroups()){
@@ -346,14 +343,12 @@ public class DashboardController  extends RestrictedBaseController{
 					for (String policyKeyValue : splitPolicy){
 						policyID = urnPolicyID(policyKeyValue);
 						policyFireCount = countPolicyID(policyKeyValue);
-						if (policyID != null ){
-							if (policyMap.containsKey(policyID)){
-								JSONObject object = new JSONObject();
-								object.put("policyId", policyMap.get(policyID));
-								object.put("fireCount", policyFireCount);
-								object.put("system", pdp.getId());
-								policyActivityData.add(object);
-							}
+						if (policyID != null && policyMap.containsKey(policyID)){
+							JSONObject object = new JSONObject();
+							object.put("policyId", policyMap.get(policyID));
+							object.put("fireCount", policyFireCount);
+							object.put("system", pdp.getId());
+							policyActivityData.add(object);
 						}
 					}
 				}else {
@@ -382,12 +377,9 @@ public class DashboardController  extends RestrictedBaseController{
 	private Object getPolicy(String host, int port, String jmxAttribute){
 		policyLogger.debug("Create an RMI connector client and connect it to the JMX connector server for Policy: " + host);
 		HashMap map = null;
-		JMXConnector jmxConnection;
-		try {
-			jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionURL(host, port), map);
+		try (JMXConnector jmxConnection = JMXConnectorFactory.newJMXConnector(createConnectionURL(host, port), map)) {
 			jmxConnection.connect();
 			Object o = jmxConnection.getMBeanServerConnection().getAttribute(new ObjectName("PdpRest:type=PdpRestMonitor"), "policyMap");
-			jmxConnection.close();
 			policyLogger.debug("policyMap value retreived: " + o);
 			return  o;
 		} catch (MalformedURLException e) {

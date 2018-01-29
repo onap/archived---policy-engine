@@ -73,7 +73,9 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 		CreateClosedLoopFaultController.commonclassdao = commonclassdao;
 	}
 	
-	public CreateClosedLoopFaultController(){}
+	public CreateClosedLoopFaultController(){
+		// Empty constructor
+	}
 	
 	public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData, JsonNode root){
 		try{
@@ -245,35 +247,35 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 		TrapDatas trapDatas = (TrapDatas) object;
 		ArrayList<Object> attributeList = new ArrayList<>();
 		// Read the Trap 
-		if(!trap.equals("nill")){
+		if(! "nill".equals(trap)){
 			try{
 				if(trap.startsWith("Trap")){
-					if(trap.equals("Trap1")){
+					if("Trap1".equals(trap)){
 						 attributeList = trapDatas.getTrap1();
-					}else if(trap.equals("Trap2")){
+					}else if("Trap2".equals(trap)){
 						attributeList = trapDatas.getTrap2();
-					}else if(trap.equals("Trap3")){
+					}else if("Trap3".equals(trap)){
 						attributeList = trapDatas.getTrap3();
-					}else if(trap.equals("Trap4")){
+					}else if("Trap4".equals(trap)){
 						attributeList = trapDatas.getTrap4();
-					}else if(trap.equals("Trap5")){
+					}else if("Trap5".equals(trap)){
 						attributeList = trapDatas.getTrap5();
-					}else if(trap.equals("Trap6")){
+					}else if("Trap6".equals(trap)){
 						attributeList = trapDatas.getTrap6();
 					}
 				}else{
 					if(trap.startsWith("Fault")){
-						if(trap.equals("Fault1")){
+						if("Fault1".equals(trap)){
 							attributeList = trapDatas.getTrap1();
-						}else if(trap.equals("Fault2")){
+						}else if("Fault2".equals(trap)){
 							attributeList = trapDatas.getTrap2();
-						}else if(trap.equals("Fault3")){
+						}else if("Fault3".equals(trap)){
 							attributeList = trapDatas.getTrap3();
-						}else if(trap.equals("Fault4")){
+						}else if("Fault4".equals(trap)){
 							attributeList = trapDatas.getTrap4();
-						}else if(trap.equals("Fault5")){
+						}else if("Fault5".equals(trap)){
 							attributeList = trapDatas.getTrap5();
-						}else if(trap.equals("Fault6")){
+						}else if("Fault6".equals(trap)){
 							attributeList = trapDatas.getTrap6();
 						}	
 					}
@@ -548,22 +550,22 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 										String attributeId = designator.getAttributeId();
 										
 										// First match in the target is OnapName, so set that value.
-										if (attributeId.equals("ONAPName")) {
+										if ("ONAPName".equals(attributeId)) {
 											policyAdapter.setOnapName(value);
 											OnapName onapName = new OnapName();
 											onapName.setOnapName(value);
 											policyAdapter.setOnapNameField(onapName);
 										}
-										if (attributeId.equals("RiskType")){
+										if ("RiskType".equals(attributeId)){
 											policyAdapter.setRiskType(value);
 										}
-										if (attributeId.equals("RiskLevel")){
+										if ("RiskLevel".equals(attributeId)){
 											policyAdapter.setRiskLevel(value);
 										}
-										if (attributeId.equals("guard")){
+										if ("guard".equals(attributeId)){
 											policyAdapter.setGuard(value);
 										}
-										if (attributeId.equals("TTLDate") && !value.contains("NA")){
+										if ("TTLDate".equals(attributeId) && !value.contains("NA")){
 											PolicyController controller = new PolicyController();
 											String newDate = controller.convertDate(value);
 											policyAdapter.setTtlDate(newDate);
@@ -584,7 +586,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			ClosedLoopFaultBody closedLoopBody = mapper.readValue(entity.getConfigurationData().getConfigBody(), ClosedLoopFaultBody.class);
-			if(closedLoopBody.getClosedLoopPolicyStatus().equalsIgnoreCase("ACTIVE")){
+			if("ACTIVE".equalsIgnoreCase(closedLoopBody.getClosedLoopPolicyStatus())){
 				closedLoopBody.setClosedLoopPolicyStatus("Active");
 			}else{
 				closedLoopBody.setClosedLoopPolicyStatus("InActive");

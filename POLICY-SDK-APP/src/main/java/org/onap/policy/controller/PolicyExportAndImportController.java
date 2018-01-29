@@ -116,12 +116,14 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 		PolicyExportAndImportController.commonClassDao = commonClassDao;
 	}
 
-	public PolicyExportAndImportController(){}
+	public PolicyExportAndImportController(){
+		// Empty constructor
+	}
 
 	@RequestMapping(value={"/policy_download/exportPolicy.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public void exportPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
-			String file = null;
+			String file;
 			selectedPolicy = new ArrayList<>();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -209,8 +211,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 		boolean configExists = false;
 		boolean actionExists = false;
 		String configName = null;
-		String scope = null;
-		boolean finalColumn = false;
+		String scope;
+		boolean finalColumn;
 		PolicyController controller = policyController != null ? getPolicyController() : new PolicyController();
 		String userId = UserUtils.getUserSession(request).getOrgUserId();
 		UserInfo userInfo = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", userId);
@@ -251,19 +253,19 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 			Iterator<Cell> cellIterator = currentRow.cellIterator();
 			while (cellIterator.hasNext()) {
 				Cell cell = cellIterator.next();
-				if (getCellHeaderName(cell).equalsIgnoreCase("policyName")) {
+				if ("policyName".equalsIgnoreCase(getCellHeaderName(cell))) {
 					policyEntity.setPolicyName(cell.getStringCellValue());
 				}
-				if (getCellHeaderName(cell).equalsIgnoreCase("scope")) {
+				if ("scope".equalsIgnoreCase(getCellHeaderName(cell))) {
 					policyEntity.setScope(cell.getStringCellValue());
 				}
-				if (getCellHeaderName(cell).equalsIgnoreCase("policyData")) {
+				if ("policyData".equalsIgnoreCase(getCellHeaderName(cell))) {
 					policyEntity.setPolicyData(cell.getStringCellValue());
 				}
-				if (getCellHeaderName(cell).equalsIgnoreCase("description")) {
+				if ("description".equalsIgnoreCase(getCellHeaderName(cell))) {
 					policyEntity.setDescription(cell.getStringCellValue());
 				}
-				if (getCellHeaderName(cell).equalsIgnoreCase("configurationbody")) {
+				if ("configurationbody".equalsIgnoreCase(getCellHeaderName(cell))) {
 					if(policyEntity.getPolicyName().contains("Config_")){
 						configExists = true;
 						configurationDataEntity.setConfigBody(cell.getStringCellValue());
@@ -272,7 +274,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 						actionBodyEntity.setActionBody(cell.getStringCellValue());
 					}	
 				}
-				if (getCellHeaderName(cell).equalsIgnoreCase("configurationName")) {
+				if ("configurationName".equalsIgnoreCase(getCellHeaderName(cell))) {
 					finalColumn = true;
 					configName = cell.getStringCellValue();
 					if(policyEntity.getPolicyName().contains("Config_")){
@@ -312,7 +314,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 					}
 					if (roles.contains(ADMIN) || roles.contains(EDITOR)) {
 						if(scopes.isEmpty()){
-							//return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
+							logger.error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
 						}else{
 							//1. if Role contains admin, then check if parent scope has role admin, if not don't create a scope and add to list.
 							if(roles.contains(ADMIN)){

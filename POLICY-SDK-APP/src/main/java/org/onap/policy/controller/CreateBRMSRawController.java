@@ -131,16 +131,16 @@ public class CreateBRMSRawController{
 										AttributeDesignatorType designator = match.getAttributeDesignator();
 										String attributeId = designator.getAttributeId();
 										
-										if (attributeId.equals("RiskType")){
+										if ("RiskType".equals(attributeId)){
 											policyAdapter.setRiskType(value);
 										}
-										if (attributeId.equals("RiskLevel")){
+										if ("RiskLevel".equals(attributeId)){
 											policyAdapter.setRiskLevel(value);
 										}
-										if (attributeId.equals("guard")){
+										if ("guard".equals(attributeId)){
 											policyAdapter.setGuard(value);
 										}
-										if (attributeId.equals("TTLDate") && !value.contains("NA")){
+										if ("TTLDate".equals(attributeId) && !value.contains("NA")){
 											PolicyController controller = new PolicyController();
 											String newDate = controller.convertDate(value);
 											policyAdapter.setTtlDate(newDate);

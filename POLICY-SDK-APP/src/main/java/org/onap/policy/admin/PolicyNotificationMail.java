@@ -143,11 +143,9 @@ public class PolicyNotificationMail{
 					}
 				}
 				if(sendFlag){
-					AnnotationConfigApplicationContext ctx = null;
-					try {
+					try (AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext()) {
 						to = list.getLoginIds()+"@"+PolicyController.getSmtpEmailExtension();
 						to = to.trim();
-						ctx = new AnnotationConfigApplicationContext();
 						ctx.register(PolicyNotificationMail.class);
 						ctx.refresh();
 						JavaMailSenderImpl mailSender = ctx.getBean(JavaMailSenderImpl.class);
@@ -158,15 +156,11 @@ public class PolicyNotificationMail{
 						mailMsg.setSubject(subject);
 						mailMsg.setText(message);
 						mailSender.send(mimeMessage);
-						if(mode.equalsIgnoreCase("Rename") || mode.contains("Delete") || mode.contains("Move")){
+						if("Rename".equalsIgnoreCase(mode) || mode.contains("Delete") || mode.contains("Move")){
 							policyNotificationDao.delete(watch);
 						}
 					} catch (Exception e) {
 						policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW+"Exception Occured in Policy Notification" +e);
-					}finally{
-						if(ctx != null){
-							ctx.close();
-						}
 					}
 				}
 			}

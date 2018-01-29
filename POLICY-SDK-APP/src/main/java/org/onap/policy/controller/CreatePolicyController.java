@@ -101,24 +101,24 @@ public class CreatePolicyController extends RestrictedBaseController{
 										AttributeDesignatorType designator = match.getAttributeDesignator();
 										String attributeId = designator.getAttributeId();
 										// First match in the target is OnapName, so set that value.
-										if (attributeId.equals("ONAPName")) {
+										if ("ONAPName".equals(attributeId)) {
 											policyAdapter.setOnapName(value);
 										}
-										if (attributeId.equals("RiskType")){
+										if ("RiskType".equals(attributeId)){
 											policyAdapter.setRiskType(value);
 										}
-										if (attributeId.equals("RiskLevel")){
+										if ("RiskLevel".equals(attributeId)){
 											policyAdapter.setRiskLevel(value);
 										}
-										if (attributeId.equals("guard")){
+										if ("guard".equals(attributeId)){
 											policyAdapter.setGuard(value);
 										}
-										if (attributeId.equals("TTLDate") && !value.contains("NA")){
+										if ("TTLDate".equals(attributeId) && !value.contains("NA")){
 											PolicyController controller = new PolicyController();
 											String newDate = controller.convertDate(value);
 											policyAdapter.setTtlDate(newDate);
 										}
-										if (attributeId.equals("ConfigName")){
+										if ("ConfigName".equals(attributeId)){
 											policyAdapter.setConfigName(value);
 										}
 										// After Onap and Config it is optional to have attributes, so

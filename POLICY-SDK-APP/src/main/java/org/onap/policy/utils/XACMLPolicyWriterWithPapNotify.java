@@ -210,7 +210,7 @@ public class XACMLPolicyWriterWithPapNotify{
 		}
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)).getBytes(StandardCharsets.UTF_8));
-		HttpURLConnection connection = null;
+		HttpURLConnection connection;
 		UUID requestID = UUID.randomUUID();
 		URL url;
 		try {
@@ -297,7 +297,7 @@ public class XACMLPolicyWriterWithPapNotify{
 	public static boolean notifyPapOfDelete(String policyToDelete){
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)).getBytes(StandardCharsets.UTF_8));
-		HttpURLConnection connection = null;
+		HttpURLConnection connection;
 		UUID requestID = UUID.randomUUID();
 		String papUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
 		if(papUrl == null){
@@ -397,7 +397,7 @@ public class XACMLPolicyWriterWithPapNotify{
 		}
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)).getBytes(StandardCharsets.UTF_8));
-		HttpURLConnection connection = null;
+		HttpURLConnection connection;
 		UUID requestID = UUID.randomUUID();
 		URL url;
 		try {

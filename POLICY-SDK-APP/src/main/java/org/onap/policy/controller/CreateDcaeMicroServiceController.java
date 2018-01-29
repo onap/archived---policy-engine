@@ -158,7 +158,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		CreateDcaeMicroServiceController.commonClassDao = commonClassDao;
 	}
 
-	public CreateDcaeMicroServiceController(){}
+	public CreateDcaeMicroServiceController(){
+		// Empty Constructor
+	}
 
 	protected PolicyRestAdapter policyAdapter = null;
 	private int priorityCount; 
@@ -701,7 +703,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				Iterator<String> itr=keys.iterator();
 				while(itr.hasNext()){
 					String key= itr.next();
-					if((!("type").equals(key) ||("required").equals(key)))
+					if(!("type").equals(key) ||("required").equals(key))
 					{
 						String value= keyValues.get(key);
 						//The "." in the value determines if its a string or a user defined type.  
@@ -721,10 +723,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
 				}
 
-				if(keyValues.get("type").equalsIgnoreCase(LIST)){
-					if(constraints == null || constraints.isEmpty()){
+				if(keyValues.get("type").equalsIgnoreCase(LIST) &&
+					(constraints == null || constraints.isEmpty()) ) {
 						referenceStringBuilder.append(keySetString+"=MANY-true"+",");
-					}
 				}
 			}else{
 				//User defined Datatype. 
@@ -829,7 +830,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
 		ObjectNode node = nodeFactory.objectNode();
 		String prevKey = null;
-		String presKey = null;
+		String presKey;
 		for(String key: element.keySet()){
 			if(key.contains(".")){
 				presKey = key.substring(0,key.indexOf('.'));
@@ -1053,7 +1054,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		List<Object>  list = new ArrayList<>();
 		PrintWriter out = response.getWriter();
 		String responseString = mapper.writeValueAsString(returnModel);
-		JSONObject j = null;
+		JSONObject j;
 		if("".equals(allManyTrueKeys)){
 			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + "}");	
 		}else{
@@ -1103,7 +1104,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		for (Entry<String, String> keySet : attributeMap.entrySet()){
 			array = new JSONArray();
 			String value = keySet.getValue();
-			if (keySet.getValue().split("MANY-")[1].equalsIgnoreCase("true")){
+			if ("true".equalsIgnoreCase(keySet.getValue().split("MANY-")[1])){
 				array.put(value);
 				object.put(keySet.getKey().trim(), array);
 			}else {
@@ -1115,14 +1116,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			array = new JSONArray();
 			String value = keySet.getValue().split(":")[0];
 			if (gsonObject.containsKey(value)){
-				if (keySet.getValue().split("MANY-")[1].equalsIgnoreCase("true")){
+				if ("true".equalsIgnoreCase(keySet.getValue().split("MANY-")[1])){
 					array.put(recursiveReference(value, gsonObject, enumAttribute));
 					object.put(keySet.getKey().trim(), array);
 				}else {
 					object.put(keySet.getKey().trim(), recursiveReference(value, gsonObject, enumAttribute));
 				}
 			}else {
-				if (keySet.getValue().split("MANY-")[1].equalsIgnoreCase("true")){
+				if ("true".equalsIgnoreCase(keySet.getValue().split("MANY-")[1])){
 					array.put(value.trim());
 					object.put(keySet.getKey().trim(), array);
 				}else {
@@ -1148,14 +1149,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			String[] splitValue = m.getValue().split(":");
 			array = new JSONArray();
 			if (subAttributeMap.containsKey(splitValue[0])){
-				if (m.getValue().split("MANY-")[1].equalsIgnoreCase("true")){
+				if ("true".equalsIgnoreCase(m.getValue().split("MANY-")[1])){
 					array.put(recursiveReference(splitValue[0], subAttributeMap, enumAttribute));
 					object.put(m.getKey().trim(), array);
 				}else {
 					object.put(m.getKey().trim(), recursiveReference(splitValue[0], subAttributeMap, enumAttribute));
 				}
 			} else{
-				if (m.getValue().split("MANY-")[1].equalsIgnoreCase("true")){
+				if ("true".equalsIgnoreCase(m.getValue().split("MANY-")[1])){
 					array.put(splitValue[0].trim());
 					object.put(m.getKey().trim(), array);
 				}else {
@@ -1203,7 +1204,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		
 		if(referAttributes != null){
 			String[] referAarray = referAttributes.split(",");
-			String []element= null;
+			String []element;
 			for(int i=0; i<referAarray.length; i++){
 				element = referAarray[i].split("=");	  
 				if(element.length > 1 && element[1].contains("MANY-true")){
@@ -1373,28 +1374,28 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 										AttributeDesignatorType designator = match.getAttributeDesignator();
 										String attributeId = designator.getAttributeId();
 										// First match in the target is OnapName, so set that value.
-										if (attributeId.equals("ONAPName")) {
+										if ("ONAPName".equals(attributeId)) {
 											policyAdapter.setOnapName(value);
 										}
-										if (attributeId.equals("ConfigName")){
+										if ("ConfigName".equals(attributeId)){
 											policyAdapter.setConfigName(value);
 										}
-										if (attributeId.equals("uuid")){
+										if ("uuid".equals(attributeId)){
 											policyAdapter.setUuid(value);
 										}
-										if (attributeId.equals("location")){
+										if ("location".equals(attributeId)){
 											policyAdapter.setLocation(value);
 										}
-										if (attributeId.equals("RiskType")){
+										if ("RiskType".equals(attributeId)){
 											policyAdapter.setRiskType(value);
 										}
-										if (attributeId.equals("RiskLevel")){
+										if ("RiskLevel".equals(attributeId)){
 											policyAdapter.setRiskLevel(value);
 										}
-										if (attributeId.equals("guard")){
+										if ("guard".equals(attributeId)){
 											policyAdapter.setGuard(value);
 										}
-										if (attributeId.equals("TTLDate") && !value.contains("NA")){
+										if ("TTLDate".equals(attributeId) && !value.contains("NA")){
 											PolicyController controller = new PolicyController();
 											String newDate = controller.convertDate(value);
 											policyAdapter.setTtlDate(newDate);
@@ -1499,7 +1500,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	//Convert the map values and set into JSON body
 	public Map<String, String> convertMap(Map<String, String> attributesMap, Map<String, String> attributesRefMap) {
 		Map<String, String> attribute = new HashMap<>();
-		StringBuilder temp = null;
+		StringBuilder temp;
 		String key;
 		String value;
 		for (Entry<String, String> entry : attributesMap.entrySet()) {
@@ -1604,7 +1605,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			File file = new File(this.newFile);
 			fileList.add(file);
 		}
-		String modelType= "";
+		String modelType;
 		if(! yml){
 			modelType="xmi";
 			//Process Main Model file first
@@ -1675,9 +1676,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	    int BUFFER = 2048;
 	    File file = new File(zipFile);
 
-	    ZipFile zip = null;
-		try {
-			zip = new ZipFile(file);
+		try (ZipFile zip = new ZipFile(file)) {
 		    String newPath =  "model" + File.separator + zipFile.substring(0, zipFile.length() - 4);
 		    this.directory = "model" + File.separator + zipFile.substring(0, zipFile.length() - 4);
 		    checkZipDirectory(this.directory);
@@ -1697,15 +1696,20 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		        if (!entry.isDirectory()){
 		            BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry));
 		            int currentByte;
-		            byte data[] = new byte[BUFFER];
-		            FileOutputStream fos = new FileOutputStream(destFile);
-		            BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
-		            while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-		                dest.write(data, 0, currentByte);
+		            byte[] data = new byte[BUFFER];
+		            try (FileOutputStream fos = new FileOutputStream(destFile);
+		            		BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER)) {
+			            while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+			                dest.write(data, 0, currentByte);
+			            }
+			            dest.flush();
+		            } catch (IOException e) {
+		            	LOGGER.error("Failed to write zip contents to {}" + destFile + e);
+		            	//
+		            	// PLD should I throw e?
+		            	//
+		            	throw e;
 		            }
-		            dest.flush();
-		            dest.close();
-		            is.close();
 		        }
 	
 		        if (currentEntry.endsWith(".zip")){
@@ -1714,13 +1718,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		    }
 	    } catch (IOException e) {
 	    	LOGGER.error("Failed to unzip model file " + zipFile, e);
-		}finally{
-			try {
-				if(zip != null)
-				zip.close();
-			} catch (IOException e) {
-				LOGGER.error("Exception Occured While closing zipfile " + e);
-			}
 		}
 	}
 	

@@ -119,7 +119,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 
 
 	public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData){
-		String jsonBody="";
+		String jsonBody;
 		termCollectorList = new ArrayList <>();
 		tagCollectorList = new ArrayList <>();
 		if(! policyData.getAttributes().isEmpty()){
@@ -134,7 +134,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 			}
 		}
 		jsonBody = constructJson(policyData);	
-		if (jsonBody != null && !jsonBody.equalsIgnoreCase("")) {
+		if (jsonBody != null && ! "".equalsIgnoreCase(jsonBody)) {
 			policyData.setJsonBody(jsonBody);
 		} else {
 			policyData.setJsonBody("{}");
@@ -145,8 +145,8 @@ public class CreateFirewallController extends RestrictedBaseController {
 	}
 
 	private List<String> mapping(String expandableList) {
-		String value = null;
-		String desc = null;
+		String value;
+		String desc;
 		List <String> valueDesc= new ArrayList<>();
 		List<Object> prefixListData = commonClassDao.getData(PrefixList.class);
 		for (int i = 0; i< prefixListData.size(); i++) {
@@ -227,7 +227,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 			TermCollector tc1=null;
 			try {
 				//Json conversion. 
-				String data=null;
+				String data;
 				SecurityZone jpaSecurityZone;
 				data = entity.getConfigurationData().getConfigBody();
 				tc1 = mapper.readValue(data, TermCollector.class);
@@ -244,7 +244,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 				policyLogger.error("Exception Caused while Retriving the JSON body data" +e);
 			}
 			
-			Map<String, String> termTagMap=null;
+			Map<String, String> termTagMap;
 			if(tc1 != null){
 				for(int i=0;i<tc1.getFirewallRuleList().size();i++){
 					termTagMap = new HashMap <>();
@@ -298,7 +298,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 										if (("guard").equals(attributeId)){
 											policyAdapter.setGuard(value);
 										}
-										if (attributeId.equals("TTLDate") && !value.contains("NA")){
+										if ("TTLDate".equals(attributeId) && !value.contains("NA")){
 											PolicyController controller = new PolicyController();
 											String newDate = controller.convertDate(value);
 											policyAdapter.setTtlDate(newDate);
@@ -330,12 +330,12 @@ public class CreateFirewallController extends RestrictedBaseController {
 				}
 			}
 			TermList jpaTermList;
-			String ruleSrcList=null;
-			String ruleDestList=null;
-			String ruleSrcPort=null;
-			String ruleDestPort=null;
-			String ruleAction=null;
-			List <String> valueDesc= new ArrayList<>();
+			String ruleSrcList;
+			String ruleDestList;
+			String ruleSrcPort;
+			String ruleDestPort;
+			String ruleAction;
+			List <String> valueDesc;
 			StringBuffer displayString = new StringBuffer();
 			for (String id : termCollectorList) {
 				List<Object> tmList = commonClassDao.getDataById(TermList.class, "termName", id);
@@ -372,7 +372,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 						displayString.append("\n");
 					} 
 					ruleDestList= jpaTermList.getDestIPList();
-					if ( ruleDestList!= null && (!ruleDestList.isEmpty())&& !ruleDestList.equals("null")){
+					if ( ruleDestList!= null && (!ruleDestList.isEmpty())&& ! "null".equals(ruleDestList)){
 						displayString.append("Destination IP List: " + jpaTermList.getDestIPList());
 						displayString.append(" ; \t\n");
 						for(String destList:ruleDestList.split(",")){	
@@ -401,14 +401,14 @@ public class CreateFirewallController extends RestrictedBaseController {
 					} 
 
 					ruleSrcPort=jpaTermList.getSrcPortList();
-					if ( ruleSrcPort!= null && (!ruleSrcPort.isEmpty())&& !ruleSrcPort.equals("null")) {
+					if ( ruleSrcPort!= null && (!ruleSrcPort.isEmpty())&& !"null".equals(ruleSrcPort)) {
 						displayString.append("\n"+"Source Port List:"
 								+ ruleSrcPort);
 						displayString.append(" ; \t\n");
 					} 
 
 					ruleDestPort= jpaTermList.getDestPortList();
-					if (ruleDestPort != null && (!ruleDestPort.isEmpty())&& !ruleDestPort.equals("null")) {
+					if (ruleDestPort != null && (!ruleDestPort.isEmpty())&& !"null".equals(ruleDestPort)) {
 						displayString.append("\n"+"Destination Port List:"
 								+ ruleDestPort);
 						displayString.append(" ; \t\n");
@@ -654,7 +654,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 				}
 				//ExpandableServicesList
 				if((srcPort_map!=null) && (destPort_map!=null)){
-					String servicesCollateString = (srcPort_map.get(tl) + "," + destPort_map.get(tl));
+					String servicesCollateString = srcPort_map.get(tl) + "," + destPort_map.get(tl);
 					expandableServicesList.add(servicesCollateString);
 				}else if (srcPort_map!=null){
 					expandableServicesList.add(srcPort_map.get(tl));
@@ -707,8 +707,8 @@ public class CreateFirewallController extends RestrictedBaseController {
 				//ExpandablePrefixIPList
 				if ((srcIP_map!=null) && (destIP_map!=null)) 
 				{
-					String collateString = (srcIP_map.get(tl) + "," + destIP_map
-							.get(tl));
+					String collateString = srcIP_map.get(tl) + "," + destIP_map
+							.get(tl);
 					expandablePrefixIPList.add(collateString);
 				}
 				else if(srcIP_map!=null){
@@ -754,15 +754,15 @@ public class CreateFirewallController extends RestrictedBaseController {
 			Set<AddressGroupJson> addrGroupArray= new HashSet<>();
 			Set<AddressMembers> addrArray= new HashSet<> ();
 
-			ServiceGroupJson targetSg= null;
-			AddressGroupJson addressSg=null;
-			ServiceListJson targetAny= null;
-			ServiceListJson targetAnyTcp=null;
-			ServiceListJson targetAnyUdp=null;
+			ServiceGroupJson targetSg;
+			AddressGroupJson addressSg;
+			ServiceListJson targetAny;
+			ServiceListJson targetAnyTcp;
+			ServiceListJson targetAnyUdp;
 
 			for(String serviceList:expandableServicesList){
 				for(String t: serviceList.split(",")){
-					if((!t.startsWith(GROUP))){
+					if(!t.startsWith(GROUP)){
 						if(!t.equals(ANY)){
 							ServiceList sl;
 							targetSl= new ServiceListJson();
@@ -838,7 +838,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 			Set<PrefixIPList> prefixIPList = new HashSet<>();
 			for(String prefixList:expandablePrefixIPList){
 				for(String prefixIP: prefixList.split(",")){
-					if((!prefixIP.startsWith(GROUP))){
+					if(!prefixIP.startsWith(GROUP)){
 						if(!prefixIP.equals(ANY)){
 							List<AddressMembers> addMembersList= new ArrayList<>();
 							List<String> valueDesc;
