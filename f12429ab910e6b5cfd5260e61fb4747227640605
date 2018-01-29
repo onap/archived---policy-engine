@@ -1,0 +1,371 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_085a2bf3",
+        "filename": "ONAP-REST/logs/common-modules/integrity-monitor/audit.log",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Do not add log files",
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c873e37e",
+        "filename": "ONAP-REST/logs/common-modules/integrity-monitor/debug.log",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "do not add this file",
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_285da7e9",
+        "filename": "ONAP-REST/logs/common-modules/integrity-monitor/error.log",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Do not add this file",
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e86edf95",
+        "filename": "ONAP-REST/logs/common-modules/integrity-monitor/metrics.log",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "do not add this file",
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_886ddb9a",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/adapter/PolicyRestAdapter.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Change this to List",
+      "range": {
+        "startLine": 148,
+        "startChar": 12,
+        "endLine": 148,
+        "endChar": 21
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a868d787",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/adapter/PolicyRestAdapter.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Do not mask anything like this. You don\u0027t know what kind of List it is.",
+      "range": {
+        "startLine": 606,
+        "startChar": 30,
+        "endLine": 606,
+        "endChar": 48
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0811cb04",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "This is not the proper way to define a constant. Define these outside the methods in the class itself. Use static.",
+      "range": {
+        "startLine": 291,
+        "startChar": 2,
+        "endLine": 291,
+        "endChar": 38
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c8fa03bd",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "This is useless initialization.",
+      "range": {
+        "startLine": 703,
+        "startChar": 22,
+        "endLine": 703,
+        "endChar": 27
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8804fbc0",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Oops this is not going to work. I would just remove this one for now The method seems strange.",
+      "range": {
+        "startLine": 792,
+        "startChar": 3,
+        "endLine": 792,
+        "endChar": 15
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a8ff77a9",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Why are you changing the method?",
+      "range": {
+        "startLine": 824,
+        "startChar": 6,
+        "endLine": 824,
+        "endChar": 51
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_482ef344",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Same here - undo this.",
+      "range": {
+        "startLine": 834,
+        "startChar": 6,
+        "endLine": 834,
+        "endChar": 44
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0828eb32",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdPAPPolicy.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Change this to a list",
+      "range": {
+        "startLine": 52,
+        "startChar": 9,
+        "endLine": 52,
+        "endChar": 18
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_282b6731",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdPAPPolicy.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "You cannot mask this.",
+      "range": {
+        "startLine": 271,
+        "startChar": 24,
+        "endLine": 271,
+        "endChar": 43
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c821a34e",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdPAPPolicy.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Same thing",
+      "range": {
+        "startLine": 296,
+        "startChar": 24,
+        "endLine": 296,
+        "endChar": 43
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e81c9f15",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdPAPPolicy.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Same thing",
+      "range": {
+        "startLine": 918,
+        "startChar": 24,
+        "endLine": 918,
+        "endChar": 43
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_881b9b1a",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdPDPGroup.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Move out of method into class. Use private static final",
+      "range": {
+        "startLine": 159,
+        "startChar": 3,
+        "endLine": 159,
+        "endChar": 64
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c8e8c3e4",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/controller/PDPControllerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 1,
+      "message": "Why was this changed?",
+      "range": {
+        "startLine": 69,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 30
+      },
+      "revId": "f12429ab910e6b5cfd5260e61fb4747227640605",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_a81697ef",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdPDPGroup.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 959,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T18:55:06Z",
+      "side": 0,
+      "message": "Oops - why was this removed?",
+      "range": {
+        "startLine": 957,
+        "startChar": 0,
+        "endLine": 959,
+        "endChar": 29
+      },
+      "revId": "38261bb20e49c39f710aef47b5415dcdf14a1729",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
