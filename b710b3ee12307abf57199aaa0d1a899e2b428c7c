@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_884abbc3",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 709,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:21:47Z",
+      "side": 1,
+      "message": "Looks like sonar may not have flagged this correctly. There should be another else statement and set it \u003d\"\"",
+      "range": {
+        "startLine": 704,
+        "startChar": 3,
+        "endLine": 709,
+        "endChar": 4
+      },
+      "revId": "b710b3ee12307abf57199aaa0d1a899e2b428c7c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
