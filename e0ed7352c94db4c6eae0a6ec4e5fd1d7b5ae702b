@@ -1,0 +1,366 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_e8781f2d",
+        "filename": "BRMSGateway/BRMSGateway.iml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "What are all these .iml files? If they are a result of an eclipse plugin then they should not be added.",
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_48911346",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/XACMLRest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "We have just been adding comment\n// Empty constructor\nNo need to throw exception",
+      "range": {
+        "startLine": 50,
+        "startChar": 2,
+        "endLine": 50,
+        "endChar": 51
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_089b0b68",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/adapter/ClosedLoopPerformanceMetrics.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "Then again, this might be more appropriate. The sonar doesn\u0027t really say to do this.",
+      "range": {
+        "startLine": 38,
+        "startChar": 2,
+        "endLine": 38,
+        "endChar": 51
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e89fbf4e",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/ActionList.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "Not sure we should do this. It may be appropriate, but I\u0027m scared of the ramafications. Let\u0027s just save it for later.",
+      "range": {
+        "startLine": 61,
+        "startChar": 2,
+        "endLine": 61,
+        "endChar": 44
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_88ae3b84",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/ActionList.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 65,
+        "startChar": 2,
+        "endLine": 65,
+        "endChar": 44
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_48b833c8",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/AddressGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "Same",
+      "range": {
+        "startLine": 65,
+        "startChar": 2,
+        "endLine": 65,
+        "endChar": 43
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_68bbafc4",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/AddressGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 69,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 43
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_08b22be6",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/DCAEUsers.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 63,
+        "startChar": 2,
+        "endLine": 63,
+        "endChar": 43
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_28b5a7cc",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/DCAEUsers.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 67,
+        "startChar": 2,
+        "endLine": 67,
+        "endChar": 44
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c8cbe351",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/DCAEuuid.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 63,
+        "startChar": 2,
+        "endLine": 63,
+        "endChar": 44
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e8c6df48",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/DCAEuuid.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 67,
+        "startChar": 2,
+        "endLine": 67,
+        "endChar": 44
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_88c5db3d",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/DatabaseLockEntity.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "Not sure we can change a database column. Ravi?",
+      "range": {
+        "startLine": 35,
+        "startChar": 15,
+        "endLine": 35,
+        "endChar": 22
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a8c0d72a",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/GroupPolicyScopeList.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 65,
+        "startChar": 2,
+        "endLine": 65,
+        "endChar": 44
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_48dfd30d",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/GroupPolicyScopeList.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 69,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 44
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_68e2cfd6",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/GroupServiceList.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "Same",
+      "range": {
+        "startLine": 63,
+        "startChar": 2,
+        "endLine": 63,
+        "endChar": 44
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_28ecc7c6",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/GroupServiceList.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 67,
+        "startChar": 2,
+        "endLine": 67,
+        "endChar": 44
+      },
+      "revId": "e0ed7352c94db4c6eae0a6ec4e5fd1d7b5ae702b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

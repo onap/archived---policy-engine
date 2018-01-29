@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_c8a443a8",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/daoimpl/PolicyValidationDaoImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-29T20:02:21Z",
+      "side": 0,
+      "message": "I don\u0027t think you can remove this. We can mark it as false positive because the Autowired annotation is for Spring, which automatically deploys this.",
+      "range": {
+        "startLine": 63,
+        "startChar": 1,
+        "endLine": 67,
+        "endChar": 1
+      },
+      "revId": "38261bb20e49c39f710aef47b5415dcdf14a1729",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
