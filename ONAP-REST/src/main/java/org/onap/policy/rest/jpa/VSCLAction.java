@@ -101,7 +101,7 @@ public class VSCLAction implements Serializable  {
 	private static Log LOGGER = LogFactory.getLog(VSCLAction.class);
 	
 	public VSCLAction() {
-		
+		// Empty constructor
 	}
 	
 	public VSCLAction(String string, String userid) {

@@ -170,12 +170,12 @@ public class Category implements Serializable {
 
 	@Transient
 	public boolean isStandard() {
-		return (this.isStandard == Category.STANDARD);
+		return this.isStandard == Category.STANDARD;
 	}
 	
 	@Transient
 	public boolean isCustom() {
-		return (this.isStandard == Category.CUSTOM);
+		return this.isStandard == Category.CUSTOM;
 	}
 	
 	@Transient

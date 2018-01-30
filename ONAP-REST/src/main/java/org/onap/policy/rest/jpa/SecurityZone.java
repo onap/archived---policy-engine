@@ -56,22 +56,23 @@ public class SecurityZone implements Serializable {
 
 
 	public SecurityZone() {
-		
+		// Empty constructor
 	}
 	public SecurityZone(String string, String userid) {
 		this(domain);
 		
 	}
 	public SecurityZone(String domain) {
-		
+		// Empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		// Empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		// Empty function
 	}
 
 	

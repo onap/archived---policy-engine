@@ -81,6 +81,7 @@ public class FunctionDefinition implements Serializable {
 	private List<FunctionArgument> functionArguments;
 
 	public FunctionDefinition() {
+		//An empty constructor
 	}
 
 	public int getId() {

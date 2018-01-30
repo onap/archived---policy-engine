@@ -86,7 +86,7 @@ public class FWTagPicker implements Serializable {
 	private static Log logger = LogFactory.getLog(FWTagPicker.class);
 	
 	public FWTagPicker(){
-		
+		//An empty constructor
 	}
 	
 	public FWTagPicker(String string, String userid) {

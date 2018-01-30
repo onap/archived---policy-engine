@@ -57,22 +57,23 @@ public class RemoteCatalogValues implements Serializable {
 
 
 	public RemoteCatalogValues() {
-		
+		// Empty constructor
 	}
 	public RemoteCatalogValues(String string, String userid) {
 		this(domain);
 		
 	}
 	public RemoteCatalogValues(String domain) {
-		
+		// Empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		// Empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		// Empty function
 	}
 
 	public String getValue() {

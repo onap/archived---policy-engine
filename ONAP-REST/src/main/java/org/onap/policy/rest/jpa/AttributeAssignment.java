@@ -65,6 +65,7 @@ public class AttributeAssignment implements Serializable {
 	private Obadvice obadvice;
 
 	public AttributeAssignment() {
+		//An empty constructor
 	}
 
 	public int getId() {

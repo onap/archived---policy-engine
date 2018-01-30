@@ -57,22 +57,23 @@ public class DCAEUsers implements Serializable {
 
 
 	public DCAEUsers() {
-		
+		//An empty constructor
 	}
 	public DCAEUsers(String string, String userid) {
 		this(domain);
 		
 	}
 	public DCAEUsers(String domain) {
-		
+		//An empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		//An empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		//An empty function
 	}
 
 	

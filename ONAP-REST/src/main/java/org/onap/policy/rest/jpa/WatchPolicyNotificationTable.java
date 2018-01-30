@@ -96,10 +96,9 @@ public class WatchPolicyNotificationTable implements Serializable{
 			return false;
 		}
 		
-		return(id == ((WatchPolicyNotificationTable)obj).id &&
+		return id == ((WatchPolicyNotificationTable)obj).id &&
 		policyName.equals(((WatchPolicyNotificationTable)obj).policyName) && 
-		loginIds.equals(((WatchPolicyNotificationTable)obj).loginIds)
-		);
+		loginIds.equals(((WatchPolicyNotificationTable)obj).loginIds);
 	}
 	
 	

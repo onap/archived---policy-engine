@@ -65,22 +65,23 @@ public class SafePolicyWarning implements Serializable {
 		this.riskType = riskType;
 	}
 	public SafePolicyWarning() {
-		
+		// Empty constructor
 	}
 	public SafePolicyWarning(String string, String userid) {
 		this(domain);
 		
 	}
 	public SafePolicyWarning(String domain) {
-		
+		// Empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		// Empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		// Empty function
 	}
 
 	

@@ -57,22 +57,23 @@ public class GroupServiceList implements Serializable {
 	
 
 	public GroupServiceList() {
-		
+		//An empty constructor
 	}
 	public GroupServiceList(String string, String userid) {
 		this(domain);
 		
 	}
 	public GroupServiceList(String domain) {
-		
+		//An empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		//An empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		//An empty function
 	}
 
 	

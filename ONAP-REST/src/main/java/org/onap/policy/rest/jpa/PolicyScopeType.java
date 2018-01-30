@@ -56,22 +56,23 @@ public class PolicyScopeType implements Serializable {
 	private String description ;
 
 	public PolicyScopeType() {
-		
+		// Empty constructor
 	}
 	public PolicyScopeType(String string, String userid) {
 		this(domain);
 		
 	}
 	public PolicyScopeType(String domain) {
-		
+		// Empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		// Empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		// Empty function
 	}
 
 	

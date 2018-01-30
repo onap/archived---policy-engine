@@ -104,7 +104,7 @@ public class PEPOptions implements Serializable {
 	private static Log LOGGER = LogFactory.getLog(PEPOptions.class);
 	
 	public PEPOptions(){
-		
+		//An empty constructor
 	}
 	
 	public PEPOptions(String string, String userid) {

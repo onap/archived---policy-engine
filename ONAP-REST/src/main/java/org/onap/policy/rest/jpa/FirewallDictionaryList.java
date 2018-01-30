@@ -57,22 +57,6 @@ public class FirewallDictionaryList implements Serializable {
 	
 	@Column(name="serviceList")
 	private String serviceList;
-	
-/*	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
-	
-	@ManyToOne(optional = false)
-	@JoinColumn(name="created_by")
-	private UserInfo userCreatedBy;
-
-	@ManyToOne(optional = false)
-	@JoinColumn(name="modified_by")
-	private UserInfo userModifiedBy;*/
 
 	public int getId() {
 		return this.id;
@@ -113,26 +97,9 @@ public class FirewallDictionaryList implements Serializable {
 	public void setServiceList(String serviceList) {
 		this.serviceList = serviceList;
 	}
-	
-	
-	/*public UserInfo getUserCreatedBy() {
-		return userCreatedBy;
-	}
-
-	public void setUserCreatedBy(UserInfo userCreatedBy) {
-		this.userCreatedBy = userCreatedBy;
-	}
-
-	public UserInfo getUserModifiedBy() {
-		return userModifiedBy;
-	}
-
-	public void setUserModifiedBy(UserInfo userModifiedBy) {
-		this.userModifiedBy = userModifiedBy;
-	}*/
 
 	public FirewallDictionaryList() {
-		
+		//An empty constructor
 	}
 	
 	public FirewallDictionaryList(String string, String userid) {
@@ -142,23 +109,4 @@ public class FirewallDictionaryList implements Serializable {
 		this.parentItemName = domain;
 	}	
 
-	/*@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-		auditLogger.debug("Added New Term Name: "+this.parentItemName+" by "+this.userCreatedBy);
-		
-	}
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-		try {
-			this.userModifiedBy =XacmlAdminAuthorization.getUserId();;
-		} catch (Exception e) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "TermList", "Exception caused While adding Modified by Role");
-		}
-		auditLogger.debug("Updated Term Name: "+this.parentItemName+" by "+this.userModifiedBy);
-	}
-*/
 }

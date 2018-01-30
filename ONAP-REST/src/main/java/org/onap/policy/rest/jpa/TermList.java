@@ -128,7 +128,7 @@ public class TermList implements Serializable {
 	private static Log LOGGER = LogFactory.getLog(TermList.class);
 	
 	public TermList() {
-		
+		// Empty constructor
 	}
 	
 	private static final Log auditLogger = LogFactory
