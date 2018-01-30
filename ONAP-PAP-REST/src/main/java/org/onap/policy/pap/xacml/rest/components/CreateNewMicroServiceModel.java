@@ -70,7 +70,7 @@ public class CreateNewMicroServiceModel {
 		this.newModel.setUserCreatedBy(userInfo);
 		String cleanUpFile = null;
 	
-	    HashMap<String, MSAttributeObject> tempMap = new HashMap<>();
+	    Map<String, MSAttributeObject> tempMap = new HashMap<>();
 	    //Need to delete the file
 	    if (importFile.contains(".zip")){
 	    	extractFolder(randomID + ".zip");
@@ -143,16 +143,14 @@ public class CreateNewMicroServiceModel {
 		            int currentByte;
 
 		            byte data[] = new byte[BUFFER];
-	
-		            FileOutputStream fos = new FileOutputStream(destFile);
-		            BufferedOutputStream dest = new BufferedOutputStream(fos,
-		            BUFFER);
-	
-		            while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-		                dest.write(data, 0, currentByte);
-		            }
-		            dest.flush();
-		            dest.close();
+					try(FileOutputStream fos = new FileOutputStream(destFile);
+						BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER)) {
+
+						while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+							dest.write(data, 0, currentByte);
+						}
+						dest.flush();
+					}
 		            is.close();
 		        }
 	
@@ -177,7 +175,7 @@ public class CreateNewMicroServiceModel {
 		
 		Map<String, String> successMap = new HashMap<>();
 		MSAttributeObject mainClass  = null;
-		ArrayList<String> dependency = null;
+		List<String> dependency = null;
 		String subAttribute = null;
 		
 		if (!classMap.containsKey(this.newModel.getModelName())){

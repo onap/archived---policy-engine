@@ -39,6 +39,7 @@ public class AddressGroupJson {
 		this.name = value;
 	}
 	
+	@Override
 	public boolean equals(Object obj){
 		if(obj == null){
 			return false;
@@ -52,8 +53,8 @@ public class AddressGroupJson {
 		}	
 		return false;
 	}
-	
-	 public int hashCode() {
+	@Override
+	public int hashCode() {
 	    return Integer.valueOf(name.charAt(0)+(name.charAt(1)));
 	 }
 	
@@ -70,7 +71,7 @@ public class AddressGroupJson {
     {
     	if(members==null)
     	{
-    		members= new ArrayList<AddressMembersJson>();
+    		members= new ArrayList<>();
     	}
         return this.members;
     }

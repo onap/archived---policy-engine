@@ -62,7 +62,7 @@ public class PolicyScore implements Serializable {
 	private String PolicyScore;
 	
 	public PolicyScore() {
-		
+		// Empty constructor
 	}
 	
 	public PolicyScore(String pName, String pScore) {
@@ -70,7 +70,7 @@ public class PolicyScore implements Serializable {
 		
 	}
 	public PolicyScore(String domain) {
-		
+		// Empty constructor
 	}
 	
 	public int getId() {

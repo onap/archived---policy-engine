@@ -21,22 +21,22 @@
 package org.onap.policy.rest.adapter;
 
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class AutoPushTabAdapter {
 
-	private ArrayList<Object> pdpDatas;
-	private ArrayList<Object> policyDatas;
-	public ArrayList<Object> getPdpDatas() {
+	private List<Object> pdpDatas;
+	private List<Object> policyDatas;
+	public List<Object> getPdpDatas() {
 		return pdpDatas;
 	}
-	public void setPdpDatas(ArrayList<Object> pdpDatas) {
+	public void setPdpDatas(List<Object> pdpDatas) {
 		this.pdpDatas = pdpDatas;
 	}
-	public ArrayList<Object> getPolicyDatas() {
+	public List<Object> getPolicyDatas() {
 		return policyDatas;
 	}
-	public void setPolicyDatas(ArrayList<Object> policyDatas) {
+	public void setPolicyDatas(List<Object> policyDatas) {
 		this.policyDatas = policyDatas;
 	}
 }

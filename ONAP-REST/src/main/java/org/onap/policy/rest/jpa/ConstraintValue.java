@@ -60,6 +60,7 @@ public class ConstraintValue implements Serializable {
 	private Attribute attribute;
 
 	public ConstraintValue() {
+		//An empty constructor
 	}
 
 	public ConstraintValue(String property, String value) {

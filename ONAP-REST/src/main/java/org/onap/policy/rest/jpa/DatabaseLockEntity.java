@@ -35,7 +35,7 @@ public class DatabaseLockEntity implements Serializable {
 	@Column(name="lock_key")
 	private int lock_key = 1;
 	public DatabaseLockEntity(){
-		
+		//An empty constructor
 	}
 	public int getKey(){
 		return lock_key;

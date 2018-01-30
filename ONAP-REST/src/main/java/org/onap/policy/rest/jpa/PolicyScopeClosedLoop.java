@@ -56,22 +56,23 @@ public class PolicyScopeClosedLoop implements Serializable {
 	private String description ;
 
 	public PolicyScopeClosedLoop() {
-		
+		// Empty constructor
 	}
 	public PolicyScopeClosedLoop(String string, String userid) {
 		this(domain);
 		
 	}
 	public PolicyScopeClosedLoop(String domain) {
-		
+		// Empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		// Empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		// Empty function
 	}
 
 	

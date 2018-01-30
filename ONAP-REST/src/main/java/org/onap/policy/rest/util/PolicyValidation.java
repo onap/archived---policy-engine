@@ -76,7 +76,9 @@ public class PolicyValidation {
 	/*
 	 * This is an empty constructor
 	 */
-	public PolicyValidation(){}	
+	public PolicyValidation(){
+		// Empty constructor
+	}
 	
 	
 	public StringBuilder validatePolicy(PolicyRestAdapter policyData) throws IOException{
@@ -178,17 +180,17 @@ public class PolicyValidation {
 						String configBodyData = policyData.getConfigBodyData();
 						String configType = policyData.getConfigType();
 						if (configType != null) {
-							if (configType.equals("JSON")) {
+							if ("JSON".equals(configType)) {
 								if (!PolicyUtils.isJSONValid(configBodyData)) {
 									responseString.append("Config Body: JSON Content is not valid" + "<br>");
 									valid = false;
 								}
-							} else if (configType.equals("XML")) {
+							} else if ("XML".equals(configType)) {
 								if (!PolicyUtils.isXMLValid(configBodyData)) {
 									responseString.append("Config Body: XML Content data is not valid" + "<br>");
 									valid = false;
 								}
-							} else if (configType.equals("PROPERTIES")) {
+							} else if ("PROPERTIES".equals(configType)) {
 								if (!PolicyUtils.isPropValid(configBodyData)||configBodyData.equals("")) {
 									responseString.append("Config Body: Property data is not valid" + "<br>");
 									valid = false;
@@ -384,8 +386,8 @@ public class PolicyValidation {
 					if(!Strings.isNullOrEmpty(policyData.getServiceType())){
 						pullJsonKeyPairs((JsonNode) policyData.getPolicyJSON());
 
-						String service = null;
-						String version = null;
+						String service;
+						String version;
 						if (policyData.getServiceType().contains("-v")){
 							service = policyData.getServiceType().split("-v")[0];
 							version = policyData.getServiceType().split("-v")[1];
@@ -678,15 +680,17 @@ public class PolicyValidation {
 	}
 
 	protected String emailValidation(String email, String response){
+		String res = response;
 		if(email != null){
 			String validateEmail = PolicyUtils.validateEmailAddress(email.replace("\"", ""));
 			if(!validateEmail.contains(SUCCESS)){
-				response += "<b>Email</b>:<i>" +  validateEmail + HTML_ITALICS_LNBREAK;
-			}else{
+				res  += "<b>Email</b>:<i>" +  validateEmail + HTML_ITALICS_LNBREAK;
+			}
+			else {
 				return SUCCESS;
 			}
 		}
-		return response;
+		return res;
 	}
 
 	private MicroServiceModels getAttributeObject(String name, String version) {	

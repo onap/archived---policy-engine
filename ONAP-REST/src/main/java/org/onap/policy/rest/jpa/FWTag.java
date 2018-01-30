@@ -100,7 +100,7 @@ public class FWTag implements Serializable {
 	private static Log LOGGER = LogFactory.getLog(FWTag.class);
 	
 	public FWTag(){
-		
+		//An empty constructor
 	}
 	
 	public FWTag(String string, String userid) {

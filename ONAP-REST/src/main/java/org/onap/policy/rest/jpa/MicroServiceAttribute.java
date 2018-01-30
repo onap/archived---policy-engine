@@ -58,22 +58,23 @@ public class MicroServiceAttribute implements Serializable {
 	
 
 	public MicroServiceAttribute() {
-		
+		//An empty constructor
 	}
 	public MicroServiceAttribute(String string, String userid) {
 		this(domain);
 		
 	}
 	public MicroServiceAttribute(String domain) {
-		
+		//An empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		//An empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		//An empty function
 	}
 
 	

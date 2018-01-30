@@ -25,7 +25,7 @@ import java.util.List;
 
 public class VendorSpecificData {
 
-	private List<IdMap> idMap= new ArrayList<IdMap>();
+	private List<IdMap> idMap= new ArrayList<>();
 
 	public List<IdMap> getIdMap() {
 		return idMap;

@@ -41,10 +41,10 @@ public class PolicyElasticData {
 	private String jsonBody;
 	private Object jsonBodyData;
 	
-	private LinkedHashMap<?, ?> serviceTypePolicyName;
-	private LinkedHashMap<?, ?> verticaMetrics;
-    private LinkedHashMap<?, ?> description;
-    private LinkedHashMap<?, ?> attributeFields;
+	private Map<?, ?> serviceTypePolicyName;
+	private Map<?, ?> verticaMetrics;
+    private Map<?, ?> description;
+    private Map<?, ?> attributeFields;
 
 	//Safe Policy
 	private String policyScope;
@@ -55,8 +55,8 @@ public class PolicyElasticData {
 	private String ttlDate;
 	private  Map<String,String> matching; 
 
-	private ArrayList<Object> triggerSignatures;
-	private ArrayList<Object> symptomSignatures;
+	private List<Object> triggerSignatures;
+	private List<Object> symptomSignatures;
 	private String logicalConnector;
 	private String policyStatus;
 	public String gocServerScope;
@@ -73,9 +73,9 @@ public class PolicyElasticData {
 	private String ruleName;
 	private Map<String,String> brmsParamBody;
 	private String brmsController;
-	private ArrayList<String> brmsDependency;
-	private LinkedHashMap<?, ?>  ruleData;
-	private LinkedHashMap<?,?>   ruleListData;
+	private List<String> brmsDependency;
+	private Map<?, ?>  ruleData;
+	private Map<?,?>   ruleListData;
 	private Map<String,String> drlRuleAndUIParams;
 
 	//ClosedLoop
@@ -86,7 +86,7 @@ public class PolicyElasticData {
 
 	//FireWall
 	private String fwPolicyType;
-	private ArrayList<Object> fwattributes;
+	private List<Object> fwattributes;
 	private String parentForChild;
 	private String securityZone;
 
@@ -262,7 +262,7 @@ public class PolicyElasticData {
 	public void setJsonBody(String jsonBody) {
 		this.jsonBody = jsonBody;
 	}
-	public LinkedHashMap<?, ?> getServiceTypePolicyName() {
+	public Map<?, ?> getServiceTypePolicyName() {
 		return serviceTypePolicyName;
 	}
 
@@ -270,7 +270,7 @@ public class PolicyElasticData {
 		this.serviceTypePolicyName = serviceTypePolicyName;
 	}
 
-	public LinkedHashMap<?, ?> getVerticaMetrics() {
+	public Map<?, ?> getVerticaMetrics() {
 		return verticaMetrics;
 	}
 
@@ -278,15 +278,15 @@ public class PolicyElasticData {
 		this.verticaMetrics = verticaMetrics;
 	}
 
-	public LinkedHashMap<?, ?> getDescription() {
+	public Map<?, ?> getDescription() {
 		return description;
 	}
 
-	public void setDescription(LinkedHashMap<?, ?> description) {
+	public void setDescription(Map<?, ?> description) {
 		this.description = description;
 	}
 
-	public LinkedHashMap<?, ?> getAttributeFields() {
+	public Map<?, ?> getAttributeFields() {
 		return attributeFields;
 	}
 
@@ -335,13 +335,13 @@ public class PolicyElasticData {
 	public void setMatching(Map<String, String> matching) {
 		this.matching = matching;
 	}
-	public ArrayList<Object> getTriggerSignatures() {
+	public List<Object> getTriggerSignatures() {
 		return triggerSignatures;
 	}
 	public void setTriggerSignatures(ArrayList<Object> triggerSignatures) {
 		this.triggerSignatures = triggerSignatures;
 	}
-	public ArrayList<Object> getSymptomSignatures() {
+	public List<Object> getSymptomSignatures() {
 		return symptomSignatures;
 	}
 	public void setSymptomSignatures(ArrayList<Object> symptomSignatures) {
@@ -419,22 +419,22 @@ public class PolicyElasticData {
 	public void setBrmsController(String brmsController) {
 		this.brmsController = brmsController;
 	}
-	public ArrayList<String> getBrmsDependency() {
+	public List<String> getBrmsDependency() {
 		return brmsDependency;
 	}
-	public void setBrmsDependency(ArrayList<String> brmsDependency) {
+	public void setBrmsDependency(List<String> brmsDependency) {
 		this.brmsDependency = brmsDependency;
 	}
-	public LinkedHashMap<?, ?> getRuleData() {
+	public Map<?, ?> getRuleData() {
 		return ruleData;
 	}
-	public void setRuleData(LinkedHashMap<?, ?> ruleData) {
+	public void setRuleData(Map<?, ?> ruleData) {
 		this.ruleData = ruleData;
 	}
-	public LinkedHashMap<?, ?> getRuleListData() {
+	public Map<?, ?> getRuleListData() {
 		return ruleListData;
 	}
-	public void setRuleListData(LinkedHashMap<?, ?> ruleListData) {
+	public void setRuleListData(Map<?, ?> ruleListData) {
 		this.ruleListData = ruleListData;
 	}
 	public Map<String, String> getDrlRuleAndUIParams() {
@@ -473,7 +473,7 @@ public class PolicyElasticData {
 	public void setFwPolicyType(String fwPolicyType) {
 		this.fwPolicyType = fwPolicyType;
 	}
-	public ArrayList<Object> getFwattributes() {
+	public List<Object> getFwattributes() {
 		return fwattributes;
 	}
 	public void setFwattributes(ArrayList<Object> fwattributes) {

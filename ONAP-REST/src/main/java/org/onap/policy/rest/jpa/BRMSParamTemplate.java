@@ -87,10 +87,11 @@ public class BRMSParamTemplate implements Serializable{
 	}
 	
 	public BRMSParamTemplate(){
+		//An empty constructor
 	}
 	
 	public BRMSParamTemplate(String userid){
-		
+		//An empty constructor
 	}
 	
 	@PrePersist

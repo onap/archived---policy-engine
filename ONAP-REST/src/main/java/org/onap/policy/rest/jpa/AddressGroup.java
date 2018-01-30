@@ -59,22 +59,23 @@ public class AddressGroup implements Serializable {
 	private String description;
 	
 	public AddressGroup() {
-		
+		//An empty constructor
 	}
 	public AddressGroup(String string, String userid) {
 		this(domain);
 		
 	}
 	public AddressGroup(String domain) {
-		
+		//An empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		//An empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		//An empty function
 	}
 
 	

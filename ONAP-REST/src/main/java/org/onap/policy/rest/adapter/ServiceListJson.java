@@ -38,7 +38,8 @@ public class ServiceListJson {
 	public void setName(String value) {
 		this.name = value;
 	}
-	
+
+	@Override
 	public boolean equals(Object obj){
 		if(obj == null){
 			return false;
@@ -52,14 +53,15 @@ public class ServiceListJson {
 		}
 		return false;
 	}
-	
-	 public int hashCode() {
+
+	@Override
+	public int hashCode() {
 		 if(name!=null){
 	        return Integer.valueOf(name.charAt(0)+(name.charAt(1)));
 		 }else{
 			 return 0;
 		 }
-	 }
+	}
 	
 	
 	public String getDescription() {

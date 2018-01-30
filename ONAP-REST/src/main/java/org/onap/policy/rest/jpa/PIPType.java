@@ -63,6 +63,7 @@ public class PIPType implements Serializable {
 	private Set<PIPConfiguration> pipconfigurations;
 
 	public PIPType() {
+		// Empty constructor
 	}
 
 	public int getId() {

@@ -310,8 +310,7 @@ public class PolicyEntity implements Serializable {
 
 		PolicyEntity p = (PolicyEntity) obj;
 		
-		return (
-				policyId == p.policyId &&
+		return policyId == p.policyId &&
 				policyName.equals(p.policyName) &&
 				scope.equals(p.scope) &&
 				version == p.version &&
@@ -324,8 +323,7 @@ public class PolicyEntity implements Serializable {
 				description.equals(p.description) &&
 				modifiedBy.equals(p.modifiedBy) &&
 				modifiedDate.equals(p.modifiedDate) &&
-				deleted == p.deleted
-				);
+				deleted == p.deleted;
 	}
 
 

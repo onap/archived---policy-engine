@@ -79,7 +79,8 @@ public class PolicyEditorScopes implements Serializable{
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
 	
-	public PolicyEditorScopes() {		
+	public PolicyEditorScopes() {
+		// Empty constructor
 	}
 	
 	public PolicyEditorScopes(String string, String userid) {

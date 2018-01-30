@@ -21,34 +21,34 @@
 package org.onap.policy.rest.adapter;
 
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class GridData {
-	private ArrayList<Object> attributes;
-	private ArrayList<Object> transportProtocols;
-	private ArrayList<Object> appProtocols;
+	private List<Object> attributes;
+	private List<Object> transportProtocols;
+	private List<Object> appProtocols;
 
-	public ArrayList<Object> getAttributes() {
+	public List<Object> getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(ArrayList<Object> attributes) {
+	public void setAttributes(List<Object> attributes) {
 		this.attributes = attributes;
 	}
 
-	public ArrayList<Object> getAppProtocols() {
+	public List<Object> getAppProtocols() {
 		return appProtocols;
 	}
 
-	public void setAppProtocols(ArrayList<Object> appProtocols) {
+	public void setAppProtocols(List<Object> appProtocols) {
 		this.appProtocols = appProtocols;
 	}
 
-	public ArrayList<Object> getTransportProtocols() {
+	public List<Object> getTransportProtocols() {
 		return transportProtocols;
 	}
 
-	public void setTransportProtocols(ArrayList<Object> transportProtocols) {
+	public void setTransportProtocols(List<Object> transportProtocols) {
 		this.transportProtocols = transportProtocols;
 	}
 }

@@ -59,22 +59,23 @@ public class GroupPolicyScopeList implements Serializable {
 	private String description;
 
 	public GroupPolicyScopeList() {
-		
+		//An empty constructor
 	}
 	public GroupPolicyScopeList(String string, String userid) {
 		this(domain);
 		
 	}
 	public GroupPolicyScopeList(String domain) {
-		
+		//An empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		//An empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		//An empty function
 	}
 
 	
