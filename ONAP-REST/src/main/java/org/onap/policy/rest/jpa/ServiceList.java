@@ -65,31 +65,25 @@ public class ServiceList implements Serializable {
 	
 	@Column(name="ports")
 	private String servicePorts;
-	
-	
-	
-/*
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;*/
 
 	public ServiceList() {
-		
+		// Empty constructor
 	}
 	public ServiceList(String string, String userid) {
 		this(domain);
 		
 	}
 	public ServiceList(String domain) {
-		
+		// Empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		// Empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		// Empty function
 	}
 
 	

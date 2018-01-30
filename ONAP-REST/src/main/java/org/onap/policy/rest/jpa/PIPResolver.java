@@ -106,6 +106,7 @@ public class PIPResolver implements Serializable {
 	private Set<PIPResolverParam> pipresolverParams = new HashSet<>();
 
 	public PIPResolver() {
+		//An empty constructor
 	}
 	
 	public PIPResolver(String prefix, Properties properties, String user) throws PIPException {
@@ -260,7 +261,7 @@ public class PIPResolver implements Serializable {
 
 	@Transient
 	public boolean isReadOnly() {
-		return (this.readOnly == '1');
+		return this.readOnly == '1';
 	}
 	
 	@Transient
@@ -293,62 +294,64 @@ public class PIPResolver implements Serializable {
 		//
 		// Go through each property
 		//
-		for (Object name : properties.keySet()) {
-			if (name.toString().startsWith(prefix) == false) {
+		for (Object nme : properties.keySet()) {
+			if (nme.toString().startsWith(prefix) == false) {
 				continue;
 			}
-			if (name.equals(prefix + ".classname")) {
+			if (nme.equals(prefix + ".classname")) {
 				//
 				// We already saved this
 				//
-			} else if (name.equals(prefix + "." + StdConfigurableEngine.PROP_NAME)) {
-				this.name = properties.getProperty(name.toString());
-			} else if (name.equals(prefix + "." + StdConfigurableEngine.PROP_DESCRIPTION)) {
-				this.description = properties.getProperty(name.toString());
-			} else if (name.equals(prefix + "." + StdConfigurableEngine.PROP_ISSUER)) {
-				this.issuer = properties.getProperty(name.toString());
+			} else if (nme.equals(prefix + "." + StdConfigurableEngine.PROP_NAME)) {
+				this.name = properties.getProperty(nme.toString());
+			} else if (nme.equals(prefix + "." + StdConfigurableEngine.PROP_DESCRIPTION)) {
+				this.description = properties.getProperty(nme.toString());
+			} else if (nme.equals(prefix + "." + StdConfigurableEngine.PROP_ISSUER)) {
+				this.issuer = properties.getProperty(nme.toString());
 			} else {
-				this.addPipresolverParam(new PIPResolverParam(name.toString().substring(prefix.length() + 1),
-															properties.getProperty(name.toString())));
+				this.addPipresolverParam(new PIPResolverParam(nme.toString().substring(prefix.length() + 1),
+															properties.getProperty(nme.toString())));
 			}
 		}
 	}
 
 	@Transient
 	public Map<String, String> getConfiguration(String prefix) {
+		String pref = prefix;
 		Map<String, String> map = new HashMap<>();
 		if (prefix.endsWith(".") == false) {
-			prefix = prefix + ".";
+			pref = prefix + ".";
 		}
-		map.put(prefix + "classname", this.classname);
-		map.put(prefix + "name", this.name);
+		map.put(pref + "classname", this.classname);
+		map.put(pref + "name", this.name);
 		if (this.description != null) {
-			map.put(prefix + "description", this.description);
+			map.put(pref + "description", this.description);
 		}
 		if (this.issuer != null && this.issuer.isEmpty() != false) {
-			map.put(prefix + "issuer", this.issuer);
+			map.put(pref + "issuer", this.issuer);
 		}
 		for (PIPResolverParam param : this.pipresolverParams) {
-			map.put(prefix + param.getParamName(), param.getParamValue());
+			map.put(pref + param.getParamName(), param.getParamValue());
 		}
 		return map;
 	}
 
 	@Transient
 	public void	generateProperties(Properties props, String prefix) {
+		String pref = prefix;
 		if (prefix.endsWith(".") == false) {
-			prefix = prefix + ".";
+			pref = prefix + ".";
 		}
-		props.setProperty(prefix + "classname", this.classname);
-		props.setProperty(prefix + "name", this.name);
+		props.setProperty(pref + "classname", this.classname);
+		props.setProperty(pref + "name", this.name);
 		if (this.description != null) {
-			props.setProperty(prefix + "description", this.description);
+			props.setProperty(pref + "description", this.description);
 		}
 		if (this.issuer != null && this.issuer.isEmpty() != false) {
-			props.setProperty(prefix + "issuer", this.issuer);
+			props.setProperty(pref + "issuer", this.issuer);
 		}
 		for (PIPResolverParam param : this.pipresolverParams) {
-			props.setProperty(prefix + param.getParamName(), param.getParamValue());
+			props.setProperty(pref + param.getParamName(), param.getParamValue());
 		}
 	}
 

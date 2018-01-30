@@ -56,28 +56,25 @@ public class PrefixList implements Serializable {
 	
 	@Column(name="pl_value", nullable=false)
 	private String prefixListValue;
-/*
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;*/
 
 	public PrefixList() {
-		
+		// Empty constructor
 	}
 	public PrefixList(String string, String userid) {
 		this(domain);
 		
 	}
 	public PrefixList(String domain) {
-		
+		// Empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		// Empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		// Empty function
 	}
 	public String getPrefixListName() {
 		return this.prefixListName;

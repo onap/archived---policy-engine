@@ -102,7 +102,7 @@ public class VNFType implements Serializable  {
 	private static Log LOGGER = LogFactory.getLog(VNFType.class);
 	
 	public VNFType() {
-		
+		// Empty constructor
 	}
 	
 	public String getVnftype() {

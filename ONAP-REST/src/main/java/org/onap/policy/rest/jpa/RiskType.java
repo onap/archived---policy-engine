@@ -101,7 +101,7 @@ public class RiskType implements Serializable {
 	private static Log LOGGER = LogFactory.getLog(RiskType.class);
 	
 	public RiskType() {
-		
+		// Empty constructor
 	}
 	
 	public RiskType(String string, String userid) {

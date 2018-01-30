@@ -58,4 +58,7 @@ public class ClosedLoopPolicy {
 	public static final String CLFAULT_UIFIELD_POLICY_STATUS_INACTIVE = "InActive";
 	public static final String CLFAULT_UIJSON_POLICY_STATUS_INACTIVE = "INACTIVE";
 
+	private ClosedLoopPolicy(){
+		// Empty constructor
+	}
 }

@@ -90,6 +90,7 @@ public class ActionBodyEntity implements Serializable {
 	private boolean deleted = false;
 
 	public ActionBodyEntity() {
+		//An empty constructor
 	}
 
 	@PrePersist
@@ -110,7 +111,7 @@ public class ActionBodyEntity implements Serializable {
 		return actionBodyId;
 	}
 	/**
-	 * @param configurationDataId the configurationDataId to set
+	 * @param name the configuration body name to set
 	 */
 	public void setActionBodyName(String name) {
 		this.actionBodyName = name;
@@ -126,7 +127,7 @@ public class ActionBodyEntity implements Serializable {
 		return actionBody;
 	}
 	/**
-	 * @param configBody the configBody to set
+	 * @param body the configBody to set
 	 */
 	public void setActionBody(String body) {
 		this.actionBody = body;
@@ -213,8 +214,7 @@ public class ActionBodyEntity implements Serializable {
 			return false;
 		}
 
-		return (
-				actionBodyId == ((ActionBodyEntity) obj).actionBodyId &&
+		return  actionBodyId == ((ActionBodyEntity) obj).actionBodyId &&
 				actionBodyName.equals(((ActionBodyEntity) obj).actionBodyName) && 
 				version == ((ActionBodyEntity) obj).version && 
 				actionBody.equals(((ActionBodyEntity) obj).actionBody) && 
@@ -222,7 +222,6 @@ public class ActionBodyEntity implements Serializable {
 				createdDate.equals(((ActionBodyEntity) obj).createdDate) && 
 				modifiedBy.equals(((ActionBodyEntity) obj).modifiedBy) &&
 				modifiedDate.equals(((ActionBodyEntity) obj).modifiedDate) &&
-				deleted == ((ActionBodyEntity) obj).deleted
-				);
+				deleted == ((ActionBodyEntity) obj).deleted;
 	}
 }

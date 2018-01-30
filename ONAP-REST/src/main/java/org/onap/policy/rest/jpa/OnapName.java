@@ -97,7 +97,7 @@ public class OnapName implements Serializable {
 	}
 	
 	public OnapName() {
-		
+		//An empty constructor
 	}
 	
 	public OnapName(String string, String userid) {

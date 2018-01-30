@@ -57,22 +57,23 @@ public class VMType implements Serializable {
 
 
 	public VMType() {
-		
+		// Empty constructor
 	}
 	public VMType(String string, String userid) {
 		this(domain);
 		
 	}
 	public VMType(String domain) {
-		
+		// Empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		// Empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		// Empty function
 	}
 
 	public String getDescription() {

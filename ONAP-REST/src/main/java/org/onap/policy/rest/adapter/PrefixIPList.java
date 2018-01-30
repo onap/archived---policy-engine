@@ -51,7 +51,7 @@ public class PrefixIPList {
     {
     	if(members==null)
     	{
-    		members= new ArrayList<AddressMembers>();
+    		members= new ArrayList<>();
     	}
         return this.members;
     }
@@ -60,13 +60,5 @@ public class PrefixIPList {
 	{
 	        this.members = members;
 	}
-    /*public String getValue() {
-        return value;
-    }
 
-   
-    public void setValue(String value) {
-        this.value = value;
-    }*/
-    
 }

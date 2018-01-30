@@ -73,6 +73,7 @@ public class PolicyRoles implements Serializable {
 	private String role;
 	
 	public PolicyRoles() {
+		// Empty constructor
 	}
 
 	public int getId() {

@@ -46,7 +46,10 @@ import com.att.research.xacml.util.XACMLProperties;
 public class XACMLRest {
 	private static final Log logger	= LogFactory.getLog(XACMLRest.class);
 	private static Properties restProperties = new Properties();
-	
+
+	private XACMLRest(){
+	    // Empty constructor
+    }
 	/**
 	 * This must be called during servlet initialization. It sets up the xacml.?.properties
 	 * file as a system property. If the System property is already set, then it does not
@@ -96,9 +99,8 @@ public class XACMLRest {
 		Enumeration<String> params = config.getInitParameterNames();
 		while (params.hasMoreElements()) {
 			String param = params.nextElement();
-			if (! param.equals("XACML_PROPERTIES_NAME")) {
+			if (! "XACML_PROPERTIES_NAME".equals(param)) {
 				String value = config.getInitParameter(param);
-				//logger.info(param + "=" + config.getInitParameter(param));
 				PolicyLogger.info(param + "=" + config.getInitParameter(param));
 				restProperties.setProperty(param, value);
 			}
@@ -161,8 +163,7 @@ public class XACMLRest {
 	public static void dumpRequest(HttpServletRequest request) {
 		if (logger.isDebugEnabled()) {
 			// special-case for receiving heartbeat - don't need to repeatedly output all of the information in multiple lines
-			if (request.getMethod().equals("GET") && "hb".equals(request.getParameter("type"))  ) {
-				//logger.debug("GET type=hb : heartbeat received");
+			if ("GET".equals(request.getMethod()) && "hb".equals(request.getParameter("type"))  ) {
 				PolicyLogger.debug("GET type=hb : heartbeat received");
 				return;				
 			}
@@ -185,7 +186,7 @@ public class XACMLRest {
 				logger.debug(element + ":" + request.getAttribute(element));
 			}
 			logger.debug("ContextPath: " + request.getContextPath());
-			if (request.getMethod().equals("PUT") || request.getMethod().equals("POST")) {
+			if ("PUT".equals(request.getMethod()) || "POST".equals(request.getMethod())) {
 				// POST and PUT are allowed to have parameters in the content, but in our usage the parameters are always in the Query string.
 				// More importantly, there are cases where the POST and PUT content is NOT parameters (e.g. it might contain a Policy file).
 				// Unfortunately the request.getParameterMap method reads the content to see if there are any parameters,

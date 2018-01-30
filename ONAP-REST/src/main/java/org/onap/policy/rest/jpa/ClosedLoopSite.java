@@ -105,7 +105,7 @@ public class ClosedLoopSite implements Serializable{
 	private static Log LOGGER = LogFactory.getLog(ClosedLoopSite.class);
 	
 	public ClosedLoopSite(){
-		
+		//An empty constructor
 	}
 	
 	public ClosedLoopSite(String string, String userid) {

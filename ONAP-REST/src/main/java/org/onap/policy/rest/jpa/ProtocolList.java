@@ -53,28 +53,25 @@ public class ProtocolList implements Serializable {
 	
 	@Column(name="description")
 	private String description;
-/*
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;*/
 
 	public ProtocolList() {
-		
+		// Empty constructor
 	}
 	public ProtocolList(String string, String userid) {
 		this(domain);
 		
 	}
 	public ProtocolList(String domain) {
-		
+		// Empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		// Empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		// Empty function
 	}
 	public String getProtocolName() {
 		return this.protocolName;

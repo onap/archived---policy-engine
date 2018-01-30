@@ -102,7 +102,7 @@ public class DescriptiveScope implements Serializable {
 	private static Log LOGGER = LogFactory.getLog(DescriptiveScope.class);
 	
 	public DescriptiveScope(){
-		
+		//An empty constructor
 	}
 	
 	public DescriptiveScope(String string, String userid) {

@@ -1702,7 +1702,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	private void retreiveDependency(String workingFile, Boolean modelClass) {
 		
 		MSModelUtils utils = new MSModelUtils(PolicyController.getMsOnapName(), PolicyController.getMsPolicyName());
-	    HashMap<String, MSAttributeObject> tempMap;
+	    Map<String, MSAttributeObject> tempMap;
 	    
 	    tempMap = utils.processEpackage(workingFile, MODEL_TYPE.XMI);
 	    

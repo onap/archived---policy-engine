@@ -67,7 +67,7 @@ public class Term {
     public  List<String> getFromZones() {
     	if (fromZones==null)
     	{
-    		fromZones= new ArrayList<String>();
+    		fromZones= new ArrayList<>();
     	}
         return fromZones;
     }
@@ -80,7 +80,7 @@ public class Term {
     public  List<String> getToZones() {
     	if (toZones==null)
     	{
-    		toZones= new ArrayList<String>();
+    		toZones= new ArrayList<>();
     	}
         return toZones;
     }
@@ -113,7 +113,7 @@ public class Term {
     {
     	if(sourceList==null)
     	{
-    		sourceList= new ArrayList<AddressJson>();
+    		sourceList= new ArrayList<>();
     	}
         return this.sourceList;
     }
@@ -127,7 +127,7 @@ public class Term {
     {
     	if(destinationList==null)
     	{
-    		destinationList= new ArrayList<AddressJson>();
+    		destinationList= new ArrayList<>();
     	}
         return this.destinationList;
     }
@@ -140,7 +140,7 @@ public class Term {
     public List<ServicesJson> getSourceServices() {
     	if(sourceServices==null)
     	{
-    		sourceServices= new ArrayList<ServicesJson>();
+    		sourceServices= new ArrayList<>();
     	}
         return this.sourceServices;
     }
@@ -153,7 +153,7 @@ public class Term {
     public Set<ServicesJson> getDestServices() {
     	if(destServices==null)
     	{
-    		destServices= new HashSet<ServicesJson>();
+    		destServices= new HashSet<>();
     	}
         return this.destServices;
     }

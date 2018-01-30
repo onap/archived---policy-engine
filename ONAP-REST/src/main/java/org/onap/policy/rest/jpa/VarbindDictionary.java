@@ -103,7 +103,7 @@ public class VarbindDictionary implements Serializable{
 	private static Log LOGGER = LogFactory.getLog(VarbindDictionary.class);
 	
 	public VarbindDictionary() {
-		
+		// Empty constructor
 	}
 	
 	public VarbindDictionary(String string, String userid) {

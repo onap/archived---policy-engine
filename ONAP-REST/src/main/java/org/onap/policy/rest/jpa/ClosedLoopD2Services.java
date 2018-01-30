@@ -103,7 +103,7 @@ public class ClosedLoopD2Services implements Serializable{
 	private static Log LOGGER = LogFactory.getLog(ClosedLoopD2Services.class);
 	
 	public ClosedLoopD2Services(){
-		
+		//An empty constructor
 	}
 	
 	public ClosedLoopD2Services(String string, String userid) {

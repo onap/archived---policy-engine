@@ -89,12 +89,12 @@ public class PolicyAlgorithms implements Serializable {
 
 	@Transient
 	public boolean isStandard() {
-		return (this.isStandard == PolicyAlgorithms.STANDARD);
+		return this.isStandard == PolicyAlgorithms.STANDARD;
 	}
 	
 	@Transient
 	public boolean isCustom() {
-		return (this.isStandard == PolicyAlgorithms.CUSTOM);
+		return this.isStandard == PolicyAlgorithms.CUSTOM;
 	}
 
 	public String getXacmlId() {

@@ -63,12 +63,6 @@ public class ObadviceExpression implements Serializable {
 
 	@Column(name="type", nullable=false)
 	private String type;
-	
-	/*
-	@Lob
-	@Column(name="expression", nullable=false)
-	private byte[] expression;
-	*/
 
 	//bi-directional many-to-one association to Obadvice
 	@ManyToOne

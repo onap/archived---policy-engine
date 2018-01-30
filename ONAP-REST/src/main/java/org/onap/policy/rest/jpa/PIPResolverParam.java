@@ -58,6 +58,7 @@ public class PIPResolverParam implements Serializable {
 	private PIPResolver pipresolver;
 
 	public PIPResolverParam() {
+		// Empty constructor
 	}
 
 	public PIPResolverParam(String name) {

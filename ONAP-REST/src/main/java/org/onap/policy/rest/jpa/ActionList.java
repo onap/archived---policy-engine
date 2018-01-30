@@ -53,28 +53,25 @@ public class ActionList implements Serializable {
 	
 	@Column(name="description")
 	private String description;
-/*
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;*/
 
 	public ActionList() {
-		
+		//An empty constructor
 	}
 	public ActionList(String string, String userid) {
 		this(domain);
 		
 	}
 	public ActionList(String domain) {
-		
+		//An empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		//An empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		//An empty function
 	}
 	public String getActionName() {
 		return this.actionName;

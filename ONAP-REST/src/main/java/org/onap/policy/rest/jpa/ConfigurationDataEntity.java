@@ -97,6 +97,7 @@ public class ConfigurationDataEntity implements Serializable {
 	private boolean deleted = false;
 
 	public ConfigurationDataEntity() {
+		//An empty constructor
 	}
 
 	@PrePersist
@@ -242,8 +243,7 @@ public class ConfigurationDataEntity implements Serializable {
 			return false;
 		}
 		
-		return (
-				configurationDataId == ((ConfigurationDataEntity) obj).configurationDataId &&	
+		return configurationDataId == ((ConfigurationDataEntity) obj).configurationDataId &&
 				configurationName.equals(((ConfigurationDataEntity) obj).configurationName) && 
 				version == ((ConfigurationDataEntity) obj).version &&
 				configType.equals(((ConfigurationDataEntity) obj).configType) &&
@@ -253,7 +253,6 @@ public class ConfigurationDataEntity implements Serializable {
 				description.equals(((ConfigurationDataEntity) obj).description) &&
 				modifiedBy.equals(((ConfigurationDataEntity) obj).modifiedBy) &&
 				modifiedDate.equals(((ConfigurationDataEntity) obj).modifiedDate) &&
-				deleted == ((ConfigurationDataEntity) obj).deleted
-				);
+				deleted == ((ConfigurationDataEntity) obj).deleted;
 	}
 }
