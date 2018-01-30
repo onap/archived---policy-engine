@@ -336,7 +336,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 			String ruleDestPort;
 			String ruleAction;
 			List <String> valueDesc;
-			StringBuffer displayString = new StringBuffer();
+			StringBuilder displayString = new StringBuilder();
 			for (String id : termCollectorList) {
 				List<Object> tmList = commonClassDao.getDataById(TermList.class, "termName", id);
 				jpaTermList = (TermList) tmList.get(0);
@@ -349,15 +349,17 @@ public class CreateFirewallController extends RestrictedBaseController {
 							if(srcList.startsWith(GROUP)){
 								AddressGroup ag;
 								ag= mappingAddressGroup(srcList);
-								displayString.append("\n\t"+"Group has  :"+ag.getPrefixList()+"\n");
-								for(String groupItems:ag.getPrefixList().split(",")){
-									valueDesc=mapping(groupItems);
-									displayString.append("\n\t"+"Name: "+groupItems);
-									if(!valueDesc.isEmpty()){
-										displayString.append("\n\t"+"Description: "+valueDesc.get(1));
-										displayString.append("\n\t"+"Value: "+valueDesc.get(0));
+								displayString.append("\n\t"+"Group has  :"+(ag != null ? ag.getPrefixList() : "") +"\n");
+								if (ag != null) {
+									for(String groupItems:ag.getPrefixList().split(",")){
+										valueDesc=mapping(groupItems);
+										displayString.append("\n\t"+"Name: "+groupItems);
+										if(!valueDesc.isEmpty()){
+											displayString.append("\n\t"+"Description: "+valueDesc.get(1));
+											displayString.append("\n\t"+"Value: "+valueDesc.get(0));
+										}
+										displayString.append("\n");
 									}
-									displayString.append("\n");
 								}
 							}else{
 								if(!srcList.equals(ANY)){
@@ -379,13 +381,15 @@ public class CreateFirewallController extends RestrictedBaseController {
 							if(destList.startsWith(GROUP)){
 								AddressGroup ag;
 								ag= mappingAddressGroup(destList);
-								displayString.append("\n\t"+"Group has  :"+ag.getPrefixList()+"\n");
-								for(String groupItems:ag.getPrefixList().split(",")){
-									valueDesc=mapping(groupItems);
-									displayString.append("\n\t"+"Name: "+groupItems);
-									displayString.append("\n\t"+"Description: "+valueDesc.get(1));
-									displayString.append("\n\t"+"Value: "+valueDesc.get(0));
-									displayString.append("\n\t");
+								displayString.append("\n\t"+"Group has  :"+ (ag != null ? ag.getPrefixList() : "") +"\n");
+								if (ag != null) {
+									for(String groupItems:ag.getPrefixList().split(",")){
+										valueDesc=mapping(groupItems);
+										displayString.append("\n\t"+"Name: "+groupItems);
+										displayString.append("\n\t"+"Description: "+valueDesc.get(1));
+										displayString.append("\n\t"+"Value: "+valueDesc.get(0));
+										displayString.append("\n\t");
+									}
 								}
 							}else{
 								if(!destList.equals(ANY)){
@@ -416,19 +420,21 @@ public class CreateFirewallController extends RestrictedBaseController {
 							if(destServices.startsWith(GROUP)){
 								GroupServiceList sg;
 								sg= mappingServiceGroup(destServices);
-								displayString.append("\n\t"+"Service Group has  :"+sg.getServiceList()+"\n");
-								for(String groupItems:sg.getServiceList().split(",")){
-									ServiceList sl;
-									sl= mappingServiceList(groupItems);
-									displayString.append("\n\t"+"Name:  "+
-											sl.getServiceName());
-									displayString.append("\n\t"+"Description:  "+
-											sl.getServiceDescription());	
-									displayString.append("\n\t"+"Transport-Protocol:  "+
-											sl.getServiceTransProtocol());
-									displayString.append("\n\t"+"Ports:  "+
-											sl.getServicePorts());
-									displayString.append("\n");
+								displayString.append("\n\t"+"Service Group has  :"+ (sg != null ? sg.getServiceList() : "") +"\n");
+								if (sg != null) {
+									for(String groupItems:sg.getServiceList().split(",")){
+										ServiceList sl;
+										sl= mappingServiceList(groupItems);
+										displayString.append("\n\t"+"Name:  "+
+												sl.getServiceName());
+										displayString.append("\n\t"+"Description:  "+
+												sl.getServiceDescription());	
+										displayString.append("\n\t"+"Transport-Protocol:  "+
+												sl.getServiceTransProtocol());
+										displayString.append("\n\t"+"Ports:  "+
+												sl.getServicePorts());
+										displayString.append("\n");
+									}
 								}
 							}
 							else{

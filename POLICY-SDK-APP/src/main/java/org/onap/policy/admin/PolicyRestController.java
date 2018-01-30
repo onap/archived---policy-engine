@@ -141,14 +141,11 @@ public class PolicyRestController extends RestrictedBaseController{
 
 			if(policyData.getConfigPolicyType() != null){
 				if("ClosedLoop_Fault".equalsIgnoreCase(policyData.getConfigPolicyType())){
-					CreateClosedLoopFaultController faultController = new CreateClosedLoopFaultController();
-					policyData = faultController.setDataToPolicyRestAdapter(policyData, root);
+					policyData = new CreateClosedLoopFaultController().setDataToPolicyRestAdapter(policyData, root);
 				}else if("Firewall Config".equalsIgnoreCase(policyData.getConfigPolicyType())){
-					CreateFirewallController fwController = new CreateFirewallController();
-					policyData = fwController.setDataToPolicyRestAdapter(policyData);
+					policyData = new CreateFirewallController().setDataToPolicyRestAdapter(policyData);
 				}else if("Micro Service".equalsIgnoreCase(policyData.getConfigPolicyType())){
-					CreateDcaeMicroServiceController msController = new CreateDcaeMicroServiceController();
-					policyData = msController.setDataToPolicyRestAdapter(policyData, root);
+					policyData = new CreateDcaeMicroServiceController().setDataToPolicyRestAdapter(policyData, root);
 				}
 			}
 

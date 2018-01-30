@@ -433,7 +433,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return settings; 
 	} 
 
-	public Map<String, String> load(byte[] source) throws IOException { 
+	public Map<String, String> load(byte[] source) { 
 		Yaml yaml = new Yaml(); 
 		@SuppressWarnings("unchecked")
 		Map<Object, Object> yamlMap = (Map<Object, Object>) yaml.load(Arrays.toString(source)); 
@@ -831,7 +831,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		ObjectNode node = nodeFactory.objectNode();
 		String prevKey = null;
 		String presKey;
-		for(String key: element.keySet()){
+		for(Entry<String, String> entry: element.entrySet()){
+			String key = entry.getKey();
+			String value = entry.getValue();
 			if(key.contains(".")){
 				presKey = key.substring(0,key.indexOf('.'));
 			}else if(key.contains("@")){
@@ -859,7 +861,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					nodeKey = key.substring(0,key.indexOf('.'));
 				}
 				if(nodeKey.equals(key.substring(0,key.indexOf('.')))){
-					node.put(key.substring(key.indexOf('.')+1), element.get(key));
+					node.put(key.substring(key.indexOf('.')+1), value);
 				}else{
 					if(node.size()!=0){
 						if(nodeKey.contains("@")){
@@ -888,7 +890,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					if(nodeKey.contains("@")){
 						arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
 					}
-					node.put(key.substring(key.indexOf('.')+1), element.get(key));
+					node.put(key.substring(key.indexOf('.')+1), value);
 				}
 			}else if(node.size()!=0){
 				if(nodeKey.contains("@")){
@@ -926,14 +928,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 						oldValue = key.substring(0,key.indexOf('@'));
 					}
 					if(oldValue.equals(key.substring(0,key.indexOf('@')))){
-						jsonArray.put(element.get(key));
+						jsonArray.put(value);
 					}else{
 						jsonResult.put(oldValue, jsonArray);
 						jsonArray = new JSONArray();
 					}
 					oldValue = key.substring(0,key.indexOf('@'));
 				}else{
-					jsonResult.put(key, element.get(key));
+					jsonResult.put(key, value);
 				}
 			}else{
 				if(key.contains("@")){
@@ -952,14 +954,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 						oldValue = key.substring(0,key.indexOf('@'));
 					}
 					if(oldValue.equals(key.substring(0,key.indexOf('@')))){
-						jsonArray.put(element.get(key));
+						jsonArray.put(value);
 					}else{
 						jsonResult.put(oldValue, jsonArray);
 						jsonArray = new JSONArray();
 					}
 					oldValue = key.substring(0,key.indexOf('@'));
 				}else{
-					jsonResult.put(key, element.get(key));
+					jsonResult.put(key, value);
 				}
 			}
 		}
@@ -1459,8 +1461,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			if(value instanceof LinkedHashMap<?, ?>){
 				LinkedHashMap<String, Object> secondObjec = new LinkedHashMap<>(); 
 				readRecursivlyJSONContent((LinkedHashMap<String, ?>) value, secondObjec);
-				for(String objKey: secondObjec.keySet()){
-					data.put(key+"." +objKey, secondObjec.get(objKey));
+				for( Entry<String, Object> entry : secondObjec.entrySet()){
+					data.put(key+"." + entry.getKey(), entry.getValue());
 				}
 			}else if(value instanceof ArrayList){
 				ArrayList<?> jsonArrayVal = (ArrayList<?>)value;
@@ -1469,8 +1471,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					if(arrayvalue instanceof LinkedHashMap<?, ?>){
 						LinkedHashMap<String, Object> newData = new LinkedHashMap<>();   
 						readRecursivlyJSONContent((LinkedHashMap<String, ?>) arrayvalue, newData);
-						for(String objKey: newData.keySet()){
-							data.put(key+"@"+i+"." +objKey, newData.get(objKey));
+						for(Entry<String, Object> entry: newData.entrySet()){
+							data.put(key+"@"+i+"." +entry.getKey(), entry.getValue());
 						}
 					}else if(arrayvalue instanceof ArrayList){
 						ArrayList<?> jsonArrayVal1 = (ArrayList<?>)value;

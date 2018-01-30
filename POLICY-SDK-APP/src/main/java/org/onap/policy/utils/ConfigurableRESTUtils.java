@@ -27,6 +27,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.onap.policy.common.logging.flexlogger.FlexLogger; 
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -88,11 +89,9 @@ public class ConfigurableRESTUtils  {
             connection.setUseCaches(false);
             
             // add hard-coded headers
-            for (String headerName : hardCodedHeaderMap.keySet()) {
-            	connection.addRequestProperty(headerName, hardCodedHeaderMap.get(headerName));
+            for (Entry<String, String> entry : hardCodedHeaderMap.entrySet()) {
+            	connection.addRequestProperty(entry.getKey(), entry.getValue());
             }
-
-            
             
             if (jsonBody != null){
             	connection.setDoInput(true);
