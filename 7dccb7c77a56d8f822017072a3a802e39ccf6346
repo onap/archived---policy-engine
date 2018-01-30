@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_42d80f53",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewMicroServiceModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-30T17:46:25Z",
+      "side": 1,
+      "message": "I think this also can be in the try() block. Then you can remove the dest.close() line.",
+      "range": {
+        "startLine": 147,
+        "startChar": 6,
+        "endLine": 147,
+        "endChar": 72
+      },
+      "revId": "7dccb7c77a56d8f822017072a3a802e39ccf6346",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
