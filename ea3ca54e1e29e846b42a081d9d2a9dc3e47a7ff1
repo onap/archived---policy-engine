@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_eed7c7bd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-30T13:44:12Z",
+      "side": 1,
+      "message": "Remove this - not supposed to be in summary.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "ea3ca54e1e29e846b42a081d9d2a9dc3e47a7ff1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8ee643b3",
+        "filename": "ONAP-REST/logs/common-modules/integrity-monitor/audit.log",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-30T13:44:12Z",
+      "side": 1,
+      "message": "Do not add log files",
+      "revId": "ea3ca54e1e29e846b42a081d9d2a9dc3e47a7ff1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2eedaf8b",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-30T13:44:12Z",
+      "side": 1,
+      "message": "Probably should be Map. But if this causes a ton of refactoring, then we can leave it alone. Please confirm.",
+      "range": {
+        "startLine": 286,
+        "startChar": 9,
+        "endLine": 286,
+        "endChar": 16
+      },
+      "revId": "ea3ca54e1e29e846b42a081d9d2a9dc3e47a7ff1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_eefee737",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-01-30T13:44:12Z",
+      "side": 1,
+      "message": "would need to be changed also",
+      "range": {
+        "startLine": 289,
+        "startChar": 2,
+        "endLine": 289,
+        "endChar": 9
+      },
+      "revId": "ea3ca54e1e29e846b42a081d9d2a9dc3e47a7ff1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
