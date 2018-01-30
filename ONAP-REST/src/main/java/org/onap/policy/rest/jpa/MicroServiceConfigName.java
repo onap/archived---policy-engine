@@ -57,22 +57,23 @@ public class MicroServiceConfigName implements Serializable {
 
 
 	public MicroServiceConfigName() {
-		
+		//An empty constructor
 	}
 	public MicroServiceConfigName(String string, String userid) {
 		this(domain);
 		
 	}
 	public MicroServiceConfigName(String domain) {
-		
+		//An empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		//An empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		//An empty function
 	}
 
 	

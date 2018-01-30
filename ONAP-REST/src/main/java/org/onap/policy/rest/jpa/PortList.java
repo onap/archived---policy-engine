@@ -59,22 +59,23 @@ public class PortList implements Serializable {
 	private Date modifiedDate;*/
 
 	public PortList() {
-		
+		// Empty constructor
 	}
 	public PortList(String string, String userid) {
 		this(domain);
 		
 	}
 	public PortList(String domain) {
-		
+		// Empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		// Empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		// Empty function
 	}
 
 	

@@ -98,12 +98,12 @@ public class RuleAlgorithms implements Serializable {
 	
 	@Transient
 	public boolean isStandard() {
-		return (this.isStandard == RuleAlgorithms.STANDARD);
+		return this.isStandard == RuleAlgorithms.STANDARD;
 	}
 	
 	@Transient
 	public boolean isCustom() {
-		return (this.isStandard == RuleAlgorithms.CUSTOM);
+		return this.isStandard == RuleAlgorithms.CUSTOM;
 	}
 
 	public String getXacmlId() {

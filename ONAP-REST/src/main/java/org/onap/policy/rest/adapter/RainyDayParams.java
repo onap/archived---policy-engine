@@ -20,7 +20,6 @@
 
 package org.onap.policy.rest.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RainyDayParams {
@@ -28,7 +27,7 @@ public class RainyDayParams {
 	private String vnfType;
 	private String bbid;
 	private String workstep;
-	private ArrayList<Object> treatmentTableChoices;
+	private List<Object> treatmentTableChoices;
 	private List<String> errorcode;
 	private List<String> treatment;
 
@@ -83,13 +82,13 @@ public class RainyDayParams {
 	/**
 	 * @return the treatmentTableChoices
 	 */
-	public ArrayList<Object> getTreatmentTableChoices() {
+	public List<Object> getTreatmentTableChoices() {
 		return treatmentTableChoices;
 	}
 	/**
 	 * @param treatmentTableChoices the treatmentTableChoices to set
 	 */
-	public void setTreatmentTableChoices(ArrayList<Object> treatmentTableChoices) {
+	public void setTreatmentTableChoices(List<Object> treatmentTableChoices) {
 		this.treatmentTableChoices = treatmentTableChoices;
 	}
 	/**

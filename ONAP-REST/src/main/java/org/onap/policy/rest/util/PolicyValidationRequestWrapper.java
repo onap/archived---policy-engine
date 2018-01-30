@@ -62,7 +62,7 @@ public class PolicyValidationRequestWrapper {
 			JsonNode root = mapper.readTree(request.getReader());
 			policyData = mapper.readValue(root.get("policyData").toString(), PolicyRestAdapter.class);
 			
-			JsonObject json = null;
+			JsonObject json;
 			json = stringToJsonObject(root.toString());
 			
 			if(json != null){
@@ -181,14 +181,14 @@ public class PolicyValidationRequestWrapper {
 				
 			} else if("Action".equals(parameters.getPolicyClass().toString())){
 				
-				ArrayList<Object> ruleAlgorithmChoices = new ArrayList<Object>();
+				ArrayList<Object> ruleAlgorithmChoices = new ArrayList<>();
 								
 				List<String> dynamicLabelRuleAlgorithms = parameters.getDynamicRuleAlgorithmLabels();
 				List<String> dynamicFieldFunctionRuleAlgorithms = parameters.getDynamicRuleAlgorithmFunctions();
 				List<String> dynamicFieldOneRuleAlgorithms = parameters.getDynamicRuleAlgorithmField1();
 				List<String> dyrnamicFieldTwoRuleAlgorithms = parameters.getDynamicRuleAlgorithmField2();
 	            
-				if (dynamicLabelRuleAlgorithms != null && dynamicLabelRuleAlgorithms.size() > 0) {
+				if (dynamicLabelRuleAlgorithms != null && !dynamicLabelRuleAlgorithms.isEmpty()) {
 	                int i = dynamicLabelRuleAlgorithms.size() - 1;
 
 	                for (String labelAttr : dynamicLabelRuleAlgorithms) {
@@ -215,10 +215,10 @@ public class PolicyValidationRequestWrapper {
 	            
 	            ArrayList<Object> attributeList = new ArrayList<>();
 	            if (matching != null) {
-		            for (String keyField : matching.keySet()) {
+		            for (Map.Entry<String, String> entry : matching.entrySet()) {
 						LinkedHashMap<String, String> attributeMap = new LinkedHashMap<>();
-						String key = keyField;
-						String value = matching.get(keyField);
+						String key = entry.getKey();
+						String value = entry.getValue();
 						attributeMap.put("key", key);
 						attributeMap.put("value", value);
 						attributeList.add(attributeMap);
@@ -325,7 +325,7 @@ public class PolicyValidationRequestWrapper {
 			        }
 			        if (json.get("serviceTypePolicyName")!=null){
 			        	String serviceType = json.get("serviceTypePolicyName").toString().replace("\"", "");
-						LinkedHashMap<String, String> serviceTypePolicyName = new LinkedHashMap<>();
+						Map<Object, Object> serviceTypePolicyName = new LinkedHashMap<>();
 						serviceTypePolicyName.put("serviceTypePolicyName", serviceType);
 			        	policyData.setServiceTypePolicyName(serviceTypePolicyName);
 			        }
@@ -351,16 +351,21 @@ public class PolicyValidationRequestWrapper {
 	
     private JsonObject stringToJsonObject(String value)
             throws JsonException, IllegalStateException {
-    	
+		JsonReader jsonReader = null;
+		JsonObject object;
     	try{
-            JsonReader jsonReader = Json.createReader(new StringReader(value));
-            JsonObject object = jsonReader.readObject();
-            jsonReader.close();
-            return object;
+            jsonReader = Json.createReader(new StringReader(value));
+            object = jsonReader.readObject();
+
         } catch(JsonException| IllegalStateException e){
             LOGGER.info(XACMLErrorConstants.ERROR_DATA_ISSUE+ "Improper JSON format... may or may not cause issues in validating the policy: " + value, e);
             return null;
-        }
+        } finally {
+    		if (jsonReader != null){
+				jsonReader.close();
+			}
+		}
+		return object;
     }
     
     private String convertDate(Date date) {

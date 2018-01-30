@@ -57,22 +57,23 @@ public class MicroServiceLocation implements Serializable {
 
 
 	public MicroServiceLocation() {
-		
+		//An empty constructor
 	}
 	public MicroServiceLocation(String string, String userid) {
 		this(domain);
 		
 	}
 	public MicroServiceLocation(String domain) {
-		
+		//An empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		//An empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		//An empty function
 	}
 
 	

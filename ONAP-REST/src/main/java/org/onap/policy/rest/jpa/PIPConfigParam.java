@@ -58,6 +58,7 @@ public class PIPConfigParam implements Serializable {
 	private PIPConfiguration pipconfiguration;
 
 	public PIPConfigParam() {
+		//An empty constructor
 	}
 
 	public PIPConfigParam(String param) {
@@ -125,7 +126,7 @@ public class PIPConfigParam implements Serializable {
 
 	@Transient
 	public boolean isRequired() {
-		return (this.required == '1');
+		return this.required == '1';
 	}
 	
 	@Transient

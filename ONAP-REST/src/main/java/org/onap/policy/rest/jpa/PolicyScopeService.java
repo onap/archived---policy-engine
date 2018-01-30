@@ -56,22 +56,23 @@ public class PolicyScopeService implements Serializable {
 	private String description ;
 
 	public PolicyScopeService() {
-		
+		// Empty constructor
 	}
 	public PolicyScopeService(String string, String userid) {
 		this(domain);
 		
 	}
 	public PolicyScopeService(String domain) {
-		
+		// Empty constructor
 	}	
 
 	@PrePersist
 	public void	prePersist() {
-		
+		// Empty function
 	}
 	@PreUpdate
 	public void preUpdate() {
+		// Empty function
 	}
 
 	

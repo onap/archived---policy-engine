@@ -4,6 +4,7 @@
 .classpath
 .jupiter
 .pydevproject
+.idea
 target
 .metadata/
 ASTRAGateway/policyEngineLog.log
@@ -30,6 +31,7 @@ XACML-PDP-REST/catalina.base_IS_UNDEFINED/logs/Policy/XACML-PDP-REST/metrics.log
 XACML-REST/IntegrityMonitor.log
 /bin/
 *.checkstyle
+*.iml
 BRMSGateway/logs/
 BRMSGateway/sql/
 BRMSGateway/src/test/resources/META-INF/generatedCreate.ddl

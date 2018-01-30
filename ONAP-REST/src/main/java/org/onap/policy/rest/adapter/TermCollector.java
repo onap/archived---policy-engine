@@ -90,7 +90,7 @@ public class TermCollector {
 	public Set<Object> getServiceGroups() {
 		if(serviceGroups==null)
 		{
-			serviceGroups= new HashSet<Object>();
+			serviceGroups= new HashSet<>();
 		}
 		return this.serviceGroups;
 	}
@@ -103,7 +103,7 @@ public class TermCollector {
 	public Set<Object> getAddressGroups() {
 		if(addressGroups==null)
 		{
-			addressGroups= new HashSet<Object>();
+			addressGroups= new HashSet<>();
 		}
 		return this.addressGroups;
 	}
@@ -117,7 +117,7 @@ public class TermCollector {
 
 		if(firewallRuleList==null)
 		{
-			firewallRuleList= new ArrayList<Term>();
+			firewallRuleList= new ArrayList<>();
 		}
 		return this.firewallRuleList;
 	}

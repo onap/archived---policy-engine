@@ -21,16 +21,16 @@
 package org.onap.policy.rest.adapter;
 
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class PolicyExportAdapter {
 	
-	private ArrayList<Object> policyDatas;
+	private List<Object> policyDatas;
 	
-	public ArrayList<Object> getPolicyDatas() {
+	public List<Object> getPolicyDatas() {
 		return policyDatas;
 	}
-	public void setPolicyDatas(ArrayList<Object> policyDatas) {
+	public void setPolicyDatas(List<Object> policyDatas) {
 		this.policyDatas = policyDatas;
 	}
 }
