@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
@@ -242,8 +243,8 @@ public class PolicyController extends RestrictedBaseController {
 
 		//Initialize the FunctionDefinition table at Server Start up
 		Map<Datatype, List<FunctionDefinition>> functionMap = getFunctionDatatypeMap();
-		for (Datatype id : functionMap.keySet()) {
-			List<FunctionDefinition> functionDefinations = functionMap.get(id);
+		for ( Entry<Datatype, List<FunctionDefinition>> entry : functionMap.entrySet()) {
+			List<FunctionDefinition> functionDefinations = entry.getValue();
 			for (FunctionDefinition functionDef : functionDefinations) {
 				dropDownMap.put(functionDef.getShortname(),functionDef.getXacmlid());
 			}

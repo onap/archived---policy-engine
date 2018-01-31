@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 
@@ -166,8 +167,9 @@ public class ActionPolicyController extends RestrictedBaseController {
                                             AttributeValueType attributeValue = (AttributeValueType) attributeAssignmentExpression
                                                     .getExpression().getValue();
                                             if (attributeID.equals(PERFORMER_ATTRIBUTEID)) {
-                                                for (String key : performer.keySet()) {
-                                                    String keyValue = performer.get(key);
+                                                for ( Entry<String, String> entry: performer.entrySet()) {
+                                                	String key = entry.getKey();
+                                                    String keyValue = entry.getValue();
                                                     if (keyValue.equals(attributeValue.getContent().get(0))) {
                                                         policyAdapter.setActionPerformer(key);
                                                     }
@@ -235,10 +237,9 @@ public class ActionPolicyController extends RestrictedBaseController {
         ruleMap.put("id", "A" + (index + 1));
         // Populate combo box
         Map<String, String> dropDownMap = PolicyController.getDropDownMap();
-        for (String key : dropDownMap.keySet()) {
-            String keyValue = dropDownMap.get(key);
-            if (keyValue.equals(actionApply.getFunctionId())) {
-                ruleMap.put("dynamicRuleAlgorithmCombo", key);
+        for ( Entry<String, String> entry : dropDownMap.entrySet()) {
+            if (entry.getValue().equals(actionApply.getFunctionId())) {
+                ruleMap.put("dynamicRuleAlgorithmCombo", entry.getKey());
             }
         }
         // Populate the key and value fields

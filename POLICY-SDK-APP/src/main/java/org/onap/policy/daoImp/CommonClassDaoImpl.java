@@ -21,6 +21,7 @@
 package org.onap.policy.daoImp;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -253,7 +254,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 
 	@Override
 	public List<Object> checkExistingGroupListforUpdate(String arg0, String arg1) {
-		return null;
+		return Collections.emptyList();
 	}
 
 
