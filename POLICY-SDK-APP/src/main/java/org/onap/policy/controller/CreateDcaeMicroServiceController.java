@@ -892,52 +892,28 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					}
 					node.put(key.substring(key.indexOf('.')+1), value);
 				}
-			}else if(node.size()!=0){
-				if(nodeKey.contains("@")){
-					if(arryKey==null){
+			}else {
+				if(node.size()!=0){
+					if(nodeKey.contains("@")){
+						if(arryKey==null){
+							arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
+						}
+						if(nodeKey.endsWith("@0")){
+							isArray = true;
+							jsonArray = new JSONArray();
+						}
+						if(jsonArray != null && arryKey.equals(nodeKey.substring(0,nodeKey.indexOf('@')))){
+							jsonArray.put(decodeContent(node));
+						}
+						jsonResult.put(arryKey, jsonArray);
+						jsonArray = new JSONArray();
 						arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
-					}
-					if(nodeKey.endsWith("@0")){
-						isArray = true;
-						jsonArray = new JSONArray();
-					}
-					if(jsonArray != null && arryKey.equals(nodeKey.substring(0,nodeKey.indexOf('@')))){
-						jsonArray.put(decodeContent(node));
-					}
-					jsonResult.put(arryKey, jsonArray);
-					jsonArray = new JSONArray();
-					arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
-				}else{
-					isArray = false;
-					jsonResult.put(nodeKey, decodeContent(node));
-				}
-				node = nodeFactory.objectNode();
-				if(key.contains("@")){
-					isArray = true;
-					if(key.endsWith("@0")|| jsonArray==null){
-						jsonArray = new JSONArray();
-					}
-				}else if(!key.contains("@")){
-					isArray = false;
-				}
-				if(isArray){
-					if(oldValue==null){
-						oldValue = key.substring(0,key.indexOf('@'));
-					}
-					if(oldValue!=prevKey){
-						oldValue = key.substring(0,key.indexOf('@'));
-					}
-					if(oldValue.equals(key.substring(0,key.indexOf('@')))){
-						jsonArray.put(value);
 					}else{
-						jsonResult.put(oldValue, jsonArray);
-						jsonArray = new JSONArray();
+						isArray = false;
+						jsonResult.put(nodeKey, decodeContent(node));
 					}
-					oldValue = key.substring(0,key.indexOf('@'));
-				}else{
-					jsonResult.put(key, value);
+					node = nodeFactory.objectNode();
 				}
-			}else{
 				if(key.contains("@")){
 					isArray = true;
 					if(key.endsWith("@0")|| jsonArray==null){

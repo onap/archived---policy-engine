@@ -38,7 +38,7 @@ import org.onap.policy.admin.RESTfulPAPEngine;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.model.PDPGroupContainer;
-import org.onap.policy.model.Roles;
+import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
@@ -92,22 +92,10 @@ public class PDPController extends RestrictedBaseController {
 				List<String> roles;
 				String userId =  isJunit()  ? "Test" : UserUtils.getUserSession(request).getOrgUserId();
 				List<Object> userRoles = controller.getRoles(userId);
-				roles = new ArrayList<>();
-				scopes = new HashSet<>();
-				for(Object role: userRoles){
-					Roles userRole = (Roles) role;
-					roles.add(userRole.getRole());
-					if(userRole.getScope() != null){
-						if(userRole.getScope().contains(",")){
-							String[] multipleScopes = userRole.getScope().split(",");
-							for(int i =0; i < multipleScopes.length; i++){
-								scopes.add(multipleScopes[i]);
-							}
-						}else{
-							scopes.add(userRole.getScope());
-						}
-					}	
-				}
+				Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
+				roles = pair.u;
+				scopes = pair.t;
+				
 				if(!junit&& controller.getPapEngine()==null){
 				    setPAPEngine(request);
 				}

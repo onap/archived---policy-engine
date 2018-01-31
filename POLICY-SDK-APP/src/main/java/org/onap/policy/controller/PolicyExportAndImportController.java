@@ -29,7 +29,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -49,7 +48,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.model.Roles;
 import org.onap.policy.rest.adapter.PolicyExportAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
@@ -58,6 +56,7 @@ import org.onap.policy.rest.jpa.PolicyEditorScopes;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
+import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.onap.portalsdk.core.web.support.UserUtils;
@@ -217,24 +216,11 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 		String userId = UserUtils.getUserSession(request).getOrgUserId();
 		UserInfo userInfo = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", userId);
 
-		//Check if the Role and Scope Size are Null get the values from db. 
 		List<Object> userRoles = controller.getRoles(userId);
-		roles = new ArrayList<>();
-		scopes = new HashSet<>();
-		for(Object role: userRoles){
-			Roles userRole = (Roles) role;
-			roles.add(userRole.getRole());
-			if(userRole.getScope() != null){
-				if(userRole.getScope().contains(",")){
-					String[] multipleScopes = userRole.getScope().split(",");
-					for(int i =0; i < multipleScopes.length; i++){
-						scopes.add(multipleScopes[i]);
-					}
-				}else{
-					scopes.add(userRole.getScope());
-				}		
-			}
-		}
+		Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
+		roles = pair.u;
+		scopes = pair.t;
+		
 		FileInputStream excelFile = new FileInputStream(new File(file));
 		workbook = new HSSFWorkbook(excelFile);
 		Sheet datatypeSheet = workbook.getSheetAt(0);

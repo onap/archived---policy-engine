@@ -68,7 +68,6 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.components.HumanPolicyComponent;
 import org.onap.policy.controller.PolicyController;
 import org.onap.policy.controller.PolicyExportAndImportController;
-import org.onap.policy.model.Roles;
 import org.onap.policy.rest.XACMLRest;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -79,6 +78,7 @@ import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.utils.PolicyUtils;
+import org.onap.policy.utils.UserUtils.Pair;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
 import org.onap.portalsdk.core.web.support.UserUtils;
@@ -326,24 +326,10 @@ public class PolicyManagerServlet extends HttpServlet {
 		try {
 			//Get the Login Id of the User from Request
 			String userId =  UserUtils.getUserSession(request).getOrgUserId();
-			//Check if the Role and Scope Size are Null get the values from db.
 			List<Object> userRoles = controller.getRoles(userId);
-			roles = new ArrayList<>();
-			scopes = new HashSet<>();
-			for(Object role: userRoles){
-				Roles userRole = (Roles) role;
-				roles.add(userRole.getRole());
-				if(userRole.getScope() != null){
-					if(userRole.getScope().contains(",")){
-						String[] multipleScopes = userRole.getScope().split(",");
-						for(int i =0; i < multipleScopes.length; i++){
-							scopes.add(multipleScopes[i]);
-						}
-					}else{
-						scopes.add(userRole.getScope());
-					}
-				}
-			}
+			Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
+			roles = pair.u;
+			scopes = pair.t;
 			if (roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST) ) {
 				if(scopes.isEmpty()){
 					return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
@@ -572,24 +558,10 @@ public class PolicyManagerServlet extends HttpServlet {
 			//Get the Login Id of the User from Request
 			String testUserID = getTestUserId();
 			String userId =  testUserID != null ? testUserID : UserUtils.getUserSession(request).getOrgUserId();
-			//Check if the Role and Scope Size are Null get the values from db.
 			List<Object> userRoles = controller.getRoles(userId);
-			roles = new ArrayList<>();
-			scopes = new HashSet<>();
-			for(Object role: userRoles){
-				Roles userRole = (Roles) role;
-				roles.add(userRole.getRole());
-				if(userRole.getScope() != null){
-					if(userRole.getScope().contains(",")){
-						String[] multipleScopes = userRole.getScope().split(",");
-						for(int i =0; i < multipleScopes.length; i++){
-							scopes.add(multipleScopes[i]);
-						}
-					}else{
-						scopes.add(userRole.getScope());
-					}
-				}
-			}
+			Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
+			roles = pair.u;
+			scopes = pair.t;
 
 			List<JSONObject> resultList = new ArrayList<>();
 			boolean onlyFolders = params.getBoolean("onlyFolders");

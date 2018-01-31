@@ -44,6 +44,18 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 import com.att.research.xacml.util.XACMLProperties;
 
+/**
+ * What is not good about this class is that once a value has been set for pdpProperties path
+ * you cannot change it. That may be ok for a highly controlled production environment in which
+ * nothing changes, but not a very good implementation.
+ * 
+ * The reset() method has been added to assist with the above problem in order to 
+ * acquire >80% JUnit code coverage.
+ * 
+ * This static class doesn't really check a PDP, it simply loads a properties file and tried
+ * to ensure that a valid URL exists for a PDP along with user/password.
+ *
+ */
 public class CheckPDP {
 	private static Path pdpPath = null;
 	private static Long oldModified = null;
@@ -57,6 +69,12 @@ public class CheckPDP {
 	public static Map<String, String> getPdpMap() {
 		return pdpMap;
 	}
+	
+	private static void reset() {
+		pdpPath = null;
+		oldModified = null;
+		pdpMap = null;
+	}
 
 	public static boolean validateID(String id) {
 		// ReadFile
@@ -64,6 +82,9 @@ public class CheckPDP {
 			readFile();
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
+			return false;
+		}
+		if (pdpMap == null) {
 			return false;
 		}
 		// Check ID
@@ -83,15 +104,12 @@ public class CheckPDP {
 		}
 		if (pdpPath == null) {
 			pdpPath = Paths.get(pdpFile);
-			if (!pdpPath.toFile().exists()) {
+			if (!pdpPath.toString().endsWith(".properties") || !pdpPath.toFile().exists()) {
 				LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "File doesn't exist in the specified Path : "	+ pdpPath.toString());
-
-			} 
-			if (pdpPath.toString().endsWith(".properties")) {
-				readProps();
-			} else {
-				LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Not a .properties file " + pdpFile);
+				CheckPDP.reset();
+				return;
 			}
+			readProps();
 		}
 		// Check if File is updated recently
 		else {
@@ -120,12 +138,13 @@ public class CheckPDP {
 			for (String propKey : sorted) {
 				loadPDPProperties(propKey, pdpProp);
 			}
-			if (pdpMap == null || pdpMap.isEmpty()) {
-				LOGGER.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Cannot Proceed without PDP_URLs");
-			}
 			in.close();
 		} catch (IOException e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
+		}
+		if (pdpMap == null || pdpMap.isEmpty()) {
+			LOGGER.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Cannot Proceed without PDP_URLs");
+			CheckPDP.reset();
 		}
 	}
 	
