@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.onap.policy.controller.PolicyController;
 import org.onap.policy.model.Roles;
 
 public final class UserUtils {
@@ -47,7 +46,6 @@ public final class UserUtils {
 		Set<String> scopes;
 		List<String> roles;
 		//Check if the Role and Scope Size are Null get the values from db. 
-//		List<Object> userRoles = ;
 		roles = new ArrayList<>();
 		scopes = new HashSet<>();
 		for(Object role: userRoles){
