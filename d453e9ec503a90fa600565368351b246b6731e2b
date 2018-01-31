@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_96bad908",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/CryptoUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-31T17:14:54Z",
+      "side": 1,
+      "message": "A secret key should not be hardcoded, should be configurable, otherwise provides little benefit, considering this code is public information, or the binaries may be decompiled.",
+      "revId": "d453e9ec503a90fa600565368351b246b6731e2b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_363985a4",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/CryptoUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-01-31T17:14:54Z",
+      "side": 1,
+      "message": "Ideally secret key should be a parameter for reasons expressed before, we cannot expect hardcoded key used in the code.   This calls for an additional parameter in these methods.",
+      "revId": "d453e9ec503a90fa600565368351b246b6731e2b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
