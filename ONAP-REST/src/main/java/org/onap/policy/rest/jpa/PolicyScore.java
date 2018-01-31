@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,39 +40,39 @@ import javax.persistence.Table;
 	@NamedQuery(name="POLICYSCORE.findByPolicyName", query="Select p from PolicyScore p where p.PolicyName=:pname")
 })
 public class PolicyScore implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private static String domain;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
-	
+
 	@Column(name="POLICY_NAME", nullable=false)
 	@OrderBy("asc")
 	private String PolicyName;
-	
+
 	@Column(name="VERSIONEXTENSION", nullable=false)
 	@OrderBy("asc")
 	private String VersionExtension;
-	
+
 	@Column(name="POLICY_SCORE", nullable=true)
 	private String PolicyScore;
-	
+
 	public PolicyScore() {
-		
+
 	}
-	
+
 	public PolicyScore(String pName, String pScore) {
 		this(domain);
-		
+
 	}
 	public PolicyScore(String domain) {
-		
+
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -99,6 +99,6 @@ public class PolicyScore implements Serializable {
 	public void setPolicyScore(String policyScore) {
 		PolicyScore = policyScore;
 	}
-		
+
 
 }

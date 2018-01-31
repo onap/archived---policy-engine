@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,17 +23,17 @@ package org.onap.policy.rest.adapter;
 
 
 public class ClosedLoopFaultBody {
-	
+
 	private boolean trinity;
 	private boolean vUSP;
 	private boolean mcr;
 	private boolean gamma;
 	private boolean vDNS;
-	
+
 	private String vnfType;
 	private String vServices;
 	private String ONAPname;
-	
+
 	private String closedLoopPolicyStatus;
 	private ClosedLoopSignatures triggerSignatures;
 	private String actions;
@@ -54,8 +54,8 @@ public class ClosedLoopFaultBody {
 	private String pepAction;
 	private String templateVersion;
 	private int trapMaxAge;
-	
-	
+
+
 	public Integer getTrapMaxAge() {
 		return trapMaxAge;
 	}
@@ -79,8 +79,8 @@ public class ClosedLoopFaultBody {
 	public void setTimeOutvPRO(int timeOutvPRO) {
 		this.timeOutvPRO = timeOutvPRO;
 	}
-	
-	
+
+
 	public Integer getTriggerTimeWindowUsedForUI() {
 		return triggerTimeWindowUsedForUI;
 	}
@@ -117,18 +117,18 @@ public class ClosedLoopFaultBody {
 	public String getONAPname(){
 		return ONAPname;
 	}
-	
+
 	public void setONAPname(String ONAPname){
 		this.ONAPname = ONAPname;
 	}
-	
+
 	public String getvServices() {
 		return vServices;
 	}
 	public void setvServices(String vServices) {
 		this.vServices = vServices;
 	}
-	
+
 	public ClosedLoopFaultTriggerUISignatures getVerificationSignaturesUsedForUI() {
 		return verificationSignaturesUsedForUI;
 	}
@@ -156,7 +156,7 @@ public class ClosedLoopFaultBody {
 	public void setVnfType(String vnfType) {
 		this.vnfType = vnfType;
 	}
-	
+
 	public Integer getAgingWindow() {
 		return agingWindow;
 	}
@@ -220,7 +220,7 @@ public class ClosedLoopFaultBody {
 			ClosedLoopSignatures verificationSignatures) {
 		this.verificationSignatures = verificationSignatures;
 	}
-	
+
 	public boolean isvDNS() {
 		return vDNS;
 	}
@@ -228,7 +228,7 @@ public class ClosedLoopFaultBody {
 	public void setvDNS(boolean vDNS) {
 		this.vDNS = vDNS;
 	}
-	
+
 	public boolean isTrinity() {
 		return trinity;
 	}

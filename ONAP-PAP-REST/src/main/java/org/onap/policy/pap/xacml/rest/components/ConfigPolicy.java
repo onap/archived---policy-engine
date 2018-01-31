@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -73,11 +73,11 @@ public class ConfigPolicy extends Policy {
 	public ConfigPolicy() {
 		super();
 	}
-	
+
 	public ConfigPolicy(PolicyRestAdapter policyAdapter){
 		this.policyAdapter = policyAdapter;
 	}
-	
+
 	// Saving the Configurations file at server location for config policy.
 	protected void saveConfigurations(String policyName) {
 		try {
@@ -121,16 +121,16 @@ public class ConfigPolicy extends Policy {
 		return filename;
 	}
 
-	
+
 	// Validations for Config form
 	/*
-	 * FORM VALIDATION WILL BE DONE BY THE PAP-ADMIN before creating JSON object... 
+	 * FORM VALIDATION WILL BE DONE BY THE PAP-ADMIN before creating JSON object...
 	 * BODY VALIDATION WILL BE DONE BY THE PAP-REST after receiving and deserializing the JSON object
 	 */
 	public boolean validateConfigForm() {
-		
+
 		isValidForm = true;
-		
+
 		/*
 		 * Validate Text Area Body
 		 */
@@ -148,7 +148,7 @@ public class ConfigPolicy extends Policy {
 			} else if (id.equals(PROPERTIES_CONFIG)) {
 				if (!PolicyUtils.isPropValid(configBodyData)||configBodyData.equals("")) {
 					isValidForm = false;
-				} 
+				}
 			} else if (id.equals(OTHER_CONFIG)) {
 				if (configBodyData.equals("")) {
 					isValidForm = false;
@@ -161,13 +161,13 @@ public class ConfigPolicy extends Policy {
 
 	@Override
 	public Map<String, String> savePolicies() throws PAPException {
-		
+
 		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
 		}
-		
+
 		if(!isPreparedToSave()){
 			//Prep and configure the policy for saving
 			prepareToSave();
@@ -177,9 +177,9 @@ public class ConfigPolicy extends Policy {
 		Path newPolicyPath = null;
 		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
-		return successMap;		
+		return successMap;
 	}
-	
+
 	//This is the method for preparing the policy for saving.  We have broken it out
 	//separately because the fully configured policy is used for multiple things
 	@Override
@@ -188,11 +188,11 @@ public class ConfigPolicy extends Policy {
 		if(isPreparedToSave()){
 			return true;
 		}
-	
+
 		int version = 0;
 		String policyID = policyAdapter.getPolicyID();
 		version = policyAdapter.getHighestVersion();
-		
+
 		// Create the Instance for pojo, PolicyType object is used in marshalling.
 		if (policyAdapter.getPolicyType().equals("Config")) {
 			PolicyType policyConfig = new PolicyType();
@@ -202,14 +202,14 @@ public class ConfigPolicy extends Policy {
 			policyConfig.setTarget(new TargetType());
 			policyAdapter.setData(policyConfig);
 		}
-		
+
 		policyName = policyAdapter.getNewFileName();
 		configBodyData = policyAdapter.getConfigBodyData();
 		saveConfigurations(policyName);
-		
+
 		if (policyAdapter.getData() != null) {
 			PolicyType configPolicy = (PolicyType) policyAdapter.getData();
-			
+
 			configPolicy.setDescription(policyAdapter.getPolicyDescription());
 
 			configPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
@@ -222,7 +222,7 @@ public class ConfigPolicy extends Policy {
 			}
 			allOfOne.getMatch().add(createMatch("PolicyName", name));
 			AllOfType allOf = new AllOfType();
-			
+
 			// Adding the matches to AllOfType element Match for Onap
 			allOf.getMatch().add(createMatch("ONAPName", policyAdapter.getOnapName()));
 			// Match for riskType
@@ -235,9 +235,9 @@ public class ConfigPolicy extends Policy {
 			allOf.getMatch().add(createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
 			// Match for ConfigName
 			allOf.getMatch().add(createMatch("ConfigName", policyAdapter.getConfigName()));
-			
+
 			Map<String, String> dynamicFieldConfigAttributes = policyAdapter.getDynamicFieldConfigAttributes();
-			
+
 			// If there is any dynamic field create the matches here
 			for (String keyField : dynamicFieldConfigAttributes.keySet()) {
 				String key = keyField;
@@ -252,14 +252,14 @@ public class ConfigPolicy extends Policy {
 
 			TargetType target = new TargetType();
 			((TargetType) target).getAnyOf().add(anyOf);
-			
+
 			// Adding the target to the policy element
 			configPolicy.setTarget((TargetType) target);
 
 			RuleType rule = new RuleType();
 			rule.setRuleId(policyAdapter.getRuleID());
 			rule.setEffect(EffectType.PERMIT);
-			
+
 			// Create Target in Rule
 			AllOfType allOfInRule = new AllOfType();
 
@@ -329,7 +329,7 @@ public class ConfigPolicy extends Policy {
 		AdviceExpressionType advice = new AdviceExpressionType();
 		advice.setAdviceId("configID");
 		advice.setAppliesTo(EffectType.PERMIT);
-		
+
 		// For Configuration
 		AttributeAssignmentExpressionType assignment1 = new AttributeAssignmentExpressionType();
 		assignment1.setAttributeId("type");
@@ -342,7 +342,7 @@ public class ConfigPolicy extends Policy {
 		assignment1.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue));
 
 		advice.getAttributeAssignmentExpression().add(assignment1);
-		
+
 		// For Config file Url if configurations are provided.
 		if (policyAdapter.getConfigType() != null) {
 			AttributeAssignmentExpressionType assignment2 = new AttributeAssignmentExpressionType();
@@ -364,7 +364,7 @@ public class ConfigPolicy extends Policy {
 
 			AttributeValueType attributeValue3 = new AttributeValueType();
 			attributeValue3.setDataType(STRING_DATATYPE);
-			
+
 			fileName = FilenameUtils.removeExtension(fileName);
 			fileName = fileName + ".xml";
 			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
@@ -428,7 +428,7 @@ public class ConfigPolicy extends Policy {
 				advice.getAttributeAssignmentExpression().add(assignment7);
 			}
 		}
-		
+
 		//Risk Attributes
 		AttributeAssignmentExpressionType assignment8 = new AttributeAssignmentExpressionType();
 		assignment8.setAttributeId("RiskType");
@@ -441,7 +441,7 @@ public class ConfigPolicy extends Policy {
 		assignment8.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue8));
 
 		advice.getAttributeAssignmentExpression().add(assignment8);
-		
+
 		AttributeAssignmentExpressionType assignment9 = new AttributeAssignmentExpressionType();
 		assignment9.setAttributeId("RiskLevel");
 		assignment9.setCategory(CATEGORY_RESOURCE);
@@ -452,7 +452,7 @@ public class ConfigPolicy extends Policy {
 		configNameAttributeValue9.getContent().add(policyAdapter.getRiskLevel());
 		assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
 
-		advice.getAttributeAssignmentExpression().add(assignment9);	
+		advice.getAttributeAssignmentExpression().add(assignment9);
 
 		AttributeAssignmentExpressionType assignment10 = new AttributeAssignmentExpressionType();
 		assignment10.setAttributeId("guard");
@@ -465,7 +465,7 @@ public class ConfigPolicy extends Policy {
 		assignment10.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue10));
 
 		advice.getAttributeAssignmentExpression().add(assignment10);
-		
+
 		AttributeAssignmentExpressionType assignment11 = new AttributeAssignmentExpressionType();
 		assignment11.setAttributeId("TTLDate");
 		assignment11.setCategory(CATEGORY_RESOURCE);
@@ -477,7 +477,7 @@ public class ConfigPolicy extends Policy {
 		assignment11.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue11));
 
 		advice.getAttributeAssignmentExpression().add(assignment11);
-		
+
 		advices.getAdviceExpression().add(advice);
 		return advices;
 	}

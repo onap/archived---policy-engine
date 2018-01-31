@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,9 +52,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AdminTabController extends RestrictedBaseController{
 
 	private static final Logger LOGGER	= FlexLogger.getLogger(AdminTabController.class);
-	
+
 	private static CommonClassDao commonClassDao;
-	
+
         public AdminTabController() {
 		//default constructor
 	}
@@ -71,7 +71,7 @@ public class AdminTabController extends RestrictedBaseController{
 	public static void setCommonClassDao(CommonClassDao commonClassDao) {
 		AdminTabController.commonClassDao = commonClassDao;
 	}
-	
+
 	@RequestMapping(value={"/get_LockDownData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getAdminTabEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -86,7 +86,7 @@ public class AdminTabController extends RestrictedBaseController{
 			LOGGER.error("Exception Occured"+e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/adminTabController/save_LockDownValue.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveAdminTabLockdownValue(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
@@ -100,7 +100,7 @@ public class AdminTabController extends RestrictedBaseController{
 			GlobalRoleSettings globalRole = mapper.readValue(root.get("lockdowndata").toString(), GlobalRoleSettings.class);
 			globalRole.setRole("super-admin");
 			commonClassDao.update(globalRole);
-			
+
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");

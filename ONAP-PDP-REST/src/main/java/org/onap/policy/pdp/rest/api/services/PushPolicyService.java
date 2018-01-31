@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ import com.att.research.xacml.api.pap.PAPException;
 
 public class PushPolicyService {
     private static final Logger LOGGER = FlexLogger.getLogger(PushPolicyService.class.getName());
-    
+
     private String pushResult = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private PushPolicyParameters pushPolicyParameters = null;
@@ -43,7 +43,7 @@ public class PushPolicyService {
     private String pdpGroup = null;
     private String policyType = null;
     private String filePrefix = null;
-    private String clientScope = null; 
+    private String clientScope = null;
 
     public PushPolicyService(PushPolicyParameters pushPolicyParameters,
             String requestID) {
@@ -79,12 +79,12 @@ public class PushPolicyService {
     }
 
     private void run() throws PolicyException{
-        // Check Validation. 
+        // Check Validation.
         if(!getValidation()){
             LOGGER.error(message);
             throw new PolicyException(message);
         }
-        // Process Results. 
+        // Process Results.
         try{
             status = HttpStatus.OK;
             pushResult = processResult();
@@ -142,12 +142,12 @@ public class PushPolicyService {
         if(clientScope==null){
             return false;
         }
-        
+
         pdpGroup = pushPolicyParameters.getPdpGroup();
         if(pdpGroup==null || pdpGroup.trim().isEmpty()){
         	pdpGroup = "default";
         }
-        
+
         LOGGER.debug("clientScope is " + clientScope);
         LOGGER.debug("filePrefix is " + filePrefix);
 

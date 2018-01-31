@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,29 +57,29 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 
 /**
- * This code will deals with parsing the XACML content on reading from 
+ * This code will deals with parsing the XACML content on reading from
  * database(PolicyEntity, ConfigurationDataEntity and ActionBodyEntity tables)
  * and convert the data into json to do bulk operation on putting to elastic search database.
  * Which is used to support Elastic Search in Policy Application GUI to search policies.
- * 
- * 
- * 
+ *
+ *
+ *
  * properties should be configured in policyelk.properties
  *
  */
 public class ElasticSearchPolicyUpdate {
-	
+
 	private static final Logger LOGGER = FlexLogger.getLogger(ElasticSearchPolicyUpdate.class);
 	protected final static JestClientFactory jestFactory = new JestClientFactory();
-	
+
 	public static void main(String[] args) {
-		
+
 		String elkURL = null;
 		String databseUrl = null;
 		String userName = null;
 		String password = null;
-		String databaseDriver = null; 
-		
+		String databaseDriver = null;
+
 		String propertyFile = System.getProperty("PROPERTY_FILE");
 		Properties config = new Properties();
 		Path file = Paths.get(propertyFile);
@@ -96,34 +96,34 @@ public class ElasticSearchPolicyUpdate {
 					password = config.getProperty("policy.database.password");
 					databaseDriver = config.getProperty("policy.database.driver");
 					if(elkURL == null || databseUrl == null || userName == null || password == null || databaseDriver == null){
-						LOGGER.error("One of the Property is null in policyelk.properties = elkurl:databaseurl:username:password:databasedriver  " 
+						LOGGER.error("One of the Property is null in policyelk.properties = elkurl:databaseurl:username:password:databasedriver  "
 								+ elkURL + ":"+ databseUrl + ":"+ userName + ":"+ password + ":"+ databaseDriver + ":");
 					}
 				} catch (Exception e) {
 					LOGGER.error("Config File doesn't Exist in the specified Path " + file.toString(),e);
-				} 
+				}
 			}
 		}
 
 		Builder bulk = null;
-		
+
 		HttpClientConfig httpClientConfig = new HttpClientConfig.Builder(elkURL).multiThreaded(true).build();
 		jestFactory.setHttpClientConfig(httpClientConfig);
 	    JestHttpClient client = (JestHttpClient) jestFactory.getObject();
-	    
+
 		Connection conn = null;
 		Statement stmt = null;
-		
+
 		List<Index> listIndex = new ArrayList<Index>();
-		
+
 		try {
 			Class.forName(databaseDriver);
 			conn = DriverManager.getConnection(databseUrl, userName, password);
 			stmt = conn.createStatement();
-			
+
 			String policyEntityQuery = "Select * from PolicyEntity";
 			ResultSet result = stmt.executeQuery(policyEntityQuery);
-			
+
 			while(result.next()){
 				StringBuilder policyDataString = new StringBuilder("{");
 				String scope = result.getString("scope");
@@ -136,17 +136,17 @@ public class ElasticSearchPolicyUpdate {
 					policyDataString.append("\"policyDescription\":\""+description+"\",");
 				}
 				Object policyData = result.getString("policydata");
-				
+
 				if(scope != null){
 					policyDataString.append("\"scope\":\""+scope+"\",");
 				}
 				String actionbodyid = result.getString("actionbodyid");
 				String configurationdataid = result.getString("configurationdataid");
-				
-				
+
+
 				String policyWithScopeName = scope + "." + policyName;
 				String _type = null;
-				
+
 				if(policyWithScopeName.contains(".Config_")){
 					policyDataString.append("\"policyType\":\"Config\",");
 					if(policyWithScopeName.contains(".Config_Fault_")){
@@ -166,7 +166,7 @@ public class ElasticSearchPolicyUpdate {
 					_type = "decision";
 					policyDataString.append("\"policyType\":\"Decision\",");
 				}
-				
+
 				if(!"decision".equals(_type)){
 					if(configurationdataid != null){
 						String configEntityQuery = "Select * from ConfigurationDataEntity where configurationDataId = ?";
@@ -185,7 +185,7 @@ public class ElasticSearchPolicyUpdate {
 						}
 						configResult.close();
 					}
-					
+
 					if(actionbodyid != null){
 						String actionEntityQuery = "Select * from ActionBodyEntity where actionBodyId = ?";
 						PreparedStatement pstmt = null;
@@ -199,17 +199,17 @@ public class ElasticSearchPolicyUpdate {
 							policyDataString.append("\"jsonBodyData\":\""+actionBody+"\",");
 						}
 						actionResult.close();
-					}	
+					}
 				}
-				
+
 				String _id = policyWithScopeName;
-				
+
 				String dataString = constructPolicyData(policyData, policyDataString);
 				dataString = dataString.substring(0, dataString.length()-1);
 				dataString = dataString.trim().replace(System.getProperty("line.separator"), "") + "}";
 				dataString = dataString.replace("null", "\"\"");
 				dataString = dataString.replaceAll("\n", "");
-				
+
 				try{
 					Gson gson = new Gson();
 					gson.fromJson(dataString, Object.class);
@@ -217,7 +217,7 @@ public class ElasticSearchPolicyUpdate {
 					LOGGER.error(e);
 					continue;
 				}
-				
+
 				if("config".equals(_type)){
 					listIndex.add(new Index.Builder(dataString).index("policy").type("config").id(_id).build());
 				}else if("closedloop".equals(_type)){
@@ -228,7 +228,7 @@ public class ElasticSearchPolicyUpdate {
 					listIndex.add(new Index.Builder(dataString).index("policy").type("decision").id(_id).build());
 				}
 			}
-			
+
 			result.close();
 			bulk = new Bulk.Builder();
 			for(int i =0; i < listIndex.size(); i++){
@@ -252,7 +252,7 @@ public class ElasticSearchPolicyUpdate {
 			}
 		}
 	}
-	
+
 	private static String constructPolicyData(Object policyData, StringBuilder policyDataString){
 		if(policyData instanceof PolicyType){
 			PolicyType policy = (PolicyType) policyData;
@@ -310,5 +310,5 @@ public class ElasticSearchPolicyUpdate {
 		}
 		return policyDataString.toString();
 	}
-	
+
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,20 +34,20 @@ import org.onap.policy.api.PolicyException;
 import org.onap.policy.brmsInterface.BRMSHandler;
 
 public class BRMSPushTest {
-    
+
     private final String VALIDFILE = "src/test/resources/config.properties";
     private final String INVALIDFILE = "src/test/resources/failure.properties";
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest() throws PolicyException {
         new BRMSHandler(null);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest1() throws PolicyException {
         new BRMSHandler("src/test/resources/filenotexists.txt");
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest2() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -58,7 +58,7 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest3() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -73,7 +73,7 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest4() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -84,7 +84,7 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest5() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -95,7 +95,7 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest6() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -111,7 +111,7 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest7() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -122,7 +122,7 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest8() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -133,7 +133,7 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest9() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -153,7 +153,7 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest10() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -165,7 +165,7 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest11() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -176,7 +176,7 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest12() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -187,7 +187,7 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test (expected = PolicyException.class)
     public void bRMSHandlerFailTest13() throws PolicyException {
         PropertyChange prop = new PropertyChange();
@@ -203,12 +203,12 @@ public class BRMSPushTest {
         setFailureProperties(props);
         new BRMSHandler(INVALIDFILE);
     }
-    
+
     @Test
     public void BRMSHandlerTest() throws PolicyException {
         assertNotNull(new BRMSHandler(VALIDFILE));
     }
-    
+
     private void setFailureProperties(List<PropertyChange> properties) throws PolicyException {
         Properties validProp = new Properties();
         try {
@@ -225,7 +225,7 @@ public class BRMSPushTest {
             throw new PolicyException(e);
         }
     }
-    
+
     class PropertyChange {
         public String key = null;
         public String value = null;

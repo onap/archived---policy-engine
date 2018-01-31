@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -77,7 +77,7 @@ public class PDPServicesTest {
 		pep.setDecisionAttributes(eventAttributes);
 		PDPServices fixture = new PDPServices();
 
-		//Failure Tests. 
+		//Failure Tests.
 		String jsonString = getModel(pep).toString();
 		UUID requestID = UUID.randomUUID();
 
@@ -87,28 +87,28 @@ public class PDPServicesTest {
 		// An unexpected exception was thrown in user code while executing this test:
 		//    java.lang.NoClassDefFoundError: Could not initialize class org.onap.policy.pdp.rest.api.services.PDPServices
 		assertNotNull(result);
-	
+
 	}
 
     private JsonObject getModel(DecisionRequestParameters pep) throws PolicyDecisionException{
         JsonArrayBuilder resourceArray = Json.createArrayBuilder();
-        
+
         Map<String, String> decisionAttributes = pep.getDecisionAttributes();
         for (Entry<String,String> key : decisionAttributes.entrySet()) {
             JsonObjectBuilder resourceBuilder = Json.createObjectBuilder();
             if (key.getValue().matches("[0-9]+")) {
-            	
+            
             	if ((key.getKey().equals("ErrorCode")) || (key.getKey().equals("WorkStep"))) {
-                    
+
             		resourceBuilder.add("Value", key.getValue());
 
             	} else {
-            		
+            
                     int val = Integer.parseInt(key.getValue());
                     resourceBuilder.add("Value", val);
-                    
+
             	}
-            	
+            
             } else {
                 resourceBuilder.add("Value", key.getValue());
             }
@@ -129,7 +129,7 @@ public class PDPServicesTest {
                                                                 .add("AttributeId", "urn:oasis:names:tc:xacml:1.0:action:action-id"))))
                 .build();
     }
-    
+
 	/**
 	 * Run the Collection<PDPResponse> generateRequest(String,UUID,boolean,boolean) method test.
 	 *

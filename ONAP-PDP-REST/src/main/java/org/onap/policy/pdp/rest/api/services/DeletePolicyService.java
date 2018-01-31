@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,13 +32,13 @@ import org.springframework.http.HttpStatus;
 
 public class DeletePolicyService {
     private static final Logger LOGGER = FlexLogger.getLogger(DeletePolicyService.class.getName());
-    
+
     private String deleteResult = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private DeletePolicyParameters deletePolicyParameters = null;
     private String message = null;
     private String filePrefix = null;
-    private String clientScope = null; 
+    private String clientScope = null;
     private String policyType = null;
     private String policyName = null;
     private String policyScope = null;
@@ -85,16 +85,16 @@ public class DeletePolicyService {
         } else if (deleteResult.contains("JPAUtils")||deleteResult.contains("database")||deleteResult.contains("policy file")||
                 deleteResult.contains("unknown")||deleteResult.contains("configuration")) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
-        } 
+        }
     }
 
     private void run() throws PolicyException{
-        // Check Validation. 
+        // Check Validation.
         if(!getValidation()){
             LOGGER.error(message);
             throw new PolicyException(message);
         }
-        // Get Result. 
+        // Get Result.
         try{
             status = HttpStatus.OK;
             deleteResult = processResult();
@@ -109,19 +109,19 @@ public class DeletePolicyService {
         String response = null;
         String fullPolicyName = null;
         String pdpGroup = deletePolicyParameters.getPdpGroup();
-        // PDP Group Check. 
+        // PDP Group Check.
         if (pdpGroup==null){
             pdpGroup="NA";
         }
         PAPServices papServices = new PAPServices();
         if (!deletePolicyParameters.getPolicyName().contains("xml")) {
-            
+
             String activeVersion = papServices.getActiveVersion(policyScope, filePrefix, policyName, clientScope, deletePolicyParameters.getRequestID());
             LOGGER.debug("The active version of " + policyScope + File.separator + filePrefix + policyName + " is " + activeVersion);
             String id = null;
             if ("pe100".equalsIgnoreCase(activeVersion)) {
                 response = XACMLErrorConstants.ERROR_PERMISSIONS + "response code of the URL is 403. PEP is not Authorized for making this Request!! "
-                        + "Contact Administrator for this Scope. "; 
+                        + "Contact Administrator for this Scope. ";
                 LOGGER.error(response);
                 return response;
             } else if ("pe300".equalsIgnoreCase(activeVersion)) {
@@ -135,13 +135,13 @@ public class DeletePolicyService {
                 LOGGER.debug("The policyId is " + id);
             } else {
                 response = XACMLErrorConstants.ERROR_DATA_ISSUE + "could not retrieve the activeVersion for this policy. could not retrieve the activeVersion for this policy.  "
-                        + "This indicates the policy does not exist, please verify the policy exists."; 
+                        + "This indicates the policy does not exist, please verify the policy exists.";
                 LOGGER.error(response);
                 return response;
             }
-            
+
             fullPolicyName = policyScope + "." + filePrefix + policyName + "." + activeVersion + ".xml";
-            
+
         } else {
             fullPolicyName = policyName;
         }
@@ -152,13 +152,13 @@ public class DeletePolicyService {
                 LOGGER.error(message);
                 return message;
             }
-            
+
             StdPAPPolicy deletePapPolicy = new StdPAPPolicy(fullPolicyName, deletePolicyParameters.getDeleteCondition().toString());
             //send JSON object to PAP
             response = (String) papServices.callPAP(deletePapPolicy, new String[] {"groupId="+pdpGroup, "apiflag=deletePapApi", "operation=delete" }, deletePolicyParameters.getRequestID(), clientScope);
         } else if ("PDP".equalsIgnoreCase(deletePolicyParameters.getPolicyComponent())) {
             if (deletePolicyParameters.getPdpGroup()==null||deletePolicyParameters.getPdpGroup().trim().isEmpty()){
-                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No PDP Group given."; 
+                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No PDP Group given.";
                 LOGGER.error(message);
                 return message;
             }
@@ -199,7 +199,7 @@ public class DeletePolicyService {
      }
      setClientScope();
      if (clientScope==null||clientScope.trim().isEmpty()){
-         message = XACMLErrorConstants.ERROR_DATA_ISSUE + deletePolicyParameters.getPolicyType() + " is not a valid Policy Type."; 
+         message = XACMLErrorConstants.ERROR_DATA_ISSUE + deletePolicyParameters.getPolicyType() + " is not a valid Policy Type.";
          LOGGER.error(message);
          return false;
      }

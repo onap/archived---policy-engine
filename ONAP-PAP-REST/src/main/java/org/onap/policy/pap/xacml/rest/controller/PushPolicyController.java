@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,7 +56,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class PushPolicyController {
 	private static final Logger LOGGER  = FlexLogger.getLogger(PushPolicyController.class);
-	
+
 	private static CommonClassDao commonClassDao;
 	private static String policyNames = "policyName";
 	private static String errorMsg	= "error";
@@ -70,7 +70,7 @@ public class PushPolicyController {
 	 * This is an empty constructor
 	 */
 	public PushPolicyController(){}
-	
+
 	@RequestMapping(value="/pushPolicy", method=RequestMethod.POST)
 	public void pushPolicy(HttpServletRequest request, HttpServletResponse response){
 		ObjectMapper mapper = new ObjectMapper();
@@ -133,7 +133,7 @@ public class PushPolicyController {
 		}
 		//Get PolicyEntity from DB;
 		EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
-		Query createPolicyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");			
+		Query createPolicyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");
 		createPolicyQuery.setParameter("scope", policyScope);
 		createPolicyQuery.setParameter(policyNames, policyName.substring(policyScope.length()+1));
 		List<?> createPolicyQueryList = createPolicyQuery.getResultList();
@@ -160,7 +160,7 @@ public class PushPolicyController {
 			selectedPolicy = new StdPDPPolicy(policyName, true, policyID, selectedURI);
 		} catch (IOException e) {
 			LOGGER.error("Unable to create policy '" + policyName + "': "+ e.getMessage(),e);
-		} 
+		}
 		try {
 			new ObjectOutputStream(response.getOutputStream()).writeObject(selectedPolicy);
 		} catch (IOException e) {
@@ -175,6 +175,6 @@ public class PushPolicyController {
 		response.addHeader(operation, "push");
 		response.addHeader("policyId", policyName);
 		return;
-		// TODO : Check point to push policies within PAP. 
+		// TODO : Check point to push policies within PAP.
 	}
 }

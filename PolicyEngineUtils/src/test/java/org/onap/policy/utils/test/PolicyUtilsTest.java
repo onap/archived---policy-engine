@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,10 +45,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class PolicyUtilsTest {
-	
+
 	private static final String ERROR = "The Value in Required Field will allow only '{0-9}, {a-z}, {A-Z}, _' following set of Combinations";
 	private static final String SUCCESS = "success";
-	
+
 	@Test
 	public void testJsonConversions() throws Exception{
 		StdPDPNotification notification = new StdPDPNotification();
@@ -69,17 +69,17 @@ public class PolicyUtilsTest {
 		loadedPolicies.add(updatedPolicy);
 		notification.setRemovedPolicies(removedPolicies);
 		notification.setLoadedPolicies(loadedPolicies);
-		
+
 		String json = PolicyUtils.objectToJsonString(notification);
 		PDPNotification getBackObject = PolicyUtils.jsonStringToObject(json, StdPDPNotification.class);
 		assertEquals(0,getBackObject.getNotificationType().compareTo(notification.getNotificationType()));
-		
+
 	}
-	
+
 	private String encodedValue(String input){
 		return new String(Base64.getEncoder().encode(input.getBytes()));
 	}
-	
+
 	@Test
 	public void testDecode() throws Exception{
 		String value = "test";
@@ -87,7 +87,7 @@ public class PolicyUtilsTest {
 		assertNull(PolicyUtils.decode(null));
 		assertNull(PolicyUtils.decode(""));
 	}
-	
+
 	@Test
 	public void testBasicEncoding() throws Exception{
 		String userName = "test";
@@ -98,7 +98,7 @@ public class PolicyUtilsTest {
 		assertEquals(0, PolicyUtils.decodeBasicEncoding(encodedValue(userName+":"+key)).length);
 		assertEquals(0, PolicyUtils.decodeBasicEncoding(null).length);
 	}
-	
+
 	@Test
 	public void testSpecialCharValidator(){
 		assertEquals(ERROR, PolicyUtils.policySpecialCharValidator("$TEST_"));
@@ -107,21 +107,21 @@ public class PolicyUtilsTest {
 		assertEquals(ERROR, PolicyUtils.policySpecialCharValidator("TæST"));
 		assertEquals(SUCCESS, PolicyUtils.policySpecialCharValidator("TEST"));
 	}
-	
+
 	@Test
 	public void testSpecialCharWithSpaceValidator(){
 		assertEquals(ERROR, PolicyUtils.policySpecialCharWithSpaceValidator(""));
 		assertEquals(ERROR, PolicyUtils.policySpecialCharWithSpaceValidator("$TEST _"));
 		assertEquals(SUCCESS, PolicyUtils.policySpecialCharWithSpaceValidator("TE ST"));
 	}
-	
+
 	@Test
 	public void testDescription() {
 		assertEquals(SUCCESS, PolicyUtils.descriptionValidator("Test"));
 		assertNotEquals(SUCCESS, PolicyUtils.descriptionValidator("@ModifiedBy:TesterB"));
 		assertNotEquals(SUCCESS, PolicyUtils.descriptionValidator("@CreatedBy:TesterA"));
 	}
-	
+
 	@Test
 	public void testNonAscii(){
 		assertTrue(PolicyUtils.containsNonAsciiEmptyChars(null));
@@ -130,20 +130,20 @@ public class PolicyUtilsTest {
 		assertTrue(PolicyUtils.containsNonAsciiEmptyChars("TæST"));
 		assertFalse(PolicyUtils.containsNonAsciiEmptyChars("TEST"));
 	}
-	
+
 	@Test
 	public void testInteger(){
 	    assertFalse(PolicyUtils.isInteger(null));
 		assertTrue(PolicyUtils.isInteger("123"));
 		assertFalse(PolicyUtils.isInteger("1a23"));
 	}
-	
+
 	@Test
 	public void testEmailAddress(){
 		assertEquals(SUCCESS, PolicyUtils.validateEmailAddress("test@onap.org"));
 		assertNotEquals(SUCCESS, PolicyUtils.validateEmailAddress("test@onap"));
 	}
-	
+
 	@Test
 	public void testBRMSValidate(){
 	    String rule = "package com.sample;\n"
@@ -174,7 +174,7 @@ public class PolicyUtilsTest {
 	    assertTrue(PolicyUtils.brmsRawValidate("error").contains("[ERR"));
         assertFalse(PolicyUtils.brmsRawValidate("package com.att.ecomp.policy.controlloop.p_${unique};").contains("[ERR"));
 	}
-	
+
 	@Test
 	public void testiIsJsonValid(){
 	    assertTrue(PolicyUtils.isJSONValid("{\"test\":\"test\"}"));
@@ -182,7 +182,7 @@ public class PolicyUtilsTest {
 	    assertTrue(PolicyUtils.isJSONValid(value));
 	    assertFalse(PolicyUtils.isJSONValid("{\"test\":\"test"));
 	}
-	
+
 	@Test
 	public void testIsXMLValid() throws SAXException{
 	    XMLErrorHandler error = new XMLErrorHandler();
@@ -191,7 +191,7 @@ public class PolicyUtilsTest {
 	    assertTrue(PolicyUtils.isXMLValid("<test>123</test>"));
 	    assertFalse(PolicyUtils.isXMLValid("<test>123</test"));
 	}
-	
+
 	@Test
 	public void testIsPropValid(){
         assertTrue(PolicyUtils.isPropValid("test=123\n\tval=123"));
@@ -199,7 +199,7 @@ public class PolicyUtilsTest {
         assertFalse(PolicyUtils.isPropValid("test="));
         assertTrue(PolicyUtils.isPropValid("#test\n\nval=123"));
 	}
-	
+
 	@Test
 	public void testVersionStringToArray(){
 	    assertTrue(PolicyUtils.versionStringToArray(null).length==0);

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,12 +31,12 @@ import org.onap.policy.std.StdLoadedPolicy;
 import org.onap.policy.std.StdPDPNotification;
 import org.onap.policy.std.StdRemovedPolicy;
 
-import org.onap.policy.common.logging.flexlogger.*; 
+import org.onap.policy.common.logging.flexlogger.*;
 
 public class MatchStore {
 	private static HashSet<Matches> matchStore = new HashSet<>();
 	private static Logger logger = FlexLogger.getLogger(MatchStore.class.getName());
-	
+
 	public static HashSet<Matches> getMatchStore() {
 		return matchStore;
 	}
@@ -52,12 +52,12 @@ public class MatchStore {
 				for(Matches oldMatch: matchStore){
 					// Compare ONAPName
 					if(oldMatch.getOnapName().equals(newMatch.getOnapName())){
-						// Compare ConfigName if it exists. 
+						// Compare ConfigName if it exists.
 						if(newMatch.getConfigName()!=null && oldMatch.getConfigName()!=null){
 							if(oldMatch.getConfigName().equals(newMatch.getConfigName())){
 								// Compare the Config Attributes if they exist.
 								if(newMatch.getConfigAttributes()!= null && oldMatch.getConfigAttributes()!=null) {
-									//Simple thing would be comparing their size. 
+									//Simple thing would be comparing their size.
 									if(newMatch.getConfigAttributes().size()==oldMatch.getConfigAttributes().size()){
 										// Now need to compare each of them..
 										int count= 0;
@@ -89,9 +89,9 @@ public class MatchStore {
 						}else if(newMatch.getConfigName()==null && oldMatch.getConfigName()==null){
 							match = true;
 							break;
-						}	
+						}
 					}
-					
+
 				}
 				// IF not a match then add it to the MatchStore
 				if(match==false){
@@ -100,8 +100,8 @@ public class MatchStore {
 			}
 		}
 	}
-	
-	//Logic changes for Requested Policies notifications.. 
+
+	//Logic changes for Requested Policies notifications..
 	public static PDPNotification checkMatch(PDPNotification oldNotification) {
 		boolean removed = false, updated = false;
 		if(oldNotification==null){
@@ -112,7 +112,7 @@ public class MatchStore {
 			logger.debug("No Success Config Calls made yet.. ");
 			System.out.println("No success Config calls made yet. ");
 			return null;
-		} 
+		}
 		if(oldNotification.getRemovedPolicies()!=null && !oldNotification.getRemovedPolicies().isEmpty()){
 			// send all removed policies to client.
 			Collection<StdRemovedPolicy> removedPolicies = new HashSet<>();
@@ -138,10 +138,10 @@ public class MatchStore {
 						// Again Better way would be comparing sizes first.
 						// Matches are different need to check if has configAttributes
 						if(match.getConfigAttributes()!=null && !match.getConfigAttributes().isEmpty()){
-							// adding onap and config to config-attributes. 
+							// adding onap and config to config-attributes.
 							int compValues = match.getConfigAttributes().size() + 2;
 							if(updatedPolicy.getMatches().size()== compValues){
-								// Comparing both the values.. 
+								// Comparing both the values..
 								boolean matchAttributes = false;
 								for(String newKey: updatedPolicy.getMatches().keySet()){
 									if(newKey.equals("ONAPName")){
@@ -198,10 +198,10 @@ public class MatchStore {
 								break;
 							}
 						}else {
-							// If non exist then assuming the ONAP Name to be there. 
+							// If non exist then assuming the ONAP Name to be there.
 							if(updatedPolicy.getMatches().size()== 1){
 								if(updatedPolicy.getMatches().get("ONAPName").equals(match.getOnapName())){
-									// Match.. 
+									// Match..
 									matched = true;
 								}else {
 									break;
@@ -210,7 +210,7 @@ public class MatchStore {
 								break;
 							}
 						}
-						// Add logic to add the policy. 
+						// Add logic to add the policy.
 						if(matched){
 							newUpdatedPolicy = new StdLoadedPolicy();
 							newUpdatedPolicy.setPolicyName(updatedPolicy.getPolicyName());
@@ -220,7 +220,7 @@ public class MatchStore {
 							updated = true;
 						}
 					}
-					
+
 				}else {
 					//send all non config notifications to client.
 					newUpdatedPolicy = new StdLoadedPolicy();
@@ -232,7 +232,7 @@ public class MatchStore {
 			}
 			newNotification.setLoadedPolicies(updatedPolicies);
 		}
-		// Need to set the type of Update.. 
+		// Need to set the type of Update..
 		if(removed && updated) {
 			newNotification.setNotificationType(NotificationType.BOTH);
 		}else if(removed){
@@ -242,5 +242,5 @@ public class MatchStore {
 		}
 		return newNotification;
 	}
-	
+
 }

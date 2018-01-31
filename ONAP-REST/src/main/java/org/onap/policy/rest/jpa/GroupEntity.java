@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,22 +78,22 @@ public class GroupEntity implements Serializable {
 	@Column (name="groupKey", nullable=false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long groupKey;
-	
+
 	@Column (name="groupId", nullable=false)
 	private String groupId;
 
 	@Column(name="groupName", nullable=false, unique=false, length=255)
 	private String groupName;
-	
-	@Version 
+
+	@Version
 	@Column(name="version")
 	private int version;
-	
+
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name="PolicyGroupEntity",joinColumns={@JoinColumn(name="groupKey")}, inverseJoinColumns={@JoinColumn(name="policyId")})
 	@JsonManagedReference
 	private List<PolicyEntity> policies;
-	
+
 	@Column(name="created_by", nullable=false, length=255)
 	private String createdBy = "guest";
 
@@ -110,7 +110,7 @@ public class GroupEntity implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
-	
+
 	@Column(name="defaultGroup", nullable=false)
 	private boolean defaultGroup = false;
 	@Column(name="deleted", nullable=false)
@@ -141,7 +141,7 @@ public class GroupEntity implements Serializable {
 	public long getGroupKey(){
 		return groupKey;
 	}
-	
+
 	public void setGroupId(String groupId){
 		this.groupId = groupId;
 	}
@@ -157,11 +157,11 @@ public class GroupEntity implements Serializable {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
-	
+
 	public boolean isDefaultGroup(){
 		return defaultGroup;
 	}
-	
+
 	public void setDefaultGroup(boolean isDefaultGroup){
 		this.defaultGroup = isDefaultGroup;
 	}

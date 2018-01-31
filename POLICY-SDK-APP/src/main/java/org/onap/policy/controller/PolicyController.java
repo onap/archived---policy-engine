@@ -143,12 +143,12 @@ public class PolicyController extends RestrictedBaseController {
 	//WebApp directories
 	private static String configHome;
 	private static String actionHome;
-	
+
 	//File upload size
 	private static long fileSizeLimit;
-	
+
 	private static boolean jUnit = false;
-	
+
 
 	public static boolean isjUnit() {
 		return jUnit;
@@ -721,7 +721,7 @@ public class PolicyController extends RestrictedBaseController {
 	public static String getFile() {
 		return file;
 	}
-	
+
 	public static void setFileSizeLimit(String uploadSize) {
 		//Default size limit is 30MB
 		if (uploadSize == null || uploadSize.isEmpty()) {
@@ -731,7 +731,7 @@ public class PolicyController extends RestrictedBaseController {
 			fileSizeLimit = Long.parseLong(uploadSize);
 		}
 	}
-	
+
 	public static long getFileSizeLimit() {
 		return fileSizeLimit;
 	}

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,7 +49,7 @@ import com.github.fge.jsonpatch.diff.JsonDiff;
 
 /**
  * BackUp Monitor checks Backup Status with the Database and maintains Redundancy for Gateway Applications.
- * 
+ *
  */
 public class BackUpMonitor {
     private static final Logger LOGGER = Logger.getLogger(BackUpMonitor.class.getName());
@@ -57,7 +57,7 @@ public class BackUpMonitor {
     private static final String PING_INTERVAL = "ping_interval";
     private static final String MASTER = "MASTER";
     private static final String SLAVE = "SLAVE";
-    
+
     private static BackUpMonitor instance = null;
     private static String resourceName = null;
     private static String resourceNodeName = null;
@@ -99,7 +99,7 @@ public class BackUpMonitor {
         // Start thread.
         startThread(new BMonitor());
     }
-    
+
     private static void startThread(BMonitor bMonitor) {
         t = new Thread(bMonitor);
         t.start();
@@ -123,7 +123,7 @@ public class BackUpMonitor {
 
     /**
      * Gets the BackUpMonitor Instance if given proper resourceName and properties. Else returns null.
-     * 
+     *
      * @param resourceNodeName
      *            String format of the Resource Node to which the resource Belongs to.
      * @param resourceName
@@ -186,7 +186,7 @@ public class BackUpMonitor {
 
     /**
      * Gets the Boolean value of Master(True) or Slave mode (False)
-     * 
+     *
      * @return Boolean flag which if True means that the operation needs to be performed(Master mode) or if false the
      *         operation is in slave mode.
      */
@@ -427,7 +427,7 @@ public class BackUpMonitor {
 
 	/**
      * Updates Notification in the Database while Performing the health check.
-     * 
+     *
      * @param notification
      *            String format of notification record to store in the Database.
      * @throws Exception
@@ -460,7 +460,7 @@ public class BackUpMonitor {
         } catch (Exception e) {
             LOGGER.error("Error in Clients Handler Object : " + e.getMessage(), e);
         }
-		
+
 	}
 
 	// Used to set LastMasterNotification Record.

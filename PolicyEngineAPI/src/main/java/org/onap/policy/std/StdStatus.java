@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,20 +45,20 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	private String other;
 	private PolicyConfigStatus policyConfigStatus;
 	private String configStatus;
-	private PolicyResponseStatus policyResponseStatus; 
+	private PolicyResponseStatus policyResponseStatus;
 	private Map<String,String> actionAdvised;
 	private Map<String,String> actionTaken;
 	private Map<String,String> requestAttributes;
-	private String policyResponseMessage; 
+	private String policyResponseMessage;
 	private String policyName;
 	private String policyVersion;
 	private Map<String,String> matchingConditions;
 	private Map<String,String> responseAttributes;
 	private PolicyDecision policyDecision;
 	private String details;
-	
+
 	public void setStatus(String message, PolicyResponseStatus policyResponseStatus, PolicyConfigStatus policyConfigStatus) {
-		this.configStatus = message; 
+		this.configStatus = message;
 		this.policyResponseMessage = message;
 		this.policyResponseStatus = policyResponseStatus;
 		this.policyConfigStatus = policyConfigStatus;
@@ -72,7 +72,7 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	public Map<String, String> getActionAdvised() {
 		return actionAdvised;
 	}
-	
+
 	@Override
 	public Map<String, String> getActionTaken() {
 		return actionTaken;
@@ -91,7 +91,7 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	public void setPolicyResponseStatus(PolicyResponseStatus policyResponseStatus) {
 		this.policyResponseStatus = policyResponseStatus;
 	}
-	
+
 	public void setActionAdvised(Map<String, String> actionAdvised) {
 		this.actionAdvised = actionAdvised;
 	}
@@ -107,12 +107,12 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	public void setPolicyResponseMessage(String policyResponseMessage) {
 		this.policyResponseMessage = policyResponseMessage;
 	}
-	
+
 	public void setPolicyResponseStatus(String policyResponseMessage, PolicyResponseStatus policyResponseStatus) {
 		this.policyResponseMessage = policyResponseMessage;
 		this.policyResponseStatus = policyResponseStatus;
 	}
-	
+
 	@Override
 	public PolicyType getType() {
 		return policyType;
@@ -142,7 +142,7 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	public String getPolicyConfigMessage() {
 		return configStatus;
 	}
-	
+
 	@Override
 	public String getPolicyName() {
 		if(policyName!=null && policyName.contains(".xml")){
@@ -150,17 +150,17 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 		}
 		return policyName;
 	}
-	
+
 	@Override
 	public String getPolicyVersion() {
 		return policyVersion;
 	}
-	
+
 	@Override
 	public Map<String,String> getMatchingConditions(){
 		return matchingConditions;
 	}
-	
+
 	@Override
 	public Map<String,String> getResponseAttributes(){
 		return responseAttributes;
@@ -181,64 +181,64 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	public void setDocument(Document document) {
 		this.document = document;
 	}
-	
+
 	public void setConfigStatus(String configStatus) {
 		this.configStatus = configStatus;
 	}
-	
+
 	public void setPolicyName(String policyName) {
 		this.policyName = policyName;
 	}
-	
+
 	public void setPolicyVersion(String policyVersion) {
 		this.policyVersion = policyVersion;
 	}
-	
+
 	public void setMatchingConditions(Map<String,String> matchingConditions){
 		this.matchingConditions = matchingConditions;
 	}
-	
+
 	public void setResposneAttributes(Map<String,String> responseAttributes){
 		this.responseAttributes = responseAttributes;
 	}
-	
+
 	public void setPolicyConfigStatus(PolicyConfigStatus policyConfigStatus) {
 		this.policyConfigStatus = policyConfigStatus;
 	}
-	
+
 	public void setPolicyConfigStatus(String configStatus, PolicyConfigStatus policyConfigStatus) {
 		this.policyConfigStatus = policyConfigStatus;
 		this.configStatus = configStatus;
 	}
-	
+
 	@Override
 	public String toOther() {
 		return other;
 	}
-	
+
 	public void setOther(String other) {
 		this.other = other;
 	}
-	
+
 	public PolicyDecision getDecision() {
 		return policyDecision;
 	}
 	public void setDecision(PolicyDecision policyDecision) {
 		this.policyDecision = policyDecision;
 	}
-	
+
 	public void setDetails(String details){
 		this.details = details;
 	}
-	
+
 	public String getDetails(){
 		return details;
 	}
-	
+
     public PolicyConfigType getPolicyType() {
         return type;
     }
-    
+
     public void setPolicyType(PolicyConfigType policyType) {
         this.type = policyType;
     }

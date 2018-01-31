@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,7 +72,7 @@ public class FindAction {
 	public StdMutableResponse run(StdMutableResponse stdResponse, Request pepRequest) {
 		int count = 0;
 		boolean config = false;
-		boolean decide = false; 
+		boolean decide = false;
 		Collection<RequestAttributes> requestAttributes =  pepRequest.getRequestAttributes();
 		for(RequestAttributes requestAttribute : requestAttributes){
 			Collection<Attribute> attributes = requestAttribute.getAttributes();
@@ -145,7 +145,7 @@ public class FindAction {
 							headers.put(attribute.getAttributeId().stringValue().replaceFirst("(headers).", ""),
 									attribute.getAttributeValue().getValue().toString());
 							afterRemoveAssignments.add(attribute);
-						} else if (attribute.getAttributeId().stringValue().equalsIgnoreCase("body")) { 
+						} else if (attribute.getAttributeId().stringValue().equalsIgnoreCase("body")) {
 							String papPath = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
 							papPath= papPath.replace("/pap", "");
 							matchValues.put("body",attribute.getAttributeValue().getValue().toString().replace("$URL", papPath));
@@ -249,7 +249,7 @@ public class FindAction {
 		match.appendTail(sb);
 		LOGGER.info("URL is : " + sb.toString());
 		configURL = sb.toString();
-		// Calling the Requested service. 
+		// Calling the Requested service.
 		if (matchValues.get("method").equalsIgnoreCase("GET")) {
 			httpClient = new DefaultHttpClient();
 			try {
@@ -286,7 +286,7 @@ public class FindAction {
 						postRequest.addHeader(key, headers.get(key));
 					}
 				}
-				// Adding the Body. 
+				// Adding the Body.
 				URL configURL = new URL(matchValues.get("body"));
 				URLConnection connection = null;
 				connection = configURL.openConnection();
@@ -296,7 +296,7 @@ public class FindAction {
 				StringEntity input = new StringEntity(jsonReader.readObject().toString());
 				input.setContentType("application/json");
 				postRequest.setEntity(input);
-				// Executing the Request. 
+				// Executing the Request.
 				HttpResponse result = httpClient.execute(postRequest);
 				LOGGER.info("Result Headers are : " + result.getAllHeaders());
 				status = result.getStatusLine().getStatusCode();
@@ -324,7 +324,7 @@ public class FindAction {
 						putRequest.addHeader(key, headers.get(key));
 					}
 				}
-				// Adding the Body. 
+				// Adding the Body.
 				URL configURL = new URL(matchValues.get("body"));
 				URLConnection connection = null;
 				connection = configURL.openConnection();
@@ -334,7 +334,7 @@ public class FindAction {
 				StringEntity input = new StringEntity(jsonReader.readObject().toString());
 				input.setContentType("application/json");
 				putRequest.setEntity(input);
-				// Executing the Request. 
+				// Executing the Request.
 				HttpResponse result = httpClient.execute(putRequest);
 				status = result.getStatusLine().getStatusCode();
 				BufferedReader br = new BufferedReader(new InputStreamReader(

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,21 +55,21 @@ import java.util.Map;
 public class DecisionPolicyDictionaryController {
 
 	private static final Logger LOGGER  = FlexLogger.getLogger(DecisionPolicyDictionaryController.class);
-	
+
 	private static CommonClassDao commonClassDao;
-	
+
 	@Autowired
 	public DecisionPolicyDictionaryController(CommonClassDao commonClassDao){
 		DecisionPolicyDictionaryController.commonClassDao = commonClassDao;
 	}
-	
+
 	public DecisionPolicyDictionaryController(){}
-	
+
 	public UserInfo getUserInfo(String loginId){
 		UserInfo name = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
-		return name;	
+		return name;
 	}
-	
+
 	@RequestMapping(value={"/get_SettingsDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSettingsDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -85,7 +85,7 @@ public class DecisionPolicyDictionaryController {
 		}
 	}
 
-	
+
 	@RequestMapping(value={"/get_SettingsDictionaryData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSettingsDictionaryEntityData(HttpServletResponse response){
 		try{
@@ -94,17 +94,17 @@ public class DecisionPolicyDictionaryController {
 			model.put("settingsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-            response.addHeader("successMapKey", "success"); 
+            response.addHeader("successMapKey", "success");
             response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
-	
+
 	@RequestMapping(value={"/decision_dictionary/save_Settings"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
@@ -119,7 +119,7 @@ public class DecisionPolicyDictionaryController {
 			JsonNode root = mapper.readTree(request.getReader());
 			DecisionSettings decisionSettings;
             String userId = null;
-            
+
             if (fromAPI) {
             	decisionSettings = (DecisionSettings)mapper.readValue(root.get("dictionaryFields").toString(), DecisionSettings.class);
             	userId = "API";
@@ -146,15 +146,15 @@ public class DecisionPolicyDictionaryController {
 				String datatype = decisionSettings.getDatatypeBean().getShortName();
 				Datatype a = new Datatype();
 				if(datatype.equalsIgnoreCase("string")){
-					a.setId(26);	
+					a.setId(26);
 				}else if(datatype.equalsIgnoreCase("integer")){
-					a.setId(12);	
+					a.setId(12);
 				}else if(datatype.equalsIgnoreCase("boolean")){
-					a.setId(18);	
+					a.setId(18);
 				}else if(datatype.equalsIgnoreCase("double")){
-					a.setId(25);	
+					a.setId(25);
 				}else if(datatype.equalsIgnoreCase("user")){
-					a.setId(29);	
+					a.setId(29);
 				}
 				decisionSettings.setDatatypeBean(a);
 			}
@@ -171,7 +171,7 @@ public class DecisionPolicyDictionaryController {
 				if(!isFakeUpdate) {
 					decisionSettings.setUserModifiedBy(this.getUserInfo(userId));
 					decisionSettings.setModifiedDate(new Date());
-					commonClassDao.update(decisionSettings); 
+					commonClassDao.update(decisionSettings);
 				}
 			}
             String responseString = "";
@@ -180,7 +180,7 @@ public class DecisionPolicyDictionaryController {
             }else{
                 responseString =  mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class));
             }
-          
+
             if (fromAPI) {
                 if (!"Duplicate".equals(responseString)) {
                     if(isFakeUpdate){
@@ -196,13 +196,13 @@ public class DecisionPolicyDictionaryController {
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application / json");
                 request.setCharacterEncoding("UTF-8");
- 
+
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{settingsDictionaryDatas: " + responseString + "}");
                 out.write(j.toString());
                 return null;
             }
- 
+
         }catch (Exception e){
         	LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 			response.setCharacterEncoding("UTF-8");
@@ -242,9 +242,9 @@ public class DecisionPolicyDictionaryController {
 		}
 		return null;
 	}
-	
-	
-	
+
+
+
 	@RequestMapping(value={"/get_RainyDayDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getRainyDayDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -260,7 +260,7 @@ public class DecisionPolicyDictionaryController {
 		}
 	}
 
-	
+
 	@RequestMapping(value={"/get_RainyDayDictionaryData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getRainyDayDictionaryEntityData(HttpServletResponse response){
 		try{
@@ -269,17 +269,17 @@ public class DecisionPolicyDictionaryController {
 			model.put("rainyDayDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(RainyDayTreatments.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-            response.addHeader("successMapKey", "success"); 
+            response.addHeader("successMapKey", "success");
             response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
-	
+
 	@RequestMapping(value={"/decision_dictionary/save_RainyDay"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
@@ -313,7 +313,7 @@ public class DecisionPolicyDictionaryController {
             	decisionRainyDay = (RainyDayTreatments)mapper.readValue(root.get("rainyDayDictionaryData").toString(), RainyDayTreatments.class);
             	treatmentsData = (TreatmentValues)mapper.readValue(root.get("rainyDayDictionaryData").toString(), TreatmentValues.class);
             }
-            
+
 			String userValue = "";
 			int counter = 0;
 			if(treatmentsData.getUserDataTypeValues().size() > 0){
@@ -329,7 +329,7 @@ public class DecisionPolicyDictionaryController {
 				}
 				decisionRainyDay.setTreatments(userValue);
 			}
-			
+
 			if(decisionRainyDay.getId() == 0){
         		List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionRainyDay.getBbid()+":"+decisionRainyDay.getWorkstep(), "bbid:workstep", RainyDayTreatments.class);
 				if(!duplicateData.isEmpty()){
@@ -339,7 +339,7 @@ public class DecisionPolicyDictionaryController {
 				}
 			}else{
 				if(!isFakeUpdate) {
-					commonClassDao.update(decisionRainyDay); 
+					commonClassDao.update(decisionRainyDay);
 				}
 			}
             String responseString = "";
@@ -348,7 +348,7 @@ public class DecisionPolicyDictionaryController {
             }else{
                 responseString =  mapper.writeValueAsString(commonClassDao.getData(RainyDayTreatments.class));
             }
-          
+
             if (fromAPI) {
                 if (!"Duplicate".equals(responseString)) {
                     if(isFakeUpdate){
@@ -364,13 +364,13 @@ public class DecisionPolicyDictionaryController {
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application / json");
                 request.setCharacterEncoding("UTF-8");
- 
+
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{rainyDayDictionaryDatas: " + responseString + "}");
                 out.write(j.toString());
                 return null;
             }
- 
+
         }catch (Exception e){
         	LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 			response.setCharacterEncoding("UTF-8");
@@ -410,10 +410,10 @@ public class DecisionPolicyDictionaryController {
 		}
 		return null;
 	}
-	
+
 }
 
-class TreatmentValues { 
+class TreatmentValues {
 	private ArrayList<Object> userDataTypeValues = new ArrayList<>();
 
 	public ArrayList<Object> getUserDataTypeValues() {

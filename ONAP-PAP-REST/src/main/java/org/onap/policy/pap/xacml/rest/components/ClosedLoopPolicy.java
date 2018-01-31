@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,7 +54,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType; 
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 public class ClosedLoopPolicy extends Policy {
 
@@ -63,11 +63,11 @@ public class ClosedLoopPolicy extends Policy {
 	public ClosedLoopPolicy() {
 		super();
 	}
-	
+
 	public ClosedLoopPolicy(PolicyRestAdapter policyAdapter){
 		this.policyAdapter = policyAdapter;
 	}
-	
+
 	//save configuration of the policy based on the policyname
 	private void saveConfigurations(String policyName, String jsonBody) {
 		try {
@@ -93,18 +93,18 @@ public class ClosedLoopPolicy extends Policy {
 
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured while writing Configuration Data"+e);
-		} 
+		}
 	}
-	
+
 	//Utility to read json data from the existing file to a string
 	static String readFile(String path, Charset encoding) throws IOException {
-		
+
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return new String(encoded, encoding);
-		
+
 	}
-	
-	//create the configuration file based on the policy name on adding the extension as .json 
+
+	//create the configuration file based on the policy name on adding the extension as .json
 	private String getConfigFile(String filename) {
 		filename = FilenameUtils.removeExtension(filename);
 		if (filename.endsWith(".xml")) {
@@ -116,39 +116,39 @@ public class ClosedLoopPolicy extends Policy {
 
 	@Override
 	public Map<String, String> savePolicies() throws PAPException {
-		
+
 		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
 		}
-		
+
 		if(!isPreparedToSave()){
 			prepareToSave();
 		}
-		
+
 		// Until here we prepared the data and here calling the method to create xml.
 		Path newPolicyPath = null;
 		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 
-		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());	
-		return successMap;		
+		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
+		return successMap;
 	}
 
 	//This is the method for preparing the policy for saving.  We have broken it out
 	//separately because the fully configured policy is used for multiple things
 	@Override
 	public boolean prepareToSave() throws PAPException{
-		
+
 		if(isPreparedToSave()){
 			//we have already done this
 			return true;
 		}
-		
+
 		int version = 0;
 		String policyID = policyAdapter.getPolicyID();
 		version = policyAdapter.getHighestVersion();
-		
+
 		// Create the Instance for pojo, PolicyType object is used in marshalling.
 		if (policyAdapter.getPolicyType().equals("Config")) {
 			PolicyType policyConfig = new PolicyType();
@@ -163,18 +163,18 @@ public class ClosedLoopPolicy extends Policy {
 			// Save the Configurations file with the policy name with extention based on selection.
 			String jsonBody = policyAdapter.getJsonBody();
 			saveConfigurations(policyName, jsonBody);
-			
+
 			// Make sure the filename ends with an extension
 			if (policyName.endsWith(".xml") == false) {
 				policyName = policyName + ".xml";
 			}
-			
+
 			PolicyType faultPolicy = (PolicyType) policyAdapter.getData();
-			
+
 			faultPolicy.setDescription(policyAdapter.getPolicyDescription());
 
 			faultPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
-			
+
 			AllOfType allOfOne = new AllOfType();
 			String fileName = policyAdapter.getNewFileName();
 			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
@@ -198,7 +198,7 @@ public class ClosedLoopPolicy extends Policy {
 			// Match for ttlDate
 			allOf.getMatch().add(
 					createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
-			
+
 			AnyOfType anyOf = new AnyOfType();
 			anyOf.getAllOf().add(allOfOne);
 			anyOf.getAllOf().add(allOf);
@@ -211,7 +211,7 @@ public class ClosedLoopPolicy extends Policy {
 			RuleType rule = new RuleType();
 			rule.setRuleId(policyAdapter.getRuleID());
 			rule.setEffect(EffectType.PERMIT);
-			
+
 			// Create Target in Rule
 			AllOfType allOfInRule = new AllOfType();
 
@@ -348,7 +348,7 @@ public class ClosedLoopPolicy extends Policy {
 		assignment5.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue5));
 
 		advice.getAttributeAssignmentExpression().add(assignment5);
-		
+
 		//Risk Attributes
 		AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
 		assignment6.setAttributeId("RiskType");
@@ -361,7 +361,7 @@ public class ClosedLoopPolicy extends Policy {
 		assignment6.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue6));
 
 		advice.getAttributeAssignmentExpression().add(assignment6);
-		
+
 		AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
 		assignment7.setAttributeId("RiskLevel");
 		assignment7.setCategory(CATEGORY_RESOURCE);
@@ -372,7 +372,7 @@ public class ClosedLoopPolicy extends Policy {
 		configNameAttributeValue7.getContent().add(policyAdapter.getRiskLevel());
 		assignment7.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue7));
 
-		advice.getAttributeAssignmentExpression().add(assignment7);	
+		advice.getAttributeAssignmentExpression().add(assignment7);
 
 		AttributeAssignmentExpressionType assignment8 = new AttributeAssignmentExpressionType();
 		assignment8.setAttributeId("guard");
@@ -385,7 +385,7 @@ public class ClosedLoopPolicy extends Policy {
 		assignment8.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue8));
 
 		advice.getAttributeAssignmentExpression().add(assignment8);
-		
+
 		AttributeAssignmentExpressionType assignment9 = new AttributeAssignmentExpressionType();
 		assignment9.setAttributeId("TTLDate");
 		assignment9.setCategory(CATEGORY_RESOURCE);
@@ -399,7 +399,7 @@ public class ClosedLoopPolicy extends Policy {
 		advice.getAttributeAssignmentExpression().add(assignment9);
 
 
-		
+
 		advices.getAdviceExpression().add(advice);
 		return advices;
 	}

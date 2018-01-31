@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,7 +59,7 @@ public class FWTagPicker implements Serializable {
 
 	@Column(name="description", nullable=true, length=2048)
 	private String description;
-	
+
 	@Column(name="networkRole", nullable=true)
 	private String networkRole;
 
@@ -84,26 +84,26 @@ public class FWTagPicker implements Serializable {
 	private UserInfo userModifiedBy;
 
 	private static Log logger = LogFactory.getLog(FWTagPicker.class);
-	
+
 	public FWTagPicker(){
-		
+
 	}
-	
+
 	public FWTagPicker(String string, String userid) {
 		this(string);
 	}
 
 	public FWTagPicker(String domain) {
 		this.tagPickerName = domain;
-	}	
-	
+	}
+
 	@PrePersist
 	public void	prePersist() {
 		Date date = new Date();
 		this.createdDate = date;
 		this.modifiedDate = date;
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
@@ -114,14 +114,14 @@ public class FWTagPicker implements Serializable {
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "DescriptiveScope", "Exception caused While adding Modified by Role");
 		}
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getTagPickerName() {
 		return tagPickerName;
 	}
@@ -129,11 +129,11 @@ public class FWTagPicker implements Serializable {
 	public void setTagPickerName(String tagPickerName) {
 		this.tagPickerName = tagPickerName;
 	}
-	
+
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -145,7 +145,7 @@ public class FWTagPicker implements Serializable {
 	public void setNetworkRole(String networkRole) {
 		this.networkRole = networkRole;
 	}
-	
+
 	public String getTagValues() {
 		return tagValues;
 	}
@@ -153,23 +153,23 @@ public class FWTagPicker implements Serializable {
 	public void setTagValues(String tagValues) {
 		this.tagValues = tagValues;
 	}
-	
+
 	public Date getCreatedDate() {
 		return this.createdDate;
 	}
-	
+
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	
+
 	public Date getModifiedDate() {
 		return this.modifiedDate;
 	}
-	
+
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}

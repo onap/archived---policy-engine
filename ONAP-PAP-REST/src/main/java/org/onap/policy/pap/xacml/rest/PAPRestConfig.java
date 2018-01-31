@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,12 +47,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan(basePackages = { "org.onap.*", "com.*" })
 public class PAPRestConfig extends WebMvcConfigurerAdapter {
 	private static final Logger LOGGER	= FlexLogger.getLogger(PAPRestConfig.class);
-	
+
 	private static String dbDriver = null;
 	private static String dbUrl = null;
 	private static String dbUserName = null;
 	private static String dbPassword = null;
-	
+
 	@PostConstruct
 	public void init(){
 		Properties prop = new Properties();
@@ -77,7 +77,7 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
 			}
 		}
 	}
-	
+
 	@Bean(name = "dataSource")
 	public DataSource getDataSource() {
 	    BasicDataSource dataSource = new BasicDataSource();
@@ -87,7 +87,7 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
 	    dataSource.setPassword(PAPRestConfig.getDbPassword());
 	    return dataSource;
 	}
-	
+
 	@Autowired
 	@Bean(name = "sessionFactory")
 	public SessionFactory getSessionFactory(DataSource dataSource) {
@@ -96,14 +96,14 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
 	    sessionBuilder.addProperties(getHibernateProperties());
 	    return sessionBuilder.buildSessionFactory();
 	}
-	
+
 	private Properties getHibernateProperties() {
 		Properties properties = new Properties();
 		properties.put("hibernate.show_sql", "true");
 		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 		return properties;
 	}
-	
+
 	@Autowired
 	@Bean(name = "transactionManager")
 	public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
@@ -141,5 +141,5 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
 	public static void setDbPassword(String dbPassword) {
 		PAPRestConfig.dbPassword = dbPassword;
 	}
-	
+
 }

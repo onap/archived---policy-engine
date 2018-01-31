@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ public class PolicyControllerTest {
 
 	private static Logger logger = FlexLogger.getLogger(PolicyControllerTest.class);
 	private static CommonClassDao commonClassDao;
-	
+
 	@Before
 	public void setUp() throws Exception{
 		logger.info("setUp: Entering");
@@ -62,9 +62,9 @@ public class PolicyControllerTest {
         entity.setPolicyData(policyData);
         entity.setScope("com");
         data.add(entity);
-   
+
         when(commonClassDao.getDataByQuery("FROM PolicyEntity where policyName = 'Config_SampleTest1206.1.xml' and scope ='com'", new SimpleBindings())).thenReturn(data);
-        
+
         FunctionDefinition fnDefinition = new FunctionDefinition();
         fnDefinition.setXacmlid("Test");
         fnDefinition.setShortname("Test");
@@ -75,7 +75,7 @@ public class PolicyControllerTest {
         fnObjects.add(fnDefinition);
         when(commonClassDao.getData(FunctionDefinition.class)).thenReturn(fnObjects);
 	}
-	
+
 	@Test
 	public void testInit(){
 		PolicyController controller = new PolicyController();

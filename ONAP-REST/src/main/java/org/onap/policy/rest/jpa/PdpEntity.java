@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,21 +62,21 @@ public class PdpEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column (name="pdpKey")
 	private long pdpKey;
-	
+
 	@Column (name="pdpId", nullable=false, unique=false, length=255)
 	private String pdpId;
 
 	@Column(name="pdpName", nullable=false, unique=false, length=255)
 	private String pdpName;
-	
+
 	@Column(name="jmxPort", nullable=false, unique=false)
 	private int jmxPort;
-	
-	
+
+
 	@ManyToOne(optional=false)
 	@JoinColumn(name="groupKey", referencedColumnName="groupKey")
 	private GroupEntity groupEntity;
-	
+
 	@Column(name="created_by", nullable=false, length=255)
 	private String createdBy = "guest";
 
@@ -93,7 +93,7 @@ public class PdpEntity implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
-	
+
 	@Column(name="deleted", nullable=false)
 	private boolean deleted = false;
 
@@ -204,7 +204,7 @@ public class PdpEntity implements Serializable {
 	public int getJmxPort() {
 		return jmxPort;
 	}
-	
+
 	public void setJmxPort(int jmxPort){
 		this.jmxPort = jmxPort;
 	}

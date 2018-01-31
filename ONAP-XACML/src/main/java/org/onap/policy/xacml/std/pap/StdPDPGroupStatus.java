@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,39 +30,39 @@ import com.att.research.xacml.api.pap.PDPPolicy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class StdPDPGroupStatus implements PDPGroupStatus {
-	
+
 	private Status status = Status.UNKNOWN;
-	
+
 	private Set<String>	loadErrors = new HashSet<>();
-	
+
 	private Set<String> loadWarnings = new HashSet<>();
-	
+
 	private Set<PDPPolicy> loadedPolicies = new HashSet<>();
-	
+
 	private Set<PDPPolicy> failedPolicies = new HashSet<>();
-	
+
 	private Set<PDPPIPConfig>	loadedPIPConfigs = new HashSet<>();
-	
+
 	private Set<PDPPIPConfig>	failedPIPConfigs = new HashSet<>();
-	
+
 	private Set<PDP>			inSynchPDPs = new HashSet<>();
-	
+
 	private Set<PDP>			outOfSynchPDPs = new HashSet<>();
-	
+
 	private Set<PDP>			failedPDPs = new HashSet<>();
-	
+
 	private Set<PDP>			updatingPDPs = new HashSet<>();
-	
+
 	private Set<PDP>			lastUpdateFailedPDPs = new HashSet<>();
-	
+
 	private Set<PDP>			unknownPDPs = new HashSet<>();
-	
-	
+
+
 	// Constructor needed for JSON deserialization
 	public StdPDPGroupStatus() {
-		
+
 	}
-	
+
 	public StdPDPGroupStatus(Status status) {
 		this.status = status;
 	}
@@ -128,7 +128,7 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 	public void setLastUpdateFailedPDPs(Set<PDP> lastUpdateFailedPDPs) {
 		this.lastUpdateFailedPDPs = lastUpdateFailedPDPs;
 	}
-	
+
 
 	@Override
 	public Status getStatus() {
@@ -161,7 +161,7 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 	public Set<PDPPolicy> getLoadedPolicies() {
 		return Collections.unmodifiableSet(this.loadedPolicies);
 	}
-	
+
 	public void addLoadedPolicy(PDPPolicy policy) {
 		this.loadedPolicies.add(policy);
 	}
@@ -170,7 +170,7 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 	public Set<PDPPolicy> getFailedPolicies() {
 		return Collections.unmodifiableSet(this.failedPolicies);
 	}
-	
+
 	public void addFailedPolicy(PDPPolicy policy) {
 		this.failedPolicies.add(policy);
 	}
@@ -187,7 +187,7 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 	public Set<PDPPIPConfig> getLoadedPipConfigs() {
 		return Collections.unmodifiableSet(this.loadedPIPConfigs);
 	}
-	
+
 	public void addLoadedPipConfig(PDPPIPConfig config) {
 		this.loadedPIPConfigs.add(config);
 	}
@@ -196,7 +196,7 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 	public Set<PDPPIPConfig> getFailedPipConfigs() {
 		return Collections.unmodifiableSet(this.failedPIPConfigs);
 	}
-	
+
 	public void addFailedPipConfig(PDPPIPConfig config) {
 		this.failedPIPConfigs.add(config);
 	}
@@ -298,10 +298,10 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 		}
 		return (this.status == Status.OK);
 	}
-	
+
 	public void reset() {
 		this.status = Status.OK;
-		
+
 		this.loadErrors.clear();
 		this.loadWarnings.clear();
 		this.loadedPolicies.clear();

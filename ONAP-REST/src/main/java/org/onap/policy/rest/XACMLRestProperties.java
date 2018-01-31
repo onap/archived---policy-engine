@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,21 +25,21 @@ import com.att.research.xacml.util.XACMLProperties;
 /**
  * These are XACML Properties that are relevant to the RESTful API interface for
  * the PDP, PAP and AC interfaces.
- * 
+ *
  *
  */
 public class XACMLRestProperties extends XACMLProperties {
 	/**
 	 * A unique identifier for the PDP servlet instance. Usually set to the URL
 	 * it is running as in the J2EE container.
-	 * 
+	 *
 	 * Eg. http://localhost:8080/pdp/
 	 */
 	public static final String PROP_PDP_ID = "xacml.rest.pdp.id";
 	/**
 	 * A PDP servlet's configuration directory. Holds the pip and policy
 	 * configuration data as well as the local policy cache.
-	 * 
+	 *
 	 * Eg: /opt/app/xacml/config
 	 */
 	public static final String PROP_PDP_CONFIG = "xacml.rest.pdp.config";
@@ -95,7 +95,7 @@ public class XACMLRestProperties extends XACMLProperties {
 	public static final String PROP_PAP_URLS = "xacml.rest.pap.urls";
 	public static final String PROP_PAP_FAILED_URLS = "xacml.rest.pap.failedUrls";
 	public static final String PROP_PAP_SUCCEEDED_URLS = "xacml.rest.pap.succeededUrls";
-	
+
 	/**
 	 * Upon startup, have the PAP servlet send latest configuration information
 	 * to all the PDP nodes it knows about.
@@ -116,83 +116,83 @@ public class XACMLRestProperties extends XACMLProperties {
 	 * Eg. com:sample:foo
 	 */
 	public static final String PROP_PAP_DOMAIN = "xacml.rest.pap.domain";
-	
+
 	/*
 	 * Local path to where user workspaces exist. The user workspace contains temporary files, the
 	 * user's clone of the GIT repository, anything specific to the user, etc.
 	 */
 	public static final String PROP_PAP_WORKSPACE = "xacml.rest.pap.workspace";
-	
+
 	/*
 	 * Local path to  where the GIT repository exists.
-	 * 
+	 *
 	 * Eg. /opt/app/xacml/repository
 	 */
 	public static final String PROP_PAP_REPOSITORY = "xacml.rest.pap.repository";
-	
+
 	/*
 	 * Database driver property
 	 */
 	public static final String PROP_PAP_DB_DRIVER = "javax.persistence.jdbc.driver";
-	
+
 	/*
 	 * Database url
 	 */
 	public static final String PROP_PAP_DB_URL = "javax.persistence.jdbc.url";
-	
+
 	/*
 	 * Database user
 	 */
 	public static final String PROP_PAP_DB_USER = "javax.persistence.jdbc.user";
-	
+
 	/*
 	 * Database password
 	 */
 	public static final String PROP_PAP_DB_PASSWORD = "javax.persistence.jdbc.password";
-	
+
 	/*
 	 * Time in ms which a Policy DB transaction will wait to get the transaction lock object
 	 */
 	public static final String PROP_PAP_TRANS_WAIT = "xacml.rest.pap.transaction.waitms";
-	
+
 	/*
 	 * Policy DB transaction timeout in ms after it has obtained the transaction lock object
 	 */
 	public static final String PROP_PAP_TRANS_TIMEOUT = "xacml.rest.pap.transaction.timeoutms";
-	
+
 	/*
 	 * Policy Audit transaction timeout in ms after it has obtained the transaction lock object
 	 */
 	public static final String PROP_PAP_AUDIT_TIMEOUT = "xacml.rest.pap.audit.timeoutms";
-	
+
 	/*
-	 * Value determines direction of audit.  Value=true will synch the file system to contents of the DB.  
+	 * Value determines direction of audit.  Value=true will synch the file system to contents of the DB.
 	 * Value=false will synch the DB to the contents of the file system.
-	 */	
+	 */
 	public static final String PROP_PAP_AUDIT_FLAG = "xacml.rest.pap.filesystem.audit";
-	
+
 	/*
 	 * Value for enable/disable of audit functionality
-	 */		
+	 */
 	public static final String PROP_PAP_RUN_AUDIT_FLAG = "xacml.rest.pap.run.audit.flag";
-	
+
 	/*
 	 * Controls how long the timeout will be when a pap sends a notification to another pap
 	 */
 	public static final String PROP_PAP_NOTIFY_TIMEOUT = "xacml.rest.pap.notify.timeoutms";
 	/*
-	 *  Value for Enable/Disable of AutoPush Flag. 
+	 *  Value for Enable/Disable of AutoPush Flag.
 	 */
 	public static final String PROP_PAP_PUSH_FLAG = "xacml.rest.pap.autopush.flag";
-	
+
 	/*
-	 *  Properties file for the AutoPush Functionality. 
+	 *  Properties file for the AutoPush Functionality.
 	 */
 	public static final String PROP_PAP_PUSH_FILE = "xacml.rest.pap.autopush.file";
-	
+
 	/*
 	 * Local path to where the GIT repository exists.
-	 * 
+	 *
 	 * Eg. /opt/app/xacml/repository
 	 */
 	public static final String PROP_ADMIN_REPOSITORY = "xacml.rest.admin.repository";
@@ -205,39 +205,39 @@ public class XACMLRestProperties extends XACMLProperties {
 	/*
 	 * This is the domain you can setup for your organization, it should be a
 	 * URI.
-	 * 
+	 *
 	 * Eg. com:sample:foo
 	 */
 	public static final String PROP_ADMIN_DOMAIN = "xacml.rest.admin.domain";
 	/**
 	 * PROP_ADMIN_USER_NAME is simply a name for the logged in user.
-	 * 
+	 *
 	 * AC authentication is out the scope of the web application itself. It is
 	 * up to the developer to setup authentication as they please in the J2EE
 	 * container used to run the web application. Whatever authentication
 	 * mechanism they use, they should then set the attribute into the
 	 * HttpSession object. The Admin Console will be able to read that value
 	 * (default to "guest") in.
-	 * 
+	 *
 	 * ((HttpServletRequest)
 	 * request).getSession().setAttribute("xacml.rest.admin.user.name",
 	 * "Homer");
-	 * 
+	 *
 	 */
 	public static final String PROP_ADMIN_USER_NAME = "xacml.rest.admin.user.name";
 	/**
-	 * 
+	 *
 	 * PROP_ADMIN_USER_ID is an id for the logged in user.
-	 * 
+	 *
 	 * Eg. hs1234
 	 *
 	 * @see #PROP_ADMIN_USER_NAME for more information.
 	 */
 	public static final String PROP_ADMIN_USER_ID = "xacml.rest.admin.user.id";
 	/**
-	 * 
+	 *
 	 * PROP_ADMIN_USER_EMAIL is a user's email address.
-	 * 
+	 *
 	 * @see #PROP_ADMIN_USER_NAME for more information.
 	 */
 	public static final String PROP_ADMIN_USER_EMAIL = "xacml.rest.admin.user.email";
@@ -285,7 +285,7 @@ public class XACMLRestProperties extends XACMLProperties {
 	/*
 	 * PROP_PAP_PASS is the PAP password
 	 */
-	public static final String PROP_CONFIG_URL = "xacml.rest.config.url";	
+	public static final String PROP_CONFIG_URL = "xacml.rest.config.url";
 	/*
 	 * PROP_PDP_USERID is the PDP Unique User ID
 	 */
@@ -313,7 +313,7 @@ public class XACMLRestProperties extends XACMLProperties {
 	/*
 	 * Value for Notification DMaaP servers
 	 */
-	public static final String PROP_NOTIFICATION_SERVERS = "NOTIFICATION_SERVERS";	
+	public static final String PROP_NOTIFICATION_SERVERS = "NOTIFICATION_SERVERS";
 	/*
 	 * Value for Notification Delay
 	 */
@@ -321,15 +321,15 @@ public class XACMLRestProperties extends XACMLProperties {
 	/*
 	 * Value for Notification Topic
 	 */
-	public static final String PROP_NOTIFICATION_TOPIC= "NOTIFICATION_TOPIC";	
+	public static final String PROP_NOTIFICATION_TOPIC= "NOTIFICATION_TOPIC";
 	/*
 	 * Value for Notification Topic
 	 */
-	public static final String PROP_UEB_API_KEY= "UEB_API_KEY";	
+	public static final String PROP_UEB_API_KEY= "UEB_API_KEY";
 	/*
 	 * Value for Notification Topic
 	 */
-	public static final String PROP_UEB_API_SECRET= "UEB_API_SECRET";	
+	public static final String PROP_UEB_API_SECRET= "UEB_API_SECRET";
 	/*
 	 * Closedloop Fault Policy Template Version
 	 */
@@ -341,7 +341,7 @@ public class XACMLRestProperties extends XACMLProperties {
 	/*
 	 * Value for model properties file
 	 */
-	public static final String PROP_ADMIN_MICROSERVICE = "xacml.rest.admin.microServiceModel";	
+	public static final String PROP_ADMIN_MICROSERVICE = "xacml.rest.admin.microServiceModel";
 	/*
 	 * MicroService Policy Template Version
 	 */
@@ -352,11 +352,11 @@ public class XACMLRestProperties extends XACMLProperties {
 	public static final String TemplateVersion_FW= "xacml.rest.firewallPolicy";
 	/*
 	 *  Size of SelectList for Users in MS
-	 *  
+	 *
 	*/
 	public static final String PROP_USER_SELECTLIST_WINDOW_SIZE= "xacml.user.column.count";
 	/*
-	 * Audit function in pap admin to Update userinfo table to syncronize with Roles table 
+	 * Audit function in pap admin to Update userinfo table to syncronize with Roles table
 	 */
 	public static final String PROP_ROLES_USERINFO_AUDIT= "xacml.audit.userInfo";
 	/*
@@ -365,27 +365,27 @@ public class XACMLRestProperties extends XACMLProperties {
 	public static final String PROP_TEST_ENVIRONMENT_LOGINID= "xacml.testEnvironment.loginId";
 	/*
 	 *  Size of of the page length for sqlcontainer
-	 *  
+	 *
 	*/
 	public static final String PROP_SQLCONTAINER_PAGE_LENGTH= "xacml.sqlcontainer.page.length";
 	/*
 	 *  add values used to connect to restful api
-	 *  
+	 *
 	*/
 	public static final String PROP_RESTFUL_INTERFACE= "xacm.restful.interface.file";
 	/*
 	 *  add pattern to identify what values are designed as required
-	 *  
+	 *
 	*/
 	public static final String PROP_XCORE_REQUIRED_PATTERN= "xacm.xcor.required.pattern";
 	/*
 	 *  Time before a cache value is evicted
-	 *  
+	 *
 	*/
 	public static final String PROP_CACHE_LIVE_TIME= "xacm.cache.live.time";
 	/*
 	 *  Highest value allowed in priority
-	 *  
+	 *
 	*/
 	public static final String PROP_PRIORITY_COUNT= "xacml.max.priority.count";
 	/*
@@ -401,7 +401,7 @@ public class XACMLRestProperties extends XACMLProperties {
 	 */
 	public static final String PAP_NODE_TYPE="node_type";
 	/*
-	 * A list of the groups of resources/nodes on which the PAP is dependent. The members of a 
+	 * A list of the groups of resources/nodes on which the PAP is dependent. The members of a
 	 * group are comma-separated and the groups are separated with semicolons.
 	 */
 	public static final String PAP_DEPENDENCY_GROUPS="dependency_groups";
@@ -421,7 +421,7 @@ public class XACMLRestProperties extends XACMLProperties {
 	 */
 	public static final String PDP_RESOURCE_NAME="xacml.rest.pdp.resource.name";
 	/*
-	 * Audit function in pap admin to Update userinfo table to syncronize with Roles table 
+	 * Audit function in pap admin to Update userinfo table to syncronize with Roles table
 	 */
 	public static final String PROP_AUTOMATIC_POLICYPUSH= "xacml.automatic.push";
 	/*
@@ -430,13 +430,13 @@ public class XACMLRestProperties extends XACMLProperties {
 	public static final String PROP_ONAP_LOGLIMIT = "xacml.onap.dashboard.logTableLimit";
 	public static final String PROP_ONAP_SYSTEMALERTLIMIT = "xacml.onap.dashboard.systemAlertTableLimit";
 	/*
-	 * Diff of the policies for the Firewall Feature. 
+	 * Diff of the policies for the Firewall Feature.
 	 */
 	public static final String PROP_FW_GETURL = "FW_GETURL";
 	public static final String PROP_FW_AUTHOURL = "FW_AUTHOURL";
 	public static final String PROP_FW_PROXY = "FW_PROXY";
 	public static final String PROP_FW_PORT = "FW_PORT";
-	
+
 	/*
 	 * The number of Risk Levels allowed
 	 */
@@ -445,11 +445,11 @@ public class XACMLRestProperties extends XACMLProperties {
 	 * The maxium Level displayed on the UI for Micro Services
 	 */
 	public static final String PROP_MODEL_LEVEL = "xacml.model.level";
-	
+
 	/*
 	 * Value for Incoming Notification tries
-	 * 
+	 *
 	 * */
 	public static final String PROP_PAP_INCOMINGNOTIFICATION_TRIES = "xacml.rest.pap.incomingnotification.tries";
-	
+
 }

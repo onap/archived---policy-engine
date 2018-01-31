@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -66,7 +66,7 @@ public class ImportService {
 				logger.error(e);
 				PolicyLogger.error(errorMessage);
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				response.addHeader(errorMsg, "missing");	
+				response.addHeader(errorMsg, "missing");
 				response.addHeader(operation, importHeader);
 				response.addHeader(service, serviceName);
 			}
@@ -95,7 +95,7 @@ public class ImportService {
 						PolicyLogger.error(errorMessage);
 						return;
 					}
-					PolicyLogger.info("XML request from API for import new Service"); 
+					PolicyLogger.info("XML request from API for import new Service");
 					try (Writer writer = new BufferedWriter(new OutputStreamWriter(
 							new FileOutputStream(extractDir + File.separator + randomID+".xmi"), "utf-8"))) {
 						writer.write(xmi);
@@ -104,14 +104,14 @@ public class ImportService {
 						PolicyLogger.error(errorMessage);
 						return;
 					}
-				}else{ 
+				}else{
 					InputStream inputStream = null;
-					try(FileOutputStream outputStream = new FileOutputStream(extractDir + File.separator + randomID+".zip")) {	
+					try(FileOutputStream outputStream = new FileOutputStream(extractDir + File.separator + randomID+".zip")) {
 						inputStream = request.getInputStream();
 						byte[] buffer = new byte[4096];
-						int bytesRead = -1 ; 
-						while ((bytesRead = inputStream.read(buffer)) != -1) { 
-							outputStream.write(buffer, 0, bytesRead) ; 
+						int bytesRead = -1 ;
+						while ((bytesRead = inputStream.read(buffer)) != -1) {
+							outputStream.write(buffer, 0, bytesRead) ;
 						}
 					} catch (IOException e) {
 						PolicyLogger.error("Error in reading in Zip File from API call"+e);
@@ -134,11 +134,11 @@ public class ImportService {
 				}
 			}
 		}
-		
-		// return a response to the PAP		    
-		if (successMap.containsKey(successMessage)) {							
-			response.setStatus(HttpServletResponse.SC_OK);								
-			response.addHeader("successMapKey", successMessage);								
+
+		// return a response to the PAP
+		if (successMap.containsKey(successMessage)) {
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.addHeader("successMapKey", successMessage);
 			response.addHeader(operation, importHeader);
 			response.addHeader(service, serviceName);
 		} else if (successMap.containsKey("DBError")) {
@@ -154,12 +154,12 @@ public class ImportService {
 			response.addHeader(service, serviceName);
 		}else if (successMap.get(errorMsg).contains("MISSING")){
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.addHeader(errorMsg, "missing");	
+			response.addHeader(errorMsg, "missing");
 			response.addHeader(operation, importHeader);
 			response.addHeader(service, serviceName);
 		}else if (successMap.get(errorMsg).contains("VALIDATION")){
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.addHeader(errorMsg, "validation");	
+			response.addHeader(errorMsg, "validation");
 			response.addHeader(operation, importHeader);
 			response.addHeader(service, serviceName);
 		}

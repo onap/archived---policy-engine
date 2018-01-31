@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name="Roles")
 @NamedQuery(name="Roles.findAll", query="SELECT r FROM Roles r ")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})  
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Roles implements Serializable{
 	private static final long serialVersionUID = 1L;
 
@@ -48,7 +48,7 @@ public class Roles implements Serializable{
 
 	@Column(name="loginId")
 	private String loginId;
-	
+
 	private String name;
 	private String scope;
 	private String role;
@@ -56,7 +56,7 @@ public class Roles implements Serializable{
 	public Roles(){
 		// Empty constructor
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}
@@ -71,7 +71,7 @@ public class Roles implements Serializable{
 
 	public void setLoginId(String loginId) {
 		this.loginId = loginId;
-		
+
 	}
 	public String getScope() {
 		return this.scope;
@@ -79,9 +79,9 @@ public class Roles implements Serializable{
 
 	public void setScope(String scope) {
 		this.scope = scope;
-		
+
 	}
-	
+
 	public String getName() {
 		return name;
 	}

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,8 +44,8 @@ public class AdminAuthExtension implements IAdminAuthExtension {
 
 	@Autowired
 	CommonClassDao commonClassDao;
-	
-	
+
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.openecomp.portalapp.service.IAdminAuthExtension#saveUserExtension(org.openecomp.portalsdk.core.domain.User)
@@ -71,7 +71,7 @@ public class AdminAuthExtension implements IAdminAuthExtension {
 		logger.debug("saveUserRoleExtension");
 		savePolicyRole(roles, user);
 	}
-	
+
 	private void savePolicyRole(Set<Role> roles, User user){
 		System.out.println("User Object Recieved");
 		try{
@@ -81,7 +81,7 @@ public class AdminAuthExtension implements IAdminAuthExtension {
 			if(user.getRoles() != null){
 				String query = "delete from Roles where loginid='"+user.getLoginId()+"'";
 				commonClassDao.updateQuery(query);
-				for(Role role : user.getRoles()){ 
+				for(Role role : user.getRoles()){
 					System.out.println("User Role"+role);
 					if(role.getName().trim().equalsIgnoreCase("Policy Super Admin") || role.getName().trim().equalsIgnoreCase("System Administrator") || role.getName().trim().equalsIgnoreCase("Standard User") ){
 						roles1.setRole("super-admin");
@@ -95,11 +95,11 @@ public class AdminAuthExtension implements IAdminAuthExtension {
 						roles1.setRole("editor");
 					}else if(role.getName().trim().equalsIgnoreCase("Policy Guest")){
 						roles1.setRole("guest");
-					}	
+					}
 					commonClassDao.save(roles1);
-				}	
+				}
 			}
-			
+
 			UserInfo userInfo = new UserInfo();
 			userInfo.setUserLoginId(user.getLoginId());
 			userInfo.setUserName(user.getFullName());

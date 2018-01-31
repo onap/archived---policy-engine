@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,12 +78,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 public class PolicyRestController extends RestrictedBaseController{
 
 	private static final Logger policyLogger = FlexLogger.getLogger(PolicyRestController.class);
-	
+
 	private static final String modal = "model";
 	private static final String importDictionary = "import_dictionary";
-	
+
 	private static CommonClassDao commonClassDao;
-	
+
 	public PolicyRestController(){
 		//default constructor
 	}
@@ -92,7 +92,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	private PolicyRestController(CommonClassDao commonClassDao){
 		PolicyRestController.commonClassDao = commonClassDao;
 	}
-	
+
 	public static CommonClassDao getCommonClassDao() {
 		return commonClassDao;
 	}
@@ -100,7 +100,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	public static void setCommonClassDao(CommonClassDao commonClassDao) {
 		PolicyRestController.commonClassDao = commonClassDao;
 	}
-	
+
 
 
 	@RequestMapping(value={"/policycreation/save_policy"}, method={RequestMethod.POST})
@@ -110,11 +110,11 @@ public class PolicyRestController extends RestrictedBaseController{
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		try{
 			JsonNode root = mapper.readTree(request.getReader());
-			
+
 			policyLogger.info("****************************************Logging UserID while Create/Update Policy**************************************************");
 			policyLogger.info("UserId:  " + userId + "Policy Data Object:  "+ root.get(PolicyController.getPolicydata()).get("policy").toString());
 			policyLogger.info("***********************************************************************************************************************************");
-			
+
 			PolicyRestAdapter policyData = mapper.readValue(root.get(PolicyController.getPolicydata()).get("policy").toString(), PolicyRestAdapter.class);
 
 			if("file".equals(root.get(PolicyController.getPolicydata()).get(modal).get("type").toString().replace("\"", ""))){
@@ -193,8 +193,8 @@ public class PolicyRestController extends RestrictedBaseController{
 			policyLogger.error("Exception Occured while saving policy" , e);
 		}
 	}
-	
-	
+
+
 	private ResponseEntity<?> sendToPAP(String body, String requestURI, HttpMethod method){
 		String papUrl = PolicyController.getPapUrl();
 		String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
@@ -240,16 +240,16 @@ public class PolicyRestController extends RestrictedBaseController{
 			String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + ":"+exception.getStatusCode()+":" + exception.getResponseBodyAsString();
 			policyLogger.error(message);
 		}
-		return result;	
+		return result;
 	}
-	
+
 	private String callPAP(HttpServletRequest request , String method, String uriValue){
 		String uri = uriValue;
 		String boundary = null;
 		String papUrl = PolicyController.getPapUrl();
 		String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
 		String papPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
-	
+
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
 		HttpHeaders headers = new HttpHeaders();
@@ -284,7 +284,7 @@ public class PolicyRestController extends RestrictedBaseController{
 			connection.setDoInput(true);
 
 			if(!uri.contains("searchPolicy?action=delete&")){
-				
+
 				if(!(uri.endsWith("set_BRMSParamData") || uri.contains(importDictionary))){
 					connection.setRequestProperty("Content-Type",PolicyController.getContenttype());
 					ObjectMapper mapper = new ObjectMapper();
@@ -368,7 +368,7 @@ public class PolicyRestController extends RestrictedBaseController{
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value={"/getDictionary/*"}, method={RequestMethod.GET})
 	public void getDictionaryController(HttpServletRequest request, HttpServletResponse response){
 		String uri = request.getRequestURI().replace("/getDictionary", "");
@@ -385,7 +385,7 @@ public class PolicyRestController extends RestrictedBaseController{
 			policyLogger.error("Exception occured while getting Dictionary entries", e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/saveDictionary/*/*"}, method={RequestMethod.POST})
 	public ModelAndView saveDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String userId = "";
@@ -398,16 +398,16 @@ public class PolicyRestController extends RestrictedBaseController{
 			userId = UserUtils.getUserSession(request).getOrgUserId();
 			uri = uri+ "?userId=" +userId;
 		}
-		
+
 		policyLogger.info("****************************************Logging UserID while Saving Dictionary*****************************************************");
 		policyLogger.info("UserId:  " + userId);
 		policyLogger.info("***********************************************************************************************************************************");
-		
+
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
 		response.getWriter().write(body);
 		return null;
 	}
-	
+
 	@RequestMapping(value={"/deleteDictionary/*/*"}, method={RequestMethod.POST})
 	public ModelAndView deletetDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String uri = request.getRequestURI().replace("/deleteDictionary", "");
@@ -415,17 +415,17 @@ public class PolicyRestController extends RestrictedBaseController{
 			uri = uri.substring(uri.indexOf('/')+1);
 		}
 		uri = "/onap" + uri.substring(uri.indexOf('/'));
-		
+
 		String userId = UserUtils.getUserSession(request).getOrgUserId();
 		policyLogger.info("****************************************Logging UserID while Deleting Dictionary*****************************************************");
 		policyLogger.info("UserId:  " + userId);
 		policyLogger.info("*************************************************************************************************************************************");
-		
+
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
 		response.getWriter().write(body);
 		return null;
 	}
-	
+
 	@RequestMapping(value={"/searchDictionary"}, method={RequestMethod.POST})
 	public ModelAndView searchDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		Object resultList;
@@ -450,7 +450,7 @@ public class PolicyRestController extends RestrictedBaseController{
 			data.add("Elastic Search Server is down");
 			resultList = data;
 		}
-		
+
 		response.setCharacterEncoding(PolicyController.getCharacterencoding());
 		response.setContentType(PolicyController.getContenttype());
 		PrintWriter out = response.getWriter();
@@ -458,7 +458,7 @@ public class PolicyRestController extends RestrictedBaseController{
 		out.write(j.toString());
 		return null;
 	}
-	
+
 	@RequestMapping(value={"/searchPolicy"}, method={RequestMethod.POST})
 	public ModelAndView searchPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		Object resultList;
@@ -488,7 +488,7 @@ public class PolicyRestController extends RestrictedBaseController{
 		out.write(j.toString());
 		return null;
 	}
-	
+
 	public void deleteElasticData(String fileName){
 		String uri = "searchPolicy?action=delete&policyName='"+fileName+"'";
 		callPAP(null, "POST", uri.trim());

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,17 +43,17 @@ import com.att.research.xacml.util.XACMLProperties;
 
 import org.onap.policy.common.logging.ONAPLoggingContext;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.*; 
+import org.onap.policy.common.logging.flexlogger.*;
 
 public class XACMLPdpRegisterThread implements Runnable {
 	private static final Logger LOGGER	= FlexLogger.getLogger(XACMLPdpRegisterThread.class);
 	private static final Logger auditLogger = FlexLogger.getLogger("auditLogger");
 	private ONAPLoggingContext baseLoggingContext = null;
-	
+
 
 
 	public volatile boolean isRunning = false;
-	
+
 	public XACMLPdpRegisterThread(ONAPLoggingContext baseLoggingContext) {
 		this.baseLoggingContext = baseLoggingContext;
 	}
@@ -61,15 +61,15 @@ public class XACMLPdpRegisterThread implements Runnable {
 	public synchronized boolean isRunning() {
 		return this.isRunning;
 	}
-	
+
 	public synchronized void terminate() {
 		this.isRunning = false;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This is our thread that runs on startup to tell the PAP server we are up-and-running.
-	 * 
+	 *
 	 */
 	@Override
 	public void run() {
@@ -168,7 +168,7 @@ public class XACMLPdpRegisterThread implements Runnable {
 		    			//
 		    			String lists = XACMLProperties.PROP_ROOTPOLICIES + "=" + tempRootPoliciesProperty;
 		    			lists = lists + "\n" + XACMLProperties.PROP_REFERENCEDPOLICIES + "=" + tempReferencedPoliciesProperty + "\n";
-		    			try (InputStream listsInputStream = new ByteArrayInputStream(lists.getBytes());		    					
+		    			try (InputStream listsInputStream = new ByteArrayInputStream(lists.getBytes());		    
 		    					OutputStream os = connection.getOutputStream()) {
 		    				IOUtils.copy(listsInputStream, os);
 
@@ -191,26 +191,26 @@ public class XACMLPdpRegisterThread implements Runnable {
 		            	PolicyLogger.audit("Success. We are configured correctly.");
 		            	papUrls.registered();
 		            	finished = true;
-		            	registered = true;		            	
+		            	registered = true;		            
 		            } else if (connection.getResponseCode() == 200) {
 		            	LOGGER.info("Success. We have a new configuration.");
 		            	loggingContext.transactionEnded();
 		            	PolicyLogger.audit("Success. We have a new configuration.");
 		            	papUrls.registered();
 		            	Properties properties = new Properties();
-		            	properties.load(connection.getInputStream());		            	
+		            	properties.load(connection.getInputStream());		            
 		            	LOGGER.info("New properties: " + properties.toString());
 		            	//
 		            	// Queue it
 		            	//
-		            	// The incoming properties does NOT include urls		            
+		            	// The incoming properties does NOT include urls
 		            	Properties returnedPolicyProperties = XACMLProperties.getPolicyProperties(properties, false);
 		            	tempRootPoliciesProperty = new String(returnedPolicyProperties.getProperty(XACMLProperties.PROP_ROOTPOLICIES));
-		            	tempReferencedPoliciesProperty = new String(returnedPolicyProperties.getProperty(XACMLProperties.PROP_REFERENCEDPOLICIES));		            	
+		            	tempReferencedPoliciesProperty = new String(returnedPolicyProperties.getProperty(XACMLProperties.PROP_REFERENCEDPOLICIES));		            
 		            	Properties returnedPipProperties = XACMLProperties.getPipProperties(properties);
 		            	Properties threadSafeReturnedPipProperties = new Properties();
 		            	ByteArrayOutputStream threadSafeReturnedPipPropertiesOs = new ByteArrayOutputStream();
-		            	returnedPipProperties.store(threadSafeReturnedPipPropertiesOs, "");		            	
+		            	returnedPipProperties.store(threadSafeReturnedPipPropertiesOs, "");		            
 		            	InputStream threadSafeReturnedPipPropertiesIs = new ByteArrayInputStream(threadSafeReturnedPipPropertiesOs.toByteArray());
 		            	threadSafeReturnedPipProperties.load(threadSafeReturnedPipPropertiesIs);
 		            	tempPipConfigProperties = threadSafeReturnedPipProperties;

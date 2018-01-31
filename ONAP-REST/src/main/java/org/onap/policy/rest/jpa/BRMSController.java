@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,45 +48,45 @@ public class BRMSController implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id")
     private int id;
-    
+
     @Column(name="controller_name", nullable=false, length=1024, unique=true)
     @OrderBy("asc")
     private String controllerName;
-    
+
     @Column(name="description", nullable=true, length=1024)
     private String description;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="created_date", updatable=false)
     private Date createdDate;
-    
+
     @ManyToOne(optional = false)
     @JoinColumn(name="created_by")
     private UserInfo userCreatedBy;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="modified_date", nullable=false)
     private Date modifiedDate;
-    
+
     @ManyToOne(optional = false)
     @JoinColumn(name="modified_by")
     private UserInfo userModifiedBy;
-    
+
     @Column(name="controller", nullable=false)
     private String controller;
-    
+
     @PrePersist
     public void prePersist() {
         Date date = new Date();
         this.createdDate = date;
         this.modifiedDate = date;
     }
-    
+
     @PreUpdate
     public void preUpdate() {
         this.modifiedDate = new Date();
     }
-    
+
     public String getDescription() {
         return description;
     }
@@ -150,5 +150,5 @@ public class BRMSController implements Serializable{
     public void setControllerName(String controllerName) {
         this.controllerName = controllerName;
     }
-    
+
 }

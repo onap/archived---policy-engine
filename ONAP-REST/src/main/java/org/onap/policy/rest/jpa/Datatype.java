@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,14 +43,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The persistent class for the Datatype database table.
- * 
+ *
  */
 @Entity
 @Table(name="Datatype")
 @NamedQuery(name="Datatype.findAll", query="SELECT d FROM Datatype d")
 public class Datatype implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final char STANDARD = 'S';
 	public static final char CUSTOM = 'C';
 
@@ -87,8 +87,8 @@ public class Datatype implements Serializable {
 		this.xacmlId = XACML3.ID_DATATYPE_STRING.stringValue();
 		this.isStandard = Datatype.STANDARD;
 	}
-	
-	
+
+
 	public Datatype(int id, Datatype dt) {
 		this.id = id;
 		this.isStandard = dt.isStandard;
@@ -99,19 +99,19 @@ public class Datatype implements Serializable {
 		//
 		this.attributes = new HashSet<>();
 	}
-	
+
 	public Datatype(Identifier identifier, char standard) {
 		if (identifier != null) {
 			this.xacmlId = identifier.stringValue();
-			
+
 		}
 		this.isStandard = standard;
 	}
-	
+
 	public Datatype(Identifier identifier) {
 		this(identifier, Datatype.STANDARD);
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}
@@ -142,7 +142,7 @@ public class Datatype implements Serializable {
 
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
-	}	
+	}
 
 	public Set<Attribute> getAttributes() {
 		return this.attributes;
@@ -214,7 +214,7 @@ public class Datatype implements Serializable {
 	public Identifier getIdentifer() {
 		return new IdentifierImpl(this.xacmlId);
 	}
-	
+
 	@Transient
 	public Identifier getIdentiferByShortName() {
 		return new IdentifierImpl(this.shortName);
@@ -224,7 +224,7 @@ public class Datatype implements Serializable {
 	public boolean isStandard() {
 		return (this.isStandard == Datatype.STANDARD);
 	}
-	
+
 	@Transient
 	public boolean isCustom() {
 		return (this.isStandard == Datatype.CUSTOM);
@@ -237,7 +237,7 @@ public class Datatype implements Serializable {
 				+ ", xacmlId=" + xacmlId + ", shortName=" + shortName
 				+ ", attributes=" + attributes + ", functions=" + functions
 				+ ", arguments=" + arguments + "]";
-				
+
 		//return "Datatype [shortName=" + shortName + "]";
 	}
 

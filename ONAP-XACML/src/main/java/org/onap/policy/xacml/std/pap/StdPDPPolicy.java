@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,23 +47,23 @@ import com.google.common.collect.Lists;
 public class StdPDPPolicy implements PDPPolicy, Serializable {
 	private static final long serialVersionUID = 1L;
 	private static Log	logger	= LogFactory.getLog(StdPDPPolicy.class);
-	
+
 	private String id = null;
-	
+
 	private String name = null;
 
 	private String policyId = null;
-	
+
 	private String description = null;
-	
+
 	private int[]	version = null;
 
 	private boolean isRoot = false;
-	
+
 	private boolean isValid = false;
-	
+
 	private URI location = null;
-	
+
 
 	public StdPDPPolicy(String id, boolean isRoot) {
 		this.id = id;
@@ -75,28 +75,28 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 		this.name = name;
 	}
 
-	
+
 	public StdPDPPolicy(String id, boolean isRoot, String name, URI location) throws IOException {
 		this(id, isRoot);
 		this.name = name;
 		this.location = location;
-		
+
 		//
 		// Read the policy data
-		//		
+		//
 		String theID = this.readPolicyData();
 
 		if (this.id == null) {
 			logger.debug("id is null so we are calling readPolicyData() to get the policyID");
 			this.id = theID;
 		}
-		
-		logger.debug("The final outcome of the constructor returned the following:  id = " + id + 
+
+		logger.debug("The final outcome of the constructor returned the following:  id = " + id +
 						", location = " + location + ", name = " + name);
-		
+
 	}
-	
-	public StdPDPPolicy(String id, boolean isRoot, String name, URI location, boolean isValid, String policyId, 
+
+	public StdPDPPolicy(String id, boolean isRoot, String name, URI location, boolean isValid, String policyId,
 							String description, String version) throws IOException {
 		this(id, isRoot);
 		this.name = name;
@@ -105,22 +105,22 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 		this.description = description;
 		this.version = versionStringToArray(version);
 		this.isValid = isValid;
-		
-		logger.debug("The final outcome of the constructor returned the following:  id = " + id + 
+
+		logger.debug("The final outcome of the constructor returned the following:  id = " + id +
 						", location = " + location + ", name = " + name + ", policyId = " + policyId +
 							", description = " + description + ", Version = " + version);
-		
+
 	}
-	
+
 	public StdPDPPolicy(String id, boolean isRoot, String name, URI location, boolean isFromAPI) throws IOException {
 		this(id, isRoot);
 		this.name = name;
 		this.location = location;
 		this.isValid = isFromAPI;
-		
-		logger.debug("The final outcome of the constructor returned the following:  id = " + id + 
+
+		logger.debug("The final outcome of the constructor returned the following:  id = " + id +
 						", location = " + location + ", name = " + name);
-		
+
 	}
 
 	public StdPDPPolicy(String id, boolean isRoot, URI location, Properties properties) throws IOException {
@@ -140,8 +140,8 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 			}
 		}
 	}
-	
-	
+
+
 	private String readPolicyData() throws IOException {
 		//
 		// Extract XACML policy information
@@ -179,7 +179,7 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public String getId() {
 		return id;
@@ -193,7 +193,7 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -202,17 +202,17 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 	public String getPolicyId() {
 		return this.policyId;
 	}
-	
+
 	@Override
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	@Override
 	public String getVersion() {
 		return versionArrayToString(this.version);
 	}
-	
+
 	@Override
 	@JsonIgnore
 	public int[] getVersionInts() {
@@ -296,11 +296,11 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 				+ this.getVersion() + ", isRoot=" + isRoot + ", isValid=" + isValid
 				+ ", location=" + location + "]";
 	}
-	
-	
+
+
 	/**
 	 * Given a version string consisting of integers with dots between them, convert it into an array of ints.
-	 * 
+	 *
 	 * @param version
 	 * @return
 	 * @throws NumberFormatException
@@ -316,10 +316,10 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 		}
 		return resultArray;
 	}
-	
+
 	/**
 	 * Given an array representing a version, create the corresponding dot-separated string.
-	 * 
+	 *
 	 * @param array
 	 * @return
 	 */
@@ -336,14 +336,14 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 		}
 		return versionString;
 	}
-	
 
-	
+
+
 	//
 	// Methods needed for JSON Deserialization
 	//
 	public StdPDPPolicy() {}
-	
+
 	public void setPolicyId(String policyId) {
 		this.policyId = policyId;
 	}
@@ -362,5 +362,5 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 	public void setLocation(URI location) {
 		this.location = location;
 	}
-	
+
 }

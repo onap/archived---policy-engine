@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -69,7 +69,7 @@ public class DecisionSettings implements Serializable {
 	@Column(name="PRIORITY", nullable=true)
 	@OrderBy("asc")
 	private String priority;
-	
+
 	@Column(name="xacml_id", unique = true, nullable=false)
 	@OrderBy("asc")
 	private String xacmlId = "urn";
@@ -78,10 +78,10 @@ public class DecisionSettings implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="datatype")
 	private Datatype datatypeBean;
-	
+
 	@Transient
 	private String issuer = null;
-	
+
 	@Transient
 	private boolean mustBePresent = false;
 
@@ -92,7 +92,7 @@ public class DecisionSettings implements Serializable {
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -108,14 +108,14 @@ public class DecisionSettings implements Serializable {
 	public void setUserModifiedBy(UserInfo userModifiedBy) {
 		this.userModifiedBy = userModifiedBy;
 	}
-	
+
 	public DecisionSettings() {
 	}
-	
+
 	public DecisionSettings(String domain) {
 		this.xacmlId = domain;
 	}
-	
+
 	public DecisionSettings(String domain, String user) {
 		this(domain);
 	}
@@ -123,13 +123,13 @@ public class DecisionSettings implements Serializable {
 		this(copy.getXacmlId() + ":(0)", user);
 		this.datatypeBean = copy.getDatatypeBean();
 		this.description = copy.getDescription();
-		
+
 	}
-	
+
 	public String getDecisionSettings(){
 		return this.xacmlId;
 	}
-	
+
 	public String setDecisionSettings(){
 		return this.xacmlId;
 	}
@@ -139,7 +139,7 @@ public class DecisionSettings implements Serializable {
 		this.createdDate = date;
 		this.modifiedDate = date;
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
@@ -158,7 +158,7 @@ public class DecisionSettings implements Serializable {
 		this.id = id;
 	}
 
-	
+
 	public Date getCreatedDate() {
 		return this.createdDate;
 	}
@@ -186,7 +186,7 @@ public class DecisionSettings implements Serializable {
 	public String getXacmlId() {
 		return this.xacmlId;
 	}
-	
+
 /*	@Transient
 	public Identifier getXacmlIdentifier() {
 		return new IdentifierImpl(this.xacmlId);
@@ -195,7 +195,7 @@ public class DecisionSettings implements Serializable {
 	public void setXacmlId(String xacmlId) {
 		this.xacmlId = xacmlId;
 	}
-	
+
 	public Datatype getDatatypeBean() {
 		return this.datatypeBean;
 	}
@@ -232,4 +232,4 @@ public class DecisionSettings implements Serializable {
 		this.priority = priority;
 	}
 }
-	
+

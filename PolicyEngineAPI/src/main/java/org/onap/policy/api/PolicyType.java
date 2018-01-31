@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 /**
  * Enumeration of the Policy Return Types that can be returned as part of a
  * {@link org.onap.policy.api.PolicyConfig}.
- * 
+ *
  * @version 0.2
  */
 public enum PolicyType {
@@ -46,13 +46,13 @@ public enum PolicyType {
 	 */
 	OTHER("other")
 	;
-	
-	private String name; 
-	
+
+	private String name;
+
 	private PolicyType(String typeName) {
 		this.name = typeName;
 	}
-	
+
 	/**
 	 * Returns the <code>String</code> format of Type for this <code>PolicyType</code>
 	 * @return the <code>String</code> of the Type for this <code>PolicyType</code>
@@ -69,5 +69,5 @@ public enum PolicyType {
             }
         }
         throw new IllegalArgumentException();
-    }	
+    }
 }

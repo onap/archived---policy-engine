@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ import javax.persistence.Table;
 
 /**
  * The persistent class for the ConstraintValues database table.
- * 
+ *
  */
 @Entity
 @Table(name="ConstraintValues")
@@ -66,7 +66,7 @@ public class ConstraintValue implements Serializable {
 		this.property = property;
 		this.value = value;
 	}
-	
+
 	public ConstraintValue(ConstraintValue value) {
 		this.property = value.getProperty();
 		this.value = value.getValue();
@@ -103,14 +103,14 @@ public class ConstraintValue implements Serializable {
 	public void setAttribute(Attribute attribute) {
 		this.attribute = attribute;
 	}
-	
+
 	public ConstraintValue clone() {
 		ConstraintValue constraint = new ConstraintValue();
-		
+
 		constraint.property = this.property;
 		constraint.value = this.value;
 		constraint.attribute = this.attribute;
-		
+
 		return constraint;
 	}
 }

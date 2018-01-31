@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,7 +56,7 @@ public class OnapName implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
-	
+
 	@Column(name="onap_Name", nullable=false, unique=true)
 	@OrderBy("asc")
 	private String onapName;
@@ -71,7 +71,7 @@ public class OnapName implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
-	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name="created_by")
 	private UserInfo userCreatedBy;
@@ -79,7 +79,7 @@ public class OnapName implements Serializable {
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -95,18 +95,18 @@ public class OnapName implements Serializable {
 	public void setUserModifiedBy(UserInfo userModifiedBy) {
 		this.userModifiedBy = userModifiedBy;
 	}
-	
+
 	public OnapName() {
-		
+
 	}
-	
+
 	public OnapName(String string, String userid) {
 		this(domain);
 	}
-	
+
 	public OnapName(String domain) {
 		this.onapName = domain;
-	}	
+	}
 
 	@PrePersist
 	public void	prePersist() {

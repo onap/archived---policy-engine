@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,7 +61,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 public class PolicyDBDaoTest {
 
 	private static Logger logger = FlexLogger.getLogger(PolicyDBDaoTest.class);
-	
+
 	PolicyDBDaoTestClass d;
 	PolicyDBDao dbd;
 	PolicyDBDao dbd2;
@@ -72,7 +72,7 @@ public class PolicyDBDaoTest {
 		emf = Persistence.createEntityManagerFactory("testPapPU");
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		try{	
+		try{
 			em.createQuery("DELETE FROM PolicyDBDaoEntity").executeUpdate();
 			em.createQuery("DELETE FROM PolicyEntity").executeUpdate();
 			em.createQuery("DELETE FROM ConfigurationDataEntity").executeUpdate();
@@ -96,14 +96,14 @@ public class PolicyDBDaoTest {
 
 		d = PolicyDBDao.getPolicyDBDaoTestClass();
 	}
-	
+
 	@After
 	public void cleanUp(){
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		try{	
-		em.createQuery("DELETE FROM PolicyDBDaoEntity").executeUpdate(); 
-		em.createQuery("DELETE FROM PolicyEntity").executeUpdate(); 
+		try{
+		em.createQuery("DELETE FROM PolicyDBDaoEntity").executeUpdate();
+		em.createQuery("DELETE FROM PolicyEntity").executeUpdate();
 		em.createQuery("DELETE FROM ConfigurationDataEntity").executeUpdate();
 		em.createQuery("DELETE FROM ActionBodyEntity").executeUpdate();
 		em.createQuery("DELETE FROM PdpEntity").executeUpdate();
@@ -121,7 +121,7 @@ public class PolicyDBDaoTest {
 		}
 
 	}
-	
+
 	@Test
 	public void computeScopeTest(){
 		Assert.assertEquals("com",d.computeScope("C:\\Users\\testuser\\admin\\repo\\com\\", "C:\\Users\\testuser\\admin\\repo"));
@@ -137,7 +137,7 @@ public class PolicyDBDaoTest {
 		configFile = d.getConfigFile("Action_mypolicy.xml", "org.onap", pra);
 		Assert.assertEquals("org.onap.Action_mypolicy.json", configFile);
 	}
-	
+
 	@Ignore
 	@Test
 	public void createFromPolicyObject(){
@@ -163,7 +163,7 @@ public class PolicyDBDaoTest {
 			transaction.rollbackTransaction();
 			Assert.fail();
 		}
-		
+
 		EntityManager getData = emf.createEntityManager();
 		Query getDataQuery = getData.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:name");
 		getDataQuery.setParameter("scope", "org.onap");
@@ -193,7 +193,7 @@ public class PolicyDBDaoTest {
 			Assert.fail();
 		}
 		Assert.assertTrue(transaction.isTransactionOpen());
-		try{				
+		try{
 			transaction.deletePolicy(policyFile.getAbsolutePath());
 			Assert.fail();
 		} catch(IllegalStateException e){
@@ -216,7 +216,7 @@ public class PolicyDBDaoTest {
 
 	@Ignore
 	@Test
-	public void groupTransactions(){		
+	public void groupTransactions(){
 		PolicyDBDaoTransaction group = dbd.getNewTransaction();
 		String groupName = "test group 1";
 		try{
@@ -241,7 +241,7 @@ public class PolicyDBDaoTest {
 		Assert.assertEquals("this is a test group", groupEntity.getDescription());
 		group = dbd.getNewTransaction();
 		try{
-			OnapPDPGroup groupToDelete = new StdPDPGroup(PolicyDBDao.createNewPDPGroupId(groupName),Paths.get("/"));			
+			OnapPDPGroup groupToDelete = new StdPDPGroup(PolicyDBDao.createNewPDPGroupId(groupName),Paths.get("/"));
 			group.deleteGroup(groupToDelete, null,"testuser");
 			group.commitTransaction();
 		} catch(Exception e){
@@ -310,7 +310,7 @@ public class PolicyDBDaoTest {
 			Assert.fail();
 		}
 		em.close();
-		
+
 		//add some pdps to groups
 		group = dbd.getNewTransaction();
 		try{
@@ -330,7 +330,7 @@ public class PolicyDBDaoTest {
 			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
-		
+
 		group = dbd.getNewTransaction();
 		try{
 			group.addPdpToGroup("http://localhost:4344/pdp/", PolicyDBDao.createNewPDPGroupId("testgroup1"), "primary", "the main pdp", 3232, "testuser");
@@ -357,11 +357,11 @@ public class PolicyDBDaoTest {
 			Assert.assertEquals("testgroup1",((PdpEntity)o).getGroup().getgroupName());
 		}
 		em.close();
-		
+
 		group = dbd.getNewTransaction();
 		try{
 			OnapPDPGroup groupToDelete = new StdPDPGroup(PolicyDBDao.createNewPDPGroupId("testgroup1"),Paths.get("/"));
-			OnapPDPGroup groupToMoveTo = new StdPDPGroup(PolicyDBDao.createNewPDPGroupId("testgroup2"),Paths.get("/"));	
+			OnapPDPGroup groupToMoveTo = new StdPDPGroup(PolicyDBDao.createNewPDPGroupId("testgroup2"),Paths.get("/"));
 			group.deleteGroup(groupToDelete, groupToMoveTo,"testuser");
 			group.commitTransaction();
 		} catch(Exception e){
@@ -379,7 +379,7 @@ public class PolicyDBDaoTest {
 			Assert.fail();
 		}
 		em.close();
-		
+
 		em = emf.createEntityManager();
 		getPdp = em.createQuery("SELECT p FROM PdpEntity p WHERE p.deleted=:deleted");
 		getPdp.setParameter("deleted", false);
@@ -388,11 +388,11 @@ public class PolicyDBDaoTest {
 			Assert.assertEquals("testgroup2",((PdpEntity)o).getGroup().getgroupName());
 		}
 		em.close();
-		
+
 		group = dbd.getNewTransaction();
 		try{
 			OnapPDPGroup groupToDelete = new StdPDPGroup(PolicyDBDao.createNewPDPGroupId("testgroup2"),Paths.get("/"));
-			OnapPDPGroup groupToMoveTo = null;	
+			OnapPDPGroup groupToMoveTo = null;
 			group.deleteGroup(groupToDelete, groupToMoveTo,"testuser");
 			group.commitTransaction();
 			Assert.fail();
@@ -404,10 +404,10 @@ public class PolicyDBDaoTest {
 			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
-		
-		
+
+
 		//add policy to group
-		
+
 		//update group
 		OnapPDPGroup pdpGroup = new StdPDPGroup("testgroup2", false, "newtestgroup2", "this is my new description", Paths.get("/"));
 		group = dbd.getNewTransaction();
@@ -440,7 +440,7 @@ public class PolicyDBDaoTest {
 		}
 		em.close();
 	}
-	
+
 	@Test
 	public void encryptionTest(){
 		try {
@@ -454,7 +454,7 @@ public class PolicyDBDaoTest {
 			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
-		
+
 	}
 	@Test
 	public void getDescriptionFromXacmlTest(){
@@ -470,7 +470,7 @@ public class PolicyDBDaoTest {
 					+ "threadingStabilityTest() entry"
 					+ "******************************\n\n");
 		}
-			
+
 		PolicyDBDaoTransaction t = dbd.getNewTransaction();
 		Assert.assertTrue(t.isTransactionOpen());
 		try {
@@ -479,7 +479,7 @@ public class PolicyDBDaoTest {
 			if(logger.isDebugEnabled()){
 				Date date= new java.util.Date();
 				logger.debug("\n\nPolicyDBDaoTest.threadingStabilityTest() "
-						+ "\n   sleepTime =  " + sleepTime 
+						+ "\n   sleepTime =  " + sleepTime
 						+ "\n   TimeStamp = " + date.getTime()
 						+ "\n\n");
 			}
@@ -495,12 +495,12 @@ public class PolicyDBDaoTest {
 					+ "\n\n");
 		}
 		Assert.assertFalse(t.isTransactionOpen());
-		
-		
+
+
 		if(logger.isDebugEnabled()){
 			Date date= new java.util.Date();
 			logger.debug("\n\nPolicyDBDaoTest.threadingStabilityTest() "
-					+ "\n   a = dbd.getNewTransaction() " 
+					+ "\n   a = dbd.getNewTransaction() "
 					+ "\n   TimeStamp = " + date.getTime()
 					+ "\n\n");
 		}
@@ -520,7 +520,7 @@ public class PolicyDBDaoTest {
 			if(logger.isDebugEnabled()){
 				Date date= new java.util.Date();
 				logger.debug("\n\nPolicyDBDaoTest.threadingStabilityTest() "
-						+ "\n   sleepTime =  " + sleepTime 
+						+ "\n   sleepTime =  " + sleepTime
 						+ "\n   TimeStamp = " + date.getTime()
 						+ "\n\n");
 			}
@@ -531,7 +531,7 @@ public class PolicyDBDaoTest {
 		if(logger.isDebugEnabled()){
 			Date date= new java.util.Date();
 			logger.debug("\n\nPolicyDBDaoTest.threadingStabilityTest() "
-					+ "\n   b = dbd.getNewTransaction() " 
+					+ "\n   b = dbd.getNewTransaction() "
 					+ "\n   TimeStamp = " + date.getTime()
 					+ "\n\n");
 		}
@@ -553,9 +553,9 @@ public class PolicyDBDaoTest {
 		}
 		Assert.assertTrue(b.isTransactionOpen());
 		b.close();
-		
-		
-				
+
+
+
 		//Now let's test the transaction wait time timeout. Shorten the wait time to 1000 ms
 		System.setProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT,"1000");
 		//And let's lengthen the transaction timeout to 5000 ms
@@ -575,17 +575,17 @@ public class PolicyDBDaoTest {
 		try {
 			//Now the 2nd transaction has a wait timeout in 1000 ms
 			PolicyDBDaoTransaction t2 = dbd2.getNewTransaction();
-			/* 
+			/*
 			 * Give it plenty of time to time out the second transaction
 			 * It will actually hang right here until it either gets the lock from the DB or the
 			 * request for the DB lock times out. The timers are very sloppy so, I have given
 			 * this plenty of leeway.
 			 */
-			
+
 			if(logger.isDebugEnabled()){
 				Date date= new java.util.Date();
 				logger.debug("\n\nPolicyDBDaoTest.threadingStabilityTest() "
-						+ "\n   Thread.sleep(3000)" 
+						+ "\n   Thread.sleep(3000)"
 						+ "\n   TimeStamp = " + date.getTime()
 						+ "\n\n");
 			}
@@ -600,7 +600,7 @@ public class PolicyDBDaoTest {
 			}
 			//Assert.assertTrue(t1.isTransactionOpen());
 			//Assert.assertFalse(t2.isTransactionOpen());
-			
+
 			Assert.fail("\n\nTransaction timeout of 1000 ms exceeded without a PersistenceException\n\n");
 		} catch (PersistenceException e) {
 			//success
@@ -624,7 +624,7 @@ public class PolicyDBDaoTest {
 			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
-		
+
 		if(logger.isDebugEnabled()){
 			Date date= new java.util.Date();
 			logger.debug("\n\nthreadingStabilityTest() exit"

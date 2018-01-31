@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,7 +42,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements PolicyContainer.Indexed {
 	private static final long serialVersionUID = 1L;
 	private static Logger logger	= FlexLogger.getLogger(PDPPolicyContainer.class);
-	
+
 	 /**
      * String identifier of a file's "Id" property.
      */
@@ -57,12 +57,12 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
       * String identifier of a file's "name" property.
       */
      public static final String PROPERTY_VERSION = "Version";
-     
+
     /**
      * String identifier of a file's "Description" property.
      */
     public static final String PROPERTY_DESCRIPTION = "Description";
-    
+
     /**
      * String identifier of a file's "IsRoot" property.
      */
@@ -72,10 +72,10 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
      * List of the string identifiers for the available properties.
      */
     private static Collection<String> pdpPolicyProperties;
- 
+
     private final transient Object data;
     private transient List<PDPPolicy> policies;
-    
+
 	@SuppressWarnings("unchecked")
 	public PDPPolicyContainer(Object data) {
 		super();
@@ -95,7 +95,7 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 		}
 		this.setContainer(this);
 	}
-	
+
 	@Override
 	public Object nextItemId(Object itemId) {
 		if (logger.isTraceEnabled()) {
@@ -104,7 +104,7 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 		int index = this.policies.indexOf(itemId);
 		if (index == -1 || ((index + 1) >= this.policies.size())) {
 			return null;
-		}		
+		}
 		return new PDPPolicyItem(this.policies.get(index + 1));
 	}
 
@@ -180,8 +180,8 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 		items.addAll(this.policies);
 		return Collections.unmodifiableCollection(items);
 	}
-	
-	
+
+
 	@Override
 	public Class<?> getType(Object propertyId) {
         if (propertyId.equals(PROPERTY_ID)) {
@@ -240,7 +240,7 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 			}
 		} catch (Exception e) {
 			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Exception Occured While Mapping the Removing Policy from PDP Group to Std Policy"+e);
-		}	
+		}
 		return this.policies.remove(itemId);
 	}
 
@@ -297,7 +297,7 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 
 	public class PDPPolicyItem {
 		private final PDPPolicy policy;
-		
+
 		public PDPPolicyItem(PDPPolicy itemId) {
 			this.policy = itemId;
 		}
@@ -308,38 +308,38 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 			}
 			return this.policy.getId();
 		}
-		
+
 		public String getName() {
 			if (logger.isTraceEnabled()) {
 				logger.trace("getName: " + this.policy);
 			}
 			return this.policy.getName();
 		}
-		
+
 		public String getVersion() {
 			if (logger.isTraceEnabled()) {
 				logger.trace("getVersion: " + this.policy);
 			}
 			return this.policy.getVersion();
 		}
-		
+
 		public String getDescription() {
 			if (logger.isTraceEnabled()) {
 				logger.trace("getDescription: " + this.policy);
 			}
 			return this.policy.getDescription();
 		}
-		
+
 		public boolean getRoot() {
 			if (logger.isTraceEnabled()) {
 				logger.trace("isRoot: " + this.policy);
 			}
 			return this.policy.isRoot();
 		}
-		
+
 		public void setRoot(Boolean root) {
 			((StdPDPPolicy)this.policy).setRoot(root);
 		}
-	
+
 	}
 }

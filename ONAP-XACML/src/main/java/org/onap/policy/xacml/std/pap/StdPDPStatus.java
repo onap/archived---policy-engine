@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,23 +31,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class StdPDPStatus implements Serializable, PDPStatus {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Status status = Status.UNKNOWN;
 
 	private Set<String>	loadErrors = new HashSet<>();
-	
+
 	private Set<String> loadWarnings = new HashSet<>();
-	
+
 	private transient Set<PDPPolicy> loadedPolicies = new HashSet<>();
-	
+
 	private transient Set<PDPPolicy> loadedRootPolicies = new HashSet<>();
-	
+
 	private transient Set<PDPPolicy> failedPolicies = new HashSet<>();
-	
+
 	private transient Set<PDPPIPConfig>	loadedPIPConfigs = new HashSet<>();
-	
+
 	private transient Set<PDPPIPConfig>	failedPIPConfigs = new HashSet<>();
-	
+
 	public StdPDPStatus() {
 	}
 
@@ -68,18 +68,18 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 		this.failedPIPConfigs.clear();
 		this.failedPIPConfigs.addAll(newStatus.getFailedPipConfigs());
 	}
-	
-	
+
+
 
 	@Override
 	public Status getStatus() {
 		return this.status;
 	}
-	
+
 	public void setStatus(Status status) {
 		this.status = status;
 	}
-	
+
 	@Override
 	public Set<String> getLoadErrors() {
 		return Collections.unmodifiableSet(this.loadErrors);
@@ -88,7 +88,7 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 	public void setLoadErrors(Set<String> errors) {
 		this.loadErrors = errors;
 	}
-	
+
 	public void addLoadError(String error) {
 		this.loadErrors.add(error);
 	}
@@ -101,7 +101,7 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 	public void setLoadWarnings(Set<String> warnings) {
 		this.loadWarnings = warnings;
 	}
-	
+
 	public void addLoadWarning(String warning) {
 		this.loadWarnings.add(warning);
 	}
@@ -110,41 +110,41 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 	public Set<PDPPolicy> getLoadedPolicies() {
 		return Collections.unmodifiableSet(this.loadedPolicies);
 	}
-	
+
 	public void setLoadedPolicies(Set<PDPPolicy> policies) {
 		this.loadedPolicies = policies;
 	}
-	
+
 	public void addLoadedPolicy(PDPPolicy policy) {
 		this.loadedPolicies.add(policy);
 	}
-	
+
 	@Override
 	public Set<PDPPolicy> getLoadedRootPolicies() {
 		return Collections.unmodifiableSet(this.loadedRootPolicies);
 	}
-	
+
 	public void setLoadedRootPolicies(Set<PDPPolicy> policies) {
 		this.loadedRootPolicies = policies;
 	}
-	
+
 	public void addRootPolicy(PDPPolicy policy) {
 		this.loadedRootPolicies.add(policy);
 	}
-	
+
 	public void addAllLoadedRootPolicies(Set<PDPPolicy> policies) {
 		this.loadedRootPolicies.addAll(policies);
 	}
-	
+
 	@Override
 	public Set<PDPPolicy> getFailedPolicies() {
 		return Collections.unmodifiableSet(this.failedPolicies);
 	}
-	
+
 	public void	setFailedPolicies(Set<PDPPolicy> policies) {
 		this.failedPolicies = policies;
 	}
-	
+
 	public void addFailedPolicy(PDPPolicy policy) {
 		this.failedPolicies.add(policy);
 	}
@@ -161,11 +161,11 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 	public Set<PDPPIPConfig> getLoadedPipConfigs() {
 		return Collections.unmodifiableSet(this.loadedPIPConfigs);
 	}
-	
+
 	public void setLoadedPipConfigs(Set<PDPPIPConfig> configs) {
 		this.loadedPIPConfigs = configs;
 	}
-	
+
 	public void addLoadedPipConfig(PDPPIPConfig config) {
 		this.loadedPIPConfigs.add(config);
 	}
@@ -178,7 +178,7 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 	public void setFailedPipConfigs(Set<PDPPIPConfig> configs) {
 		this.failedPIPConfigs = configs;
 	}
-	
+
 	public void addFailedPipConfig(PDPPIPConfig config) {
 		this.failedPIPConfigs.add(config);
 	}
@@ -255,7 +255,7 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 	public String toString() {
 		return "StdPDPStatus [status=" + status + ", loadErrors=" + loadErrors
 				+ ", loadWarnings=" + loadWarnings + ", loadedPolicies="
-				+ loadedPolicies + ", loadedRootPolicies=" + loadedRootPolicies 
+				+ loadedPolicies + ", loadedRootPolicies=" + loadedRootPolicies
 				+ ", failedPolicies=" + failedPolicies
 				+ ", loadedPIPConfigs=" + loadedPIPConfigs
 				+ ", failedPIPConfigs=" + failedPIPConfigs + "]";

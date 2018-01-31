@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -75,19 +75,19 @@ public class PolicyEntity implements Serializable {
 
 	@Column(name="policyName", nullable=false, unique=false, length=255)
 	private String policyName;
-	
-	//The scope is the directory structure in dot notation.  For example: org.onap.myproject 
+
+	//The scope is the directory structure in dot notation.  For example: org.onap.myproject
 	@Column(name="scope", nullable=false, unique=false, length=255)
 	private String scope;
-	
-	@Version 
+
+	@Version
 	@Column(name="version")
 	private int version;
-	
+
 	//not going to be used
 	@Column(name="policyVersion")
 	private int policyVersion = 0;
-	
+
 	@Lob
 	@Column(name="policyData", nullable=false, columnDefinition="TEXT")
 	private String policyData = "NoData";
@@ -96,12 +96,12 @@ public class PolicyEntity implements Serializable {
 	@JoinColumn(name="configurationDataId")
 	@JsonManagedReference
 	private ConfigurationDataEntity configurationDataEntity;
-	
+
 	@OneToOne(optional=true, orphanRemoval=true)
 	@JoinColumn(name="actionBodyId")
 	@JsonManagedReference
 	private ActionBodyEntity actionBodyEntity;
-	
+
 	@Column(name="created_by", nullable=false, length=255)
 	private String createdBy = "guest";
 
@@ -118,7 +118,7 @@ public class PolicyEntity implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
-	
+
 	@Column(name="deleted", nullable=false)
 	private boolean deleted = false;
 
@@ -135,7 +135,7 @@ public class PolicyEntity implements Serializable {
 
 	@PreUpdate
 	public void preUpdate() {
-		this.modifiedDate = new Date();		
+		this.modifiedDate = new Date();
 	}
 
 	/**
@@ -289,10 +289,10 @@ public class PolicyEntity implements Serializable {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
 	public int hashCode() {
-	return Objects.hash(policyId, policyName, scope, version, policyVersion, policyData, configurationDataEntity, 
+	return Objects.hash(policyId, policyName, scope, version, policyVersion, policyData, configurationDataEntity,
 			actionBodyEntity, createdBy, createdDate, description, modifiedBy, modifiedDate, deleted);
 	}
 
@@ -309,7 +309,7 @@ public class PolicyEntity implements Serializable {
 		}
 
 		PolicyEntity p = (PolicyEntity) obj;
-		
+
 		return (
 				policyId == p.policyId &&
 				policyName.equals(p.policyName) &&

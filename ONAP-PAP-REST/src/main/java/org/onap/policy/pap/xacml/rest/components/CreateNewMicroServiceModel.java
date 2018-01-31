@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,7 +53,7 @@ public class CreateNewMicroServiceModel {
 	private MicroServiceModels newModel = null;
 	private HashMap<String,MSAttributeObject > classMap = new HashMap<>();
 
-	
+
 	MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
 
 	public CreateNewMicroServiceModel(String fileName, String serviceName, String string, String version) {
@@ -61,7 +61,7 @@ public class CreateNewMicroServiceModel {
 	}
 
 	public CreateNewMicroServiceModel(String importFile, String  modelName, String description, String version, String randomID) {
-	
+
 		this.newModel = new MicroServiceModels();
 		this.newModel.setVersion(version);
 		this.newModel.setModelName(modelName);
@@ -69,7 +69,7 @@ public class CreateNewMicroServiceModel {
 		userInfo.setUserLoginId("API");
 		this.newModel.setUserCreatedBy(userInfo);
 		String cleanUpFile = null;
-	
+
 	    HashMap<String, MSAttributeObject> tempMap = new HashMap<>();
 	    //Need to delete the file
 	    if (importFile.contains(".zip")){
@@ -87,7 +87,7 @@ public class CreateNewMicroServiceModel {
 	        try {
 				FileUtils.deleteDirectory(new File("ExtractDir" + File.separator + randomID));
 				FileUtils.deleteDirectory(new File(randomID));
-				File deleteFile = new File(cleanUpFile); 
+				File deleteFile = new File(cleanUpFile);
 				FileUtils.forceDelete(deleteFile);
 			} catch (IOException e) {
 				logger.error("Failed to unzip model file " + randomID, e);
@@ -96,11 +96,11 @@ public class CreateNewMicroServiceModel {
 		    tempMap = utils.processEpackage("ExtractDir" + File.separator + randomID+".xmi", MODEL_TYPE.XMI);
 		    classMap.putAll(tempMap);
 		    cleanUpFile = "ExtractDir" + File.separator + randomID+".xmi";
-		    File deleteFile = new File(cleanUpFile); 
+		    File deleteFile = new File(cleanUpFile);
 			deleteFile.delete();
 	    }
 	}
-	
+
 	private List<File> listModelFiles(String directoryName) {
 		File directory = new File(directoryName);
 		List<File> resultList = new ArrayList<>();
@@ -126,7 +126,7 @@ public class CreateNewMicroServiceModel {
 		    String newPath =  zipFile.substring(0, zipFile.length() - 4);
 		    new File(newPath).mkdir();
 		    Enumeration zipFileEntries = zip.entries();
-	
+
 		    // Process each entry
 		    while (zipFileEntries.hasMoreElements()){
 		        // grab a zip file entry
@@ -134,20 +134,20 @@ public class CreateNewMicroServiceModel {
 		        String currentEntry = entry.getName();
 		        File destFile = new File("ExtractDir" + File.separator + newPath + File.separator + currentEntry);
 		        File destinationParent = destFile.getParentFile();
-	
+
 		        destinationParent.mkdirs();
-	
+
 		        if (!entry.isDirectory()){
 		            BufferedInputStream is = new BufferedInputStream(zip
 		            .getInputStream(entry));
 		            int currentByte;
 
 		            byte data[] = new byte[BUFFER];
-	
+
 		            FileOutputStream fos = new FileOutputStream(destFile);
 		            BufferedOutputStream dest = new BufferedOutputStream(fos,
 		            BUFFER);
-	
+
 		            while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
 		                dest.write(data, 0, currentByte);
 		            }
@@ -155,7 +155,7 @@ public class CreateNewMicroServiceModel {
 		            dest.close();
 		            is.close();
 		        }
-	
+
 		        if (currentEntry.endsWith(".zip")){
 		            extractFolder(destFile.getAbsolutePath());
 		        }
@@ -174,12 +174,12 @@ public class CreateNewMicroServiceModel {
 	}
 
 	public Map<String, String> addValuesToNewModel() {
-		
+
 		Map<String, String> successMap = new HashMap<>();
 		MSAttributeObject mainClass  = null;
 		ArrayList<String> dependency = null;
 		String subAttribute = null;
-		
+
 		if (!classMap.containsKey(this.newModel.getModelName())){
 			logger.error("Model Provided does not contain the service name provided in request. Unable to import new model");
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, "AddValuesToNewModel", "Unable to pull out required values, file missing service name provided in request");
@@ -190,7 +190,7 @@ public class CreateNewMicroServiceModel {
 		String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[]{"[", "]", " "}, new String[]{"", "", ""});
 		this.newModel.setDependency(dependTemp);
 		if (!this.newModel.getDependency().equals("")){
-			dependency = new ArrayList<String>(Arrays.asList(dependTemp.split(",")));	
+			dependency = new ArrayList<String>(Arrays.asList(dependTemp.split(",")));
 			dependency = utils.getFullDependencyList(dependency, classMap);
 			if (!dependency.isEmpty()){
 				for (String element : dependency){
@@ -201,7 +201,7 @@ public class CreateNewMicroServiceModel {
 						mainClass.addAllAttribute(temp.getAttribute());
 					}
 				}
-			}		
+			}
 		}
 		subAttribute = utils.createSubAttributes(dependency, classMap, this.newModel.getModelName());
 
@@ -212,9 +212,9 @@ public class CreateNewMicroServiceModel {
         this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
 		successMap.put("success", "success");
 		return successMap;
-		
+
 	}
-	
+
 	public Map<String, String> saveImportService(){
 		String modelName = this.newModel.getModelName();
 		String imported_by = "API";
@@ -242,7 +242,7 @@ public class CreateNewMicroServiceModel {
 		}else{
 			successMap.put("DBError", "EXISTS");
 			logger.error("Import new service failed.  Service already exists");
-		}		
+		}
 		return successMap;
 	}
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,7 +59,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
  */
 
 public class MicroServiceDictionaryControllerTest {
-	
+
 	private static Logger logger = FlexLogger.getLogger(MicroServiceDictionaryControllerTest.class);
 	private static CommonClassDao commonClassDao;
 	private String jsonString = null;
@@ -75,28 +75,28 @@ public class MicroServiceDictionaryControllerTest {
         userInfo.setUserLoginId("testUserId");
         userInfo.setUserName("John");
         when(commonClassDao.getEntityItem(UserInfo.class, "userLoginId", "testing")).thenReturn(userInfo);
-        
+
         List<String>  listIds = new ArrayList<String>();
         listIds.add("Jack");
         when(commonClassDao.getDataByColumn(DCAEuuid.class, "name")).thenReturn(listIds);
-        
+
         List<String>  microList = new ArrayList<String>();
         microList.add("MC-Model");
         when(commonClassDao.getDataByColumn(MicroServiceLocation.class, "name")).thenReturn(microList);
-        
+
         List<Object>  listId = new ArrayList<Object>();
         listId.add("smith");
         when(commonClassDao.getData(DCAEuuid.class)).thenReturn(listId);
         MicroServiceModels microServiceModels = new MicroServiceModels();
-        
+
         doNothing().when(commonClassDao).delete(microServiceModels);
-		
-		MicroServiceDictionaryController.setCommonClassDao(commonClassDao);	
-		
+
+		MicroServiceDictionaryController.setCommonClassDao(commonClassDao);
+
 		controller = new MicroServiceDictionaryController();
-       
+
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        
+
 		jsonString = "{\"microServiceModelsDictionaryData\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
 				+ " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
 				+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
@@ -105,11 +105,11 @@ public class MicroServiceDictionaryControllerTest {
 				+ "	\"policyDescription\": \"testing input\", \"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\",\"riskLevel\": \"2\","
 				+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 				+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
-    
+
         br = new BufferedReader(new StringReader(jsonString));
         //--- mock the getReader() call
-        when(request.getReader()).thenReturn(br);   
-                
+        when(request.getReader()).thenReturn(br);
+
         logger.info("setUp: exit");
 	}
 
@@ -120,52 +120,52 @@ public class MicroServiceDictionaryControllerTest {
 
 	@Test
 	public void testGetUserInfo() {
-		
-		logger.info("testGetUserInfo: Entering");		
+
+		logger.info("testGetUserInfo: Entering");
 
 		UserInfo userInfo = controller.getUserInfo("testing");
 		logger.info("userInfo.getUserName() : " + userInfo.getUserName());
-		
+
 		assertEquals("John", userInfo.getUserName());
-	
-		logger.info("testGetUserInfo: exit");		
+
+		logger.info("testGetUserInfo: exit");
 	}
 
 	@Test
 	public void testGetDCAEUUIDDictionaryByNameEntityData() {
-		
+
 		logger.info("testGetDCAEUUIDDictionaryByNameEntityData: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 
 		controller.getDCAEUUIDDictionaryByNameEntityData(response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("dcaeUUIDDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetDCAEUUIDDictionaryByNameEntityData: exit");
 	}
 
 	@Test
 	public void testGetDCAEUUIDDictionaryEntityData() {
-		
+
 		logger.info("testGetDCAEUUIDDictionaryEntityData: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-		
+
 		controller.getDCAEUUIDDictionaryEntityData(response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("dcaeUUIDDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetDCAEUUIDDictionaryEntityData: exit");
 	}
 
@@ -174,8 +174,8 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testSaveDCAEUUIDDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"dcaeUUIDDictionaryData\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
@@ -187,7 +187,7 @@ public class MicroServiceDictionaryControllerTest {
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.saveDCAEUUIDDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("dcaeUUIDDictionaryDatas"));
@@ -195,7 +195,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testSaveDCAEUUIDDictionary: exit");
 	}
 
@@ -204,8 +204,8 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testRemoveDCAEUUIDDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
@@ -217,7 +217,7 @@ public class MicroServiceDictionaryControllerTest {
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.removeMicroServiceConfigNameDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
@@ -225,7 +225,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testRemoveDCAEUUIDDictionary: exit");
 	}
 
@@ -234,16 +234,16 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testGetMicroServiceConfigNameByNameDictionaryEntityData: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-		
+
 		controller.getMicroServiceConfigNameByNameDictionaryEntityData(response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetMicroServiceConfigNameByNameDictionaryEntityData: exit");
 	}
 
@@ -252,16 +252,16 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testGetMicroServiceConfigNameByNameDictionaryEntityData: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-		
+
 		controller.getMicroServiceConfigNameDictionaryEntityData(response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetMicroServiceConfigNameDictionaryEntityData: exit");
 	}
 
@@ -270,8 +270,8 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testSaveMicroServiceConfigNameDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"microServiceCongigNameDictionaryData\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
@@ -283,7 +283,7 @@ public class MicroServiceDictionaryControllerTest {
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.saveMicroServiceConfigNameDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
@@ -291,7 +291,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testSaveMicroServiceConfigNameDictionary: exit");
 	}
 
@@ -300,8 +300,8 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testRemoveMicroServiceConfigNameDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
@@ -313,7 +313,7 @@ public class MicroServiceDictionaryControllerTest {
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.removeMicroServiceConfigNameDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
@@ -321,26 +321,26 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testRemoveMicroServiceConfigNameDictionary: exit");
 	}
 
 	@Test
 	public void testGetMicroServiceLocationByNameDictionaryEntityData() {
-		
+
 		logger.info("testGetMicroServiceLocationByNameDictionaryEntityData: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-		
+
 		controller.getMicroServiceLocationByNameDictionaryEntityData(response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceLocationDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetMicroServiceLocationByNameDictionaryEntityData: exit");
 	}
 
@@ -349,16 +349,16 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testGetMicroServiceLocationDictionaryEntityData: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-		
+
 		controller.getMicroServiceLocationDictionaryEntityData(response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceLocationDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetMicroServiceLocationDictionaryEntityData: exit");
 	}
 
@@ -367,8 +367,8 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testSaveMicroServiceLocationDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"microServiceLocationDictionaryData\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
@@ -380,7 +380,7 @@ public class MicroServiceDictionaryControllerTest {
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.saveMicroServiceLocationDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceLocationDictionaryDatas"));
@@ -388,7 +388,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testSaveMicroServiceLocationDictionary: exit");
 	}
 
@@ -397,8 +397,8 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testRemoveMicroServiceLocationDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
@@ -411,7 +411,7 @@ public class MicroServiceDictionaryControllerTest {
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
 
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.removeMicroServiceLocationDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceLocationDictionaryDatas"));
@@ -419,7 +419,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testRemoveMicroServiceLocationDictionary: exit");
 	}
 
@@ -428,16 +428,16 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testGetMicroServiceAttributeByNameDictionaryEntityData: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-		
+
 		controller.getMicroServiceAttributeByNameDictionaryEntityData(response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceAttributeDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetMicroServiceAttributeByNameDictionaryEntityData: exit");
 	}
 
@@ -446,16 +446,16 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testGetMicroServiceAttributeDictionaryEntityData: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-		
+
 		controller.getMicroServiceAttributeDictionaryEntityData(response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceAttributeDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetMicroServiceAttributeDictionaryEntityData: exit");
 	}
 
@@ -464,8 +464,8 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testSaveMicroServiceAttributeDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"modelAttributeDictionaryData\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
@@ -477,7 +477,7 @@ public class MicroServiceDictionaryControllerTest {
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.saveMicroServiceAttributeDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceAttributeDictionaryDatas"));
@@ -485,7 +485,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testSaveMicroServiceAttributeDictionary: exit");
 	}
 
@@ -494,8 +494,8 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testRemoveMicroServiceAttributeDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
@@ -507,7 +507,7 @@ public class MicroServiceDictionaryControllerTest {
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.removeMicroServiceAttributeDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceAttributeDictionaryDatas"));
@@ -515,7 +515,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testRemoveMicroServiceAttributeDictionary: exit");
 	}
 
@@ -524,16 +524,16 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testGetMicroServiceModelsDictionaryByNameEntityData: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-		
+
 		controller.getMicroServiceModelsDictionaryByNameEntityData(response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceModelsDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetMicroServiceModelsDictionaryByNameEntityData: exit");
 	}
 
@@ -543,13 +543,13 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		String msModelJson = "{\"microServiceModelsDictionaryData\":[\"modelName\"]}";
-	        
+
 	    BufferedReader br = new BufferedReader(new StringReader(msModelJson));
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.getMicroServiceModelsDictionaryByVersionEntityData(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("No model name given"));
@@ -557,7 +557,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetMicroServiceModelsDictionaryByVersionEntityData: exit");
 	}
 
@@ -567,13 +567,13 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		String msModelJson = "{\"microServiceModelsDictionaryData\":[\"modelName\"]}";
-	        
+
 	    BufferedReader br = new BufferedReader(new StringReader(msModelJson));
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.getMicroServiceModelsDictionaryEntityData(response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceModelsDictionaryDatas"));
@@ -581,7 +581,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetMicroServiceModelsDictionaryEntityData: exit");
 	}
 
@@ -591,13 +591,13 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		String msModelJson = "{\"microServiceModelsDictionaryData\":[\"modelName\"]}";
-	        
+
 	    BufferedReader br = new BufferedReader(new StringReader(msModelJson));
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.getMicroServiceModelsDictionaryEntityDataServiceVersion(response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceModelsDictionaryDatas"));
@@ -605,7 +605,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetMicroServiceModelsDictionaryEntityDataServiceVersion: exit");
 	}
 
@@ -615,13 +615,13 @@ public class MicroServiceDictionaryControllerTest {
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		String msModelJson = "{\"microServiceModelsDictionaryData\":[\"modelName\"]}";
-	        
+
 	    BufferedReader br = new BufferedReader(new StringReader(msModelJson));
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.getMicroServiceModelsDictionaryClassEntityData(response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceModelsDictionaryClassDatas"));
@@ -629,7 +629,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetMicroServiceModelsDictionaryClassEntityData: exit");
 	}
 
@@ -638,11 +638,11 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testSaveMicroServiceModelsDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.saveMicroServiceModelsDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceModelsDictionaryDatas"));
@@ -650,7 +650,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testSaveMicroServiceModelsDictionary: exit");
 	}
 
@@ -659,8 +659,8 @@ public class MicroServiceDictionaryControllerTest {
 		logger.info("testRemoveMicroServiceModelsDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
@@ -671,9 +671,9 @@ public class MicroServiceDictionaryControllerTest {
 					+ "	\"policyDescription\": \"testing input\", \"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\",\"riskLevel\": \"2\","
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
-			
+
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.removeMicroServiceModelsDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceModelsDictionaryDatas"));
@@ -681,7 +681,7 @@ public class MicroServiceDictionaryControllerTest {
 		} catch (Exception e) {
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testRemoveMicroServiceModelsDictionary: exit");
 	}
 

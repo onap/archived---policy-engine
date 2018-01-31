@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,14 +30,14 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 
 /**
- * Action Policy Implementation. 
- * 
+ * Action Policy Implementation.
+ *
  * @version 0.1
  */
 public class ActionPolicyService {
 	private static final Logger LOGGER = FlexLogger.getLogger(ActionPolicyService.class.getName());
 	private PAPServices papServices = null;
-	
+
 	private PolicyParameters policyParameters = null;
 	private String message = null;
 	private String policyName = null;
@@ -45,7 +45,7 @@ public class ActionPolicyService {
 	private Map<String,String> componentAttributes = null;
 	private String actionAttribute = null;
 	private String actionPerformer = null;
-	
+
 	public ActionPolicyService(String policyScope, String policyName,
 			PolicyParameters policyParameters) {
 		this.policyParameters = policyParameters;

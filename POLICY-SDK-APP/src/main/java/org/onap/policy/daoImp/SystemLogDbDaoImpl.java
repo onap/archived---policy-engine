@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,14 +35,14 @@ import org.onap.policy.conf.HibernateSession;
 import org.onap.policy.controller.PolicyController;
 import org.onap.policy.dao.SystemLogDbDao;
 import org.onap.policy.rest.jpa.SystemLogDB;
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
 
 @Service("SystemLogDbDao")
 public class SystemLogDbDaoImpl implements SystemLogDbDao {
 	private static final Logger logger = FlexLogger.getLogger(SystemLogDbDaoImpl.class);
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SystemLogDB> getLoggingData() {
@@ -61,7 +61,7 @@ public class SystemLogDbDaoImpl implements SystemLogDbDao {
             system = cr.list();
 			tx.commit();
 		} catch (Exception e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDB Table"+e);	
+			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDB Table"+e);
 		}finally{
 			try{
 				session.close();
@@ -90,7 +90,7 @@ public class SystemLogDbDaoImpl implements SystemLogDbDao {
             system = cr.list();
 			tx.commit();
 		} catch (Exception e) {
-			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDB Table"+e);	
+			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying SystemLogDB Table"+e);
 		}finally{
 			try{
 				session.close();

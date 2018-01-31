@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,7 +54,7 @@ import com.google.common.base.Splitter;
 
 /**
  * The persistent class for the PIPResolver database table.
- * 
+ *
  */
 @Entity
 @Table(name="PIPResolver")
@@ -107,14 +107,14 @@ public class PIPResolver implements Serializable {
 
 	public PIPResolver() {
 	}
-	
+
 	public PIPResolver(String prefix, Properties properties, String user) throws PIPException {
 		this.createdBy = user;
 		this.modifiedBy = user;
 		this.readOnly = '0';
 		this.readProperties(prefix, properties);
 	}
-	
+
 	public PIPResolver(PIPResolver resolver) {
 		this.name = resolver.name;
 		this.description = resolver.description;
@@ -132,7 +132,7 @@ public class PIPResolver implements Serializable {
 		this.createdDate = date;
 		this.modifiedDate = date;
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
@@ -250,7 +250,7 @@ public class PIPResolver implements Serializable {
 
 		return pipresolverParam;
 	}
-	
+
 	@Transient
 	public void clearParams() {
 		while (this.pipresolverParams.isEmpty() == false) {
@@ -262,7 +262,7 @@ public class PIPResolver implements Serializable {
 	public boolean isReadOnly() {
 		return (this.readOnly == '1');
 	}
-	
+
 	@Transient
 	public void setReadOnly(boolean readOnly) {
 		if (readOnly) {
@@ -271,13 +271,13 @@ public class PIPResolver implements Serializable {
 			this.readOnly = '0';
 		}
 	}
-	
+
 	@Transient
 	public static Collection<PIPResolver>	importResolvers(String prefix, String list, Properties properties, String user) throws PIPException {
 		Collection<PIPResolver> resolvers = new ArrayList<>();
 		for (String id : Splitter.on(',').trimResults().omitEmptyStrings().split(list)) {
 			resolvers.add(new PIPResolver(prefix + "." + id, properties, user));
-		}		
+		}
 		return resolvers;
 	}
 

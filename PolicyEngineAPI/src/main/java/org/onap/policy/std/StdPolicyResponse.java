@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,18 +27,18 @@ import org.onap.policy.api.PolicyResponse;
 import org.onap.policy.api.PolicyResponseStatus;
 
 /**
- * PolicyResponse Implementation class. 
- * 
- * @version 0.1 
+ * PolicyResponse Implementation class.
+ *
+ * @version 0.1
  *
  */
 public class StdPolicyResponse implements PolicyResponse{
-	private PolicyResponseStatus policyResponseStatus; 
+	private PolicyResponseStatus policyResponseStatus;
 	private Map<String,String> actionAdvised;
 	private Map<String,String> actionTaken;
 	private Map<String,String> requestAttributes;
-	private String policyResponseMessage; 
-	
+	private String policyResponseMessage;
+
 	@Override
 	public PolicyResponseStatus getPolicyResponseStatus() {
 		return policyResponseStatus;
@@ -83,12 +83,12 @@ public class StdPolicyResponse implements PolicyResponse{
 	public void setPolicyResponseMessage(String policyResponseMessage) {
 		this.policyResponseMessage = policyResponseMessage;
 	}
-	
+
 	public void setPolicyResponseStatus(String policyResponseMessage, PolicyResponseStatus policyResponseStatus) {
 		this.policyResponseMessage = policyResponseMessage;
 		this.policyResponseStatus = policyResponseStatus;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "PolicyResponse [ policyResponseStatus=" + policyResponseStatus + ", policyResponseMessage=" + policyResponseMessage + ", " +

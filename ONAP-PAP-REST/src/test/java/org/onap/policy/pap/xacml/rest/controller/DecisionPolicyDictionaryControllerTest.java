@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,13 +44,13 @@ public class DecisionPolicyDictionaryControllerTest {
 	private String jsonString = null;
 	private HttpServletRequest request = null;
 	private DecisionPolicyDictionaryController controller = null;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		logger.info("setUp: Entering");
         commonClassDao = Mockito.mock(CommonClassDao.class);
 	    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        
+
 		jsonString = "{\"attributeDictionaryDatas\": {\"error\": \"\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
 				+ " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
 				+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
@@ -61,12 +61,12 @@ public class DecisionPolicyDictionaryControllerTest {
 				+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 
         BufferedReader br = new BufferedReader(new StringReader(jsonString));
-        
+
         //--- mock the getReader() call
-        when(request.getReader()).thenReturn(br);   
-        
+        when(request.getReader()).thenReturn(br);
+
         controller = new DecisionPolicyDictionaryController(commonClassDao);
-        
+
         logger.info("setUp: exit");
 	}
 
@@ -81,7 +81,7 @@ public class DecisionPolicyDictionaryControllerTest {
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 
 		controller.getSettingsDictionaryByNameEntityData(request, response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("settingsDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
@@ -89,9 +89,9 @@ public class DecisionPolicyDictionaryControllerTest {
 			logger.error("Exception Occured"+e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testGetSettingsDictionaryByNameEntityData: exit");	
-		
+
+		logger.info("testGetSettingsDictionaryByNameEntityData: exit");
+
 	}
 
 	@Test
@@ -101,7 +101,7 @@ public class DecisionPolicyDictionaryControllerTest {
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 
 		controller.getSettingsDictionaryEntityData(response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("settingsDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
@@ -109,9 +109,9 @@ public class DecisionPolicyDictionaryControllerTest {
 			logger.error("Exception Occured"+e);
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetSettingsDictionaryEntityData: exit");
-		
+
 	}
 
 	@Test
@@ -119,14 +119,14 @@ public class DecisionPolicyDictionaryControllerTest {
 		logger.info("testSaveSettingsDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);  
-        
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"settingsDictionaryData\":{\"xacmlId\":\"testMMRestAPI1\",\"datatypeBean\":{\"shortName\":\"string\"},\"description\":\"test\",\"priority\":\"High\"}, \"userid\":\"test\"}";
-			
+
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.saveSettingsDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("settingsDictionaryDatas"));
@@ -135,9 +135,9 @@ public class DecisionPolicyDictionaryControllerTest {
 			logger.error("Exception Occured"+e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testSaveSettingsDictionary: exit");	
-		
+
+		logger.info("testSaveSettingsDictionary: exit");
+
 	}
 
 	@Test
@@ -145,8 +145,8 @@ public class DecisionPolicyDictionaryControllerTest {
 		logger.info("testRemoveSettingsDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
@@ -158,7 +158,7 @@ public class DecisionPolicyDictionaryControllerTest {
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.removeSettingsDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("settingsDictionaryDatas"));
@@ -167,9 +167,9 @@ public class DecisionPolicyDictionaryControllerTest {
 			logger.error("Exception Occured"+e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testRemoveSettingsDictionary: exit");	
-		
+
+		logger.info("testRemoveSettingsDictionary: exit");
+
 	}
 
 	@Test
@@ -179,7 +179,7 @@ public class DecisionPolicyDictionaryControllerTest {
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 
 		controller.getRainyDayDictionaryByNameEntityData(request, response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("rainyDayDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
@@ -187,9 +187,9 @@ public class DecisionPolicyDictionaryControllerTest {
 			logger.error("Exception Occured"+e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testGetRainyDayDictionaryByNameEntityData: exit");		
-		
+
+		logger.info("testGetRainyDayDictionaryByNameEntityData: exit");
+
 	}
 
 	@Test
@@ -199,7 +199,7 @@ public class DecisionPolicyDictionaryControllerTest {
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 
 		controller.getRainyDayDictionaryEntityData(response);
-		
+
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("rainyDayDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
@@ -207,9 +207,9 @@ public class DecisionPolicyDictionaryControllerTest {
 			logger.error("Exception Occured"+e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testGetRainyDayDictionaryEntityData: exit");	
-		
+
+		logger.info("testGetRainyDayDictionaryEntityData: exit");
+
 	}
 
 	@Test
@@ -217,14 +217,14 @@ public class DecisionPolicyDictionaryControllerTest {
 		logger.info("testSaveRainyDayDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);  
-        
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"rainyDayDictionaryData\":{\"bbid\":\"BB2\",\"workstep\":\"1\",\"userDataTypeValues\":[{\"$$hashKey\":\"object:233\",\"treatment\":\"test1\"},{\"$$hashKey\":\"object:239\",\"treatment\":\"test2\"}]},\"userid\":\"mm117s\"}";
-			
+
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.saveRainyDayDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("rainyDayDictionaryDatas"));
@@ -233,9 +233,9 @@ public class DecisionPolicyDictionaryControllerTest {
 			logger.error("Exception Occured"+e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testSaveRainyDayDictionary: exit");		
-		
+
+		logger.info("testSaveRainyDayDictionary: exit");
+
 	}
 
 	@Test
@@ -243,8 +243,8 @@ public class DecisionPolicyDictionaryControllerTest {
 		logger.info("testRemoveRainyDayDictionary: Entering");
 
 		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+	    request = mock(HttpServletRequest.class);
+
 		try {
 		    // mock the getReader() call
 			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
@@ -256,7 +256,7 @@ public class DecisionPolicyDictionaryControllerTest {
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br); 
 			controller.removeRainyDayDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("rainyDayDictionaryDatas"));
@@ -265,9 +265,9 @@ public class DecisionPolicyDictionaryControllerTest {
 			logger.error("Exception Occured"+e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testRemoveRainyDayDictionary: exit");		
-		
+
+		logger.info("testRemoveRainyDayDictionary: exit");
+
 	}
 
 }

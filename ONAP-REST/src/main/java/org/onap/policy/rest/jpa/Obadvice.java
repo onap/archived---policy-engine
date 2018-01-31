@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ import com.att.research.xacml.api.Identifier;
 
 /**
  * The persistent class for the Obadvice database table.
- * 
+ *
  */
 @Entity
 @Table(name="Obadvice")
@@ -95,7 +95,7 @@ public class Obadvice implements Serializable {
 		this.type = Obadvice.OBLIGATION;
 		this.fulfillOn = Obadvice.EFFECT_PERMIT;
 	}
-	
+
 	public Obadvice(String domain, String userid) {
 		this.xacmlId = domain;
 		this.type = Obadvice.OBLIGATION;
@@ -114,7 +114,7 @@ public class Obadvice implements Serializable {
 		this.createdDate = date;
 		this.modifiedDate = date;
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
@@ -197,7 +197,7 @@ public class Obadvice implements Serializable {
 
 		return obadviceExpression;
 	}
-	
+
 	public void removeAllExpressions() {
 		if (this.obadviceExpressions == null) {
 			return;
@@ -211,7 +211,7 @@ public class Obadvice implements Serializable {
 	@Transient
 	public Obadvice clone() {
 		Obadvice obadvice = new Obadvice();
-		
+
 		obadvice.type = this.type;
 		obadvice.xacmlId = this.xacmlId;
 		obadvice.fulfillOn = this.fulfillOn;

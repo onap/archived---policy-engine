@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,24 +46,24 @@ import com.att.research.xacml.util.XACMLProperties;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
 /**
  * Helper static class that wraps XACMLPolicyWriter
- * 
+ *
  *
  */
 public class XACMLPolicyWriterWithPapNotify{
 	private static final Logger LOGGER = FlexLogger.getLogger(XACMLPolicyWriterWithPapNotify.class);
-	
+
 	private XACMLPolicyWriterWithPapNotify() {
 		// Add private constructor to hide the implicit public one
 	}
 
 	/**
 	 * Helper static class that does the work to write a policy set to a file on disk and notify PAP
-	 * 
+	 *
 	 *
 	 */
 	public static Path writePolicyFile(Path filename, PolicySetType policySet) {
@@ -74,7 +74,7 @@ public class XACMLPolicyWriterWithPapNotify{
 		}
 		//write to file
 		Path path = XACMLPolicyWriter.writePolicyFile(filename, policySet);
-		
+
 		if(path!=null){
 			//write to DB
 			if(notifyPapOfCreateUpdate(filename.toAbsolutePath().toString())){
@@ -108,7 +108,7 @@ public class XACMLPolicyWriterWithPapNotify{
 
 	/**
 	 * Helper static class that does the work to write a policy set to an output stream and notify PAP
-	 * 
+	 *
 	 *
 	 */
 	public static void writePolicyFile(OutputStream os, PolicySetType policySet) {
@@ -123,7 +123,7 @@ public class XACMLPolicyWriterWithPapNotify{
 
 	/**
 	 * Helper static class that does the work to write a policy to a file on disk.
-	 * 
+	 *
 	 *
 	 */
 	public static Path writePolicyFile(Path filename, PolicyType policy) {
@@ -135,9 +135,9 @@ public class XACMLPolicyWriterWithPapNotify{
 
 		//write to file
 		Path path = XACMLPolicyWriter.writePolicyFile(filename, policy);
-		
+
 		if(path!=null){
-			//write to DB			
+			//write to DB
 			if(notifyPapOfCreateUpdate(filename.toAbsolutePath().toString())){
 				return path;
 			}else{
@@ -170,7 +170,7 @@ public class XACMLPolicyWriterWithPapNotify{
 
 	/**
 	 * Helper static class that does the work to write a policy to a file on disk.
-	 * 
+	 *
 	 *
 	 */
 	public static InputStream getXmlAsInputStream(PolicyType policy) {
@@ -182,7 +182,7 @@ public class XACMLPolicyWriterWithPapNotify{
 	}
 	/**
 	 * Helper static class that does the work to write a policy set to an output stream.
-	 * 
+	 *
 	 *
 	 */
 	public static void writePolicyFile(OutputStream os, PolicyType policy) {
@@ -202,10 +202,10 @@ public class XACMLPolicyWriterWithPapNotify{
 		}
 		return XACMLPolicyWriter.changeFileNameInXmlWhenRenamePolicy(filename);
 	}
-	
+
 	public static boolean notifyPapOfPolicyRename(String oldPolicyName, String newPolicyName){
 		if(LOGGER.isDebugEnabled()){
-			LOGGER.debug("\nXACMLPolicyWriterWithPapNotify.notifyPapOfCreateUpdate(String policyToCreateUpdate) " 
+			LOGGER.debug("\nXACMLPolicyWriterWithPapNotify.notifyPapOfCreateUpdate(String policyToCreateUpdate) "
 					+ "\npolicyToCreateUpdate = " + " ");
 		}
 		Base64.Encoder encoder = Base64.getEncoder();
@@ -221,7 +221,7 @@ public class XACMLPolicyWriterWithPapNotify{
 		} catch (MalformedURLException e) {
 			LOGGER.error("\nnotifyPapOfCreateUpdate(String policyToCreateUpdate)"
 					+ "\nMalformedURLException message = " + e);
-			
+
 			return false;
 		} catch (UnsupportedEncodingException e) {
 			LOGGER.error("\nnotifyPapOfCreateUpdate(String policyToCreateUpdate)"
@@ -236,7 +236,7 @@ public class XACMLPolicyWriterWithPapNotify{
 			connection = (HttpURLConnection)url.openConnection();
 		} catch (IOException e) {
 			LOGGER.error("\nnotifyPapOfCreateUpdate(String policyToCreateUpdate)"
-					+ "\nurl.openConnection() IOException message = " + e);			
+					+ "\nurl.openConnection() IOException message = " + e);
 			return false;
 		}
 		//
@@ -252,7 +252,7 @@ public class XACMLPolicyWriterWithPapNotify{
 		}
         connection.setRequestProperty("Authorization", "Basic " + encoding);
 		connection.setRequestProperty("Accept", "text/x-java-properties");
-        connection.setRequestProperty("Content-Type", "text/x-java-properties");	  	        
+        connection.setRequestProperty("Content-Type", "text/x-java-properties");	  
         connection.setRequestProperty("requestID", requestID.toString());
         connection.setUseCaches(false);
         //
@@ -293,7 +293,7 @@ public class XACMLPolicyWriterWithPapNotify{
 			return false;
 		}
 	}
-	
+
 	public static boolean notifyPapOfDelete(String policyToDelete){
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)).getBytes(StandardCharsets.UTF_8));
@@ -301,7 +301,7 @@ public class XACMLPolicyWriterWithPapNotify{
 		UUID requestID = UUID.randomUUID();
 		String papUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
 		if(papUrl == null){
-			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + 
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE +
 					"PAP url property does not exist");
 			return false;
 		}
@@ -309,18 +309,18 @@ public class XACMLPolicyWriterWithPapNotify{
 		try{
 		urlString = papUrl+"?groupId=0&isDeleteNotify=1&policyToDelete="+ URLEncoder.encode(policyToDelete, "UTF-8");
 		} catch(UnsupportedEncodingException e){
-			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + 
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE +
 					"Invalid encoding: UTF-8", e);
 			return false;
 		}
 		URL url;
 		try {
 			url = new URL(urlString);
-		} catch (MalformedURLException e) {			
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + 
+		} catch (MalformedURLException e) {
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW +
 					"Error parsing PAP url: "
 							+ urlString
-							, e);				
+							, e);
 			return false;
 		}
 		//
@@ -329,10 +329,10 @@ public class XACMLPolicyWriterWithPapNotify{
 		try {
 			connection = (HttpURLConnection)url.openConnection();
 		} catch (IOException e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + 
+			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +
 					"Error opening HttpURLConnection to: "
 							+ url.toString()
-							, e);				
+							, e);
 			return false;
 		}
 		//
@@ -341,14 +341,14 @@ public class XACMLPolicyWriterWithPapNotify{
         try {
 			connection.setRequestMethod("DELETE");
 		} catch (ProtocolException e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + 
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE +
 					"Invalid request method: DELETE", e);
 			connection.disconnect();
 			return false;
 		}
         connection.setRequestProperty("Authorization", "Basic " + encoding);
 		connection.setRequestProperty("Accept", "text/x-java-properties");
-        connection.setRequestProperty("Content-Type", "text/x-java-properties");	  	        
+        connection.setRequestProperty("Content-Type", "text/x-java-properties");	  
         connection.setRequestProperty("requestID", requestID.toString());
         connection.setUseCaches(false);
         //
@@ -364,10 +364,10 @@ public class XACMLPolicyWriterWithPapNotify{
         try {
 			connection.connect();
 		} catch (IOException e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + 
+			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +
 					"Error connecting HttpURLConnection to: "
 							+ connection.getURL().toString()
-							, e);	
+							, e);
 			connection.disconnect();
 			return false;
 		}
@@ -381,7 +381,7 @@ public class XACMLPolicyWriterWithPapNotify{
 				return false;
 			}
 		} catch (IOException e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + 
+			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +
 					"Error getting HttpUrlConnection response code for: "
 							+ connection.getURL().toString()
 							, e);
@@ -389,10 +389,10 @@ public class XACMLPolicyWriterWithPapNotify{
 			return false;
 		}
 	}
-	
+
 	public static boolean notifyPapOfCreateUpdate(String policyToCreateUpdate){
 		if(LOGGER.isDebugEnabled()){
-			LOGGER.debug("\nXACMLPolicyWriterWithPapNotify.notifyPapOfCreateUpdate(String policyToCreateUpdate) " 
+			LOGGER.debug("\nXACMLPolicyWriterWithPapNotify.notifyPapOfCreateUpdate(String policyToCreateUpdate) "
 					+ "\npolicyToCreateUpdate = " + policyToCreateUpdate);
 		}
 		Base64.Encoder encoder = Base64.getEncoder();
@@ -408,7 +408,7 @@ public class XACMLPolicyWriterWithPapNotify{
 		} catch (MalformedURLException e) {
 			LOGGER.error("\nnotifyPapOfCreateUpdate(String policyToCreateUpdate)"
 					+ "\nMalformedURLException message = " + e);
-			
+
 			return false;
 		} catch (UnsupportedEncodingException e) {
 			LOGGER.error("\nnotifyPapOfCreateUpdate(String policyToCreateUpdate)"
@@ -423,7 +423,7 @@ public class XACMLPolicyWriterWithPapNotify{
 			connection = (HttpURLConnection)url.openConnection();
 		} catch (IOException e) {
 			LOGGER.error("\nnotifyPapOfCreateUpdate(String policyToCreateUpdate)"
-					+ "\nurl.openConnection() IOException message = " + e);			
+					+ "\nurl.openConnection() IOException message = " + e);
 			return false;
 		}
 		//
@@ -439,7 +439,7 @@ public class XACMLPolicyWriterWithPapNotify{
 		}
         connection.setRequestProperty("Authorization", "Basic " + encoding);
 		connection.setRequestProperty("Accept", "text/x-java-properties");
-        connection.setRequestProperty("Content-Type", "text/x-java-properties");	  	        
+        connection.setRequestProperty("Content-Type", "text/x-java-properties");	  
         connection.setRequestProperty("requestID", requestID.toString());
         connection.setUseCaches(false);
         //

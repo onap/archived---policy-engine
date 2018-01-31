@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,7 +58,7 @@ public class DecisionPolicyTest {
 	List<Object> dynamicVariableList = new LinkedList<>();
 	List<String> dataTypeList = new LinkedList<>();
 	DecisionPolicy component = null;
-	
+
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -77,18 +77,18 @@ public class DecisionPolicyTest {
 		policyAdapter.setHighestVersion(1);
 		policyAdapter.setPolicyID("urn:xacml:policy:id:"+UUID.randomUUID());
 		policyAdapter.setOnapName("MSO");
-		
+
 		//rainy day attributes
 		attributeMap.put("ServiceType", "S");
 		attributeMap.put("VNFType", "V");
 		attributeMap.put("BB_ID", "testBB");
 		attributeMap.put("WorkStep", "1");
-				
+
 		dynamicRuleAlgorithmLabels.add("test1");
 		dynamicRuleAlgorithmField1.add("testField1");
 		dynamicRuleAlgorithmCombo.add("testruleCombo");
 		dynamicRuleAlgorithmField2.add("testField2");
-		
+
 		policyAdapter.setDynamicRuleAlgorithmLabels(dynamicRuleAlgorithmLabels);
 		policyAdapter.setDynamicRuleAlgorithmCombo(dynamicRuleAlgorithmCombo);
 		policyAdapter.setDynamicRuleAlgorithmField1(dynamicRuleAlgorithmField1);
@@ -100,7 +100,7 @@ public class DecisionPolicyTest {
 		policyAdapter.setDynamicFieldConfigAttributes(attributeMap);
 		policyAdapter.setRainydayMap(treatmentMap);
 		policyAdapter.setRainyday(rainyday);
-			
+
 		component = new DecisionPolicy(policyAdapter);
 
         logger.info("setUp: exit");
@@ -122,14 +122,14 @@ public class DecisionPolicyTest {
 
         Map<String, String> successMap = new HashMap<>();
 		successMap.put("success", "success");
-		
+
         try {
         	when(mockDecision.savePolicies()).thenReturn(successMap);
         	successMap = mockDecision.savePolicies();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		assertEquals(successMap.get("success"),"success");
 	}
 
@@ -142,7 +142,7 @@ public class DecisionPolicyTest {
 		policyAdapter.setRuleProvider("Rainy_Day");
 		component = new DecisionPolicy(policyAdapter);
 		boolean response = false;
-		
+
 		try {
 			response = component.prepareToSave();
 		} catch (Exception e) {
@@ -150,7 +150,7 @@ public class DecisionPolicyTest {
 		}
 		assertTrue(response);
 	}
-	
+
 	/**
 	 * Test method for {@link org.openecomp.policy.pap.xacml.rest.components.DecisionPolicy#prepareToSave()}.
 	 */
@@ -160,7 +160,7 @@ public class DecisionPolicyTest {
 		policyAdapter.setRuleProvider("Custom");
 		component = new DecisionPolicy(policyAdapter);
 		boolean response = false;
-		
+
 		try {
 			response = component.prepareToSave();
 		} catch (Exception e) {

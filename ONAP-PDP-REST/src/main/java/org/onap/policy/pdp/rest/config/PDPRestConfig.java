@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,14 +57,14 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @ComponentScan(basePackages = { "org.onap.*", "com.*" })
 public class PDPRestConfig extends WebMvcConfigurerAdapter{
-	
+
 	private static final Logger LOGGER	= FlexLogger.getLogger(PDPRestConfig.class);
 
 	private static String dbDriver = null;
 	private static String dbUrl = null;
 	private static String dbUserName = null;
 	private static String dbPassword = null;
-	
+
 	@PostConstruct
 	public void init(){
 		Properties prop = new Properties();
@@ -79,13 +79,13 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
 			LOGGER.error("Exception Occured while loading properties file"+e);
 		}
 	}
-	
-	@Override 
+
+	@Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
-    
+
     private ApiInfo apiInfo(){
         return new ApiInfoBuilder()
                 .title("Policy Engine REST API")
@@ -93,18 +93,18 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
                 .version("3.0")
                 .build();
     }
-    
+
     @Bean
     public Docket policyAPI(){
         PolicyLogger.info("Setting up Swagger... ");
-        return new Docket(DocumentationType.SWAGGER_2)                
+        return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("org.onap.policy.pdp.rest.api"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
     }
-    
+
 	@Bean(name = "dataSource")
 	public DataSource getDataSource() {
 	    BasicDataSource dataSource = new BasicDataSource();
@@ -114,7 +114,7 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
 	    dataSource.setPassword(PDPRestConfig.getDbPassword());
 	    return dataSource;
 	}
-	
+
 	@Autowired
 	@Bean(name = "sessionFactory")
 	public SessionFactory getSessionFactory(DataSource dataSource) {
@@ -123,20 +123,20 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
 	    sessionBuilder.addProperties(getHibernateProperties());
 	    return sessionBuilder.buildSessionFactory();
 	}
-	
+
 	private Properties getHibernateProperties() {
 		Properties properties = new Properties();
 		properties.put("hibernate.show_sql", "true");
 		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 		return properties;
 	}
-	
+
 	@Autowired
 	@Bean(name = "transactionManager")
 	public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
 		return new HibernateTransactionManager(sessionFactory);
 	}
-    
+
     @Bean
     public MultipartConfigElement multipartConfigElement(){
         String location = System.getProperty("java.io.tmpdir");

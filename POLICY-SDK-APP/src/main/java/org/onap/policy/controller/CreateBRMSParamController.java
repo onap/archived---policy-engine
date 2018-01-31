@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,7 +79,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 	public static void setCommonClassDao(CommonClassDao commonClassDao) {
 		CreateBRMSParamController.commonClassDao = commonClassDao;
 	}
-	
+
 	@Autowired
 	private CreateBRMSParamController(CommonClassDao commonClassDao){
 		CreateBRMSParamController.commonClassDao = commonClassDao;
@@ -88,10 +88,10 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 	public CreateBRMSParamController(){
 		// Empty constructor
 	}
-	protected PolicyRestAdapter policyAdapter = null; 
+	protected PolicyRestAdapter policyAdapter = null;
 
 	private HashMap<String, String> dynamicLayoutMap;
-	
+
 	private static String brmsTemplateVlaue = "<$%BRMSParamTemplate=";
 	private static String string = "String";
 
@@ -216,7 +216,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			}
 		}
 	}
-	
+
 	private void createField(String caption, String type) {
 		dynamicLayoutMap.put(caption, type);
 	}
@@ -255,17 +255,17 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 					drlRule.put(keyValue.toString(), policyAdapter.getDynamicLayoutMap().get(keyValue));
 				}
 				policyAdapter.setRuleData(drlRule);
-			}	
+			}
 			TargetType target = policy.getTarget();
 			if (target != null) {
 				setDataToAdapterFromTarget(target, policyAdapter);
 			}
-		} 		
+		} 
 	}
-	
+
 	private void setDataAdapterFromAdviceExpressions(PolicyType policy, PolicyRestAdapter policyAdapter){
 		ArrayList<Object> attributeList = new ArrayList<>();
-		// Set Attributes. 
+		// Set Attributes.
 		AdviceExpressionsType expressionTypes = ((RuleType)policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().get(0)).getAdviceExpressions();
 		for( AdviceExpressionType adviceExpression: expressionTypes.getAdviceExpression()){
 			for(AttributeAssignmentExpressionType attributeAssignment: adviceExpression.getAttributeAssignmentExpression()){
@@ -291,7 +291,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			policyAdapter.setAttributes(attributeList);
 		}
 	}
-	
+
 	private void setDataToAdapterFromTarget(TargetType target, PolicyRestAdapter policyAdapter){
 		// Under target we have AnyOFType
 		List<AnyOfType> anyOfList = target.getAnyOf();
@@ -315,7 +315,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			}
 		}
 	}
-	
+
 	private void setDataToAdapterFromMatchList(List<MatchType> matchList, PolicyRestAdapter policyAdapter){
 		Iterator<MatchType> iterMatch = matchList.iterator();
 		while (iterMatch.hasNext()) {
@@ -350,7 +350,7 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 	public void paramUIGenerate(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		String data = entity.getConfigurationData().getConfigBody();
 		if(data != null){
-			try {	
+			try {
 				StringBuilder params = new StringBuilder("");
 				Boolean flag = false;
 				Boolean comment = false;
@@ -439,9 +439,9 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 				}
 			} catch (Exception e) {
 				policyLogger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e.getMessage() + e);
-			} 
+			}
 		}
-		
+
 	}
 
 	// set View Rule
@@ -466,24 +466,24 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			StringBuilder generatedRule = new StringBuilder();
 			generatedRule.append("rule \""+ policyData.getDomainDir().replace("\\", ".") +".Config_BRMS_Param_" + policyData.getPolicyName()+".PapParams\" \n\tsalience 1000 \n\twhen\n\tthen\n\t\tPapParams params = new PapParams();");
 
-			if(policyData.getRuleData().size() > 0){ 
-				for(Object keyValue: policyData.getRuleData().keySet()){ 
-					String key = keyValue.toString().substring(0, 1).toUpperCase() + keyValue.toString().substring(1); 
-					if (string.equals(keyValue)) { 
-						generatedRule.append("\n\t\tparams.set" 
-								+ key + "(\"" 
-								+ policyData.getRuleData().get(keyValue).toString() + "\");"); 
-					} else { 
-						generatedRule.append("\n\t\tparams.set" 
-								+ key + "(" 
-								+ policyData.getRuleData().get(keyValue).toString() + ");"); 
-					} 
-				} 
+			if(policyData.getRuleData().size() > 0){
+				for(Object keyValue: policyData.getRuleData().keySet()){
+					String key = keyValue.toString().substring(0, 1).toUpperCase() + keyValue.toString().substring(1);
+					if (string.equals(keyValue)) {
+						generatedRule.append("\n\t\tparams.set"
+								+ key + "(\""
+								+ policyData.getRuleData().get(keyValue).toString() + "\");");
+					} else {
+						generatedRule.append("\n\t\tparams.set"
+								+ key + "("
+								+ policyData.getRuleData().get(keyValue).toString() + ");");
+					}
+				}
 			}
 			generatedRule.append("\n\t\tinsert(params);\nend");
 			policyLogger.info("New rule generated with :" + generatedRule.toString());
 			body = body + generatedRule.toString();
-			// Expand the body. 
+			// Expand the body.
 			Map<String,String> copyMap=new HashMap<>();
 			copyMap.putAll((Map<? extends String, ? extends String>) policyData.getRuleData());
 			copyMap.put("policyName", policyData.getDomainDir().replace("\\", ".") +".Config_BRMS_Param_" + policyData.getPolicyName());
@@ -491,18 +491,18 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			copyMap.put("policyVersion", "1");
 			//Finding all the keys in the Map data-structure.
 			Set<String> keySet= copyMap.keySet();
-			Iterator<String> iterator = keySet.iterator(); 
+			Iterator<String> iterator = keySet.iterator();
 			Pattern p;
 			Matcher m;
 			while(iterator.hasNext()) {
-				//Converting the first character of the key into a lower case. 
+				//Converting the first character of the key into a lower case.
 				String input= iterator.next();
 				String output  = Character.toLowerCase(input.charAt(0)) +
 						(input.length() > 1 ? input.substring(1) : "");
-				//Searching for a pattern in the String using the key. 
-				p=Pattern.compile("\\$\\{"+output+"\\}");   
+				//Searching for a pattern in the String using the key.
+				p=Pattern.compile("\\$\\{"+output+"\\}");
 				m=p.matcher(body);
-				//Replacing the value with the inputs provided by the user in the editor. 
+				//Replacing the value with the inputs provided by the user in the editor.
 				body=m.replaceAll(copyMap.get(input));
 			}
 			response.setCharacterEncoding("UTF-8");
@@ -515,6 +515,6 @@ public class CreateBRMSParamController extends RestrictedBaseController {
 			out.write(j.toString());
 		} catch (Exception e) {
 			policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}	
+		}
 	}
 }

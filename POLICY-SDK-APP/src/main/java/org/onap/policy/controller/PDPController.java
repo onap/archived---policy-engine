@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -83,7 +83,7 @@ public class PDPController extends RestrictedBaseController {
 	}
 
 	public synchronized void refreshGroups(HttpServletRequest request) {
-		synchronized(this.groups) { 
+		synchronized(this.groups) {
 			this.groups.clear();
 			try {
 				PolicyController controller = getPolicyControllerInstance();
@@ -106,7 +106,7 @@ public class PDPController extends RestrictedBaseController {
 						}else{
 							scopes.add(userRole.getScope());
 						}
-					}	
+					}
 				}
 				if(!junit&& controller.getPapEngine()==null){
 				    setPAPEngine(request);
@@ -116,7 +116,7 @@ public class PDPController extends RestrictedBaseController {
 						this.groups.addAll(controller.getPapEngine().getOnapPDPGroups());
 					}else{
 						this.groups.addAll(this.getGroupsData());
-					}	
+					}
 				}else{
 					if(!userRoles.isEmpty() && !scopes.isEmpty()){
 						this.groups.addAll(controller.getPapEngine().getOnapPDPGroups());
@@ -146,9 +146,9 @@ public class PDPController extends RestrictedBaseController {
 								StdPDPGroup newGroup = (StdPDPGroup) group;
 								newGroup.setPolicies(filteredPolicies);
 								tempGroups.add(newGroup);
-							}	
+							}
 							groups.clear();
-							groups = tempGroups;	
+							groups = tempGroups;
 						}
 					}
 				}
@@ -193,12 +193,12 @@ public class PDPController extends RestrictedBaseController {
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			this.container = new PDPGroupContainer(controller.getPapEngine());
-			
+
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			policyLogger.info("****************************************Logging UserID for Save PDP Group Function*****************************************");
 			policyLogger.info("UserId:  " + userId + "PDP Group Data:  "+ root.get("pdpGroupData").toString());
 			policyLogger.info("***************************************************************************************************************************");
-			
+
 			StdPDPGroup pdpGroupData =  mapper.readValue(root.get("pdpGroupData").toString().replace("groupName", "name"), StdPDPGroup.class);
 			try {
 				if(pdpGroupData.getId() == null){
@@ -244,13 +244,13 @@ public class PDPController extends RestrictedBaseController {
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			PolicyController controller = getPolicyControllerInstance();
-			this.container = new PDPGroupContainer(controller.getPapEngine()); 
-			
+			this.container = new PDPGroupContainer(controller.getPapEngine());
+
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			policyLogger.info("****************************************Logging UserID for Remove PDP Group Function*****************************************");
 			policyLogger.info("UserId:  " + userId + "PDP Group Data:  "+ root.get("pdpGroupData").toString());
 			policyLogger.info("*****************************************************************************************************************************");
-			
+
 			StdPDPGroup pdpGroupData =  mapper.readValue(root.get("pdpGroupData").toString(), StdPDPGroup.class);
 			if("Default".equals(pdpGroupData.getName())) {
 				throw new UnsupportedOperationException("You can't remove the Default Group.");
@@ -290,16 +290,16 @@ public class PDPController extends RestrictedBaseController {
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			PolicyController controller = getPolicyControllerInstance();
-			this.container = new PDPGroupContainer(controller.getPapEngine()); 
+			this.container = new PDPGroupContainer(controller.getPapEngine());
 			String update = root.get("update").toString();
 			PdpData pdpGroupData = mapper.readValue(root.get("pdpInGroup").toString(), PdpData.class);
 			StdPDPGroup activeGroupData =  mapper.readValue(root.get("activePDP").toString(), StdPDPGroup.class);
-			
+
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			policyLogger.info("****************************************Logging UserID while Saving  pdp in  PDP Group*****************************************");
 			policyLogger.info("UserId:  " + userId + "PDP Group Data:  "+ root.get("pdpInGroup").toString() + "Active Group Data: "+ root.get("activePDP").toString());
 			policyLogger.info("*******************************************************************************************************************************");
-			
+
 			try {
 
 				if(update.contains("false")){
@@ -344,7 +344,7 @@ public class PDPController extends RestrictedBaseController {
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			PolicyController controller = getPolicyControllerInstance();
-			this.container = new PDPGroupContainer(controller.getPapEngine()); 
+			this.container = new PDPGroupContainer(controller.getPapEngine());
 			StdPDP deletePdp =  mapper.readValue(root.get("data").toString(), StdPDP.class);
 			StdPDPGroup activeGroupData =  mapper.readValue(root.get("activePDP").toString(), StdPDPGroup.class);
 
@@ -352,7 +352,7 @@ public class PDPController extends RestrictedBaseController {
 			policyLogger.info("****************************************Logging UserID while Removing  pdp from  PDP Group*****************************************");
 			policyLogger.info("UserId:  " + userId + "Delete PDP Group Data:  "+ root.get("data").toString() + "Active Group Data: "+ root.get("activePDP").toString());
 			policyLogger.info("***********************************************************************************************************************************");
-			
+
 			this.container.removePDP(deletePdp, activeGroupData);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
@@ -428,5 +428,5 @@ class PdpData{
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 }

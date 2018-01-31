@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,7 @@
 
 package org.onap.policy.rest.jpa;
 /*
- * 
+ *
  * */
 import java.io.Serializable;
 import java.util.Date;
@@ -84,7 +84,7 @@ public class PEPOptions implements Serializable {
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -102,26 +102,26 @@ public class PEPOptions implements Serializable {
 	}
 
 	private static Log LOGGER = LogFactory.getLog(PEPOptions.class);
-	
+
 	public PEPOptions(){
-		
+
 	}
-	
+
 	public PEPOptions(String string, String userid) {
 		this(string);
 	}
 
 	public PEPOptions(String domain) {
 		this.pepName = domain;
-	}	
-	
+	}
+
 	@PrePersist
 	public void	prePersist() {
 		Date date = new Date();
 		this.createdDate = date;
 		this.modifiedDate = date;
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
@@ -132,14 +132,14 @@ public class PEPOptions implements Serializable {
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PEPOptions", "Exception caused While adding Modified by Role");
 		}
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getPepName() {
 		return pepName;
 	}
@@ -155,27 +155,27 @@ public class PEPOptions implements Serializable {
 	public void setActions(String actions) {
 		this.actions = actions;
 	}
-	
+
 	public Date getCreatedDate() {
 		return this.createdDate;
 	}
-	
+
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	
+
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public Date getModifiedDate() {
 		return this.modifiedDate;
 	}
-	
+
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}

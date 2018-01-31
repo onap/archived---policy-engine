@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,13 +31,13 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 
 /**
- * MicroServices Policy implementation. 
- * 
+ * MicroServices Policy implementation.
+ *
  * @version 0.1
  */
 public class MicroServicesPolicyService{
 	private static final Logger LOGGER = FlexLogger.getLogger(MicroServicesPolicyService.class.getName());
-	
+
 	private PAPServices papServices = null;
 	private PolicyParameters policyParameters = null;
 	private String message = null;
@@ -46,7 +46,7 @@ public class MicroServicesPolicyService{
 	private String date = null;
 	private String onapName = null;
 	private JsonObject microServiceAttributes = null;
-	
+
 	public MicroServicesPolicyService(String policyName, String policyScope, PolicyParameters policyParameters, String date) {
 		this.policyParameters = policyParameters;
 		this.policyName = policyName;
@@ -84,7 +84,7 @@ public class MicroServicesPolicyService{
 	public String getMessage() {
 		return message;
 	}
-	
+
 	public String getResult(boolean updateFlag) throws PolicyException{
 	    String response = null;
         String operation = null;
@@ -101,7 +101,7 @@ public class MicroServicesPolicyService{
         String policyDescription=null;
         String priority=null;
         String version=null;
-        
+
         if (microServiceAttributes.get("service")!=null){
         	microService = microServiceAttributes.get("service").toString().replace("\"", "");
         }
@@ -123,12 +123,12 @@ public class MicroServicesPolicyService{
         if(microServiceAttributes.containsKey("version")){
         	version = microServiceAttributes.get("version").toString().replace("\"", "");
         }
-        // Create Policy. 
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("Micro Service", policyName, policyDescription, onapName, 
-                configName, microService, uuid, msLocation, microServiceAttributes.toString(), priority, 
+        // Create Policy.
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("Micro Service", policyName, policyDescription, onapName,
+                configName, microService, uuid, msLocation, microServiceAttributes.toString(), priority,
                 version, updateFlag, policyScope, 0, policyParameters.getRiskLevel(),
-                policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date); 
-        // Send JSON Object to PAP. 
+                policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date);
+        // Send JSON Object to PAP.
         response = (String) papServices.callPAP(newPAPPolicy, new String[] {"operation="+operation, "apiflag=api", "policyType=Config"}, policyParameters.getRequestID(), "ConfigMS");
         LOGGER.info("Policy MS created Response: " + response);
         return response;

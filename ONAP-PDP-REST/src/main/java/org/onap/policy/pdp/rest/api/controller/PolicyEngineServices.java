@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -84,8 +84,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/")
 public class PolicyEngineServices {
 	private static Logger logger = FlexLogger.getLogger(PolicyEngineServices.class.getName());
-	private static final String NOTIFICATIONPERM = "notification"; 
-	
+	private static final String NOTIFICATIONPERM = "notification";
+
 	private final AtomicLong configCounter = new AtomicLong();
 	private final AtomicLong configNameCounter = new AtomicLong();
 	private final AtomicLong eventCounter = new AtomicLong();
@@ -175,7 +175,7 @@ public class PolicyEngineServices {
 		configCounter.incrementAndGet();
 		return new ResponseEntity<>(results, status);
 	}
-	
+
 	@ApiImplicitParams({
 		@ApiImplicitParam(name ="Authorization", required = true, paramType = "Header"),
 		@ApiImplicitParam(name ="Environment", required = true, paramType = "Header")
@@ -188,16 +188,16 @@ public class PolicyEngineServices {
 			@RequestHeader(value="X-ECOMP-RequestID", required=false)String requestID) {
 		MetricsResponse response = null;
 		HttpStatus status = HttpStatus.UNAUTHORIZED;
-		// Check Permissions. 
+		// Check Permissions.
 		if(PDPApiAuth.checkPermissions(clientEncoding, requestID, "getMetrics")){
 			GetMetricsService getMetricsService = new GetMetricsService(requestID);
 			response = getMetricsService.getResult();
 			status = getMetricsService.getResponseCode();
-		}	
+		}
 		metricCounter.incrementAndGet();
 		return new ResponseEntity<>(response, status);
 	}
-	
+
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
 		@ApiImplicitParam(name = "Environment", required = true, paramType = "Header") })
@@ -219,7 +219,7 @@ public class PolicyEngineServices {
 		notificationCounter.incrementAndGet();
 		return new ResponseEntity<>(policyResponse, status);
 	}
-	
+
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
 		@ApiImplicitParam(name = "Environment", required = true, paramType = "Header") })
@@ -241,7 +241,7 @@ public class PolicyEngineServices {
 		notificationCounter.incrementAndGet();
 		return new ResponseEntity<>(policyResponse, status);
 	}
-	
+
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "Authorization", required = true, paramType = "Header"),
 		@ApiImplicitParam(name = "Environment", required = true, paramType = "Header") })

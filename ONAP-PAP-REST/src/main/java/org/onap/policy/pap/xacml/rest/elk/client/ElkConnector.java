@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,10 +27,10 @@ import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import io.searchbox.client.JestResult;
 
 public interface ElkConnector {
-	
+
 	public static final String ELK_URL = "http://localhost:9200";
 	public static final String ELK_INDEX_POLICY = "policy";
-	
+
 	public enum PolicyIndexType {
 		config,
 		action,
@@ -38,7 +38,7 @@ public interface ElkConnector {
 		closedloop,
 		all,
 	}
-	
+
 	public enum PolicyType {
 		Config,
 		Action,
@@ -49,7 +49,7 @@ public interface ElkConnector {
 		Config_MS,
 		none,
 	}
-	
+
 	public enum PolicyBodyType {
 		json,
 		xml,
@@ -61,18 +61,18 @@ public interface ElkConnector {
 	public boolean delete(PolicyRestAdapter policyData)
 			throws IllegalStateException;
 
-	public JestResult search(PolicyIndexType type, String text) 
+	public JestResult search(PolicyIndexType type, String text)
 		   throws IllegalStateException, IllegalArgumentException;
-	
-	public JestResult search(PolicyIndexType type, String text, 
-			Map<String, String> searchKeyValue) 
+
+	public JestResult search(PolicyIndexType type, String text,
+			Map<String, String> searchKeyValue)
 			   throws IllegalStateException, IllegalArgumentException;
-	
+
 	public boolean update(PolicyRestAdapter policyData) throws IllegalStateException;
-	
+
 	public ElkConnector singleton = new ElkConnectorImpl();
-	
-	public static PolicyIndexType toPolicyIndexType(String policyName) 
+
+	public static PolicyIndexType toPolicyIndexType(String policyName)
 			throws IllegalArgumentException {
 		if (policyName == null)
 			throw new IllegalArgumentException("Unsupported NULL policy name conversion");
@@ -93,9 +93,9 @@ public interface ElkConnector {
 			return PolicyIndexType.config;
 		} else {
 			throw new IllegalArgumentException
-			("Unsupported policy name conversion to index: " + 
+			("Unsupported policy name conversion to index: " +
 					policyName);
 		}
 	}
-	
+
 }

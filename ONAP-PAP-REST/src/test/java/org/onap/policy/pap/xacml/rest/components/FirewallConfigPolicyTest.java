@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ import com.att.research.xacml.util.XACMLProperties;
 
 
 public class FirewallConfigPolicyTest {
-	
+
 	private static Logger logger = FlexLogger.getLogger(FirewallConfigPolicyTest.class);
 	PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
 	Map<String, String> attributeMap = new HashMap<>();
@@ -75,14 +75,14 @@ public class FirewallConfigPolicyTest {
 		policyAdapter.setRiskType("RiskTest");
 		policyAdapter.setSecurityZone("CraigSecurityZone");
 		policyAdapter.setUserId("API");
-		
+
 		attributeMap.put("testJunits", "test");
 		policyAdapter.setDynamicFieldConfigAttributes(attributeMap);
 
 		component = new FirewallConfigPolicy(policyAdapter);
 		mockFWConfig = Mockito.mock(FirewallConfigPolicy.class);
         logger.info("setUp: exit");
-		
+
 	}
 
 	/**
@@ -121,10 +121,10 @@ public class FirewallConfigPolicyTest {
 		} catch (Exception e) {
 			logger.error("Exception Occured"+e);
 		}
-		assertTrue(response);		
-		
+		assertTrue(response);
+
 	}
-	
+
 	@Test
 	public void testUpdateJson() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 	    FirewallConfigPolicy firewallConfigPolicy = new FirewallConfigPolicy();
@@ -134,7 +134,7 @@ public class FirewallConfigPolicyTest {
 	    String prevJsonBody = "{\"serviceTypeId\":\"/v0/firewall/pan\",\"configName\":\"TestFwPolicy1Config\",\"deploymentOption\":{\"deployNow\":false},\"securityZoneId\":\"cloudsite:dev\",\"vendorServiceId\":\"test\",\"vendorSpecificData\":{\"idMap\":[{\"Id\":\"cloudsite:dev1a\",\"vendorId\":\"deviceGroup:dev\"}]},\"serviceGroups\":[{\"name\":\"SSH\",\"description\":\"Ssh service entry in service list\",\"type\":\"SERVICE\",\"transportProtocol\":\"tcp\",\"appProtocol\":null,\"ports\":\"22\"}],\"addressGroups\":[{\"name\":\"Test\",\"description\":\"Destination Test\",\"members\":[{\"type\":\"SUBNET\",\"value\":\"127.0.0.1/12\"}]},{\"name\":\"TestServers\",\"description\":\"Source TestServers for first testing\",\"members\":[{\"type\":\"SUBNET\",\"value\":\"127.0.0.1/23\"}]}],\"firewallRuleList\":[{\"position\":\"1\",\"ruleName\":\"FWRuleTestServerTot\",\"fromZones\":[\"UntrustedZoneTestName\"],\"toZones\":[\"TrustedZoneTName\"],\"negateSource\":false,\"negateDestination\":false,\"sourceList\":[{\"type\":\"REFERENCE\",\"name\":\"TServers\"}],\"destinationList\":[{\"type\":\"REFERENCE\",\"name\":\"Test\"}],\"sourceServices\":[],\"destServices\":[{\"type\":\"REFERENCE\",\"name\":\"SSH\"}],\"action\":\"accept\",\"description\":\"FW rule for HOHO source to CiscoVCE destination\",\"enabled\":true,\"log\":true}]}";
         assertFalse((Boolean) method.invoke(firewallConfigPolicy, jsonBody, prevJsonBody));
 	}
-	
+
 	@Test
     public void testInsertJson() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
         FirewallConfigPolicy firewallConfigPolicy = new FirewallConfigPolicy();

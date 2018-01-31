@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,8 +41,8 @@ import org.onap.policy.api.PolicyType;
 
 public class BrmsRawPolicyClient {
 	static Boolean isEdit = true;
-	
-	//Reads a File and converts into a String. 
+
+	//Reads a File and converts into a String.
 	private static String readFile( String file ) throws IOException {
 	    BufferedReader reader = new BufferedReader( new FileReader (file));
 	    String         line = null;
@@ -60,8 +60,8 @@ public class BrmsRawPolicyClient {
 	        reader.close();
 	    }
 	}
-	
-	
+
+
 	public static void main(String[] args) {
 		try {
 	        PolicyEngine policyEngine = new PolicyEngine("config.properties");
@@ -71,7 +71,7 @@ public class BrmsRawPolicyClient {
 	        attrib.put("memory", "50");
 	        Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
             attributes.put(AttributeType.RULE, attrib);
-	        
+
 	        // Set Policy Type
 	        policyParameters.setPolicyConfigType(PolicyConfigType.BRMS_RAW); //required
 	        policyParameters.setPolicyName("Lakshman.testBRMSRawAPITwo"); //required
@@ -79,7 +79,7 @@ public class BrmsRawPolicyClient {
 	        policyParameters.setAttributes(attributes);
 	        //policyParameters.setPolicyScope("Lakshman"); //Directory will be created where the Policies are saved... this displays a a subscope on the GUI
 	        policyParameters.setRequestID(UUID.randomUUID());
-	        
+
             // Set Safe Policy value for Risk Type
 			SimpleDateFormat dateformat3 = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = dateformat3.parse("15/10/2016");
@@ -90,23 +90,23 @@ public class BrmsRawPolicyClient {
 			policyParameters.setRiskLevel("5");
 			// Set Safe Policy value for Risk Type
 			policyParameters.setRiskType("PROD");
-	        
+
 	        File rawBodyFile = null;
-		
+
 			Path file = Paths.get("C:\\Users\\testuser\\Documents\\API\\com.Config_BRMS_Raw_TestBrmsPolicy.1.txt");
 			rawBodyFile = file.toFile();
-			
-			policyParameters.setConfigBody(readFile(rawBodyFile.toString()));		
+
+			policyParameters.setConfigBody(readFile(rawBodyFile.toString()));
 			policyParameters.setConfigBodyType(PolicyType.OTHER);
-			
-			/*public String createUpdateBRMSRawPolicy(String policyName, 
-					String policyDescription, 
+
+			/*public String createUpdateBRMSRawPolicy(String policyName,
+					String policyDescription,
 					Map<String,String> dyanamicFieldConfigAttributes,
-					String brmsRawBody, 
-					String policyScope, 
-					Boolean isEdit, 
+					String brmsRawBody,
+					String policyScope,
+					Boolean isEdit,
 					UUID requestID) */
-	
+
 	        // API method to create Policy or update policy
 	        PolicyChangeResponse response = null;
 	        if (!isEdit) {
@@ -114,7 +114,7 @@ public class BrmsRawPolicyClient {
 	        } else {
 	        	response = policyEngine.updatePolicy(policyParameters);
 	        }
-	        
+
 	        if(response.getResponseCode()==200){
 	            System.out.println(response.getResponseMessage());
 	            System.out.println("Policy Created Successfully!");
@@ -125,7 +125,7 @@ public class BrmsRawPolicyClient {
 			System.err.println(e.getMessage());
 		}
 	}
-	
+
 }
 
 

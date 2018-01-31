@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -68,8 +68,8 @@ import com.google.common.base.Splitter;
 /**
  * Does the work for loading policy and PIP configurations sent from the PAP
  * servlet.
- * 
- * 
+ *
+ *
  *
  */
 public class XACMLPdpLoader {
@@ -193,7 +193,7 @@ public class XACMLPdpLoader {
 	}
 
 	private static HashMap<String, PolicyDef> policyContainer = null;
-	
+
 	public static synchronized void sendNotification(){
 		Thread notify = new Thread(){
 			public void run(){
@@ -207,7 +207,7 @@ public class XACMLPdpLoader {
 		};
 		notify.start();
 	}
-	
+
 	public static synchronized void validatePolicies(Properties properties,
 			StdPDPStatus status) throws PAPException {
 		Set<String> rootPolicies = XACMLProperties.getRootPolicyIDs(properties);
@@ -236,13 +236,13 @@ public class XACMLPdpLoader {
 		policyContainer.clear();
 	}
 
-	
+
 	public static synchronized void loadPolicy(Properties properties,
 			StdPDPStatus status, String id, boolean isRoot) throws PAPException {
 		PolicyDef policy = null;
 		String location = null;
 		URI locationURI = null;
-		boolean isFile = false;		
+		boolean isFile = false;
 		boolean rougeFile = false;
 		try {
 			location = properties.getProperty(id + ".file");
@@ -252,7 +252,7 @@ public class XACMLPdpLoader {
 				try (InputStream is = Files.newInputStream(Paths.get(location))) {
 					policy = DOMPolicyDef.load(is);
 				} catch (Exception e){
-					// This Happens if a any issue with the error policyFile. Lets remove it. 
+					// This Happens if a any issue with the error policyFile. Lets remove it.
 					try {
 						LOGGER.error("Corrupted policy file, deleting: " + location + e);
 						Files.delete(Paths.get(location));
@@ -340,7 +340,7 @@ public class XACMLPdpLoader {
 						}
 					}while(error && errorCount>2);
 				}
-			} 
+			}
 			if (policy != null) {
 				status.addLoadedPolicy(new StdPDPPolicy(id, isRoot,
 						locationURI, properties));
@@ -370,7 +370,7 @@ public class XACMLPdpLoader {
 				try {
 					LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Corrupted policy file, deleting: " + location);
 					Files.delete(Paths.get(location));
-					
+
 				} catch (IOException e1) {
 					LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e1);
 				}
@@ -421,10 +421,10 @@ public class XACMLPdpLoader {
 	 * the local directory; if so create a ".file" property for it. - if not,
 	 * get the "&lt;PolicyID&gt;.url" property and try to GET the policy from
 	 * that location (and set the ".file" property)
-	 * 
+	 *
 	 * If the ".file" property is created, then true is returned to tell the
 	 * caller that the props object changed.
-	 * 
+	 *
 	 * @param props
 	 * @return true/false if anything was changed in the props object
 	 * @throws PAPException
@@ -554,7 +554,7 @@ public class XACMLPdpLoader {
 												+ policy
 												+ "' had bad URL in new configuration, URL='"
 												+ propLocation + "'");
-										
+
 									} else {
 										LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while retrieving policy "
 												+ policy

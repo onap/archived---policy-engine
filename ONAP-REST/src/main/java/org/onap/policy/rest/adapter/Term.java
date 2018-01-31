@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,10 +29,10 @@ import java.util.Set;
 
 
 public class Term {
-	
+
 	String position;
 	protected String ruleName;
-	protected List<String> fromZones;  
+	protected List<String> fromZones;
 	protected List<String> toZones;
 	protected boolean negateSource; //hardcoded
 	protected boolean negateDestination; //hardcoded
@@ -44,25 +44,25 @@ public class Term {
 	protected String description;
 	boolean enabled;  //hardcoded
 	boolean log;      //hardcoded
-	
+
 	//position
     public String getPosition() {
         return position;
     }
-    
+
     public void setPosition(String value) {
         this.position = value;
     }
-    
+
     //RuleName
     public String getRuleName() {
         return ruleName;
     }
-    
+
     public void setRuleName(String value) {
         this.ruleName = value;
     }
-    
+
     //From Zone
     public  List<String> getFromZones() {
     	if (fromZones==null)
@@ -71,11 +71,11 @@ public class Term {
     	}
         return fromZones;
     }
-    
+
     public void setFromZones(List<String> fromZones) {
         this.fromZones = fromZones;
     }
-    
+
     //To Zone
     public  List<String> getToZones() {
     	if (toZones==null)
@@ -84,32 +84,32 @@ public class Term {
     	}
         return toZones;
     }
-    
+
     public void setToZones(List<String> toZones) {
         this.toZones = toZones;
     }
-   
-    
+
+
     //Negate Source
     public boolean getNegateSource() {
         return negateSource;
     }
-    
+
     public void setNegateSource(boolean negateSource) {
         this.negateSource = negateSource;
     }
-    
+
     //Negate Destination
     public boolean getNegateDestination() {
         return negateDestination;
     }
-    
+
     public void setNegateDestination(boolean negateDestination) {
         this.negateDestination = negateDestination;
     }
-    
+
     //SourceList
-    public List<AddressJson> getSourceList() 
+    public List<AddressJson> getSourceList()
     {
     	if(sourceList==null)
     	{
@@ -121,9 +121,9 @@ public class Term {
     public void setSourceList(List<AddressJson> srcList) {
         this.sourceList = srcList;
     }
-    
+
     //Destination List
-    public List<AddressJson> getDestinationList() 
+    public List<AddressJson> getDestinationList()
     {
     	if(destinationList==null)
     	{
@@ -135,7 +135,7 @@ public class Term {
     public void setDestinationList(List<AddressJson> destList) {
         this.destinationList = destList;
     }
-    
+
     //Source Services
     public List<ServicesJson> getSourceServices() {
     	if(sourceServices==null)
@@ -148,8 +148,8 @@ public class Term {
     public void setSourceServices(List<ServicesJson> sourceServices) {
         this.sourceServices = sourceServices;
     }
-	
-    //Destination services. 
+
+    //Destination services.
     public Set<ServicesJson> getDestServices() {
     	if(destServices==null)
     	{
@@ -161,39 +161,39 @@ public class Term {
     public void setDestServices(Set<ServicesJson> destServices) {
         this.destServices = destServices;
     }
-	 
+
 	//Action
     public String getAction() {
         return action;
     }
-    
+
     public void setAction(String value) {
         this.action = value;
     }
-    
+
     //description
     public String getDescription() {
         return description;
     }
-    
+
     public void setDescription(String desc) {
         this.description = desc;
     }
-      
+
     //enabled
     public boolean getEnabled() {
         return enabled;
     }
-    
+
     public void setEnabled(boolean value) {
         this.enabled = value;
     }
-    
+
     //Log
     public boolean getLog() {
         return log;
     }
-    
+
     public void setLog(boolean value) {
         this.log = value;
     }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,7 +59,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 @RequestMapping("/")
 public class DecisionPolicyController extends RestrictedBaseController {
 	private static final Logger policyLogger = FlexLogger.getLogger(DecisionPolicyController.class);
-	
+
 	public DecisionPolicyController(){
 		// This constructor is empty
 	}
@@ -78,7 +78,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 		decisionList = new ArrayList<>();
 		ruleAlgorithmList = new ArrayList<>();
 		treatmentList = new ArrayList<>();
-		
+
 		if (policyAdapter.getPolicyData() instanceof PolicyType) {
 			RainyDayParams rainydayParams = new RainyDayParams();
 			Object policyData = policyAdapter.getPolicyData();
@@ -133,11 +133,11 @@ public class DecisionPolicyController extends RestrictedBaseController {
 										}
 										// Component attributes are saved under Target here we are fetching  them back.
 										// One row is default so we are not adding dynamic component at index 0.
-										if (index >= 1) {	
+										if (index >= 1) {
 											Map<String, String> attribute = new HashMap<>();
 											attribute.put("key", attributeId);
 											attribute.put("value", value);
-											attributeList.add(attribute);	
+											attributeList.add(attribute);
 										}
 										index++;
 									}
@@ -146,7 +146,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 							}
 						}
 					}
-					// Setting rainy day attributes to the parameters object if they exist 
+					// Setting rainy day attributes to the parameters object if they exist
 					boolean rainy = false;
 					if(!attributeList.isEmpty()) {
 						for(int i=0; i<attributeList.size() ; i++){
@@ -164,7 +164,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 								rainydayParams.setVnfType(map.get("value"));
 								rainy=true;
 							}
-						}	
+						}
 					}
 					if(rainy){
 						policyAdapter.setRuleProvider("Rainy_Day");
@@ -246,39 +246,39 @@ public class DecisionPolicyController extends RestrictedBaseController {
 								policyAdapter.setRuleAlgorithmschoices(ruleAlgorithmList);
 							}
 						} else if(policyAdapter.getRuleProvider()!=null && "Rainy_Day".equals(policyAdapter.getRuleProvider())&& ((RuleType) object).getEffect().equals(EffectType.PERMIT)) {
-							
+
 							TargetType ruleTarget = ((RuleType) object).getTarget();
 							AdviceExpressionsType adviceExpression = ((RuleType) object).getAdviceExpressions();
-							
+
 							String errorcode = ruleTarget.getAnyOf().get(0).getAllOf().get(0).getMatch().
 									get(1).getAttributeValue().getContent().get(0).toString();
 							JAXBElement<AttributeValueType> tempTreatmentObj = (JAXBElement<AttributeValueType>) adviceExpression.getAdviceExpression().
 									get(0).getAttributeAssignmentExpression().get(0).getExpression();
 							String treatment = tempTreatmentObj.getValue().getContent().get(0).toString();
-							
-							prePopulateRainyDayTreatments(errorcode, treatment);						
+
+							prePopulateRainyDayTreatments(errorcode, treatment);
 
 						}
 					}
 				}
 			}
-			
+
 			rainydayParams.setTreatmentTableChoices(treatmentList);
 			policyAdapter.setRainyday(rainydayParams);
-			policyAdapter.setSettings(decisionList);	
-		}	
+			policyAdapter.setSettings(decisionList);
+		}
 
 	}
 
 	private void prePopulateRainyDayTreatments(String errorcode, String treatment) {
 		Map<String, String> ruleMap = new HashMap<>();
-		
+
 		ruleMap.put("errorcode", errorcode);
 		ruleMap.put("treatment", treatment);
 		treatmentList.add(ruleMap);
-		
+
 	}
-	
+
 	private void prePopulateDecisionRuleAlgorithms(int index, ApplyType decisionApply, List<JAXBElement<?>> jaxbDecisionTypes) {
 		Map<String, String> ruleMap = new HashMap<>();
 		ruleMap.put("id", "A" + (index +1));
@@ -303,7 +303,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 				ruleMap.put("dynamicRuleAlgorithmField2", attributeValue);
 			}
 		} else if ((jaxbDecisionTypes.get(0).getValue()) instanceof VariableReferenceType) {
-			VariableReferenceType variableReference = (VariableReferenceType) jaxbDecisionTypes.get(0).getValue();	
+			VariableReferenceType variableReference = (VariableReferenceType) jaxbDecisionTypes.get(0).getValue();
 			ruleMap.put("dynamicRuleAlgorithmField1", "S_"+ variableReference.getVariableId());
 
 
@@ -329,7 +329,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 				ruleAlgoirthmTracker.addLast(index);
 				isCompoundRule = false;
 				index++;
-			} 
+			}
 		}
 		if (isCompoundRule) {
 			// As it's compound rule, Get the Apply types
@@ -360,7 +360,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 			ruleAlgorithmList.add(rule);
 			index++;
 		}
-		
+
 		return index;
 	}
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -66,10 +66,10 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType; 
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 public class CreateBrmsParamPolicy extends Policy {
-	
+
 	private static final Logger LOGGER = FlexLogger.getLogger(CreateBrmsParamPolicy.class);
 
 	public CreateBrmsParamPolicy() {
@@ -81,7 +81,7 @@ public class CreateBrmsParamPolicy extends Policy {
 		this.policyAdapter.setConfigType(policyAdapter.getConfigType());
 
 	}
-	
+
 	public String expandConfigBody(String ruleContents, Map<String, String> brmsParamBody) {
 
 		Map<String,String> copyMap=new HashMap<>();
@@ -92,35 +92,35 @@ public class CreateBrmsParamPolicy extends Policy {
 		copyMap.put("unique", ("p"+policyName+UUID.randomUUID().toString()).replaceAll("[^A-Za-z0-9]", ""));
 
 		//Finding all the keys in the Map data-structure.
-		Iterator<String> iterator = copyMap.keySet().iterator(); 
+		Iterator<String> iterator = copyMap.keySet().iterator();
 		Pattern p;
 		Matcher m;
 		while(iterator.hasNext()) {
-			//Converting the first character of the key into a lower case. 
+			//Converting the first character of the key into a lower case.
 			String input= iterator.next();
 			String output  = Character.toLowerCase(input.charAt(0)) +
 					(input.length() > 1 ? input.substring(1) : "");
-			//Searching for a pattern in the String using the key. 
-			p=Pattern.compile("\\$\\{"+output+"\\}");	
+			//Searching for a pattern in the String using the key.
+			p=Pattern.compile("\\$\\{"+output+"\\}");
 			m=p.matcher(ruleContents);
-			//Replacing the value with the inputs provided by the user in the editor. 
+			//Replacing the value with the inputs provided by the user in the editor.
 			String finalInput = copyMap.get(input);
 			if(finalInput.contains("$")){
 				finalInput = finalInput.replace("$", "\\$");
 			}
 			ruleContents=m.replaceAll(finalInput);
 		}
-		return ruleContents; 
-	} 
-			 
+		return ruleContents;
+	}
 
-    
+
+
 	// Utility to read json data from the existing file to a string
 	static String readFile(String path, Charset encoding) throws IOException {
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return new String(encoded, encoding);
 	}
-	
+
 	// Saving the Configurations file at server location for config policy.
 	protected void saveConfigurations(String policyName, String ruleBody) {
 		try {
@@ -163,13 +163,13 @@ public class CreateBrmsParamPolicy extends Policy {
 
 	@Override
 	public Map<String, String> savePolicies() throws PAPException {
-		
+
 		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
 		}
-		
+
 		if (!isPreparedToSave()) {
 			prepareToSave();
 		}
@@ -185,7 +185,7 @@ public class CreateBrmsParamPolicy extends Policy {
 		}
 		return successMap;
 	}
-	
+
 	private String getValueFromDictionary(String templateName){
 		String ruleTemplate = null;
 		CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
@@ -199,7 +199,7 @@ public class CreateBrmsParamPolicy extends Policy {
 		}
 		return ruleTemplate;
 	}
-	
+
 	protected Map<String, String> findType(String rule) {
 		Map<String, String> mapFieldType= new HashMap<>();
 		if(rule!=null){
@@ -278,7 +278,7 @@ public class CreateBrmsParamPolicy extends Policy {
 						LOGGER.debug(e);
 						nextComponent = components[i];
 					}
-					//If the type is of type String then we add the UI Item and type to the map. 
+					//If the type is of type String then we add the UI Item and type to the map.
 					if (nextComponent.startsWith("String")) {
 						type = "String";
 						mapFieldType.put(caption, type);
@@ -295,14 +295,14 @@ public class CreateBrmsParamPolicy extends Policy {
 		}
 		return mapFieldType;
 	}
-	
+
 	// This is the method for preparing the policy for saving. We have broken it
 	// out
 	// separately because the fully configured policy is used for multiple
 	// things
 	@Override
 	public boolean prepareToSave() throws PAPException {
-		
+
 		if (isPreparedToSave()) {
 			// we have already done this
 			return true;
@@ -324,29 +324,29 @@ public class CreateBrmsParamPolicy extends Policy {
 		}
 
 		policyName = policyAdapter.getNewFileName();
-		
-		if (policyAdapter.getData() != null) {	
+
+		if (policyAdapter.getData() != null) {
 			Map<String,String> ruleAndUIValue= policyAdapter.getBrmsParamBody();
 			String tempateValue= ruleAndUIValue.get("templateName");
 			String valueFromDictionary= getValueFromDictionary(tempateValue);
-			
-			//Get the type of the UI Fields. 
+
+			//Get the type of the UI Fields.
 			Map<String,String> typeOfUIField=findType(valueFromDictionary);
 			StringBuilder generatedRule = new StringBuilder();
 			StringBuilder body = new StringBuilder();
-			
+
 			try {
-				
+
 				try {
 					body.append("/* Autogenerated Code Please Don't change/remove this comment section. This is for the UI purpose. \n\t " +
 								"<$%BRMSParamTemplate=" + tempateValue + "%$> \n */ \n");
 					body.append(valueFromDictionary + "\n");
 					generatedRule.append("rule \"" +policyName.substring(0, policyName.replace(".xml", "").lastIndexOf(".")) +".PapParams\" \n\tsalience 1000 \n\twhen\n\tthen\n\t\tPapParams params = new PapParams();");
-					
+
 					//We first read the map data structure(ruleAndUIValue) received from the PAP-ADMIN
-					//We ignore if the key is "templateName as we are interested only in the UI fields and its value. 
-					//We have one more map data structure(typeOfUIField) created by parsing the Drools rule. 
-					//From the type of the UI field(String/int) we structure whether to put the "" or not. 
+					//We ignore if the key is "templateName as we are interested only in the UI fields and its value.
+					//We have one more map data structure(typeOfUIField) created by parsing the Drools rule.
+					//From the type of the UI field(String/int) we structure whether to put the "" or not.
 					for (Map.Entry<String, String> entry : ruleAndUIValue.entrySet()) {
 						if(entry.getKey()!="templateName")
 						{
@@ -354,7 +354,7 @@ public class CreateBrmsParamPolicy extends Policy {
 							{
 								if(fieldType.getKey().equalsIgnoreCase(entry.getKey()))
 								{
-									String key = entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1); 
+									String key = entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1);
 									if(fieldType.getValue()=="String")
 									{
 										//Type is String
@@ -371,7 +371,7 @@ public class CreateBrmsParamPolicy extends Policy {
 							}
 						}
 					}
-					
+
 					generatedRule.append("\n\t\tinsert(params);\nend");
 					LOGGER.info("New rule generated with :" + generatedRule);
 					body.append(generatedRule);
@@ -382,9 +382,9 @@ public class CreateBrmsParamPolicy extends Policy {
 			catch (Exception e) {
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "CreateBrmsParamPolicy", "Exception saving policy");
 			}
-			
+
 			saveConfigurations(policyName,body.toString());
-			
+
 			// Make sure the filename ends with an extension
 			if (!policyName.endsWith(".xml")) {
 				policyName = policyName + ".xml";
@@ -405,8 +405,8 @@ public class CreateBrmsParamPolicy extends Policy {
 						fileName.length());
 			}
 			allOfOne.getMatch().add(createMatch("PolicyName", name));
-			
-			
+
+
 			AllOfType allOf = new AllOfType();
 
 			// Match for ONAPName
@@ -585,8 +585,8 @@ public class CreateBrmsParamPolicy extends Policy {
 		assignment5.setExpression(new ObjectFactory()
 				.createAttributeValue(configNameAttributeValue5));
 		advice.getAttributeAssignmentExpression().add(assignment5);
-		
-		
+
+
 		//Config Name Assignment
 		AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
 		assignment6.setAttributeId("matching:" +CONFIGID);
@@ -597,15 +597,15 @@ public class CreateBrmsParamPolicy extends Policy {
 		configNameAttributeValue6.getContent().add(policyAdapter.getConfigName());
 		assignment6.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue6));
 		advice.getAttributeAssignmentExpression().add(assignment6);
-        // Adding Controller Information. 
+        // Adding Controller Information.
         if(policyAdapter.getBrmsController()!=null){
             BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
             advice.getAttributeAssignmentExpression().add(
-                        createResponseAttributes("controller:"+ policyAdapter.getBrmsController(), 
+                        createResponseAttributes("controller:"+ policyAdapter.getBrmsController(),
                                 brmsDicitonaryController.getControllerDataByID(policyAdapter.getBrmsController()).getController()));
         }
-        
-        // Adding Dependencies. 
+
+        // Adding Dependencies.
         if(policyAdapter.getBrmsDependency()!=null){
             BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
             ArrayList<String> dependencies = new ArrayList<>();
@@ -617,13 +617,13 @@ public class CreateBrmsParamPolicy extends Policy {
             advice.getAttributeAssignmentExpression().add(
                         createResponseAttributes("dependencies:"+key.toString(), dependencies.toString()));
         }
-        
-        // Dynamic Field Config Attributes. 
+
+        // Dynamic Field Config Attributes.
 		Map<String, String> dynamicFieldConfigAttributes = policyAdapter.getDynamicFieldConfigAttributes();
 		for (Entry<String, String> map : dynamicFieldConfigAttributes.entrySet()) {
 			advice.getAttributeAssignmentExpression().add(createResponseAttributes("key:"+map.getKey(), map.getValue()));
 		}
-		
+
 		//Risk Attributes
 		AttributeAssignmentExpressionType assignment8 = new AttributeAssignmentExpressionType();
 		assignment8.setAttributeId("RiskType");
@@ -636,7 +636,7 @@ public class CreateBrmsParamPolicy extends Policy {
 		assignment8.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue8));
 
 		advice.getAttributeAssignmentExpression().add(assignment8);
-		
+
 		AttributeAssignmentExpressionType assignment9 = new AttributeAssignmentExpressionType();
 		assignment9.setAttributeId("RiskLevel");
 		assignment9.setCategory(CATEGORY_RESOURCE);
@@ -647,7 +647,7 @@ public class CreateBrmsParamPolicy extends Policy {
 		configNameAttributeValue9.getContent().add(policyAdapter.getRiskLevel());
 		assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
 
-		advice.getAttributeAssignmentExpression().add(assignment9);	
+		advice.getAttributeAssignmentExpression().add(assignment9);
 
 		AttributeAssignmentExpressionType assignment10 = new AttributeAssignmentExpressionType();
 		assignment10.setAttributeId("guard");
@@ -678,10 +678,10 @@ public class CreateBrmsParamPolicy extends Policy {
 	}
 
 	@Override
-	public Object getCorrectPolicyDataObject() {		
+	public Object getCorrectPolicyDataObject() {
 		return policyAdapter.getData();
 	}
-	
+
     private AttributeAssignmentExpressionType  createResponseAttributes(String key, String value){
         AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
         assignment7.setAttributeId(key);

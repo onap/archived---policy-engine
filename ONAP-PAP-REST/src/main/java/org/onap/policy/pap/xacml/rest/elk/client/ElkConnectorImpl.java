@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,7 +50,7 @@ public class ElkConnectorImpl implements ElkConnector{
 	private static final Logger LOGGER = FlexLogger.getLogger(ElkConnector.class);
 
 	protected final JestClientFactory jestFactory = new JestClientFactory();
-	protected final JestClient jestClient;	
+	protected final JestClient jestClient;
 	protected static int QUERY_MAXRECORDS = 1000;
 
 	public ElkConnectorImpl() {
@@ -77,7 +77,7 @@ public class ElkConnectorImpl implements ElkConnector{
 				LOGGER.info("PATH:" + result.getPathToResult());
 				LOGGER.info(result.getJsonObject());
 			}
-			return result.isSucceeded();	
+			return result.isSucceeded();
 		} catch (IOException e) {
 			LOGGER.warn("Error checking type existance of " + type.toString() + ": " + e.getMessage(), e);
 			throw e;
@@ -95,7 +95,7 @@ public class ElkConnectorImpl implements ElkConnector{
 				LOGGER.info("PATH:" + result.getPathToResult());
 				LOGGER.info(result.getJsonObject());
 			}
-			return result.isSucceeded();	
+			return result.isSucceeded();
 		} catch (IOException e) {
 			LOGGER.warn("Error checking index existance of " + ELK_INDEX_POLICY + ": " + e.getMessage(), e);
 			throw e;
@@ -120,9 +120,9 @@ public class ElkConnectorImpl implements ElkConnector{
 		}
 
 		QueryStringQueryBuilder mQ = QueryBuilders.queryStringQuery("*"+text+"*");
-		SearchSourceBuilder searchSourceBuilder = 
+		SearchSourceBuilder searchSourceBuilder =
 				new SearchSourceBuilder().query(mQ);
-		
+
 		Builder searchBuilder = new Search.Builder(searchSourceBuilder.toString()).
 				addIndex(ELK_INDEX_POLICY).
 				setParameter(Parameters.SIZE, ElkConnectorImpl.QUERY_MAXRECORDS);
@@ -142,22 +142,22 @@ public class ElkConnectorImpl implements ElkConnector{
 		try {
 			result = jestClient.execute(search);
 		} catch (IOException ioe) {
-			LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ":" + 
+			LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ":" +
 					search + ": " + ioe.getMessage(), ioe);
 			throw new IllegalStateException(ioe);
 		}
 
 		if (result.isSucceeded()) {
 			if (LOGGER.isInfoEnabled()){
-				LOGGER.info("OK:" + result.getResponseCode() + ":" + search + ": " + 
+				LOGGER.info("OK:" + result.getResponseCode() + ":" + search + ": " +
 						result.getPathToResult() + ":" + System.lineSeparator() +
 						result.getJsonString());
 			}
-		} else {	
+		} else {
 			/* Unsuccessful search */
 			if (LOGGER.isWarnEnabled()){
-				LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + ":" + 
-						result.getResponseCode() + ": " + 
+				LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + ":" +
+						result.getResponseCode() + ": " +
 						search.getURI() + ":" +
 						result.getPathToResult() + ":" +
 						result.getJsonString() + ":" +
@@ -175,13 +175,13 @@ public class ElkConnectorImpl implements ElkConnector{
 					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
 				} else if (errorMessage.contains("JsonParseException")) {
 					int indexError = errorMessage.lastIndexOf("JsonParseException");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
+					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
 				} else if (errorMessage.contains("Parse Failure")) {
 					int indexError = errorMessage.lastIndexOf("Parse Failure");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
+					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
 				} else if (errorMessage.contains("SearchParseException")) {
 					int indexError = errorMessage.lastIndexOf("SearchParseException");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
+					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
 				} else {
 					xMessage = result.getErrorMessage();
 				}
@@ -194,8 +194,8 @@ public class ElkConnectorImpl implements ElkConnector{
 
 
 	@Override
-	public JestResult search(PolicyIndexType type, String text, 
-			Map<String, String> filter_s) 
+	public JestResult search(PolicyIndexType type, String text,
+			Map<String, String> filter_s)
 					throws IllegalStateException, IllegalArgumentException {
 		if (LOGGER.isTraceEnabled()){
 			LOGGER.trace("ENTER: " + text);
@@ -215,7 +215,7 @@ public class ElkConnectorImpl implements ElkConnector{
 				"    \"query\": {\n" +
 				"        \"bool\" : {\n" +
 				"            \"must\" : [";
-		
+
 		String match_params = "";
 		boolean first = true;
 		for(Entry<String, String> entry : filter_s.entrySet()){
@@ -233,20 +233,20 @@ public class ElkConnectorImpl implements ElkConnector{
 		}
 
 		matches_s = matches_s + "{\n" + match_params + "\n}" ;
-		
+
 		boolean query = false;
 		String query_String = "";
 		if(text != null){
 			query = true;
 			query_String = "{\n \"query_string\" : {\n \"query\" : \"*"+text+"*\"\n} \n}";
 		}
-		
+
 		if(query){
 			matches_s = matches_s + "," +  query_String + "]\n}\n}\n}";
 		}else{
 			matches_s = matches_s + "]\n}\n}\n}";
 		}
-				
+
 		Builder searchBuilder = new Search.Builder(matches_s).addIndex(ELK_INDEX_POLICY);
 
 		if (type == null || type == PolicyIndexType.all) {
@@ -265,22 +265,22 @@ public class ElkConnectorImpl implements ElkConnector{
 		try {
 			result = jestClient.execute(search);
 		} catch (IOException ioe) {
-			LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ":" + 
+			LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ":" +
 					search + ": " + ioe.getMessage(), ioe);
 			throw new IllegalStateException(ioe);
 		}
 
 		if (result.isSucceeded()) {
 			if (LOGGER.isInfoEnabled()){
-				LOGGER.info("OK:" + result.getResponseCode() + ":" + search + ": " + 
+				LOGGER.info("OK:" + result.getResponseCode() + ":" + search + ": " +
 						result.getPathToResult() + ":" + System.lineSeparator() +
-						result.getJsonString());	
-			}	
-		} else {	
+						result.getJsonString());
+			}
+		} else {
 			/* Unsuccessful search */
 			if (LOGGER.isWarnEnabled()){
-				LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + ":" + 
-						result.getResponseCode() + ": " + 
+				LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + ":" +
+						result.getResponseCode() + ": " +
 						search.getURI() + ":" +
 						result.getPathToResult() + ":" +
 						result.getJsonString() + ":" +
@@ -298,13 +298,13 @@ public class ElkConnectorImpl implements ElkConnector{
 					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
 				} else if (errorMessage.contains("JsonParseException")) {
 					int indexError = errorMessage.lastIndexOf("JsonParseException");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
+					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
 				} else if (errorMessage.contains("Parse Failure")) {
 					int indexError = errorMessage.lastIndexOf("Parse Failure");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
+					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
 				} else if (errorMessage.contains("SearchParseException")) {
 					int indexError = errorMessage.lastIndexOf("SearchParseException");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
+					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
 				} else {
 					xMessage = result.getErrorMessage();
 				}
@@ -315,7 +315,7 @@ public class ElkConnectorImpl implements ElkConnector{
 		return result;
 	}
 
-	public boolean put(PolicyRestAdapter policyData) 
+	public boolean put(PolicyRestAdapter policyData)
 			throws IOException, IllegalStateException {
 		if (LOGGER.isTraceEnabled()) LOGGER.trace("ENTER");
 
@@ -329,12 +329,12 @@ public class ElkConnectorImpl implements ElkConnector{
 			}else if(policyName.contains("Decision_")){
 				policyName = policyName.replace(".Decision_", ":Decision_");
 			}
-			
+
 			String[] splitPolicyName = policyName.split(":");
 			indexType = ElkConnector.toPolicyIndexType(splitPolicyName[1]);
 		} catch (IllegalArgumentException e) {
 			LOGGER.error(e);
-			throw new IllegalStateException("ELK: Index: " + ELK_INDEX_POLICY + e.getMessage());			
+			throw new IllegalStateException("ELK: Index: " + ELK_INDEX_POLICY + e.getMessage());
 		}
 		PolicyElasticData elasticData = new PolicyElasticData(policyData);
 		JSONObject jsonObj = new JSONObject(elasticData);
@@ -358,7 +358,7 @@ public class ElkConnectorImpl implements ElkConnector{
 				LOGGER.warn("FAILURE: PUT operation of "+ "->" + ": " +
 						"success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
 						result.getPathToResult() + "]" + System.lineSeparator() +
-						result.getJsonString());			
+						result.getJsonString());
 
 		}
 
@@ -378,12 +378,12 @@ public class ElkConnectorImpl implements ElkConnector{
 			}else if(policyName.contains("Decision_")){
 				policyName = policyName.replace(".Decision_", ":Decision_");
 			}
-			
+
 			String[] splitPolicyName = policyName.split(":");
 			indexType = ElkConnector.toPolicyIndexType(splitPolicyName[1]);
 			if (!isType(indexType)) {
 				throw new IllegalStateException("ELK: Index: " + ELK_INDEX_POLICY +
-						" Type: " + indexType + 
+						" Type: " + indexType +
 						" is not configured");
 			}
 			PolicyElasticData elasticData = new PolicyElasticData(policyData);
@@ -391,8 +391,8 @@ public class ElkConnectorImpl implements ElkConnector{
 					type(indexType.name()).build();
 			result = jestClient.execute(deleteRequest);
 		} catch (IllegalArgumentException | IOException e) {
-			LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ": delete:" + 
-					indexType +  ": null" + ":" + policyData.getNewFileName() + ": " + 
+			LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ": delete:" +
+					indexType +  ": null" + ":" + policyData.getNewFileName() + ": " +
 					e.getMessage(), e);
 			throw new IllegalStateException(e);
 		}
@@ -408,23 +408,23 @@ public class ElkConnectorImpl implements ElkConnector{
 				LOGGER.warn("FAILURE: DELETE operation of " + indexType + ":" + policyData.getNewFileName() + ": " +
 						"success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
 						result.getPathToResult() + "]" + System.lineSeparator() +
-						result.getJsonString());	
+						result.getJsonString());
 		}
 
 		return result.isSucceeded();
 	}
-	
+
 	@Override
-	public boolean update(PolicyRestAdapter policyData) throws IllegalStateException  {	
+	public boolean update(PolicyRestAdapter policyData) throws IllegalStateException  {
 		if (LOGGER.isDebugEnabled()){
 			LOGGER.debug("ENTER");
 		}
 		try {
-			boolean success = put(policyData);	
-			return success; 	
+			boolean success = put(policyData);
+			return success; 
 		} catch (Exception e) {
 			LOGGER.warn(XACMLErrorConstants.ERROR_UNKNOWN + ":" + "cannot test and update", e);
-			throw new IllegalStateException(e);			
+			throw new IllegalStateException(e);
 		}
 	}
 }

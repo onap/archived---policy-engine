@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,9 +51,9 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 public abstract class Policy {
-	
+
 	private static final Logger LOGGER	= FlexLogger.getLogger(Policy.class);
-	
+
 
 	/**
 	 * Common Fields
@@ -214,7 +214,7 @@ public abstract class Policy {
 		String fileName = "default";
 		if (policyDir != null && !policyDir.equals(EMPTY_STRING)) {
 			fileName = policyType + "_" + String.format(polcyFileName) + "." + version + ".xml";
-		} 
+		}
 		if (fileName != null) {
 			newFile = Paths.get(parent.toString(), fileName);
 		}
@@ -247,7 +247,7 @@ public abstract class Policy {
 			}else if(policyConfigType.equals("Micro Service")){
 				fileName = policyType + "_" + "MS" + "_" + java.lang.String.format(policyFileName) + "." + version + ".xml";
 			}
-		} 
+		}
 		if (fileName != null) {
 			newFile = Paths.get(parentPath.toString(), fileName);
 		}
@@ -260,7 +260,7 @@ public abstract class Policy {
 
 	//create policy once all the validations are completed
 	protected Map<String, String> createPolicy(final Path policyPath, final Object policyData) {
-		Map<String, String> success = new HashMap<>(); 
+		Map<String, String> success = new HashMap<>();
 		//
 		// Is the root a PolicySet or Policy?
 		//
@@ -353,7 +353,7 @@ public abstract class Policy {
 			configHome = webappsPathConfig.toString();
 		}
 	}
-	
+
 	public boolean validateConfigForm() {
 		return true;
 	}

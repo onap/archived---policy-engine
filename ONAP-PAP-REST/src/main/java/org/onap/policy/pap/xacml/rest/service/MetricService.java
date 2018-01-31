@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ public class MetricService {
 	 * This is a private constructor
 	 * */
 	private MetricService(){
-		
+
 	}
 	public static void doGetPolicyMetrics(HttpServletResponse response) {
 		Set<OnapPDPGroup> groups = new HashSet<>();
@@ -61,7 +61,7 @@ public class MetricService {
 			}
 			if (em==null){
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Error creating entity manager with persistence unit: " + XACMLPapServlet.getPersistenceUnit());
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);								
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.addHeader(errorMsg, "Error creating entity manager with persistence unit");
 				return;
 			}
@@ -82,16 +82,16 @@ public class MetricService {
 				return;
 			}else{
 				String message = "The policy count on the PAP and PDP is 0.  Please check the database and file system to correct this error.";
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);								
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.addHeader(errorMsg, message);
 				return;
 			}
 		} catch (Exception e) {
 			String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Error Querying the Database: " + e.getMessage();
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPapServlet", " Error Querying the Database.");
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);								
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, message);
-			return;			
+			return;
 		}
 	}
 

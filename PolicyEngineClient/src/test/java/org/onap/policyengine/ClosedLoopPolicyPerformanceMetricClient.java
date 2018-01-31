@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,15 +43,15 @@ import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.api.PolicyType;
 
 public class ClosedLoopPolicyPerformanceMetricClient {
-	
-	//For updating a ClosedLoop_Fault policy set the "isEdit" flag to true.   
-	//For creating a ClosedLoop_Fault policy set the "isEdit" flag to false.  
+
+	//For updating a ClosedLoop_Fault policy set the "isEdit" flag to true.
+	//For creating a ClosedLoop_Fault policy set the "isEdit" flag to false.
 	static Boolean isEdit = true;
-	     
-	//Builds JSONObject from File  
+
+	//Builds JSONObject from File
 	private static JsonObject buildJSON(File jsonInput, String jsonString) throws FileNotFoundException {
 	    JsonObject json = null;;
-	    JsonReader jsonReader = null;     
+	    JsonReader jsonReader = null;
 	    if (jsonString != null && jsonInput == null) {
 	        StringReader in = null;
 	            in = new StringReader(jsonString);
@@ -70,27 +70,27 @@ public class ClosedLoopPolicyPerformanceMetricClient {
 				System.err.println("Exception Occured while closing input stream"+e);
 			}
 	    }
-	    jsonReader.close();   
+	    jsonReader.close();
 	    return json;
 	}
-	
+
 	public static void main(String[] args) {
 			try {
 				PolicyEngine policyEngine = new PolicyEngine("config.properties");
 				PolicyParameters policyParameters = new PolicyParameters();
-				// Set Policy Type 
+				// Set Policy Type
 				policyParameters.setPolicyConfigType(PolicyConfigType.ClosedLoop_PM);
 				policyParameters.setPolicyName("MikeAPItests.ClosedLoopPmApiTest");
 				policyParameters.setPolicyDescription("This is a sample ClosedLoop_PM policy CREATE example");
 				//policyParameters.setPolicyScope("MikeAPItests");
-				
-				// Set up Micro Services Attributes 
+
+				// Set up Micro Services Attributes
 				File jsonFile = null;
 				String MSjsonString= null;
 				Path file = Paths.get("C:\\policyAPI\\ClosedLoopJSON\\pmTestJson.json");
 				jsonFile = file.toFile();
-				
-				policyParameters.setConfigBody(buildJSON(jsonFile, MSjsonString).toString());		
+
+				policyParameters.setConfigBody(buildJSON(jsonFile, MSjsonString).toString());
 				policyParameters.setConfigBodyType(PolicyType.JSON);
 
 				policyParameters.setRequestID(UUID.randomUUID());
@@ -104,16 +104,16 @@ public class ClosedLoopPolicyPerformanceMetricClient {
 				policyParameters.setRiskLevel("5");
 				// Set Safe Policy value for Risk Type
 				policyParameters.setRiskType("PROD");
-				
-				// API method to create or update Policy. 
+
+				// API method to create or update Policy.
 	 	        PolicyChangeResponse response = null;
 		        if (!isEdit) {
 		            response = policyEngine.createPolicy(policyParameters);
-		        } 
-		        else {	
+		        }
+		        else {
 		        	response = policyEngine.updatePolicy(policyParameters);
 		        }
-		        
+
 				if(response.getResponseCode()==200){
 					System.out.println(response.getResponseMessage());
 					System.out.println("Policy Created Successfully!");

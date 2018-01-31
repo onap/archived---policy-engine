@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,11 +35,11 @@ public class PolicyItemSetChangeNotifier implements PolicyContainer.ItemSetChang
 	private static final long serialVersionUID = 1L;
     private Collection<PolicyContainer.ItemSetChangeListener> itemSetChangeListeners = null;
     private PolicyContainer container = null;
-    
+
     public PolicyItemSetChangeNotifier() {
     	// Empty constructor
     }
-    
+
     protected void setContainer(PolicyContainer c) {
     	this.container = c;
     }
@@ -57,7 +57,7 @@ public class PolicyItemSetChangeNotifier implements PolicyContainer.ItemSetChang
             getItemSetChangeListeners().remove(listener);
         }
     }
-	
+
 	protected static class BaseItemSetChangeEvent extends EventObject implements
 	    PolicyContainer.ItemSetChangeEvent, Serializable {
 		private static final long serialVersionUID = 1L;
@@ -65,7 +65,7 @@ public class PolicyItemSetChangeNotifier implements PolicyContainer.ItemSetChang
 		protected BaseItemSetChangeEvent(PolicyContainer source) {
 		    super(source);
 		}
-		
+
 		@Override
 		public PolicyContainer getContainer() {
 		    return (PolicyContainer) getSource();
@@ -79,7 +79,7 @@ public class PolicyItemSetChangeNotifier implements PolicyContainer.ItemSetChang
     protected Collection<PolicyContainer.ItemSetChangeListener> getItemSetChangeListeners() {
         return itemSetChangeListeners;
     }
-  
+
     protected void fireItemSetChange() {
         fireItemSetChange(new BaseItemSetChangeEvent(this.container));
     }

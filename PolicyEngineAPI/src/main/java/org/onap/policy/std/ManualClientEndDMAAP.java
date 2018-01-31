@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ public class ManualClientEndDMAAP {
 	private static BusConsumer dmaapConsumer = null;
 	private static String uniquID = null;
 	private static String topic = null;
-	
+
 
 	public static PDPNotification result(NotificationScheme scheme) {
 		if (resultJson == null || notification == null) {
@@ -47,7 +47,7 @@ public class ManualClientEndDMAAP {
 			return null;
 		} else {
 			if(scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)) {
-				boolean removed = false, updated = false; 
+				boolean removed = false, updated = false;
 				if(notification.getRemovedPolicies()!=null && !notification.getRemovedPolicies().isEmpty()){
 					removed = true;
 				}
@@ -74,14 +74,14 @@ public class ManualClientEndDMAAP {
         BusPublisher pub = null;
 		try {
 			pub = new BusPublisher.DmaapPublisherWrapper(dmaapList, topic, aafLogin, aafPassword);
-			final JSONObject msg1 = new JSONObject (); 
-	        msg1.put ( "JSON", "DMaaP Update Request UID=" + uniqueID);  
+			final JSONObject msg1 = new JSONObject ();
+	        msg1.put ( "JSON", "DMaaP Update Request UID=" + uniqueID);
 	        pub.send ( "MyPartitionKey", msg1.toString () );
 		} catch (Exception e) {
 			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Unable to create DMaaP Publisher: ", e);
 		}
 		if(pub != null){
-	        pub.close (); 
+	        pub.close ();
 		}
 	}
 
@@ -90,27 +90,27 @@ public class ManualClientEndDMAAP {
 		ManualClientEndDMAAP.topic = topic;
 		publishMessage(topic, uniquID, dmaapList, aafLogin, aafPassword);
 	}
-	
-	
+
+
 	public static void start(List<String> dmaapList, String topic, String aafLogin, String aafPassword, String uniqueID) {
-		
+
 		ManualClientEndDMAAP.uniquID = uniqueID;
 		ManualClientEndDMAAP.topic = topic;
-		
+
 		String id = "0";
-		
+
 		try {
 			dmaapConsumer = new BusConsumer.DmaapConsumerWrapper(dmaapList, topic, aafLogin, aafPassword, "clientGroup", id, 15*1000, 1000);
 		} catch (Exception e) {
 			logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Unable to create DMaaP Consumer: ", e);
 		}
-		
+
 		int count = 1;
 		while (count < 4) {
 				publishMessage(topic, uniquID, dmaapList, aafLogin, aafPassword);
 				try {
 					for ( String msg : dmaapConsumer.fetch () )
-					{	
+					{
 						logger.debug("Manual Notification Recieved Message " + msg + " from DMaaP server : " + dmaapList.toString());
 						resultJson = msg;
 						if (!msg.contains("DMaaP Update")){
@@ -120,8 +120,8 @@ public class ManualClientEndDMAAP {
 					}
 				}catch (Exception e) {
 					logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Unable to fetch messages from DMaaP servers: ", e);
-				} 
+				}
 				count++;
-			}		
+			}
 	}
 }

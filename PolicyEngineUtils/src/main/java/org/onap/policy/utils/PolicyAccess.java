@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,22 +30,22 @@ import org.apache.log4j.Logger;
 import com.att.cadi.Access;
 
 /**
- * PolicyAccess used by AAF for logging purposes. 
- *  
+ * PolicyAccess used by AAF for logging purposes.
+ *
  */
 public class PolicyAccess implements Access {
 	private static final Logger logger = Logger.getLogger(PolicyAccess.class.getName());
-	
-	private Properties properties = new Properties(); 
+
+	private Properties properties = new Properties();
 	private Access.Level logLevel = Access.Level.INFO;
-	
+
 	public PolicyAccess(Properties properties, Level level) {
 		this.properties = properties;
 		if(level!=null){
 			logLevel = level;
 		}
 	}
-	
+
 	@Override
 	public ClassLoader classLoader() {
 		return getClass().getClassLoader();
@@ -88,7 +88,7 @@ public class PolicyAccess implements Access {
 	public void setLogLevel(Level level) {
 		logLevel = level;
 	}
-	
+
 	private void logtail(StringBuilder sb, Object[] args) {
         for (Object o: args) {
             String s = o.toString();

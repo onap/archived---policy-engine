@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,7 +42,7 @@ import com.att.research.xacml.util.XACMLProperties;
 public class SavePolicyHandler {
 	private static final Logger logger = FlexLogger.getLogger(SavePolicyHandler.class);
 	private HashMap<String, String> ErrorHeaders = null;
-	
+
 	public void doPolicyAPIPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String operation = request.getParameter("operation");
 		String policyType = request.getParameter("policyType");
@@ -55,7 +55,7 @@ public class SavePolicyHandler {
 			}else{
 				policyAdapter.setEditPolicy(false);
 			}
-			
+
 			// get the request content into a String
 			String json = null;
 			// read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)
@@ -69,7 +69,7 @@ public class SavePolicyHandler {
 			//Set policyAdapter values including parentPath (Common to all policy types)
 			try {
                 policyAdapter = setDataToPolicyAdapter(policy, policyType, apiflag);
-                
+
                 if(!extendedPolicyOptions(policyAdapter, response)){
                 	creation.savePolicy(policyAdapter, response);
                 }
@@ -95,7 +95,7 @@ public class SavePolicyHandler {
 		policyAdapter.setPolicyDescription(policy.getPolicyDescription());
 		policyAdapter.setOnapName(policy.getOnapName()); //Config Base and Decision Policies
 		policyAdapter.setRuleCombiningAlgId("urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides");
-	
+
 		policyAdapter.setPolicyType(policyType);
 		policyAdapter.setDynamicFieldConfigAttributes(policy.getDynamicFieldConfigAttributes());
 		policyAdapter.setEditPolicy(policy.isEditPolicy());
@@ -134,11 +134,11 @@ public class SavePolicyHandler {
 
 		return policyAdapter;
 	}
-	
+
 	public boolean extendedPolicyOptions(PolicyRestAdapter policyAdapter, HttpServletResponse response){
 		return false;
 	}
-	
+
 	public void addErrorHeader(String key, String value){
 		if(ErrorHeaders==null){
 			ErrorHeaders= new HashMap<>();
@@ -149,7 +149,7 @@ public class SavePolicyHandler {
 	public static SavePolicyHandler getInstance() {
 		try {
 			Class<?> savePolicyHandler = Class.forName(XACMLProperties.getProperty("savePolicy.impl.className", SavePolicyHandler.class.getName()));
-			SavePolicyHandler instance = (SavePolicyHandler) savePolicyHandler.newInstance(); 
+			SavePolicyHandler instance = (SavePolicyHandler) savePolicyHandler.newInstance();
 			return instance;
 		} catch (Exception e) {
 			logger.error(e.getMessage(),e);

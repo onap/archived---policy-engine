@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,14 +49,14 @@ import com.google.common.base.Splitter;
 public class XACMLPdpPolicyFinderFactory extends PolicyFinderFactory {
 	public static final String	PROP_FILE		= ".file";
 	public static final String	PROP_URL		= ".url";
-	
+
 	private static Log LOGGER							= LogFactory.getLog(XACMLPdpPolicyFinderFactory.class);
 	private List<PolicyDef> rootPolicies;
 	private List<PolicyDef> referencedPolicies;
 	private boolean needsInit					= true;
-	
+
 	private Properties properties = null;
-	
+
 	public XACMLPdpPolicyFinderFactory() {
 		//
 		// Here we differ from the StdPolicyFinderFactory in that we initialize right away.
@@ -81,7 +81,7 @@ public class XACMLPdpPolicyFinderFactory extends PolicyFinderFactory {
 	 * Loads the <code>PolicyDef</code> for the given <code>String</code> identifier by looking first
 	 * for a ".file" property associated with the ID and using that to load from a <code>File</code> and
 	 * looking for a ".url" property associated with the ID and using that to load from a <code>URL</code>.
-	 * 
+	 *
 	 * @param policyId the <code>String</code> identifier for the policy
 	 * @return a <code>PolicyDef</code> loaded from the given identifier
 	 */
@@ -144,15 +144,15 @@ public class XACMLPdpPolicyFinderFactory extends PolicyFinderFactory {
 				}
 			}
 		}
-		
+
 		XACMLPdpPolicyFinderFactory.LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR +"No known location for Policy " + policyId);
 		return null;
 	}
-	
+
 	/**
 	 * Finds the identifiers for all of the policies referenced by the given property name in the
 	 * <code>XACMLProperties</code> and loads them using the requested loading method.
-	 * 
+	 *
 	 * @param propertyName the <code>String</code> name of the property containing the list of policy identifiers
 	 * @return a <code>List</code> of <code>PolicyDef</code>s loaded from the given property name
 	 */
@@ -161,22 +161,22 @@ public class XACMLPdpPolicyFinderFactory extends PolicyFinderFactory {
 		if (policyIds == null || policyIds.length() == 0) {
 			return null;
 		}
-		
+
 		Iterable<String> policyIdArray	= Splitter.on(',').trimResults().omitEmptyStrings().split(policyIds);
 		if (policyIdArray == null) {
 			return null;
 		}
-		
+
 		List<PolicyDef> listPolicyDefs	= new ArrayList<>();
 		for (String policyId : policyIdArray) {
-			PolicyDef policyDef	= this.loadPolicyDef(policyId);	
+			PolicyDef policyDef	= this.loadPolicyDef(policyId);
 			if (policyDef != null) {
 				listPolicyDefs.add(policyDef);
 			}
 		}
 		return listPolicyDefs;
 	}
-	
+
 	protected synchronized void init() {
 		if (this.needsInit) {
 			if (XACMLPdpPolicyFinderFactory.LOGGER.isDebugEnabled()) {
@@ -191,7 +191,7 @@ public class XACMLPdpPolicyFinderFactory extends PolicyFinderFactory {
 			this.needsInit	= false;
 		}
 	}
-	
+
 	@Override
 	public PolicyFinder getPolicyFinder() throws FactoryException {
 		//

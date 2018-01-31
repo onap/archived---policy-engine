@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,23 +60,23 @@ public class CleanUpSystemLogDB extends TimerTask{
 	}
 
 	public static void cleanLogDBTableEntries(Connection dbConnect, int timeFrame) throws SQLException {
-		
+
 		Connection connect = dbConnect;
         if(dbConnect == null || dbConnect.isClosed()) {
         	connect = ParseLog.getDbConnection();
-        }		
-		try ( 
+        }
+		try (
 			  java.sql.PreparedStatement statement	= connect
 						.prepareStatement("DELETE FROM SYSTEMLOGDB WHERE date < DATE_SUB(CURDATE(), INTERVAL ? DAY)");
 		){
 
-			statement.setInt(1, timeFrame);	
+			statement.setInt(1, timeFrame);
 
 			int records = statement.executeUpdate();
-			
+
 			logger.debug("cleanLogDBTableEntries:deleting Log files ended with " + records + " deleted.");
 			statement.close();
-			
+
 		} catch (Exception e) {
 			logger.error("Failed to create SQLContainer for System Log Database", e);
 		} finally{

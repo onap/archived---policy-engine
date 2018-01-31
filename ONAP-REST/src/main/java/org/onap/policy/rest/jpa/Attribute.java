@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,7 +51,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The persistent class for the Attribute database table.
- * 
+ *
  */
 @Entity
 @Table(name="Attribute")
@@ -59,7 +59,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Attribute implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Log logger = LogFactory.getLog(Attribute.class);
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
@@ -85,7 +85,7 @@ public class Attribute implements Serializable {
 	@Column(name="PRIORITY", nullable=true)
 	@OrderBy("asc")
 	private String priority;
-	
+
 	@Column(name="ATTRIBUTE_VALUE", nullable=true)
 	@OrderBy("asc")
 	private String attributeValue;
@@ -116,12 +116,12 @@ public class Attribute implements Serializable {
 
 	@Column(name="selector_path", nullable=true, length=2048)
 	private String selectorPath;
-	
 
-	
+
+
 	@Transient
 	private String issuer = null;
-	
+
 	@Transient
 	private boolean mustBePresent = false;
 
@@ -132,7 +132,7 @@ public class Attribute implements Serializable {
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -149,14 +149,14 @@ public class Attribute implements Serializable {
 		this.userModifiedBy = userModifiedBy;
 	}
 
-	
+
 	public Attribute() {
 	}
-	
+
 	public Attribute(String domain) {
 		this.xacmlId = domain;
 	}
-	
+
 	public Attribute(Attribute copy) {
 		this(copy.getXacmlId() + ":(0)");
 		this.constraintType = copy.getConstraintType();
@@ -176,7 +176,7 @@ public class Attribute implements Serializable {
 		this.createdDate = date;
 		this.modifiedDate = date;
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
@@ -230,7 +230,7 @@ public class Attribute implements Serializable {
 	public String getXacmlId() {
 		return this.xacmlId;
 	}
-	
+
 /*	@Transient
 	public Identifier getXacmlIdentifier() {
 		return new IdentifierImpl(this.xacmlId);
@@ -267,7 +267,7 @@ public class Attribute implements Serializable {
 
 		return constraintValue;
 	}
-	
+
 	public void removeAllConstraintValues() {
 		if (this.constraintValues == null) {
 			return;
@@ -297,19 +297,19 @@ public class Attribute implements Serializable {
 	public char getIsDesignator() {
 		return this.isDesignator;
 	}
-	
+
 	public void setIsDesignator(char is) {
 		this.isDesignator = is;
 	}
-	
+
 	public String getSelectorPath() {
 		return this.selectorPath;
 	}
-	
+
 	public void setSelectorPath(String path) {
 		this.selectorPath = path;
 	}
-	
+
 	@Transient
 	public String getIssuer() {
 		return issuer;
@@ -334,7 +334,7 @@ public class Attribute implements Serializable {
 	public boolean isDesignator() {
 		return (this.isDesignator == '1');
 	}
-	
+
 	@Transient
 	public void setIsDesignator(boolean is) {
 		if (is) {
@@ -342,8 +342,8 @@ public class Attribute implements Serializable {
 		} else {
 			this.isDesignator = '0';
 		}
-	}	
-	
+	}
+
 	public String getPriority() {
 		return priority;
 	}
@@ -351,7 +351,7 @@ public class Attribute implements Serializable {
 	public void setPriority(String priority) {
 		this.priority = priority;
 	}
-	
+
 	public String getAttributeValue() {
 		return attributeValue;
 	}
@@ -360,4 +360,4 @@ public class Attribute implements Serializable {
 		this.attributeValue = attributeValue;
 	}
 }
-	
+

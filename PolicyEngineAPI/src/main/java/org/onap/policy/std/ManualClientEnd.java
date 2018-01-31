@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ import org.onap.policy.std.StdPDPNotification;
 
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
-import org.onap.policy.common.logging.flexlogger.*; 
+import org.onap.policy.common.logging.flexlogger.*;
 
 @ClientEndpoint
 public class ManualClientEnd {
@@ -49,7 +49,7 @@ public class ManualClientEnd {
 	private static StdPDPNotification notification = null;
 	private static String resultJson = null;
 	private static Logger logger = FlexLogger.getLogger(ManualClientEnd.class.getName());
-	
+
 	public static void start(String url) {
 		latch = new CountDownLatch(1);
 		ClientManager client = ClientManager.createClient();
@@ -73,7 +73,7 @@ public class ManualClientEnd {
 		} else {
 			if(scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)) {
 				boolean removed = false;
-				boolean updated = false; 
+				boolean updated = false;
 				if(notification.getRemovedPolicies()!=null && !notification.getRemovedPolicies().isEmpty()){
 					removed = true;
 				}
@@ -95,26 +95,26 @@ public class ManualClientEnd {
 			}
 		}
 	}
-	
-	// WebSockets Code.. 
+
+	// WebSockets Code..
 	@OnOpen
 	public void onOpen(Session session) throws IOException {
 		logger.info("Session Started with : " + session.getId());
 		session.getBasicRemote().sendText("Manual");
 	}
-	
+
 	@OnError
 	public void onError(Session session, Throwable e) {
 		logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in: "+ session.getId());
 		latch.countDown();
 	}
-	
+
 	@OnClose
 	public void onClose(Session session) {
 		logger.info("Session ended with "+ session.getId());
 		latch.countDown();
 	}
-	
+
 	@OnMessage
 	public static void onMessage(String message, Session session){
 		logger.debug(" Manual Notification Recieved Message : " + message +" Session info is : "+ session.getId());

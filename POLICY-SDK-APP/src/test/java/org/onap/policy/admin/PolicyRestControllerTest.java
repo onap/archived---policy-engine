@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -65,12 +65,12 @@ public class PolicyRestControllerTest {
 	private List<Object> serviceGroupData;
 	private List<Object> tagListData;
 	private List<Object> termListData;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		commonClassDao = mock(CommonClassDao.class);
 		HttpSession mockSession = mock(HttpSession.class);
-		request = mock(HttpServletRequest.class);  
+		request = mock(HttpServletRequest.class);
 		response =  new MockHttpServletResponse();
 		User user = new User();
 		user.setOrgUserId("Test");
@@ -104,8 +104,8 @@ public class PolicyRestControllerTest {
 				+ "\"notBox\":\"NOT\",\"trigger1\":\"Test\",\"operatorBox\":\"AND\",\"trigger2\":\"Test\"},{\"id\":\"A2\",\"$$hashKey\":"
 				+ "\"object:1583\",\"notBox\":\"NOT\",\"trigger1\":\"Test\",\"operatorBox\":\"OR\",\"trigger2\":\"Test\"},{\"id\":\"A3"
 				+ "\",\"$$hashKey\":\"object:1589\",\"notBox\":\"NOT\",\"trigger1\":\"A1\",\"operatorBox\":\"AND\",\"trigger2\":\"A2\"}]}}";
-		
-		
+
+
 		fwRequestString = "{\"policyData\":{\"error\":\"\",\"inprocess\":false,\"model\":{\"name\":\"com\",\"subScopename\":\"\",\"path\":[],"
 				+ "\"type\":\"dir\",\"size\":0,\"date\":\"2017-06-01T15:45:36.000Z\",\"version\":\"\",\"createdBy\":\"Demo\",\"modifiedBy\":"
 				+ "\"Demo\",\"content\":\"\",\"recursive\":false},\"tempModel\":{\"name\":\"com\",\"subScopename\":\"\",\"path\":[],\"type\":"
@@ -114,7 +114,7 @@ public class PolicyRestControllerTest {
 				+ "\":\"Firewall Config\",\"attributes\":[{\"id\":\"choice1\",\"$$hashKey\":\"object:338\",\"key\":\"Test\",\"value\":\"Test\"}],"
 				+ "\"fwattributes\":[],\"policyName\":\"SampleTest\",\"policyDescription\":\"SampleTest\",\"riskType\":\"SampleRiskType\","
 				+ "\"riskLevel\":\"1\",\"guard\":\"True\",\"configName\":\"SampleTest\",\"ttlDate\":\"14/09/2017\",\"securityZone\":\"Test\"}}}";
-		
+
 		fwViewRequestString = "{\"policyData\":{\"policyType\":\"Config\",\"configPolicyType\":\"Firewall Config\",\"attributes\":[{\"id\":"
 				+ "\"choice1\",\"$$hashKey\":\"object:338\",\"key\":\"Test\",\"value\":\"Test\"}],\"fwattributes\":[],\"policyName\":"
 				+ "\"SampleTest\",\"policyDescription\":\"SampleTest\",\"riskType\":\"SampleRiskType\",\"riskLevel\":\"1\",\"guard\":\"True\","
@@ -128,13 +128,13 @@ public class PolicyRestControllerTest {
 		prefixList.setPrefixListValue("10.10.10.10/12");
 		prefixListData.add(prefixList);
 		when(commonClassDao.getData(PrefixList.class)).thenReturn(prefixListData);
-		
+
 		actionListData = new ArrayList<>();
 		ActionList actionList = new ActionList();
 		actionList.setActionName("Test");
 		actionListData.add(actionList);
 		when(commonClassDao.getData(ActionList.class)).thenReturn(actionListData);
-			
+
 		serviceListData = new ArrayList<>();
 		ServiceList serviceList = new ServiceList();
 		serviceList.setServiceName("Test");
@@ -144,35 +144,35 @@ public class PolicyRestControllerTest {
 		serviceList.setServicePorts("8080");
 		serviceListData.add(serviceList);
 		when(commonClassDao.getData(ServiceList.class)).thenReturn(serviceListData);
-		
+
 		addressGroupData = new ArrayList<>();
 		AddressGroup addressGroup = new AddressGroup();
 		addressGroup.setGroupName("Group_Test");
 		addressGroup.setServiceList("Test");
 		addressGroupData.add(addressGroup);
 		when(commonClassDao.getData(AddressGroup.class)).thenReturn(addressGroupData);
-		
+
 		securityZoneData = new ArrayList<>();
 		SecurityZone securityZone = new SecurityZone();
 		securityZone.setZoneName("Test");
 		securityZone.setZoneValue("Test");
 		securityZoneData.add(securityZone);
 		when(commonClassDao.getData(SecurityZone.class)).thenReturn(securityZoneData);
-		
+
 		serviceGroupData = new ArrayList<>();
 		GroupServiceList serviceGroup = new GroupServiceList();
 		serviceGroup.setGroupName("Group_Test");
 		serviceGroup.setServiceList("Test");
 		serviceGroupData.add(serviceGroup);
 		when(commonClassDao.getData(GroupServiceList.class)).thenReturn(serviceGroupData);
-		
+
 		tagListData = new ArrayList<>();
 		FWTagPicker fwPicker = new FWTagPicker();
 		fwPicker.setTagPickerName("Test");
 		fwPicker.setTagValues("Test:8080");
 		tagListData.add(fwPicker);
 		when(commonClassDao.getData(FWTagPicker.class)).thenReturn(tagListData);
-		
+
 		termListData = new ArrayList<>();
 		TermList termList = new TermList();
 		termList.setTermName("Test");
@@ -194,7 +194,7 @@ public class PolicyRestControllerTest {
 		BufferedReader reader = new BufferedReader(new StringReader(clRequestString));
 		try {
 			Mockito.when(request.getReader()).thenReturn(reader);
-			controller.policyCreationController(request, response);	
+			controller.policyCreationController(request, response);
 		} catch (IOException e) {
 			fail();
 		}
@@ -203,17 +203,17 @@ public class PolicyRestControllerTest {
 		BufferedReader reader1 = new BufferedReader(new StringReader(fwRequestString));
 		try {
 			Mockito.when(request.getReader()).thenReturn(reader1);
-			controller1.policyCreationController(request, response);	
+			controller1.policyCreationController(request, response);
 		} catch (IOException e) {
 			fail();
 		}
-		
+
 		CreateFirewallController fwController = new CreateFirewallController();
 		CreateFirewallController.setCommonClassDao(commonClassDao);
 		BufferedReader reader2 = new BufferedReader(new StringReader(fwViewRequestString));
 		try {
 			Mockito.when(request.getReader()).thenReturn(reader2);
-			fwController.setFWViewRule(request, response);	
+			fwController.setFWViewRule(request, response);
 		} catch (IOException e) {
 			fail();
 		}

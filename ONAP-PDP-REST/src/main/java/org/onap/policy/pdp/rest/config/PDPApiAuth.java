@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,7 +74,7 @@ public class PDPApiAuth {
 	}
 
 	/*
-	 * Return Environment value of the PDP servlet. 
+	 * Return Environment value of the PDP servlet.
 	 */
 	public static String getEnvironment() {
 		if(environment==null){
@@ -84,7 +84,7 @@ public class PDPApiAuth {
 	}
 
 	/*
-	 * Security check for authentication and authorizations. 
+	 * Security check for authentication and authorizations.
 	 */
 	public static boolean checkPermissions(String clientEncoding, String requestID,
 			String resource) {
@@ -101,7 +101,7 @@ public class PDPApiAuth {
 			}
 			LOGGER.info("User " + userNamePass[0] + " is Accessing Policy Engine API.");
 			Boolean result = false;
-			// Check Backward Compatibility. 
+			// Check Backward Compatibility.
 			try{
 				result = clientAuth(userNamePass);
 			}catch(Exception e){
@@ -168,9 +168,9 @@ public class PDPApiAuth {
 		}
 		// Read the Properties and Load the Clients and their scopes.
 		clientMap = new HashMap<>();
-		// 
+		//
 		for (Object propKey : clientProp.keySet()) {
-			String clientID = (String)propKey; 
+			String clientID = (String)propKey;
 			String clientValue = clientProp.getProperty(clientID);
 			if (clientValue != null && clientValue.contains(",")) {
 				ArrayList<String> clientValues = new ArrayList<>(Arrays.asList(clientValue.split("\\s*,\\s*")));

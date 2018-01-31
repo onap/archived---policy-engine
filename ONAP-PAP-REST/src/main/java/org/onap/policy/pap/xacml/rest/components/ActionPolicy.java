@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,18 +58,18 @@ import com.att.research.xacml.api.pap.PAPException;
 
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
-import org.onap.policy.common.logging.flexlogger.Logger; 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class ActionPolicy extends Policy {
-    
+
     /**
      * ActionPolicy Fields
      */
     private static final Logger LOGGER = FlexLogger.getLogger(ActionPolicy.class);
-    
+
     public static final String JSON_CONFIG = "JSON";
-    
+
     public static final String PDP_ACTION = "PDP";
     public static final String PEP_ACTION = "PEP";
     public static final String TYPE_ACTION = "REST";
@@ -84,42 +84,42 @@ public class ActionPolicy extends Policy {
     public static final String HEADERS_ATTRIBUTEID = "headers";
     public static final String URL_ATTRIBUTEID = "url";
     public static final String BODY_ATTRIBUTEID = "body";
-    
+
     List<String> dynamicLabelRuleAlgorithms = new LinkedList<>();
     List<String> dynamicFieldFunctionRuleAlgorithms = new LinkedList<>();
     List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<>();
     List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<>();
-    
+
     protected Map<String, String> dropDownMap = new HashMap<>();
-    
+
     private static boolean isAttribute = false;
     private synchronized static boolean getAttribute () {
         return isAttribute;
 
     }
-    
+
     public ActionPolicy() {
         super();
     }
-    
+
     public ActionPolicy(PolicyRestAdapter policyAdapter){
         this.policyAdapter = policyAdapter;
     }
-    
+
     @Override
     public Map<String, String> savePolicies() throws PAPException {
-        
+
         Map<String, String> successMap = new HashMap<>();
         if(isPolicyExists()){
             successMap.put("EXISTS", "This Policy already exist on the PAP");
             return successMap;
         }
-        
+
         if(!ActionPolicy.getAttribute()) {
             successMap.put("invalidAttribute", "Action Attrbute was not in the database.");
             return successMap;
         }
-        
+
         if(!isPreparedToSave()){
             //Prep and configure the policy for saving
             prepareToSave();
@@ -128,10 +128,10 @@ public class ActionPolicy extends Policy {
         // Until here we prepared the data and here calling the method to create xml.
         Path newPolicyPath = null;
         newPolicyPath = Paths.get(policyAdapter.getNewFileName());
-        successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject() );     
-        return successMap;      
+        successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject() );
+        return successMap;
     }
-    
+
     //This is the method for preparing the policy for saving.  We have broken it out
     //separately because the fully configured policy is used for multiple things
     @Override
@@ -141,11 +141,11 @@ public class ActionPolicy extends Policy {
             //we have already done this
             return true;
         }
-        
+
         int version = 0;
         String policyID = policyAdapter.getPolicyID();
         version = policyAdapter.getHighestVersion();
-        
+
         // Create the Instance for pojo, PolicyType object is used in marshalling.
         if (policyAdapter.getPolicyType().equals("Action")) {
             PolicyType policyConfig = new PolicyType();
@@ -155,9 +155,9 @@ public class ActionPolicy extends Policy {
             policyConfig.setTarget(new TargetType());
             policyAdapter.setData(policyConfig);
         }
-        
+
         policyName = policyAdapter.getNewFileName();
-        
+
         if (policyAdapter.getData() != null) {
             // Action body is optional so checking value provided or not
             String comboDictValue = policyAdapter.getActionAttribute();
@@ -165,7 +165,7 @@ public class ActionPolicy extends Policy {
             setAttribute(false);
 
             //if actionBody is null or empty then we know the ActionAttribute in the request does not exist in the dictionary
-            if(!(actionBody==null || "".equals(actionBody))){   
+            if(!(actionBody==null || "".equals(actionBody))){
                 saveActionBody(policyName, actionBody);
                 setAttribute(true);
             } else {
@@ -174,15 +174,15 @@ public class ActionPolicy extends Policy {
                     return false;
                 }
             }
-            
+
             PolicyType actionPolicy = (PolicyType) policyAdapter.getData();
             actionPolicy.setDescription(policyAdapter.getPolicyDescription());
             actionPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
 
             AllOfType allOf = new AllOfType();
-            
+
             Map<String, String> dynamicFieldComponentAttributes = policyAdapter.getDynamicFieldConfigAttributes();
-            
+
             // If there is any dynamic field attributes create the matches here
             for (String keyField : dynamicFieldComponentAttributes.keySet()) {
                 String key = keyField;
@@ -196,22 +196,22 @@ public class ActionPolicy extends Policy {
 
             TargetType target = new TargetType();
             target.getAnyOf().add(anyOf);
-            
+
             // Adding the target to the policy element
             actionPolicy.setTarget(target);
-            
+
             RuleType rule = new RuleType();
             rule.setRuleId(policyAdapter.getRuleID());
 
             rule.setEffect(EffectType.PERMIT);
             rule.setTarget(new TargetType());
-            
+
             dynamicLabelRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmLabels();
             dynamicFieldFunctionRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmCombo();
             dynamicFieldOneRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField1();
             dynamicFieldTwoRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField2();
             dropDownMap = createDropDownMap();
-                        
+
             // Rule attributes are optional and dynamic so check and add them to condition.
             if (dynamicLabelRuleAlgorithms != null && dynamicLabelRuleAlgorithms.size() > 0) {
                 boolean isCompound = false;
@@ -245,12 +245,12 @@ public class ActionPolicy extends Policy {
             policyAdapter.setPolicyData(actionPolicy);
         }  else {
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
-        }   
+        }
 
         setPreparedToSave(true);
         return true;
     }
-    
+
     private static synchronized void setAttribute(boolean b) {
         isAttribute = b;
     }
@@ -273,7 +273,7 @@ public class ActionPolicy extends Policy {
             LOGGER.error("Exception Occured"+e);
         }
     }
-    
+
     // Data required for obligation part is setting here.
     private ObligationExpressionsType getObligationExpressions() {
         ObligationExpressionsType obligations = new ObligationExpressionsType();
@@ -335,7 +335,7 @@ public class ActionPolicy extends Policy {
         obligation.getAttributeAssignmentExpression().add(assignmentMethod);
 
         // Add JSON_URL Assignment:
-        String actionBody = policyAdapter.getActionBody();      
+        String actionBody = policyAdapter.getActionBody();
         if (actionBody != null) {
             AttributeAssignmentExpressionType assignmentJsonURL = new AttributeAssignmentExpressionType();
             assignmentJsonURL.setAttributeId(BODY_ATTRIBUTEID);
@@ -359,12 +359,12 @@ public class ActionPolicy extends Policy {
                 obligation.getAttributeAssignmentExpression().add(addDynamicHeaders(textFieldVals[0], textFieldVals[1]));
             }
         }
-            
+
         obligations.getObligationExpression().add(obligation);
         return obligations;
     }
 
-    
+
     // if compound setting the inner apply here
     protected ApplyType getInnerActionApply(String value1Label) {
         ApplyType actionApply = new ApplyType();
@@ -471,7 +471,7 @@ public class ActionPolicy extends Policy {
         actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value2)));
         return actionApply;
     }
-        
+
     // Adding the dynamic headers if any
     private AttributeAssignmentExpressionType addDynamicHeaders(String header, String value) {
         AttributeAssignmentExpressionType assignmentHeaders = new AttributeAssignmentExpressionType();
@@ -485,7 +485,7 @@ public class ActionPolicy extends Policy {
         assignmentHeaders.setExpression(new ObjectFactory().createAttributeValue(headersAttributeValue));
         return assignmentHeaders;
     }
-    
+
     private Map<String,String> createDropDownMap(){
         JPAUtils jpaUtils = null;
         Map<String, String> dropDownMap = new HashMap<>();
@@ -496,7 +496,7 @@ public class ActionPolicy extends Policy {
         }
         if(jpaUtils != null){
             Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
-            
+
             for (Datatype id : functionMap.keySet()) {
                 List<FunctionDefinition> functionDefinitions = (List<FunctionDefinition>) functionMap
                         .get(id);

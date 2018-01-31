@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,7 @@
 
 package org.onap.policy.rest.jpa;
 /*
- * 
+ *
  */
 import java.io.Serializable;
 import java.util.Date;
@@ -52,30 +52,30 @@ import org.onap.policy.rest.XacmlAdminAuthorization;
 @NamedQuery(name="ClosedLoopD2Services.findAll", query="SELECT c FROM ClosedLoopD2Services c ")
 public class ClosedLoopD2Services implements Serializable{
 	private static final long serialVersionUID = 1L;
-	
+
 	private static String domain;
 
-	
+
 	@Id
 	@Column(name ="id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	
+
 	@Column(name="service_Name", nullable=false, unique=true)
 	@OrderBy("asc")
 	private String serviceName;
 
 	@Column(name="description", nullable=true, length=2048)
 	private String description;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_date", updatable=false)
 	private Date createdDate;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
-	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name="created_by")
 	private UserInfo userCreatedBy;
@@ -83,7 +83,7 @@ public class ClosedLoopD2Services implements Serializable{
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -101,18 +101,18 @@ public class ClosedLoopD2Services implements Serializable{
 	}
 
 	private static Log LOGGER = LogFactory.getLog(ClosedLoopD2Services.class);
-	
+
 	public ClosedLoopD2Services(){
-		
+
 	}
-	
+
 	public ClosedLoopD2Services(String string, String userid) {
 		this(domain);
 	}
-	
+
 	public ClosedLoopD2Services(String domain) {
 		this.serviceName = domain;
-	}	
+	}
 
 	@PrePersist
 	public void	prePersist() {
@@ -131,7 +131,7 @@ public class ClosedLoopD2Services implements Serializable{
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "ClosedLoopD2Services", "Exception caused While adding Modified by Role");
 		}
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -163,7 +163,7 @@ public class ClosedLoopD2Services implements Serializable{
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	
+
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}

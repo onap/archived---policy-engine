@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,7 +27,7 @@ import java.util.Set;
 
 import org.onap.policy.xacml.api.pap.OnapPDP;
 
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import com.att.research.xacml.api.pap.PDPPIPConfig;
 import com.att.research.xacml.api.pap.PDPPolicy;
@@ -36,48 +36,48 @@ import com.att.research.xacml.api.pap.PDPStatus;
 public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comparable<StdPDP>, Serializable {
 	private static final long serialVersionUID = 1L;
 	private static Logger	logger	= FlexLogger.getLogger(StdPDP.class);
-	
+
 	private String id;
-	
+
 	private String name;
-	
+
 	private String description;
-	
+
 	private Integer jmxport = 0;
-	
+
 	private transient PDPStatus status = new StdPDPStatus();
-	
+
 	private transient Set<PDPPolicy> policies = new HashSet<>();
-	
+
 	private transient Set<PDPPIPConfig> pipConfigs = new HashSet<>();
-	
+
 	public StdPDP() {
-		
+
 	}
-	
+
 	public StdPDP(String id, Integer  jmxport) {
 		this(id, null, null, jmxport);
 	}
-	
+
 	public StdPDP(String id, String name, Integer  jmxport) {
 		this(id, name, null, jmxport);
 	}
-	
+
 	public StdPDP(String id, String name, String description, Integer jmxport) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		if(jmxport != null){
 			this.jmxport = jmxport;
-		} 
+		}
 	}
-	
+
 	public StdPDP(String id, Properties properties) {
 		this(id, 0);
-		
+
 		this.initialize(properties);
 	}
-	
+
 	public void initialize(Properties properties) {
 		for (Object key : properties.keySet()) {
 			if (key.toString().startsWith(this.id + ".")) {
@@ -114,7 +114,7 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 	public String getName() {
 		return this.name;
 	}
-	
+
 	@Override
 	public void setName(String name) {
 		this.name = name;
@@ -125,7 +125,7 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	@Override
 	public void setDescription(String description) {
 		this.description = description;
@@ -140,12 +140,12 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 	public void setStatus(PDPStatus status) {
 		this.status = status;
 	}
-	
+
 	@Override
 	public Set<PDPPolicy> getPolicies() {
 		return Collections.unmodifiableSet(this.policies);
 	}
-	
+
 	public void setPolicies(Set<PDPPolicy> policies) {
 		this.policies = policies;
 	}
@@ -154,7 +154,7 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 	public Set<PDPPIPConfig> getPipConfigs() {
 		return Collections.unmodifiableSet(this.pipConfigs);
 	}
-	
+
 	public void setPipConfigs(Set<PDPPIPConfig> pipConfigs) {
 		this.pipConfigs = pipConfigs;
 	}
@@ -165,7 +165,7 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 	public Integer getJmxPort() {
 		return this.jmxport;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -197,7 +197,7 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 				+ description + ", jmxport=" + jmxport + ", status=" + status + ", policies=" + policies
 				+ ", pipConfigs=" + pipConfigs + "]";
 	}
-	
+
 	//
 	// Comparable interface
 	//
@@ -217,5 +217,5 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 		}
 		return name.compareTo(((StdPDP)o).name);
 	}
-	
+
 }

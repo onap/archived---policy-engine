@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,7 @@ import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.adapter.YAMLParams;
 
 public class PolicyElasticData {
-	
+
 	private String scope;
 	private String policyType;
 	private String configPolicyType;
@@ -40,7 +40,7 @@ public class PolicyElasticData {
 	private String configType;
 	private String jsonBody;
 	private Object jsonBodyData;
-	
+
 	private LinkedHashMap<?, ?> serviceTypePolicyName;
 	private LinkedHashMap<?, ?> verticaMetrics;
     private LinkedHashMap<?, ?> description;
@@ -53,7 +53,7 @@ public class PolicyElasticData {
 	private String riskLevel;
 	private String guard;
 	private String ttlDate;
-	private  Map<String,String> matching; 
+	private  Map<String,String> matching;
 
 	private ArrayList<Object> triggerSignatures;
 	private ArrayList<Object> symptomSignatures;
@@ -110,7 +110,7 @@ public class PolicyElasticData {
 	private String actionDictType;
 	private String actionDictUrl;
 	private String actionDictMethod;
-	private YAMLParams yamlparams; 
+	private YAMLParams yamlparams;
 
 	public PolicyElasticData(PolicyRestAdapter policyData) {
 		this.scope = policyData.getDomainDir();
@@ -124,11 +124,11 @@ public class PolicyElasticData {
 		this.configType = policyData.getConfigType();
 		this.jsonBody = policyData.getJsonBody();
 		if(configPolicyType.startsWith("ClosedLoop")){
-			this.jsonBodyData = jsonBody; 
+			this.jsonBodyData = jsonBody;
 		}else{
-			this.jsonBodyData = policyData.getJsonBodyData(); 
+			this.jsonBodyData = policyData.getJsonBodyData();
 		}
-		
+
 		this.serviceTypePolicyName = policyData.getServiceTypePolicyName();
 		this.verticaMetrics = policyData.getVerticaMetrics();
 		this.description = policyData.getDescription();
@@ -141,7 +141,7 @@ public class PolicyElasticData {
 		this.riskLevel = policyData.getRiskLevel();
 		this.guard  = policyData.getGuard();
 		this.ttlDate = policyData.getTtlDate();
-		this.matching = policyData.getMatching(); 
+		this.matching = policyData.getMatching();
 
 		this.triggerSignatures = policyData.getTriggerSignatures();
 		this.symptomSignatures = policyData.getSymptomSignatures();
@@ -200,7 +200,7 @@ public class PolicyElasticData {
 		this.actionDictMethod = policyData.getActionDictMethod();
 		this.yamlparams = policyData.getYamlparams();
 	}
-	
+
 	public String getScope() {
 		return scope;
 	}

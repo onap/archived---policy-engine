@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,8 +28,8 @@ import java.util.UUID;
 
 /**
  * <code>PolicyParameters</code> defines the Policy Parameters
- *  which are required to Create/Update a Policy. 
- * 
+ *  which are required to Create/Update a Policy.
+ *
  * @version 0.1
  */
 public class PolicyParameters {
@@ -59,22 +59,22 @@ public class PolicyParameters {
 	private String riskLevel = "5";
 	private String riskType = "default";
 	private String extendedOption;
-	
+
 	/**
 	 * Sets Config Policy Parameters.
-	 * 
+	 *
 	 * @param policyConfigType the {@link org.onap.policy.api.PolicyConfigType} Enum format of the Config Type
 	 * @param policyName the <code>String</code> format of the Policy Name
 	 * @param policyDescription the <code>String</code> format of the Policy Description
 	 * @param onapName the <code>String</code> format of the ONAP Name
 	 * @param configName the <code>String</code> format of the Config Name
 	 * @param attributes the <code>Map</code> Attributes that must contain the AttributeType and Map of key,value pairs corresponding to it.
-	 * @param configBodyType the {@link org.onap.policy.api.PolicyType} Enum format of the config Body Type. 
+	 * @param configBodyType the {@link org.onap.policy.api.PolicyType} Enum format of the config Body Type.
 	 * @param configBody the <code>String</code> format of the Policy Body
 	 * @param requestID unique request ID which will be passed throughout the ONAP components to correlate logging messages.
 	 * A different request ID should be passed for each request.
 	 */
-	public void setConfigPolicyParameters(PolicyConfigType policyConfigType, String policyName, String policyDescription, String onapName, String configName, 
+	public void setConfigPolicyParameters(PolicyConfigType policyConfigType, String policyName, String policyDescription, String onapName, String configName,
 			Map<AttributeType, Map<String, String>> attributes, PolicyType configBodyType, String configBody, UUID requestID){
 		this.setPolicyConfigType(policyConfigType);
 		this.setPolicyName(policyName);
@@ -86,10 +86,10 @@ public class PolicyParameters {
 		this.setConfigBodyType(configBodyType);
 		this.setRequestID(requestID);
 	}
-	
+
 	/**
 	 * Sets config Firewall Policy Parameters.
-	 * 
+	 *
 	 * @param policyName the <code>String</code> format of the Policy Name
 	 * @param firewallJson the <code>String</code> representation of the Firewall Rules List
 	 * @param requestID unique request ID which will be passed throughout the ONAP components to correlate logging messages.
@@ -104,8 +104,8 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Gets the PolicyName of the Policy Parameters. 
-	 * 
+	 * Gets the PolicyName of the Policy Parameters.
+	 *
 	 * @return policyName the <code>String</code> format of the Policy Name
 	 */
 	public String getPolicyName() {
@@ -114,7 +114,7 @@ public class PolicyParameters {
 
 	/**
 	 * Sets the policyName of the Policy Parameters.
-	 * 
+	 *
 	 * @param policyName the <code>String</code> format of the Policy Name
 	 */
 	public void setPolicyName(String policyName) {
@@ -122,8 +122,8 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Gets the policy Description. 
-	 * 
+	 * Gets the policy Description.
+	 *
 	 * @return the <code>String</code> format of the Policy Description
 	 */
 	public String getPolicyDescription() {
@@ -131,8 +131,8 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Sets the policy Description of the Policy Description. 
-	 * 
+	 * Sets the policy Description of the Policy Description.
+	 *
 	 * @param policyDescription the <code>String</code> format of the Policy Description
 	 */
 	public void setPolicyDescription(String policyDescription) {
@@ -140,19 +140,19 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Gets the ONAP Name value of the Policy Paramters. 
-	 * 
+	 * Gets the ONAP Name value of the Policy Paramters.
+	 *
 	 * @return <code>String</code> format of the ONAP Name
 	 */
 	public String getOnapName() {
 		return onapName;
 	}
-	
+
 	/**
-     * Gets the ONAP Name value of the Policy Paramters. 
-     * 
+     * Gets the ONAP Name value of the Policy Paramters.
+     *
      * @return <code>String</code> format of the ONAP Name
-     * @deprecated Use {@link #getOnapName()} instead. 
+     * @deprecated Use {@link #getOnapName()} instead.
      */
 	@Deprecated
     public String getEcompName() {
@@ -160,29 +160,29 @@ public class PolicyParameters {
     }
 
 	/**
-	 * Sets the ONAP Name field of the Policy Parameters. 
-	 * 
+	 * Sets the ONAP Name field of the Policy Parameters.
+	 *
 	 * @param onapName the <code>String</code> format of the ONAP Name
 	 */
 	public void setOnapName(String onapName) {
 		this.onapName = onapName;
 	}
-	
+
 	/**
-     * Sets the ONAP Name field of the Policy Parameters. 
-     * 
+     * Sets the ONAP Name field of the Policy Parameters.
+     *
      * @param ecompName the <code>String</code> format of the ONAP Name
-     * @deprecated use {@link #setOnapName(String)} instead. 
+     * @deprecated use {@link #setOnapName(String)} instead.
      */
 	@Deprecated
     public void setEcompName(String ecompName) {
         this.onapName = ecompName;
     }
-    
+
 
 	/**
-	 * Gets the Config Name value of the Policy Parameters. 
-	 * 
+	 * Gets the Config Name value of the Policy Parameters.
+	 *
 	 * @return <code>String</code> format of the Config Name
 	 */
 	public String getConfigName() {
@@ -190,8 +190,8 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Sets the Config Name field of the Policy Parameters. 
-	 * 
+	 * Sets the Config Name field of the Policy Parameters.
+	 *
 	 * @param configName the <code>String</code> format of the Config Name
 	 */
 	public void setConfigName(String configName) {
@@ -199,8 +199,8 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Gets the Attributes of the policy Parameters. 
-	 * 
+	 * Gets the Attributes of the policy Parameters.
+	 *
 	 * @return <code>List</code> the <code>Map</code> Attributes that must contain the AttributeType and Map of key,value pairs corresponding to it.
 	 */
 	public Map<AttributeType, Map<String, String>> getAttributes() {
@@ -208,8 +208,8 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Sets the Attributes of the Policy Parameters. 
-	 * 
+	 * Sets the Attributes of the Policy Parameters.
+	 *
 	 * @param attributes the <code>Map</code> Attributes that must contain the AttributeType and Map of key,value pairs corresponding to it.
 	 */
 	public void setAttributes(Map<AttributeType, Map<String, String>> attributes) {
@@ -217,8 +217,8 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Gets the Policy Config Type value the Policy parameters. 
-	 * 
+	 * Gets the Policy Config Type value the Policy parameters.
+	 *
 	 * @return {@link org.onap.policy.api.PolicyConfigType} Enum of the Config Type
 	 */
 	public PolicyConfigType getPolicyConfigType() {
@@ -226,8 +226,8 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Sets the Policy Config Type field of the policy Parameters. 
-	 * 
+	 * Sets the Policy Config Type field of the policy Parameters.
+	 *
 	 * @param policyConfigType the {@link org.onap.policy.api.PolicyConfigType} Enum format of the Config Type
 	 */
 	public void setPolicyConfigType(PolicyConfigType policyConfigType) {
@@ -238,8 +238,8 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Gets the configBody value of the Policy Parameters. 
-	 * 
+	 * Gets the configBody value of the Policy Parameters.
+	 *
 	 * @return the <code>String</code> format of the Policy Body
 	 */
 	public String getConfigBody() {
@@ -247,8 +247,8 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Sets the configBody field of the Policy Parameters. 
-	 * 
+	 * Sets the configBody field of the Policy Parameters.
+	 *
 	 * @param configBody the <code>String</code> format of the Policy Body
 	 */
 	public void setConfigBody(String configBody) {
@@ -256,8 +256,8 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Gets the config Body Type value of the Policy Parameters.  
-	 * 
+	 * Gets the config Body Type value of the Policy Parameters.
+	 *
 	 * @return the <code>PolicyType</code> representation of the configBodyType
 	 */
 	public PolicyType getConfigBodyType() {
@@ -265,26 +265,26 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Sets the configBodyType field of the Policy Parameters. 
-	 * 
+	 * Sets the configBodyType field of the Policy Parameters.
+	 *
 	 * @param configBodyType the <code>PolicyType</code> representation of the config BodyType
 	 */
 	public void setConfigBodyType(PolicyType configBodyType) {
 		this.configBodyType = configBodyType;
 	}
-	
+
 	/**
-	 * Gets the requestID of the Policy Parameters. 
-	 * 
+	 * Gets the requestID of the Policy Parameters.
+	 *
 	 * @return unique request ID which will be passed throughout the ONAP components to correlate logging messages.
 	 */
 	public UUID getRequestID() {
 		return requestID;
 	}
-	
+
 	/**
-	 * Sets the requestID of the Policy Parameters. 
-	 * 
+	 * Sets the requestID of the Policy Parameters.
+	 *
 	 * @param requestID unique request ID which will be passed throughout the ONAP components to correlate logging messages.
 	 */
 	public void setRequestID(UUID requestID) {
@@ -292,35 +292,35 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Gets the Policy Class of the Policy Parameters. 
-	 * 
-	 * @return {@link org.onap.policy.api.PolicyClass} of the Policy Parameters. 
+	 * Gets the Policy Class of the Policy Parameters.
+	 *
+	 * @return {@link org.onap.policy.api.PolicyClass} of the Policy Parameters.
 	 */
 	public PolicyClass getPolicyClass() {
 		return policyClass;
 	}
 
 	/**
-	 * Sets the Policy Class of the Policy Parameters. 
-	 * 
-	 * @param policyClass the Enum {@link org.onap.policy.api.PolicyClass} to set Policy Class Type of Policy parameters. 
+	 * Sets the Policy Class of the Policy Parameters.
+	 *
+	 * @param policyClass the Enum {@link org.onap.policy.api.PolicyClass} to set Policy Class Type of Policy parameters.
 	 */
 	public void setPolicyClass(PolicyClass policyClass) {
 		this.policyClass = policyClass;
 	}
-	
+
 	/**
-	 * Gets the Action Performer value of the Policy Parameters for Action Policies. 
+	 * Gets the Action Performer value of the Policy Parameters for Action Policies.
 	 *
 	 * @return the <code>String</code> value of the Action Performer for Action Policies
 	 */
 	public String getActionPerformer() {
 		return actionPerformer;
 	}
-	
+
 	/**
 	 * Sets the Action Performer value of the Policy Parameters for Action Policies.
-	 * 
+	 *
 	 * @param actionPerformer the <code>String</code> format of the Action Performer
 	 */
 	public void setActionPerformer(String actionPerformer) {
@@ -328,7 +328,7 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Gets the Action Attribute value of the Policy Parameters for Action Policies. 
+	 * Gets the Action Attribute value of the Policy Parameters for Action Policies.
 	 *
 	 * @return the <code>String</code> value of the Action Attribute for Action Policies
 	 */
@@ -338,17 +338,17 @@ public class PolicyParameters {
 
 	/**
 	 * Sets the Action Attribute value of the Policy Parameters for Action Policies.
-	 * 
+	 *
 	 * @param actionAttribute the <code>String</code> format of the Action Attribute
 	 */
 	public void setActionAttribute(String actionAttribute) {
 		this.actionAttribute = actionAttribute;
 	}
-	
+
 	/**
 	 * Gets the Dynamic Rule Algorithm Label of the policy Parameters. Used in conjunction with the Label, Field1,
 	 * Function, and Field2 to complete the complex and simple Rule Algorithms
-	 * 
+	 *
 	 * @return <code>List</code> the Dynamic Rule Algorithm Label that must contain the Labels in order
 	 */
 	public List<String> getDynamicRuleAlgorithmLabels() {
@@ -358,7 +358,7 @@ public class PolicyParameters {
 	/**
 	 * Sets the Dynamic Rule Algorithm Labels used in conjunction with the Label, Field1,
 	 * Function, and Field2 to complete the complex and simple Rule Algorithms
-	 * 
+	 *
 	 * @param dynamicRuleAlgorithmLabels the <code>List</code> dynamicRuleAlgoritmLabels in order
 	 */
 	public void setDynamicRuleAlgorithmLabels(
@@ -368,8 +368,8 @@ public class PolicyParameters {
 
 	/**
 	 * Gets the Dynamic Rule Algorithm Function of the policy Parameters. Used in conjunction with the Label, Field1,
-	 * FunctionDef, and Field2 to complete the complex and simple Rule Algorithms 
-	 * 
+	 * FunctionDef, and Field2 to complete the complex and simple Rule Algorithms
+	 *
 	 * @return <code>List</code> the Dynamic Rule Algorithm Functions that must contain the values in order
 	 */
 	public List<String> getDynamicRuleAlgorithmFunctions() {
@@ -379,7 +379,7 @@ public class PolicyParameters {
 	/**
 	 * Sets the Dynamic Rule Algorithm Functions used in conjunction with the Label, Field1,
 	 * Function, and Field2 to complete the complex and simple Rule Algorithms
-	 * 
+	 *
 	 * @param dynamicRuleAlgorithmFunctions the <code>List</code> dynamicRuleAlgorithmFunctions in order
 	 */
 	public void setDynamicRuleAlgorithmFunctions(List<String> dynamicRuleAlgorithmFunctions) {
@@ -389,7 +389,7 @@ public class PolicyParameters {
 	/**
 	 * Gets the Dynamic Rule Algorithm Field1 of the policy Parameters. Used in conjunction with the Label, Field1,
 	 * Function, and Field2 to complete the complex and simple Rule Algorithms
-	 * 
+	 *
 	 * @return <code>List</code> the Dynamic Rule Algorithm Field1 that must contain the Field1 values in order
 	 */
 	public List<String> getDynamicRuleAlgorithmField1() {
@@ -399,7 +399,7 @@ public class PolicyParameters {
 	/**
 	 * Sets the Dynamic Rule Algorithm Field1 used in conjunction with the Label, Field1,
 	 * Function, and Field2 to complete the complex and simple Rule Algorithms
-	 * 
+	 *
 	 * @param dynamicRuleAlgorithmField1 the <code>List</code> dynamicRuleAlgorithmField1 in order
 	 */
 	public void setDynamicRuleAlgorithmField1(
@@ -410,7 +410,7 @@ public class PolicyParameters {
 	/**
 	 * Gets the Dynamic Rule Algorithm Field2 of the policy Parameters. Used in conjunction with the Label, Field1,
 	 * Operator, and Field2 to complete the complex and simple Rule Algorithms
-	 * 
+	 *
 	 * @return <code>List</code> the Dynamic Rule Algorithm Field2 that must contain the Field2 values in order
 	 */
 	public List<String> getDynamicRuleAlgorithmField2() {
@@ -420,26 +420,26 @@ public class PolicyParameters {
 	/**
 	 * Sets the Dynamic Rule Algorithm Field2 used in conjunction with the Label, Field1,
 	 * Function, and Field2 to complete the complex and simple Rule Algorithms
-	 * 
+	 *
 	 * @param dynamicRuleAlgorithmField2 the <code>List</code> dynamicRuleAlgorithmField2 in order
 	 */
 	public void setDynamicRuleAlgorithmField2(
 			List<String> dynamicRuleAlgorithmField2) {
 		this.dynamicRuleAlgorithmField2 = dynamicRuleAlgorithmField2;
 	}
-	
+
 	/**
-	 * Gets the Priority of the Policy Parameters. 
-	 * 
+	 * Gets the Priority of the Policy Parameters.
+	 *
 	 * @return priority the <code>String</code> format of the Micro Services priority
 	 */
 	public String getPriority() {
 		return priority;
 	}
-	
+
 	/**
 	 * Sets the Priority of the Policy Parameters.
-	 * 
+	 *
 	 * @param priority the <code>String</code> format of the Micro Services priority
 	 */
 	public void setPriority(String priority) {
@@ -452,100 +452,100 @@ public class PolicyParameters {
 
 	public void setRuleProvider(RuleProvider ruleProvider) {
 		this.ruleProvider = ruleProvider;
-	}	
+	}
 	/**
-	 * Sets the Guard field of the Policy Parameters. 
-	 * 
+	 * Sets the Guard field of the Policy Parameters.
+	 *
 	 * @param guard the <code>Boolean</code> format of the guard value
 	 */
 	public void setGuard(boolean guard){
 		this.guard = guard;
 	}
-	
+
 	/**
-	 * Gets the  guard value of the Policy Parameters for Action Policies. 
+	 * Gets the  guard value of the Policy Parameters for Action Policies.
 	 *
 	 * @return the <code>boolean</code> value of the Guard for Config Policies
 	 */
 	public boolean getGuard(){
 		return guard;
 	}
-	
+
 	/**
-	 * Sets the riskType field of the Policy Parameters. 
-	 * 
+	 * Sets the riskType field of the Policy Parameters.
+	 *
 	 * @param riskType the <code>String</code> format of the riskType value
 	 */
 	public void setRiskType(String riskType){
 		this.riskType = riskType;
 	}
-	
+
 	/**
-	 * Gets the riskType value of the Policy Parameters for Config Policies. 
+	 * Gets the riskType value of the Policy Parameters for Config Policies.
 	 *
 	 * @return the <code>String</code> value of the riskType for Config Policies
 	 */
 	public String getRiskType(){
 		return riskType;
 	}
-	
+
 	/**
-	 * Sets the riskLevel field of the Policy Parameters. 
-	 * 
+	 * Sets the riskLevel field of the Policy Parameters.
+	 *
 	 * @param riskLevel the <code>String</code> format of the riskType value
 	 */
 	public void setRiskLevel(String riskLevel){
 		this.riskLevel = riskLevel;
 	}
-	
+
 	/**
-	 * Gets the riskLevel value of the Policy Parameters for Config Policies. 
+	 * Gets the riskLevel value of the Policy Parameters for Config Policies.
 	 *
 	 * @return the <code>String</code> value of the riskLevel for Config Policies
 	 */
 	public String getRiskLevel(){
 		return riskLevel;
 	}
-	
+
 	/**
-	 * Sets the TTLDate field of the Policy Parameters. 
-	 * 
+	 * Sets the TTLDate field of the Policy Parameters.
+	 *
 	 * @param ttlDate the <code>Date</code> format of the TTLDate value
 	 */
 	public void setTtlDate(Date ttlDate){
 		this.ttlDate = ttlDate;
 	}
-	
+
 	/**
-	 * Gets the TTLDate value of the Policy Parameters for Config Policies. 
+	 * Gets the TTLDate value of the Policy Parameters for Config Policies.
 	 *
 	 * @return the <code>Date</code> value of the TTLDate for Config Policies
 	 */
 	public Date getTtlDate(){
 		return ttlDate;
 	}
-	
+
 	/**
-	 * Gets the Controller Name for your policy. 
-	 *  
-	 * @return String format of the controller Name. 
+	 * Gets the Controller Name for your policy.
+	 *
+	 * @return String format of the controller Name.
 	 */
 	public String getControllerName() {
         return controllerName;
     }
-	
+
 	/**
-	 * Sets Controller Name for your policy. 
-	 * 
-	 * @param controllerName to identify the controller information for your policy. 
+	 * Sets Controller Name for your policy.
+	 *
+	 * @param controllerName to identify the controller information for your policy.
 	 */
     public void setControllerName(String controllerName) {
         this.controllerName = controllerName;
     }
-    
+
     /**
-     * Gets Dependency Names for your policy. 
-     * 
+     * Gets Dependency Names for your policy.
+     *
      * @return ArrayList of String(s) format of dependency names.
      */
     public ArrayList<String> getDependencyNames() {
@@ -553,14 +553,14 @@ public class PolicyParameters {
     }
 
     /**
-     * Sets Dependency that your policy is dependent on. 
-     * 
-     * @param dependencyNames ArrayList of String(s). 
+     * Sets Dependency that your policy is dependent on.
+     *
+     * @param dependencyNames ArrayList of String(s).
      */
     public void setDependencyNames(ArrayList<String> dependencyNames) {
         this.dependencyNames = dependencyNames;
     }
-	
+
     public String getExtendedOption() {
 		return extendedOption;
 	}
@@ -568,10 +568,10 @@ public class PolicyParameters {
 	public void setExtendedOption(String extendedOption) {
 		this.extendedOption = extendedOption;
 	}
-	
+
 	/**
      * Gets Allowed Treatments Map for Rainy Day Decision Policy
-     * 
+     *
      * @return Map of String format for treatments per errorcode
      */
 	public Map<String, String> getTreatments() {
@@ -579,21 +579,21 @@ public class PolicyParameters {
 	}
 
 	/**
-	 * Sets Allowed Treatments Map for Rainy Day Decision Policy 
-	 * 
-	 * @param treatments Map that contains the treatment per errorcode 
+	 * Sets Allowed Treatments Map for Rainy Day Decision Policy
+	 *
+	 * @param treatments Map that contains the treatment per errorcode
 	 */
 	public void setTreatments(Map<String, String> treatments) {
 		this.treatments = treatments;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "PolicyParameters [ policyName=" + policyName + ", policyDescription=" + policyDescription + ", onapName="+ onapName 
-				+ ", configName=" + configName + ", attributes=" + attributes + ", configBody=" + configBody 
-				+ ",dynamicRuleAlgorithmLabels=" + dynamicRuleAlgorithmLabels + ",dynamicRuleAlgorithmFunctions=" + dynamicRuleAlgorithmFunctions 
-				+ ",dynamicRuleAlgorithmField1=" + dynamicRuleAlgorithmField1 + ",dynamicRuleAlgorithmField2=" + dynamicRuleAlgorithmField2 
-				+ ", actionPerformer=" + actionPerformer + ", actionAttribute=" + actionAttribute + ", priority=" + priority  
+		return "PolicyParameters [ policyName=" + policyName + ", policyDescription=" + policyDescription + ", onapName="+ onapName
+				+ ", configName=" + configName + ", attributes=" + attributes + ", configBody=" + configBody
+				+ ",dynamicRuleAlgorithmLabels=" + dynamicRuleAlgorithmLabels + ",dynamicRuleAlgorithmFunctions=" + dynamicRuleAlgorithmFunctions
+				+ ",dynamicRuleAlgorithmField1=" + dynamicRuleAlgorithmField1 + ",dynamicRuleAlgorithmField2=" + dynamicRuleAlgorithmField2
+				+ ", actionPerformer=" + actionPerformer + ", actionAttribute=" + actionAttribute + ", priority=" + priority
 				+ ", ruleProvider= " + ruleProvider + ", riskLevel= " + riskLevel + ", riskType= " + riskType + ", extendedOption= " + extendedOption
 				+ ", treatments= " + treatments + "]";
 	}

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,7 +51,7 @@ public class DecisionPolicyApiTest extends TestCase {
 
 	private PolicyEngine policyEngine = null;
 	private PolicyEngine mockPolicyEngine = null;
-	
+
 	PolicyChangeResponse result = null;
 	StdPolicyChangeResponse response = new StdPolicyChangeResponse();
 	PolicyParameters policyParameters = new PolicyParameters();
@@ -71,7 +71,7 @@ public class DecisionPolicyApiTest extends TestCase {
 			fail("PolicyEngine Instantiation Error" + e);
 		}
 		logger.info("Loaded.. PolicyEngine");
-		
+
 		mockPolicyEngine = Mockito.mock(PolicyEngine.class);
 
         policyParameters.setPolicyClass(PolicyClass.Decision); //required
@@ -79,11 +79,11 @@ public class DecisionPolicyApiTest extends TestCase {
         policyParameters.setOnapName("test");
         policyParameters.setPolicyDescription("testing");  //optional
         //policyParameters.setPolicyScope("test"); //Directory will be created where the Policies are saved... this displays a a subscope on the GUI
-        
+
         //Set the Component Attributes... These are Optional
-        Map<String, String> configAttributes = new HashMap<String, String>(); 
+        Map<String, String> configAttributes = new HashMap<String, String>();
         configAttributes.put("test", "testing");
-        
+
         Map<AttributeType, Map<String,String>> attributes = new HashMap<AttributeType, Map<String,String>>();
         attributes.put(AttributeType.MATCHING, configAttributes);
         policyParameters.setAttributes(attributes);
@@ -91,11 +91,11 @@ public class DecisionPolicyApiTest extends TestCase {
       //Set the settings... These are Optional
 /*        Map<String, String> settingsMap = new HashMap<String, String>();
         settingsMap.put("server", "5");
-         
+
         Map<AttributeType, Map<String,String>> settings = new HashMap<AttributeType, Map<String, String>>();
         settings.put(AttributeType.SETTINGS, settingsMap);
         policyParameters.setSettings(settings);*/
-        
+
         policyParameters.setRequestID(UUID.randomUUID());
 	}
 
@@ -118,10 +118,10 @@ public class DecisionPolicyApiTest extends TestCase {
 		response.setResponseMessage("success");
 		PolicyChangeResponse result = null;
 		try {
-		
+
 			Mockito.when(mockPolicyEngine.createPolicy(policyParameters)).thenReturn(response);
 			result = mockPolicyEngine.createPolicy(policyParameters);
-			
+
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
 		}
@@ -135,16 +135,16 @@ public class DecisionPolicyApiTest extends TestCase {
 		response.setResponseMessage("success");
 		PolicyChangeResponse result = null;
 		try {
-		
+
 			Mockito.when(mockPolicyEngine.updatePolicy(policyParameters)).thenReturn(response);
 			result = mockPolicyEngine.updatePolicy(policyParameters);
-			
+
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
 		}
 		assertEquals(result, response);
 	}
-	
+
 	@Test
 	public final void testCreatePolicyNullPolicyName() {
 		response.setResponseMessage("PE500 - Process Flow Issue: :500:");
@@ -156,7 +156,7 @@ public class DecisionPolicyApiTest extends TestCase {
 		}
 		assertEquals(result.getResponseMessage(), response.getResponseMessage());
 	}
-	
+
 	@Test
 	public final void testCreatePolicyNullPolicyScope() {
 		response.setResponseMessage("PE500 - Process Flow Issue: :500:");
@@ -168,7 +168,7 @@ public class DecisionPolicyApiTest extends TestCase {
 		}
 		assertEquals(result.getResponseMessage(), response.getResponseMessage());
 	}
-	
+
 	@Test
 	public final void testCreatePolicyNullOnapName() {
 		response.setResponseMessage("PE500 - Process Flow Issue: :500:");
@@ -180,7 +180,7 @@ public class DecisionPolicyApiTest extends TestCase {
 		}
 		assertEquals(result.getResponseMessage(), response.getResponseMessage());
 	}
-	
+
 	@Test
 	public final void testUpdatePolicyNullPolicyName() {
 		response.setResponseMessage("PE500 - Process Flow Issue: :500:");
@@ -192,7 +192,7 @@ public class DecisionPolicyApiTest extends TestCase {
 		}
 		assertEquals(result.getResponseMessage(), response.getResponseMessage());
 	}
-	
+
 	@Test
 	public final void testUpdatePolicyNullPolicyScope() {
 		response.setResponseMessage("PE500 - Process Flow Issue: :500:");
@@ -204,7 +204,7 @@ public class DecisionPolicyApiTest extends TestCase {
 		}
 		assertEquals(result.getResponseMessage(), response.getResponseMessage());
 	}
-	
+
 	@Test
 	public final void testUpdatePolicyNullOnapName() {
 		response.setResponseMessage("PE500 - Process Flow Issue: :500:");

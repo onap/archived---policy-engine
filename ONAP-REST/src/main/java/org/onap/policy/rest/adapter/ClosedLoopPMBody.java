@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@ package org.onap.policy.rest.adapter;
 import java.util.Map;
 
 public class ClosedLoopPMBody {
-	
+
 	private boolean trinity;
 	private boolean vUSP;
 	private boolean mcr;
@@ -33,14 +33,14 @@ public class ClosedLoopPMBody {
 	private String geoLink;
 	private String vServices;
 	private String ONAPname;
-	
+
 	private String emailAddress;
-	
+
 	private String serviceTypePolicyName;
-	
+
 	private Map<String, String> attributes;
 	private String templateVersion;
-	
+
 	public String getTemplateVersion() {
 		return templateVersion;
 	}
@@ -48,15 +48,15 @@ public class ClosedLoopPMBody {
 	public void setTemplateVersion(String templateVersion) {
 		this.templateVersion = templateVersion;
 	}
-	
+
 	public String getONAPname(){
 		return ONAPname;
 	}
-	
+
 	public void setONAPname(String ONAPname){
 		this.ONAPname = ONAPname;
 	}
-	
+
 	public String getvServices() {
 		return vServices;
 	}
@@ -64,7 +64,7 @@ public class ClosedLoopPMBody {
 	public void setvServices(String vServices) {
 		this.vServices = vServices;
 	}
-	
+
 	public Map<String, String> getAttributes() {
 		return attributes;
 	}
@@ -96,7 +96,7 @@ public class ClosedLoopPMBody {
 	public void setServiceTypePolicyName(String serviceTypePolicyName) {
 		this.serviceTypePolicyName = serviceTypePolicyName;
 	}
-	
+
 	public boolean isGamma() {
 		return gamma;
 	}
@@ -109,7 +109,7 @@ public class ClosedLoopPMBody {
 	public void setvDNS(boolean vDNS) {
 		this.vDNS = vDNS;
 	}
-	
+
 	public boolean isTrinity() {
 		return trinity;
 	}

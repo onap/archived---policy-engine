@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,14 +42,14 @@ import org.springframework.http.HttpStatus;
 
 public class GetDecisionService {
     private static final Logger LOGGER = FlexLogger.getLogger(GetDecisionService.class.getName());
-    
+
     private DecisionResponse decisionResponse = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private DecisionRequestParameters decisionRequestParameters = null;
     private String message = null;
     private String onapComponentName = null;
     private Map<String,String> decisionAttributes = null;
-    
+
     public GetDecisionService(
             DecisionRequestParameters decisionRequestParameters,
             String requestID) {
@@ -86,10 +86,10 @@ public class GetDecisionService {
             LOGGER.error(message);
             throw new PolicyDecisionException(message);
         }
-        // Generate Request. 
+        // Generate Request.
         String modelString = getModel().toString();
         LOGGER.debug("Generated JSON Request is: " + modelString);
-        // Process Result. 
+        // Process Result.
         try {
             PDPServices pdpServices = new PDPServices();
             status = HttpStatus.OK;
@@ -126,18 +126,18 @@ public class GetDecisionService {
             }
             JsonObjectBuilder resourceBuilder = Json.createObjectBuilder();
             if (key.getValue().matches("[0-9]+")) {
-            	
+            
             	if ((key.getKey().equals("ErrorCode")) || (key.getKey().equals("WorkStep"))) {
-                    
+
             		resourceBuilder.add("Value", key.getValue());
 
             	} else {
-            		
+            
                     int val = Integer.parseInt(key.getValue());
                     resourceBuilder.add("Value", val);
-                    
+
             	}
-            	
+            
             } else {
                 resourceBuilder.add("Value", key.getValue());
             }
@@ -162,7 +162,7 @@ public class GetDecisionService {
     private boolean getValidation() {
         if(decisionRequestParameters==null){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Decision Request Paramaters";
-            return false; 
+            return false;
         }
         onapComponentName = decisionRequestParameters.getOnapName();
         decisionAttributes = decisionRequestParameters.getDecisionAttributes();

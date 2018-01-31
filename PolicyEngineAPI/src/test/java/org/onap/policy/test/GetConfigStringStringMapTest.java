@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ import org.onap.policy.api.PolicyEngine;
 import org.onap.policy.api.PolicyEngineException;
 import org.onap.policy.api.PolicyType;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger; 
+import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class GetConfigStringStringMapTest {
 
@@ -72,7 +72,7 @@ public class GetConfigStringStringMapTest {
 		}
 		assertNull(policyConfig);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringMapFail1() {
@@ -86,7 +86,7 @@ public class GetConfigStringStringMapTest {
 		}
 		assertNull(policyConfig);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringMapFail2() {
@@ -100,7 +100,7 @@ public class GetConfigStringStringMapTest {
 		}
 		assertNull(policyConfig);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringMapFail3() {
@@ -114,7 +114,7 @@ public class GetConfigStringStringMapTest {
 		}
 		assertNull(policyConfig);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetConfigStringStringMapfail4() {
@@ -128,7 +128,7 @@ public class GetConfigStringStringMapTest {
 		}
 		assertNull(policyConfig);
 	}
-	
+
 	//@Test
 	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringMapNotValid() {
@@ -152,7 +152,7 @@ public class GetConfigStringStringMapTest {
 			assertNull(policyConfig.toOther());
 		}
 	}
-	
+
 	//@Test
 	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringMapValidJSON() {
@@ -178,7 +178,7 @@ public class GetConfigStringStringMapTest {
 			assertNull(policyConfig.toOther());
 		}
 	}
-	
+
 	//@Test
 	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringMapValidXML() {
@@ -204,7 +204,7 @@ public class GetConfigStringStringMapTest {
 			assertNull(policyConfig.toOther());
 		}
 	}
-	
+
 	//@Test
 	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringMapValidProperties() {
@@ -230,7 +230,7 @@ public class GetConfigStringStringMapTest {
 			assertNull(policyConfig.toOther());
 		}
 	}
-	
+
 	//@Test
 	@SuppressWarnings("deprecation")
 	public void testGetConfigStringStringMapValidOther() {

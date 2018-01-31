@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,23 +39,23 @@ public class StdPDPGroupTest {
 
 
 	private static Logger logger = FlexLogger.getLogger(StdPDPGroupTest.class);
-	
+
 	private StdPDPGroup stdPDPGroup;
 	private Path repository;
 	private StdPDP testPdp = new StdPDP();
 	private StdPDP testPdp1 = new StdPDP();
-	
+
 	@Before
 	public void setUp(){
-	
+
 		try {
 			stdPDPGroup = new StdPDPGroup();
 			repository = Paths.get("src/test/resources/pdps");
 			testPdp1.setId("100");
-			
+
 		} catch (Exception e) {
 			logger.error(e);
-		} 
+		}
 	}
 
 
@@ -105,7 +105,7 @@ public class StdPDPGroupTest {
 			assertTrue(stdPDPGroup.getDescription() != null);
 		} catch (Exception e) {
 			logger.error(e);
-		}	
+		}
 	}
 
 	@Test
@@ -208,10 +208,10 @@ public class StdPDPGroupTest {
 	@Test
 	public void testGetPipConfig() {
 		try {
-			Set pipConfigs = new HashSet();			
+			Set pipConfigs = new HashSet();
 			StdPDP testPdp = new StdPDP();
 			testPdp.setId("20");
-			pipConfigs.add(testPdp);			
+			pipConfigs.add(testPdp);
 			stdPDPGroup.setId("testId");
 			assertTrue(stdPDPGroup.getPipConfig("222") == null);
 		} catch (Exception e) {

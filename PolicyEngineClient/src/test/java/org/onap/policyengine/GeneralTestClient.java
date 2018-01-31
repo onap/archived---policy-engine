@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,15 +54,15 @@ import org.onap.policy.common.logging.flexlogger.Logger;
  * Class reads from .testCases file and run the test cases available in the file
  * and generates output for each test cases specifing whether is passed or fail
  * and reason why it fails.
- * 
- * 
+ *
+ *
  * @version 1.0
  *
  */
 public class GeneralTestClient {
-	
+
 	private static final Logger LOGGER	= FlexLogger.getLogger(GeneralTestClient.class);
-	
+
 	static int totalTC = 0, passTC = 0, failTC = 0;
 
 	public static void main(String[] args) {
@@ -240,7 +240,7 @@ public class GeneralTestClient {
 										(String) innerObj.get("value"));
 
 							}
-							
+
 							resultReceived = PolicyEngineTestClient
 									.getDecision(policyEngine,
 											onapComponentName,
@@ -309,7 +309,7 @@ public class GeneralTestClient {
 
 	/**
 	 * This function prints the reason if test fails.
-	 * 
+	 *
 	 * @param id
 	 * @param testFor
 	 * @param testCaseDescription
@@ -326,7 +326,7 @@ public class GeneralTestClient {
 
 	/**
 	 * This function prints in output in required format.
-	 * 
+	 *
 	 * @param id
 	 * @param testFor
 	 * @param testCaseDescription
@@ -341,7 +341,7 @@ public class GeneralTestClient {
 	/**
 	 * This function compares the required expected output and received output
 	 * and returns PASS if expected output and received output matches
-	 * 
+	 *
 	 * @param expectedResult
 	 * @param resultReceived
 	 * @return
@@ -363,9 +363,9 @@ public class GeneralTestClient {
 							+ expectedResult.get(index)
 							+ ",\n\tOutput Received: "
 							+ resultReceived.get(index)+"\n";
-//				
+//
 					//System.out.println(resultReceived.get(index));
-				} 
+				}
 
 			} else {
 				if (index >= expectedResult.size()) {

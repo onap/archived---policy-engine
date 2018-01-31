@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,7 +48,7 @@ public class PDPControllerTest extends Mockito{
 	private Set<OnapPDPGroup> groupsData;
 	private Set<StdPDPGroup> groups;
 	private static List<Object> rolesdata;
-	
+
 	@Before
 	public void setUp() throws Exception{
 		logger.info("setUp: Entering");
@@ -62,7 +62,7 @@ public class PDPControllerTest extends Mockito{
 		roles1.setScope("['com','Test']");
 		rolesdata.add(roles);
 		rolesdata.add(roles1);
-		
+
 		groups = new HashSet<>();
 		StdPDPGroup group = new StdPDPGroup();
 		group.setId("default");
@@ -76,10 +76,10 @@ public class PDPControllerTest extends Mockito{
 			groupsData.add(g);
 		}
 	}
-	
+
 	@Test
 	public void testPDPGroupData(){
-		HttpServletRequest request = mock(HttpServletRequest.class);       
+		HttpServletRequest request = mock(HttpServletRequest.class);
 		MockHttpServletResponse response =  new MockHttpServletResponse();
         PolicyController controller = mock(PolicyController.class);
         PDPController pdpController = new PDPController();

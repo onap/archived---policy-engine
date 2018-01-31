@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,7 +64,7 @@ import com.google.common.base.Splitter;
 
 /**
  * The persistent class for the PIPConfiguration database table.
- * 
+ *
  */
 @Entity
 @Table(name="PIPConfiguration")
@@ -125,7 +125,7 @@ public class PIPConfiguration implements Serializable {
 
 	public PIPConfiguration() {
 	}
-	
+
 	public PIPConfiguration(PIPConfiguration config, String user) {
 		this.description = config.description;
 		this.name = config.name;
@@ -141,11 +141,11 @@ public class PIPConfiguration implements Serializable {
 			this.addPipresolver(new PIPResolver(resolver));
 		}
 	}
-	
+
 	public PIPConfiguration(String id, Properties properties) throws PIPException {
 		this.readProperties(id, properties);
 	}
-	
+
 	public PIPConfiguration(String id, Properties properties, String user) throws PIPException {
 		this.createdBy = user;
 		this.modifiedBy = user;
@@ -158,7 +158,7 @@ public class PIPConfiguration implements Serializable {
 		this.createdDate = date;
 		this.modifiedDate = date;
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
@@ -244,7 +244,7 @@ public class PIPConfiguration implements Serializable {
 
 		return pipconfigParam;
 	}
-	
+
 	@Transient
 	public void clearConfigParams() {
 		while (this.pipconfigParams.isEmpty() == false) {
@@ -318,7 +318,7 @@ public class PIPConfiguration implements Serializable {
 	public boolean isReadOnly() {
 		return (this.readOnly == '1');
 	}
-	
+
 	@Transient
 	public void setReadOnly(boolean readOnly) {
 		if (readOnly) {
@@ -327,12 +327,12 @@ public class PIPConfiguration implements Serializable {
 			this.readOnly = '0';
 		}
 	}
-	
+
 	@Transient
 	public boolean requiresResolvers() {
 		return (this.requiresResolvers == '1');
 	}
-	
+
 	@Transient
 	public void	setRequiresResolvers(boolean requires) {
 		if (requires) {
@@ -341,7 +341,7 @@ public class PIPConfiguration implements Serializable {
 			this.requiresResolvers = '0';
 		}
 	}
-	
+
 	@Transient
 	public static Collection<PIPConfiguration>		importPIPConfigurations(Properties properties) {
 		Collection<PIPConfiguration> configurations = new ArrayList<>();
@@ -362,16 +362,16 @@ public class PIPConfiguration implements Serializable {
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PIPConfiguration", "Import failed");
 			}
 		}
-		
+
 		return configurations;
 	}
-	
+
 	@Transient
 	protected	void		readProperties(String id, Properties properties) throws PIPException {
 		//
 		// Save the id if we don't have one already
 		//
-		
+
 		if (this.id == 0) {
 			try {
 				this.id = Integer.parseInt(id);
@@ -428,7 +428,7 @@ public class PIPConfiguration implements Serializable {
 				//
 				// Config Parameter
 				//
-				this.addPipconfigParam(new PIPConfigParam(name.toString().substring(id.length() + 1), 
+				this.addPipconfigParam(new PIPConfigParam(name.toString().substring(id.length() + 1),
 													properties.getProperty(name.toString())));
 			}
 		}
@@ -439,7 +439,7 @@ public class PIPConfiguration implements Serializable {
 			this.name = id;
 		}
 	}
-	
+
 
 	@Transient
 	public Map<String, String> getConfiguration(String name) {
@@ -461,11 +461,11 @@ public class PIPConfiguration implements Serializable {
 		if (this.issuer != null) {
 			map.put(prefix + "issuer", this.issuer);
 		}
-		
+
 		for (PIPConfigParam param : this.pipconfigParams) {
 			map.put(prefix + param.getParamName(), param.getParamValue());
 		}
-		
+
 		List<String> ids = new ArrayList<>();
 		Iterator<PIPResolver> iter = this.pipresolvers.iterator();
 		while (iter.hasNext()) {
@@ -480,7 +480,7 @@ public class PIPConfiguration implements Serializable {
 		}
 		return map;
 	}
-	
+
 	@Transient
 	public Properties	generateProperties(String name) {
 		String prefix;
@@ -503,11 +503,11 @@ public class PIPConfiguration implements Serializable {
 		if (this.issuer != null && this.issuer.isEmpty() == false) {
 			props.setProperty(prefix + "issuer", this.issuer);
 		}
-		
+
 		for (PIPConfigParam param : this.pipconfigParams) {
 			props.setProperty(prefix + param.getParamName(), param.getParamValue());
 		}
-		
+
 		List<String> ids = new ArrayList<>();
 		Iterator<PIPResolver> iter = this.pipresolvers.iterator();
 		while (iter.hasNext()) {

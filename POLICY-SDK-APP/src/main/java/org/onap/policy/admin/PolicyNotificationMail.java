@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,7 +48,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 @Configurable
 public class PolicyNotificationMail{
 	private static Logger policyLogger	= FlexLogger.getLogger(PolicyNotificationMail.class);
-	
+
 	@Bean
 	public JavaMailSenderImpl javaMailSenderImpl(){
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -64,7 +64,7 @@ public class PolicyNotificationMail{
 		return mailSender;
 	}
 
-	public void sendMail(PolicyVersion entityItem, String policyName, String mode, CommonClassDao policyNotificationDao) throws MessagingException {  
+	public void sendMail(PolicyVersion entityItem, String policyName, String mode, CommonClassDao policyNotificationDao) throws MessagingException {
 		String from = PolicyController.getSmtpUsername();
 		String to = "";
 		String subject = "";
@@ -73,17 +73,17 @@ public class PolicyNotificationMail{
 		Date date = new Date();
 		if("EditPolicy".equalsIgnoreCase(mode)){
 			subject = "Policy has been Updated : "+entityItem.getPolicyName();
-			message = "The Policy Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been Updated" + '\n'  + '\n'  + '\n'+ "Scope + Policy Name  : "  + policyName + '\n' + "Active Version  : " +entityItem.getActiveVersion() 
+			message = "The Policy Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been Updated" + '\n'  + '\n'  + '\n'+ "Scope + Policy Name  : "  + policyName + '\n' + "Active Version  : " +entityItem.getActiveVersion()
 					 + '\n'  + '\n' + "Modified By : " +entityItem.getModifiedBy() + '\n' + "Modified Time  : " +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + "Policy Notification System  (please don't respond to this email)";
 		}
 		if("Rename".equalsIgnoreCase(mode)){
 			subject = "Policy has been Renamed : "+entityItem.getPolicyName();
-			message = "The Policy Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been Renamed" + '\n'  + '\n'  + '\n'+ "Scope + Policy Name  : "  + policyName + '\n' + "Active Version  : " +entityItem.getActiveVersion() 
+			message = "The Policy Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been Renamed" + '\n'  + '\n'  + '\n'+ "Scope + Policy Name  : "  + policyName + '\n' + "Active Version  : " +entityItem.getActiveVersion()
 					 + '\n'  + '\n' + "Renamed By : " +entityItem.getModifiedBy() + '\n' + "Renamed Time  : " +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + "Policy Notification System  (please don't respond to this email)";
 		}
 		if("DeleteAll".equalsIgnoreCase(mode)){
 			subject = "Policy has been Deleted : "+entityItem.getPolicyName();
-			message = "The Policy Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been Deleted with All Versions" + '\n'  + '\n'  + '\n'+ "Scope + Policy Name  : "  + policyName + '\n'  
+			message = "The Policy Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been Deleted with All Versions" + '\n'  + '\n'  + '\n'+ "Scope + Policy Name  : "  + policyName + '\n'
 					 + '\n'  + '\n' + "Deleted By : " +entityItem.getModifiedBy() + '\n' + "Deleted Time  : " +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + "Policy Notification System  (please don't respond to this email)";
 		}
 		if("DeleteOne".equalsIgnoreCase(mode)){
@@ -93,17 +93,17 @@ public class PolicyNotificationMail{
 		}
 		if("DeleteScope".equalsIgnoreCase(mode)){
 			subject = "Scope has been Deleted : "+entityItem.getPolicyName();
-			message = "The Scope Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been Deleted" + '\n'  + '\n'  + '\n'+ "Scope + Scope Name  : "  + policyName + '\n'  
+			message = "The Scope Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been Deleted" + '\n'  + '\n'  + '\n'+ "Scope + Scope Name  : "  + policyName + '\n'
 					 + '\n'  + '\n' + "Deleted By : " +entityItem.getModifiedBy() + '\n' + "Deleted Time  : " +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + "Policy Notification System  (please don't respond to this email)";
 		}
 		if("SwitchVersion".equalsIgnoreCase(mode)){
 			subject = "Policy has been SwitchedVersion : "+entityItem.getPolicyName();
-			message = "The Policy Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been SwitchedVersion" + '\n'  + '\n'  + '\n'+ "Scope + Policy Name  : "  + policyName + '\n' + "Active Version  : " +entityItem.getActiveVersion() 
+			message = "The Policy Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been SwitchedVersion" + '\n'  + '\n'  + '\n'+ "Scope + Policy Name  : "  + policyName + '\n' + "Active Version  : " +entityItem.getActiveVersion()
 					 + '\n'  + '\n' + "Switched By : " +entityItem.getModifiedBy() + '\n' + "Switched Time  : " +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + "Policy Notification System  (please don't respond to this email)";
 		}
 		if("Move".equalsIgnoreCase(mode)){
 			subject = "Policy has been Moved to Other Scope : "+entityItem.getPolicyName();
-			message = "The Policy Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been Moved to Other Scope" + '\n'  + '\n'  + '\n'+ "Scope + Policy Name  : "  + policyName + '\n' + "Active Version  : " +entityItem.getActiveVersion() 
+			message = "The Policy Which you are watching in  " + PolicyController.getSmtpApplicationName() + " has been Moved to Other Scope" + '\n'  + '\n'  + '\n'+ "Scope + Policy Name  : "  + policyName + '\n' + "Active Version  : " +entityItem.getActiveVersion()
 					 + '\n'  + '\n' + "Moved By : " +entityItem.getModifiedBy() + '\n' + "Moved Time  : " +dateFormat.format(date) + '\n' + '\n' + '\n' + '\n' + "Policy Notification System  (please don't respond to this email)";
 		}
 		String policyFileName = entityItem.getPolicyName();
@@ -119,7 +119,7 @@ public class PolicyNotificationMail{
 			policyFileName = policyFileName.substring(0, policyFileName.indexOf('\\'));
 			policyFileName = policyFileName.replace("\\", "\\\\");
 		}
-		
+
 		policyFileName += "%";
 		String query = "from WatchPolicyNotificationTable where policyName like:policyFileName";
 		boolean sendFlag = false;

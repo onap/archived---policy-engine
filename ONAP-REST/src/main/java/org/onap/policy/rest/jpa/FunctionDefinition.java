@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * The persistent class for the FunctionDefinition database table.
- * 
+ *
  */
 @Entity
 @Table(name="FunctionDefinition")
@@ -49,7 +49,7 @@ public class FunctionDefinition implements Serializable {
 
 	@Column(name="xacml_id", nullable=false, length=255)
 	private String xacmlid;
-	
+
 	//bi-directional many-to-one association to Datatype
 	@ManyToOne
 	@JoinColumn(name="return_datatype", nullable=true)
@@ -57,7 +57,7 @@ public class FunctionDefinition implements Serializable {
 
 	@Column(name="is_bag_return", nullable=false)
 	private Integer isBagReturn;
-	
+
 	@Column(name="is_higher_order", nullable=false)
 	private Integer isHigherOrder;
 
@@ -69,10 +69,10 @@ public class FunctionDefinition implements Serializable {
 
 	@Column(name="ho_arg_lb", nullable=true)
 	private Integer higherOrderArg_LB;
-	
+
 	@Column(name="ho_arg_ub", nullable=true)
 	private Integer higherOrderArg_UB;
-	
+
 	@Column(name="ho_primitive", nullable=true)
 	private Character higherOrderIsPrimitive;
 

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,7 +62,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 public class ExternalAppConfig extends AppConfig implements Configurable {
 
 	EELFLoggerDelegate logger = EELFLoggerDelegate.getLogger(ExternalAppConfig.class);
-	
+
 	private RegistryAdapter schedulerRegistryAdapter;
 
 	@Configuration
@@ -80,7 +80,7 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 
 	/**
 	 * @see org.onap.portalsdk.core.conf.AppConfig#addResourceHandlers(ResourceHandlerRegistry)
-	 * 
+	 *
 	 * @param registry
 	 */
 	@Override
@@ -102,7 +102,7 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	/**
 	 * Creates a new list with a single entry that is the external app
 	 * definitions.xml path.
-	 * 
+	 *
 	 * @return List of String, size 1
 	 */
 	@Override
@@ -126,7 +126,7 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 
 	/**
 	 * Creates and returns a new instance of a {@link CacheManager} class.
-	 * 
+	 *
 	 * @return New instance of {@link CacheManager}
 	 */
 	@Bean
@@ -137,7 +137,7 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 	/**
 	 * Creates and returns a new instance of a {@link SchedulerFactoryBean} and
 	 * populates it with triggers.
-	 * 
+	 *
 	 * @return New instance of {@link SchedulerFactoryBean}
 	 * @throws Exception
 	 */
@@ -158,7 +158,7 @@ public class ExternalAppConfig extends AppConfig implements Configurable {
 
 	/**
 	 * Sets the scheduler registry adapter.
-	 * 
+	 *
 	 * @param schedulerRegistryAdapter
 	 */
 	@Autowired

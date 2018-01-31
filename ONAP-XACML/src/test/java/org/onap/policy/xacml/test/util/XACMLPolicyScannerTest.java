@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ public class XACMLPolicyScannerTest {
 	private static final Log logger				= LogFactory.getLog(XACMLPolicyScannerTest.class);
 	private static Path configPolicyPathValue;
 	private static Path actionPolicyPathValue;
-	
+
 	@Before
 	public void setUp() {
 		File templateFile;
@@ -54,7 +54,7 @@ public class XACMLPolicyScannerTest {
 			logger.error("Exception Occured"+e1);
 		}
 	}
-	
+
 	@Test
 	public void xacmlPolicyScannerTest() throws IOException{
 		Callback callback = null;
@@ -63,7 +63,7 @@ public class XACMLPolicyScannerTest {
 			assertTrue(actionScanner.getPolicyObject() != null);
 			Object actionObject = actionScanner.scan();
 			assertTrue(actionObject != null);
-			
+
 			XACMLPolicyScanner scanner = new XACMLPolicyScanner(configPolicyPathValue, callback);
 			assertTrue(scanner.getPolicyObject() != null);
 			Object object = scanner.scan();

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ public class PolicyNotificationMailTest {
 	private String policyName = "com/Config_Test";
 	private CommonClassDao commonClassDao;
 	private List<Object> data = null;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		PolicyController.setjUnit(true);
@@ -50,16 +50,16 @@ public class PolicyNotificationMailTest {
 		PolicyController.setSmtpPort("23");
 		PolicyController.setSmtpPassword("test");
 		PolicyController.setSmtpUsername("test");
-		
+
 		version = new PolicyVersion();
 		version.setPolicyName("com/Config_Test");
 		version.setModifiedBy("xyz");
-		
+
 		WatchPolicyNotificationTable watch = new WatchPolicyNotificationTable();
 		watch.setPolicyName("com/Config_Test");
 		data = new ArrayList<>();
 		data.add(watch);
-		
+
 		commonClassDao = mock(CommonClassDao.class);
         PolicyController.setCommonClassDao(commonClassDao);
         when(commonClassDao.getDataByQuery("from WatchPolicyNotificationTable where policyName like:policyFileName", null)).thenReturn(data);

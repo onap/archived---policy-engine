@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -73,12 +73,12 @@ import com.att.research.xacml.util.XACMLProperties;
 
 public class PDPServices {
     private static final Logger LOGGER = FlexLogger.getLogger(PDPServices.class.getName());
-    // Change the default Priority value here. 
+    // Change the default Priority value here.
     private static final int DEFAULT_PRIORITY = 9999;
     private boolean unique = false;
     private Boolean decide = false;
     private Request rainydayRequest = null;
-    
+
     public Collection<PDPResponse> generateRequest(String jsonString, UUID requestID, boolean unique, boolean decide) throws PolicyException{
         this.unique = unique;
         this.decide = decide;
@@ -155,7 +155,7 @@ public class PDPServices {
                     // check for Decision for decision based calls.
                     PDPResponse pdpResponse = new PDPResponse();
                     pdpResponse.setDecision(PolicyDecision.PERMIT);
-                    
+
                 	//if this is a Rainy Day treatment decision we need to get the selected treatment
                 	if(rainydayRequest!=null){
                 		pdpResponse.setDetails(getRainyDayTreatment(result));
@@ -166,7 +166,7 @@ public class PDPServices {
                     return combinedResult;
                 }
                 if (!result.getAssociatedAdvice().isEmpty()) {
-                    // Configurations should be in advice. 
+                    // Configurations should be in advice.
                     // Also PDP took actions could be here.
                     for (Advice advice : result.getAssociatedAdvice()) {
                         int config = 0, uri = 0;
@@ -303,7 +303,7 @@ public class PDPServices {
             }
         }
         if(unique){
-            // Select Unique policy. 
+            // Select Unique policy.
             int minNum = DEFAULT_PRIORITY;
             for(int num: uniqueResult.keySet()){
                 if(num < minNum){
@@ -314,10 +314,10 @@ public class PDPServices {
             // Turn off Unique
             unique = false;
         }
-        
+
         return combinedResult;
     }
-    
+
     private String getRainyDayTreatment(Result result) {
     	String treatment = null;
     	if (rainydayRequest!=null&& !result.getAssociatedAdvice().isEmpty()) {
@@ -329,7 +329,7 @@ public class PDPServices {
     				if ("treatment".equalsIgnoreCase(attribute.getAttributeId().stringValue())){
     					treatment = attribute.getAttributeValue().getValue().toString();
     				}
-    			}   
+    			}
     		}
     	}
     	return treatment;

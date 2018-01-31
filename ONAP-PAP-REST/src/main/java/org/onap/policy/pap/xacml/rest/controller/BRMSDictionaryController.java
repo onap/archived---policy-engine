@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,10 +58,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class BRMSDictionaryController{
-	
+
 	private static final Logger LOGGER  = FlexLogger.getLogger(BRMSDictionaryController.class);
 
-	
+
 	private static CommonClassDao commonClassDao;
 	private static String rule;
 	private static String utf8 = "UTF-8";
@@ -88,11 +88,11 @@ public class BRMSDictionaryController{
 	}
 	/*
 	 * This is an empty constructor
-	 */	
+	 */
 	public BRMSDictionaryController() {}
-	
+
 	public UserInfo getUserInfo(String loginId){
-		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);	
+		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
 	}
 
 	@RequestMapping(value={"/get_BRMSParamDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -109,7 +109,7 @@ public class BRMSDictionaryController{
 			 LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/get_BRMSParamData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getBRMSParamDictionaryEntityData(HttpServletResponse response){
 		try{
@@ -118,17 +118,17 @@ public class BRMSDictionaryController{
 			model.put("brmsParamDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(BRMSParamTemplate.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-            response.addHeader(successMapKey, successMessage); 
+            response.addHeader(successMapKey, successMessage);
             response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
-	
+
 	@RequestMapping(value={"/brms_dictionary/set_BRMSParamData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public static void setRuleData(HttpServletRequest request) throws IOException{
 		StringWriter writer = new StringWriter();
@@ -136,7 +136,7 @@ public class BRMSDictionaryController{
 		String cleanStreamBoundary =  writer.toString().replaceFirst("------(.*)(?s).*octet-stream", "");
 		rule = cleanStreamBoundary.substring(0, cleanStreamBoundary.lastIndexOf("end")+4);
 	}
-	
+
 	@RequestMapping(value={"/brms_dictionary/save_BRMSParam"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveBRMSParamDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
@@ -148,13 +148,13 @@ public class BRMSDictionaryController{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			
+
             BRMSParamTemplate bRMSParamTemplateData;
             String userId = null;
             if(fromAPI) {
                 bRMSParamTemplateData = (BRMSParamTemplate)mapper.readValue(root.get(dictionaryFields).toString(), BRMSParamTemplate.class);
                 userId = "API";
-                
+
                 //check if update operation or create, get id for data to be updated and update attributeData
                 if ((update).equals(request.getParameter(operation))) {
                 	List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(bRMSParamTemplateData.getRuleName(), ruleName, BRMSParamTemplate.class);
@@ -167,7 +167,7 @@ public class BRMSDictionaryController{
                 bRMSParamTemplateData = (BRMSParamTemplate)mapper.readValue(root.get("brmsParamDictionaryData").toString(), BRMSParamTemplate.class);
                 userId = root.get(userid).textValue();
             }
-            
+
 			bRMSParamTemplateData.setRule(rule);
 			if(bRMSParamTemplateData.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(bRMSParamTemplateData.getRuleName(), ruleName, BRMSParamTemplate.class);
@@ -176,10 +176,10 @@ public class BRMSDictionaryController{
 				}else{
 					bRMSParamTemplateData.setUserCreatedBy(this.getUserInfo(userId));
 					commonClassDao.save(bRMSParamTemplateData);
-				}	
+				}
 			}else{
-				commonClassDao.update(bRMSParamTemplateData); 
-			} 
+				commonClassDao.update(bRMSParamTemplateData);
+			}
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
 			request.setCharacterEncoding(utf8);
@@ -247,7 +247,7 @@ public class BRMSDictionaryController{
 		}
 		return null;
 	}
-	
+
     @RequestMapping(value={"/get_BRMSDependencyDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSDependencyDictionaryByNameEntityData(HttpServletResponse response){
         try{
@@ -262,7 +262,7 @@ public class BRMSDictionaryController{
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
         }
     }
-    
+
     @RequestMapping(value={"/get_BRMSDependencyData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSDependencyDictionaryEntityData(HttpServletResponse response){
         try{
@@ -271,38 +271,38 @@ public class BRMSDictionaryController{
             model.put("brmsDependencyDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(BRMSDependency.class)));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
             JSONObject j = new JSONObject(msg);
-            response.addHeader(successMapKey, successMessage); 
+            response.addHeader(successMapKey, successMessage);
             response.addHeader(operation, getDictionary);
             response.getWriter().write(j.toString());
         }
         catch (Exception e){
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.addHeader(errorMsg, dictionaryDBQuery);
         }
     }
-    
+
     @RequestMapping(value={"/brms_dictionary/save_BRMSDependencyData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView saveBRMSDependencyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             boolean duplicateflag = false;
             LOGGER.debug("DictionaryController:  saveBRMSDependencyDictionary() is called");
-            
+
             boolean fromAPI = false;
             if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
                 fromAPI = true;
             }
-            
+
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
-            
+
             BRMSDependency brmsDependency;
             String userId = null;
             if (fromAPI) {
                 brmsDependency = (BRMSDependency)mapper.readValue(root.get(dictionaryFields).toString(), BRMSDependency.class);
                 userId = "API";
-                
+
                 //check if update operation or create, get id for data to be updated
                 if ((update).equals(request.getParameter(operation))) {
                 	List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(brmsDependency.getDependencyName(), dependencyName, BRMSDependency.class);
@@ -315,10 +315,10 @@ public class BRMSDictionaryController{
                 brmsDependency = (BRMSDependency)mapper.readValue(root.get("brmsDependencyDictionaryData").toString(), BRMSDependency.class);
                 userId = root.get(userid).textValue();
             }
-            
+
             LOGGER.audit("the userId from the onap portal is: " + userId);
             String responseString = null;
-            
+
             if(brmsDependency.getDependency()!=null && !("").equals(brmsDependency.getDependency().trim())){
                 PEDependency dependency = null;
                 try{
@@ -342,7 +342,7 @@ public class BRMSDictionaryController{
                     }else{
                         brmsDependency.setUserModifiedBy(this.getUserInfo(userId));
                         brmsDependency.setModifiedDate(new Date());
-                        commonClassDao.update(brmsDependency); 
+                        commonClassDao.update(brmsDependency);
                     }
                     if(duplicateflag) {
                         responseString = duplicateResponseString;
@@ -365,7 +365,7 @@ public class BRMSDictionaryController{
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{brmsDependencyDictionaryDatas: " + responseString + "}");
                 out.write(j.toString());
- 
+
                 return null;
             }
         } catch (Exception e){
@@ -377,7 +377,7 @@ public class BRMSDictionaryController{
         }
         return null;
     }
- 
+
     @RequestMapping(value={"/brms_dictionary/remove_brmsDependency"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView removeBRMSDependencyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try{
@@ -404,8 +404,8 @@ public class BRMSDictionaryController{
         }
         return null;
     }
-    
-    
+
+
     @RequestMapping(value={"/get_BRMSControllerDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSControllerDictionaryByNameEntityData(HttpServletResponse response){
         try{
@@ -420,7 +420,7 @@ public class BRMSDictionaryController{
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
         }
     }
-    
+
     @RequestMapping(value={"/get_BRMSControllerData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getBRMSControllerDictionaryEntityData(HttpServletResponse response){
         try{
@@ -429,17 +429,17 @@ public class BRMSDictionaryController{
             model.put("brmsControllerDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(BRMSController.class)));
             JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
             JSONObject j = new JSONObject(msg);
-            response.addHeader(successMapKey, successMessage); 
+            response.addHeader(successMapKey, successMessage);
             response.addHeader(operation, getDictionary);
             response.getWriter().write(j.toString());
         }
         catch (Exception e){
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.addHeader(errorMsg, dictionaryDBQuery);
         }
     }
-    
+
     @RequestMapping(value={"/brms_dictionary/save_BRMSControllerData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView saveBRMSControllerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
         try {
@@ -494,7 +494,7 @@ public class BRMSDictionaryController{
                     }else{
                         brmsController.setUserModifiedBy(this.getUserInfo(userId));
                         brmsController.setModifiedDate(new Date());
-                        commonClassDao.update(brmsController); 
+                        commonClassDao.update(brmsController);
                     }
                     if(duplicateflag) {
                         responseString = duplicateResponseString;
@@ -528,7 +528,7 @@ public class BRMSDictionaryController{
         }
         return null;
     }
- 
+
     @RequestMapping(value={"/brms_dictionary/remove_brmsController"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
     public ModelAndView removeBRMSControllerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
         try{
@@ -555,13 +555,13 @@ public class BRMSDictionaryController{
         }
         return null;
     }
-    
+
     public BRMSDependency getDependencyDataByID(String dependencyName){
         return (BRMSDependency) commonClassDao.getEntityItem(BRMSDependency.class, dependencyName, dependencyName);
     }
-    
+
     public BRMSController getControllerDataByID(String controllerName){
         return (BRMSController) commonClassDao.getEntityItem(BRMSController.class, controllerName, controllerName);
     }
-	
+
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.onap.policy.xacml.util.MetricsUtil;
 
 public class MetricsUtilTest {
-	
+
 	@Test
 	public void metricsUtilTest(){
 		MetricsUtil.AvgLatency avgLatency = new MetricsUtil.AvgLatency();
@@ -35,13 +35,13 @@ public class MetricsUtilTest {
 		assertTrue(avgLatency.avg() == 1);
 		avgLatency.reset();
 		assertTrue(avgLatency.avg() == 0);
-		
+
 		MetricsUtil.MaxLatency maxLatency = new MetricsUtil.MaxLatency();
 		maxLatency.compute(2);
 		assertTrue(maxLatency.max() == 2);
 		maxLatency.reset();
 		assertTrue(maxLatency.max() < 0);
-		
+
 		MetricsUtil.MinLatency minLatency = new MetricsUtil.MinLatency();
 		minLatency.compute(2);
 		assertTrue(minLatency.min() == 2);

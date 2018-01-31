@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -159,11 +159,11 @@ public class FirewallConfigPolicy extends Policy {
 		}
 
 		if(dbIsUpdated) {
-			successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());	
+			successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
 		} else {
 			PolicyLogger.error("Failed to Update the Database Dictionary Tables.");
 
-			//remove the new json file 
+			//remove the new json file
 			String jsonBody = policyAdapter.getPrevJsonBody();
 			if (jsonBody!=null){
 				saveConfigurations(policyName, jsonBody);
@@ -173,7 +173,7 @@ public class FirewallConfigPolicy extends Policy {
 			successMap.put("fwdberror", "DB UPDATE");
 		}
 
-		return successMap;		
+		return successMap;
 	}
 
 	//This is the method for preparing the policy for saving.  We have broken it out
@@ -208,11 +208,11 @@ public class FirewallConfigPolicy extends Policy {
 		int oldversion = Integer.parseInt(dbPolicyName.substring(dbPolicyName.lastIndexOf('.')+1));
 		dbPolicyName = dbPolicyName.substring(0, dbPolicyName.lastIndexOf('.')+1);
 		if(oldversion > 1){
-			oldversion = oldversion - 1; 
+			oldversion = oldversion - 1;
 			dbPolicyName = dbPolicyName + oldversion + ".xml";
 		}
 		EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
-		Query createPolicyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");			
+		Query createPolicyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");
 		createPolicyQuery.setParameter("scope", scope);
 		createPolicyQuery.setParameter("policyName", dbPolicyName);
 		List<?> createPolicyQueryList = createPolicyQuery.getResultList();
@@ -443,7 +443,7 @@ public class FirewallConfigPolicy extends Policy {
 		configNameAttributeValue8.getContent().add(policyAdapter.getRiskLevel());
 		assignment8.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue8));
 
-		advice.getAttributeAssignmentExpression().add(assignment8);	
+		advice.getAttributeAssignmentExpression().add(assignment8);
 
 		AttributeAssignmentExpressionType assignment9 = new AttributeAssignmentExpressionType();
 		assignment9.setAttributeId("guard");
@@ -488,7 +488,7 @@ public class FirewallConfigPolicy extends Policy {
 			try {
 				firewallRules = json.getJsonArray("firewallRuleList");
 				serviceGroup = json.getJsonArray("serviceGroups");
-				addressGroup = json.getJsonArray("addressGroups");	
+				addressGroup = json.getJsonArray("addressGroups");
 				/*
 				 * Inserting firewallRuleList data into the Terms, SecurityZone, and Action tables
 				 */
@@ -509,7 +509,7 @@ public class FirewallConfigPolicy extends Policy {
 							TermList termEntry = (TermList) result.get(0);
 							dbConnection.delete(termEntry);
 						}
-						
+
 						//getting fromZone Array field from the firewallRulesList
 						JsonArray fromZoneArray = ruleListobj.getJsonArray("fromZones");
 						String fromZoneString = null;
@@ -623,15 +623,15 @@ public class FirewallConfigPolicy extends Policy {
 								destPortListString = value;
 							}
 						}
-						String destPortListInsert = "'"+destPortListString+"'";					
+						String destPortListInsert = "'"+destPortListString+"'";
 
 						/*
-						 * Create Queries to INSERT data into database tables and execute 
-						 */	
+						 * Create Queries to INSERT data into database tables and execute
+						 */
 						UserInfo userInfo = new UserInfo();
 						userInfo.setUserLoginId("API");
 						userInfo.setUserName("API");
-						
+
 						TermList termEntry = new TermList();
 						termEntry.setTermName(ruleName);
 						termEntry.setSrcIPList(srcListInsert);
@@ -646,7 +646,7 @@ public class FirewallConfigPolicy extends Policy {
 						termEntry.setToZones(toZoneInsert);
 						termEntry.setUserCreatedBy(userInfo);
 						dbConnection.save(termEntry);
-						
+
 						ActionList actionEntry = new ActionList();
 						actionEntry.setActionName(action);
 						actionEntry.setDescription(action);
@@ -683,7 +683,7 @@ public class FirewallConfigPolicy extends Policy {
 							}
 						}
 
-						//Insert values into GROUPSERVICELIST table if name begins with Group 
+						//Insert values into GROUPSERVICELIST table if name begins with Group
 						if (isServiceGroup) {
 							String name = null;
 							for (int membersIndex = 0; membersIndex< membersArray.size(); membersIndex++) {
@@ -710,7 +710,7 @@ public class FirewallConfigPolicy extends Policy {
 									name = value;
 								}
 							}
-							String nameInsert = "'"+name+"'";		
+							String nameInsert = "'"+name+"'";
 							GroupServiceList groupServiceEntry = new GroupServiceList();
 							groupServiceEntry.setGroupName(serviceListName);
 							groupServiceEntry.setServiceList(nameInsert);
@@ -721,7 +721,7 @@ public class FirewallConfigPolicy extends Policy {
 							String ports = svcGroupListobj.get("ports").toString();
 
 							/*
-							 * Create Queries to INSERT data into database table and execute 
+							 * Create Queries to INSERT data into database table and execute
 							 */
 							ServiceList serviceListEntry = new ServiceList();
 							serviceListEntry.setServiceName(serviceListName);
@@ -731,12 +731,12 @@ public class FirewallConfigPolicy extends Policy {
 							serviceListEntry.setServiceAppProtocol("null");
 							serviceListEntry.setServicePorts(ports);
 							dbConnection.save(serviceListEntry);
-							
+
 							ProtocolList protocolEntry = new ProtocolList();
 							protocolEntry.setProtocolName(transportProtocol);
 							protocolEntry.setDescription(transportProtocol);
 							dbConnection.save(protocolEntry);
-							
+
 							PortList portListEntry = new PortList();
 							portListEntry.setPortName(ports);
 							portListEntry.setDescription(ports);
@@ -795,7 +795,7 @@ public class FirewallConfigPolicy extends Policy {
 
 						Boolean isAddressGroup = type.contains("REFERENCE");
 
-						if (isAddressGroup) {								
+						if (isAddressGroup) {
 							AddressGroup addressGroupEntry = new AddressGroup();
 							addressGroupEntry.setGroupName(addressGroupName);
 							addressGroupEntry.setDescription(description);
@@ -838,7 +838,7 @@ public class FirewallConfigPolicy extends Policy {
 			}catch (Exception e) {
 				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FirewallConfigPolicy", "Exception getting Json values");
 				return false;
-			} 
+			}
 			return true;
 
 		} else {
@@ -869,7 +869,7 @@ public class FirewallConfigPolicy extends Policy {
 
 			firewallRules = newJson.getJsonArray("firewallRuleList");
 			serviceGroup = newJson.getJsonArray("serviceGroups");
-			addressGroup = newJson.getJsonArray("addressGroups");	
+			addressGroup = newJson.getJsonArray("addressGroups");
 
 			//insert data into tables
 			try {
@@ -1025,15 +1025,15 @@ public class FirewallConfigPolicy extends Policy {
 									destPortListString = value;
 								}
 							}
-							String destPortListInsert = "'"+destPortListString+"'";					
+							String destPortListInsert = "'"+destPortListString+"'";
 
 							/*
-							 * Create Queries to INSERT data into database tables and execute 
+							 * Create Queries to INSERT data into database tables and execute
 							 */
 							UserInfo userInfo = new UserInfo();
 							userInfo.setUserLoginId("API");
 							userInfo.setUserName("API");
-							
+
 							TermList termEntry = new TermList();
 							termEntry.setTermName(ruleName);
 							termEntry.setSrcIPList(srcListInsert);
@@ -1048,13 +1048,13 @@ public class FirewallConfigPolicy extends Policy {
 							termEntry.setToZones(toZoneInsert);
 							termEntry.setUserCreatedBy(userInfo);
 							dbConnection.save(termEntry);
-							
+
 							List<Object> actionResult = dbConnection.getDataById(ActionList.class, "actionName", action);
 							if(actionResult == null || actionResult.isEmpty()){
 								ActionList actionEntry = new ActionList();
 								actionEntry.setActionName(action);
 								actionEntry.setDescription(action);
-								dbConnection.save(actionEntry);	
+								dbConnection.save(actionEntry);
 							}
 						}
 					}
@@ -1070,7 +1070,7 @@ public class FirewallConfigPolicy extends Policy {
 							//create the JSON object from the JSON Array for each iteration through the for loop
 							JsonObject svcGroupListobj = serviceGroup.getJsonObject(si);
 
-							String groupName = svcGroupListobj.get("name").toString().replace('"', '\''); 
+							String groupName = svcGroupListobj.get("name").toString().replace('"', '\'');
 
 							String description = null;
 							if (svcGroupListobj.containsKey("description")){
@@ -1087,14 +1087,14 @@ public class FirewallConfigPolicy extends Policy {
 								}
 							}
 
-							//Insert values into GROUPSERVICELIST table if name begins with Group 
+							//Insert values into GROUPSERVICELIST table if name begins with Group
 							if (isServiceGroup) {
 								List<Object> result = dbConnection.getDataById(GroupServiceList.class, "name", groupName);
 								if(result != null && !result.isEmpty()){
 									GroupServiceList groupEntry = (GroupServiceList) result.get(0);
 									dbConnection.delete(groupEntry);
 								}
-			
+
 								String name = null;
 								for (int membersIndex = 0; membersIndex < membersArray.size(); membersIndex++) {
 									JsonObject membersObj = membersArray.getJsonObject(membersIndex);
@@ -1119,7 +1119,7 @@ public class FirewallConfigPolicy extends Policy {
 										name = value;
 									}
 								}
-								String nameInsert = "'"+name+"'";	
+								String nameInsert = "'"+name+"'";
 								GroupServiceList groupServiceEntry = new GroupServiceList();
 								groupServiceEntry.setGroupName(groupName);
 								groupServiceEntry.setServiceList(nameInsert);
@@ -1128,13 +1128,13 @@ public class FirewallConfigPolicy extends Policy {
 								String type = svcGroupListobj.get("type").toString().replace('"', '\'');
 								String transportProtocol = svcGroupListobj.get("transportProtocol").toString().replace('"', '\'');
 								String ports = svcGroupListobj.get("ports").toString().replace('"', '\'');
-								
+
 								List<Object> result = dbConnection.getDataById(ServiceList.class, "name", groupName);
 								if(result != null && !result.isEmpty()){
 									ServiceList serviceEntry = (ServiceList) result.get(0);
 									dbConnection.delete(serviceEntry);
 								}
-								
+
 								ServiceList serviceListEntry = new ServiceList();
 								serviceListEntry.setServiceName(groupName);
 								serviceListEntry.setServiceDescription(description);
@@ -1143,7 +1143,7 @@ public class FirewallConfigPolicy extends Policy {
 								serviceListEntry.setServiceAppProtocol("null");
 								serviceListEntry.setServicePorts(ports);
 								dbConnection.save(serviceListEntry);
-								
+
 								List<Object> protocolResult = dbConnection.getDataById(ProtocolList.class, "protocolName", transportProtocol);
 								if(protocolResult == null || protocolResult.isEmpty()){
 									ProtocolList protocolEntry = new ProtocolList();
@@ -1151,7 +1151,7 @@ public class FirewallConfigPolicy extends Policy {
 									protocolEntry.setDescription(transportProtocol);
 									dbConnection.save(protocolEntry);
 								}
-								
+
 								List<Object> portResult = dbConnection.getDataById(PortList.class, "portName", ports);
 								if(portResult == null || portResult.isEmpty()){
 									PortList portEntry = new PortList();
@@ -1209,11 +1209,11 @@ public class FirewallConfigPolicy extends Policy {
 									prefixIP = value;
 								}
 							}
-							
+
 							String prefixList = "'"+prefixIP+"'";
 							Boolean isAddressGroup = type.contains("REFERENCE");
 
-							if (isAddressGroup) {	
+							if (isAddressGroup) {
 								List<Object> result = dbConnection.getDataById(AddressGroup.class, "name", addressGroupName);
 								if(result != null && !result.isEmpty()){
 									AddressGroup addressGroupEntry = (AddressGroup) result.get(0);
@@ -1236,7 +1236,7 @@ public class FirewallConfigPolicy extends Policy {
 								newPrefixList.setPrefixListValue(prefixList);
 								dbConnection.save(newPrefixList);
 							}
-						}						
+						}
 					}
 				}
 

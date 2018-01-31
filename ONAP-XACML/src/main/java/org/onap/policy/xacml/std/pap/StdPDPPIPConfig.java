@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,31 +27,31 @@ import java.util.Properties;
 
 import com.att.research.xacml.api.pap.PDPPIPConfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class StdPDPPIPConfig implements PDPPIPConfig, Serializable {
 	private static final long serialVersionUID = 1L;
 	private static Logger	logger	= FlexLogger.getLogger(StdPDPPIPConfig.class);
-	
+
 	private String id;
-	
+
 	private String name;
-	
+
 	private String description;
-	
+
 	private String classname;
-	
+
 	private Map<String,String> config = new HashMap<>();
-	
+
 	public StdPDPPIPConfig() {
-		
+
 	}
 
 	public StdPDPPIPConfig(String id) {
 		this.id = id;
 	}
-	
+
 	public StdPDPPIPConfig(String id, String name, String description) {
 		this(id);
 		this.name = name;
@@ -64,7 +64,7 @@ public class StdPDPPIPConfig implements PDPPIPConfig, Serializable {
 			throw new IllegalArgumentException("PIP Engine '" + id + "' has no classname property in config");
 		}
 	}
-	
+
 	public boolean initialize(Properties properties) {
 		boolean classnameSeen = false;
 		for (Object key : properties.keySet()) {
@@ -91,7 +91,7 @@ public class StdPDPPIPConfig implements PDPPIPConfig, Serializable {
 	public String getId() {
 		return this.id;
 	}
-	
+
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -109,7 +109,7 @@ public class StdPDPPIPConfig implements PDPPIPConfig, Serializable {
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -200,8 +200,8 @@ public class StdPDPPIPConfig implements PDPPIPConfig, Serializable {
 				+ ", config=" + config + "]";
 	}
 
-	
-	
+
+
 	//
 	// Methods needed for JSON serialization/deserialization
 	//
@@ -212,5 +212,5 @@ public class StdPDPPIPConfig implements PDPPIPConfig, Serializable {
 	public void setConfig(Map<String, String> config) {
 		this.config = config;
 	}
-	
+
 }

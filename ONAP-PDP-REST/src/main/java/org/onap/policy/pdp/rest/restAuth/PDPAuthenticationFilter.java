@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,7 +58,7 @@ public class PDPAuthenticationFilter implements Filter {
 
 			if (authenticationStatus) {
 				if (check(path)) {
-                    // New API request. 
+                    // New API request.
                     path = path.substring(path.substring(1).indexOf("/") + 1);
                     if (environment == null) {
                         // Allow Old clients.
@@ -68,7 +68,7 @@ public class PDPAuthenticationFilter implements Filter {
                             request.getRequestDispatcher(path).forward(request,response);
                         }
                     } else if (environment.equalsIgnoreCase(PDPApiAuth.getEnvironment())) {
-                        // Validated new Clients. 
+                        // Validated new Clients.
                         if(!path.contains("/api/")){
                             request.getRequestDispatcher("/api/" + path).forward(request,response);
                         }else{
@@ -95,7 +95,7 @@ public class PDPAuthenticationFilter implements Filter {
 			}
 		}
 	}
-	
+
 	private boolean check(String path) {
         if(path.endsWith("/pdp/")|| path.endsWith("/pdp")|| path.endsWith("/test")){
             return false;

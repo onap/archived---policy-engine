@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -80,7 +80,7 @@ public class FWTag implements Serializable {
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -98,26 +98,26 @@ public class FWTag implements Serializable {
 	}
 
 	private static Log LOGGER = LogFactory.getLog(FWTag.class);
-	
+
 	public FWTag(){
-		
+
 	}
-	
+
 	public FWTag(String string, String userid) {
 		this(string);
 	}
 
 	public FWTag(String domain) {
 		this.fwTagName = domain;
-	}	
-	
+	}
+
 	@PrePersist
 	public void	prePersist() {
 		Date date = new Date();
 		this.createdDate = date;
 		this.modifiedDate = date;
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
@@ -128,14 +128,14 @@ public class FWTag implements Serializable {
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "FWTag", "Exception caused While adding Modified by Role");
 		}
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getFwTagName() {
 		return fwTagName;
 	}
@@ -151,28 +151,28 @@ public class FWTag implements Serializable {
 	public void setTagValues(String tagValues) {
 		this.tagValues = tagValues;
 	}
-	
-	
+
+
 	public Date getCreatedDate() {
 		return this.createdDate;
 	}
-	
+
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	
+
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public Date getModifiedDate() {
 		return this.modifiedDate;
 	}
-	
+
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}

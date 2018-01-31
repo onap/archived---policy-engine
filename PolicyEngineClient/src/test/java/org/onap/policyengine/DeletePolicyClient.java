@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,15 +31,15 @@ public class DeletePolicyClient {
 		try {
 
 			PolicyEngine policyEngine = new PolicyEngine("config.properties");
-			DeletePolicyParameters policyParameters = new DeletePolicyParameters();			
-						
+			DeletePolicyParameters policyParameters = new DeletePolicyParameters();
+
 			//Parameter arguments
 			policyParameters.setPolicyName("MikeConsole.Config_testDeleteAPI6.1.xml");
 			policyParameters.setPolicyComponent("PDP");
 			policyParameters.setPdpGroup("default");
 			policyParameters.setDeleteCondition(DeletePolicyCondition.ALL);
 			policyParameters.setRequestID(null);
-			
+
             // API method to Push Policy to PDP
             PolicyChangeResponse response = null;
             response = policyEngine.deletePolicy(policyParameters);
@@ -52,11 +52,11 @@ public class DeletePolicyClient {
             }
 
 		} catch (Exception e) {
-			System.err.println(e.getMessage());		
-			
+			System.err.println(e.getMessage());
+
 		}
-		
+
 	}
-	
+
 
 }

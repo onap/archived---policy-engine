@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,7 +46,7 @@ import com.att.research.xacml.api.pap.PDPPolicy;
 public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements PolicyContainer.Indexed, PolicyContainer.ItemSetChangeNotifier {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER	= FlexLogger.getLogger(PDPGroupContainer.class);
-	
+
     /**
      * String identifier of a file's "Id" property.
      */
@@ -85,7 +85,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
      * String identifier of a file's "PIP Configurations" property.
      */
 	private static final String PROPERTY_PIPCONFIG = "PIP Configurations";
-    
+
     /**
      * String identifier of a file's "Selected" property.
      */
@@ -98,7 +98,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 
  	private transient PAPPolicyEngine papEngine = null;
  	protected transient List<OnapPDPGroup> groups = Collections.synchronizedList(new ArrayList<OnapPDPGroup>());
- 	
+ 
     public PDPGroupContainer(PAPPolicyEngine papPolicyEngine) {
 		super();
 		this.setContainer(this);
@@ -111,13 +111,13 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 		//
 		this.refreshGroups();
 	}
-    
+
     public boolean isSupported(Object itemId) {
     	return itemId instanceof OnapPDPGroup;
     }
-	
+
 	public synchronized void refreshGroups() {
-		synchronized(this.groups) { 
+		synchronized(this.groups) {
 			this.groups.clear();
 			try {
 				this.groups.addAll(this.papEngine.getOnapPDPGroups());
@@ -132,11 +132,11 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 		//
 		this.fireItemSetChange();
 	}
-	
+
 	public List<OnapPDPGroup>	getGroups() {
 		return Collections.unmodifiableList(this.groups);
 	}
-	
+
 	public void makeDefault(OnapPDPGroup group) {
 		try {
 			this.papEngine.setDefaultGroup(group);
@@ -146,7 +146,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 		}
 		return;
 	}
-	
+
 	public void removeGroup(OnapPDPGroup group, OnapPDPGroup newGroup) throws PAPException {
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("removeGroup: " + group + " new group for PDPs: " + newGroup);
@@ -161,7 +161,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 			throw new PAPException("Failed to remove group '" + group.getId()+ "'", e);
 		}
 	}
-	
+
 	public void removePDP(OnapPDP pdp, OnapPDPGroup group) throws PAPException {
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("removePDP: " + pdp + " from group: " + group);
@@ -173,7 +173,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 			throw new PAPException("Failed to remove pdp '" + pdp.getId()+ "'", e);
 		}
 	}
-	
+
 	public void updatePDP(OnapPDP pdp) {
 		try {
 			papEngine.updatePDP(pdp);
@@ -181,7 +181,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
 	}
-	
+
 	public void updateGroup(OnapPDPGroup group) {
 		try {
 			papEngine.updateGroup(group);
@@ -189,7 +189,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
 	}
-	
+
 	@Override
 	public Collection<?> getContainerPropertyIds() {
 		return pDPProperties;
@@ -257,21 +257,21 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 	public Object addItem() {
 		throw new UnsupportedOperationException("PDP Container cannot add a given item.");
 	}
-	
+
 	public void addNewGroup(String name, String description) throws PAPException {
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("addNewGroup " + name + " " + description);
 		}
 		this.papEngine.newGroup(name, description);
 	}
-	
+
 	public void addNewPDP(String id, OnapPDPGroup group, String name, String description, int jmxport) throws PAPException {
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("addNewPDP " + id + " " + name + " " + description + " " + jmxport);
 		}
 		this.papEngine.newPDP(id, group, name, description, jmxport);
 	}
-	
+
 	public void movePDP(OnapPDP pdp, OnapPDPGroup group) {
 		try {
 			this.papEngine.movePDP(pdp, group);
@@ -302,7 +302,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
         if (getItemSetChangeListeners() == null) {
             setItemSetChangeListeners(new LinkedList<PolicyContainer.ItemSetChangeListener>());
         }
-        getItemSetChangeListeners().add(listener);	
+        getItemSetChangeListeners().add(listener);
 	}
 
 	@Override
@@ -458,7 +458,7 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 
 	public class PDPGroupItem{
 		private final OnapPDPGroup group;
-		
+
 		public PDPGroupItem(OnapPDPGroup itemId) {
 			this.group = itemId;
 		}
@@ -469,44 +469,44 @@ public class PDPGroupContainer extends PolicyItemSetChangeNotifier implements Po
 			}
 			return this.group.getId();
 		}
-		
+
 		public String getName() {
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("getName: " + this.group);
 			}
 			return this.group.getName();
 		}
-		
+
 		public String getDescription() {
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("getDescription: " + this.group);
 			}
 			return this.group.getDescription();
 		}
-		
+
 		public Boolean getDefault() {
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("getDefault: " + this.group);
 			}
 			return this.group.isDefaultGroup();
 		}
-		
-        
+
+
         public String	getStatus() {
 			return this.group.getStatus().getStatus().toString();
         }
-        
+
         public Set<PDP>		getPDPs() {
         	return Collections.unmodifiableSet(this.group.getPdps());
         }
-        
+
         public Set<PDPPolicy> getPolicies() {
  			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("getPolicies: " + this.group);
 			}
  			return this.group.getPolicies();
         }
-        
+
         public Set<PDPPIPConfig> getPipConfigs() {
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("getPIPConfigs: " + this.group);

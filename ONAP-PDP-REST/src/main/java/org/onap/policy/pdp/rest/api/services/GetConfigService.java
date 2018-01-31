@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,13 +46,13 @@ import org.springframework.http.HttpStatus;
 
 public class GetConfigService {
     private static final Logger LOGGER = FlexLogger.getLogger(GetConfigService.class.getName());
-    
+
     private ConfigRequestParameters configRequestParameters = null;
     private String message = null;
     private HttpStatus responseCode = HttpStatus.BAD_REQUEST;
     private Collection<PolicyConfig> policyConfigs = null;
     private boolean unique = false;
-    
+
     public GetConfigService(ConfigRequestParameters configRequestParameters,
             String requestID){
         this.configRequestParameters = configRequestParameters;
@@ -84,7 +84,7 @@ public class GetConfigService {
             responseCode = HttpStatus.BAD_REQUEST;
         }
     }
-    
+
     private void specialCheck() {
         if(policyConfigs==null || policyConfigs.isEmpty()){
             responseCode = HttpStatus.BAD_REQUEST;
@@ -100,24 +100,24 @@ public class GetConfigService {
     }
 
     private void run() throws PolicyConfigException{
-        // getValidation. 
+        // getValidation.
         if(!getValidation()){
             LOGGER.error(message);
             throw new PolicyConfigException(message);
         }
-        // Generate Request. 
+        // Generate Request.
         String modelString = getModel().toString();
         LOGGER.debug("Generated JSON Request is: " + modelString);
         if(configRequestParameters.getUnique()){
             LOGGER.info("Requested for Unique Result only. ");
             unique = true;
         }
-        // Process Result. 
+        // Process Result.
         try {
-            PDPServices pdpServices = new PDPServices(); 
+            PDPServices pdpServices = new PDPServices();
             responseCode = HttpStatus.OK;
             policyConfigs = configResult(pdpServices.generateRequest(modelString, configRequestParameters.getRequestID(), unique, false));
-            // Filter addition. 
+            // Filter addition.
             policyConfigs = filterResults(policyConfigs, configRequestParameters);
         } catch (Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
@@ -150,8 +150,8 @@ public class GetConfigService {
         }
         return result;
     }
-    
-    // Returns PolicyConfigType based on policyName. 
+
+    // Returns PolicyConfigType based on policyName.
     private PolicyConfigType getPolicyType(String policyName) {
         if(policyName != null) {
             String name = policyName;
@@ -181,11 +181,11 @@ public class GetConfigService {
     }
 
     public PolicyConfigType extendedServices(String policyName) {
-        // For extended services policyName will be required. 
+        // For extended services policyName will be required.
         return null;
     }
 
-    // Filter logic required for results comparing with requests. 
+    // Filter logic required for results comparing with requests.
     private Collection<PolicyConfig> filterResults(
             Collection<PolicyConfig> policyConfigs,
             ConfigRequestParameters configRequestParameters) {
@@ -208,7 +208,7 @@ public class GetConfigService {
                     }
                 }
                 if(configRequestParameters.getConfigAttributes()!=null && configRequestParameters.getConfigAttributes().size()>0){
-                    boolean flag = false; 
+                    boolean flag = false;
                     for(String key: configRequestParameters.getConfigAttributes().keySet()){
                     	if(key.equals("RiskType")||key.equals("RiskLevel")||key.equals("guard")||key.equals("TTLDate")){
                     		continue;
@@ -293,7 +293,7 @@ public class GetConfigService {
                                                                         .add("AttributeId","urn:oasis:names:tc:xacml:1.0:resource:resource-id")))))
                 .build();
     }
-    
+
     private JsonArrayBuilder getResourceArray(Map<String, String> configAttributes) throws PolicyConfigException{
         JsonArrayBuilder resourceArray = Json.createArrayBuilder();
         configAttributes = configRequestParameters.getConfigAttributes();
@@ -331,7 +331,7 @@ public class GetConfigService {
         }
         return resourceArray;
     }
-    
+
     private Boolean getValidation(){
         if(configRequestParameters==null){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No config Request Parameters given.";

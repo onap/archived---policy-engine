@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -97,24 +97,24 @@ public class FirewallDictionaryController {
 	private static String tagPickerName = "tagPickerName";
 	private static String fwTagPickerDictionaryData = "fwTagPickerDictionaryData";
 	private static String fwTagDictionaryDatas = "fwTagDictionaryDatas";
-	
-	
+
+
 	@Autowired
 	public FirewallDictionaryController(CommonClassDao commonClassDao){
 		FirewallDictionaryController.commonClassDao = commonClassDao;
 	}
-	
+
 	public static void setCommonClassDao(CommonClassDao clDao){
 	    commonClassDao = clDao;
 	}
-	
+
 	/*
 	 * This is an empty constructor
 	 */
-	public FirewallDictionaryController(){}	
+	public FirewallDictionaryController(){}
 
 	public UserInfo getUserInfo(String loginId){
-		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);	
+		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
 	}
 
 
@@ -141,13 +141,13 @@ public class FirewallDictionaryController {
 			model.put("prefixListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PrefixList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW, e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -189,12 +189,12 @@ public class FirewallDictionaryController {
 					duplicateflag = true;
 				}else{
 					commonClassDao.save(prefixList);
-				}		
+				}
 			}else{
 				if(!isFakeUpdate) {
-					commonClassDao.update(prefixList); 
+					commonClassDao.update(prefixList);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
@@ -274,7 +274,7 @@ public class FirewallDictionaryController {
 			}catch(UnknownHostException e){
 				LOGGER.error(e);
 				responseValidation = errorMsg;
-			}		
+			}
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
 			request.setCharacterEncoding(utf8);
@@ -302,13 +302,13 @@ public class FirewallDictionaryController {
 			model.put("portListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PortList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -329,8 +329,8 @@ public class FirewallDictionaryController {
 					commonClassDao.save(portList);
 				}
 			}else{
-				commonClassDao.update(portList); 
-			} 
+				commonClassDao.update(portList);
+			}
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
 			request.setCharacterEncoding(utf8);
@@ -394,13 +394,13 @@ public class FirewallDictionaryController {
 			model.put("protocolListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ProtocolList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -462,7 +462,7 @@ public class FirewallDictionaryController {
 				if(!isFakeUpdate){
 					commonClassDao.update(protocolList);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
@@ -553,13 +553,13 @@ public class FirewallDictionaryController {
 			model.put("addressGroupDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(AddressGroup.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -597,7 +597,7 @@ public class FirewallDictionaryController {
 						addressGroup.setId(1);
 					} else {
 						addressGroup.setId(id);
-					}            
+					}
 				}
 			} else {
 				addressGroup = (AddressGroup)mapper.readValue(root.get("addressGroupDictionaryData").toString(), AddressGroup.class);
@@ -631,9 +631,9 @@ public class FirewallDictionaryController {
 				}
 			}else{
 				if (!isFakeUpdate) {
-					commonClassDao.update(addressGroup); 
+					commonClassDao.update(addressGroup);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
@@ -729,13 +729,13 @@ public class FirewallDictionaryController {
 			model.put("actionListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ActionList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -766,7 +766,7 @@ public class FirewallDictionaryController {
 						actionList.setId(1);
 					} else {
 						actionList.setId(id);
-					}  
+					}
 				}
 			} else {
 				actionList = (ActionList)mapper.readValue(root.get("actionListDictionaryData").toString(), ActionList.class);
@@ -782,7 +782,7 @@ public class FirewallDictionaryController {
 				if(!isFakeUpdate) {
 					commonClassDao.update(actionList);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
@@ -857,13 +857,13 @@ public class FirewallDictionaryController {
 			model.put("serviceGroupDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(GroupServiceList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -916,7 +916,7 @@ public class FirewallDictionaryController {
 						groupServiceList.setId(1);
 					} else {
 						groupServiceList.setId(id);
-					}   
+					}
 				}
 			} else {
 				groupServiceList = (GroupServiceList)mapper.readValue(root.get("serviceGroupDictionaryData").toString(), GroupServiceList.class);
@@ -950,9 +950,9 @@ public class FirewallDictionaryController {
 				}
 			}else{
 				if(!isFakeUpdate) {
-					commonClassDao.update(groupServiceList); 
+					commonClassDao.update(groupServiceList);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
@@ -1044,13 +1044,13 @@ public class FirewallDictionaryController {
 			model.put("securityZoneDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(SecurityZone.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -1081,7 +1081,7 @@ public class FirewallDictionaryController {
 						securityZone.setId(1);
 					} else {
 						securityZone.setId(id);
-					}               
+					}
 				}
 			} else {
 				securityZone = (SecurityZone)mapper.readValue(root.get("securityZoneDictionaryData").toString(), SecurityZone.class);
@@ -1092,12 +1092,12 @@ public class FirewallDictionaryController {
 					duplicateflag = true;
 				}else{
 					commonClassDao.save(securityZone);
-				}			
+				}
 			}else{
 				if(!isFakeUpdate) {
-					commonClassDao.update(securityZone); 
+					commonClassDao.update(securityZone);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
@@ -1111,7 +1111,7 @@ public class FirewallDictionaryController {
 						responseString = existsResponseString;
 					} else {
 						responseString = successMsg;
-					}   
+					}
 				}
 				ModelAndView result = new ModelAndView();
 				result.setViewName(responseString);
@@ -1176,13 +1176,13 @@ public class FirewallDictionaryController {
 			model.put("serviceListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ServiceList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -1276,16 +1276,16 @@ public class FirewallDictionaryController {
 				}
 			}else{
 				if(!isFakeUpdate) {
-					commonClassDao.update(serviceList); 
+					commonClassDao.update(serviceList);
 				}
-			} 
+			}
 
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
 			}else{
 				responseString = mapper.writeValueAsString(commonClassDao.getData(ServiceList.class));
-			} 
+			}
 			if (fromAPI) {
 				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
 					if(isFakeUpdate){
@@ -1356,7 +1356,7 @@ public class FirewallDictionaryController {
 			model.put("zoneDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(Zone.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
@@ -1417,12 +1417,12 @@ public class FirewallDictionaryController {
 					duplicateflag = true;
 				}else{
 					commonClassDao.save(zone);
-				}	
+				}
 			}else{
 				if(!isFakeUpdate) {
-					commonClassDao.update(zone); 
+					commonClassDao.update(zone);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
@@ -1514,13 +1514,13 @@ public class FirewallDictionaryController {
 			model.put("termListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(TermList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -1555,7 +1555,7 @@ public class FirewallDictionaryController {
 						termList.setId(1);
 					} else {
 						termList.setId(id);
-					}                 
+					}
 					termList.setUserCreatedBy(this.getUserInfo(userId));
 				}
 			} else {
@@ -1687,9 +1687,9 @@ public class FirewallDictionaryController {
 			}else{
 				if(!isFakeUpdate) {
 					termList.setUserModifiedBy(this.getUserInfo(userId));
-					commonClassDao.update(termList); 
+					commonClassDao.update(termList);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
@@ -1781,13 +1781,13 @@ public class FirewallDictionaryController {
 			model.put("fwDictListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(FirewallDictionaryList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -1839,8 +1839,8 @@ public class FirewallDictionaryController {
 					commonClassDao.save(fwDictList);
 				}
 			}else{
-				commonClassDao.update(fwDictList); 
-			} 
+				commonClassDao.update(fwDictList);
+			}
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
 			request.setCharacterEncoding(utf8);
@@ -1995,8 +1995,8 @@ public class FirewallDictionaryController {
 			}else{
 				fwTagPicker.setUserModifiedBy(this.getUserInfo(userId));
 				fwTagPicker.setModifiedDate(new Date());
-				commonClassDao.update(fwTagPicker); 
-			} 
+				commonClassDao.update(fwTagPicker);
+			}
 
 			String responseString = "";
 			if(duplicateflag){
@@ -2152,12 +2152,12 @@ public class FirewallDictionaryController {
 					fwTag.setUserCreatedBy(this.getUserInfo(userId));
 					fwTag.setUserModifiedBy(this.getUserInfo(userId));
 					commonClassDao.save(fwTag);
-				}   
+				}
 			}else{
 				fwTag.setUserModifiedBy(this.getUserInfo(userId));
 				fwTag.setModifiedDate(new Date());
-				commonClassDao.update(fwTag); 
-			} 
+				commonClassDao.update(fwTag);
+			}
 
 			String responseString = "";
 			if(duplicateflag){

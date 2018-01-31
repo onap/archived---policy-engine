@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -77,16 +77,16 @@ public class PolicyScopeDictionaryController {
 	/*
 	 * This is an empty constructor
 	 */
-	public PolicyScopeDictionaryController(){}	
+	public PolicyScopeDictionaryController(){}
 
 	@Autowired
 	public PolicyScopeDictionaryController(CommonClassDao commonClassDao){
 		PolicyScopeDictionaryController.commonClassDao = commonClassDao;
 	}
-	
-	
+
+
 	public UserInfo getUserInfo(String loginId){
-		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);	
+		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
 	}
 
 	@RequestMapping(value={"/get_GroupPolicyScopeDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -112,12 +112,12 @@ public class PolicyScopeDictionaryController {
 			model.put("groupPolicyScopeListDatas", mapper.writeValueAsString(commonClassDao.getData(GroupPolicyScopeList.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 			LOGGER.error(e);
 		}
@@ -165,7 +165,7 @@ public class PolicyScopeDictionaryController {
 					for (int i =0; i< duplicateData.size(); i++){
 						GroupPolicyScopeList data = (GroupPolicyScopeList) duplicateData.get(0);
 						id = data.getId();
-					}                   
+					}
 
 					if(id==0){
 						isFakeUpdate=true;
@@ -227,9 +227,9 @@ public class PolicyScopeDictionaryController {
 					if(!duplicateGroupList.isEmpty()) {
 						duplicateGroupFlag = true;
 					} else {
-						commonClassDao.update(gpdata); 
+						commonClassDao.update(gpdata);
 					}
-				} 
+				}
 			}
 			String responseString = "";
 			if(duplicateflag){
@@ -326,12 +326,12 @@ public class PolicyScopeDictionaryController {
 			model.put("psClosedLoopDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeClosedLoop.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 			LOGGER.error(e);
 		}
@@ -367,7 +367,7 @@ public class PolicyScopeDictionaryController {
 						onapData.setId(1);
 					} else {
 						onapData.setId(id);
-					}   
+					}
 
 				}
 			} else {
@@ -382,9 +382,9 @@ public class PolicyScopeDictionaryController {
 				}
 			}else{
 				if(!isFakeUpdate) {
-					commonClassDao.update(onapData); 
+					commonClassDao.update(onapData);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
@@ -479,12 +479,12 @@ public class PolicyScopeDictionaryController {
 			model.put("psServiceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeService.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 			LOGGER.error(e);
 		}
@@ -533,16 +533,16 @@ public class PolicyScopeDictionaryController {
 				}
 			}else{
 				if(!isFakeUpdate) {
-					commonClassDao.update(onapData); 
+					commonClassDao.update(onapData);
 				}
-			} 
+			}
 
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
 			}else{
 				responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeService.class));
-			}   
+			}
 
 			if (fromAPI) {
 				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
@@ -629,12 +629,12 @@ public class PolicyScopeDictionaryController {
 			model.put("psTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeType.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 			LOGGER.error(e);
 		}
@@ -670,7 +670,7 @@ public class PolicyScopeDictionaryController {
 						onapData.setId(1);
 					} else {
 						onapData.setId(id);
-					}   
+					}
 
 				}
 			} else {
@@ -685,15 +685,15 @@ public class PolicyScopeDictionaryController {
 				}
 			}else{
 				if(!isFakeUpdate) {
-					commonClassDao.update(onapData); 
+					commonClassDao.update(onapData);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
 			}else{
 				responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeType.class));
-			} 
+			}
 
 			if (fromAPI) {
 				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
@@ -785,13 +785,13 @@ public class PolicyScopeDictionaryController {
 			model.put("psResourceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PolicyScopeResource.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader("successMapKey", successMessage); 
+			response.addHeader("successMapKey", successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 			LOGGER.error(e);
 		}
@@ -838,15 +838,15 @@ public class PolicyScopeDictionaryController {
 				}
 			}else{
 				if(!isFakeUpdate) {
-					commonClassDao.update(onapData); 
+					commonClassDao.update(onapData);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
 			}else{
 				responseString = mapper.writeValueAsString(commonClassDao.getData(PolicyScopeResource.class));
-			}   
+			}
 
 			if (fromAPI) {
 				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,53 +46,53 @@ public class ServiceList implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
-	
+
 	@Column(name="name", nullable=false)
 	@OrderBy("asc")
 	private String serviceName;
-	
+
 	@Column(name="description")
 	private String serviceDesc;
-	
+
 	@Column(name="type")
 	private String serviceType;
-	
+
 	@Column(name="transportprotocol")
 	private String serviceTrasProtocol;
-	
+
 	@Column(name="appprotocol ")
 	private String serviceAppProtocol;
-	
+
 	@Column(name="ports")
 	private String servicePorts;
-	
-	
-	
+
+
+
 /*
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;*/
 
 	public ServiceList() {
-		
+
 	}
 	public ServiceList(String string, String userid) {
 		this(domain);
-		
+
 	}
 	public ServiceList(String domain) {
-		
-	}	
+
+	}
 
 	@PrePersist
 	public void	prePersist() {
-		
+
 	}
 	@PreUpdate
 	public void preUpdate() {
 	}
 
-	
+
 	public int getId() {
 		return this.id;
 	}
@@ -108,7 +108,7 @@ public class ServiceList implements Serializable {
 		this.serviceName = serviceName;
 
 	}
-	
+
 	public String getServiceDescription() {
 		return this.serviceDesc;
 	}
@@ -117,7 +117,7 @@ public class ServiceList implements Serializable {
 		this.serviceDesc = serviceDesc;
 
 	}
-	
+
 	public String getServiceType() {
 		return this.serviceType;
 	}
@@ -125,7 +125,7 @@ public class ServiceList implements Serializable {
 	public void setServiceType(String serviceType) {
 		this.serviceType = serviceType;
 	}
-	
+
 	public String getServiceTransProtocol() {
 		return this.serviceTrasProtocol;
 	}
@@ -134,7 +134,7 @@ public class ServiceList implements Serializable {
 		this.serviceTrasProtocol = serviceTrasProtocol;
 
 	}
-	
+
 	public String getServiceAppProtocol() {
 		return this.serviceAppProtocol;
 	}

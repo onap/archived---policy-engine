@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,16 +30,16 @@ import com.google.common.base.Joiner;
 
 @Component
 public abstract class AbstractPolicyCreation {
-	
+
 	public static String getDomain() {
 		return XACMLProperties.getProperty(XACMLRestProperties.PROP_ADMIN_DOMAIN, "urn");
 	}
-	
+
 	public String newPolicyID() {
 		return Joiner.on(':').skipNulls().join((getDomain().startsWith("urn") ? null: "urn"),
 				getDomain().replaceAll("[/\\\\.]", ":"), "xacml", "policy", "id", UUID.randomUUID());
 	}
-	
+
 	public String convertDate(String dateTTL) {
 		String formateDate = null;
 		if(dateTTL.contains("/")){
@@ -47,9 +47,9 @@ public abstract class AbstractPolicyCreation {
 		}
 		return formateDate;
 	}
-	
 
-	
+
+
 	public void updatePolicyCreationToDatabase(){
 		// Add it into our tree
 /*		Path finalPolicyPath = null;
@@ -63,7 +63,7 @@ public abstract class AbstractPolicyCreation {
 			String removeXml = removePath.replace(".xml", "");
 			String removeExtension = removeXml.substring(0, removeXml.indexOf("."));
 			List<Object> policyVersionList = commonClassDao.getDataById(PolicyVersion.class, "policyName", removeExtension);
-			if (policyVersionList.size() > 0) {		
+			if (policyVersionList.size() > 0) {
 				for(int i = 0;  i < policyVersionList.size(); i++) {
 				PolicyVersion entityItem = (PolicyVersion) policyVersionList.get(i);
 					if(entityItem.getPolicyName().equals(removeExtension)){
@@ -88,7 +88,7 @@ public abstract class AbstractPolicyCreation {
 				entityItem.setCreatedBy(userId);
 				entityItem.setModifiedBy(userId);
 				commonClassDao.save(entityItem);
-			}	
+			}
 		}*/
 	}
 

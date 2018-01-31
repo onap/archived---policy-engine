@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,8 +25,8 @@ import java.util.UUID;
 
 /**
  * <code>ImportParameters</code> defines the Policy Engine Import Parameters
- *  which are required to import a new Policy Service or Value. 
- * 
+ *  which are required to import a new Policy Service or Value.
+ *
  * @version 0.1
  */
 public class ImportParameters {
@@ -36,7 +36,7 @@ public class ImportParameters {
 	private String filePath;
 	private String version;
 	private IMPORT_TYPE importType;
-	
+
 	public enum IMPORT_TYPE {
 	    MICROSERVICE,
 	    BRMSPARAM
@@ -44,7 +44,7 @@ public class ImportParameters {
 
 	/**
 	 * Sets Import Policy Parameters.
-	 * 
+	 *
 	 * @param serviceName the <code>String</code> format of the Service Name
 	 * @param description the <code>String</code> format of the i Description
 	 * @param requestID unique request ID which will be passed throughout the ONAP components to correlate logging messages.
@@ -54,19 +54,19 @@ public class ImportParameters {
 	 * A different request ID should be passed for each request.
 	 */
 	public void setImportParameters(String serviceName, String description, UUID requestID, String filePath, IMPORT_TYPE importType, String version){
-		
+
 		this.setServiceName(serviceName);
 		this.setDescription(description);
 		this.setRequestID(requestID);
 		this.setFilePath(filePath);
-		this.setServiceType(importType);	
+		this.setServiceType(importType);
 		this.setVersion(version);
-		
+
 	}
 
 	/**
-	 * Gets the Policy Service of the Policy Service Import Parameters. 
-	 * 
+	 * Gets the Policy Service of the Policy Service Import Parameters.
+	 *
 	 * @return serviceName the <code>String</code> format of the Policy Service Name
 	 */
 	public String getServiceName() {
@@ -75,7 +75,7 @@ public class ImportParameters {
 
 	/**
 	 * Sets the serviceName of the Policy Service Parameters.
-	 * 
+	 *
 	 * @param serviceName the <code>String</code> format of the Policy Service Name
 	 */
 	public void setServiceName(String serviceName) {
@@ -83,8 +83,8 @@ public class ImportParameters {
 	}
 
 	/**
-	 * Gets the Policy Import Description. 
-	 * 
+	 * Gets the Policy Import Description.
+	 *
 	 * @return description the <code>String</code> format of the Policy Import Description
 	 */
 	public String getDescription() {
@@ -92,35 +92,35 @@ public class ImportParameters {
 	}
 
 	/**
-	 * Sets the Description of the new Policy Import Description. 
-	 * 
+	 * Sets the Description of the new Policy Import Description.
+	 *
 	 * @param description the <code>String</code> format of the Policy Import Description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	/**
-	 * Gets the requestID of the Policy Parameters. 
-	 * 
+	 * Gets the requestID of the Policy Parameters.
+	 *
 	 * @return unique request ID which will be passed throughout the ONAP components to correlate logging messages.
 	 */
 	public UUID getRequestID() {
 		return requestID;
 	}
-	
+
 	/**
-	 * Sets the requestID of the Policy Parameters. 
-	 * 
+	 * Sets the requestID of the Policy Parameters.
+	 *
 	 * @param requestID unique request ID which will be passed throughout the ONAP components to correlate logging messages.
 	 */
 	public void setRequestID(UUID requestID) {
 		this.requestID = requestID;
 	}
-	
+
 	/**
-	 * Gets the List of File Paths of the new import. 
-	 * 
+	 * Gets the List of File Paths of the new import.
+	 *
 	 * @return filePath the <code>List</code> format of the Policy Import  File
 	 */
 	public String getFilePath() {
@@ -128,36 +128,36 @@ public class ImportParameters {
 	}
 
 	/**
-	 * Sets the policy Import File List of the new Policy Import. 
-	 * 
+	 * Sets the policy Import File List of the new Policy Import.
+	 *
 	 * @param filePath the <code>List</code> format of the Policy Import  File
 	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
-	
-	/** 
-	 * Gets the Service Type of the new policy import. 
-	 * 
+
+	/**
+	 * Gets the Service Type of the new policy import.
+	 *
 	 * @return ImportType {@link IMPORT_TYPE} format of the Policy Service List
 	 */
 	public IMPORT_TYPE getServiceType() {
 		return importType;
 	}
-	
+
 	/**
-	 * Sets the policy Service Type of the new Policy Service. 
-	 * 
+	 * Sets the policy Service Type of the new Policy Service.
+	 *
 	 * @param enumImportType the <code>enumServiceType</code> format of the Policy Service List
 	 */
 	public void setServiceType(IMPORT_TYPE enumImportType) {
 		this.importType = enumImportType;
 	}
-	
+
 	/**
-	 * 
-	 * Gets the Import Version of the new policy import. 
-	 * 
+	 *
+	 * Gets the Import Version of the new policy import.
+	 *
 	 * @return version the <code>String</code> format of the Policy Import Version
 	 */
 	public String getVersion() {
@@ -165,8 +165,8 @@ public class ImportParameters {
 	}
 
 	/**
-	 * Sets the policy Import Version  of the new Policy Import. 
-	 * 
+	 * Sets the policy Import Version  of the new Policy Import.
+	 *
 	 * @param version the <code>String</code> format of the Policy Import Version
 	 */
 	public void setVersion(String version) {

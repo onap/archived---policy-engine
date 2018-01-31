@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,13 +55,13 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 public class CreateClosedLoopPerformanceMetrics extends Policy {
-	
+
 	private static final Logger LOGGER	= FlexLogger.getLogger(CreateClosedLoopPerformanceMetrics.class);
-	
+
 	public CreateClosedLoopPerformanceMetrics() {
 		super();
 	}
-	
+
 	public CreateClosedLoopPerformanceMetrics(PolicyRestAdapter policyAdapter){
 		this.policyAdapter = policyAdapter;
 	}
@@ -76,7 +76,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 				LOGGER.error("Exception Occured"+e);
 			}
 			if(policyName.endsWith(".xml")){
-				policyName	 = policyName.substring(0, policyName.lastIndexOf(".xml"));	
+				policyName	 = policyName.substring(0, policyName.lastIndexOf(".xml"));
 			}
 			PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + "."+ policyName +".json");
 			out.println(body);
@@ -88,7 +88,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 			LOGGER.error("Exception Occured"+e);
 		}
 	}
-	
+
 	//getting the policy name and setting to configuration on adding .json
 	private String getConfigFile(String filename) {
 		filename = FilenameUtils.removeExtension(filename);
@@ -98,7 +98,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 		filename = filename +".json";
 		return filename;
 	}
-	
+
 	@Override
 	public Map<String, String> savePolicies() throws PAPException {
 
@@ -117,11 +117,11 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 		Path newPolicyPath = null;
 		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 
-		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());	
-		
-		return successMap;		
+		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
+
+		return successMap;
 	}
-	
+
 	//This is the method for preparing the policy for saving.  We have broken it out
 	//separately because the fully configured policy is used for multiple things
 	@Override
@@ -131,11 +131,11 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 			//we have already done this
 			return true;
 		}
-		
+
 		int version = 0;
 		String policyID = policyAdapter.getPolicyID();
 		version = policyAdapter.getHighestVersion();
-		
+
 		// Create the Instance for pojo, PolicyType object is used in marshalling.
 		if (policyAdapter.getPolicyType().equals("Config")) {
 			PolicyType policyConfig = new PolicyType();
@@ -150,19 +150,19 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 			// Save the Configurations file with the policy name with extention based on selection.
 			String jsonBody = policyAdapter.getJsonBody();
 			saveConfigurations(policyName, jsonBody);
-			
+
 			// Make sure the filename ends with an extension
 			if (policyName.endsWith(".xml") == false) {
 				policyName = policyName + ".xml";
 			}
-			
-	
+
+
 			PolicyType configPolicy = (PolicyType) policyAdapter.getData();
-			
+
 			configPolicy.setDescription(policyAdapter.getPolicyDescription());
 
 			configPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
-			
+
 			AllOfType allOfOne = new AllOfType();
 			String fileName = policyAdapter.getNewFileName();
 			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
@@ -171,7 +171,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 			}
 			allOfOne.getMatch().add(createMatch("PolicyName", name));
 			AllOfType allOf = new AllOfType();
-			
+
 			// Adding the matches to AllOfType element Match for Onap
 			allOf.getMatch().add(createMatch("ONAPName", policyAdapter.getOnapName()));
 			// Match for riskType
@@ -195,15 +195,15 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 
 			TargetType target = new TargetType();
 			((TargetType) target).getAnyOf().add(anyOf);
-			
+
 			// Adding the target to the policy element
 			configPolicy.setTarget((TargetType) target);
 
 			RuleType rule = new RuleType();
 			rule.setRuleId(policyAdapter.getRuleID());
-			
+
 			rule.setEffect(EffectType.PERMIT);
-			
+
 			// Create Target in Rule
 			AllOfType allOfInRule = new AllOfType();
 
@@ -266,7 +266,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 		setPreparedToSave(true);
 		return true;
 	}
-	
+
 	// Data required for Advice part is setting here.
 	@SuppressWarnings("static-access")
 	private AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
@@ -351,7 +351,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 		assignment6.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue6));
 
 		advice.getAttributeAssignmentExpression().add(assignment6);
-		
+
 		//Risk Attributes
 		AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
 		assignment7.setAttributeId("RiskType");
@@ -364,7 +364,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 		assignment7.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue7));
 
 		advice.getAttributeAssignmentExpression().add(assignment7);
-		
+
 		AttributeAssignmentExpressionType assignment8 = new AttributeAssignmentExpressionType();
 		assignment8.setAttributeId("RiskLevel");
 		assignment8.setCategory(CATEGORY_RESOURCE);
@@ -375,7 +375,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 		configNameAttributeValue8.getContent().add(policyAdapter.getRiskLevel());
 		assignment8.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue8));
 
-		advice.getAttributeAssignmentExpression().add(assignment8);	
+		advice.getAttributeAssignmentExpression().add(assignment8);
 
 		AttributeAssignmentExpressionType assignment9 = new AttributeAssignmentExpressionType();
 		assignment9.setAttributeId("guard");
@@ -388,7 +388,7 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 		assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
 
 		advice.getAttributeAssignmentExpression().add(assignment9);
-		
+
 		AttributeAssignmentExpressionType assignment10 = new AttributeAssignmentExpressionType();
 		assignment10.setAttributeId("TTLDate");
 		assignment10.setCategory(CATEGORY_RESOURCE);
@@ -408,6 +408,6 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 	@Override
 	public Object getCorrectPolicyDataObject() {
 		return policyAdapter.getPolicyData();
-	}	
+	}
 
 }

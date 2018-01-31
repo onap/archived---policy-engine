@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,20 +44,20 @@ public class FirewallDictionaryList implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
-	
+
 	@Column(name="parentItemName", nullable=false)
 	@OrderBy("asc")
 	private String parentItemName;
-	
+
 	@Column(name="description")
 	private String description;
-	
+
 	@Column(name="addressList")
 	private String addressList;
-	
+
 	@Column(name="serviceList")
 	private String serviceList;
-	
+
 /*	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_date", updatable=false)
 	private Date createdDate;
@@ -65,7 +65,7 @@ public class FirewallDictionaryList implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
-	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name="created_by")
 	private UserInfo userCreatedBy;
@@ -81,7 +81,7 @@ public class FirewallDictionaryList implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getParentItemName() {
 		return parentItemName;
 	}
@@ -113,8 +113,8 @@ public class FirewallDictionaryList implements Serializable {
 	public void setServiceList(String serviceList) {
 		this.serviceList = serviceList;
 	}
-	
-	
+
+
 	/*public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -132,15 +132,15 @@ public class FirewallDictionaryList implements Serializable {
 	}*/
 
 	public FirewallDictionaryList() {
-		
+
 	}
-	
+
 	public FirewallDictionaryList(String string, String userid) {
 		this(domain);
 	}
 	public FirewallDictionaryList(String domain) {
 		this.parentItemName = domain;
-	}	
+	}
 
 	/*@PrePersist
 	public void	prePersist() {
@@ -148,7 +148,7 @@ public class FirewallDictionaryList implements Serializable {
 		this.createdDate = date;
 		this.modifiedDate = date;
 		auditLogger.debug("Added New Term Name: "+this.parentItemName+" by "+this.userCreatedBy);
-		
+
 	}
 	@PreUpdate
 	public void preUpdate() {

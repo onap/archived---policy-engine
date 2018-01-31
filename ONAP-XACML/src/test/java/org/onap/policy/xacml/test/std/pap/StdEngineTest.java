@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,15 +37,15 @@ import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.pap.StdPDP;
 
 public class StdEngineTest {
-	
+
 	private static Logger logger = FlexLogger.getLogger(StdEngineTest.class);
 	private Path repository;
 	Properties properties = new Properties();
 	StdEngine stdEngine = null;
-	
+
 	@Before
 	public void setUp(){
-	
+
 		repository = Paths.get("src/test/resources/pdps");
 		try {
 			stdEngine = new StdEngine(repository);
@@ -63,7 +63,7 @@ public class StdEngineTest {
 		} catch (PAPException e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetGroup(){
 		try {
@@ -71,17 +71,17 @@ public class StdEngineTest {
 		} catch (PAPException e) {
 			logger.info(e);
 		}
-		
-	}	
-	
+
+	}
+
 	@Test
 	public void testGetOnapPDPGroups(){
 		try {
 			assertTrue(stdEngine.getOnapPDPGroups() != null);
 		} catch (PAPException e) {
 			logger.info(e);
-		}	
-	}	
+		}
+	}
 	@Test
 	public void testGetPDP(){
 		try {
@@ -89,7 +89,7 @@ public class StdEngineTest {
 		} catch (PAPException e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetPDPGroup(){
 		try {

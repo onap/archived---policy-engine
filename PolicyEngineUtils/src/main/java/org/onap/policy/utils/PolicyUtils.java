@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,60 +53,60 @@ import com.google.gson.JsonSyntaxException;
 
 public class PolicyUtils {
     private static final Logger LOGGER = FlexLogger.getLogger(PolicyUtils.class);
-    
+
     public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private static final String PACKAGE_ERROR = "mismatched input '{' expecting one of the following tokens: '[package";
     private static final String SUCCESS = "success";
-    
+
     private PolicyUtils(){
         // Private Constructor
     }
-    
+
     /**
-     * Converts an Object to JSON String 
-     * 
-     * @param o Object 
-     * @return String format of Object JSON. 
+     * Converts an Object to JSON String
+     *
+     * @param o Object
+     * @return String format of Object JSON.
      * @throws JsonProcessingException
      */
     public static String objectToJsonString(Object o) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(o);
     }
-    
+
     /**
      * Converts JSON string into Object
-     * 
-     * @param jsonString 
-     * @param className equivalent Class of the given JSON string 
-     * @return T instance of the class given. 
+     *
+     * @param jsonString
+     * @param className equivalent Class of the given JSON string
+     * @return T instance of the class given.
      * @throws IOException
      */
     public static <T> T jsonStringToObject(String jsonString, Class<T> className) throws IOException{
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(jsonString, className);
     }
-    
+
     /**
-     * Decode a base64 string 
-     * 
+     * Decode a base64 string
+     *
      * @param encodedString
      * @return String
      * @throws UnsupportedEncodingException
      */
-    public static String decode(String encodedString) throws UnsupportedEncodingException { 
-        if(encodedString!=null && !encodedString.isEmpty()){ 
-            return new String(Base64.getDecoder().decode(encodedString) ,"UTF-8"); 
-        }else{ 
-            return null; 
-        } 
+    public static String decode(String encodedString) throws UnsupportedEncodingException {
+        if(encodedString!=null && !encodedString.isEmpty()){
+            return new String(Base64.getDecoder().decode(encodedString) ,"UTF-8");
+        }else{
+            return null;
+        }
     }
-    
+
     /**
-     * Decodes Basic Authentication 
-     * 
+     * Decodes Basic Authentication
+     *
      * @param encodedValue
      * @return
      * @throws UnsupportedEncodingException
@@ -125,10 +125,10 @@ public class PolicyUtils {
             return new String[]{};
         }
     }
-    
+
     /**
-     * Validate a field if contains space or unacceptable policy input and return "success" if good. 
-     * 
+     * Validate a field if contains space or unacceptable policy input and return "success" if good.
+     *
      * @param field
      * @return
      */
@@ -136,14 +136,14 @@ public class PolicyUtils {
         String error;
         if ("".equals(field) || field.contains(" ") || !field.matches("^[a-zA-Z0-9_]*$")) {
             error = "The Value in Required Field will allow only '{0-9}, {a-z}, {A-Z}, _' following set of Combinations";
-            return error; 
+            return error;
         }
-        return SUCCESS;   
-    } 
-    
+        return SUCCESS;
+    }
+
     /**
-     * Validate a field (accepts space) if it contains unacceptable policy input and return "success" if good. 
-     * 
+     * Validate a field (accepts space) if it contains unacceptable policy input and return "success" if good.
+     *
      * @param field
      * @return
      */
@@ -153,12 +153,12 @@ public class PolicyUtils {
             error = "The Value in Required Field will allow only '{0-9}, {a-z}, {A-Z}, _' following set of Combinations";
             return error;
         }
-        return SUCCESS;   
-    } 
-    
+        return SUCCESS;
+    }
+
     /**
-     * Validate the XACML description tag and return "success" if good. 
-     * 
+     * Validate the XACML description tag and return "success" if good.
+     *
      * @param field
      * @return
      */
@@ -170,22 +170,22 @@ public class PolicyUtils {
         } else {
             error = SUCCESS;
         }
-        return error;   
+        return error;
     }
-    
+
     /**
-     * Validate if string contains non ASCII characters 
-     * 
+     * Validate if string contains non ASCII characters
+     *
      * @param value
      * @return
      */
     public static boolean containsNonAsciiEmptyChars(String value) {
         return (value == null|| value.contains(" ") || "".equals(value.trim())|| !CharMatcher.ASCII.matchesAllOf((CharSequence) value))? true:false;
     }
-    
+
     /**
-     * Validate if given string is an integer. 
-     * 
+     * Validate if given string is an integer.
+     *
      * @param number
      * @return
      */
@@ -198,10 +198,10 @@ public class PolicyUtils {
         }
         return true;
     }
-    
+
     /**
-     * Validate Email Address and return "success" if good. 
-     * 
+     * Validate Email Address and return "success" if good.
+     *
      * @param emailAddressValue
      * @return
      */
@@ -218,12 +218,12 @@ public class PolicyUtils {
                 error = SUCCESS;
             }
         }
-        return error;       
+        return error;
     }
-    
+
     /**
      * Validates BRMS rule as per Policy Platform and return string contains "[ERR" if there are any errors.
-     * 
+     *
      * @param rule
      * @return String error message
      */
@@ -231,10 +231,10 @@ public class PolicyUtils {
         VerifierBuilder vBuilder = VerifierBuilderFactory.newVerifierBuilder();
         Verifier verifier = vBuilder.newVerifier();
         verifier.addResourcesToVerify(new ReaderResource(new StringReader(rule)), ResourceType.DRL);
-        // Check if there are any Errors in Verification. 
+        // Check if there are any Errors in Verification.
         if(!verifier.getErrors().isEmpty()){
             boolean ignore = false;
-            StringBuilder message = new StringBuilder("Not a Valid DRL rule"); 
+            StringBuilder message = new StringBuilder("Not a Valid DRL rule");
             for(VerifierError error: verifier.getErrors()){
                 // Ignore annotations Error Messages
                 if(!error.getMessage().contains("'@'") && !error.getMessage().contains(PACKAGE_ERROR)){
@@ -251,10 +251,10 @@ public class PolicyUtils {
         }
         return "";
     }
-    
+
     /**
-     * Validates if the given string is proper JSON format. 
-     * 
+     * Validates if the given string is proper JSON format.
+     *
      * @param data
      * @return
      */
@@ -270,8 +270,8 @@ public class PolicyUtils {
     }
 
     /**
-     * Validates if the given string is proper XML format. 
-     * 
+     * Validates if the given string is proper XML format.
+     *
      * @param data
      * @return
      */
@@ -292,8 +292,8 @@ public class PolicyUtils {
     }
 
     /**
-     * Validates if given string is valid Properties format. 
-     * 
+     * Validates if given string is valid Properties format.
+     *
      * @param prop
      * @return
      */
@@ -320,12 +320,12 @@ public class PolicyUtils {
         scanner.close();
         return true;
     }
-    
+
     /**
      * Given a version string consisting of integers with dots between them, convert it into an array of integers.
-     * 
+     *
      * @param version
-     * @return 
+     * @return
      * @throws NumberFormatException
      */
     public static int[] versionStringToArray(String version){

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -93,7 +93,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 
 	@Autowired
 	SessionFactory sessionFactory;
-	
+
 	private static CommonClassDao commonClassDao;
 
 	public static CommonClassDao getCommonClassDao() {
@@ -103,9 +103,9 @@ public class CreateFirewallController extends RestrictedBaseController {
 	public static void setCommonClassDao(CommonClassDao commonClassDao) {
 		CreateFirewallController.commonClassDao = commonClassDao;
 	}
-	
+
 	private List<String> tagCollectorList;
-	
+
 	List<String> expandablePrefixIPList = new ArrayList<>();
 	List<String> expandableServicesList= new ArrayList<>();
 	@Autowired
@@ -115,7 +115,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 
 	public CreateFirewallController(){}
 	private List<String> termCollectorList;
-	
+
 
 
 	public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData){
@@ -127,20 +127,20 @@ public class CreateFirewallController extends RestrictedBaseController {
 				if(attribute instanceof LinkedHashMap<?, ?>){
 					String key = ((LinkedHashMap<?, ?>) attribute).get("key").toString();
 					termCollectorList.add(key);
-					
+
 					String tag = ((LinkedHashMap<?, ?>) attribute).get("value").toString();
 					tagCollectorList.add(tag);
 				}
 			}
 		}
-		jsonBody = constructJson(policyData);	
+		jsonBody = constructJson(policyData);
 		if (jsonBody != null && ! "".equalsIgnoreCase(jsonBody)) {
 			policyData.setJsonBody(jsonBody);
 		} else {
 			policyData.setJsonBody("{}");
 		}
 		policyData.setJsonBody(jsonBody);
-		
+
 		return policyData;
 	}
 
@@ -162,7 +162,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 		return valueDesc;
 	}
 
-	private ServiceList mappingServiceList(String expandableList) {	
+	private ServiceList mappingServiceList(String expandableList) {
 		ServiceList serviceList=null;
 		List<Object> serviceListData = commonClassDao.getData(ServiceList.class);
 		for (int i = 0; i< serviceListData.size(); i++) {
@@ -226,7 +226,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 
 			TermCollector tc1=null;
 			try {
-				//Json conversion. 
+				//Json conversion.
 				String data;
 				SecurityZone jpaSecurityZone;
 				data = entity.getConfigurationData().getConfigBody();
@@ -243,7 +243,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 			catch(Exception e) {
 				policyLogger.error("Exception Caused while Retriving the JSON body data" +e);
 			}
-			
+
 			Map<String, String> termTagMap;
 			if(tc1 != null){
 				for(int i=0;i<tc1.getFirewallRuleList().size();i++){
@@ -274,7 +274,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 								// Under AllOFType we have Match
 								List<MatchType> matchList = allOf.getMatch();
 								if (matchList != null) {
-									
+
 									Iterator<MatchType> iterMatch = matchList.iterator();
 									while (iterMatch.hasNext()) {
 										MatchType match = iterMatch.next();
@@ -312,7 +312,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 			}
 		}
 	}
-	
+
 	@RequestMapping(value={"/policyController/ViewFWPolicyRule.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView setFWViewRule(HttpServletRequest request, HttpServletResponse response){
 		try {
@@ -340,12 +340,12 @@ public class CreateFirewallController extends RestrictedBaseController {
 			for (String id : termCollectorList) {
 				List<Object> tmList = commonClassDao.getDataById(TermList.class, "termName", id);
 				jpaTermList = (TermList) tmList.get(0);
-				if (jpaTermList != null){				
-					ruleSrcList= jpaTermList.getSrcIPList();	
+				if (jpaTermList != null){
+					ruleSrcList= jpaTermList.getSrcIPList();
 					if ((ruleSrcList!= null) && (!ruleSrcList.isEmpty()) && !ruleSrcList.equals("null")){
 						displayString.append("Source IP List: " + jpaTermList.getSrcIPList());
 						displayString.append(" ; \t\n");
-						for(String srcList:ruleSrcList.split(",")){	
+						for(String srcList:ruleSrcList.split(",")){
 							if(srcList.startsWith(GROUP)){
 								AddressGroup ag;
 								ag= mappingAddressGroup(srcList);
@@ -370,12 +370,12 @@ public class CreateFirewallController extends RestrictedBaseController {
 							}
 						}
 						displayString.append("\n");
-					} 
+					}
 					ruleDestList= jpaTermList.getDestIPList();
 					if ( ruleDestList!= null && (!ruleDestList.isEmpty())&& ! "null".equals(ruleDestList)){
 						displayString.append("Destination IP List: " + jpaTermList.getDestIPList());
 						displayString.append(" ; \t\n");
-						for(String destList:ruleDestList.split(",")){	
+						for(String destList:ruleDestList.split(",")){
 							if(destList.startsWith(GROUP)){
 								AddressGroup ag;
 								ag= mappingAddressGroup(destList);
@@ -398,21 +398,21 @@ public class CreateFirewallController extends RestrictedBaseController {
 							}
 						}
 						displayString.append("\n");
-					} 
+					}
 
 					ruleSrcPort=jpaTermList.getSrcPortList();
 					if ( ruleSrcPort!= null && (!ruleSrcPort.isEmpty())&& !"null".equals(ruleSrcPort)) {
 						displayString.append("\n"+"Source Port List:"
 								+ ruleSrcPort);
 						displayString.append(" ; \t\n");
-					} 
+					}
 
 					ruleDestPort= jpaTermList.getDestPortList();
 					if (ruleDestPort != null && (!ruleDestPort.isEmpty())&& !"null".equals(ruleDestPort)) {
 						displayString.append("\n"+"Destination Port List:"
 								+ ruleDestPort);
 						displayString.append(" ; \t\n");
-						for(String destServices:ruleDestPort.split(",")){	
+						for(String destServices:ruleDestPort.split(",")){
 							if(destServices.startsWith(GROUP)){
 								GroupServiceList sg;
 								sg= mappingServiceGroup(destServices);
@@ -423,7 +423,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 									displayString.append("\n\t"+"Name:  "+
 											sl.getServiceName());
 									displayString.append("\n\t"+"Description:  "+
-											sl.getServiceDescription());	
+											sl.getServiceDescription());
 									displayString.append("\n\t"+"Transport-Protocol:  "+
 											sl.getServiceTransProtocol());
 									displayString.append("\n\t"+"Ports:  "+
@@ -438,7 +438,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 									displayString.append("\n\t"+"Name:  "+
 											sl.getServiceName());
 									displayString.append("\n\t"+"Description:  "+
-											sl.getServiceDescription());	
+											sl.getServiceDescription());
 									displayString.append("\n\t"+"Transport-Protocol:  "+
 											sl.getServiceTransProtocol());
 									displayString.append("\n\t"+"Ports:  "+
@@ -455,7 +455,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 						displayString.append("\n"+"Action List:"
 								+ ruleAction);
 						displayString.append(" ; \t\n");
-					} 
+					}
 				}
 			}
 			response.setCharacterEncoding("UTF-8");
@@ -470,7 +470,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 		} catch (Exception e) {
 			policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
-		return null;	
+		return null;
 	}
 
 	private String constructJson(PolicyRestAdapter policyData) {
@@ -501,10 +501,10 @@ public class CreateFirewallController extends RestrictedBaseController {
 		TermCollector tc = new TermCollector();
 		SecurityZone jpaSecurityZone;
 		List<Term> termList = new ArrayList<>();
-		
+
 		Tags tags=null;
 		List<Tags>tagsList= new ArrayList<>();
-		
+
 		TagDefines tagDefine= new TagDefines();
 		List<TagDefines> tagList=null;
 		ServiceListJson targetSl=null;
@@ -524,18 +524,18 @@ public class CreateFirewallController extends RestrictedBaseController {
 							int index=val.indexOf(':');
 							String keyToStore=val.substring(0,index);
 							String valueToStore=val.substring(index+1,val.length());
-							
+
 							tagDefine= new TagDefines();
 							tagDefine.setKey(keyToStore);
 							tagDefine.setValue(valueToStore);
 							//Add to the collection.
 							tagList.add(tagDefine);
-							
+
 						}
 						networkRole=jpaTagPickerList.getNetworkRole();
 						break;
 					}
-				}	
+				}
 				tags.setTags(tagList);
 				tags.setTagPickerName(tag);
 				tags.setRuleName(termCollectorList.get(i));
@@ -556,52 +556,52 @@ public class CreateFirewallController extends RestrictedBaseController {
 						ruleDesc=jpaTermList.getTermDescription();
 						if ((ruleDesc!=null)&& (!ruleDesc.isEmpty())){
 							targetTerm.setDescription(ruleDesc);
-						}	
-						ruleFromZone=jpaTermList.getFromZone();	
+						}
+						ruleFromZone=jpaTermList.getFromZone();
 
 						if ((ruleFromZone != null) && (!ruleFromZone.isEmpty())){
 							fromZone_map = new HashMap<>();
 							fromZone_map.put(tl, ruleFromZone);
-						} 	
+						} 
 						ruleToZone=jpaTermList.getToZone();
 
 						if ((ruleToZone != null) && (!ruleToZone.isEmpty())){
 							toZone_map = new HashMap<>();
 							toZone_map.put(tl, ruleToZone);
-						} 
+						}
 						ruleSrcPrefixList=jpaTermList.getSrcIPList();
 
 						if ((ruleSrcPrefixList != null) && (!ruleSrcPrefixList.isEmpty())){
 							srcIP_map = new HashMap<>();
 							srcIP_map.put(tl, ruleSrcPrefixList);
-						} 
+						}
 
 						ruleDestPrefixList= jpaTermList.getDestIPList();
 						if ((ruleDestPrefixList != null) && (!ruleDestPrefixList.isEmpty())){
 							destIP_map = new HashMap<>();
 							destIP_map.put(tl, ruleDestPrefixList);
-						} 
+						}
 
 						ruleSrcPort=jpaTermList.getSrcPortList();
 
 						if (ruleSrcPort != null && (!ruleSrcPort.isEmpty())){
 							srcPort_map = new HashMap<>();
 							srcPort_map.put(tl, ruleSrcPort);
-						} 
+						}
 
 						ruleDestPort= jpaTermList.getDestPortList();
 
 						if (ruleDestPort!= null && (!jpaTermList.getDestPortList().isEmpty())){
 							destPort_map = new HashMap<>();
 							destPort_map.put(tl, ruleDestPort);
-						} 
+						}
 
 						ruleAction=jpaTermList.getAction();
 
 						if (( ruleAction!= null) && (!ruleAction.isEmpty())){
 							action_map = new HashMap<>();
 							action_map.put(tl, ruleAction);
-						} 
+						}
 					}
 				}
 				targetTerm.setEnabled(true);
@@ -649,7 +649,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 							}
 							destServicesJsonList.add(destServicesJson);
 						}
-					}			
+					}
 					targetTerm.setDestServices(destServicesJsonList);
 				}
 				//ExpandableServicesList
@@ -664,7 +664,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 
 				if(srcIP_map!=null){
 					//Source List
-					List<AddressJson> sourceListArrayJson= new ArrayList<>();			
+					List<AddressJson> sourceListArrayJson= new ArrayList<>();
 					for(String srcList:srcIP_map.get(tl).split(",") ){
 						AddressJson srcListJson= new AddressJson();
 						if(srcList.equals(ANY)){
@@ -685,7 +685,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 				}
 				if(destIP_map!=null){
 					//Destination List
-					List<AddressJson> destListArrayJson= new ArrayList<>();				
+					List<AddressJson> destListArrayJson= new ArrayList<>();
 					for(String destList:destIP_map.get(tl).split(",")){
 						AddressJson destListJson= new AddressJson();
 						if(destList.equals(ANY)){
@@ -702,10 +702,10 @@ public class CreateFirewallController extends RestrictedBaseController {
 							destListArrayJson.add(destListJson);
 						}
 					}
-					targetTerm.setDestinationList(destListArrayJson);	
+					targetTerm.setDestinationList(destListArrayJson);
 				}
 				//ExpandablePrefixIPList
-				if ((srcIP_map!=null) && (destIP_map!=null)) 
+				if ((srcIP_map!=null) && (destIP_map!=null))
 				{
 					String collateString = srcIP_map.get(tl) + "," + destIP_map
 							.get(tl);
@@ -720,7 +720,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 				termList.add(targetTerm);
 				targetTerm.setPosition(Integer.toString (ruleCount++));
 			}
-			
+
 			List<Object> securityZoneData = commonClassDao.getData(SecurityZone.class);
 			for (int j =0 ; j< securityZoneData.size() ; j++){
 				jpaSecurityZone = (SecurityZone) securityZoneData.get(j);
@@ -729,10 +729,10 @@ public class CreateFirewallController extends RestrictedBaseController {
 					IdMap idMapInstance= new IdMap();
 					idMapInstance.setAstraId(jpaSecurityZone.getZoneValue());
 					idMapInstance.setVendorId("deviceGroup:dev");
-					
+
 					List<IdMap> idMap = new ArrayList <>();
 					idMap.add(idMapInstance);
-					
+
 					VendorSpecificData vendorStructure= new VendorSpecificData();
 					vendorStructure.setIdMap(idMap);
 					tc.setVendorSpecificData(vendorStructure);
@@ -743,7 +743,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 			tc.setServiceTypeId("/v0/firewall/pan");
 			tc.setConfigName(policyData.getConfigName());
 			tc.setVendorServiceId("vipr");
-			
+
 			DeployNowJson deployNow= new DeployNowJson();
 			deployNow.setDeployNow(false);
 
@@ -775,7 +775,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 							servListArray.add(targetSl);
 						}else{
 							//Any for destinationServices.
-							//Add names any, any-tcp, any-udp to the serviceGroup object. 
+							//Add names any, any-tcp, any-udp to the serviceGroup object.
 							targetAny= new ServiceListJson();
 							targetAny.setName("any");
 							targetAny.setType("SERVICE");
@@ -806,7 +806,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 						sg= mappingServiceGroup(t);
 
 						String name=sg.getGroupName();
-						//Removing the "Group_" prepending string before packing the JSON 
+						//Removing the "Group_" prepending string before packing the JSON
 						targetSg.setName(name.substring(6,name.length()));
 						List<ServiceMembers> servMembersList= new ArrayList<>();
 
@@ -851,7 +851,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 								policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "PrefixList description:"+valueDesc.get(1));
 								targetAddressList.setDescription(valueDesc.get(1));
 							}
-							
+
 
 							addressMembers.setType("SUBNET");
 							if(!valueDesc.isEmpty()) {
@@ -867,12 +867,12 @@ public class CreateFirewallController extends RestrictedBaseController {
 					else{//This is a group
 						AddressGroup ag;
 						addressSg= new AddressGroupJson();
-						ag= mappingAddressGroup(prefixIP);		
+						ag= mappingAddressGroup(prefixIP);
 
 						String name=ag.getGroupName();
-						//Removing the "Group_" prepending string before packing the JSON 
+						//Removing the "Group_" prepending string before packing the JSON
 						addressSg.setName(name.substring(6,name.length()));
-						
+
 						List<AddressMembersJson> addrMembersList= new ArrayList<>();
 						for(String groupString: ag.getPrefixList().split(",")){
 							List<String> valueDesc;
@@ -883,13 +883,13 @@ public class CreateFirewallController extends RestrictedBaseController {
 							//Expand the group Name
 							addressMembersJson= new AddressMembers();
 							valueDesc= mapping (groupString);
-							
+
 							addressMembersJson.setName(groupString);
 							addressMembersJson.setType("SUBNET");
 							addressMembersJson.setValue(valueDesc.get(0));
-							
+
 							addrArray.add(addressMembersJson);
-							
+
 						}
 						addressSg.setMembers(addrMembersList);
 						addrGroupArray.add(addressSg);
@@ -917,11 +917,11 @@ public class CreateFirewallController extends RestrictedBaseController {
 			for(Object addObj1:addrGroupArray){
 				addressGroup.add(addObj1);
 			}
-			
+
 			for(Object addObj2:addrArray){
 				addressGroup.add(addObj2);
 			}
-			
+
 
 			tc.setServiceGroups(serviceGroup);
 			tc.setAddressGroups(addressGroup);
@@ -934,7 +934,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 				policyLogger.error("JsonGenerationException Ocured",e);
 			} catch (JsonMappingException e) {
 				policyLogger.error("IOException Occured",e);
-			}	
+			}
 
 		}catch (Exception e) {
 			policyLogger.error("Exception Occured"+e);

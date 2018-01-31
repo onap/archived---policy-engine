@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,7 +59,7 @@ public class VNFType implements Serializable  {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
-	
+
 	@Column(name="vnf_type", nullable=false, unique=true)
 	@OrderBy("asc")
 	private String vnftype;
@@ -70,7 +70,7 @@ public class VNFType implements Serializable  {
 
 	@Column(name="description", nullable=true, length=2048)
 	private String description;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
@@ -82,7 +82,7 @@ public class VNFType implements Serializable  {
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -100,11 +100,11 @@ public class VNFType implements Serializable  {
 	}
 
 	private static Log LOGGER = LogFactory.getLog(VNFType.class);
-	
+
 	public VNFType() {
-		
+
 	}
-	
+
 	public String getVnftype() {
 		return vnftype;
 	}
@@ -116,10 +116,10 @@ public class VNFType implements Serializable  {
 	public VNFType(String string, String userid) {
 		this(domain);
 	}
-	
+
 	public VNFType(String domain) {
 		this.vnftype = domain;
-	}	
+	}
 
 	@PrePersist
 	public void	prePersist() {
@@ -138,7 +138,7 @@ public class VNFType implements Serializable  {
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "VNFType", "Exception caused While adding Modified by Role");
 		}
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}

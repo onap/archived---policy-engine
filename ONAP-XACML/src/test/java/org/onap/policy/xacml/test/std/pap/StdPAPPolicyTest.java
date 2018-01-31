@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,15 +42,15 @@ import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.pap.StdPDP;
 
 public class StdPAPPolicyTest {
-	
+
 	private static Logger logger = FlexLogger.getLogger(StdPAPPolicyTest.class);
 	private Path repository;
 	Properties properties = new Properties();
 	StdPAPPolicy stdPAPPolicy;
-	
+
 	@Before
 	public void setUp(){
-	
+
 		repository = Paths.get("src/test/resources/pdps");
 		try {
 			stdPAPPolicy = new StdPAPPolicy();
@@ -67,7 +67,7 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetActionBody(){
 		try {
@@ -76,9 +76,9 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-		
-	}	
-	
+
+	}
+
 	@Test
 	public void testGetActionDictHeader(){
 		try {
@@ -86,8 +86,8 @@ public class StdPAPPolicyTest {
 			assertTrue(stdPAPPolicy.getActionDictHeader() != null);
 		} catch (Exception e) {
 			logger.info(e);
-		}	
-	}	
+		}
+	}
 	@Test
 	public void testGetActionDictMethod(){
 		try {
@@ -97,7 +97,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetActionDictType(){
 		try {
@@ -107,7 +107,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetActionDictUrl(){
 		try {
@@ -116,7 +116,7 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetActionPerformer(){
 		try {
@@ -125,9 +125,9 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-		
-	}	
-	
+
+	}
+
 	@Test
 	public void testGetBrmsController(){
 		try {
@@ -135,8 +135,8 @@ public class StdPAPPolicyTest {
 			assertTrue(stdPAPPolicy.getBrmsController() != null);
 		} catch (Exception e) {
 			logger.info(e);
-		}	
-	}	
+		}
+	}
 	@Test
 	public void testGetBrmsDependency(){
 		try {
@@ -146,7 +146,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetConfigBodyData(){
 		try {
@@ -156,7 +156,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 
 	@Test
 	public void testGetConfigName(){
@@ -166,7 +166,7 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetConfigPolicyType(){
 		try {
@@ -175,9 +175,9 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-		
-	}	
-	
+
+	}
+
 	@Test
 	public void testGetConfigType(){
 		try {
@@ -185,8 +185,8 @@ public class StdPAPPolicyTest {
 			assertTrue(stdPAPPolicy.getConfigType() != null);
 		} catch (Exception e) {
 			logger.info(e);
-		}	
-	}	
+		}
+	}
 	@Test
 	public void testGetDataTypeList(){
 		try {
@@ -196,7 +196,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetDeleteCondition(){
 		try {
@@ -206,8 +206,8 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testGetDrlRuleAndUIParams(){
 		try {
@@ -216,7 +216,7 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetDropDownMap(){
 		try {
@@ -225,17 +225,17 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-		
-	}	
-	
+
+	}
+
 	@Test
 	public void testGetDynamicFieldConfigAttributes(){
 		try {
 			assertTrue(stdPAPPolicy.getDynamicFieldConfigAttributes() != null);
 		} catch (Exception e) {
 			logger.info(e);
-		}	
-	}	
+		}
+	}
 	@Test
 	public void testGetDynamicRuleAlgorithmCombo(){
 		try {
@@ -245,7 +245,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetDynamicRuleAlgorithmField1(){
 		try {
@@ -254,7 +254,7 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-	}	
+	}
 
 	@Test
 	public void testGetDictionary(){
@@ -264,7 +264,7 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetDictionaryFields(){
 		try {
@@ -273,9 +273,9 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-		
-	}	
-	
+
+	}
+
 	@Test
 	public void testGetDictionaryType(){
 		try {
@@ -283,8 +283,8 @@ public class StdPAPPolicyTest {
 			assertTrue(stdPAPPolicy.getDictionaryType() != null);
 		} catch (Exception e) {
 			logger.info(e);
-		}	
-	}	
+		}
+	}
 	@Test
 	public void testGetDomainDir(){
 		try {
@@ -294,7 +294,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testIsDraft(){
 		try {
@@ -304,7 +304,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetDynamicRuleAlgorithmLabels(){
 		try {
@@ -313,7 +313,7 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetDynamicSettingsMap(){
 		try {
@@ -322,9 +322,9 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-		
-	}	
-	
+
+	}
+
 	@Test
 	public void testGetDynamicVariableList(){
 		try {
@@ -332,8 +332,8 @@ public class StdPAPPolicyTest {
 			assertTrue(stdPAPPolicy.getDynamicVariableList() != null);
 		} catch (Exception e) {
 			logger.info(e);
-		}	
-	}	
+		}
+	}
 	@Test
 	public void testGetGuard(){
 		try {
@@ -343,7 +343,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetHighestVersion(){
 		try {
@@ -353,7 +353,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testgGtJsonBody(){
 		try {
@@ -362,7 +362,7 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetLocation(){
 		try {
@@ -371,9 +371,9 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-		
-	}	
-	
+
+	}
+
 	@Test
 	public void testGetMsLocation(){
 		try {
@@ -381,8 +381,8 @@ public class StdPAPPolicyTest {
 			assertTrue(stdPAPPolicy.getMsLocation() != null);
 		} catch (Exception e) {
 			logger.info(e);
-		}	
-	}	
+		}
+	}
 	@Test
 	public void testSetOldPolicyFileName(){
 		try {
@@ -392,7 +392,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetOnapName(){
 		try {
@@ -402,7 +402,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetPolicyDescription(){
 		try {
@@ -411,7 +411,7 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetPolicyID(){
 		try {
@@ -420,9 +420,9 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-		
-	}	
-	
+
+	}
+
 	@Test
 	public void testSetPolicyName(){
 		try {
@@ -430,8 +430,8 @@ public class StdPAPPolicyTest {
 			assertTrue(stdPAPPolicy.getPolicyName() != null);
 		} catch (Exception e) {
 			logger.info(e);
-		}	
-	}	
+		}
+	}
 	@Test
 	public void testSetPriority(){
 		try {
@@ -441,7 +441,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetProviderComboBox(){
 		try {
@@ -451,7 +451,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetRiskLevel(){
 		try {
@@ -460,7 +460,7 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetRiskType(){
 		try {
@@ -469,9 +469,9 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-		
-	}	
-	
+
+	}
+
 	@Test
 	public void testGetRuleID(){
 		try {
@@ -479,8 +479,8 @@ public class StdPAPPolicyTest {
 			assertTrue(stdPAPPolicy.getRuleID() != null);
 		} catch (Exception e) {
 			logger.info(e);
-		}	
-	}	
+		}
+	}
 	@Test
 	public void testGetServiceType(){
 		try {
@@ -490,7 +490,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 	@Test
 	public void testGetTTLDate(){
 		try {
@@ -500,7 +500,7 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 
 	@Test
 	public void testGetUuid(){
@@ -510,7 +510,7 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-	}	
+	}
 	@Test
 	public void testGetVersion(){
 		try {
@@ -519,9 +519,9 @@ public class StdPAPPolicyTest {
 		} catch (Exception e) {
 			logger.info(e);
 		}
-		
-	}	
-	
+
+	}
+
 	@Test
 	public void testIsEditPolicy(){
 		try {
@@ -529,8 +529,8 @@ public class StdPAPPolicyTest {
 			assertTrue(stdPAPPolicy.isEditPolicy() == true);
 		} catch (Exception e) {
 			logger.info(e);
-		}	
-	}	
+		}
+	}
 	@Test
 	public void testToString(){
 		try {
@@ -539,5 +539,5 @@ public class StdPAPPolicyTest {
 			logger.info(e);
 		}
 	}
-	
+
 }

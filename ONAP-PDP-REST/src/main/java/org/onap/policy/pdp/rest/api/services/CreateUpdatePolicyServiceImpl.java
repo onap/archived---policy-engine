@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ import com.google.common.base.Strings;
 
 public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService {
 	private static final Logger LOGGER = FlexLogger.getLogger(CreateUpdatePolicyServiceImpl.class.getName());
-    
+
     private String policyResult = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private Boolean updateFlag = false;
@@ -47,7 +47,7 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
     private String policyName = null;
     private String policyScope = null;
     private String date = null;
-    
+
 	public CreateUpdatePolicyServiceImpl(PolicyParameters policyParameters,
 			String requestID, boolean updateFlag) {
 		this.updateFlag = updateFlag;
@@ -77,12 +77,12 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
     }
 
     public void run() throws PolicyException{
-        // Check Validation. 
+        // Check Validation.
         if(!getValidation()){
             LOGGER.error(message);
             throw new PolicyException(message);
         }
-        // Get Result. 
+        // Get Result.
         try{
             status = HttpStatus.OK;
             policyResult = processResult();
@@ -92,88 +92,88 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
             throw new PolicyException(e);
         }
     }
-    
+
     @SuppressWarnings("incomplete-switch")
     public String processResult() throws PolicyException{
         String response = null;
         if(policyParameters.getPolicyConfigType()!=null){
-            // This is a Config Type Policy. 
+            // This is a Config Type Policy.
             switch(policyParameters.getPolicyConfigType()){
             case BRMS_PARAM:
                 BRMSParamPolicyService bRMSParamPolicyService = new BRMSParamPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
+                // Check Validation.
                 if(!bRMSParamPolicyService.getValidation()){
                     LOGGER.error(bRMSParamPolicyService.getMessage());
                     status = HttpStatus.BAD_REQUEST;
                     return bRMSParamPolicyService.getMessage();
                 }
-                // Get Result. 
+                // Get Result.
                 response = bRMSParamPolicyService.getResult(updateFlag);
                 break;
             case BRMS_RAW:
                 BRMSRawPolicyService bRMSRawPolicyService = new BRMSRawPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
+                // Check Validation.
                 if(!bRMSRawPolicyService.getValidation()){
                     LOGGER.error(bRMSRawPolicyService.getMessage());
                     status = HttpStatus.BAD_REQUEST;
                     return bRMSRawPolicyService.getMessage();
                 }
-                // Get Result. 
+                // Get Result.
                 response = bRMSRawPolicyService.getResult(updateFlag);
                 break;
             case Base:
                 ConfigPolicyService configPolicyService = new ConfigPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
+                // Check Validation.
                 if(!configPolicyService.getValidation()){
                     LOGGER.error(configPolicyService.getMessage());
                     status = HttpStatus.BAD_REQUEST;
                     return configPolicyService.getMessage();
                 }
-                // Get Result. 
+                // Get Result.
                 response = configPolicyService.getResult(updateFlag);
                 break;
             case ClosedLoop_Fault:
                 ClosedLoopFaultPolicyService closedLoopFaultPolicyService = new ClosedLoopFaultPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
+                // Check Validation.
                 if(!closedLoopFaultPolicyService.getValidation()){
                     LOGGER.error(closedLoopFaultPolicyService.getMessage());
                     status = HttpStatus.BAD_REQUEST;
                     return closedLoopFaultPolicyService.getMessage();
                 }
-                // Get Result. 
+                // Get Result.
                 response = closedLoopFaultPolicyService.getResult(updateFlag);
                 break;
             case ClosedLoop_PM:
                 ClosedLoopPMPolicyService closedLoopPMPolicyService = new ClosedLoopPMPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
+                // Check Validation.
                 if(!closedLoopPMPolicyService.getValidation()){
                     LOGGER.error(closedLoopPMPolicyService.getMessage());
                     status = HttpStatus.BAD_REQUEST;
                     return closedLoopPMPolicyService.getMessage();
                 }
-                // Get Result. 
+                // Get Result.
                 response = closedLoopPMPolicyService.getResult(updateFlag);
                 break;
             case Firewall:
                 FirewallPolicyService firewallPolicyService = new FirewallPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
+                // Check Validation.
                 if(!firewallPolicyService.getValidation()){
                     LOGGER.error(firewallPolicyService.getMessage());
                     status = HttpStatus.BAD_REQUEST;
                     return firewallPolicyService.getMessage();
                 }
-                // Get Result. 
+                // Get Result.
                 response = firewallPolicyService.getResult(updateFlag);
                 break;
             case MicroService:
                 MicroServicesPolicyService microServicesPolicyService = new MicroServicesPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
+                // Check Validation.
                 if(!microServicesPolicyService.getValidation()){
                     LOGGER.error(microServicesPolicyService.getMessage());
                     status = HttpStatus.BAD_REQUEST;
                     return microServicesPolicyService.getMessage();
                 }
-                // Get Result. 
+                // Get Result.
                 response = microServicesPolicyService.getResult(updateFlag);
                 break;
             default:
@@ -186,24 +186,24 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
             switch (policyParameters.getPolicyClass()){
             case Action:
                 ActionPolicyService actionPolicyService = new ActionPolicyService(policyScope, policyName, policyParameters);
-                // Check Validation. 
+                // Check Validation.
                 if(!actionPolicyService.getValidation()){
                     LOGGER.error(actionPolicyService.getMessage());
                     status = HttpStatus.BAD_REQUEST;
                     return actionPolicyService.getMessage();
                 }
-                // Get Result. 
+                // Get Result.
                 response = actionPolicyService.getResult(updateFlag);
                 break;
             case Decision:
                 DecisionPolicyService decisionPolicyService = new DecisionPolicyService(policyScope, policyName, policyParameters);
-                // Check Validation. 
+                // Check Validation.
                 if(!decisionPolicyService.getValidation()){
                     LOGGER.error(decisionPolicyService.getMessage());
                     status = HttpStatus.BAD_REQUEST;
                     return decisionPolicyService.getMessage();
                 }
-                // Get Result. 
+                // Get Result.
                 response = decisionPolicyService.getResult(updateFlag);
                 break;
             }
@@ -217,13 +217,13 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
     }
 
     protected boolean getValidation() {
-    	
+    
     	PolicyValidation validation = new PolicyValidation();
-    	
+    
 		StringBuilder responseString;
-		
+
     	if (policyParameters != null) {
-    		
+    
     		if (!Strings.isNullOrEmpty(policyParameters.getPolicyName())){
                 if (policyParameters.getPolicyName().contains(".")) {
                     policyName = policyParameters.getPolicyName().substring(policyParameters.getPolicyName().lastIndexOf('.') + 1,
@@ -241,7 +241,7 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
         		LOGGER.error("Common validation did not return success:  " + message);
     			return false;
     		}
-    		
+    
     		if(policyParameters.getPolicyClass() != null && "Config".equals(policyParameters.getPolicyClass().toString())){
     			String policyConfigType = policyParameters.getPolicyConfigType().toString();
     			if(!"BRMS_Param".equalsIgnoreCase(policyConfigType) && Strings.isNullOrEmpty(policyParameters.getConfigBody())){
@@ -252,7 +252,7 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
     		}
 
     		try {
-    			PolicyValidationRequestWrapper wrapper = new PolicyValidationRequestWrapper();    			
+    			PolicyValidationRequestWrapper wrapper = new PolicyValidationRequestWrapper();    
     			PolicyRestAdapter policyData = wrapper.populateRequestParameters(policyParameters);
 				responseString = validation.validatePolicy(policyData);
 			} catch (Exception e) {
@@ -271,11 +271,11 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
     		return false;
     	}
 
-        // Set some default Values. 
+        // Set some default Values.
         if (policyParameters.getTtlDate()!=null){
             date = convertDate(policyParameters.getTtlDate());
         }
-        
+
         if (responseString!=null){
         	if("success".equals(responseString.toString())||"success@#".equals(responseString.toString())){
         		return true;
@@ -291,7 +291,7 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
         }
 
     }
-    
+
     protected String convertDate(Date date) {
         String strDate = null;
         if (date!=null) {

@@ -21,8 +21,8 @@
 package org.onap.policy.rest.dao;
 
 /**
- * PolicyDBException extends <code>Exception</code> to implement exceptions thrown by Policy Database transactions. 
- * 
+ * PolicyDBException extends <code>Exception</code> to implement exceptions thrown by Policy Database transactions.
+ *
  * @version 0.1
  */
 public class PolicyDBException extends Exception {
@@ -30,19 +30,19 @@ public class PolicyDBException extends Exception {
 
     public PolicyDBException() {
     }
-    
+
     public PolicyDBException(String message) {
         super(message);
     }
-    
+
     public PolicyDBException(Throwable cause){
         super(cause);
     }
-    
+
     public PolicyDBException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
     public PolicyDBException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }

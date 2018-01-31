@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,25 +26,25 @@ import java.util.List;
 
 
 public interface PolicyContainer extends Serializable{
-	
+
     public Collection<?> getContainerPropertyIds();
-    
+
     public Collection<?> getItemIds();
 
     public Class<?> getType(Object propertyId);
 
     public int size();
-  
+
     public boolean containsId(Object itemId);
 
     public Object addItem() throws UnsupportedOperationException;
-    
+
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException;
 
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException;
-   
+
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException;
 
@@ -66,10 +66,10 @@ public interface PolicyContainer extends Serializable{
 
         public Object addItemAfter(Object previousItemId)
                 throws UnsupportedOperationException;
-        
+
     }
 
-    
+
     public interface Indexed extends Ordered {
 
         public int indexOfId(Object itemId);
@@ -77,7 +77,7 @@ public interface PolicyContainer extends Serializable{
         public Object getIdByIndex(int index);
 
         public List<?> getItemIds(int startIndex, int numberOfItems);
-        
+
         public Object addItemAt(int index) throws UnsupportedOperationException;
 
         public interface ItemAddEvent extends ItemSetChangeEvent {
@@ -89,9 +89,9 @@ public interface PolicyContainer extends Serializable{
             public int getAddedItemsCount();
         }
 
-     
+
         public interface ItemRemoveEvent extends ItemSetChangeEvent {
-          
+
             public Object getFirstItemId();
 
             public int getFirstIndex();
@@ -99,7 +99,7 @@ public interface PolicyContainer extends Serializable{
             public int getRemovedItemsCount();
         }
     }
-  
+
     public interface ItemSetChangeEvent extends Serializable {
 
         public PolicyContainer getContainer();

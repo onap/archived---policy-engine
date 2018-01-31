@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ import org.springframework.http.HttpStatus;
 
 public class SendEventService {
     private static final Logger LOGGER = FlexLogger.getLogger(SendEventService.class.getName());
-    
+
     private Collection<PolicyResponse> policyResponses = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private EventRequestParameters eventRequestParameters = null;
@@ -81,17 +81,17 @@ public class SendEventService {
     }
 
     private void run() throws PolicyEventException{
-        // getValidation. 
+        // getValidation.
         if(!getValidation()){
             LOGGER.error(message);
             throw new PolicyEventException(message);
         }
-        // Generate Request. 
+        // Generate Request.
         String modelString = getModel().toString();
         LOGGER.debug("Generated JSON Request is: " + modelString);
-        // Process Result. 
+        // Process Result.
         try {
-            PDPServices pdpServices = new PDPServices(); 
+            PDPServices pdpServices = new PDPServices();
             status = HttpStatus.OK;
             policyResponses = eventResult(pdpServices.generateRequest(modelString, eventRequestParameters.getRequestID(),false, false));
         } catch (Exception e) {

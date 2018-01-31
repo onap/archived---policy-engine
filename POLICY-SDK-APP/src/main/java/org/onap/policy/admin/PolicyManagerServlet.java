@@ -228,8 +228,8 @@ public class PolicyManagerServlet extends HttpServlet {
 					}
 					else if (!item.getName().endsWith(".xls")) {
 						LOGGER.error("Non .xls filetype uploaded: " + item.getName());
-					} 
-					else { //uploaded file size is greater than allowed 
+					}
+					else { //uploaded file size is greater than allowed
 						LOGGER.error("Upload file size limit exceeded! File size (Bytes) is: " + item.getSize());
 					}
 				}
@@ -261,12 +261,12 @@ public class PolicyManagerServlet extends HttpServlet {
 			JSONObject jObj = new JSONObject(sb.toString());
 			JSONObject params = jObj.getJSONObject("params");
 			Mode mode = Mode.valueOf(params.getString("mode"));
-			
+
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			LOGGER.info("****************************************Logging UserID while doing actions on Editor tab*******************************************");
 			LOGGER.info("UserId:  " + userId + "Action Mode:  "+ mode.toString() + "Action Params: "+params.toString());
 			LOGGER.info("***********************************************************************************************************************************");
-			
+
 			switch (mode) {
 			case ADDFOLDER:
 			case ADDSUBSCOPE:
@@ -1434,7 +1434,7 @@ public class PolicyManagerServlet extends HttpServlet {
 				policyAdapter.setReadOnly(false);
 				policyAdapter.setEditPolicy(true);
 			}
-			
+
 			policyAdapter.setDomainDir(domain);
 			policyAdapter.setPolicyData(policy);
 			String policyName = path.replace(".xml", "");

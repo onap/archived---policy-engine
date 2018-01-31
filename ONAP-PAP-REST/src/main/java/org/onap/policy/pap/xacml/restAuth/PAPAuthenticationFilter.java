@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,23 +47,23 @@ public class PAPAuthenticationFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain filter) throws IOException, ServletException {
-		
-		
+
+
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
 			String authCredentials = null;
 			String url = httpServletRequest.getRequestURI();
-			
+
 			logger.info("Request URI: " + url);
 			System.out.println("Request URI: " + url);
-			
+
 			//getting authentication credentials
 			if(url.contains("@Auth@")){
 				int authIndex = url.lastIndexOf("@");
 				int endAuthIndex = url.indexOf("/onap");
 				authCredentials = "Basic " + url.substring(authIndex+1, endAuthIndex);
-				
+
 				//parse the url for /pap/onap/
 				String url1 = url.substring(0, 4);
 				String url2 = url.substring(endAuthIndex, url.length());
@@ -72,21 +72,21 @@ public class PAPAuthenticationFilter implements Filter {
 			} else {
 				authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
 			}
-			
+
 			// Check Authentication credentials
 			AuthenticationService authenticationService = new AuthenticationService();
 			boolean authenticationStatus = authenticationService.authenticate(authCredentials);
-			
+
 			if (authenticationStatus) {
 				//indicates the request comes from Traditional Admin Console or PolicyEngineAPI
 				if (url.equals("/pap/")){
-					logger.info("Request comes from Traditional Admin Console or PolicyEngineAPI");						
-					
+					logger.info("Request comes from Traditional Admin Console or PolicyEngineAPI");
+
 					//forward request to the XACMLPAPServlet if authenticated
 					request.getRequestDispatcher("/pap/pap/").forward(request, response);
-					
+
 				}else if (url.startsWith("/pap/onap/")){
-					
+
 					//indicates the request comes from the ONAP Portal onap-sdk-app
 					if(response instanceof HttpServletResponse) {
 						HttpServletResponse alteredResponse = ((HttpServletResponse)response);
@@ -98,9 +98,9 @@ public class PAPAuthenticationFilter implements Filter {
 						/*url = url.substring(url.indexOf("/pap/")+4);
 						request.getRequestDispatcher(url).forward(request, response);*/
 					}
-					
+
 				}
-				
+
 			} else {
 				if (response instanceof HttpServletResponse) {
 					HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -110,14 +110,14 @@ public class PAPAuthenticationFilter implements Filter {
 
 		}
 	}
-	
+
 	//method to add CorsHeaders for onap portal rest call
 	private void addCorsHeader(HttpServletResponse response) {
 		logger.info("Adding Cors Response Headers!!!");
 		response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
         response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
-        response.addHeader("Access-Control-Max-Age", "1728000");	
+        response.addHeader("Access-Control-Max-Age", "1728000");
 	}
 
 	@Override

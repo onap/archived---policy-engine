@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,8 +50,8 @@ import org.onap.policy.api.RemovedPolicy;
 /**
  * Class contains static functions which make call to policy engine using API.
  * This class is used by generalTestClient.java
- * 
- * 
+ *
+ *
  * @version 1.0
  *
  */
@@ -59,7 +59,7 @@ public class PolicyEngineTestClient {
 	/**
 	 * This fuction make API call to policy engine to get config. And returns
 	 * policy name, policy version and policy configStatus
-	 * 
+	 *
 	 * @param org.onap.policyEngine
 	 * @param onapComponentName
 	 * @param configName
@@ -82,7 +82,7 @@ public class PolicyEngineTestClient {
 					policyConfigs = policyEngine.getConfig(onapComponentName,
 							configName, requestID);
 				} else {
-					
+
 					policyConfigs = policyEngine.getConfig(onapComponentName,
 							configName, configAttributes, requestID);
 				}
@@ -106,7 +106,7 @@ public class PolicyEngineTestClient {
 	/**
 	 * This functions make API call to policy engine to get decision. And
 	 * returns policy Decision
-	 * 
+	 *
 	 * @param org.onap.policyEngine
 	 * @param onapComponentName
 	 * @param decisionAttributes
@@ -132,7 +132,7 @@ public class PolicyEngineTestClient {
 	/**
 	 * This function makes API call to policy engine to get action. And returns
 	 * responseMessage and responseStatus
-	 * 
+	 *
 	 * @param org.onap.policyEngine
 	 * @param eventAttributes
 	 * @return
@@ -163,7 +163,7 @@ public class PolicyEngineTestClient {
 	/**
 	 * This function makes API call to policy engine to get manual
 	 * notifications.
-	 * 
+	 *
 	 * @param org.onap.policyEngine
 	 */
 
@@ -185,7 +185,7 @@ public class PolicyEngineTestClient {
 	/**
 	 * This function makes API call to policy engine to get automatic
 	 * notifications.
-	 * 
+	 *
 	 * @param org.onap.policyEngine
 	 */
 	public static void getAutoNotifications(PolicyEngine policyEngine) {

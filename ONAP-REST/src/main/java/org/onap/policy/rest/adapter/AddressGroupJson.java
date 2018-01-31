@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,7 +29,7 @@ public class AddressGroupJson {
 	protected String name;
 	protected String description;
 	protected List<AddressMembersJson> members;
-	
+
 	// name
 	public String getName() {
 		return name;
@@ -38,7 +38,7 @@ public class AddressGroupJson {
 	public void setName(String value) {
 		this.name = value;
 	}
-	
+
 	public boolean equals(Object obj){
 		if(obj == null){
 			return false;
@@ -49,14 +49,14 @@ public class AddressGroupJson {
 		AddressGroupJson servGroupobj=(AddressGroupJson) obj;
 		if(this.getName().equals(servGroupobj.getName())){
 			return true;
-		}	
+		}
 		return false;
 	}
-	
+
 	 public int hashCode() {
 	    return Integer.valueOf(name.charAt(0)+(name.charAt(1)));
 	 }
-	
+
 	// description
 	public String getDescription() {
 		return description;
@@ -65,8 +65,8 @@ public class AddressGroupJson {
 	public void setDescription(String value) {
 		this.description = value;
 	}
-	
-	public List<AddressMembersJson> getMembers() 
+
+	public List<AddressMembersJson> getMembers()
     {
     	if(members==null)
     	{
@@ -75,7 +75,7 @@ public class AddressGroupJson {
         return this.members;
     }
 
-	public void setMembers(List<AddressMembersJson> members) 
+	public void setMembers(List<AddressMembersJson> members)
 	{
 	        this.members = members;
 	}

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,14 +42,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * The persistent class for the Categories database table.
- * 
+ *
  */
 @Entity
 @Table(name="Category")
 @NamedQuery(name="Category.findAll", query="SELECT c FROM Category c")
 public class Category implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final char STANDARD = 'S';
 	public static final char CUSTOM = 'C';
 
@@ -66,10 +66,10 @@ public class Category implements Serializable {
 
 	@Column(name="xacml_id", nullable=false, unique=true, length=255)
 	private String xacmlId;
-	
+
 	@Column(name="short_name", nullable=false, length=64)
 	private String shortName;
-	
+
 	//bi-directional many-to-one association to Attribute
 	@OneToMany(mappedBy="categoryBean")
 	@JsonBackReference
@@ -172,12 +172,12 @@ public class Category implements Serializable {
 	public boolean isStandard() {
 		return (this.isStandard == Category.STANDARD);
 	}
-	
+
 	@Transient
 	public boolean isCustom() {
 		return (this.isStandard == Category.CUSTOM);
 	}
-	
+
 	@Transient
 	public static String	extractGrouping(String xacmlId) {
 		if (xacmlId == null) {
@@ -201,7 +201,7 @@ public class Category implements Serializable {
 		}
 		return null;
 	}
-	
+
 	@Transient
 	public Identifier getIdentifer() {
 		return new IdentifierImpl(this.xacmlId);

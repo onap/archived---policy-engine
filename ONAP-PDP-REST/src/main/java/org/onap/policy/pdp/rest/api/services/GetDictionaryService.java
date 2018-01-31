@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ import org.springframework.http.HttpStatus;
 
 public class GetDictionaryService {
     private static final Logger LOGGER = FlexLogger.getLogger(GetDictionaryService.class.getName());
-    
+
     private DictionaryResponse dictionaryResponse = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private String message = null;
@@ -78,12 +78,12 @@ public class GetDictionaryService {
     }
 
     private void run() throws PolicyException{
-     // Check Validation. 
+     // Check Validation.
         if(!getValidation()){
             LOGGER.error(message);
             throw new PolicyException(message);
         }
-        // Get Result. 
+        // Get Result.
         try{
             status = HttpStatus.OK;
             dictionaryResponse = processResult();
@@ -98,7 +98,7 @@ public class GetDictionaryService {
         StdDictionaryResponse response = new StdDictionaryResponse();
         PAPServices papServices = new PAPServices();
         String result = (String) papServices.callPAP(null, new String[] {"operation=get", "apiflag=api", "dictionaryType="+dictionaryParameters.getDictionary()}, dictionaryParameters.getRequestID(), "dictionaryItem");
-        
+
         if (result!=null && result.contains("data")) {
             String jsonString = formatDictionaryJson(result);
             String responseMessage = result.substring(0, 82);
@@ -120,7 +120,7 @@ public class GetDictionaryService {
             }
             response.setResponseCode(papServices.getResponseCode());
             response.setDictionaryJson(json);
-            response.setResponseMessage(responseMessage);                     
+            response.setResponseMessage(responseMessage);
         } else {
             response.setResponseCode(400);
             response.setResponseMessage(result);
@@ -136,7 +136,7 @@ public class GetDictionaryService {
     private String formatDictionaryJson(String result) {
         String jsonString = result.substring(82);
         String dictionary = dictionaryParameters.getDictionary();
-        
+
         switch (dictionary) {
         case "OnapName":
             jsonString = jsonString.replace("onapNameDictionaryDatas", "DictionaryDatas");

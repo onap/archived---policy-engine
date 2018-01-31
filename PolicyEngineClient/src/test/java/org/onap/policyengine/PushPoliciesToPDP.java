@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,15 +29,15 @@ public class PushPoliciesToPDP {
 		try {
 
 			PolicyEngine policyEngine = new PolicyEngine("config.properties");
-			PushPolicyParameters policyParameters = new PushPolicyParameters();			
-						
+			PushPolicyParameters policyParameters = new PushPolicyParameters();
+
 			//Parameter arguments
 			policyParameters.setPolicyName("Mike.testCase1");
 			policyParameters.setPolicyType("Base");
 			//policyParameters.setPolicyScope("MikeAPItesting");
-			policyParameters.setPdpGroup("default");			
+			policyParameters.setPdpGroup("default");
 			policyParameters.setRequestID(null);
-			
+
             // API method to Push Policy to PDP
             PolicyChangeResponse response = null;
             response = policyEngine.pushPolicy(policyParameters);
@@ -50,10 +50,10 @@ public class PushPoliciesToPDP {
             }
 
 		} catch (Exception e) {
-			System.err.println(e.getMessage());		
-			
+			System.err.println(e.getMessage());
+
 		}
-		
+
 	}
 
 }

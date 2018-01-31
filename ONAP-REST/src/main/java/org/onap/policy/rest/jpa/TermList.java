@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,38 +58,38 @@ public class TermList implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
-	
+
 	@Column(name="termName", nullable=false)
 	@OrderBy("asc")
 	private String termName;
-	
+
 	@Column(name="description")
 	private String termDescription;
-	
+
 	@Column(name="fromzone")
 	private String fromZone;
-	
+
 	@Column(name="tozone")
 	private String toZone;
-	
+
 	@Column(name="srcIPList")
 	private String srcIPList;
-	
+
 	@Column(name="destIPList")
 	private String destIPList;
-	
+
 	@Column(name="protocolList")
 	private String protocolList;
-	
+
 	@Column(name="portList")
 	private String portList;
-	
+
 	@Column(name="srcPortList")
 	private String srcPortList;
-	
+
 	@Column(name="destPortList")
 	private String destPortList;
-	
+
 	@Column(name="action")
 	private String action;
 
@@ -100,7 +100,7 @@ public class TermList implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
-	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name="created_by")
 	private UserInfo userCreatedBy;
@@ -108,7 +108,7 @@ public class TermList implements Serializable {
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -126,20 +126,20 @@ public class TermList implements Serializable {
 	}
 
 	private static Log LOGGER = LogFactory.getLog(TermList.class);
-	
+
 	public TermList() {
-		
+
 	}
-	
+
 	private static final Log auditLogger = LogFactory
 			.getLog("auditLogger");
-	
+
 	public TermList(String string, String userid) {
 		this(domain);
 	}
 	public TermList(String domain) {
 		this.termName = domain;
-	}	
+	}
 
 	@PrePersist
 	public void	prePersist() {
@@ -147,7 +147,7 @@ public class TermList implements Serializable {
 		this.createdDate = date;
 		this.modifiedDate = date;
 		auditLogger.debug("Added New Term Name: "+this.termName+" by "+this.userCreatedBy);
-		
+
 	}
 	@PreUpdate
 	public void preUpdate() {
@@ -160,7 +160,7 @@ public class TermList implements Serializable {
 		}
 		auditLogger.debug("Updated Term Name: "+this.termName+" by "+this.userModifiedBy);
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}
@@ -168,7 +168,7 @@ public class TermList implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getTermName() {
 		return this.termName;
 	}
@@ -176,7 +176,7 @@ public class TermList implements Serializable {
 	public void setTermName(String termName) {
 		this.termName = termName;
 	}
-	
+
 	public String getTermDescription() {
 		return this.termDescription;
 	}
@@ -184,7 +184,7 @@ public class TermList implements Serializable {
 	public void setDescription(String termDescription) {
 		this.termDescription = termDescription;
 	}
-	
+
 	public String getFromZone() {
 		return this.fromZone;
 	}
@@ -192,7 +192,7 @@ public class TermList implements Serializable {
 	public void setFromZones(String fromZone) {
 		this.fromZone = fromZone;
 	}
-	
+
 	public String getToZone() {
 		return this.toZone;
 	}
@@ -200,7 +200,7 @@ public class TermList implements Serializable {
 	public void setToZones(String toZone) {
 		this.toZone = toZone;
 	}
-	
+
 	public String getSrcIPList() {
 		return this.srcIPList;
 	}
@@ -208,7 +208,7 @@ public class TermList implements Serializable {
 	public void setSrcIPList(String srcIPList) {
 		this.srcIPList = srcIPList;
 	}
-	
+
 	public String getDestIPList() {
 		return this.destIPList;
 	}
@@ -216,7 +216,7 @@ public class TermList implements Serializable {
 	public void setDestIPList(String destIPList) {
 		this.destIPList = destIPList;
 	}
-	
+
 	public String getProtocolList() {
 		return this.protocolList;
 	}
@@ -224,7 +224,7 @@ public class TermList implements Serializable {
 	public void setProtocolList(String protocolList) {
 		this.protocolList = protocolList;
 	}
-	
+
 	public String getPortList() {
 		return this.portList;
 	}
@@ -232,7 +232,7 @@ public class TermList implements Serializable {
 	public void setPortList(String portList) {
 		this.portList = portList;
 	}
-	
+
 	public String getSrcPortList() {
 		return this.srcPortList;
 	}
@@ -240,7 +240,7 @@ public class TermList implements Serializable {
 	public void setSrcPortList(String srcPortList) {
 		this.srcPortList = srcPortList;
 	}
-	
+
 	public String getDestPortList() {
 		return this.destPortList;
 	}
@@ -248,8 +248,8 @@ public class TermList implements Serializable {
 	public void setDestPortList(String destPortList) {
 		this.destPortList = destPortList;
 	}
-	
-	
+
+
 	public String getAction() {
 		return this.action;
 	}

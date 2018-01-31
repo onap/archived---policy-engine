@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -88,7 +88,7 @@ public class PolicyElasticSearchController{
 
 	enum Mode{
 		attribute, onapName, actionPolicy, brmsParam, pepOptions,
-		clSite, clService, clVarbind, clVnf, clVSCL, decision, 
+		clSite, clService, clVarbind, clVnf, clVSCL, decision,
 		fwTerm, msDCAEUUID, msConfigName, msLocation, msModels,
 		psGroupPolicy, safeRisk, safePolicyWarning
 	}
@@ -96,7 +96,7 @@ public class PolicyElasticSearchController{
 	protected static final HashMap<String, String> name2jsonPath = new HashMap<String, String>() {
 		private static final long serialVersionUID = 1L;
 	};
-	
+
 	private static CommonClassDao commonClassDao;
 
 	@Autowired
@@ -142,9 +142,9 @@ public class PolicyElasticSearchController{
 		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
 	}
 
-	
 
-	
+
+
 	public ElkConnector.PolicyIndexType toPolicyIndexType(String type) throws IllegalArgumentException {
 		if (type == null || type.isEmpty()){
 			return PolicyIndexType.all;
@@ -163,8 +163,8 @@ public class PolicyElasticSearchController{
 			} else {
 				if (LOGGER.isInfoEnabled()) {
 					LOGGER.warn("SUCCESS creating ELK record created for " + policyData.getNewFileName());
-				}									
-			}									
+				}
+			}
 		} catch (Exception e) {
 			LOGGER.warn(XACMLErrorConstants.ERROR_DATA_ISSUE + ": " + e.getMessage(), e);
 			success = false;
@@ -183,8 +183,8 @@ public class PolicyElasticSearchController{
 			} else {
 				if (LOGGER.isInfoEnabled()) {
 					LOGGER.warn("SUCCESS deleting ELK record created for " + policyData.getNewFileName());
-				}									
-			}									
+				}
+			}
 		} catch (Exception e) {
 			LOGGER.warn(XACMLErrorConstants.ERROR_DATA_ISSUE + ": " + e.getMessage(), e);
 			success = false;
@@ -192,7 +192,7 @@ public class PolicyElasticSearchController{
 		return success;
 	}
 
-	
+
 	@RequestMapping(value="/searchPolicy", method= RequestMethod.POST)
 	public void searchPolicy(HttpServletRequest request, HttpServletResponse response) {
 		try{
@@ -219,7 +219,7 @@ public class PolicyElasticSearchController{
 					SearchData searchData = (SearchData)mapper.readValue(root.get("searchdata").toString(), SearchData.class);
 
 					String policyType = searchData.getPolicyType();
-					
+
 					String searchText = searchData.getQuery();
 					String descriptivevalue = searchData.getDescriptiveScope();
 					if(descriptivevalue != null){
@@ -236,7 +236,7 @@ public class PolicyElasticSearchController{
 							}
 						}
 					}
-					
+
 					if(searchData.getClosedLooppolicyType() != null){
 						String closedLoopType;
 						if("Config_Fault".equalsIgnoreCase(searchData.getClosedLooppolicyType())){
@@ -263,9 +263,9 @@ public class PolicyElasticSearchController{
 							d2Service = "vDNS";
 						}
 						searchKeyValue.put("jsonBodyData."+d2Service+"", "true");
-					}	
+					}
 					if(searchData.getVnfType() != null){
-						searchKeyValue.put("jsonBodyData", "*"+searchData.getVnfType()+"*");					
+						searchKeyValue.put("jsonBodyData", "*"+searchData.getVnfType()+"*");
 					}
 					if(searchData.getPolicyStatus() != null){
 						searchKeyValue.put("jsonBodyData", "*"+searchData.getPolicyStatus()+"*");
@@ -321,7 +321,7 @@ public class PolicyElasticSearchController{
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(message));
 			JSONObject j = new JSONObject(msg);
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.addHeader("success", "success"); 
+			response.addHeader("success", "success");
 			if(policyResult){
 				JSONObject k = new JSONObject("{policyresult: " + policyList + "}");
 				response.getWriter().write(k.toString());
@@ -334,7 +334,7 @@ public class PolicyElasticSearchController{
 			LOGGER.error("Exception Occured While Performing Elastic Transaction"+e.getMessage(),e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/searchDictionary"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView searchDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 		try{
@@ -343,13 +343,13 @@ public class PolicyElasticSearchController{
 			PolicyIndexType action = PolicyIndexType.action;
 			PolicyIndexType decision = PolicyIndexType.decision;
 			PolicyIndexType all = PolicyIndexType.all;
-			
+
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			String dictionaryType = root.get("type").textValue();
 			Mode mode = Mode.valueOf(dictionaryType);
-			String value; 
+			String value;
 			List<String> policyList = new ArrayList<>();
 			switch (mode){
 			case attribute :
@@ -406,7 +406,7 @@ public class PolicyElasticSearchController{
 				DecisionSettings decisionSettings = (DecisionSettings)mapper.readValue(root.get("data").toString(), DecisionSettings.class);
 				value = decisionSettings.getXacmlId();
 				policyList = searchElkDatabase(decision,"pholder",value);
-				break;	
+				break;
 			case fwTerm :
 				TermList term = (TermList)mapper.readValue(root.get("data").toString(), TermList.class);
 				value = term.getTermName();
@@ -442,11 +442,11 @@ public class PolicyElasticSearchController{
 				value = safePolicy.getName();
 				policyList = searchElkDatabase(config, "pholder",value);
 				break;
-			default: 		
+			default: 
 			}
-			
+
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.addHeader("success", "success"); 
+			response.addHeader("success", "success");
 			JSONObject k = new JSONObject("{policyresult: " + policyList + "}");
 			response.getWriter().write(k.toString());
 		}catch(Exception e){
@@ -466,7 +466,7 @@ public class PolicyElasticSearchController{
 		if(!"pholder".equals(key)){
 			searchKeyValue.put(key, value);
 		}
-		
+
 		List<String> policyList = new ArrayList<>();
 		JestResult policyResultList = controller.search(type, value, searchKeyValue);
 		if(policyResultList.isSucceeded()){
@@ -480,11 +480,11 @@ public class PolicyElasticSearchController{
 		}
 		return policyList;
 	}
-	
+
 	public JestResult search(PolicyIndexType type, String text, Map<String, String> searchKeyValue) {
 		 return ElkConnector.singleton.search(type, text, searchKeyValue);
 	}
-	
+
 }
 
 class SearchData{

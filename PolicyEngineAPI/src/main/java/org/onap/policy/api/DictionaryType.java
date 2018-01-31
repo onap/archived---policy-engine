@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum DictionaryType{
 	/**
-	 * Indicates Common Dictionaries. 
+	 * Indicates Common Dictionaries.
 	 */
 	Common("Common"),
 	/**
@@ -32,23 +32,23 @@ public enum DictionaryType{
 	 */
 	Action("Action"),
 	/**
-	 * Indicates ClosedLoop Policy Dictionaries. 
+	 * Indicates ClosedLoop Policy Dictionaries.
 	 */
 	ClosedLoop("ClosedLoop"),
 	/**
-	 * Indicates Firewall Config Policy Dictionaries. 
+	 * Indicates Firewall Config Policy Dictionaries.
 	 */
 	Firewall("Firewall"),
 	/**
-	 * Indicates Decision Policy Dictionaries. 
+	 * Indicates Decision Policy Dictionaries.
 	 */
 	Decision("Decision"),
 	/**
-	 * Indicates BRMS Policy Dictionaries. 
+	 * Indicates BRMS Policy Dictionaries.
 	 */
 	BRMS("BRMS"),
 	/**
-	 * Indicates DCAE Micro Service Policy Dictionaries. 
+	 * Indicates DCAE Micro Service Policy Dictionaries.
 	 */
 	MicroService("MicroService"),
 	/**
@@ -68,17 +68,17 @@ public enum DictionaryType{
 	 */
 	SafePolicy("SafePolicy"),
 	/**
-	 * Enum support entry to extend dictionary 
+	 * Enum support entry to extend dictionary
 	 */
 	Extended("Extended"),
 	;
-	
+
 	private String name;
-	
+
 	private DictionaryType(String typeName){
 		this.name = typeName;
 	}
-	
+
 	/**
 	 * Returns the <code>String</code> format of Type for this <code>PolicyClass</code>
 	 * @return the <code>String</code> of the Type for this <code>PolicyClass</code>
@@ -87,7 +87,7 @@ public enum DictionaryType{
 	public String toString() {
 		return this.name;
 	}
-	
+
 	@JsonCreator
     public static DictionaryType create (String value) {
         for(DictionaryType type: values()){

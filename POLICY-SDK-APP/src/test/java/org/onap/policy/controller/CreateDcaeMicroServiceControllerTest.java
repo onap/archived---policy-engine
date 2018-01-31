@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,18 +79,18 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
  * where they have write privileges and can execute time-sensitive
  * tasks.
  *
- * 
+ *
  *
  */
 
 public class CreateDcaeMicroServiceControllerTest {
-	
+
 	private static Logger logger = FlexLogger.getLogger(CreateDcaeMicroServiceControllerTest.class);
 	private static CommonClassDao commonClassDao;
 	private String jsonString = null;
 	private String configBodyString = null;
 	private HttpServletRequest request = null;
-	
+
 	@Before
 	public void setUp() throws Exception {
 
@@ -98,12 +98,12 @@ public class CreateDcaeMicroServiceControllerTest {
         commonClassDao = mock(CommonClassDao.class);
         List<Object> microServiceModelsData = new ArrayList<Object>();
         MicroServiceModels testData = new MicroServiceModels();
-        testData.setVersion("OpenOnap-Junit");        
+        testData.setVersion("OpenOnap-Junit");
         microServiceModelsData.add(testData);
 
         // mock the getDataById() call
         when(commonClassDao.getDataById(MicroServiceModels.class, "modelName", "test")).thenReturn(microServiceModelsData);
-        
+
 		jsonString = "{\"policyData\": {\"error\": \"\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
 				+ " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
 				+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
@@ -117,28 +117,28 @@ public class CreateDcaeMicroServiceControllerTest {
 				+ "\"priority\":\"2\",\"content\":{\"lastPolled\":\"1\",\"boolen-test\":\"true\",\"created\":\"test\",\"retiredDate\":\"test\",\"scope\":\"SNIRO_PLACEMENT_VDHV\","
 				+ "\"name\":\"test\",\"lastModified\":\"test\",\"state\":\"CREATED\",\"type\":\"CONFIG\",\"intent\":\"test\",\"target\":\"SNIRO\"}}";
 
-		request = mock(HttpServletRequest.class);        
+		request = mock(HttpServletRequest.class);
         BufferedReader br = new BufferedReader(new StringReader(jsonString));
         // mock the getReader() call
-        when(request.getReader()).thenReturn(br);   
-        
+        when(request.getReader()).thenReturn(br);
+
         logger.info("setUp: exit");
 	}
-		
-	
+
+
 	/**
 	 * Run the PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter,
 	 * JsonNode) method test
 	 */
-	
+
 	@Test
 	public void testSetDataToPolicyRestAdapter() {
-		
+
 		logger.debug("testSetDataToPolicyRestAdapter: enter");
-		
+
 		CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
 		CreateDcaeMicroServiceController.setCommonClassDao(commonClassDao);
-	
+
 		JsonNode root = null;
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -147,12 +147,12 @@ public class CreateDcaeMicroServiceControllerTest {
 			root = JsonLoader.fromString(jsonString);
 			policyData = (PolicyRestAdapter)mapper.readValue(root.get("policyData").get("policy").toString(), PolicyRestAdapter.class);
 		} catch (Exception e) {
-			logger.error("testSetDataToPolicyRestAdapter", e);			
-		} 
-		
+			logger.error("testSetDataToPolicyRestAdapter", e);
+		}
+
 		PolicyRestAdapter result = controller.setDataToPolicyRestAdapter(policyData,	root);
 		assertTrue(result != null && result.getJsonBody() != null && !result.getJsonBody().isEmpty());
-	
+
 		logger.debug("result.getJsonBody() : " + result.getJsonBody());
 		logger.debug("testSetDataToPolicyRestAdapter: exit");
 	}
@@ -160,34 +160,34 @@ public class CreateDcaeMicroServiceControllerTest {
 	/**
 	 * Run the void stringBetweenDots(String, String) method test
 	 */
-	
+
 	 @Test
 	public void testStringBetweenDots() {
 
 		logger.debug("testStringBetweenDots: enter");
-		
-		//expect: uniqueKeys should contain a string value 
+
+		//expect: uniqueKeys should contain a string value
 		CreateDcaeMicroServiceController controllerA = new CreateDcaeMicroServiceController();
 		String str = "testing\\.byCorrectWay\\.OfDATA";
 		assertEquals(1, controllerA.stringBetweenDots(str));
-		
-		//expect: uniqueKeys should not contain a string value 
+
+		//expect: uniqueKeys should not contain a string value
 		str = "testing\byWrongtWay.\\OfDATA";
 		CreateDcaeMicroServiceController controllerB = new CreateDcaeMicroServiceController();
 	    assertEquals(0, controllerB.stringBetweenDots(str));
-	    
+
 		logger.debug("testStringBetweenDots: exit");
 	}
 
 	/**
 	 * Run the Map<String,String> load(String) method test
 	 */
-	
+
 	@Test
 	public void testLoad() {
-		
+
 		logger.debug("testLoad: enter");
-		
+
 		boolean isLocalTesting = true;
 		CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
 		String fileName = null;
@@ -205,21 +205,21 @@ public class CreateDcaeMicroServiceControllerTest {
 				logger.error("testLoad", e);
 				result = null;
 			}
-			
-			assertTrue(result != null && !result.isEmpty());				
+
+			assertTrue(result != null && !result.isEmpty());
 			logger.debug("result : " + result);
 		}
 
 		logger.debug("testLoad: exit");
 	}
-	
+
 	/**
 	 * Run the void parseTosca(String) method test
 	 */
-	
+
 	@Test
 	public void testParseTosca() {
-		
+
 		logger.debug("testParseTosca: enter");
 		boolean isLocalTesting = true;
 		String fileName = null;
@@ -229,7 +229,7 @@ public class CreateDcaeMicroServiceControllerTest {
 		} catch (Exception e1) {
 			logger.error("Exception Occured while loading file"+e1);
 		}
-		
+
 		CreateDcaeMicroServiceController contoller = new CreateDcaeMicroServiceController();
         if(isLocalTesting){
 			try {
@@ -245,40 +245,40 @@ public class CreateDcaeMicroServiceControllerTest {
 	 * Run the ModelAndView getDCAEMSTemplateData(HttpServletRequest,
 	 * HttpServletResponse) method test
 	 */
-	
+
 	 @Test
 	public void testGetDCAEMSTemplateData() {
-		
+
 		logger.debug("testGetDCAEMSTemplateData: enter");
-		
-		CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();   
+
+		CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		String msModelJson = "{\"policyData\":\"DkatPolicyBody\"}";
-		try {	
-			
+		try {
+
 	        CreateDcaeMicroServiceController.setCommonClassDao(commonClassDao);
-	        
+
 	        BufferedReader br = new BufferedReader(new StringReader(msModelJson));
 	        // mock the getReader() call
-	        when(request.getReader()).thenReturn(br); 
-	        
+	        when(request.getReader()).thenReturn(br);
+
 	        List<Object> microServiceModelsData = new ArrayList<Object>();
 	        MicroServiceModels testData = new MicroServiceModels();
-	        testData.setVersion("1707.4.1.2-Junit");        
+	        testData.setVersion("1707.4.1.2-Junit");
 	        microServiceModelsData.add(testData);
-	        // mock the getDataById() call with the same MS model name 
-	        when(commonClassDao.getDataById(MicroServiceModels.class, "modelName", "DkatPolicyBody")).thenReturn(microServiceModelsData);	
-	        
+	        // mock the getDataById() call with the same MS model name
+	        when(commonClassDao.getDataById(MicroServiceModels.class, "modelName", "DkatPolicyBody")).thenReturn(microServiceModelsData);
+
 			controller.getDCAEMSTemplateData(request, response);
-			
+
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("dcaeModelData"));
-			
+
 			logger.debug("response: "  + response.getContentAsString());
-			
+
 		} catch (Exception e) {
 			logger.error("testGetDCAEMSTemplateData", e);
-		}		
-	
+		}
+
 		logger.debug("testGetDCAEMSTemplateData: exit");
 	}
 
@@ -286,36 +286,36 @@ public class CreateDcaeMicroServiceControllerTest {
 	 * Run the ModelAndView getModelServiceVersionData(HttpServletRequest,
 	 * HttpServletResponse) method test
 	 */
-	
+
 	@Test
 	public void testGetModelServiceVersionData() {
-		
+
 		logger.debug("testGetModelServiceVersionData: enter");
-		
+
 		CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 		String msModelJson = "{\"policyData\":\"DkatPolicyBody\"}";
 		try {
-			
+
 	        CreateDcaeMicroServiceController.setCommonClassDao(commonClassDao);
-	        
+
 	        BufferedReader br = new BufferedReader(new StringReader(msModelJson));
 	        // mock the getReader() call
-	        when(request.getReader()).thenReturn(br);   
-	        
+	        when(request.getReader()).thenReturn(br);
+
 	        List<Object> microServiceModelsData = new ArrayList<Object>();
 	        MicroServiceModels testData = new MicroServiceModels();
-	        testData.setVersion("1707.4.1.2-Junit");        
+	        testData.setVersion("1707.4.1.2-Junit");
 	        microServiceModelsData.add(testData);
 
-	        // mock the getDataById() call with the same MS model name 
+	        // mock the getDataById() call with the same MS model name
 	        when(commonClassDao.getDataById(MicroServiceModels.class, "modelName", "DkatPolicyBody")).thenReturn(microServiceModelsData);
-			controller.getModelServiceVersionData(request, response);	
-						
+			controller.getModelServiceVersionData(request, response);
+
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("1707.4.1.2-Junit"));
-			
+
 			logger.debug("response: "  + response.getContentAsString());
-			
+
 		} catch (Exception e) {
 			logger.error("testGetModelServiceVersionData", e);
 			fail("testGetModelServiceVersionData failed due to: " + e);
@@ -328,14 +328,14 @@ public class CreateDcaeMicroServiceControllerTest {
 	 * Run the void getDCAEPriorityValuesData(HttpServletRequest,
 	 * HttpServletResponse) method test
 	 */
-	
+
 	@Test
 	public void testGetDCAEPriorityValuesData() {
-		
+
 		logger.debug("testGetDCAEPriorityValuesData: enter");
-		
+
 		CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
-		
+
 	    MockHttpServletRequest request = new MockHttpServletRequest();
 	    MockHttpServletResponse response = new MockHttpServletResponse();
         try{
@@ -346,7 +346,7 @@ public class CreateDcaeMicroServiceControllerTest {
 			logger.error("testGetDCAEPriorityValuesData", e);
 			fail("testGetDCAEPriorityValuesData failed due to: " + e);
 		}
-		
+
 		logger.debug("testGetDCAEPriorityValuesData: exit");
 	}
 
@@ -354,20 +354,20 @@ public class CreateDcaeMicroServiceControllerTest {
 	 * Run the void prePopulateDCAEMSPolicyData(PolicyRestAdapter,
 	 * PolicyEntity) method test
 	 */
-	
+
 	@Test
 	public void testPrePopulateDCAEMSPolicyData() {
-		
+
 		logger.debug("testPrePopulateDCAEMSPolicyData: enter");
-		
+
 	    CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
-	    
+
 	    // populate an entity object for testing
 		PolicyEntity entity = new PolicyEntity();
 		ConfigurationDataEntity configData = new ConfigurationDataEntity();
-		configData.setConfigBody(configBodyString);		
+		configData.setConfigBody(configBodyString);
 		entity.setConfigurationData(configData);
-		
+
 		JsonNode root = null;
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -377,10 +377,10 @@ public class CreateDcaeMicroServiceControllerTest {
 			root = JsonLoader.fromString(jsonString);
 			restAdapter = (PolicyRestAdapter)mapper.readValue(root.get("policyData").get("policy").toString(), PolicyRestAdapter.class);
 			PolicyType policyType = new PolicyType();
-			TargetType target = new TargetType(); 
-			
-			// create guard attribute 
-			AnyOfType anyOfType = new AnyOfType();			
+			TargetType target = new TargetType();
+
+			// create guard attribute
+			AnyOfType anyOfType = new AnyOfType();
 			AllOfType alltype = new AllOfType();
 			MatchType matchType = new MatchType();
 			// set value
@@ -391,8 +391,8 @@ public class CreateDcaeMicroServiceControllerTest {
 			AttributeDesignatorType designator = new AttributeDesignatorType();
 			designator.setAttributeId("guard");
 			matchType.setAttributeDesignator(designator);
-			alltype.getMatch().add(matchType);	
-			
+			alltype.getMatch().add(matchType);
+
 			// add a dummy MatchType object since while (matchList.size()>1 ...)
 			MatchType matchDummy = new MatchType();
 			// set value
@@ -403,14 +403,14 @@ public class CreateDcaeMicroServiceControllerTest {
 			AttributeDesignatorType designatorDummy = new AttributeDesignatorType();
 			designatorDummy.setAttributeId("dummyId");
 			matchDummy.setAttributeDesignator(designatorDummy);
-			
+
 			alltype.getMatch().add(matchDummy);
 			anyOfType.getAllOf().add(alltype);
-			
+
 			target.getAnyOf().add(anyOfType);
-			
-			// create RiskType attribute 
-			AnyOfType anyRiskType = new AnyOfType();			
+
+			// create RiskType attribute
+			AnyOfType anyRiskType = new AnyOfType();
 			AllOfType allRiskType = new AllOfType();
 			MatchType matchRiskType = new MatchType();
 			// set value
@@ -421,8 +421,8 @@ public class CreateDcaeMicroServiceControllerTest {
 			AttributeDesignatorType designatorRiskType = new AttributeDesignatorType();
 			designatorRiskType.setAttributeId("RiskType");
 			matchRiskType.setAttributeDesignator(designatorRiskType);
-			allRiskType.getMatch().add(matchRiskType);	
-			
+			allRiskType.getMatch().add(matchRiskType);
+
 			// add a dummy MatchType object since while (matchList.size()>1 ...)
 			MatchType matchDummy1 = new MatchType();
 			// set value
@@ -433,15 +433,15 @@ public class CreateDcaeMicroServiceControllerTest {
 			AttributeDesignatorType designatorDummy1 = new AttributeDesignatorType();
 			designatorDummy1.setAttributeId("dummyId");
 			matchDummy1.setAttributeDesignator(designatorDummy1);
-			
+
 			allRiskType.getMatch().add(matchDummy1);
-			
+
 			anyRiskType.getAllOf().add(allRiskType);
-			
+
 			target.getAnyOf().add(anyRiskType);
-			
-			// create RiskLevel attribute 
-			AnyOfType anyRiskLevel = new AnyOfType();			
+
+			// create RiskLevel attribute
+			AnyOfType anyRiskLevel = new AnyOfType();
 			AllOfType allRiskLevel = new AllOfType();
 			MatchType matchRiskLevel = new MatchType();
 			// set value
@@ -453,7 +453,7 @@ public class CreateDcaeMicroServiceControllerTest {
 			designatorRiskLevel.setAttributeId("RiskLevel");
 			matchRiskLevel.setAttributeDesignator(designatorRiskLevel);
 			allRiskLevel.getMatch().add(matchRiskLevel);
-			
+
 			// add a dummy MatchType object since while (matchList.size()>1 ...)
 			MatchType matchDummy2 = new MatchType();
 			// set value
@@ -464,110 +464,110 @@ public class CreateDcaeMicroServiceControllerTest {
 			AttributeDesignatorType designatorDummy2 = new AttributeDesignatorType();
 			designatorDummy2.setAttributeId("dummyId");
 			matchDummy2.setAttributeDesignator(designatorDummy2);
-			
+
 			allRiskLevel.getMatch().add(matchDummy2);
-			
+
 			anyRiskLevel.getAllOf().add(allRiskLevel);
 			target.getAnyOf().add(anyRiskLevel);
-			
+
 			policyType.setTarget(target);
-			
+
 			restAdapter.setPolicyData(policyType);
-			
+
 			controller.prePopulateDCAEMSPolicyData(restAdapter, entity);
-			
+
 			logger.error("restAdapter.getRiskType() : " + restAdapter.getRiskType());
 			logger.error("restAdapter.getRiskLevel() : " + restAdapter.getRiskLevel());
 			logger.error("restAdapter.getGuard() : " + restAdapter.getGuard());
-			
+
 			assertEquals("True", restAdapter.getGuard());
 			assertEquals("3", restAdapter.getRiskLevel());
 			assertEquals("test", restAdapter.getRiskType());
-			
+
 		} catch (Exception e) {
 			logger.error("testPrePopulateDCAEMSPolicyData", e);
 			fail("testPrePopulateDCAEMSPolicyData failed due to: " + e);
-		} 
-		
+		}
+
 		logger.debug("testPrePopulateDCAEMSPolicyData: exit");
-		
+
 	}
 
 	/**
 	 * Run the Map<String,String> convert(String, String) method test
 	 */
-	
+
 	@Test
 	public void testConvert(){
 		logger.debug("testConvert: enter");
-		
+
 	    String str = "k1=v1,k2=v2,k3=v3";
 		String split = ",";
-		Map<String,String> result = CreateDcaeMicroServiceController.convert(str, split);		
+		Map<String,String> result = CreateDcaeMicroServiceController.convert(str, split);
 		assertTrue(result != null && result.size() == 3);
-		
+
 		logger.debug("testConvert: exit");
 	}
-	
+
 	/**
 	 * Run the Map<String,String> convertMap(Map<String,String>,
 	 * Map<String,String>) method test
 	 */
-	
+
 	@Test
 	public void testConvertMap(){
 		logger.debug("testConvertMap: enter");
-		
+
 		CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
 		Map<String,String> attributesMap = new HashMap<String, String>();
 		Map<String,String> attributesRefMap = new HashMap<String, String>();
 		Map<String,String> attributesListRefMap  = controller.getAttributesListRefMap();
 		Map<String, LinkedList<String>> arrayTextList = controller.getArrayTextList();
 		LinkedList<String> list = new LinkedList<String>();
-		 
+
 		attributesMap.put("keyOne", "valueOne");
 		attributesMap.put("keyTwo", "valueTwo");
 		attributesMap.put("keyThree", "valueThree");
-		
+
 		attributesRefMap.put("key4", "value4");
 		attributesRefMap.put("key5", "value5");
 		attributesRefMap.put("key6", "value6");
-		
+
 		attributesListRefMap.put("key7", "value7");
-		
+
 		list.add("l1");
 		list.add("l2");
 		arrayTextList.put("key8", list);
-		
+
 		Map<String,String> result = controller.convertMap(attributesMap, attributesRefMap);
-		
+
 		assertTrue(result != null && result.size() == 8);
-		
+
 		assertTrue(arrayTextList.get("key8").toString().contains("[l1, l2]"));
-		
+
 		logger.debug("testConvertMap: exit");
 	}
-	
+
 	/**
 	 * Run the void SetMSModelData(HttpServletRequest, HttpServletResponse)
 	 * method test
 	 */
-	
+
 	//@Ignore
 	@Test
-	public void testSetMSModelData() {		
-		
+	public void testSetMSModelData() {
+
 		logger.debug("testSetMSModelData: enter");
-		
+
 		CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
-		
+
 	    MockHttpServletResponse response = new MockHttpServletResponse();
 
 	    HttpServletRequest request = createMock(HttpServletRequest.class);
 	    expect(request.getContentType()).andReturn("multipart/form-data; boundary=----WebKitFormBoundaryWcRUaIbC8kXgjr3p");
 	    expect(request.getMethod()).andReturn("post");
 	    expect(request.getHeader("Content-length")).andReturn("7809");
-	    
+
 	    expect(request.getContentLength()).andReturn(7809);
 
 	    try {
@@ -579,23 +579,23 @@ public class CreateDcaeMicroServiceControllerTest {
 			} catch (Exception e1) {
 				logger.error("Exception Occured while loading file"+e1);
 			}
-			expect(request.getInputStream()).andReturn(new MockServletInputStream(fileName));	    
+			expect(request.getInputStream()).andReturn(new MockServletInputStream(fileName));
 		    expect(request.getCharacterEncoding()).andReturn("UTF-8");
 		    expect(request.getContentLength()).andReturn(1024);
 		    replay(request);
-			
+
 		} catch (Exception e) {
 			logger.error("testSetMSModelData" + e);
 			e.printStackTrace();
 		}
-	    
+
 		//assertTrue(false);
-		
+
 		logger.debug("testSetMSModelData: exit");
 	}
 
 	/**
-	 * 
+	 *
 	 * @ Get File Stream
 	 *
 	 */
@@ -637,6 +637,6 @@ public class CreateDcaeMicroServiceControllerTest {
 		public void setReadListener(ReadListener arg0) {
 
 		}
-	}	
-	
+	}
+
 }

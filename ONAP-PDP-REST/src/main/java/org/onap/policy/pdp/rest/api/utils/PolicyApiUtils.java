@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ public class PolicyApiUtils {
             .getName());
     private static final String SUCCESS = "success";
 
-		
+
     public static Boolean validateNONASCIICharactersAndAllowSpaces(
             String jsonString) {
         Boolean isValidForm = false;
@@ -58,16 +58,16 @@ public class PolicyApiUtils {
         }
         return isValidForm;
     }
-    
+
     public static String formatResponse(StringBuilder responseString){
-    	
+    
     	LOGGER.info("Formatting response message from Policy Validator");
-    	String response = responseString.toString().replace("<br>", " | ");		
+    	String response = responseString.toString().replace("<br>", " | ");
 		response = response.replaceAll("(<b>|<\\/b>|<br>|<i>|<\\/i>|@#)", "");
-				
+
     	return response;
     }
-    
+
     public static boolean isNumeric(String str) {
         for (char c : str.toCharArray()) {
             if (!Character.isDigit(c))
@@ -83,12 +83,12 @@ public class PolicyApiUtils {
         jsonReader.close();
         return object;
     }
-    
+
     public static String validateDictionaryJsonFields(JsonObject json, String dictionary) {
-    	
+    
     	LOGGER.info("Validating DictionaryJsonField values");
     	String message;
-    	
+    
     	if("Action".equals(dictionary.trim())){
         	if(json.containsKey("attributeName")){
         		if(json.getString("attributeName")==null || json.getString("attributeName").trim().isEmpty()){
@@ -121,15 +121,15 @@ public class PolicyApiUtils {
         			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Method provided.";
         			return message;
         		}
-        		if("GET".equals(json.getString("method").trim()) 
-        				|| "PUT".equals(json.getString("method").trim()) 
+        		if("GET".equals(json.getString("method").trim())
+        				|| "PUT".equals(json.getString("method").trim())
         				|| "POST".equals(json.getString("method").trim())){
-        			
+        
         			//Successful Validation
-        			
+        
         		}else{
         			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Method value.";
-    				return message;	
+    				return message;
         		}
         	}else{
         		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing method key in the dictionaryJson parameter.";
@@ -155,8 +155,8 @@ public class PolicyApiUtils {
         	}
         	if(json.containsKey("headers")){
         		JsonArray array = json.getJsonArray("headers");
-        		
-        		for (int i = 0;i<array.size(); i++) { 
+        
+        		for (int i = 0;i<array.size(); i++) {
     				JsonObject jsonObj = array.getJsonObject(i);
     				if(jsonObj.containsKey("option")){
         				if(jsonObj.getString("option")==null || jsonObj.getString("option").trim().isEmpty()){

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,10 +36,10 @@ import org.onap.policy.api.PolicyEventException;
 import org.onap.policy.api.PolicyResponse;
 import org.onap.policy.api.PolicyResponseStatus;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger; 
+import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class SendEventTest {
-	
+
 	private PolicyEngine policyEngine = null;
 	private Map<String,String> eventAttributes = new HashMap<String,String>();
 	private Collection<PolicyResponse> policyResponse = null;
@@ -66,7 +66,7 @@ public class SendEventTest {
 		}
 		assertNull(policyResponse);
 	}
-	
+
 	//@Test
 	@SuppressWarnings("deprecation")
 	public void testSendEventFailNull() {
@@ -78,8 +78,8 @@ public class SendEventTest {
 		}
 		assertNull(policyResponse);
 	}
-	
-	// deprecated Test. 
+
+	// deprecated Test.
 	/*@Test
 	public void testSendEventFailAttribute() {
 		eventAttributes.put("Fail.key", "Value");
@@ -90,7 +90,7 @@ public class SendEventTest {
 		}
 		assertNull(policyResponse.getPolicyResponseMessage());
 	}*/
-	
+
 	//@Test
 	@SuppressWarnings("deprecation")
 	public void testSendEventNotValid() {
@@ -110,7 +110,7 @@ public class SendEventTest {
 			assertNull(policyResponse.getActionAdvised());
 		}
 	}
-	
+
 	//@Test
 	@SuppressWarnings("deprecation")
 	public void testSendEventActionAdvised() {
@@ -131,7 +131,7 @@ public class SendEventTest {
 			assertNotNull(policyResponse.getActionAdvised());
 		}
 	}
-	
+
 	//@Test
 	@SuppressWarnings("deprecation")
 	public void testSendEventActionTaken() {

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,17 +59,17 @@ import junit.framework.TestCase;
 
 public class XACMLPdpServletTest extends TestCase{
 	private static Logger LOGGER	= FlexLogger.getLogger(XACMLPdpServletTest.class);
-	
+
 	private List<String> headers = new ArrayList<>();
-	
+
 	private HttpServletRequest httpServletRequest;
 	private HttpServletResponse httpServletResponse;
 	private ServletOutputStream mockOutput;
 	private ServletInputStream mockInput;
-	private ServletConfig servletConfig; 
+	private ServletConfig servletConfig;
 	private XACMLPdpServlet pdpServlet;
 	private IntegrityMonitor im;
-	
+
 	private DbDAO dbDAO;
 	private String persistenceUnit;
 	private Properties properties;
@@ -84,10 +84,10 @@ public class XACMLPdpServletTest extends TestCase{
 	private static final String DEFAULT_DB_USER = "sa";
 	private static final String DEFAULT_DB_PWD = "";
 
-	 
+
     @Before
     public void setUp(){
-    	
+    
     	properties = new Properties();
 		properties.put(IntegrityAuditProperties.DB_DRIVER, XACMLPdpServletTest.DEFAULT_DB_DRIVER);
 		properties.put(IntegrityAuditProperties.DB_URL, "jdbc:h2:file:./sql/xacmlTest");
@@ -104,15 +104,15 @@ public class XACMLPdpServletTest extends TestCase{
 		nodeType = "pdp";
 		persistenceUnit = "testPdpPU";
 		resourceName = "siteA.pdp1";
-		
+
 		System.setProperty("com.sun.management.jmxremote.port", "9999");
-		
+
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnit, properties);
-		
+
 		EntityManager em = emf.createEntityManager();
 		// Start a transaction
 		EntityTransaction et = em.getTransaction();
-		
+
 		IntegrityMonitor im = null;
 		try {
 			im = IntegrityMonitor.getInstance(resourceName, properties);
@@ -121,17 +121,17 @@ public class XACMLPdpServletTest extends TestCase{
 			e2.printStackTrace();
 		}
 		//cleanDb(persistenceUnit, properties);
-		
+
     	httpServletRequest = Mockito.mock(HttpServletRequest.class);
     	Mockito.when(httpServletRequest.getMethod()).thenReturn("POST");
     	Mockito.when(httpServletRequest.getHeaderNames()).thenReturn(Collections.enumeration(headers));
     	Mockito.when(httpServletRequest.getAttributeNames()).thenReturn(Collections.enumeration(headers));
     	Mockito.when(httpServletRequest.getRequestURI()).thenReturn("/pdp/test");
-    	
+    
     	mockOutput = Mockito.mock(ServletOutputStream.class);
-    	
+    
     	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	
+    
     	try {
 			Mockito.when(httpServletResponse.getOutputStream()).thenReturn(mockOutput);
 		} catch (IOException e) {
@@ -143,9 +143,9 @@ public class XACMLPdpServletTest extends TestCase{
     	Mockito.when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
     	pdpServlet = new XACMLPdpServlet();
     	pdpServlet.setIm(im);
-    	
+    
     	Mockito.when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("src/test/resources/xacml.pdp.properties");
-    	
+    
 		System.setProperty("xacml.properties", "src/test/resources/xacml.pdp.properties");
 		System.setProperty("xacml.rest.pdp.config", "src/test/resources/config_testing");
 		System.setProperty("xacml.rest.pdp.webapps", "src/test/resources/webapps");
@@ -155,7 +155,7 @@ public class XACMLPdpServletTest extends TestCase{
 		*/
 		System.setProperty("xacml.rest.pdp.register", "false");
 		System.setProperty("com.sun.management.jmxremote.port", "9999");
-		
+
 		im = Mockito.mock(IntegrityMonitor.class);
 		// Need PowerMockito for mocking static method getInstance(...)
 		PowerMockito.mockStatic(IntegrityMonitor.class);
@@ -165,7 +165,7 @@ public class XACMLPdpServletTest extends TestCase{
 		} catch (Exception e1) {
 			LOGGER.error("Exception Occured"+e1);
 		}
-		
+
 		try {
 			Mockito.doNothing().when(im).startTransaction();
 		} catch (StandbyStatusException | AdministrativeStateException e) {
@@ -173,26 +173,26 @@ public class XACMLPdpServletTest extends TestCase{
 		}
 		Mockito.doNothing().when(im).endTransaction();
     }
-    
+
 	@Test
     public void testInit(){
 		LOGGER.info("XACMLPdpServletTest - testInit");
-		try {	
+		try {
 			pdpServlet.init(servletConfig);
 			assertTrue(true);
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured"+e);
 			fail();
-			
+
 		}
 
 	}
-	
+
 	@Test
 	public void testDoGetNoTypeError(){
 		LOGGER.info("XACMLPdpServletTest - testDoGetNoTypeError");
 		try{
-			
+
 			pdpServlet.init(servletConfig);
 			pdpServlet.doGet(httpServletRequest, httpServletResponse);
 			Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
@@ -203,13 +203,13 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}
-	
+
 	@Test
 	public void testDoGetConfigType(){
 		LOGGER.info("XACMLPdpServletTest - testDoGetConfigType");
-		Mockito.when(httpServletRequest.getParameter("type")).thenReturn("config");	
+		Mockito.when(httpServletRequest.getParameter("type")).thenReturn("config");
 
-		try{	
+		try{
 			pdpServlet.init(servletConfig);
 			pdpServlet.doGet(httpServletRequest, httpServletResponse);
 			Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
@@ -221,7 +221,7 @@ public class XACMLPdpServletTest extends TestCase{
 		}
 
 	}
-	
+
 	@Test
 	public void testDoGetTypeHb(){
 		LOGGER.info("XACMLPdpServletTest - testDoGetTypeHb");
@@ -237,7 +237,7 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}
-	
+
 	@Test
 	public void testDoGetTypeStatus(){
 		LOGGER.info("XACMLPdpServletTest - testDoGetTypeStatus");
@@ -252,8 +252,8 @@ public class XACMLPdpServletTest extends TestCase{
 			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
-	}	
-	
+	}
+
 	@Test
 	public void testDoPost(){
 		LOGGER.info("XACMLPdpServletTest - testDoPost");
@@ -267,14 +267,14 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}
-	
+
 	@Test
 	public void testDoPostToLong(){
 		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
 		try{
 			Mockito.when(httpServletRequest.getContentType()).thenReturn("stuff");
 			Mockito.when(httpServletRequest.getContentLength()).thenReturn(32768);
-			
+
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPost(httpServletRequest, httpServletResponse);
 			assertTrue(true);
@@ -283,15 +283,15 @@ public class XACMLPdpServletTest extends TestCase{
 			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
-	}	
-	
+	}
+
 	@Test
 	public void testDoPostContentLengthNegative(){
 		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
 		try{
 			Mockito.when(httpServletRequest.getContentType()).thenReturn("stuff");
 			Mockito.when(httpServletRequest.getContentLength()).thenReturn(-1);
-			
+
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPost(httpServletRequest, httpServletResponse);
 			assertTrue(true);
@@ -300,15 +300,15 @@ public class XACMLPdpServletTest extends TestCase{
 			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
-	}	
-	
+	}
+
 	@Test
 	public void testDoPostContentTypeNonValid(){
 		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
 		try{
 			Mockito.when(httpServletRequest.getContentType()).thenReturn(";");
 			Mockito.when(httpServletRequest.getContentLength()).thenReturn(30768);
-			
+
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPost(httpServletRequest, httpServletResponse);
 			assertTrue(true);
@@ -317,15 +317,15 @@ public class XACMLPdpServletTest extends TestCase{
 			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
-	}	
-	
+	}
+
 	@Test
 	public void testDoPostContentTypeConfigurationError(){
 		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
 		try{
 			Mockito.when(httpServletRequest.getContentType()).thenReturn("stuff");
 			Mockito.when(httpServletRequest.getContentLength()).thenReturn(30768);
-			
+
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPost(httpServletRequest, httpServletResponse);
 			assertTrue(true);
@@ -334,13 +334,13 @@ public class XACMLPdpServletTest extends TestCase{
 			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
-	}	
-	
+	}
+
 	@Test
 	public void testDoPutCacheEmpty(){
 		LOGGER.info("XACMLPdpServletTest - testDoPutCacheEmpty");
 		mockInput = Mockito.mock(ServletInputStream.class);
-		
+
 		try{
 			Mockito.when(httpServletRequest.getParameter("cache")).thenReturn("cache");
 			Mockito.when(httpServletRequest.getContentType()).thenReturn("text/x-java-properties");
@@ -355,15 +355,15 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}
-	
+
 	@Test
 	public void testDoPutConfigPolicies(){
 		LOGGER.info("XACMLPdpServletTest - testDoPutConfigPolicies");
 		byte[] b = new byte[20];
 		new Random().nextBytes(b);
-		
+
 		mockInput = new MockServletInputStream(b);
-	
+
 		try{
 			Mockito.when(httpServletRequest.getParameter("cache")).thenReturn("policies");
 			Mockito.when(httpServletRequest.getContentType()).thenReturn("text/x-java-properties");
@@ -376,16 +376,16 @@ public class XACMLPdpServletTest extends TestCase{
 			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
-	}	
-	
+	}
+
 	public void testDoPutToLong(){
 		LOGGER.info("XACMLPdpServletTest - testDoPutToLong");
 		try{
 			Mockito.when(httpServletRequest.getParameter("cache")).thenReturn("policies");
-			
+
 			Mockito.when(httpServletRequest.getContentType()).thenReturn("text/x-java-properties");
 			Mockito.when(httpServletRequest.getContentLength()).thenReturn(1000000000);
-			
+
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPut(httpServletRequest, httpServletResponse);
 			Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Content-Length larger than server will accept.");
@@ -395,17 +395,17 @@ public class XACMLPdpServletTest extends TestCase{
 			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
-	}	
-	
+	}
+
 	@Test
 	public void testDoPutInvalidContentType(){
 		LOGGER.info("XACMLPdpServletTest - testDoPutToLong");
 		try{
 			Mockito.when(httpServletRequest.getParameter("cache")).thenReturn("policies");
-			
+
 			Mockito.when(httpServletRequest.getContentType()).thenReturn("text/json");
 			Mockito.when(httpServletRequest.getContentLength()).thenReturn(32768);
-			
+
 			pdpServlet.init(servletConfig);
 			pdpServlet.doPut(httpServletRequest, httpServletResponse);
 			Mockito.verify(httpServletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid cache: 'policies' or content-type: 'text/json'");
@@ -415,12 +415,12 @@ public class XACMLPdpServletTest extends TestCase{
 			LOGGER.error("Exception Occured"+e);
 			fail();
 		}
-	}		
-	
+	}
+
 	@Test
 	public void testDestroy(){
 		LOGGER.info("XACMLPdpServletTest - testDestroy");
-		
+
 		try{
 			pdpServlet.init(servletConfig);
 			pdpServlet.destroy();

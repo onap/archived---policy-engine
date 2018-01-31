@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,11 +30,11 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 /**
  * BRMSGateway: This application acts as the Gateway interface between the PDP XACML and PDP Drools. The listens for
  * BRMS based policies and pushes them to the specified Policy Repository, from where the PDP Drools reads the Rule Jar.
- * 
+ *
  * @version 0.1
  */
 class BRMSGateway {
-	
+
     private static final Logger logger = FlexLogger.getLogger(BRMSGateway.class);
     private static final String CONFIGFILE = "config.properties";
 
@@ -43,7 +43,7 @@ class BRMSGateway {
     private BRMSGateway() {
     	// Default private constructor
     }
-    
+
     public static void main(String[] args) throws Exception {
         // Initialize Handler.
         logger.info("Initializing BRMS Handler");

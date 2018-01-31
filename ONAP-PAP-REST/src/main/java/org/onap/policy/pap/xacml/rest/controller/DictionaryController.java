@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,7 +55,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class DictionaryController {
-	
+
 	private static final Log LOGGER	= LogFactory.getLog(DictionaryController.class);
 
 	private static CommonClassDao commonClassDao;
@@ -75,12 +75,12 @@ public class DictionaryController {
 	 * This is an empty constructor
 	 */
 	public DictionaryController(){}
-	
+
 	public UserInfo getUserInfo(String loginId){
 		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
 	}
-	
-	
+
+
 	public Category getCategory(){
 		List<Object> list = commonClassDao.getData(Category.class);
 		for (int i = 0; i < list.size() ; i++) {
@@ -89,7 +89,7 @@ public class DictionaryController {
 				return value;
 			}
 		}
-		return null;	
+		return null;
 	}
 
 	@RequestMapping(value={"/get_AttributeDatabyAttributeName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -106,7 +106,7 @@ public class DictionaryController {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
 	}
-	
+
 	//Attribute Dictionary
 	@RequestMapping(value="/get_AttributeData", method= RequestMethod.GET , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getAttributeDictionaryEntityData(HttpServletResponse response){
@@ -116,17 +116,17 @@ public class DictionaryController {
 			model.put("attributeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(Attribute.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-            response.addHeader("successMapKey", "success"); 
+            response.addHeader("successMapKey", "success");
             response.addHeader(operation, "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
-	
+
 	@RequestMapping(value={"/attribute_dictionary/save_attribute"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
@@ -146,7 +146,7 @@ public class DictionaryController {
                 attributeData = (Attribute)mapper.readValue(root.get(dictionaryFields).toString(), Attribute.class);
                 attributeValueData = (AttributeValues)mapper.readValue(root.get(dictionaryFields).toString(), AttributeValues.class);
                 userId = "API";
-                
+
                 //check if update operation or create, get id for data to be updated and update attributeData
                 if (("update").equals(request.getParameter(operation))) {
                 	List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(attributeData.getXacmlId(), xacmlId, Attribute.class);
@@ -184,15 +184,15 @@ public class DictionaryController {
 				String datatype = attributeData.getDatatypeBean().getShortName();
 				Datatype a = new Datatype();
 				if(("string").equalsIgnoreCase(datatype)){
-					a.setId(26);	
+					a.setId(26);
 				}else if(("integer").equalsIgnoreCase(datatype)){
-					a.setId(12);	
+					a.setId(12);
 				}else if(("boolean").equalsIgnoreCase(datatype)){
-					a.setId(18);	
+					a.setId(18);
 				}else if(("double").equalsIgnoreCase(datatype)){
-					a.setId(25);	
+					a.setId(25);
 				}else if(("user").equalsIgnoreCase(datatype)){
-					a.setId(29);	
+					a.setId(29);
 				}
 				attributeData.setDatatypeBean(a);
 			}
@@ -210,16 +210,16 @@ public class DictionaryController {
 				if(!isFakeUpdate) {
 					attributeData.setUserModifiedBy(this.getUserInfo(userId));
 					attributeData.setModifiedDate(new Date());
-					commonClassDao.update(attributeData); 
+					commonClassDao.update(attributeData);
 				}
-			} 
+			}
             String responseString = null;
             if(duplicateflag) {
                 responseString = duplicateResponseString;
             } else {
                 responseString = mapper.writeValueAsString(commonClassDao.getData(Attribute.class));
             }
-            
+
             if (fromAPI) {
                 if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
                     if(isFakeUpdate) {
@@ -235,7 +235,7 @@ public class DictionaryController {
                 response.setCharacterEncoding(utf8);
                 response.setContentType(applicationJsonContentType);
                 request.setCharacterEncoding(utf8);
- 
+
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{attributeDictionaryDatas: " + responseString + "}");
                 out.write(j.toString());
@@ -278,7 +278,7 @@ public class DictionaryController {
 		}
 		return null;
 	}
-	
+
 	//OnapName Dictionary
 	@RequestMapping(value={"/get_OnapNameDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getOnapNameDictionaryByNameEntityData(HttpServletResponse response){
@@ -295,7 +295,7 @@ public class DictionaryController {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/get_OnapNameData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getOnapNameDictionaryEntityData(HttpServletResponse response){
 		try{
@@ -304,13 +304,13 @@ public class DictionaryController {
 			model.put("onapNameDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(OnapName.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-            response.addHeader("successMapKey", "success"); 
+            response.addHeader("successMapKey", "success");
             response.addHeader(operation, "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
@@ -365,7 +365,7 @@ public class DictionaryController {
 					onapData.setModifiedDate(new Date());
 					commonClassDao.update(onapData);
 				}
-			} 
+			}
 			String responseString = null;
 			if(duplicateflag) {
 				responseString = duplicateResponseString;

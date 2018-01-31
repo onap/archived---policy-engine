@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,11 +46,11 @@ public class ActionList implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
-	
+
 	@Column(name="actionname", nullable=false)
 	@OrderBy("asc")
 	private String actionName;
-	
+
 	@Column(name="description")
 	private String description;
 /*
@@ -59,19 +59,19 @@ public class ActionList implements Serializable {
 	private Date modifiedDate;*/
 
 	public ActionList() {
-		
+
 	}
 	public ActionList(String string, String userid) {
 		this(domain);
-		
+
 	}
 	public ActionList(String domain) {
-		
-	}	
+
+	}
 
 	@PrePersist
 	public void	prePersist() {
-		
+
 	}
 	@PreUpdate
 	public void preUpdate() {
@@ -84,7 +84,7 @@ public class ActionList implements Serializable {
 		this.actionName = actionName;
 
 	}
-	
+
 	public String getDescription() {
 		return this.description;
 	}
@@ -99,5 +99,5 @@ public class ActionList implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,29 +56,29 @@ import com.att.research.xacml.util.XACMLProperties;
 
 /**
  * PIP Engine for Implementing {@link com.att.research.xacml.std.pip.engines.ConfigurableEngine} interface to provide
- * attribute retrieval from Operation History Table.  
- * 
+ * attribute retrieval from Operation History Table.
+ *
  * @version $Revision$
  */
 public class OperationHistoryEngine extends StdConfigurableEngine{
 	public static final String DEFAULT_DESCRIPTION		= "PIP for retrieving Operations History from DB";
 	public static final String DEFAULT_ISSUER			= "org:onap:xacml:guard:historydb";
-	
+
 	private static final Logger LOGGER= FlexLogger.getLogger(OperationHistoryEngine.class);
-	
+
 	private static final PIPRequest PIP_REQUEST_ACTOR	= new StdPIPRequest(
-			XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+			XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
 			new IdentifierImpl("actor"),
 			XACML.ID_DATATYPE_STRING);
 
 	private static final PIPRequest PIP_REQUEST_RECIPE	= new StdPIPRequest(
-			XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
-			new IdentifierImpl("recipe"), 
+			XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
+			new IdentifierImpl("recipe"),
 			XACML.ID_DATATYPE_STRING);
 
 	private static final PIPRequest PIP_REQUEST_TARGET	= new StdPIPRequest(
-			XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
-			new IdentifierImpl("target"), 
+			XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
+			new IdentifierImpl("target"),
 			XACML.ID_DATATYPE_STRING);
 
 	private void addIntegerAttribute(StdMutablePIPResponse stdPIPResponse, Identifier category, Identifier attributeId, int value, PIPRequest pipRequest) {
@@ -138,8 +138,8 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 		int countFromDB = getCountFromDB(actor, operation, target, timeWindowVal, timeWindowScale);
 		StdMutablePIPResponse stdPIPResponse	= new StdMutablePIPResponse();
 		this.addIntegerAttribute(stdPIPResponse,
-				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
-				new IdentifierImpl("count"), 
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE,
+				new IdentifierImpl("count"),
 				countFromDB,
 				pipRequest);
 		return new StdPIPResponse(stdPIPResponse);
@@ -169,7 +169,7 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 				pipResponse	= null;
 			}
 		} catch (PIPException ex) {
-			LOGGER.error("PIPException getting subject-id attribute: " + ex.getMessage(), ex);			
+			LOGGER.error("PIPException getting subject-id attribute: " + ex.getMessage(), ex);
 		}
 		return pipResponse;
 	}
@@ -285,12 +285,12 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 		int ret = ((Number)nq.getSingleResult()).intValue();
 		LOGGER.info("###########************** History count: " + ret);
 		em.close();
-		return ret;	
+		return ret;
 	}
-	
-	// Validating Time Units to prevent SQL Injection. 
+
+	// Validating Time Units to prevent SQL Injection.
 	private static boolean validTimeUnits(String timeUnits) {
-		return (timeUnits.equalsIgnoreCase("minute") || timeUnits.equalsIgnoreCase("hour") || timeUnits.equalsIgnoreCase("day") 
+		return (timeUnits.equalsIgnoreCase("minute") || timeUnits.equalsIgnoreCase("hour") || timeUnits.equalsIgnoreCase("day")
 			|| timeUnits.equalsIgnoreCase("week") || timeUnits.equalsIgnoreCase("month")||timeUnits.equalsIgnoreCase("year"))?
 				true: false;
 	}

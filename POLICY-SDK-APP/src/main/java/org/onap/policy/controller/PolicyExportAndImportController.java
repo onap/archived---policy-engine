@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -84,7 +84,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 	private static String EDITOR = "editor";
 
 	private static CommonClassDao commonClassDao;
-	
+
 	private PolicyEntity policyEntity;
 	private ConfigurationDataEntity configurationDataEntity;
 	private ActionBodyEntity actionBodyEntity;
@@ -93,7 +93,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 	private Workbook workbook;
 
 	private HSSFWorkbook workBook2;
-	
+
 	private PolicyController policyController;
 	public PolicyController getPolicyController() {
 		return policyController;
@@ -206,7 +206,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 		}
 	}
 
-	//Policy Import 
+	//Policy Import
 	public JSONObject importRepositoryFile(String file, HttpServletRequest request) throws IOException{
 		boolean configExists = false;
 		boolean actionExists = false;
@@ -217,7 +217,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 		String userId = UserUtils.getUserSession(request).getOrgUserId();
 		UserInfo userInfo = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", userId);
 
-		//Check if the Role and Scope Size are Null get the values from db. 
+		//Check if the Role and Scope Size are Null get the values from db.
 		List<Object> userRoles = controller.getRoles(userId);
 		roles = new ArrayList<>();
 		scopes = new HashSet<>();
@@ -232,7 +232,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 					}
 				}else{
 					scopes.add(userRole.getScope());
-				}		
+				}
 			}
 		}
 		FileInputStream excelFile = new FileInputStream(new File(file));
@@ -272,7 +272,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 					}else if(policyEntity.getPolicyName().contains("Action_")){
 						actionExists = true;
 						actionBodyEntity.setActionBody(cell.getStringCellValue());
-					}	
+					}
 				}
 				if ("configurationName".equalsIgnoreCase(getCellHeaderName(cell))) {
 					finalColumn = true;
@@ -281,7 +281,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 						configurationDataEntity.setConfigurationName(cell.getStringCellValue());
 					}else if(policyEntity.getPolicyName().contains("Action_")){
 						actionBodyEntity.setActionBodyName(cell.getStringCellValue());
-					}	
+					}
 				}
 
 				if(finalColumn){
@@ -297,7 +297,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 					if (roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR)) {
 						//1. if Role contains super admin create scope.
 						//2. if Role contains super editor don't create new scope and add to list to show to user.
-						
+
 						PolicyEditorScopes policyEditorScope = (PolicyEditorScopes) commonClassDao.getEntityItem(PolicyEditorScopes.class, "scopeName", scope);
 						if(policyEditorScope == null){
 							if(roles.contains(SUPERADMIN)){
@@ -332,7 +332,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 								continue;
 							}
 						}
-					} 	
+					} 
 
 					if(configExists){
 						if(configName.endsWith("json")){
@@ -382,12 +382,12 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 					policyEntity.setModifiedBy(userId);
 					policyEntity.setDeleted(false);
 					commonClassDao.save(policyEntity);
-					
+
 					policyVersion = new PolicyVersion();
 					String policyName = policyEntity.getPolicyName().replace(".xml", "");
 					int version = Integer.parseInt(policyName.substring(policyName.lastIndexOf('.')+1));
 					policyName = policyName.substring(0, policyName.lastIndexOf('.'));
-					
+
 					policyVersion.setPolicyName(scope.replace(".", File.separator) + File.separator + policyName);
 					policyVersion.setActiveVersion(version);
 					policyVersion.setHigherVersion(version);

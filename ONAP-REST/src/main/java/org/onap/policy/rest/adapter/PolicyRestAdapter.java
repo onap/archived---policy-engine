@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,15 +30,15 @@ import javax.persistence.EntityManagerFactory;
 import org.onap.policy.rest.jpa.OnapName;
 
 public class PolicyRestAdapter {
-	
+
 	/*
-	 * 
+	 *
 	 * Note : Make Sure if any variables are added in PolicyRestAdapter.java, add them to PolicyElasticData.java file
-	 * 
-	 * 
+	 *
+	 *
 	 * */
-		
-	
+
+
 	//Common
 	private Object data;
 	private String policyName = null;
@@ -52,7 +52,7 @@ public class PolicyRestAdapter {
 	private String onapName = null;
 	private String configName = null;
 	private String ruleID = null;
-	private String parentPath;	
+	private String parentPath;
 	private boolean isValidData = false;
 	private String adminNotification = null;
 	private boolean isEditPolicy = false;
@@ -86,25 +86,25 @@ public class PolicyRestAdapter {
 	private ArrayList<Object> attributes;
 	private ArrayList<Object> settings;
 	private ArrayList<Object> ruleAlgorithmschoices;
-	
+
 	private LinkedHashMap<?, ?> serviceTypePolicyName;
-   
+
 	private LinkedHashMap<?, ?> verticaMetrics;
     private LinkedHashMap<?, ?> description;
     private LinkedHashMap<?, ?> attributeFields;
-    
+
     //ClosedLoop
 	private String clearTimeOut;
 	private String trapMaxAge;
 	private String verificationclearTimeOut;
 	private Map<String , String> dynamicLayoutMap;
-	
+
     //FireWall
     private String fwPolicyType;
 	private ArrayList<Object> fwattributes;
 	private String parentForChild;
 	private String securityZone;
-	
+
 	//Action & Decision
 	private String ruleCombiningAlgId = null;
 	private Map<String,String> dynamicFieldConfigAttributes;
@@ -125,14 +125,14 @@ public class PolicyRestAdapter {
 	private String actionDictType = null;
 	private String actionDictUrl = null;
 	private String actionDictMethod = null;
-	private YAMLParams yamlparams; 
-	
+	private YAMLParams yamlparams;
+
 	//Rainy Day Decision
 	private RainyDayParams rainyday;
 	private Map<String,String> rainydayMap;
 	private List<String> errorCodeList;
 	private List<String> treatmentList;
-	
+
 	//MicroSerice
 	private String serviceType = null;
 	private String uuid = null;
@@ -140,7 +140,7 @@ public class PolicyRestAdapter {
     private String priority = null;
     private String msLocation = null;
     private Object policyJSON = null;
-    
+
     //BRMS Policies
     private String ruleName;
 	private Map<String,String> brmsParamBody=null;
@@ -149,7 +149,7 @@ public class PolicyRestAdapter {
     private LinkedHashMap<?, ?>  ruleData;
 	private LinkedHashMap<?,?>   ruleListData;
 	private Map<String,String> drlRuleAndUIParams=null;
-    
+
 	//Safe Policy
 	private String policyScope;
 	private String providerComboBox = null;
@@ -157,16 +157,16 @@ public class PolicyRestAdapter {
 	private String riskLevel;
 	private String guard = null;
 	private String ttlDate;
-	private Map<String,String> matching; 
-	
+	private Map<String,String> matching;
+
 	private ArrayList<Object> triggerSignatures;
     private ArrayList<Object> symptomSignatures;
     private String logicalConnector;
     private String policyStatus;
     private String gocServerScope;
     private String supressionType;
-    
-    
+
+
 	public ArrayList<Object> getTriggerSignatures() {
 		return triggerSignatures;
 	}
@@ -197,17 +197,17 @@ public class PolicyRestAdapter {
 	public void setGocServerScope(String gocServerScope) {
 		this.gocServerScope = gocServerScope;
 	}
-	
+
 	public String getSupressionType() {
 		return supressionType;
 	}
 	public void setSupressionType(String supressionType) {
 		this.supressionType = supressionType;
 	}
-	
+
 	/********************************************************************************/
-	
-	
+
+
 
 	public String getComboPolicyType() {
 		return comboPolicyType;
@@ -559,7 +559,7 @@ public class PolicyRestAdapter {
 	public String getPolicyScope() {
 		return policyScope;
 	}
-	
+
 	public void setPolicyScope(String domainDir) {
 		this. policyScope=domainDir;
 	}

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,7 +50,7 @@ public class PAPServices {
     private static final String SUCCESS = "success";
     private static Logger LOGGER = FlexLogger.getLogger(PAPServices.class
             .getName());
-    
+
     private int responseCode = 0;
     private static String environment = "DEVL";
     private static Boolean junit = false;
@@ -58,7 +58,7 @@ public class PAPServices {
     private static final Object papResourceLock = new Object();
     private String operation = null;
     private String requestMethod = null;
-    private String encoding = null; 
+    private String encoding = null;
 
     public PAPServices() {
         environment = PDPApiAuth.getEnvironment();
@@ -72,7 +72,7 @@ public class PAPServices {
             }
         }
     }
-    
+
     private String getPAPEncoding(){
         if(encoding  == null){
             String userID =  XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
@@ -82,13 +82,13 @@ public class PAPServices {
         }
         return encoding;
     }
-    
+
     private void rotatePAPList(){
         synchronized (papResourceLock) {
             Collections.rotate(paps, -1);
         }
     }
-    
+
     private String getPAP(){
         String result;
         synchronized (papResourceLock) {
@@ -220,7 +220,7 @@ public class PAPServices {
             return response;
         }
     }
-    
+
     public String getActiveVersion(String policyScope, String filePrefix, String policyName, String clientScope, UUID requestID) {
         String version = null;
         HttpURLConnection connection = null;
@@ -269,7 +269,7 @@ public class PAPServices {
                     //DO the connect
                     connection.connect();
 
-                    // If Connected to PAP then break from the loop and continue with the Request 
+                    // If Connected to PAP then break from the loop and continue with the Request
                     if (connection.getResponseCode() > 0) {
                         connected = true;
                         break;
@@ -278,7 +278,7 @@ public class PAPServices {
                         LOGGER.debug(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PAP connection Error");
                     }
                 } catch (Exception e) {
-                    // This means that the PAP is not working 
+                    // This means that the PAP is not working
                     LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PAP connection Error : " + e);
                     rotatePAPList();
                 }
@@ -299,11 +299,11 @@ public class PAPServices {
                         version = connection.getHeaderField("version");
                         LOGGER.debug("ActiveVersion from the Header: " + version);
                     } else if (connection.getResponseCode() == 403) {
-                        LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS + "response code of the URL is " 
+                        LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS + "response code of the URL is "
                                 + connection.getResponseCode() + ". PEP is not Authorized for making this Request!! \n Contact Administrator for this Scope. ");
                         version = "pe100";
                     } else if (connection.getResponseCode() == 404) {
-                        LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "response code of the URL is " 
+                        LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "response code of the URL is "
                                 + connection.getResponseCode() + ". This indicates a problem with getting the version from the PAP");
                         version = "pe300";
                     } else {
@@ -311,17 +311,17 @@ public class PAPServices {
                     }
                 } catch (IOException e) {
                     LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
-                } 
+                }
             } else {
                 LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Unable to get valid response from PAP(s) " + paps);
-            }   
+            }
         }
         return version;
     }
-    
+
     private String checkResponse(HttpURLConnection connection, UUID requestID) throws IOException {
         String response = null;
-        if (responseCode == 200 || junit) {         
+        if (responseCode == 200 || junit) {
             // Check for successful creation of policy
             String isSuccess = null;
             if (!junit) { // is this a junit test?
@@ -335,9 +335,9 @@ public class PAPServices {
                     response = "Transaction ID: " + requestID + " --Policy with the name "+ connection.getHeaderField("policyName")
                             + " was successfully updated. ";
                     if (connection.getHeaderField("safetyChecker")!=null) {
-                    	response = response 
+                    	response = response
             					+ "\n\nPolicy Safety Checker Warning: This closedLoopControlName "
-            					+ "is potentially in conflict with " + connection.getHeaderField("conflictCLName") 
+            					+ "is potentially in conflict with " + connection.getHeaderField("conflictCLName")
             					+  " that already exists." + " See detailed information on ClosedLoop Pairs below: "
             					+"\n\n"+connection.getHeaderField("safetyChecker");
                     }
@@ -345,9 +345,9 @@ public class PAPServices {
                 	response = "Transaction ID: " + requestID + " --Policy with the name "+ connection.getHeaderField("policyName")
                             + " was successfully created.";
                     if (connection.getHeaderField("safetyChecker")!=null) {
-                    	response = response 
+                    	response = response
             					+ "\n\nPolicy Safety Checker Warning: This closedLoopControlName "
-            					+ "is potentially in conflict with " + connection.getHeaderField("conflictCLName") 
+            					+ "is potentially in conflict with " + connection.getHeaderField("conflictCLName")
             					+  " that already exists. " + "See detailed information on ClosedLoop Pairs below: "
             					+"\n\n"+connection.getHeaderField("safetyChecker");
                     }
@@ -363,16 +363,16 @@ public class PAPServices {
                 } else if ("getDictionary".equals(operation)) {
                     String json =  null;
                     try {
-                        
-                        //get the json string from the response 
+
+                        //get the json string from the response
                         InputStream is = connection.getInputStream();
-                            
+
                         // read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)
                         java.util.Scanner scanner = new java.util.Scanner(is);
                         scanner.useDelimiter("\\A");
                         json =  scanner.hasNext() ? scanner.next() : "";
                         scanner.close();
-                        
+
                     } catch (IOException e1) {
                         LOGGER.error(e1.getMessage() + e1);
                     }
@@ -633,7 +633,7 @@ public class PAPServices {
                     throw new PolicyException(
                             XACMLErrorConstants.ERROR_SYSTEM_ERROR
                                     + "Decoding the result ", e);
-                }	
+                }
             }
             return null;
         } else {

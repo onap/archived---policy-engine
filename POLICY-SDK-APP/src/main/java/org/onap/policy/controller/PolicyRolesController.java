@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,14 +55,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 @RequestMapping("/")
 public class PolicyRolesController extends RestrictedBaseController{
-	
+
 	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyRolesController.class);
-	
+
 	@Autowired
 	CommonClassDao commonClassDao;
-	
+
 	List<String> scopelist;
-	
+
 	@RequestMapping(value={"/get_RolesData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPolicyRolesEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -77,7 +77,7 @@ public class PolicyRolesController extends RestrictedBaseController{
 			LOGGER.error("Exception Occured"+e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/save_NonSuperRolesData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView SaveRolesEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -92,7 +92,7 @@ public class PolicyRolesController extends RestrictedBaseController{
 		    		scopeName.append(adapter.getScope().get(0));
 		    	}else{
 		    		scopeName.append("," + adapter.getScope().get(i));
-		    	}	
+		    	}
 		    }
 		    LOGGER.info("****************************************Logging UserID for Roles Function********************************************************");
 			LOGGER.info("UserId:  " + userId + "Updating the Scope for following user" + adapter.getLoginId() + "ScopeNames" + adapter.getScope());
@@ -106,7 +106,7 @@ public class PolicyRolesController extends RestrictedBaseController{
 		    response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
-		
+
 			PrintWriter out = response.getWriter();
 			String responseString = mapper.writeValueAsString(commonClassDao.getUserRoles());
 			JSONObject j = new JSONObject("{rolesDatas: " + responseString + "}");
@@ -118,7 +118,7 @@ public class PolicyRolesController extends RestrictedBaseController{
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value={"/get_PolicyRolesScopeData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPolicyScopesEntityData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -143,7 +143,7 @@ class ReadScopes{
 	private UserInfo loginId;
 	private String role;
 	private List<String> scope;
-	
+
 	public int getId() {
 		return id;
 	}

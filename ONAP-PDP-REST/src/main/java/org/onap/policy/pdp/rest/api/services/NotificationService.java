@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,23 +50,23 @@ public class NotificationService {
 	public static final String BACKUPFILE = "topicBackup.txt";
 	private static Logger logger = FlexLogger.getLogger(GetDictionaryService.class.getName());
 	private static ConcurrentHashMap<String, Date> topicQueue = new ConcurrentHashMap<>();
-	private static int interval = 15000;  
+	private static int interval = 15000;
 	private static Thread backUpthread = null;
 	private static Object resourceLock = new Object();
 	private static List<String> dmaapList = null;
 	private static String dmaapServers = null;
 	private static String aafLogin = null;
 	private static String aafPassword = null;
-	
+
 	private String notificationResponse = null;
 	private HttpStatus status = HttpStatus.BAD_REQUEST;
-	
+
 	/**
-	 * NotificationService Constructor.  
-	 * 
-	 * @param notificationTopic Topic Name in String format. 
-	 * @param requestID Request ID in String format. 
-	 * @param serviceType Needs to be NotificationServiceType based enumeration value. 
+	 * NotificationService Constructor.
+	 *
+	 * @param notificationTopic Topic Name in String format.
+	 * @param requestID Request ID in String format.
+	 * @param serviceType Needs to be NotificationServiceType based enumeration value.
 	 */
 	public NotificationService(String notificationTopic, String requestID, NotificationServiceType serviceType) {
 		init();
@@ -104,11 +104,11 @@ public class NotificationService {
 				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "DMaaP properties are missing from the property file ");
 				return;
 			}
-			// Cleanup Values. 
+			// Cleanup Values.
 			dmaapServers= dmaapServers.trim();
 			aafLogin = aafLogin.trim();
 			aafPassword = aafPassword.trim();
-			// Get servers to List. 
+			// Get servers to List.
 			if(dmaapServers.contains(",")) {
 				dmaapList = new ArrayList<>(Arrays.asList(dmaapServers.split("\\s*,\\s*")));
 			} else {
@@ -118,7 +118,7 @@ public class NotificationService {
 			callThread();
 		}
 	}
-	
+
 	public static void reloadProps(){
 	    dmaapServers = null;
 	    aafLogin = null;
@@ -139,8 +139,8 @@ public class NotificationService {
             logger.error(message);
             throw new PolicyException(message);
         }
-        // if already exists give error.Saying already registered. 
-        // Get Result. 
+        // if already exists give error.Saying already registered.
+        // Get Result.
         try{
             status = HttpStatus.OK;
             switch (serviceType) {
@@ -164,8 +164,8 @@ public class NotificationService {
             throw new PolicyException(e);
         }
 	}
-	
-	// Used to register Heart beat. 
+
+	// Used to register Heart beat.
 	private void heartBeat(String notificationTopic) throws PolicyException{
 		if(!topicQueue.isEmpty()&& topicQueue.containsKey(notificationTopic)){
 			topicQueue.put(notificationTopic, new Date());
@@ -176,7 +176,7 @@ public class NotificationService {
 	}
 
 	// Used to remove Topic.
-	private static void removeTopic(String notificationTopic) throws PolicyException{ 
+	private static void removeTopic(String notificationTopic) throws PolicyException{
 		if(topicQueue.containsKey(notificationTopic)){
 			topicQueue.remove(notificationTopic);
 			removeTopicFromBackup(notificationTopic);
@@ -205,9 +205,9 @@ public class NotificationService {
 		}
 	}
 
-	// Used to add Topic. 
+	// Used to add Topic.
 	private void addTopic(String notificationTopic) throws PolicyException{
-		// validate if topic exists. 
+		// validate if topic exists.
 		if(!topicQueue.isEmpty()&& topicQueue.containsKey(notificationTopic)){
 			topicQueue.put(notificationTopic, new Date());
 			logger.info("Topic " + notificationTopic + " is already registered.");
@@ -227,9 +227,9 @@ public class NotificationService {
 		}
 	}
 
-	// Maintains BackUp and Queue Topic. 
+	// Maintains BackUp and Queue Topic.
 	private static void callThread() {
-		// Create the backup file if it not exists. 
+		// Create the backup file if it not exists.
 		backup();
 		if(backUpthread==null){
 			Runnable task = () -> {
@@ -248,7 +248,7 @@ public class NotificationService {
 				if(!backUpFile.exists() && backUpFile.createNewFile()){
 					logger.info(" BackUp File for topic's has been created !");
 				}else{
-					// File Already exists. Process file and load the Memory. 
+					// File Already exists. Process file and load the Memory.
 					Stream<String> stream = Files.lines(Paths.get(BACKUPFILE));
 					Map<String,Date> data = stream.map(line -> line.split(",")).collect(Collectors.toMap(e->e[0],e-> new Date()));
 					stream.close();
@@ -288,8 +288,8 @@ public class NotificationService {
 	}
 
 	/**
-	 * Entry point for sending Notifications from Notification Server. 
-	 * @param notification String JSON format of notification message which needs to be sent. 
+	 * Entry point for sending Notifications from Notification Server.
+	 * @param notification String JSON format of notification message which needs to be sent.
 	 */
 	public static void sendNotification(String notification) {
 		init();
@@ -297,20 +297,20 @@ public class NotificationService {
 			sendDmaapMessage(topic, notification);
 		}
 	}
-	
+
 	private static void sendDmaapMessage(String topic, String notification) {
-		BusPublisher publisher = new BusPublisher.DmaapPublisherWrapper(dmaapList, 
-						                               topic, 
-						                               aafLogin, 
+		BusPublisher publisher = new BusPublisher.DmaapPublisherWrapper(dmaapList,
+						                               topic,
+						                               aafLogin,
 						                               aafPassword);
 		// Sending notification through DMaaP Message Router
 		publisher.send( "MyPartitionKey", notification);
 		logger.debug("Message Published on DMaaP :" + dmaapList.get(0) + "for Topic: " + topic);
 		publisher.close();
 	}
-	
+
 	/**
-	 *  Notification service Type Enumeration 
+	 *  Notification service Type Enumeration
 	 */
 	public enum NotificationServiceType{
 		ADD,

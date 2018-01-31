@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,12 +28,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
 
 public class ConfigurableRESTUtils  {
-	
+
 	protected Logger LOGGER	= FlexLogger.getLogger(this.getClass());
 
 	//
@@ -45,17 +45,17 @@ public class ConfigurableRESTUtils  {
 	public enum RESQUEST_METHOD {
 		  GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE;
 		}
-	
+
 	private String ERROR_RECEIVED = "ERROR - Unexpected HTTP response: ";
-	
+
 	public ConfigurableRESTUtils() {
 		//Default Constructor
 	}
-	
-	
+
+
 	/**
 	 * Call the RESTful API and return a string containing the result.  The string may be either a httpResponseCode or json body
-	 * 		
+	 * 
 	 * @param fullURI
 	 * @param hardCodedHeaders
 	 * @param httpResponseCodes
@@ -64,16 +64,16 @@ public class ConfigurableRESTUtils  {
 	 * @param requestMethod
 	 * @return String
 	 */
-	public String sendRESTRequest(String fullURI, Map<String, String> hardCodedHeaderMap, 
+	public String sendRESTRequest(String fullURI, Map<String, String> hardCodedHeaderMap,
 			Map<Integer,String> httpResponseCodeMap,
 			REST_RESPONSE_FORMAT responseFormat,
 			String jsonBody,
 			RESQUEST_METHOD requestMethod ){
-		
+
 		String responseString = null;
 		HttpURLConnection connection = null;
 		try {
-			
+
 			URL url = new URL(fullURI);
 
 			//
@@ -86,14 +86,14 @@ public class ConfigurableRESTUtils  {
             connection.setRequestMethod(requestMethod.toString());
 
             connection.setUseCaches(false);
-            
+
             // add hard-coded headers
             for (String headerName : hardCodedHeaderMap.keySet()) {
             	connection.addRequestProperty(headerName, hardCodedHeaderMap.get(headerName));
             }
 
-            
-            
+
+
             if (jsonBody != null){
             	connection.setDoInput(true);
             	connection.setDoOutput(true);
@@ -104,9 +104,9 @@ public class ConfigurableRESTUtils  {
             } else{
             	connection.connect();
             }
-            
+
             int responseCode = connection.getResponseCode();
-            
+
             // check that the response is one we expected (and get the associated value at the same time)
             responseString = httpResponseCodeMap.get(responseCode);
             if (responseString == null) {
@@ -114,12 +114,12 @@ public class ConfigurableRESTUtils  {
             	LOGGER.error("Unexpected HTTP response code '" + responseCode + "' from RESTful Server");
             	return ERROR_RECEIVED +  " code" + responseCode + " from RESTful Server";
             }
-            
+
             // if the response is contained only in the http code we are done.  Otherwise we need to read the body
             if (responseFormat == REST_RESPONSE_FORMAT.httpResponseCode) {
             	return responseString;
             }
-            
+
             // Need to read the body and return that as the responseString.
 
             responseString = null;
@@ -130,7 +130,7 @@ public class ConfigurableRESTUtils  {
 		    scanner.close();
 		    LOGGER.debug("RESTful body: " + responseString);
 		    return responseString;
-		    
+
 		} catch (Exception e) {
 			LOGGER.error("HTTP Request/Response from RESTFUL server: " + e);
 			responseString =  ERROR_RECEIVED + e;

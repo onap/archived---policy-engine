@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ import com.att.research.xacml.api.Identifier;
 @NamedQuery(name="PolicyAlgorithms.findAll", query="SELECT d FROM PolicyAlgorithms d")
 public class PolicyAlgorithms implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final char STANDARD = 'S';
 	public static final char CUSTOM = 'C';
 
@@ -52,7 +52,7 @@ public class PolicyAlgorithms implements Serializable {
 
 	@Column(name="xacml_id", nullable=false, unique=true, length=255)
 	private String xacmlId;
-	
+
 	@Column(name="short_name", nullable=false, length=64)
 	private String shortName;
 
@@ -62,7 +62,7 @@ public class PolicyAlgorithms implements Serializable {
 			this.xacmlId = identifier.stringValue();
 		}
 	}
-	
+
 	public PolicyAlgorithms(Identifier identifier) {
 		this(identifier, PolicyAlgorithms.STANDARD);
 	}
@@ -70,7 +70,7 @@ public class PolicyAlgorithms implements Serializable {
 	public PolicyAlgorithms() {
 		this(null, PolicyAlgorithms.STANDARD);
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}
@@ -91,7 +91,7 @@ public class PolicyAlgorithms implements Serializable {
 	public boolean isStandard() {
 		return (this.isStandard == PolicyAlgorithms.STANDARD);
 	}
-	
+
 	@Transient
 	public boolean isCustom() {
 		return (this.isStandard == PolicyAlgorithms.CUSTOM);

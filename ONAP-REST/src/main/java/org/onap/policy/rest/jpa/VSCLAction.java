@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,7 +58,7 @@ public class VSCLAction implements Serializable  {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
-	
+
 	@Column(name="vscl_action", nullable=false, unique=true)
 	@OrderBy("asc")
 	private String vsclaction;
@@ -69,7 +69,7 @@ public class VSCLAction implements Serializable  {
 
 	@Column(name="description", nullable=true, length=2048)
 	private String description;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
@@ -81,7 +81,7 @@ public class VSCLAction implements Serializable  {
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -99,18 +99,18 @@ public class VSCLAction implements Serializable  {
 	}
 
 	private static Log LOGGER = LogFactory.getLog(VSCLAction.class);
-	
+
 	public VSCLAction() {
-		
+
 	}
-	
+
 	public VSCLAction(String string, String userid) {
 		this(domain);
 	}
-	
+
 	public VSCLAction(String domain) {
 		this.vsclaction = domain;
-	}	
+	}
 
 	@PrePersist
 	public void	prePersist() {
@@ -129,7 +129,7 @@ public class VSCLAction implements Serializable  {
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "VSCLAction", "Exception caused While adding Modified by Role");
 		}
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}
@@ -137,7 +137,7 @@ public class VSCLAction implements Serializable  {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getVsclaction() {
 		return vsclaction;
 	}
@@ -145,7 +145,7 @@ public class VSCLAction implements Serializable  {
 	public void setVsclaction(String vsclaction) {
 		this.vsclaction = vsclaction;
 	}
-	
+
 
 	public Date getCreatedDate() {
 		return this.createdDate;

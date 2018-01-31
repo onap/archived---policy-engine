@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,24 +22,24 @@ package org.onap.policy.utils;
 
 public class BackUpMonitorException extends Exception{
     private static final long serialVersionUID = 6778134503685443473L;
-    
+
     public BackUpMonitorException() {
-    	// Nothing for this constructor to initialize 
+    	// Nothing for this constructor to initialize
     	// in an exception class.
     }
-    
+
     public BackUpMonitorException(String message) {
         super(message);
     }
-    
+
     public BackUpMonitorException(Throwable cause){
         super(cause);
     }
-    
+
     public BackUpMonitorException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
     public BackUpMonitorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,18 +74,18 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableDefinitionType;
 
 /**
  * class XACMLPolicyScanner
- * 
+ *
  * This class traverses the hierarchy of a XACML 3.0 policy. You can optionally pass a Callback class
- * and override any desired methods to retrieve information from a policy. 
- * 
+ * and override any desired methods to retrieve information from a policy.
+ *
  *
  */
 public class XACMLPolicyScanner {
-	
+
 	private static final Log logger				= LogFactory.getLog(XACMLPolicyScanner.class);
 	private Object policyObject = null;
 	private Callback callback = null;
-	
+
 	public XACMLPolicyScanner(Path filename, Callback callback) {
 		try (InputStream is = Files.newInputStream(filename)) {
 			this.policyObject = XACMLPolicyScanner.readPolicy(is);
@@ -94,7 +94,7 @@ public class XACMLPolicyScanner {
 		}
 		this.callback = callback;
 	}
-	
+
 	public XACMLPolicyScanner(InputStream filename, Callback callback) {
 		try (InputStream is = filename) {
 			this.policyObject = XACMLPolicyScanner.readPolicy(is);
@@ -103,37 +103,37 @@ public class XACMLPolicyScanner {
 		}
 		this.callback = callback;
 	}
-	
+
 	public XACMLPolicyScanner(PolicySetType policySet, Callback callback) {
 		this.policyObject = policySet;
 		this.callback = callback;
 	}
-	
+
 	public XACMLPolicyScanner(PolicySetType policySet) {
 		this(policySet, null);
 	}
-	
+
 	public XACMLPolicyScanner(PolicyType policy, Callback callback) {
 		this.policyObject = policy;
 		this.callback = callback;
 	}
-	
+
 	public XACMLPolicyScanner(PolicyType policy) {
 		this(policy, null);
 	}
-	
+
 	/**
 	 * Sets the callback interface to be used.
-	 * 
+	 *
 	 * @param cb
 	 */
 	public void setCallback(Callback cb) {
 		this.callback = cb;
 	}
-	
+
 	/**
 	 * Saves the given callback object then calls the scan() method.
-	 * 
+	 *
 	 * @param cb
 	 * @return
 	 */
@@ -141,11 +141,11 @@ public class XACMLPolicyScanner {
 		this.callback = cb;
 		return this.scan();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This begins the scanning of the contained object.
-	 * 
+	 *
 	 * @return - The PolicySet/Policy that was scanned.
 	 */
 	public Object scan() {
@@ -169,10 +169,10 @@ public class XACMLPolicyScanner {
 		}
 		return this.policyObject;
 	}
-	
+
 	/**
 	 * This performs the scan of a PolicySet
-	 * 
+	 *
 	 * @param parent - Its parent PolicySet. Can be null if this is the root.
 	 * @param policySet - The PolicySet object.
 	 * @return CallbackResult - CONTINUE to continue, STOP to terminate scanning.
@@ -218,9 +218,9 @@ public class XACMLPolicyScanner {
 				}
 			} else if (element.getValue() instanceof IdReferenceType) {
 				if (element.getName().getLocalPart().equals("PolicySetIdReference")) {
-					
+
 				} else if (element.getName().getLocalPart().equals("PolicyIdReference")) {
-					
+
 				}
 			} else {
 				logger.warn("generating policy sets found unsupported element: " + element.getName().getNamespaceURI());
@@ -233,11 +233,11 @@ public class XACMLPolicyScanner {
 		}
 		return CallbackResult.CONTINUE;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * This performs scanning of the Policy object.
-	 * 
+	 *
 	 * @param parent - The parent PolicySet of the policy. This can be null if this is a root Policy.
 	 * @param policy - The policy being scanned.
 	 * @return CallbackResult - CONTINUE to continue, STOP to terminate scanning.
@@ -317,10 +317,10 @@ public class XACMLPolicyScanner {
 		}
 		return CallbackResult.CONTINUE;
 	}
-	
+
 	/**
 	 * Scans the given target for attributes. Its sole purpose is to return attributes found.
-	 * 
+	 *
 	 * @param parent - The parent PolicySet/Policy/Rule for the target.
 	 * @param target - The target.
 	 * @return CallbackResult - CONTINUE to continue, STOP to terminate scanning.
@@ -382,10 +382,10 @@ public class XACMLPolicyScanner {
 		}
 		return CallbackResult.CONTINUE;
 	}
-	
+
 	/**
 	 * Scan the list of obligations.
-	 * 
+	 *
 	 * @param parent - The parent PolicySet/Policy/Rule for the obligation.
 	 * @param obligationExpressionsType - All the obligation expressions.
 	 * @return CallbackResult - CONTINUE to continue, STOP to terminate scanning.
@@ -427,9 +427,9 @@ public class XACMLPolicyScanner {
 	}
 
 	/**
-	 * 
+	 *
 	 * Scans the list of advice expressions returning each individually.
-	 * 
+	 *
 	 * @param parent - The parent PolicySet/Policy/Rule for the advice.
 	 * @param adviceExpressionstype - The list of advice expressions.
 	 * @return CallbackResult - CONTINUE to continue, STOP to terminate scanning.
@@ -468,10 +468,10 @@ public class XACMLPolicyScanner {
 		}
 		return CallbackResult.CONTINUE;
 	}
-	
+
 	/**
 	 * Scans the list of variable definitions.
-	 * 
+	 *
 	 * @param policy - Policy object containing the variable definition.
 	 * @param list - List of variable definitions.
 	 * @return CallbackResult - CONTINUE to continue, STOP to terminate scanning.
@@ -489,13 +489,13 @@ public class XACMLPolicyScanner {
 				}
 			}
 		}
-		
+
 		return CallbackResult.CONTINUE;
 	}
-	
+
 	/**
 	 * Scans the list of conditions.
-	 * 
+	 *
 	 * @param rule
 	 * @param condition
 	 * @return
@@ -510,13 +510,13 @@ public class XACMLPolicyScanner {
 		}
 		return CallbackResult.CONTINUE;
 	}
-	
+
 	/**
 	 * Reads the XACML XML policy file in and returns the version contained in the root Policy/PolicySet element.
-	 * 
+	 *
 	 * @param policy - The policy file.
 	 * @return - The version string from the file (uninterpreted)
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static String	getVersion(Path policy) throws IOException {
 		Object data = null;
@@ -532,10 +532,10 @@ public class XACMLPolicyScanner {
 		}
 		return getVersion(data);
 	}
-		
+
 	/**
 	 * Reads the Policy/PolicySet element object and returns its current version.
-	 * 
+	 *
 	 * @param data - Either a PolicySet or Policy XACML type object.
 	 * @return - The integer version value. -1 if it doesn't exist or was un-parsable.
 	 */
@@ -563,10 +563,10 @@ public class XACMLPolicyScanner {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns the Policy or PolicySet ID.
-	 * 
+	 *
 	 * @param data - A XACML 3.0 Policy or PolicySet element object.
 	 * @return The policy/policyset's policy ID
 	 */
@@ -580,7 +580,7 @@ public class XACMLPolicyScanner {
 			return null;
 		}
 	}
-	
+
 	public static List<String> getCreatedByModifiedBy(Path policyPath) throws IOException{
 		String createdBy = "";
 		String modifiedBy= "";
@@ -599,7 +599,7 @@ public class XACMLPolicyScanner {
 		}
 		return Arrays.asList(createdBy, modifiedBy);
 	}
-	
+
 	//get the Created Name of the User on reading the Xml file
 	public static String getCreatedBy(Path policyPath) throws IOException{
 		String userId = "";
@@ -616,7 +616,7 @@ public class XACMLPolicyScanner {
 		}
 		return userId;
 	}
-	
+
 	//get the Modified Name of the User on reading the Xml file
 	public static String getModifiedBy(Path policyPath) throws IOException{
 		String modifiedBy = "";
@@ -636,7 +636,7 @@ public class XACMLPolicyScanner {
 
 	/**
 	 * readPolicy - does the work to read in policy data from a file.
-	 * 
+	 *
 	 * @param policy - The path to the policy file.
 	 * @return - The policy data object. This *should* be either a PolicySet or a Policy.
 	 */
@@ -702,8 +702,8 @@ public class XACMLPolicyScanner {
 				}
 			} else {
 				if (logger.isDebugEnabled()) {
-					logger.debug("No root element contained in policy " + 
-								" Name: " + node.getNodeName() + " type: " + node.getNodeType() + 
+					logger.debug("No root element contained in policy " +
+								" Name: " + node.getNodeName() + " type: " + node.getNodeType() +
 								" Value: " + node.getNodeValue());
 				}
 			}

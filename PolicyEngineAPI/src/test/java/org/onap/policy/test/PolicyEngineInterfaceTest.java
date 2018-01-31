@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -86,8 +86,8 @@ public class PolicyEngineInterfaceTest extends TestCase {
 
 	PolicyChangeResponse result = null;
 	StdPolicyChangeResponse response = new StdPolicyChangeResponse();
-	
-	
+
+
 	/**
 	 * Construct new test instance
 	 *
@@ -112,7 +112,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 			fail("PolicyEngine Instantiation Error" + e);
 		}
 		logger.info("Loaded.. PolicyEngine");
-		
+
 		mockPolicyEngine = Mockito.mock(PolicyEngine.class);
 		HttpURLConnection conn = Mockito.mock(HttpURLConnection.class);
 		Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
@@ -145,11 +145,11 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		}
 		assertNull(policyConfig);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void testGetConfigByPolicyName2() {
 		String policyName = null;
-		
+
 		try{
 			policyConfig = policyEngine.getConfigByPolicyName(policyName, requestID);
 		} catch (PolicyConfigException e){
@@ -164,7 +164,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	@SuppressWarnings("deprecation")
 	public void testGetConfig() {
 		String onapName = null;
-		
+
 		try{
 			policyConfig = policyEngine.getConfig(onapName);
 		} catch (PolicyConfigException e){
@@ -172,7 +172,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		}
 		assertNull(policyConfig);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void testGetConfig2() {
 		String onapName = null;
@@ -185,7 +185,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		assertNull(policyConfig);
 	}
 
-	
+
 	@SuppressWarnings("deprecation")
 	public void testGetConfig3() {
 		String onapName = null;
@@ -204,7 +204,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		String onapName = null;
 		String configName = null;
 		Map<String,String> configAttributes = null;
-		
+
 		try{
 			policyConfig = policyEngine.getConfig(onapName,configName,configAttributes);
 		} catch (PolicyConfigException e){
@@ -212,13 +212,13 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		}
 		assertNull(policyConfig);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void testGetConfig5() {
 		String onapName = null;
 		String configName = null;
 		Map<String,String> configAttributes = null;
-		
+
 		try{
 			policyConfig = policyEngine.getConfig(onapName,configName,configAttributes,requestID);
 		} catch (PolicyConfigException e){
@@ -226,10 +226,10 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		}
 		assertNull(policyConfig);
 	}
-	
+
 	public void testGetConfig6() {
 		ConfigRequestParameters parameters = new ConfigRequestParameters();
-		
+
 		try{
 			policyConfig = policyEngine.getConfig(parameters);
 		} catch (PolicyConfigException e){
@@ -249,57 +249,57 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		Collection<PolicyResponse> result = null;
 		Collection<StdPolicyResponse> response = null;
 		Map<String,String> eventAttributes = null;
-		
+
 		try {
 			Mockito.when(mockPolicyEngine.sendEvent(eventAttributes)).thenReturn(result);
 			result = mockPolicyEngine.sendEvent(eventAttributes);
 		} catch (PolicyEventException e) {
 			logger.error("Exception Occured"+e);
 		}
-		
-		
+
+
 		assertEquals(result,response);
-	
+
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void testSendEvent2()
 	{
 		Collection<PolicyResponse> result = null;
 		Collection<StdPolicyResponse> response = null;
 		Map<String,String> eventAttributes = null;
-		
+
 		try {
 			Mockito.when(mockPolicyEngine.sendEvent(eventAttributes,requestID)).thenReturn(result);
 			result = mockPolicyEngine.sendEvent(eventAttributes,requestID);
 		} catch (PolicyEventException e) {
 			logger.error("Exception Occured"+e);
 		}
-		
-		
+
+
 		assertEquals(result,response);
-	
+
 	}
-	
+
 	public void testSendEvent3()
 	{
 		Collection<PolicyResponse> result = null;
 		Collection<StdPolicyResponse> response = null;
 		EventRequestParameters parameters = new EventRequestParameters();
-		
+
 		try {
 			Mockito.when(mockPolicyEngine.sendEvent(parameters)).thenReturn(result);
 			result = mockPolicyEngine.sendEvent(parameters);
 		} catch (PolicyEventException e) {
 			logger.error("Exception Occured"+e);
 		}
-		
+
 		assertEquals(result,response);
-	
+
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Run the PolicyDecision getDecision(String, Map<String,String>) method
 	 * test
@@ -309,59 +309,59 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	{
 		String onapComponentName = null;
 		Map<String,String> decisionAttributes = null;
-		
+
 		DecisionResponse result = null;
-		
+
 		try {
 			Mockito.when(mockPolicyEngine.getDecision(onapComponentName,decisionAttributes)).thenReturn(null);
 			result = mockPolicyEngine.getDecision(onapComponentName,decisionAttributes);
 		} catch (PolicyDecisionException e) {
 			logger.error("Exception Occured"+e);
 		}
-		
+
 		assertEquals(result,null);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void testGetDecision2()
 	{
 		String onapComponentName = null;
 		Map<String,String> decisionAttributes = null;
-		
+
 		DecisionResponse result = null;
-		
-		try {	
+
+		try {
 			Mockito.when(mockPolicyEngine.getDecision(onapComponentName,decisionAttributes,requestID)).thenReturn(null);
 			result = mockPolicyEngine.getDecision(onapComponentName,decisionAttributes);
 		} catch (PolicyDecisionException e) {
 			logger.error("Exception Occured"+e);
 		}
-		
+
 		assertEquals(result,null);
 	}
-	
+
 	public void testGetDecision3()
 	{
 		DecisionRequestParameters parameters = new DecisionRequestParameters();
 		DecisionResponse result = null;
-		
+
 		try {
 			Mockito.when(mockPolicyEngine.getDecision(parameters)).thenReturn(null);
 			result = mockPolicyEngine.getDecision(parameters);
 		} catch (PolicyDecisionException e) {
 			logger.error("Exception Occured"+e);
 		}
-		
+
 		assertEquals(result,null);
 	}
-	
+
 	/**
 	 * Run the void setNotification(NotificationScheme, NotificationHandler)
 	 * method test
 	 */
 	public void testSetNotification() {
 		// add test code here
-		
+
 		NotificationScheme scheme = null;
 		NotificationHandler handler = null;
 
@@ -386,7 +386,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	 */
 	public void testSetScheme() {
 		NotificationScheme scheme = null;
-		
+
 		Mockito.doNothing().when(mockPolicyEngine).setScheme(scheme);
 		mockPolicyEngine.setScheme(scheme);
 		//assertTrue(true);
@@ -400,7 +400,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		StdPDPNotification response = null;
 		Mockito.when(mockPolicyEngine.getNotification()).thenReturn(response);
 		result = mockPolicyEngine.getNotification();
-		
+
 		assertEquals(result,response);
 	}
 
@@ -414,7 +414,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		String response = "success";
 		String result = null;
 		try {
-		
+
 			Mockito.when(mockPolicyEngine.createConfigPolicy("testPolicy","test","test","testConfig",null,"OTHER","test","test",null, null, null, null, null)).thenReturn(response);
 			result = mockPolicyEngine.createConfigPolicy("testPolicy","test","test","testConfig",null,"OTHER","test","test",null, null, null, null, null);
 
@@ -423,7 +423,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		}
 		assertEquals(result, response);
 	}
-	
+
 	/**
 	 * Run the String updateConfigPolicy(String, String, String, String,
 	 * Map<String,String>, String, String, String, UUID) method test
@@ -434,7 +434,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		String response = "success";
 		String result = null;
 		try {
-		
+
 			Mockito.when(mockPolicyEngine.updateConfigPolicy("testPolicy","test","test","testConfig",null,"OTHER","test","test",null, null, null, null, null)).thenReturn(response);
 			result = mockPolicyEngine.updateConfigPolicy("testPolicy","test","test","testConfig",null,"OTHER","test","test",null, null, null, null, null);
 
@@ -443,7 +443,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		}
 		assertEquals(result, response);
 	}
-	
+
 	/**
 	 * Run the String createConfigFirewallPolicy(String, JsonObject, String,
 	 * UUID) method test
@@ -455,7 +455,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		String json = "{\"serviceTypeId\":\"/v0/firewall/pan\",\"configName\":\"rule1607\",\"deploymentOption\":{\"deployNow\":false},\"securityZoneId\":\"/v0/firewall/pan\",\"serviceGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"REFERENCE\",\"name\":\"SList\"},{\"type\":\"REFERENCE\",\"name\":\"Syslog\"}]},{\"name\":\"Syslog\",\"description\":\"NA\",\"type\":\"SERVICE\",\"transportProtocol\":\"udp\",\"appProtocol\":null,\"ports\":\"514\"},{\"name\":\"SList\",\"description\":\"Service List\",\"type\":\"SERVICE\",\"transportProtocol\":\"tcp\",\"appProtocol\":null,\"ports\":\"8080\"}],\"addressGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"},{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]},{\"name\":\"PL_CCE3\",\"description\":\"CCE Routers\",\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]}],\"firewallRuleList\":[{\"position\":\"1\",\"ruleName\":\"1607Rule\",\"fromZones\":[\"Trusted\"],\"toZones\":[\"Untrusted\"],\"negateSource\":false,\"negateDestination\":false,\"sourceList\":[{\"type\":\"REFERENCE\",\"value\":\"PL_CCE3\"},{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"destinationList\":[{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"sourceServices\":[],\"destServices\":[{\"type\":\"REFERENCE\",\"name\":\"1607Group\"}],\"action\":\"accept\",\"description\":\"Rule for 1607 templates\",\"enabled\":true,\"log\":true}]}";
 		JsonObject jsonObj = buildJSON(json);
 		try {
-		
+
 			Mockito.when(mockPolicyEngine.createConfigFirewallPolicy("testPolicy",jsonObj, "test", null, null, null, null, null)).thenReturn(response);
 			result = mockPolicyEngine.createConfigFirewallPolicy("testPolicy",jsonObj, "test", null, null, null, null, null);
 
@@ -476,7 +476,7 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		String json = "{\"serviceTypeId\":\"/v0/firewall/pan\",\"configName\":\"rule1607\",\"deploymentOption\":{\"deployNow\":false},\"securityZoneId\":\"/v0/firewall/pan\",\"serviceGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"REFERENCE\",\"name\":\"SList\"},{\"type\":\"REFERENCE\",\"name\":\"Syslog\"}]},{\"name\":\"Syslog\",\"description\":\"NA\",\"type\":\"SERVICE\",\"transportProtocol\":\"udp\",\"appProtocol\":null,\"ports\":\"514\"},{\"name\":\"SList\",\"description\":\"Service List\",\"type\":\"SERVICE\",\"transportProtocol\":\"tcp\",\"appProtocol\":null,\"ports\":\"8080\"}],\"addressGroups\":[{\"name\":\"1607Group\",\"description\":null,\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"},{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]},{\"name\":\"PL_CCE3\",\"description\":\"CCE Routers\",\"members\":[{\"type\":\"SUBNET\",\"value\":\"10.11.12.13/14\"}]}],\"firewallRuleList\":[{\"position\":\"1\",\"ruleName\":\"1607Rule\",\"fromZones\":[\"Trusted\"],\"toZones\":[\"Untrusted\"],\"negateSource\":false,\"negateDestination\":false,\"sourceList\":[{\"type\":\"REFERENCE\",\"value\":\"PL_CCE3\"},{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"destinationList\":[{\"type\":\"REFERENCE\",\"value\":\"1607Group\"}],\"sourceServices\":[],\"destServices\":[{\"type\":\"REFERENCE\",\"name\":\"1607Group\"}],\"action\":\"accept\",\"description\":\"Rule for 1607 templates\",\"enabled\":true,\"log\":true}]}";
 		JsonObject jsonObj = buildJSON(json);
 		try {
-		
+
 			Mockito.when(mockPolicyEngine.updateConfigFirewallPolicy("testPolicy",jsonObj, "test", null, null, null, null, null)).thenReturn(response);
 			result = mockPolicyEngine.updateConfigFirewallPolicy("testPolicy",jsonObj, "test", null, null, null, null, null);
 
@@ -497,26 +497,26 @@ public class PolicyEngineInterfaceTest extends TestCase {
         policyParameters.setPolicyClass(PolicyClass.Action); //required
         policyParameters.setPolicyName("test.junitTest"); //required
         policyParameters.setPolicyDescription("testing");  //optional
-        
+
         //Set the Component Attributes... These are Optional
-        Map<String, String> configAttributes = new HashMap<String, String>(); 
+        Map<String, String> configAttributes = new HashMap<String, String>();
         configAttributes.put("test", "testing");
-        
+
         Map<AttributeType, Map<String,String>> attributes = new HashMap<AttributeType, Map<String,String>>();
         attributes.put(AttributeType.MATCHING, configAttributes);
         policyParameters.setAttributes(attributes);
-		
+
         policyParameters.setActionPerformer("PEP");
         policyParameters.setActionAttribute("testing");
         policyParameters.setRequestID(UUID.randomUUID());
-		
+
 		try {
-			
+
 			//stdPolicyEngine = Mockito.mock(StdPolicyEngine.class);
 			//Mockito.when(stdPolicyEngine.callPAP(newPAPPolicy, new String[] {"operation=create", "apiflag=api", "policyType=Action"}, null, "Action")).thenReturn(callPapResponse);
 			Mockito.when(mockPolicyEngine.createPolicy(policyParameters)).thenReturn(response);
 			result = mockPolicyEngine.createPolicy(policyParameters);
-			
+
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
 			logger.error("Exception Occured"+e);
@@ -535,24 +535,24 @@ public class PolicyEngineInterfaceTest extends TestCase {
         policyParameters.setPolicyClass(PolicyClass.Action); //required
         policyParameters.setPolicyName("test.junitTest"); //required
         policyParameters.setPolicyDescription("testing");  //optional
-        
+
         //Set the Component Attributes... These are Optional
-        Map<String, String> configAttributes = new HashMap<String, String>(); 
+        Map<String, String> configAttributes = new HashMap<String, String>();
         configAttributes.put("test", "testing");
-        
+
         Map<AttributeType, Map<String,String>> attributes = new HashMap<AttributeType, Map<String,String>>();
         attributes.put(AttributeType.MATCHING, configAttributes);
         policyParameters.setAttributes(attributes);
-		
+
         policyParameters.setActionPerformer("PEP");
         policyParameters.setActionAttribute("testing");
         policyParameters.setRequestID(UUID.randomUUID());
-		
+
 		try {
-		
+
 			Mockito.when(mockPolicyEngine.updatePolicy(policyParameters)).thenReturn(response);
 			result = mockPolicyEngine.updatePolicy(policyParameters);
-			
+
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
 		}
@@ -568,35 +568,35 @@ public class PolicyEngineInterfaceTest extends TestCase {
 		String response = "Success";
 		String result = null;
 		try {
-			
+
 			Mockito.when(mockPolicyEngine.pushPolicy("testing","test","Base","default",requestID)).thenReturn(response);
 			result = mockPolicyEngine.pushPolicy("testing","test","Base","default",requestID);
-			
+
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
 		}
-		
+
 		assertEquals(result, response);
 	}
 
 	public void testPushPolicy2() {
 		PushPolicyParameters policyParameters = new PushPolicyParameters();
 		PolicyChangeResponse result = null;
-		
+
 		//String policyScope = null;
 		policyParameters.setPolicyName("test.junitTest");
 		policyParameters.setPolicyType("Action");
 		policyParameters.setPdpGroup("Default");
-		
+
 		try {
-			
+
 			Mockito.when(mockPolicyEngine.pushPolicy(policyParameters)).thenReturn(response);
 			result = mockPolicyEngine.pushPolicy(policyParameters);
-			
+
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
 		}
-		
+
 		assertEquals(result, response);
 	}
 
@@ -607,22 +607,22 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	public void testDeletePolicy() {
 		DeletePolicyParameters policyParameters = new DeletePolicyParameters();
 		PolicyChangeResponse result = null;
-		
+
 		//String policyScope = null;
 		policyParameters.setPolicyName("test.junitTest.1.xml");
 		policyParameters.setDeleteCondition(DeletePolicyCondition.ALL);
 		policyParameters.setPolicyComponent("PAP");
 		policyParameters.setPdpGroup("Default");
-		
+
 		try {
-			
+
 			Mockito.when(mockPolicyEngine.deletePolicy(policyParameters)).thenReturn(response);
 			result = mockPolicyEngine.deletePolicy(policyParameters);
-			
+
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
 		}
-		
+
 		assertEquals(result, response);
 	}
 
@@ -633,38 +633,38 @@ public class PolicyEngineInterfaceTest extends TestCase {
 	public void testPolicyEngineImport() {
 		ImportParameters importParameters = new ImportParameters();
 		PolicyChangeResponse result = null;
-		
+
         importParameters.setFilePath("C:\\Workspaces\\models\\TestingModel\\ControllerServiceSampleSdnlServiceInstance-v0.1.0-SNAPSHOT.zip");
         importParameters.setServiceName("ControllerServiceSampleSdnlServiceInstance");
-  	  	
+  	  
         importParameters.setRequestID(UUID.randomUUID());
         importParameters.setServiceType(IMPORT_TYPE.MICROSERVICE);
         importParameters.setVersion("1607-2");
 
-		
+
 		try {
-			
+
 			Mockito.when(mockPolicyEngine.policyEngineImport(importParameters)).thenReturn(response);
 			result = mockPolicyEngine.policyEngineImport(importParameters);
-			
+
 		} catch (Exception e) {
 			logger.warn(e.getMessage());
 		}
-		
+
 		assertEquals(result, response);
 	}
-	
+
     private static JsonObject buildJSON(String jsonString) {
         JsonObject json = null;;
         if (jsonString != null) {
             StringReader in = null;
-             
+
             in = new StringReader(jsonString);
-             
+
             JsonReader jsonReader = Json.createReader(in);
-            json = jsonReader.readObject();        
-        } 
-        
+            json = jsonReader.readObject();
+        }
+
         return json;
     }
 }

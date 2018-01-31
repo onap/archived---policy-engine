@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,7 @@ package org.onap.policy.api;
 
 /**
  * PolicyEngineException extends <code>Exception</code> to implement exceptions thrown by {@link org.onap.policy.api.PolicyEngine}
- * 
+ *
  * @version 0.1
  */
 public class PolicyEngineException extends Exception{
@@ -30,19 +30,19 @@ public class PolicyEngineException extends Exception{
 
 	public PolicyEngineException() {
 	}
-	
+
 	public PolicyEngineException(String message) {
 		super(message);
 	}
-	
+
 	public PolicyEngineException(Throwable cause){
 		super(cause);
 	}
-	
+
 	public PolicyEngineException(String message, Throwable cause) {
 		super(message, cause);
 	}
-	
+
 	public PolicyEngineException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}

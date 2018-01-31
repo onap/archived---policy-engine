@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,8 +43,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 /*
- * JPA for the Micro Service Models. 
- * 
+ * JPA for the Micro Service Models.
+ *
  * @version: 0.1
  */
 
@@ -54,40 +54,40 @@ import javax.persistence.Table;
 @NamedQuery(name="MicroServiceModels.findAll", query="SELECT b FROM MicroServiceModels b ")
 public class MicroServiceModels implements Serializable{
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
-	
+
 	@Column(name="modelName", nullable=false, unique=true)
 	@OrderBy("asc")
 	private String modelName;
-	
+
 	@Column(name="description", nullable=true, length=2048)
 	private String description;
-	
+
 	@Column(name="dependency", nullable=true, length=2048)
 	private String dependency;
 
 	@Column(name="attributes", nullable=false, length=255)
 	private String attributes;
-	
+
 	@Column(name="ref_attributes", nullable=false, length=255)
 	private String ref_attributes;
 
 	@Column (name="sub_attributes", nullable=false, length=2000)
 	private String sub_attributes;
-	
+
 	@Column (name="version", nullable=false, length=2000)
 	private String version;
-	
+
 	@Column (name="enumValues", nullable=false, length=2000)
 	private String enumValues;
-	
+
 	@Column (name="annotation", nullable=false, length=2000)
 	private String annotation;
-	
+
 	public String getSub_attributes() {
 		return sub_attributes;
 	}
@@ -107,7 +107,7 @@ public class MicroServiceModels implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="imported_by")
 	private UserInfo userCreatedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -115,12 +115,12 @@ public class MicroServiceModels implements Serializable{
 	public void setUserCreatedBy(UserInfo userCreatedBy) {
 		this.userCreatedBy = userCreatedBy;
 	}
-	
+
 	public MicroServiceModels(){
 	}
-	
+
 	public MicroServiceModels(String userid){
-	
+
 	}
 
 	public String getAttributes() {
@@ -142,11 +142,11 @@ public class MicroServiceModels implements Serializable{
 	public int getId() {
 		return this.id;
 	}
-	
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getDescription() {
 		return this.description;
 	}
@@ -154,7 +154,7 @@ public class MicroServiceModels implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public String getDependency() {
 		return dependency;
 	}
@@ -162,15 +162,15 @@ public class MicroServiceModels implements Serializable{
 	public void setDependency(String dependency) {
 		this.dependency = dependency;
 	}
-	
+
 	public String getModelName(){
 		return this.modelName;
 	}
-	
+
 	public void setModelName(String modelName){
 		this.modelName = modelName;
 	}
-	
+
 	public String getEnumValues() {
 		return enumValues;
 	}
@@ -178,7 +178,7 @@ public class MicroServiceModels implements Serializable{
 	public void setEnumValues(String enumValues) {
 		this.enumValues = enumValues;
 	}
-	
+
 	public String getAnnotation() {
 		return annotation;
 	}

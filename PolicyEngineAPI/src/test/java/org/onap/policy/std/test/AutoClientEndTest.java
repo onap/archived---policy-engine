@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -118,7 +118,7 @@ public class AutoClientEndTest {
 	@Test
 	public void testSetScheme()
 		throws Exception {
-		
+
 		NotificationScheme scheme = NotificationScheme.AUTO_ALL_NOTIFICATIONS;
 		AutoClientEnd.setScheme(scheme);
 
@@ -194,11 +194,11 @@ public class AutoClientEndTest {
 		throws Exception {
 		// add set up code here
 		StdPolicyEngine policyEngine = new StdPolicyEngine("Test/config_pass.properties", (String) null);
-		
+
 		NotificationHandler handler = policyEngine.getNotificationHandler();
 		AutoClientEnd.setAuto(NotificationScheme.AUTO_ALL_NOTIFICATIONS, handler);
 		AutoClientEnd.start("http://testurl.com");
-		
+
 	}
 
 	/**

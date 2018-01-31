@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,13 +31,13 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 
 /**
- * Closed Loop PM policy Implementation. 
- * 
+ * Closed Loop PM policy Implementation.
+ *
  * @version 0.1
  */
 public class ClosedLoopPMPolicyService{
 	private static final Logger LOGGER = FlexLogger.getLogger(ClosedLoopPMPolicyService.class.getName());
-	
+
 	private PAPServices papServices = null;
 	private PolicyParameters policyParameters = null;
 	private String message = null;
@@ -45,7 +45,7 @@ public class ClosedLoopPMPolicyService{
 	private String policyScope = null;
 	private String date = null;
 	private JsonObject configBody = null;
-	
+
 	public ClosedLoopPMPolicyService(String policyName, String policyScope,
 			PolicyParameters policyParameters, String date) {
 		this.policyParameters = policyParameters;
@@ -111,10 +111,10 @@ public class ClosedLoopPMPolicyService{
 		}
 		String jsonBody = configBody.toString();
 		String serviceType = configBody.get("serviceTypePolicyName").toString().replace("\"", "");
-		// Create Policy. 
-		StdPAPPolicy newPAPPolicy = new StdPAPPolicy("ClosedLoop_PM", policyName, policyParameters.getPolicyDescription(), onapName, 
+		// Create Policy.
+		StdPAPPolicy newPAPPolicy = new StdPAPPolicy("ClosedLoop_PM", policyName, policyParameters.getPolicyDescription(), onapName,
 				jsonBody, false, null, serviceType, updateFlag, policyScope, 0, policyParameters.getRiskLevel(),
-				policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date); 
+				policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date);
 		//send JSON object to PAP
 		response = (String) papServices.callPAP(newPAPPolicy, new String[] {"operation="+operation, "apiflag=api", "policyType=Config"}, policyParameters.getRequestID(), "ConfigClosedLoop");
 		return response;

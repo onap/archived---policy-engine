@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,9 +79,9 @@ public class PolicyCreation extends AbstractPolicyCreation{
 	private String ruleID = "";
 	private PolicyDBDao policyDBDao;
 	String CLName = null;
-	
+
 	private static CommonClassDao commonClassDao;
-	
+
 	public static CommonClassDao getCommonClassDao() {
 		return commonClassDao;
 	}
@@ -96,7 +96,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 	}
 
 	public PolicyCreation(){}
-	
+
 	@RequestMapping(value="/policycreation/save_policy", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> savePolicy(@RequestBody PolicyRestAdapter policyData, HttpServletResponse response){
@@ -106,7 +106,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 		Map<String, String> attributeMap = new HashMap<>();
 		PolicyVersion policyVersionDao;
 		try {
-		
+
 			Policy newPolicy = null;
 			String policyConfigType = null;
 			String userId = policyData.getUserId();
@@ -137,7 +137,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 				}else if (policyConfigType.equalsIgnoreCase("BRMS_Param")) {
 					filePrefix = "Config_BRMS_Param_";
 				}else {
-					filePrefix = "Config_"; 
+					filePrefix = "Config_";
 				}
 			} else if (policyType.equalsIgnoreCase("Action")) {
 				filePrefix = "Action_";
@@ -163,13 +163,13 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			}
 			//get the highest version of policy from policy version table.
 			String dbCheckPolicyName = policyData.getDomainDir() + File.separator + filePrefix + policyData.getPolicyName();
-			PolicyVersion policyVersion = getPolicyVersionData(dbCheckPolicyName);	
+			PolicyVersion policyVersion = getPolicyVersionData(dbCheckPolicyName);
 			if(policyVersion == null){
 				highestVersion = 0;
 			}else{
 				highestVersion = policyVersion.getHigherVersion();
 			}
-			
+
 			if(highestVersion != 0 && policyVersion != null){
 				if(policyData.isEditPolicy()){
 					version = highestVersion +1;
@@ -191,7 +191,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					response.addHeader("error", "policyExists");
 					response.addHeader("policyName", policyData.getPolicyName());
 					return new ResponseEntity<String>(body, status);
-				}		
+				}
 			}else{
 				// if policy does not exist and the request is updatePolicy return error
 				if(policyData.isEditPolicy()){
@@ -219,30 +219,30 @@ public class PolicyCreation extends AbstractPolicyCreation{
 				policyVersionDao.setCreatedBy(createdBy);
 				policyVersionDao.setModifiedBy(modifiedBy);
 			}
-			
+
 			policyData.setPolicyID(newPolicyID());
 			policyData.setRuleID(ruleID);
-	
+
 			String policyFileName = dbCheckPolicyName.replace(File.separator, ".")+ "." + version + ".xml";
 			policyData.setNewFileName(policyFileName);
 			policyData.setPolicyDescription(policyData.getPolicyDescription()+ "@CreatedBy:" +createdBy + "@CreatedBy:" + "@ModifiedBy:" +modifiedBy + "@ModifiedBy:");
 			policyData.setRuleCombiningAlgId("urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides");
 			if(policyData.getApiflag() == null){
-				//set the Rule Combining Algorithm Id to be sent to PAP-REST via JSON	
+				//set the Rule Combining Algorithm Id to be sent to PAP-REST via JSON
 				if(policyData.getAttributes() != null){
 					if(policyData.getAttributes().size() > 0){
 						for(Object attribute : policyData.getAttributes()){
 							if(attribute instanceof LinkedHashMap<?, ?>){
 								String key = ((LinkedHashMap<?, ?>) attribute).get("key").toString();
 								String value = ((LinkedHashMap<?, ?>) attribute).get("value").toString();
-								attributeMap.put(key, value);	
+								attributeMap.put(key, value);
 							}
 						}
 					}
 				}
 				policyData.setDynamicFieldConfigAttributes(attributeMap);
 			}
-			
+
 			policyData.setVersion(String.valueOf(version));
 			policyData.setHighestVersion(version);
 
@@ -250,7 +250,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			if (policyType.equalsIgnoreCase("Config")) {
 				if (policyConfigType.equalsIgnoreCase("Firewall Config")) {
 					newPolicy = new FirewallConfigPolicy(policyData);
-				}else if (policyConfigType.equalsIgnoreCase("BRMS_Raw")) { 
+				}else if (policyConfigType.equalsIgnoreCase("BRMS_Raw")) {
 					policyData.setOnapName("DROOLS");
 					policyData.setConfigName("BRMS_RAW_RULE");
 					newPolicy = new CreateBrmsRawPolicy(policyData);
@@ -273,10 +273,10 @@ public class PolicyCreation extends AbstractPolicyCreation{
 		                drlRuleAndUIParams=policyData.getBrmsParamBody();
 		                String modelName= drlRuleAndUIParams.get("templateName");
 		                PolicyLogger.info("Template name from API is: "+modelName);
-		                
+
 		                BRMSParamTemplate template = (BRMSParamTemplate) commonClassDao.getEntityItem(BRMSParamTemplate.class, "ruleName", modelName);
 		                if(template == null){
-		                	String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Template.  The template name, " 
+		                	String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Template.  The template name, "
 		                            + modelName + " was not found in the dictionary.";
 		                	body = message;
 		                	status = HttpStatus.BAD_REQUEST;
@@ -285,7 +285,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 		                    response.addHeader("modelName", modelName);
 		                    return new ResponseEntity<String>(body, status);
 		                }
-					}		
+					}
 					newPolicy = new CreateBrmsParamPolicy(policyData);
 				}else if (policyConfigType.equalsIgnoreCase("Base")) {
 					newPolicy =  new ConfigPolicy(policyData);
@@ -366,7 +366,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 							if(settingsData instanceof LinkedHashMap<?, ?>){
 								String key = ((LinkedHashMap<?, ?>) settingsData).get("key").toString();
 								String value = ((LinkedHashMap<?, ?>) settingsData).get("value").toString();
-								settingsMap.put(key, value);	
+								settingsMap.put(key, value);
 							}
 						}
 					}
@@ -384,7 +384,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 							}
 						}
 					}
-					if(policyData.getRuleProvider()!=null && (policyData.getRuleProvider().equals(DecisionPolicy.GUARD_YAML)|| policyData.getRuleProvider().equals(DecisionPolicy.GUARD_BL_YAML)) 
+					if(policyData.getRuleProvider()!=null && (policyData.getRuleProvider().equals(DecisionPolicy.GUARD_YAML)|| policyData.getRuleProvider().equals(DecisionPolicy.GUARD_BL_YAML))
 							&& policyData.getYamlparams()!=null){
 						attributeMap.put("actor", policyData.getYamlparams().getActor());
 						attributeMap.put("recipe", policyData.getYamlparams().getRecipe());
@@ -408,7 +408,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 						attributeMap.put("VNFType", policyData.getRainyday().getVnfType());
 						attributeMap.put("BB_ID", policyData.getRainyday().getBbid());
 						attributeMap.put("WorkStep", policyData.getRainyday().getWorkstep());
-						
+
 						if(policyData.getRainyday().getTreatmentTableChoices()!=null && policyData.getRainyday().getTreatmentTableChoices().size() > 0){
 							for (Object table : policyData.getRainyday().getTreatmentTableChoices()){
 								if(table instanceof LinkedHashMap<?,?>){
@@ -419,7 +419,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 							}
 						}
 					}
-					
+
 					policyData.setDynamicRuleAlgorithmLabels(dynamicRuleAlgorithmLabels);
 					policyData.setDynamicRuleAlgorithmCombo(dynamicRuleAlgorithmCombo);
 					policyData.setDynamicRuleAlgorithmField1(dynamicRuleAlgorithmField1);
@@ -440,11 +440,11 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			}else{
 				body = "error";
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
-				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);								
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				response.addHeader("error", "error");
 				return new ResponseEntity<String>(body, status);
 			}
-			
+
 			PolicyDBDaoTransaction policyDBDaoTransaction = null;
 			try{
 				policyDBDao = PolicyDBDao.getPolicyDBDaoInstance(XACMLPapServlet.getEmf());
@@ -466,10 +466,10 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					}
 					body = "success";
 					status = HttpStatus.OK;
-					response.setStatus(HttpServletResponse.SC_OK);								
-					response.addHeader("successMapKey", "success");								
+					response.setStatus(HttpServletResponse.SC_OK);
+					response.addHeader("successMapKey", "success");
 					response.addHeader("policyName", policyData.getNewFileName());
-					
+
                     //get message from the SafetyCheckerResults if present
                     String safetyCheckerResponse = policyData.getClWarning();
                     String existingCLName = policyData.getExistingCLName();
@@ -483,13 +483,13 @@ public class PolicyCreation extends AbstractPolicyCreation{
                     } else {
                         PolicyLogger.info("SafetyCheckerResponse was empty or null.");
                     }
-                    
+
 				}else if (successMap.containsKey("invalidAttribute")) {
 					String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Invalid Action Attribute";
 					LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Could not fine " + policyData.getActionAttribute() + " in the ActionPolicyDict table.");
 					body = "invalidAttribute";
 					status = HttpStatus.BAD_REQUEST;
-					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);								
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 					response.addHeader("invalidAttribute", policyData.getActionAttribute());
 					response.addHeader("error", message);
 					response.addHeader("policyName", policyData.getPolicyName());
@@ -513,12 +513,12 @@ public class PolicyCreation extends AbstractPolicyCreation{
                     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     response.addHeader("error", message);
                     response.addHeader("policyName", policyData.getPolicyName());
-                }else {						
+                }else {
 					policyDBDaoTransaction.rollbackTransaction();
 					body = "error";
 					status = HttpStatus.INTERNAL_SERVER_ERROR;
-					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);								
-					response.addHeader("error", "error");							
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					response.addHeader("error", "error");
 				}
 			}catch(Exception e){
 				LOGGER.error("Exception Occured : ",e);
@@ -530,7 +530,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 		catch (Exception e){
 			LOGGER.error("Exception Occured : "+e.getMessage(),e);
 			body = "error";
-			response.addHeader("error", e.getMessage());	
+			response.addHeader("error", e.getMessage());
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(body, status);
@@ -550,11 +550,11 @@ public class PolicyCreation extends AbstractPolicyCreation{
 
 	public PolicyVersion getPolicyVersionData(String dbCheckPolicyName){
 		PolicyVersion entityItem = (PolicyVersion) commonClassDao.getEntityItem(PolicyVersion.class, "policyName", dbCheckPolicyName);
-		if (entityItem != null) {		
+		if (entityItem != null) {
 			if(entityItem.getPolicyName().equals(dbCheckPolicyName)){
 				return entityItem;
 			}
-		}	
+		}
 		return entityItem;
 	}
 }

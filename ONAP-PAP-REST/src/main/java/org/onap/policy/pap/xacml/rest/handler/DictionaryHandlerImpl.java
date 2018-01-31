@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -151,19 +151,19 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 		} catch (Exception e) {
 			String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Error Querying the Database: " + e.getMessage();
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "DictionaryHandler", " Error Querying the Database.");
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader("error", "dictionaryDBQuery");
 			response.addHeader("error", message);
 			return;
 		}
 	}
-	
+
 	/**
 	 * Can be used to extend the services.
-	 * 
+	 *
 	 * getflag=true indicates Get Request.
-	 * getflag=false indicates Put Request.  
-	 * @return 
+	 * getflag=false indicates Put Request.
+	 * @return
 	 */
 	public String extendedOptions(String dictionaryType, HttpServletRequest request, HttpServletResponse response, boolean getflag) {
 		// Default code
@@ -178,7 +178,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 	public void doDictionaryAPIPut(HttpServletRequest request, HttpServletResponse response) {
 		String result = null;
 		String dictionaryType = request.getParameter("dictionaryType");
-		String operation = request.getParameter("operation");         
+		String operation = request.getParameter("operation");
 		try {
 			DictionaryService dictionary = new DictionaryService();
 			switch (dictionaryType) {
@@ -306,7 +306,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 			return;
 		}
 		if (result.equalsIgnoreCase("Success")) {
-			response.setStatus(HttpServletResponse.SC_OK);                              
+			response.setStatus(HttpServletResponse.SC_OK);
 			response.addHeader("successMapKey", "success");
 			if (operation.equalsIgnoreCase("update")) {
 				response.addHeader("operation",  "updateDictionary");
@@ -322,7 +322,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 		} else {
 			String message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Error Updating the Database.";
         	PolicyLogger.error(message);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);	
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader("error", message);
 		}
 	}

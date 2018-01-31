@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class PolicyEngineImportService {
     private static Logger LOGGER = FlexLogger.getLogger(PolicyEngineImportService.class.getName());
-    
+
     private String importResponse = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private String message = null;
@@ -51,8 +51,8 @@ public class PolicyEngineImportService {
         } catch (Exception e) {
             importResponse = XACMLErrorConstants.ERROR_DATA_ISSUE + e;
             status = HttpStatus.BAD_REQUEST;
-            // This needs to stop here in case if there a issue here. Avoiding Null pointer exceptions. 
-            return; 
+            // This needs to stop here in case if there a issue here. Avoiding Null pointer exceptions.
+            return;
         }
         this.file = file;
         if(importParameters.getRequestID()==null){
@@ -88,12 +88,12 @@ public class PolicyEngineImportService {
     }
 
     private void run() throws PolicyException{
-        // Check Validation. 
+        // Check Validation.
         if(!getValidation()){
             LOGGER.error(message);
             throw new PolicyException(message);
         }
-        // Get Result. 
+        // Get Result.
         try{
             status = HttpStatus.OK;
             importResponse = processResult();
@@ -120,7 +120,7 @@ public class PolicyEngineImportService {
 	            }
 	        }else{
 	            response = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect File Type Given. Please use a file of type .xmi or .zip.";
-	            LOGGER.error(response);     
+	            LOGGER.error(response);
 	            return response;
 	        }
 			break;
@@ -135,16 +135,16 @@ public class PolicyEngineImportService {
 	            }
 	        }else{
 	            response = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect File Type Given. Please use a file of type .drl";
-	            LOGGER.error(response);     
+	            LOGGER.error(response);
 	            return response;
 	        }
 			break;
 		default:
 			response = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect ServiceType Given. ";
-			LOGGER.error(response);     
+			LOGGER.error(response);
 			return response;
         }
-        String[] parameters = new String[] {"importService=" + importParameters.getServiceType(), "serviceName=" 
+        String[] parameters = new String[] {"importService=" + importParameters.getServiceType(), "serviceName="
                 + importParameters.getServiceName(), "fileName=" + fileName, "version=" + importParameters.getVersion(), "description=" + importParameters.getDescription()};
         PAPServices papServices = new PAPServices();
         response =  (String) papServices.callPAP(targetStream, parameters, importParameters.getRequestID(), "importMS");

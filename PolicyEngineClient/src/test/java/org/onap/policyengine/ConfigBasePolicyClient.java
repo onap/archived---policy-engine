@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,13 +47,13 @@ public class ConfigBasePolicyClient{
             policyParameters.setConfigName("testBase"); //required
             policyParameters.setConfigBodyType(PolicyType.OTHER); //required
             policyParameters.setConfigBody("testing");  //required
-                        
+
             //Set the Config Attributes... These are Optional
-            Map<String, String> configAttributes = new HashMap<>(); 
+            Map<String, String> configAttributes = new HashMap<>();
             configAttributes.put("Template", "SampleTemplate");
-            configAttributes.put("controller", "default"); 
+            configAttributes.put("controller", "default");
             configAttributes.put("SamPoll", "30");
-            configAttributes.put("value", "abcd"); 
+            configAttributes.put("value", "abcd");
             Map<AttributeType, Map<String,String>> attributes = new HashMap<>();
             attributes.put(AttributeType.MATCHING, configAttributes);
             policyParameters.setAttributes(attributes);
@@ -68,7 +68,7 @@ public class ConfigBasePolicyClient{
 			policyParameters.setRiskLevel("5");
 			// Set Safe Policy value for Risk Type
 			policyParameters.setRiskType("PROD");
-            
+
             // API method to create Policy or update policy
             PolicyChangeResponse response = null;
             if (!isEdit) {
@@ -76,7 +76,7 @@ public class ConfigBasePolicyClient{
             } else {
             	response = policyEngine.updatePolicy(policyParameters);
             }
-            
+
             if(response.getResponseCode()==200){
                 System.out.println(response.getResponseMessage());
                 System.out.println("Policy Created Successfully!");
@@ -87,5 +87,5 @@ public class ConfigBasePolicyClient{
             System.err.println(e.getMessage());
         }
 	}
-	
+
 }

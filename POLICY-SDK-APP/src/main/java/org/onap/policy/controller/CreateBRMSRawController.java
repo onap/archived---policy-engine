@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,7 +42,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.jpa.PolicyEntity;
@@ -54,7 +54,7 @@ public class CreateBRMSRawController{
 	protected PolicyRestAdapter policyAdapter = null;
 	private ArrayList<Object> attributeList;
 
-	
+
 	@SuppressWarnings("unchecked")
 	public void prePopulateBRMSRawPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		attributeList = new ArrayList<>();
@@ -76,7 +76,7 @@ public class CreateBRMSRawController{
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);
-			// Set Attributes. 
+			// Set Attributes.
 			AdviceExpressionsType expressionTypes = ((RuleType)policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().get(0)).getAdviceExpressions();
 			for( AdviceExpressionType adviceExpression: expressionTypes.getAdviceExpression()){
 				for(AttributeAssignmentExpressionType attributeAssignment: adviceExpression.getAttributeAssignmentExpression()){
@@ -130,7 +130,7 @@ public class CreateBRMSRawController{
 										String value = (String) attributeValue.getContent().get(0);
 										AttributeDesignatorType designator = match.getAttributeDesignator();
 										String attributeId = designator.getAttributeId();
-										
+
 										if ("RiskType".equals(attributeId)){
 											policyAdapter.setRiskType(value);
 										}
@@ -152,7 +152,7 @@ public class CreateBRMSRawController{
 					}
 				}
 			}
-		} 
+		}
 	}
 
 }

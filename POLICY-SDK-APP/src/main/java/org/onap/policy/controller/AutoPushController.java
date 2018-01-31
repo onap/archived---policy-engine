@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -77,13 +77,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AutoPushController extends RestrictedBaseController{
 
 	private static final Logger logger = FlexLogger.getLogger(AutoPushController.class);
-	
+
 	@Autowired
 	CommonClassDao commonClassDao;
 
 	private PDPGroupContainer container;
 	protected List<OnapPDPGroup> groups = Collections.synchronizedList(new ArrayList<OnapPDPGroup>());
-	
+
 	private PDPPolicyContainer policyContainer;
 
 	private PolicyController policyController;
@@ -98,7 +98,7 @@ public class AutoPushController extends RestrictedBaseController{
 	private List<Object> data;
 
 	public synchronized void refreshGroups() {
-		synchronized(this.groups) { 
+		synchronized(this.groups) {
 			this.groups.clear();
 			try {
 				PolicyController controller = getPolicyControllerInstance();
@@ -114,7 +114,7 @@ public class AutoPushController extends RestrictedBaseController{
 	private PolicyController getPolicyControllerInstance(){
 		return policyController != null ? getPolicyController() : new PolicyController();
 	}
-	
+
 	@RequestMapping(value={"/get_AutoPushPoliciesContainerData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPolicyGroupContainerData(HttpServletRequest request, HttpServletResponse response){
 		try{
@@ -141,7 +141,7 @@ public class AutoPushController extends RestrictedBaseController{
 						if(!userRole.getScope().equals("")){
 							scopes.add(userRole.getScope());
 						}
-					}		
+					}
 				}
 			}
 			if (roles.contains("super-admin") || roles.contains("super-editor")  || roles.contains("super-guest")) {
@@ -157,7 +157,7 @@ public class AutoPushController extends RestrictedBaseController{
 						if(filterdatas != null){
 							for(int i =0; i < filterdatas.size(); i++){
 								data.add(filterdatas.get(i));
-							}	
+							}
 						}
 					}
 				}else{
@@ -187,12 +187,12 @@ public class AutoPushController extends RestrictedBaseController{
 			this.container = new PDPGroupContainer(controller.getPapEngine());
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			
+
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			logger.info("****************************************Logging UserID while Pushing  Policy to PDP Group*****************************************");
 			logger.info("UserId:  " + userId + "Push Policy Data:  "+ root.get("pushTabData").toString());
 			logger.info("***********************************************************************************************************************************");
-			
+
 			AutoPushTabAdapter adapter = mapper.readValue(root.get("pushTabData").toString(), AutoPushTabAdapter.class);
 			for (Object pdpGroupId :  adapter.getPdpDatas()) {
 				LinkedHashMap<?, ?> selectedPDP = (LinkedHashMap<?, ?>)pdpGroupId;
@@ -214,7 +214,7 @@ public class AutoPushController extends RestrictedBaseController{
 				Set<PDPPolicy> selectedPolicies = new HashSet<>();
 				for (String policyId : selectedPoliciesInUI) {
 					logger.debug("Handlepolicies..." + pdpDestinationGroupId + policyId);
-					
+
 					//
 					// Get the current selection
 					String selectedItem = policyId;
@@ -232,10 +232,10 @@ public class AutoPushController extends RestrictedBaseController{
 						id = id.replace(".xml", "");
 						id = id.substring(0, id.lastIndexOf('.'));
 					}
-					
+
 					// Default policy to be Root policy; user can change to deferred
 					// later
-					
+
 					StdPDPPolicy selectedPolicy = null;
 					String dbCheckName = name;
 					if(dbCheckName.contains("Config_")){
@@ -347,15 +347,15 @@ public class AutoPushController extends RestrictedBaseController{
 			this.container = new PDPGroupContainer(controller.getPapEngine());
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());  
+			JsonNode root = mapper.readTree(request.getReader());
 			StdPDPGroup group = mapper.readValue(root.get("activePdpGroup").toString(), StdPDPGroup.class);
 			JsonNode removePolicyData = root.get("data");
-			
+
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			logger.info("****************************************Logging UserID while Removing Policy from PDP Group*****************************************");
 			logger.info("UserId:  " + userId + "PDP Group Data:  "+ root.get("activePdpGroup").toString() + "Remove Policy Data: "+root.get("data"));
 			logger.info("***********************************************************************************************************************************");
-			
+
 			policyContainer = new PDPPolicyContainer(group);
 			if(removePolicyData.size() > 0){
 				for(int i = 0 ; i < removePolicyData.size(); i++){
@@ -371,7 +371,7 @@ public class AutoPushController extends RestrictedBaseController{
 				updatedGroupObject.setStatus(group.getStatus());
 				this.container.updateGroup(updatedGroupObject);
 			}
-			
+
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");

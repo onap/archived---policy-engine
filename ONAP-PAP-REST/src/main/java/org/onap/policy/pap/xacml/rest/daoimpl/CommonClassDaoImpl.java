@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,20 +52,20 @@ import org.springframework.stereotype.Service;
 public class CommonClassDaoImpl implements CommonClassDao{
 
 	private static final Log LOGGER = LogFactory.getLog(CommonClassDaoImpl.class);
-	
-	
+
+
 	private static SessionFactory sessionFactory;
-	
-	
+
+
 	@Autowired
 	private CommonClassDaoImpl(SessionFactory sessionFactory){
 		CommonClassDaoImpl.sessionFactory = sessionFactory;
 	}
-	
+
 	public CommonClassDaoImpl(){
 		//Default Constructor
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Object> getData(Class className) {
@@ -75,7 +75,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 			Criteria cr = session.createCriteria(className);
 			data = cr.list();
 		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Table"+e);
 		}finally{
 			try{
 				session.close();
@@ -101,11 +101,11 @@ public class CommonClassDaoImpl implements CommonClassDao{
 					cr.add(Restrictions.eq(columns[i], keys[i]));
 				}
 			}else{
-				cr.add(Restrictions.eq(columnName, key));	
+				cr.add(Restrictions.eq(columnName, key));
 			}
 			data = cr.list();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Table"+e);		
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Table"+e);
 		}finally{
 			try{
 				session.close();
@@ -115,7 +115,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		}
 		return data;
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<String> getDataByColumn(Class className, String columnName) {
@@ -126,7 +126,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 			cr.setProjection(Projections.property(columnName));
 			data = cr.list();
 		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Table"+e);
 		}finally{
 			try{
 				session.close();
@@ -136,16 +136,16 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		}
 		return data;
 	}
-	
+
 	@Override
 	public void save(Object entity) {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		try {
 			session.persist(entity);
-			tx.commit();	
+			tx.commit();
 		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Saving  data to Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Saving  data to Table"+e);
 		}finally{
 			try{
 				session.close();
@@ -153,7 +153,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -162,9 +162,9 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		Transaction tx = session.beginTransaction();
 		try {
 			session.delete(entity);
-			tx.commit();	
+			tx.commit();
 		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Deleting data from Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Deleting data from Table"+e);
 		}finally{
 			try{
 				session.close();
@@ -172,7 +172,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
 			}
 		}
-		
+
 	}
 
 
@@ -182,9 +182,9 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		Transaction tx = session.beginTransaction();
 		try {
 			session.update(entity);
-			tx.commit();	
+			tx.commit();
 		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating data to Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating data to Table"+e);
 		}finally{
 			try{
 				session.close();
@@ -192,7 +192,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 				LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Closing Connection/Statement"+e1);
 			}
 		}
-		
+
 	}
 
 
@@ -202,7 +202,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		List<Object> data = null;
-		
+
 		String[] columnNames = null;
 		if(columnName != null && columnName.contains(":")){
 			columnNames = columnName.split(":");
@@ -210,7 +210,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		String[] values = null;
 		if(value != null && value.contains(":")){
 			values = value.split(":");
-		}		
+		}
 		try {
 			Criteria cr = session.createCriteria(className);
 			if(columnNames != null && values != null && columnNames.length == values.length){
@@ -224,7 +224,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 			data = cr.list();
 			tx.commit();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying for Duplicate Entries for Table"+e + className);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying for Duplicate Entries for Table"+e + className);
 		}finally{
 			try{
 				session.close();
@@ -235,7 +235,7 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		return data;
 	}
 
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object> getDataByQuery(String query, SimpleBindings params) {
@@ -271,13 +271,13 @@ public class CommonClassDaoImpl implements CommonClassDao{
 	@Override
 	public void updateQuery(String query) {
 		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();	
+		Transaction tx = session.beginTransaction();
 		try {
 			Query hbquery = session.createQuery(query);
 			hbquery.executeUpdate();
 			tx.commit();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating Database Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating Database Table"+e);
 		}finally{
 			try{
 				session.close();
@@ -303,12 +303,12 @@ public class CommonClassDaoImpl implements CommonClassDao{
 					cr.add(Restrictions.eq(columns[i], keys[i]));
 				}
 			}else{
-				cr.add(Restrictions.eq(columnName, key));	
+				cr.add(Restrictions.eq(columnName, key));
 			}
 			data = cr.list().get(0);
 			tx.commit();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table"+e);
 		}finally{
 			try{
 				session.close();
@@ -327,21 +327,21 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		Transaction tx = session.beginTransaction();
 		List<PolicyRoles> rolesData = null;
 		try {
-			Criteria cr = session.createCriteria(PolicyRoles.class);		
-			Disjunction disjunction = Restrictions.disjunction(); 
+			Criteria cr = session.createCriteria(PolicyRoles.class);
+			Disjunction disjunction = Restrictions.disjunction();
 			Conjunction conjunction1  = Restrictions.conjunction();
 			conjunction1.add(Restrictions.eq("role", "admin"));
 			Conjunction conjunction2  = Restrictions.conjunction();
-			conjunction2.add(Restrictions.eq("role", "editor"));	
+			conjunction2.add(Restrictions.eq("role", "editor"));
 			Conjunction conjunction3  = Restrictions.conjunction();
-			conjunction3.add(Restrictions.eq("role", "guest"));	
+			conjunction3.add(Restrictions.eq("role", "guest"));
 			disjunction.add(conjunction1);
 			disjunction.add(conjunction2);
 			disjunction.add(conjunction3);
 			rolesData = cr.add(disjunction).list();
 			tx.commit();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying PolicyRoles Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying PolicyRoles Table"+e);
 		}finally{
 			try{
 				session.close();
@@ -366,9 +366,9 @@ public class CommonClassDaoImpl implements CommonClassDao{
 			ClosedLoops closedloop = closedloopsdata.get(0);
 			closedloop.setAlarmConditions(alarms);
 			session.update(closedloop);
-			tx.commit();	
+			tx.commit();
 		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating ClosedLoops Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating ClosedLoops Table"+e);
 		}finally{
 			session.close();
 		}
@@ -388,9 +388,9 @@ public class CommonClassDaoImpl implements CommonClassDao{
 			ClosedLoops closedloop = closedloopsdata.get(0);
 			closedloop.setYaml(yaml);
 			session.update(closedloop);
-			tx.commit();	
+			tx.commit();
 		}catch(Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating ClosedLoops Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Updating ClosedLoops Table"+e);
 		}finally{
 			session.close();
 		}
@@ -433,13 +433,13 @@ public class CommonClassDaoImpl implements CommonClassDao{
 		List<Object> data = null;
 		try {
 			Criteria cr = session.createCriteria(GroupPolicyScopeList.class);
-			cr.add(Restrictions.eq("groupList",groupListValue));	
+			cr.add(Restrictions.eq("groupList",groupListValue));
 			Criterion expression = Restrictions.eq("name", groupNameValue);
 			cr.add(Restrictions.not(expression));
 			data = cr.list();
 			tx.commit();
 		} catch (Exception e) {
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying for Duplicate Entries for GroupPolicyScopeList Table"+e);	
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying for Duplicate Entries for GroupPolicyScopeList Table"+e);
 		}finally{
 			try{
 				session.close();

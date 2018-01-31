@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -51,7 +51,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class EnforcerDictionaryController {
 
 	private static final Logger LOGGER	= FlexLogger.getLogger(EnforcerDictionaryController.class);
-	
+
 	@Autowired
 	CommonClassDao commonClassDao;
 
@@ -75,7 +75,7 @@ public class EnforcerDictionaryController {
 			LOGGER.error("Exception Occured"+e);
 		}
 	}
-	
+
 	@RequestMapping(value={"/enforcer_dictionary/save_enforcerType"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
 		try {
@@ -86,8 +86,8 @@ public class EnforcerDictionaryController {
 			if(enforcingType.getId() == 0){
 				commonClassDao.save(enforcingType);
 			}else{
-				commonClassDao.update(enforcingType); 
-			} 
+				commonClassDao.update(enforcingType);
+			}
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");

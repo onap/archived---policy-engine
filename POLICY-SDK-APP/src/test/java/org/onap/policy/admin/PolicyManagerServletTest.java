@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,7 +52,7 @@ import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
 
 public class PolicyManagerServletTest extends Mockito{
-	
+
 	private static Logger logger = FlexLogger.getLogger(PolicyManagerServletTest.class);
 	private List<String> headers = new ArrayList<String>();
 
@@ -61,7 +61,7 @@ public class PolicyManagerServletTest extends Mockito{
 	private static List<Object> policyEditorScopes;
 	private static List<Object> policyVersion;
 	private static CommonClassDao commonClassDao;
-	
+
 	@Before
 	public void setUp() throws Exception{
 		logger.info("setUp: Entering");
@@ -80,7 +80,7 @@ public class PolicyManagerServletTest extends Mockito{
         roles1.setScope("['com','Test']");
         rolesdata.add(roles);
         rolesdata.add(roles1);
-        
+
         //PolicyEntity Data
         basePolicyData = new ArrayList<>();
         String policyContent = "";
@@ -101,7 +101,7 @@ public class PolicyManagerServletTest extends Mockito{
         configurationEntity.setDescription("test");
         entity.setConfigurationData(configurationEntity);
         basePolicyData.add(entity);
-        
+
         //PolicyEditorScopes data
         policyEditorScopes = new ArrayList<>();
         PolicyEditorScopes scopes = new PolicyEditorScopes();
@@ -114,7 +114,7 @@ public class PolicyManagerServletTest extends Mockito{
         scopes1.setUserModifiedBy(userinfo);
         policyEditorScopes.add(scopes);
         policyEditorScopes.add(scopes1);
-        
+
         //PolicyVersion data
         policyVersion = new ArrayList<>();
         PolicyVersion policy = new PolicyVersion();
@@ -125,30 +125,30 @@ public class PolicyManagerServletTest extends Mockito{
         policy.setModifiedBy("Test");
         policyVersion.add(policy);
 	}
-	
+
 	@Test
 	public void testInit(){
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		ServletConfig servletConfig = mock(ServletConfig.class);       
+		ServletConfig servletConfig = mock(ServletConfig.class);
         try {
         	when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
         	when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.admin.properties");
         	System.setProperty("xacml.rest.admin.closedLoopJSON", new File(".").getCanonicalPath() + File.separator + "src"+ File.separator + "test" + File.separator + "resources" + File.separator + "JSONConfig.json");
 			servlet.init(servletConfig);
-			
+
 			assertTrue(PolicyManagerServlet.getServiceTypeNamesList().size() > 0);
 			assertTrue(PolicyManagerServlet.getPolicyNames().size() > 0);
-			
+
 		} catch (Exception e1) {
 			logger.error("Exception Occured"+e1);
 			fail();
 		}
 	}
-	
+
 	@Test
 	public void testBadInitJson() {
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		ServletConfig servletConfig = mock(ServletConfig.class);       
+		ServletConfig servletConfig = mock(ServletConfig.class);
         try {
         	when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
         	when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.admin.properties");
@@ -159,11 +159,11 @@ public class PolicyManagerServletTest extends Mockito{
 			fail();
 		}
 	}
-	
+
 	@Test
 	public void testBadInitJsonInvalidFile() {
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		ServletConfig servletConfig = mock(ServletConfig.class);       
+		ServletConfig servletConfig = mock(ServletConfig.class);
         try {
         	when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
         	when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.admin.properties");
@@ -179,8 +179,8 @@ public class PolicyManagerServletTest extends Mockito{
 	@Test
 	public void testDescribePolicy(){
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class);  
+		HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         PolicyController controller = mock(PolicyController.class);
         BufferedReader reader = new BufferedReader(new StringReader("{params: { mode: 'DESCRIBEPOLICYFILE', path: 'com.Config_SampleTest1206.1.xml'}}"));
         try {
@@ -194,14 +194,14 @@ public class PolicyManagerServletTest extends Mockito{
 			fail();
 		}
 	}
-	
-	
+
+
 	@SuppressWarnings("static-access")
 	@Test
 	public void testPolicyScopeList(){
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class); 
+		HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'LIST', path: '/', onlyFolders: false}}");
@@ -223,13 +223,13 @@ public class PolicyManagerServletTest extends Mockito{
     		}
         }
 	}
-	
+
 	@SuppressWarnings("static-access")
 	@Test
 	public void editBasePolicyTest(){
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class); 
+		HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_SampleTest1206.1.xml', onlyFolders: false}}");
@@ -248,7 +248,7 @@ public class PolicyManagerServletTest extends Mockito{
     		}
         }
 	}
-	
+
 	@SuppressWarnings("static-access")
 	@Test
 	public void editBRMSParamPolicyTest(){
@@ -274,8 +274,8 @@ public class PolicyManagerServletTest extends Mockito{
         entity.setConfigurationData(configurationEntity);
         policyData.add(entity);
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class); 
+		HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Param_BRMSParamvFWDemoPolicy.1.xml', onlyFolders: false}}");
@@ -320,8 +320,8 @@ public class PolicyManagerServletTest extends Mockito{
         entity.setConfigurationData(configurationEntity);
         policyData.add(entity);
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class); 
+		HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_BRMS_Raw_TestBRMSRawPolicy.1.xml', onlyFolders: false}}");
@@ -340,7 +340,7 @@ public class PolicyManagerServletTest extends Mockito{
     		}
         }
 	}
-	
+
 	@SuppressWarnings("static-access")
 	@Test
 	public void editClosedLoopFaultPolicyTest(){
@@ -366,8 +366,8 @@ public class PolicyManagerServletTest extends Mockito{
         entity.setConfigurationData(configurationEntity);
         policyData.add(entity);
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class); 
+		HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_Fault_TestClosedLoopPolicy.1.xml', onlyFolders: false}}");
@@ -386,7 +386,7 @@ public class PolicyManagerServletTest extends Mockito{
     		}
         }
 	}
-	
+
 	@SuppressWarnings("static-access")
 	@Test
 	public void editClosedLoopPMPolicyTest(){
@@ -412,8 +412,8 @@ public class PolicyManagerServletTest extends Mockito{
         entity.setConfigurationData(configurationEntity);
         policyData.add(entity);
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class); 
+		HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_PM_TestClosedLoopPMPolicy.1.xml', onlyFolders: false}}");
@@ -432,7 +432,7 @@ public class PolicyManagerServletTest extends Mockito{
     		}
         }
 	}
-	
+
 	@SuppressWarnings("static-access")
 	@Test
 	public void editMicroServicePolicyTest(){
@@ -465,8 +465,8 @@ public class PolicyManagerServletTest extends Mockito{
         entity.setConfigurationData(configurationEntity);
         policyData.add(entity);
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class); 
+		HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_MS_vFirewall.1.xml', onlyFolders: false}}");
@@ -486,7 +486,7 @@ public class PolicyManagerServletTest extends Mockito{
     		}
         }
 	}
-	
+
 	@SuppressWarnings("static-access")
 	@Test
 	public void editFirewallPolicyTest(){
@@ -512,8 +512,8 @@ public class PolicyManagerServletTest extends Mockito{
         entity.setConfigurationData(configurationEntity);
         policyData.add(entity);
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class); 
+		HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Config_FW_TestFireWallPolicy.1.xml', onlyFolders: false}}");
@@ -532,7 +532,7 @@ public class PolicyManagerServletTest extends Mockito{
     		}
         }
 	}
-	
+
 	@SuppressWarnings("static-access")
 	@Test
 	public void editActionPolicyTest(){
@@ -556,8 +556,8 @@ public class PolicyManagerServletTest extends Mockito{
         entity.setActionBodyEntity(configurationEntity);
         policyData.add(entity);
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class); 
+		HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Action_TestActionPolicy.1.xml', onlyFolders: false}}");
@@ -576,7 +576,7 @@ public class PolicyManagerServletTest extends Mockito{
     		}
         }
 	}
-	
+
 	@SuppressWarnings("static-access")
 	@Test
 	public void editDecisionPolicyTest(){
@@ -594,8 +594,8 @@ public class PolicyManagerServletTest extends Mockito{
         entity.setScope("com");
         policyData.add(entity);
 		PolicyManagerServlet servlet = new PolicyManagerServlet();
-		HttpServletRequest request = mock(HttpServletRequest.class);       
-        HttpServletResponse response = mock(HttpServletResponse.class); 
+		HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         PolicyController controller = mock(PolicyController.class);
         List<String> list = new ArrayList<>();
         list.add("{params: { mode: 'EDITFILE', path: '/com/Decision_TestDecisionPolicyWithRuleAlgorithms.1.xml', onlyFolders: false}}");

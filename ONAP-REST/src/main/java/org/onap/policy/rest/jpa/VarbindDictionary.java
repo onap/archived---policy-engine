@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,21 +50,21 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 @NamedQuery(name = "VarbindDictionary.findAll", query = "Select v FROM VarbindDictionary v")
 public class VarbindDictionary implements Serializable{
 	private static final long serialVersionUID = 1L;
-	
+
 	private static String domain;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "Id")
 	private int id;
-	
+
 	@Column(name ="varbind_Name", nullable = false, unique = true)
 	@OrderBy("asc")
 	private String varbindName;
 
 	@Column(name = "varbind_Description", nullable = true, length = 2048)
 	private String varbindDescription;
-	
+
 	@Column(name = "varbind_oid", nullable = false)
 	private String varbindOID;
 
@@ -75,7 +75,7 @@ public class VarbindDictionary implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
-	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name="created_by")
 	private UserInfo userCreatedBy;
@@ -83,7 +83,7 @@ public class VarbindDictionary implements Serializable{
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -101,18 +101,18 @@ public class VarbindDictionary implements Serializable{
 	}
 
 	private static Log LOGGER = LogFactory.getLog(VarbindDictionary.class);
-	
+
 	public VarbindDictionary() {
-		
+
 	}
-	
+
 	public VarbindDictionary(String string, String userid) {
 		this(domain);
 	}
-	
+
 	public VarbindDictionary(String domain) {
 		this.varbindName = domain;
-	}	
+	}
 
 	@PrePersist
 	public void	prePersist() {
@@ -131,7 +131,7 @@ public class VarbindDictionary implements Serializable{
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "VarbindDictionary", "Exception caused While adding Modified by Role");
 		}
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}
@@ -171,7 +171,7 @@ public class VarbindDictionary implements Serializable{
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	
+
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
@@ -179,6 +179,6 @@ public class VarbindDictionary implements Serializable{
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
-	
+
 
 }

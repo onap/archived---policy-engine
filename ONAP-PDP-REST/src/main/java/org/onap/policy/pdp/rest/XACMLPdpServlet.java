@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,32 +79,32 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Servlet implementation class XacmlPdpServlet
- * 
+ *
  * This is an implementation of the XACML 3.0 RESTful Interface with added features to support
  * simple PAP RESTful API for policy publishing and PIP configuration changes.
- * 
+ *
  * If you are running this the first time, then we recommend you look at the xacml.pdp.properties file.
  * This properties file has all the default parameter settings. If you are running the servlet as is,
  * then we recommend setting up you're container to run it on port 8080 with context "/pdp". Wherever
  * the default working directory is set to, a "config" directory will be created that holds the policy
  * and pip cache. This setting is located in the xacml.pdp.properties file.
- * 
+ *
  * When you are ready to customize, you can create a separate xacml.pdp.properties on you're local file
  * system and setup the parameters as you wish. Just set the Java VM System variable to point to that file:
- * 
+ *
  * -Dxacml.properties=/opt/app/xacml/etc/xacml.pdp.properties
- * 
+ *
  * Or if you only want to change one or two properties, simply set the Java VM System variable for that property.
- * 
+ *
  * -Dxacml.rest.pdp.register=false
  *
  *
  */
 @WebServlet(
-		description = "Implements the XACML PDP RESTful API and client PAP API.", 
-		urlPatterns = { "/" }, 
+		description = "Implements the XACML PDP RESTful API and client PAP API.",
+		urlPatterns = { "/" },
 		loadOnStartup=1,
-		initParams = { 
+		initParams = {
 				@WebInitParam(name = "XACML_PROPERTIES_NAME", value = "xacml.pdp.properties", description = "The location of the PDP xacml.pdp.properties file holding configuration information.")
 		})
 public class XACMLPdpServlet extends HttpServlet implements Runnable {
@@ -120,7 +120,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	// It's output ideally should be sent to a separate file from the application logger.
 	//
 	private static final Log requestLogger = LogFactory.getLog("xacml.request");
-	// 
+	//
 	// audit logger
 	private static final Log auditLogger = LogFactory.getLog("auditLogger");
 
@@ -189,7 +189,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	}
 
 	/**
-	 * Default constructor. 
+	 * Default constructor.
 	 */
 	public XACMLPdpServlet() {
 		//Default constructor.
@@ -208,8 +208,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		XACMLRest.xacmlInit(config);
 		// Load the Notification Delay.
 		setNotificationDelay();
-		// Load Queue size. 
-		int queueSize = 5; // Set default Queue Size here. 
+		// Load Queue size.
+		int queueSize = 5; // Set default Queue Size here.
 		queueSize = Integer.parseInt(XACMLProperties.getProperty("REQUEST_BUFFER_SIZE",String.valueOf(queueSize)));
 		initQueue(queueSize);
 		// Load our engine - this will use the latest configuration
@@ -261,9 +261,9 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			throw new ServletException("dependency_groups is null");
 		}
 		setDependencyNodes(dependencyGroups);
-		
 
-		// CreateUpdatePolicy ResourceName  
+
+		// CreateUpdatePolicy ResourceName
 		createUpdateResourceName = properties.getProperty("createUpdatePolicy.impl.className", CREATE_UPDATE_POLICY_SERVICE);
 		setCreateUpdatePolicyConstructor(createUpdateResourceName);
 
@@ -271,7 +271,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		try {
 			logger.info("Creating IntegrityMonitor");
 			im = IntegrityMonitor.getInstance(pdpResourceName, properties);
-		} catch (Exception e) { 
+		} catch (Exception e) {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to create IntegrityMonitor" +e);
 			throw new ServletException(e);
 		}
@@ -371,18 +371,18 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 
     /**
 	 * PUT - The PAP engine sends configuration information using HTTP PUT request.
-	 * 
+	 *
 	 * One parameter is expected:
-	 * 
+	 *
 	 * config=[policy|pip|all]
-	 * 
+	 *
 	 * 	policy - Expect a properties file that contains updated lists of the root and referenced policies that the PDP should
 	 * 			 be using for PEP requests.
-	 * 
+	 *
 	 * 		Specifically should AT LEAST contain the following properties:
 	 * 		xacml.rootPolicies
 	 * 		xacml.referencedPolicies
-	 * 
+	 *
 	 * 		In addition, any relevant information needed by the PDP to load or retrieve the policies to store in its cache.
 	 *
 	 * 		EXAMPLE:
@@ -390,32 +390,32 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	 *
 	 *			PolicyA.1.url=http://localhost:9090/PAP?id=b2d7b86d-d8f1-4adf-ba9d-b68b2a90bee1&version=1
 	 *			PolicyB.1.url=http://localhost:9090/PAP/id=be962404-27f6-41d8-9521-5acb7f0238be&version=1
-	 *	
+	 *
 	 *			xacml.referencedPolicies=RefPolicyC.1, RefPolicyD.1
 	 *
 	 *			RefPolicyC.1.url=http://localhost:9090/PAP?id=foobar&version=1
 	 *			RefPolicyD.1.url=http://localhost:9090/PAP/id=example&version=1
-	 *	
+	 *
 	 * pip - Expect a properties file that contain PIP engine configuration properties.
-	 * 
+	 *
 	 *  		Specifically should AT LEAST the following property:
 	 * 			xacml.pip.engines
-	 * 
+	 *
 	 * 		In addition, any relevant information needed by the PDP to load and configure the PIPs.
-	 * 
+	 *
 	 * 		EXAMPLE:
 	 * 			xacml.pip.engines=foo,bar
-	 * 
+	 *
 	 * 			foo.classname=com.foo
 	 * 			foo.sample=abc
 	 * 			foo.example=xyz
 	 * 			......
-	 * 
+	 *
 	 * 			bar.classname=com.bar
 	 * 			......
-	 * 
+	 *
 	 * all - Expect ALL new configuration properties for the PDP
-	 * 
+	 *
 	 * @see HttpServlet#doPut(HttpServletRequest request, HttpServletResponse response)
 	 */
 	@Override
@@ -611,18 +611,18 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 
 	/**
 	 * Parameters: type=hb|config|Status
-	 * 
-	 * 1. HeartBeat Status 
+	 *
+	 * 1. HeartBeat Status
 	 * HeartBeat
 	 * 		OK - All Policies are Loaded, All PIPs are Loaded
 	 *  	LOADING_IN_PROGRESS - Currently loading a new policy set/pip configuration
 	 *  	LAST_UPDATE_FAILED - Need to track the items that failed during last update
-	 *  	LOAD_FAILURE - ??? Need to determine what information is sent and how 
+	 *  	LOAD_FAILURE - ??? Need to determine what information is sent and how
 	 * 2. Configuration
 	 * 3. Status
 	 * 		return the StdPDPStatus object in the Response content
-	 * 
-	 * 
+	 *
+	 *
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	@Override
@@ -830,8 +830,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	/**
 	 * POST - We expect XACML requests to be posted by PEP applications. They can be in the form of XML or JSON according
 	 * to the XACML 3.0 Specifications for both.
-	 * 
-	 * 
+	 *
+	 *
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	@Override
@@ -925,7 +925,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		}catch(Exception e){
 			logger.error("Exception occured while getting max content length"+e);
 		}
-		
+
 		if (request.getContentLength() <= 0) {
 			String message = "Content-Length is negative";
 			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
@@ -985,7 +985,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			}catch(Exception e){
 				logger.error("Exception Occured while reading line"+e);
 			}
-			
+
 			incomingRequestString = buffer.toString();
 			logger.info(incomingRequestString);
 			//
@@ -1048,7 +1048,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		//
 		try {
 			//
-			// Authenticating the Request here. 
+			// Authenticating the Request here.
 			//
 			if(!authorizeRequest(request)){
 				String message = "PEP not Authorized for making this Request!! \n Contact Administrator for this Scope. ";
@@ -1088,7 +1088,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				myEngine = XACMLPdpServlet.pdpEngine;
 				try {
 					PolicyList.clearPolicyList();
-					lTimeStart = System.currentTimeMillis();		
+					lTimeStart = System.currentTimeMillis();
 					pdpResponse	= myEngine.decide(pdpRequest);
 					lTimeEnd = System.currentTimeMillis();
 				} catch (PDPException e) {
@@ -1106,7 +1106,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 					return;
 				}
 			}
-			monitor.computeLatency(lTimeEnd - lTimeStart);	
+			monitor.computeLatency(lTimeEnd - lTimeStart);
 			requestLogger.info(lTimeStart + "=" + incomingRequestString);
 			for(String policy : PolicyList.getpolicyList()){
 				monitor.policyCountAdd(policy, 1);
@@ -1115,7 +1115,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 
 			logger.info("PolicyID triggered in Request: " + PolicyList.getpolicyList());
 
-			//need to go through the list and find out if the value is unique and then add it other wise 
+			//need to go through the list and find out if the value is unique and then add it other wise
 			//			monitor.policyCountAdd(PolicyList.getpolicyList(), 1);
 
 			if (logger.isDebugEnabled()) {
@@ -1169,7 +1169,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 						//
 						outgoingResponseString = DOMResponse.toString(pdpResponse, false);
 					}
-				}	
+				}
 				//	adding the jmx values for NA, Permit and Deny
 				//
 				if (outgoingResponseString.contains("NotApplicable") || outgoingResponseString.contains("Decision not a Permit")){
@@ -1217,10 +1217,10 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	}
 
 	/*
-	 * Added for Authorizing the PEP Requests for Environment check. 
+	 * Added for Authorizing the PEP Requests for Environment check.
 	 */
 	private boolean authorizeRequest(HttpServletRequest request) {
-		// Get the client Credentials from the Request header. 
+		// Get the client Credentials from the Request header.
 		HttpServletRequest httpServletRequest = request;
 		String clientCredentials = httpServletRequest.getHeader(ENVIORNMENT_HEADER);
 		if(clientCredentials!=null && clientCredentials.equalsIgnoreCase(environment)){
@@ -1240,7 +1240,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			while (! XACMLPdpServlet.configThreadTerminate) {
 				PutRequest request = XACMLPdpServlet.queue.take();
 				StdPDPStatus newStatus = new StdPDPStatus();
-				
+
 				PDPEngine newEngine = null;
 				synchronized(pdpStatusLock) {
 					XACMLPdpServlet.status.setStatus(Status.UPDATING_CONFIGURATION);
@@ -1283,7 +1283,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, "interrupted");
 			Thread.currentThread().interrupt();
 		}
-	}	
+	}
 
 	public static PDPEngine getPDPEngine(){
 		PDPEngine myEngine = null;
@@ -1296,7 +1296,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	public static Constructor<?> getCreateUpdatePolicyConstructor(){
 		return createUpdatePolicyConstructor;
 	}
-	
+
 	private static void setCreateUpdatePolicyConstructor(String createUpdateResourceName) throws ServletException{
 		try{
 			Class<?> createUpdateclass = Class.forName(createUpdateResourceName);

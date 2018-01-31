@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -90,7 +90,7 @@ public class XACMLPAPTest {
         pap = new XACMLPapServlet();
         pap.init(servletConfig);
     }
-    
+
     @Test
     public void testFirwallCreatePolicy() throws IOException, ServletException, SQLException {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
@@ -100,20 +100,20 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getParameter("apiflag")).thenReturn("api");
         Mockito.when(httpServletRequest.getParameter("operation")).thenReturn("create");
         Mockito.when(httpServletRequest.getParameter("policyType")).thenReturn("Config");
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("Firewall Config", "test", "testDescription", "Test", false, "test", json, 0, 
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("Firewall Config", "test", "testDescription", "Test", false, "test", json, 0,
                 "5","default", "false", "");
         MockServletInputStream mockInput = new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
-        
+
         // set DBDao
         setDBDao();
         pap.service(httpServletRequest, httpServletResponse);
-        
+
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         Mockito.verify(httpServletResponse).addHeader("successMapKey", "success");
         Mockito.verify(httpServletResponse).addHeader("policyName", "test.Config_FW_test.1.xml");
     }
-    
+
     @Test
     public void testBRMSCreatePolicy() throws IOException, ServletException, SQLException {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
@@ -128,23 +128,23 @@ public class XACMLPAPTest {
         ruleAttributes.put("samPoll", "5");
         ruleAttributes.put("value", "test");
         StdPAPPolicy newPAPPolicy = new StdPAPPolicy("BRMS_Param","test", "testing",
-                "BRMS_PARAM_RULE",false,"test", 
-                matchingAttributes, 0, "DROOLS", 
+                "BRMS_PARAM_RULE",false,"test",
+                matchingAttributes, 0, "DROOLS",
                 null, ruleAttributes, "5",
                 "default", "false", "", null, null);
         MockServletInputStream mockInput = new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
-        
+
         // set DBDao
         setDBDao();
         setPolicyCreation();
         pap.service(httpServletRequest, httpServletResponse);
-        
+
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         Mockito.verify(httpServletResponse).addHeader("successMapKey", "success");
         Mockito.verify(httpServletResponse).addHeader("policyName", "test.Config_BRMS_Param_test.1.xml");
     }
-    
+
     @Test
     public void testBRMSRawCreatePolicy() throws IOException, ServletException, SQLException {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
@@ -156,22 +156,22 @@ public class XACMLPAPTest {
         Map<String, String> ruleAttributes = new HashMap<>();
         ruleAttributes.put("value", "test");
         StdPAPPolicy newPAPPolicy = new StdPAPPolicy("BRMS_Raw","test","testig description",
-                "BRMS_RAW_RULE",false,"test", ruleAttributes, 0, "DROOLS", 
+                "BRMS_RAW_RULE",false,"test", ruleAttributes, 0, "DROOLS",
                 "test", "4",
                 "default", "false", null,  null, null);
         MockServletInputStream mockInput = new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
-        
+
         // set DBDao
         setDBDao();
         setPolicyCreation();
         pap.service(httpServletRequest, httpServletResponse);
-        
+
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         Mockito.verify(httpServletResponse).addHeader("successMapKey", "success");
         Mockito.verify(httpServletResponse).addHeader("policyName", "test.Config_BRMS_Raw_test.1.xml");
     }
-    
+
     @Test
     public void testClosedLoopPMCreatePolicy() throws IOException, ServletException, SQLException {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
@@ -181,22 +181,22 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getParameter("operation")).thenReturn("create");
         Mockito.when(httpServletRequest.getParameter("policyType")).thenReturn("Config");
         String json = "{\"test\":\"java\"}";
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("ClosedLoop_PM", "test", "testing", "onap", 
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("ClosedLoop_PM", "test", "testing", "onap",
                 json, false, null, "Registration Failure(Trinity)", false, "test", 0, null,
-                "default", "true", ""); 
+                "default", "true", "");
         MockServletInputStream mockInput = new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
-        
+
         // set DBDao
         setDBDao();
         setPolicyCreation();
         pap.service(httpServletRequest, httpServletResponse);
-        
+
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         Mockito.verify(httpServletResponse).addHeader("successMapKey", "success");
         Mockito.verify(httpServletResponse).addHeader("policyName", "test.Config_PM_test.1.xml");
     }
-    
+
     @Test
     public void testDecisonAAFPolicy() throws IOException, ServletException, SQLException {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
@@ -205,20 +205,20 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getParameter("apiflag")).thenReturn("api");
         Mockito.when(httpServletRequest.getParameter("operation")).thenReturn("create");
         Mockito.when(httpServletRequest.getParameter("policyType")).thenReturn("Decision");
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("test", "test rule", "ONAP", "AAF", null, null, null, 
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("test", "test rule", "ONAP", "AAF", null, null, null,
                 null, null, null, null, null, null, null, false, "test", 0);
         MockServletInputStream mockInput = new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
-        
+
         // set DBDao
         setDBDao();
         pap.service(httpServletRequest, httpServletResponse);
-        
+
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         Mockito.verify(httpServletResponse).addHeader("successMapKey", "success");
         Mockito.verify(httpServletResponse).addHeader("policyName", "test.Decision_test.1.xml");
     }
-    
+
     @Test
     public void testDecisonGuardPolicy() throws IOException, ServletException, SQLException {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
@@ -237,20 +237,20 @@ public class XACMLPAPTest {
         matchingAttributes.put("timeUnits","minute");
         matchingAttributes.put("guardActiveStart","05:00");
         matchingAttributes.put("guardActiveEnd","10:00");
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("testGuard", "test rule", "PDPD", "GUARD_YAML", matchingAttributes , null, null, 
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("testGuard", "test rule", "PDPD", "GUARD_YAML", matchingAttributes , null, null,
                 null, null, null, null, null, null, null, false, "test", 0);
         MockServletInputStream mockInput = new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
-        
+
         // set DBDao
         setDBDao();
         pap.service(httpServletRequest, httpServletResponse);
-        
+
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         Mockito.verify(httpServletResponse).addHeader("successMapKey", "success");
         Mockito.verify(httpServletResponse).addHeader("policyName", "test.Decision_testGuard.1.xml");
     }
-    
+
     @Test
     public void testDecisonBLGuardPolicy() throws IOException, ServletException, SQLException {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
@@ -266,20 +266,20 @@ public class XACMLPAPTest {
         matchingAttributes.put("guardActiveStart","05:00");
         matchingAttributes.put("guardActiveEnd","10:00");
         matchingAttributes.put("blackList","bl1,bl2");
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("testblGuard", "test rule", "PDPD", "GUARD_BL_YAML", matchingAttributes , null, null, 
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("testblGuard", "test rule", "PDPD", "GUARD_BL_YAML", matchingAttributes , null, null,
                 null, null, null, null, null, null, null, false, "test", 0);
         MockServletInputStream mockInput = new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
-        
+
         // set DBDao
         setDBDao();
         pap.service(httpServletRequest, httpServletResponse);
-        
+
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         Mockito.verify(httpServletResponse).addHeader("successMapKey", "success");
         Mockito.verify(httpServletResponse).addHeader("policyName", "test.Decision_testblGuard.1.xml");
     }
-    
+
     @Test
     public void testConfigPolicy() throws IOException, ServletException, SQLException {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
@@ -290,20 +290,20 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getParameter("policyType")).thenReturn("Config");
         Map<String, String> configAttributes = new HashMap<>();
         configAttributes.put("value", "test");
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("Base", "test", "test rule", "TEST", "config", configAttributes, "OTHER", 
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("Base", "test", "test rule", "TEST", "config", configAttributes, "OTHER",
                 "test body", false, "test",0, "5","default", "false", null);
         MockServletInputStream mockInput = new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
-        
+
         // set DBDao
         setDBDao();
         pap.service(httpServletRequest, httpServletResponse);
-        
+
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         Mockito.verify(httpServletResponse).addHeader("successMapKey", "success");
         Mockito.verify(httpServletResponse).addHeader("policyName", "test.Config_test.1.xml");
     }
-    
+
     private void setPolicyCreation() {
         CommonClassDao commonClassDao = Mockito.mock(CommonClassDao.class);
         PolicyCreation.setCommonClassDao(commonClassDao);
@@ -344,20 +344,20 @@ public class XACMLPAPTest {
                 + "end\n";
         template.setRule(rule );
         Mockito.when(commonClassDao.getEntityItem(BRMSParamTemplate.class, "ruleName", "testPolicy")).thenReturn(template);
-        
+
     }
-    
+
     @Test
     public void testClosedLoopCreateDictionary() throws IOException, SQLException, ServletException {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
-        // Check VSCLAction. 
+        // Check VSCLAction.
         String json = "{\"dictionaryFields\": {\"vsclaction\": \"testRestAPI\",\"description\": \"testing create\"}}";
         dictionaryTestSetup(false, "VSCLAction", json);
         // set DBDao
         ClosedLoopDictionaryController.setCommonClassDao(new CommonClassDaoImpl());
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
         // Check VNFType
@@ -368,7 +368,7 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "VNFType", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
         // Check PEPOptions
@@ -379,7 +379,7 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "PEPOptions", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
         // Check Varbind
@@ -390,7 +390,7 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "Varbind", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
         // Check Service
@@ -401,7 +401,7 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "Service", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
         // Check Site
@@ -412,21 +412,21 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "Site", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
     }
 
     @Test
     public void testFirewallCreateDictionary() throws IOException, SQLException, ServletException {
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
-        // Check SecurityZone. 
+        // Check SecurityZone.
         String json = "{\"dictionaryFields\":{\"zoneName\":\"testRestAPI\",\"zoneValue\":\"testing\"}}";
         dictionaryTestSetup(false, "SecurityZone", json);
         // set DBDao
         FirewallDictionaryController.setCommonClassDao(new CommonClassDaoImpl());
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
         // Check Action List
@@ -437,10 +437,10 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "ActionList", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
-        // Check Protocol List. 
+        // Check Protocol List.
         //
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
@@ -448,10 +448,10 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "ProtocolList", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
-        // Check Zone. 
+        // Check Zone.
         //
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
@@ -459,10 +459,10 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "Zone", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
-        // Check PrefixList. 
+        // Check PrefixList.
         //
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
@@ -470,10 +470,10 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "PrefixList", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
-        // Check AddressGroup. 
+        // Check AddressGroup.
         //
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
@@ -481,10 +481,10 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "AddressGroup", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
-        // Check ServiceGroup. 
+        // Check ServiceGroup.
         //
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
@@ -492,10 +492,10 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "ServiceGroup", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
-        // Check ServiceList. 
+        // Check ServiceList.
         //
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
@@ -503,10 +503,10 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "ServiceList", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
         //
-        // Check TermList. 
+        // Check TermList.
         //
         httpServletRequest = Mockito.mock(HttpServletRequest.class);
         httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
@@ -514,10 +514,10 @@ public class XACMLPAPTest {
         dictionaryTestSetup(false, "TermList", json);
         // send Request to PAP
         pap.service(httpServletRequest, httpServletResponse);
-        // Verify 
+        // Verify
         Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
     }
-    
+
     private void dictionaryTestSetup(Boolean updateFlag, String dictionaryType, String json) throws IOException, SQLException {
         Mockito.when(httpServletRequest.getHeader(ENVIRONMENT_HEADER)).thenReturn("DEVL");
         Mockito.when(httpServletRequest.getHeader("ClientScope")).thenReturn("dictionaryItem");
@@ -579,7 +579,7 @@ public class XACMLPAPTest {
             fail();
         }
     }
-    
+
     @After
     public void destroy(){
         if(sessionFactory!=null){

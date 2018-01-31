@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ import org.onap.policy.api.NotificationType;
 import org.onap.policy.api.PDPNotification;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.xacml.api.XACMLErrorConstants; 
+import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 @ClientEndpoint
 public class AutoClientEnd {
@@ -50,12 +50,12 @@ public class AutoClientEnd {
 	private static NotificationHandler handler = null;
 	private static String url = null;
 	private static Session session = null;
-	private static boolean status = false; 
+	private static boolean status = false;
 	private static boolean stop = false;
 	private static boolean message = false;
 	private static boolean error = false;
 	private static Logger logger = FlexLogger.getLogger(AutoClientEnd.class.getName());
-	
+
 	public static void setAuto(NotificationScheme scheme,
 			NotificationHandler handler) {
 		AutoClientEnd.scheme = scheme;
@@ -65,7 +65,7 @@ public class AutoClientEnd {
 	public static void setScheme(NotificationScheme scheme) {
 		AutoClientEnd.scheme = scheme;
 	}
-	
+
 	public static boolean getStatus(){
 		return AutoClientEnd.status;
 	}
@@ -91,7 +91,7 @@ public class AutoClientEnd {
 						client.connectToServer(AutoClientEnd.class, new URI(url	+ "notifications"));
 						status = true;
 						if(error){
-							// The URL's will be in Sync according to design Spec. 
+							// The URL's will be in Sync according to design Spec.
 							ManualClientEnd.start(AutoClientEnd.url);
 							StdPDPNotification notification = NotificationStore.getDeltaNotification((StdPDPNotification)ManualClientEnd.result(NotificationScheme.MANUAL_ALL_NOTIFICATIONS));
 							if(notification.getNotificationType()!=null&&oldNotification!=notification){
@@ -112,9 +112,9 @@ public class AutoClientEnd {
 			}
 		}
 	}
-	
+
 	private static void changeURL(){
-		// Change the PDP if it is not Up. 
+		// Change the PDP if it is not Up.
 		StdPolicyEngine.rotatePDPList();
 		start(StdPolicyEngine.getPDPURL());
 	}
@@ -200,7 +200,7 @@ public class AutoClientEnd {
 	public static void onClose(Session session) {
 		logger.info("Session ended with "+ session.getId());
 		if(!stop && !message){
-			// This Block of code is executed if there is any Network Failure or if the Notification is Down. 
+			// This Block of code is executed if there is any Network Failure or if the Notification is Down.
 			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Disconnected from Notification Server");
 			client = null;
 			status = false;

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,21 +31,21 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 
 /**
- * BRMS Param Policy Implementation.  
- * 
+ * BRMS Param Policy Implementation.
+ *
  * @version 0.1
  */
 public class BRMSParamPolicyService{
 	private static final Logger LOGGER = FlexLogger.getLogger(BRMSParamPolicyService.class.getName());
 	private PAPServices papServices = null;
-	
+
 	private PolicyParameters policyParameters = null;
 	private String message = null;
 	private String policyName = null;
 	private String policyScope = null;
-	private String date = null; 
+	private String date = null;
 	private Map<AttributeType, Map<String, String>> drlRuleAndUIParams = null;
-	
+
 	public BRMSParamPolicyService(String policyName, String policyScope,
 			PolicyParameters policyParameters, String date) {
 		this.policyParameters = policyParameters;
@@ -83,11 +83,11 @@ public class BRMSParamPolicyService{
 		}
 		// Create Policy
 		StdPAPPolicy newPAPPolicy = new StdPAPPolicy("BRMS_Param",policyName, policyParameters.getPolicyDescription(),
-				"BRMS_PARAM_RULE",updateFlag,policyScope, 
-				drlRuleAndUIParams.get(AttributeType.MATCHING), 0, "DROOLS", 
+				"BRMS_PARAM_RULE",updateFlag,policyScope,
+				drlRuleAndUIParams.get(AttributeType.MATCHING), 0, "DROOLS",
 				null, drlRuleAndUIParams.get(AttributeType.RULE), policyParameters.getRiskLevel(),
 				policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date, policyParameters.getControllerName(), policyParameters.getDependencyNames());
-		// Send JSON to PAP 
+		// Send JSON to PAP
 		response = (String) papServices.callPAP(newPAPPolicy, new String[] {"operation="+operation, "apiflag=api", "policyType=Config"}, policyParameters.getRequestID(), "ConfigBrmsParam");
 		LOGGER.info(response);
 		return response;

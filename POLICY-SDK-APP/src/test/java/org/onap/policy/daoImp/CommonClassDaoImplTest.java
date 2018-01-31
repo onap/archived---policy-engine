@@ -351,10 +351,10 @@ public class CommonClassDaoImplTest{
 		}
 	}
 
-	
+
 	 /* Test for SQL Injection Protection
 	 */
-	 
+
 	@Test
 	@Transactional
     @Rollback(true)
@@ -396,7 +396,7 @@ public class CommonClassDaoImplTest{
 			fail();
 		}
 	}
-	
+
 	@Test
 	public void testCommonClassDaoImplMethods(){
 		try{
@@ -432,9 +432,9 @@ public class CommonClassDaoImplTest{
 			fail();
 		}
 	}
-	
 
-	
+
+
 	@Test
 	public final void testGetLoggingData() {
 		SystemLogDbDaoImpl system = new SystemLogDbDaoImpl();

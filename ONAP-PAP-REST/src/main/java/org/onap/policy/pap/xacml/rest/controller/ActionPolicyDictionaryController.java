@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,9 +62,9 @@ public class ActionPolicyDictionaryController {
 	}
 	/*
 	 * This is an empty constructor
-	 */	
+	 */
 	public ActionPolicyDictionaryController(){
-		
+
 	}
 
 	public UserInfo getUserInfo(String loginId){
@@ -94,13 +94,13 @@ public class ActionPolicyDictionaryController {
 			model.put("actionPolicyDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ActionPolicyDict.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader("successMapKey", "success"); 
+			response.addHeader("successMapKey", "success");
 			response.addHeader("operation", "getDictionary");
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(e.getMessage(),e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader("error", "dictionaryDBQuery");
 		}
 	}
@@ -175,9 +175,9 @@ public class ActionPolicyDictionaryController {
 				if(!isFakeUpdate) {
 					actionPolicyDict.setUserModifiedBy(this.getUserInfo(userId));
 					actionPolicyDict.setModifiedDate(new Date());
-					commonClassDao.update(actionPolicyDict); 
+					commonClassDao.update(actionPolicyDict);
 				}
-			} 
+			}
 
 			String responseString = null;
 			if(duplicateflag) {
@@ -192,7 +192,7 @@ public class ActionPolicyDictionaryController {
 						responseString = "Exists";
 					} else {
 						responseString = "Success";
-					}   
+					}
 				}
 
 				ModelAndView result = new ModelAndView();
@@ -201,7 +201,7 @@ public class ActionPolicyDictionaryController {
 			} else {
 				response.setCharacterEncoding(utf8);
 				response.setContentType("application / json");
-				request.setCharacterEncoding(utf8); 
+				request.setCharacterEncoding(utf8);
 
 				PrintWriter out = response.getWriter();
 				JSONObject j = new JSONObject("{actionPolicyDictionaryDatas: " + responseString + "}");

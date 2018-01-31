@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,7 +62,7 @@ public class RuleAlgorithms implements Serializable {
 
 	@Column(name="xacml_id", nullable=false, unique=true, length=255)
 	private String xacmlId;
-	
+
 	@Column(name="short_name", nullable=false, length=64)
 	private String shortName;
 
@@ -95,12 +95,12 @@ public class RuleAlgorithms implements Serializable {
 	public void setIsStandard(char isStandard) {
 		this.isStandard = isStandard;
 	}
-	
+
 	@Transient
 	public boolean isStandard() {
 		return (this.isStandard == RuleAlgorithms.STANDARD);
 	}
-	
+
 	@Transient
 	public boolean isCustom() {
 		return (this.isStandard == RuleAlgorithms.CUSTOM);

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,24 +53,24 @@ public class PolicyVersion implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	
+
 	@Column(name="id")
 	private int id;
 
 	@Column(name="POLICY_NAME", nullable=false, length=255)
-	private String policyName;	
-	
+	private String policyName;
+
 	@Column(name="ACTIVE_VERSION")
 	private int activeVersion;
-	
+
 	@Column(name="HIGHEST_VERSION")
 	private int higherVersion;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_date", nullable=false)
 	private Date createdDate;
-	
-	
+
+
 	public int getActiveVersion() {
 		return activeVersion;
 	}
@@ -89,12 +89,12 @@ public class PolicyVersion implements Serializable {
 
 	@Column(name="CREATED_BY", nullable=false, length=45)
 	private String createdBy;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
-	
-	
+
+
 	@Column(name="modified_by", nullable=false, length=45)
 	private String modifiedBy;
 
@@ -103,15 +103,15 @@ public class PolicyVersion implements Serializable {
 		this.createdBy = loginUserId;
 		this.modifiedBy = loginUserId;
 	}
-	
+
 	public PolicyVersion(String domain) {
 		this.policyName = domain;
 	}
-	
+
 	public PolicyVersion(){
-		
+
 	}
-	
+
 	@PrePersist
 	public void	prePersist() {
 		Date date = new Date();
@@ -125,13 +125,13 @@ public class PolicyVersion implements Serializable {
 		/*
 		 * The modifiedBy must be set via the setModifiedBy() method since PolicyVersion
 		 * has been moved to XACML-REST module for access from the XACML-PAP-REST module
-		 
+
 		   String userid = ((XacmlAdminUI) UI.getCurrent()).getLoginUserId();
 		   this.modifiedBy =userid;
-		 * 
+		 *
 		 */
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -147,7 +147,7 @@ public class PolicyVersion implements Serializable {
 	public void setPolicyName(String policyName) {
 		this.policyName = policyName;
 	}
-	
+
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -179,10 +179,10 @@ public class PolicyVersion implements Serializable {
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
-	
+
 	@Override
 	public int hashCode() {
-	return Objects.hash(id, policyName,	activeVersion, higherVersion, createdDate, 
+	return Objects.hash(id, policyName,	activeVersion, higherVersion, createdDate,
 			createdBy, modifiedDate, modifiedBy);
 	}
 
@@ -199,7 +199,7 @@ public class PolicyVersion implements Serializable {
 		}
 
 		PolicyVersion p = (PolicyVersion) obj;
-		
+
 		return (
 				id == p.id &&
 				policyName.equals(p.policyName) &&
@@ -213,4 +213,4 @@ public class PolicyVersion implements Serializable {
 	}
 
 }
-	
+

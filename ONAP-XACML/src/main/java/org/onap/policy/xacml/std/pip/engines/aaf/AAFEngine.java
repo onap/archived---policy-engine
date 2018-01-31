@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,51 +52,51 @@ import com.att.research.xacml.util.XACMLProperties;
 
 /**
  * PIP Engine for Implementing {@link com.att.research.xacml.std.pip.engines.ConfigurableEngine} interface to provide
- * attribute retrieval from AAF interface.  
- * 
+ * attribute retrieval from AAF interface.
+ *
  * @version $Revision$
  */
 public class AAFEngine extends StdConfigurableEngine {
-	
+
 	public static final String DEFAULT_DESCRIPTION		= "PIP for authenticating aaf attributes using the AAF REST interface";
 	public static final String DEFAULT_ISSUER			= "aaf";
-	
+
 	private static final String SUCCESS = "Success";
-	
+
 	public static final String AAF_RESULT= "AAF_RESULT";
 	public static final String AAF_RESPONSE= "AAF_RESPONSE";
-	// 
+	//
 	public static final Identifier AAF_RESPONSE_ID = new IdentifierImpl(AAF_RESPONSE);
 	public static final Identifier AAF_RESULT_ID = new IdentifierImpl(AAF_RESULT);
-	
+
 	//
 	private static final PIPRequest PIP_REQUEST_UID = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, new IdentifierImpl("AAF_ID"), XACML3.ID_DATATYPE_STRING);
 	private static final PIPRequest PIP_REQUEST_PASS =  new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, new IdentifierImpl("AAF_PASS"), XACML3.ID_DATATYPE_STRING);
 	private static final PIPRequest PIP_REQUEST_TYPE = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, new IdentifierImpl("AAF_TYPE"), XACML3.ID_DATATYPE_STRING);
 	private static final PIPRequest PIP_REQUEST_INSTANCE = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, new IdentifierImpl("AAF_INSTANCE"), XACML3.ID_DATATYPE_STRING);
 	private static final PIPRequest PIP_REQUEST_ACTION = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, new IdentifierImpl("AAF_ACTION"), XACML3.ID_DATATYPE_STRING);
-	
+
 	private static final List<PIPRequest> mapRequiredAttributes	= new ArrayList<>();
-	static{ 
+	static{
 		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_UID));
 		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_PASS));
 		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_TYPE));
 		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_INSTANCE));
 		mapRequiredAttributes.add(new StdPIPRequest(PIP_REQUEST_ACTION));
 	}
-	
+
 	private static final Map<PIPRequest, String> mapSupportedAttributes	= new HashMap<>();
 	static{
 		mapSupportedAttributes.put(new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, AAF_RESPONSE_ID, XACML3.ID_DATATYPE_STRING), "response");
 		mapSupportedAttributes.put(new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, AAF_RESULT_ID, XACML3.ID_DATATYPE_BOOLEAN), "result");
 	}
-	
+
 	protected Log logger	= LogFactory.getLog(this.getClass());
-	
+
 	public AAFEngine(){
 		//default constructor
 	}
-	
+
 	private PIPResponse getAttribute(PIPRequest pipRequest, PIPFinder pipFinder) {
 		PIPResponse pipResponse	= null;
 		try {
@@ -110,11 +110,11 @@ public class AAFEngine extends StdConfigurableEngine {
 				pipResponse	= null;
 			}
 		} catch (PIPException ex) {
-			this.logger.error("PIPException getting subject-id attribute: " + ex.getMessage(), ex);			
+			this.logger.error("PIPException getting subject-id attribute: " + ex.getMessage(), ex);
 		}
 		return pipResponse;
 	}
-	
+
 	private String getValue(PIPResponse pipResponse){
 		String result = null;
 		Collection<Attribute> listAttributes = pipResponse.getAttributes();
@@ -129,7 +129,7 @@ public class AAFEngine extends StdConfigurableEngine {
 		}
 		return result;
 	}
-	
+
 	private synchronized String getResult(PIPFinder pipFinder) {
 		PIPResponse pipResponseUID = this.getAttribute(PIP_REQUEST_UID, pipFinder);
 		PIPResponse pipResponsePass = this.getAttribute(PIP_REQUEST_PASS, pipFinder);
@@ -137,11 +137,11 @@ public class AAFEngine extends StdConfigurableEngine {
 		PIPResponse pipResponseAction = this.getAttribute(PIP_REQUEST_ACTION, pipFinder);
 		PIPResponse pipResponseInstance = this.getAttribute(PIP_REQUEST_INSTANCE, pipFinder);
 		String response = null;
-		// Evaluate AAF if we have all the required values. 
+		// Evaluate AAF if we have all the required values.
 		if(pipResponseUID!=null && pipResponsePass!=null && pipResponseType != null && pipResponseAction!= null && pipResponseInstance!=null){
 			String userName = getValue(pipResponseUID);
 			String pass = getValue(pipResponsePass);
-			
+
 			AAFPolicyClient aafClient = null;
 			Properties properties;
 			try {
@@ -166,7 +166,7 @@ public class AAFEngine extends StdConfigurableEngine {
 						if(aafClient.checkPerm(userName, pass, type, instance, action)){
 							response = SUCCESS + "Permissions Validated";
 						}else{
-							response = "No Permissions for "+userName+" to: "+type+", "+instance+", "+action; 
+							response = "No Permissions for "+userName+" to: "+type+", "+instance+", "+action;
 						}
 					}else{
 						response = "Authentication Failed for the given Values";
@@ -175,13 +175,13 @@ public class AAFEngine extends StdConfigurableEngine {
 			}else{
 				response = "ID and Password are not given";
 			}
-			
+
 		}else{
 			response = "Insufficient Values to Evaluate AAF";
 		}
 		return response;
 	}
-	
+
 	private void addStringAttribute(StdMutablePIPResponse stdPIPResponse, Identifier category, Identifier attributeId, String value) {
 		if (value != null) {
 			AttributeValue<String> attributeValue	= null;
@@ -207,7 +207,7 @@ public class AAFEngine extends StdConfigurableEngine {
 			stdPIPResponse.addAttribute(new StdMutableAttribute(category, attributeId, attributeValue, this.getIssuer(), false));
 		}
 	}
-	
+
 	@Override
 	public PIPResponse getAttributes(PIPRequest pipRequest, PIPFinder pipFinder) throws PIPException {
 		/*
@@ -250,7 +250,7 @@ public class AAFEngine extends StdConfigurableEngine {
 			this.setIssuer(DEFAULT_ISSUER);
 		}
 	}
-	
+
 	@Override
 	public Collection<PIPRequest> attributesRequired() {
 		List<PIPRequest> attributes = new ArrayList<>();
@@ -268,5 +268,5 @@ public class AAFEngine extends StdConfigurableEngine {
 		}
 		return attributes;
 	}
-	
+
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ import org.springframework.http.HttpStatus;
 
 public class CreateUpdateDictionaryService {
     private static final Logger LOGGER = FlexLogger.getLogger(CreateUpdateDictionaryService.class.getName());
-    
+
     private String dictionaryResult = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private String message = null;
@@ -84,12 +84,12 @@ public class CreateUpdateDictionaryService {
     }
 
     private void run() throws PolicyException{
-        // Check Validation. 
+        // Check Validation.
         if(!getValidation()){
             LOGGER.error(message);
             throw new PolicyException(message);
         }
-        // Get Result. 
+        // Get Result.
         try{
             status = HttpStatus.OK;
             dictionaryResult = processResult();
@@ -107,7 +107,7 @@ public class CreateUpdateDictionaryService {
         } else {
             operation = "create";
         }
-        
+
         String dictionaryFields = json.toString();
         PAPServices papServices = new PAPServices();
         return (String) papServices.callPAP(new ByteArrayInputStream(dictionaryFields.getBytes()), new String[] {"operation="+operation, "apiflag=api", "dictionaryType="+dictionaryParameters.getDictionary()}, dictionaryParameters.getRequestID(), "dictionaryItem");
@@ -130,27 +130,27 @@ public class CreateUpdateDictionaryService {
         if(dictionaryParameters.getDictionaryJson()==null || dictionaryParameters.getDictionaryJson().isEmpty()){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Dictionary JSON given.";
             return false;
-        } 
+        }
         if (updateFlag && "MicroServiceDictionary".equalsIgnoreCase(dictionaryParameters.getDictionary())&& !dictionaryParameters.getDictionaryJson().contains("initialFields")){
         	message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Mising the required field initialFields.";
         	return false;
         }
-        
+
         try{
             json = PolicyApiUtils.stringToJsonObject(dictionaryParameters.getDictionaryJson());
             String result = PolicyApiUtils.validateDictionaryJsonFields(json.getJsonObject("dictionaryFields"), dictionaryParameters.getDictionary());
-            
+
             if(!"success".equals(result)) {
             	message = result;
                 return false;
             }
-            
+
         }catch(JsonException| IllegalStateException e){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper Dictionary JSON object : " + dictionaryParameters.getDictionaryJson();
             LOGGER.error(message, e);
             return false;
         }
-        
+
         LOGGER.info("dictionary API request validation complete and valid.");
         return true;
     }

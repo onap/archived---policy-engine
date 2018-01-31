@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,9 +46,9 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.w3c.dom.Document;
 
 public class MainClient {
-	
+
 	private static final Logger LOGGER	= FlexLogger.getLogger(MainClient.class);
-	
+
 	public static void main(String[] args) {
 		PolicyEngine policyEngine;
 		try {
@@ -63,8 +63,8 @@ public class MainClient {
 			eventAttributes.put("cpu", "91");
 			Map<String, String> decisionAttributes = new HashMap<>();
 			decisionAttributes.put("Key", "Value");
-			
-			// Config Example 
+
+			// Config Example
 			try {
 				@SuppressWarnings("deprecation")
 				Collection<PolicyConfig> policyConfigs = policyEngine.getConfigByPolicyName(".*");//(onapComponentName, configName, configAttributes);
@@ -79,8 +79,8 @@ public class MainClient {
 			} catch (PolicyConfigException e) {
 				LOGGER.error("Exception Occured"+e);
 			}
-			
-			// Manual Notifications.. 
+
+			// Manual Notifications..
 			policyEngine.setScheme(NotificationScheme.MANUAL_ALL_NOTIFICATIONS);
 			if(policyEngine.getNotification()!=null){
 				System.out.println(policyEngine.getNotification().getNotificationType());
@@ -104,12 +104,12 @@ public class MainClient {
 			} catch (IOException e) {
 				System.err.println("Exception Occured"+e);
 			}
-			
+
 		} catch (PolicyEngineException e1) {
 			System.err.println("Exception Occured"+e1);
 		}
 	}
-	
+
 	public static void printDocument(Document doc, OutputStream out) throws IOException, TransformerException {
 	    TransformerFactory tf = TransformerFactory.newInstance();
 	    Transformer transformer = tf.newTransformer();
@@ -119,7 +119,7 @@ public class MainClient {
 	    transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 	    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
-	    transformer.transform(new DOMSource(doc), 
+	    transformer.transform(new DOMSource(doc),
 	         new StreamResult(new OutputStreamWriter(out, "UTF-8")));
 	}
 }

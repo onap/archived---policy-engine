@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,9 +30,9 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 public class SafePolicyBuilder {
-	
+
 	private SafePolicyBuilder(){
-		//Private Constructor. 
+		//Private Constructor.
 	}
 
 	public static ControlLoopGuard loadYamlGuard(String specification) {
@@ -44,9 +44,9 @@ public class SafePolicyBuilder {
 		Object obj = yaml.load(specification);
 		return (ControlLoopGuard) obj;
 	}
-	
+
 	public static String generateXacmlGuard(String xacmlFileContent,Map<String, String> generateMap, List<String> blacklist, List<String> targets) {
-		//Setup default values and Targets. 
+		//Setup default values and Targets.
 		StringBuilder targetRegex= new StringBuilder(".*|");
 		if(targets!=null && !targets.isEmpty()){
 			targetRegex = new StringBuilder();
@@ -58,7 +58,7 @@ public class SafePolicyBuilder {
 			generateMap.put("clname",".*");
 		}
 		generateMap.put("targets", targetRegex.toString().substring(0, targetRegex.length()-1));
-		// Replace values. 
+		// Replace values.
 		for(Map.Entry<String,String> map: generateMap.entrySet()){
 			Pattern p = Pattern.compile("\\$\\{" +map.getKey() +"\\}");
 			Matcher m = p.matcher(xacmlFileContent);

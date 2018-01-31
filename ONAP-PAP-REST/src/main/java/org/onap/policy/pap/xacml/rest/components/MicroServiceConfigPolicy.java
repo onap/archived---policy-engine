@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,12 +61,12 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType; 
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 public class MicroServiceConfigPolicy extends Policy {
-	
+
 	private static final Logger LOGGER = FlexLogger.getLogger(MicroServiceConfigPolicy.class);
-	
+
     private static Map<String, String> mapAttribute = new HashMap<>();
     private static Map<String, String> mapMatch = new HashMap<>();
 
@@ -81,7 +81,7 @@ public class MicroServiceConfigPolicy extends Policy {
 	public MicroServiceConfigPolicy() {
 		super();
 	}
-	
+
 	public MicroServiceConfigPolicy(PolicyRestAdapter policyAdapter){
 		this.policyAdapter = policyAdapter;
 	}
@@ -97,10 +97,10 @@ public class MicroServiceConfigPolicy extends Policy {
 			out.close();
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured While writing Configuration data"+e);
-		} 
+		}
 	}
-	
-	
+
+
 	@Override
 	public Map<String, String> savePolicies() throws PAPException {
 
@@ -119,11 +119,11 @@ public class MicroServiceConfigPolicy extends Policy {
 		Path newPolicyPath = null;
 		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 
-		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());	
-	
-		return successMap;		
+		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
+
+		return successMap;
 	}
-	
+
 	//This is the method for preparing the policy for saving.  We have broken it out
 	//separately because the fully configured policy is used for multiple things
 	@Override
@@ -133,11 +133,11 @@ public class MicroServiceConfigPolicy extends Policy {
 			//we have already done this
 			return true;
 		}
-		
+
 		int version = 0;
 		String policyID = policyAdapter.getPolicyID();
 		version = policyAdapter.getHighestVersion();
-		
+
 		// Create the Instance for pojo, PolicyType object is used in marshalling.
 		if (policyAdapter.getPolicyType().equals("Config")) {
 			PolicyType policyConfig = new PolicyType();
@@ -152,26 +152,26 @@ public class MicroServiceConfigPolicy extends Policy {
 			// Save the Configurations file with the policy name with extention based on selection.
 			String jsonBody = policyAdapter.getJsonBody();
 			saveConfigurations(policyName, jsonBody);
-			
+
 			// Make sure the filename ends with an extension
 			if (policyName.endsWith(".xml") == false) {
 				policyName = policyName + ".xml";
 			}
-			
-	
+
+
 			PolicyType configPolicy = (PolicyType) policyAdapter.getData();
-			
+
 			configPolicy.setDescription(policyAdapter.getPolicyDescription());
 
 			configPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
-			
+
 			AllOfType allOfOne = new AllOfType();
 			String fileName = policyAdapter.getNewFileName();
 			String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
 			if ((name == null) || (name.equals(""))) {
 				name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
 			}
-			
+
             //setup values for pulling out matching attributes
             ObjectMapper mapper = new ObjectMapper();
             String matching = null;
@@ -191,18 +191,18 @@ public class MicroServiceConfigPolicy extends Policy {
                     matchMap = Splitter.on(",").withKeyValueSeparator("=").split(matching);
             setMatchMap(matchMap);
                     if(policyAdapter.getJsonBody() != null){
-                        pullMatchValue(rootNode);           
+                        pullMatchValue(rootNode);
                     }
                 }
             } catch (IOException e1) {
                 throw new PAPException(e1);
             }
-            
+
 			// Match for policyName
 			allOfOne.getMatch().add(createMatch("PolicyName", name));
-			
+
 			AllOfType allOf = new AllOfType();
-		
+
 			// Adding the matches to AllOfType element Match for Onap
 			allOf.getMatch().add(createMatch("ONAPName", policyAdapter.getOnapName()));
 			if (matchMap==null || matchMap.isEmpty()){
@@ -244,15 +244,15 @@ public class MicroServiceConfigPolicy extends Policy {
 
 			TargetType target = new TargetType();
 			((TargetType) target).getAnyOf().add(anyOf);
-			
+
 			// Adding the target to the policy element
 			configPolicy.setTarget((TargetType) target);
 
 			RuleType rule = new RuleType();
 			rule.setRuleId(policyAdapter.getRuleID());
-			
+
 			rule.setEffect(EffectType.PERMIT);
-			
+
 			// Create Target in Rule
 			AllOfType allOfInRule = new AllOfType();
 
@@ -315,7 +315,7 @@ public class MicroServiceConfigPolicy extends Policy {
 		setPreparedToSave(true);
 		return true;
 	}
-	
+
     private void pullMatchValue(JsonNode rootNode) {
         Iterator<Map.Entry<String, JsonNode>> fieldsIterator = rootNode.fields();
         String newValue = null;
@@ -330,14 +330,14 @@ public class MicroServiceConfigPolicy extends Policy {
                    mapAttribute.put(key, newValue);
                }
            }
-       
+
    }
 
    private String getValueFromDictionary(String service){
        String ruleTemplate=null;
        String modelName = service.split("-v")[0];
        String modelVersion = service.split("-v")[1];
-       
+
        CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
        List<Object> result = dbConnection.getDataById(MicroServiceModels.class, "modelName:version", modelName+":"+modelVersion);
        if(result != null && !result.isEmpty()){
@@ -346,7 +346,7 @@ public class MicroServiceConfigPolicy extends Policy {
        }
        return ruleTemplate;
    }
-   
+
 	// Data required for Advice part is setting here.
 	private AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
 		AdviceExpressionsType advices = new AdviceExpressionsType();
@@ -429,12 +429,12 @@ public class MicroServiceConfigPolicy extends Policy {
         assignment7.setAttributeId("matching:service");
         assignment7.setCategory(CATEGORY_RESOURCE);
         assignment7.setIssuer("");
- 
+
         AttributeValueType configNameAttributeValue7 = new AttributeValueType();
         configNameAttributeValue7.setDataType(STRING_DATATYPE);
         configNameAttributeValue7.getContent().add(policyAdapter.getServiceType());
         assignment7.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue7));
- 
+
         advice.getAttributeAssignmentExpression().add(assignment7);
 
         Map<String, String> matchMap = getMatchMap();
@@ -485,19 +485,19 @@ public class MicroServiceConfigPolicy extends Policy {
                         assignment9.setAttributeId("matching:" + key);
                         assignment9.setCategory(CATEGORY_RESOURCE);
                         assignment9.setIssuer("");
-                
+
                         AttributeValueType configNameAttributeValue9 = new AttributeValueType();
                         configNameAttributeValue9.setDataType(STRING_DATATYPE);
                         configNameAttributeValue9.getContent().add(mapAttribute.get(key));
                         assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
-                
+
                         advice.getAttributeAssignmentExpression().add(assignment9);
- 
+
                     }
                 }
             }
         }
-        
+
 		AttributeAssignmentExpressionType assignment10 = new AttributeAssignmentExpressionType();
 		assignment10.setAttributeId("Priority");
 		assignment10.setCategory(CATEGORY_RESOURCE);
@@ -509,7 +509,7 @@ public class MicroServiceConfigPolicy extends Policy {
 		assignment10.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue10));
 
 		advice.getAttributeAssignmentExpression().add(assignment10);
-		
+
 		//Risk Attributes
 		AttributeAssignmentExpressionType assignment11 = new AttributeAssignmentExpressionType();
 		assignment11.setAttributeId("RiskType");
@@ -522,7 +522,7 @@ public class MicroServiceConfigPolicy extends Policy {
 		assignment11.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue11));
 
 		advice.getAttributeAssignmentExpression().add(assignment11);
-		
+
 		AttributeAssignmentExpressionType assignment12 = new AttributeAssignmentExpressionType();
 		assignment12.setAttributeId("RiskLevel");
 		assignment12.setCategory(CATEGORY_RESOURCE);
@@ -533,7 +533,7 @@ public class MicroServiceConfigPolicy extends Policy {
 		configNameAttributeValue12.getContent().add(policyAdapter.getRiskLevel());
 		assignment12.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue12));
 
-		advice.getAttributeAssignmentExpression().add(assignment12);	
+		advice.getAttributeAssignmentExpression().add(assignment12);
 
 		AttributeAssignmentExpressionType assignment13 = new AttributeAssignmentExpressionType();
 		assignment13.setAttributeId("guard");
@@ -546,7 +546,7 @@ public class MicroServiceConfigPolicy extends Policy {
 		assignment13.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue13));
 
 		advice.getAttributeAssignmentExpression().add(assignment13);
-		
+
 		AttributeAssignmentExpressionType assignment14 = new AttributeAssignmentExpressionType();
 		assignment14.setAttributeId("TTLDate");
 		assignment14.setCategory(CATEGORY_RESOURCE);
@@ -566,5 +566,5 @@ public class MicroServiceConfigPolicy extends Policy {
 	@Override
 	public Object getCorrectPolicyDataObject() {
 		return policyAdapter.getPolicyData();
-	}	
+	}
 }

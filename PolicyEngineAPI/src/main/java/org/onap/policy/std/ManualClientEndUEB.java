@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 
 import com.att.nsa.cambria.client.CambriaClientFactory;
 import com.att.nsa.cambria.client.CambriaConsumer;
-import com.att.nsa.cambria.client.CambriaPublisher; 
+import com.att.nsa.cambria.client.CambriaPublisher;
 
 
 @SuppressWarnings("deprecation")
@@ -44,14 +44,14 @@ public class ManualClientEndUEB {
 	private static Logger logger = FlexLogger.getLogger(ManualClientEndUEB.class.getName());
 	private static CambriaConsumer CConsumer = null;
 	@SuppressWarnings("unused")
-	private static List<String> uebURLList = null; 
+	private static List<String> uebURLList = null;
 	@SuppressWarnings("unused")
 	private static boolean messageNotReceived = false;
 	@SuppressWarnings("unused")
 	private static String url = null;
 	private static String uniquID = null;
 	private static String topic = null;
-	
+
 
 	public static PDPNotification result(NotificationScheme scheme) {
 		if (resultJson == null || notification == null) {
@@ -59,7 +59,7 @@ public class ManualClientEndUEB {
 			return null;
 		} else {
 			if(scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)) {
-				boolean removed = false, updated = false; 
+				boolean removed = false, updated = false;
 				if(notification.getRemovedPolicies()!=null && !notification.getRemovedPolicies().isEmpty()){
 					removed = true;
 				}
@@ -83,7 +83,7 @@ public class ManualClientEndUEB {
 	}
 
 	private static void publishMessage(String pubTopic, String uniqueID , List<String> uebURLList) {
-		
+
 		String UEBlist = uebURLList.toString();
 		UEBlist = UEBlist.substring(1,UEBlist.length()-1);
         CambriaPublisher pub = null;
@@ -92,17 +92,17 @@ public class ManualClientEndUEB {
 		} catch (Exception e1) {
 			logger.error("Exception Occured"+e1);
 		}
-        final JSONObject msg1 = new JSONObject (); 
+        final JSONObject msg1 = new JSONObject ();
 
-        msg1.put ( "JSON", "UEB Update Ruest UID=" + uniqueID);  
+        msg1.put ( "JSON", "UEB Update Ruest UID=" + uniqueID);
         if(pub != null){
         	 try {
      			pub.send ( "MyPartitionKey", msg1.toString () );
-     			pub.close (); 	
+     			pub.close (); 
      		} catch (IOException e) {
      			logger.error("Exception Occured"+e);
      		}
-        }	
+        }
 	}
 
 	public static void createTopic (String url, String uniquID, List<String> uebURLList){
@@ -115,7 +115,7 @@ public class ManualClientEndUEB {
 		}
 
 		publishMessage(topic+ uniquID , uniquID, uebURLList);
-		
+
 	}
 	public static void start(String url, List<String> uebURLList,
 			String uniqueID) {
@@ -134,14 +134,14 @@ public class ManualClientEndUEB {
 			CConsumer = CambriaClientFactory.createConsumer ( null, uebURLList, topic + uniquID, "clientGroup", id, 15*1000, 1000 );
 		} catch (Exception e1) {
 			logger.error("Exception Occured"+e1);
-		} 		
+		} 
 		int count = 1;
 		while (count < 4) {
 				publishMessage(topic + "UpdateRequest", uniquID, uebURLList);
 				try {
 					for ( String msg : CConsumer.fetch () )
-					{	
-						
+					{
+
 						logger.debug("Manual Notification Recieved Message " + msg + " from UEB cluster : " + uebURLList.toString());
 						resultJson = msg;
 						if (!msg.contains("UEB Update")){
@@ -151,9 +151,9 @@ public class ManualClientEndUEB {
 					}
 				}catch (Exception e) {
 					logger.error("Error in Manual CLient UEB notification ", e);
-				} 
+				}
 				count++;
-			}		
+			}
 	}
-	
+
 }

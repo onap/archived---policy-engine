@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,11 +49,11 @@ public class CheckPDP {
 	private static Long oldModified = null;
 	private static HashMap<String, String> pdpMap = null;
 	private static final Logger LOGGER = FlexLogger.getLogger(CheckPDP.class);
-	
+
 	private CheckPDP(){
 		//default constructor
 	}
-	
+
 	public static Map<String, String> getPdpMap() {
 		return pdpMap;
 	}
@@ -73,7 +73,7 @@ public class CheckPDP {
 	private static void readFile(){
 		String pdpFile = null;
 		try{
-			pdpFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_IDFILE);	
+			pdpFile = XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_IDFILE);
 		}catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot read the PDP ID File" + e);
 			return;
@@ -86,7 +86,7 @@ public class CheckPDP {
 			if (!pdpPath.toFile().exists()) {
 				LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "File doesn't exist in the specified Path : "	+ pdpPath.toString());
 
-			} 
+			}
 			if (pdpPath.toString().endsWith(".properties")) {
 				readProps();
 			} else {
@@ -128,7 +128,7 @@ public class CheckPDP {
 			LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 		}
 	}
-	
+
 	private static void loadPDPProperties(String propKey, Properties pdpProp){
 		if (propKey.startsWith("PDP_URL")) {
 			String checkVal = pdpProp.getProperty(propKey);
@@ -164,7 +164,7 @@ public class CheckPDP {
 			LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS + "No Credentials to send Request: " + pdpVal);
 		}
 	}
-	
+
 	public static String getEncoding(String pdpID){
 		try {
 			readFile();

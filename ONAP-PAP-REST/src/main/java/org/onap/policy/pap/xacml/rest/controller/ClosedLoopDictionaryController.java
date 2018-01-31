@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -82,7 +82,7 @@ public class ClosedLoopDictionaryController{
 	private static String utf8 = "UTF-8";
 	private static String applicationJsonContentType = "application / json";
 	private static String successMsg = "Success";
-	
+
 	@Autowired
 	public ClosedLoopDictionaryController(CommonClassDao commonClassDao){
 		ClosedLoopDictionaryController.commonClassDao = commonClassDao;
@@ -121,13 +121,13 @@ public class ClosedLoopDictionaryController{
 			model.put("vsclActionDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(VSCLAction.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -140,7 +140,7 @@ public class ClosedLoopDictionaryController{
 			model.put("vnfTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(VNFType.class, vnftype)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
@@ -157,13 +157,13 @@ public class ClosedLoopDictionaryController{
 			model.put("vnfTypeDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(VNFType.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -191,13 +191,13 @@ public class ClosedLoopDictionaryController{
 			model.put("pepOptionsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PEPOptions.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -225,13 +225,13 @@ public class ClosedLoopDictionaryController{
 			model.put("varbindDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(VarbindDictionary.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -259,13 +259,13 @@ public class ClosedLoopDictionaryController{
 			model.put("closedLoopServiceDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ClosedLoopD2Services.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -293,13 +293,13 @@ public class ClosedLoopDictionaryController{
 			model.put("closedLoopSiteDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ClosedLoopSite.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(successMapKey, successMessage);
 			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.addHeader(errorMsg, dictionaryDBQuery);
 		}
 	}
@@ -354,7 +354,7 @@ public class ClosedLoopDictionaryController{
 			}else{
 				if(!isFakeUpdate) {
 					vSCLAction.setUserModifiedBy(this.getUserInfo(userId));
-					commonClassDao.update(vSCLAction); 
+					commonClassDao.update(vSCLAction);
 				}
 			}
 
@@ -363,14 +363,14 @@ public class ClosedLoopDictionaryController{
 				responseString = duplicateResponseString;
 			}else{
 				responseString = mapper.writeValueAsString(commonClassDao.getData(VSCLAction.class));
-			}	
+			}
 			if (fromAPI) {
 				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
 					if(isFakeUpdate) {
 						responseString = "Exists";
 					} else {
 						responseString = successMsg;
-					}               
+					}
 
 				}
 				ModelAndView result = new ModelAndView();
@@ -378,7 +378,7 @@ public class ClosedLoopDictionaryController{
 				return result;
 			} else {
 				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType); 
+				response.setContentType(applicationJsonContentType);
 				request.setCharacterEncoding(utf8);
 
 				PrintWriter out = response.getWriter();
@@ -472,31 +472,31 @@ public class ClosedLoopDictionaryController{
 					vNFType.setUserCreatedBy(this.getUserInfo(userId));
 					vNFType.setUserModifiedBy(this.getUserInfo(userId));
 					commonClassDao.save(vNFType);
-				}  	 
+				}  
 			}else{
 				if(!isFakeUpdate) {
 					vNFType.setUserModifiedBy(this.getUserInfo(userId));
 					vNFType.setModifiedDate(new Date());
-					commonClassDao.update(vNFType); 
+					commonClassDao.update(vNFType);
 				}
-			} 
+			}
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
 			}else{
 				responseString = mapper.writeValueAsString(commonClassDao.getData(VNFType.class));
-			} 
+			}
 			if (fromAPI) {
 				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
 					if(isFakeUpdate) {
 						responseString = "Exists";
 					} else {
 						responseString = successMsg;
-					}        
+					}
 				}
 				ModelAndView result = new ModelAndView();
 				result.setViewName(responseString);
-				return result; 
+				return result;
 			} else {
 				response.setCharacterEncoding(utf8);
 				response.setContentType(applicationJsonContentType);
@@ -504,10 +504,10 @@ public class ClosedLoopDictionaryController{
 
 				PrintWriter out = response.getWriter();
 				JSONObject j = new JSONObject("{vnfTypeDictionaryDatas: " + responseString + "}");
-				out.write(j.toString()); 
+				out.write(j.toString());
 				return null;
 			}
-		} 
+		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 			response.setCharacterEncoding(utf8);
@@ -567,7 +567,7 @@ public class ClosedLoopDictionaryController{
                 pEPOptions = (PEPOptions)mapper.readValue(root.get(dictionaryFields).toString(), PEPOptions.class);
                 gridData = (GridData)mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
                 userId = "API";
-                
+
                 //check if update operation or create, get id for data to be updated and update attributeData
                 if ((update).equals(request.getParameter(operation))) {
                     List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(pEPOptions.getPepName(), pepName, PEPOptions.class);
@@ -611,7 +611,7 @@ public class ClosedLoopDictionaryController{
 					pEPOptions.setUserCreatedBy(this.getUserInfo(userId));
 					pEPOptions.setUserModifiedBy(this.getUserInfo(userId));
 					commonClassDao.save(pEPOptions);
-				}   	 
+				}   
 			}else{
 				if(!isFakeUpdate){
 					pEPOptions.setUserModifiedBy(this.getUserInfo(userId));
@@ -624,16 +624,16 @@ public class ClosedLoopDictionaryController{
                 responseString = duplicateResponseString;
             }else{
                 responseString = mapper.writeValueAsString(commonClassDao.getData(PEPOptions.class));
-            } 
+            }
             if (fromAPI) {
                 if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
                     if(isFakeUpdate){
                         responseString = "Exists";
                     } else {
                         responseString = successMsg;
-                    } 
+                    }
                 }
-                
+
                 ModelAndView result = new ModelAndView();
                 result.setViewName(responseString);
                 return result;
@@ -641,13 +641,13 @@ public class ClosedLoopDictionaryController{
                 response.setCharacterEncoding(utf8);
                 response.setContentType(applicationJsonContentType);
                 request.setCharacterEncoding(utf8);
- 
+
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{pepOptionsDictionaryDatas: " + responseString + "}");
                 out.write(j.toString());
                 return null;
             }
- 
+
         }catch (Exception e){
         	LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 			response.setCharacterEncoding(utf8);
@@ -705,7 +705,7 @@ public class ClosedLoopDictionaryController{
             if (fromAPI) {
                 serviceData = (ClosedLoopD2Services)mapper.readValue(root.get(dictionaryFields).toString(), ClosedLoopD2Services.class);
                 userId = "API";
-                
+
                 //check if update operation or create, get id for data to be updated and update attributeData
                 if ((update).equals(request.getParameter(operation))) {
                     List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(serviceData.getServiceName(), serviceName, ClosedLoopD2Services.class);
@@ -736,7 +736,7 @@ public class ClosedLoopDictionaryController{
 				if(!isFakeUpdate){
 					serviceData.setUserModifiedBy(this.getUserInfo(userId));
 					serviceData.setModifiedDate(new Date());
-					commonClassDao.update(serviceData); 
+					commonClassDao.update(serviceData);
 				}
 			}
             String responseString = "";
@@ -744,7 +744,7 @@ public class ClosedLoopDictionaryController{
                 responseString = duplicateResponseString;
             }else{
                 responseString = mapper.writeValueAsString(commonClassDao.getData(ClosedLoopD2Services.class));
-            } 
+            }
             if (fromAPI) {
                 if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
                     if(isFakeUpdate){
@@ -760,7 +760,7 @@ public class ClosedLoopDictionaryController{
                 response.setCharacterEncoding(utf8);
                 response.setContentType(applicationJsonContentType);
                 request.setCharacterEncoding(utf8);
- 
+
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{closedLoopServiceDictionaryDatas: " + responseString + "}");
                 out.write(j.toString());
@@ -812,7 +812,7 @@ public class ClosedLoopDictionaryController{
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
             boolean fromAPI = false;
-            
+
             if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
                 fromAPI = true;
             }
@@ -862,8 +862,8 @@ public class ClosedLoopDictionaryController{
                 responseString = duplicateResponseString;
             }else{
                 responseString = mapper.writeValueAsString(commonClassDao.getData(ClosedLoopSite.class));
-            }   
-            
+            }
+
             if (fromAPI) {
                 if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
                     if(isFakeUpdate){
@@ -879,7 +879,7 @@ public class ClosedLoopDictionaryController{
                 response.setCharacterEncoding(utf8);
                 response.setContentType(applicationJsonContentType);
                 request.setCharacterEncoding(utf8);
- 
+
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{closedLoopSiteDictionaryDatas: " + responseString + "}");
                 out.write(j.toString());
@@ -942,7 +942,7 @@ public class ClosedLoopDictionaryController{
             if (fromAPI) {
                 varbindDictionary = (VarbindDictionary)mapper.readValue(root.get(dictionaryFields).toString(), VarbindDictionary.class);
                 userId = "API";
-                
+
                 //check if update operation or create, get id for data to be updated and update attributeData
                 if ((update).equals(request.getParameter(operation))) {
                     List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(varbindDictionary.getVarbindName(), varbindName, VarbindDictionary.class);
@@ -968,7 +968,7 @@ public class ClosedLoopDictionaryController{
 					varbindDictionary.setUserCreatedBy(this.getUserInfo(userId));
 					varbindDictionary.setUserModifiedBy(this.getUserInfo(userId));
 					commonClassDao.save(varbindDictionary);
-				}	  
+				}
 			}else{
 				if(!isFakeUpdate){
 					varbindDictionary.setUserModifiedBy(this.getUserInfo(userId));
@@ -982,7 +982,7 @@ public class ClosedLoopDictionaryController{
             }else{
                 responseString = mapper.writeValueAsString(commonClassDao.getData(VarbindDictionary.class));
             }
-            
+
             if (fromAPI) {
                 if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
                     if(isFakeUpdate){
@@ -998,7 +998,7 @@ public class ClosedLoopDictionaryController{
                 response.setCharacterEncoding(utf8);
                 response.setContentType(applicationJsonContentType);
                 request.setCharacterEncoding(utf8);
- 
+
                 PrintWriter out = response.getWriter();
                 JSONObject j = new JSONObject("{varbindDictionaryDatas: " + responseString + "}");
                 out.write(j.toString());
@@ -1043,7 +1043,7 @@ public class ClosedLoopDictionaryController{
 		}
 		return null;
 	}
-	
+
     public static void setCommonClassDao(CommonClassDaoImpl commonClassDaoImpl) {
         commonClassDao = commonClassDaoImpl;
     }

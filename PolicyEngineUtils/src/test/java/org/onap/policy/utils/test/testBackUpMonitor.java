@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -67,7 +67,7 @@ public class testBackUpMonitor {
 		properties.setProperty("javax.persistence.jdbc.password", "");
 		BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
 	}
-	
+
 	@Test
 	public void backUpMonitorTestFailNoUser() throws Exception{
 		Properties properties = new Properties();
@@ -78,7 +78,7 @@ public class testBackUpMonitor {
 		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
 		assertNull(bum);
 	}
-	
+
 	@Test
 	public void backUpMonitorTestFailNoURL() throws Exception{
 		Properties properties = new Properties();
@@ -90,7 +90,7 @@ public class testBackUpMonitor {
 		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
 		assertNull(bum);
 	}
-	
+
 	@Test
 	public void backUpMonitorTestFailNoDriver() throws Exception{
 		Properties properties = new Properties();
@@ -102,7 +102,7 @@ public class testBackUpMonitor {
 		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
 		assertNull(bum);
 	}
-	
+
 	@Test
 	public void backUpMonitorTestFailNoNode() throws Exception{
 		Properties properties = new Properties();
@@ -114,7 +114,7 @@ public class testBackUpMonitor {
 		BackUpMonitor bum = BackUpMonitor.getInstance(null, "brms_test" , properties, new Handler());
 		assertNull(bum);
 	}
-	
+
 	@Test
 	public void backUpMonitorTestFailNoResource() throws Exception{
 		Properties properties = new Properties();
@@ -125,13 +125,13 @@ public class testBackUpMonitor {
 		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), null , properties, new Handler());
 		assertNull(bum);
 	}
-	
+
 	@Test
 	public void backUpMonitorTestFailNoProperties() throws Exception{
 		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , null, new Handler());
 		assertNull(bum);
 	}
-	
+
 	@Test
 	public void backUpMonitorTestFailNoHandler() throws Exception{
 		Properties properties = new Properties();
@@ -143,7 +143,7 @@ public class testBackUpMonitor {
 		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, null);
 		assertNull(bum);
 	}
-	
+
 	@Test
 	public void backUpMonitorPingError() throws BackUpMonitorException {
 	    Properties properties = new Properties();
@@ -156,11 +156,11 @@ public class testBackUpMonitor {
         BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
         assertTrue(bum.getFlag());
 	}
-	
+
 	@Test
 	public void backUpMonitorMasterTest() throws BackUpMonitorException, InterruptedException, JsonProcessingException {
 	    Properties properties = new Properties();
-	    // Master Check. Initial Run. 
+	    // Master Check. Initial Run.
 	    properties.setProperty("javax.persistence.jdbc.driver", "org.h2.Driver");
         properties.setProperty("javax.persistence.jdbc.url", "jdbc:h2:file:./sql/xacmlTest");
         properties.setProperty("javax.persistence.jdbc.user", "sa");
@@ -178,17 +178,17 @@ public class testBackUpMonitor {
         // Get Back to Master test
         TimeUnit.MILLISECONDS.sleep(2000);
         assertTrue(bum.getFlag());
-        // No Master check. 
+        // No Master check.
         changeALL(properties, "SLAVE");
         TimeUnit.MILLISECONDS.sleep(2000);
         assertTrue(bum.getFlag());
-        // No Master check. 
+        // No Master check.
         changeALL(properties, "MASTER");
         TimeUnit.MILLISECONDS.sleep(2000);
         assertTrue(bum.getFlag());
-        
+
 	}
-	
+
 	private void updatePolicyNotification() {
 	    StdPDPNotification notification = new StdPDPNotification();
         notification.setNotificationType(NotificationType.BOTH);
@@ -255,7 +255,7 @@ public class testBackUpMonitor {
         bMEntity.setResourceNodeName(ResourceNode.BRMS.toString());
         bMEntity.setResourceName("brms_test2");
         bMEntity.setFlag("MASTER");
-        bMEntity.setTimeStamp(new Date());        
+        bMEntity.setTimeStamp(new Date());
         StdPDPNotification notification = new StdPDPNotification();
         notification.setNotificationType(NotificationType.UPDATE);
         List<StdLoadedPolicy> loadedPolicies = new ArrayList<>();
@@ -274,7 +274,7 @@ public class testBackUpMonitor {
         em.flush();
         et.commit();
     }
-    
+
     @Test(expected = BackUpMonitorException.class)
     public void testException() throws InterruptedException, BackUpMonitorException{
         BackUpMonitor.stop();

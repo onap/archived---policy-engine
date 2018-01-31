@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,7 @@ import org.onap.policy.utils.AAFPolicyException;
 public class AAFClientTest {
     AAFPolicyClient afClient;
     String pass = "test";
-    
+
     @Before
     public void setUp() throws AAFPolicyException{
         Properties props = new Properties();
@@ -41,7 +41,7 @@ public class AAFClientTest {
         props.setProperty("aafClient.impl.className", AAFPolicyClientImpl.class.getName());
         afClient  = AAFPolicyClient.getInstance(props);
     }
-    
+
     @Test
     public void invalidClientTest() throws AAFPolicyException{
         assertFalse(afClient.checkAuth("test", pass));
@@ -63,14 +63,14 @@ public class AAFClientTest {
         assertFalse(afClient.checkAuth("test", pass));
         assertFalse(afClient.checkAuthPerm("test", pass, "decision", "*", "read"));
     }
-    
+
     @Test(expected = AAFPolicyException.class)
     public void invalidAAFInstance() throws AAFPolicyException{
         Properties props = new Properties();
         props.setProperty("aafClient.impl.className", "errorClass");
         afClient  = AAFPolicyClient.getInstance(props);
     }
-    
+
     @Test(expected = AAFPolicyException.class)
     public void testPropNullException() throws AAFPolicyException {
         afClient.updateProperties(null);
@@ -80,7 +80,7 @@ public class AAFClientTest {
     public void testPropEmptyException() throws AAFPolicyException {
         afClient.updateProperties(new Properties());
     }
-    
+
     @Test(expected = AAFPolicyException.class)
     public void testAAFException() throws AAFPolicyException{
         new AAFPolicyException();

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -101,17 +101,17 @@ import com.google.gson.GsonBuilder;
 
 /**
  * PolicyEngine Implementation class
- * 
+ *
  * @version 1.0
  */
 public class StdPolicyEngine {
     private static final String ERROR_AUTH_GET_PERM = "You are not allowed to Make this Request. Please contact PolicyAdmin to give access to: ";
     private static final String DEFAULT_NOTIFICATION = "websocket";
-    private static final String ERROR_DATA_ISSUE = "Invalid Data is given."; 
+    private static final String ERROR_DATA_ISSUE = "Invalid Data is given.";
     private static final String DMAAP = "dmaap";
     private static final String ERROR_INVALID_PDPS = "Unable to get valid Response from  PDP(s) ";
     private static final String ERROR_WHILE_CONNECTING = "Error while connecting to ";
-    
+
     private static String clientEncoding = null;
     private String contentType = null;
     private static List<String> pdps = null;

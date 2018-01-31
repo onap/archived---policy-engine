@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,7 +59,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 
 public class CreateBrmsRawPolicy extends Policy {
-	
+
 	public CreateBrmsRawPolicy() {
 		super();
 	}
@@ -71,7 +71,7 @@ public class CreateBrmsRawPolicy extends Policy {
 	}
 
 	// Saving the Configurations file at server location for CreateBrmsRawPolicy policy.
-	protected void saveConfigurations(String policyName, String jsonBody) {		
+	protected void saveConfigurations(String policyName, String jsonBody) {
 		try {
 			if (policyName.endsWith(".xml")) {
 				policyName = policyName.substring(0,
@@ -117,13 +117,13 @@ public class CreateBrmsRawPolicy extends Policy {
 
 	@Override
 	public Map<String, String> savePolicies() throws PAPException {
-		
+
 		Map<String, String> successMap = new HashMap<>();
 		if(isPolicyExists()){
 			successMap.put("EXISTS", "This Policy already exist on the PAP");
 			return successMap;
 		}
-		
+
 		if (!isPreparedToSave()) {
 			prepareToSave();
 		}
@@ -131,7 +131,7 @@ public class CreateBrmsRawPolicy extends Policy {
 		// xml.
 		Path newPolicyPath = null;
 		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
-		
+
 		successMap = createPolicy(newPolicyPath, getCorrectPolicyDataObject());
 		if (successMap == null) {
 			successMap = new HashMap<>();
@@ -170,7 +170,7 @@ public class CreateBrmsRawPolicy extends Policy {
 		}
 
 		policyName = policyAdapter.getNewFileName();
-		
+
 		if (policyAdapter.getData() != null) {
 			//String jsonBody = policyAdapter.getJsonBody();
 			String configBody=policyAdapter.getConfigBodyData();
@@ -195,8 +195,8 @@ public class CreateBrmsRawPolicy extends Policy {
 						fileName.length());
 			}
 			allOfOne.getMatch().add(createMatch("PolicyName", name));
-			
-			
+
+
 			AllOfType allOf = new AllOfType();
 
 			// Match for ONAPName
@@ -378,8 +378,8 @@ public class CreateBrmsRawPolicy extends Policy {
 		assignment5.setExpression(new ObjectFactory()
 				.createAttributeValue(configNameAttributeValue5));
 		advice.getAttributeAssignmentExpression().add(assignment5);
-		
-		
+
+
 		//Config Name Assignment
 		AttributeAssignmentExpressionType assignment6 = new AttributeAssignmentExpressionType();
 		assignment6.setAttributeId("matching:" + CONFIGID);
@@ -390,16 +390,16 @@ public class CreateBrmsRawPolicy extends Policy {
 		configNameAttributeValue6.getContent().add(policyAdapter.getConfigName());
 		assignment6.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue6));
 		advice.getAttributeAssignmentExpression().add(assignment6);
-		
-        // Adding Controller Information. 
+
+        // Adding Controller Information.
         if(policyAdapter.getBrmsController()!=null){
             BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
             advice.getAttributeAssignmentExpression().add(
-                    createResponseAttributes("controller:"+ policyAdapter.getBrmsController(), 
+                    createResponseAttributes("controller:"+ policyAdapter.getBrmsController(),
                                 brmsDicitonaryController.getControllerDataByID(policyAdapter.getBrmsController()).getController()));
         }
-        
-        // Adding Dependencies. 
+
+        // Adding Dependencies.
         if(policyAdapter.getBrmsDependency()!=null){
             BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
             ArrayList<String> dependencies = new ArrayList<>();
@@ -411,13 +411,13 @@ public class CreateBrmsRawPolicy extends Policy {
             advice.getAttributeAssignmentExpression().add(
                         createResponseAttributes("dependencies:"+key.toString(), dependencies.toString()));
         }
-        
-        // Dynamic Field Config Attributes. 
+
+        // Dynamic Field Config Attributes.
 		Map<String, String> dynamicFieldConfigAttributes = policyAdapter.getDynamicFieldConfigAttributes();
 		for (String keyField : dynamicFieldConfigAttributes.keySet()) {
 			advice.getAttributeAssignmentExpression().add(createResponseAttributes("key:"+keyField, dynamicFieldConfigAttributes.get(keyField)));
 		}
-		
+
 		//Risk Attributes
 		AttributeAssignmentExpressionType assignment8 = new AttributeAssignmentExpressionType();
 		assignment8.setAttributeId("RiskType");
@@ -430,7 +430,7 @@ public class CreateBrmsRawPolicy extends Policy {
 		assignment8.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue8));
 
 		advice.getAttributeAssignmentExpression().add(assignment8);
-		
+
 		AttributeAssignmentExpressionType assignment9 = new AttributeAssignmentExpressionType();
 		assignment9.setAttributeId("RiskLevel");
 		assignment9.setCategory(CATEGORY_RESOURCE);
@@ -441,7 +441,7 @@ public class CreateBrmsRawPolicy extends Policy {
 		configNameAttributeValue9.getContent().add(policyAdapter.getRiskLevel());
 		assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
 
-		advice.getAttributeAssignmentExpression().add(assignment9);	
+		advice.getAttributeAssignmentExpression().add(assignment9);
 
 		AttributeAssignmentExpressionType assignment10 = new AttributeAssignmentExpressionType();
 		assignment10.setAttributeId("guard");
@@ -475,7 +475,7 @@ public class CreateBrmsRawPolicy extends Policy {
 	public Object getCorrectPolicyDataObject() {
 		return policyAdapter.getData();
 	}
-	
+
     private AttributeAssignmentExpressionType  createResponseAttributes(String key, String value){
         AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
         assignment7.setAttributeId(key);

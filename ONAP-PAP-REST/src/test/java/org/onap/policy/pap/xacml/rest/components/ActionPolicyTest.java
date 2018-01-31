@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ import com.att.research.xacml.util.XACMLProperties;
 
 
 public class ActionPolicyTest {
-	
+
 	private static Logger logger = FlexLogger.getLogger(ActionPolicyTest.class);
 	PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
 	List<String> dynamicRuleAlgorithmLabels = new LinkedList<>();
@@ -63,7 +63,7 @@ public class ActionPolicyTest {
 		dynamicRuleAlgorithmField1.add("testField1");
 		dynamicRuleAlgorithmCombo.add("testCombo");
 		dynamicRuleAlgorithmField2.add("testField2");
-		
+
 		policyAdapter.setPolicyName("Test.Action_junitTest");
 		policyAdapter.setPolicyDescription("test");
 		policyAdapter.setRuleCombiningAlgId("urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides");
@@ -73,22 +73,22 @@ public class ActionPolicyTest {
 		policyAdapter.setNewFileName("Test.Action_junitTest.1.xml");
 		policyAdapter.setHighestVersion(1);
 		policyAdapter.setPolicyID("urn:xacml:policy:id:"+UUID.randomUUID());
-		
+
 		policyAdapter.setActionDictHeader("");
 		policyAdapter.setActionDictType("REST");
 		policyAdapter.setActionDictUrl("onap.org");
 		policyAdapter.setActionDictMethod("GET");
 		policyAdapter.setActionAttribute("test");
 		policyAdapter.setActionBody("test");
-		
+
 		policyAdapter.setDynamicRuleAlgorithmLabels(dynamicRuleAlgorithmLabels);
 		policyAdapter.setDynamicRuleAlgorithmCombo(dynamicRuleAlgorithmCombo);
 		policyAdapter.setDynamicRuleAlgorithmField1(dynamicRuleAlgorithmField1);
 		policyAdapter.setDynamicRuleAlgorithmField2(dynamicRuleAlgorithmField2);
-		
+
 		attributeMap.put("java", "test");
 		policyAdapter.setDynamicFieldConfigAttributes(attributeMap);
-		
+
 		component = new ActionPolicy(policyAdapter);
 
         logger.info("setUp: exit");
@@ -107,9 +107,9 @@ public class ActionPolicyTest {
 	@Test
 	public void testSavePolicies() {
         ActionPolicy mockAction = Mockito.mock(component.getClass());
-		
+
         Map<String, String> successMap = new HashMap<>();
-        
+
 		successMap.put("success", "success");
 
         try {
@@ -118,7 +118,7 @@ public class ActionPolicyTest {
 		} catch (Exception e) {
 			logger.error("Exception Occured"+e);
 		}
-		assertEquals(successMap.get("success"),"success");		
+		assertEquals(successMap.get("success"),"success");
 	}
 
 	/**
@@ -128,14 +128,14 @@ public class ActionPolicyTest {
 	public void testPrepareToSave() {
 		logger.debug("test PrepareToSave Policy: enter");
 		boolean response = true;
-		
+
 		try {
 			response = component.prepareToSave();
 		} catch (Exception e) {
 			logger.error("Exception Occured"+e);
 		}
-		assertTrue(response);	
-		
+		assertTrue(response);
+
 	}
 
 }

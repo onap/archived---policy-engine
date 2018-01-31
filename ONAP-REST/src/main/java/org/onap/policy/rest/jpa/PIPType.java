@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,14 +36,14 @@ import javax.persistence.Transient;
 
 /**
  * The persistent class for the PIPType database table.
- * 
+ *
  */
 @Entity
 @Table(name="PIPType")
 @NamedQuery(name="PIPType.findAll", query="SELECT p FROM PIPType p")
 public class PIPType implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final String TYPE_SQL = "SQL";
 	public static final String TYPE_LDAP = "LDAP";
 	public static final String TYPE_CSV = "CSV";
@@ -102,7 +102,7 @@ public class PIPType implements Serializable {
 
 		return pipconfiguration;
 	}
-	
+
 	@Transient
 	public boolean	isSQL() {
 		return this.type.equals(TYPE_SQL);

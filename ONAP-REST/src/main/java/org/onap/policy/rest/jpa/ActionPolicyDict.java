@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,42 +56,42 @@ public class ActionPolicyDict implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
-	
+
 	@Column(name="ATTRIBUTE_NAME", nullable=false)
 	@OrderBy("asc")
 	private String attributeName;
-	
+
 	@Column(name="Type", nullable=false)
 	@OrderBy("asc")
 	private String type;
-	
+
 	@Column(name="URL", nullable=false)
 	@OrderBy("asc")
 	private String url;
-	
+
 	@Column(name="Method", nullable=false)
 	@OrderBy("asc")
 	private String method;
-	
+
 	@Column(name="Headers", nullable=true)
 	@OrderBy("asc")
 	private String header;
-	
+
 	@Column(name="Body", nullable=true)
 	@OrderBy("asc")
-	private String body;	
-	
+	private String body;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_date", updatable=false)
 	private Date createdDate;
-	
+
 	@Column(name="description", nullable=true, length=2048)
 	private String description;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
-	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name="created_by")
 	private UserInfo userCreatedBy;
@@ -99,7 +99,7 @@ public class ActionPolicyDict implements Serializable {
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
-	
+
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}
@@ -118,16 +118,16 @@ public class ActionPolicyDict implements Serializable {
 
 	private static Log logger = LogFactory.getLog(ActionPolicyDict.class);
 	public ActionPolicyDict() {
-		
+
 	}
-	
+
 	public ActionPolicyDict(String string, String userid) {
 		this(string);
 	}
-	
+
 	public ActionPolicyDict(String domain) {
 		this.type = domain;
-	}	
+	}
 	@PrePersist
 	public void	prePersist() {
 		Date date = new Date();
@@ -150,7 +150,7 @@ public class ActionPolicyDict implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public Date getCreatedDate() {
 		return this.createdDate;
 	}
@@ -163,7 +163,7 @@ public class ActionPolicyDict implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public Date getModifiedDate() {
 		return this.modifiedDate;
 	}
@@ -176,7 +176,7 @@ public class ActionPolicyDict implements Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	public String getUrl() {
 		return url;
 	}
@@ -195,7 +195,7 @@ public class ActionPolicyDict implements Serializable {
 	public void setHeader(String header) {
 		this.header = header;
 	}
-	
+
 	public String getBody() {
 		return body;
 	}

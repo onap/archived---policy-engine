@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,18 +56,18 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 /**
  * Helper static class for policy writing.
- * 
+ *
  *
  */
 public class XACMLPolicyWriter {
 
 	/**
 	 * Helper static class that does the work to write a policy set to a file on disk.
-	 * 
+	 *
 	 *
 	 */
 	public static Path writePolicyFile(Path filename, PolicySetType policySet) {
-		JAXBElement<PolicySetType> policySetElement = new ObjectFactory().createPolicySet(policySet);		
+		JAXBElement<PolicySetType> policySetElement = new ObjectFactory().createPolicySet(policySet);
 		try {
 			JAXBContext context = JAXBContext.newInstance(PolicySetType.class);
 			Marshaller m = context.createMarshaller();
@@ -89,7 +89,7 @@ public class XACMLPolicyWriter {
 
 	/**
 	 * Helper static class that does the work to write a policy set to an output stream.
-	 * 
+	 *
 	 *
 	 */
 	public static void writePolicyFile(OutputStream os, PolicySetType policySet) {
@@ -106,11 +106,11 @@ public class XACMLPolicyWriter {
 
 	/**
 	 * Helper static class that does the work to write a policy to a file on disk.
-	 * 
+	 *
 	 *
 	 */
 	public static Path writePolicyFile(Path filename, PolicyType policy) {
-		JAXBElement<PolicyType> policyElement = new ObjectFactory().createPolicy(policy);		
+		JAXBElement<PolicyType> policyElement = new ObjectFactory().createPolicy(policy);
 		try {
 			JAXBContext context = JAXBContext.newInstance(PolicyType.class);
 			Marshaller m = context.createMarshaller();
@@ -127,19 +127,19 @@ public class XACMLPolicyWriter {
 		} catch (JAXBException e) {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyWriter", "writePolicyFile failed");
 			return null;
-		}		
+		}
 	}
 
 
 	/**
 	 * Helper static class that does the work to write a policy to a file on disk.
-	 * 
+	 *
 	 *
 	 */
 	public static InputStream getXmlAsInputStream(PolicyType policy) {
-		JAXBElement<PolicyType> policyElement = new ObjectFactory().createPolicy(policy);		
+		JAXBElement<PolicyType> policyElement = new ObjectFactory().createPolicy(policy);
 		try {
-			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();			
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			JAXBContext context = JAXBContext.newInstance(PolicyType.class);
 			Marshaller m = context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
@@ -151,15 +151,15 @@ public class XACMLPolicyWriter {
 		} catch (JAXBException e) {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyWriter", "writePolicyFile failed");
 			return null;
-		}		
+		}
 	}
 	/**
 	 * Helper static class that does the work to write a policy set to an output stream.
-	 * 
+	 *
 	 *
 	 */
 	public static void writePolicyFile(OutputStream os, PolicyType policy) {
-		JAXBElement<PolicyType> policySetElement = new ObjectFactory().createPolicy(policy);		
+		JAXBElement<PolicyType> policySetElement = new ObjectFactory().createPolicy(policy);
 		try {
 			JAXBContext context = JAXBContext.newInstance(PolicyType.class);
 			Marshaller m = context.createMarshaller();
@@ -169,7 +169,7 @@ public class XACMLPolicyWriter {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyWriter", "writePolicyFile failed");
 		}
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static String changeFileNameInXmlWhenRenamePolicy(Path filename) {
 
@@ -178,7 +178,7 @@ public class XACMLPolicyWriter {
 		String domain = null;
 		String repository = "repository";
 		if(filename.toString().contains("Config_")){
-			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.toString().length()+1), filename.toString().indexOf("Config_"));		
+			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.toString().length()+1), filename.toString().indexOf("Config_"));
 		}else if(filename.toString().contains("Action_")){
 			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.toString().length()+1), filename.toString().indexOf("Action_"));
 		}else if(filename.toString().contains("Decision_")){
@@ -200,8 +200,8 @@ public class XACMLPolicyWriter {
 					List<AllOfType> allOf = anyOfType.getAllOf();
 					for( Iterator allOfIte = allOf.iterator(); allOfIte.hasNext(); ){
 						AllOfType allOfType = (AllOfType) allOfIte.next();
-						List<MatchType> match = allOfType.getMatch();						
-						for( Iterator matchIte = match.iterator(); matchIte.hasNext();) {							
+						List<MatchType> match = allOfType.getMatch();
+						for( Iterator matchIte = match.iterator(); matchIte.hasNext();) {
 							MatchType  matchType = (MatchType) matchIte.next();
 							if(matchType.getAttributeDesignator().getAttributeId().equals("PolicyName")){
 								AttributeValueType attributeValueType = matchType.getAttributeValue();
@@ -220,12 +220,12 @@ public class XACMLPolicyWriter {
 									String newName = tmp.substring(0, tmp.lastIndexOf("."));
 									attributeValueType.getContent().clear();
 									attributeValueType.getContent().add(domain + newName  + "." + "xml");
-								}	
+								}
 							}
 						}
 					}
 				}
-				if(filename.toString().contains("Config_") || filename.toString().contains("Action_")){	
+				if(filename.toString().contains("Config_") || filename.toString().contains("Action_")){
 					List<Object> objects = policyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
 					if (objects != null && objects.size() > 0) {
 						for (Iterator ite = objects.iterator(); ite.hasNext();) {
@@ -240,7 +240,7 @@ public class XACMLPolicyWriter {
 										AdviceExpressionType adviceExpressionType = (AdviceExpressionType) iterator
 												.next();
 										if (adviceExpressionType.getAdviceId() != null && !adviceExpressionType.getAdviceId().equals("") && (adviceExpressionType.getAdviceId().equals("configID")
-												|| adviceExpressionType.getAdviceId().equals("faultID") || adviceExpressionType.getAdviceId().equals("PMID")||adviceExpressionType.getAdviceId().equals("firewallConfigID") 
+												|| adviceExpressionType.getAdviceId().equals("faultID") || adviceExpressionType.getAdviceId().equals("PMID")||adviceExpressionType.getAdviceId().equals("firewallConfigID")
 												|| adviceExpressionType.getAdviceId().equals("MSID")) || adviceExpressionType.getAdviceId().equals("GocID")||adviceExpressionType.getAdviceId().equals("GocHPID")||adviceExpressionType.getAdviceId().equals("BRMSRAWID")
 												||adviceExpressionType.getAdviceId().equals("BRMSPARAMID")|| adviceExpressionType.getAdviceId().equals("HPSuppID") || adviceExpressionType.getAdviceId().equals("HPFlapID") || adviceExpressionType.getAdviceId().equals("HPOverID"))
 										{
@@ -254,14 +254,14 @@ public class XACMLPolicyWriter {
 														JAXBElement<AttributeValueType> attributeValueType = (JAXBElement<AttributeValueType>) attributeAssignmentExpressionType.getExpression();
 														AttributeValueType attributeValueType1 = attributeValueType.getValue();
 														String configUrl = "$URL";
-														String urlVal = (String) attributeValueType1.getContent().get(0);   
+														String urlVal = (String) attributeValueType1.getContent().get(0);
 														String origExtension = urlVal.substring(urlVal.lastIndexOf('.')+1).trim();
 														extension = origExtension;
 														attributeValueType1.getContent().clear();
 														String txtFileName = filename.getFileName().toString();
 														txtFileName = txtFileName.substring(0, txtFileName.lastIndexOf(".")+1) + origExtension;
 														txtFileName = configUrl+ File.separator + "Config" + File.separator + domain + txtFileName;
-														attributeValueType1.getContent().add(txtFileName);	
+														attributeValueType1.getContent().add(txtFileName);
 													} else if (attributeAssignmentExpressionType.getAttributeId().equals("PolicyName")) {
 														JAXBElement<AttributeValueType> attributeValueType = (JAXBElement<AttributeValueType>) attributeAssignmentExpressionType.getExpression();
 														AttributeValueType attributeValueType1 = attributeValueType.getValue();
@@ -276,7 +276,7 @@ public class XACMLPolicyWriter {
 															String newName = tmp.substring(0, tmp.lastIndexOf("."));
 															attributeValueType1.getContent().clear();
 															attributeValueType1.getContent().add(domain + newName + "." + "xml");
-														}										
+														}
 
 													}
 
@@ -310,15 +310,15 @@ public class XACMLPolicyWriter {
 															JAXBElement<AttributeValueType> attributeValueType = (JAXBElement<AttributeValueType>) attributeAssignmentExpressionType.getExpression();
 															AttributeValueType attributeValueType1 = attributeValueType.getValue();
 															String configUrl = "$URL";
-															String urlVal = (String) attributeValueType1.getContent().get(0);    	
+															String urlVal = (String) attributeValueType1.getContent().get(0);    
 															String origExtension = urlVal.substring(urlVal.lastIndexOf('.')+1).trim();
 															extension = "json";
 															attributeValueType1.getContent().clear();
 															String txtFileName = filename.getFileName().toString();
 															txtFileName = txtFileName.substring(0, txtFileName.lastIndexOf(".")+1) + origExtension;
 															txtFileName = configUrl+ File.separator + "Action" + File.separator + domain + txtFileName;
-															attributeValueType1.getContent().add(txtFileName);	
-														} 
+															attributeValueType1.getContent().add(txtFileName);
+														}
 
 													}
 												}
@@ -336,7 +336,7 @@ public class XACMLPolicyWriter {
 			}
 		}catch (JAXBException e) {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyWriter", "writePolicyFile failed");
-		}	
+		}
 
 		return extension;
 	}

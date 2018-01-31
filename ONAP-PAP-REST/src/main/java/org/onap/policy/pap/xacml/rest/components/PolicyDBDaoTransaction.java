@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PersistenceException if the commit fails for some reason
 	 */
 	public void commitTransaction();
-	
+
 	/**
 	 * Create or update a policy
 	 * @param policy A Policy object representing the policy to store or update
@@ -51,15 +51,15 @@ public interface PolicyDBDaoTransaction {
 	 * @throws IllegalArgumentException If the Policy's PolicyRestAdapter contains incorrect data.
 	 */
 	public void createPolicy(Policy policy, String username) throws PolicyDBException;
-	
+
 	/**
 	 * Check if the PolicyDBDaoTransaction is currently open
 	 * @return False if the PolicyDBDao transaction has not been used or has been committed already, true if it is open.
 	 */
 	public boolean isTransactionOpen();
-	
-	
-	
+
+
+
 	/**
 	 * Delete an existing policy
 	 * @param policyToDelete The file path of the policy to delete
@@ -68,18 +68,18 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PolicyDBException If a database error occurs
 	 */
 	public void deletePolicy(String policyToDelete) throws PolicyDBException;
-	
+
 	/**
 	 * Rollback (undo) the current transaction.
 	 */
 	public void rollbackTransaction();
-	
+
 	/**
 	 * Close the PolicyDBDaoTransaction without rolling back or doing anything. Just used to close the EntityManager
 	 */
 	public void close();
-	
-	
+
+
 	/**
 	 * Create a new PDP group in the database
 	 * @param groupID The ID to name the new group (use PolicyDBDao.createNewPDPGroupId)
@@ -91,7 +91,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PersistenceException If a database error occurs
 	 */
 	public void createGroup(String groupID, String groupName, String groupDescription, String username) throws PolicyDBException;
-	
+
 	/**
 	 * Updates a group in the database with a new name of description
 	 * @param group The group with updated information. The id must match an existing group, but the name and description can be changed.
@@ -101,7 +101,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PersistenceException If a database error occurs or if the group can not be found
 	 */
 	public void updateGroup(OnapPDPGroup group, String username) throws PolicyDBException;
-	
+
 	/**
 	 * Updates a PDP in the database with new information
 	 * @param pdp The PDP to update
@@ -111,7 +111,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PersistenceException If a database error occurs or if the pdp can not be found
 	 */
 	public void updatePdp(OnapPDP pdp, String username) throws PolicyDBException;
-	
+
 	/**
 	 * Change the default group in the database to the group provided.
 	 * @param group The new group which should be set as default in the database
@@ -121,7 +121,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PersistenceException If a database error occurs
 	 */
 	public void changeDefaultGroup(OnapPDPGroup group, String username) throws PolicyDBException;
-	
+
 	/**
 	 * Moves a PDP to a new group.
 	 * @param pdp The PDP which is to be moved to a new group
@@ -132,7 +132,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PersistenceException If a database error occurs
 	 */
 	public void movePdp(OnapPDP pdp, OnapPDPGroup group, String username) throws PolicyDBException;
-	
+
 	/**
 	 * Add a new PDP to an existing group
 	 * @param pdpID The ID to name the new PDP
@@ -146,20 +146,20 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PersistenceException If a database error occurs
 	 */
 	public void addPdpToGroup(String pdpID, String groupID, String pdpName, String pdpDescription, int pdpJmxPort, String username) throws PolicyDBException;
-	
+
 	/**
 	 * Add an existing policy to an existing group
 	 * @param group The ID of the existing group to add the policy to
 	 * @param policyID The ID of an existing policy
-	 * @return 
+	 * @return
 	 * @throws IllegalArgumentException If non-optional parameters are null or empty strings
 	 * @throws IllegalStateException If a transaction is already open
 	 * @throws PersistenceException If a database error occurs
-	 * @throws PolicyDBException 
+	 * @throws PolicyDBException
 	 */
 	public StdPDPGroup addPolicyToGroup(String group, String policyID, String username) throws PolicyDBException;
-	
-	
+
+
 	/**
 	 * Delete an existing PDP groupPolicyDBException
 	 * @param group A PDPGroup object representing the group to delete
@@ -170,7 +170,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PAPException If an error relating to how groups are handled occurs
 	 */
 	public void deleteGroup(OnapPDPGroup group, OnapPDPGroup moveToGroup, String username)throws PolicyDBException;
-	
+
 	/**
 	 * Removes an existing PDP from its group and deletes it.
 	 * @param pdpID The ID of the existing PDP which should be deleted
@@ -179,7 +179,7 @@ public interface PolicyDBDaoTransaction {
 	 * @throws PersistenceException If a database error occurs
 	 */
 	public void removePdpFromGroup(String pdpID, String username) throws PolicyDBException;
-	
+
 	public GroupEntity getGroup(long groupKey);
 	public GroupEntity getGroup(String groupId);
 	public List<?> getPdpsInGroup(long groupKey);
@@ -188,5 +188,5 @@ public interface PolicyDBDaoTransaction {
 	void renamePolicy(String oldPath, String newPath,String username);
 
 	void clonePolicy(String oldPolicyPath, String newPolicyPath, String username);
-		
+
 }

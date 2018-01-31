@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,18 +60,18 @@ public class ActionBodyEntity implements Serializable {
 	@Column(name="actionBodyId")
 	@JsonBackReference
 	private long actionBodyId;
-	
+
 	@Column(name="actionBodyName", nullable=false, length=255)
 	private String actionBodyName = "";
-	
-	@Version 
+
+	@Version
 	@Column(name="version")
 	private int version;
-	
+
 	@Lob
 	@Column(name="actionBody", nullable=false, columnDefinition="TEXT")
 	private String actionBody = "NoBody";
-	
+
 	@Column(name="created_by", nullable=false, length=255)
 	private String createdBy = "guest";
 
@@ -85,7 +85,7 @@ public class ActionBodyEntity implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="modified_date", nullable=false)
 	private Date modifiedDate;
-	
+
 	@Column(name="deleted", nullable=false)
 	private boolean deleted = false;
 
@@ -118,7 +118,7 @@ public class ActionBodyEntity implements Serializable {
 	public String getActionBodyName(){
 		return this.actionBodyName;
 	}
-	
+
 	/**
 	 * @return the actionBody
 	 */
@@ -143,7 +143,7 @@ public class ActionBodyEntity implements Serializable {
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	
+
 	/**
 	 * @return the modifiedBy
 	 */
@@ -194,7 +194,7 @@ public class ActionBodyEntity implements Serializable {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
 	@Override
 	public int hashCode() {
 	return Objects.hash(actionBodyId, actionBodyName, version, actionBody,
@@ -215,11 +215,11 @@ public class ActionBodyEntity implements Serializable {
 
 		return (
 				actionBodyId == ((ActionBodyEntity) obj).actionBodyId &&
-				actionBodyName.equals(((ActionBodyEntity) obj).actionBodyName) && 
-				version == ((ActionBodyEntity) obj).version && 
-				actionBody.equals(((ActionBodyEntity) obj).actionBody) && 
-				createdBy.equals(((ActionBodyEntity) obj).createdBy) && 
-				createdDate.equals(((ActionBodyEntity) obj).createdDate) && 
+				actionBodyName.equals(((ActionBodyEntity) obj).actionBodyName) &&
+				version == ((ActionBodyEntity) obj).version &&
+				actionBody.equals(((ActionBodyEntity) obj).actionBody) &&
+				createdBy.equals(((ActionBodyEntity) obj).createdBy) &&
+				createdDate.equals(((ActionBodyEntity) obj).createdDate) &&
 				modifiedBy.equals(((ActionBodyEntity) obj).modifiedBy) &&
 				modifiedDate.equals(((ActionBodyEntity) obj).modifiedDate) &&
 				deleted == ((ActionBodyEntity) obj).deleted
