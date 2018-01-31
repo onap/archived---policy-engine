@@ -45,7 +45,9 @@ public class StdPDPPIPConfig implements PDPPIPConfig, Serializable {
 	private Map<String,String> config = new HashMap<>();
 	
 	public StdPDPPIPConfig() {
-		
+		//
+		// Default constructor
+		//
 	}
 
 	public StdPDPPIPConfig(String id) {

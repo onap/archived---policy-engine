@@ -58,9 +58,11 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 	private Set<PDP>			unknownPDPs = new HashSet<>();
 	
 	
-	// Constructor needed for JSON deserialization
+	
 	public StdPDPGroupStatus() {
-		
+		//
+		// Constructor needed for JSON deserialization
+		//
 	}
 	
 	public StdPDPGroupStatus(Status status) {
@@ -177,7 +179,7 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 
 	@Override
 	public boolean policiesOK() {
-		if (this.failedPolicies.size() > 0) {
+		if (!this.failedPolicies.isEmpty()) {
 			return false;
 		}
 		return true;
@@ -203,7 +205,7 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 
 	@Override
 	public boolean pipConfigOK() {
-		if (this.failedPIPConfigs.size() > 0) {
+		if (!this.failedPIPConfigs.isEmpty()) {
 			return false;
 		}
 		return true;
@@ -266,16 +268,16 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 
 	@Override
 	public boolean pdpsOK() {
-		if (this.outOfSynchPDPs.size() > 0) {
+		if (!this.outOfSynchPDPs.isEmpty()) {
 			return false;
 		}
-		if (this.failedPDPs.size() > 0) {
+		if (!this.failedPDPs.isEmpty()) {
 			return false;
 		}
-		if (this.lastUpdateFailedPDPs.size() > 0) {
+		if (!this.lastUpdateFailedPDPs.isEmpty()) {
 			return false;
 		}
-		if (this.unknownPDPs.size() > 0) {
+		if (!this.unknownPDPs.isEmpty()) {
 			return false;
 		}
 		return true;
@@ -296,7 +298,7 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 		if (this.loadErrors.isEmpty() == false) {
 			return false;
 		}
-		return (this.status == Status.OK);
+		return this.status == Status.OK;
 	}
 	
 	public void reset() {

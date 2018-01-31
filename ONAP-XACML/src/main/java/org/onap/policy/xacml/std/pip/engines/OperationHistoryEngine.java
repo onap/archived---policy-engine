@@ -290,8 +290,8 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 	
 	// Validating Time Units to prevent SQL Injection. 
 	private static boolean validTimeUnits(String timeUnits) {
-		return (timeUnits.equalsIgnoreCase("minute") || timeUnits.equalsIgnoreCase("hour") || timeUnits.equalsIgnoreCase("day") 
-			|| timeUnits.equalsIgnoreCase("week") || timeUnits.equalsIgnoreCase("month")||timeUnits.equalsIgnoreCase("year"))?
+		return ("minute".equalsIgnoreCase(timeUnits) || "hour".equalsIgnoreCase(timeUnits) || "day".equalsIgnoreCase(timeUnits) 
+			|| "week".equalsIgnoreCase(timeUnits) || "month".equalsIgnoreCase(timeUnits)|| "year".equalsIgnoreCase(timeUnits))?
 				true: false;
 	}
 }

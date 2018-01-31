@@ -34,7 +34,7 @@ public class MetricsUtil {
 			if (count == 0)
 				return 0;
 			
-			return (cumLatency / count);
+			return cumLatency / count;
 		}
 		
 		public void reset() {

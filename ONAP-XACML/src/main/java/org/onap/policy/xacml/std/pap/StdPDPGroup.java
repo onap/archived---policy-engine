@@ -59,7 +59,9 @@ import com.google.common.base.Splitter;
 import com.google.common.io.ByteStreams;
 
 public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPGroup, StdItemSetChangeListener, Comparable<Object>, Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	private static final String groupNotExist= "Group directory does NOT exist";
 	private static Log	logger	= LogFactory.getLog(StdPDPGroup.class);
 	
 	private String id;
@@ -137,8 +139,8 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 				} else if (key.toString().endsWith(".pdps")) {
 					String pdpList = properties.getProperty(key.toString());
 					if (pdpList != null && pdpList.length() > 0) {
-						for (String id : Splitter.on(',').omitEmptyStrings().trimResults().split(pdpList)) {
-							StdPDP pdp = new StdPDP(id, properties);
+						for (String pdpId : Splitter.on(',').omitEmptyStrings().trimResults().split(pdpList)) {
+							StdPDP pdp = new StdPDP(pdpId, properties);
 							pdp.addItemSetChangeListener(this);
 							this.pdps.add(pdp);
 						}
@@ -157,10 +159,10 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 			logger.warn("Group directory does NOT exist: " + directory.toString());
 			try {
 				Files.createDirectory(directory);
-				this.status.addLoadWarning("Group directory does NOT exist");
+				this.status.addLoadWarning(groupNotExist);
 			} catch (IOException e) {
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup", "Group directory does NOT exist");
-				this.status.addLoadError("Group directory does NOT exist");
+				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdPDPGroup", groupNotExist);
+				this.status.addLoadError(groupNotExist);
 				this.status.setStatus(PDPGroupStatus.Status.LOAD_ERRORS);
 			}
 		}
@@ -229,7 +231,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 			}
 			//Even if we create a new pip file, we still need to parse and load the properties
 			try{
-				this.readPIPProperties(directory, pipProperties);
+				this.readPIPProperties(pipProperties);
 			}catch(Exception e){
 				throw new PAPException("Failed to load the new pip properties file", e);
 			}
@@ -243,7 +245,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 				}
 				// For all old PIP config's modify to the new PIP Configuration. 
 				// If PIP is empty add the new values and save it. 
-				if(pipProperties.get(XACMLProperties.PROP_PIP_ENGINES).toString().trim().equals("")){
+				if("".equals(pipProperties.get(XACMLProperties.PROP_PIP_ENGINES).toString().trim())){
 					pipProperties = setPIPProperties(pipProperties);
 					try (OutputStream os = Files.newOutputStream(file)) {
 						pipProperties.store(os, "");
@@ -252,7 +254,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 				//
 				// Parse the pips
 				//
-				this.readPIPProperties(directory, pipProperties);
+				this.readPIPProperties(pipProperties);
 			} catch (IOException e) {
 				logger.warn("Failed to open group PIP Config properties file: " + file, e);
 				this.status.addLoadError("Not PIP config properties defined");
@@ -264,20 +266,6 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 	}
 	
 	public void resetStatus() {
-//		//
-//		// If we are updating, don't allow reset
-//		//
-//		if (this.status.getStatus() == Status.UPDATING_CONFIGURATION) {
-//			logger.warn("We are updating, chill.");
-//			return;
-//		}
-//		//
-//		// Load errors take precedence
-//		//
-//		if (this.status.getStatus() == Status.LOAD_ERRORS) {
-//			logger.warn("We had load errors.");
-//			return;
-//		}
 		//
 		// Reset our status object
 		//
@@ -312,13 +300,13 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 		}
 		
 		// priority is worst-cast to best case
-		if (this.status.getUnknownPDPs().size() > 0) {
+		if (!this.status.getUnknownPDPs().isEmpty()) {
 			this.status.setStatus(Status.UNKNOWN);
-		} else if (this.status.getFailedPDPs().size() > 0 || this.status.getLastUpdateFailedPDPs().size() > 0) {
+		} else if (!this.status.getFailedPDPs().isEmpty() || !this.status.getLastUpdateFailedPDPs().isEmpty()) {
 			this.status.setStatus(Status.LOAD_ERRORS);
-		} else if (this.status.getOutOfSynchPDPs().size() > 0) {
+		} else if (!this.status.getOutOfSynchPDPs().isEmpty()) {
 			this.status.setStatus(Status.OUT_OF_SYNCH);
-		} else if (this.status.getUpdatingPDPs().size() > 0) {
+		} else if (!this.status.getUpdatingPDPs().isEmpty()) {
 			this.status.setStatus(Status.UPDATING_CONFIGURATION);
 		} else {
 			this.status.setStatus(Status.OK); 
@@ -404,6 +392,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 		this.pdps = pdps;
 	}
 	
+	@Override
 	public Set<OnapPDP> getOnapPdps(){
 		return Collections.unmodifiableSet(pdps);
 	}
@@ -430,7 +419,8 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 		}
 		return null;
 	}
-
+	
+	@Override
 	public Properties getPolicyProperties()
 	{
 		Properties properties = new Properties(){
@@ -442,9 +432,9 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 		    public synchronized Enumeration<Object> keys() {
 		        return Collections.enumeration(new TreeSet<Object>(super.keySet()));
 		    }
-	    };;
-		List<String> roots = new ArrayList<String>();
-		List<String> refs = new ArrayList<String>();
+	    };
+		List<String> roots = new ArrayList<>();
+		List<String> refs = new ArrayList<>();
 		
 		for (PDPPolicy policy : this.policies) {
 			// for all policies need to tell PDP the "name", which is the base name for the file id
@@ -718,9 +708,10 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 		this.firePDPGroupChanged(this);
 	}
 	
+	@Override
 	public Properties getPipConfigProperties() {
 		Properties properties = new Properties();
-		List<String> configs = new ArrayList<String>();
+		List<String> configs = new ArrayList<>();
 		
 		for (PDPPIPConfig config : this.pipConfigs) {
 			configs.add(config.getId());
@@ -820,11 +811,11 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 				isRoot = false;
 				continue;
 			}
-			for (String id : policyList) {
+			for (String policyId : policyList) {
 				//
 				// Construct the policy filename
 				//
-				Path policyPath = Paths.get(directory.toString(), id );
+				Path policyPath = Paths.get(directory.toString(), policyId );
 				//
 				// Create the Policy Object
 				//
@@ -854,13 +845,13 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 		}
 	}
 
-	private void	readPIPProperties(Path directory, Properties properties) {
+	private void readPIPProperties(Properties properties) {
 		String list = properties.getProperty(XACMLProperties.PROP_PIP_ENGINES);
 		if (list == null || list.length() == 0) {
 			return;
 		}
-		for (String id : list.split("[,]")) {
-			StdPDPPIPConfig config = new StdPDPPIPConfig(id, properties);
+		for (String pipId : list.split("[,]")) {
+			StdPDPPIPConfig config = new StdPDPPIPConfig(pipId, properties);
 			if (config.isConfigured()) {
 				this.pipConfigs.add(config);
 				this.status.addLoadedPipConfig(config);
@@ -935,11 +926,10 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 	}
 
 	
-	//
-	// Methods needed for JSON deserialization
-	//
 	public StdPDPGroup() {
-		
+		//
+		// Methods needed for JSON deserialization
+		//
 	}
 	
 	public StdPDPGroup(OnapPDPGroup group) {
@@ -955,9 +945,9 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 	public boolean isDefault() {
 		return isDefault;
 	}
-	public void setDefault(boolean isDefault) {
-		this.isDefault = isDefault;
-	}
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
 	public void setStatus(PDPGroupStatus status) {
 		this.status = new StdPDPGroupStatus(status);
 	}

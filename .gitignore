@@ -54,3 +54,4 @@ ONAP-XACML/src/test/resources/pdpstest/
 POLICY-SDK-APP/catalina.base_IS_UNDEFINED/
 PolicyEngineAPI/logs/
 PolicyEngineUtils/logs/
+ONAP-REST/logs/common-modules/integrity-monitor/*.log

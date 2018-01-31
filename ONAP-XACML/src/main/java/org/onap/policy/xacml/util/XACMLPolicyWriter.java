@@ -173,16 +173,15 @@ public class XACMLPolicyWriter {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static String changeFileNameInXmlWhenRenamePolicy(Path filename) {
 
-		PolicyType policyType = null;
 		String extension = "";
 		String domain = null;
 		String repository = "repository";
 		if(filename.toString().contains("Config_")){
-			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.toString().length()+1), filename.toString().indexOf("Config_"));		
+			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.length()+1), filename.toString().indexOf("Config_"));		
 		}else if(filename.toString().contains("Action_")){
-			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.toString().length()+1), filename.toString().indexOf("Action_"));
+			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.length()+1), filename.toString().indexOf("Action_"));
 		}else if(filename.toString().contains("Decision_")){
-			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.toString().length()+1), filename.toString().indexOf("Decision_"));
+			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.length()+1), filename.toString().indexOf("Decision_"));
 		}
 		if(domain.contains(File.separator)){
 			domain =	domain.replace(File.separator, ".");
@@ -191,7 +190,7 @@ public class XACMLPolicyWriter {
 			JAXBContext context = JAXBContext.newInstance(PolicyType.class);
 			Unmarshaller m = context.createUnmarshaller();
 			JAXBElement<PolicyType> policyElement = (JAXBElement<PolicyType>) m.unmarshal(filename.toFile());
-			policyType = policyElement.getValue();
+			PolicyType policyType = policyElement.getValue();
 			if (policyType != null) {
 				TargetType targetType = policyType.getTarget();
 				List<AnyOfType> anyOfTypes = targetType.getAnyOf();
@@ -203,19 +202,10 @@ public class XACMLPolicyWriter {
 						List<MatchType> match = allOfType.getMatch();						
 						for( Iterator matchIte = match.iterator(); matchIte.hasNext();) {							
 							MatchType  matchType = (MatchType) matchIte.next();
-							if(matchType.getAttributeDesignator().getAttributeId().equals("PolicyName")){
+							if("PolicyName".equals(matchType.getAttributeDesignator().getAttributeId())){
 								AttributeValueType attributeValueType = matchType.getAttributeValue();
 								List<Object> contents = attributeValueType.getContent();
-								if (contents != null && contents.size() > 0) {
-									String value = (String) contents.get(0);
-									String version = value;
-									version = version.substring(0, version.lastIndexOf("."));
-									version = version.substring(version.lastIndexOf("."));
-									if(filename.toString().contains("Config_")){
-										value = value.substring(0, value.indexOf("Config_"));
-									}else{
-										value = value.substring(0, value.indexOf("Decision_"));
-									}
+								if (contents != null && !contents.isEmpty()) {
 									String tmp = filename.getFileName()+"";
 									String newName = tmp.substring(0, tmp.lastIndexOf("."));
 									attributeValueType.getContent().clear();
@@ -227,30 +217,30 @@ public class XACMLPolicyWriter {
 				}
 				if(filename.toString().contains("Config_") || filename.toString().contains("Action_")){	
 					List<Object> objects = policyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
-					if (objects != null && objects.size() > 0) {
+					if (objects != null && !objects.isEmpty()) {
 						for (Iterator ite = objects.iterator(); ite.hasNext();) {
 
 							RuleType  ruleType = (RuleType ) ite.next();
 							AdviceExpressionsType adviceExpressionsType = ruleType.getAdviceExpressions();
 							if (adviceExpressionsType != null) {
 								List<AdviceExpressionType> adviceExpressionTypes = adviceExpressionsType.getAdviceExpression();
-								if (adviceExpressionTypes != null && adviceExpressionTypes.size() > 0) {
+								if (adviceExpressionTypes != null && !adviceExpressionTypes.isEmpty()) {
 									for (Iterator iterator = adviceExpressionTypes
 											.iterator(); iterator.hasNext();) {
 										AdviceExpressionType adviceExpressionType = (AdviceExpressionType) iterator
 												.next();
-										if (adviceExpressionType.getAdviceId() != null && !adviceExpressionType.getAdviceId().equals("") && (adviceExpressionType.getAdviceId().equals("configID")
-												|| adviceExpressionType.getAdviceId().equals("faultID") || adviceExpressionType.getAdviceId().equals("PMID")||adviceExpressionType.getAdviceId().equals("firewallConfigID") 
-												|| adviceExpressionType.getAdviceId().equals("MSID")) || adviceExpressionType.getAdviceId().equals("GocID")||adviceExpressionType.getAdviceId().equals("GocHPID")||adviceExpressionType.getAdviceId().equals("BRMSRAWID")
-												||adviceExpressionType.getAdviceId().equals("BRMSPARAMID")|| adviceExpressionType.getAdviceId().equals("HPSuppID") || adviceExpressionType.getAdviceId().equals("HPFlapID") || adviceExpressionType.getAdviceId().equals("HPOverID"))
+										if (adviceExpressionType.getAdviceId() != null && !"".equals(adviceExpressionType.getAdviceId()) && ("configID".equals(adviceExpressionType.getAdviceId())
+												|| "faultID".equals(adviceExpressionType.getAdviceId()) || "PMID".equals(adviceExpressionType.getAdviceId())||"firewallConfigID".equals(adviceExpressionType.getAdviceId()) 
+												|| "MSID".equals(adviceExpressionType.getAdviceId())) || "GocID".equals(adviceExpressionType.getAdviceId())||"GocHPID".equals(adviceExpressionType.getAdviceId())||"BRMSRAWID".equals(adviceExpressionType.getAdviceId())
+												|| "BRMSPARAMID".equals(adviceExpressionType.getAdviceId())|| "HPSuppID".equals(adviceExpressionType.getAdviceId()) || "HPFlapID".equals(adviceExpressionType.getAdviceId()) || "HPOverID".equals(adviceExpressionType.getAdviceId()))
 										{
 											List<AttributeAssignmentExpressionType> attributeAssignmentExpressionTypes = adviceExpressionType.getAttributeAssignmentExpression();
-											if (attributeAssignmentExpressionTypes != null && attributeAssignmentExpressionTypes.size() > 0) {
+											if (attributeAssignmentExpressionTypes != null && !attributeAssignmentExpressionTypes.isEmpty()) {
 												for (Iterator iterator2 = attributeAssignmentExpressionTypes
 														.iterator(); iterator2.hasNext();) {
 													AttributeAssignmentExpressionType attributeAssignmentExpressionType = (AttributeAssignmentExpressionType) iterator2
 															.next();
-													if (attributeAssignmentExpressionType.getAttributeId().equals("URLID")) {
+													if ("URLID".equals(attributeAssignmentExpressionType.getAttributeId())) {
 														JAXBElement<AttributeValueType> attributeValueType = (JAXBElement<AttributeValueType>) attributeAssignmentExpressionType.getExpression();
 														AttributeValueType attributeValueType1 = attributeValueType.getValue();
 														String configUrl = "$URL";
@@ -266,12 +256,7 @@ public class XACMLPolicyWriter {
 														JAXBElement<AttributeValueType> attributeValueType = (JAXBElement<AttributeValueType>) attributeAssignmentExpressionType.getExpression();
 														AttributeValueType attributeValueType1 = attributeValueType.getValue();
 														List<Object> contents = attributeValueType1.getContent();
-														if (contents != null && contents.size() > 0) {
-															String value = (String) contents.get(0);
-															String version = value;
-															version = version.substring(0, version.lastIndexOf("."));
-															version = version.substring(version.lastIndexOf("."));
-															value = value.substring(0, value.indexOf("Config_"));
+														if (contents != null && !contents.isEmpty()) {
 															String tmp = filename.getFileName()+"";
 															String newName = tmp.substring(0, tmp.lastIndexOf("."));
 															attributeValueType1.getContent().clear();
@@ -287,26 +272,26 @@ public class XACMLPolicyWriter {
 								}
 							}
 						}
-						if (objects != null && objects.size() > 0) {
+						if (objects != null && !objects.isEmpty()) {
 							for (Iterator ite1 = objects.iterator(); ite1.hasNext();) {
 
 								RuleType  ruleType1 = (RuleType ) ite1.next();
 								ObligationExpressionsType obligationExpressionsType = ruleType1.getObligationExpressions();
 								if (obligationExpressionsType != null) {
 									List<ObligationExpressionType> obligationExpressionType = obligationExpressionsType.getObligationExpression();
-									if (obligationExpressionType != null && obligationExpressionType.size() > 0) {
+									if (obligationExpressionType != null && !obligationExpressionType.isEmpty()) {
 										for (Iterator iterator = obligationExpressionType
 												.iterator(); iterator.hasNext();) {
 											ObligationExpressionType obligationExpressionTypes = (ObligationExpressionType) iterator
 													.next();
-											if (obligationExpressionTypes.getObligationId() != null && !obligationExpressionTypes.getObligationId().equals("")) {
+											if (obligationExpressionTypes.getObligationId() != null && !"".equals(obligationExpressionTypes.getObligationId())) {
 												List<AttributeAssignmentExpressionType> attributeAssignmentExpressionTypes = obligationExpressionTypes.getAttributeAssignmentExpression();
-												if (attributeAssignmentExpressionTypes != null && attributeAssignmentExpressionTypes.size() > 0) {
+												if (attributeAssignmentExpressionTypes != null && !attributeAssignmentExpressionTypes.isEmpty()) {
 													for (Iterator iterator2 = attributeAssignmentExpressionTypes
 															.iterator(); iterator2.hasNext();) {
 														AttributeAssignmentExpressionType attributeAssignmentExpressionType = (AttributeAssignmentExpressionType) iterator2
 																.next();
-														if (attributeAssignmentExpressionType.getAttributeId().equals("body")) {
+														if ("body".equals(attributeAssignmentExpressionType.getAttributeId())) {
 															JAXBElement<AttributeValueType> attributeValueType = (JAXBElement<AttributeValueType>) attributeAssignmentExpressionType.getExpression();
 															AttributeValueType attributeValueType1 = attributeValueType.getValue();
 															String configUrl = "$URL";
