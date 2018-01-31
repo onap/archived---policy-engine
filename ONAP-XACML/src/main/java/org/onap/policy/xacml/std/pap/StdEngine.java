@@ -625,16 +625,16 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		List<String> ids = new ArrayList<>();
 		for (PDPGroup group : this.groups) {
 			ids.add(group.getId());
-			properties.setProperty(group.getId() + ".name", (group.getName() == null ? "" : group.getName()));
-			properties.setProperty(group.getId() + ".description", (group.getDescription() == null ? "" : group.getDescription()));
+			properties.setProperty(group.getId() + ".name", group.getName() == null ? "" : group.getName());
+			properties.setProperty(group.getId() + ".description", group.getDescription() == null ? "" : group.getDescription());
 			//
 			// Iterate its PDPs
 			//
 			List<String> pdps = new ArrayList<>();
 			for (PDP pdp : group.getPdps()) {
 				pdps.add(pdp.getId());
-				properties.setProperty(pdp.getId() + ".name", (pdp.getName() == null ? "" : pdp.getName()));
-				properties.setProperty(pdp.getId() + ".description", (pdp.getDescription() == null ? "" : pdp.getDescription()));
+				properties.setProperty(pdp.getId() + ".name", pdp.getName() == null ? "" : pdp.getName());
+				properties.setProperty(pdp.getId() + ".description", pdp.getDescription() == null ? "" : pdp.getDescription());
 				if (pdp instanceof OnapPDP) {
 					properties.setProperty(pdp.getId() + ".jmxport", (((OnapPDP)pdp).getJmxPort()==0 ? "" : ((OnapPDP)pdp).getJmxPort()).toString());
 				}
