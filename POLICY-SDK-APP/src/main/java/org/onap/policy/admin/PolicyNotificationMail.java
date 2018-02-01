@@ -66,7 +66,7 @@ public class PolicyNotificationMail{
 
 	public void sendMail(PolicyVersion entityItem, String policyName, String mode, CommonClassDao policyNotificationDao) throws MessagingException {  
 		String from = PolicyController.getSmtpUsername();
-		String to = "";
+		String to;
 		String subject = "";
 		String message = "";
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -125,7 +125,7 @@ public class PolicyNotificationMail{
 		boolean sendFlag = false;
 		SimpleBindings params = new SimpleBindings();
 		params.put("policyFileName", policyFileName);
-		List<Object> watchList = null;
+		List<Object> watchList;
 		if(PolicyController.isjUnit()){
 			watchList = policyNotificationDao.getDataByQuery(query, null);
 		}else{
