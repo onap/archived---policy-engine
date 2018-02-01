@@ -40,13 +40,13 @@
 			<div class="form-group row">
 			<div class="form-group col-sm-6" >
 				<label><sup><b>*</b></sup>Scope:</label><br>
-				<select class="form-control" multiple  ng-model="editRole.scope" ng-options="option for option in scopeDatas" ></select>
+				<select class="form-control" multiple  ng-model="editRole.scope" ng-options="option for option in scopeDatas" title="Select the Scopes from the dropdown."></select>
 			</div>
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button class="btn btn-success" herf="javascript:void(0)" ng-click="saveRole(editRole);">Save</button>
-			<button class="btn btn-default" herf="javascript:void(0)" ng-click="close()">Close</button>
+			<button class="btn btn-success" herf="javascript:void(0)" ng-click="saveRole(editRole);" title="OnClick Policy Role is saved.">Save</button>
+			<button class="btn btn-default" herf="javascript:void(0)" ng-click="close()" title="OnClick Policy Role Window is closed.">Close</button>
 		</div>
 	</div>
 </div>

@@ -13,8 +13,8 @@
         <div ng-include data-src="'error-bar'" class="clearfix"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-click="refresh();" ng-disabled="temp.inprocess">Cancel</button>
-        <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess" autofocus="autofocus">Delete</button>
+        <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-click="refresh();" ng-disabled="temp.inprocess" title="Close the Delete Scope Window.">Cancel</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess" autofocus="autofocus" title="OnClick you can delete the Scopes.">Delete</button>
       </div>
       </form>
     </div>
@@ -42,8 +42,8 @@
         <div ng-include data-src="'error-bar'" class="clearfix"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-click="refresh();" ng-disabled="temp.inprocess">Cancel</button>
-        <button type="submit" class="btn btn-primary" ng-disabled="!temp.model.versions" autofocus="autofocus">Delete</button>
+        <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-click="refresh();" ng-disabled="temp.inprocess" title="Close the Delete Policy Window.">Cancel</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="!temp.model.versions" autofocus="autofocus" title="OnClick you can delete the Policies.">Delete</button>
       </div>
       </form>
     </div>
@@ -62,7 +62,7 @@
             </div>
             <div class="modal-body">
               <label class="radio">Enter New Name : <b>{{temp.model.name}}</b></label>
-              <input class="form-control" ng-model="temp.tempModel.name" autofocus="autofocus">
+              <input class="form-control" ng-model="temp.tempModel.name" autofocus="autofocus" title="Enter the value without space or special characters.">
 
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
             </div>
@@ -119,6 +119,29 @@
   </div>
 </div>  
 
+<div class="modal" id="moveScope" data-toggle="modal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <form ng-submit="move(temp)">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                  <span class="sr-only">Close</span>
+              </button>
+              <h4 class="modal-title">Move Scope</h4>
+            </div>
+            <div class="modal-body">
+              <div ng-include data-src="'path-selector'" class="clearfix"></div>
+              <div ng-include data-src="'error-bar'" class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-click="refresh();" ng-disabled="temp.inprocess">Cancel</button>
+              <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess">Move</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>  
+
 <div class="modal" id="switchVersion" data-toggle="modal" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -131,16 +154,16 @@
             </div>
             <div class="modal-body">
               <label class="radio">Highest Version <b></b></label>
-              <input class="form-control" ng-disabled="true" ng-model="temp.tempModel.content.highestVersion" autofocus="autofocus">
+              <input class="form-control" ng-disabled="true" ng-model="temp.tempModel.content.highestVersion" autofocus="autofocus" title="The Field shows highest version of Policy.">
             </div>
              <div class="modal-body">
               <label class="radio">Active Version <b></b></label>
-              <select class="form-control" ng-model="temp.tempModel.content.activeVersion" ng-options="option for option in temp.tempModel.content.availableVersions" autofocus="autofocus"></select>
+              <select class="form-control" ng-model="temp.tempModel.content.activeVersion" ng-options="option for option in temp.tempModel.content.availableVersions" autofocus="autofocus" title="Enter the value not greater than highest version to switch policy."></select>
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-disabled="temp.inprocess">Cancel</button>
-              <button type="submit" class="btn btn-primary" ng-disabled="temp.tempModel.content.highestVersion === temp.tempModel.content.activeVersion">Save</button>
+              <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-disabled="temp.inprocess" title="OnClick SwitchVersion Window is closed.">Cancel</button>
+              <button type="submit" class="btn btn-primary" ng-disabled="temp.tempModel.content.highestVersion === temp.tempModel.content.activeVersion" title="OnClick Policy Version will be Switched.">Save</button>
             </div>
         </form>
     </div>
@@ -159,12 +182,12 @@
             </div>
             <div class="modal-body">
               <label class="radio">Enter new Policy Name to Clone <b>{{temp.model.name}}</b></label>
-              <input class="form-control" ng-model="temp.tempModel.name" autofocus="autofocus">
+              <input class="form-control" ng-model="temp.tempModel.name" autofocus="autofocus" title="Enter the PolicyName without space or special characters.">
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-disabled="temp.inprocess">Cancel</button>
-              <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess">Clone</button>
+              <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-disabled="temp.inprocess" title="OnClick Clone Window is closed.">Cancel</button>
+              <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess" title="OnClick the Policy will be cloned.">Clone</button>
             </div>
         </form>
     </div>
@@ -183,12 +206,12 @@
             </div>
             <div class="modal-body">
               <label class="radio">Scope Name</label>
-              <input class="form-control" ng-model="temp.tempModel.name" autofocus="autofocus">
+              <input class="form-control" ng-model="temp.tempModel.name" autofocus="autofocus" title="Enter the ScopeName without space or special characters.">
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
             </div>
             <div class="modal-footer">
-              <button id = "cancel" type="button" class="btn btn-pedefault" data-dismiss="modal" ng-disabled="temp.inprocess">Cancel</button>
-              <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess">Create</button>
+              <button id = "cancel" type="button" class="btn btn-pedefault" data-dismiss="modal" ng-disabled="temp.inprocess" title="OnClick Scope Window is closed.">Cancel</button>
+              <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess" title="OnClick Scope is created.">Create</button>
             </div>
         </form>
     </div>
@@ -207,12 +230,12 @@
             </div>
             <div class="modal-body">
               <label class="radio">Scope Name</label>
-              <input class="form-control" ng-model="temp.tempModel.subScopename" autofocus="autofocus">
+              <input class="form-control" ng-model="temp.tempModel.subScopename" autofocus="autofocus" title="Enter the SubScopeName without space or special characters.">
               <div ng-include data-src="'error-bar'" class="clearfix"></div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-disabled="temp.inprocess">Cancel</button>
-              <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess">Create</button>
+              <button type="button" class="btn btn-pedefault" data-dismiss="modal" ng-disabled="temp.inprocess" title="OnClick SubScope Window is closed.">Cancel</button>
+              <button type="submit" class="btn btn-primary" ng-disabled="temp.inprocess" title="OnClick SubScope is created.">Create</button>
             </div>
         </form>
     </div>
@@ -236,8 +259,8 @@
             </div>
             <div class="modal-footer">
               <div ng-show="!fileUploader.requesting">
-                  <button type="button" class="btn btn-pedefault" data-dismiss="modal">Cancel</button>
-                  <button type="submit" class="btn btn-primary" ng-disabled="!uploadFileList.length || fileUploader.requesting">{{'upload' | translate}}</button>
+                  <button type="button" class="btn btn-pedefault" data-dismiss="modal" title="OnClick Import window is closed.">Cancel</button>
+                  <button type="submit" class="btn btn-primary" ng-disabled="!uploadFileList.length || fileUploader.requesting" title="OnClick Policy will be Imported.">{{'upload' | translate}}</button>
               </div>
               <div ng-show="fileUploader.requesting">
                   <span class="label label-warning">Uploading......</span>

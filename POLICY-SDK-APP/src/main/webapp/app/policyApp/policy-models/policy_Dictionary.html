@@ -46,16 +46,16 @@
 					<div class="form-group col-sm-3">
 						<label>Policy Type Dictionary:</label> </br><select class="form-control" 
 							ng-model="option1" ng-options="option for option in options1"
-							ng-change="getOptions2()"></select>
+							ng-change="getOptions2()" title="Dropdown shows values specific to Policy type."></select>
 					</div>
 					<div class="form-group col-sm-3">
 						<label>Select Dictionary:</label></br> <select class="form-control" 
-							ng-model="option2" ng-options="option for option in options2"></select>
+							ng-model="option2" ng-options="option for option in options2" title="Dictionary type values are shown based on specific Policy Type Dictionary selection."></select>
 					</div>
 					<div class="form-group col-sm-1">
 					<label></label></br>
 						<button class="btn btn-primary btn-small" type="button"
-							herf="javascript:void(0)" ng-click="import();">Import
+							herf="javascript:void(0)" ng-click="import();" title="Import Dictionary's and the file ends with .csv format">Import
 							Dictionary's</button>
 					</div>
 			</div>

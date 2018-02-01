@@ -348,8 +348,8 @@ public class PDPController extends RestrictedBaseController {
 
 			PrintWriter out = response.getWriter();
 			refreshGroups(request);
-			String responseString = mapper.writeValueAsString(groups);
-			JSONObject j = new JSONObject("{pdpEntityDatas: " + responseString + "}");
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
+			JSONObject j = new JSONObject(msg);
 			out.write(j.toString());
 		}
 		catch (Exception e){
