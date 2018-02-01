@@ -49,7 +49,7 @@ public class OnapFunctionDefinitionFactory extends FunctionDefinitionFactory {
 	}
 		
 	private static void initMap() {
-		if (needMapInit) {
+
 			synchronized(mapFunctionDefinitions) {
 				if (needMapInit) {
 					needMapInit	= false;
@@ -74,7 +74,6 @@ public class OnapFunctionDefinitionFactory extends FunctionDefinitionFactory {
 					register(FD_CUSTOM_REGEXP_MATCH);
 				}
 			}
-		}
 	}
 	
 	public OnapFunctionDefinitionFactory() {

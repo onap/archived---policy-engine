@@ -45,6 +45,7 @@ import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.jpa.VNFType;
 import org.onap.policy.rest.jpa.VSCLAction;
 import org.onap.policy.rest.jpa.VarbindDictionary;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -392,7 +393,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -422,7 +423,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -513,7 +514,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -543,7 +544,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -653,7 +654,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -683,7 +684,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -771,7 +772,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -801,7 +802,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -890,7 +891,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -920,7 +921,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1009,7 +1010,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1039,7 +1040,7 @@ public class ClosedLoopDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}

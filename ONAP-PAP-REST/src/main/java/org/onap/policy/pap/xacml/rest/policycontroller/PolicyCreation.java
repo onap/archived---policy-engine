@@ -20,6 +20,7 @@
 package org.onap.policy.pap.xacml.rest.policycontroller;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -184,6 +185,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					policyVersionDao.setActiveVersion(version);
 					policyVersionDao.setHigherVersion(version);
 					policyVersionDao.setModifiedBy(modifiedBy);
+					policyVersionDao.setModifiedDate(new Date());
 				}else{
 					body = "policyExists";
 					status = HttpStatus.CONFLICT;
@@ -229,14 +231,12 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			policyData.setRuleCombiningAlgId("urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides");
 			if(policyData.getApiflag() == null){
 				//set the Rule Combining Algorithm Id to be sent to PAP-REST via JSON	
-				if(policyData.getAttributes() != null){
-					if(policyData.getAttributes().size() > 0){
-						for(Object attribute : policyData.getAttributes()){
-							if(attribute instanceof LinkedHashMap<?, ?>){
-								String key = ((LinkedHashMap<?, ?>) attribute).get("key").toString();
-								String value = ((LinkedHashMap<?, ?>) attribute).get("value").toString();
-								attributeMap.put(key, value);	
-							}
+				if(policyData.getAttributes() != null && !policyData.getAttributes().isEmpty()){
+					for(Object attribute : policyData.getAttributes()){
+						if(attribute instanceof LinkedHashMap<?, ?>){
+							String key = ((LinkedHashMap<?, ?>) attribute).get("key").toString();
+							String value = ((LinkedHashMap<?, ?>) attribute).get("value").toString();
+							attributeMap.put(key, value);	
 						}
 					}
 				}
@@ -312,7 +312,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					List<String> dynamicRuleAlgorithmField2 = new LinkedList<>();
 
 
-					if(policyData.getRuleAlgorithmschoices().size() > 0){
+					if(!policyData.getRuleAlgorithmschoices().isEmpty()){
 						for(Object attribute : policyData.getRuleAlgorithmschoices()){
 							if(attribute instanceof LinkedHashMap<?, ?>){
 								String label = ((LinkedHashMap<?, ?>) attribute).get("id").toString();
@@ -329,22 +329,35 @@ public class PolicyCreation extends AbstractPolicyCreation{
 
 					String actionDictValue = policyData.getActionAttributeValue();
 					ActionPolicyDict jsonData = ((ActionPolicyDict) commonClassDao.getEntityItem(ActionPolicyDict.class, "attributeName", actionDictValue));
-					String actionBodyString = jsonData.getBody();
-					String actionDictHeader = jsonData.getHeader();
-					String actionDictType = jsonData.getType();
-					String actionDictUrl = jsonData.getUrl();
-					String actionDictMethod = jsonData.getMethod();
-					policyData.setActionDictHeader(actionDictHeader);
-					policyData.setActionDictType(actionDictType);
-					policyData.setActionDictUrl(actionDictUrl);
-					policyData.setActionDictMethod(actionDictMethod);
+					if(jsonData!=null){
+						String actionBodyString = jsonData.getBody();
+						String actionDictHeader = jsonData.getHeader();
+						String actionDictType = jsonData.getType();
+						String actionDictUrl = jsonData.getUrl();
+						String actionDictMethod = jsonData.getMethod();
+						policyData.setActionDictHeader(actionDictHeader);
+						policyData.setActionDictType(actionDictType);
+						policyData.setActionDictUrl(actionDictUrl);
+						policyData.setActionDictMethod(actionDictMethod);
+						if (actionBodyString != null) {
+							policyData.setActionBody(actionBodyString);
+						}
+					}
 					policyData.setActionAttribute(actionDictValue);
 					policyData.setDynamicRuleAlgorithmLabels(dynamicRuleAlgorithmLabels);
 					policyData.setDynamicRuleAlgorithmCombo(dynamicRuleAlgorithmCombo);
 					policyData.setDynamicRuleAlgorithmField1(dynamicRuleAlgorithmField1);
 					policyData.setDynamicRuleAlgorithmField2(dynamicRuleAlgorithmField2);
-					if (actionBodyString != null) {
-						policyData.setActionBody(actionBodyString);
+				}else{
+					// API request. 
+					String comboDictValue = policyData.getActionAttribute();
+					ActionPolicyDict jsonData = ((ActionPolicyDict) commonClassDao.getEntityItem(ActionPolicyDict.class, "attributeName", comboDictValue));
+					if(jsonData!=null){
+						policyData.setActionBody(jsonData.getBody());
+						policyData.setActionDictHeader(jsonData.getHeader());
+						policyData.setActionDictType(jsonData.getType());
+						policyData.setActionDictUrl(jsonData.getUrl());
+						policyData.setActionDictMethod(jsonData.getMethod());
 					}
 				}
 				newPolicy = new ActionPolicy(policyData);

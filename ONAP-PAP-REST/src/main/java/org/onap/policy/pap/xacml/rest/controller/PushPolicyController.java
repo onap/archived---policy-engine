@@ -86,7 +86,7 @@ public class PushPolicyController {
 				requestID = UUID.randomUUID().toString();
                 LOGGER.info("No request ID provided, sending generated ID: " + requestID);
 			}
-			LOGGER.info("Push policy Request : " + root.asText());
+			LOGGER.info("Push policy Request to get the selectedPolicy : " + root.asText());
 			String policyVersionName = policyScope.replace(".", File.separator) + File.separator
 					+ filePrefix + policyName;
 			List<?> policyVersionObject = commonClassDao.getDataById(PolicyVersion.class, policyNames, policyVersionName);
@@ -116,7 +116,7 @@ public class PushPolicyController {
 	private void addPolicyToGroup(String policyScope, String policyID, String policyName, String pdpGroup, HttpServletResponse response) {
 		StdPDPGroup selectedPDPGroup = null;
 		StdPDPPolicy selectedPolicy = null;
-		//Get the current policies from the Group and Add the new one
+		//Get the selected PDP Group to push the policy
 		try {
 			selectedPDPGroup = (StdPDPGroup) XACMLPapServlet.getPAPEngine().getGroup(pdpGroup);
 		} catch (PAPException e1) {
@@ -127,6 +127,9 @@ public class PushPolicyController {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
 			response.addHeader(errorMsg, "unknownGroupId");
 			response.addHeader(operation, "push");
+			//for fixing Header Manipulation of Fortify issue
+			message = message.replace("\n", "");
+			message = message.replace("\r", "");
 			response.addHeader(messageContent, message);
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return;
@@ -159,7 +162,7 @@ public class PushPolicyController {
 			// Create the policy Object
 			selectedPolicy = new StdPDPPolicy(policyName, true, policyID, selectedURI);
 		} catch (IOException e) {
-			LOGGER.error("Unable to create policy '" + policyName + "': "+ e.getMessage(),e);
+			LOGGER.error("Unable to get policy '" + policyName + "': "+ e.getMessage(),e);
 		} 
 		try {
 			new ObjectOutputStream(response.getOutputStream()).writeObject(selectedPolicy);

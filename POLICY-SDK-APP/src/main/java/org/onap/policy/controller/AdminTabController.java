@@ -34,6 +34,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.GlobalRoleSettings;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.onap.portalsdk.core.web.support.JsonMessage;
 import org.onap.portalsdk.core.web.support.UserUtils;
@@ -118,7 +119,7 @@ public class AdminTabController extends RestrictedBaseController{
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}

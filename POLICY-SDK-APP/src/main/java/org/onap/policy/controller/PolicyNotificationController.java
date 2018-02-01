@@ -38,6 +38,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.WatchPolicyNotificationTable;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.onap.portalsdk.core.web.support.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +125,7 @@ public class PolicyNotificationController extends RestrictedBaseController {
 			request.setCharacterEncoding("UTF-8");
 			logger.error("Error druing watchPolicy function " + e);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
