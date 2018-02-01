@@ -17,17 +17,6 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
-/*
- *                        AT&T - PROPRIETARY
- *          THIS FILE CONTAINS PROPRIETARY INFORMATION OF
- *        AT&T AND IS NOT TO BE DISCLOSED OR USED EXCEPT IN
- *             ACCORDANCE WITH APPLICABLE AGREEMENTS.
- *
- *          Copyright (c) 2015 AT&T Knowledge Ventures
- *              Unpublished and Not for Publication
- *                     All Rights Reserved
- */
 package org.onap.policy.rest.jpa;
 
 import java.io.Serializable;
