@@ -103,44 +103,44 @@ public class AutoClientUEB implements Runnable  {
 		String group =  UUID.randomUUID ().toString ();
 		String id = "0";
 		// Stop and Start needs to be done.
-		if (scheme != null && handler!=null) {
-			if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) || scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) {
-				URL aURL;
-				try {
-					aURL = new URL(AutoClientUEB.topic);
-					setTopic(aURL.getHost() + aURL.getPort());
-				} catch (MalformedURLException e) {
-					setTopic(AutoClientUEB.url.replace("[:/]", ""));
-				}
-				try {
-					ConsumerBuilder builder = new CambriaClientBuilders.ConsumerBuilder();
-					builder.knownAs(group, id)
-					.usingHosts(uebURLList)
-					.onTopic(topic)
-					.waitAtServer(15*1000)
-					.receivingAtMost(1000)
-					.authenticatedBy(apiKey, apiSecret);
-					setConsumer(builder.build()); 
-				} catch (Exception e1) {
-					logger.error("Exception Occured" + e1);
-				} 
-                while (this.isRunning()) {
-                    try {
-                        for (String msg : cConsumer.fetch()) {
-                            logger.debug("Auto Notification Recieved Message " + msg + " from UEB cluster : "
-                                    + uebURLList.toString());
-                            setNotification(NotificationUnMarshal.notificationJSON(msg));
-                            callHandler();
-                        }
-                    } catch (Exception e) {
-                        logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Error in processing UEB message"
-                                + e.getMessage(), e);
-                    }
-
-                }
-				logger.debug("Stopping UEB Consumer loop will not logger fetch messages from the cluster");
-			}
+		if (scheme == null || handler == null ||
+				! (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) || scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) ) {
+			return;
 		}
+		URL aURL;
+		try {
+			aURL = new URL(AutoClientUEB.topic);
+			setTopic(aURL.getHost() + aURL.getPort());
+		} catch (MalformedURLException e) {
+			setTopic(AutoClientUEB.url.replace("[:/]", ""));
+		}
+		try {
+			ConsumerBuilder builder = new CambriaClientBuilders.ConsumerBuilder();
+			builder.knownAs(group, id)
+			.usingHosts(uebURLList)
+			.onTopic(topic)
+			.waitAtServer(15*1000)
+			.receivingAtMost(1000)
+			.authenticatedBy(apiKey, apiSecret);
+			setConsumer(builder.build()); 
+		} catch (Exception e1) {
+			logger.error("Exception Occured" + e1);
+		} 
+        while (this.isRunning()) {
+            try {
+                for (String msg : cConsumer.fetch()) {
+                    logger.debug("Auto Notification Recieved Message " + msg + " from UEB cluster : "
+                            + uebURLList.toString());
+                    setNotification(NotificationUnMarshal.notificationJSON(msg));
+                    callHandler();
+                }
+            } catch (Exception e) {
+                logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Error in processing UEB message"
+                        + e.getMessage(), e);
+            }
+
+        }
+		logger.debug("Stopping UEB Consumer loop will not logger fetch messages from the cluster");
 	}
 
 	private static void setNotification(StdPDPNotification notificationJSON) {

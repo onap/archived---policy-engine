@@ -37,6 +37,10 @@ public class MatchStore {
 	private static HashSet<Matches> matchStore = new HashSet<>();
 	private static Logger logger = FlexLogger.getLogger(MatchStore.class.getName());
 	
+	private MatchStore() {
+		// Empty Constructor
+	}
+	
 	public static HashSet<Matches> getMatchStore() {
 		return matchStore;
 	}
@@ -103,14 +107,14 @@ public class MatchStore {
 	
 	//Logic changes for Requested Policies notifications.. 
 	public static PDPNotification checkMatch(PDPNotification oldNotification) {
-		boolean removed = false, updated = false;
+		boolean removed = false;
+		boolean updated = false;
 		if(oldNotification==null){
 			return null;
 		}
 		StdPDPNotification newNotification = new StdPDPNotification();
 		if(matchStore.isEmpty()) {
 			logger.debug("No Success Config Calls made yet.. ");
-			System.out.println("No success Config calls made yet. ");
 			return null;
 		} 
 		if(oldNotification.getRemovedPolicies()!=null && !oldNotification.getRemovedPolicies().isEmpty()){
@@ -132,7 +136,7 @@ public class MatchStore {
 			for(LoadedPolicy updatedPolicy: oldNotification.getLoadedPolicies()){
 				// if it is config policies check their matches..
 				if(updatedPolicy.getMatches()!=null && !updatedPolicy.getMatches().isEmpty()){
-					boolean matched = false;
+					boolean matched;
 					for(Matches match : matchStore){
 						matched = false;
 						// Again Better way would be comparing sizes first.
@@ -144,14 +148,14 @@ public class MatchStore {
 								// Comparing both the values.. 
 								boolean matchAttributes = false;
 								for(String newKey: updatedPolicy.getMatches().keySet()){
-									if(newKey.equals("ONAPName")){
+									if("ONAPName".equals(newKey)){
 										if(updatedPolicy.getMatches().get(newKey).equals(match.getOnapName())){
 											matchAttributes = true;
 										}else {
 											matchAttributes = false;
 											break;
 										}
-									}else if(newKey.equals("ConfigName")) {
+									}else if("ConfigName".equals(newKey)) {
 										if(updatedPolicy.getMatches().get(newKey).equals(match.getConfigName())){
 											matchAttributes = true;
 										}else{

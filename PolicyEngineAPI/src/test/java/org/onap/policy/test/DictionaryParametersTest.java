@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,34 +17,35 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.policy.test;
 
-package org.onap.policy.api;
+import static org.junit.Assert.*;
 
-/**
- * PolicyConfigException extends <code>Exception</code> to implement exceptions thrown by {@link org.onap.policy.api.PolicyEngine}
- * 
- * @version 0.1
- */
-public class PolicyConfigException extends Exception{
-	private static final long serialVersionUID = -188355220060684215L;
-	
-	public PolicyConfigException() {
-		// Empty constructor
+import java.util.UUID;
+
+import org.junit.Test;
+import org.onap.policy.api.DictionaryParameters;
+import org.onap.policy.api.DictionaryType;
+
+public class DictionaryParametersTest {
+
+	@Test
+	public void test() {
+		DictionaryParameters params = new DictionaryParameters();
+		
+		params.setDictionary("dictionary");
+		assertEquals("dictionary", params.getDictionary());
+		
+		UUID uuid = UUID.randomUUID();
+		params.setRequestID(uuid);
+		assertEquals(uuid, params.getRequestID());
+		
+		params.setDictionaryJson("{}");
+		assertEquals("{}", params.getDictionaryJson());
+		
+		params.setDictionaryType(DictionaryType.BRMS);
+		assertEquals(DictionaryType.BRMS, params.getDictionaryType());
+		
 	}
-	
-	public PolicyConfigException(String message) {
-		super(message);
-	}
-	
-	public PolicyConfigException(Throwable cause){
-		super(cause);
-	}
-	
-	public PolicyConfigException(String message, Throwable cause) {
-		super(message, cause);
-	}
-	
-	public PolicyConfigException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
+
 }

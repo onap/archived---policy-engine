@@ -48,6 +48,13 @@ public class PolicyDecisionTest {
 
 		// add additional test code here
 		assertEquals("deny", result);
+		
+		assertEquals(PolicyDecision.PERMIT, PolicyDecision.create(PolicyDecision.PERMIT.name()));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testException() {
+		PolicyDecision.create("foobar");
 	}
 
 	/**

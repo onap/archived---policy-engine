@@ -53,7 +53,7 @@ public class PolicyParameters {
 	private String priority;
 	private RuleProvider ruleProvider;
 	private String controllerName;
-	private ArrayList<String> dependencyNames;
+	private List<String> dependencyNames;
 	private Date ttlDate;
 	private boolean guard = false;
 	private String riskLevel = "5";
@@ -548,7 +548,7 @@ public class PolicyParameters {
      * 
      * @return ArrayList of String(s) format of dependency names.
      */
-    public ArrayList<String> getDependencyNames() {
+    public List<String> getDependencyNames() {
         return dependencyNames;
     }
 
@@ -557,7 +557,7 @@ public class PolicyParameters {
      * 
      * @param dependencyNames ArrayList of String(s). 
      */
-    public void setDependencyNames(ArrayList<String> dependencyNames) {
+    public void setDependencyNames(List<String> dependencyNames) {
         this.dependencyNames = dependencyNames;
     }
 	

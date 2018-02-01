@@ -56,6 +56,10 @@ public class AutoClientEnd {
 	private static boolean error = false;
 	private static Logger logger = FlexLogger.getLogger(AutoClientEnd.class.getName());
 	
+	private AutoClientEnd() {
+		// Empty constructor
+	}
+	
 	public static void setAuto(NotificationScheme scheme,
 			NotificationHandler handler) {
 		AutoClientEnd.scheme = scheme;
@@ -76,40 +80,42 @@ public class AutoClientEnd {
 
 	public static void start(String url) {
 		AutoClientEnd.url = url;
+		
+		if (scheme == null || handler == null ||
+			! (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) &&
+					scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS) ) ||
+			AutoClientEnd.client == null) {
+			return;
+		}
+		
 		// Stop and Start needs to be done.
-		if (scheme != null && handler!=null) {
-			if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) || scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) {
-				if (AutoClientEnd.client == null) {
-					client = ClientManager.createClient();
-					if(url.contains("https")){
-						url = url.replaceAll("https", "wss");
-					}else {
-						url = url.replaceAll("http", "ws");
-					}
-					try {
-						logger.info("Starting Auto Notification with the PDP server : " + url);
-						client.connectToServer(AutoClientEnd.class, new URI(url	+ "notifications"));
-						status = true;
-						if(error){
-							// The URL's will be in Sync according to design Spec. 
-							ManualClientEnd.start(AutoClientEnd.url);
-							StdPDPNotification notification = NotificationStore.getDeltaNotification((StdPDPNotification)ManualClientEnd.result(NotificationScheme.MANUAL_ALL_NOTIFICATIONS));
-							if(notification.getNotificationType()!=null&&oldNotification!=notification){
-							    oldNotification= notification;
-							    AutoClientEnd.notification = notification;
-							    callHandler();
-							}
-							error = false;
-						}
-						//
-					} catch (DeploymentException | IOException | URISyntaxException e) {
-						logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
-						client = null;
-						status = false;
-						changeURL();
-					}
+		client = ClientManager.createClient();
+		if(url.contains("https")){
+			url = url.replaceAll("https", "wss");
+		}else {
+			url = url.replaceAll("http", "ws");
+		}
+		try {
+			logger.info("Starting Auto Notification with the PDP server : " + url);
+			client.connectToServer(AutoClientEnd.class, new URI(url	+ "notifications"));
+			status = true;
+			if(error){
+				// The URL's will be in Sync according to design Spec. 
+				ManualClientEnd.start(AutoClientEnd.url);
+				StdPDPNotification notification = NotificationStore.getDeltaNotification((StdPDPNotification)ManualClientEnd.result(NotificationScheme.MANUAL_ALL_NOTIFICATIONS));
+				if(notification.getNotificationType()!=null&&oldNotification!=notification){
+				    oldNotification= notification;
+				    AutoClientEnd.notification = notification;
+				    callHandler();
 				}
+				error = false;
 			}
+			//
+		} catch (DeploymentException | IOException | URISyntaxException e) {
+			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
+			client = null;
+			status = false;
+			changeURL();
 		}
 	}
 	
@@ -120,55 +126,57 @@ public class AutoClientEnd {
 	}
 
 	public static void stop() {
-		if (client != null) {
-			client.shutdown();
-			if(session!=null){
-				try {
-					stop = true;
-					logger.info("\n Closing Auto Notification WebSocket Connection.. ");
-					session.close();
-					session = null;
-				} catch (IOException e) {
-					logger.error("Error closing websocket connection", e);
-				}
-			}
-			client = null;
-			status = false;
-			stop = false;
+		if (client == null) {
+			return;
 		}
+		client.shutdown();
+		if(session!=null){
+			try {
+				stop = true;
+				logger.info("\n Closing Auto Notification WebSocket Connection.. ");
+				session.close();
+				session = null;
+			} catch (IOException e) {
+				logger.error("Error closing websocket connection", e);
+			}
+		}
+		client = null;
+		status = false;
+		stop = false;
 	}
 
 	private static void callHandler() {
-		if (handler != null && scheme != null) {
-			if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS)) {
-				boolean removed = false;
-				boolean updated = false;
-				if (notification.getRemovedPolicies() != null && !notification.getRemovedPolicies().isEmpty()) {
-					removed = true;
-				}
-				if (notification.getLoadedPolicies() != null && !notification.getLoadedPolicies().isEmpty()) {
-					updated = true;
-				}
-				if (removed && updated) {
-					notification.setNotificationType(NotificationType.BOTH);
-				} else if (removed) {
-					notification.setNotificationType(NotificationType.REMOVE);
-				} else if (updated) {
-					notification.setNotificationType(NotificationType.UPDATE);
-				}
+		if (handler == null || scheme == null) {
+			return;
+		}
+		if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS)) {
+			boolean removed = false;
+			boolean updated = false;
+			if (notification.getRemovedPolicies() != null && !notification.getRemovedPolicies().isEmpty()) {
+				removed = true;
+			}
+			if (notification.getLoadedPolicies() != null && !notification.getLoadedPolicies().isEmpty()) {
+				updated = true;
+			}
+			if (removed && updated) {
+				notification.setNotificationType(NotificationType.BOTH);
+			} else if (removed) {
+				notification.setNotificationType(NotificationType.REMOVE);
+			} else if (updated) {
+				notification.setNotificationType(NotificationType.UPDATE);
+			}
+			try{
+				handler.notificationReceived(notification);
+			}catch (Exception e){
+				logger.error("Error in Clients Handler Object : ", e);
+			}
+		} else if (scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) {
+			PDPNotification newNotification = MatchStore.checkMatch(notification);
+			if (newNotification.getNotificationType() != null) {
 				try{
-					handler.notificationReceived(notification);
+					handler.notificationReceived(newNotification);
 				}catch (Exception e){
 					logger.error("Error in Clients Handler Object : ", e);
-				}
-			} else if (scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) {
-				PDPNotification newNotification = MatchStore.checkMatch(notification);
-				if (newNotification.getNotificationType() != null) {
-					try{
-						handler.notificationReceived(newNotification);
-					}catch (Exception e){
-						logger.error("Error in Clients Handler Object : ", e);
-					}
 				}
 			}
 		}

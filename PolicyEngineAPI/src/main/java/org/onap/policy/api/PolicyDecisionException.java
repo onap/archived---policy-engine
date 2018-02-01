@@ -30,6 +30,7 @@ public class PolicyDecisionException extends Exception {
 	private static final long serialVersionUID = -2080072039363261175L;
 	
 	public PolicyDecisionException() {
+		// Empty constructor
 	}
 	
 	public PolicyDecisionException(String message) {

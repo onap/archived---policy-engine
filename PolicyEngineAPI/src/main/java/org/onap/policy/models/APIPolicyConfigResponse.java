@@ -36,48 +36,57 @@ public class APIPolicyConfigResponse implements APIConfigResponse {
     private Map<String, String> matchingConditions;
     private Map<String, String> responseAttributes;
     private Map<String, String> property;
+    
+    @Override
     public String getConfig() {
         return config;
     }
     public void setConfig(String config) {
         this.config = config;
     }
+    @Override
     public PolicyType getType() {
         return type;
     }
     public void setType(PolicyType type) {
         this.type = type;
     }
+    @Override
     public PolicyConfigStatus getPolicyConfigStatus() {
         return policyConfigStatus;
     }
     public void setPolicyConfigStatus(PolicyConfigStatus policyConfigStatus) {
         this.policyConfigStatus = policyConfigStatus;
     }
+    @Override
     public String getPolicyConfigMessage() {
         return policyConfigMessage;
     }
     public void setPolicyConfigMessage(String policyConfigMessage) {
         this.policyConfigMessage = policyConfigMessage;
     }
+    @Override
     public Map<String, String> getProperty() {
         return property;
     }
     public void setProperty(Map<String, String> property) {
         this.property = property;
     }
+    @Override
     public String getPolicyName(){
         return policyName;
     }
     public void setPolicyName(String policyName){
         this.policyName = policyName;
     }
+    @Override
     public String getPolicyVersion(){
         return policyVersion;
     }
     public void setPolicyVersion(String policyVersion){
         this.policyVersion = policyVersion;
     }
+    @Override
     public Map<String, String> getMatchingConditions(){
         return matchingConditions;
     }

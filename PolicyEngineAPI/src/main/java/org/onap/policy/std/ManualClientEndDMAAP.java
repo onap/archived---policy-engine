@@ -40,34 +40,37 @@ public class ManualClientEndDMAAP {
 	private static String uniquID = null;
 	private static String topic = null;
 	
+	private ManualClientEndDMAAP() {
+		// Empty constructor
+	}
+	
 
 	public static PDPNotification result(NotificationScheme scheme) {
 		if (resultJson == null || notification == null) {
 			logger.debug("No Result" );
 			return null;
-		} else {
-			if(scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)) {
-				boolean removed = false, updated = false; 
-				if(notification.getRemovedPolicies()!=null && !notification.getRemovedPolicies().isEmpty()){
-					removed = true;
-				}
-				if(notification.getLoadedPolicies()!=null && !notification.getLoadedPolicies().isEmpty()){
-					updated = true;
-				}
-				if(removed && updated) {
-					notification.setNotificationType(NotificationType.BOTH);
-				}else if(removed){
-					notification.setNotificationType(NotificationType.REMOVE);
-				}else if(updated){
-					notification.setNotificationType(NotificationType.UPDATE);
-				}
-				return notification;
-			}else if(scheme.equals(NotificationScheme.MANUAL_NOTIFICATIONS)) {
-				return MatchStore.checkMatch(notification);
-			}else {
-				return null;
-			}
 		}
+		if(scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)) {
+			boolean removed = false;
+			boolean updated = false; 
+			if(notification.getRemovedPolicies()!=null && !notification.getRemovedPolicies().isEmpty()){
+				removed = true;
+			}
+			if(notification.getLoadedPolicies()!=null && !notification.getLoadedPolicies().isEmpty()){
+				updated = true;
+			}
+			if(removed && updated) {
+				notification.setNotificationType(NotificationType.BOTH);
+			}else if(removed){
+				notification.setNotificationType(NotificationType.REMOVE);
+			}else if(updated){
+				notification.setNotificationType(NotificationType.UPDATE);
+			}
+			return notification;
+		}else if(scheme.equals(NotificationScheme.MANUAL_NOTIFICATIONS)) {
+			return MatchStore.checkMatch(notification);
+		}
+		return null;
 	}
 
 	private static void publishMessage(String pubTopic, String uniqueID, List<String> dmaapList, String aafLogin, String aafPassword) {

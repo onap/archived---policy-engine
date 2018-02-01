@@ -38,6 +38,7 @@ public class DecisionRequestParameters {
 	 * Constructor with no Parameters
 	 */
 	public DecisionRequestParameters(){
+		// Empty constructor
 	}
 	
 	/**

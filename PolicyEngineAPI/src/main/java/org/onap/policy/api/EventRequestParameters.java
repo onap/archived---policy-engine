@@ -37,6 +37,7 @@ public class EventRequestParameters {
 	 * Constructor with no Parameters
 	 */
 	public EventRequestParameters(){
+		// Empty constructor
 	}
 	
 	/**

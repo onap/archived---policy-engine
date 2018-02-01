@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,34 +17,28 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.policy.test;
 
-package org.onap.policy.api;
+import static org.junit.Assert.*;
 
-/**
- * PolicyConfigException extends <code>Exception</code> to implement exceptions thrown by {@link org.onap.policy.api.PolicyEngine}
- * 
- * @version 0.1
- */
-public class PolicyConfigException extends Exception{
-	private static final long serialVersionUID = -188355220060684215L;
-	
-	public PolicyConfigException() {
-		// Empty constructor
+import java.util.Collections;
+
+import org.junit.Test;
+import org.onap.policy.std.StdDictionaryResponse;
+
+public class StdDictionaryResponseTest {
+
+	@Test
+	public void test() {
+		StdDictionaryResponse r = new StdDictionaryResponse();
+		r.setResponseCode(0);
+		assertEquals(0, r.getResponseCode());
+		r.setResponseMessage("msg");
+		assertEquals("msg", r.getResponseMessage());
+		r.setDictionaryData(Collections.emptyMap());
+		assertEquals(0, r.getDictionaryData().size());
+		r.setDictionaryJson(null);
+		assertNull(r.getDictionaryJson());
 	}
-	
-	public PolicyConfigException(String message) {
-		super(message);
-	}
-	
-	public PolicyConfigException(Throwable cause){
-		super(cause);
-	}
-	
-	public PolicyConfigException(String message, Throwable cause) {
-		super(message, cause);
-	}
-	
-	public PolicyConfigException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
+
 }

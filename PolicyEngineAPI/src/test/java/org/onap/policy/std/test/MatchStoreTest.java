@@ -41,18 +41,6 @@ import org.onap.policy.std.StdPDPNotification;
  * @version $Revision: 1.0 $
  */
 public class MatchStoreTest {
-	/**
-	 * Run the MatchStore() constructor test.
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Test
-	public void testMatchStore_1()
-		throws Exception {
-		MatchStore result = new MatchStore();
-		assertNotNull(result);
-		// add additional test code here
-	}
 
 	/**
 	 * Run the PDPNotification checkMatch(PDPNotification) method test.

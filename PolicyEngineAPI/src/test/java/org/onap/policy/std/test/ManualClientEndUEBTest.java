@@ -62,18 +62,6 @@ public class ManualClientEndUEBTest {
 		uebURLList.add(url);
 				
 	}
-	/**
-	 * Run the ManualClientEndUEB() constructor test.
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testManualClientEndUEB_1()
-		throws Exception {
-		ManualClientEndUEB result = new ManualClientEndUEB();
-		assertNotNull(result);
-		// add additional test code here
-	}
 
 	/**
 	 * Run the PDPNotification result(NotificationScheme) method test.

@@ -51,6 +51,8 @@ public class PolicyConfigStatusTest {
 		assertEquals("not_found", result.toString());
 		assertEquals("CONFIG_NOT_FOUND", result.name());
 		assertEquals(1, result.ordinal());
+		
+		assertEquals(PolicyConfigStatus.CONFIG_RETRIEVED, PolicyConfigStatus.create("retrieved"));
 	}
 
 	/**
@@ -63,15 +65,15 @@ public class PolicyConfigStatusTest {
 	@Test
 	public void testGetStatus_2()
 		throws Exception {
-		String configStatus = "";
+		String configStatus = "retrieved";
 
 		PolicyConfigStatus result = PolicyConfigStatus.getStatus(configStatus);
 
 		// add additional test code here
 		assertNotNull(result);
-		assertEquals("not_found", result.toString());
-		assertEquals("CONFIG_NOT_FOUND", result.name());
-		assertEquals(1, result.ordinal());
+		assertEquals("retrieved", result.toString());
+		assertEquals("CONFIG_RETRIEVED", result.name());
+		assertEquals(0, result.ordinal());
 	}
 
 	/**
@@ -92,6 +94,10 @@ public class PolicyConfigStatusTest {
 		assertEquals("not_found", result);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testException () {
+		PolicyConfigStatus.create("foobar");
+	}
 	/**
 	 * Perform pre-test initialization.
 	 *

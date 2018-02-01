@@ -91,7 +91,7 @@ public class StdPolicyConfig implements PolicyConfig{
 	@Override
 	public String getPolicyName() {
 		if(policyName!=null && policyName.contains(".xml")){
-			return (policyName.substring(0, policyName.substring(0, policyName.lastIndexOf('.')).lastIndexOf('.')));
+			return policyName.substring(0, policyName.substring(0, policyName.lastIndexOf('.')).lastIndexOf('.'));
 		}
 		return policyName;
 	}

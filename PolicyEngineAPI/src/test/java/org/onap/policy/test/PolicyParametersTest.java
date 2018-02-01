@@ -20,9 +20,10 @@
 
 package org.onap.policy.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +46,30 @@ import org.onap.policy.api.PolicyType;
  * @version $Revision: 1.0 $
  */
 public class PolicyParametersTest {
+	
+	@Test
+	public void testEverythingElse() {
+		PolicyParameters params = new PolicyParameters();
+		params.setRuleProvider(null);
+		assertNull(params.getRuleProvider());
+		params.setGuard(false);
+		assertFalse(params.getGuard());
+		params.setRiskLevel("level");
+		assertEquals("level", params.getRiskLevel());
+		params.setRiskType("type");
+		assertEquals("type", params.getRiskType());
+		params.setTtlDate(new Date());
+		assertNotNull(params.getTtlDate());
+		params.setControllerName(null);
+		assertNull(params.getControllerName());
+		params.setDependencyNames(Collections.emptyList());
+		params.setExtendedOption(null);
+		assertNull(params.getExtendedOption());
+		params.setTreatments(Collections.emptyMap());
+		assertTrue(params.getTreatments().size() == 0);
+		assertNotNull(params.toString());
+	}
+	
 	/**
 	 * Run the String getActionAttribute() method test.
 	 *
