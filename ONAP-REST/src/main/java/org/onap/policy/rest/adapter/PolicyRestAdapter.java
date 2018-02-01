@@ -98,6 +98,8 @@ public class PolicyRestAdapter {
 	private String trapMaxAge;
 	private String verificationclearTimeOut;
 	private Map<String , String> dynamicLayoutMap;
+	private ClosedLoopFaultTrapDatas trapDatas;
+	private ClosedLoopFaultTrapDatas faultDatas;
 	
     //FireWall
     private String fwPolicyType;
@@ -892,5 +894,18 @@ public class PolicyRestAdapter {
 	 */
 	public void setPolicyJSON(Object policyJSON) {
 		this.policyJSON = policyJSON;
+	}
+	
+	public ClosedLoopFaultTrapDatas getTrapDatas() {
+		return trapDatas;
+	}
+	public void setTrapDatas(ClosedLoopFaultTrapDatas trapDatas) {
+		this.trapDatas = trapDatas;
+	}
+	public ClosedLoopFaultTrapDatas getFaultDatas() {
+		return faultDatas;
+	}
+	public void setFaultDatas(ClosedLoopFaultTrapDatas faultDatas) {
+		this.faultDatas = faultDatas;
 	}
 }

@@ -53,12 +53,12 @@ import com.google.gson.JsonSyntaxException;
 
 public class PolicyUtils {
     private static final Logger LOGGER = FlexLogger.getLogger(PolicyUtils.class);
-    
+    public static final String CATCH_EXCEPTION = "PE500: An exception was caught.";  
     public static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private static final String PACKAGE_ERROR = "mismatched input '{' expecting one of the following tokens: '[package";
-    private static final String SUCCESS = "success";
+    public static final String SUCCESS = "success";
     
     private PolicyUtils(){
         // Private Constructor
@@ -276,6 +276,9 @@ public class PolicyUtils {
      * @return
      */
     public static boolean isXMLValid(String data) {
+    	if(data == null || data.isEmpty()){
+        	return false;
+        }
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setValidating(false);
         factory.setNamespaceAware(true);

@@ -315,7 +315,11 @@ public class MSModelUtils {
 						if (annotation &&  obj instanceof EReference) {
 							EClass refType = ((EReference) obj).getEReferenceType();
 							if(!refType.toString().contains(eProxyURI)){
-								subAttribute.put(eStrucClassifier.getName(), refType.getName());						
+								String required = ":required-false";
+								if(eStrucClassifier.getLowerBound() == 1){
+									required = ":required-true";
+								}
+								subAttribute.put(eStrucClassifier.getName(), refType.getName() + required);						
 							}
 						}	
 					}
@@ -390,18 +394,28 @@ public class MSModelUtils {
 								refAttribute.put(eStrucClassifier.getName(), refValue);							
 							} else {
 								String array = arrayCheck(((EStructuralFeature) obj).getUpperBound());
-								refAttribute.put(eStrucClassifier.getName(), refType.getName() + array);
+								String required = ":required-false";
+								if(((EStructuralFeature) obj).getLowerBound() == 1){
+									required = ":required-true";
+								}
+								refAttribute.put(eStrucClassifier.getName(), refType.getName() + array + required);
 							}
 						} else if (annotation &&  obj instanceof EAttributeImpl){
 							EClassifier refType = ((EAttributeImpl) obj).getEType();
 							if (refType instanceof EEnumImpl){
 								String array = arrayCheck(((EStructuralFeature) obj).getUpperBound());
-								refAttribute.put(eStrucClassifier.getName(), refType.getName() + array);							}
+								String required = ":required-false";
+								if(((EStructuralFeature) obj).getLowerBound() == 1){
+									required = ":required-true";
+								}
+								refAttribute.put(eStrucClassifier.getName(), refType.getName() + array + required);							
+							}
 						}	
 					}
 				}
 			}
 		}
+		
 		return refAttribute;
 	}
 

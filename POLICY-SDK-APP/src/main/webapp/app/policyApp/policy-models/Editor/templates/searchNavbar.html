@@ -58,7 +58,7 @@ body {
 					<div class="input-group">
 						<div class="input-group" id="adv-search">
 							<input type="text" class="form-control"
-								placeholder="{{'search'}}..." ng-model="search.query" />
+								placeholder="{{'search'}}..." ng-model="search.query" title="Enter the value to filter policies."/>
 							<div class="input-group-btn">
 								<div class="btn-group" role="group">
 									<div class="dropdown dropdown-lg">
@@ -71,7 +71,7 @@ body {
 												<div class="form-group row">
 													<div class="form-group col-sm-4">
 														<label for="filter">Policy Type:</label> <select
-															class="form-control" ng-model="search.policyType">
+															class="form-control" ng-model="search.policyType" title="Select the PolicyType value.">
 															<option>action</option>
 															<option>config</option>
 															<option>closedLoop</option>
@@ -82,7 +82,7 @@ body {
 													<div class="form-group col-sm-8">
 														<label for="filter">Descriptive Type:</label> <select
 															class="form-control" ng-model="search.descriptiveScope"
-															ng-options="option for option in descriptiveScopeDictionaryDatas track by option"></select>
+															ng-options="option for option in descriptiveScopeDictionaryDatas track by option" title="Select Descriptive Scope value driven from Descriptive Scope dictionary."></select>
 													</div>
 												</div>
 												<div ng-if="search.policyType == 'closedLoop'">
@@ -90,21 +90,21 @@ body {
 														<div class="form-group col-sm-6">
 															<label>ClosedLoop Policy Type:</label><BR> <select
 																class="form-control"
-																ng-model="search.closedLooppolicyType">
+																ng-model="search.closedLooppolicyType" title="Select the ClosedLoop Policy Type value.">
 																<option>Config_Fault</option>
 																<option>Config_PM</option>
 															</select>
 														</div>
 														<div class="form-group col-sm-6">
 															<label>Onap Name:</label><BR> <select
-																class="form-control" ng-model="search.onapName"
+																class="form-control" ng-model="search.onapName" title="Select the dropdown value driven from ONAP (Common)Dictionary."
 																ng-options="option for option in onapNameDictionaryDatas track by option"></select>
 														</div>
 													</div>
 													<div class="form-group row">
 														<div class="form-group col-sm-6" ng-if="search.closedLooppolicyType == 'Config_PM'">
 															<label>D2 Service:</label><BR> <select
-																class="form-control" ng-model="search.d2Service">
+																class="form-control" ng-model="search.d2Service" title="Select the ClosedLoop D2 Service value.">
 																<option>Hosted Voice(Trinity)</option>
 																<option>vUSP</option>
 																<option>MCR</option>
@@ -115,7 +115,7 @@ body {
 														<div class="form-group col-sm-6"
 															ng-if="search.closedLooppolicyType == 'Config_PM'">
 															<label>Service Type:</label><BR> <select
-																class="form-control" ng-model="search.serviceType">
+																class="form-control" ng-model="search.serviceType" title="Select the Service Type Value.">
 																<option>Registration Failure(Trinity)</option>
 																<option>International Fraud(Trinity)</option>
 																<option>No Dial Tone(Trinity)</option>
@@ -128,13 +128,13 @@ body {
 														<div class="form-group col-sm-6"
 															ng-if="search.closedLooppolicyType == 'Config_Fault'">
 															<label>VNF Type:</label><BR> <select
-																class="form-control" ng-model="search.vnfType"
+																class="form-control" ng-model="search.vnfType" title="Select the ClosedLoop VNF Type value."
 																ng-options="option for option in vnfTypeDictionaryDatas track by option"></select>
 														</div>
 														<div class="form-group col-sm-6"
 															ng-if="search.closedLooppolicyType == 'Config_Fault'">
 															<label>Policy Status:</label><BR> <select
-																class="form-control" ng-model="search.policyStatus">
+																class="form-control" ng-model="search.policyStatus" title="Select the Policy Status value.">
 																<option>Active</option>
 																<option>InActive</option>
 															</select>
@@ -145,11 +145,11 @@ body {
 															ng-if="search.closedLooppolicyType == 'Config_Fault'">
 															<label>vPRO Action:</label><BR> <select
 																class="form-control" ng-model="search.vproAction"
-																ng-options="option for option in vsclActionDictionaryDatas track by option"></select>
+																ng-options="option for option in vsclActionDictionaryDatas track by option" title="Select vPRO Action value."></select>
 														</div>
 														<div class="form-group col-sm-6" ng-if="search.closedLooppolicyType == 'Config_Fault'">
 															<label>Bind Text Search to:</label><BR> <select
-																class="form-control" ng-model="search.bindTextSearch">
+																class="form-control" ng-model="search.bindTextSearch" title="Select the Bind Text Search value.">
 																<option>Email Address</option>
 																<option>Trigger Signature</option>
 																<option>Connect All Traps</option>
@@ -167,11 +167,11 @@ body {
 										</div>
 									</div>
 									<button type="button" class="btn btn-pedefault"
-										ng-click="refresh(search = null);">
+										ng-click="refresh(search = null);" title="Clear the selected values.">
 										<span aria-hidden="true">Clear</span>
 									</button>
 									<button type="button" class="btn btn-primary"
-										ng-click="searchPolicy(search);">
+										ng-click="searchPolicy(search);" title="Click on the button to search for policies after entering the fields.">
 										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 									</button>
 								</div>
@@ -183,8 +183,8 @@ body {
 		</div>
 		<div class="form-group col-sm-4" style="margin-top: 2%" align="right">
 			<div class="btn-group">
-  				<button class="btn btn-secondary" type="button" onClick="window.location='policy#/Editor';">Editor</button>
-				<button class="btn btn-primary" type="button" onClick="window.location='policy#/policy_SearchFilter';">Filter</button>
+  				<button class="btn btn-secondary" type="button" onClick="window.location='policy#/Editor';" title="OnClick navigate to Editor tab.">Editor</button>
+				<button class="btn btn-primary" type="button" onClick="window.location='policy#/policy_SearchFilter';" title="Search Policy window">Filter</button>
 			</div>
 		</div>
 	</div>

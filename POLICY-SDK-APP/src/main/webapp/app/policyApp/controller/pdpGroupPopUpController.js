@@ -18,15 +18,16 @@
  * ============LICENSE_END=========================================================
  */
 app.controller('editPDPGrouppopupController' ,  function ($scope, $modalInstance, message, modalService, $modal, Notification){
-	if(message.pdpGroupData==null)
+	if(message.pdpGroupData==null){
 		$scope.label='Add New PDP Group'
-			else{
-				$scope.label='Edit PDP Group'
-				$scope.disableCd=true;
-				$scope.policies = message.pdpGroupData.policies;
-		        $scope.pdps = message.pdpGroupData.pdps;
-		        $scope.selectedPdp = message.pdpGroupData;
-			}
+	}else{
+		$scope.label='Edit PDP Group'
+			$scope.disableCd=true;
+		$scope.policies = message.pdpGroupData.policies;
+		$scope.pdps = message.pdpGroupData.pdps;
+		$scope.selectedPdp = message.pdpGroupData;
+	}
+	
 	$scope.editPDPGroup = message.pdpGroupData;
 
 	$scope.policiesGrid = {
@@ -76,7 +77,7 @@ app.controller('editPDPGrouppopupController' ,  function ($scope, $modalInstance
 		});
 		modalInstance.result.then(function(response){
 			console.log('response', response);
-			$scope.data=response.data;
+			refreshPDPGroupDatas(response);
 		});
 	};
 
@@ -98,34 +99,34 @@ app.controller('editPDPGrouppopupController' ,  function ($scope, $modalInstance
 		});
 		modalInstance.result.then(function(response){
 			console.log('response', response);
-			$scope.data=response.data;
+			refreshPDPGroupDatas(response);
 		});
 	};
 
 	$scope.deletePDPFromGroup = function(data){
 		modalService.popupConfirmWin("Confirm","You are about to delete the PDP Group :  "+data.name+". Do you want to continue?",
-			function(){
-				var uuu = "pdp_Group/remove_pdpFromGroup.htm";
-				var postData={data: data,
-						activePDP : $scope.selectedPdp};
-				$.ajax({
-					type : 'POST',
-					url : uuu,
-					dataType: 'json',
-					contentType: 'application/json',
-					data: JSON.stringify(postData),
-					success : function(data){
-						$scope.$apply(function(){$scope.data=data.data;});
-						Notification.success("PDP Group Deleted Successfully");
-					},
-					error : function(data){
-						console.log(data);
-						Notification.error("Error Occured While Deleting a PDP Group")
-						//modalService.showFailure("Fail","Error while deleting: "+ data.responseText);
-					}
-				});
-
-			})
+				function(){
+			var uuu = "pdp_Group/remove_pdpFromGroup.htm";
+			var postData={data: data,
+					activePDP : $scope.selectedPdp};
+			$.ajax({
+				type : 'POST',
+				url : uuu,
+				dataType: 'json',
+				contentType: 'application/json',
+				data: JSON.stringify(postData),
+				success : function(data){
+					$scope.$apply(function(){
+						refreshPDPGroupDatas(data);
+					});
+					Notification.success("PDP Group Deleted Successfully");
+				},
+				error : function(data){
+					console.log(data);
+					Notification.error("Error Occured While Deleting a PDP Group");
+				}
+			});
+		})
 	};
 
 	$scope.statusOfPDP = function(status){
@@ -167,9 +168,22 @@ app.controller('editPDPGrouppopupController' ,  function ($scope, $modalInstance
 				$modalInstance.close({data:$scope.data});
 			},
 			error : function(data){
-				alert("Error while saving.");
+				Notification.error("Error while saving PDP Group.");
 			}
 		});
+	};
+	
+	function refreshPDPGroupDatas(response){
+		$scope.selectedPDPName = $scope.selectedPdp.id;
+		if(response != undefined){
+			$scope.data = JSON.parse(response.data);
+			for(var i=0; i< $scope.data.length; i++){
+				if($scope.data[i].id === $scope.selectedPDPName){
+					$scope.policies = $scope.data[i].policies;
+			        $scope.pdps = $scope.data[i].pdps;
+				}
+			}
+		}
 	};
 
 	$scope.close = function() {

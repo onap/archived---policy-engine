@@ -157,35 +157,38 @@ app.controller('PolicySearchController', [
             return currentPath.indexOf(path) !== -1;
         };
        
-	    $scope.searchPolicy = function(searchContent){
-		    var deferred = $q.defer();
-           var uuu = "searchPolicy";
-           var postData = {searchdata : searchContent};
-           $.ajax({
-               type : 'POST',
-               url : uuu,
-               dataType: 'json',
-               contentType: 'application/json',
-               data: JSON.stringify(postData),
-               success : function(data){
-                   $scope.$apply(function(){
-                      var searchdata = data.result;
-                       if(searchdata.length > 0){
-                    	   if(searchdata[0] == "Elastic Search Server is down"){
-                    		   alert("Elastic Search Server is down.");
-                    	   }else{
-                    		   $scope.policyNavigator.searchrefresh(searchdata);  
-                    	   }
-                       }else{
-                    	   Notification.info("No Matches Found with your Search");
-                       }
-                   });     
-               },
-               error : function(data){
-                   alert("Error while Searching.");
-               }
-           });
-       };
+        $scope.searchPolicy = function(searchContent){
+        	if(searchContent != undefined){
+        		var uuu = "searchPolicy";
+        		var postData = {searchdata : searchContent};
+        		$.ajax({
+        			type : 'POST',
+        			url : uuu,
+        			dataType: 'json',
+        			contentType: 'application/json',
+        			data: JSON.stringify(postData),
+        			success : function(data){
+        				$scope.$apply(function(){
+        					var searchdata = data.result;
+        					if(searchdata.length > 0){
+        						if(searchdata[0] == "Exception"){
+        							Notification.error(searchdata[1]);
+        						}else{
+        							$scope.policyNavigator.searchrefresh(searchdata);  
+        						}
+        					}else{
+        						Notification.info("No Matches Found with your Search");
+        					}
+        				});     
+        			},
+        			error : function(data){
+        				Notification.error("Error while Searching.");
+        			}
+        		});
+        	}else{
+        		Notification.error("No data has been entered or selected to search");
+        	}
+        };
        
        $scope.refresh = function(searchData){
     	   $scope.policyNavigator.searchrefresh(null);
