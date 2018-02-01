@@ -7,12 +7,13 @@
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-readonly="temp.policy.editPolicy"
 						ng-model="temp.policy.policyName" required pattern="\S+"
-						title="Enter the Policy Name without any spaces" />
+						title="Enter Policy Name without any spaces and special characters and will accept _." />
 				</div>
 				<div class="form-group col-sm-6">
 					<label>Description:</label> <input type="text" class="form-control"
 						ng-disabled="temp.policy.readOnly"
-						ng-model="temp.policy.policyDescription" />
+						ng-model="temp.policy.policyDescription" 
+						title="Description field will accept any type of data."/>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -21,13 +22,13 @@
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.riskType"
 						ng-options="option for option in riskTypeDictionaryDatas track by option"
-						required pattern="\S+" title="RiskType is required"></select>
+						required pattern="\S+" title="Select the dropdown value driven from RiskType (Safe Policy)Dictionary."></select>
 				</div>
 				<div class="form-group col-sm-3">
 					<label>Risk Level:<sup><b>*</b></sup></label> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.riskLevel"
-						required pattern="\S+" title="RiskLevel is required">
+						required pattern="\S+" title="Select the dropdown Risk level value.">
 						<option>1</option>
 						<option>2</option>
 						<option>3</option>
@@ -38,7 +39,7 @@
 					<label>Guard:<sup><b>*</b></sup></label> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.guard"
-						required pattern="\S+" title="Guard is required">
+						required pattern="\S+" title="Select the dropdown Guard value.">
 						<option>True</option>
 						<option>False</option></select>
 				</div>
@@ -47,7 +48,7 @@
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.onapName"
 						ng-options="option for option in onapNameDictionaryDatas track by option"
-						required pattern="\S+" title="OnapName is required"></select>
+						required pattern="\S+" title="Select the dropdown value driven from OnapName (common)Dictionary."></select>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -55,7 +56,8 @@
 					<label>Vnf Type:<sup><b>*</b></sup></label> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.vnfType"
-						ng-options="option for option in vnfTypeDictionaryDatas  track by option">
+						ng-options="option for option in vnfTypeDictionaryDatas  track by option"
+						title="Select the dropdown value driven from VNF Type (ClosedLoop Policy)Dictionary.">
 						<option value="">{{temp.policy.jsonBodyData.vnfType}}</option>
 					</select>
 				</div>
@@ -63,7 +65,8 @@
 					<label>Policy Status:<sup><b>*</b></sup></label> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-init="init(temp.policy.jsonBodyData);"
-						ng-model="temp.policy.jsonBodyData.closedLoopPolicyStatus">
+						ng-model="temp.policy.jsonBodyData.closedLoopPolicyStatus"
+						title="Select the value from dropdown.">
 						<option value="Active">Active</option>
 						<option>InActive</option>
 					</select>
@@ -84,7 +87,7 @@
 				<div class="form-group col-sm-3">
 					<label>Time to Live Date:</label> <input type="text" id="ttlDate"
 						class="form-control" name="ttlDate" ng-disabled="temp.policy.readOnly"
-						ng-model="temp.policy.ttlDate" />
+						ng-model="temp.policy.ttlDate" title="Select the date from calender onclick on the field."/>
 				</div>
 			</div>
 		</div>
@@ -95,12 +98,14 @@
 					<div class="form-group row">
 						<div class="form-group col-sm-1">
 							<button type="button" class="btn btn-default"
-								ng-disabled="temp.policy.readOnly" ng-click="addTriggerButton()">
+								ng-disabled="temp.policy.readOnly" ng-click="addTriggerButton()"
+								title="onClick Trigger Signature Trap row is added.">
 								<i class="fa fa-plus"></i>
 							</button>
 							<button type="button" class="btn btn-default"
 								ng-disabled="temp.policy.readOnly"
-								ng-click="removeTriggerButton()">
+								ng-click="removeTriggerButton()"
+								title="onClick Trigger Signature Trap row is removed.">
 								<i class="fa fa-minus"></i>
 							</button>
 						</div>
@@ -112,12 +117,14 @@
 									<label ng-model="choice.label" name="label">{{choice.id}}</label>
 									<button type="button" class="btn btn-default"
 										ng-disabled="temp.policy.readOnly"
-										ng-click="addTrapTriggerButton(choice.id)">
+										ng-click="addTrapTriggerButton(choice.id)"
+										title="onClick Trap Signature row is added.">
 										<i class="fa fa-plus"></i>
 									</button>
 									<button type="button" class="btn btn-default"
 										ng-disabled="temp.policy.readOnly"
-										ng-click="removeTrapTriggerButton(choice.id)">
+										ng-click="removeTrapTriggerButton(choice.id)"
+										title="onClick Trap Signature row is removed.">
 										<i class="fa fa-minus"></i>
 									</button>
 								</div>
@@ -138,7 +145,8 @@
 											<select class="form-control"
 												ng-disabled="temp.policy.readOnly"
 												ng-model="choice.trigger1"
-												ng-options="option for option in varbindDictionaryDatas track by option">
+												ng-options="option for option in varbindDictionaryDatas track by option"
+												title="Select the dropdown value driven from Varbind (ClosedLoop)Dictionary.">
 												<option value="">{{choice.trigger1}}</option>
 											</select>
 										</div>
@@ -152,7 +160,8 @@
 											<select class="form-control"
 												ng-disabled="temp.policy.readOnly"
 												ng-model="choice.trigger2"
-												ng-options="option for option in varbindDictionaryDatas track by option">
+												ng-options="option for option in varbindDictionaryDatas track by option"
+												title="Select the dropdown value driven from Varbind (ClosedLoop)Dictionary.">
 												<option value="">{{choice.trigger2}}</option>
 											</select>
 										</div>
@@ -170,7 +179,7 @@
 					<div class="form-group col-sm-1">
 						<button type="button" class="btn btn-default"
 							ng-disabled="temp.policy.readOnly"
-							ng-click="addTriggerConnectButton()">
+							ng-click="addTriggerConnectButton()" title="onClick Connect Trap Trigger Signature row is added.">
 							<i class="fa fa-plus"></i>
 						</button>
 					</div>
@@ -189,7 +198,8 @@
 							<div class="form-group col-sm-1">
 								<select ng-disabled="temp.policy.readOnly"
 									ng-model="choice.connectTrap1" class="form-control"
-									ng-options="option for option in connectTriggerTrapsList track by option">
+									ng-options="option for option in connectTriggerTrapsList track by option"
+									title="Select the traps to form rule formation.">
 									<option value="">{{choice.connectTrap1}}</option>
 								</select>
 							</div>
@@ -206,7 +216,8 @@
 							<div class="form-group col-sm-1">
 								<select class="form-control" ng-disabled="temp.policy.readOnly"
 									ng-model="choice.connectTrap2"
-									ng-options="option for option in connectTriggerTrapsList track by option">
+									ng-options="option for option in connectTriggerTrapsList track by option"
+									title="Select the traps to form rule formation.">
 									<option value="">{{choice.connectTrap2}}</option>
 								</select>
 							</div>
@@ -218,7 +229,7 @@
 							<div class="form-group col-sm-1">
 								<button type="button" class="btn btn-default" ng-show="$last"
 									ng-disabled="temp.policy.readOnly"
-									ng-click="removeTriggerConnectButton()">
+									ng-click="removeTriggerConnectButton()" title="onClick Connect Trap Trigger Signature row is removed.">
 									<i class="fa fa-minus"></i>
 								</button>
 							</div>
@@ -228,16 +239,15 @@
 			</div>
 			<div class="form-group row">
 				<div class="form-group col-sm-2">
-					<label>Clear TimeOut:<sup><b>*</b></sup>
+					<label>Clear TimeOut:
 					</label><br> <input type="text" ng-disabled="triggerdisabled"
-						ng-model="temp.policy.clearTimeOut" class="form-control" required />
+						ng-model="temp.policy.clearTimeOut" class="form-control" title="Enter the Cleartimeout value and the value should be numeric."/>
 				</div>
 				<div class="form-group col-sm-2">
-					<label>Trap Max Age:<sup><b>*</b></sup></label><br> <input
+					<label>Trap Max Age:</label><br> <input
 						type="text" ng-disabled="triggerdisabled"
 						ng-model="temp.policy.trapMaxAge" class="form-control"
-						ng-init="temp.policy.jsonBodyData.trapMaxAge='300'" value="300"
-						required />
+						ng-init="temp.policy.jsonBodyData.trapMaxAge='300'" value="300" title="Enter the Trap Max Age value and the value should be numeric."/>
 				</div>
 			</div>
 		</div>
@@ -248,7 +258,8 @@
 					<label>vPRO Actions:<sup><b>*</b></sup></label><br> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.actions"
-						ng-options="option for option in vsclActionDictionaryDatas  track by option">
+						ng-options="option for option in vsclActionDictionaryDatas  track by option"
+						title="Select the dropdown value driven from VSCL Action (ClosedLoop)Dictionary.">
 						<option value="">{{temp.policy.jsonBodyData.actions}}</option>
 					</select>
 				</div>
@@ -256,25 +267,25 @@
 					<label>Time Interval:<sup><b>*</b></sup>
 					</label><br> <input type="text" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.timeInterval"
-						class="form-control" required />
+						class="form-control" required title="Enter the Time Interval value and the value should be numeric."/>
 				</div>
 				<div class="form-group col-sm-2">
 					<label>App-C TimeOut:<sup><b>*</b></sup></label><br> <input
 						type="text" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.timeOutvPRO"
-						class="form-control" required />
+						class="form-control" required title="Enter the App-C Timeout value and the value should be numeric."/>
 				</div>
 				<div class="form-group col-sm-2">
 					<label>TimeOut for Ruby:<sup><b>*</b></sup></label><br> <input
 						type="text" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.timeOutRuby"
-						class="form-control" required />
+						class="form-control" required title="Enter the Timeout for Ruby value and the value should be numeric."/>
 				</div>
 				<div class="form-group col-sm-2">
 					<label>Number of Retries:<sup><b>*</b></sup></label><br> <input
 						type="text" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.retrys" class="form-control"
-						required />
+						required title="Enter the Number of retries value and the value should be numeric."/>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -282,20 +293,20 @@
 					<label>Aging Window:<sup><b>*</b></sup>
 					</label><br> <input type="text" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.agingWindow"
-						class="form-control" required />
+						class="form-control" required title="Enter the Aging Window value and the value should be numeric."/>
 				</div>
 				<div class="form-group col-sm-4">
 					<label>Text to Include in UEB messages for AOTS ticket and
 						Geo Link:</label><br> <input type="text"
 						ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.geoLink" class="form-control"
-						required />
+						required title="Enter the UEB Message value."/>
 				</div>
 				<div class="form-group col-sm-4">
 					<label>Email Address:</label><br> <input type="text"
 						ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.emailAddress"
-						class="form-control" required />
+						class="form-control" required title="Enter the email address for multiple use comma seperated value."/>
 				</div>
 			</div>
 		</div>
@@ -307,7 +318,8 @@
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.pepName"
 						ng-options="option for option in pepOptionsDictionaryDatas  track by option"
-						ng-change="getPepActionValues(temp.policy.jsonBodyData.pepName)">
+						ng-change="getPepActionValues(temp.policy.jsonBodyData.pepName)"
+						title="Select the dropdown value driven from PEP Options (ClosedLoop)Dictionary.">
 						<option value="">{{temp.policy.jsonBodyData.pepName}}</option>
 					</select></select></select>
 				</div>
@@ -315,7 +327,8 @@
 					<label>Actions:<sup><b></b></sup></label><br> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.jsonBodyData.pepAction"
-						ng-options="option for option in pepActionDictionaryDatas  track by option">
+						ng-options="option for option in pepActionDictionaryDatas  track by option"
+						title="Select the dropdown value driven based on PEP Options selection from PEP Options (ClosedLoop)Dictionary.">
 						<option value="">{{temp.policy.jsonBodyData.pepAction}}</option>
 					</select>
 				</div>
@@ -329,12 +342,14 @@
 						<div class="form-group col-sm-1">
 							<button type="button" class="btn btn-default"
 								ng-disabled="temp.policy.readOnly"
-								ng-click="addVerFaultButton()">
+								ng-click="addVerFaultButton()"
+								title="onClick Verification Signature Fault row is added.">
 								<i class="fa fa-plus"></i>
 							</button>
 							<button type="button" class="btn btn-default"
 								ng-disabled="temp.policy.readOnly"
-								ng-click="removeVerFaultButton()">
+								ng-click="removeVerFaultButton()"
+								title="onClick Verification Signature Fault row is removed.">
 								<i class="fa fa-minus"></i>
 							</button>
 						</div>
@@ -346,12 +361,14 @@
 									<label ng-model="choice.label" name="label">{{choice.id}}</label>
 									<button type="button" class="btn btn-default"
 										ng-disabled="temp.policy.readOnly"
-										ng-click="addVerTriggerButton(choice.id)">
+										ng-click="addVerTriggerButton(choice.id)"
+										title="onClick Fault Signature row is added.">
 										<i class="fa fa-plus"></i>
 									</button>
 									<button type="button" class="btn btn-default"
 										ng-disabled="temp.policy.readOnly"
-										ng-click="removeVerTriggerButton(choice.id)">
+										ng-click="removeVerTriggerButton(choice.id)"
+										title="onClick Fault Signature row is removed.">
 										<i class="fa fa-minus"></i>
 									</button>
 								</div>
@@ -372,7 +389,8 @@
 											<select class="form-control"
 												ng-disabled="temp.policy.readOnly"
 												ng-model="choice.trigger1"
-												ng-options="option for option in varbindDictionaryDatas track by option">
+												ng-options="option for option in varbindDictionaryDatas track by option"
+												title="Select the dropdown value driven from Varbind (ClosedLoop)Dictionary.">
 												<option value="">{{choice.trigger1}}</option>
 											</select>
 										</div>
@@ -386,7 +404,8 @@
 											<select class="form-control"
 												ng-disabled="temp.policy.readOnly"
 												ng-model="choice.trigger2"
-												ng-options="option for option in varbindDictionaryDatas track by option">
+												ng-options="option for option in varbindDictionaryDatas track by option"
+												title="Select the dropdown value driven from Varbind (ClosedLoop)Dictionary.">
 												<option value="">{{choice.trigger2}}</option>
 											</select>
 										</div>
@@ -403,7 +422,7 @@
 					<div class="form-group col-sm-1">
 						<button type="button" class="btn btn-default"
 							ng-disabled="temp.policy.readOnly"
-							ng-click="addFaultConnectButton()">
+							ng-click="addFaultConnectButton()" title="onClick Connect Fault Verification Signature row is added.">
 							<i class="fa fa-plus"></i>
 						</button>
 					</div>
@@ -422,7 +441,8 @@
 							<div class="form-group col-sm-1">
 								<select ng-disabled="temp.policy.readOnly"
 									ng-model="choice.connectTrap1" class="form-control"
-									ng-options="option for option in connectTriggerFaultsList track by option">
+									ng-options="option for option in connectTriggerFaultsList track by option"
+									title="Select the faults to form rule formation.">
 									<option value="">{{choice.connectTrap1}}</option>
 								</select>
 							</div>
@@ -439,7 +459,8 @@
 							<div class="form-group col-sm-1">
 								<select ng-disabled="temp.policy.readOnly"
 									ng-model="choice.connectTrap2" class="form-control"
-									ng-options="option for option in connectTriggerFaultsList track by option">
+									ng-options="option for option in connectTriggerFaultsList track by option"
+									title="Select the faults to form rule formation.">
 									<option value="">{{choice.connectTrap2}}</option>
 								</select>
 							</div>
@@ -451,7 +472,7 @@
 							<div class="form-group col-sm-1">
 								<button type="button" class="btn btn-default" ng-show="$last"
 									ng-disabled="temp.policy.readOnly"
-									ng-click="removeFaultConnectButton()">
+									ng-click="removeFaultConnectButton()" title="onClick Connect Fault Verification Signature row is removed.">
 									<i class="fa fa-minus"></i>
 								</button>
 							</div>
@@ -461,11 +482,11 @@
 			</div>
 			<div class="form-group row">
 				<div class="form-group col-sm-2">
-					<label>Clear TimeOut:<sup><b>*</b></sup></label><br> <input
+					<label>Clear TimeOut:</label><br> <input
 						type="text" ng-disabled="verificationdisabled"
 						ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.verificationclearTimeOut"
-						class="form-control" required />
+						class="form-control" required title="Enter the Cleartimeout value and the value should be numeric."/>
 				</div>
 			</div>
 		</div>
@@ -493,11 +514,11 @@
 		<div class="modal-footer">
 			<button class="btn btn-primary" herf="javascript:void(0)"
 				ng-disabled="temp.policy.readOnly"
-				ng-click="validatePolicy(temp.policy);">Validate</button>
+				ng-click="validatePolicy(temp.policy);" title="Validate the data entered in the Policy fields.">Validate</button>
 			<button class="btn btn-success" herf="javascript:void(0)"
 				ng-disabled="savebutton" ng-disabled="temp.policy.readOnly"
-				ng-click="saveFaultPolicy(temp);">Save</button>
-			<button type="button" class="btn btn-default" ng-click="refresh();">Close</button>
+				ng-click="saveFaultPolicy(temp);" title="Save the Policy with validated data.">Save</button>
+			<button type="button" class="btn btn-default" ng-click="refresh();" title="Close the template.">Close</button>
 		</div>
 	</form>
 </div>

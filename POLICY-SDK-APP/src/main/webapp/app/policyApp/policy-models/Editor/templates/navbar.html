@@ -10,10 +10,10 @@
 		<div class="form-group col-sm-5" style="margin-top: 2%"></div>
 		<div class="form-group col-sm-4" style="margin-top: 2%" align="right" ng-hide="isDisabled">
 			<div class="btn-group">
-  				<button type="button" class="btn btn-primary" ng-show="superAdminId" data-toggle="modal" data-target="#newfolder" ng-click="touch()"><i class="glyphicon glyphicon-plus"></i>Add Scope</button>
-  				<button type="button" class="btn btn-primary" ng-show="importPolicyId" data-toggle="modal" data-target="#uploadfile" ng-show="config.allowedActions.upload" ng-click="touch()"> <i class="glyphicon glyphicon-upload"></i>Import</button>
-  				<button type="button" class="btn btn-primary" ng-show="exportPolicyId" data-toggle="modal" data-target="#exportPolicy" ng-show="config.allowedActions.exportPolicy"> <i class="glyphicon glyphicon-download"></i>Export</button>
-				<button class="btn btn-secondary" type="button" onClick="window.location='policy#/policy_SearchFilter';">Filter</button>
+  				<button type="button" class="btn btn-primary" ng-show="superAdminId" data-toggle="modal" data-target="#newfolder" ng-click="touch()" title="Create Scope for adding policies"><i class="glyphicon glyphicon-plus"></i>Add Scope</button>
+  				<button type="button" class="btn btn-primary" ng-show="importPolicyId" data-toggle="modal" data-target="#uploadfile" ng-show="config.allowedActions.upload" ng-click="touch()" title="On Click Popup will open to Import policies"> <i class="glyphicon glyphicon-upload"></i>Import</button>
+  				<button type="button" class="btn btn-primary" ng-show="exportPolicyId" data-toggle="modal" data-target="#exportPolicy" ng-show="config.allowedActions.exportPolicy" title="On Click Popup will open to Export policies"> <i class="glyphicon glyphicon-download"></i>Export</button>
+				<button class="btn btn-secondary" type="button" onClick="window.location='policy#/policy_SearchFilter';" title="On Click Navigaate to Search window">Filter</button> 
 			</div>
 		</div>
 	</div>

@@ -44,6 +44,8 @@ public abstract class AbstractPolicyCreation {
 		String formateDate = null;
 		if(dateTTL.contains("/")){
 			formateDate = dateTTL.replace("/", "-");
+		}else {
+			formateDate = dateTTL;
 		}
 		return formateDate;
 	}
