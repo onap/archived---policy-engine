@@ -537,7 +537,7 @@ public class StdPolicyEngine {
     public DecisionResponse getDecisionImpl(String onapName, Map<String, String> decisionAttributes, UUID requestID)
             throws PolicyDecisionException {
         String resource = "getDecision";
-        StdDecisionResponse response = new StdDecisionResponse();
+        StdDecisionResponse response;
         String body = null;
         // Create Request.
         try {
@@ -579,7 +579,7 @@ public class StdPolicyEngine {
     public Collection<PolicyConfig> getConfigImpl(ConfigRequestParameters configRequestParameters)
             throws PolicyConfigException {
         String resource = "getConfig";
-        ArrayList<PolicyConfig> response = null;
+        ArrayList<PolicyConfig> response;
         String body = null;
         // Create Request.
         try {
@@ -671,9 +671,9 @@ public class StdPolicyEngine {
         HashMap<String, String> configAttributes = new HashMap<>();
         try {
             for (Map.Entry<String,String> entry : matchingConditions.entrySet()) {
-                if (entry.getKey().equalsIgnoreCase("ONAPName")) {
+                if ("ONAPName".equalsIgnoreCase(entry.getKey())) {
                     match.setOnapName(entry.getValue());
-                } else if (entry.getKey().equalsIgnoreCase("ConfigName")) {
+                } else if ("ConfigName".equalsIgnoreCase(entry.getKey())) {
                     match.setConfigName(entry.getValue());
                 } else {
                     configAttributes.put(entry.getKey(), entry.getValue());
@@ -716,31 +716,31 @@ public class StdPolicyEngine {
                 break;
             }
         }
-        if (exception != null && exception.getStatusCode() != null) {
-            if (exception.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
-                String message = XACMLErrorConstants.ERROR_PERMISSIONS + ":" + exception.getStatusCode() + ":"
-                        + ERROR_AUTH_GET_PERM + resource;
-                LOGGER.error(message);
-                throw new PolicyException(message, exception);
-            }
-            if (exception.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
-                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + ":" + exception.getStatusCode() + ":"
-                        + exception.getResponseBodyAsString();
-                LOGGER.error(message);
-                throw new PolicyException(message, exception);
-            }
-            if (exception.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-                String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + ERROR_WHILE_CONNECTING + pdps
-                        + exception;
-                LOGGER.error(message);
-                throw new PolicyException(message, exception);
-            }
-            String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + ":" + exception.getStatusCode() + ":"
+        if (exception == null || exception.getStatusCode() == null) {
+        	return result;
+        }
+        if (exception.getStatusCode().equals(HttpStatus.UNAUTHORIZED)) {
+            String message = XACMLErrorConstants.ERROR_PERMISSIONS + ":" + exception.getStatusCode() + ":"
+                    + ERROR_AUTH_GET_PERM + resource;
+            LOGGER.error(message);
+            throw new PolicyException(message, exception);
+        }
+        if (exception.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + ":" + exception.getStatusCode() + ":"
                     + exception.getResponseBodyAsString();
             LOGGER.error(message);
             throw new PolicyException(message, exception);
         }
-        return result;
+        if (exception.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+            String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + ERROR_WHILE_CONNECTING + pdps
+                    + exception;
+            LOGGER.error(message);
+            throw new PolicyException(message, exception);
+        }
+        String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + ":" + exception.getStatusCode() + ":"
+                + exception.getResponseBodyAsString();
+        LOGGER.error(message);
+        throw new PolicyException(message, exception);
     }
 
     private HttpHeaders getHeaders() {
@@ -782,7 +782,7 @@ public class StdPolicyEngine {
     public Collection<PolicyResponse> sendEventImpl(Map<String, String> eventAttributes, UUID requestID)
             throws PolicyEventException {
         String resource = "sendEvent";
-        ArrayList<PolicyResponse> response = null;
+        ArrayList<PolicyResponse> response;
         String body = null;
         // Create Request.
         try {
@@ -835,140 +835,140 @@ public class StdPolicyEngine {
         if (propertyFilePath == null) {
             throw new PolicyEngineException(
                     XACMLErrorConstants.ERROR_DATA_ISSUE + "Error NO PropertyFile Path provided");
-        } else {
-            // Adding logic for remote Properties file.
-            Properties prop = new Properties();
-            if (propertyFilePath.startsWith("http")) {
-                URL configURL;
-                try {
-                    configURL = new URL(propertyFilePath);
-                    URLConnection connection = null;
-                    connection = configURL.openConnection();
-                    prop.load(connection.getInputStream());
-                } catch (IOException e) {
-                    LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
-                    throw new PolicyEngineException(
-                            XACMLErrorConstants.ERROR_DATA_ISSUE + "Maformed property URL " + e.getMessage());
-                }
-            } else {
-                Path file = Paths.get(propertyFilePath);
-                if (!file.toFile().exists()) {
-                    throw new PolicyEngineException(XACMLErrorConstants.ERROR_DATA_ISSUE
-                            + "File doesn't exist in the specified Path " + file.toString());
-                }
-                if (file.toString().endsWith(".properties")) {
-                    InputStream in;
-                    prop = new Properties();
-                    try {
-                        in = new FileInputStream(file.toFile());
-                        prop.load(in);
-                    } catch (IOException e) {
-                        LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
-                        throw new PolicyEngineException(
-                                XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Cannot Load the Properties file", e);
-                    }
-                } else {
-                    LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Not a .properties file " + propertyFilePath);
-                    throw new PolicyEngineException(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Not a .properties file");
-                }
-            }
-            // UEB and DMAAP Settings
-            String checkType = prop.getProperty("NOTIFICATION_TYPE");
-            String serverList = prop.getProperty("NOTIFICATION_SERVERS");
-            topic = prop.getProperty("NOTIFICATION_TOPIC");
-            apiKey = prop.getProperty("UEB_API_KEY");
-            apiSecret = prop.getProperty("UEB_API_SECRET");
-
-            if (checkType == null) {
-                notificationType.add(DEFAULT_NOTIFICATION);
-                LOGGER.info(
-                        "Properties file doesn't have the NOTIFICATION_TYPE parameter system will use defualt websockets");
-            } else {
-                checkType = checkType.trim();
-                if (checkType.contains(",")) {
-                    notificationType = new ArrayList<>(Arrays.asList(prop.getProperty("NOTIFICATION_TYPE").split(",")));
-                } else {
-                    notificationType = new ArrayList<>();
-                    notificationType.add(checkType);
-                }
-            }
-            if (serverList == null) {
-                notificationType.clear();
-                notificationType.add(DEFAULT_NOTIFICATION);
-                LOGGER.info(
-                        "Properties file doesn't have the NOTIFICATION_SERVERS parameter system will use defualt websockets");
-            } else {
-                serverList = serverList.trim();
-                if (serverList.contains(",")) {
-                    notificationURLList = new ArrayList<>(Arrays.asList(serverList.split(",")));
-                } else {
-                    notificationURLList = new ArrayList<>();
-                    notificationURLList.add(serverList);
-                }
-            }
-
-            if (topic != null) {
-                topic = topic.trim();
-            } else {
-                LOGGER.error("Properties file doesn't have the NOTIFICATION_TOPIC parameter.");
-            }
-
-            // Client ID Authorization Settings.
-            String clientID = prop.getProperty("CLIENT_ID");
-            if (clientKey == null) {
-                clientKey = prop.getProperty("CLIENT_KEY");
-                try {
-                    clientKey = PolicyUtils.decode(clientKey);
-                } catch (UnsupportedEncodingException | IllegalArgumentException e) {
-                    LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS
-                            + " Cannot Decode the given Password Proceeding with given Password!!", e);
-                }
-            }
-            if (clientID == null || clientKey == null || clientID.isEmpty() || clientKey.isEmpty()) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS
-                        + " Cannot proceed without the CLIENT_KEY and CLIENT_ID values !!");
-                throw new PolicyEngineException(XACMLErrorConstants.ERROR_PERMISSIONS
-                        + " Cannot proceed without the CLIENT_KEY and CLIENT_ID values !!");
-            } else {
-                setClientId(clientID.trim());
-                setClientKey(clientKey.trim());
-            }
-            setEnvironment(prop);
-            // Initializing the values.
-            init();
-            // Check the Keys for PDP_URLs
-            Collection<Object> unsorted = prop.keySet();
-            @SuppressWarnings({ "rawtypes", "unchecked" })
-            List<String> sorted = new ArrayList(unsorted);
-            Collections.sort(sorted);
-            for (String propKey : sorted) {
-                if (propKey.startsWith("PDP_URL")) {
-                    String checkVal = prop.getProperty(propKey);
-                    if (checkVal == null) {
-                        throw new PolicyEngineException(XACMLErrorConstants.ERROR_DATA_ISSUE
-                                + "Properties file doesn't have the PDP_URL parameter");
-                    }
-                    if (checkVal.contains(";")) {
-                        List<String> pdpDefault = new ArrayList<>(Arrays.asList(checkVal.split("\\s*;\\s*")));
-                        int pdpCount = 0;
-                        while (pdpCount < pdpDefault.size()) {
-                            String pdpVal = pdpDefault.get(pdpCount);
-                            readPDPParam(pdpVal);
-                            pdpCount++;
-                        }
-                    } else {
-                        readPDPParam(checkVal);
-                    }
-                }
-            }
-            if (pdps == null || pdps.isEmpty()) {
-                LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot Proceed without PDP_URLs");
-                throw new PolicyEngineException(
-                        XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot Proceed without PDP_URLs");
-            }
-            // Get JUNIT property from properties file when running tests
-            checkJunit(prop);
         }
+
+        // Adding logic for remote Properties file.
+        Properties prop = new Properties();
+        if (propertyFilePath.startsWith("http")) {
+            URL configURL;
+            try {
+                configURL = new URL(propertyFilePath);
+                URLConnection connection;
+                connection = configURL.openConnection();
+                prop.load(connection.getInputStream());
+            } catch (IOException e) {
+                LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
+                throw new PolicyEngineException(
+                        XACMLErrorConstants.ERROR_DATA_ISSUE + "Maformed property URL " + e.getMessage());
+            }
+        } else {
+            Path file = Paths.get(propertyFilePath);
+            if (!file.toFile().exists()) {
+                throw new PolicyEngineException(XACMLErrorConstants.ERROR_DATA_ISSUE
+                        + "File doesn't exist in the specified Path " + file.toString());
+            }
+            if (file.toString().endsWith(".properties")) {
+                InputStream in;
+                prop = new Properties();
+                try {
+                    in = new FileInputStream(file.toFile());
+                    prop.load(in);
+                } catch (IOException e) {
+                    LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
+                    throw new PolicyEngineException(
+                            XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Cannot Load the Properties file", e);
+                }
+            } else {
+                LOGGER.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Not a .properties file " + propertyFilePath);
+                throw new PolicyEngineException(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Not a .properties file");
+            }
+        }
+        // UEB and DMAAP Settings
+        String checkType = prop.getProperty("NOTIFICATION_TYPE");
+        String serverList = prop.getProperty("NOTIFICATION_SERVERS");
+        topic = prop.getProperty("NOTIFICATION_TOPIC");
+        apiKey = prop.getProperty("UEB_API_KEY");
+        apiSecret = prop.getProperty("UEB_API_SECRET");
+
+        if (checkType == null) {
+            notificationType.add(DEFAULT_NOTIFICATION);
+            LOGGER.info(
+                    "Properties file doesn't have the NOTIFICATION_TYPE parameter system will use defualt websockets");
+        } else {
+            checkType = checkType.trim();
+            if (checkType.contains(",")) {
+                notificationType = new ArrayList<>(Arrays.asList(prop.getProperty("NOTIFICATION_TYPE").split(",")));
+            } else {
+                notificationType = new ArrayList<>();
+                notificationType.add(checkType);
+            }
+        }
+        if (serverList == null) {
+            notificationType.clear();
+            notificationType.add(DEFAULT_NOTIFICATION);
+            LOGGER.info(
+                    "Properties file doesn't have the NOTIFICATION_SERVERS parameter system will use defualt websockets");
+        } else {
+            serverList = serverList.trim();
+            if (serverList.contains(",")) {
+                notificationURLList = new ArrayList<>(Arrays.asList(serverList.split(",")));
+            } else {
+                notificationURLList = new ArrayList<>();
+                notificationURLList.add(serverList);
+            }
+        }
+
+        if (topic != null) {
+            topic = topic.trim();
+        } else {
+            LOGGER.error("Properties file doesn't have the NOTIFICATION_TOPIC parameter.");
+        }
+
+        // Client ID Authorization Settings.
+        String clientID = prop.getProperty("CLIENT_ID");
+        if (clientKey == null) {
+            clientKey = prop.getProperty("CLIENT_KEY");
+            try {
+                clientKey = PolicyUtils.decode(clientKey);
+            } catch (UnsupportedEncodingException | IllegalArgumentException e) {
+                LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS
+                        + " Cannot Decode the given Password Proceeding with given Password!!", e);
+            }
+        }
+        if (clientID == null || clientKey == null || clientID.isEmpty() || clientKey.isEmpty()) {
+            LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS
+                    + " Cannot proceed without the CLIENT_KEY and CLIENT_ID values !!");
+            throw new PolicyEngineException(XACMLErrorConstants.ERROR_PERMISSIONS
+                    + " Cannot proceed without the CLIENT_KEY and CLIENT_ID values !!");
+        } else {
+            setClientId(clientID.trim());
+            setClientKey(clientKey.trim());
+        }
+        setEnvironment(prop);
+        // Initializing the values.
+        init();
+        // Check the Keys for PDP_URLs
+        Collection<Object> unsorted = prop.keySet();
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        List<String> sorted = new ArrayList(unsorted);
+        Collections.sort(sorted);
+        for (String propKey : sorted) {
+            if (propKey.startsWith("PDP_URL")) {
+                String checkVal = prop.getProperty(propKey);
+                if (checkVal == null) {
+                    throw new PolicyEngineException(XACMLErrorConstants.ERROR_DATA_ISSUE
+                            + "Properties file doesn't have the PDP_URL parameter");
+                }
+                if (checkVal.contains(";")) {
+                    List<String> pdpDefault = new ArrayList<>(Arrays.asList(checkVal.split("\\s*;\\s*")));
+                    int pdpCount = 0;
+                    while (pdpCount < pdpDefault.size()) {
+                        String pdpVal = pdpDefault.get(pdpCount);
+                        readPDPParam(pdpVal);
+                        pdpCount++;
+                    }
+                } else {
+                    readPDPParam(checkVal);
+                }
+            }
+        }
+        if (pdps == null || pdps.isEmpty()) {
+            LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot Proceed without PDP_URLs");
+            throw new PolicyEngineException(
+                    XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot Proceed without PDP_URLs");
+        }
+        // Get JUNIT property from properties file when running tests
+        checkJunit(prop);
     }
 
     private static void checkJunit(Properties prop) {
@@ -976,7 +976,7 @@ public class StdPolicyEngine {
         if (junitFlag == null || junitFlag.isEmpty()) {
             LOGGER.info("No JUNIT property provided, this will not be executed as a test.");
         } else {
-            if (junitFlag.equalsIgnoreCase("test")) {
+            if ("test".equalsIgnoreCase(junitFlag)) {
                 StdPolicyEngine.junit = true;
             } else {
                 StdPolicyEngine.junit = false;
@@ -1040,7 +1040,7 @@ public class StdPolicyEngine {
         LOGGER.debug("Scheme is : " + scheme.toString());
         LOGGER.debug("Handler is : " + handler.getClass().getName());
 
-        if (notificationType.get(0).equals("ueb")) {
+        if ("ueb".equals(notificationType.get(0))) {
             if (this.uebThread) {
                 AutoClientUEB.setAuto(scheme, handler);
                 this.uebThread = registerUEBThread.isAlive();
@@ -1059,7 +1059,7 @@ public class StdPolicyEngine {
         }
 
         if (pdps != null) {
-            if (notificationType.get(0).equals("ueb") && !this.uebThread) {
+            if ("ueb".equals(notificationType.get(0)) && !this.uebThread) {
                 this.uebClientThread = new AutoClientUEB(pdps.get(0), notificationURLList, apiKey, apiSecret);
                 AutoClientUEB.setAuto(scheme, handler);
                 this.registerUEBThread = new Thread(this.uebClientThread);
@@ -1089,7 +1089,7 @@ public class StdPolicyEngine {
      */
     public PDPNotification getNotification() {
         // Check if there is proper scheme..
-        PDPNotification notification = null;
+        PDPNotification notification;
         if (this.scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)
                 || this.scheme.equals(NotificationScheme.MANUAL_NOTIFICATIONS)) {
             if (notificationType.get(0).equals("ueb")) {
@@ -1106,12 +1106,10 @@ public class StdPolicyEngine {
             if (notification == null) {
                 LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "No Notification yet..");
                 return null;
-            } else {
-                return notification;
             }
-        } else {
-            return null;
+            return notification;
         }
+        return null;
     }
 
     /*
@@ -1119,7 +1117,7 @@ public class StdPolicyEngine {
      */
     public void setScheme(NotificationScheme scheme) {
         this.scheme = scheme;
-        if (notificationType.get(0).equals("ueb")) {
+        if ("ueb".equals(notificationType.get(0))) {
             AutoClientUEB.setScheme(this.scheme);
             if (this.scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)) {
                 ManualClientEndUEB.createTopic(pdps.get(0), UNIQUEID, notificationURLList);
@@ -1155,7 +1153,7 @@ public class StdPolicyEngine {
         if (this.scheme != null && this.handler != null && (this.scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS)
                 || this.scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS))) {
             LOGGER.info("Clear Notification called.. ");
-            if (notificationType.get(0).equals("ueb")) {
+            if ("ueb".equals(notificationType.get(0))) {
                 this.uebClientThread.terminate();
                 this.uebThread = false;
             } else if (notificationType.get(0).equals(DMAAP)) {
@@ -1222,7 +1220,7 @@ public class StdPolicyEngine {
         policyParameters.setPolicyDescription(policyDescription);
         policyParameters.setOnapName(onapName);
         policyParameters.setConfigName(configName);
-        Map<AttributeType, Map<String, String>> attributes = new HashMap<AttributeType, Map<String, String>>();
+        Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
         attributes.put(AttributeType.MATCHING, configAttributes);
         policyParameters.setAttributes(attributes);
         policyParameters.setConfigBodyType(PolicyType.valueOf(configType));

@@ -48,6 +48,15 @@ public class AttributeTypeTest {
 
 		// add additional test code here
 		assertEquals("matching", result);
+		
+		AttributeType type = AttributeType.create("dictionary");
+		assertEquals(AttributeType.DICTIONARY, type);
+		
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testException() {
+		AttributeType.create("foobar");
 	}
 
 	/**

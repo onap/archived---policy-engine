@@ -90,36 +90,36 @@ public class AutoClientDMAAP implements Runnable {
         }
         String group = UUID.randomUUID().toString();
         String id = "0";
-
-        // Stop and Start needs to be done.
-        if (scheme != null && handler != null) {
-            if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS)
-                    || scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) {
-
-                // create a loop to listen for messages from DMaaP server
-                try {
-                    setDmaapCosumer(new BusConsumer.DmaapConsumerWrapper(dmaapList, topic, aafLogin, aafPassword, group,
-                            id, 15 * 1000, 1000));
-                } catch (Exception e) {
-                    logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Unable to create DMaaP Consumer: ", e);
-                }
-
-                while (this.isRunning()) {
-                    try {
-                        for (String msg : dmaapConsumer.fetch()) {
-                            logger.debug("Auto Notification Recieved Message " + msg + " from DMAAP server : "
-                                    + dmaapList.toString());
-                            setNotification(NotificationUnMarshal.notificationJSON(msg));
-                            callHandler();
-                        }
-                    } catch (Exception e) {
-                        logger.debug("Error in processing DMAAP message", e);
-                    }
-
-                }
-                logger.debug("Stopping DMAAP Consumer loop will no longer fetch messages from the servers");
-            }
+        
+        if (scheme == null || handler == null || 
+        	! (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) ||
+        		scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) ) {
+        	logger.info("no stop/start required");
+        	return;
         }
+
+        // create a loop to listen for messages from DMaaP server
+        try {
+            setDmaapCosumer(new BusConsumer.DmaapConsumerWrapper(dmaapList, topic, aafLogin, aafPassword, group,
+                    id, 15 * 1000, 1000));
+        } catch (Exception e) {
+            logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Unable to create DMaaP Consumer: ", e);
+        }
+
+        while (this.isRunning()) {
+            try {
+                for (String msg : dmaapConsumer.fetch()) {
+                    logger.debug("Auto Notification Recieved Message " + msg + " from DMAAP server : "
+                            + dmaapList.toString());
+                    setNotification(NotificationUnMarshal.notificationJSON(msg));
+                    callHandler();
+                }
+            } catch (Exception e) {
+                logger.debug("Error in processing DMAAP message", e);
+            }
+
+        }
+        logger.debug("Stopping DMAAP Consumer loop will no longer fetch messages from the servers");
     }
 
     private static void setNotification(StdPDPNotification notificationJSON) {
@@ -131,30 +131,34 @@ public class AutoClientDMAAP implements Runnable {
     }
 
     private static void callHandler() {
-        if (handler != null && scheme != null) {
-            if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS)) {
-                boolean removed = false, updated = false;
-                if (notification.getRemovedPolicies() != null && !notification.getRemovedPolicies().isEmpty()) {
-                    removed = true;
-                }
-                if (notification.getLoadedPolicies() != null && !notification.getLoadedPolicies().isEmpty()) {
-                    updated = true;
-                }
-                if (removed && updated) {
-                    notification.setNotificationType(NotificationType.BOTH);
-                } else if (removed) {
-                    notification.setNotificationType(NotificationType.REMOVE);
-                } else if (updated) {
-                    notification.setNotificationType(NotificationType.UPDATE);
-                }
-                handler.notificationReceived(notification);
-            } else if (scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) {
-                PDPNotification newNotification = MatchStore.checkMatch(notification);
-                if (newNotification.getNotificationType() != null) {
-                    handler.notificationReceived(newNotification);
-                }
-            }
-        }
+    	
+    	if (handler == null || scheme == null) {
+    		logger.info("handler does not need to do anything");
+    		return;
+    	}
+	    if (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS)) {	
+	        boolean removed = false; 
+	        boolean updated = false;
+	        if (notification.getRemovedPolicies() != null && !notification.getRemovedPolicies().isEmpty()) {
+	            removed = true;
+	        }
+	        if (notification.getLoadedPolicies() != null && !notification.getLoadedPolicies().isEmpty()) {
+	            updated = true;
+	        }
+	        if (removed && updated) {
+	            notification.setNotificationType(NotificationType.BOTH);
+	        } else if (removed) {
+	            notification.setNotificationType(NotificationType.REMOVE);
+	        } else if (updated) {
+	            notification.setNotificationType(NotificationType.UPDATE);
+	        }
+	        handler.notificationReceived(notification);
+	    } else if (scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS)) {
+	        PDPNotification newNotification = MatchStore.checkMatch(notification);
+	        if (newNotification.getNotificationType() != null) {
+	            handler.notificationReceived(newNotification);
+	        }
+	    }
     }
 
 }

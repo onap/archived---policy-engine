@@ -48,6 +48,13 @@ public class PolicyTypeTest {
 
 		// add additional test code here
 		assertEquals("json", result);
+		
+		assertEquals(PolicyType.JSON, PolicyType.create("json"));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testException() {
+		PolicyType.create("foobar");
 	}
 
 	/**

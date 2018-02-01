@@ -40,16 +40,22 @@ public class PolicyClassTest {
 	 * @generatedBy CodePro at 6/1/16 1:40 PM
 	 */
 	@Test
-	public void testToString_1()
-		throws Exception {
+	public void testToString_1() {
 		PolicyClass fixture = PolicyClass.Action;
 
 		String result = fixture.toString();
 
 		// add additional test code here
 		assertEquals("Action", result);
+		
+		assertEquals(PolicyClass.Decision, PolicyClass.create(PolicyClass.Decision.toString()));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testException() {
+		PolicyClass.create("foobar");
+	}
+	
 	/**
 	 * Perform pre-test initialization.
 	 *

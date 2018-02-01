@@ -63,15 +63,15 @@ public class PolicyResponseStatusTest {
 	@Test
 	public void testGetStatus_2()
 		throws Exception {
-		String responseStatus = "";
+		String responseStatus = "action_advised";
 
 		PolicyResponseStatus result = PolicyResponseStatus.getStatus(responseStatus);
 
 		// add additional test code here
 		assertNotNull(result);
-		assertEquals("no_action", result.toString());
-		assertEquals("NO_ACTION_REQUIRED", result.name());
-		assertEquals(0, result.ordinal());
+		assertEquals("action_advised", result.toString());
+		assertEquals("ACTION_ADVISED", result.name());
+		assertEquals(1, result.ordinal());
 	}
 
 	/**
@@ -84,15 +84,15 @@ public class PolicyResponseStatusTest {
 	@Test
 	public void testGetStatus_3()
 		throws Exception {
-		String responseStatus = "";
+		String responseStatus = "action_taken";
 
 		PolicyResponseStatus result = PolicyResponseStatus.getStatus(responseStatus);
 
 		// add additional test code here
 		assertNotNull(result);
-		assertEquals("no_action", result.toString());
-		assertEquals("NO_ACTION_REQUIRED", result.name());
-		assertEquals(0, result.ordinal());
+		assertEquals("action_taken", result.toString());
+		assertEquals("ACTION_TAKEN", result.name());
+		assertEquals(2, result.ordinal());
 	}
 
 	/**
@@ -111,6 +111,13 @@ public class PolicyResponseStatusTest {
 
 		// add additional test code here
 		assertEquals("action_advised", result);
+
+		assertEquals(PolicyResponseStatus.ACTION_ADVISED, PolicyResponseStatus.create("ACTION_ADVISED"));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testTheRest() {
+		PolicyResponseStatus.create("foobar");
 	}
 
 	/**

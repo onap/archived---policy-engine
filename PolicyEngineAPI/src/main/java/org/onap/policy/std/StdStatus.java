@@ -88,26 +88,32 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 		return policyResponseMessage;
 	}
 
+	@Override
 	public void setPolicyResponseStatus(PolicyResponseStatus policyResponseStatus) {
 		this.policyResponseStatus = policyResponseStatus;
 	}
 	
+	@Override
 	public void setActionAdvised(Map<String, String> actionAdvised) {
 		this.actionAdvised = actionAdvised;
 	}
 
+	@Override
 	public void setActionTaken(Map<String, String> actionTaken) {
 		this.actionTaken = actionTaken;
 	}
 
+	@Override
 	public void setRequestAttributes(Map<String, String> requestAttributes) {
 		this.requestAttributes = requestAttributes;
 	}
 
+	@Override
 	public void setPolicyResponseMessage(String policyResponseMessage) {
 		this.policyResponseMessage = policyResponseMessage;
 	}
 	
+	@Override
 	public void setPolicyResponseStatus(String policyResponseMessage, PolicyResponseStatus policyResponseStatus) {
 		this.policyResponseMessage = policyResponseMessage;
 		this.policyResponseStatus = policyResponseStatus;
@@ -146,7 +152,7 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	@Override
 	public String getPolicyName() {
 		if(policyName!=null && policyName.contains(".xml")){
-			return (policyName.substring(0, policyName.substring(0, policyName.lastIndexOf(".")).lastIndexOf(".")));
+			return (policyName.substring(0, policyName.substring(0, policyName.lastIndexOf('.')).lastIndexOf('.')));
 		}
 		return policyName;
 	}

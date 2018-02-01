@@ -38,6 +38,7 @@ public class PushPolicyParameters {
 	 * Constructor with no Parameters.
 	 */
 	public PushPolicyParameters(){
+		// Empty constructor
 	}
 	
 	/**

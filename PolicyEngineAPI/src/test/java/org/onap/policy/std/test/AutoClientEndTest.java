@@ -37,18 +37,6 @@ import org.onap.policy.std.StdPolicyEngine;
  * @version $Revision: 1.0 $
  */
 public class AutoClientEndTest {
-	/**
-	 * Run the AutoClientEnd() constructor test.
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testAutoClientEnd_1()
-		throws Exception {
-		AutoClientEnd result = new AutoClientEnd();
-		assertNotNull(result);
-		// add additional test code here
-	}
 
 	/**
 	 * Run the boolean getStatus() method test.

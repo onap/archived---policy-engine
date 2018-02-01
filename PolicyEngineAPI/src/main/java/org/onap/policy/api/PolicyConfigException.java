@@ -29,6 +29,7 @@ public class PolicyConfigException extends Exception{
 	private static final long serialVersionUID = -188355220060684215L;
 	
 	public PolicyConfigException() {
+		// Empty constructor
 	}
 	
 	public PolicyConfigException(String message) {

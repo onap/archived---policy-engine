@@ -48,8 +48,14 @@ public class PolicyConfigTypeTest {
 
 		// add additional test code here
 		assertEquals("BRMS_Param", result);
+		
+		assertEquals(PolicyConfigType.MicroService, PolicyConfigType.create(PolicyConfigType.MicroService.name()));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testException() {
+		PolicyConfigType.create("foobar");
+	}
 	/**
 	 * Perform pre-test initialization.
 	 *

@@ -48,8 +48,15 @@ public class DeletePolicyConditionTest {
 
 		// add additional test code here
 		assertEquals("All Versions", result);
+		
+		assertEquals(DeletePolicyCondition.ALL, DeletePolicyCondition.create(DeletePolicyCondition.ALL.name()));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testException() {
+		DeletePolicyCondition.create("foobar");
+	}
+	
 	/**
 	 * Perform pre-test initialization.
 	 *

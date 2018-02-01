@@ -32,34 +32,39 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class NotificationUnMarshal {
 	
+	private NotificationUnMarshal() {
+		// Empty constructor
+	}
+	
 	public static StdPDPNotification notificationJSON(String json) throws IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		StdPDPNotification notification = mapper.readValue(json, StdPDPNotification.class);
-		if(notification!=null&&notification.getLoadedPolicies()!=null){
-		    Collection<StdLoadedPolicy> stdLoadedPolicies = new ArrayList<>();
-		    for(LoadedPolicy loadedPolicy: notification.getLoadedPolicies()){
-		        StdLoadedPolicy stdLoadedPolicy = (StdLoadedPolicy) loadedPolicy;
-		        if(notification.getRemovedPolicies()!=null){
-		            Boolean updated = false;
-		            for(RemovedPolicy removedPolicy: notification.getRemovedPolicies()){
-		                String regex = ".(\\d)*.xml";
-		                if(removedPolicy.getPolicyName().replaceAll(regex, "").equals(stdLoadedPolicy.getPolicyName().replaceAll(regex, ""))){
-		                    updated  = true;
-		                    break;
-		                }
-		            }
-		            if(updated){
-		                stdLoadedPolicy.setUpdateType(UpdateType.UPDATE);
-		            }else{
-		                stdLoadedPolicy.setUpdateType(UpdateType.NEW);
-		            }
-		        }else{
-		            stdLoadedPolicy.setUpdateType(UpdateType.NEW);
-		        }
-		        stdLoadedPolicies.add(stdLoadedPolicy);
-		    }
-		    notification.setLoadedPolicies(stdLoadedPolicies);
+		if(notification == null || notification.getLoadedPolicies() == null){
+			return notification;
 		}
+	    Collection<StdLoadedPolicy> stdLoadedPolicies = new ArrayList<>();
+	    for(LoadedPolicy loadedPolicy: notification.getLoadedPolicies()){
+	        StdLoadedPolicy stdLoadedPolicy = (StdLoadedPolicy) loadedPolicy;
+	        if(notification.getRemovedPolicies()!=null){
+	            Boolean updated = false;
+	            for(RemovedPolicy removedPolicy: notification.getRemovedPolicies()){
+	                String regex = ".(\\d)*.xml";
+	                if(removedPolicy.getPolicyName().replaceAll(regex, "").equals(stdLoadedPolicy.getPolicyName().replaceAll(regex, ""))){
+	                    updated  = true;
+	                    break;
+	                }
+	            }
+	            if(updated){
+	                stdLoadedPolicy.setUpdateType(UpdateType.UPDATE);
+	            }else{
+	                stdLoadedPolicy.setUpdateType(UpdateType.NEW);
+	            }
+	        }else{
+	            stdLoadedPolicy.setUpdateType(UpdateType.NEW);
+	        }
+	        stdLoadedPolicies.add(stdLoadedPolicy);
+	    }
+	    notification.setLoadedPolicies(stdLoadedPolicies);
 		return notification;
 	}
 }
