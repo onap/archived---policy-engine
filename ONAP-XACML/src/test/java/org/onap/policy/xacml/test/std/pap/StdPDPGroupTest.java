@@ -19,7 +19,7 @@
  */
 package org.onap.policy.xacml.test.std.pap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,10 +30,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.std.pap.StdPDP;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
-import org.onap.policy.xacml.std.pap.StdPDPGroupStatus;
 
 public class StdPDPGroupTest {
 

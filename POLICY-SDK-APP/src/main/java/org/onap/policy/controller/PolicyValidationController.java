@@ -33,6 +33,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.util.PolicyValidation;
 import org.onap.policy.rest.util.PolicyValidationRequestWrapper;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.onap.portalsdk.core.web.support.JsonMessage;
 import org.springframework.stereotype.Controller;
@@ -71,7 +72,7 @@ public class PolicyValidationController extends RestrictedBaseController {
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}

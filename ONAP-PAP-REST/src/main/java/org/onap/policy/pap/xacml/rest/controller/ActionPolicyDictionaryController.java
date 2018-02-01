@@ -38,6 +38,7 @@ import org.onap.policy.pap.xacml.rest.util.JsonMessage;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionPolicyDict;
 import org.onap.policy.rest.jpa.UserInfo;
+import org.onap.policy.utils.PolicyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -215,7 +216,7 @@ public class ActionPolicyDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}

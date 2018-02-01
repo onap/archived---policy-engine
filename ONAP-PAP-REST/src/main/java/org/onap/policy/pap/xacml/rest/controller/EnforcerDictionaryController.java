@@ -37,6 +37,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.util.JsonMessage;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.EnforcingType;
+import org.onap.policy.utils.PolicyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -104,7 +105,7 @@ public class EnforcerDictionaryController {
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 			LOGGER.error(e);
 		}
 		return null;
@@ -135,7 +136,7 @@ public class EnforcerDictionaryController {
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}

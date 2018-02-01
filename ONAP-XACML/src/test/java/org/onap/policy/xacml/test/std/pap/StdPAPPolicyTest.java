@@ -21,9 +21,7 @@ package org.onap.policy.xacml.test.std.pap;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -34,12 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.xacml.api.pap.OnapPDP;
-import org.onap.policy.xacml.std.pap.StdEngine;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
-
-import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.pap.StdPDP;
 
 public class StdPAPPolicyTest {
 	
