@@ -47,7 +47,6 @@ import org.onap.policy.xacml.std.pap.StdPDPItemSetChangeNotifier.StdItemSetChang
 
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDP;
-//import com.att.research.xacml.api.pap.PDPGroup;
 import com.att.research.xacml.api.pap.PDPGroupStatus;
 import com.att.research.xacml.api.pap.PDPGroupStatus.Status;
 import com.att.research.xacml.api.pap.PDPPIPConfig;

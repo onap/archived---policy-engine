@@ -252,7 +252,7 @@ public class XACMLPolicyWriter {
 														txtFileName = txtFileName.substring(0, txtFileName.lastIndexOf(".")+1) + origExtension;
 														txtFileName = configUrl+ File.separator + "Config" + File.separator + domain + txtFileName;
 														attributeValueType1.getContent().add(txtFileName);	
-													} else if (attributeAssignmentExpressionType.getAttributeId().equals("PolicyName")) {
+													} else if ("PolicyName".equals(attributeAssignmentExpressionType.getAttributeId())) {
 														JAXBElement<AttributeValueType> attributeValueType = (JAXBElement<AttributeValueType>) attributeAssignmentExpressionType.getExpression();
 														AttributeValueType attributeValueType1 = attributeValueType.getValue();
 														List<Object> contents = attributeValueType1.getContent();
