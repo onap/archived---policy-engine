@@ -28,34 +28,34 @@
 			<div class="form-group row">
             <div class="form-group col-sm-6">
                 <label>PDP URL:<sup><b>*</b></sup> </label><br>
-                <input type="text"  class="form-control" ng-model="editPDPInGroup.id" class="form-control" />
+                <input type="text"  class="form-control" ng-model="editPDPInGroup.id" class="form-control" title="Enter the valid PDP URL value."/>
             </div>
 			</div>
 			<div class="form-group row">
             <div class="form-group col-sm-6">
                 <label>JMX Port:<sup><b>*</b></sup></label><br>
                 <input type="text"  class="form-control" ng-model="editPDPInGroup.jmxPort"
-                       class="form-control"  />
+                       class="form-control"  title="Enter the valid PDP JMX Port Number."/>
             </div>
 			</div>
 			<div class="form-group row">
             <div class="form-group col-sm-6">
                 <label>PDP Name:<sup><b>*</b></sup></label><br>
                 <input type="text"  class="form-control" ng-model="editPDPInGroup.name"
-                      class="form-control"  />
+                      class="form-control"  title="Enter the PDP Name."/>
             </div>
 			</div>
 			<div class="form-group row">
             <div class="form-group col-sm-6">
                 <label>PDP Description:</label><br>
                 <input type="text"  class="form-control" ng-model="editPDPInGroup.description"
-                      class="form-control"/>
+                      class="form-control" title="Enter the PDP Description."/>
             </div>
 			</div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-success"  herf="javascript:void(0)" ng-click="savePDPInGroup(editPDPInGroup);">Save</button>
-            <button class="btn btn-default" herf="javascript:void(0)" ng-click="close()">Close</button>
+            <button class="btn btn-success"  herf="javascript:void(0)" ng-click="savePDPInGroup(editPDPInGroup);" title="OnClick PDP Group is created.">Save</button>
+            <button class="btn btn-default" herf="javascript:void(0)" ng-click="close()" title="OnClick PDP Group Window is closed.">Close</button>
 		</div>
     </div>
 	</div>

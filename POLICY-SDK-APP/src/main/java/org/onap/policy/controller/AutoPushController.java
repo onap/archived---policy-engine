@@ -52,6 +52,7 @@ import org.onap.policy.rest.adapter.AutoPushTabAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
@@ -288,6 +289,7 @@ public class AutoPushController extends RestrictedBaseController{
 				updatedGroupObject.setOnapPdps(pdpGroup.getOnapPdps());
 				updatedGroupObject.setPipConfigs(pdpGroup.getPipConfigs());
 				updatedGroupObject.setStatus(pdpGroup.getStatus());
+				updatedGroupObject.setOperation("push");
 
 				// replace the original set of Policies with the set from the
 				// container (possibly modified by the user)
@@ -334,7 +336,7 @@ public class AutoPushController extends RestrictedBaseController{
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			logger.error(e);
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);;
 		}
 		return null;
 	}
@@ -369,6 +371,7 @@ public class AutoPushController extends RestrictedBaseController{
 				updatedGroupObject.setOnapPdps(group.getOnapPdps());
 				updatedGroupObject.setPipConfigs(group.getPipConfigs());
 				updatedGroupObject.setStatus(group.getStatus());
+				updatedGroupObject.setOperation("delete");
 				this.container.updateGroup(updatedGroupObject);
 			}
 			
@@ -390,7 +393,7 @@ public class AutoPushController extends RestrictedBaseController{
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			logger.error(e);
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);;
 		}
 		return null;
 	}

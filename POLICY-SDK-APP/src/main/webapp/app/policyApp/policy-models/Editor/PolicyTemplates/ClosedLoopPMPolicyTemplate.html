@@ -7,12 +7,13 @@
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-readonly="temp.policy.editPolicy"
 						ng-model="temp.policy.policyName" required pattern="\S+"
-						title="Enter the Policy Name without any spaces" />
+						title="Enter Policy Name without any spaces and special characters and will accept _."/>
 				</div>
 				<div class="form-group col-sm-6">
 					<label>Description:</label> <input type="text" class="form-control"
 						ng-disabled="temp.policy.readOnly"
-						ng-model="temp.policy.policyDescription" />
+						ng-model="temp.policy.policyDescription" 
+						title="Description field will accept any type of data."/>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -21,18 +22,18 @@
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.onapName"
 						ng-options="option for option in onapNameDictionaryDatas track by option"
-						required pattern="\S+" title="OnapName is required"></select>
+						required pattern="\S+" title="Select the dropdown value driven from OnapName (common)Dictionary."></select>
 				</div>
 				<div class="form-group col-sm-3">
 					<label>Time to Live Date:</label> <input type="text" id="ttlDate"
 						class="form-control" name="ttlDate" ng-disabled="temp.policy.readOnly"
-						ng-model="temp.policy.ttlDate" />
+						ng-model="temp.policy.ttlDate" title="Select the date from calender onclick on the field."/>
 				</div>
 				<div class="form-group col-sm-3">
 					<label>Guard:<sup><b>*</b></sup></label> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.guard"
-						required pattern="\S+" title="Guard is required">
+						required pattern="\S+" title="Select the dropdown Guard value.">
 						<option>True</option>
 						<option>False</option></select>
 				</div>
@@ -41,7 +42,7 @@
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.riskType"
 						ng-options="option for option in riskTypeDictionaryDatas track by option"
-						required pattern="\S+" title="RiskType is required"></select>
+						required pattern="\S+" title="Select the dropdown value driven from RiskType (Safe Policy)Dictionary."></select>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -49,7 +50,7 @@
 					<label>Risk Level:<sup><b>*</b></sup></label> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.riskLevel"
-						required pattern="\S+" title="RiskLevel is required">
+						required pattern="\S+" title="Select the dropdown Risk level value.">
 						<option>1</option>
 						<option>2</option>
 						<option>3</option>
@@ -74,7 +75,8 @@
 					<select style="width: 400px;" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.serviceTypePolicyName" class="form-control"
 						ng-options="option.serviceTypePolicyName for option in PMData track by option.serviceTypePolicyName"
-						ng-click="addDataToFields(temp.policy.serviceTypePolicyName);"></select>
+						ng-click="addDataToFields(temp.policy.serviceTypePolicyName);"
+						title="Select the Service Type PolicyName from dropdown value."></select>
 				</div>
 			</div>
 		</div>
@@ -125,7 +127,8 @@
 					<div>
 						<input type="text" class="form-control"
 							ng-disabled="temp.policy.readOnly"
-							ng-model="temp.policy.jsonBodyData.geoLink" />
+							ng-model="temp.policy.jsonBodyData.geoLink" 
+							title="Enter the UEB Message value."/>
 					</div>
 				</div>
 				<div class="form-group col-sm-6">
@@ -133,7 +136,8 @@
 					<div>
 						<input type="text" class="form-control"
 							ng-disabled="temp.policy.readOnly"
-							ng-model="temp.policy.jsonBodyData.emailAddress" />
+							ng-model="temp.policy.jsonBodyData.emailAddress" 
+							title="Enter the email address and for multiple use comma seperated value."/>
 					</div>
 				</div>
 			</div>
@@ -144,11 +148,11 @@
 			<div>
 				<button class="btn btn-primary" herf="javascript:void(0)"
 					ng-disabled="temp.policy.readOnly"
-					ng-click="validatePolicy(temp.policy);">Validate</button>
+					ng-click="validatePolicy(temp.policy);" title="Validate the data entered in the Policy fields.">Validate</button>
 				<button class="btn btn-success" herf="javascript:void(0)"
 					ng-disabled="savebutton" ng-disabled="temp.policy.readOnly"
-					ng-click="saveCLPMPolicy(temp);">Save</button>
-				<button type="button" class="btn btn-default" ng-click="refresh();">Close</button>
+					ng-click="saveCLPMPolicy(temp);" title="Save the Policy with validated data.">Save</button>
+				<button type="button" class="btn btn-default" ng-click="refresh();" title="Close the template.">Close</button>
 			</div>
 		</div>
 	</form>

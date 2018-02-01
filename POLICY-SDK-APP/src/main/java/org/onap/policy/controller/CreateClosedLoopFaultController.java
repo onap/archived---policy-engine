@@ -32,6 +32,7 @@ import java.util.Map;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.ClosedLoopFaultBody;
+import org.onap.policy.rest.adapter.ClosedLoopFaultTrapDatas;
 import org.onap.policy.rest.adapter.ClosedLoopFaultTriggerUISignatures;
 import org.onap.policy.rest.adapter.ClosedLoopSignatures;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -62,27 +63,27 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 public class CreateClosedLoopFaultController extends RestrictedBaseController{
 
 	private static final Logger policyLogger	= FlexLogger.getLogger(CreateClosedLoopFaultController.class);
-	
+
 	protected PolicyRestAdapter policyAdapter = null;
-	
-	
+
+
 	private static CommonClassDao commonclassdao;
-	
+
 	@Autowired
 	private CreateClosedLoopFaultController(CommonClassDao commonclassdao){
 		CreateClosedLoopFaultController.commonclassdao = commonclassdao;
 	}
-	
+
 	public CreateClosedLoopFaultController(){
 		// Empty constructor
 	}
-	
+
 	public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData, JsonNode root){
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			TrapDatas trapDatas = mapper.readValue(root.get("trapData").toString(), TrapDatas.class);
-			TrapDatas faultDatas = mapper.readValue(root.get("faultData").toString(), TrapDatas.class);
+			ClosedLoopFaultTrapDatas trapDatas = mapper.readValue(root.get("trapData").toString(), ClosedLoopFaultTrapDatas.class);
+			ClosedLoopFaultTrapDatas faultDatas = mapper.readValue(root.get("faultData").toString(), ClosedLoopFaultTrapDatas.class);
 			ClosedLoopGridJSONData policyJsonData = mapper.readValue(root.get("policyData").get("policy").toString(), ClosedLoopGridJSONData.class);
 			ClosedLoopFaultBody jsonBody = mapper.readValue(root.get("policyData").get("policy").get("jsonBodyData").toString(), ClosedLoopFaultBody.class);
 
@@ -164,7 +165,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 		}
 		return policyData;
 	}
-	
+
 
 	@SuppressWarnings("unchecked")
 	private String connectTriggerSignature(int index, ArrayList<Object> triggerSignatures, Object object) {
@@ -241,17 +242,17 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 		return resultBody.toString();
 	}
 
-	
+
 	private String callTrap(String trap, Object object) {
 		String signatureBody = "";
-		TrapDatas trapDatas = (TrapDatas) object;
-		ArrayList<Object> attributeList = new ArrayList<>();
+		ClosedLoopFaultTrapDatas trapDatas = (ClosedLoopFaultTrapDatas) object;
+		List<Object> attributeList = new ArrayList<>();
 		// Read the Trap 
 		if(! "nill".equals(trap)){
 			try{
 				if(trap.startsWith("Trap")){
 					if("Trap1".equals(trap)){
-						 attributeList = trapDatas.getTrap1();
+						attributeList = trapDatas.getTrap1();
 					}else if("Trap2".equals(trap)){
 						attributeList = trapDatas.getTrap2();
 					}else if("Trap3".equals(trap)){
@@ -281,7 +282,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 					}
 				}
 			} catch(Exception e){
-			    policyLogger.warn("Error during callTrap" , e);
+				policyLogger.warn("Error during callTrap" , e);
 				return "(" + trap + ")";
 			}
 		}else{
@@ -294,9 +295,9 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 		signatureBody = signatureBody + "(" + readAttributes(attributeList, attributeList.size()-1) + ")";
 		return signatureBody;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private String readAttributes(ArrayList<Object> object, int index) {
+	private String readAttributes(List<Object> object, int index) {
 		String attributes = "";
 		Map<String, String> trapSignatures = (Map<String, String>) object.get(index);
 		// Read the Elements. 
@@ -365,144 +366,144 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 		}
 		return attributes;
 	}
-	
+
 	private String getVarbindOID(String attrib) {
 		VarbindDictionary varbindId = null;
 		try{
-			 varbindId = (VarbindDictionary) commonclassdao.getEntityItem(VarbindDictionary.class, "varbindName", attrib);
-			 return varbindId.getVarbindOID();
+			varbindId = (VarbindDictionary) commonclassdao.getEntityItem(VarbindDictionary.class, "varbindName", attrib);
+			return varbindId.getVarbindOID();
 		}catch(Exception e){
-		    policyLogger.error("Error during retrieving varbindName " + attrib, e);
+			policyLogger.error("Error during retrieving varbindName " + attrib, e);
 			return attrib;
 		}
 	}
 
-	
+
 	//connect traps data set to JSON Body as String
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		private String getUIConnectTraps(ArrayList<Object> connectTrapSignatures) {
-			StringBuilder resultBody = new StringBuilder();
-			String connectMainBody = "";
-			for(int j = 0; j < connectTrapSignatures.size(); j++){
-				Map<String, String> connectTraps = (Map<String, String>)connectTrapSignatures.get(j);
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private String getUIConnectTraps(ArrayList<Object> connectTrapSignatures) {
+		StringBuilder resultBody = new StringBuilder();
+		String connectMainBody = "";
+		for(int j = 0; j < connectTrapSignatures.size(); j++){
+			Map<String, String> connectTraps = (Map<String, String>)connectTrapSignatures.get(j);
+			String connectBody = "";
+			Object object = connectTraps;
+			if(object instanceof LinkedHashMap<?, ?>){
+				String notBox = "";
+				String connectTrap1 = "";
+				String trapCount1 = "";
+				String operatorBox = "";
+				String connectTrap2 = "";
+				String trapCount2 = "";
+				if(((LinkedHashMap) object).keySet().contains("notBox")){
+					notBox = ((LinkedHashMap) object).get("notBox").toString();
+				}
+				if(((LinkedHashMap) object).get("connectTrap1") != null){
+					connectTrap1 = ((LinkedHashMap) object).get("connectTrap1").toString();
+				}
+				if(((LinkedHashMap) object).get("trapCount1") != null){
+					trapCount1 = ((LinkedHashMap) object).get("trapCount1").toString();
+				}
+				if(((LinkedHashMap) object).get("operatorBox") != null){
+					operatorBox = ((LinkedHashMap) object).get("operatorBox").toString();
+				}
+				if(((LinkedHashMap) object).get("connectTrap2") != null){
+					connectTrap2 = ((LinkedHashMap) object).get("connectTrap2").toString();
+				}
+				if(((LinkedHashMap) object).get("trapCount2") != null){
+					trapCount2 = ((LinkedHashMap) object).get("trapCount2").toString();
+				}
+				connectBody = notBox + "@!" + connectTrap1 + "@!" + trapCount1 + "@!" + operatorBox + "@!" + connectTrap2 + "@!" + trapCount2 + "#!?!"; 
+			}
+			resultBody.append(connectBody);
+		}
+		connectMainBody = connectMainBody + resultBody;
+		return connectMainBody;
+	}
+
+
+
+	// get Trigger signature from JSON body
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private String getUITriggerSignature(String trap, Object object2) {
+		StringBuilder triggerBody = new StringBuilder();
+		ClosedLoopFaultTrapDatas trapDatas = (ClosedLoopFaultTrapDatas) object2;
+		ArrayList<Object> attributeList = new ArrayList<>();
+		// Read the Trap 
+		if(trap.startsWith("Trap")){
+			if(trapDatas.getTrap1()!= null){
+				attributeList.add(trapDatas.getTrap1());
+			}
+			if(trapDatas.getTrap2()!= null){
+				attributeList.add(trapDatas.getTrap2());
+			}
+			if(trapDatas.getTrap3()!= null){
+				attributeList.add(trapDatas.getTrap3());
+			}
+			if(trapDatas.getTrap4()!= null){
+				attributeList.add(trapDatas.getTrap4());
+			}
+			if(trapDatas.getTrap5()!= null){
+				attributeList.add(trapDatas.getTrap5());
+			}
+			if(trapDatas.getTrap6()!= null){
+				attributeList.add(trapDatas.getTrap6());
+			}
+		}else{
+			if(trap.startsWith("Fault")){
+				if(trapDatas.getTrap1()!= null){
+					attributeList.add(trapDatas.getTrap1());
+				}
+				if(trapDatas.getTrap2()!= null){
+					attributeList.add(trapDatas.getTrap2());
+				}
+				if(trapDatas.getTrap3()!= null){
+					attributeList.add(trapDatas.getTrap3());
+				}
+				if(trapDatas.getTrap4()!= null){
+					attributeList.add(trapDatas.getTrap4());
+				}
+				if(trapDatas.getTrap5()!= null){
+					attributeList.add(trapDatas.getTrap5());
+				}
+				if(trapDatas.getTrap6()!= null){
+					attributeList.add(trapDatas.getTrap6());
+				}				
+			}	
+		}
+
+		for(int j = 0; j < attributeList.size(); j++){
+			StringBuilder signatureBody = new StringBuilder();
+			ArrayList<Object> connectTraps = (ArrayList<Object>) attributeList.get(j);
+			for(int i =0 ; i < connectTraps.size(); i++){
 				String connectBody = "";
-				Object object = connectTraps;
+				Object object = connectTraps.get(i);
 				if(object instanceof LinkedHashMap<?, ?>){
 					String notBox = "";
-					String connectTrap1 = "";
-					String trapCount1 = "";
+					String trigger1 = "";
 					String operatorBox = "";
-					String connectTrap2 = "";
-					String trapCount2 = "";
+					String trigger2 = "";
 					if(((LinkedHashMap) object).keySet().contains("notBox")){
 						notBox = ((LinkedHashMap) object).get("notBox").toString();
 					}
-					if(((LinkedHashMap) object).get("connectTrap1") != null){
-						connectTrap1 = ((LinkedHashMap) object).get("connectTrap1").toString();
-					}
-					if(((LinkedHashMap) object).get("trapCount1") != null){
-						trapCount1 = ((LinkedHashMap) object).get("trapCount1").toString();
+					if(((LinkedHashMap) object).get("trigger1") != null){
+						trigger1 = ((LinkedHashMap) object).get("trigger1").toString();
 					}
 					if(((LinkedHashMap) object).get("operatorBox") != null){
 						operatorBox = ((LinkedHashMap) object).get("operatorBox").toString();
 					}
-					if(((LinkedHashMap) object).get("connectTrap2") != null){
-						connectTrap2 = ((LinkedHashMap) object).get("connectTrap2").toString();
+					if(((LinkedHashMap) object).get("trigger2") != null){
+						trigger2 = ((LinkedHashMap) object).get("trigger2").toString();
 					}
-					if(((LinkedHashMap) object).get("trapCount2") != null){
-						trapCount2 = ((LinkedHashMap) object).get("trapCount2").toString();
-					}
-					connectBody = notBox + "@!" + connectTrap1 + "@!" + trapCount1 + "@!" + operatorBox + "@!" + connectTrap2 + "@!" + trapCount2 + "#!?!"; 
+					connectBody = notBox + "@!" + trigger1 + "@!" + operatorBox + "@!" + trigger2 + "#!"; 
 				}
-				resultBody.append(connectBody);
+				signatureBody.append(connectBody);
 			}
-			connectMainBody = connectMainBody + resultBody;
-			return connectMainBody;
+			triggerBody.append(signatureBody + "?!");
 		}
 
-			
-
-			// get Trigger signature from JSON body
-			@SuppressWarnings({ "rawtypes", "unchecked" })
-			private String getUITriggerSignature(String trap, Object object2) {
-				StringBuilder triggerBody = new StringBuilder();
-				TrapDatas trapDatas = (TrapDatas) object2;
-				ArrayList<Object> attributeList = new ArrayList<>();
-				// Read the Trap 
-				if(trap.startsWith("Trap")){
-					if(trapDatas.getTrap1()!= null){
-						attributeList.add(trapDatas.getTrap1());
-					}
-					if(trapDatas.getTrap2()!= null){
-						attributeList.add(trapDatas.getTrap2());
-					}
-					if(trapDatas.getTrap3()!= null){
-						attributeList.add(trapDatas.getTrap3());
-					}
-					if(trapDatas.getTrap4()!= null){
-						attributeList.add(trapDatas.getTrap4());
-					}
-					if(trapDatas.getTrap5()!= null){
-						attributeList.add(trapDatas.getTrap5());
-					}
-					if(trapDatas.getTrap6()!= null){
-						attributeList.add(trapDatas.getTrap6());
-					}
-				}else{
-					if(trap.startsWith("Fault")){
-						if(trapDatas.getTrap1()!= null){
-							attributeList.add(trapDatas.getTrap1());
-						}
-						if(trapDatas.getTrap2()!= null){
-							attributeList.add(trapDatas.getTrap2());
-						}
-						if(trapDatas.getTrap3()!= null){
-							attributeList.add(trapDatas.getTrap3());
-						}
-						if(trapDatas.getTrap4()!= null){
-							attributeList.add(trapDatas.getTrap4());
-						}
-						if(trapDatas.getTrap5()!= null){
-							attributeList.add(trapDatas.getTrap5());
-						}
-						if(trapDatas.getTrap6()!= null){
-							attributeList.add(trapDatas.getTrap6());
-						}				
-					}	
-				}
-
-				for(int j = 0; j < attributeList.size(); j++){
-					StringBuilder signatureBody = new StringBuilder();
-					ArrayList<Object> connectTraps = (ArrayList<Object>) attributeList.get(j);
-					for(int i =0 ; i < connectTraps.size(); i++){
-						String connectBody = "";
-						Object object = connectTraps.get(i);
-						if(object instanceof LinkedHashMap<?, ?>){
-							String notBox = "";
-							String trigger1 = "";
-							String operatorBox = "";
-							String trigger2 = "";
-							if(((LinkedHashMap) object).keySet().contains("notBox")){
-								notBox = ((LinkedHashMap) object).get("notBox").toString();
-							}
-							if(((LinkedHashMap) object).get("trigger1") != null){
-								trigger1 = ((LinkedHashMap) object).get("trigger1").toString();
-							}
-							if(((LinkedHashMap) object).get("operatorBox") != null){
-								operatorBox = ((LinkedHashMap) object).get("operatorBox").toString();
-							}
-							if(((LinkedHashMap) object).get("trigger2") != null){
-								trigger2 = ((LinkedHashMap) object).get("trigger2").toString();
-							}
-							connectBody = notBox + "@!" + trigger1 + "@!" + operatorBox + "@!" + trigger2 + "#!"; 
-						}
-						signatureBody.append(connectBody);
-					}
-					triggerBody.append(signatureBody + "?!");
-				}
-				
-				return triggerBody.toString();		
-			}
+		return triggerBody.toString();		
+	}
 
 	public  void prePopulateClosedLoopFaultPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		if (policyAdapter.getPolicyData() instanceof PolicyType) {
@@ -515,7 +516,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
-			    policyLogger.error("Error during collecting the description tag info for createClosedLoopFault " + policyNameValue , e);
+				policyLogger.error("Error during collecting the description tag info for createClosedLoopFault " + policyNameValue , e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);
@@ -548,7 +549,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 										String value = (String) attributeValue.getContent().get(0);
 										AttributeDesignatorType designator = match.getAttributeDesignator();
 										String attributeId = designator.getAttributeId();
-										
+
 										// First match in the target is OnapName, so set that value.
 										if ("ONAPName".equals(attributeId)) {
 											policyAdapter.setOnapName(value);
@@ -611,51 +612,6 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 
 }
 
-class TrapDatas{
-	private ArrayList<Object> trap1;
-	private ArrayList<Object> trap2;
-	private ArrayList<Object> trap3;
-	private ArrayList<Object> trap4;
-	private ArrayList<Object> trap5;
-	private ArrayList<Object> trap6;
-	public ArrayList<Object> getTrap1() {
-		return trap1;
-	}
-	public void setTrap1(ArrayList<Object> trap1) {
-		this.trap1 = trap1;
-	}
-	public ArrayList<Object> getTrap2() {
-		return trap2;
-	}
-	public void setTrap2(ArrayList<Object> trap2) {
-		this.trap2 = trap2;
-	}
-	public ArrayList<Object> getTrap3() {
-		return trap3;
-	}
-	public void setTrap3(ArrayList<Object> trap3) {
-		this.trap3 = trap3;
-	}
-	public ArrayList<Object> getTrap4() {
-		return trap4;
-	}
-	public void setTrap4(ArrayList<Object> trap4) {
-		this.trap4 = trap4;
-	}
-	public ArrayList<Object> getTrap5() {
-		return trap5;
-	}
-	public void setTrap5(ArrayList<Object> trap5) {
-		this.trap5 = trap5;
-	}
-	public ArrayList<Object> getTrap6() {
-		return trap6;
-	}
-	public void setTrap6(ArrayList<Object> trap6) {
-		this.trap6 = trap6;
-	}
-}
-
 class ClosedLoopGridJSONData{
 
 	private String clearTimeOut;
@@ -682,7 +638,7 @@ class ClosedLoopGridJSONData{
 	public void setVerificationclearTimeOut(String verificationclearTimeOut) {
 		this.verificationclearTimeOut = verificationclearTimeOut;
 	}
-	
+
 
 	public ArrayList<Object> getConnecttriggerSignatures() {
 		return connecttriggerSignatures;

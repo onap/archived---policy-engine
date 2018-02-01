@@ -7,12 +7,13 @@
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-readonly="temp.policy.editPolicy"
 						ng-model="temp.policy.policyName" required pattern="\S+"
-						title="Enter the Policy Name without any spaces" />
+						title="Enter Policy Name without any spaces and special characters and will accept _." />
 				</div>
 				<div class="form-group col-sm-6">
 					<label>Description:</label> <input type="text" class="form-control"
 						ng-disabled="temp.policy.readOnly"
-						ng-model="temp.policy.policyDescription" />
+						ng-model="temp.policy.policyDescription" 
+						title="Description field will accept any type of data."/>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -21,13 +22,13 @@
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.riskType"
 						ng-options="option for option in riskTypeDictionaryDatas track by option"
-						required pattern="\S+" title="RiskType is required"></select>
+						required pattern="\S+" title="Select the dropdown value driven from RiskType (Safe Policy)Dictionary."></select>
 				</div>
 				<div class="form-group col-sm-3">
 					<label>Risk Level:<sup><b>*</b></sup></label> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.riskLevel"
-						required pattern="\S+" title="RiskLevel is required">
+						required pattern="\S+" title="Select the dropdown Risk level value.">
 						<option>1</option>
 						<option>2</option>
 						<option>3</option>
@@ -38,7 +39,7 @@
 					<label>Guard:<sup><b>*</b></sup></label> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.guard"
-						required pattern="\S+" title="Guard is required">
+						required pattern="\S+" title="Select the dropdown Guard value.">
 						<option>True</option>
 						<option>False</option></select>
 				</div>
@@ -47,19 +48,19 @@
 				<div class="form-group col-sm-3">
 					<label>Time to Live Date:</label> <input type="text" id="ttlDate"
 						class="form-control" name="ttlDate" ng-disabled="temp.policy.readOnly"
-						ng-model="temp.policy.ttlDate" />
+						ng-model="temp.policy.ttlDate" title="Select the date from calender onclick on the field."/>
 				</div>
 				<div class="form-group col-sm-3">
 					<label>Controller:<sup></sup></label> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.brmsController"
-						ng-options="option for option in brmsControllerDatas track by option"></select>
+						ng-options="option for option in brmsControllerDatas track by option" title="Select the dropdown value driven from BRMS Controller (BRMS)Dictionary."></select>
 				</div>
 				<div class="form-group col-sm-3">
 					<label>Dependencies:<sup></sup></label> <select
 						class="form-control" multiple ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.brmsDependency"
-						ng-options="option for option in brmsDependencyDatas track by option"></select>
+						ng-options="option for option in brmsDependencyDatas track by option" title="Select the dropdown value driven from BRMS Dependency (BRMS)Dictionary."></select>
 				</div>
 			</div>
 		</div>
@@ -68,7 +69,7 @@
 				<div class="form-group col-sm-2">
 					<label>Rule Attributes:<sup></sup></label>
 					<button type="button" class="btn btn-default"
-						ng-disabled="temp.policy.readOnly" ng-click="addNewChoice()">
+						ng-disabled="temp.policy.readOnly" ng-click="addNewChoice()" title="onClick Rule Attribute row is added.">
 						<i class="fa fa-plus"></i>
 					</button>
 				</div>
@@ -78,17 +79,17 @@
 					<div class="form-group row" style="margin-left: 2%">
 						<div class="form-group col-sm-3">
 							<input type="text" class="form-control"
-								ng-disabled="temp.policy.readOnly" ng-model="choice.key"
+								ng-disabled="temp.policy.readOnly" ng-model="choice.key" title="Enter the Rule Attribute Key without any spaces and special characters"
 								placeholder="Attribute Key" />
 						</div>
 						<div class="form-group col-sm-3">
 							<input type="text" class="form-control"
-								ng-disabled="temp.policy.readOnly" ng-model="choice.value"
+								ng-disabled="temp.policy.readOnly" ng-model="choice.value" title="Enter the Rule Attribute Value without any spaces and special characters"
 								placeholder="Attribute Value" />
 						</div>
 						<div class="form-group col-sm-1">
 							<button type="button" class="btn btn-default" ng-show="$last"
-								ng-disabled="temp.policy.readOnly" ng-click="removeChoice()">
+								ng-disabled="temp.policy.readOnly" ng-click="removeChoice()" title="onClick will remove the last row">
 								<i class="fa fa-minus"></i>
 							</button>
 						</div>
@@ -101,7 +102,7 @@
 				<div class="form-group col-sm-12">
 					<label>Raw Rule:<sup><b>*</b></sup></label>
 					<textarea class="form-control"
-						ng-model="temp.policy.configBodyData"
+						ng-model="temp.policy.configBodyData" title="Enter Valid BRMS Rule."
 						ng-disabled="temp.policy.readOnly" style="height: 400px;" required></textarea>
 				</div>
 			</div>
@@ -112,11 +113,11 @@
 			<div>
 				<button class="btn btn-primary" herf="javascript:void(0)"
 					ng-disabled="temp.policy.readOnly"
-					ng-click="validatePolicy(temp.policy);">Validate</button>
+					ng-click="validatePolicy(temp.policy);" title="Validate the data entered in the Policy fields.">Validate</button>
 				<button class="btn btn-success" herf="javascript:void(0)"
 					ng-disabled="savebutton" ng-disabled="temp.policy.readOnly"
-					ng-click="saveBrmsRawPolicy(temp);">Save</button>
-				<button type="button" class="btn btn-default" ng-click="refresh();">Close</button>
+					ng-click="saveBrmsRawPolicy(temp);" title="Save the Policy with validated data.">Save</button>
+				<button type="button" class="btn btn-default" ng-click="refresh();" title="Close the template.">Close</button>
 			</div>
 		</div>
 	</form>

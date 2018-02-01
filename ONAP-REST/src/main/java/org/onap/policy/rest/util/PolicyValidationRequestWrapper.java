@@ -37,6 +37,7 @@ import org.onap.policy.api.AttributeType;
 import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.adapter.ClosedLoopFaultTrapDatas;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.adapter.RainyDayParams;
 import org.onap.policy.rest.adapter.YAMLParams;
@@ -55,12 +56,21 @@ public class PolicyValidationRequestWrapper {
 	public PolicyRestAdapter populateRequestParameters(HttpServletRequest request) {
 		
 		PolicyRestAdapter policyData = null;
-		
+		ClosedLoopFaultTrapDatas trapDatas = null;
+		ClosedLoopFaultTrapDatas faultDatas = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			policyData = mapper.readValue(root.get("policyData").toString(), PolicyRestAdapter.class);
+			if(root.get("trapData") != null){
+				trapDatas = mapper.readValue(root.get("trapData").toString(), ClosedLoopFaultTrapDatas.class);
+				policyData.setTrapDatas(trapDatas);
+			}
+			if(root.get("faultData") != null){
+				faultDatas = mapper.readValue(root.get("faultData").toString(), ClosedLoopFaultTrapDatas.class);
+				policyData.setFaultDatas(faultDatas);
+			}
 			
 			JsonObject json;
 			json = stringToJsonObject(root.toString());
@@ -88,9 +98,15 @@ public class PolicyValidationRequestWrapper {
 		/*
 		 * set policy adapter values for Building JSON object containing policy data
 		 */
-		//Common among policy types
+		//Common Policy Fields
 		policyData.setPolicyName(parameters.getPolicyName());
 		policyData.setOnapName(parameters.getOnapName()); 
+		policyData.setPriority(parameters.getPriority()); //Micro Service
+		policyData.setConfigName(parameters.getConfigName());  //Base and Firewall
+		policyData.setRiskType(parameters.getRiskType()); //Safe parameters Attributes
+		policyData.setRiskLevel(parameters.getRiskLevel());//Safe parameters Attributes
+		policyData.setGuard(String.valueOf(parameters.getGuard()));//Safe parameters Attributes
+		policyData.setTtlDate(convertDate(parameters.getTtlDate()));//Safe parameters Attributes
 		
 		//Some policies require jsonObject conversion from String for configBody (i.e. MicroService and Firewall)
 		JsonObject json = null;
@@ -298,6 +314,26 @@ public class PolicyValidationRequestWrapper {
 			        	String version = json.get("version").toString().replace("\"", "");
 			        	policyData.setVersion(version);
 			        }
+			        if(json.containsKey("policyScope")){
+			        	String policyScope = json.get("policyScope").toString().replace("\"", "");
+			        	policyData.setPolicyScope(policyScope);
+			        }
+			        if(json.containsKey("riskType")){
+			        	String riskType = json.get("riskType").toString().replace("\"", "");
+			        	policyData.setRiskType(riskType);
+			        }
+			        if(json.containsKey("riskLevel")){
+			        	String riskLevel = json.get("riskLevel").toString().replace("\"", "");
+			        	policyData.setRiskLevel(riskLevel);
+			        }
+			        if(json.containsKey("guard")){
+			        	String guard = json.get("guard").toString().replace("\"", "");
+			        	policyData.setGuard(guard);
+			        }
+				} else {
+		            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + parameters.getConfigBody();
+		            LOGGER.error(message);
+		            return null;				
 				}
 				
 			} else if("Fault".equals(parameters.getPolicyConfigType().toString())){
@@ -337,13 +373,6 @@ public class PolicyValidationRequestWrapper {
 				
 			}
 		}
-		
-		policyData.setPriority(parameters.getPriority()); //Micro Service
-		policyData.setConfigName(parameters.getConfigName());  //Base and Firewall
-		policyData.setRiskType(parameters.getRiskType()); //Safe parameters Attributes
-		policyData.setRiskLevel(parameters.getRiskLevel());//Safe parameters Attributes
-		policyData.setGuard(String.valueOf(parameters.getGuard()));//Safe parameters Attributes
-		policyData.setTtlDate(convertDate(parameters.getTtlDate()));//Safe parameters Attributes
 
 		return policyData;
 				

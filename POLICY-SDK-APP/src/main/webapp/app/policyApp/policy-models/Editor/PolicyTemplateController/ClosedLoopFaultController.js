@@ -529,6 +529,64 @@ angular.module("abs").controller('clFaultController', ['$scope', '$window', 'Pol
     	}
 	};
 
+	function trapData(){
+		var data = {};
+		if($scope.temp.policy.triggerTrapSignatures.length == 1 || $scope.temp.policy.triggerTrapSignatures["Trap1"] != null){
+			 data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1 }
+		}
+		if($scope.temp.policy.triggerTrapSignatures.length == 2 || $scope.temp.policy.triggerTrapSignatures["Trap2"] != null){
+			 data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2}
+		}
+		if($scope.temp.policy.triggerTrapSignatures.length == 3 || $scope.temp.policy.triggerTrapSignatures["Trap3"] != null){
+			 data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2,
+					trap3 : $scope.temp.policy.triggerTrapSignatures.Trap3}
+		}
+		if($scope.temp.policy.triggerTrapSignatures.length == 4 || $scope.temp.policy.triggerTrapSignatures["Trap4"] != null){
+			 data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2,
+					trap3 : $scope.temp.policy.triggerTrapSignatures.Trap3,   trap4 : $scope.temp.policy.triggerTrapSignatures.Trap4}
+		}
+		if($scope.temp.policy.triggerTrapSignatures.length == 5 || $scope.temp.policy.triggerTrapSignatures["Trap5"] != null){
+			 data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2,
+					trap3 : $scope.temp.policy.triggerTrapSignatures.Trap3,   trap4 : $scope.temp.policy.triggerTrapSignatures.Trap4,
+					trap5 : $scope.temp.policy.triggerTrapSignatures.Trap5}
+		}
+		if($scope.temp.policy.triggerTrapSignatures.length == 6 || $scope.temp.policy.triggerTrapSignatures["Trap6"] != null){
+			 data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2,
+					trap3 : $scope.temp.policy.triggerTrapSignatures.Trap3,   trap4 : $scope.temp.policy.triggerTrapSignatures.Trap4,
+					trap5 : $scope.temp.policy.triggerTrapSignatures.Trap5, trap6 : $scope.temp.policy.triggerTrapSignatures.Trap6}
+		}	
+		return data;
+	}
+	
+	function faultDatas(){
+		var faultData = {};
+		if($scope.temp.policy.triggerfaultSignatures.length == 1 || $scope.temp.policy.triggerfaultSignatures["Fault1"] != null){
+			 faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1 }
+		}
+		if($scope.temp.policy.triggerfaultSignatures.length == 2 || $scope.temp.policy.triggerfaultSignatures["Fault2"] != null){
+			 faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2}
+		}
+		if($scope.temp.policy.triggerfaultSignatures.length == 3 || $scope.temp.policy.triggerfaultSignatures["Fault3"] != null){
+			 faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2,
+					trap3 : $scope.temp.policy.triggerfaultSignatures.Fault3}
+		}
+		if($scope.temp.policy.triggerTrapSignatures.length == 4 || $scope.temp.policy.triggerfaultSignatures["Fault4"] != null){
+			 faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2,
+					trap3 : $scope.temp.policy.triggerfaultSignatures.Fault3,   trap4 : $scope.temp.policy.triggerfaultSignatures.Fault4}
+		}
+		if($scope.temp.policy.triggerfaultSignatures.length == 5 || $scope.temp.policy.triggerfaultSignatures["Fault5"] != null){
+			 faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2,
+					trap3 : $scope.temp.policy.triggerfaultSignatures.Fault3,   trap4 : $scope.temp.policy.triggerfaultSignatures.Fault4,
+					trap5 : $scope.temp.policy.triggerfaultSignatures.Fault5}
+		}
+		if($scope.temp.policy.triggerfaultSignatures.length == 6 || $scope.temp.policy.triggerfaultSignatures["Fault6"] != null){
+			 faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2,
+					trap3 : $scope.temp.policy.triggerfaultSignatures.Fault3,   trap4 : $scope.temp.policy.triggerfaultSignatures.Fault4,
+					trap5 : $scope.temp.policy.triggerfaultSignatures.Fault5, trap6 : $scope.temp.policy.triggerfaultSignatures.Fault6}
+		}
+		return faultData;
+	}
+	
 	$scope.saveFaultPolicy = function(policy){
 		if(policy.itemContent != undefined){
     		$scope.refreshCheck = true; 
@@ -536,57 +594,8 @@ angular.module("abs").controller('clFaultController', ['$scope', '$window', 'Pol
         	policy.itemContent = "";
     	}
 		$scope.savebutton = false;
-		var data = {};
-		var faultData = {};
-		if($scope.temp.policy.triggerTrapSignatures.length == 1 || $scope.temp.policy.triggerTrapSignatures["Trap1"] != null){
-			var data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1 }
-		}
-		if($scope.temp.policy.triggerTrapSignatures.length == 2 || $scope.temp.policy.triggerTrapSignatures["Trap2"] != null){
-			var data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2}
-		}
-		if($scope.temp.policy.triggerTrapSignatures.length == 3 || $scope.temp.policy.triggerTrapSignatures["Trap3"] != null){
-			var data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2,
-					trap3 : $scope.temp.policy.triggerTrapSignatures.Trap3}
-		}
-		if($scope.temp.policy.triggerTrapSignatures.length == 4 || $scope.temp.policy.triggerTrapSignatures["Trap4"] != null){
-			var data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2,
-					trap3 : $scope.temp.policy.triggerTrapSignatures.Trap3,   trap4 : $scope.temp.policy.triggerTrapSignatures.Trap4}
-		}
-		if($scope.temp.policy.triggerTrapSignatures.length == 5 || $scope.temp.policy.triggerTrapSignatures["Trap5"] != null){
-			var data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2,
-					trap3 : $scope.temp.policy.triggerTrapSignatures.Trap3,   trap4 : $scope.temp.policy.triggerTrapSignatures.Trap4,
-					trap5 : $scope.temp.policy.triggerTrapSignatures.Trap5}
-		}
-		if($scope.temp.policy.triggerTrapSignatures.length == 6 || $scope.temp.policy.triggerTrapSignatures["Trap6"] != null){
-			var data = {trap1 : $scope.temp.policy.triggerTrapSignatures.Trap1,  trap2 : $scope.temp.policy.triggerTrapSignatures.Trap2,
-					trap3 : $scope.temp.policy.triggerTrapSignatures.Trap3,   trap4 : $scope.temp.policy.triggerTrapSignatures.Trap4,
-					trap5 : $scope.temp.policy.triggerTrapSignatures.Trap5, trap6 : $scope.temp.policy.triggerTrapSignatures.Trap6}
-		}
-
-		if($scope.temp.policy.triggerfaultSignatures.length == 1 || $scope.temp.policy.triggerfaultSignatures["Fault1"] != null){
-			var faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1 }
-		}
-		if($scope.temp.policy.triggerfaultSignatures.length == 2 || $scope.temp.policy.triggerfaultSignatures["Fault2"] != null){
-			var faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2}
-		}
-		if($scope.temp.policy.triggerfaultSignatures.length == 3 || $scope.temp.policy.triggerfaultSignatures["Fault3"] != null){
-			var faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2,
-					trap3 : $scope.temp.policy.triggerfaultSignatures.Fault3}
-		}
-		if($scope.temp.policy.triggerTrapSignatures.length == 4 || $scope.temp.policy.triggerfaultSignatures["Fault4"] != null){
-			var faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2,
-					trap3 : $scope.temp.policy.triggerfaultSignatures.Fault3,   trap4 : $scope.temp.policy.triggerfaultSignatures.Fault4}
-		}
-		if($scope.temp.policy.triggerfaultSignatures.length == 5 || $scope.temp.policy.triggerfaultSignatures["Fault5"] != null){
-			var faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2,
-					trap3 : $scope.temp.policy.triggerfaultSignatures.Fault3,   trap4 : $scope.temp.policy.triggerfaultSignatures.Fault4,
-					trap5 : $scope.temp.policy.triggerfaultSignatures.Fault5}
-		}
-		if($scope.temp.policy.triggerfaultSignatures.length == 6 || $scope.temp.policy.triggerfaultSignatures["Fault6"] != null){
-			var faultData = {trap1 : $scope.temp.policy.triggerfaultSignatures.Fault1,  trap2 : $scope.temp.policy.triggerfaultSignatures.Fault2,
-					trap3 : $scope.temp.policy.triggerfaultSignatures.Fault3,   trap4 : $scope.temp.policy.triggerfaultSignatures.Fault4,
-					trap5 : $scope.temp.policy.triggerfaultSignatures.Fault5, trap6 : $scope.temp.policy.triggerfaultSignatures.Fault6}
-		}
+		var data = trapData();
+		var faultData = faultDatas();
 		var uuu = "policycreation/save_policy";
 		var postData={policyData: policy,
 				trapData : data,
@@ -627,7 +636,9 @@ angular.module("abs").controller('clFaultController', ['$scope', '$window', 'Pol
 		console.log(policy);
 		document.getElementById("validate").innerHTML = "";
 		var uuu = "policyController/validate_policy.htm";
-		var postData={policyData: policy};
+		var data = trapData();
+		var faultData = faultDatas();
+		var postData={policyData: policy, trapData : data, faultData : faultData};
 		$.ajax({
 			type : 'POST',
 			url : uuu,
