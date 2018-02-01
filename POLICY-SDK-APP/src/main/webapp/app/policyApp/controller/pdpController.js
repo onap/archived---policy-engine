@@ -53,14 +53,7 @@ app.controller('pdpTabController', function ($scope, PolicyAppService, modalServ
 					 $scope.editPdpGroupId = true;
 				 }   
 			 } 
-
-			 PolicyAppService.getData('get_PDPGroupData').then(function(data){
-				 var j = data;
-				 $scope.pdpdatas = JSON.parse(j.data);
-				 console.log($scope.pdpdatas);
-			 },function(error){
-				 console.log("failed");
-			 });
+			 getPDPGroups();
 		 },function (error) {
 			 console.log("failed");
 		 });
@@ -77,7 +70,6 @@ app.controller('pdpTabController', function ($scope, PolicyAppService, modalServ
 	};
 
 	$scope.editPDPGroup = null;
-	var dialog = null;
 	$scope.editPDPGroupFunctionPopup = function(pdpGroupData) {
 		$scope.editPDPGroup = pdpGroupData;
 		$( "#dialog" ).dialog({
@@ -87,8 +79,9 @@ app.controller('pdpTabController', function ($scope, PolicyAppService, modalServ
 
 	$scope.editPDPGroupFunctionModalPopup = function(pdpGroupData) {
 		$scope.editPDPGroup = pdpGroupData;
+		var modalInstance;
 		if($scope.userRolesDatas[0] == 'super-guest' || $scope.userRolesDatas[0] == 'guest'){
-			var modalInstance = $modal.open({
+			modalInstance = $modal.open({
 				backdrop: 'static', keyboard: false,
 				templateUrl: 'show_policies_pdp_group_popup.html',
 				controller: 'editPDPGrouppopupController',
@@ -102,7 +95,7 @@ app.controller('pdpTabController', function ($scope, PolicyAppService, modalServ
 				}
 			}); 
 		}else{
-			var modalInstance = $modal.open({
+			modalInstance = $modal.open({
 				backdrop: 'static', keyboard: false,
 				templateUrl: 'edit_pdp_group_popup.html',
 				controller: 'editPDPGrouppopupController',
@@ -118,10 +111,20 @@ app.controller('pdpTabController', function ($scope, PolicyAppService, modalServ
 		}  
 		modalInstance.result.then(function(response){
 			console.log('response', response);
-			$scope.pdpdatas=response.data;
+			getPDPGroups();
 		});
 	};
 
+	function getPDPGroups(){
+		PolicyAppService.getData('get_PDPGroupData').then(function(data){
+			var j = data;
+			$scope.pdpdatas = JSON.parse(j.data);
+			console.log($scope.pdpdatas);
+		},function(error){
+			console.log("failed");
+		});
+	}
+	
 	$scope.addNewPDPGroupPopUpWindow = function(editPDPGroup) {
 		$scope.editPDPGroup = null;
 		var modalInstance = $modal.open({
@@ -161,9 +164,8 @@ app.controller('pdpTabController', function ($scope, PolicyAppService, modalServ
 				dataType: 'json',
 				contentType: 'application/json',
 				data: JSON.stringify(postData),
-				success : function(data){
-					$scope.$apply(function(){$scope.pdpdata=data.data;});
-					$scope.pdpdatas=JSON.parse(data.data);
+				success : function(response){
+					$scope.$apply(function(){$scope.pdpdatas=JSON.parse(response.data);});
 				},
 				error : function(data){
 					console.log(data);

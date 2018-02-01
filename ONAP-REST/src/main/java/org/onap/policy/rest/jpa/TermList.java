@@ -109,6 +109,20 @@ public class TermList implements Serializable {
 	@JoinColumn(name="modified_by")
 	private UserInfo userModifiedBy;
 	
+	public Date getCreatedDate() {
+		return this.createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public Date getModifiedDate() {
+		return this.modifiedDate;
+	}
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+	
 	public UserInfo getUserCreatedBy() {
 		return userCreatedBy;
 	}

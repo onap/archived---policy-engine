@@ -7,12 +7,13 @@
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-readonly="temp.policy.editPolicy"
 						ng-model="temp.policy.policyName" required pattern="\S+"
-						title="Enter the Policy Name without any spaces" />
+						title="Enter Policy Name without any spaces and special characters and will accept _." />
 				</div>
 				<div class="form-group col-sm-6">
 					<label>Description:</label> <input type="text" class="form-control"
 						ng-disabled="temp.policy.readOnly"
-						ng-model="temp.policy.policyDescription" />
+						ng-model="temp.policy.policyDescription" 
+						title="Description field will accept any type of data."/>
 				</div>
 			</div>
 			<div class="well">
@@ -20,7 +21,7 @@
 					<div class="form-group col-sm-2">
 						<label>Component Attributes:<sup><b>*</b></sup></label><br>
 						<button type="button" class="btn btn-default"
-							ng-disabled="temp.policy.readOnly" ng-click="addNewChoice()">
+							ng-disabled="temp.policy.readOnly" ng-click="addNewChoice()" title="onClick Component Attribute row is added.">
 							<i class="fa fa-plus"></i>
 						</button>
 					</div>
@@ -31,18 +32,19 @@
 							<div class="form-group col-sm-3">
 								<select class="form-control" ng-disabled="temp.policy.readOnly"
 									ng-model="choice.key"
-									ng-options="option for option in attributeDictionaryDatas track by option">
+									ng-options="option for option in attributeDictionaryDatas track by option"
+									title="Select the dropdown value driven from Attribute (common)Dictionary.">
 									<option value="">{{choice.key}}</option>
 								</select>
 							</div>
 							<div class="form-group col-sm-3">
 								<input type="text" class="form-control"
 									ng-disabled="temp.policy.readOnly" ng-model="choice.value"
-									placeholder="Attribute Value" />
+									placeholder="Attribute Value" title="Enter the Attribute Value without any spaces and special characters"/>
 							</div>
 							<div class="form-group col-sm-1">
 								<button type="button" class="btn btn-default" ng-show="$last"
-									ng-disabled="temp.policy.readOnly" ng-click="removeChoice()">
+									ng-disabled="temp.policy.readOnly" ng-click="removeChoice()" title="onClick will remove the last row">
 									<i class="fa fa-minus"></i>
 								</button>
 							</div>
@@ -56,7 +58,7 @@
 					<div class="form-group col-sm-1">
 						<button type="button" class="btn btn-default"
 							ng-disabled="temp.policy.readOnly"
-							ng-click="addNewRuleAlgorithm()">
+							ng-click="addNewRuleAlgorithm()" title="onClick Rule Algorithms row is added.">
 							<i class="fa fa-plus"></i>
 						</button>
 					</div>
@@ -75,7 +77,7 @@
 								ng-disabled="temp.policy.readOnly"
 								ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmField1"
 								ng-options="option for option in attributeDictionaryDatas track by option"
-								name="dynamicRuleAlgorithmField1">
+								name="dynamicRuleAlgorithmField1" title="Select the dropdown value driven from Attribute (common)Dictionary.">
 								<option value="">{{ruleAlgorithmschoice.dynamicRuleAlgorithmField1}}</option>
 							</select>
 						</div>
@@ -84,7 +86,7 @@
 								ng-disabled="temp.policy.readOnly"
 								ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmCombo"
 								ng-options="option for option in functionDefinitionDatas"
-								name="dynamicRuleAlgorithmCombo">
+								name="dynamicRuleAlgorithmCombo" title="Select the dropdown value driven from FunctionDataType.">
 								<option value="">{{ruleAlgorithmschoice.dynamicRuleAlgorithmCombo}}</option>
 							</select>
 						</div>
@@ -92,12 +94,12 @@
 							<input type="text" class="form-control"
 								ng-disabled="temp.policy.readOnly"
 								ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmField2"
-								name="dynamicRuleAlgorithmField2" />
+								name="dynamicRuleAlgorithmField2" title="Enter the Value without any spaces and special characters and for rule formation use A1, A2,..etc., based on above Rules."/>
 						</div>
 						<div class="form-group col-sm-1">
 							<button type="button" class="btn btn-default" ng-show="$last"
 								ng-disabled="temp.policy.readOnly"
-								ng-click="removeRuleAlgorithm()">
+								ng-click="removeRuleAlgorithm()" title="onClick will remove the last row">
 								<i class="fa fa-minus"></i>
 							</button>
 						</div>
@@ -110,7 +112,7 @@
 					<div class="form-group col-sm-6">
 						<label>Action Performer:<sup><b>*</b></sup></label><BR> <select
 							class="form-control" ng-disabled="temp.policy.readOnly"
-							ng-model="temp.policy.actionPerformer">
+							ng-model="temp.policy.actionPerformer" title="Select the Action Performer values from dropdown.">
 							<option>PEP</option>
 							<option>PDP</option>
 						</select>
@@ -120,7 +122,7 @@
 							class="form-control"
 							ng-disabled="temp.policy.readOnly"
 							ng-model="temp.policy.actionAttributeValue"
-							ng-options="option for option in actionPolicyDictionaryDatas track by option"></select>
+							ng-options="option for option in actionPolicyDictionaryDatas track by option" title="Select the dropdown value driven from Action (Action)Dictionary."></select>
 					</div>
 				</div>
 			</div>
@@ -129,11 +131,11 @@
 			<div class="modal-footer">
 				<button class="btn btn-primary" herf="javascript:void(0)"
 					ng-disabled="temp.policy.readOnly"
-					ng-click="validatePolicy(temp.policy);">Validate</button>
+					ng-click="validatePolicy(temp.policy);" title="Validate the data entered in the Policy fields.">Validate</button>
 				<button class="btn btn-success" ng-disabled="savebutton"
 					herf="javascript:void(0)" ng-disabled="temp.policy.readOnly"
-					ng-click="saveActionPolicy(temp);">Save</button>
-				<button type="button" class="btn btn-default" ng-click="refresh();">Close</button>
+					ng-click="saveActionPolicy(temp);" title="Save the Policy with validated data.">Save</button>
+				<button type="button" class="btn btn-default" ng-click="refresh();" title="Close the template.">Close</button>
 			</div>
 	</form>
 </div>
