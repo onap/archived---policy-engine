@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_c73bc936",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/adapter/ClosedLoopFaultTrapDatas.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-01T17:53:59Z",
+      "side": 1,
+      "message": "Please add a JUnit test for this class",
+      "revId": "bd7aba8d61a5ef933b4e8bb34f5cac69aae2e6a7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a740fda5",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/adapter/ClosedLoopFaultTrapDatas.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-01T17:53:59Z",
+      "side": 1,
+      "message": "2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "bd7aba8d61a5ef933b4e8bb34f5cac69aae2e6a7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_674af5c6",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PolicyUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-01T17:53:59Z",
+      "side": 1,
+      "message": "Seems like this should be the first line in the method to avoid creating an instance of factory.",
+      "revId": "bd7aba8d61a5ef933b4e8bb34f5cac69aae2e6a7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
