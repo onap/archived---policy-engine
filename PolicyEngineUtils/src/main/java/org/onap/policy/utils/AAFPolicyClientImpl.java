@@ -165,7 +165,6 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 				logger.error(e.getMessage() + e);
 			}
 		}
-		logger.info("Authentication failed for : " + userName + " in " + props.getProperty(Config.AAF_URL));
 		return false;
 	}
 
@@ -194,7 +193,6 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 					aafLurPerm.destroy();
 				}
 			}
-			logger.info("Permissions for : " + userName + " in " + props.getProperty(Config.AAF_URL) + " for " + type  + "," + instance + "," + action + "\n Result is: " + result);
 			i++;
 		}while(i<2 && !result); // Try once more to check if this can be passed. AAF has some issues. 
 		return result;

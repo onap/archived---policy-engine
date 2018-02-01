@@ -46,13 +46,12 @@ public class XACMLPdpPIPFinderFactory extends PIPFinderFactory {
 
 	@Override
 	public PIPFinder getFinder() throws PIPException {
-		if (pipFinder == null) {
 			synchronized(this) {
 				if (pipFinder == null) {
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Creating default configurable engine finder");
 					}
-					pipFinder					= new ConfigurableEngineFinder();
+					pipFinder = new ConfigurableEngineFinder();
 					Properties xacmlProperties	= null;
 					try {
 						xacmlProperties	= XACMLProperties.getProperties();
@@ -66,21 +65,18 @@ public class XACMLPdpPIPFinderFactory extends PIPFinderFactory {
 					}
 				}
 			}
-		}
 		return pipFinder;
 	}
 
 	@Override
 	public PIPFinder getFinder(Properties properties) throws PIPException {
-		if (pipFinder == null) {
-			synchronized(this) {
-				if (pipFinder == null) {
-					if (LOGGER.isDebugEnabled()) {
+		synchronized(this) {
+			if (pipFinder == null) {
+				if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Creating configurable engine finder using: " + properties);
-					}
-					pipFinder					= new ConfigurableEngineFinder();
-					((ConfigurableEngineFinder)pipFinder).configure(properties);
 				}
+				pipFinder = new ConfigurableEngineFinder();
+				((ConfigurableEngineFinder)pipFinder).configure(properties);
 			}
 		}
 		return this.pipFinder;

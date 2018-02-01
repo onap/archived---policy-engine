@@ -30,11 +30,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.std.pap.StdEngine;
 
 import com.att.research.xacml.api.pap.PAPException;
-import com.att.research.xacml.std.pap.StdPDP;
 
 public class StdEngineTest {
 	

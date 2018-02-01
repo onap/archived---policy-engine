@@ -54,6 +54,7 @@ import org.onap.policy.rest.jpa.ServiceList;
 import org.onap.policy.rest.jpa.TermList;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.jpa.Zone;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -228,7 +229,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -256,7 +257,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -289,7 +290,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -353,7 +354,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -381,7 +382,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -496,7 +497,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -525,7 +526,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -666,7 +667,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -695,7 +696,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -816,7 +817,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -844,7 +845,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -986,7 +987,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1016,7 +1017,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1132,7 +1133,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1162,7 +1163,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1312,7 +1313,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 
 		return null;
@@ -1343,7 +1344,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1456,7 +1457,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1486,7 +1487,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1682,11 +1683,13 @@ public class FirewallDictionaryController {
 				}else{
 					termList.setUserCreatedBy(this.getUserInfo(userId));
 					termList.setUserModifiedBy(this.getUserInfo(userId));
+					termList.setCreatedDate(new Date());
 					commonClassDao.save(termList);
 				}
 			}else{
 				if(!isFakeUpdate) {
 					termList.setUserModifiedBy(this.getUserInfo(userId));
+					termList.setModifiedDate(new Date());
 					commonClassDao.update(termList); 
 				}
 			} 
@@ -1723,7 +1726,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1753,7 +1756,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1863,7 +1866,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1893,7 +1896,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -1922,6 +1925,8 @@ public class FirewallDictionaryController {
 			model.put("fwTagPickerDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(FWTagPicker.class)));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
+			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(operation, getDictionary);
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
@@ -1933,58 +1938,55 @@ public class FirewallDictionaryController {
 	public ModelAndView saveFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			boolean duplicateflag = false;
+			boolean isFakeUpdate = false;
 			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
+			if (request.getParameter("apiflag")!=null && ("api").equalsIgnoreCase (request.getParameter("apiflag"))) {
 				fromAPI = true;
 			}
-
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-
-
 			FWTagPicker fwTagPicker;
-			TagGridValues data;
-			String userId = null;
+			
+			String userId = "";
 			if (fromAPI) {
-				fwTagPicker = (FWTagPicker)mapper.readValue(root.get(fwTagPickerDictionaryData).toString(), FWTagPicker.class);
-				data = (TagGridValues)mapper.readValue(root.get(fwTagPickerDictionaryData).toString(), TagGridValues.class);
+				fwTagPicker = (FWTagPicker)mapper.readValue(root.get("dictionaryFields").toString(), FWTagPicker.class);
 				userId = "API";
-
 				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(), tagPickerName, FWTagPicker.class);
+				if (("update").equals(request.getParameter("operation"))) {
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(), "tagPickerName", FWTagPicker.class);
+					int id = 0;
 					FWTagPicker dbdata = (FWTagPicker) duplicateData.get(0);
-					int id = dbdata.getId();
+					id = dbdata.getId();
 					fwTagPicker.setId(id);
 					fwTagPicker.setUserCreatedBy(this.getUserInfo(userId));
 				}
 			} else {
-
-				fwTagPicker = (FWTagPicker)mapper.readValue(root.get(fwTagPickerDictionaryData).toString(), FWTagPicker.class);
-				data = (TagGridValues)mapper.readValue(root.get(fwTagPickerDictionaryData).toString(), TagGridValues.class);
-				userId = root.get(userid).textValue();
-			}
-
-			String header = "";
-			int counter = 0;
-			if(!data.getTags().isEmpty()){
-				for(Object attribute : data.getTags()){
-					if(attribute instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
-						String value = ((LinkedHashMap<?, ?>) attribute).get("number").toString();
-						if(counter>0){
-							header = header + "#";
+				TagGridValues data;
+				fwTagPicker = (FWTagPicker)mapper.readValue(root.get("fwTagPickerDictionaryData").toString(), FWTagPicker.class);
+				data = (TagGridValues)mapper.readValue(root.get("fwTagPickerDictionaryData").toString(), TagGridValues.class);
+				userId = root.get("userid").textValue();
+				
+				StringBuilder header = new StringBuilder();
+				int counter = 0;
+				if(!data.getTags().isEmpty()){
+					for(Object attribute : data.getTags()){
+						if(attribute instanceof LinkedHashMap<?, ?>){
+							String key = ((LinkedHashMap<?, ?>) attribute).get("option").toString();
+							String value = ((LinkedHashMap<?, ?>) attribute).get("number").toString();
+							if(counter>0){
+								header.append("#");
+							}
+							header.append(key+":"+value);
+							counter ++;
 						}
-						header = header + key + ":";
-						header = header + value;
-						counter ++;
 					}
 				}
+				fwTagPicker.setTagValues(header.toString());
 			}
-			fwTagPicker.setTagValues(header);
+			
 			if(fwTagPicker.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(), tagPickerName, FWTagPicker.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(), "tagPickerName", FWTagPicker.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
@@ -1997,7 +1999,6 @@ public class FirewallDictionaryController {
 				fwTagPicker.setModifiedDate(new Date());
 				commonClassDao.update(fwTagPicker); 
 			} 
-
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
@@ -2028,7 +2029,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -2056,25 +2057,9 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
-	}
-
-
-	@RequestMapping(value={"/get_TagNameByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getTagNameEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put(fwTagDictionaryDatas, mapper.writeValueAsString(commonClassDao.getDataByColumn(FWTag.class, "fwTagName")));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
 	}
 
 	@RequestMapping(value={"/get_TagListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -2082,7 +2067,24 @@ public class FirewallDictionaryController {
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
-			model.put(fwTagDictionaryDatas, mapper.writeValueAsString(commonClassDao.getData(FWTag.class)));
+			model.put(fwTagDictionaryDatas, mapper.writeValueAsString(commonClassDao.getData(FWTag.class)));	
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
+			JSONObject j = new JSONObject(msg);
+			response.addHeader(successMapKey, successMessage); 
+			response.addHeader(operation, getDictionary);
+			response.getWriter().write(j.toString());
+		}
+		catch (Exception e){
+			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+		}
+	}
+	
+	@RequestMapping(value={"/get_TagNameByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	public void getTagNameEntityDataByName(HttpServletRequest request, HttpServletResponse response){
+		try{
+			Map<String, Object> model = new HashMap<>();
+			ObjectMapper mapper = new ObjectMapper();
+			model.put("fwTagDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(FWTag.class, "fwTagName")));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -2091,6 +2093,7 @@ public class FirewallDictionaryController {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
 		}
 	}
+
 
 	@RequestMapping(value={"/fw_dictionary/save_fwTag"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView saveFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -2100,50 +2103,47 @@ public class FirewallDictionaryController {
 			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
 				fromAPI = true;
 			}
-
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-
-
 			FWTag fwTag;
-			TagGridValues tagGridValues;
-			String userId = null;
+			
+			String userId="";
 			if (fromAPI) {
-				fwTag = (FWTag)mapper.readValue(root.get(fwTagDictionaryDatas).toString(), FWTag.class);
-				tagGridValues = (TagGridValues)mapper.readValue(root.get(fwTagDictionaryDatas).toString(), TagGridValues.class);
+				fwTag = mapper.readValue(root.get("dictionaryFields").toString(), FWTag.class);
 				userId = "API";
-
 				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTag.getFwTagName(), "tagName", FWTag.class);
+				if (("update").equals(request.getParameter("operation"))) {
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTag.getFwTagName(), "fwTagName", FWTag.class);
+					int id = 0;
 					FWTag data = (FWTag) duplicateData.get(0);
-					int id = data.getId();
+					id = data.getId();
 					fwTag.setId(id);
 					fwTag.setUserCreatedBy(this.getUserInfo(userId));
-
 				}
 			} else {
-				fwTag = (FWTag)mapper.readValue(root.get("fwTagDictionaryData").toString(), FWTag.class);
-				tagGridValues = (TagGridValues)mapper.readValue(root.get("fwTagDictionaryData").toString(), TagGridValues.class);
-				userId = root.get(userid).textValue();
-			}
-
-			String userValue = "";
-			int counter = 0;
-			if(!tagGridValues.getTags().isEmpty()){
-				for(Object attribute : tagGridValues.getTags()){
-					if(attribute instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) attribute).get("tags").toString();
-						if(counter>0){
-							userValue = userValue + ",";
+				TagGridValues tagGridValues;
+				fwTag = mapper.readValue(root.get("fwTagDictionaryData").toString(), FWTag.class);
+				tagGridValues = mapper.readValue(root.get("fwTagDictionaryData").toString(), TagGridValues.class);
+				userId = root.get("userid").textValue();
+				
+				StringBuilder userValue = new StringBuilder();
+				int counter = 0;
+				if(!tagGridValues.getTags().isEmpty()){
+					for(Object attribute : tagGridValues.getTags()){
+						if(attribute instanceof LinkedHashMap<?, ?>){
+							String key = ((LinkedHashMap<?, ?>) attribute).get("tags").toString();
+							if(counter>0){
+								userValue.append(",");
+							}
+							userValue.append(key);
+							counter ++;
 						}
-						userValue = userValue + key ;
-						counter ++;
 					}
 				}
+				fwTag.setTagValues(userValue.toString());
 			}
-			fwTag.setTagValues(userValue);
+			
 			if(fwTag.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTag.getFwTagName(), "fwTagName", FWTag.class);
 				if(!duplicateData.isEmpty()){
@@ -2151,20 +2151,22 @@ public class FirewallDictionaryController {
 				}else{
 					fwTag.setUserCreatedBy(this.getUserInfo(userId));
 					fwTag.setUserModifiedBy(this.getUserInfo(userId));
+					
 					commonClassDao.save(fwTag);
-				}   
+				}		
 			}else{
-				fwTag.setUserModifiedBy(this.getUserInfo(userId));
-				fwTag.setModifiedDate(new Date());
-				commonClassDao.update(fwTag); 
+				
+					fwTag.setUserModifiedBy(this.getUserInfo(userId));
+					commonClassDao.update(fwTag); 
+				
 			} 
-
 			String responseString = "";
 			if(duplicateflag){
-				responseString = duplicateResponseString;
+				responseString = "Duplicate";
 			}else{
-				responseString =  mapper.writeValueAsString(commonClassDao.getData(FWTag.class));
+				responseString = mapper.writeValueAsString(commonClassDao.getData(FWTag.class));
 			}
+
 			if (fromAPI) {
 				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
 					responseString = successMsg;
@@ -2189,7 +2191,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -2219,7 +2221,7 @@ public class FirewallDictionaryController {
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}

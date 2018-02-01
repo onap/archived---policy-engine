@@ -18,9 +18,7 @@ package org.onap.policy.xacml.test.std.pap;
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-import static org.junit.Assert.*;
-
-import java.util.HashSet;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
