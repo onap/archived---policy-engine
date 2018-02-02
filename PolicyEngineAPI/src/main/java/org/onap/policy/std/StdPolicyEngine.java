@@ -632,11 +632,11 @@ public class StdPolicyEngine {
                     try {
                         switch (policyConfigResponse.getType()) {
                             case JSON:
-                                JsonReader jsonReader = Json
-                                        .createReader(new StringReader(policyConfigResponse.getConfig()));
-                                JsonObject object = jsonReader.readObject();
-                                jsonReader.close();
-                                policyConfig.setJsonObject(object);
+                            	try (JsonReader jsonReader = Json
+                                        .createReader(new StringReader(policyConfigResponse.getConfig())) ) {
+                            		JsonObject object = jsonReader.readObject();
+                            		policyConfig.setJsonObject(object);
+                            	}
                                 break;
                             case OTHER:
                                 policyConfig.setOther(policyConfigResponse.getConfig());

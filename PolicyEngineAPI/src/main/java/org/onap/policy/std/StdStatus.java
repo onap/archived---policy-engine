@@ -152,7 +152,7 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	@Override
 	public String getPolicyName() {
 		if(policyName!=null && policyName.contains(".xml")){
-			return (policyName.substring(0, policyName.substring(0, policyName.lastIndexOf('.')).lastIndexOf('.')));
+			return policyName.substring(0, policyName.substring(0, policyName.lastIndexOf('.')).lastIndexOf('.'));
 		}
 		return policyName;
 	}
@@ -225,7 +225,7 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	public void setOther(String other) {
 		this.other = other;
 	}
-	
+	@Override
 	public PolicyDecision getDecision() {
 		return policyDecision;
 	}
@@ -236,11 +236,11 @@ public class StdStatus extends StdPolicyResponse implements PolicyConfig, Policy
 	public void setDetails(String details){
 		this.details = details;
 	}
-	
+	@Override
 	public String getDetails(){
 		return details;
 	}
-	
+	@Override
     public PolicyConfigType getPolicyType() {
         return type;
     }

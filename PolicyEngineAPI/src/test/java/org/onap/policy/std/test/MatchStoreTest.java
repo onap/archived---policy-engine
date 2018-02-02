@@ -23,8 +23,8 @@ package org.onap.policy.std.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -373,7 +373,7 @@ public class MatchStoreTest {
 	public void testGetMatchStore_1()
 		throws Exception {
 
-		HashSet<Matches> result = MatchStore.getMatchStore();
+		Set<Matches> result = MatchStore.getMatchStore();
 
 		// add additional test code here
 		// An unexpected exception was thrown in user code while executing this test:

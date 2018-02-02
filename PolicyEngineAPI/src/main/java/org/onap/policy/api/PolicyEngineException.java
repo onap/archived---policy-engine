@@ -29,6 +29,7 @@ public class PolicyEngineException extends Exception{
 	private static final long serialVersionUID = 4945973094200118969L;
 
 	public PolicyEngineException() {
+		super();
 	}
 	
 	public PolicyEngineException(String message) {
