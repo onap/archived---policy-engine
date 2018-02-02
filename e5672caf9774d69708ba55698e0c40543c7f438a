@@ -2,6 +2,74 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_0da30fb3",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/CryptoUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-02T18:50:58Z",
+      "side": 1,
+      "message": "Frank, can you add a little comment, mentioning that \"the hadcoded key is to be removed in a future iteration\"",
+      "revId": "e5672caf9774d69708ba55698e0c40543c7f438a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4da0379f",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/CryptoUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-02T18:50:58Z",
+      "side": 1,
+      "message": "The next 3 lines are repeated in a couple places (next function) also, can they be consolidated in a single place to avoid code duplication complaints in sonar?",
+      "revId": "e5672caf9774d69708ba55698e0c40543c7f438a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2d8dab31",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/CryptoUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-02T18:50:58Z",
+      "side": 1,
+      "message": "encryptedTxt is always going to be \"not-null\" per if statement in line 140.   I think you can simple do\n\nreturn encryptedTxt.getBytes(StandardCharsets.UTF_8);",
+      "revId": "e5672caf9774d69708ba55698e0c40543c7f438a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_cd83e702",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/CryptoUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-02T18:50:58Z",
+      "side": 1,
+      "message": "The next 3 lines are repeated across multiple methods, consolidate into single function for reuse and avoid sonar",
+      "revId": "e5672caf9774d69708ba55698e0c40543c7f438a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_2dbfebd1",
         "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/test/CryptoUtilsTest.java",
         "patchSetId": 4
