@@ -22,16 +22,14 @@ package org.onap.policy.std;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.onap.policy.api.LoadedPolicy;
 import org.onap.policy.api.NotificationType;
 import org.onap.policy.api.PDPNotification;
 import org.onap.policy.api.RemovedPolicy;
-import org.onap.policy.std.StdLoadedPolicy;
-import org.onap.policy.std.StdPDPNotification;
-import org.onap.policy.std.StdRemovedPolicy;
-
-import org.onap.policy.common.logging.flexlogger.*; 
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger; 
 
 public class MatchStore {
 	private static HashSet<Matches> matchStore = new HashSet<>();
@@ -41,7 +39,7 @@ public class MatchStore {
 		// Empty Constructor
 	}
 	
-	public static HashSet<Matches> getMatchStore() {
+	public static Set<Matches> getMatchStore() {
 		return matchStore;
 	}
 
@@ -98,7 +96,7 @@ public class MatchStore {
 					
 				}
 				// IF not a match then add it to the MatchStore
-				if(match==false){
+				if(! match){
 					matchStore.add(newMatch);
 				}
 			}

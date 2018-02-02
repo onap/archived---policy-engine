@@ -96,6 +96,7 @@ public class APIPolicyConfigResponse implements APIConfigResponse {
     public void setResponseAttributes(Map<String,String> responseAttributes){
         this.responseAttributes = responseAttributes;
     }
+    @Override
     public Map<String,String> getResponseAttributes(){
         return responseAttributes;
     }

@@ -62,7 +62,8 @@ public class ManualClientEndUEB {
 			return null;
 		}
 		if(scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)) {
-			boolean removed = false, updated = false; 
+			boolean removed = false;
+			boolean updated = false; 
 			if(notification.getRemovedPolicies()!=null && !notification.getRemovedPolicies().isEmpty()){
 				removed = true;
 			}
