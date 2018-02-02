@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_2dbfebd1",
+        "filename": "PolicyEngineUtils/src/test/java/org/onap/policy/utils/test/CryptoUtilsTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-02T18:27:36Z",
+      "side": 1,
+      "message": "2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "e5672caf9774d69708ba55698e0c40543c7f438a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
