@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,9 @@ public class PolicyValidationRequestWrapper {
 	
 	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyValidationRequestWrapper.class);
 	public static final String CONFIG_NAME="configName";
+	public static final String INVALIDJSON = " improper JSON format: ";
+	public static final String ONAPNAME = "onapname";
+	public static final String SERVICETYPE_POLICY_NAME = "serviceTypePolicyName";
 
 	public PolicyRestAdapter populateRequestParameters(HttpServletRequest request) {
 		
@@ -107,6 +110,7 @@ public class PolicyValidationRequestWrapper {
 		policyData.setRiskLevel(parameters.getRiskLevel());//Safe parameters Attributes
 		policyData.setGuard(String.valueOf(parameters.getGuard()));//Safe parameters Attributes
 		policyData.setTtlDate(convertDate(parameters.getTtlDate()));//Safe parameters Attributes
+		policyData.setApiflag("API");
 		
 		//Some policies require jsonObject conversion from String for configBody (i.e. MicroService and Firewall)
 		JsonObject json = null;
@@ -115,7 +119,7 @@ public class PolicyValidationRequestWrapper {
         		json = stringToJsonObject(parameters.getConfigBody());
         	}
         } catch(JsonException| IllegalStateException e){
-            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + parameters.getConfigBody();
+            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ INVALIDJSON + parameters.getConfigBody();
             LOGGER.error(message, e);
             return null;
         }
@@ -284,7 +288,7 @@ public class PolicyValidationRequestWrapper {
 						try {
 							policyJSON = mapper.readTree(content);
 						} catch (IOException e) {
-				            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + parameters.getConfigBody();
+				            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ INVALIDJSON + parameters.getConfigBody();
 				            LOGGER.error(message, e);
 				            return null;					
 				        }
@@ -300,7 +304,7 @@ public class PolicyValidationRequestWrapper {
 			        }
 			        if (json.containsKey("location")){
 			            String msLocation = json.get("location").toString().replace("\"", "");
-			            policyData.setMsLocation(msLocation);
+			            policyData.setLocation(msLocation);
 			        }
 			        if (json.containsKey(CONFIG_NAME)){
 			            String configName = json.get(CONFIG_NAME).toString().replace("\"", "");
@@ -331,7 +335,7 @@ public class PolicyValidationRequestWrapper {
 			        	policyData.setGuard(guard);
 			        }
 				} else {
-		            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + parameters.getConfigBody();
+		            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ INVALIDJSON + parameters.getConfigBody();
 		            LOGGER.error(message);
 		            return null;				
 				}
@@ -339,12 +343,11 @@ public class PolicyValidationRequestWrapper {
 			} else if("Fault".equals(parameters.getPolicyConfigType().toString())){
 				
 				policyData.setConfigPolicyType("ClosedLoop_Fault");
-				policyData.setApiflag("API");
 				
 				if(json != null){
 					policyData.setJsonBody(json.toString());
-			        if (json.get("onapname")!=null){
-			        	String onapName = json.get("onapname").toString().replace("\"", "");
+			        if (json.get(ONAPNAME)!=null){
+			        	String onapName = json.get(ONAPNAME).toString().replace("\"", "");
 			        	policyData.setOnapName(onapName);
 			        }
 				}
@@ -355,14 +358,14 @@ public class PolicyValidationRequestWrapper {
 				
 				if(json != null){
 					policyData.setJsonBody(json.toString());
-			        if (json.get("onapname")!=null){
-			        	String onapName = json.get("onapname").toString().replace("\"", "");
+			        if (json.get(ONAPNAME)!=null){
+			        	String onapName = json.get(ONAPNAME).toString().replace("\"", "");
 			        	policyData.setOnapName(onapName);
 			        }
-			        if (json.get("serviceTypePolicyName")!=null){
-			        	String serviceType = json.get("serviceTypePolicyName").toString().replace("\"", "");
+			        if (json.get(SERVICETYPE_POLICY_NAME)!=null){
+			        	String serviceType = json.get(SERVICETYPE_POLICY_NAME).toString().replace("\"", "");
 						LinkedHashMap<String, String> serviceTypePolicyName = new LinkedHashMap<>();
-						serviceTypePolicyName.put("serviceTypePolicyName", serviceType);
+						serviceTypePolicyName.put(SERVICETYPE_POLICY_NAME, serviceType);
 			        	policyData.setServiceTypePolicyName(serviceTypePolicyName);
 			        }
 				}
@@ -377,11 +380,10 @@ public class PolicyValidationRequestWrapper {
 		return policyData;
 				
 	}
-	
+    
     private JsonObject stringToJsonObject(String value) {
-
     	try(JsonReader jsonReader = Json.createReader(new StringReader(value))){
-			return jsonReader.readObject();
+            return jsonReader.readObject();
         } catch(JsonException| IllegalStateException e){
             LOGGER.info(XACMLErrorConstants.ERROR_DATA_ISSUE+ "Improper JSON format... may or may not cause issues in validating the policy: " + value, e);
             return null;

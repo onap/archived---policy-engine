@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,8 +81,10 @@ public class NotificationController {
     private static Boolean notificationFlag = false;
 
     public void check(PDPStatus newStatus, Map<String, PolicyDef> policyContainer) {
-        boolean updated = false;
-        boolean removed = false;
+    	
+    	LOGGER.info("NotificationController: checking for updated and removed policies.");
+        boolean isUpdated = false;
+        boolean isRemoved = false;
         Notification notification = new Notification();
         HashSet<Removed> removedPolicies = new HashSet<>();
         HashSet<Updated> updatedPolicies = new HashSet<>();
@@ -90,16 +92,18 @@ public class NotificationController {
         if (oldStatus == null) {
             oldStatus = newStatus;
         }
-        // Debugging purpose only.
-        LOGGER.debug("old config Status :" + oldStatus.getStatus());
-        LOGGER.debug("new config Status :" + newStatus.getStatus());
+
+        LOGGER.info("old config Status :" + oldStatus.getStatus());
+        LOGGER.info("new config Status :" + newStatus.getStatus());
 
         // Depending on the above condition taking the Change as an Update.
         if (oldStatus.getStatus().toString() != newStatus.getStatus().toString()) {
             LOGGER.info("There is an Update to the PDP");
             LOGGER.debug(oldStatus.getLoadedPolicies());
             LOGGER.debug(newStatus.getLoadedPolicies());
+            
             // Check if there is an Update/additions in the policy.
+    		LOGGER.info("NotificationController: check for updated or new policies");
             for (PDPPolicy newPolicy : newStatus.getLoadedPolicies()) {
                 boolean change = true;
                 for (PDPPolicy oldPolicy : oldStatus.getLoadedPolicies()) {
@@ -113,12 +117,14 @@ public class NotificationController {
                 }
                 // if there is a change Send the notifications to the Client.
                 if (change) {
+            		LOGGER.info("NotificationController: sending update/new policy notification");
                     sendUpdate(newPolicy, policyContainer);
-                    updated = true;
+                    isUpdated = true;
                     updatedPolicies.add(this.updated);
                 }
             }
             // Check if there is any removal of policy.
+    		LOGGER.info("NotificationController: check for removed policies");
             for (PDPPolicy oldPolicy : oldStatus.getLoadedPolicies()) {
                 boolean change = true;
                 for (PDPPolicy newPolicy : newStatus.getLoadedPolicies()) {
@@ -132,8 +138,9 @@ public class NotificationController {
                 }
                 // if there is a change Send the notifications to the Client.
                 if (change) {
+            		LOGGER.info("NotificationController: sending removal notification");
                     sendremove(oldPolicy);
-                    removed = true;
+                    isRemoved = true;
                     removedPolicies.add(this.removed);
                 }
             }
@@ -141,15 +148,15 @@ public class NotificationController {
         // At the end the oldStatus must be updated with the newStatus.
         oldStatus = newStatus;
         // Sending Notification to the Server to pass over to the clients
-        if (updated || removed) {
+        if (isUpdated || isRemoved) {
             // Call the Notification Server..
             notification.setRemovedPolicies(removedPolicies);
             notification.setLoadedPolicies(updatedPolicies);
-            notification = setUpdateTypes(updated, removed, notification);
+            notification = setUpdateTypes(isUpdated, isRemoved, notification);
             ObjectWriter om = new ObjectMapper().writer();
             try {
                 setNotificationJSON(om.writeValueAsString(notification));
-                LOGGER.info(notificationJSON);
+                LOGGER.info("NotificationController notificationJson: " + notificationJSON);
                 // NotificationServer Method here.
                 setPropNotification();
                 if (("ueb".equals(propNotificationType) || "dmaap".equals(propNotificationType))
@@ -191,6 +198,7 @@ public class NotificationController {
     public static void sendNotification() {
         if (notificationFlag) {
             try {
+        		LOGGER.info("NotificationController: calling NotificationServer to sendNotification");
                 NotificationServer.sendNotification(notificationJSON, propNotificationType, pdpURL);
             } catch (Exception e) {
                 LOGGER.info(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in sending the Event Notification: "
@@ -255,7 +263,7 @@ public class NotificationController {
         } else if (newPolicy.getName().contains(".Action_")) {
             // Take Configuration copy to PDP Webapps.
             // Action policies have .json as extension.
-            String urlString = "$URL/Action/" + newPolicy.getId().substring(0, newPolicy.getId().lastIndexOf("."))
+            String urlString = "$URL/Action/" + newPolicy.getId().substring(0, newPolicy.getId().lastIndexOf('.'))
                     + ".json";
             callPap(urlString, "Action");
         }
@@ -390,7 +398,7 @@ public class NotificationController {
             }
             if (delete) {
                 FileFilter fileFilter = new WildcardFileFilter(
-                        oldPolicy.getId().substring(0, oldPolicy.getId().lastIndexOf(".")) + ".*");
+                        oldPolicy.getId().substring(0, oldPolicy.getId().lastIndexOf('.')) + ".*");
                 File[] configFile = dir.listFiles(fileFilter);
                 if (configFile.length == 1) {
                     Files.deleteIfExists(configFile[0].toPath());
@@ -418,7 +426,7 @@ public class NotificationController {
             String papPath = papUrls.getUrl();
             papPath = papPath.substring(0, papPath.lastIndexOf("/pap"));
             String papAddress = urlString.replace("$URL", papPath);
-            String fileName = papAddress.substring(papAddress.lastIndexOf("/") + 1);
+            String fileName = papAddress.substring(papAddress.lastIndexOf('/') + 1);
             String fileLocation = configLocation.toString() + File.separator + fileName;
             try {
                 URL papURL = new URL(papAddress);
