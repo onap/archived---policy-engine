@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public class APIRequestHandler {
 	public void doDelete(HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext, String apiflag) throws IOException, SQLException{
 		DeleteHandler deleteHandler = DeleteHandler.getInstance();
 		if ("deletePapApi".equalsIgnoreCase(apiflag)) {
-			deleteHandler.doAPIDeleteFromPAP(request, response, loggingContext);
+			deleteHandler.doAPIDeleteFromPAP(request, response);
 			return;
 		} else if ("deletePdpApi".equalsIgnoreCase(apiflag)) {
 			deleteHandler.doAPIDeleteFromPDP(request, response, loggingContext);
