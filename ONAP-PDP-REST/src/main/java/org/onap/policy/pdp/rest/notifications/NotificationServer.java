@@ -208,11 +208,15 @@ public class NotificationServer {
 		
 		for(Session session: queue) {
 			try {
+				LOGGER.info("\n Sending Notification: " + notification + " for client session id: " + session.getId() + "\n "
+						+ "PDPUrl is " + pdpURL);
+	    		LOGGER.info("NotificationServer: sending text message");
 				session.getBasicRemote().sendText(notification);
 			} catch (IOException e) {
 				LOGGER.info(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error in sending the Event Notification: "+ e.getMessage() + e);
 			}
 		}
+		
 		NotificationService.sendNotification(notification);
 	}
 

@@ -208,8 +208,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		XACMLRest.xacmlInit(config);
 		// Load the Notification Delay.
 		setNotificationDelay();
-		// Load Queue size. 
-		int queueSize = 5; // Set default Queue Size here. 
+		// Load Queue size. Not sure if we really need to have the queue bounded, we should look further into this
+		int queueSize = 50; // Set default Queue Size here. 
 		queueSize = Integer.parseInt(XACMLProperties.getProperty("REQUEST_BUFFER_SIZE",String.valueOf(queueSize)));
 		initQueue(queueSize);
 		// Load our engine - this will use the latest configuration
@@ -477,6 +477,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 					im.endTransaction();
 					return;
 				}
+				logger.info("XACMLPdpServlet: calling doPutConfig to add properties to the queue");
 				this.doPutConfig(cache, request, response, loggingContext);
 				loggingContext.transactionEnded();
 				PolicyLogger.audit("Transaction ended");
@@ -504,6 +505,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	protected void doPutConfig(String config, HttpServletRequest request, HttpServletResponse response, ONAPLoggingContext loggingContext)  throws ServletException, IOException {
 		try {
 			// prevent multiple configuration changes from stacking up
+			logger.info("XACMLPdpServlet: checking remainingCapacity of Queue.");
 			if (XACMLPdpServlet.queue.remainingCapacity() <= 0) {
 				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Queue capacity reached");
 				PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, "Queue capacity reached");
@@ -542,6 +544,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "PUT with cache=policies must contain at least one policy property");
 					return;
 				}
+				logger.info("XACMLPdpServlet: offer policies to queue. No pip properties added.");
 				XACMLPdpServlet.queue.offer(new PutRequest(newProperties, null));
 				loggingContext.transactionEnded();
 				auditLogger.info("Success");
@@ -556,6 +559,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "PUT with cache=pips must contain at least one pip property");
 					return;
 				}
+				logger.info("XACMLPdpServlet: offer pips to queue. No policy properties added.");
 				XACMLPdpServlet.queue.offer(new PutRequest(null, newProperties));
 				loggingContext.transactionEnded();
 				auditLogger.info("Success");
@@ -579,10 +583,12 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "PUT with cache=all must contain at least one pip property");
 					return;
 				}
+				logger.info("XACMLPdpServlet: offer policies and pips to queue.");
 				XACMLPdpServlet.queue.offer(new PutRequest(newPolicyProperties, newPipProperties));
 				loggingContext.transactionEnded();
 				auditLogger.info("Success");
 				PolicyLogger.audit("Success");
+
 			} else {
 				//
 				// Invalid value
@@ -1238,25 +1244,32 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		try {
 			// variable not used, but constructor has needed side-effects so don't remove:
 			while (! XACMLPdpServlet.configThreadTerminate) {
+				logger.info("XACMLPdpServlet: Taking requests from the queue");
 				PutRequest request = XACMLPdpServlet.queue.take();
+				logger.info("XACMLPdpServlet: Taking requests from the queue COMPLETED");
 				StdPDPStatus newStatus = new StdPDPStatus();
 				
 				PDPEngine newEngine = null;
 				synchronized(pdpStatusLock) {
 					XACMLPdpServlet.status.setStatus(Status.UPDATING_CONFIGURATION);
+					
+					logger.info("created new PDPEngine");
 					newEngine = XACMLPdpLoader.loadEngine(newStatus, request.policyProperties, request.pipConfigProperties);
 				}
 				if (newEngine != null) {
+					logger.info("XACMLPdpServlet: newEngine created, assigning newEngine to the pdpEngine.");
 					synchronized(XACMLPdpServlet.pdpEngineLock) {
 						XACMLPdpServlet.pdpEngine = newEngine;
 						try {
 							logger.info("Saving configuration.");
 							if (request.policyProperties != null) {
+								logger.info("Saving configuration: Policy Properties: " + request.policyProperties);
 								try (OutputStream os = Files.newOutputStream(XACMLPdpLoader.getPDPPolicyCache())) {
 									request.policyProperties.store(os, "");
 								}
 							}
 							if (request.pipConfigProperties != null) {
+								logger.info("Saving configuration: PIP Properties: " + request.pipConfigProperties);
 								try (OutputStream os = Files.newOutputStream(XACMLPdpLoader.getPIPConfig())) {
 									request.pipConfigProperties.store(os, "");
 								}
@@ -1276,6 +1289,11 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 				}
 				synchronized(pdpStatusLock) {
 					XACMLPdpServlet.status.set(newStatus);
+				}
+				logger.info("New PDP Servlet Status: " + newStatus.getStatus());
+				if (Status.UP_TO_DATE.equals(newStatus.getStatus())) {
+					// Notification will be Sent Here.
+					XACMLPdpLoader.sendNotification();
 				}
 			}
 		} catch (InterruptedException e) {

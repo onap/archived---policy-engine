@@ -75,13 +75,15 @@ public class DeletePolicyService {
     		return;
     	}
         if (deleteResult.contains("BAD REQUEST")||deleteResult.contains("PE300")||deleteResult.contains("PE200")||deleteResult.contains("not exist")||deleteResult.contains("Invalid policyName")) {
-            status = HttpStatus.BAD_REQUEST;
+            if(deleteResult.contains("groupId")) {
+                status = HttpStatus.NOT_FOUND;
+            } else {
+            	status = HttpStatus.BAD_REQUEST;
+            }
         } else if (deleteResult.contains("locked down")){
             status = HttpStatus.ACCEPTED;
         } else if (deleteResult.contains("not Authorized")) {
             status = HttpStatus.FORBIDDEN;
-        } else if (deleteResult.contains("groupId")) {
-            status = HttpStatus.NOT_FOUND;
         } else if (deleteResult.contains("JPAUtils")||deleteResult.contains("database")||deleteResult.contains("policy file")||
                 deleteResult.contains("unknown")||deleteResult.contains("configuration")) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -148,7 +150,7 @@ public class DeletePolicyService {
 
         if ("PAP".equalsIgnoreCase(deletePolicyParameters.getPolicyComponent())) {
             if (deletePolicyParameters.getDeleteCondition()==null||deletePolicyParameters.getDeleteCondition().toString().trim().isEmpty()){
-                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Delete Condition given.";
+                message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Delete Condition given.";
                 LOGGER.error(message);
                 return message;
             }
@@ -158,14 +160,14 @@ public class DeletePolicyService {
             response = (String) papServices.callPAP(deletePapPolicy, new String[] {"groupId="+pdpGroup, "apiflag=deletePapApi", "operation=delete" }, deletePolicyParameters.getRequestID(), clientScope);
         } else if ("PDP".equalsIgnoreCase(deletePolicyParameters.getPolicyComponent())) {
             if (deletePolicyParameters.getPdpGroup()==null||deletePolicyParameters.getPdpGroup().trim().isEmpty()){
-                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No PDP Group given."; 
+                message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No PDP Group given."; 
                 LOGGER.error(message);
                 return message;
             }
             //send JSON object to PAP
             response = (String) papServices.callPAP(null, new String[] {"policyName="+fullPolicyName, "groupId="+pdpGroup, "apiflag=deletePdpApi", "operation=delete" }, deletePolicyParameters.getRequestID(), clientScope);
         } else {
-            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Policy Component does not exist. Please enter either PAP or PDP to delete the policy from a specified Policy Component.";
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Policy Component does not exist. Please enter either PAP or PDP to delete the policy from a specified Policy Component.";
             LOGGER.error(message);
             response = message;
         }
@@ -181,9 +183,9 @@ public class DeletePolicyService {
      if (!deletePolicyParameters.getPolicyName().contains("xml")) {
          if (deletePolicyParameters.getPolicyName() != null
                  && deletePolicyParameters.getPolicyName().contains(".")) {
-             policyName = deletePolicyParameters.getPolicyName().substring(deletePolicyParameters.getPolicyName().lastIndexOf(".") + 1,
+             policyName = deletePolicyParameters.getPolicyName().substring(deletePolicyParameters.getPolicyName().lastIndexOf('.') + 1,
                      deletePolicyParameters.getPolicyName().length());
-             policyScope = deletePolicyParameters.getPolicyName().substring(0,deletePolicyParameters.getPolicyName().lastIndexOf("."));
+             policyScope = deletePolicyParameters.getPolicyName().substring(0,deletePolicyParameters.getPolicyName().lastIndexOf('.'));
              LOGGER.info("Name is " + policyName + "   scope is " + policyScope);
          } else {
              message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Scope given.";

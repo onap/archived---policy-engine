@@ -78,6 +78,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AutoPushController extends RestrictedBaseController{
 
 	private static final Logger logger = FlexLogger.getLogger(AutoPushController.class);
+    private static final String UTF8 = "UTF-8";
+
 	
 	@Autowired
 	CommonClassDao commonClassDao;
@@ -319,9 +321,9 @@ public class AutoPushController extends RestrictedBaseController{
 				updatedGroupObject.setPolicies(currentPoliciesInGroup);
 				this.container.updateGroup(updatedGroupObject);
 
-				response.setCharacterEncoding("UTF-8");
+				response.setCharacterEncoding(UTF8);
 				response.setContentType("application / json");
-				request.setCharacterEncoding("UTF-8");
+				request.setCharacterEncoding(UTF8);
 
 				PrintWriter out = response.getWriter();
 				refreshGroups();
@@ -332,8 +334,8 @@ public class AutoPushController extends RestrictedBaseController{
 			}
 		}
 		catch (Exception e){
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(UTF8);
+			request.setCharacterEncoding(UTF8);
 			PrintWriter out = response.getWriter();
 			logger.error(e);
 			out.write(PolicyUtils.CATCH_EXCEPTION);;
@@ -375,9 +377,9 @@ public class AutoPushController extends RestrictedBaseController{
 				this.container.updateGroup(updatedGroupObject);
 			}
 			
-			response.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(UTF8);
 			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
+			request.setCharacterEncoding(UTF8);
 
 			PrintWriter out = response.getWriter();
 			refreshGroups();
@@ -389,8 +391,8 @@ public class AutoPushController extends RestrictedBaseController{
 			return null;
 		}
 		catch (Exception e){
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(UTF8);
+			request.setCharacterEncoding(UTF8);
 			PrintWriter out = response.getWriter();
 			logger.error(e);
 			out.write(PolicyUtils.CATCH_EXCEPTION);;

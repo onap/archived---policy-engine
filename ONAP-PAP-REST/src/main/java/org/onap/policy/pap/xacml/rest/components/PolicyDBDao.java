@@ -71,6 +71,7 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.elasticsearch.common.Strings;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -537,7 +538,8 @@ public class PolicyDBDao {
 			//
 			// Open up the connection
 			//
-			logger.debug("Connecting with url: "+url);
+			logger.info("PolicyDBDao: NotifyOtherThread: notifying other PAPs of an update");
+			logger.info("Connecting with url: "+url);
 			try {
 				connection = (HttpURLConnection)url.openConnection();
 			} catch (Exception e) {
@@ -688,7 +690,7 @@ public class PolicyDBDao {
 		case GROUP_NOTIFICATION:
 			for(int i=0; i<retries;i++){
 				try{
-					handleIncomingGroupChange(url, entityId, extraData, transaction, xacmlPapServlet);
+					handleIncomingGroupChange(entityId, extraData, transaction, xacmlPapServlet);
 					break;
 				}catch(Exception e){
 					logger.debug(e);
@@ -706,7 +708,7 @@ public class PolicyDBDao {
 		//no changes should be being made in this function, we still need to close
 		transaction.rollbackTransaction();
 	}
-	private void handleIncomingGroupChange(String url, String groupId, String extraData,PolicyDBDaoTransaction transaction,XACMLPapServlet xacmlPapServlet) throws PAPException, PolicyDBException{
+	private void handleIncomingGroupChange(String groupId, String extraData,PolicyDBDaoTransaction transaction,XACMLPapServlet xacmlPapServlet) throws PAPException, PolicyDBException{
 		GroupEntity groupRecord = null;
 		long groupIdLong = -1;
 		try{
@@ -895,7 +897,7 @@ public class PolicyDBDao {
 				
 				//convert PolicyEntity object to PDPPolicy
             	String name = pdpPolicyId.replace(".xml", "");
-            	name = name.substring(0, name.lastIndexOf("."));
+            	name = name.substring(0, name.lastIndexOf('.'));
 				InputStream policyStream = new ByteArrayInputStream(policy.getPolicyData().getBytes());
 				pdpGroup.copyPolicyToFile(pdpPolicyId,name,policyStream);
 				URI location = Paths.get(pdpGroup.getDirectory().toAbsolutePath().toString(), pdpPolicyId).toUri();
@@ -1077,7 +1079,7 @@ public class PolicyDBDao {
 		try {
 			if(policy != null){
 				policyName = policy.getPolicyName();
-				logger.debug("Deleting Policy: " + policy.getPolicyName());
+				logger.info("Deleting old Policy Config File for " + policy.getPolicyName());
 				action = "delete";
 				Path subFile = null;
 
@@ -1114,7 +1116,7 @@ public class PolicyDBDao {
 	}
 
 	private Path getPolicySubFile(String filename, String subFileType){
-		logger.debug("getPolicySubFile(" + filename + ", " + subFileType + ")");
+		logger.info("getPolicySubFile(" + filename + ", " + subFileType + ")");
 		Path filePath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS).toString(), subFileType);
 		File file = null;
 
@@ -1131,7 +1133,7 @@ public class PolicyDBDao {
 			finalPath = Paths.get(file.getAbsolutePath());
 		}
 
-		logger.debug("end of getPolicySubFile: " + finalPath);
+		logger.info("end of getPolicySubFile: " + finalPath);
 		return finalPath;	
 	}
 
@@ -2370,7 +2372,7 @@ public class PolicyDBDao {
 
 		@Override
 		public void updateGroup(OnapPDPGroup group, String username){
-			logger.debug("updateGroup(PDPGroup group) as updateGroup("+group+","+username+") called");
+			logger.info("PolicyDBDao: updateGroup(PDPGroup group) as updateGroup("+group+","+username+") called");
 			if(group == null){
 				throw new IllegalArgumentException("PDPGroup group must not be null");
 			}
@@ -2397,12 +2399,12 @@ public class PolicyDBDao {
 					PolicyLogger.error("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
 					throw new PersistenceException("Somehow, more than one group with the same id "+group.getId()+" and deleted status were found in the database");
 				}
-				GroupEntity groupToUpdate = (GroupEntity)getGroupQueryList.get(0);
-				if(!stringEquals(groupToUpdate.getModifiedBy(), username)){
-					groupToUpdate.setModifiedBy(username);
+				GroupEntity groupToUpdateInDB = (GroupEntity)getGroupQueryList.get(0);
+				if(!stringEquals(groupToUpdateInDB.getModifiedBy(), username)){
+					groupToUpdateInDB.setModifiedBy(username);
 				}
-				if(group.getDescription() != null && !stringEquals(group.getDescription(),groupToUpdate.getDescription())){
-					groupToUpdate.setDescription(group.getDescription());
+				if(group.getDescription() != null && !stringEquals(group.getDescription(),groupToUpdateInDB.getDescription())){
+					groupToUpdateInDB.setDescription(group.getDescription());
 				}
 				//let's find out what policies have been deleted
 				StdPDPGroup oldGroup = null;
@@ -2414,7 +2416,6 @@ public class PolicyDBDao {
 				if(oldGroup == null){
 					PolicyLogger.error("We cannot get the group from the papEngine to delete policies");
 				} else {
-
 					Set<String> newPolicySet = new HashSet<>(group.getPolicies().size());
 					//a multiple of n runtime is faster than n^2, so I am using a hashset to do the comparison
 					for(PDPPolicy pol: group.getPolicies()){
@@ -2424,19 +2425,45 @@ public class PolicyDBDao {
 						//should be fast since getPolicies uses a HashSet in StdPDPGroup
 						if(!newPolicySet.contains(pol.getId())){
 							String[] scopeAndName = getNameScopeAndVersionFromPdpPolicy(pol.getId());
-							PolicyEntity policyToDelete;
+							PolicyEntity policyToDelete = null;
 							try{
-								policyToDelete = getPolicy(scopeAndName[0],scopeAndName[1]);
+								if(scopeAndName!=null){
+									policyToDelete = getPolicy(scopeAndName[0],scopeAndName[1]);
+								
+									if ("XACMLPapServlet.doDelete".equals(username)) {
+	
+										Iterator<PolicyEntity> dbPolicyIt = groupToUpdateInDB.getPolicies().iterator();
+										String policyName = getPolicyNameAndVersionFromPolicyFileName(policyToDelete.getPolicyName())[0];
+						            	
+										logger.info("PolicyDBDao: delete policy from GroupEntity");
+										try{
+											while(dbPolicyIt.hasNext()){
+												PolicyEntity dbpolicy = dbPolicyIt.next();
+												if(policyToDelete.getScope().equals(dbpolicy.getScope()) && 
+														getPolicyNameAndVersionFromPolicyFileName(dbpolicy.getPolicyName())[0].equals(policyName)) {
+													dbPolicyIt.remove();
+													
+													logger.info("PolicyDBDao: deleting policy from the existing group:\n "
+															+ "policyName is " + policyToDelete.getScope()+"."+policyToDelete.getPolicyName() + "\n"
+															+ "group is " + groupToUpdateInDB.getGroupId());
+												}  
+											}
+										}catch(Exception e){
+											logger.debug(e);
+											PolicyLogger.error("Could not delete policy with name: "+ policyToDelete.getScope()+"."+policyToDelete.getPolicyName()+"\n ID: "+ policyToDelete.getPolicyId());
+						            	}
+									}
+								}
+								
 							}catch(Exception e){
 								PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not get policy to remove: "+pol.getId());
 								throw new PersistenceException("Could not get policy to remove: "+pol.getId());
 							}
-							groupToUpdate.getPolicies().remove(policyToDelete);
-
 						}
 					}
 				}
-				if(group.getName() != null && !stringEquals(group.getName(),groupToUpdate.getgroupName())){
+
+				if(group.getName() != null && !stringEquals(group.getName(),groupToUpdateInDB.getgroupName())){
 					//we need to check if the new id exists in the database
 					String newGroupId = createNewPDPGroupId(group.getName());
 					Query checkGroupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
@@ -2453,13 +2480,13 @@ public class PolicyDBDao {
 						PolicyLogger.error("The new group name already exists, group id "+newGroupId);
 						throw new PersistenceException("The new group name already exists, group id "+newGroupId);
 					}
-					groupToUpdate.setGroupId(newGroupId);
-					groupToUpdate.setGroupName(group.getName());
+					groupToUpdateInDB.setGroupId(newGroupId);
+					groupToUpdateInDB.setGroupName(group.getName());
 					this.newGroupId = group.getId();
 				}
 
 				em.flush();
-				this.groupId = groupToUpdate.getGroupKey();
+				this.groupId = groupToUpdateInDB.getGroupKey();
 			}
 		}
 

@@ -856,11 +856,11 @@ public class MicroServiceDictionaryController {
 					this.newModel.setSub_attributes(value);
 					String attributes= mainClass.getAttribute().toString().replace("{", "").replace("}", "");
 					int equalsIndexForAttributes= attributes.indexOf("=");
-					String atttributesAfterFirstEquals= attributes.substring(equalsIndexForAttributes+1);
+					String atttributesAfterFirstEquals= attributes.substring(equalsIndexForAttributes+1, attributes.length()-1);
 					this.newModel.setAttributes(atttributesAfterFirstEquals);
 					String refAttributes= mainClass.getRefAttribute().toString().replace("{", "").replace("}", "");
 					int equalsIndex= refAttributes.indexOf("=");
-					String refAttributesAfterFirstEquals= refAttributes.substring(equalsIndex+1);
+					String refAttributesAfterFirstEquals= refAttributes.substring(equalsIndex+1, refAttributes.length()-1);
 					this.newModel.setRef_attributes(refAttributesAfterFirstEquals);
 					this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
 					this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));

@@ -177,7 +177,7 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
                 response = microServicesPolicyService.getResult(updateFlag);
                 break;
             default:
-                String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " Invalid Config Type Present";
+                message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " Invalid Config Type Present";
                 LOGGER.error(message);
                 status = HttpStatus.BAD_REQUEST;
                 return message;
@@ -208,7 +208,7 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
                 break;
             }
         }else {
-            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Class found.";
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Class found.";
             LOGGER.error(message);
             status = HttpStatus.BAD_REQUEST;
             response = message;
@@ -254,7 +254,12 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
     		try {
     			PolicyValidationRequestWrapper wrapper = new PolicyValidationRequestWrapper();    			
     			PolicyRestAdapter policyData = wrapper.populateRequestParameters(policyParameters);
-				responseString = validation.validatePolicy(policyData);
+    			if(policyData!=null) {
+    				responseString = validation.validatePolicy(policyData);
+    			} else {
+    				message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + policyParameters.getConfigBody();
+    				return false;
+    			}
 			} catch (Exception e) {
 				LOGGER.error("Exception Occured during Policy Validation" +e);
 				if(e.getMessage()!=null){
@@ -277,7 +282,8 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
         }
         
         if (responseString!=null){
-        	if("success".equals(responseString.toString())||"success@#".equals(responseString.toString())){
+    		String response = responseString.toString().substring(0, 7);
+        	if("success".equals(response)) {
         		return true;
         	} else {
     			message = XACMLErrorConstants.ERROR_DATA_ISSUE + PolicyApiUtils.formatResponse(responseString);

@@ -304,8 +304,9 @@ public class NotificationService {
 						                               aafLogin, 
 						                               aafPassword);
 		// Sending notification through DMaaP Message Router
+		logger.info("NotificationService: send DMaaP Message. ");
 		publisher.send( "MyPartitionKey", notification);
-		logger.debug("Message Published on DMaaP :" + dmaapList.get(0) + "for Topic: " + topic);
+		logger.info("Message Published on DMaaP :" + dmaapList.get(0) + "for Topic: " + topic);
 		publisher.close();
 	}
 	
