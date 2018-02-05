@@ -1092,7 +1092,7 @@ public class StdPolicyEngine {
         PDPNotification notification;
         if (this.scheme.equals(NotificationScheme.MANUAL_ALL_NOTIFICATIONS)
                 || this.scheme.equals(NotificationScheme.MANUAL_NOTIFICATIONS)) {
-            if (notificationType.get(0).equals("ueb")) {
+            if ("ueb".equals(notificationType.get(0))) {
                 ManualClientEndUEB.start(pdps.get(0), notificationURLList, UNIQUEID);
                 notification = ManualClientEndUEB.result(scheme);
             } else if (notificationType.get(0).equals(DMAAP)) {
