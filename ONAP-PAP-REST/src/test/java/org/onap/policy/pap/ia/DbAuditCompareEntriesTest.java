@@ -25,8 +25,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -150,7 +150,7 @@ public class DbAuditCompareEntriesTest {
 		
 		String className = null;
 		//There is only one entry IntegrityAuditEntity, but we will check anyway
-		HashSet<String> classNameSet = dbDAO.getPersistenceClassNames();
+		Set<String> classNameSet = dbDAO.getPersistenceClassNames();
 		for(String c : classNameSet){
 			if (c.equals("org.onap.policy.common.ia.jpa.IntegrityAuditEntity")){
 				className = c;
@@ -187,7 +187,7 @@ public class DbAuditCompareEntriesTest {
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
 				
-		HashSet<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
+		Set<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
 		
 		/*
 		 * Assert that there are no mismatches returned
@@ -246,7 +246,7 @@ public class DbAuditCompareEntriesTest {
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
 				
-		HashSet<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
+		Set<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
 		
 		
 		// Assert that there are no mismatches returned
@@ -306,7 +306,7 @@ public class DbAuditCompareEntriesTest {
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
 				
-		HashSet<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
+		Set<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
 		
 		
 		// Assert that there are no mismatches returned
@@ -363,7 +363,7 @@ public class DbAuditCompareEntriesTest {
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
 				
-		HashSet<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
+		Set<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
 		
 		
 		// Assert that there are no mismatches returned
@@ -420,7 +420,7 @@ public class DbAuditCompareEntriesTest {
 		myEntries.put("pdp1", entry1);
 		theirEntries.put("pdp1", entry2);
 				
-		HashSet<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
+		Set<Object> result = dbAudit.compareEntries(myEntries, theirEntries);
 		
 		
 		// Assert that there are no mismatches returned

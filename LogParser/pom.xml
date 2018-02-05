@@ -3,7 +3,7 @@
   ============LICENSE_START=======================================================
   ONAP Policy Engine
   ================================================================================
-  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -103,7 +103,34 @@
 		    <groupId>org.mockito</groupId>
 		    <artifactId>mockito-all</artifactId>
 		    <version>1.10.19</version>
-		</dependency>       
+		</dependency> 
+		<dependency>
+			<groupId>org.onap.policy.engine</groupId>
+			<artifactId>PolicyEngineUtils</artifactId>
+			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.att.aft</groupId>
+					<artifactId>dme2</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.json</groupId>
+					<artifactId>json</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.onap.dmaap.messagerouter.dmaapclient</groupId>
+					<artifactId>dmaapClient</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.att.nsa</groupId>
+					<artifactId>cambriaClient</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.att.cadi</groupId>
+					<artifactId>cadi-aaf</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>     		           
 	</dependencies>
 	<build>
 		<plugins>
