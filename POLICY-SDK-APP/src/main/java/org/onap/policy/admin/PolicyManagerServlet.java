@@ -1276,7 +1276,7 @@ public class PolicyManagerServlet extends HttpServlet {
 					}
 				}
 			}else{
-				List<String> activePoliciesInPDP = new ArrayList<String>();
+				List<String> activePoliciesInPDP = new ArrayList<>();
 				if(!policyEntityobjects.isEmpty()){
 					for(Object object : policyEntityobjects){
 						policyEntity = (PolicyEntity) object;

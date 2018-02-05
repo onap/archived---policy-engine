@@ -168,7 +168,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 
 
 	@SuppressWarnings("unchecked")
-	private String connectTriggerSignature(int index, ArrayList<Object> triggerSignatures, Object object) {
+	private String connectTriggerSignature(int index, List<Object> triggerSignatures, Object object) {
 		StringBuilder resultBody = new StringBuilder();
 		Map<String, String> connectTraps = (Map<String, String>) triggerSignatures.get(index);
 		try{
@@ -381,7 +381,7 @@ public class CreateClosedLoopFaultController extends RestrictedBaseController{
 
 	//connect traps data set to JSON Body as String
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private String getUIConnectTraps(ArrayList<Object> connectTrapSignatures) {
+	private String getUIConnectTraps(List<Object> connectTrapSignatures) {
 		StringBuilder resultBody = new StringBuilder();
 		String connectMainBody = "";
 		for(int j = 0; j < connectTrapSignatures.size(); j++){
@@ -617,8 +617,8 @@ class ClosedLoopGridJSONData{
 	private String clearTimeOut;
 	private String trapMaxAge;
 	private String verificationclearTimeOut;
-	private ArrayList<Object> connecttriggerSignatures;
-	private ArrayList<Object> connectVerificationSignatures;
+	private List<Object> connecttriggerSignatures;
+	private List<Object> connectVerificationSignatures;
 
 	public String getClearTimeOut() {
 		return clearTimeOut;
@@ -640,16 +640,16 @@ class ClosedLoopGridJSONData{
 	}
 
 
-	public ArrayList<Object> getConnecttriggerSignatures() {
+	public List<Object> getConnecttriggerSignatures() {
 		return connecttriggerSignatures;
 	}
-	public void setConnecttriggerSignatures(ArrayList<Object> connecttriggerSignatures) {
+	public void setConnecttriggerSignatures(List<Object> connecttriggerSignatures) {
 		this.connecttriggerSignatures = connecttriggerSignatures;
 	}
-	public ArrayList<Object> getConnectVerificationSignatures() {
+	public List<Object> getConnectVerificationSignatures() {
 		return connectVerificationSignatures;
 	}
-	public void setConnectVerificationSignatures(ArrayList<Object> connectVerificationSignatures) {
+	public void setConnectVerificationSignatures(List<Object> connectVerificationSignatures) {
 		this.connectVerificationSignatures = connectVerificationSignatures;
 	}
 }

@@ -113,7 +113,9 @@ public class CreateFirewallController extends RestrictedBaseController {
 		CreateFirewallController.commonClassDao = commonClassDao;
 	}
 
-	public CreateFirewallController(){}
+	public CreateFirewallController(){
+		// Empty constructor
+	}
 	private List<String> termCollectorList;
 	
 
