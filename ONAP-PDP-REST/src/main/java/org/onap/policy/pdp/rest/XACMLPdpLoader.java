@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,10 +107,12 @@ public class XACMLPdpLoader {
 			// - creating new "<PolicyId>.file" properties for files existing
 			// local
 			//
+			LOGGER.info("XACMLPdpLoader: cache the policies.");
 			XACMLPdpLoader.cachePolicies(policyProperties);
 			//
 			// Validate the policies
 			//
+			LOGGER.info("XACMLPdpLoader: validating the policies.");
 			XACMLPdpLoader.validatePolicies(policyProperties, status);
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Status: " + status);
@@ -215,12 +217,13 @@ public class XACMLPdpLoader {
 				.getReferencedPolicyIDs(properties);
 		policyContainer = new HashMap<String, PolicyDef>();
 
+		LOGGER.info("XACMLPdpLoader: load rootPolicies");
 		for (String id : rootPolicies) {
 			loadPolicy(properties, status, id, true);
 		}
 		// remember which policies were root policies
 		status.addAllLoadedRootPolicies(status.getLoadedPolicies());
-
+		LOGGER.info("XACMLPdpLoader: load referencedPolicies");
 		for (String id : refPolicies) {
 			loadPolicy(properties, status, id, false);
 		}

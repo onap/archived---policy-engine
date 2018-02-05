@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ public class PAPServices {
         // This makes it Real-Time to change the list depending on their
         // availability.
         if (paps == null || paps.isEmpty()) {
-            String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "PAPs List is Empty.";
+            String message = XACMLErrorConstants.ERROR_SYSTEM_ERROR + "PAPs List is Empty.";
             LOGGER.error(message);
             throw new PolicyException(message);
         }
@@ -415,10 +415,10 @@ public class PAPServices {
                     + ". PEP is not Authorized for making this Request!! \n Contact Administrator for this Scope. ";
             LOGGER.error(response);
         } else if (connection.getResponseCode() == 404 && connection.getHeaderField("error") != null) {
-            if ("unknownGroupId".equals(connection.getHeaderField("error"))) {
+            if ("UnknownGroup".equals(connection.getHeaderField("error"))) {
                 response = XACMLErrorConstants.ERROR_DATA_ISSUE
                         + connection.getHeaderField("message")
-                        + " Please check the pdpGroup you are requesting to move the policy to.";
+                        + " Please check the pdpGroup you are requesting to push the policy to.";
                 LOGGER.error(response);
             } else if ("policyNotAvailableForEdit".equals(connection.getHeaderField("error"))) {
             	response = XACMLErrorConstants.ERROR_DATA_ISSUE
@@ -544,8 +544,8 @@ public class PAPServices {
 				+ "\"policyName\": \""+policyName+"\","
 				+ "\"clientScope\": \""+clientScope+"\","
 				+ "\"pdpGroup\": \""+pdpGroup+"\"}";
-        //String response = null;
-        HttpURLConnection connection = null;
+
+		HttpURLConnection connection = null;
         responseCode = 0;
         if (paps == null || paps.isEmpty()) {
             String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "PAPs List is Empty.";

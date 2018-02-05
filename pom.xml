@@ -25,6 +25,8 @@
 		<project.target.version>1.8</project.target.version>
 		<project.encoding>UTF-8</project.encoding>
 
+		<common-modules.version>1.2.0-SNAPSHOT</common-modules.version>
+		<drools-applications.version>1.2.0-SNAPSHOT</drools-applications.version>
 		<nexusproxy>https://nexus.onap.org</nexusproxy>
 		<sitePath>/content/sites/site/${project.groupId}/${project.artifactId}/${project.version}</sitePath>
 		<releases.path>content/repositories/releases/</releases.path>

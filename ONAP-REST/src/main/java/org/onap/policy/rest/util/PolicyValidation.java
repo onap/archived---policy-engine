@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -515,7 +515,7 @@ public class PolicyValidation {
 				if (MICROSERVICES.equals(policyData.getConfigPolicyType())){
 					if(!Strings.isNullOrEmpty(policyData.getServiceType())){
 						
-						modelRequiredFieldsList = new ArrayList<>();
+						modelRequiredFieldsList.clear();
 						pullJsonKeyPairs((JsonNode) policyData.getPolicyJSON());
 
 						String service;
@@ -570,7 +570,7 @@ public class PolicyValidation {
 									}
 								} else {
 									// Validate for configName, location, uuid, and policyScope if no annotations exist for this model
-									if(Strings.isNullOrEmpty(policyData.getMsLocation())){
+									if(Strings.isNullOrEmpty(policyData.getLocation())){
 										responseString.append("<b>Micro Service Model</b>:<i> location is required for this model" + HTML_ITALICS_LNBREAK);
 										valid = false;
 									}
@@ -591,51 +591,64 @@ public class PolicyValidation {
 									}	
 								}
 								
-								// get list of required fields from the sub_Attributes of the Model
-								if(!Strings.isNullOrEmpty(subAttributes)) {
-									JsonObject subAttributesJson = stringToJsonObject(subAttributes);
-									findRequiredFields(subAttributesJson);
-								}
-								
-								// get list of required fields from the attributes of the Model
-								if (!Strings.isNullOrEmpty(modelAttributes)) {
-									Map<String, String> modelAttributesMap = Splitter.on(",").withKeyValueSeparator("=").split(modelAttributes);
-									String json = new ObjectMapper().writeValueAsString(modelAttributesMap);
-									findRequiredFields(stringToJsonObject(json));
-								}
-								
-								// get list of required fields from the ref_Attributes of the Model
-								if (!Strings.isNullOrEmpty(refAttributes)) {
-									Map<String, String> refAttributesMap = Splitter.on(",").withKeyValueSeparator("=").split(refAttributes);
-									String json = new ObjectMapper().writeValueAsString(refAttributesMap);
-									findRequiredFields(stringToJsonObject(json));
-								}
-								
-								// Validate Required Fields in the Micro Service Model
-								if (modelRequiredFieldsList!=null || !modelRequiredFieldsList.isEmpty()) {
-									// create jsonRequestMap with all json keys and values from request
-									JsonNode rootNode = (JsonNode) policyData.getPolicyJSON();
-									pullModelJsonKeyPairs(rootNode);
+								// If request comes from the API we need to validate required fields in the Micro Service Model 
+								// GUI request are already validated from the SDK-APP
+								if("API".equals(policyData.getApiflag())){
+									// get list of required fields from the sub_Attributes of the Model
+									if(!Strings.isNullOrEmpty(subAttributes)) {
+										JsonObject subAttributesJson = stringToJsonObject(subAttributes);
+										findRequiredFields(subAttributesJson);
+									}
 									
-									// validate if the requiredFields are in the request
-									for(String requiredField : modelRequiredFieldsList) {
-										if (jsonRequestMap.containsKey(requiredField)) {
-											String value = jsonRequestMap.get(requiredField);
-											if(Strings.isNullOrEmpty(jsonRequestMap.get(requiredField)) || 
-													"\"\"".equals(value) || 
-													"".equals(jsonRequestMap.get(requiredField))){
+									// get list of required fields from the attributes of the Model
+									if (!Strings.isNullOrEmpty(modelAttributes)) {
+										Map<String, String> modelAttributesMap = null;
+										if (",".equals(modelAttributes.substring(modelAttributes.length()-1))) {
+											String attributeString = modelAttributes.substring(0, modelAttributes.length()-1);
+											modelAttributesMap = Splitter.on(",").withKeyValueSeparator("=").split(attributeString);
+										} else {
+											modelAttributesMap = Splitter.on(",").withKeyValueSeparator("=").split(modelAttributes);
+										}
+										String json = new ObjectMapper().writeValueAsString(modelAttributesMap);
+										findRequiredFields(stringToJsonObject(json));
+									}
+									
+									// get list of required fields from the ref_Attributes of the Model
+									if (!Strings.isNullOrEmpty(refAttributes)) {
+										Map<String, String> refAttributesMap = null;
+										if (",".equals(refAttributes.substring(refAttributes.length()-1))) {
+											String attributesString = refAttributes.substring(0, refAttributes.length()-1);
+											refAttributesMap = Splitter.on(",").withKeyValueSeparator("=").split(attributesString);
+										} else {
+											refAttributesMap = Splitter.on(",").withKeyValueSeparator("=").split(modelAttributes);
+										}
+										String json = new ObjectMapper().writeValueAsString(refAttributesMap);
+										findRequiredFields(stringToJsonObject(json));
+									}
+									
+									if (modelRequiredFieldsList!=null || !modelRequiredFieldsList.isEmpty()) {
+										// create jsonRequestMap with all json keys and values from request
+										JsonNode rootNode = (JsonNode) policyData.getPolicyJSON();
+										jsonRequestMap.clear();
+										pullModelJsonKeyPairs(rootNode);
+										
+										// validate if the requiredFields are in the request
+										for(String requiredField : modelRequiredFieldsList) {
+											if (jsonRequestMap.containsKey(requiredField)) {
+												String value = jsonRequestMap.get(requiredField);
+												if(Strings.isNullOrEmpty(jsonRequestMap.get(requiredField)) || 
+														"\"\"".equals(value) || 
+														"".equals(jsonRequestMap.get(requiredField))){
+													responseString.append("<b>Micro Service Model</b>:<i> " + requiredField + " is required" + HTML_ITALICS_LNBREAK);
+													valid = false; 
+												}
+											} else {
 												responseString.append("<b>Micro Service Model</b>:<i> " + requiredField + " is required" + HTML_ITALICS_LNBREAK);
 												valid = false; 
 											}
-										} else {
-											responseString.append("<b>Micro Service Model</b>:<i> " + requiredField + " is required" + HTML_ITALICS_LNBREAK);
-											valid = false; 
 										}
 									}
-								}
-								
-
-								
+								}								
 							} else {
 								responseString.append("<b>Micro Service Model</b>:<i> Invalid Model. The model name, " + service + 
 										" of version, " + version + " was not found in the dictionary" + HTML_ITALICS_LNBREAK);

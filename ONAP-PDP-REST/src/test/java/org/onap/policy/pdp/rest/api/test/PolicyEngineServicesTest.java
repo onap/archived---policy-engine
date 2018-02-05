@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -469,9 +469,9 @@ public class PolicyEngineServicesTest {
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setRiskLevel("5");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isBadRequest());
+				.headers(headers)).andExpect(status().isInternalServerError());
 		mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isBadRequest());
+				.headers(headers)).andExpect(status().isInternalServerError());
 	}
 	
 	@Test
@@ -505,7 +505,7 @@ public class PolicyEngineServicesTest {
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setConfigName("configName");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isBadRequest());
+				.headers(headers)).andExpect(status().isInternalServerError());
 		pep.setConfigBody("{'test':'test}");
 		pep.setConfigBodyType(PolicyType.JSON);
 		mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
@@ -517,7 +517,7 @@ public class PolicyEngineServicesTest {
 		pep.setAttributes(attributes);
 		pep.setConfigBody("testBody");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isBadRequest());
+				.headers(headers)).andExpect(status().isInternalServerError());
 	}
 	
 	@Test

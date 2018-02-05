@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,11 +63,18 @@ public class SavePolicyHandler {
 			scanner.useDelimiter("\\A");
 			json =  scanner.hasNext() ? scanner.next() : "";
 			scanner.close();
-			PolicyLogger.info("JSON request from API: " + json);
+			
+			if(policyAdapter.isEditPolicy()){
+				PolicyLogger.info("SavePolicyHandler: JSON request from API to update a policy: " + json);
+			} else {
+				PolicyLogger.info("SavePolicyHandler: JSON request from API to create a policy: " + json);
+			}
+			
 			// convert Object sent as JSON into local object
 			StdPAPPolicy policy = PolicyUtils.jsonStringToObject(json, StdPAPPolicy.class);
 			//Set policyAdapter values including parentPath (Common to all policy types)
 			try {
+				PolicyLogger.info("SavePolicyHandler: Setting parameter values to PolicyAdapter");
                 policyAdapter = setDataToPolicyAdapter(policy, policyType, apiflag);
                 
                 if(!extendedPolicyOptions(policyAdapter, response)){
