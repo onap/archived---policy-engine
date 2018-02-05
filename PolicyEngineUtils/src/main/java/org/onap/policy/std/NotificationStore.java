@@ -40,7 +40,7 @@ public class NotificationStore {
 
     private static StdPDPNotification notificationRecord = new StdPDPNotification();
 
-    public NotificationStore () {
+    private NotificationStore () {
     	// Sonar prefers that we have an empty public constructor
     	// as opposed to an implicit public constructor.
     }
