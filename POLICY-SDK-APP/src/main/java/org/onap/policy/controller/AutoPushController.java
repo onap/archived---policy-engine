@@ -119,8 +119,8 @@ public class AutoPushController extends RestrictedBaseController{
 	@RequestMapping(value={"/get_AutoPushPoliciesContainerData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPolicyGroupContainerData(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Set<String> scopes = null;
-			List<String> roles = null;
+			Set<String> scopes;
+			List<String> roles;
 			data = new ArrayList<>();
 			String userId = UserUtils.getUserSession(request).getOrgUserId();
 			Map<String, Object> model = new HashMap<>();
@@ -139,7 +139,7 @@ public class AutoPushController extends RestrictedBaseController{
 							scopes.add(multipleScopes[i]);
 						}
 					}else{
-						if(!userRole.getScope().equals("")){
+						if(!"".equals(userRole.getScope())){
 							scopes.add(userRole.getScope());
 						}
 					}		
@@ -220,7 +220,7 @@ public class AutoPushController extends RestrictedBaseController{
 					// Get the current selection
 					String selectedItem = policyId;
 					//
-					assert (selectedItem != null);
+					assert selectedItem != null;
 					// create the id of the target file
 					// Our standard for file naming is:
 					// <domain>.<filename>.<version>.xml
@@ -328,6 +328,10 @@ public class AutoPushController extends RestrictedBaseController{
 				JsonMessage msg = new JsonMessage(mapper.writeValueAsString(groups));
 				JSONObject j = new JSONObject(msg);
 				out.write(j.toString());
+				//
+				// Why is this here? This defeats the purpose of the loop??
+				// Sonar says to remove it or make it conditional
+				//
 				return null;
 			}
 		}
@@ -336,7 +340,7 @@ public class AutoPushController extends RestrictedBaseController{
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			logger.error(e);
-			out.write(PolicyUtils.CATCH_EXCEPTION);;
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -393,7 +397,7 @@ public class AutoPushController extends RestrictedBaseController{
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			logger.error(e);
-			out.write(PolicyUtils.CATCH_EXCEPTION);;
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
