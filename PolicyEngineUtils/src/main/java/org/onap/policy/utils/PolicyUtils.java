@@ -194,7 +194,9 @@ public class PolicyUtils {
             return false;
         }
         for (char c : number.toCharArray()){
-            if (!Character.isDigit(c)) return false;
+            if (!Character.isDigit(c)) {
+            	return false;
+            }
         }
         return true;
     }

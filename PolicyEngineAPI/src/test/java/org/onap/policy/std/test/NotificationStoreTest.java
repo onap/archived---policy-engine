@@ -34,19 +34,6 @@ import static org.junit.Assert.*;
  */
 public class NotificationStoreTest {
 	/**
-	 * Run the NotificationStore() constructor test.
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testNotificationStore_1()
-		throws Exception {
-		NotificationStore result = new NotificationStore();
-		assertNotNull(result);
-		// add additional test code here
-	}
-
-	/**
 	 * Run the void recordNotification(StdPDPNotification) method test.
 	 *
 	 * @throws Exception
