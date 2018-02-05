@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_01ebd813",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/ia/DbAuditCompareEntriesTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-05T21:27:06Z",
+      "side": 1,
+      "message": "This file was already changed, what happened to it?",
+      "revId": "1b963f5fc872e90be1bf33ffa18e0c956b90da4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
