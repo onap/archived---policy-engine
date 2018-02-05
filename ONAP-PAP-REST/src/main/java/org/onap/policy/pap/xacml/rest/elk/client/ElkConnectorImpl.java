@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -349,13 +349,13 @@ public class ElkConnectorImpl implements ElkConnector{
 
 		if (result.isSucceeded()) {
 			if (LOGGER.isInfoEnabled())
-				LOGGER.info("OK: PUT operation of " + "->"  + ": " +
+				LOGGER.info("ElkConnector: OK: PUT operation of " + "->"  + ": " +
 						"success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
 						result.getPathToResult() + "]" + System.lineSeparator() +
 						result.getJsonString());
 		} else {
 			if (LOGGER.isWarnEnabled())
-				LOGGER.warn("FAILURE: PUT operation of "+ "->" + ": " +
+				LOGGER.warn("ElkConnector: FAILURE: PUT operation of "+ "->" + ": " +
 						"success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
 						result.getPathToResult() + "]" + System.lineSeparator() +
 						result.getJsonString());			

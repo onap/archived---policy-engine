@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -856,11 +856,11 @@ public class MicroServiceDictionaryController {
 					this.newModel.setSub_attributes(value);
 					String attributes= mainClass.getAttribute().toString().replace("{", "").replace("}", "");
 					int equalsIndexForAttributes= attributes.indexOf("=");
-					String atttributesAfterFirstEquals= attributes.substring(equalsIndexForAttributes+1);
+					String atttributesAfterFirstEquals= attributes.substring(equalsIndexForAttributes+1, attributes.length()-1);
 					this.newModel.setAttributes(atttributesAfterFirstEquals);
 					String refAttributes= mainClass.getRefAttribute().toString().replace("{", "").replace("}", "");
 					int equalsIndex= refAttributes.indexOf("=");
-					String refAttributesAfterFirstEquals= refAttributes.substring(equalsIndex+1);
+					String refAttributesAfterFirstEquals= refAttributes.substring(equalsIndex+1, refAttributes.length()-1);
 					this.newModel.setRef_attributes(refAttributesAfterFirstEquals);
 					this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
 					this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
