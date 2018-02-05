@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -168,9 +168,9 @@ public class PolicyEngineServicesTest {
 		mockMvc.perform(get("/getMetrics")).andExpect(status().isBadRequest());
 		mockMvc.perform(get("/getMetrics").header(CLIENTAUTHHEADER, "Basic 123")).andExpect(status().isUnauthorized());
 		//Service Tests. 
-		mockMvc.perform(get("/getMetrics").headers(headers).header(UUIDHEADER, "123")).andExpect(status().isOk());
-		mockMvc.perform(get("/getMetrics").headers(headers).header(UUIDHEADER, UUID.randomUUID())).andExpect(status().isOk());
-		mockMvc.perform(get("/getMetrics").headers(headers)).andExpect(status().isOk());
+		mockMvc.perform(get("/getMetrics").headers(headers).header(UUIDHEADER, "123")).andExpect(status().isBadRequest());
+		mockMvc.perform(get("/getMetrics").headers(headers).header(UUIDHEADER, UUID.randomUUID())).andExpect(status().isBadRequest());
+		mockMvc.perform(get("/getMetrics").headers(headers)).andExpect(status().isBadRequest());
 	}
 	
 	@Test
@@ -699,9 +699,9 @@ public class PolicyEngineServicesTest {
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setActionPerformer("PEP");
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		mockMvc.perform(put("/updatePolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		// Checks for Decision Policy. 
 		pep.setPolicyClass(PolicyClass.Decision);
 		mockMvc.perform(put("/createPolicy").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
@@ -743,7 +743,7 @@ public class PolicyEngineServicesTest {
 				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setDictionaryJson("{\"test\":\"value\"}");
 		mockMvc.perform(put("/createDictionaryItem").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers).header(UUIDHEADER, UUID.randomUUID())).andExpect(status().isInternalServerError());
+				.headers(headers).header(UUIDHEADER, UUID.randomUUID())).andExpect(status().isBadRequest());
 		pep.setDictionaryJson("test123");
 		mockMvc.perform(put("/updateDictionaryItem").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
 				.headers(headers).header(UUIDHEADER, "123")).andExpect(status().isBadRequest());
@@ -766,10 +766,10 @@ public class PolicyEngineServicesTest {
 				.headers(headers).header(UUIDHEADER, UUID.randomUUID().toString())).andExpect(status().isBadRequest());
 		pep.setDictionary("OnapName");
 		mockMvc.perform(post("/getDictionaryItems").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 		pep.setRequestID(UUID.randomUUID());
 		mockMvc.perform(post("/getDictionaryItems").content(PolicyUtils.objectToJsonString(pep)).contentType(MediaType.APPLICATION_JSON)
-				.headers(headers)).andExpect(status().isInternalServerError());
+				.headers(headers)).andExpect(status().isBadRequest());
 	}
 	
 	@Test
