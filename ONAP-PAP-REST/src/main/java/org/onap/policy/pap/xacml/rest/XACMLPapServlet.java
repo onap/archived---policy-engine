@@ -1016,6 +1016,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		//This would occur if a PolicyDBDao notification was received
 		String policyDBDaoRequestUrl = request.getParameter("policydbdaourl");
 		if(policyDBDaoRequestUrl != null){
+			LOGGER.info("XACMLPapServlet: PolicyDBDao Notification received." );
 			String policyDBDaoRequestEntityId = request.getParameter("entityid");
 			String policyDBDaoRequestEntityType = request.getParameter("entitytype");
 			String policyDBDaoRequestExtraData = request.getParameter("extradata");
@@ -1026,7 +1027,8 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				im.endTransaction();
 				return;
 			}
-			loggingContext.metricStarted();		
+			loggingContext.metricStarted();	
+			LOGGER.info("XACMLPapServlet: Calling PolicyDBDao to handlIncomingHttpNotification");
 			policyDBDao.handleIncomingHttpNotification(policyDBDaoRequestUrl,policyDBDaoRequestEntityId,policyDBDaoRequestEntityType,policyDBDaoRequestExtraData,this);
 			loggingContext.metricEnded();
 			PolicyLogger.metrics("XACMLPapServlet doPut handle incoming http notification");
@@ -1574,8 +1576,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				
 				if(apiflag!=null){
 					loggingContext.setServiceName("PolicyEngineAPI:PAP.postPolicy");
+					LOGGER.info("PushPolicy Request From The API");
 				} else {
 					loggingContext.setServiceName("AC:PAP.postPolicy");
+					LOGGER.info("PushPolicy Request From The AC");
 				}
 				
 				String policyId = request.getParameter("policyId");
@@ -1607,27 +1611,28 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					return;
 				}
 				
-				// Get new transaction to perform updateGroup()
-				PolicyDBDaoTransaction acPutTransaction = policyDBDao.getNewTransaction();
-				try {
+				if(apiflag != null){
 					/*
 					 * If request comes from the API we need to run the PolicyDBDao updateGroup() to notify other paps of the change.
 					 * The GUI does this from the POLICY-SDK-APP code.
 					 */
-					if(apiflag != null){
-
-						// read the inputStream into a buffer
+					
+					// Get new transaction to perform updateGroup()
+					PolicyDBDaoTransaction acPutTransaction = policyDBDao.getNewTransaction();
+					try {
+						// get the request content into a String and read the inputStream into a buffer
 						java.util.Scanner scanner = new java.util.Scanner(request.getInputStream());
 						scanner.useDelimiter("\\A");
 						String json =  scanner.hasNext() ? scanner.next() : "";
 						scanner.close();
-						LOGGER.info("PushPolicy API request: " + json);
 						
 						// convert Object sent as JSON into local object
 						ObjectMapper mapper = new ObjectMapper();
 						Object objectFromJSON = mapper.readValue(json, StdPDPPolicy.class);
 						StdPDPPolicy policy = (StdPDPPolicy) objectFromJSON;
 						
+						LOGGER.info("Request JSON Payload: " + json);
+
 						// Assume that this is an update of an existing PDP Group
 						loggingContext.setServiceName("PolicyEngineAPI:PAP.updateGroup");
 						try{
@@ -1667,26 +1672,22 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						}
 						
 						//delete temporary policy file from the bin directory
-						if(policy != null) {
-							Files.deleteIfExists(Paths.get(policy.getId()));
-						}
-						
+						Files.deleteIfExists(Paths.get(policy.getId()));
+							
+					} catch (Exception e) {
+						acPutTransaction.rollbackTransaction();
+						PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " API PUT exception");
+						loggingContext.transactionEnded();
+						PolicyLogger.audit("Transaction Failed - See Error.log");
+						String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + "Exception occurred when updating the group from API.";
+						LOGGER.error(message);
+						setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+						response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+						response.addHeader("error","addGroupError");
+						response.addHeader("message", message);
+						return;
 					}
-				} catch (Exception e) {
-					acPutTransaction.rollbackTransaction();
-					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " API PUT exception");
-					loggingContext.transactionEnded();
-					PolicyLogger.audit("Transaction Failed - See Error.log");
-					String message = XACMLErrorConstants.ERROR_PROCESS_FLOW + "Exception occurred when updating the group from API.";
-					LOGGER.error(message);
-					setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-					response.addHeader("error","addGroupError");
-					response.addHeader("message", message);
-					return;
 				}
-				
-				
 				
 				// policy file copied ok and the Group was updated on the PDP
 				response.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -2142,7 +2143,11 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					((StdPDPGroup)objectFromJSON).setDirectory(((StdPDPGroup)group).getDirectory());
 				}
 				try{
-					acPutTransaction.updateGroup((StdPDPGroup)objectFromJSON, "XACMLPapServlet.doACPut");
+					if("delete".equals(((StdPDPGroup)objectFromJSON).getOperation())){
+						acPutTransaction.updateGroup((StdPDPGroup)objectFromJSON, "XACMLPapServlet.doDelete");
+					} else {
+						acPutTransaction.updateGroup((StdPDPGroup)objectFromJSON, "XACMLPapServlet.doACPut");
+					}
 				} catch(Exception e){
 					PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW + " Error while updating group in the database: "
 							+"group="+group.getId());
