@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_13048d13",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2018-02-06T15:16:08Z",
+      "side": 1,
+      "message": "do we need the close?",
+      "revId": "0c77e9255ad043b2b5826de82a415afa020f5df0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b32119a1",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 758,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2018-02-06T15:16:08Z",
+      "side": 1,
+      "message": "please recheck for file prefix with two underscores. Maybe lastIndexOf for _",
+      "revId": "0c77e9255ad043b2b5826de82a415afa020f5df0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_93365de6",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2018-02-06T15:16:08Z",
+      "side": 1,
+      "message": "this line needs to be removed?",
+      "revId": "0c77e9255ad043b2b5826de82a415afa020f5df0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_333509da",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2018-02-06T15:16:08Z",
+      "side": 1,
+      "message": "needs to be removed",
+      "revId": "0c77e9255ad043b2b5826de82a415afa020f5df0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
