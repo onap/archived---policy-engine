@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f089d726",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DeleteHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-06T13:45:55Z",
+      "side": 1,
+      "message": "Thanks for changing this. I think you can also add line 306 to the try-with-resources declaration. Then you can remove the finally clause.",
+      "range": {
+        "startLine": 306,
+        "startChar": 3,
+        "endLine": 317,
+        "endChar": 3
+      },
+      "revId": "c7414a076a5c07d27a753dc811d97b62ebfe790c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_108d6331",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/util/PolicyValidationTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-06T13:45:55Z",
+      "side": 1,
+      "message": "2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "c7414a076a5c07d27a753dc811d97b62ebfe790c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
