@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,18 +71,30 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 
 	public StdPDPGroupStatus(PDPGroupStatus stat) {
 		this.status = stat.getStatus();
-		this.failedPDPs.clear(); this.failedPDPs.addAll(stat.getFailedPDPs());
-		this.failedPIPConfigs.clear(); this.failedPIPConfigs.addAll(stat.getFailedPipConfigs());
-		this.failedPolicies.clear(); this.failedPolicies.addAll(stat.getFailedPolicies());
-		this.inSynchPDPs.clear(); this.inSynchPDPs.addAll(stat.getInSynchPDPs());
-		this.lastUpdateFailedPDPs.clear(); this.lastUpdateFailedPDPs.addAll(stat.getLastUpdateFailedPDPs());
-		this.loadedPIPConfigs.clear(); this.loadedPIPConfigs.addAll(stat.getLoadedPipConfigs());
-		this.loadedPolicies.clear(); this.loadedPolicies.addAll(stat.getLoadedPolicies());
-		this.loadErrors.clear(); this.loadErrors.addAll(stat.getLoadErrors());
-		this.loadWarnings.clear(); this.loadWarnings.addAll(stat.getLoadWarnings());
-		this.outOfSynchPDPs.clear(); this.outOfSynchPDPs.addAll(stat.getOutOfSynchPDPs());
-		this.unknownPDPs.clear(); this.unknownPDPs.addAll(stat.getUpdatingPDPs());
-		this.updatingPDPs.clear(); this.updatingPDPs.addAll(stat.getUpdatingPDPs());
+		this.failedPDPs.clear(); 
+		this.failedPDPs.addAll(stat.getFailedPDPs());
+		this.failedPIPConfigs.clear(); 
+		this.failedPIPConfigs.addAll(stat.getFailedPipConfigs());
+		this.failedPolicies.clear(); 
+		this.failedPolicies.addAll(stat.getFailedPolicies());
+		this.inSynchPDPs.clear(); 
+		this.inSynchPDPs.addAll(stat.getInSynchPDPs());
+		this.lastUpdateFailedPDPs.clear(); 
+		this.lastUpdateFailedPDPs.addAll(stat.getLastUpdateFailedPDPs());
+		this.loadedPIPConfigs.clear(); 
+		this.loadedPIPConfigs.addAll(stat.getLoadedPipConfigs());
+		this.loadedPolicies.clear(); 
+		this.loadedPolicies.addAll(stat.getLoadedPolicies());
+		this.loadErrors.clear(); 
+		this.loadErrors.addAll(stat.getLoadErrors());
+		this.loadWarnings.clear(); 
+		this.loadWarnings.addAll(stat.getLoadWarnings());
+		this.outOfSynchPDPs.clear(); 
+		this.outOfSynchPDPs.addAll(stat.getOutOfSynchPDPs());
+		this.unknownPDPs.clear(); 
+		this.unknownPDPs.addAll(stat.getUpdatingPDPs());
+		this.updatingPDPs.clear(); 
+		this.updatingPDPs.addAll(stat.getUpdatingPDPs());
 	}
 
 	public Set<PDPPIPConfig> getLoadedPIPConfigs() {
@@ -286,16 +298,16 @@ public class StdPDPGroupStatus implements PDPGroupStatus {
 	@Override
 	@JsonIgnore
 	public boolean isGroupOk() {
-		if (this.policiesOK() == false) {
+		if (!this.policiesOK()) {
 			return false;
 		}
-		if (this.pipConfigOK() == false) {
+		if (!this.pipConfigOK()) {
 			return false;
 		}
-		if (this.pdpsOK() == false) {
+		if (!this.pdpsOK()) {
 			return false;
 		}
-		if (this.loadErrors.isEmpty() == false) {
+		if (!this.loadErrors.isEmpty()) {
 			return false;
 		}
 		return this.status == Status.OK;

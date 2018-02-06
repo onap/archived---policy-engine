@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,12 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 	
 	private URI location = null;
 	
-
+	public StdPDPPolicy() {
+		//
+		// Methods needed for JSON Deserialization
+		//
+	}
+	
 	public StdPDPPolicy(String id, boolean isRoot) {
 		this.id = id;
 		this.isRoot = isRoot;
@@ -173,7 +178,7 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 		}
 		if (this.policyId != null) {
 			ArrayList<String> foo = Lists.newArrayList(Splitter.on(':').split(this.policyId));
-			if (foo.isEmpty() == false) {
+			if (!foo.isEmpty()) {
 				return foo.get(foo.size() - 1);
 			}
 		}
@@ -335,14 +340,6 @@ public class StdPDPPolicy implements PDPPolicy, Serializable {
 			}
 		}
 		return versionString;
-	}
-	
-
-	
-	public StdPDPPolicy() {
-		//
-		// Methods needed for JSON Deserialization
-		//
 	}
 	
 	public void setPolicyId(String policyId) {

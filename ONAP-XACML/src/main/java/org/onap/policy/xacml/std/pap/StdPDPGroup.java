@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,6 +89,21 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 	@JsonIgnore
 	private Integer jmxport;
 	
+	public StdPDPGroup() {
+		//
+		// Methods needed for JSON deserialization
+		//
+	}
+	
+	public StdPDPGroup(OnapPDPGroup group) {
+		this.id = group.getId();
+		this.name = group.getName();
+		this.description = group.getDescription();
+		this.isDefault = group.isDefaultGroup();
+		this.pdps = group.getOnapPdps();
+		this.policies = group.getPolicies();
+		this.pipConfigs = group.getPipConfigs();
+	}
 	
 	public StdPDPGroup(String id, Path directory) {
 		this.id = id;
@@ -333,7 +348,6 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 		// to occur: 1) old default=false (don't want to fire) and
 		// then 2) new default=true (yes fire - but we'll have to do that
 		// elsewhere.
-		//this.firePDPGroupChanged(this);
 	}
 
 	@Override
@@ -474,7 +488,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 			logger.info("Copied " + num + " bytes for policy " + name);
 			
 			StdPDPPolicy tempRootPolicy = new StdPDPPolicy(id, isRoot, name, tempFile.toUri());
-			if (tempRootPolicy.isValid() == false) {
+			if (!tempRootPolicy.isValid()) {
 				try {
 					Files.delete(tempFile);
 				} catch(Exception ee) {
@@ -544,7 +558,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 			
 			// policy is new to this group
 			StdPDPPolicy tempRootPolicy = new StdPDPPolicy(id, true, name, policyFile.toUri());
-			if (tempRootPolicy.isValid() == false) {
+			if (!tempRootPolicy.isValid()) {
 				try {
 					Files.delete(policyFile);
 				} catch(Exception ee) {
@@ -606,7 +620,7 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 			
 			// policy is new to this group
 			StdPDPPolicy tempRootPolicy = new StdPDPPolicy(id, true, name, policyFile.toUri());
-			if (tempRootPolicy.isValid() == false) {
+			if (!tempRootPolicy.isValid()) {
 				try {
 					Files.delete(policyFile);
 				} catch(Exception ee) {
@@ -922,23 +936,6 @@ public class StdPDPGroup extends StdPDPItemSetChangeNotifier implements OnapPDPG
 		// If one of the group's PDP's changed, then the group changed
 		//
 		this.changed();
-	}
-
-	
-	public StdPDPGroup() {
-		//
-		// Methods needed for JSON deserialization
-		//
-	}
-	
-	public StdPDPGroup(OnapPDPGroup group) {
-		this.id = group.getId();
-		this.name = group.getName();
-		this.description = group.getDescription();
-		this.isDefault = group.isDefaultGroup();
-		this.pdps = group.getOnapPdps();
-		this.policies = group.getPolicies();
-		this.pipConfigs = group.getPipConfigs();
 	}
 
 	public boolean isDefault() {

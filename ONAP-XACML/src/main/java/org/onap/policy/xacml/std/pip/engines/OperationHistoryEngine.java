@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,6 +80,10 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 			XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
 			new IdentifierImpl("target"), 
 			XACML.ID_DATATYPE_STRING);
+	
+	public OperationHistoryEngine() {
+		super();
+	}
 
 	private void addIntegerAttribute(StdMutablePIPResponse stdPIPResponse, Identifier category, Identifier attributeId, int value, PIPRequest pipRequest) {
 		AttributeValue<BigInteger> attributeValue	= null;
@@ -91,10 +95,6 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 		if (attributeValue != null) {
 			stdPIPResponse.addAttribute(new StdMutableAttribute(category, attributeId, attributeValue, pipRequest.getIssuer()/*this.getIssuer()*/, false));
 		}
-	}
-
-	public OperationHistoryEngine() {
-		super();
 	}
 
 	@Override
