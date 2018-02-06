@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_a66f95c4",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-06T18:06:25Z",
+      "side": 1,
+      "message": "This may end up with useless parens",
+      "range": {
+        "startLine": 470,
+        "startChar": 10,
+        "endLine": 470,
+        "endChar": 53
+      },
+      "revId": "0d6c7099a06d650785e68f90b4279a99e8584828",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c672e1ac",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 497,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-06T18:06:25Z",
+      "side": 1,
+      "message": "??",
+      "range": {
+        "startLine": 495,
+        "startChar": 2,
+        "endLine": 497,
+        "endChar": 3
+      },
+      "revId": "0d6c7099a06d650785e68f90b4279a99e8584828",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
