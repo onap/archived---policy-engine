@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,10 +125,10 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		if (Files.notExists(this.repository)) {
 			Files.createDirectory(repository);
 		}
-		if (Files.isDirectory(this.repository) == false) {
+		if (!Files.isDirectory(this.repository)) {
 			throw new PAPException ("Repository is NOT a directory: " + this.repository.toAbsolutePath());
 		}
-		if (Files.isWritable(this.repository) == false) {
+		if (!Files.isWritable(this.repository)) {
 			throw new PAPException ("Repository is NOT writable: " + this.repository.toAbsolutePath());
 		}
 		//
@@ -467,7 +467,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 					this.doSave();
 				} else {
 					PolicyLogger.error("Failed to add to new group, putting back into original group.");
-					if (((StdPDPGroup) currentGroup).removePDP(pdp) == false) {
+					if (!((StdPDPGroup) currentGroup).removePDP(pdp)) {
 						PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Failed to put PDP back into original group.");
 					}
 				}
@@ -492,8 +492,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		// the only things that the user can change are name and description
 		currentPDP.setDescription(pdp.getDescription());
 		currentPDP.setName(pdp.getName());
-		if (currentPDP instanceof OnapPDP && pdp instanceof OnapPDP) {
-			((OnapPDP)currentPDP).setJmxPort(((OnapPDP)pdp).getJmxPort());
+		if (currentPDP instanceof OnapPDP) {
+			((OnapPDP)currentPDP).setJmxPort(pdp.getJmxPort());
 		}
 		this.doSave();
 	}
@@ -769,9 +769,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 			// Save the configuration
 			//
 			this.saveConfiguration();
-		} catch (IOException e) {
-			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "StdEngine", "Failed to save configuration");
-		} catch (PAPException e) {
+		} catch (IOException|PAPException e) {
 			PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "StdEngine", "Failed to save configuration");
 		}		
 	}
