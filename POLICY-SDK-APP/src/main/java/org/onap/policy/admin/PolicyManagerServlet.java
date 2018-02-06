@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -430,58 +430,60 @@ public class PolicyManagerServlet extends HttpServlet {
 
 		String activePolicy;
 		PolicyController controller = getPolicyControllerInstance();
-		if(! params.toString().contains("activeVersion")){
-			return controller.switchVersionPolicyContent(policyName);
+		if(params.toString().contains("activeVersion")){
+			String activeVersion = params.getString("activeVersion");
+			String highestVersion = params.get("highestVersion").toString();
+			if(Integer.parseInt(activeVersion) > Integer.parseInt(highestVersion)){
+				return error("The Version shouldn't be greater than Highest Value");
+			}else{
+				activePolicy = policyName + "." + activeVersion + ".xml";
+				String dbCheckName = activePolicy.replace("/", ".");
+				if(dbCheckName.contains("Config_")){
+					dbCheckName = dbCheckName.replace(".Config_", ":Config_");
+				}else if(dbCheckName.contains("Action_")){
+					dbCheckName = dbCheckName.replace(".Action_", ":Action_");
+				}else if(dbCheckName.contains("Decision_")){
+					dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
+				}
+				String[] splitDBCheckName = dbCheckName.split(":");
+				String peQuery =   "FROM PolicyEntity where policyName = :splitDBCheckName_1 and scope = :splitDBCheckName_0";
+				SimpleBindings policyParams = new SimpleBindings();
+				policyParams.put("splitDBCheckName_1", splitDBCheckName[1]);
+				policyParams.put("splitDBCheckName_0", splitDBCheckName[0]);
+				List<Object> policyEntity = controller.getDataByQuery(peQuery, policyParams);
+				PolicyEntity pentity = (PolicyEntity) policyEntity.get(0);
+				if(pentity.isDeleted()){
+					return error("The Policy is Not Existing in Workspace");
+				}else{
+					if(policyName.contains("/")){
+						policyName = policyName.replace("/", File.separator);
+					}
+					policyName = policyName.substring(policyName.lastIndexOf(File.separator)+1);
+					if(policyName.contains("\\")){
+						policyName = policyName.replace(File.separator, "\\");
+					}
+					policyName = splitDBCheckName[0].replace(".", File.separator)+File.separator+policyName;
+					String watchPolicyName = policyName;
+					if(policyName.contains("/")){
+						policyName = policyName.replace("/", File.separator);
+					}
+					if(policyName.contains("\\")){
+						policyName = policyName.replace("\\", "\\\\");
+					}
+					String query = "update PolicyVersion set active_version='"+activeVersion+"' where policy_name ='"+policyName+"'  and id >0";
+					//query the database
+					controller.executeQuery(query);
+					//Policy Notification
+					PolicyVersion entity = new PolicyVersion();
+					entity.setPolicyName(watchPolicyName);
+					entity.setActiveVersion(Integer.parseInt(activeVersion));
+					entity.setModifiedBy(userId);
+					controller.watchPolicyFunction(entity, activePolicy, "SwitchVersion");
+					return success();
+				}
+			}
 		}
-		String activeVersion = params.getString("activeVersion");
-		String highestVersion = params.get("highestVersion").toString();
-		if(Integer.parseInt(activeVersion) > Integer.parseInt(highestVersion)){
-			return error("The Version shouldn't be greater than Highest Value");
-		}
-		activePolicy = policyName + "." + activeVersion + ".xml";
-		String dbCheckName = activePolicy.replace("/", ".");
-		if(dbCheckName.contains("Config_")){
-			dbCheckName = dbCheckName.replace(".Config_", ":Config_");
-		}else if(dbCheckName.contains("Action_")){
-			dbCheckName = dbCheckName.replace(".Action_", ":Action_");
-		}else if(dbCheckName.contains("Decision_")){
-			dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
-		}
-		String[] splitDBCheckName = dbCheckName.split(":");
-		String peQuery =   "FROM PolicyEntity where policyName = :splitDBCheckName_1 and scope = :splitDBCheckName_0";
-		SimpleBindings policyParams = new SimpleBindings();
-		policyParams.put("splitDBCheckName_1", splitDBCheckName[1]);
-		policyParams.put("splitDBCheckName_0", splitDBCheckName[0]);
-		List<Object> policyEntity = controller.getDataByQuery(peQuery, policyParams);
-		PolicyEntity pentity = (PolicyEntity) policyEntity.get(0);
-		if(pentity.isDeleted()){
-			return error("The Policy is Not Existing in Workspace");
-		}
-		if(policyName.contains("/")){
-			policyName = policyName.replace("/", File.separator);
-		}
-		policyName = policyName.substring(policyName.indexOf(File.separator)+1);
-		if(policyName.contains("\\")){
-			policyName = policyName.replace(File.separator, "\\");
-		}
-		policyName = splitDBCheckName[0].replace(".", File.separator)+File.separator+policyName;
-		String watchPolicyName = policyName;
-		if(policyName.contains("/")){
-			policyName = policyName.replace("/", File.separator);
-		}
-		if(policyName.contains("\\")){
-			policyName = policyName.replace("\\", "\\\\");
-		}
-		String query = "update PolicyVersion set active_version='"+activeVersion+"' where policy_name ='"+policyName+"'  and id >0";
-		//query the database
-		controller.executeQuery(query);
-		//Policy Notification
-		PolicyVersion entity = new PolicyVersion();
-		entity.setPolicyName(watchPolicyName);
-		entity.setActiveVersion(Integer.parseInt(activeVersion));
-		entity.setModifiedBy(userId);
-		controller.watchPolicyFunction(entity, activePolicy, "SwitchVersion");
-		return success();
+		return controller.switchVersionPolicyContent(policyName);
 	}
 
 	//Describe Policy
@@ -530,6 +532,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		}
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(temp))) {
 			bw.write(entity.getPolicyData());
+			bw.close();
 			object = HumanPolicyComponent.DescribePolicy(temp);
 		} catch (IOException e) {
 			LOGGER.error("Exception Occured while Describing the Policy"+e);
@@ -653,7 +656,7 @@ public class PolicyManagerServlet extends HttpServlet {
 			scopeName = scopeName.replace("/", File.separator);
 		}
 		if(scopeName.contains("\\")){
-			scopeName = scopeName.replace("\\", "\\\\\\\\");
+			scopeName = scopeName.replace("\\", "\\\\");
 		}
 		String query = "from PolicyVersion where POLICY_NAME like :scopeName";
 		String scopeNamequery = "from PolicyEditorScopes where SCOPENAME like :scopeName";
@@ -751,7 +754,14 @@ public class PolicyManagerServlet extends HttpServlet {
 			String newPath = params.getString("newPath");
 			oldPath = oldPath.substring(oldPath.indexOf('/')+1);
 			newPath = newPath.substring(newPath.indexOf('/')+1);
+			String checkValidation = null;
 			if(oldPath.endsWith(".xml")){
+				checkValidation = newPath.replace(".xml", "");
+				checkValidation = checkValidation.substring(checkValidation.indexOf('_') + 1, checkValidation.lastIndexOf("."));
+				checkValidation = checkValidation.substring(checkValidation.lastIndexOf("/")+1);
+				if(!PolicyUtils.policySpecialCharValidator(checkValidation).contains("success")){
+					return error("Policy Rename Failed. The Name contains special characters.");
+				}
 				JSONObject result = policyRename(oldPath, newPath, userId);
 				if(!(Boolean)(result.getJSONObject("result").get("success"))){
 					return result;
@@ -763,10 +773,14 @@ public class PolicyManagerServlet extends HttpServlet {
 					scopeName = scopeName.replace("/", File.separator);
 					newScopeName = newScopeName.replace("/", File.separator);
 				}
-				if(scopeName.contains("\\")){
-					scopeName = scopeName.replace("\\", "\\\\\\\\");
-					newScopeName = newScopeName.replace("\\", "\\\\\\\\");
-				}
+				checkValidation = newScopeName.substring(newScopeName.lastIndexOf(File.separator)+1);
+                if(scopeName.contains("\\")){
+                    scopeName = scopeName.replace("\\", "\\\\\\\\");
+                    newScopeName = newScopeName.replace("\\", "\\\\\\\\");
+                }
+                if(!PolicyUtils.policySpecialCharValidator(checkValidation).contains("success")){
+                    return error("Scope Rename Failed. The Name contains special characters.");
+                }
 				PolicyController controller = getPolicyControllerInstance();
 				String query = "from PolicyVersion where POLICY_NAME like :scopeName";
 				String scopeNamequery = "from PolicyEditorScopes where SCOPENAME like :scopeName";
@@ -901,7 +915,12 @@ public class PolicyManagerServlet extends HttpServlet {
 				}
 				for(int i=0; i<oldEntityData.size(); i++){
 					entity = (PolicyEntity) oldEntityData.get(i);
-					checkOldPolicyEntryAndUpdate(entity, newPolicySplit[0] , newPolicySplit[1], oldPolicySplit[0], oldPolicySplit[1], policyName, newpolicyName, oldpolicyName, userId);
+					String checkEntityName = entity.getPolicyName().replace(".xml", "");
+                    checkEntityName = checkEntityName.substring(0, checkEntityName.lastIndexOf('.'));
+                    String originalPolicyName = oldpolicyName.substring(oldpolicyName.lastIndexOf(File.separator)+1);
+                    if(checkEntityName.equals(originalPolicyName)){
+                        checkOldPolicyEntryAndUpdate(entity, newPolicySplit[0] , newPolicySplit[1], oldPolicySplit[0], oldPolicySplit[1], policyName, newpolicyName, oldpolicyName, userId);
+                    }
 				}
 			}else{
 				return error("Policy rename failed due to policy not able to retrieve from database. Please, contact super-admin.");
@@ -931,21 +950,24 @@ public class PolicyManagerServlet extends HttpServlet {
 			entity.setPolicyData(entity.getPolicyData().replace(oldScope +"."+oldPolicyNameWithoutExtension, newScope+"."+newPolicyNameWithoutExtension));
 			entity.setScope(newScope);
 			entity.setModifiedBy(userId);
+			
+			String oldConfigurationName = null;
+			String newConfigurationName = null;
 			if(newpolicyName.contains("Config_")){
-				String oldConfigurationName = configEntity.getConfigurationName();
+				oldConfigurationName = configEntity.getConfigurationName();
 				configEntity.setConfigurationName(configEntity.getConfigurationName().replace(oldScope +"."+oldPolicyNameWithoutExtension, newScope+"."+newPolicyNameWithoutExtension));
 				controller.updateData(configEntity);
-				String newConfigurationName = configEntity.getConfigurationName();
+				newConfigurationName = configEntity.getConfigurationName();
 				File file = new File(PolicyController.getConfigHome() + File.separator + oldConfigurationName);
 				if(file.exists()){
 					File renamefile = new File(PolicyController.getConfigHome() + File.separator + newConfigurationName);
 					file.renameTo(renamefile);
 				}
 			}else if(newpolicyName.contains("Action_")){
-				String oldConfigurationName = actionEntity.getActionBodyName();
+				oldConfigurationName = actionEntity.getActionBodyName();
 				actionEntity.setActionBody(actionEntity.getActionBody().replace(oldScope +"."+oldPolicyNameWithoutExtension, newScope+"."+newPolicyNameWithoutExtension));
 				controller.updateData(actionEntity);
-				String newConfigurationName = actionEntity.getActionBodyName();
+				newConfigurationName = actionEntity.getActionBodyName();
 				File file = new File(PolicyController.getActionHome() + File.separator + oldConfigurationName);
 				if(file.exists()){
 					File renamefile = new File(PolicyController.getActionHome() + File.separator + newConfigurationName);
@@ -954,6 +976,8 @@ public class PolicyManagerServlet extends HttpServlet {
 			}
 			controller.updateData(entity);
 
+			PolicyRestController restController = new PolicyRestController();
+			restController.notifyOtherPAPSToUpdateConfigurations("rename", newConfigurationName, oldConfigurationName);
 			PolicyVersion versionEntity = (PolicyVersion) controller.getEntityItem(PolicyVersion.class, "policyName", oldpolicyName);
 			versionEntity.setPolicyName(policyName);
 			versionEntity.setModifiedBy(userId);
@@ -972,18 +996,20 @@ public class PolicyManagerServlet extends HttpServlet {
 		}
 	}
 
-	private JSONObject cloneRecord(String newpolicyName, String oldScope, String inRemoveoldPolicyExtension, String newScope, String removenewPolicyExtension, PolicyEntity entity, String userId) throws ServletException{
+	private JSONObject cloneRecord(String newpolicyName, String oldScope, String inRemoveoldPolicyExtension, String newScope, String inRemovenewPolicyExtension, PolicyEntity entity, String userId) throws ServletException{
 		String queryEntityName;
 		PolicyController controller = getPolicyControllerInstance();
 		PolicyEntity cloneEntity = new PolicyEntity();
 		cloneEntity.setPolicyName(newpolicyName);
 		String removeoldPolicyExtension = inRemoveoldPolicyExtension;
+		String removenewPolicyExtension = inRemovenewPolicyExtension;
 		removeoldPolicyExtension = removeoldPolicyExtension.replace(".xml", "");
 		removenewPolicyExtension = removenewPolicyExtension.replace(".xml", "");
 		cloneEntity.setPolicyData(entity.getPolicyData().replace(oldScope+"."+removeoldPolicyExtension, newScope+"."+removenewPolicyExtension));
 		cloneEntity.setScope(entity.getScope());
 		String oldConfigRemoveExtension = removeoldPolicyExtension.replace(".xml", "");
 		String newConfigRemoveExtension = removenewPolicyExtension.replace(".xml", "");
+		String newConfigurationName = null;
 		if(newpolicyName.contains("Config_")){
 			ConfigurationDataEntity configurationDataEntity = new ConfigurationDataEntity();
 			configurationDataEntity.setConfigurationName(entity.getConfigurationData().getConfigurationName().replace(oldScope+"."+oldConfigRemoveExtension, newScope+"."+newConfigRemoveExtension));
@@ -996,10 +1022,11 @@ public class PolicyManagerServlet extends HttpServlet {
 			controller.saveData(configurationDataEntity);
 			ConfigurationDataEntity configEntiy = (ConfigurationDataEntity) controller.getEntityItem(ConfigurationDataEntity.class, "configurationName", queryEntityName);
 			cloneEntity.setConfigurationData(configEntiy);
-			String newConfigurationName = configEntiy.getConfigurationName();
+			newConfigurationName = configEntiy.getConfigurationName();
 			try (FileWriter fw = new FileWriter(PolicyController.getConfigHome() + File.separator + newConfigurationName);
 					BufferedWriter bw = new BufferedWriter(fw)){
 				bw.write(configEntiy.getConfigBody());
+				bw.close();
 			} catch (IOException e) {
 				LOGGER.error("Exception Occured While cloning the configuration file"+e);
 			}
@@ -1014,19 +1041,24 @@ public class PolicyManagerServlet extends HttpServlet {
 			controller.saveData(actionBodyEntity);
 			ActionBodyEntity actionEntiy = (ActionBodyEntity) controller.getEntityItem(ActionBodyEntity.class, "actionBodyName", queryEntityName);
 			cloneEntity.setActionBodyEntity(actionEntiy);
-			String newConfigurationName = actionEntiy.getActionBodyName();
-			try (FileWriter fw = new FileWriter(PolicyController.getActionHome() + File.separator + newConfigurationName);
-				BufferedWriter bw = new BufferedWriter(fw)){
-				bw.write(actionEntiy.getActionBody());
-			} catch (IOException e) {
+			newConfigurationName = actionEntiy.getActionBodyName();
+			 try (FileWriter fw = new FileWriter(PolicyController.getActionHome() + File.separator + newConfigurationName);
+					 BufferedWriter bw = new BufferedWriter(fw)){
+				 bw.write(actionEntiy.getActionBody());
+				 bw.close();
+			 } catch (IOException e) {
 				LOGGER.error("Exception Occured While cloning the configuration file"+e);
 			}
 		}
+		
 		cloneEntity.setDeleted(entity.isDeleted());
 		cloneEntity.setCreatedBy(userId);
 		cloneEntity.setModifiedBy(userId);
 		controller.saveData(cloneEntity);
 
+		//Notify others paps regarding clone policy.
+		PolicyRestController restController = new PolicyRestController();
+		restController.notifyOtherPAPSToUpdateConfigurations("clonePolicy", newConfigurationName, null);
 		return success();
 	}
 
@@ -1055,8 +1087,17 @@ public class PolicyManagerServlet extends HttpServlet {
 			}else if(newPolicyCheck.contains("Decision_")){
 				newPolicyCheck = newPolicyCheck.replace(".Decision_", ":Decision_");
 			}
+			if(!newPolicyCheck.contains(":")){
+				 return error("Policy Clone Failed. The Name contains special characters.");
+			}
 			String[] newPolicySplit = newPolicyCheck.split(":");
 
+			String checkValidation = newPolicySplit[1].replace(".xml", "");
+            checkValidation = checkValidation.substring(checkValidation.indexOf('_') + 1, checkValidation.lastIndexOf("."));
+            if(!PolicyUtils.policySpecialCharValidator(checkValidation).contains("success")){
+                return error("Policy Clone Failed. The Name contains special characters.");
+            }
+            
 			String oldPolicyCheck = orignalPolicyName;
 			if(oldPolicyCheck.contains("Config_")){
 				oldPolicyCheck = oldPolicyCheck.replace(".Config_", ":Config_");
@@ -1182,9 +1223,11 @@ public class PolicyManagerServlet extends HttpServlet {
 								if(policyNamewithoutExtension.contains("Config_")){
 									Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator + policyEntity.getConfigurationData().getConfigurationName()));
 									controller.deleteData(policyEntity.getConfigurationData());
+									restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getConfigurationData().getConfigurationName());
 								}else if(policyNamewithoutExtension.contains("Action_")){
 									Files.deleteIfExists(Paths.get(PolicyController.getActionHome() + File.separator + policyEntity.getActionBodyEntity().getActionBodyName()));
 									controller.deleteData(policyEntity.getActionBodyEntity());
+									restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getActionBodyEntity().getActionBodyName());
 								}
 							}
 						}
@@ -1237,9 +1280,11 @@ public class PolicyManagerServlet extends HttpServlet {
 							if(policyNamewithoutExtension.contains("Config_")){
 								Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator + policyEntity.getConfigurationData().getConfigurationName()));
 								controller.deleteData(policyEntity.getConfigurationData());
+								restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getConfigurationData().getConfigurationName());
 							}else if(policyNamewithoutExtension.contains("Action_")){
 								Files.deleteIfExists(Paths.get(PolicyController.getActionHome() + File.separator + policyEntity.getActionBodyEntity().getActionBodyName()));
 								controller.deleteData(policyEntity.getActionBodyEntity());
+								restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getActionBodyEntity().getActionBodyName());
 							}
 
 							if(version > 1){
@@ -1262,7 +1307,12 @@ public class PolicyManagerServlet extends HttpServlet {
 								entity.setModifiedBy(userId);
 								controller.watchPolicyFunction(entity, policyNamewithExtension, "DeleteOne");
 
-								String updatequery = "update PolicyVersion set active_version='"+highestVersion+"' , highest_version='"+highestVersion+"' where policy_name ='" +policyNamewithoutExtension.replace("\\", "\\\\")+"'";
+								String updatequery = "";
+								if(highestVersion != 0){
+									updatequery = "update PolicyVersion set active_version='"+highestVersion+"' , highest_version='"+highestVersion+"' where policy_name ='" +policyNamewithoutExtension.replace("\\", "\\\\")+"'";	
+								}else{
+									updatequery = "delete from PolicyVersion  where policy_name ='" +policyNamewithoutExtension.replace("\\", "\\\\")+"' and id >0";
+								}
 								controller.executeQuery(updatequery);
 							}else{
 								String policyVersionQuery = "delete from PolicyVersion  where policy_name ='" +policyNamewithoutExtension.replace("\\", "\\\\")+"' and id >0";
@@ -1297,9 +1347,11 @@ public class PolicyManagerServlet extends HttpServlet {
 							if(policyNamewithoutExtension.contains("Config_")){
 								Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator + policyEntity.getConfigurationData().getConfigurationName()));
 								controller.deleteData(policyEntity.getConfigurationData());
+								restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getConfigurationData().getConfigurationName());
 							}else if(policyNamewithoutExtension.contains("Action_")){
 								Files.deleteIfExists(Paths.get(PolicyController.getActionHome() + File.separator + policyEntity.getActionBodyEntity().getActionBodyName()));
 								controller.deleteData(policyEntity.getActionBodyEntity());
+								restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getActionBodyEntity().getActionBodyName());
 							}
 						}
 					}

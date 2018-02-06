@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -401,6 +401,11 @@ public class PolicyRestController extends RestrictedBaseController{
 		policyLogger.info("***********************************************************************************************************************************");
 		
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
+		if(body != null && !body.isEmpty()){
+			response.getWriter().write(body);
+		}else{
+			response.getWriter().write("Failed");
+		}		
 		response.getWriter().write(body);
 		return null;
 	}
@@ -419,6 +424,11 @@ public class PolicyRestController extends RestrictedBaseController{
 		policyLogger.info("*************************************************************************************************************************************");
 		
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
+		if(body != null && !body.isEmpty()){
+			response.getWriter().write(body);
+		}else{
+			response.getWriter().write("Failed");
+		}		
 		response.getWriter().write(body);
 		return null;
 	}
@@ -471,7 +481,9 @@ public class PolicyRestController extends RestrictedBaseController{
 			resultList = json.get("policyresult");
 		}catch(Exception e){
 			List<String> data = new ArrayList<>();
-			data.add("Elastic Search Server is down");
+			resultList = json.get("data");
+			data.add("Exception");
+			data.add(resultList.toString());
 			resultList = data;
 			policyLogger.error("Exception Occured while searching for Policy in Elastic Database" +e);
 		}
@@ -489,6 +501,11 @@ public class PolicyRestController extends RestrictedBaseController{
 	public void deleteElasticData(String fileName){
 		String uri = "searchPolicy?action=delete&policyName='"+fileName+"'";
 		callPAP(null, "POST", uri.trim());
+	}
+	
+	public String notifyOtherPAPSToUpdateConfigurations(String mode, String newName, String oldName){
+		String uri = "onap/notifyOtherPAPs?action="+mode+"&newPolicyName="+newName+"&oldPolicyName="+oldName+"";
+		return callPAP(null, "POST", uri.trim());
 	}
 
 }
