@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -384,7 +384,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	}
 	
 	@RequestMapping(value={"/saveDictionary/*/*"}, method={RequestMethod.POST})
-	public ModelAndView saveDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void saveDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String userId = "";
 		String uri = request.getRequestURI().replace("/saveDictionary", "");
 		if(uri.startsWith("/")){
@@ -401,12 +401,15 @@ public class PolicyRestController extends RestrictedBaseController{
 		policyLogger.info("***********************************************************************************************************************************");
 		
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
-		response.getWriter().write(body);
-		return null;
+		if(body != null && !body.isEmpty()){
+			response.getWriter().write(body);
+		}else{
+			response.getWriter().write("Failed");
+		}		
 	}
 	
 	@RequestMapping(value={"/deleteDictionary/*/*"}, method={RequestMethod.POST})
-	public ModelAndView deletetDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void deletetDictionaryController(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String uri = request.getRequestURI().replace("/deleteDictionary", "");
 		if(uri.startsWith("/")){
 			uri = uri.substring(uri.indexOf('/')+1);
@@ -419,8 +422,11 @@ public class PolicyRestController extends RestrictedBaseController{
 		policyLogger.info("*************************************************************************************************************************************");
 		
 		String body = callPAP(request, "POST", uri.replaceFirst("/", "").trim());
-		response.getWriter().write(body);
-		return null;
+		if(body != null && !body.isEmpty()){
+			response.getWriter().write(body);
+		}else{
+			response.getWriter().write("Failed");
+		}		
 	}
 	
 	@RequestMapping(value={"/searchDictionary"}, method={RequestMethod.POST})
@@ -471,7 +477,9 @@ public class PolicyRestController extends RestrictedBaseController{
 			resultList = json.get("policyresult");
 		}catch(Exception e){
 			List<String> data = new ArrayList<>();
-			data.add("Elastic Search Server is down");
+			resultList = json.get("data");
+			data.add("Exception");
+			data.add(resultList.toString());
 			resultList = data;
 			policyLogger.error("Exception Occured while searching for Policy in Elastic Database" +e);
 		}
@@ -489,6 +497,11 @@ public class PolicyRestController extends RestrictedBaseController{
 	public void deleteElasticData(String fileName){
 		String uri = "searchPolicy?action=delete&policyName='"+fileName+"'";
 		callPAP(null, "POST", uri.trim());
+	}
+	
+	public String notifyOtherPAPSToUpdateConfigurations(String mode, String newName, String oldName){
+		String uri = "onap/notifyOtherPAPs?action="+mode+"&newPolicyName="+newName+"&oldPolicyName="+oldName+"";
+		return callPAP(null, "POST", uri.trim());
 	}
 
 }

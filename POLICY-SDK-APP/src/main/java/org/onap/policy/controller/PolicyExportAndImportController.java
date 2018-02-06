@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,8 +44,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONObject;
+import org.onap.policy.admin.PolicyRestController;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyExportAdapter;
@@ -73,25 +73,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping("/")
 public class PolicyExportAndImportController extends RestrictedBaseController {
 	private static Logger	logger	= FlexLogger.getLogger(PolicyExportAndImportController.class);
-
-	private ArrayList<String> selectedPolicy;
-	private Set<String> scopes = null;
-	private List<String> roles = null;
-	private static String SUPERADMIN = "super-admin";
-	private static String SUPEREDITOR = "super-editor";
-	private static String ADMIN = "admin";
-	private static String EDITOR = "editor";
+	
+	private static String superAdmin = "super-admin";
+	private static String superEditor = "super-editor";
+	private static String admin = "admin";
+	private static String editor = "editor";
+	private static String policyName = "policyName";
+	private static String configurationName = "configurationName";
+	private static String configurationbody = "configurationbody";
+	private static String config = "Config_";
 
 	private static CommonClassDao commonClassDao;
-	
-	private PolicyEntity policyEntity;
-	private ConfigurationDataEntity configurationDataEntity;
-	private ActionBodyEntity actionBodyEntity;
-	private PolicyVersion policyVersion;
 
-	private Workbook workbook;
-
-	private HSSFWorkbook workBook2;
 	
 	private PolicyController policyController;
 	public PolicyController getPolicyController() {
@@ -121,33 +114,33 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 
 	@RequestMapping(value={"/policy_download/exportPolicy.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public void exportPolicy(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
+		try(HSSFWorkbook workBook2 = new HSSFWorkbook()){
 			String file;
-			selectedPolicy = new ArrayList<>();
+			ArrayList<String> selectedPolicy = new ArrayList<>();
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			PolicyExportAdapter adapter = mapper.readValue(root.get("exportData").toString(), PolicyExportAdapter.class);
 			for (Object policyId :  adapter.getPolicyDatas()) {
 				LinkedHashMap<?, ?> selected = (LinkedHashMap<?, ?>)policyId;
-				String policyWithScope = selected.get("policyName").toString() + "." + selected.get("activeVersion").toString() + ".xml";
+				String policyWithScope = selected.get(policyName).toString() + "." + selected.get("activeVersion").toString() + ".xml";
 				String scope = policyWithScope.substring(0 , policyWithScope.lastIndexOf(File.separator)).replace(File.separator, ".");
 				String policyName = policyWithScope.substring(policyWithScope.lastIndexOf(File.separator)+1);
 				selectedPolicy.add(policyName+":"+scope);
 			}
 			List<Object> entityData = commonClassDao.getMultipleDataOnAddingConjunction(PolicyEntity.class, "policyName:scope", selectedPolicy);
 
-			workBook2 = new HSSFWorkbook();
 			HSSFSheet sheet = workBook2.createSheet("PolicyEntity");
 
 			HSSFRow headingRow = sheet.createRow(0);
-			headingRow.createCell(0).setCellValue("policyName");
+			headingRow.createCell(0).setCellValue(policyName);
 			headingRow.createCell(1).setCellValue("scope");
 			headingRow.createCell(2).setCellValue("version");
 			headingRow.createCell(3).setCellValue("policyData");
 			headingRow.createCell(4).setCellValue("description");
-			headingRow.createCell(5).setCellValue("configurationbody");
-			headingRow.createCell(6).setCellValue("configurationName");
+			headingRow.createCell(5).setCellValue(configurationName);
+			headingRow.createCell(6).setCellValue("bodySize");
+			headingRow.createCell(7).setCellValue(configurationbody);
 
 			short rowNo = 1;
 			for (Object object : entityData) {
@@ -160,16 +153,36 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 				row.createCell(4).setCellValue(policyEntity.getDescription());
 				if(!policyEntity.getPolicyName().contains("Decision_")){
 					if(policyEntity.getConfigurationData() != null){
-						row.createCell(5).setCellValue(policyEntity.getConfigurationData().getConfigBody());
-						row.createCell(6).setCellValue(policyEntity.getConfigurationData().getConfigurationName());
+						row.createCell(5).setCellValue(policyEntity.getConfigurationData().getConfigurationName());
+						String body = policyEntity.getConfigurationData().getConfigBody();
+						if(policyEntity.getPolicyName().contains("Config_BRMS_Param_")){
+							int index = 0;
+							int arraySize = 0;
+							while (index < body.length()) {
+								if(arraySize == 0){
+									row.createCell(7).setCellValue(body.substring(index, Math.min(index + 30000, body.length())));
+								}else{
+									headingRow.createCell(7 + arraySize).setCellValue(configurationbody+arraySize);
+									row.createCell(7 + arraySize).setCellValue(body.substring(index, Math.min(index + 30000, body.length())));
+								}
+								index += 30000;
+								arraySize += 1;
+							}
+							row.createCell(6).setCellValue(arraySize);
+						}else{	
+							row.createCell(6).setCellValue(0);
+							row.createCell(7).setCellValue(body);
+						}	
 					}
 					if(policyEntity.getActionBodyEntity() != null){
-						row.createCell(5).setCellValue(policyEntity.getActionBodyEntity().getActionBody());
-						row.createCell(6).setCellValue(policyEntity.getActionBodyEntity().getActionBodyName());
+						row.createCell(5).setCellValue(policyEntity.getActionBodyEntity().getActionBodyName());
+						row.createCell(6).setCellValue(0);
+						row.createCell(7).setCellValue(policyEntity.getActionBodyEntity().getActionBody());
 					}
 				}else{
 					row.createCell(5).setCellValue("");
-					row.createCell(6).setCellValue("");
+					row.createCell(6).setCellValue(0);
+					row.createCell(7).setCellValue("");
 				}
 				rowNo++;
 			}
@@ -177,8 +190,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 			String tmp = System.getProperty("catalina.base") + File.separator + "webapps" + File.separator + "temp";
 			String deleteCheckPath = tmp + File.separator + "PolicyExport.xls";
 			File deleteCheck = new File(deleteCheckPath);
-			if(deleteCheck.exists()){
-				deleteCheck.delete();
+			if(deleteCheck.exists() && deleteCheck.delete()){
+				logger.info("Deleted the file from system before exporting a new file.");
 			}
 			File temPath = new File(tmp);
 			if(!temPath.exists()){
@@ -216,176 +229,215 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 		String userId = UserUtils.getUserSession(request).getOrgUserId();
 		UserInfo userInfo = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", userId);
 
+		//Check if the Role and Scope Size are Null get the values from db. 
 		List<Object> userRoles = controller.getRoles(userId);
 		Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
-		roles = pair.u;
-		scopes = pair.t;
+		List<String> roles = pair.u;
+		Set<String> scopes = pair.t;
 		
-		FileInputStream excelFile = new FileInputStream(new File(file));
-		workbook = new HSSFWorkbook(excelFile);
-		Sheet datatypeSheet = workbook.getSheetAt(0);
-		Iterator<Row> rowIterator = datatypeSheet.iterator();
+		try(FileInputStream excelFile = new FileInputStream(new File(file)); HSSFWorkbook workbook = new HSSFWorkbook(excelFile)){
+			Sheet datatypeSheet = workbook.getSheetAt(0);
+			Iterator<Row> rowIterator = datatypeSheet.iterator();
 
-		while (rowIterator.hasNext()) {
-			finalColumn = false;
-			policyEntity = new PolicyEntity();
-			configurationDataEntity = new ConfigurationDataEntity();
-			actionBodyEntity = new ActionBodyEntity();
-			policyVersion = new PolicyVersion();
-			Row currentRow = rowIterator.next();
-			if (currentRow.getRowNum() == 0) {
-				continue;
-			}
-			Iterator<Cell> cellIterator = currentRow.cellIterator();
-			while (cellIterator.hasNext()) {
-				Cell cell = cellIterator.next();
-				if ("policyName".equalsIgnoreCase(getCellHeaderName(cell))) {
-					policyEntity.setPolicyName(cell.getStringCellValue());
+			while (rowIterator.hasNext()) {
+				finalColumn = false;
+				PolicyEntity policyEntity = new PolicyEntity();
+				ConfigurationDataEntity configurationDataEntity = new ConfigurationDataEntity();
+				ActionBodyEntity actionBodyEntity = new ActionBodyEntity();
+				PolicyVersion policyVersion = new PolicyVersion();
+				Row currentRow = rowIterator.next();
+				if (currentRow.getRowNum() == 0) {
+					continue;
 				}
-				if ("scope".equalsIgnoreCase(getCellHeaderName(cell))) {
-					policyEntity.setScope(cell.getStringCellValue());
-				}
-				if ("policyData".equalsIgnoreCase(getCellHeaderName(cell))) {
-					policyEntity.setPolicyData(cell.getStringCellValue());
-				}
-				if ("description".equalsIgnoreCase(getCellHeaderName(cell))) {
-					policyEntity.setDescription(cell.getStringCellValue());
-				}
-				if ("configurationbody".equalsIgnoreCase(getCellHeaderName(cell))) {
-					if(policyEntity.getPolicyName().contains("Config_")){
-						configExists = true;
-						configurationDataEntity.setConfigBody(cell.getStringCellValue());
-					}else if(policyEntity.getPolicyName().contains("Action_")){
-						actionExists = true;
-						actionBodyEntity.setActionBody(cell.getStringCellValue());
-					}	
-				}
-				if ("configurationName".equalsIgnoreCase(getCellHeaderName(cell))) {
-					finalColumn = true;
-					configName = cell.getStringCellValue();
-					if(policyEntity.getPolicyName().contains("Config_")){
-						configurationDataEntity.setConfigurationName(cell.getStringCellValue());
-					}else if(policyEntity.getPolicyName().contains("Action_")){
-						actionBodyEntity.setActionBodyName(cell.getStringCellValue());
-					}	
-				}
-
-				if(finalColumn){
-					scope = policyEntity.getScope().replace(".", File.separator);
-					String query = "FROM PolicyEntity where policyName = :policyName and scope = :policyScope";
-					SimpleBindings params = new SimpleBindings();
-					params.put("policyName", policyEntity.getPolicyName());
-					params.put("policyScope", policyEntity.getScope());
-					List<Object> queryData = controller.getDataByQuery(query, params);
-					if(!queryData.isEmpty()){
-						continue;
+				Iterator<Cell> cellIterator = currentRow.cellIterator();
+				StringBuilder body = new StringBuilder();
+				int bodySize = 0;
+				int setBodySize = 0;
+				boolean configurationBodySet = false;
+				while (cellIterator.hasNext()) {
+					Cell cell = cellIterator.next();
+					if (policyName.equalsIgnoreCase(getCellHeaderName(cell))) {
+						policyEntity.setPolicyName(cell.getStringCellValue());
+						finalColumn = false; 
+						configurationBodySet = false;
+						configExists = false;
+						actionExists = false;
 					}
-					if (roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR)) {
-						//1. if Role contains super admin create scope.
-						//2. if Role contains super editor don't create new scope and add to list to show to user.
-						
-						PolicyEditorScopes policyEditorScope = (PolicyEditorScopes) commonClassDao.getEntityItem(PolicyEditorScopes.class, "scopeName", scope);
-						if(policyEditorScope == null){
-							if(roles.contains(SUPERADMIN)){
-								PolicyEditorScopes policyEditorScopeEntity = new PolicyEditorScopes();
-								policyEditorScopeEntity.setScopeName(scope);
-								policyEditorScopeEntity.setUserCreatedBy(userInfo);
-								policyEditorScopeEntity.setUserModifiedBy(userInfo);
-								commonClassDao.save(policyEditorScopeEntity);
-							}else{
-								//Add Error Message a new Scope Exists, contact super-admin to create a new scope
-								continue;
+					if ("scope".equalsIgnoreCase(getCellHeaderName(cell))) {
+						policyEntity.setScope(cell.getStringCellValue());
+					}
+					if ("policyData".equalsIgnoreCase(getCellHeaderName(cell))) {
+						policyEntity.setPolicyData(cell.getStringCellValue());
+					}
+					if ("description".equalsIgnoreCase(getCellHeaderName(cell))) {
+						policyEntity.setDescription(cell.getStringCellValue());
+					}
+					if (configurationbody.equalsIgnoreCase(getCellHeaderName(cell))) {
+						if(policyEntity.getPolicyName().contains(config)){
+							if(policyEntity.getPolicyName().contains("Config_BRMS_Param_")){
+								setBodySize += 1;
 							}
+							if(setBodySize == bodySize){
+								finalColumn = true;
+								configurationBodySet = true;
+							}else if(setBodySize == 0){
+								configurationBodySet = true;
+							}
+							configExists = true;
+							body.append(cell.getStringCellValue());
+						}else if(policyEntity.getPolicyName().contains("Action_")){
+							actionExists = true;
+							actionBodyEntity.setActionBody(cell.getStringCellValue());
+						}	
+					}
+					if ("bodySize".equalsIgnoreCase(getCellHeaderName(cell))) {
+						if(cell.getNumericCellValue() < 1){
+							finalColumn = true;
+						}else{
+							bodySize = (int) cell.getNumericCellValue();
 						}
 					}
-					if (roles.contains(ADMIN) || roles.contains(EDITOR)) {
-						if(scopes.isEmpty()){
-							logger.error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
-						}else{
-							//1. if Role contains admin, then check if parent scope has role admin, if not don't create a scope and add to list.
-							if(roles.contains(ADMIN)){
-								String scopeCheck = scope.substring(0, scope.lastIndexOf('.'));
-								if(scopes.contains(scopeCheck)){
+					if (configurationName.equalsIgnoreCase(getCellHeaderName(cell))) {
+						configName = cell.getStringCellValue();
+						if(policyEntity.getPolicyName().contains(config)){
+							configurationDataEntity.setConfigurationName(cell.getStringCellValue());
+						}else if(policyEntity.getPolicyName().contains("Action_")){
+							actionBodyEntity.setActionBodyName(cell.getStringCellValue());
+						}	
+					}
+
+					if(finalColumn && configurationBodySet){
+						configurationDataEntity.setConfigBody(body.toString());
+						scope = policyEntity.getScope().replace(".", File.separator);
+						String query = "FROM PolicyEntity where policyName = :policyName and scope = :policyScope";
+						SimpleBindings params = new SimpleBindings();
+						params.put(policyName, policyEntity.getPolicyName());
+						params.put("policyScope", policyEntity.getScope());
+						List<Object> queryData = controller.getDataByQuery(query, params);
+						if(!queryData.isEmpty()){
+							continue;
+						}
+						if (roles.contains(superAdmin) || roles.contains(superEditor)) {
+							//1. if Role contains super admin create scope.
+							//2. if Role contains super editor don't create new scope and add to list to show to user.
+
+							PolicyEditorScopes policyEditorScope = (PolicyEditorScopes) commonClassDao.getEntityItem(PolicyEditorScopes.class, "scopeName", scope);
+							if(policyEditorScope == null){
+								if(roles.contains(superAdmin)){
 									PolicyEditorScopes policyEditorScopeEntity = new PolicyEditorScopes();
 									policyEditorScopeEntity.setScopeName(scope);
 									policyEditorScopeEntity.setUserCreatedBy(userInfo);
 									policyEditorScopeEntity.setUserModifiedBy(userInfo);
 									commonClassDao.save(policyEditorScopeEntity);
 								}else{
+									//Add Error Message a new Scope Exists, contact super-admin to create a new scope
 									continue;
 								}
-							}else{
-								continue;
 							}
 						}
-					} 	
+						if (roles.contains(admin) || roles.contains(editor)) {
+							if(scopes.isEmpty()){
+								logger.error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
+							}else{
+								//1. if Role contains admin, then check if parent scope has role admin, if not don't create a scope and add to list.
+								if(roles.contains(admin)){
+									String scopeCheck = scope.substring(0, scope.lastIndexOf('.'));
+									if(scopes.contains(scopeCheck)){
+										PolicyEditorScopes policyEditorScopeEntity = new PolicyEditorScopes();
+										policyEditorScopeEntity.setScopeName(scope);
+										policyEditorScopeEntity.setUserCreatedBy(userInfo);
+										policyEditorScopeEntity.setUserModifiedBy(userInfo);
+										commonClassDao.save(policyEditorScopeEntity);
+									}else{
+										continue;
+									}
+								}else{
+									continue;
+								}
+							}
+						} 	
 
-					if(configExists){
-						if(configName.endsWith("json")){
-							configurationDataEntity.setConfigType("JSON");
-						}else if(configName.endsWith("txt")){
-							configurationDataEntity.setConfigType("OTHER");
-						}else if(configName.endsWith("xml")){
-							configurationDataEntity.setConfigType("XML");
-						}else if(configName.endsWith("properties")){
-							configurationDataEntity.setConfigType("PROPERTIES");
+						if(configExists){
+							if(configName.endsWith("json")){
+								configurationDataEntity.setConfigType("JSON");
+							}else if(configName.endsWith("txt")){
+								configurationDataEntity.setConfigType("OTHER");
+							}else if(configName.endsWith("xml")){
+								configurationDataEntity.setConfigType("XML");
+							}else if(configName.endsWith("properties")){
+								configurationDataEntity.setConfigType("PROPERTIES");
+							}
+							configurationDataEntity.setDeleted(false);
+							configurationDataEntity.setCreatedBy(userId);
+							configurationDataEntity.setModifiedBy(userId);
+							commonClassDao.save(configurationDataEntity);
+							writeConfigurationFile(configurationDataEntity);
 						}
-						configurationDataEntity.setDeleted(false);
-						configurationDataEntity.setCreatedBy(userId);
-						configurationDataEntity.setModifiedBy(userId);
-						commonClassDao.save(configurationDataEntity);
-						try(FileWriter fw = new FileWriter(PolicyController.getConfigHome() + File.separator + configName)){
-							BufferedWriter bw = new BufferedWriter(fw);
-							bw.write(configurationDataEntity.getConfigBody());
-							bw.close();
-						} catch (IOException e) {
-							logger.error("Exception Occured While cloning the configuration file",e);
+						if(actionExists){
+							actionBodyEntity.setDeleted(false);
+							actionBodyEntity.setCreatedBy(userId);
+							actionBodyEntity.setModifiedBy(userId);
+							commonClassDao.save(actionBodyEntity);
+							writeActionBodyFile(actionBodyEntity);
 						}
+						if(configName != null){
+							if(configName.contains(config)){
+								ConfigurationDataEntity configuration = (ConfigurationDataEntity) commonClassDao.getEntityItem(ConfigurationDataEntity.class, configurationName, configName);
+								policyEntity.setConfigurationData(configuration);
+							}else{
+								ActionBodyEntity actionBody = (ActionBodyEntity) commonClassDao.getEntityItem(ActionBodyEntity.class, "actionBodyName", configName);
+								policyEntity.setActionBodyEntity(actionBody);
+							}
+						}
+						policyEntity.setCreatedBy(userId);
+						policyEntity.setModifiedBy(userId);
+						policyEntity.setDeleted(false);
+						commonClassDao.save(policyEntity);
+
+						policyVersion = new PolicyVersion();
+						String policyName = policyEntity.getPolicyName().replace(".xml", "");
+						int version = Integer.parseInt(policyName.substring(policyName.lastIndexOf('.')+1));
+						policyName = policyName.substring(0, policyName.lastIndexOf('.'));
+
+						policyVersion.setPolicyName(scope.replace(".", File.separator) + File.separator + policyName);
+						policyVersion.setActiveVersion(version);
+						policyVersion.setHigherVersion(version);
+						policyVersion.setCreatedBy(userId);
+						policyVersion.setModifiedBy(userId);
+						commonClassDao.save(policyVersion);
+
+						//Notify Other paps regarding Export Policy.
+						PolicyRestController restController = new PolicyRestController();
+						restController.notifyOtherPAPSToUpdateConfigurations("exportPolicy", configName, null);
 					}
-					if(actionExists){
-						actionBodyEntity.setDeleted(false);
-						actionBodyEntity.setCreatedBy(userId);
-						actionBodyEntity.setModifiedBy(userId);
-						commonClassDao.save(actionBodyEntity);
-						try(FileWriter fw = new FileWriter(PolicyController.getActionHome() + File.separator + actionBodyEntity.getActionBodyName())) {
-							BufferedWriter bw = new BufferedWriter(fw);
-							bw.write(actionBodyEntity.getActionBody());
-							bw.close();
-						} catch (IOException e) {
-							logger.error("Exception Occured While cloning the configuration file",e);
-						}
-					}
-					if(configName != null){
-						if(configName.contains("Config_")){
-							ConfigurationDataEntity configuration = (ConfigurationDataEntity) commonClassDao.getEntityItem(ConfigurationDataEntity.class, "configurationName", configName);
-							policyEntity.setConfigurationData(configuration);
-						}else{
-							ActionBodyEntity actionBody = (ActionBodyEntity) commonClassDao.getEntityItem(ActionBodyEntity.class, "actionBodyName", configName);
-							policyEntity.setActionBodyEntity(actionBody);
-						}
-					}
-					policyEntity.setCreatedBy(userId);
-					policyEntity.setModifiedBy(userId);
-					policyEntity.setDeleted(false);
-					commonClassDao.save(policyEntity);
-					
-					policyVersion = new PolicyVersion();
-					String policyName = policyEntity.getPolicyName().replace(".xml", "");
-					int version = Integer.parseInt(policyName.substring(policyName.lastIndexOf('.')+1));
-					policyName = policyName.substring(0, policyName.lastIndexOf('.'));
-					
-					policyVersion.setPolicyName(scope.replace(".", File.separator) + File.separator + policyName);
-					policyVersion.setActiveVersion(version);
-					policyVersion.setHigherVersion(version);
-					policyVersion.setCreatedBy(userId);
-					policyVersion.setModifiedBy(userId);
-					commonClassDao.save(policyVersion);
 				}
 			}
+		}catch(IOException e){
+			logger.error("Exception Occured While importing the Policy"+e);
 		}
 		return null;
 	}
 
+	private void writeConfigurationFile(ConfigurationDataEntity configurationDataEntity){
+		try(FileWriter fw = new FileWriter(PolicyController.getConfigHome() + File.separator + configurationDataEntity.getConfigurationName())){
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(configurationDataEntity.getConfigBody());
+			bw.close();
+		} catch (IOException e) {
+			logger.error("Exception Occured While cloning the configuration file",e);
+		}
+	}
+	
+	private void writeActionBodyFile(ActionBodyEntity actionBodyEntity){
+		try(FileWriter fw = new FileWriter(PolicyController.getActionHome() + File.separator + actionBodyEntity.getActionBodyName())) {
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(actionBodyEntity.getActionBody());
+			bw.close();
+		} catch (IOException e) {
+			logger.error("Exception Occured While cloning the configuration file",e);
+		}
+	}
+	
 	//return the column header name value
 	private String getCellHeaderName(Cell cell){
 		return cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
