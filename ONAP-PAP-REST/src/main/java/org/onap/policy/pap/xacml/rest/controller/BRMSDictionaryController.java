@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import org.onap.policy.api.PEDependency;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.pap.xacml.rest.components.CreateBRMSRuleTemplate;
 import org.onap.policy.pap.xacml.rest.util.JsonMessage;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.BRMSController;
@@ -60,6 +61,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class BRMSDictionaryController{
 	
 	private static final Logger LOGGER  = FlexLogger.getLogger(BRMSDictionaryController.class);
+
+
+	private static final String VALIDATIONRESPONSE = "Validation";
 
 	
 	private static CommonClassDao commonClassDao;
@@ -85,6 +89,10 @@ public class BRMSDictionaryController{
 	@Autowired
 	public BRMSDictionaryController(CommonClassDao commonClassDao){
 		BRMSDictionaryController.commonClassDao = commonClassDao;
+	}
+	public static void setCommonClassDao(CommonClassDao commonClassDao2) {
+		BRMSDictionaryController.commonClassDao = commonClassDao2;
+		
 	}
 	/*
 	 * This is an empty constructor
@@ -167,19 +175,22 @@ public class BRMSDictionaryController{
                 bRMSParamTemplateData = (BRMSParamTemplate)mapper.readValue(root.get("brmsParamDictionaryData").toString(), BRMSParamTemplate.class);
                 userId = root.get(userid).textValue();
             }
-            
-			bRMSParamTemplateData.setRule(rule);
-			if(bRMSParamTemplateData.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(bRMSParamTemplateData.getRuleName(), ruleName, BRMSParamTemplate.class);
-				if(!duplicateData.isEmpty()){
-					duplicateflag = true;
-				}else{
-					bRMSParamTemplateData.setUserCreatedBy(this.getUserInfo(userId));
-					commonClassDao.save(bRMSParamTemplateData);
-				}	
-			}else{
-				commonClassDao.update(bRMSParamTemplateData); 
-			} 
+            boolean validation = false;
+            if(rule != null && CreateBRMSRuleTemplate.validateRuleParams(rule)){
+    			bRMSParamTemplateData.setRule(rule);
+    			validation = true;
+    			if(bRMSParamTemplateData.getId() == 0){
+    				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(bRMSParamTemplateData.getRuleName(), ruleName, BRMSParamTemplate.class);
+    				if(!duplicateData.isEmpty()){
+    					duplicateflag = true;
+    				}else{
+    					bRMSParamTemplateData.setUserCreatedBy(this.getUserInfo(userId));
+    					commonClassDao.save(bRMSParamTemplateData);
+    				}	
+    			}else{
+    				commonClassDao.update(bRMSParamTemplateData); 
+    			}
+            }
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
 			request.setCharacterEncoding(utf8);
@@ -187,11 +198,13 @@ public class BRMSDictionaryController{
 			String responseString = "";
 			if(duplicateflag){
 				responseString = duplicateResponseString;
+			}else if(!validation){
+				responseString = VALIDATIONRESPONSE;
 			}else{
 				responseString = mapper.writeValueAsString(BRMSDictionaryController.commonClassDao.getData(BRMSParamTemplate.class));
 			}
             if(fromAPI) {
-                if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
+                if (responseString!=null && !(duplicateResponseString).equals(responseString) && !VALIDATIONRESPONSE.equals(responseString)) {
                     responseString = successMsg;
                 }
                 ModelAndView result = new ModelAndView();
@@ -213,7 +226,7 @@ public class BRMSDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -243,7 +256,7 @@ public class BRMSDictionaryController{
 			response.setCharacterEncoding(utf8);
 			request.setCharacterEncoding(utf8);
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
 		return null;
 	}
@@ -373,7 +386,7 @@ public class BRMSDictionaryController{
             response.setCharacterEncoding(utf8);
             request.setCharacterEncoding(utf8);
             PrintWriter out = response.getWriter();
-            out.write(e.getMessage());
+            out.write(PolicyUtils.CATCH_EXCEPTION);
         }
         return null;
     }
@@ -400,7 +413,7 @@ public class BRMSDictionaryController{
             response.setCharacterEncoding(utf8);
             request.setCharacterEncoding(utf8);
             PrintWriter out = response.getWriter();
-            out.write(e.getMessage());
+            out.write(PolicyUtils.CATCH_EXCEPTION);
         }
         return null;
     }
@@ -524,7 +537,7 @@ public class BRMSDictionaryController{
             response.setCharacterEncoding(utf8);
             request.setCharacterEncoding(utf8);
             PrintWriter out = response.getWriter();
-            out.write(e.getMessage());
+            out.write(PolicyUtils.CATCH_EXCEPTION);
         }
         return null;
     }
@@ -551,17 +564,16 @@ public class BRMSDictionaryController{
             response.setCharacterEncoding(utf8);
             request.setCharacterEncoding(utf8);
             PrintWriter out = response.getWriter();
-            out.write(e.getMessage());
+            out.write(PolicyUtils.CATCH_EXCEPTION);
         }
         return null;
     }
     
     public BRMSDependency getDependencyDataByID(String dependencyName){
-        return (BRMSDependency) commonClassDao.getEntityItem(BRMSDependency.class, dependencyName, dependencyName);
+        return (BRMSDependency) commonClassDao.getEntityItem(BRMSDependency.class, BRMSDictionaryController.dependencyName, dependencyName);
     }
     
     public BRMSController getControllerDataByID(String controllerName){
-        return (BRMSController) commonClassDao.getEntityItem(BRMSController.class, controllerName, controllerName);
-    }
-	
+        return (BRMSController) commonClassDao.getEntityItem(BRMSController.class, BRMSDictionaryController.controllerName, controllerName);
+    }	
 }
