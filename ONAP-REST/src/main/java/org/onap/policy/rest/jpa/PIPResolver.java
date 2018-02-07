@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -254,7 +254,7 @@ public class PIPResolver implements Serializable {
 	
 	@Transient
 	public void clearParams() {
-		while (this.pipresolverParams.isEmpty() == false) {
+		while (!this.pipresolverParams.isEmpty()) {
 			this.removePipresolverParam(this.pipresolverParams.iterator().next());
 		}
 	}
@@ -295,7 +295,7 @@ public class PIPResolver implements Serializable {
 		// Go through each property
 		//
 		for (Object nme : properties.keySet()) {
-			if (nme.toString().startsWith(prefix) == false) {
+			if (!nme.toString().startsWith(prefix)) {
 				continue;
 			}
 			if (nme.equals(prefix + ".classname")) {
@@ -319,7 +319,7 @@ public class PIPResolver implements Serializable {
 	public Map<String, String> getConfiguration(String prefix) {
 		String pref = prefix;
 		Map<String, String> map = new HashMap<>();
-		if (prefix.endsWith(".") == false) {
+		if (!prefix.endsWith(".")) {
 			pref = prefix + ".";
 		}
 		map.put(pref + "classname", this.classname);
@@ -327,7 +327,7 @@ public class PIPResolver implements Serializable {
 		if (this.description != null) {
 			map.put(pref + "description", this.description);
 		}
-		if (this.issuer != null && this.issuer.isEmpty() != false) {
+		if (this.issuer != null && this.issuer.isEmpty()) {
 			map.put(pref + "issuer", this.issuer);
 		}
 		for (PIPResolverParam param : this.pipresolverParams) {
@@ -339,7 +339,7 @@ public class PIPResolver implements Serializable {
 	@Transient
 	public void	generateProperties(Properties props, String prefix) {
 		String pref = prefix;
-		if (prefix.endsWith(".") == false) {
+		if (!prefix.endsWith(".")) {
 			pref = prefix + ".";
 		}
 		props.setProperty(pref + "classname", this.classname);
@@ -347,7 +347,7 @@ public class PIPResolver implements Serializable {
 		if (this.description != null) {
 			props.setProperty(pref + "description", this.description);
 		}
-		if (this.issuer != null && this.issuer.isEmpty() != false) {
+		if (this.issuer != null && this.issuer.isEmpty()) {
 			props.setProperty(pref + "issuer", this.issuer);
 		}
 		for (PIPResolverParam param : this.pipresolverParams) {

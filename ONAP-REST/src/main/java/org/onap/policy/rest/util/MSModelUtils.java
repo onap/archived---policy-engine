@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,7 +102,7 @@ public class MSModelUtils {
 
 		//    Pulling out dependency from file
 		while (treeItr.hasNext()) {	    
-			EObject obj = (EObject) treeItr.next();
+			EObject obj = treeItr.next();
 			if (obj instanceof EClassifier) {
 				EClassifier eClassifier = (EClassifier) obj;
 				className = eClassifier.getName();
@@ -184,9 +184,7 @@ public class MSModelUtils {
 			logger.error("Error loading Encore Resource for new Model" + e);
 		}
 
-		EPackage root = (EPackage) resource.getContents().get(0);
-
-		return root;
+		return (EPackage) resource.getContents().get(0);
 	}
 
 	private HashMap<String, String> getEEnum(EObject obj) {
@@ -352,10 +350,7 @@ public class MSModelUtils {
 
 	public JSONObject buildJavaObject(Map<String, String> map){
 
-		JSONObject returnValue = new JSONObject(map);
-
-		return returnValue;
-
+		return  new JSONObject(map);
 	}
 
 	public Map<String, String> getRefAttributeList(EPackage root, String className, String superClass){
@@ -651,9 +646,7 @@ public class MSModelUtils {
 		}
 
 		Gson gson = new Gson(); 
-		String json = gson.toJson(myObject); 
-
-		return json;		
+		return gson.toJson(myObject);
 	}
 
 	public Map<String, String> getRefclass(Map<String, MSAttributeObject> classMap, String className){
@@ -687,8 +680,7 @@ public class MSModelUtils {
 			}
 		}
 
-		String returnValue = createJson(workingMap, classMap, modelName);			
-		return returnValue;
+		return createJson(workingMap, classMap, modelName);
 	}
 
 	public List<String> getFullDependencyList(List<String> dependency, Map<String,MSAttributeObject > classMap) {

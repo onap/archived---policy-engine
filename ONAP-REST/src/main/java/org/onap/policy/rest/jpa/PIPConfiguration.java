@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -248,7 +248,7 @@ public class PIPConfiguration implements Serializable {
 	
 	@Transient
 	public void clearConfigParams() {
-		while (this.pipconfigParams.isEmpty() == false) {
+		while (!this.pipconfigParams.isEmpty()) {
 			this.removePipconfigParam(this.pipconfigParams.iterator().next());
 		}
 	}
@@ -392,7 +392,7 @@ public class PIPConfiguration implements Serializable {
 		// Go through each property
 		//
 		for (Object nme : properties.keySet()) {
-			if (nme.toString().startsWith(id) == false) {
+			if (!nme.toString().startsWith(id)) {
 				continue;
 			}
 			if (nme.equals(id + ".classname")) {
@@ -450,7 +450,7 @@ public class PIPConfiguration implements Serializable {
 		} else {
 			prefix = name;
 		}
-		if (prefix.endsWith(".") == false) {
+		if (!prefix.endsWith(".")) {
 			prefix = prefix + ".";
 		}
 		Map<String, String> map = new HashMap<>();
@@ -501,7 +501,7 @@ public class PIPConfiguration implements Serializable {
 		if (this.description != null) {
 			props.setProperty(prefix + "description", this.description);
 		}
-		if (this.issuer != null && this.issuer.isEmpty() == false) {
+		if (this.issuer != null && !this.issuer.isEmpty()) {
 			props.setProperty(prefix + "issuer", this.issuer);
 		}
 		
