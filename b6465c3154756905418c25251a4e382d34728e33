@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_9f841cd5",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-07T15:42:12Z",
+      "side": 1,
+      "message": "We are going to have new sonar issues about cyclomatic complexity here.   It would be better to move it to its own method if possible.  I\u0027m ok with it for the review, but at some point, if it can get restructure because of the cyclomatic complexity I mentioned.",
+      "revId": "b6465c3154756905418c25251a4e382d34728e33",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
