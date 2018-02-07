@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_7fe35005",
+        "filename": "pom.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-07T14:43:36Z",
+      "side": 1,
+      "message": "Mike, Common-modules.version and drools-application version are not required in LF. Here it uses project.version in all pom.xml.\n\nOnly for internal perspective, we use them.",
+      "revId": "1d3f012b2b943e5929b916ff0400d68fbdba6bd9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
