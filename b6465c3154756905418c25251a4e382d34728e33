@@ -34,6 +34,52 @@
       "revId": "b6465c3154756905418c25251a4e382d34728e33",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_3a687686",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DeleteHandler.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-07T18:10:06Z",
+      "side": 1,
+      "message": "Reverse args to clear sonar",
+      "range": {
+        "startLine": 206,
+        "startChar": 9,
+        "endLine": 206,
+        "endChar": 28
+      },
+      "revId": "b6465c3154756905418c25251a4e382d34728e33",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_da0632ce",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DeleteHandler.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-07T18:10:06Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 211,
+        "startChar": 15,
+        "endLine": 211,
+        "endChar": 43
+      },
+      "revId": "b6465c3154756905418c25251a4e382d34728e33",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
