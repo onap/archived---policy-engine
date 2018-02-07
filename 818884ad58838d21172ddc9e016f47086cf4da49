@@ -34,6 +34,24 @@
       "revId": "818884ad58838d21172ddc9e016f47086cf4da49",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_d54e056f",
+        "filename": "pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-07T21:09:31Z",
+      "side": 1,
+      "message": "not a problem Mike!  I guess the question is if these symbols are used in child modules.  If they are and you remove, build will fail.   If not used, and they directly refer to project.version, you can safely remove these properties.",
+      "parentUuid": "5a93c517_553bd5d0",
+      "revId": "818884ad58838d21172ddc9e016f47086cf4da49",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
