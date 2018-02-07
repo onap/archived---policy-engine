@@ -16,6 +16,24 @@
       "revId": "b6465c3154756905418c25251a4e382d34728e33",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ff99a01f",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-02-07T16:16:32Z",
+      "side": 1,
+      "message": "I agree Jorge.  This was added to fix an issue with deleting policies from the PDP. I prefer to merge this as it will require significant testing to change it. I plan on addressing cyclomatic complexity issues in several areas of the PE code this year including this one.",
+      "parentUuid": "5a93c517_9f841cd5",
+      "revId": "b6465c3154756905418c25251a4e382d34728e33",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
