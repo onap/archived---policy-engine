@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,6 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeSelectorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.IdReferenceType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
@@ -152,10 +151,8 @@ public class XACMLPolicyScanner {
 		if (this.policyObject == null) {
 			return null;
 		}
-		if (this.callback != null) {
-			if (this.callback.onBeginScan(this.policyObject) == CallbackResult.STOP) {
-				return this.policyObject;
-			}
+		if (this.callback != null && this.callback.onBeginScan(this.policyObject) == CallbackResult.STOP) {
+			return this.policyObject;
 		}
 		if (this.policyObject instanceof PolicyType) {
 			this.scanPolicy(null, (PolicyType) this.policyObject);
@@ -186,10 +183,8 @@ public class XACMLPolicyScanner {
 		if (logger.isTraceEnabled()) {
 			logger.trace("scanning policy set: " + policySet.getPolicySetId() + " " + policySet.getDescription());
 		}
-		if (this.callback != null) {
-			if (this.callback.onPreVisitPolicySet(parent, policySet) == CallbackResult.STOP) {
-				return CallbackResult.STOP;
-			}
+		if (this.callback != null && this.callback.onPreVisitPolicySet(parent, policySet) == CallbackResult.STOP) {
+			return CallbackResult.STOP;
 		}
 		//
 		// Scan its info
@@ -208,28 +203,18 @@ public class XACMLPolicyScanner {
 		//
 		List<JAXBElement<?>> list = policySet.getPolicySetOrPolicyOrPolicySetIdReference();
 		for (JAXBElement<?> element: list) {
-			if ("PolicySet".equals(element.getName().getLocalPart())) {
-				if (this.scanPolicySet(policySet, (PolicySetType)element.getValue()) == CallbackResult.STOP) {
-					return CallbackResult.STOP;
-				}
-			} else if ("Policy".equals(element.getName().getLocalPart())) {
-				if (this.scanPolicy(policySet, (PolicyType)element.getValue()) == CallbackResult.STOP) {
-					return CallbackResult.STOP;
-				}
-			} else if (element.getValue() instanceof IdReferenceType) {
-				if ("PolicySetIdReference".equals(element.getName().getLocalPart())) {
-					
-				} else if ("PolicyIdReference".equals(element.getName().getLocalPart())) {
-					
-				}
+			if ("PolicySet".equals(element.getName().getLocalPart()) && 
+				this.scanPolicySet(policySet, (PolicySetType)element.getValue()) == CallbackResult.STOP) {
+				return CallbackResult.STOP;
+			} else if ("Policy".equals(element.getName().getLocalPart()) &&
+					   this.scanPolicy(policySet, (PolicyType)element.getValue()) == CallbackResult.STOP) {
+				return CallbackResult.STOP;
 			} else {
 				logger.warn("generating policy sets found unsupported element: " + element.getName().getNamespaceURI());
 			}
 		}
-		if (this.callback != null) {
-			if (this.callback.onPostVisitPolicySet(parent, policySet) == CallbackResult.STOP) {
-				return CallbackResult.STOP;
-			}
+		if (this.callback != null && this.callback.onPostVisitPolicySet(parent, policySet) == CallbackResult.STOP) {
+			return CallbackResult.STOP;
 		}
 		return CallbackResult.CONTINUE;
 	}
@@ -246,10 +231,8 @@ public class XACMLPolicyScanner {
 		if (logger.isTraceEnabled()) {
 			logger.trace("scanning policy: " + policy.getPolicyId() + " " + policy.getDescription());
 		}
-		if (this.callback != null) {
-			if (this.callback.onPreVisitPolicy(parent, policy) == CallbackResult.STOP) {
-				return CallbackResult.STOP;
-			}
+		if (this.callback != null && this.callback.onPreVisitPolicy(parent, policy) == CallbackResult.STOP) {
+			return CallbackResult.STOP;
 		}
 		//
 		// Scan its info
@@ -276,10 +259,8 @@ public class XACMLPolicyScanner {
 				if (logger.isTraceEnabled()) {
 					logger.trace("scanning rule: " + rule.getRuleId() + " " + rule.getDescription());
 				}
-				if (this.callback != null) {
-					if (this.callback.onPreVisitRule(policy, rule) == CallbackResult.STOP) {
-						return CallbackResult.STOP;
-					}
+				if (this.callback != null && this.callback.onPreVisitRule(policy, rule) == CallbackResult.STOP) {
+					return CallbackResult.STOP;
 				}
 				if (this.scanTarget(rule, rule.getTarget()) == CallbackResult.STOP) {
 					return CallbackResult.STOP;
@@ -293,16 +274,12 @@ public class XACMLPolicyScanner {
 				if (this.scanAdvice(rule, rule.getAdviceExpressions()) == CallbackResult.STOP) {
 					return CallbackResult.STOP;
 				}
-				if (this.callback != null) {
-					if (this.callback.onPostVisitRule(policy, rule) == CallbackResult.STOP) {
-						return CallbackResult.STOP;
-					}
+				if (this.callback != null && this.callback.onPostVisitRule(policy, rule) == CallbackResult.STOP) {
+					return CallbackResult.STOP;
 				}
 			} else if (o instanceof VariableDefinitionType) {
-				if (this.callback != null) {
-					if (this.callback.onVariable(policy, (VariableDefinitionType) o) == CallbackResult.STOP) {
-						return CallbackResult.STOP;
-					}
+				if (this.callback != null && this.callback.onVariable(policy, (VariableDefinitionType) o) == CallbackResult.STOP) {
+					return CallbackResult.STOP;
 				}
 			} else {
 				if (logger.isDebugEnabled()) {
@@ -310,10 +287,8 @@ public class XACMLPolicyScanner {
 				}
 			}
 		}
-		if (this.callback != null) {
-			if (this.callback.onPostVisitPolicy(parent, policy) == CallbackResult.STOP) {
-				return CallbackResult.STOP;
-			}
+		if (this.callback != null && this.callback.onPostVisitPolicy(parent, policy) == CallbackResult.STOP) {
+			return CallbackResult.STOP;
 		}
 		return CallbackResult.CONTINUE;
 	}
@@ -369,10 +344,8 @@ public class XACMLPolicyScanner {
 								} else {
 									logger.warn("NULL designator/selector or value for match.");
 								}
-								if (attribute != null && this.callback != null) {
-									if (this.callback.onAttribute(parent, target, attribute) == CallbackResult.STOP) {
-										return CallbackResult.STOP;
-									}
+								if (attribute != null && this.callback != null && this.callback.onAttribute(parent, target, attribute) == CallbackResult.STOP) {
+									return CallbackResult.STOP;
 								}
 							}
 						}
@@ -417,10 +390,8 @@ public class XACMLPolicyScanner {
 					ob.addAttributeAssignment(attribute);
 				}
 			}
-			if (this.callback != null) {
-				if (this.callback.onObligation(parent, expression, ob) == CallbackResult.STOP) {
-					return CallbackResult.STOP;
-				}
+			if (this.callback != null && this.callback.onObligation(parent, expression, ob) == CallbackResult.STOP) {
+				return CallbackResult.STOP;
 			}
 		}
 		return CallbackResult.CONTINUE;
@@ -460,10 +431,8 @@ public class XACMLPolicyScanner {
 					ob.addAttributeAssignment(attribute);
 				}
 			}
-			if (this.callback != null) {
-				if (this.callback.onAdvice(parent, expression, ob) == CallbackResult.STOP) {
-					return CallbackResult.STOP;
-				}
+			if (this.callback != null && this.callback.onAdvice(parent, expression, ob) == CallbackResult.STOP) {
+				return CallbackResult.STOP;
 			}
 		}
 		return CallbackResult.CONTINUE;
@@ -481,12 +450,8 @@ public class XACMLPolicyScanner {
 			return CallbackResult.CONTINUE;
 		}
 		for (Object o : list) {
-			if (o instanceof VariableDefinitionType) {
-				if (this.callback != null) {
-					if (this.callback.onVariable(policy, (VariableDefinitionType) o) == CallbackResult.STOP) {
-						return CallbackResult.STOP;
-					}
-				}
+			if (o instanceof VariableDefinitionType && this.callback != null && this.callback.onVariable(policy, (VariableDefinitionType) o) == CallbackResult.STOP) {
+				return CallbackResult.STOP;
 			}
 		}
 		
@@ -501,12 +466,8 @@ public class XACMLPolicyScanner {
 	 * @return
 	 */
 	protected CallbackResult scanConditions(RuleType rule, ConditionType condition) {
-		if (condition != null) {
-			if (this.callback != null) {
-				if (this.callback.onCondition(rule, condition) == CallbackResult.STOP) {
-					return CallbackResult.STOP;
-				}
-			}
+		if (condition != null && this.callback != null && this.callback.onCondition(rule, condition) == CallbackResult.STOP) {
+			return CallbackResult.STOP;
 		}
 		return CallbackResult.CONTINUE;
 	}

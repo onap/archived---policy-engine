@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -208,9 +208,6 @@ public class StdPDP extends StdPDPItemSetChangeNotifier implements OnapPDP, Comp
 	@Override
 	public int compareTo(StdPDP o) {
 		if (o == null) {
-			return -1;
-		}
-		if ( ! (o instanceof StdPDP)) {
 			return -1;
 		}
 		if (o.name == null) {

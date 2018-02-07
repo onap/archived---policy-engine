@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class StdEngineFactory extends ONAPPapEngineFactory {
 	@Override
 	public PAPPolicyEngine newEngine() throws FactoryException, PAPException {
 		try {
-			return (PAPPolicyEngine) new StdEngine();
+			return new StdEngine();
 		} catch (IOException e) {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "StdEngineFactory", "Failed to create engine");
 			return null;
@@ -47,7 +47,7 @@ public class StdEngineFactory extends ONAPPapEngineFactory {
 	public PAPPolicyEngine newEngine(Properties properties) throws FactoryException,
 			PAPException {
 		try {
-			return (PAPPolicyEngine) new StdEngine(properties);
+			return new StdEngine(properties);
 		} catch (IOException e) {
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "StdEngineFactory", "Failed to create engine");
 			return null;
