@@ -16,6 +16,24 @@
       "revId": "818884ad58838d21172ddc9e016f47086cf4da49",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_553bd5d0",
+        "filename": "pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-02-07T21:03:50Z",
+      "side": 1,
+      "message": "Ravi asked me to remove them in an earlier comment.  I thought I did but I think I overwrote my own change by accident.  Do you want me to remove these lines entirely or add ${project.version} instead?",
+      "parentUuid": "5a93c517_f503010b",
+      "revId": "818884ad58838d21172ddc9e016f47086cf4da49",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
