@@ -188,7 +188,7 @@
 	</dependencies>
 
 	<properties>
-		<springframework.version>4.2.0.RELEASE</springframework.version>
+		<springframework.version>4.3.3.RELEASE</springframework.version>
 		<hibernate.version>4.3.10.Final</hibernate.version>
 	</properties>
 </project>
