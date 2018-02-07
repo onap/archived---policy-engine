@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f503010b",
+        "filename": "pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-07T20:55:22Z",
+      "side": 1,
+      "message": "Change 1.2.0-SNAPSHOT to ${project.version}.   We need it like this for release management.  In general references to other policy projects should be ${project.version}.   They are kept in the same version, and they are changed lockstep.",
+      "revId": "818884ad58838d21172ddc9e016f47086cf4da49",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
