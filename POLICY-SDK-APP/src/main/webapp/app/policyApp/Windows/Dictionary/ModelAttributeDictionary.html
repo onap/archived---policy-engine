@@ -36,14 +36,14 @@
 			<div class="form-group row">
            <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.name.$invalid && !formdata.name.$pristine }" >
                 <label>Enter Dictionary Name:<sup><b>*</b></sup></label><br>
-                <input type="text"  ng-model="editModelAttribute.name" class="form-control" name= "name"  required/>
+                <input type="text"  ng-model="editModelAttribute.name" class="form-control" name= "name"   required="true"/>
 				<p ng-show="formdata.name.$invalid && !formdata.name.$pristine" class="help-block">Dictionary Name is required.</p>
             </div>
             </div>
 			<div class="form-group row">
             <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.value.$invalid && !formdata.value.$pristine }">
                 <label>Enter Value:<sup><b>*</b></sup></label><br>
-                <input type="text" ng-model="editModelAttribute.value" class="form-control" name= "value"  required"/>
+                <input type="text" ng-model="editModelAttribute.value" class="form-control" name= "value"   required="true"/>
 				<p ng-show="formdata.value.$invalid && !formdata.value.$pristine" class="help-block">Value is required.</p>
             </div>
 			</div>

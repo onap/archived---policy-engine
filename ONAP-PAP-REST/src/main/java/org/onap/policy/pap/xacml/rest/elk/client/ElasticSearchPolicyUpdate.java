@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,8 +96,7 @@ public class ElasticSearchPolicyUpdate {
 					password = config.getProperty("policy.database.password");
 					databaseDriver = config.getProperty("policy.database.driver");
 					if(elkURL == null || databseUrl == null || userName == null || password == null || databaseDriver == null){
-						LOGGER.error("One of the Property is null in policyelk.properties = elkurl:databaseurl:username:password:databasedriver  " 
-								+ elkURL + ":"+ databseUrl + ":"+ userName + ":"+ password + ":"+ databaseDriver + ":");
+						LOGGER.error("please check the elk configuration");
 					}
 				} catch (Exception e) {
 					LOGGER.error("Config File doesn't Exist in the specified Path " + file.toString(),e);
