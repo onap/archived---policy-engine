@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -304,8 +304,9 @@ public class NotificationService {
 						                               aafLogin, 
 						                               aafPassword);
 		// Sending notification through DMaaP Message Router
+		logger.info("NotificationService: send DMaaP Message. ");
 		publisher.send( "MyPartitionKey", notification);
-		logger.debug("Message Published on DMaaP :" + dmaapList.get(0) + "for Topic: " + topic);
+		logger.info("Message Published on DMaaP :" + dmaapList.get(0) + "for Topic: " + topic);
 		publisher.close();
 	}
 	
