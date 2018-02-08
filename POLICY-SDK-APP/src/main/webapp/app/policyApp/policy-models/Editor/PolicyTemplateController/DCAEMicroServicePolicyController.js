@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -223,7 +223,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 				for(var i=0; i<inputs.length; i++){
 					if ($scope.temp.policy.ruleData!=undefined){
 						var checkValue = $scope.temp.policy.ruleData[inputs[i].id];
-						if (checkValue!=undefined){
+						if (checkValue!=undefined && checkValue != "undefined"){
 							if($scope.temp.policy.ruleData != null){
 								var checkValue = $scope.temp.policy.ruleData[inputs[i].id];
 								document.getElementById(inputs[i].id).value = $scope.temp.policy.ruleData[inputs[i].id];
@@ -241,7 +241,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 				for(var i=0; i<selects.length; i++){
 					if ($scope.temp.policy.ruleData!=undefined){
 						var checkValue = $scope.temp.policy.ruleData[selects[i].id];
-						if (checkValue!=undefined){
+						if (checkValue!=undefined && checkValue!="undefined"){
 							if($scope.temp.policy.ruleData != null){
 								var checkValue = $scope.temp.policy.ruleData[selects[i].id];
 								document.getElementById(selects[i].id).value = $scope.temp.policy.ruleData[selects[i].id];
@@ -412,19 +412,25 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	            		    	}
 	                    		
 	            		    	//--- Populate these extra elements created by clicked add button 
-	                    		for(a = 0; a < extraElements.length; a++){            			
-	                    			if(extraElements[a].includes("@")){
-			                    			var n = extraElements[a].lastIndexOf("@");
-			                    			if(n > 0){
-				                    			var key = extraElements[a].substring(0, n+2); //include @x in key also by n+2 since x can be  1, or 2, or 3
-					                            checkData.push(key);
-			                    			}
-	                    			}
-	                    		}
+		                    	for(a = 0; a < extraElements.length; a++){            			
+		                    		if(extraElements[a].includes("@")){
+				                    	var index = extraElements[a].lastIndexOf("@");
+				                    	if(index > 0){
+				                    	    // Get the number after @
+				                    	    var n = getNumOfDigits(extraElements[a], index+1);
+				                    				
+					                        var key = extraElements[a].substring(0, index+n+1); //include @x in key also by n+2 since x can be 1,12, etc
+					                    	console.log("key: " + key);
+					                    	checkData.push(key);
+				                    	}
+		                    		}
+		                    	}
 	                    		var unique = checkData.filter(onlyUnique);
 	                    		for(i =0; i < unique.length; i++){
 	                    			//remove @x and let addNewChoice add @1 or @2...
-	                    			var newKey = unique[i].substring(0, unique[i].length-2);
+	                    			//var newKey = unique[i].substring(0, unique[i].length-2);
+	                    			var index = unique[i].lastIndexOf("@");
+	                    			var newKey = unique[i].substring(0, index);
 	                    			console.log("newKey: " + newKey);	
 	                    			$scope.addNewChoice(newKey);
 	                    		}
@@ -443,6 +449,22 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
             });
         }
     };
+    
+    function getNumOfDigits(str_value, index){
+		// Get the number after @
+		var str = str_value.substring(index, str_value.length);	
+		var c = '';
+		var n = 0;
+		for (var x = 0; x < str.length; x++){			                    				
+		    c = str.charAt(x);
+			    if(!isNaN(c)){ 
+                n++;                                                     
+		    }else{
+                break;
+            }
+		}
+		return n;
+    }
     
     function getDictionary(attribute){
     	var dicName = attribute;
@@ -738,16 +760,22 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 					defaultValue = "";
 				}				
 			}
-			document.getElementById(checkKey).value = defaultValue;
+			if(defaultValue != "undefined" && defaultValue != undefined){
+		    	document.getElementById(checkKey).value = defaultValue;
+			}
 		}
 		
 		if($scope.temp.policy.ruleData != null){
 			//document.getElementById(checkKey).value = $scope.temp.policy.ruleData[checkKey];
 			if (attributeManyKey){
 				var newCheckKey = checkKey.replace(attibuteKey + '@0',attibuteKey);
-				document.getElementById(newCheckKey +'@0').value = $scope.temp.policy.ruleData[newCheckKey +'@0'];
+				if($scope.temp.policy.ruleData[newCheckKey +'@0'] != undefined && $scope.temp.policy.ruleData[newCheckKey +'@0'] != "undefined"){
+			  	    document.getElementById(newCheckKey +'@0').value = $scope.temp.policy.ruleData[newCheckKey +'@0'];
+				}
 			}else{
-				document.getElementById(checkKey).value = $scope.temp.policy.ruleData[checkKey];
+				if($scope.temp.policy.ruleData[checkKey] != undefined && $scope.temp.policy.ruleData[checkKey] != "undefined"){
+				    document.getElementById(checkKey).value = $scope.temp.policy.ruleData[checkKey];
+				}
 			}
 		} 
 		plainAttributeKeys.push(labelValue + attibuteKey+'*'+attributeManyKey);	
@@ -900,8 +928,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 					}
 				}			
 			}else {
-	                document.getElementById(labelLevel + attributeName).value = $scope.temp.policy.ruleData[labelLevel + attributeName];	
-				
+				    if($scope.temp.policy.ruleData[labelLevel + attributeName] != undefined && $scope.temp.policy.ruleData[labelLevel + attributeName] != "undefined"){
+	                    document.getElementById(labelLevel + attributeName).value = $scope.temp.policy.ruleData[labelLevel + attributeName];	
+				    }
 			}
 		}
     };
