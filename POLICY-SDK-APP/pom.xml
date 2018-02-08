@@ -69,7 +69,7 @@
 	<properties>
 		<encoding>UTF-8</encoding>
 		<epsdk.version>2.1.0-SNAPSHOT</epsdk.version>
-		<springframework.version>4.3.3.RELEASE</springframework.version>
+		<springframework.version>4.2.0.RELEASE</springframework.version>
 		<hibernate.version>4.3.11.Final</hibernate.version>
 		<skipassembly>true</skipassembly>
 		<skiptests>false</skiptests>
