@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_277ff6ac",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/ActionPolicyDictionaryController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-09T21:20:50Z",
+      "side": 1,
+      "message": "This is more consistent with usage:\n\nheader.append(key).append(\"\u003d\").append(value)",
+      "revId": "76edc74692e71f9a343e6d1d0316df37346c9a25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
