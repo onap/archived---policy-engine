@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_c7d412bf",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-09T19:52:09Z",
+      "side": 1,
+      "message": "Is this final?   Probably better to make it upper case to be consistent with notation for static literal strings as above.",
+      "revId": "bf7c3f967959b9575dbbe476fe59bd968091b363",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
