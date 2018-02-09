@@ -88,6 +88,10 @@ public class ClosedLoopDictionaryController{
 	public ClosedLoopDictionaryController(CommonClassDao commonClassDao){
 		ClosedLoopDictionaryController.commonClassDao = commonClassDao;
 	}
+	
+	public void setCommonClassDao(CommonClassDao commonClassDao){
+		ClosedLoopDictionaryController.commonClassDao = commonClassDao;
+	}
 	/*
 	 * This is an empty constructor
 	 */

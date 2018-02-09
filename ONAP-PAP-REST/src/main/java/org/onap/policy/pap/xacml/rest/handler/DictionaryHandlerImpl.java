@@ -75,9 +75,6 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 			case "DescriptiveScope":
 				dictionary.getDescriptiveDictionary(response);
 				break;
-			case "Enforcer":
-				dictionary.getEnforcerDictionary(response);
-				break;
 			case "ActionList":
 				dictionary.getActionListDictionary(response);
 				break;
@@ -220,9 +217,6 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 				break;
 			case "DescriptiveScope":
 				result = dictionary.saveDescriptiveDictionary(request, response);
-				break;
-			case "Enforcer":
-				result = dictionary.saveEnforcerDictionary(request, response);
 				break;
 			case "ActionList":
 				result = dictionary.saveActionListDictionary(request, response);
