@@ -19,32 +19,37 @@
  */
 package org.onap.policy.rest.adapter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
 
-public class ClosedLoopFaultTrapDatasTest {
-
+public class YAMLParamsTest {
+	
 	@Test
-	public void testClosedLoopFaultTrapDatas(){
-		List<Object> trap = new ArrayList<>();
-		trap.add("Test");
-		ClosedLoopFaultTrapDatas closedLoopTrapData = new ClosedLoopFaultTrapDatas();
-		closedLoopTrapData.setTrap1(trap);
-		assertTrue("Test".equals(closedLoopTrapData.getTrap1().get(0)));
-		closedLoopTrapData.setTrap2(trap);
-		assertTrue("Test".equals(closedLoopTrapData.getTrap2().get(0)));
-		closedLoopTrapData.setTrap3(trap);
-		assertTrue("Test".equals(closedLoopTrapData.getTrap3().get(0)));
-		closedLoopTrapData.setTrap4(trap);
-		assertTrue("Test".equals(closedLoopTrapData.getTrap4().get(0)));
-		closedLoopTrapData.setTrap5(trap);
-		assertTrue("Test".equals(closedLoopTrapData.getTrap5().get(0)));
-		closedLoopTrapData.setTrap6(trap);
-		assertTrue("Test".equals(closedLoopTrapData.getTrap6().get(0)));
-		
+	public void testYAMLParams(){
+		YAMLParams yamlParams = new YAMLParams();
+		yamlParams.setActor("Test");
+		assertTrue("Test".equals(yamlParams.getActor()));
+		yamlParams.setRecipe("Test");
+		assertTrue("Test".equals(yamlParams.getRecipe()));
+		yamlParams.setClname("Test");
+		assertTrue("Test".equals(yamlParams.getClname()));
+		yamlParams.setGuardActiveEnd("Test");
+		assertTrue("Test".equals(yamlParams.getGuardActiveEnd()));
+		yamlParams.setGuardActiveStart("Test");
+		assertTrue("Test".equals(yamlParams.getGuardActiveStart()));
+		yamlParams.setLimit("Test");
+		assertTrue("Test".equals(yamlParams.getLimit()));
+		yamlParams.setBlackList(new ArrayList<>());
+		assertTrue(yamlParams.getBlackList() != null);
+		yamlParams.setTargets(new ArrayList<>());
+		assertTrue(yamlParams.getTargets() != null);
+		yamlParams.setTimeUnits("Test");
+		assertTrue("Test".equals(yamlParams.getTimeUnits()));
+		yamlParams.setTimeWindow("Test");
+		assertTrue("Test".equals(yamlParams.getTimeWindow()));
 	}
+
 }
