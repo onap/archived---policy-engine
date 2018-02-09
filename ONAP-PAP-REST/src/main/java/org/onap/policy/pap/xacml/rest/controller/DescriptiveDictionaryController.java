@@ -64,15 +64,20 @@ public class DescriptiveDictionaryController {
 		DescriptiveDictionaryController.commonClassDao = commonClassDao;
 	}
 	
-	public DescriptiveDictionaryController(){}
+	public void setCommonClassDao(CommonClassDao commonClassDao){
+		DescriptiveDictionaryController.commonClassDao = commonClassDao;
+	}
+	
+	public DescriptiveDictionaryController(){
+		//Empty Constructor
+	}
 	
 	public UserInfo getUserInfo(String loginId){
-		UserInfo name = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
-		return name;	
+		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
 	}
 
 	@RequestMapping(value={"/get_DescriptiveScopeByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getDescriptiveDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
+	public void getDescriptiveDictionaryByNameEntityData(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -121,8 +126,8 @@ public class DescriptiveDictionaryController {
             GridData data;
             String userId = null;
             if (fromAPI) {
-                descriptiveScope = (DescriptiveScope)mapper.readValue(root.get("dictionaryFields").toString(), DescriptiveScope.class);
-                data = (GridData)mapper.readValue(root.get("dictionaryFields").toString(), GridData.class);
+                descriptiveScope = mapper.readValue(root.get("dictionaryFields").toString(), DescriptiveScope.class);
+                data = mapper.readValue(root.get("dictionaryFields").toString(), GridData.class);
                 userId = "API";
                 
                 //check if update operation or create, get id for data to be updated and update attributeData
@@ -140,27 +145,26 @@ public class DescriptiveDictionaryController {
                 	descriptiveScope.setUserCreatedBy(this.getUserInfo(userId));
                 }
             } else {
-            	descriptiveScope = (DescriptiveScope)mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(), DescriptiveScope.class);
-            	data = (GridData)mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(), GridData.class);
+            	descriptiveScope = mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(), DescriptiveScope.class);
+            	data = mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(), GridData.class);
             	userId = root.get("userid").textValue();
             }
-			String header = "";
+			StringBuilder header = new StringBuilder();
 			int counter = 0;
-			if(data.getAttributes().size() > 0){
+			if(!data.getAttributes().isEmpty()){
 				for(Object attribute : data.getAttributes()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get("option").toString();
 						String value = ((LinkedHashMap<?, ?>) attribute).get("number").toString();
 						if(counter>0){
-							header = header + "AND";
+							header.append("AND");
 						}
-						header = header + key + ":";
-						header = header + value;
+						header.append( key + ":" +value);
 						counter ++;
 					}
 				}
 			}
-			descriptiveScope.setSearch(header);
+			descriptiveScope.setSearch(header.toString());
 			if(descriptiveScope.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(descriptiveScope.getScopeName(), "descriptiveScopeName", DescriptiveScope.class);
 				if(!duplicateData.isEmpty()){
@@ -217,12 +221,12 @@ public class DescriptiveDictionaryController {
 	}
 
 	@RequestMapping(value={"/descriptive_dictionary/remove_descriptiveScope"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	public void removeDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			DescriptiveScope descriptiveScope = (DescriptiveScope)mapper.readValue(root.get("data").toString(), DescriptiveScope.class);
+			DescriptiveScope descriptiveScope = mapper.readValue(root.get("data").toString(), DescriptiveScope.class);
 			commonClassDao.delete(descriptiveScope);
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
@@ -233,8 +237,6 @@ public class DescriptiveDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(DescriptiveScope.class));
 			JSONObject j = new JSONObject("{descriptiveScopeDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -243,7 +245,6 @@ public class DescriptiveDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 }
 

@@ -23,13 +23,13 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.onap.policy.pap.xacml.rest.controller.ActionPolicyDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.BRMSDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.ClosedLoopDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.DecisionPolicyDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.DescriptiveDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.DictionaryController;
-import org.onap.policy.pap.xacml.rest.controller.EnforcerDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.FirewallDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.MicroServiceDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.PolicyScopeDictionaryController;
@@ -132,13 +132,6 @@ public class DictionaryService {
 		
 		DescriptiveDictionaryController dictionary = new DescriptiveDictionaryController();
 			ModelAndView result = dictionary.saveDescriptiveDictionary(request, response);
-		return result.getViewName();
-	}
-	
-	public String saveEnforcerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		
-		EnforcerDictionaryController dictionary = new EnforcerDictionaryController();
-			ModelAndView result = dictionary.saveEnforcerDictionary(request, response);
 		return result.getViewName();
 	}
 	
@@ -358,11 +351,6 @@ public class DictionaryService {
 	public void getDescriptiveDictionary(HttpServletResponse response){
 		DescriptiveDictionaryController dictionary = new DescriptiveDictionaryController();
 			dictionary.getDescriptiveDictionaryEntityData(response);
-	}
-	
-	public void getEnforcerDictionary(HttpServletResponse response){
-		EnforcerDictionaryController dictionary = new EnforcerDictionaryController();
-			dictionary.getEnforcerDictionaryEntityData(response);
 	}
 	
 	public void getActionListDictionary(HttpServletResponse response){
