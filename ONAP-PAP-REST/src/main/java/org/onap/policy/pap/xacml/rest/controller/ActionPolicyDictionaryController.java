@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,6 +59,10 @@ public class ActionPolicyDictionaryController {
 	private static String attributeName = "attributeName";
 	@Autowired
 	public ActionPolicyDictionaryController(CommonClassDao commonClassDao){
+		ActionPolicyDictionaryController.commonClassDao = commonClassDao;
+	}
+	
+	public void setCommonClassDao(CommonClassDao commonClassDao){
 		ActionPolicyDictionaryController.commonClassDao = commonClassDao;
 	}
 	/*
@@ -124,8 +128,8 @@ public class ActionPolicyDictionaryController {
 			String userId = null;
 
 			if(fromAPI) {
-				actionPolicyDict = (ActionPolicyDict)mapper.readValue(root.get("dictionaryFields").toString(), ActionPolicyDict.class);
-				adapter = (ActionAdapter)mapper.readValue(root.get("dictionaryFields").toString(), ActionAdapter.class);
+				actionPolicyDict = mapper.readValue(root.get("dictionaryFields").toString(), ActionPolicyDict.class);
+				adapter = mapper.readValue(root.get("dictionaryFields").toString(), ActionAdapter.class);
 				userId = "API";
 
 				//check if update operation or create, get id for data to be updated and update attributeData
@@ -142,11 +146,11 @@ public class ActionPolicyDictionaryController {
 					actionPolicyDict.setUserCreatedBy(this.getUserInfo(userId));
 				}
 			} else {
-				actionPolicyDict = (ActionPolicyDict)mapper.readValue(root.get("actionPolicyDictionaryData").toString(), ActionPolicyDict.class);
+				actionPolicyDict = mapper.readValue(root.get("actionPolicyDictionaryData").toString(), ActionPolicyDict.class);
 				adapter = mapper.readValue(root.get("actionPolicyDictionaryData").toString(), ActionAdapter.class);
 				userId = root.get("userid").textValue();
 			}
-			String header = "";
+			StringBuilder header = new StringBuilder();
 			int counter = 0;
 			if(!adapter.getHeaders().isEmpty()){
 				for(Object attribute : adapter.getHeaders()){
@@ -154,15 +158,14 @@ public class ActionPolicyDictionaryController {
 						String key = ((LinkedHashMap<?, ?>) attribute).get("option").toString();
 						String value = ((LinkedHashMap<?, ?>) attribute).get("number").toString();
 						if(counter>0){
-							header = header + ":";
+							header.append(":");
 						}
-						header = header + key + "=";
-						header = header + value;
+						header.append(key).append("=").append(value);
 						counter ++;
 					}
 				}
 			}
-			actionPolicyDict.setHeader(header);
+			actionPolicyDict.setHeader(header.toString());
 			if(actionPolicyDict.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionPolicyDict.getAttributeName(), attributeName, ActionPolicyDict.class);
 				if(!duplicateData.isEmpty()){
@@ -222,12 +225,12 @@ public class ActionPolicyDictionaryController {
 	}
 
 	@RequestMapping(value={"/action_dictionary/remove_actionPolicyDict"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void removeActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			ActionPolicyDict actionPolicyDict = (ActionPolicyDict)mapper.readValue(root.get("data").toString(), ActionPolicyDict.class);
+			ActionPolicyDict actionPolicyDict = mapper.readValue(root.get("data").toString(), ActionPolicyDict.class);
 			commonClassDao.delete(actionPolicyDict);
 			response.setCharacterEncoding(utf8);
 			response.setContentType("application / json");
@@ -238,8 +241,6 @@ public class ActionPolicyDictionaryController {
 			String responseString = mapper.writeValueAsString(ActionPolicyDictionaryController.commonClassDao.getData(ActionPolicyDict.class));
 			JSONObject j = new JSONObject("{actionPolicyDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(e);
@@ -248,7 +249,6 @@ public class ActionPolicyDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(e.getMessage());
 		}
-		return null;
 	}
 }
 
