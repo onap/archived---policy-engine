@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,9 +74,6 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 				break;
 			case "DescriptiveScope":
 				dictionary.getDescriptiveDictionary(response);
-				break;
-			case "Enforcer":
-				dictionary.getEnforcerDictionary(response);
 				break;
 			case "ActionList":
 				dictionary.getActionListDictionary(response);
@@ -220,9 +217,6 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 				break;
 			case "DescriptiveScope":
 				result = dictionary.saveDescriptiveDictionary(request, response);
-				break;
-			case "Enforcer":
-				result = dictionary.saveEnforcerDictionary(request, response);
 				break;
 			case "ActionList":
 				result = dictionary.saveActionListDictionary(request, response);
