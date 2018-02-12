@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_4a7562f8",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1459,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-12T16:06:04Z",
+      "side": 1,
+      "message": "This could be one IF statement.",
+      "range": {
+        "startLine": 1457,
+        "startChar": 0,
+        "endLine": 1459,
+        "endChar": 33
+      },
+      "revId": "9acc53252cd907332c2ad0dd7efa109486bbe388",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
