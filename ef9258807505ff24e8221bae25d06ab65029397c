@@ -39,6 +39,24 @@
       "revId": "ef9258807505ff24e8221bae25d06ab65029397c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9b4dfd40",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/ClosedLoopPolicyClasses.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-13T14:14:42Z",
+      "side": 1,
+      "message": "Yes Pam, I added earlier in ONAP-PAP-REST as a code coverage. But later realized as Sonar is calculating component-wise. So, moved from ONAP-PAP-REST to ONAP-REST.",
+      "parentUuid": "5a93c517_5bbc5506",
+      "revId": "ef9258807505ff24e8221bae25d06ab65029397c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
