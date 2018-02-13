@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_9bc65d99",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/FirewallDictionaryController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-13T13:51:46Z",
+      "side": 1,
+      "message": "Just a note, we can also add super() and this will clear the silly sonar issue. No need to fix just an FYI",
+      "range": {
+        "startLine": 111,
+        "startChar": 1,
+        "endLine": 113,
+        "endChar": 2
+      },
+      "revId": "ef9258807505ff24e8221bae25d06ab65029397c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5bbc5506",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/jpa/ClosedLoopPolicyClasses.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-13T13:51:46Z",
+      "side": 1,
+      "message": "Ok - I think these were the tests from the other file??",
+      "revId": "ef9258807505ff24e8221bae25d06ab65029397c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

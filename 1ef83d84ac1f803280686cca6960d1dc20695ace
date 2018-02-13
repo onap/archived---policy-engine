@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_bbc31988",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/ClosedLoopDictionaryControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-13T13:51:46Z",
+      "side": 0,
+      "message": "Why were all these removed? Are they covered somewhere else?",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 1
+      },
+      "revId": "1ef83d84ac1f803280686cca6960d1dc20695ace",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
