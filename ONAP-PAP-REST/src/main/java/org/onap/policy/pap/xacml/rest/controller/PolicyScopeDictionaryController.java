@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,6 +85,9 @@ public class PolicyScopeDictionaryController {
 		PolicyScopeDictionaryController.commonClassDao = commonClassDao;
 	}
 	
+	public void setCommonClassDao(CommonClassDao commonClassDao){
+		PolicyScopeDictionaryController.commonClassDao = commonClassDao;
+	}
 	
 	public UserInfo getUserInfo(String loginId){
 		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);	

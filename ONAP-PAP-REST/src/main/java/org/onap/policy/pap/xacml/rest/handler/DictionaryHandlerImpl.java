@@ -136,7 +136,7 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 				dictionary.getRiskTypeDictionary(response);
 				break;
 			case "SafePolicyWarning":
-				dictionary.getSafePolicyWarningDictionary(request, response);
+				dictionary.getSafePolicyWarningDictionary(response);
 				break;
 			case "MicroServiceDictionary":
 				dictionary.getMicroServiceDictionary(response);

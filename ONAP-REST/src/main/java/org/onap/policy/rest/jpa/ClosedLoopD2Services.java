@@ -53,9 +53,6 @@ import org.onap.policy.rest.XacmlAdminAuthorization;
 public class ClosedLoopD2Services implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	private static String domain;
-
-	
 	@Id
 	@Column(name ="id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -105,14 +102,6 @@ public class ClosedLoopD2Services implements Serializable{
 	public ClosedLoopD2Services(){
 		//An empty constructor
 	}
-	
-	public ClosedLoopD2Services(String string, String userid) {
-		this(domain);
-	}
-	
-	public ClosedLoopD2Services(String domain) {
-		this.serviceName = domain;
-	}	
 
 	@PrePersist
 	public void	prePersist() {

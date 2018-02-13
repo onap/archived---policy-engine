@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -66,14 +67,19 @@ public class SafePolicyController {
 		SafePolicyController.commonClassDao = commonClassDao;
 	}
 	
-	public SafePolicyController(){}	
+	public void setCommonClassDao(CommonClassDao commonClassDao){
+		SafePolicyController.commonClassDao = commonClassDao;
+	}
+	
+	public SafePolicyController(){
+		//Empty Constructor
+	}	
 	
 	public UserInfo getUserInfo(String loginId){
 		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
 	}
 	
-	@RequestMapping(value = { "/get_RiskTypeDataByName" }, method = {
-			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = { "/get_RiskTypeDataByName" }, method = {RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void getRiskTypeDictionaryByNameEntityData(HttpServletResponse response) {
 		try {
 			Map<String, Object> model = new HashMap<>();
@@ -87,9 +93,8 @@ public class SafePolicyController {
 		}
 	}
 
-	@RequestMapping(value = { "/get_RiskTypeData" }, method = {
-			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void getOnapNameDictionaryEntityData(HttpServletResponse response) {
+	@RequestMapping(value = { "/get_RiskTypeData" }, method = {RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void getRiskTypeDictionaryEntityData(HttpServletResponse response) {
 		try {
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -106,10 +111,8 @@ public class SafePolicyController {
 		}
 	}
 
-	@RequestMapping(value = { "/sp_dictionary/save_riskType" }, method = {
-			org.springframework.web.bind.annotation.RequestMethod.POST })
-	public ModelAndView saveRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	@RequestMapping(value = { "/sp_dictionary/save_riskType" }, method = {RequestMethod.POST })
+	public ModelAndView saveRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -123,7 +126,7 @@ public class SafePolicyController {
             RiskType riskTypeData;
             String userId = null;
             if (fromAPI) {
-                riskTypeData = (RiskType) mapper.readValue(root.get("dictionaryFields").toString(),
+                riskTypeData = mapper.readValue(root.get("dictionaryFields").toString(),
                         RiskType.class);
                 userId = "API";
                 
@@ -143,7 +146,7 @@ public class SafePolicyController {
                     riskTypeData.setUserCreatedBy(this.getUserInfo(userId));
                 }
             } else {
-            	riskTypeData = (RiskType) mapper.readValue(root.get("riskTypeDictionaryData").toString(), RiskType.class);
+            	riskTypeData = mapper.readValue(root.get("riskTypeDictionaryData").toString(), RiskType.class);
             	userId = root.get("userid").textValue();
             }
 			 
@@ -201,15 +204,13 @@ public class SafePolicyController {
 		return null;
 	}
 
-	@RequestMapping(value = { "/sp_dictionary/remove_riskType" }, method = {
-			org.springframework.web.bind.annotation.RequestMethod.POST })
-	public ModelAndView removeOnapDictionary(HttpServletRequest request, HttpServletResponse response)
-			throws IOException{
+	@RequestMapping(value = { "/sp_dictionary/remove_riskType" }, method = {RequestMethod.POST })
+	public ModelAndView removeRiskTypeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			RiskType onapData = (RiskType) mapper.readValue(root.get("data").toString(), RiskType.class);
+			RiskType onapData = mapper.readValue(root.get("data").toString(), RiskType.class);
 			commonClassDao.delete(onapData);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -232,8 +233,7 @@ public class SafePolicyController {
 		return null;
 	}
 
-	@RequestMapping(value = { "/get_SafePolicyWarningDataByName" }, method = {
-			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = { "/get_SafePolicyWarningDataByName" }, method = {RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void getSafePolicyWarningEntityDataByName(HttpServletResponse response) {
 		try {
 			Map<String, Object> model = new HashMap<>();
@@ -248,8 +248,7 @@ public class SafePolicyController {
 		}
 	}
 
-	@RequestMapping(value = { "/get_SafePolicyWarningData" }, method = {
-			org.springframework.web.bind.annotation.RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = { "/get_SafePolicyWarningData" }, method = {RequestMethod.GET }, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void getSafePolicyWarningeEntityData(HttpServletResponse response) {
 		try {
 			Map<String, Object> model = new HashMap<>();
@@ -268,10 +267,8 @@ public class SafePolicyController {
 		}
 	}
 
-	@RequestMapping(value = { "/sp_dictionary/save_safePolicyWarning" }, method = {
-			org.springframework.web.bind.annotation.RequestMethod.POST })
-	public ModelAndView saveSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	@RequestMapping(value = { "/sp_dictionary/save_safePolicyWarning" }, method = {RequestMethod.POST })
+	public ModelAndView saveSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			boolean duplicateflag = false;
             boolean isFakeUpdate = false;
@@ -284,8 +281,7 @@ public class SafePolicyController {
 			JsonNode root = mapper.readTree(request.getReader());
 			SafePolicyWarning safePolicyWarning;
             if (fromAPI) {
-                safePolicyWarning = (SafePolicyWarning) mapper
-                        .readValue(root.get("dictionaryFields").toString(), SafePolicyWarning.class);
+                safePolicyWarning = mapper.readValue(root.get("dictionaryFields").toString(), SafePolicyWarning.class);
                 
                 //check if update operation or create, get id for data to be updated and update attributeData
                 if (("update").equals(request.getParameter(operation))) {
@@ -301,7 +297,7 @@ public class SafePolicyController {
                     } 
                 }
             } else {
-            	safePolicyWarning = (SafePolicyWarning) mapper.readValue(root.get("safePolicyWarningData").toString(), SafePolicyWarning.class);
+            	safePolicyWarning = mapper.readValue(root.get("safePolicyWarningData").toString(), SafePolicyWarning.class);
             }
 
 			if (safePolicyWarning.getId() == 0) {
@@ -355,15 +351,13 @@ public class SafePolicyController {
 		return null;
 	}
 
-	@RequestMapping(value = { "/sp_dictionary/remove_SafePolicyWarning" }, method = {
-			org.springframework.web.bind.annotation.RequestMethod.POST })
-	public ModelAndView removeSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	@RequestMapping(value = { "/sp_dictionary/remove_SafePolicyWarning" }, method = {RequestMethod.POST })
+	public void removeSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			SafePolicyWarning safePolicyWarningData = (SafePolicyWarning) mapper.readValue(root.get("data").toString(),
+			SafePolicyWarning safePolicyWarningData = mapper.readValue(root.get("data").toString(),
 					SafePolicyWarning.class);
 			commonClassDao.delete(safePolicyWarningData);
 			response.setCharacterEncoding(utf8);
@@ -373,10 +367,8 @@ public class SafePolicyController {
 			PrintWriter out = response.getWriter();
 
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(SafePolicyWarning.class));
-			JSONObject j = new JSONObject("{groupPolicyScopeListDatas: " + responseString + "}");
+			JSONObject j = new JSONObject("{safePolicyWarningDatas: " + responseString + "}");
 			out.write(j.toString());
-
-			return null;
 		} catch (Exception e) {
 			LOGGER.error(e);
 			response.setCharacterEncoding(utf8);
@@ -384,7 +376,6 @@ public class SafePolicyController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 }

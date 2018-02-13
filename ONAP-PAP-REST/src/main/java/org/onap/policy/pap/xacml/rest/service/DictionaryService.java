@@ -451,10 +451,10 @@ public class DictionaryService {
 	
 	public void getRiskTypeDictionary(HttpServletResponse response){
 		SafePolicyController dictionary = new SafePolicyController();
-			dictionary.getOnapNameDictionaryEntityData(response);
+			dictionary.getRiskTypeDictionaryEntityData(response);
 	}
 	
-	public void getSafePolicyWarningDictionary(HttpServletRequest request, HttpServletResponse response) {
+	public void getSafePolicyWarningDictionary(HttpServletResponse response) {
 		SafePolicyController dictionary = new SafePolicyController();
 			dictionary.getSafePolicyWarningeEntityData(response);
 	}
