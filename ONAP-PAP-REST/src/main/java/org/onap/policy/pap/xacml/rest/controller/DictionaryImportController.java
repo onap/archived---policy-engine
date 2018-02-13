@@ -486,7 +486,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("PrefixList")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					PrefixList attribute = new PrefixList("",  userId);
+					PrefixList attribute = new PrefixList();
 					String[] rows = dictSheet.get(i);
 					for (int j=0 ; j<rows.length; j++ ){
 						if(("prefixListName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("PrefixList Name").equalsIgnoreCase(dictSheet.get(0)[j])){
@@ -505,7 +505,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("SecurityZone")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					SecurityZone attribute = new SecurityZone("",  userId);
+					SecurityZone attribute = new SecurityZone();
 					String[] rows = dictSheet.get(i);
 					for (int j=0 ; j<rows.length; j++ ){
 						if(("zoneName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Zone Name").equalsIgnoreCase(dictSheet.get(0)[j])){
@@ -521,7 +521,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("Zone")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					Zone attribute = new Zone("",  userId);
+					Zone attribute = new Zone();
 					String[] rows = dictSheet.get(i);
 					for (int j=0 ; j<rows.length; j++ ){
 						if(("zoneName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Zone Name").equalsIgnoreCase(dictSheet.get(0)[j])){
@@ -537,7 +537,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("ServiceList")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					ServiceList attribute = new ServiceList("",  userId);
+					ServiceList attribute = new ServiceList();
 					String[] rows = dictSheet.get(i);
 					for (int j=0 ; j<rows.length; j++ ){
 						if(("serviceName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Service Name").equalsIgnoreCase(dictSheet.get(0)[j])){
@@ -565,7 +565,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("ServiceGroup")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					GroupServiceList attribute = new GroupServiceList("",  userId);
+					GroupServiceList attribute = new GroupServiceList();
 					String[] rows = dictSheet.get(i);
 					for (int j=0 ; j<rows.length; j++ ){
 						if(("name").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Group Name").equalsIgnoreCase(dictSheet.get(0)[j])){
@@ -581,7 +581,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("AddressGroup")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					AddressGroup attribute = new AddressGroup("",  userId);
+					AddressGroup attribute = new AddressGroup();
 					String[] rows = dictSheet.get(i);
 					for (int j=0 ; j<rows.length; j++ ){
 						if(("name").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Group Name").equalsIgnoreCase(dictSheet.get(0)[j])){
@@ -600,7 +600,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("ProtocolList")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					ProtocolList attribute = new ProtocolList("",  userId);
+					ProtocolList attribute = new ProtocolList();
 					String[] rows = dictSheet.get(i);
 					for (int j=0 ; j<rows.length; j++ ){
 						if(("protocolName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Protocol Name").equalsIgnoreCase(dictSheet.get(0)[j])){
@@ -616,7 +616,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("ActionList")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					ActionList attribute = new ActionList("",  userId);
+					ActionList attribute = new ActionList();
 					String[] rows = dictSheet.get(i);
 					for (int j=0 ; j<rows.length; j++ ){
 						if(("actionName").equalsIgnoreCase(dictSheet.get(0)[j]) || ("Action Name").equalsIgnoreCase(dictSheet.get(0)[j])){

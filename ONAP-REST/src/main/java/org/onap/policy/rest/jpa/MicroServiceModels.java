@@ -105,14 +105,6 @@ public class MicroServiceModels implements Serializable{
 		this.userCreatedBy = userCreatedBy;
 	}
 	
-	public MicroServiceModels(){
-		//An empty constructor
-	}
-	
-	public MicroServiceModels(String userid){
-		//An empty constructor
-	}
-
 	public String getAttributes() {
 		return attributes;
 	}
