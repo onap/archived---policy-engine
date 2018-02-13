@@ -438,6 +438,13 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	                    }
                         //After initially create the edit template, reset it to false.
 	                    $scope.isInitEditTemplate = false;
+	                    if($scope.temp.policy.editPolicy){
+	                    	//reset it to false since the template has been created
+	                    	$scope.temp.policy.editPolicy = false;
+	                    	//clean all the events of addNewChoice
+	                    	$scope.$on('$destroy', addNewChoice);
+	                    }
+	                    
                     }
                     var ele = angular.element(document.getElementById("DynamicTemplate"));
             		$compile(ele.contents())($scope);
