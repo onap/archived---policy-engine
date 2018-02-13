@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ package org.onap.policy.pap.xacml.rest.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -46,8 +45,8 @@ import org.onap.policy.rest.jpa.FWTag;
 import org.onap.policy.rest.jpa.FWTagPicker;
 import org.onap.policy.rest.jpa.FirewallDictionaryList;
 import org.onap.policy.rest.jpa.GroupServiceList;
-import org.onap.policy.rest.jpa.PrefixList;
 import org.onap.policy.rest.jpa.PortList;
+import org.onap.policy.rest.jpa.PrefixList;
 import org.onap.policy.rest.jpa.ProtocolList;
 import org.onap.policy.rest.jpa.SecurityZone;
 import org.onap.policy.rest.jpa.ServiceList;
@@ -96,7 +95,6 @@ public class FirewallDictionaryController {
 	private static String termName = "termName";
 	private static String userid = "userid";
 	private static String tagPickerName = "tagPickerName";
-	private static String fwTagPickerDictionaryData = "fwTagPickerDictionaryData";
 	private static String fwTagDictionaryDatas = "fwTagDictionaryDatas";
 	
 	
@@ -109,10 +107,11 @@ public class FirewallDictionaryController {
 	    commonClassDao = clDao;
 	}
 	
-	/*
-	 * This is an empty constructor
-	 */
-	public FirewallDictionaryController(){}	
+	public FirewallDictionaryController(){
+		/*
+		 * This is an empty constructor
+		 */
+	}	
 
 	public UserInfo getUserInfo(String loginId){
 		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);	
@@ -167,10 +166,10 @@ public class FirewallDictionaryController {
 			JsonNode root = mapper.readTree(request.getReader());
 			PrefixList prefixList;
 			if (fromAPI) {
-				prefixList = (PrefixList)mapper.readValue(root.get(dictionaryFields).toString(), PrefixList.class);
+				prefixList = mapper.readValue(root.get(dictionaryFields).toString(), PrefixList.class);
 
 				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
+				if (update.equals(request.getParameter(operation))) {
 					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(prefixList.getPrefixListName(), prefixListName, PrefixList.class);
 					PrefixList data = (PrefixList) duplicateData.get(0);
 					int id = data.getId();
@@ -182,7 +181,7 @@ public class FirewallDictionaryController {
 					}
 				}
 			} else {
-				prefixList = (PrefixList)mapper.readValue(root.get("prefixListDictionaryData").toString(), PrefixList.class);
+				prefixList = mapper.readValue(root.get("prefixListDictionaryData").toString(), PrefixList.class);
 			}
 			if(prefixList.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(prefixList.getPrefixListName(), prefixListName, PrefixList.class);
@@ -235,12 +234,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_PrefixList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void removePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			PrefixList prefixList = (PrefixList)mapper.readValue(root.get("data").toString(), PrefixList.class);
+			PrefixList prefixList = mapper.readValue(root.get("data").toString(), PrefixList.class);
 			commonClassDao.delete(prefixList);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -250,7 +249,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(PrefixList.class));
 			JSONObject j = new JSONObject("{prefixListDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -259,16 +257,15 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 	@RequestMapping(value={"/fw_dictionary/validate_prefixList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView validatePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void validatePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			PrefixList prefixList = (PrefixList)mapper.readValue(root.get("prefixListDictionaryData").toString(), PrefixList.class);
+			PrefixList prefixList = mapper.readValue(root.get("prefixListDictionaryData").toString(), PrefixList.class);
 			String responseValidation = successMessage;
 			try{
 				CIDR.newCIDR(prefixList.getPrefixListValue());
@@ -283,7 +280,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			JSONObject j = new JSONObject("{result: " + responseValidation + "}");
 			out.write(j.toString());
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -292,7 +288,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 	@RequestMapping(value={"/get_PortListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -321,7 +316,7 @@ public class FirewallDictionaryController {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			PortList portList = (PortList)mapper.readValue(root.get("portListDictionaryData").toString(), PortList.class);
+			PortList portList = mapper.readValue(root.get("portListDictionaryData").toString(), PortList.class);
 			if(portList.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(portList.getPortName(), "portName", PortList.class);
 				if(!duplicateData.isEmpty()){
@@ -360,12 +355,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_PortList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removePortListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void removePortListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			PortList portList = (PortList)mapper.readValue(root.get("data").toString(), PortList.class);
+			PortList portList = mapper.readValue(root.get("data").toString(), PortList.class);
 			commonClassDao.delete(portList);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -375,7 +370,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(PortList.class));
 			JSONObject j = new JSONObject("{portListDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -384,7 +378,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 	@RequestMapping(value={"/get_ProtocolListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -435,7 +428,7 @@ public class FirewallDictionaryController {
 			JsonNode root = mapper.readTree(request.getReader());
 			ProtocolList protocolList;
 			if (fromAPI) {
-				protocolList = (ProtocolList)mapper.readValue(root.get(dictionaryFields).toString(), ProtocolList.class);
+				protocolList = mapper.readValue(root.get(dictionaryFields).toString(), ProtocolList.class);
 
 				//check if update operation or create, get id for data to be updated and update attributeData
 				if ((update).equals(request.getParameter(operation))) {
@@ -450,7 +443,7 @@ public class FirewallDictionaryController {
 					}
 				}
 			} else {
-				protocolList = (ProtocolList)mapper.readValue(root.get("protocolListDictionaryData").toString(), ProtocolList.class);
+				protocolList = mapper.readValue(root.get("protocolListDictionaryData").toString(), ProtocolList.class);
 			}
 			if(protocolList.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(protocolList.getProtocolName(), protocolName, ProtocolList.class);
@@ -503,12 +496,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_protocol"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void removeProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			ProtocolList protocolList = (ProtocolList)mapper.readValue(root.get("data").toString(), ProtocolList.class);
+			ProtocolList protocolList = mapper.readValue(root.get("data").toString(), ProtocolList.class);
 			commonClassDao.delete(protocolList);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -519,7 +512,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(ProtocolList.class));
 			JSONObject j = new JSONObject("{protocolListDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -528,7 +520,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 	@RequestMapping(value={"/get_AddressGroupDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -580,8 +571,8 @@ public class FirewallDictionaryController {
 			AddressGroup addressGroup;
 			GridData gridData;
 			if (fromAPI) {
-				addressGroup = (AddressGroup)mapper.readValue(root.get(dictionaryFields).toString(), AddressGroup.class);
-				gridData = (GridData)mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
+				addressGroup = mapper.readValue(root.get(dictionaryFields).toString(), AddressGroup.class);
+				gridData = mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
 
 				if(!addressGroup.getGroupName().startsWith(groupNameStart)){
 					String groupName = groupNameStart+addressGroup.getGroupName();
@@ -601,28 +592,28 @@ public class FirewallDictionaryController {
 					}            
 				}
 			} else {
-				addressGroup = (AddressGroup)mapper.readValue(root.get("addressGroupDictionaryData").toString(), AddressGroup.class);
-				gridData = (GridData)mapper.readValue(root.get("addressGroupDictionaryData").toString(), GridData.class);
+				addressGroup = mapper.readValue(root.get("addressGroupDictionaryData").toString(), AddressGroup.class);
+				gridData = mapper.readValue(root.get("addressGroupDictionaryData").toString(), GridData.class);
 				if(!addressGroup.getGroupName().startsWith(groupNameStart)){
 					String groupName = groupNameStart+addressGroup.getGroupName();
 					addressGroup.setGroupName(groupName);
 				}
 			}
-			String userValue = "";
+			StringBuilder userValue = new StringBuilder();
 			int counter = 0;
 			if(!gridData.getAttributes().isEmpty()){
 				for(Object attribute : gridData.getAttributes()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
 						if(counter>0){
-							userValue = userValue + ",";
+							userValue.append(",");
 						}
-						userValue = userValue + key ;
+						userValue.append(key) ;
 						counter ++;
 					}
 				}
 			}
-			addressGroup.setServiceList(userValue);
+			addressGroup.setServiceList(userValue.toString());
 			if(addressGroup.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(addressGroup.getGroupName(), "name", AddressGroup.class);
 				if(!duplicateData.isEmpty()){
@@ -673,12 +664,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_AddressGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void removeAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			AddressGroup addressGroup = (AddressGroup)mapper.readValue(root.get("data").toString(), AddressGroup.class);
+			AddressGroup addressGroup = mapper.readValue(root.get("data").toString(), AddressGroup.class);
 			commonClassDao.delete(addressGroup);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -689,7 +680,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(AddressGroup.class));
 			JSONObject j = new JSONObject("{addressGroupDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -698,7 +688,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 	@RequestMapping(value={"/get_ActionListDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -706,13 +695,8 @@ public class FirewallDictionaryController {
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
-			List<Object> list = commonClassDao.getData(ActionList.class);
-			List<String> dictList = new ArrayList<>();
-			for(int i = 0; i < list.size(); i++){
-				ActionList dict = (ActionList) list.get(i);
-				dictList.add(dict.getActionName());
-			}
-			model.put("actionListDictionaryDatas", mapper.writeValueAsString(dictList));
+			List<String> list = commonClassDao.getDataByColumn(ActionList.class, "actionName");
+			model.put("actionListDictionaryDatas", mapper.writeValueAsString(list));
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
 			JSONObject j = new JSONObject(msg);
 			response.getWriter().write(j.toString());
@@ -755,7 +739,7 @@ public class FirewallDictionaryController {
 			JsonNode root = mapper.readTree(request.getReader());
 			ActionList actionList;
 			if (fromAPI) {
-				actionList = (ActionList)mapper.readValue(root.get(dictionaryFields).toString(), ActionList.class);
+				actionList = mapper.readValue(root.get(dictionaryFields).toString(), ActionList.class);
 
 				//check if update operation or create, get id for data to be updated and update attributeData
 				if ((update).equals(request.getParameter(operation))) {
@@ -770,7 +754,7 @@ public class FirewallDictionaryController {
 					}  
 				}
 			} else {
-				actionList = (ActionList)mapper.readValue(root.get("actionListDictionaryData").toString(), ActionList.class);
+				actionList = mapper.readValue(root.get("actionListDictionaryData").toString(), ActionList.class);
 			}
 			if(actionList.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionList.getActionName(), "actionName", ActionList.class);
@@ -823,12 +807,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_ActionList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void removeActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			ActionList actionList = (ActionList)mapper.readValue(root.get("data").toString(), ActionList.class);
+			ActionList actionList = mapper.readValue(root.get("data").toString(), ActionList.class);
 			commonClassDao.delete(actionList);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -838,7 +822,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(ActionList.class));
 			JSONObject j = new JSONObject("{actionListDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -847,7 +830,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 	@RequestMapping(value={"/get_ServiceGroupData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -899,8 +881,8 @@ public class FirewallDictionaryController {
 			GroupServiceList groupServiceList;
 			GridData gridData;
 			if (fromAPI) {
-				groupServiceList = (GroupServiceList)mapper.readValue(root.get(dictionaryFields).toString(), GroupServiceList.class);
-				gridData = (GridData)mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
+				groupServiceList = mapper.readValue(root.get(dictionaryFields).toString(), GroupServiceList.class);
+				gridData = mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
 
 				if(!groupServiceList.getGroupName().startsWith(groupNameStart)){
 					String groupName = groupNameStart+groupServiceList.getGroupName();
@@ -920,28 +902,28 @@ public class FirewallDictionaryController {
 					}   
 				}
 			} else {
-				groupServiceList = (GroupServiceList)mapper.readValue(root.get("serviceGroupDictionaryData").toString(), GroupServiceList.class);
-				gridData = (GridData)mapper.readValue(root.get("serviceGroupDictionaryData").toString(), GridData.class);
+				groupServiceList = mapper.readValue(root.get("serviceGroupDictionaryData").toString(), GroupServiceList.class);
+				gridData = mapper.readValue(root.get("serviceGroupDictionaryData").toString(), GridData.class);
 			}
 			if(!groupServiceList.getGroupName().startsWith(groupNameStart)){
 				String groupName = groupNameStart+groupServiceList.getGroupName();
 				groupServiceList.setGroupName(groupName);
 			}
-			String userValue = "";
+			StringBuilder userValue = new StringBuilder();
 			int counter = 0;
 			if(!gridData.getAttributes().isEmpty()){
 				for(Object attribute : gridData.getAttributes()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
 						if(counter>0){
-							userValue = userValue + ",";
+							userValue.append(",");
 						}
-						userValue = userValue + key ;
+						userValue.append(key);
 						counter ++;
 					}
 				}
 			}
-			groupServiceList.setServiceList(userValue);
+			groupServiceList.setServiceList(userValue.toString());
 			if(groupServiceList.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(groupServiceList.getGroupName(), "name", GroupServiceList.class);
 				if(!duplicateData.isEmpty()){
@@ -993,12 +975,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_serviceGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void removeServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			GroupServiceList groupServiceList = (GroupServiceList)mapper.readValue(root.get("data").toString(), GroupServiceList.class);
+			GroupServiceList groupServiceList = mapper.readValue(root.get("data").toString(), GroupServiceList.class);
 			commonClassDao.delete(groupServiceList);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -1009,8 +991,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(GroupServiceList.class));
 			JSONObject j = new JSONObject("{serviceGroupDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(e);
@@ -1019,7 +999,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 	@RequestMapping(value={"/get_SecurityZoneDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -1070,7 +1049,7 @@ public class FirewallDictionaryController {
 			JsonNode root = mapper.readTree(request.getReader());
 			SecurityZone securityZone;
 			if (fromAPI) {
-				securityZone = (SecurityZone)mapper.readValue(root.get(dictionaryFields).toString(), SecurityZone.class);
+				securityZone = mapper.readValue(root.get(dictionaryFields).toString(), SecurityZone.class);
 
 				//check if update operation or create, get id for data to be updated and update attributeData
 				if ((update).equals(request.getParameter(operation))) {
@@ -1085,7 +1064,7 @@ public class FirewallDictionaryController {
 					}               
 				}
 			} else {
-				securityZone = (SecurityZone)mapper.readValue(root.get("securityZoneDictionaryData").toString(), SecurityZone.class);
+				securityZone = mapper.readValue(root.get("securityZoneDictionaryData").toString(), SecurityZone.class);
 			}
 			if(securityZone.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(securityZone.getZoneName(), zoneName, SecurityZone.class);
@@ -1139,12 +1118,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_securityZone"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void removeSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			SecurityZone securityZone = (SecurityZone)mapper.readValue(root.get("data").toString(), SecurityZone.class);
+			SecurityZone securityZone = mapper.readValue(root.get("data").toString(), SecurityZone.class);
 			commonClassDao.delete(securityZone);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -1155,8 +1134,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(SecurityZone.class));
 			JSONObject j = new JSONObject("{securityZoneDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -1165,7 +1142,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 
@@ -1218,8 +1194,8 @@ public class FirewallDictionaryController {
 			ServiceList serviceList;
 			GridData serviceListGridData;
 			if (fromAPI) {
-				serviceList = (ServiceList)mapper.readValue(root.get(dictionaryFields).toString(), ServiceList.class);
-				serviceListGridData = (GridData)mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
+				serviceList = mapper.readValue(root.get(dictionaryFields).toString(), ServiceList.class);
+				serviceListGridData = mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
 
 				//check if update operation or create, get id for data to be updated and update attributeData
 				if ((update).equals(request.getParameter(operation))) {
@@ -1234,39 +1210,39 @@ public class FirewallDictionaryController {
 					}
 				}
 			}else{
-				serviceList = (ServiceList)mapper.readValue(root.get("serviceListDictionaryData").toString(), ServiceList.class);
-				serviceListGridData = (GridData)mapper.readValue(root.get("serviceListDictionaryData").toString(), GridData.class);
+				serviceList = mapper.readValue(root.get("serviceListDictionaryData").toString(), ServiceList.class);
+				serviceListGridData = mapper.readValue(root.get("serviceListDictionaryData").toString(), GridData.class);
 			}
-			String tcpValue = "";
+			StringBuilder tcpValue = new StringBuilder();
 			int counter = 0;
 			if(!serviceListGridData.getTransportProtocols().isEmpty()){
 				for(Object attribute : serviceListGridData.getTransportProtocols()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
 						if(counter>0){
-							tcpValue = tcpValue + ",";
+							tcpValue.append(",");
 						}
-						tcpValue = tcpValue + key ;
+						tcpValue.append(key);
 						counter ++;
 					}
 				}
 			}
-			serviceList.setServiceTransProtocol(tcpValue);
-			String appValue = "";
+			serviceList.setServiceTransProtocol(tcpValue.toString());
+			StringBuilder appValue = new StringBuilder();
 			int counter1 = 0;
 			if(!serviceListGridData.getAppProtocols().isEmpty()){
 				for(Object attribute : serviceListGridData.getAppProtocols()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
 						if(counter1>0){
-							appValue = appValue + ",";
+							appValue.append(",");
 						}
-						appValue = appValue + key ;
+						appValue.append(key);
 						counter1 ++;
 					}
 				}
 			}
-			serviceList.setServiceAppProtocol(appValue);
+			serviceList.setServiceAppProtocol(appValue.toString());
 			serviceList.setServiceType("SERVICE");
 			if(serviceList.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(serviceList.getServiceName(), serviceName, ServiceList.class);
@@ -1315,17 +1291,16 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-
 		return null;
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_serviceList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void removeServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			ServiceList serviceList = (ServiceList)mapper.readValue(root.get("data").toString(), ServiceList.class);
+			ServiceList serviceList = mapper.readValue(root.get("data").toString(), ServiceList.class);
 			commonClassDao.delete(serviceList);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -1336,8 +1311,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(ServiceList.class));
 			JSONObject j = new JSONObject("{serviceListDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(e);
@@ -1346,7 +1319,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 	@RequestMapping(value={"/get_ZoneData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -1395,7 +1367,7 @@ public class FirewallDictionaryController {
 			JsonNode root = mapper.readTree(request.getReader());
 			Zone zone;
 			if (fromAPI) {
-				zone = (Zone)mapper.readValue(root.get(dictionaryFields).toString(), Zone.class);
+				zone = mapper.readValue(root.get(dictionaryFields).toString(), Zone.class);
 
 				//check if update operation or create, get id for data to be updated and update attributeData
 				if ((update).equals(request.getParameter(operation))) {
@@ -1410,7 +1382,7 @@ public class FirewallDictionaryController {
 					}
 				}
 			} else {
-				zone = (Zone)mapper.readValue(root.get("zoneDictionaryData").toString(), Zone.class);
+				zone = mapper.readValue(root.get("zoneDictionaryData").toString(), Zone.class);
 			}
 			if(zone.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(zone.getZoneName(), zoneName, Zone.class);
@@ -1463,12 +1435,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_zone"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void removeZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			Zone zone = (Zone)mapper.readValue(root.get("data").toString(), Zone.class);
+			Zone zone = mapper.readValue(root.get("data").toString(), Zone.class);
 			commonClassDao.delete(zone);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -1479,8 +1451,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(Zone.class));
 			JSONObject j = new JSONObject("{zoneDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -1489,7 +1459,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 	@RequestMapping(value={"/get_TermListDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -1542,8 +1511,8 @@ public class FirewallDictionaryController {
 			TermListData termListDatas;
 			String userId = null;
 			if (fromAPI) {
-				termList = (TermList)mapper.readValue(root.get(dictionaryFields).toString(), TermList.class);
-				termListDatas = (TermListData)mapper.readValue(root.get(dictionaryFields).toString(), TermListData.class);
+				termList = mapper.readValue(root.get(dictionaryFields).toString(), TermList.class);
+				termListDatas = mapper.readValue(root.get(dictionaryFields).toString(), TermListData.class);
 				userId = "API";
 
 				//check if update operation or create, get id for data to be updated and update attributeData
@@ -1560,121 +1529,121 @@ public class FirewallDictionaryController {
 					termList.setUserCreatedBy(this.getUserInfo(userId));
 				}
 			} else {
-				termList = (TermList)mapper.readValue(root.get("termListDictionaryData").toString(), TermList.class);
-				termListDatas = (TermListData)mapper.readValue(root.get("termListDictionaryData").toString(), TermListData.class);
+				termList = mapper.readValue(root.get("termListDictionaryData").toString(), TermList.class);
+				termListDatas = mapper.readValue(root.get("termListDictionaryData").toString(), TermListData.class);
 				userId = root.get(userid).textValue();
 			}
-			String fromZoneValue = "";
+			StringBuilder fromZoneValue = new StringBuilder();
 			int counter = 0;
 			if(!termListDatas.getFromZoneDatas().isEmpty()){
 				for(Object fromZone : termListDatas.getFromZoneDatas()){
 					if(fromZone instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) fromZone).get(option).toString();
 						if(counter>0){
-							fromZoneValue = fromZoneValue + ",";
+							fromZoneValue.append(",");
 						}
-						fromZoneValue = fromZoneValue + key ;
+						fromZoneValue.append(key);
 						counter ++;
 					}
 				}
 			}
-			termList.setFromZones(fromZoneValue);
+			termList.setFromZones(fromZoneValue.toString());
 
-			String toZoneValue = "";
+			StringBuilder toZoneValue = new StringBuilder();
 			int toZonecounter = 0;
 			if(!termListDatas.getToZoneDatas().isEmpty()){
 				for(Object toZone : termListDatas.getToZoneDatas()){
 					if(toZone instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) toZone).get(option).toString();
 						if(toZonecounter>0){
-							toZoneValue = toZoneValue + ",";
+							toZoneValue.append(",");
 						}
-						toZoneValue = toZoneValue + key ;
+						toZoneValue.append(key);
 						toZonecounter ++;
 					}
 				}
 			}
-			termList.setToZones(toZoneValue);
+			termList.setToZones(toZoneValue.toString());
 
-			String srcListValues = "";
+			StringBuilder srcListValues = new StringBuilder();
 			int srcListcounter = 0;
 			if(!termListDatas.getSourceListDatas().isEmpty()){
 				for(Object srcList : termListDatas.getSourceListDatas()){
 					if(srcList instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) srcList).get(option).toString();
 						if(srcListcounter>0){
-							srcListValues = srcListValues + ",";
+							srcListValues.append(",");
 						}
-						srcListValues = srcListValues + key ;
+						srcListValues.append(key);
 						srcListcounter ++;
 					}
 				}
 			}
-			termList.setSrcIPList(srcListValues);
+			termList.setSrcIPList(srcListValues.toString());
 
-			String desListValues = "";
+			StringBuilder desListValues = new StringBuilder();
 			int destListcounter = 0;
 			if(!termListDatas.getDestinationListDatas().isEmpty()){
 				for(Object desList : termListDatas.getDestinationListDatas()){
 					if(desList instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) desList).get(option).toString();
 						if(destListcounter>0){
-							desListValues = desListValues + ",";
+							desListValues.append(",");
 						}
-						desListValues = desListValues + key ;
+						desListValues.append(key);
 						destListcounter ++;
 					}
 				}
 			}
-			termList.setDestIPList(desListValues);
+			termList.setDestIPList(desListValues.toString());
 
-			String srcSerValue = "";
+			StringBuilder srcSerValue = new StringBuilder();
 			int srcSercounter = 0;
 			if(!termListDatas.getSourceServiceDatas().isEmpty()){
 				for(Object srcSrc : termListDatas.getSourceServiceDatas()){
 					if(srcSrc instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) srcSrc).get(option).toString();
 						if(srcSercounter>0){
-							srcSerValue = srcSerValue + ",";
+							srcSerValue.append(",");
 						}
-						srcSerValue = srcSerValue + key ;
+						srcSerValue.append(key);
 						srcSercounter ++;
 					}
 				}
 			}
-			termList.setSrcPortList(srcSerValue);
+			termList.setSrcPortList(srcSerValue.toString());
 
-			String desSrcValue = "";
+			StringBuilder desSrcValue = new StringBuilder();
 			int desSrccounter = 0;
 			if(!termListDatas.getDestinationServiceDatas().isEmpty()){
 				for(Object desSrc : termListDatas.getDestinationServiceDatas()){
 					if(desSrc instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) desSrc).get(option).toString();
 						if(desSrccounter>0){
-							desSrcValue = desSrcValue + ",";
+							desSrcValue.append(",");
 						}
-						desSrcValue = desSrcValue + key ;
+						desSrcValue.append(key);
 						desSrccounter ++;
 					}
 				}
 			}
-			termList.setDestPortList(desSrcValue);
+			termList.setDestPortList(desSrcValue.toString());
 
-			String actionValue = "";
+			StringBuilder actionValue = new StringBuilder();
 			int actioncounter = 0;
 			if(!termListDatas.getActionListDatas().isEmpty()){
 				for(Object actionList : termListDatas.getActionListDatas()){
 					if(actionList instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) actionList).get(option).toString();
 						if(actioncounter>0){
-							actionValue = actionValue + ",";
+							actionValue.append(",");
 						}
-						actionValue = actionValue + key ;
+						actionValue.append(key);
 						actioncounter ++;
 					}
 				}
 			}
-			termList.setAction(actionValue);
+			termList.setAction(actionValue.toString());
 
 			if(termList.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(termList.getTermName(), termName, TermList.class);
@@ -1732,12 +1701,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_termList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void removeTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			TermList termList = (TermList)mapper.readValue(root.get("data").toString(), TermList.class);
+			TermList termList = mapper.readValue(root.get("data").toString(), TermList.class);
 			commonClassDao.delete(termList);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -1748,8 +1717,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(TermList.class));
 			JSONObject j = new JSONObject("{termListDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -1758,7 +1725,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 	//ParentList Dictionary Data
 	@RequestMapping(value={"/get_FWDictionaryListDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -1802,38 +1768,38 @@ public class FirewallDictionaryController {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			FirewallDictionaryList fwDictList = (FirewallDictionaryList)mapper.readValue(root.get("fwDictListDictionaryData").toString(), FirewallDictionaryList.class);
-			GridData gridData = (GridData)mapper.readValue(root.get("fwDictListDictionaryData").toString(), GridData.class);
-			String userSLValue = "";
+			FirewallDictionaryList fwDictList = mapper.readValue(root.get("fwDictListDictionaryData").toString(), FirewallDictionaryList.class);
+			GridData gridData = mapper.readValue(root.get("fwDictListDictionaryData").toString(), GridData.class);
+			StringBuilder userSLValue = new StringBuilder();
 			int slcounter = 0;
 			if(!gridData.getAttributes().isEmpty()){
 				for(Object attribute : gridData.getAttributes()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
 						if(slcounter>0){
-							userSLValue = userSLValue + ",";
+							userSLValue.append(",");
 						}
-						userSLValue = userSLValue + key ;
+						userSLValue.append(key);
 						slcounter ++;
 					}
 				}
 			}
-			fwDictList.setServiceList(userSLValue);
-			String userALValue = "";
+			fwDictList.setServiceList(userSLValue.toString());
+			StringBuilder userALValue = new StringBuilder();
 			int alcounter = 0;
 			if(!gridData.getAlAttributes().isEmpty()){
 				for(Object attribute : gridData.getAlAttributes()){
 					if(attribute instanceof LinkedHashMap<?, ?>){
 						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
 						if(alcounter>0){
-							userALValue = userALValue + ",";
+							userALValue.append(",");
 						}
-						userALValue = userALValue + key ;
+						userALValue.append(key);
 						alcounter ++;
 					}
 				}
 			}
-			fwDictList.setAddressList(userALValue);
+			fwDictList.setAddressList(userALValue.toString());
 			if(fwDictList.getId() == 0){
 				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwDictList.getParentItemName(), "parentItemName", FirewallDictionaryList.class);
 				if(!duplicateData.isEmpty()){
@@ -1856,9 +1822,7 @@ public class FirewallDictionaryController {
 				responseString = mapper.writeValueAsString(commonClassDao.getData(FirewallDictionaryList.class));
 			}
 			JSONObject j = new JSONObject("{fwDictListDictionaryDatas: " + responseString + "}");
-
 			out.write(j.toString());
-
 			return null;
 		}
 		catch (Exception e){
@@ -1872,12 +1836,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_FWDictionaryList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeFWDictionaryListy(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void removeFWDictionaryList(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			FirewallDictionaryList fwDictList = (FirewallDictionaryList)mapper.readValue(root.get("data").toString(), FirewallDictionaryList.class);
+			FirewallDictionaryList fwDictList = mapper.readValue(root.get("data").toString(), FirewallDictionaryList.class);
 			commonClassDao.delete(fwDictList);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -1888,8 +1852,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(FirewallDictionaryList.class));
 			JSONObject j = new JSONObject("{fwDictListDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -1898,7 +1860,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 
@@ -1938,9 +1899,8 @@ public class FirewallDictionaryController {
 	public ModelAndView saveFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try {
 			boolean duplicateflag = false;
-			boolean isFakeUpdate = false;
 			boolean fromAPI = false;
-			if (request.getParameter("apiflag")!=null && ("api").equalsIgnoreCase (request.getParameter("apiflag"))) {
+			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase (request.getParameter(apiflag))) {
 				fromAPI = true;
 			}
 			ObjectMapper mapper = new ObjectMapper();
@@ -1950,11 +1910,11 @@ public class FirewallDictionaryController {
 			
 			String userId = "";
 			if (fromAPI) {
-				fwTagPicker = (FWTagPicker)mapper.readValue(root.get("dictionaryFields").toString(), FWTagPicker.class);
+				fwTagPicker = mapper.readValue(root.get(dictionaryFields).toString(), FWTagPicker.class);
 				userId = "API";
 				//check if update operation or create, get id for data to be updated and update attributeData
-				if (("update").equals(request.getParameter("operation"))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(), "tagPickerName", FWTagPicker.class);
+				if ((update).equals(request.getParameter(operation))) {
+					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(), tagPickerName, FWTagPicker.class);
 					int id = 0;
 					FWTagPicker dbdata = (FWTagPicker) duplicateData.get(0);
 					id = dbdata.getId();
@@ -1963,9 +1923,9 @@ public class FirewallDictionaryController {
 				}
 			} else {
 				TagGridValues data;
-				fwTagPicker = (FWTagPicker)mapper.readValue(root.get("fwTagPickerDictionaryData").toString(), FWTagPicker.class);
-				data = (TagGridValues)mapper.readValue(root.get("fwTagPickerDictionaryData").toString(), TagGridValues.class);
-				userId = root.get("userid").textValue();
+				fwTagPicker = mapper.readValue(root.get("fwTagPickerDictionaryData").toString(), FWTagPicker.class);
+				data = mapper.readValue(root.get("fwTagPickerDictionaryData").toString(), TagGridValues.class);
+				userId = root.get(userid).textValue();
 				
 				StringBuilder header = new StringBuilder();
 				int counter = 0;
@@ -1986,7 +1946,7 @@ public class FirewallDictionaryController {
 			}
 			
 			if(fwTagPicker.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(), "tagPickerName", FWTagPicker.class);
+				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(), tagPickerName, FWTagPicker.class);
 				if(!duplicateData.isEmpty()){
 					duplicateflag = true;
 				}else{
@@ -2035,12 +1995,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_tagPicker"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void removeFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			FWTagPicker fwTagPicker = (FWTagPicker)mapper.readValue(root.get("data").toString(), FWTagPicker.class);
+			FWTagPicker fwTagPicker = mapper.readValue(root.get("data").toString(), FWTagPicker.class);
 			commonClassDao.delete(fwTagPicker);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -2050,7 +2010,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(FWTagPicker.class));
 			JSONObject j = new JSONObject("{fwTagPickerDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -2059,7 +2018,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 
 	@RequestMapping(value={"/get_TagListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
@@ -2080,7 +2038,7 @@ public class FirewallDictionaryController {
 	}
 	
 	@RequestMapping(value={"/get_TagNameByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getTagNameEntityDataByName(HttpServletRequest request, HttpServletResponse response){
+	public void getTagNameEntityDataByName(HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
@@ -2110,10 +2068,10 @@ public class FirewallDictionaryController {
 			
 			String userId="";
 			if (fromAPI) {
-				fwTag = mapper.readValue(root.get("dictionaryFields").toString(), FWTag.class);
+				fwTag = mapper.readValue(root.get(dictionaryFields).toString(), FWTag.class);
 				userId = "API";
 				//check if update operation or create, get id for data to be updated and update attributeData
-				if ("update".equals(request.getParameter("operation"))) {
+				if (update.equals(request.getParameter(operation))) {
 					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTag.getFwTagName(), "fwTagName", FWTag.class);
 					int id = 0;
 					FWTag data = (FWTag) duplicateData.get(0);
@@ -2125,7 +2083,7 @@ public class FirewallDictionaryController {
 				TagGridValues tagGridValues;
 				fwTag = mapper.readValue(root.get("fwTagDictionaryData").toString(), FWTag.class);
 				tagGridValues = mapper.readValue(root.get("fwTagDictionaryData").toString(), TagGridValues.class);
-				userId = root.get("userid").textValue();
+				userId = root.get(userid).textValue();
 				
 				StringBuilder userValue = new StringBuilder();
 				int counter = 0;
@@ -2151,14 +2109,11 @@ public class FirewallDictionaryController {
 				}else{
 					fwTag.setUserCreatedBy(this.getUserInfo(userId));
 					fwTag.setUserModifiedBy(this.getUserInfo(userId));
-					
 					commonClassDao.save(fwTag);
 				}		
 			}else{
-				
-					fwTag.setUserModifiedBy(this.getUserInfo(userId));
-					commonClassDao.update(fwTag); 
-				
+				fwTag.setUserModifiedBy(this.getUserInfo(userId));
+				commonClassDao.update(fwTag); 
 			} 
 			String responseString = "";
 			if(duplicateflag){
@@ -2175,7 +2130,6 @@ public class FirewallDictionaryController {
 				result.setViewName(responseString);
 				return result;
 			} else {
-
 				response.setCharacterEncoding(utf8);
 				response.setContentType(applicationJsonContentType);
 				request.setCharacterEncoding(utf8);
@@ -2197,12 +2151,12 @@ public class FirewallDictionaryController {
 	}
 
 	@RequestMapping(value={"/fw_dictionary/remove_tagList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void removeFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		try{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			FWTag fwTag = (FWTag)mapper.readValue(root.get("data").toString(), FWTag.class);
+			FWTag fwTag = mapper.readValue(root.get("data").toString(), FWTag.class);
 			commonClassDao.delete(fwTag);
 			response.setCharacterEncoding(utf8);
 			response.setContentType(applicationJsonContentType);
@@ -2213,8 +2167,6 @@ public class FirewallDictionaryController {
 			String responseString = mapper.writeValueAsString(commonClassDao.getData(FWTag.class));
 			JSONObject j = new JSONObject("{fwTagDictionaryDatas: " + responseString + "}");
 			out.write(j.toString());
-
-			return null;
 		}
 		catch (Exception e){
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
@@ -2223,7 +2175,6 @@ public class FirewallDictionaryController {
 			PrintWriter out = response.getWriter();
 			out.write(PolicyUtils.CATCH_EXCEPTION);
 		}
-		return null;
 	}
 }
 

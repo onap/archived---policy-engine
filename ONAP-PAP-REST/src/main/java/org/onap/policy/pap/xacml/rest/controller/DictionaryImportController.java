@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -296,7 +296,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("ClosedLoopService")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					ClosedLoopD2Services attribute = new ClosedLoopD2Services("",  userId);
+					ClosedLoopD2Services attribute = new ClosedLoopD2Services();
 					UserInfo userinfo = new UserInfo();
 					userinfo.setUserLoginId(userId);
 					attribute.setUserCreatedBy(userinfo);

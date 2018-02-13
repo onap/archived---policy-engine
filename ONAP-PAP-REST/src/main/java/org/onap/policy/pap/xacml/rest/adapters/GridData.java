@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,43 +20,43 @@
 
 package org.onap.policy.pap.xacml.rest.adapters;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class GridData {
-	private ArrayList<Object> attributes;
-	private ArrayList<Object> alAttributes;
-	private ArrayList<Object> transportProtocols;
-	private ArrayList<Object> appProtocols;
+	private List<Object> attributes;
+	private List<Object> alAttributes;
+	private List<Object> transportProtocols;
+	private List<Object> appProtocols;
 
-	public ArrayList<Object> getAttributes() {
+	public List<Object> getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(ArrayList<Object> attributes) {
+	public void setAttributes(List<Object> attributes) {
 		this.attributes = attributes;
 	}
 
-	public ArrayList<Object> getAlAttributes() {
+	public List<Object> getAlAttributes() {
 		return alAttributes;
 	}
 
-	public void setAlAttributes(ArrayList<Object> alAttributes) {
+	public void setAlAttributes(List<Object> alAttributes) {
 		this.alAttributes = alAttributes;
 	}
 
-	public ArrayList<Object> getAppProtocols() {
+	public List<Object> getAppProtocols() {
 		return appProtocols;
 	}
 
-	public void setAppProtocols(ArrayList<Object> appProtocols) {
+	public void setAppProtocols(List<Object> appProtocols) {
 		this.appProtocols = appProtocols;
 	}
 
-	public ArrayList<Object> getTransportProtocols() {
+	public List<Object> getTransportProtocols() {
 		return transportProtocols;
 	}
 
-	public void setTransportProtocols(ArrayList<Object> transportProtocols) {
+	public void setTransportProtocols(List<Object> transportProtocols) {
 		this.transportProtocols = transportProtocols;
 	}
 }

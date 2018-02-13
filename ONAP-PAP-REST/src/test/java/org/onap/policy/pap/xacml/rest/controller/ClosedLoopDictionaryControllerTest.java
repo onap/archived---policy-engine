@@ -27,7 +27,6 @@ import static org.mockito.Mockito.when;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,147 +80,6 @@ public class ClosedLoopDictionaryControllerTest {
 		logger.info("setUp: exit");
 	}
 	
-	public List<Object> testVSCLAction(){
-		List<Object>  objectData = new ArrayList<>();
-		
-		VSCLAction data = new VSCLAction();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setVsclaction("Test");
-		assertTrue("Test".equals(data.getVsclaction()));
-		data.setDescription("Test");
-		assertTrue("Test".equals(data.getDescription()));
-		data.setCreatedDate(new Date());
-		assertTrue(data.getCreatedDate()!= null);
-		data.setModifiedDate(new Date());
-		assertTrue(data.getModifiedDate()!= null);
-		data.setUserCreatedBy(userInfo);
-		assertTrue(data.getUserCreatedBy()!= null);
-		data.setUserModifiedBy(userInfo);
-		assertTrue(data.getUserModifiedBy()!= null);
-		objectData.add(data);
-		
-		return objectData;
-	}
-	
-	public List<Object> testVNFType(){
-		List<Object>  objectData = new ArrayList<>();
-		
-		VNFType data = new VNFType();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setVnftype("Test");
-		assertTrue("Test".equals(data.getVnftype()));
-		data.setDescription("Test");
-		assertTrue("Test".equals(data.getDescription()));
-		data.setCreatedDate(new Date());
-		assertTrue(data.getCreatedDate()!= null);
-		data.setModifiedDate(new Date());
-		assertTrue(data.getModifiedDate()!= null);
-		data.setUserCreatedBy(userInfo);
-		assertTrue(data.getUserCreatedBy()!= null);
-		data.setUserModifiedBy(userInfo);
-		assertTrue(data.getUserModifiedBy()!= null);
-		objectData.add(data);
-		
-		return objectData;
-	}
-	
-	public List<Object> testPEPOptions(){
-		List<Object>  objectData = new ArrayList<>();
-
-		PEPOptions data = new PEPOptions();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setPepName("Test");
-		assertTrue("Test".equals(data.getPepName()));
-		data.setDescription("Test");
-		assertTrue("Test".equals(data.getDescription()));
-		data.setCreatedDate(new Date());
-		assertTrue(data.getCreatedDate()!= null);
-		data.setModifiedDate(new Date());
-		assertTrue(data.getModifiedDate()!= null);
-		data.setUserCreatedBy(userInfo);
-		assertTrue(data.getUserCreatedBy()!= null);
-		data.setUserModifiedBy(userInfo);
-		assertTrue(data.getUserModifiedBy()!= null);
-		objectData.add(data);
-
-		return objectData;
-	}
-	
-	public List<Object> testVarbindDictionary(){
-		List<Object>  objectData = new ArrayList<>();
-
-		VarbindDictionary data = new VarbindDictionary();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setVarbindName("Test");
-		assertTrue("Test".equals(data.getVarbindName()));
-		data.setVarbindDescription("Test");
-		assertTrue("Test".equals(data.getVarbindDescription()));
-		data.setVarbindOID("Test");
-		assertTrue("Test".equals(data.getVarbindOID()));
-		data.setCreatedDate(new Date());
-		assertTrue(data.getCreatedDate()!= null);
-		data.setModifiedDate(new Date());
-		assertTrue(data.getModifiedDate()!= null);
-		data.setUserCreatedBy(userInfo);
-		assertTrue(data.getUserCreatedBy()!= null);
-		data.setUserModifiedBy(userInfo);
-		assertTrue(data.getUserModifiedBy()!= null);
-		objectData.add(data);
-
-		return objectData;
-	}
-	
-	public List<Object> testClosedLoopD2Services(){
-		List<Object>  objectData = new ArrayList<>();
-
-		ClosedLoopD2Services data = new ClosedLoopD2Services();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setServiceName("Test");
-		assertTrue("Test".equals(data.getServiceName()));
-		data.setDescription("Test");
-		assertTrue("Test".equals(data.getDescription()));
-		data.setCreatedDate(new Date());
-		assertTrue(data.getCreatedDate()!= null);
-		data.setModifiedDate(new Date());
-		assertTrue(data.getModifiedDate()!= null);
-		data.setUserCreatedBy(userInfo);
-		assertTrue(data.getUserCreatedBy()!= null);
-		data.setUserModifiedBy(userInfo);
-		assertTrue(data.getUserModifiedBy()!= null);
-		objectData.add(data);
-
-		return objectData;
-	}
-	
-	
-	public List<Object> testClosedLoopSite(){
-		List<Object>  objectData = new ArrayList<>();
-
-		ClosedLoopSite data = new ClosedLoopSite();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setSiteName("Test");
-		assertTrue("Test".equals(data.getSiteName()));
-		data.setDescription("Test");
-		assertTrue("Test".equals(data.getDescription()));
-		data.setCreatedDate(new Date());
-		assertTrue(data.getCreatedDate()!= null);
-		data.setModifiedDate(new Date());
-		assertTrue(data.getModifiedDate()!= null);
-		data.setUserCreatedBy(userInfo);
-		assertTrue(data.getUserCreatedBy()!= null);
-		data.setUserModifiedBy(userInfo);
-		assertTrue(data.getUserModifiedBy()!= null);
-		objectData.add(data);
-
-		return objectData;
-	}
-	
 	@Test
 	public void testGetVSCLActionDictionaryByNameEntityData(){
 		when(commonClassDao.getDataByColumn(VSCLAction.class, "vsclaction")).thenReturn(data);
@@ -236,7 +94,7 @@ public class ClosedLoopDictionaryControllerTest {
 	
 	@Test
 	public void testGetVSCLActionDictionaryEntityData(){
-		when(commonClassDao.getData(VSCLAction.class)).thenReturn(testVSCLAction());
+		when(commonClassDao.getData(VSCLAction.class)).thenReturn(new ArrayList<>());
 		controller.getVSCLActionDictionaryEntityData(response);
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("vsclActionDictionaryDatas"));
@@ -260,7 +118,7 @@ public class ClosedLoopDictionaryControllerTest {
 	
 	@Test
 	public void testGetVNFTypeDictionaryEntityData(){
-		when(commonClassDao.getData(VNFType.class)).thenReturn(testVNFType());
+		when(commonClassDao.getData(VNFType.class)).thenReturn(new ArrayList<>());
 		controller.getVNFTypeDictionaryEntityData(response);
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("vnfTypeDictionaryDatas"));
@@ -284,7 +142,7 @@ public class ClosedLoopDictionaryControllerTest {
 	
 	@Test
 	public void testGetPEPOptionsDictionaryEntityData(){
-		when(commonClassDao.getData(PEPOptions.class)).thenReturn(testPEPOptions());
+		when(commonClassDao.getData(PEPOptions.class)).thenReturn(new ArrayList<>());
 		controller.getPEPOptionsDictionaryEntityData(response);
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("pepOptionsDictionaryDatas"));
@@ -308,7 +166,7 @@ public class ClosedLoopDictionaryControllerTest {
 	
 	@Test
 	public void testGetVarbindDictionaryEntityData(){
-		when(commonClassDao.getData(VarbindDictionary.class)).thenReturn(testVarbindDictionary());
+		when(commonClassDao.getData(VarbindDictionary.class)).thenReturn(new ArrayList<>());
 		controller.getVarbindDictionaryEntityData(response);
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("varbindDictionaryDatas"));
@@ -332,7 +190,7 @@ public class ClosedLoopDictionaryControllerTest {
 	
 	@Test
 	public void testGetClosedLoopServiceDictionaryEntityData(){
-		when(commonClassDao.getData(ClosedLoopD2Services.class)).thenReturn(testClosedLoopD2Services());
+		when(commonClassDao.getData(ClosedLoopD2Services.class)).thenReturn(new ArrayList<>());
 		controller.getClosedLoopServiceDictionaryEntityData(response);
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("closedLoopServiceDictionaryDatas"));
@@ -356,7 +214,7 @@ public class ClosedLoopDictionaryControllerTest {
 	
 	@Test
 	public void testGetClosedLoopSiteDictionaryEntityData(){
-		when(commonClassDao.getData(ClosedLoopSite.class)).thenReturn(testClosedLoopSite());
+		when(commonClassDao.getData(ClosedLoopSite.class)).thenReturn(new ArrayList<>());
 		controller.getClosedLoopSiteDictionaryEntityData(response);
 		try {
 			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("closedLoopSiteDictionaryDatas"));
