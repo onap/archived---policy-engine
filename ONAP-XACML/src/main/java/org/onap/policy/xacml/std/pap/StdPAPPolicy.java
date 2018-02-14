@@ -69,7 +69,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable{
 	private String uuid = null;
 	private String msLocation = null;
 	private String priority = null;
-	private Map<String,String> drlRuleAndUIParams=null;
+	private transient Map<String,String> drlRuleAndUIParams=null;
 	private String deleteCondition = null;
 	private String dictionaryType = null;
 	private String dictionary = null;
