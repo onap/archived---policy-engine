@@ -959,43 +959,43 @@ public class BRMSPush {
 
         Dependency demoDependency = new Dependency();
         demoDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        demoDependency.setArtifactId("demo");
+        demoDependency.setArtifactId("controlloop.templates.template.demo");
         demoDependency.setVersion(version);
         dependencyList.add(demoDependency);
 
         Dependency controlloopDependency = new Dependency();
         controlloopDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        controlloopDependency.setArtifactId("events");
+        controlloopDependency.setArtifactId("controlloop.common.model-impl.events");
         controlloopDependency.setVersion(version);
         dependencyList.add(controlloopDependency);
 
         Dependency restDependency = new Dependency();
         restDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        restDependency.setArtifactId("rest");
+        restDependency.setArtifactId("controlloop.common.model-impl.rest");
         restDependency.setVersion(version);
         dependencyList.add(restDependency);
 
         Dependency appcDependency = new Dependency();
         appcDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        appcDependency.setArtifactId("appc");
+        appcDependency.setArtifactId("controlloop.common.model-impl.appc");
         appcDependency.setVersion(version);
         dependencyList.add(appcDependency);
 
         Dependency aaiDependency = new Dependency();
         aaiDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        aaiDependency.setArtifactId("aai");
+        aaiDependency.setArtifactId("controlloop.common.model-impl.aai");
         aaiDependency.setVersion(version);
         dependencyList.add(aaiDependency);
 
         Dependency msoDependency = new Dependency();
         msoDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        msoDependency.setArtifactId("mso");
+        msoDependency.setArtifactId("controlloop.common.model-impl.so");
         msoDependency.setVersion(version);
         dependencyList.add(msoDependency);
 
         Dependency trafficgeneratorDependency = new Dependency();
         trafficgeneratorDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        trafficgeneratorDependency.setArtifactId("trafficgenerator");
+        trafficgeneratorDependency.setArtifactId("controlloop.common.model-impl.trafficgenerator");
         trafficgeneratorDependency.setVersion(version);
         dependencyList.add(trafficgeneratorDependency);
         return dependencyList;

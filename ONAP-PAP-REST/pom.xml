@@ -219,7 +219,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.onap.policy.drools-applications</groupId>
-			<artifactId>policy-yaml</artifactId>
+			<artifactId>controlloop.common.policy-yaml</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
