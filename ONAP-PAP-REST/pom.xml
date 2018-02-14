@@ -218,7 +218,7 @@
 			<version>2.0.8</version>
 		</dependency>
 		<dependency>
-			<groupId>org.onap.policy.drools-applications</groupId>
+			<groupId>org.onap.policy.drools-applications.controlloop.common</groupId>
 			<artifactId>policy-yaml</artifactId>
 			<version>${project.version}</version>
 		</dependency>
