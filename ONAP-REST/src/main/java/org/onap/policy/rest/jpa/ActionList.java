@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
@@ -40,7 +38,6 @@ import javax.persistence.Table;
 public class ActionList implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static String domain;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,26 +50,7 @@ public class ActionList implements Serializable {
 	
 	@Column(name="description")
 	private String description;
-
-	public ActionList() {
-		//An empty constructor
-	}
-	public ActionList(String string, String userid) {
-		this(domain);
-		
-	}
-	public ActionList(String domain) {
-		//An empty constructor
-	}	
-
-	@PrePersist
-	public void	prePersist() {
-		//An empty function
-	}
-	@PreUpdate
-	public void preUpdate() {
-		//An empty function
-	}
+	
 	public String getActionName() {
 		return this.actionName;
 	}

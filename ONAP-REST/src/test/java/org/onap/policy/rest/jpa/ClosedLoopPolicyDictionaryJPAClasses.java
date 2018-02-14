@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PAP-REST
+ * ONAP-REST
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -28,9 +28,9 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
-public class ClosedLoopPolicyClasses {
+public class ClosedLoopPolicyDictionaryJPAClasses {
 	
-	private static Logger logger = FlexLogger.getLogger(ClosedLoopPolicyClasses.class);
+	private static Logger logger = FlexLogger.getLogger(ClosedLoopPolicyDictionaryJPAClasses.class);
 	private UserInfo userInfo;
 	
 	@Before
@@ -45,6 +45,9 @@ public class ClosedLoopPolicyClasses {
 	@Test
 	public void testVSCLAction(){
 		VSCLAction data = new VSCLAction();
+		new VSCLAction("Test","Test");
+		data.preUpdate();
+		data.prePersist();
 		data.setId(1);
 		assertTrue(1 == data.getId());
 		data.setVsclaction("Test");
@@ -64,6 +67,9 @@ public class ClosedLoopPolicyClasses {
 	@Test
 	public void testVNFType(){
 		VNFType data = new VNFType();
+		new VNFType("Test","Test");
+		data.preUpdate();
+		data.prePersist();
 		data.setId(1);
 		assertTrue(1 == data.getId());
 		data.setVnftype("Test");
@@ -83,6 +89,9 @@ public class ClosedLoopPolicyClasses {
 	@Test
 	public void testPEPOptions(){
 		PEPOptions data = new PEPOptions();
+		new PEPOptions("Test","Test");
+		data.preUpdate();
+		data.prePersist();
 		data.setId(1);
 		assertTrue(1 == data.getId());
 		data.setPepName("Test");
@@ -102,6 +111,9 @@ public class ClosedLoopPolicyClasses {
 	@Test
 	public void testVarbindDictionary(){
 		VarbindDictionary data = new VarbindDictionary();
+		new VarbindDictionary("Test","Test");
+		data.preUpdate();
+		data.prePersist();
 		data.setId(1);
 		assertTrue(1 == data.getId());
 		data.setVarbindName("Test");
@@ -123,6 +135,8 @@ public class ClosedLoopPolicyClasses {
 	@Test
 	public void testClosedLoopD2Services(){
 		ClosedLoopD2Services data = new ClosedLoopD2Services();
+		data.preUpdate();
+		data.prePersist();
 		data.setId(1);
 		assertTrue(1 == data.getId());
 		data.setServiceName("Test");
@@ -142,6 +156,9 @@ public class ClosedLoopPolicyClasses {
 	@Test
 	public void testClosedLoopSite(){
 		ClosedLoopSite data = new ClosedLoopSite();
+		new ClosedLoopSite("Test","Test");
+		data.preUpdate();
+		data.prePersist();
 		data.setId(1);
 		assertTrue(1 == data.getId());
 		data.setSiteName("Test");

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 
@@ -40,8 +38,6 @@ import javax.persistence.Table;
 @NamedQuery(name="GroupPolicyScopeList.findAll", query="SELECT e FROM GroupPolicyScopeList e ")
 public class GroupPolicyScopeList implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	private static String domain;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -58,27 +54,6 @@ public class GroupPolicyScopeList implements Serializable {
 	@Column(name="description")
 	private String description;
 
-	public GroupPolicyScopeList() {
-		//An empty constructor
-	}
-	public GroupPolicyScopeList(String string, String userid) {
-		this(domain);
-		
-	}
-	public GroupPolicyScopeList(String domain) {
-		//An empty constructor
-	}	
-
-	@PrePersist
-	public void	prePersist() {
-		//An empty function
-	}
-	@PreUpdate
-	public void preUpdate() {
-		//An empty function
-	}
-
-	
 	public int getId() {
 		return this.id;
 	}

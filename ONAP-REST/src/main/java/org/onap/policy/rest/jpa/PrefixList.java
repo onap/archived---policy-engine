@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
@@ -39,8 +37,6 @@ import javax.persistence.Table;
 @NamedQuery(name="PrefixList.findAll", query="SELECT e FROM PrefixList e ")
 public class PrefixList implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	private static String domain;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -57,25 +53,6 @@ public class PrefixList implements Serializable {
 	@Column(name="pl_value", nullable=false)
 	private String prefixListValue;
 
-	public PrefixList() {
-		// Empty constructor
-	}
-	public PrefixList(String string, String userid) {
-		this(domain);
-		
-	}
-	public PrefixList(String domain) {
-		// Empty constructor
-	}	
-
-	@PrePersist
-	public void	prePersist() {
-		// Empty function
-	}
-	@PreUpdate
-	public void preUpdate() {
-		// Empty function
-	}
 	public String getPrefixListName() {
 		return this.prefixListName;
 	}
