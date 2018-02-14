@@ -104,7 +104,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 @SuppressWarnings("deprecation")
 public class BRMSPush {
     private static final String GROUP_NAMES = "groupNames";
-	private static final String DROOLS_APPS_PACKAGE = "org.onap.policy.drools-applications";
+	private static final String DROOLS_APPS_TEMPLATE_GROUP = "org.onap.policy.drools-applications.controlloop.templates";
+	private static final String DROOLS_APPS_MODEL_GROUP    = "org.onap.policy.drools-applications.controlloop.common.model-impl";
 	private static final String META_INF = "META-INF";
 	private static final String KMODULE_XML_FILE = "kmodule.xml";
 	private static final String POM_XML_FILE = "pom.xml";
@@ -958,44 +959,44 @@ public class BRMSPush {
         String version = StringEscapeUtils.escapeJava(brmsdependencyversion);
 
         Dependency demoDependency = new Dependency();
-        demoDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        demoDependency.setArtifactId("demo");
+        demoDependency.setGroupId(DROOLS_APPS_TEMPLATE_GROUP);
+        demoDependency.setArtifactId("template.demo");
         demoDependency.setVersion(version);
         dependencyList.add(demoDependency);
 
         Dependency controlloopDependency = new Dependency();
-        controlloopDependency.setGroupId(DROOLS_APPS_PACKAGE);
+        controlloopDependency.setGroupId(DROOLS_APPS_MODEL_GROUP);
         controlloopDependency.setArtifactId("events");
         controlloopDependency.setVersion(version);
         dependencyList.add(controlloopDependency);
 
         Dependency restDependency = new Dependency();
-        restDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        restDependency.setArtifactId("rest");
+        restDependency.setGroupId(DROOLS_APPS_MODEL_GROUP);
+        restDependency.setArtifactId("controlloop.common.model-impl.rest");
         restDependency.setVersion(version);
         dependencyList.add(restDependency);
 
         Dependency appcDependency = new Dependency();
-        appcDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        appcDependency.setArtifactId("appc");
+        appcDependency.setGroupId(DROOLS_APPS_MODEL_GROUP);
+        appcDependency.setArtifactId("controlloop.common.model-impl.appc");
         appcDependency.setVersion(version);
         dependencyList.add(appcDependency);
 
         Dependency aaiDependency = new Dependency();
-        aaiDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        aaiDependency.setArtifactId("aai");
+        aaiDependency.setGroupId(DROOLS_APPS_MODEL_GROUP);
+        aaiDependency.setArtifactId("controlloop.common.model-impl.aai");
         aaiDependency.setVersion(version);
         dependencyList.add(aaiDependency);
 
         Dependency msoDependency = new Dependency();
-        msoDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        msoDependency.setArtifactId("mso");
+        msoDependency.setGroupId(DROOLS_APPS_MODEL_GROUP);
+        msoDependency.setArtifactId("controlloop.common.model-impl.so");
         msoDependency.setVersion(version);
         dependencyList.add(msoDependency);
 
         Dependency trafficgeneratorDependency = new Dependency();
-        trafficgeneratorDependency.setGroupId(DROOLS_APPS_PACKAGE);
-        trafficgeneratorDependency.setArtifactId("trafficgenerator");
+        trafficgeneratorDependency.setGroupId(DROOLS_APPS_MODEL_GROUP);
+        trafficgeneratorDependency.setArtifactId("controlloop.common.model-impl.trafficgenerator");
         trafficgeneratorDependency.setVersion(version);
         dependencyList.add(trafficgeneratorDependency);
         return dependencyList;
