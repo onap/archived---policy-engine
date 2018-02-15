@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import java.util.Properties;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.utils.CryptoUtils;
 
 import com.att.research.xacml.util.XACMLProperties;
 
@@ -118,10 +119,10 @@ public class PapUrlResolver {
             String userId = null;
             String pass = null;
             userId = XACMLProperties.getProperty(urls[i] + "." + XACMLRestProperties.PROP_PAP_USERID);
-            pass = XACMLProperties.getProperty(urls[i] + "." + XACMLRestProperties.PROP_PAP_PASS);
+            pass = XACMLProperties.getProperty(urls[i] + "." + CryptoUtils.decryptTxtNoExStr(XACMLRestProperties.PROP_PAP_PASS));
             if (userId == null || pass == null) {
                 userId = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-                pass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
+                pass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
             }
             if (userId == null || pass == null) {
                 userId = "";
