@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,11 +48,23 @@ public class ImportService {
 	private static String service = "service";
 	private static String extractDir = "ExtractDir";
 	private static String successMessage = "success";
+	private static String invalidServiceName = "Invalid ServiceName";
+	private static final String REGEX = "[0-9a-zA-Z._ ]*";
+	
 	public void doImportMicroServicePut(HttpServletRequest request, HttpServletResponse response) {
-		String importServiceCreation = request.getParameter("importService");;
+		String importServiceCreation = request.getParameter("importService");
 		String fileName = request.getParameter("fileName");
 		String version = request.getParameter("version");
 		String serviceName = request.getParameter("serviceName");
+		
+		if(serviceName == null || serviceName.isEmpty() || !serviceName.matches(REGEX)){
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.addHeader(errorMsg, "missing");	
+			response.addHeader(operation, importHeader);
+			response.addHeader(service, invalidServiceName);
+			return;
+		}
+
 		String description = request.getParameter("description");
 		Map<String, String> successMap = new HashMap<>();
 		if(("BRMSPARAM").equals(importServiceCreation)){

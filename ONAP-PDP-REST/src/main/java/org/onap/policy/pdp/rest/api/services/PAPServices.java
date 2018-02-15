@@ -40,6 +40,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.config.PDPApiAuth;
 import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.utils.CryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 
@@ -76,7 +77,7 @@ public class PAPServices {
     private String getPAPEncoding(){
         if(encoding  == null){
             String userID =  XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-            String pass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
+            String pass =CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
             Base64.Encoder encoder = Base64.getEncoder();
             encoding =  encoder.encodeToString((userID+":"+pass).getBytes(StandardCharsets.UTF_8));
         }
