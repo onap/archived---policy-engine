@@ -69,6 +69,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.elasticsearch.common.Strings;
@@ -88,11 +89,13 @@ import org.onap.policy.rest.jpa.PdpEntity;
 import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.util.Webapps;
+import org.onap.policy.utils.CryptoUtils;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
+import org.onap.policy.xacml.util.XACMLPolicyScanner;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -324,7 +327,7 @@ public class PolicyDBDao {
 			}
 		}
 		if(urlUserPass[2] == null || urlUserPass[2].equals("")){
-			String passwordPropertyValue = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
+			String passwordPropertyValue = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
 			if(passwordPropertyValue != null){
 				urlUserPass[2] = passwordPropertyValue;
 			}
@@ -333,24 +336,6 @@ public class PolicyDBDao {
 		return urlUserPass;
 	}
 
-	private static String encryptPassword(String password) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
-		Cipher cipher = Cipher.getInstance("AES");		
-		cipher.init(Cipher.ENCRYPT_MODE, aesKey());
-		byte[] encryption = cipher.doFinal(password.getBytes("UTF-8"));
-		logger.debug("Encryption value is " + encryption);
-		return new String(Base64.getMimeEncoder().encode(encryption),"UTF-8");
-	}
-
-	private static String decryptPassword(String encryptedPassword) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException{
-		Cipher cipher = Cipher.getInstance("AES");
-		cipher.init(Cipher.DECRYPT_MODE, aesKey());
-		byte[] password = cipher.doFinal(Base64.getDecoder().decode(encryptedPassword.getBytes("UTF-8")));
-		return new String(password,"UTF-8");
-	}
-	private static Key aesKey(){
-		byte[] aesValue = (new String("njrmbklcxtoplawf")).getBytes();
-		return new SecretKeySpec(aesValue,"AES");
-	}
 	/**
 	 * Register the PolicyDBDao instance in the PolicyDBDaoEntity table
 	 * @return Boolean, were we able to register?
@@ -358,6 +343,11 @@ public class PolicyDBDao {
 	private boolean register(){
 		logger.debug("register() as register() called");
 		String[] url = getPapUrlUserPass();
+		
+		if(url == null || url.length < 3){			
+			return false;
+		}
+		
 		EntityManager em = emf.createEntityManager();
 		try{
 			startTransactionSynced(em, 1000);
@@ -391,18 +381,22 @@ public class PolicyDBDao {
 		PolicyDBDaoEntity foundPolicyDBDaoEntity = em.find(PolicyDBDaoEntity.class, url[0]);
 		Query getPolicyDBDaoEntityQuery = em.createQuery("SELECT e FROM PolicyDBDaoEntity e WHERE e.policyDBDaoUrl=:url");
 		getPolicyDBDaoEntityQuery.setParameter("url", url[0]);
+		// encrypt the password
+		String txt = null;
+		try{
+			txt = CryptoUtils.encryptTxt(url[2].getBytes(StandardCharsets.UTF_8));
+		} catch(Exception e){
+			logger.debug(e);
+			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not encrypt PAP password");
+		}
 		if(foundPolicyDBDaoEntity == null){
 			PolicyDBDaoEntity newPolicyDBDaoEntity = new PolicyDBDaoEntity();
 			em.persist(newPolicyDBDaoEntity);
 			newPolicyDBDaoEntity.setPolicyDBDaoUrl(url[0]);
 			newPolicyDBDaoEntity.setDescription("PAP server at "+url[0]);
 			newPolicyDBDaoEntity.setUsername(url[1]);
-			try{
-				newPolicyDBDaoEntity.setPassword(encryptPassword(url[2]));
-			} catch(Exception e){
-				logger.debug(e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not encrypt PAP password");
-			}
+			newPolicyDBDaoEntity.setPassword(txt);
+			
 			try{
 				em.getTransaction().commit();
 			} catch(Exception e){
@@ -416,19 +410,14 @@ public class PolicyDBDao {
 			}
 		} else {
 			//just want to update in order to change modified date
-			String encryptedPassword = null;
-			try{
-				encryptedPassword = encryptPassword(url[2]);
-			} catch(Exception e){
-				logger.debug(e);
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Could not encrypt PAP password");
-			}
+			
 			if(url[1] != null && !stringEquals(url[1], foundPolicyDBDaoEntity.getUsername())){
 				foundPolicyDBDaoEntity.setUsername(url[1]);
 			}
-			if(encryptedPassword != null && !stringEquals(encryptedPassword, foundPolicyDBDaoEntity.getPassword())){
-				foundPolicyDBDaoEntity.setPassword(encryptedPassword);
+			if(txt != null && !stringEquals(txt, foundPolicyDBDaoEntity.getPassword())){
+				foundPolicyDBDaoEntity.setPassword(txt);
 			}
+			
 			foundPolicyDBDaoEntity.preUpdate();
 			try{
 				em.getTransaction().commit();
@@ -492,16 +481,17 @@ public class PolicyDBDao {
 			PolicyDBDaoEntity dbdEntity = (PolicyDBDaoEntity)obj;
 			String o = dbdEntity.getPolicyDBDaoUrl();
 			String username = dbdEntity.getUsername();
-			String password;
+			String txt;
 			try{
-				password = decryptPassword(dbdEntity.getPassword());
+				txt = new String(CryptoUtils.decryptTxt(dbdEntity.getPassword()), StandardCharsets.UTF_8);
 			} catch(Exception e){
 				logger.debug(e);
 				//if we can't decrypt, might as well try it anyway
-				password = dbdEntity.getPassword();
+				txt = dbdEntity.getPassword();
 			}
+			
 			Base64.Encoder encoder = Base64.getEncoder();			
-			String encoding = encoder.encodeToString((username+":"+password).getBytes(StandardCharsets.UTF_8));
+			String encoding = encoder.encodeToString((username+":"+txt).getBytes(StandardCharsets.UTF_8));
 			HttpURLConnection connection = null;
 			UUID requestID = UUID.randomUUID();
 			URL url;
@@ -597,6 +587,7 @@ public class PolicyDBDao {
 				logger.warn("Caught Exception on: connection.getResponseCode() ", e);
 			}
 
+
 			connection.disconnect();
 		}
 	}
@@ -690,7 +681,7 @@ public class PolicyDBDao {
 		case GROUP_NOTIFICATION:
 			for(int i=0; i<retries;i++){
 				try{
-					handleIncomingGroupChange(entityId, extraData, transaction, xacmlPapServlet);
+					handleIncomingGroupChange(url, entityId, extraData, transaction, xacmlPapServlet);
 					break;
 				}catch(Exception e){
 					logger.debug(e);
@@ -708,7 +699,7 @@ public class PolicyDBDao {
 		//no changes should be being made in this function, we still need to close
 		transaction.rollbackTransaction();
 	}
-	private void handleIncomingGroupChange(String groupId, String extraData,PolicyDBDaoTransaction transaction,XACMLPapServlet xacmlPapServlet) throws PAPException, PolicyDBException{
+	private void handleIncomingGroupChange(String url, String groupId, String extraData,PolicyDBDaoTransaction transaction,XACMLPapServlet xacmlPapServlet) throws PAPException, PolicyDBException{
 		GroupEntity groupRecord = null;
 		long groupIdLong = -1;
 		try{
@@ -896,8 +887,9 @@ public class PolicyDBDao {
 			} else {
 				
 				//convert PolicyEntity object to PDPPolicy
-            	String name = pdpPolicyId.replace(".xml", "");
-            	name = name.substring(0, name.lastIndexOf('.'));
+				String name = null;
+            	name = pdpPolicyId.replace(".xml", "");
+            	name = name.substring(0, name.lastIndexOf("."));
 				InputStream policyStream = new ByteArrayInputStream(policy.getPolicyData().getBytes());
 				pdpGroup.copyPolicyToFile(pdpPolicyId,name,policyStream);
 				URI location = Paths.get(pdpGroup.getDirectory().toAbsolutePath().toString(), pdpPolicyId).toUri();
@@ -1213,28 +1205,34 @@ public class PolicyDBDao {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		
-		StdPDPGroup updatedGroup = null;
-		try {
-			Query groupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
-			groupQuery.setParameter("groupId", group.getId());
-			groupQuery.setParameter("deleted", false);
-			List<?> groupQueryList = groupQuery.getResultList();
-			if(groupQueryList!=null && !groupQueryList.isEmpty()){
-				GroupEntity dbgroup = (GroupEntity)groupQueryList.get(0);
-				updatedGroup = synchronizeGroupPoliciesInFileSystem(group, dbgroup);
-				logger.info("Group was updated during file system audit: " + updatedGroup.toString());
-			}
-		} catch (PAPException | PolicyDBException e) {
-			logger.error(e);
-		} catch (Exception e) {
-			logger.error(e);
+		Query groupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId AND g.deleted=:deleted");
+		groupQuery.setParameter("groupId", group.getId());
+		groupQuery.setParameter("deleted", false);
+		List<?> groupQueryList;
+		try{
+			groupQueryList = groupQuery.getResultList();
+		}catch(Exception e){
 			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "PolicyDBDao", "Caught Exception trying to check if group exists groupQuery.getResultList()");
 			throw new PersistenceException("Query failed trying to check if group "+group.getId()+" exists");
+		}
+		
+		GroupEntity dbgroup = null;
+		if(groupQueryList!=null){
+			dbgroup = (GroupEntity)groupQueryList.get(0);
 		}
 		
 		em.getTransaction().commit();
 		em.close();
 		
+		StdPDPGroup updatedGroup = null;
+		try {
+			updatedGroup = synchronizeGroupPoliciesInFileSystem(group, dbgroup);
+		} catch (PAPException e) {
+			logger.error(e);
+		} catch (PolicyDBException e) {
+			logger.error(e);
+		}
+		logger.info("Group was updated during file system audit: " + updatedGroup.toString());
 		return updatedGroup;
 		
 	}
@@ -2879,15 +2877,17 @@ public class PolicyDBDao {
 				em.flush();
 				
 				// After adding policy to the db group we need to make sure the filesytem group is in sync with the db group
+				StdPDPGroup pdpGroup = null;
+				StdPDPGroup updatedGroup = null;
 				try {
-					StdPDPGroup pdpGroup = (StdPDPGroup) papEngine.getGroup(group.getGroupId());
-					return synchronizeGroupPoliciesInFileSystem(pdpGroup, group);
+					pdpGroup = (StdPDPGroup) papEngine.getGroup(group.getGroupId());
+					updatedGroup = synchronizeGroupPoliciesInFileSystem(pdpGroup, group);
 				} catch (PAPException e) {
 					logger.debug(e);
 					PolicyLogger.error("PolicyDBDao: Could not synchronize the filesystem group with the database group. " + e.getMessage());
 				}
-				
-				return null;
+
+				return updatedGroup;
 			}
 		}
 
@@ -2944,12 +2944,6 @@ public class PolicyDBDao {
 		}
 		String computeScope(String fullPath, String pathToExclude){
 			return PolicyDBDao.computeScope(fullPath, pathToExclude);
-		}
-		String encryptPassword(String password) throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
-			return PolicyDBDao.encryptPassword(password);
-		}
-		String decryptPassword(String password) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException{
-			return PolicyDBDao.decryptPassword(password);
 		}
 		String getDescriptionFromXacml(String xacmlData){
 			return PolicyDBDao.getDescriptionFromXacml(xacmlData);
