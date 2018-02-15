@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.utils.CryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
@@ -51,6 +52,7 @@ import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.std.pap.StdPDPItemSetChangeNotifier;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
+
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.api.pap.PDPStatus;
@@ -58,6 +60,7 @@ import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+
 import org.onap.policy.common.logging.flexlogger.FlexLogger; 
 import org.onap.policy.common.logging.flexlogger.Logger;
 
@@ -350,7 +353,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 		HttpURLConnection connection = null;
 		String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
 		LOGGER.info("User Id is " + papID);
-		String papPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
+		String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
 		Object contentObj = content;

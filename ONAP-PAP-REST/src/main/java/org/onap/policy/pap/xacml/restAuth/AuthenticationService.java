@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,13 @@ import java.util.StringTokenizer;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.utils.CryptoUtils;
 
 import com.att.research.xacml.util.XACMLProperties;
 
 public class AuthenticationService {
 	private String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-	private String papPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
+	private String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
 	
 	public boolean authenticate(String authCredentials) {
 
