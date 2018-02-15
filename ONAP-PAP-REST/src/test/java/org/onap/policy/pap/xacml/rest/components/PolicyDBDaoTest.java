@@ -442,21 +442,6 @@ public class PolicyDBDaoTest {
 	}
 	
 	@Test
-	public void encryptionTest(){
-		try {
-			String encr = d.encryptPassword("testpassword");
-			System.out.println("original password: "+"testpassword");
-			System.out.println("Encrypted password: "+encr);
-			String decr = d.decryptPassword(encr);
-			System.out.println("Decrypted password: "+decr);
-			Assert.assertEquals("testpassword", decr);
-		} catch (Exception e) {
-			logger.error("Exception Occured"+e);
-			Assert.fail();
-		}
-		
-	}
-	@Test
 	public void getDescriptionFromXacmlTest(){
 		String myTestDesc = "hello this is a test";
 		String desc = d.getDescriptionFromXacml("<Description>"+myTestDesc+"</Description>");
