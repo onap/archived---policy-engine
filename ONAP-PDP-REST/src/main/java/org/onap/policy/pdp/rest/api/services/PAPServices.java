@@ -53,9 +53,9 @@ public class PAPServices {
     
     private int responseCode = 0;
     private static String environment = "DEVL";
-    private static Boolean junit = false;
+    public static Boolean junit = false;
     private static List<String> paps = null;
-    private static final Object papResourceLock = new Object();
+	private static final Object papResourceLock = new Object();
     private String operation = null;
     private String requestMethod = null;
     private String encoding = null; 
@@ -96,6 +96,10 @@ public class PAPServices {
         }
         return result;
     }
+    
+    public static void setPaps(List<String> paps) {
+		PAPServices.paps = paps;
+	}
 
     public int getResponseCode() {
         return responseCode;
