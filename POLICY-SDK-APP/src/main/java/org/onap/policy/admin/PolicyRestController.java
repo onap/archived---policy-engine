@@ -195,7 +195,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	private ResponseEntity<?> sendToPAP(String body, String requestURI, HttpMethod method){
 		String papUrl = PolicyController.getPapUrl();
 		String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-		String papPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
+		String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
 
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
@@ -245,7 +245,7 @@ public class PolicyRestController extends RestrictedBaseController{
 		String boundary = null;
 		String papUrl = PolicyController.getPapUrl();
 		String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-		String papPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
+		String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
 	
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));

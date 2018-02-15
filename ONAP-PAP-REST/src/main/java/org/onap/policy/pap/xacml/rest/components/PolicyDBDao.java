@@ -88,6 +88,7 @@ import org.onap.policy.rest.jpa.PdpEntity;
 import org.onap.policy.rest.jpa.PolicyDBDaoEntity;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.util.Webapps;
+import org.onap.policy.utils.CryptoUtils;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.policy.xacml.api.pap.PAPPolicyEngine;
@@ -324,7 +325,7 @@ public class PolicyDBDao {
 			}
 		}
 		if(urlUserPass[2] == null || urlUserPass[2].equals("")){
-			String passwordPropertyValue = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
+			String passwordPropertyValue = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
 			if(passwordPropertyValue != null){
 				urlUserPass[2] = passwordPropertyValue;
 			}
