@@ -66,7 +66,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-
+import org.onap.policy.utils.CryptoUtils;
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -195,7 +195,7 @@ public class PolicyRestController extends RestrictedBaseController{
 	private ResponseEntity<?> sendToPAP(String body, String requestURI, HttpMethod method){
 		String papUrl = PolicyController.getPapUrl();
 		String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-		String papPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
+		String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
 
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));
@@ -245,7 +245,7 @@ public class PolicyRestController extends RestrictedBaseController{
 		String boundary = null;
 		String papUrl = PolicyController.getPapUrl();
 		String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-		String papPass = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS);
+		String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
 	
 		Base64.Encoder encoder = Base64.getEncoder();
 		String encoding = encoder.encodeToString((papID+":"+papPass).getBytes(StandardCharsets.UTF_8));

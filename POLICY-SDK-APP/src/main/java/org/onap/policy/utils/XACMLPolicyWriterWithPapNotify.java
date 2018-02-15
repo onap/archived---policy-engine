@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -209,7 +209,7 @@ public class XACMLPolicyWriterWithPapNotify{
 					+ "\npolicyToCreateUpdate = " + " ");
 		}
 		Base64.Encoder encoder = Base64.getEncoder();
-		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)).getBytes(StandardCharsets.UTF_8));
+		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS))).getBytes(StandardCharsets.UTF_8));
 		HttpURLConnection connection;
 		UUID requestID = UUID.randomUUID();
 		URL url;
@@ -296,7 +296,7 @@ public class XACMLPolicyWriterWithPapNotify{
 	
 	public static boolean notifyPapOfDelete(String policyToDelete){
 		Base64.Encoder encoder = Base64.getEncoder();
-		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)).getBytes(StandardCharsets.UTF_8));
+		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS))).getBytes(StandardCharsets.UTF_8));
 		HttpURLConnection connection;
 		UUID requestID = UUID.randomUUID();
 		String papUrl = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
@@ -396,7 +396,7 @@ public class XACMLPolicyWriterWithPapNotify{
 					+ "\npolicyToCreateUpdate = " + policyToCreateUpdate);
 		}
 		Base64.Encoder encoder = Base64.getEncoder();
-		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS)).getBytes(StandardCharsets.UTF_8));
+		String encoding = encoder.encodeToString((XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID)+":"+CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS))).getBytes(StandardCharsets.UTF_8));
 		HttpURLConnection connection;
 		UUID requestID = UUID.randomUUID();
 		URL url;

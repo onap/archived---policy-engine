@@ -62,6 +62,9 @@ public class PushPolicyController {
 	private static String errorMsg	= "error";
 	private static String operation = "operation";
 	private static String messageContent = "message";
+	
+	private static final String REGEX = "[0-9a-zA-Z._ ]*";
+	
 	@Autowired
 	public PushPolicyController(CommonClassDao commonClassDao){
 		PushPolicyController.commonClassDao = commonClassDao;
@@ -128,12 +131,12 @@ public class PushPolicyController {
 		}
 		if(selectedPDPGroup==null){
 			String message = "Unknown groupId '" + selectedPDPGroup + "'";
+			if(!message.matches(REGEX) ){
+				message = "Unknown groupId";
+			}
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
 			response.addHeader(errorMsg, "unknownGroupId");
 			response.addHeader(operation, "push");
-			//for fixing Header Manipulation of Fortify issue
-			message = message.replace("\n", "");
-			message = message.replace("\r", "");
 			response.addHeader(messageContent, message);
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return;
