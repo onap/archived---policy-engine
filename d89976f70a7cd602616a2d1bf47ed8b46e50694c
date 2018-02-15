@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f0ea18ab",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-15T20:15:09Z",
+      "side": 1,
+      "message": "Question - is it guaranteed that url[0] and url[2] (line 382) are not null?  I don\u0027t see any checks on that, but may be that is handled somewhere else such as in getPapUrlUserPass?",
+      "revId": "d89976f70a7cd602616a2d1bf47ed8b46e50694c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
