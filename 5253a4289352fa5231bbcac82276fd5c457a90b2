@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f05bf8f3",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2018-02-15T18:47:04Z",
+      "side": 1,
+      "message": "Frank, these three methods need to be removed. We had removed it as part of fortify but looks like it came back after merge.",
+      "revId": "5253a4289352fa5231bbcac82276fd5c457a90b2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9074f468",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2018-02-15T18:47:04Z",
+      "side": 1,
+      "message": "method to remove.",
+      "revId": "5253a4289352fa5231bbcac82276fd5c457a90b2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b071f077",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2018-02-15T18:47:04Z",
+      "side": 1,
+      "message": "method to remove.",
+      "revId": "5253a4289352fa5231bbcac82276fd5c457a90b2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
