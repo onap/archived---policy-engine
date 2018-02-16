@@ -37,18 +37,27 @@
 	<description>The ONAP Policy Engine main pom</description>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<jetty.plugin.version>9.2.3.v20140905</jetty.plugin.version>
+		<!-- Project common build settings -->
 		<project.source.version>1.8</project.source.version>
 		<project.target.version>1.8</project.target.version>
 		<project.encoding>UTF-8</project.encoding>
-
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Project path properties -->
 		<nexusproxy>https://nexus.onap.org</nexusproxy>
 		<sitePath>/content/sites/site/${project.groupId}/${project.artifactId}/${project.version}</sitePath>
 		<releases.path>content/repositories/releases/</releases.path>
 		<snapshots.path>content/repositories/snapshots/</snapshots.path>
 		<staging.path>content/repositories/staging/</staging.path>
+
+		<!-- sonar/jacoco overrides -->
+		<!-- Overriding oparent default sonar/jacoco settings Combine all our reports 
+			into one file shared across sub-modules -->
+		<sonar.jacoco.reportPath>${project.basedir}/../target/code-coverage/jacoco-ut.exec</sonar.jacoco.reportPath>
+		<sonar.jacoco.itReportPath>${project.basedir}/../target/code-coverage/jacoco-it.exec</sonar.jacoco.itReportPath>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+
+		<!-- Project common dependency versions -->
+		<jetty.plugin.version>9.2.3.v20140905</jetty.plugin.version>
 		<dmaap.version>1.0.0</dmaap.version>
 		<httpclient.version>4.5.5</httpclient.version>
 		<jackson.version>2.9.4</jackson.version>
@@ -153,6 +162,32 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>pre-unit-test</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<destFile>${sonar.jacoco.reportPath}</destFile>
+							<append>true</append>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-unit-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>${sonar.jacoco.reportPath}</dataFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
 				<extensions>true</extensions>
@@ -234,6 +269,46 @@
 		</plugins>
         <pluginManagement>
             <plugins>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco.version}</version>
+					<configuration>
+						<!-- Note: This exclusion list should match <sonar.exclusions> property 
+							above -->
+						<excludes>
+							<exclude>**/gen/**</exclude>
+							<exclude>**/generated-sources/**</exclude>
+							<exclude>**/yang-gen/**</exclude>
+							<exclude>**/pax/**</exclude>
+						</excludes>
+					</configuration>
+					<executions>
+						<!-- Prepares the property pointing to the JaCoCo runtime agent which 
+							is passed as VM argument when Maven the Surefire plugin is executed. -->
+						<execution>
+							<id>pre-unit-test</id>
+							<goals>
+								<goal>prepare-agent</goal>
+							</goals>
+							<configuration>
+								<destFile>${sonar.jacoco.reportPath}</destFile>
+							</configuration>
+						</execution>
+						<!-- Ensures that the code coverage report for unit tests is created 
+							after unit tests have been run. -->
+						<execution>
+							<id>post-unit-test</id>
+							<phase>test</phase>
+							<goals>
+								<goal>report</goal>
+							</goals>
+							<configuration>
+								<dataFile>${sonar.jacoco.reportPath}</dataFile>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
