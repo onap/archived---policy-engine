@@ -249,6 +249,8 @@ public class StdPDPStatus implements Serializable, PDPStatus {
 			return false;
 		if (!loadedPolicies.equals(other.loadedPolicies))
 			return false;
+        if (!loadedRootPolicies.equals(other.loadedRootPolicies))
+            return false;
 		if (status != other.status)
 			return false;
 		return true;
