@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,21 +38,12 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.onap.policy.rest.XacmlAdminAuthorization;
-
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-
 
 @Entity
 @Table(name="VSCLAction")
 @NamedQuery(name="VSCLAction.findAll", query="SELECT v FROM VSCLAction v ")
 public class VSCLAction implements Serializable  {
 	private static final long serialVersionUID = 1L;
-
-	private static String domain;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -97,21 +88,7 @@ public class VSCLAction implements Serializable  {
 	public void setUserModifiedBy(UserInfo userModifiedBy) {
 		this.userModifiedBy = userModifiedBy;
 	}
-
-	private static Log LOGGER = LogFactory.getLog(VSCLAction.class);
 	
-	public VSCLAction() {
-		// Empty constructor
-	}
-	
-	public VSCLAction(String string, String userid) {
-		this(domain);
-	}
-	
-	public VSCLAction(String domain) {
-		this.vsclaction = domain;
-	}	
-
 	@PrePersist
 	public void	prePersist() {
 		Date date = new Date();
@@ -122,12 +99,6 @@ public class VSCLAction implements Serializable  {
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
-		try {
-			this.userModifiedBy =XacmlAdminAuthorization.getUserId();;
-		} catch (Exception e) {
-			LOGGER.error("Exception caused While adding Modified by Role"+e);
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "VSCLAction", "Exception caused While adding Modified by Role");
-		}
 	}
 	
 	public int getId() {

@@ -28,9 +28,9 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
-public class DecisionDictionaryJPAClasses {
+public class BRMSDictionaryJPATest {
 
-	private static Logger logger = FlexLogger.getLogger(DecisionDictionaryJPAClasses.class);
+	private static Logger logger = FlexLogger.getLogger(BRMSDictionaryJPATest.class);
 	private UserInfo userInfo;
 	
 	@Before
@@ -43,26 +43,36 @@ public class DecisionDictionaryJPAClasses {
 	}
 	
 	@Test
-	public void testDecisionSettings(){
-		DecisionSettings data = new DecisionSettings();
+	public void testBRMSParamTemplate(){
+		BRMSParamTemplate data = new BRMSParamTemplate();
+		data.prePersist();
 		data.setId(1);
 		assertTrue(1 == data.getId());
-		data.preUpdate();
-		data.prePersist();
-		new DecisionSettings("Test");
-		new DecisionSettings(new DecisionSettings("Test"), "Test");
+		data.setRule("Test");
+		assertTrue("Test".equals(data.getRule()));
+		data.setRuleName("Test");
+		assertTrue("Test".equals(data.getRuleName()));
 		data.setDescription("Test");
 		assertTrue("Test".equals(data.getDescription()));
-		data.setXacmlId("Test");
-		assertTrue("Test".equals(data.getXacmlId()));
-		data.setDatatypeBean(new Datatype());
-		assertTrue(data.getDatatypeBean()!=null);
-		data.setIssuer("Test");
-		assertTrue("Test".equals(data.getIssuer()));
-		data.setMustBePresent(true);
-		assertTrue(data.isMustBePresent());
-		data.setPriority("Test");
-		assertTrue("Test".equals(data.getPriority()));
+		data.setCreatedDate(new Date());
+		assertTrue(data.getCreatedDate()!=null);
+		data.setUserCreatedBy(userInfo);
+		assertTrue(data.getUserCreatedBy()!=null);
+	}
+	
+	@Test
+	public void testBRMSController(){
+		BRMSController data = new BRMSController();
+		data.preUpdate();
+		data.prePersist();
+		data.setId(1);
+		assertTrue(1 == data.getId());
+		data.setController("Test");
+		assertTrue("Test".equals(data.getController()));
+		data.setControllerName("Test");
+		assertTrue("Test".equals(data.getControllerName()));
+		data.setDescription("Test");
+		assertTrue("Test".equals(data.getDescription()));
 		data.setCreatedDate(new Date());
 		assertTrue(data.getCreatedDate()!=null);
 		data.setModifiedDate(new Date());
@@ -74,16 +84,26 @@ public class DecisionDictionaryJPAClasses {
 	}
 	
 	@Test
-	public void testRainyDayTreatments(){
-		RainyDayTreatments data = new RainyDayTreatments();
+	public void testBRMSDependency(){
+		BRMSDependency data = new BRMSDependency();
+		data.preUpdate();
+		data.prePersist();
 		data.setId(1);
 		assertTrue(1 == data.getId());
-		data.setBbid("Test");
-		assertTrue("Test".equals(data.getBbid()));
-		data.setWorkstep("Test");
-		assertTrue("Test".equals(data.getWorkstep()));
-		data.setTreatments("Test");
-		assertTrue("Test".equals(data.getTreatments()));
+		data.setDependency("Test");
+		assertTrue("Test".equals(data.getDependency()));
+		data.setDependencyName("Test");
+		assertTrue("Test".equals(data.getDependencyName()));
+		data.setDescription("Test");
+		assertTrue("Test".equals(data.getDescription()));
+		data.setCreatedDate(new Date());
+		assertTrue(data.getCreatedDate()!=null);
+		data.setModifiedDate(new Date());
+		assertTrue(data.getModifiedDate()!=null);
+		data.setUserCreatedBy(userInfo);
+		assertTrue(data.getUserCreatedBy()!=null);
+		data.setUserModifiedBy(userInfo);
+		assertTrue(data.getUserModifiedBy()!=null);
 	}
 	
 }

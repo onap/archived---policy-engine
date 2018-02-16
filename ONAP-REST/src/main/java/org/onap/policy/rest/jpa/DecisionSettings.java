@@ -39,10 +39,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.rest.XacmlAdminAuthorization;
-
 
 @Entity
 @Table(name="DecisionSettings")
@@ -108,25 +104,7 @@ public class DecisionSettings implements Serializable {
 	public void setUserModifiedBy(UserInfo userModifiedBy) {
 		this.userModifiedBy = userModifiedBy;
 	}
-	
-	public DecisionSettings() {
-		//An empty constructor
-	}
-	
-	public DecisionSettings(String domain) {
-		this.xacmlId = domain;
-	}
-	
-	public DecisionSettings(String domain, String user) {
-		this(domain);
-	}
-	public DecisionSettings(DecisionSettings copy, String user) {
-		this(copy.getXacmlId() + ":(0)", user);
-		this.datatypeBean = copy.getDatatypeBean();
-		this.description = copy.getDescription();
-		
-	}
-	
+
 	@PrePersist
 	public void	prePersist() {
 		Date date = new Date();
@@ -137,11 +115,6 @@ public class DecisionSettings implements Serializable {
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
-		try {
-			this.userModifiedBy = XacmlAdminAuthorization.getUserId();
-		} catch (Exception e) {
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "DecisionSettings", "Exception caused While adding Modified by Role");
-		}
 	}
 
 	public int getId() {

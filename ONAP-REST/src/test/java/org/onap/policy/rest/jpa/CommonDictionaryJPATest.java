@@ -29,9 +29,9 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
-public class CommonDictionaryJPAClasses {
+public class CommonDictionaryJPATest {
 	
-	private static Logger logger = FlexLogger.getLogger(CommonDictionaryJPAClasses.class);
+	private static Logger logger = FlexLogger.getLogger(CommonDictionaryJPATest.class);
 	private UserInfo userInfo;
 	
 	@Before
@@ -94,7 +94,6 @@ public class CommonDictionaryJPAClasses {
 		OnapName data = new OnapName();
 		data.preUpdate();
 		data.prePersist();
-		new OnapName("Test", "Test");
 		data.setId(1);
 		assertTrue(1 == data.getId());
 		data.setOnapName("Test");

@@ -28,9 +28,9 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
-public class ClosedLoopPolicyDictionaryJPAClasses {
+public class ClosedLoopPolicyDictionaryJPATest {
 	
-	private static Logger logger = FlexLogger.getLogger(ClosedLoopPolicyDictionaryJPAClasses.class);
+	private static Logger logger = FlexLogger.getLogger(ClosedLoopPolicyDictionaryJPATest.class);
 	private UserInfo userInfo;
 	
 	@Before
@@ -45,7 +45,6 @@ public class ClosedLoopPolicyDictionaryJPAClasses {
 	@Test
 	public void testVSCLAction(){
 		VSCLAction data = new VSCLAction();
-		new VSCLAction("Test","Test");
 		data.preUpdate();
 		data.prePersist();
 		data.setId(1);
@@ -67,7 +66,6 @@ public class ClosedLoopPolicyDictionaryJPAClasses {
 	@Test
 	public void testVNFType(){
 		VNFType data = new VNFType();
-		new VNFType("Test","Test");
 		data.preUpdate();
 		data.prePersist();
 		data.setId(1);
@@ -89,7 +87,6 @@ public class ClosedLoopPolicyDictionaryJPAClasses {
 	@Test
 	public void testPEPOptions(){
 		PEPOptions data = new PEPOptions();
-		new PEPOptions("Test","Test");
 		data.preUpdate();
 		data.prePersist();
 		data.setId(1);
@@ -111,7 +108,6 @@ public class ClosedLoopPolicyDictionaryJPAClasses {
 	@Test
 	public void testVarbindDictionary(){
 		VarbindDictionary data = new VarbindDictionary();
-		new VarbindDictionary("Test","Test");
 		data.preUpdate();
 		data.prePersist();
 		data.setId(1);
@@ -156,7 +152,6 @@ public class ClosedLoopPolicyDictionaryJPAClasses {
 	@Test
 	public void testClosedLoopSite(){
 		ClosedLoopSite data = new ClosedLoopSite();
-		new ClosedLoopSite("Test","Test");
 		data.preUpdate();
 		data.prePersist();
 		data.setId(1);

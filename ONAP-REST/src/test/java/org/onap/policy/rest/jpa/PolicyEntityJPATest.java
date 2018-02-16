@@ -28,9 +28,9 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
-public class PolicyEntityJPAClasses {
+public class PolicyEntityJPATest {
 
-	private static Logger logger = FlexLogger.getLogger(PolicyEntityJPAClasses.class);
+	private static Logger logger = FlexLogger.getLogger(PolicyEntityJPATest.class);
 	private UserInfo userInfo;
 	
 	@Before

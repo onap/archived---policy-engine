@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,6 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.model.PDPGroupContainer;
 import org.onap.policy.model.Roles;
 import org.onap.policy.rest.XACMLRestProperties;
-import org.onap.policy.rest.XacmlAdminAuthorization;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.Datatype;
 import org.onap.policy.rest.jpa.FunctionDefinition;
@@ -75,10 +74,6 @@ public class PolicyController extends RestrictedBaseController {
 	private static final Logger	policyLogger	= FlexLogger.getLogger(PolicyController.class);
 
 	private static CommonClassDao commonClassDao;
-
-	// Our authorization object
-	//
-	XacmlAdminAuthorization authorizer = new XacmlAdminAuthorization();
 	//
 	// The PAP Engine
 	//
@@ -485,14 +480,6 @@ public class PolicyController extends RestrictedBaseController {
 
 	public static void setCommonClassDao(CommonClassDao commonClassDao) {
 		PolicyController.commonClassDao = commonClassDao;
-	}
-
-	public XacmlAdminAuthorization getAuthorizer() {
-		return authorizer;
-	}
-
-	public void setAuthorizer(XacmlAdminAuthorization authorizer) {
-		this.authorizer = authorizer;
 	}
 
 	public static Map<Datatype, List<FunctionDefinition>> getMapDatatype2Function() {

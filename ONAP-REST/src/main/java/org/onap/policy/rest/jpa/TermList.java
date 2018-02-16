@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,21 +38,12 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.onap.policy.rest.XacmlAdminAuthorization;
-
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-
 
 @Entity
 @Table(name="TERM")
 @NamedQuery(name="TermList.findAll", query="SELECT e FROM TermList e")
 public class TermList implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	private static String domain;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -139,40 +130,16 @@ public class TermList implements Serializable {
 		this.userModifiedBy = userModifiedBy;
 	}
 
-	private static Log LOGGER = LogFactory.getLog(TermList.class);
-	
-	public TermList() {
-		// Empty constructor
-	}
-	
-	private static final Log auditLogger = LogFactory
-			.getLog("auditLogger");
-	
-	public TermList(String string, String userid) {
-		this(domain);
-	}
-	public TermList(String domain) {
-		this.termName = domain;
-	}	
-
 	@PrePersist
 	public void	prePersist() {
 		Date date = new Date();
 		this.createdDate = date;
 		this.modifiedDate = date;
-		auditLogger.debug("Added New Term Name: "+this.termName+" by "+this.userCreatedBy);
-		
 	}
+	
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
-		try {
-			this.userModifiedBy =XacmlAdminAuthorization.getUserId();;
-		} catch (Exception e) {
-			LOGGER.error("Exception caused While adding Modified by Role"+e);
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "TermList", "Exception caused While adding Modified by Role");
-		}
-		auditLogger.debug("Updated Term Name: "+this.termName+" by "+this.userModifiedBy);
 	}
 	
 	public int getId() {

@@ -30,9 +30,9 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
-public class ActionDictionaryJPAClasses {
+public class ActionDictionaryJPATest {
 
-	private static Logger logger = FlexLogger.getLogger(ActionDictionaryJPAClasses.class);
+	private static Logger logger = FlexLogger.getLogger(ActionDictionaryJPATest.class);
 	private UserInfo userInfo;
 	
 	@Before
@@ -245,5 +245,49 @@ public class ActionDictionaryJPAClasses {
 		assertTrue(1 == data.getAttributeId());
 		data.setExpression("Test");
 		assertTrue("Test".equals(data.getExpression()));
+	}
+	
+	@Test
+	public void testDatatype(){
+		Datatype data = new Datatype();
+		new Datatype(null);
+		new Datatype(1, new Datatype());
+		data.setArguments(new HashSet<>());
+		assertTrue(data.getArguments()!=null);
+		data.setAttributes(new HashSet<>());
+		assertTrue(data.getAttributes()!=null);
+		data.setFunctions(new HashSet<>());
+		assertTrue(data.getFunctions()!=null);
+		data.setId(1);
+		assertTrue(1 == data.getId());
+		data.setShortName("Test");
+		assertTrue("Test".equals(data.getShortName()));
+		data.setXacmlId("Test");
+		assertTrue("Test".equals(data.getXacmlId()));
+		data.addArgument(new FunctionArgument());
+		data.addAttribute(new Attribute());
+		data.addFunction(new FunctionDefinition());
+		data.removeArgument(new FunctionArgument());
+		data.removeAttribute(new Attribute());
+		data.removeAttribute(new FunctionDefinition());
+		assertTrue(data.getIdentifer()!=null);
+		assertTrue(data.getIdentiferByShortName()!=null);
+		data.setIsStandard(Datatype.STANDARD);
+		assertTrue(data.isStandard());
+		data.setIsStandard(Datatype.CUSTOM);
+		assertTrue(data.isCustom());
+	}
+	
+	@Test
+	public void testPolicyAlgorithms(){
+		PolicyAlgorithms data = new PolicyAlgorithms();
+		data.setId(1);
+		assertTrue(1 == data.getId());
+		data.setShortName("Test");
+		assertTrue("Test".equals(data.getShortName()));
+		data.setXacmlId("Test");
+		assertTrue("Test".equals(data.getXacmlId()));
+		data.setIsStandard(PolicyAlgorithms.STANDARD);
+		assertTrue(data.isStandard());
 	}
 }

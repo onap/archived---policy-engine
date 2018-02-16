@@ -39,12 +39,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.rest.XacmlAdminAuthorization;
-
 
 @Entity
 @Table(name="RiskType")
@@ -96,8 +90,6 @@ public class RiskType implements Serializable {
 		this.userModifiedBy = userModifiedBy;
 	}
 
-	private static Log LOGGER = LogFactory.getLog(RiskType.class);
-
 	@PrePersist
 	public void	prePersist() {
 		Date date = new Date();
@@ -108,12 +100,6 @@ public class RiskType implements Serializable {
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
-		try {
-			this.userModifiedBy =XacmlAdminAuthorization.getUserId();
-		} catch (Exception e) {
-			LOGGER.error("Exception caused While adding Modified by Role"+e);
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "RiskType", "Exception caused While adding Modified by Role");
-		}
 	}
 	public String getRiskName() {
 		return this.name;

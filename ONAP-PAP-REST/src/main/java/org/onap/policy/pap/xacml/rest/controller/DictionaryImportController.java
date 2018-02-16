@@ -161,7 +161,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("ActionPolicyDictionary")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					ActionPolicyDict attribute = new ActionPolicyDict("",  userId);
+					ActionPolicyDict attribute = new ActionPolicyDict();
 					UserInfo userinfo = new UserInfo();
 					userinfo.setUserLoginId(userId);
 					attribute.setUserCreatedBy(userinfo);
@@ -196,7 +196,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("OnapName")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					OnapName attribute = new OnapName("",  userId);
+					OnapName attribute = new OnapName();
 					UserInfo userinfo = new UserInfo();
 					userinfo.setUserLoginId(userId);
 					attribute.setUserCreatedBy(userinfo);
@@ -256,7 +256,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("VNFType")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					VNFType attribute = new VNFType("",  userId);
+					VNFType attribute = new VNFType();
 					UserInfo userinfo = new UserInfo();
 					userinfo.setUserLoginId(userId);
 					attribute.setUserCreatedBy(userinfo);
@@ -276,7 +276,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("VSCLAction")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					VSCLAction attribute = new VSCLAction("",  userId);
+					VSCLAction attribute = new VSCLAction();
 					UserInfo userinfo = new UserInfo();
 					userinfo.setUserLoginId(userId);
 					attribute.setUserCreatedBy(userinfo);
@@ -316,7 +316,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("ClosedLoopSite")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					ClosedLoopSite attribute = new ClosedLoopSite("",  userId);
+					ClosedLoopSite attribute = new ClosedLoopSite();
 					UserInfo userinfo = new UserInfo();
 					userinfo.setUserLoginId(userId);
 					attribute.setUserCreatedBy(userinfo);
@@ -336,7 +336,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("PEPOptions")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					PEPOptions attribute = new PEPOptions("",  userId);
+					PEPOptions attribute = new PEPOptions();
 					UserInfo userinfo = new UserInfo();
 					userinfo.setUserLoginId(userId);
 					attribute.setUserCreatedBy(userinfo);
@@ -359,7 +359,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("VarbindDictionary")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					VarbindDictionary attribute = new VarbindDictionary("",  userId);
+					VarbindDictionary attribute = new VarbindDictionary();
 					UserInfo userinfo = new UserInfo();
 					userinfo.setUserLoginId(userId);
 					attribute.setUserCreatedBy(userinfo);
@@ -448,7 +448,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("Settings")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					DecisionSettings attribute = new DecisionSettings("",  userId);
+					DecisionSettings attribute = new DecisionSettings();
 					UserInfo userinfo = new UserInfo();
 					userinfo.setUserLoginId(userId);
 					attribute.setUserCreatedBy(userinfo);
@@ -632,7 +632,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("TermList")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					TermList attribute = new TermList("",  userId);
+					TermList attribute = new TermList();
 					UserInfo userinfo = new UserInfo();
 					userinfo.setUserLoginId(userId);
 					attribute.setUserCreatedBy(userinfo);
@@ -673,7 +673,7 @@ public class DictionaryImportController {
 			if(dictionaryName.startsWith("SearchCriteria")){
 				dictionaryImportExists = true;
 				for(int i = 1; i< dictSheet.size(); i++){
-					DescriptiveScope attribute = new DescriptiveScope("",  userId);
+					DescriptiveScope attribute = new DescriptiveScope();
 					UserInfo userinfo = new UserInfo();
 					userinfo.setUserLoginId(userId);
 					attribute.setUserCreatedBy(userinfo);

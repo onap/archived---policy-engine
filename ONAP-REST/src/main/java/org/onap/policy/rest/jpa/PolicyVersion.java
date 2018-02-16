@@ -21,7 +21,6 @@
 package org.onap.policy.rest.jpa;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
@@ -143,7 +142,7 @@ public class PolicyVersion implements Serializable {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Timestamp createdDate) {
+	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
 
