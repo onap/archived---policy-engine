@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_87fa7741",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-16T17:33:54Z",
+      "side": 1,
+      "message": "This is the wrong JIRA. We have sub-tasks under this JIRA for each sub-module. Please keep in mind that the Ericsson team is assigned to this sub-module.",
+      "range": {
+        "startLine": 9,
+        "startChar": 10,
+        "endLine": 9,
+        "endChar": 20
+      },
+      "revId": "3fdcd8de06949eca06793c82d973b77de209119c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
