@@ -26,9 +26,9 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
-public class MicroServiceDictionaryJPAClasses {
+public class MicroServiceDictionaryJPATest {
 
-	private static Logger logger = FlexLogger.getLogger(MicroServiceDictionaryJPAClasses.class);
+	private static Logger logger = FlexLogger.getLogger(MicroServiceDictionaryJPATest.class);
 	private UserInfo userInfo;
 	
 	@Before
@@ -180,4 +180,29 @@ public class MicroServiceDictionaryJPAClasses {
 		data.setGroupList("Test");
 		assertTrue("Test".equals(data.getGroupList()));
 	}
+	
+	@Test
+	public void testClosedLoops(){
+		ClosedLoops data = new ClosedLoops();
+		data.setId(1);
+		assertTrue(1 == data.getId());
+		data.setClosedLoopControlName("Test");
+		assertTrue("Test".equals(data.getClosedLoopControlName()));
+		data.setAlarmConditions("Test");
+		assertTrue("Test".equals(data.getAlarmConditions()));
+		data.setYaml("Test");
+		assertTrue("Test".equals(data.getYaml()));
+	}
+	
+	@Test
+	public void testVMType(){
+		VMType data = new VMType();
+		data.setId(1);
+		assertTrue(1 == data.getId());
+		data.setName("Test");
+		assertTrue("Test".equals(data.getName()));
+		data.setDescription("Test");
+		assertTrue("Test".equals(data.getDescription()));
+	}
+	
 }

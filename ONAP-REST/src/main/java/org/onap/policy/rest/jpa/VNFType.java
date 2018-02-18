@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,13 +38,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.onap.policy.rest.XacmlAdminAuthorization;
-
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-
 
 
 @Entity
@@ -52,8 +45,6 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 @NamedQuery(name="VNFType.findAll", query="SELECT v FROM VNFType v ")
 public class VNFType implements Serializable  {
 	private static final long serialVersionUID = 1L;
-
-	private static String domain;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -98,12 +89,6 @@ public class VNFType implements Serializable  {
 	public void setUserModifiedBy(UserInfo userModifiedBy) {
 		this.userModifiedBy = userModifiedBy;
 	}
-
-	private static Log LOGGER = LogFactory.getLog(VNFType.class);
-	
-	public VNFType() {
-		// Empty constructor
-	}
 	
 	public String getVnftype() {
 		return vnftype;
@@ -111,14 +96,6 @@ public class VNFType implements Serializable  {
 
 	public void setVnftype(String vnftype) {
 		this.vnftype = vnftype;
-	}
-
-	public VNFType(String string, String userid) {
-		this(domain);
-	}
-	
-	public VNFType(String domain) {
-		this.vnftype = domain;
 	}	
 
 	@PrePersist
@@ -131,12 +108,6 @@ public class VNFType implements Serializable  {
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
-		try {
-			this.userModifiedBy =XacmlAdminAuthorization.getUserId();;
-		} catch (Exception e) {
-			LOGGER.error("Exception caused While adding Modified by Role"+e);
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "VNFType", "Exception caused While adding Modified by Role");
-		}
 	}
 	
 	public int getId() {

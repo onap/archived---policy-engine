@@ -37,12 +37,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.rest.XacmlAdminAuthorization;
-
 @Entity
 @Table(name = "FWTagPicker")
 @NamedQuery(name = "FWTagPicker.findAll", query= "Select p from FWTagPicker p")
@@ -81,9 +75,7 @@ public class FWTagPicker implements Serializable {
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name="modified_by")
-	private UserInfo userModifiedBy;
-
-	private static Log logger = LogFactory.getLog(FWTagPicker.class);	
+	private UserInfo userModifiedBy;	
 	
 	@PrePersist
 	public void	prePersist() {
@@ -95,12 +87,6 @@ public class FWTagPicker implements Serializable {
 	@PreUpdate
 	public void preUpdate() {
 		this.modifiedDate = new Date();
-		try {
-			this.userModifiedBy =XacmlAdminAuthorization.getUserId();
-		} catch (Exception e) {
-			logger.error("Exception caused While adding Modified by Role"+e);
-			PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "DescriptiveScope", "Exception caused While adding Modified by Role");
-		}
 	}
 	
 	public int getId() {

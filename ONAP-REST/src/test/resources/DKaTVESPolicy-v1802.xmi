@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="service" nsURI="service.ControllerServiceDcaeDkatService.ControllerServiceDcaeDkatServiceInstance"
+    nsPrefix="">
+  <eAnnotations source="http://org.onap/policy">
+    <details key="policyTemplate" value="dcae-microservice"/>
+    <details key="matching" value="true"/>
+    <details key="dictionary" value="Dictionary Name"/>
+  </eAnnotations>ss
+  <eAnnotations source="http://www.eclipse.org/emf/2011/Xcore">
+    <details key="ecomp" value="http://org.onap"/>
+    <details key="policy" value="http://org.onap/policy"/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="ControllerServiceDcaeDkatService"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ControllerServiceDcaeDkatServiceInstance"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ControllerServiceDcaeDkatServiceConfiguration">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="DkatVESPolicyBodies" eType="#//DkatVESPolicyBody"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DkatVESPolicyBody">
+    <eAnnotations source="http://org.onap/policy">
+      <details key="policyTemplate" value="dcae-microservice"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="serviceNetwork" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="serviceNetworkDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="vnfType" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="vnfTypeDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="vnfcType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="">
+      <eAnnotations source="http://org.onap">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="vnfcTypeDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kpiClass" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="kpiClassDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kpiName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kpiId" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kpiDescription" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unitOfMeasure" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="unitOfMeasureDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rounding" eType="#//roundingList">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filterText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pmSchemaName" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="pmSchemaNameDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pmTableName" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="pmTableNameDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileNamePattern" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dmdTopic" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileDenominator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="denominator" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileNumerator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kpiStatus" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="kpiStatusDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kpiInUse" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="calculateBy" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="calculateByDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pkString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hierarchyString" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="functionCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="interfaceName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="recordSource" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="PolicyGUI">
+      <eAnnotations source="http://org.onap">
+        <details key="type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="StandardDeviationThresholds"
+        eType="#//StandardDeviationThreshold">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="KpiThresholds" eType="#//KpiThreshold">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numerator" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayStatus" eType="#//displayStatusList">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kpiAggregation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="vendor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="netId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entityType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="customerId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kpiVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="thresholdType" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="thresholdTypeDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="KpiThreshold">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="calculationInterval" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="calculationIntervalDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="direction" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+      <eAnnotations source="http://org.onap/policy">
+        <details key="dictionary" value="directionDictionary"/>
+        <details key="matching" value="true"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="majorWatermark" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="criticalWatermark" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="setSuppressionPeriod" eType="#//setSuppressionPeriodList">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contSuppressionPeriod"
+        eType="#//contSuppressionPeriodList">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="clearSuppressionPeriod"
+        eType="#//clearSuppressionPeriodList">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="productionAlert" eType="#//productionAlertList">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minNumerator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minDenominator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="highEmailNotification"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowEmailNotification" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="highQNotification" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowQNotification" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StandardDeviationThreshold">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="criticalSdThresholdPlus"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="criticalSdThresholdMinus"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="majorSdThresholdPlus" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="majorSdThresholdMinus"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sdNewWindowSize" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sdInitialWindowSize" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="criticalSdPlusEmailNotification"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="criticalSdPlusQNotification"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="criticalSdMinusEmailNotification"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="criticalSdMinusQNotification"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="majorSdPlusEmailNotification"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="majorSdPlusQNotification"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="majorSdMinusEmailNotification"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="majorSdMinusQNotification"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://org.onap">
+        <details key="^type" value="configuration"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="onapNameList">
+    <eLiterals name="DCAE"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="policyStatusList">
+    <eLiterals name="ACTIVE"/>
+    <eLiterals name="INACTIVE" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="serviceNetworkList">
+    <eLiterals name="L3"/>
+    <eLiterals name="vUSP" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="vnfTypeList">
+    <eLiterals name="JUNIPER-DBE"/>
+    <eLiterals name="VVIG" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="vnfcTypeList">
+    <eLiterals name="dbc"/>
+    <eLiterals name="dbg" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="kpiClassList">
+    <eLiterals name="accessability"/>
+    <eLiterals name="ect" value="1"/>
+    <eLiterals name="volume" value="3" literal=""/>
+    <eLiterals name="retainability" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="unitOfMeasureList">
+    <eLiterals name="%"/>
+    <eLiterals name="bytes" value="1"/>
+    <eLiterals name="kbps" value="2"/>
+    <eLiterals name="ms" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="roundingList">
+    <eLiterals name="0"/>
+    <eLiterals name="1" value="1" literal="1"/>
+    <eLiterals name="2" value="2" literal="2"/>
+    <eLiterals name="3" value="3" literal="3"/>
+    <eLiterals name="4" value="4" literal="4"/>
+    <eLiterals name="5" value="5" literal="5"/>
+    <eLiterals name="6" value="6" literal="6"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="pmSchemaNameList">
+    <eLiterals name="JUNVDBE"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="pmTableNameList">
+    <eLiterals name="ATTTUNNELSTAT"/>
+    <eLiterals name="CPUMEM_DC" value="1"/>
+    <eLiterals name="IFTABLE_DC" value="2"/>
+    <eLiterals name="UVP_DBE_NATPOOLSTATS" value="3"/>
+    <eLiterals name="UVP_DBE_NATPOOLUTILSTATS" value="4"/>
+    <eLiterals name="UVP_DBE_PERFSTATS" value="5"/>
+    <eLiterals name="UVP_DBE_SINGLEPORTSTATS" value="6"/>
+    <eLiterals name="DNR table (PID: 296120)" value="7"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="kpiStatusList">
+    <eLiterals name="IN PROGRESS"/>
+    <eLiterals name="IN REVIEW" value="1"/>
+    <eLiterals name="Active" value="3"/>
+    <eLiterals name="Ready" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="calculateByList">
+    <eLiterals name="Central"/>
+    <eLiterals name="Edge" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="directionList">
+    <eLiterals name="ascending"/>
+    <eLiterals name="descending" value="1"/>
+    <eLiterals name="max" value="2"/>
+    <eLiterals name="min" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="setSuppressionPeriodList">
+    <eLiterals name="0"/>
+    <eLiterals name="1" value="1" literal="1"/>
+    <eLiterals name="2" value="2" literal="2"/>
+    <eLiterals name="3" value="3" literal="3"/>
+    <eLiterals name="4" value="4" literal="4"/>
+    <eLiterals name="5" value="5" literal="5"/>
+    <eLiterals name="6" value="6" literal="6"/>
+    <eLiterals name="7" value="7" literal="7"/>
+    <eLiterals name="8" value="8" literal="8"/>
+    <eLiterals name="9" value="9" literal="9"/>
+    <eLiterals name="10" value="10" literal="10"/>
+    <eLiterals name="11" value="11" literal="11"/>
+    <eLiterals name="12" value="12" literal="12"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="contSuppressionPeriodList">
+    <eLiterals name="0"/>
+    <eLiterals name="1" value="1" literal="1"/>
+    <eLiterals name="2" value="2" literal="2"/>
+    <eLiterals name="3" value="3" literal="3"/>
+    <eLiterals name="4" value="4" literal="4"/>
+    <eLiterals name="5" value="5" literal="5"/>
+    <eLiterals name="6" value="6" literal="6"/>
+    <eLiterals name="7" value="7" literal="7"/>
+    <eLiterals name="8" value="8" literal="8"/>
+    <eLiterals name="9" value="9" literal="9"/>
+    <eLiterals name="10" value="10" literal="10"/>
+    <eLiterals name="11" value="11" literal="11"/>
+    <eLiterals name="12" value="12" literal="12"/>
+    <eLiterals name="13" value="13" literal="13"/>
+    <eLiterals name="14" value="14" literal="14"/>
+    <eLiterals name="15" value="15" literal="15"/>
+    <eLiterals name="16" value="16" literal="16"/>
+    <eLiterals name="17" value="17" literal="17"/>
+    <eLiterals name="18" value="18" literal="18"/>
+    <eLiterals name="19" value="19" literal="19"/>
+    <eLiterals name="20" value="20" literal="20"/>
+    <eLiterals name="21" value="21" literal="21"/>
+    <eLiterals name="22" value="22" literal="22"/>
+    <eLiterals name="23" value="23" literal="23"/>
+    <eLiterals name="24" value="24" literal="24"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="clearSuppressionPeriodList">
+    <eLiterals name="0"/>
+    <eLiterals name="1" value="1" literal="1"/>
+    <eLiterals name="2" value="2" literal="2"/>
+    <eLiterals name="3" value="3" literal="3"/>
+    <eLiterals name="4" value="4" literal="4"/>
+    <eLiterals name="5" value="5" literal="5"/>
+    <eLiterals name="6" value="6" literal="6"/>
+    <eLiterals name="7" value="7" literal="7"/>
+    <eLiterals name="8" value="8" literal="8"/>
+    <eLiterals name="9" value="9" literal="9"/>
+    <eLiterals name="10" value="10" literal="10"/>
+    <eLiterals name="11" value="11" literal="11"/>
+    <eLiterals name="12" value="12" literal="12"/>
+    <eLiterals name="13" value="13" literal="13"/>
+    <eLiterals name="14" value="14" literal="14"/>
+    <eLiterals name="15" value="15" literal="15"/>
+    <eLiterals name="16" value="16" literal="16"/>
+    <eLiterals name="17" value="17" literal="17"/>
+    <eLiterals name="18" value="18" literal="18"/>
+    <eLiterals name="19" value="19" literal="19"/>
+    <eLiterals name="20" value="20" literal="20"/>
+    <eLiterals name="21" value="21" literal="21"/>
+    <eLiterals name="22" value="22" literal="22"/>
+    <eLiterals name="23" value="23" literal="23"/>
+    <eLiterals name="24" value="24" literal="24"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="productionAlertList">
+    <eLiterals name="Y"/>
+    <eLiterals name="N" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="displayStatusList">
+    <eLiterals name="Y"/>
+    <eLiterals name="N" value="1"/>
+  </eClassifiers>
+</ecore:EPackage>

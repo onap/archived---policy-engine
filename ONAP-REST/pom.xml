@@ -185,6 +185,12 @@
 			<artifactId>tomcat-dbcp</artifactId>
 			<version>8.5.9</version>
 		</dependency>
+		<dependency>
+    		<groupId>org.powermock</groupId>
+    		<artifactId>powermock-module-junit4-common</artifactId>
+    		<version>1.6.4</version>
+		</dependency>
+		
 	</dependencies>
 
 	<properties>

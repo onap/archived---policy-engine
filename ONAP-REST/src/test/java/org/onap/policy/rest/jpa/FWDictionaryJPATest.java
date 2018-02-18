@@ -28,9 +28,9 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
-public class FWDictionaryJPAClasses {
+public class FWDictionaryJPATest {
 
-	private static Logger logger = FlexLogger.getLogger(FWDictionaryJPAClasses.class);
+	private static Logger logger = FlexLogger.getLogger(FWDictionaryJPATest.class);
 	private UserInfo userInfo;
 	
 	@Before
@@ -210,7 +210,6 @@ public class FWDictionaryJPAClasses {
 		TermList data = new TermList();
 		data.preUpdate();
 		data.prePersist();
-		new TermList("Test", "Test");
 		data.setId(1);
 		assertTrue(1 == data.getId());
 		data.setTermName("Test");
