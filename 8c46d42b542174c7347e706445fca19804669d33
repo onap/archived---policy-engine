@@ -16,6 +16,24 @@
       "revId": "8c46d42b542174c7347e706445fca19804669d33",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5dd8c07a",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-18T17:54:07Z",
+      "side": 1,
+      "message": "note you are referencing url[0] and url[2] below can still give you null pointer exceptions, should make a defensive check on the size.",
+      "parentUuid": "5a93c517_c7987fc2",
+      "revId": "8c46d42b542174c7347e706445fca19804669d33",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
