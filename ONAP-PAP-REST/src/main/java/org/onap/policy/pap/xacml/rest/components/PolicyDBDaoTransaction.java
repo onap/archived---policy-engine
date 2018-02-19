@@ -58,17 +58,6 @@ public interface PolicyDBDaoTransaction {
 	 */
 	public boolean isTransactionOpen();
 	
-	
-	
-	/**
-	 * Delete an existing policy
-	 * @param policyToDelete The file path of the policy to delete
-	 * @throws IllegalArgumentException If the file path given can not be parsed
-	 * @throws IllegalStateException If a transaction is open that has not yet been committed
-	 * @throws PolicyDBException If a database error occurs
-	 */
-	public void deletePolicy(String policyToDelete) throws PolicyDBException;
-	
 	/**
 	 * Rollback (undo) the current transaction.
 	 */
@@ -184,9 +173,4 @@ public interface PolicyDBDaoTransaction {
 	public GroupEntity getGroup(String groupId);
 	public List<?> getPdpsInGroup(long groupKey);
 	public PdpEntity getPdp(long pdpKey);
-
-	void renamePolicy(String oldPath, String newPath,String username);
-
-	void clonePolicy(String oldPolicyPath, String newPolicyPath, String username);
-		
 }
