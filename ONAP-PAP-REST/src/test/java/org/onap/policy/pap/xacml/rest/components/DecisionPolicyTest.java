@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
  */
 package org.onap.policy.pap.xacml.rest.components;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -30,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -101,16 +99,9 @@ public class DecisionPolicyTest {
 		policyAdapter.setRainydayMap(treatmentMap);
 		policyAdapter.setRainyday(rainyday);
 			
-		component = new DecisionPolicy(policyAdapter);
+		component = new DecisionPolicy(policyAdapter, null);
 
         logger.info("setUp: exit");
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
 	}
 
 	/**
@@ -140,7 +131,7 @@ public class DecisionPolicyTest {
 	public void testPrepareToSaveRainyDay() {
 		logger.debug("test PrepareToSave Policy: enter");
 		policyAdapter.setRuleProvider("Rainy_Day");
-		component = new DecisionPolicy(policyAdapter);
+		component = new DecisionPolicy(policyAdapter, null);
 		boolean response = false;
 		
 		try {
@@ -150,24 +141,4 @@ public class DecisionPolicyTest {
 		}
 		assertTrue(response);
 	}
-	
-	/**
-	 * Test method for {@link org.openecomp.policy.pap.xacml.rest.components.DecisionPolicy#prepareToSave()}.
-	 */
-	@Test
-	public void testPrepareToSaveCustom() {
-		logger.debug("test PrepareToSave Policy: enter");
-		policyAdapter.setRuleProvider("Custom");
-		component = new DecisionPolicy(policyAdapter);
-		boolean response = false;
-		
-		try {
-			response = component.prepareToSave();
-		} catch (Exception e) {
-			logger.error("Exception Occured"+e);
-		}
-		assertTrue(response);
-	}
-
-
 }
