@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,11 @@
 
 package org.onap.policy.pap.xacml.rest.components;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
@@ -36,11 +39,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Assert;
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.components.PolicyDBDao.PolicyDBDaoTestClass;
@@ -51,14 +53,17 @@ import org.onap.policy.rest.jpa.GroupEntity;
 import org.onap.policy.rest.jpa.PdpEntity;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
+import org.onap.policy.xacml.std.pap.StdEngine;
 import org.onap.policy.xacml.std.pap.StdPDPGroup;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
 
+import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.util.XACMLProperties;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
-public class PolicyDBDaoTest {
+public class PolicyDBDaoTest extends Mockito{
 
 	private static Logger logger = FlexLogger.getLogger(PolicyDBDaoTest.class);
 	
@@ -66,8 +71,11 @@ public class PolicyDBDaoTest {
 	PolicyDBDao dbd;
 	PolicyDBDao dbd2;
 	EntityManagerFactory emf;
+	private Path repository;
+	StdEngine stdEngine = null;
+	
 	@Before
-	public void init(){
+	public void init() throws PAPException, IOException{
 	    System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME,"src/test/resources/xacml.pap.properties");
 		emf = Persistence.createEntityManagerFactory("testPapPU");
 		EntityManager em = emf.createEntityManager();
@@ -90,15 +98,19 @@ public class PolicyDBDaoTest {
 			dbd = PolicyDBDao.getPolicyDBDaoInstance(emf);
 			dbd2 = PolicyDBDao.getPolicyDBDaoInstance(emf);
 		} catch (Exception e) {
-			//logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 
 		d = PolicyDBDao.getPolicyDBDaoTestClass();
+		PolicyDBDao.setJunit(true);
+		repository = Paths.get("src/test/resources/pdps");
+        stdEngine = new StdEngine(repository);
+        dbd.setPapEngine(stdEngine);
 	}
 	
 	@After
 	public void cleanUp(){
+		PolicyDBDao.setJunit(false);
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		try{	
@@ -119,14 +131,8 @@ public class PolicyDBDaoTest {
 		} catch (IOException e) {
 			//could not delete
 		}
-
 	}
 	
-	@Test
-	public void computeScopeTest(){
-		Assert.assertEquals("com",d.computeScope("C:\\Users\\testuser\\admin\\repo\\com\\", "C:\\Users\\testuser\\admin\\repo"));
-		Assert.assertEquals("org.onap.policy",d.computeScope("/Users/testuser/admin/repo/org.onap.policy", "/Users/testuser/admin/repo"));
-	}
 	@Test
 	public void getConfigFileTest(){
 		PolicyRestAdapter pra = new PolicyRestAdapter();
@@ -138,23 +144,33 @@ public class PolicyDBDaoTest {
 		Assert.assertEquals("org.onap.Action_mypolicy.json", configFile);
 	}
 	
-	@Ignore
 	@Test
 	public void createFromPolicyObject(){
-		String workspaceDir = "src/test/resources/";
-		File parentPath = new File(workspaceDir+"/com");
 		Policy policyObject = new ConfigPolicy();
 		policyObject.policyAdapter = new PolicyRestAdapter();
 		policyObject.policyAdapter.setConfigName("testpolicy1");
-		policyObject.policyAdapter.setParentPath(parentPath.getAbsolutePath());
 		policyObject.policyAdapter.setPolicyDescription("my description");
 		policyObject.policyAdapter.setConfigBodyData("this is my test config file");
-		policyObject.policyAdapter.setPolicyName("testpolicy1");
+		policyObject.policyAdapter.setPolicyName("SampleTest1206");
 		policyObject.policyAdapter.setConfigType(ConfigPolicy.OTHER_CONFIG);
 		policyObject.policyAdapter.setPolicyType("Config");
-		policyObject.policyAdapter.setDomainDir("org.onap");
+		policyObject.policyAdapter.setDomainDir("com");
+		policyObject.policyAdapter.setVersion("1");
 		PolicyType policyTypeObject = new PolicyType();
 		policyObject.policyAdapter.setPolicyData(policyTypeObject);
+		ClassLoader classLoader = getClass().getClassLoader();
+		PolicyType policyConfig = new PolicyType();
+        policyConfig.setVersion(Integer.toString(1));
+        policyConfig.setPolicyId("");
+        policyConfig.setTarget(new TargetType());
+        policyObject.policyAdapter.setData(policyConfig);
+		mock(XACMLPolicyWriter.class);
+		try {
+			policyObject.policyAdapter.setParentPath(IOUtils.toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml")));
+		} catch (Exception e2) {
+			fail();
+		}
+		
 		PolicyDBDaoTransaction transaction = dbd.getNewTransaction();
 		try{
 			transaction.createPolicy(policyObject, "testuser1");
@@ -166,57 +182,31 @@ public class PolicyDBDaoTest {
 		
 		EntityManager getData = emf.createEntityManager();
 		Query getDataQuery = getData.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:name");
-		getDataQuery.setParameter("scope", "org.onap");
-		getDataQuery.setParameter("name","Config_testpolicy1.xml");
+		getDataQuery.setParameter("scope", "com");
+		getDataQuery.setParameter("name","Config_SampleTest1206.1.xml");
 		PolicyEntity result = null;
 		try{
-		result = (PolicyEntity)getDataQuery.getSingleResult();
+			result = (PolicyEntity)getDataQuery.getSingleResult();
 		} catch(Exception e){
 			logger.error("Exception Occured"+e);
 			Assert.fail();
 		}
 		String expectedData;
 		try {
-			expectedData = IOUtils.toString(XACMLPolicyWriter.getXmlAsInputStream(policyTypeObject));
+			expectedData = IOUtils.toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml"));
 		} catch (IOException e1) {
 			expectedData = "";
 		}
 		Assert.assertEquals(expectedData, result.getPolicyData());
 		getData.close();
 		result = null;
-		File policyFile = new File(workspaceDir+"/org/onap/Config_testpolicy1.xml");
-		try{
-			transaction = dbd.getNewTransaction();
-			transaction.deletePolicy(policyFile.getAbsolutePath());
-		} catch(Exception e){
-			logger.error("Exception Occured"+e);
-			Assert.fail();
-		}
-		Assert.assertTrue(transaction.isTransactionOpen());
-		try{				
-			transaction.deletePolicy(policyFile.getAbsolutePath());
-			Assert.fail();
-		} catch(IllegalStateException e){
-			//pass
-		} catch(Exception e){
-			Assert.fail();
-		}
+
 		transaction.commitTransaction();
 		Assert.assertFalse(transaction.isTransactionOpen());
-		try{
-			transaction = dbd.getNewTransaction();
-			transaction.deletePolicy(policyFile.getAbsolutePath());
-		} catch(Exception e){
-			logger.error("Exception Occured"+e);
-			Assert.fail();
-		}
-		//Assert.assertFalse(transaction.isTransactionOpen());
-		transaction.commitTransaction();
 	}
 
-	@Ignore
 	@Test
-	public void groupTransactions(){		
+	public void groupTransactions(){
 		PolicyDBDaoTransaction group = dbd.getNewTransaction();
 		String groupName = "test group 1";
 		try{
@@ -405,9 +395,6 @@ public class PolicyDBDaoTest {
 			Assert.fail();
 		}
 		
-		
-		//add policy to group
-		
 		//update group
 		OnapPDPGroup pdpGroup = new StdPDPGroup("testgroup2", false, "newtestgroup2", "this is my new description", Paths.get("/"));
 		group = dbd.getNewTransaction();
@@ -441,12 +428,6 @@ public class PolicyDBDaoTest {
 		em.close();
 	}
 	
-	@Test
-	public void getDescriptionFromXacmlTest(){
-		String myTestDesc = "hello this is a test";
-		String desc = d.getDescriptionFromXacml("<Description>"+myTestDesc+"</Description>");
-		Assert.assertEquals(myTestDesc, desc);
-	}
 	@Ignore
 	@Test
 	public void threadingStabilityTest(){
