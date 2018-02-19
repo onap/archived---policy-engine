@@ -51,6 +51,8 @@ public class ParseLogTest {
 	private static Logger logger = FlexLogger.getLogger(ParseLogTest.class);
 	private Properties config = new Properties();
 	private String configFile;
+	private String configFile_1;
+	private String configFile_2;
 	private String testFile1;
 	private String testFile2;
 	private IntegrityMonitor im;
@@ -69,11 +71,21 @@ public class ParseLogTest {
 		Mockito.doNothing().when(im).endTransaction();
 		ClassLoader classLoader = getClass().getClassLoader();
 		configFile = classLoader.getResource("test_config.properties").getFile();
+		configFile_1 = classLoader.getResource("test_config_1.properties").getFile();
+		configFile_2 = classLoader.getResource("test_config_2.properties").getFile();
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(configFile);
+		Matcher matcher_1 = pattern.matcher(configFile_1);
+		Matcher matcher_2 = pattern.matcher(configFile_2);
 		
 		if (matcher.find()) {
 			configFile = configFile.substring(1);
+		}
+		if (matcher_1.find()) {
+		    configFile_1 = configFile_1.substring(1);
+		}
+		if (matcher_2.find()) {
+		    configFile_2 = configFile_2.substring(1);
 		}
 		testFile1 = classLoader.getResource("LineTest.txt").getFile();
 		testFile2 = classLoader.getResource("LineTest2.txt").getFile();
@@ -139,6 +151,56 @@ public class ParseLogTest {
 		
 		logger.debug("testGetPropertiesValue: exit");
 	}
+
+	@Test
+	public void testGetPropertiesValue_1() {
+
+		logger.debug("testGetPropertiesValue: enter");
+
+		config = new Properties();
+		config.put("RESOURCE_NAME", "logparser_pap01");
+		config.put("JDBC_DRIVER", "org.mariadb.jdbc.Driver");
+		config.put("JDBC_URL", "jdbc:mariadb://localhost:3306/");
+		config.put("JDBC_USER", "root");
+		config.put("JDBC_PASSWORD", "password");
+		config.put("JMX_URL", "service:jmx:rmi:///jndi/rmi://localhost:9998/jmxrmi");
+		config.put("SERVER", "password");
+		config.put("JDBC_PASSWORD", "https://localhost:9091/pap/");
+		config.put("LOGTYPE", "PAP");
+		config.put("LOGPATH", "C:\\Workspaces\\HealthCheck\\debug\\pap-rest.log");
+		config.put("PARSERLOGPATH", "IntegrityMonitor.log");
+
+		final Properties returnConfig = ParseLog.getPropertiesValue(configFile_1);
+		logger.debug("testGetPropertiesValue: returnConfig: " + returnConfig);
+		assertEquals(config.get("RESOURCE_NAME"), returnConfig.get("RESOURCE_NAME"));
+
+		logger.debug("testGetPropertiesValue_1: exit");
+	    }
+
+	@Test
+	public void testGetPropertiesValue_2() {
+
+		logger.debug("testGetPropertiesValue: enter");
+
+		config = new Properties();
+		config.put("RESOURCE_NAME", "logparser_pap01");
+		config.put("JDBC_DRIVER", "org.mariadb.jdbc.Driver");
+		config.put("JDBC_URL", "jdbc:mariadb://localhost:3306/");
+		config.put("JDBC_USER", "root");
+		config.put("JDBC_PASSWORD", "password");
+		config.put("JMX_URL", "service:jmx:rmi:///jndi/rmi://localhost:9998/jmxrmi");
+		config.put("SERVER", "password");
+		config.put("JDBC_PASSWORD", "https://localhost:9091/pap/");
+		config.put("LOGTYPE", "PAP");
+		config.put("LOGPATH", "C:\\Workspaces\\HealthCheck\\error\\pap-rest.log");
+		config.put("PARSERLOGPATH", "IntegrityMonitor.log");
+
+		final Properties returnConfig = ParseLog.getPropertiesValue(configFile_2);
+		logger.debug("testGetPropertiesValue: returnConfig: " + returnConfig);
+		assertEquals(config.get("RESOURCE_NAME"), returnConfig.get("RESOURCE_NAME"));
+
+		logger.debug("testGetPropertiesValue_2: exit");
+	    }
 
 	@Test
 	public void testGetPropertiesFail() {	
@@ -495,5 +557,14 @@ public class ParseLogTest {
 		ParseLog.process(line, "pap", LOGTYPE.INFO);
 		
 		logger.debug("testProcess: exit");
+	}
+
+	@Test
+	public void testMain() {
+		try {
+		    ParseLog.main(new String[] {});
+		} catch (final Exception e) {
+		    logger.debug("exception occured while executing the test: exit");
+		}
 	}
 }
