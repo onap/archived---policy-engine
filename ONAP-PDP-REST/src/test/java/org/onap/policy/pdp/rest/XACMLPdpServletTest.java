@@ -42,13 +42,10 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.common.ia.DbDAO;
 import org.onap.policy.common.ia.IntegrityAuditProperties;
-import org.onap.policy.common.im.AdministrativeStateException;
 import org.onap.policy.common.im.IntegrityMonitor;
-import org.onap.policy.common.im.StandbyStatusException;
+import org.onap.policy.common.im.IntegrityMonitorException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-
-import org.onap.policy.pdp.rest.XACMLPdpServletTest;
 import org.powermock.api.mockito.PowerMockito;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -168,7 +165,7 @@ public class XACMLPdpServletTest extends TestCase{
 		
 		try {
 			Mockito.doNothing().when(im).startTransaction();
-		} catch (StandbyStatusException | AdministrativeStateException e) {
+		} catch (IntegrityMonitorException e) {
 			fail();
 		}
 		Mockito.doNothing().when(im).endTransaction();

@@ -48,6 +48,7 @@ import java.util.stream.Stream;
 import org.apache.log4j.Logger;
 import org.onap.policy.common.im.AdministrativeStateException;
 import org.onap.policy.common.im.IntegrityMonitor;
+import org.onap.policy.common.im.IntegrityMonitorException;
 import org.onap.policy.common.im.StandbyStatusException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.utils.CryptoUtils;
@@ -579,10 +580,8 @@ public class ParseLog {
 		if (im!=null){
 			try {
 				im.startTransaction();
-			} catch (AdministrativeStateException e) {
-				logger.error("Error received" + e);				
-			} catch (StandbyStatusException ex) {
-				logger.error("Error received" + ex);
+			} catch (IntegrityMonitorException e) {
+				logger.error("Error received" + e);
 			}
 		}
 		returnLogValue = pullOutLogValues(line, type);
