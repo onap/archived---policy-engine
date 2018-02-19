@@ -1096,55 +1096,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				return;
 			}
 		}
-		//This would occur if we received a notification of a policy rename from AC
-		String oldPolicyName = request.getParameter("oldPolicyName");
-		String newPolicyName = request.getParameter("newPolicyName");
-		if(oldPolicyName != null && newPolicyName != null){
-			if(LOGGER.isDebugEnabled()){
-				LOGGER.debug("\nXACMLPapServlet.doPut() - before decoding"
-						+ "\npolicyToCreateUpdate = " + " ");
-			}
-			//decode it
-			try{
-				oldPolicyName = URLDecoder.decode(oldPolicyName, "UTF-8");
-				newPolicyName = URLDecoder.decode(newPolicyName, "UTF-8");
-				if(LOGGER.isDebugEnabled()){
-					LOGGER.debug("\nXACMLPapServlet.doPut() - after decoding"
-							+ "\npolicyToCreateUpdate = " + " ");
-				}
-			} catch(UnsupportedEncodingException e){
-				PolicyLogger.error("\nXACMLPapServlet.doPut() - Unsupported URL encoding of policyToCreateUpdate (UTF-8)"
-						+ "\npolicyToCreateUpdate = " + " ");
-				setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"policyToCreateUpdate encoding not supported"
-						+ "\nfailure with the following exception: " + e);
-				loggingContext.transactionEnded();
-				PolicyLogger.audit("Transaction Failed - See error.log");
-				im.endTransaction();
-				return;
-			}
-			//send it to PolicyDBDao
-			PolicyDBDaoTransaction renameTransaction = policyDBDao.getNewTransaction();
-			try{
-				renameTransaction.renamePolicy(oldPolicyName,newPolicyName, "XACMLPapServlet.doPut");
-			}catch(Exception e){
-				renameTransaction.rollbackTransaction();
-				setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"createUpdateTransaction.createPolicy(policyToCreateUpdate, XACMLPapServlet.doPut) "
-						+ "\nfailure with the following exception: " + e);
-				loggingContext.transactionEnded();
-				PolicyLogger.audit("Transaction Failed - See error.log");
-				im.endTransaction();
-				return;
-			}
-			loggingContext.metricStarted();
-			renameTransaction.commitTransaction();
-			loggingContext.metricEnded();
-			PolicyLogger.metrics("XACMLPapServlet goPut commitTransaction");
-			response.setStatus(HttpServletResponse.SC_OK);
-			loggingContext.transactionEnded();
-			PolicyLogger.audit("Transaction Ended Successfully");
-			im.endTransaction();
-			return;
-		}
 		//
 		// See if this is Admin Console registering itself with us
 		//
@@ -2274,33 +2225,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 	 * @throws IOException
 	 */
 	private void doACDelete(HttpServletRequest request, HttpServletResponse response, String groupId, ONAPLoggingContext loggingContext) throws IOException {
-		//This code is to allow deletes to propagate to the database since delete is not implemented
-		String isDeleteNotify = request.getParameter("isDeleteNotify");
-		if(isDeleteNotify != null){
-			String policyToDelete = request.getParameter("policyToDelete");
-			try{
-				policyToDelete = URLDecoder.decode(policyToDelete,"UTF-8");
-			} catch(UnsupportedEncodingException e){
-				LOGGER.error("Unsupported URL encoding of policyToDelete (UTF-8", e);
-				setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"policyToDelete encoding not supported");
-				return;
-			}
-			PolicyDBDaoTransaction deleteTransaction = policyDBDao.getNewTransaction();
-			try{
-				deleteTransaction.deletePolicy(policyToDelete);
-			} catch(Exception e){
-				deleteTransaction.rollbackTransaction();
-				setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"deleteTransaction.deleteTransaction(policyToDelete) "
-						+ "\nfailure with the following exception: " + e);
-				return;
-			}
-			loggingContext.metricStarted();
-			deleteTransaction.commitTransaction();
-			loggingContext.metricEnded();
-			PolicyLogger.metrics("XACMLPapServlet doACPut commitTransaction");
-			response.setStatus(HttpServletResponse.SC_OK);
-			return;
-		}
 		PolicyDBDaoTransaction removePdpOrGroupTransaction = policyDBDao.getNewTransaction();
 		try {
 			// for all DELETE operations the group must exist before the operation can be done
@@ -2881,7 +2805,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				}
 			}
 			// remove any ACs that are no longer connected
-			if (disconnectedACs.size() > 0) {
+			if (!disconnectedACs.isEmpty()) {
 				adminConsoleURLStringList.removeAll(disconnectedACs);
 			}
 		}
