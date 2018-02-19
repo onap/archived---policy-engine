@@ -52,6 +52,7 @@ import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.common.im.AdministrativeStateException;
 import org.onap.policy.common.im.ForwardProgressException;
 import org.onap.policy.common.im.IntegrityMonitor;
+import org.onap.policy.common.im.IntegrityMonitorException;
 import org.onap.policy.common.im.IntegrityMonitorProperties;
 import org.onap.policy.common.im.StandbyStatusException;
 import org.onap.policy.common.logging.ONAPLoggingContext;
@@ -445,7 +446,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		try {
 			im.startTransaction();
 		}
-		catch (AdministrativeStateException | StandbyStatusException e) {
+		catch (IntegrityMonitorException e) {
 			String message = e.toString();
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + e);
 			loggingContext.transactionEnded();
@@ -744,7 +745,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		try {
 			im.startTransaction();
 		}
-		catch (AdministrativeStateException | StandbyStatusException e) {
+		catch (IntegrityMonitorException e) {
 			String message = e.toString();
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
 			loggingContext.transactionEnded();
@@ -864,7 +865,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		try {
 			im.startTransaction();
 		}
-		catch (AdministrativeStateException | StandbyStatusException e) {
+		catch (IntegrityMonitorException e) {
 			String message = e.toString();
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + e);
 			loggingContext.transactionEnded();

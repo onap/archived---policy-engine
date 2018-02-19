@@ -64,6 +64,7 @@ import org.onap.policy.common.ia.IntegrityAudit;
 import org.onap.policy.common.im.AdministrativeStateException;
 import org.onap.policy.common.im.ForwardProgressException;
 import org.onap.policy.common.im.IntegrityMonitor;
+import org.onap.policy.common.im.IntegrityMonitorException;
 import org.onap.policy.common.im.IntegrityMonitorProperties;
 import org.onap.policy.common.im.StandbyStatusException;
 import org.onap.policy.common.logging.ONAPLoggingContext;
@@ -557,6 +558,16 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.audit("Transaction Failed - See Error.log");
 			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 			return;
+		} catch (IntegrityMonitorException e) {
+			String message = "POST interface called for PAP " + papResourceName + " but an exception occurred"
+					+ "\n Exception Message: " + e.getMessage();
+			LOGGER.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message, e);
+			loggingContext.metricEnded();
+			PolicyLogger.metrics("XACMLPapServlet doPost im startTransaction");
+			loggingContext.transactionEnded();
+			PolicyLogger.audit("Transaction Failed - See Error.log");
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			return;
 		}
 		try {
 			loggingContext.metricStarted();
@@ -825,6 +836,16 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.audit("Transaction Failed - See Error.log");
 				setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 				return;
+			} catch (IntegrityMonitorException e) {
+				String message = "GET interface called for PAP " + papResourceName + " but an exception occurred"
+						+ " of " + im.getStateManager().getStandbyStatus()
+						+ "\n Exception Message: " + e.getMessage();
+				LOGGER.info(message, e);
+				PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
+				loggingContext.transactionEnded();
+				PolicyLogger.audit("Transaction Failed - See Error.log");
+				setResponseError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+				return;
 			}
 			// Request from the API to get the gitPath
 			String apiflag = request.getParameter("apiflag");
@@ -997,7 +1018,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			im.startTransaction();
 			loggingContext.metricEnded();
 			PolicyLogger.metrics("XACMLPapServlet doPut im startTransaction");
-		} catch (AdministrativeStateException | StandbyStatusException e) {
+		} catch (IntegrityMonitorException e) {
 			String message = "PUT interface called for PAP " + papResourceName;
 			if (e instanceof AdministrativeStateException) {
 				message += " but it has an Administrative state of "
@@ -1274,6 +1295,15 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 					+ " of " + im.getStateManager().getStandbyStatus()
 					+ "\n Exception Message: " + se.getMessage();
 			LOGGER.info(message, se);
+			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
+			loggingContext.transactionEnded();
+			PolicyLogger.audit("Transaction Failed - See Error.log");
+			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+			return;
+		} catch (IntegrityMonitorException e) {
+			String message = "PUT interface called for PAP " + papResourceName + " but an exception occurred"
+					+ "\n Exception Message: " + e.getMessage();
+			LOGGER.info(message, e);
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
 			loggingContext.transactionEnded();
 			PolicyLogger.audit("Transaction Failed - See Error.log");
