@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PAP-REST
+ * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pap.xacml.rest.model;
+package org.onap.policy.rest.util;
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,8 +29,6 @@ import java.util.Set;
 
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.pap.xacml.rest.util.PolicyContainer;
-import org.onap.policy.pap.xacml.rest.util.PolicyItemSetChangeNotifier;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 
@@ -41,37 +40,37 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements PolicyContainer.Indexed {
 	private static final long serialVersionUID = 1L;
-	private static Logger logger	= FlexLogger.getLogger(PDPPolicyContainer.class);
+	private static final Logger LOGGER	= FlexLogger.getLogger(PDPPolicyContainer.class);
 	
 	 /**
      * String identifier of a file's "Id" property.
      */
-    public static final String PROPERTY_ID = "Id";
+	private static final String PROPERTY_ID = "Id";
 
    /**
      * String identifier of a file's "name" property.
      */
-    public static final String PROPERTY_NAME = "Name";
+	private static final String PROPERTY_NAME = "Name";
 
     /**
       * String identifier of a file's "name" property.
       */
-     public static final String PROPERTY_VERSION = "Version";
+	private static final String PROPERTY_VERSION = "Version";
      
     /**
      * String identifier of a file's "Description" property.
      */
-    public static final String PROPERTY_DESCRIPTION = "Description";
+	private static final String PROPERTY_DESCRIPTION = "Description";
     
     /**
      * String identifier of a file's "IsRoot" property.
      */
-    public static final String PROPERTY_ISROOT = "Root";
+	private static final String PROPERTY_ISROOT = "Root";
 
     /**
      * List of the string identifiers for the available properties.
      */
-    private static Collection<String> pdpPolicyProperties;
+	private static Collection<String> pDPPolicyProperties;
  
     private final transient Object data;
     private transient List<PDPPolicy> policies;
@@ -90,7 +89,7 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 			policies = new ArrayList<> ((Set<PDPPolicy>)data);
 		}
 		if (this.policies == null) {
-			logger.info("NULL policies");
+			LOGGER.info("NULL policies");
 			throw new NullPointerException("PDPPolicyContainer created with unexpected Object type '" + data.getClass().getName() + "'");
 		}
 		this.setContainer(this);
@@ -98,8 +97,8 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 	
 	@Override
 	public Object nextItemId(Object itemId) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("nextItemId: " + itemId);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("nextItemId: " + itemId);
 		}
 		int index = this.policies.indexOf(itemId);
 		if (index == -1 || ((index + 1) >= this.policies.size())) {
@@ -110,8 +109,8 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 
 	@Override
 	public Object prevItemId(Object itemId) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("prevItemId: " + itemId);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("prevItemId: " + itemId);
 		}
 		int index = this.policies.indexOf(itemId);
 		if (index <= 0) {
@@ -122,8 +121,8 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 
 	@Override
 	public Object firstItemId() {
-		if (logger.isTraceEnabled()) {
-			logger.trace("firstItemId: ");
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("firstItemId: ");
 		}
 		if (this.policies.isEmpty()) {
 			return null;
@@ -133,8 +132,8 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 
 	@Override
 	public Object lastItemId() {
-		if (logger.isTraceEnabled()) {
-			logger.trace("lastItemid: ");
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("lastItemid: ");
 		}
 		if (this.policies.isEmpty()) {
 			return null;
@@ -144,34 +143,34 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 
 	@Override
 	public boolean isFirstId(Object itemId) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("isFirstId: " + itemId);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("isFirstId: " + itemId);
 		}
 		if (this.policies.isEmpty()) {
 			return false;
 		}
-		return (itemId.equals(this.policies.get(0)));
+		return itemId.equals(this.policies.get(0));
 	}
 
 	@Override
 	public boolean isLastId(Object itemId) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("isLastId: " + itemId);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("isLastId: " + itemId);
 		}
 		if (this.policies.isEmpty()) {
 			return false;
 		}
-		return (itemId.equals(this.policies.get(this.policies.size() - 1)));
+		return itemId.equals(this.policies.get(this.policies.size() - 1));
 	}
 
 	@Override
-	public Object addItemAfter(Object previousItemId){
+	public Object addItemAfter(Object previousItemId) {
 		return null;
 	}
 
 	@Override
 	public Collection<?> getContainerPropertyIds() {
-		return pdpPolicyProperties;
+		return pDPPolicyProperties;
 	}
 
 	@Override
@@ -204,29 +203,29 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 
 	@Override
 	public int size() {
-		if (logger.isTraceEnabled()) {
-			logger.trace("size: " + this.policies.size());
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("size: " + this.policies.size());
 		}
 		return this.policies.size();
 	}
 
 	@Override
 	public boolean containsId(Object itemId) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("containsId: " + itemId);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("containsId: " + itemId);
 		}
 		return this.policies.contains(itemId);
 	}
 
 	@Override
-	public Object addItem(){
+	public Object addItem() {
 		throw new UnsupportedOperationException("Cannot add an empty policy.");
 	}
 
 	@Override
-	public boolean removeItem(Object itemId){
-		if (logger.isTraceEnabled()) {
-			logger.trace("removeItem: " + itemId);
+	public boolean removeItem(Object itemId) {
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("removeItem: " + itemId);
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -239,47 +238,47 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 				}
 			}
 		} catch (Exception e) {
-			logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Exception Occured While Mapping the Removing Policy from PDP Group to Std Policy"+e);
+			LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Exception Occured While Mapping the Removing Policy from PDP Group to Std Policy"+e);
 		}	
 		return this.policies.remove(itemId);
 	}
 
 	@Override
 	public boolean addContainerProperty(Object propertyId, Class<?> type,
-			Object defaultValue){
+			Object defaultValue) {
 		return false;
 	}
 
 	@Override
-	public boolean removeContainerProperty(Object propertyId){
+	public boolean removeContainerProperty(Object propertyId) {
 		return false;
 	}
 
 	@Override
-	public boolean removeAllItems(){
+	public boolean removeAllItems() {
 		return false;
 	}
 
 	@Override
 	public int indexOfId(Object itemId) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("indexOfId: " + itemId);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("indexOfId: " + itemId);
 		}
 		return this.policies.indexOf(itemId);
 	}
 
 	@Override
 	public Object getIdByIndex(int index) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("getIdByIndex: " + index);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("getIdByIndex: " + index);
 		}
 		return this.policies.get(index);
 	}
 
 	@Override
 	public List<?> getItemIds(int startIndex, int numberOfItems) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("getItemIds: " + startIndex + " " + numberOfItems);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("getItemIds: " + startIndex + " " + numberOfItems);
 		}
 		if (numberOfItems < 0) {
 			throw new IllegalArgumentException();
@@ -289,8 +288,8 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 
 	@Override
 	public Object addItemAt(int index) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("addItemAt: " + index);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("addItemAt: " + index);
 		}
 		return null;
 	}
@@ -303,36 +302,36 @@ public class PDPPolicyContainer extends PolicyItemSetChangeNotifier implements P
 		}
 
 		public String getId() {
-			if (logger.isTraceEnabled()) {
-				logger.trace("getId: " + this.policy);
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("getId: " + this.policy);
 			}
 			return this.policy.getId();
 		}
 		
 		public String getName() {
-			if (logger.isTraceEnabled()) {
-				logger.trace("getName: " + this.policy);
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("getName: " + this.policy);
 			}
 			return this.policy.getName();
 		}
 		
 		public String getVersion() {
-			if (logger.isTraceEnabled()) {
-				logger.trace("getVersion: " + this.policy);
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("getVersion: " + this.policy);
 			}
 			return this.policy.getVersion();
 		}
 		
 		public String getDescription() {
-			if (logger.isTraceEnabled()) {
-				logger.trace("getDescription: " + this.policy);
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("getDescription: " + this.policy);
 			}
 			return this.policy.getDescription();
 		}
 		
 		public boolean getRoot() {
-			if (logger.isTraceEnabled()) {
-				logger.trace("isRoot: " + this.policy);
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("isRoot: " + this.policy);
 			}
 			return this.policy.isRoot();
 		}

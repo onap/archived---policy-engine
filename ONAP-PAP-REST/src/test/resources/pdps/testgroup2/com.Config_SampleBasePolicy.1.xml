@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="urn:xacml:policy:id:0bc4aa91-cb41-420a-93e1-eca6098797a3" Version="1" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides">
+    <Description>SampleBasePolicy@CreatedBy:demo@CreatedBy:@ModifiedBy:demo@ModifiedBy:</Description>
+    <Target>
+        <AnyOf>
+            <AllOf>
+                <Match MatchId="org.onap.function.regex-match">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">com.Config_SampleBasePolicy.1.xml</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="PolicyName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+            </AllOf>
+            <AllOf>
+                <Match MatchId="org.onap.function.regex-match">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ONAP_TEST_123</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ONAPName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+                <Match MatchId="org.onap.function.regex-match">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SampleRiskType</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="RiskType" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+                <Match MatchId="org.onap.function.regex-match">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">1</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="RiskLevel" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+                <Match MatchId="org.onap.function.regex-match">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">False</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="guard" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+                <Match MatchId="org.onap.function.regex-match">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">17-01-2018</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="TTLDate" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+                <Match MatchId="org.onap.function.regex-match">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SampleBasePolicy</AttributeValue>
+                    <AttributeDesignator Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" AttributeId="ConfigName" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                </Match>
+            </AllOf>
+        </AnyOf>
+    </Target>
+    <Rule RuleId="" Effect="Permit">
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ACCESS</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Config</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <AdviceExpressions>
+            <AdviceExpression AdviceId="configID" AppliesTo="Permit">
+                <AttributeAssignmentExpression AttributeId="type" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Configuration</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="URLID" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#anyURI">$URL/Config/com.Config_SampleBasePolicy.1.txt</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="PolicyName" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">com.Config_SampleBasePolicy.1.xml</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="VersionNumber" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">1</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="matching:ONAPName" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ONAP_TEST_123</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="matching:ConfigName" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SampleBasePolicy</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="RiskType" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">SampleRiskType</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="RiskLevel" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">1</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="guard" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">False</AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="TTLDate" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" Issuer="">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">17-01-2018</AttributeValue>
+                </AttributeAssignmentExpression>
+            </AdviceExpression>
+        </AdviceExpressions>
+    </Rule>
+</Policy>
