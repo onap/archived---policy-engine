@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.onap.policy.common.logging.eelf.MessageCodes;
+import org.onap.policy.common.logging.eelf.PolicyLogger;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.FunctionDefinition;
+import org.onap.policy.xacml.api.XACMLErrorConstants;
+
+import com.att.research.xacml.api.pap.PAPException;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AnyOfType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ApplyType;
@@ -45,21 +56,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObligationExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
-
-import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
-import org.onap.policy.pap.xacml.rest.util.JPAUtils;
-import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.jpa.Datatype;
-import org.onap.policy.rest.jpa.FunctionDefinition;
-import org.onap.policy.xacml.api.XACMLErrorConstants;
-
-import com.att.research.xacml.api.pap.PAPException;
-
-import org.onap.policy.common.logging.eelf.MessageCodes;
-import org.onap.policy.common.logging.eelf.PolicyLogger;
-import org.onap.policy.common.logging.flexlogger.FlexLogger; 
-import org.onap.policy.common.logging.flexlogger.Logger; 
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType; 
 
 public class ActionPolicy extends Policy {
     
@@ -90,7 +87,9 @@ public class ActionPolicy extends Policy {
     List<String> dynamicFieldOneRuleAlgorithms = new LinkedList<>();
     List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<>();
     
-    protected Map<String, String> dropDownMap = new HashMap<>();
+
+    
+    private CommonClassDao commonClassDao;
     
     private static boolean isAttribute = false;
     private synchronized static boolean getAttribute () {
@@ -102,11 +101,12 @@ public class ActionPolicy extends Policy {
         super();
     }
     
-    public ActionPolicy(PolicyRestAdapter policyAdapter){
+    public ActionPolicy(PolicyRestAdapter policyAdapter, CommonClassDao commonClassDao){
         this.policyAdapter = policyAdapter;
+        this.commonClassDao = commonClassDao;
     }
-    
-    @Override
+
+	@Override
     public Map<String, String> savePolicies() throws PAPException {
         
         Map<String, String> successMap = new HashMap<>();
@@ -210,23 +210,22 @@ public class ActionPolicy extends Policy {
             dynamicFieldFunctionRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmCombo();
             dynamicFieldOneRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField1();
             dynamicFieldTwoRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField2();
-            dropDownMap = createDropDownMap();
                         
             // Rule attributes are optional and dynamic so check and add them to condition.
-            if (dynamicLabelRuleAlgorithms != null && dynamicLabelRuleAlgorithms.size() > 0) {
+            if (dynamicLabelRuleAlgorithms != null && !dynamicLabelRuleAlgorithms.isEmpty()) {
                 boolean isCompound = false;
                 ConditionType condition = new ConditionType();
                 int index = dynamicFieldOneRuleAlgorithms.size() - 1;
 
                 for (String labelAttr : dynamicLabelRuleAlgorithms) {
                     // if the rule algorithm as a label means it is a compound
-                    if (dynamicFieldOneRuleAlgorithms.get(index).toString().equals(labelAttr)) {
+                    if (dynamicFieldOneRuleAlgorithms.get(index).equals(labelAttr)) {
                         ApplyType actionApply = new ApplyType();
 
-                        String selectedFunction = (String) dynamicFieldFunctionRuleAlgorithms.get(index).toString();
-                        String value1 = (String) dynamicFieldOneRuleAlgorithms.get(index).toString();
-                        String value2 = dynamicFieldTwoRuleAlgorithms.get(index).toString();
-                        actionApply.setFunctionId(dropDownMap.get(selectedFunction));
+                        String selectedFunction = dynamicFieldFunctionRuleAlgorithms.get(index).toString();
+                        String value1 = dynamicFieldOneRuleAlgorithms.get(index);
+                        String value2 = dynamicFieldTwoRuleAlgorithms.get(index);
+                        actionApply.setFunctionId(getFunctionDefinitionId(selectedFunction));
                         actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value1)));
                         actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value2)));
                         condition.setExpression(new ObjectFactory().createApply(actionApply));
@@ -381,9 +380,9 @@ public class ActionPolicy extends Policy {
                 }
 
                 // Getting the values from the form.
-                String functionKey = dynamicFieldFunctionRuleAlgorithms.get(index).toString();
-                String value2 = dynamicFieldTwoRuleAlgorithms.get(index).toString();
-                actionApply.setFunctionId(dropDownMap.get(functionKey));
+                String functionKey = dynamicFieldFunctionRuleAlgorithms.get(index);
+                String value2 = dynamicFieldTwoRuleAlgorithms.get(index);
+                actionApply.setFunctionId(getFunctionDefinitionId(functionKey));
                 // if two text field are rule attributes.
                 if ((value1.contains(RULE_VARIABLE)) && (value2.contains(RULE_VARIABLE))) {
                     ApplyType innerActionApply1 = new ApplyType();
@@ -463,10 +462,10 @@ public class ActionPolicy extends Policy {
     // if the rule algorithm is multiple compound one setting the apply
     protected ApplyType getCompoundApply(int index) {
         ApplyType actionApply = new ApplyType();
-        String selectedFunction = dynamicFieldFunctionRuleAlgorithms.get(index).toString();
-        String value1 = dynamicFieldOneRuleAlgorithms.get(index).toString();
-        String value2 = dynamicFieldTwoRuleAlgorithms.get(index).toString();
-        actionApply.setFunctionId(dropDownMap.get(selectedFunction));
+        String selectedFunction = dynamicFieldFunctionRuleAlgorithms.get(index);
+        String value1 = dynamicFieldOneRuleAlgorithms.get(index);
+        String value2 = dynamicFieldTwoRuleAlgorithms.get(index);
+        actionApply.setFunctionId(getFunctionDefinitionId(selectedFunction));
         actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value1)));
         actionApply.getExpression().add(new ObjectFactory().createApply(getInnerActionApply(value2)));
         return actionApply;
@@ -485,32 +484,18 @@ public class ActionPolicy extends Policy {
         assignmentHeaders.setExpression(new ObjectFactory().createAttributeValue(headersAttributeValue));
         return assignmentHeaders;
     }
-    
-    private Map<String,String> createDropDownMap(){
-        JPAUtils jpaUtils = null;
-        Map<String, String> dropDownMap = new HashMap<>();
-        try {
-            jpaUtils = JPAUtils.getJPAUtilsInstance(XACMLPapServlet.getEmf());
-        } catch (Exception e) {
-            LOGGER.error("Exception Occured"+e);
-        }
-        if(jpaUtils != null){
-            Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
-            
-            for (Datatype id : functionMap.keySet()) {
-                List<FunctionDefinition> functionDefinitions = (List<FunctionDefinition>) functionMap
-                        .get(id);
-                for (FunctionDefinition functionDef : functionDefinitions) {
-                    dropDownMap.put(functionDef.getShortname(),functionDef.getXacmlid());
-                }
-            }
-        }
-        return dropDownMap;
-    }
 
     @Override
     public Object getCorrectPolicyDataObject() {
         return policyAdapter.getPolicyData();
+    }
+    
+    public String getFunctionDefinitionId(String key){
+    	FunctionDefinition object = (FunctionDefinition) commonClassDao.getDataById(FunctionDefinition.class, "short_name", key);
+    	if(object != null){
+    		return object.getXacmlid();
+    	}
+    	return null;
     }
 
 }

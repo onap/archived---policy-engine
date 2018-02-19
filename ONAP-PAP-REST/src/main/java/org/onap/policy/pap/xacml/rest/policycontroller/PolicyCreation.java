@@ -123,33 +123,33 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			String policyType = policyData.getPolicyType();
 
 			String filePrefix = null;
-			if (policyType.equalsIgnoreCase("Config")) {
+			if ("Config".equalsIgnoreCase(policyType)) {
 				policyConfigType = policyData.getConfigPolicyType();
-				if (policyConfigType.equalsIgnoreCase("Firewall Config")) {
+				if ("Firewall Config".equalsIgnoreCase(policyConfigType)) {
 					filePrefix = "Config_FW_";
-				}else if (policyConfigType.equalsIgnoreCase("ClosedLoop_Fault")) {
+				}else if ("ClosedLoop_Fault".equalsIgnoreCase(policyConfigType)) {
 					filePrefix = "Config_Fault_";
-				}else if (policyConfigType.equalsIgnoreCase("ClosedLoop_PM")) {
+				}else if ("ClosedLoop_PM".equalsIgnoreCase(policyConfigType)) {
 					filePrefix = "Config_PM_";
-				}else if (policyConfigType.equalsIgnoreCase("Micro Service")) {
+				}else if ("Micro Service".equalsIgnoreCase(policyConfigType)) {
 					filePrefix = "Config_MS_";
-				}else if (policyConfigType.equalsIgnoreCase("BRMS_Raw")) {
+				}else if ("BRMS_Raw".equalsIgnoreCase(policyConfigType)) {
 					filePrefix = "Config_BRMS_Raw_";
-				}else if (policyConfigType.equalsIgnoreCase("BRMS_Param")) {
+				}else if ("BRMS_Param".equalsIgnoreCase(policyConfigType)) {
 					filePrefix = "Config_BRMS_Param_";
 				}else {
 					filePrefix = "Config_"; 
 				}
-			} else if (policyType.equalsIgnoreCase("Action")) {
+			} else if ("Action".equalsIgnoreCase(policyType)) {
 				filePrefix = "Action_";
-			} else if (policyType.equalsIgnoreCase("Decision")) {
+			} else if ("Decision".equalsIgnoreCase(policyType)) {
 				filePrefix = "Decision_";
 			}
 
 			int version = 0;
 			int highestVersion = 0;
-			String createdBy = "";
-			String modifiedBy = userId;
+			String createdBy;
+			String modifiedBy;
 			String scopeCheck = policyData.getDomainDir().replace(".", File.separator);
 			PolicyEditorScopes policyEditorScope = (PolicyEditorScopes) commonClassDao.getEntityItem(PolicyEditorScopes.class, "scopeName", scopeCheck);
 			if(policyEditorScope == null){
@@ -192,7 +192,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					response.setStatus(HttpServletResponse.SC_CONFLICT);
 					response.addHeader("error", "policyExists");
 					response.addHeader("policyName", policyData.getPolicyName());
-					return new ResponseEntity<String>(body, status);
+					return new ResponseEntity<>(body, status);
 				}		
 			}else{
 				// if policy does not exist and the request is updatePolicy return error
@@ -261,7 +261,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					if(policyData.getApiflag() == null){
 						// If there is any dynamic field create the matches here
 						String key="templateName";
-						String value=(String) policyData.getRuleName();
+						String value= policyData.getRuleName();
 						drlRuleAndUIParams.put(key, value);
 						if(policyData.getRuleData().size() > 0){
 							for(Object keyValue: policyData.getRuleData().keySet()){
@@ -360,7 +360,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 						policyData.setActionDictMethod(jsonData.getMethod());
 					}
 				}
-				newPolicy = new ActionPolicy(policyData);
+				newPolicy = new ActionPolicy(policyData, commonClassDao);
 			} else if (policyType.equalsIgnoreCase("Decision")) {
 				if(policyData.getApiflag() == null){
 					Map<String, String> settingsMap = new HashMap<>();
@@ -374,7 +374,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					List<String> errorCodeList = new LinkedList<>();
 					List<String> treatmentList = new LinkedList<>();
 
-					if(policyData.getSettings().size() > 0){
+					if(!policyData.getSettings().isEmpty()){
 						for(Object settingsData : policyData.getSettings()){
 							if(settingsData instanceof LinkedHashMap<?, ?>){
 								String key = ((LinkedHashMap<?, ?>) settingsData).get("key").toString();
@@ -445,7 +445,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					policyData.setErrorCodeList(errorCodeList);
 					policyData.setTreatmentList(treatmentList);
 				}
-				newPolicy = new DecisionPolicy(policyData);
+				newPolicy = new DecisionPolicy(policyData, commonClassDao);
 			}
 
 			if(newPolicy != null){
@@ -455,7 +455,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);								
 				response.addHeader("error", "error");
-				return new ResponseEntity<String>(body, status);
+				return new ResponseEntity<>(body, status);
 			}
 			
 			PolicyDBDaoTransaction policyDBDaoTransaction = null;

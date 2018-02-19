@@ -89,7 +89,7 @@ public class ActionPolicyTest {
 		attributeMap.put("java", "test");
 		policyAdapter.setDynamicFieldConfigAttributes(attributeMap);
 		
-		component = new ActionPolicy(policyAdapter);
+		component = new ActionPolicy(policyAdapter, null);
 
         logger.info("setUp: exit");
 	}

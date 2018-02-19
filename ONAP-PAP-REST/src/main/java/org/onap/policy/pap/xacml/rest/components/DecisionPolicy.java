@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,9 +53,8 @@ import org.onap.policy.controlloop.policy.guard.GuardPolicy;
 import org.onap.policy.controlloop.policy.guard.MatchParameters;
 import org.onap.policy.controlloop.policy.guard.builder.ControlLoopGuardBuilder;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
-import org.onap.policy.pap.xacml.rest.util.JPAUtils;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import org.onap.policy.rest.jpa.Datatype;
+import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.DecisionSettings;
 import org.onap.policy.rest.jpa.FunctionDefinition;
 import org.onap.policy.utils.PolicyUtils;
@@ -108,15 +107,15 @@ public class DecisionPolicy extends Policy {
 	List<String> dynamicFieldTwoRuleAlgorithms = new LinkedList<>();
 	List<String> dataTypeList = new LinkedList<>();
 	
-	protected Map<String, String> dropDownMap = new HashMap<>();
+	private CommonClassDao commonClassDao;
 	
-
 	public DecisionPolicy() {
 		super();
 	}
 	
-	public DecisionPolicy(PolicyRestAdapter policyAdapter){
+	public DecisionPolicy(PolicyRestAdapter policyAdapter, CommonClassDao commonClassDao){
 		this.policyAdapter = policyAdapter;
+		this.commonClassDao = commonClassDao;
 	}
 	
 	@Override
@@ -419,7 +418,6 @@ public class DecisionPolicy extends Policy {
 		dynamicFieldComboRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmCombo();
 		dynamicFieldOneRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField1();
 		dynamicFieldTwoRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField2();
-		dropDownMap = createDropDownMap();
 		
 		if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFPROVIDER)){
 			// Values for AAF Provider are here for XML Creation. 
@@ -494,7 +492,7 @@ public class DecisionPolicy extends Policy {
 					String selectedFunction = dynamicFieldComboRuleAlgorithms.get(index);
 					String value1 = dynamicFieldOneRuleAlgorithms.get(index);
 					String value2 = dynamicFieldTwoRuleAlgorithms.get(index);
-					decisionApply.setFunctionId(dropDownMap.get(selectedFunction));
+					decisionApply.setFunctionId(getFunctionDefinitionId(selectedFunction));
 					decisionApply.getExpression().add(new ObjectFactory().createApply(getInnerDecisionApply(value1)));
 					decisionApply.getExpression().add(new ObjectFactory().createApply(getInnerDecisionApply(value2)));
 					condition.setExpression(new ObjectFactory().createApply(decisionApply));
@@ -633,7 +631,7 @@ public class DecisionPolicy extends Policy {
 				// Getting the values from the form.
 				String functionKey = dynamicFieldComboRuleAlgorithms.get(index);
 				String value2 = dynamicFieldTwoRuleAlgorithms.get(index);
-				decisionApply.setFunctionId(dropDownMap.get(functionKey));
+				decisionApply.setFunctionId(getFunctionDefinitionId(functionKey));
 				// if two text field are rule attributes.
 				if ((value1.contains(RULE_VARIABLE)) && (value2.contains(RULE_VARIABLE))) {
 					ApplyType innerDecisionApply1 = new ApplyType();
@@ -721,7 +719,7 @@ public class DecisionPolicy extends Policy {
 		String selectedFunction = dynamicFieldComboRuleAlgorithms.get(index);
 		String value1 = dynamicFieldOneRuleAlgorithms.get(index);
 		String value2 = dynamicFieldTwoRuleAlgorithms.get(index);
-		decisionApply.setFunctionId(dropDownMap.get(selectedFunction));
+		decisionApply.setFunctionId(getFunctionDefinitionId(selectedFunction));
 		decisionApply.getExpression().add(new ObjectFactory().createApply(getInnerDecisionApply(value1)));
 		decisionApply.getExpression().add(new ObjectFactory().createApply(getInnerDecisionApply(value2)));
 		return decisionApply;
@@ -760,24 +758,6 @@ public class DecisionPolicy extends Policy {
 		dataTypeList.add(dataType);
 	}
 	
-	private Map<String,String> createDropDownMap(){
-		JPAUtils jpaUtils = null;
-		try {
-			jpaUtils = JPAUtils.getJPAUtilsInstance(XACMLPapServlet.getEmf());
-		} catch (Exception e) {
-			LOGGER.error("Exception Occured"+e);
-		}
-		Map<String, String> dropDownOptions = new HashMap<>();
-		if(jpaUtils!=null){
-			Map<Datatype, List<FunctionDefinition>> functionMap = jpaUtils.getFunctionDatatypeMap();
-			for (Map.Entry<Datatype,List<FunctionDefinition>> map: functionMap.entrySet()) {
-				for (FunctionDefinition functionDef : map.getValue()) {
-					dropDownOptions.put(functionDef.getShortname(),functionDef.getXacmlid());
-				}
-			}
-		}
-		return dropDownOptions;
-	}
 	
 	private String getDataType(String key) {
 		
@@ -799,5 +779,13 @@ public class DecisionPolicy extends Policy {
 	public Object getCorrectPolicyDataObject() {
 		return policyAdapter.getData();
 	}
+	
+	public String getFunctionDefinitionId(String key){
+    	FunctionDefinition object = (FunctionDefinition) commonClassDao.getDataById(FunctionDefinition.class, "short_name", key);
+    	if(object != null){
+    		return object.getXacmlid();
+    	}
+    	return null;
+    }
 	
 }
