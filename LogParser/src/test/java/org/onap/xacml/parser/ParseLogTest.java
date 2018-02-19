@@ -40,6 +40,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.common.im.AdministrativeStateException;
 import org.onap.policy.common.im.IntegrityMonitor;
+import org.onap.policy.common.im.IntegrityMonitorException;
 import org.onap.policy.common.im.StandbyStatusException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -488,7 +489,7 @@ public class ParseLogTest {
 		im = Mockito.mock(IntegrityMonitor.class);
 		try {
 			Mockito.doNothing().when(im).startTransaction();
-		} catch (StandbyStatusException | AdministrativeStateException e) {
+		} catch (IntegrityMonitorException e) {
 			fail();
 		}
 		Mockito.doNothing().when(im).endTransaction();
