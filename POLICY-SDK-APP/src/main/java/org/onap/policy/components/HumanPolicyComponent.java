@@ -21,7 +21,6 @@
 package org.onap.policy.components;
 
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
@@ -42,7 +41,6 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.controller.PolicyController;
 import org.onap.policy.rest.jpa.FunctionDefinition;
-import org.onap.policy.utils.XACMLPolicyWriterWithPapNotify;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
 
@@ -303,29 +301,6 @@ class HtmlProcessor extends SimpleCallback {
 		super.onFinishScan(root);
 	}
 	
-	@SuppressWarnings("unused")
-	private void writeRawXACML() {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("ENTER");
-		
-		htmlOut.println("<hr>");		
-		htmlOut.println("<h3>Raw XACML:</h3>");
-		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		if (rootPolicyObject instanceof PolicySetType) {
-			XACMLPolicyWriterWithPapNotify.writePolicyFile(bos, (PolicySetType) rootPolicyObject);
-		} else if (rootPolicyObject instanceof PolicyType) {
-			XACMLPolicyWriterWithPapNotify.writePolicyFile(bos, (PolicyType) rootPolicyObject);
-		}
-		
-		String xacml = bos.toString();
-		xacml = xacml.replaceAll("<", "&lt");
-		xacml = xacml.replaceAll(">", "&gt");
-		htmlOut.println("<pre>");
-		htmlOut.println(xacml);
-		htmlOut.println("</pre>");
-	}
-
 	@Override
 	public CallbackResult onPreVisitPolicySet(PolicySetType parent, PolicySetType policySet) {
 		if (LOGGER.isTraceEnabled())

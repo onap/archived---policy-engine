@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pap.xacml.rest.util;
+package org.onap.policy.rest.util;
 
 
 import java.io.Serializable;
@@ -26,9 +26,8 @@ import java.util.Collection;
 import java.util.EventObject;
 import java.util.LinkedList;
 
-import org.onap.policy.pap.xacml.rest.util.PolicyContainer.ItemSetChangeEvent;
-import org.onap.policy.pap.xacml.rest.util.PolicyContainer.ItemSetChangeListener;
-
+import org.onap.policy.rest.util.PolicyContainer.ItemSetChangeEvent;
+import org.onap.policy.rest.util.PolicyContainer.ItemSetChangeListener;
 
 
 
@@ -38,6 +37,7 @@ public class PolicyItemSetChangeNotifier implements PolicyContainer.ItemSetChang
     private PolicyContainer container = null;
     
     public PolicyItemSetChangeNotifier() {
+    	// Empty constructor
     }
     
     protected void setContainer(PolicyContainer c) {
