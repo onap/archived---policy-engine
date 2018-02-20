@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_774fd46b",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/elk/ElkConnectorImplTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-20T22:41:23Z",
+      "side": 1,
+      "message": "it seems new unit tests in this file will always be successful.  Should any asserts be performed?",
+      "revId": "034fda80eb80e34675f75baa3abc821f9c7f3b91",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
