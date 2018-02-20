@@ -75,11 +75,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class DashboardController  extends RestrictedBaseController{
 	private static final Logger policyLogger = FlexLogger.getLogger(DashboardController.class);
 	@Autowired
-	SystemLogDbDao systemDAO;
-
-	@Autowired
 	CommonClassDao commonClassDao;
-
+	
+	@Autowired
+	SystemLogDbDao systemDAO;
+	
+	 public void setCommonClassDao(CommonClassDao commonClassDao) {
+		this.commonClassDao = commonClassDao;
+	}
+	 public void setSystemLogDbDao(SystemLogDbDao systemDAO){
+		 this.systemDAO = systemDAO;
+	 }
+	
+	public DashboardController() {}
 	private int pdpCount;
 	private PDPGroupContainer pdpConatiner;
 	private ArrayList<Object> pdpStatusData;

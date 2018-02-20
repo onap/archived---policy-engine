@@ -61,6 +61,10 @@ public class PolicyRolesController extends RestrictedBaseController{
 	@Autowired
 	CommonClassDao commonClassDao;
 	
+	public void setCommonClassDao(CommonClassDao commonClassDao) {
+		this.commonClassDao = commonClassDao;
+	}
+	
 	List<String> scopelist;
 	
 	@RequestMapping(value={"/get_RolesData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
