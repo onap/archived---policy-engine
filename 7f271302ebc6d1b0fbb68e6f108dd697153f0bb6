@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_09e196fd",
+        "filename": "LogParser/src/test/java/org/onap/xacml/parser/ParseLogTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-20T13:12:57Z",
+      "side": 1,
+      "message": "Please rename these variables to indicate why they are different to \"configFile\", for example\n\nconfigFile_1 -\u003e configFileDebug\nconfigFile_2 -\u003e configFileError",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 29
+      },
+      "revId": "7f271302ebc6d1b0fbb68e6f108dd697153f0bb6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_69185a1e",
+        "filename": "LogParser/src/test/resources/test_config_1.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-20T13:12:57Z",
+      "side": 1,
+      "message": "As this is a new file, replace this with \"Ericsson\"",
+      "range": {
+        "startLine": 5,
+        "startChar": 21,
+        "endLine": 5,
+        "endChar": 47
+      },
+      "revId": "7f271302ebc6d1b0fbb68e6f108dd697153f0bb6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_49db1e50",
+        "filename": "LogParser/src/test/resources/test_config_1.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-20T13:12:57Z",
+      "side": 1,
+      "message": "As this file is used to check the logging path, I suggest you rename it to a more helpful name like test_config_debug.properties rather than test_config_1.properties",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 50
+      },
+      "revId": "7f271302ebc6d1b0fbb68e6f108dd697153f0bb6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8915a6e6",
+        "filename": "LogParser/src/test/resources/test_config_2.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-20T13:12:57Z",
+      "side": 1,
+      "message": "Replace with \"Ericsson\", this is a new file",
+      "range": {
+        "startLine": 5,
+        "startChar": 21,
+        "endLine": 5,
+        "endChar": 47
+      },
+      "revId": "7f271302ebc6d1b0fbb68e6f108dd697153f0bb6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e9db0a4d",
+        "filename": "LogParser/src/test/resources/test_config_2.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-20T13:12:57Z",
+      "side": 1,
+      "message": "As this file is used to check the logging path, I suggest you rename it to a more helpful name like test_config_error.properties rather than test_config_1.properties",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 50
+      },
+      "revId": "7f271302ebc6d1b0fbb68e6f108dd697153f0bb6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
