@@ -56,6 +56,15 @@
 		<sonar.jacoco.itReportPath>${project.basedir}/../target/code-coverage/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 
+		<!--
+        	Shared between policy/* project repositories - same version 
+        -->
+		<h2.version>1.4.186</h2.version>
+
+		<!--
+        	Shared between policy/* project repositories - different version 
+        -->
+
 		<!-- Project common dependency versions -->
 		<jetty.plugin.version>9.2.3.v20140905</jetty.plugin.version>
 		<dmaap.version>1.0.0</dmaap.version>
@@ -144,6 +153,17 @@
 	  </plugins>
 	</reporting>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>${h2.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
 	<dependencies>
 
 		<dependency>
