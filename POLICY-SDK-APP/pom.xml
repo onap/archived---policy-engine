@@ -77,6 +77,11 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.onap.portal.sdk</groupId>
 			<artifactId>epsdk-core</artifactId>
 			<version>${epsdk.version}</version>

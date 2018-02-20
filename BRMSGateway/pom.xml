@@ -30,6 +30,11 @@
 	<description>This application will take in BRMS rules and acts as interface between PR and PDP XACML</description>
 	<dependencies>
 		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.onap.policy.engine</groupId>
 			<artifactId>PolicyEngineAPI</artifactId>
 			<version>${project.version}</version>
