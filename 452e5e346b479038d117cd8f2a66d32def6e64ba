@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_34db8a50",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 1150,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-20T20:26:22Z",
+      "side": 1,
+      "message": "\"initialize\" - seriously it doesn\u0027t compile??? ok",
+      "parentUuid": "5a93c517_d466e6ba",
+      "range": {
+        "startLine": 1150,
+        "startChar": 29,
+        "endLine": 1150,
+        "endChar": 33
+      },
+      "revId": "452e5e346b479038d117cd8f2a66d32def6e64ba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_5444161a",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
         "patchSetId": 5
