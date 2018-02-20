@@ -23,47 +23,48 @@ package org.onap.policy.api;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- * Enumeration of PolicyDecision that can be returned as a part of 
+ * Enumeration of PolicyDecision that can be returned as a part of
  * {@link org.onap.policy.api.DecisionResponse} getDecision().
  * 
  * @version 0.1
  */
 public enum PolicyDecision {
 	/**
-	 * Indicates that the Decision is to Permit. 
+	 * Indicates that the Decision is to Permit.
 	 */
 	PERMIT("permit"),
 	/**
-	 * Indicates that the Decision is to Deny. 
+	 * Indicates that the Decision is to Deny.
 	 */
 	DENY("deny"),
 	/**
-	 * Indicates that the Decision process has some issues. 
+	 * Indicates that the Decision process has some issues.
 	 */
-	ERROR("error")
-	;
-	
-	private String name;
-	private PolicyDecision(String name){
+	ERROR("error");
+
+	private final String name;
+
+	private PolicyDecision(final String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * Returns the <code>String</code> name for this <code>PolicyDecision</code>
 	 * 
 	 * @return the <code>String</code> name for this <code>PolicyDecision</code>
 	 */
 	@Override
-	public String toString(){
+	public String toString() {
 		return this.name;
 	}
+
 	@JsonCreator
-    public static PolicyDecision create (String value) {
-        for(PolicyDecision type: values()){
-            if(type.toString().equals(value) || type.equals(PolicyDecision.valueOf(value))){
-                return type;
-            }
-        }
-        throw new IllegalArgumentException();
-    }
+	public static PolicyDecision create(final String value) {
+		for (final PolicyDecision type : values()) {
+			if (type.toString().equalsIgnoreCase(value) || type.name().equalsIgnoreCase(value)) {
+				return type;
+			}
+		}
+		throw new IllegalArgumentException("Invalid value: " + value);
+	}
 }

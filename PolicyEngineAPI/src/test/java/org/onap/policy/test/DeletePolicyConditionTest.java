@@ -26,73 +26,58 @@ import org.onap.policy.api.DeletePolicyCondition;
 import static org.junit.Assert.*;
 
 /**
- * The class <code>DeletePolicyConditionTest</code> contains tests for the class <code>{@link DeletePolicyCondition}</code>.
+ * The class <code>DeletePolicyConditionTest</code> contains tests for the class
+ * <code>{@link DeletePolicyCondition}</code>.
  *
  * @generatedBy CodePro at 6/1/16 1:41 PM
  * @version $Revision: 1.0 $
  */
 public class DeletePolicyConditionTest {
-	/**
-	 * Run the String toString() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Test
-	public void testToString_1()
-		throws Exception {
-		DeletePolicyCondition fixture = DeletePolicyCondition.ALL;
 
-		String result = fixture.toString();
+	@Test
+	public void testToString_1() throws Exception {
+		final DeletePolicyCondition fixture = DeletePolicyCondition.ALL;
+
+		final String result = fixture.toString();
 
 		// add additional test code here
 		assertEquals("All Versions", result);
-		
+
 		assertEquals(DeletePolicyCondition.ALL, DeletePolicyCondition.create(DeletePolicyCondition.ALL.name()));
+	}
+
+	@Test
+	public void testCreate_EnumName_DeletePolicyConditionEnum() {
+		for (final DeletePolicyCondition condition : DeletePolicyCondition.values()) {
+			final DeletePolicyCondition actualCondition = DeletePolicyCondition.create(condition.name());
+			assertEquals(condition, actualCondition);
+			assertEquals(condition.toString(), actualCondition.toString());
+		}
+	}
+
+	@Test
+	public void testCreate_StringValue_DeletePolicyConditionEnum() {
+		for (final DeletePolicyCondition condition : DeletePolicyCondition.values()) {
+			final DeletePolicyCondition actualCondition = DeletePolicyCondition.create(condition.toString());
+			assertEquals(condition, actualCondition);
+		}
+
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testException() {
 		DeletePolicyCondition.create("foobar");
 	}
-	
-	/**
-	 * Perform pre-test initialization.
-	 *
-	 * @throws Exception
-	 *         if the initialization fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Before
-	public void setUp()
-		throws Exception {
-		// add additional set up code here
-	}
-
-	/**
-	 * Perform post-test clean-up.
-	 *
-	 * @throws Exception
-	 *         if the clean-up fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@After
-	public void tearDown()
-		throws Exception {
-		// Add additional tear down code here
-	}
 
 	/**
 	 * Launch the test.
 	 *
-	 * @param args the command line arguments
+	 * @param args
+	 *            the command line arguments
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		new org.junit.runner.JUnitCore().run(DeletePolicyConditionTest.class);
 	}
 }

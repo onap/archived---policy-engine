@@ -22,9 +22,9 @@ package org.onap.policy.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-public enum DictionaryType{
+public enum DictionaryType {
 	/**
-	 * Indicates Common Dictionaries. 
+	 * Indicates Common Dictionaries.
 	 */
 	Common("Common"),
 	/**
@@ -32,23 +32,23 @@ public enum DictionaryType{
 	 */
 	Action("Action"),
 	/**
-	 * Indicates ClosedLoop Policy Dictionaries. 
+	 * Indicates ClosedLoop Policy Dictionaries.
 	 */
 	ClosedLoop("ClosedLoop"),
 	/**
-	 * Indicates Firewall Config Policy Dictionaries. 
+	 * Indicates Firewall Config Policy Dictionaries.
 	 */
 	Firewall("Firewall"),
 	/**
-	 * Indicates Decision Policy Dictionaries. 
+	 * Indicates Decision Policy Dictionaries.
 	 */
 	Decision("Decision"),
 	/**
-	 * Indicates BRMS Policy Dictionaries. 
+	 * Indicates BRMS Policy Dictionaries.
 	 */
 	BRMS("BRMS"),
 	/**
-	 * Indicates DCAE Micro Service Policy Dictionaries. 
+	 * Indicates DCAE Micro Service Policy Dictionaries.
 	 */
 	MicroService("MicroService"),
 	/**
@@ -68,34 +68,36 @@ public enum DictionaryType{
 	 */
 	SafePolicy("SafePolicy"),
 	/**
-	 * Enum support entry to extend dictionary 
+	 * Enum support entry to extend dictionary
 	 */
-	Extended("Extended"),
-	;
-	
-	private String name;
-	
-	private DictionaryType(String typeName){
+	Extended("Extended");
+
+	private final String name;
+
+	private DictionaryType(final String typeName) {
 		this.name = typeName;
 	}
-	
+
 	/**
-	 * Returns the <code>String</code> format of Type for this <code>PolicyClass</code>
-	 * @return the <code>String</code> of the Type for this <code>PolicyClass</code>
+	 * Returns the <code>String</code> format of Type for this
+	 * <code>PolicyClass</code>
+	 * 
+	 * @return the <code>String</code> of the Type for this
+	 *         <code>PolicyClass</code>
 	 */
 	@Override
 	public String toString() {
 		return this.name;
 	}
-	
+
 	@JsonCreator
-    public static DictionaryType create (String value) {
-        for(DictionaryType type: values()){
-            if(type.toString().equals(value) || type.equals(DictionaryType.valueOf(value))){
-                return type;
-            }
-        }
-        throw new IllegalArgumentException();
-    }
+	public static DictionaryType create(final String value) {
+		for (final DictionaryType type : values()) {
+			if (type.toString().equalsIgnoreCase(value) || type.name().equalsIgnoreCase(value)) {
+				return type;
+			}
+		}
+		throw new IllegalArgumentException("Invalid value: " + value);
+	}
 
 }

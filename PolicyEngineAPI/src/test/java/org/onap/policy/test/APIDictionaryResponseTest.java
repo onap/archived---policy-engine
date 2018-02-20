@@ -17,36 +17,33 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.test;
 
 import static org.junit.Assert.assertEquals;
 
+import javax.ws.rs.core.Response.Status;
+
 import org.junit.Test;
-import org.onap.policy.api.DictionaryType;
+import org.onap.policy.models.APIDictionaryResponse;
 
-public class DictionaryTypeTest {
-
-	@Test
-	public void testCreate_EnumName_DictionaryTypeEnum() {
-		for (final DictionaryType dictionaryType : DictionaryType.values()) {
-			final DictionaryType actualDictionaryType = DictionaryType.create(dictionaryType.name());
-			assertEquals(dictionaryType, actualDictionaryType);
-			assertEquals(dictionaryType.toString(), actualDictionaryType.toString());
-		}
-	}
+public class APIDictionaryResponseTest {
+	private static final String BAD_GATEWAY = "BAD_GATEWAY";
+	private static final String JSON_STRING = "JSON_STRING";
+	private static final String DICTIONARY_DATA = "DICTIONARY_DATA";
 
 	@Test
-	public void testCreate_StringValue_DictionaryTypeEnum() {
-		for (final DictionaryType dictionaryType : DictionaryType.values()) {
-			final DictionaryType actualDictionaryType = DictionaryType.create(dictionaryType.toString());
-			assertEquals(dictionaryType, actualDictionaryType);
-		}
-	}
+	public final void testSetAndGet() {
+		final APIDictionaryResponse objUnderTest = new APIDictionaryResponse();
+		objUnderTest.setDictionaryData(DICTIONARY_DATA);
+		objUnderTest.setDictionaryJson(JSON_STRING);
+		objUnderTest.setResponseCode(Status.BAD_GATEWAY.getStatusCode());
+		objUnderTest.setResponseMessage(BAD_GATEWAY);
 
-	@Test(expected = IllegalArgumentException.class)
-	public void test() {
-		assertEquals(DictionaryType.Action, DictionaryType.create(DictionaryType.Action.toString()));
-		DictionaryType.create("foobar");
-	}
+		assertEquals(DICTIONARY_DATA, objUnderTest.getDictionaryData());
+		assertEquals(JSON_STRING, objUnderTest.getDictionaryJson());
+		assertEquals(Status.BAD_GATEWAY.getStatusCode(), objUnderTest.getResponseCode());
+		assertEquals(BAD_GATEWAY, objUnderTest.getResponseMessage());
 
+	}
 }

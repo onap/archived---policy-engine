@@ -20,172 +20,173 @@
 
 package org.onap.policy.std.test;
 
-import java.util.Hashtable;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.onap.policy.std.Matches;
 
-import static org.junit.Assert.*;
-
 /**
- * The class <code>MatchesTest</code> contains tests for the class <code>{@link Matches}</code>.
+ * The class <code>MatchesTest</code> contains tests for the class
+ * <code>{@link Matches}</code>.
  *
  * @generatedBy CodePro at 6/1/16 1:41 PM
  * @version $Revision: 1.0 $
  */
 public class MatchesTest {
-	/**
-	 * Run the Matches() constructor test.
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
+	private static final String DUMMY_VAL = "SomethingElse";
+	private static final String CONFIG_NAME = "CONFIG_NAME";
+	private static final String ONAP_NAME = "ONAP_NAME";
+
 	@Test
-	public void testMatches_1()
-		throws Exception {
-		Matches result = new Matches();
-		assertNotNull(result);
-		// add additional test code here
-	}
+	public void testMatches_SetterGetterMethods() {
+		final Matches objUnderTest = getMatches(ONAP_NAME, CONFIG_NAME, Collections.emptyMap());
 
-	/**
-	 * Run the Map<String, String> getConfigAttributes() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Test
-	public void testGetConfigAttributes_1()
-		throws Exception {
-		Matches fixture = new Matches();
-		fixture.setOnapName("");
-		fixture.setConfigAttributes(new Hashtable<String, String>());
-		fixture.setConfigName("");
+		final Map<String, String> result = objUnderTest.getConfigAttributes();
 
-		Map<String, String> result = fixture.getConfigAttributes();
-
-		// add additional test code here
-		assertNotNull(result);
+		assertEquals(ONAP_NAME, objUnderTest.getOnapName());
+		assertEquals(CONFIG_NAME, objUnderTest.getConfigName());
 		assertEquals(0, result.size());
 	}
 
-	/**
-	 * Run the String getConfigName() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
 	@Test
-	public void testGetConfigName_1()
-		throws Exception {
-		Matches fixture = new Matches();
-		fixture.setOnapName("");
-		fixture.setConfigAttributes(new Hashtable<String, String>());
-		fixture.setConfigName("");
+	public void testMatches_EqualsMethod_SameObjectsAndSameHasCode() {
+		final Matches firstObject = getMatches(ONAP_NAME, CONFIG_NAME, Collections.emptyMap());
+		final Matches secondObject = getMatches(ONAP_NAME, CONFIG_NAME, Collections.emptyMap());
 
-		String result = fixture.getConfigName();
-
-		// add additional test code here
-		assertEquals("", result);
+		assertEquals(firstObject, secondObject);
+		assertEquals(firstObject.hashCode(), secondObject.hashCode());
 	}
 
-	/**
-	 * Run the String getOnapName() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
 	@Test
-	public void testGetOnapName_1()
-		throws Exception {
-		Matches fixture = new Matches();
-		fixture.setOnapName("");
-		fixture.setConfigAttributes(new Hashtable<String, String>());
-		fixture.setConfigName("");
+	public void testMatchesEqualsMethod_differentConfigName_NotEqualsAndDifferentHashCode() {
+		final Matches firstObject = getMatches(ONAP_NAME, DUMMY_VAL, Collections.emptyMap());
+		final Matches secondObject = getMatches(ONAP_NAME, CONFIG_NAME, Collections.emptyMap());
 
-		String result = fixture.getOnapName();
-
-		// add additional test code here
-		assertEquals("", result);
+		assertNotEquals(firstObject, secondObject);
+		assertNotEquals(firstObject.hashCode(), secondObject.hashCode());
 	}
 
-	/**
-	 * Run the void setConfigAttributes(Map<String,String>) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
 	@Test
-	public void testSetConfigAttributes_1()
-		throws Exception {
-		Matches fixture = new Matches();
-		fixture.setOnapName("");
-		fixture.setConfigAttributes(new Hashtable<String, String>());
-		fixture.setConfigName("");
-		Map<String, String> configAttributes = new Hashtable<String, String>();
-
-		fixture.setConfigAttributes(configAttributes);
-
-		// add additional test code here
+	public void testMatchesEqualsMethod_differentObjects_NotEquals() {
+		final String firstObject = new String();
+		final Matches secondObject = getMatches(ONAP_NAME, CONFIG_NAME, Collections.emptyMap());
+		Assert.assertFalse(secondObject.equals(firstObject));
 	}
 
-	/**
-	 * Run the void setConfigName(String) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
 	@Test
-	public void testSetConfigName_1()
-		throws Exception {
-		Matches fixture = new Matches();
-		fixture.setOnapName("");
-		fixture.setConfigAttributes(new Hashtable<String, String>());
-		fixture.setConfigName("");
-		String configName = "";
+	public void testMatchesEqualsMethod_nullObject_NotEqualsAndDifferentHashCode() {
+		final String firstObject = null;
+		final Matches secondObject = getMatches(ONAP_NAME, CONFIG_NAME, Collections.emptyMap());
 
-		fixture.setConfigName(configName);
-
-		// add additional test code here
+		assertNotEquals(firstObject, secondObject);
 	}
 
-	/**
-	 * Run the void setOnapName(String) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
 	@Test
-	public void testSetOnapName_1()
-		throws Exception {
-		Matches fixture = new Matches();
-		fixture.setOnapName("");
-		fixture.setConfigAttributes(new Hashtable<String, String>());
-		fixture.setConfigName("");
-		String onapName = "";
+	public void testMatchesEqualsMethod_NullConfigName_NotEqualsAndDifferentHashCode() {
+		final Matches firstObject = getMatches(ONAP_NAME, CONFIG_NAME, Collections.emptyMap());
+		final Matches secondObject = getMatches(ONAP_NAME, null, Collections.emptyMap());
 
-		fixture.setOnapName(onapName);
+		assertNotEquals(firstObject, secondObject);
+		assertNotEquals(firstObject.hashCode(), secondObject.hashCode());
+	}
 
-		// add additional test code here
+	@Test
+	public void testMatchesEqualsMethod_differentOnapName_NotEqualsAndDifferentHashCode() throws Exception {
+		final Matches firstObject = getMatches(DUMMY_VAL, CONFIG_NAME, Collections.emptyMap());
+		final Matches secondObject = getMatches(ONAP_NAME, CONFIG_NAME, Collections.emptyMap());
+
+		assertNotEquals(firstObject, secondObject);
+		assertNotEquals(firstObject.hashCode(), secondObject.hashCode());
+	}
+
+	@Test
+	public void testMatchesEqualsMethod_NullOnapName_NotEqualsAndDifferentHashCode() throws Exception {
+		final Matches firstObject = getMatches(null, CONFIG_NAME, Collections.emptyMap());
+		final Matches secondObject = getMatches(ONAP_NAME, CONFIG_NAME, Collections.emptyMap());
+
+		assertNotEquals(firstObject, secondObject);
+		assertNotEquals(firstObject.hashCode(), secondObject.hashCode());
+	}
+
+	@Test
+	public void testMatchesEqualsMethod_BothNullOnapName_Equals() throws Exception {
+		final Matches firstObject = getMatches(null, CONFIG_NAME, Collections.emptyMap());
+		final Matches secondObject = getMatches(null, CONFIG_NAME, Collections.emptyMap());
+
+		assertEquals(firstObject, secondObject);
+		assertEquals(firstObject.hashCode(), secondObject.hashCode());
+	}
+
+	@Test
+	public void testMatchesEqualsMethod_BothNullConfigName_Equals() throws Exception {
+		final Matches firstObject = getMatches(ONAP_NAME, null, Collections.emptyMap());
+		final Matches secondObject = getMatches(ONAP_NAME, null, Collections.emptyMap());
+
+		assertEquals(firstObject, secondObject);
+		assertEquals(firstObject.hashCode(), secondObject.hashCode());
+	}
+
+	@Test
+	public void testMatchesEqualsMethod_DifferentConfigAttr_NotEqualsAndDifferentHashCode() throws Exception {
+		final Map<String, String> firstMap = Collections.emptyMap();
+		final Map<String, String> secondMap = new HashMap<>();
+		secondMap.put("key", "value");
+
+		final Matches firstObject = getMatches(ONAP_NAME, CONFIG_NAME, firstMap);
+		final Matches secondObject = getMatches(ONAP_NAME, CONFIG_NAME, secondMap);
+
+		assertNotEquals(firstObject, secondObject);
+		assertNotEquals(firstObject.hashCode(), secondObject.hashCode());
+	}
+
+	@Test
+	public void testMatchesEqualsMethod_NullConfigAttr_NotEqualsAndDifferentHashCode() throws Exception {
+		final Map<String, String> secondMap = new HashMap<>();
+		secondMap.put("key", "value");
+
+		final Matches firstObject = getMatches(ONAP_NAME, CONFIG_NAME, null);
+		final Matches secondObject = getMatches(ONAP_NAME, CONFIG_NAME, secondMap);
+
+		assertNotEquals(firstObject, secondObject);
+		assertNotEquals(firstObject.hashCode(), secondObject.hashCode());
+	}
+
+	@Test
+	public void testMatchesEqualsMethod_BothNullConfigAttr_Equals() throws Exception {
+
+		final Matches firstObject = getMatches(ONAP_NAME, CONFIG_NAME, null);
+		final Matches secondObject = getMatches(ONAP_NAME, CONFIG_NAME, null);
+
+		assertEquals(firstObject, secondObject);
+		assertEquals(firstObject.hashCode(), secondObject.hashCode());
+	}
+
+	private Matches getMatches(final String onapName, final String configName, final Map<String, String> attributes) {
+		final Matches objUnderTest = new Matches();
+		objUnderTest.setOnapName(onapName);
+		objUnderTest.setConfigName(configName);
+		objUnderTest.setConfigAttributes(attributes);
+		return objUnderTest;
 	}
 
 	/**
 	 * Perform pre-test initialization.
 	 *
 	 * @throws Exception
-	 *         if the initialization fails for some reason
+	 *             if the initialization fails for some reason
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@Before
-	public void setUp()
-		throws Exception {
+	public void setUp() throws Exception {
 		// add additional set up code here
 	}
 
@@ -193,24 +194,24 @@ public class MatchesTest {
 	 * Perform post-test clean-up.
 	 *
 	 * @throws Exception
-	 *         if the clean-up fails for some reason
+	 *             if the clean-up fails for some reason
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@After
-	public void tearDown()
-		throws Exception {
+	public void tearDown() throws Exception {
 		// Add additional tear down code here
 	}
 
 	/**
 	 * Launch the test.
 	 *
-	 * @param args the command line arguments
+	 * @param args
+	 *            the command line arguments
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		new org.junit.runner.JUnitCore().run(MatchesTest.class);
 	}
 }

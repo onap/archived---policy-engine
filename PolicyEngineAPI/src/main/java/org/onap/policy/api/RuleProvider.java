@@ -30,11 +30,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  */
 public enum RuleProvider {
 	/**
-	 * Indicates User will be defining the Rule information. 
+	 * Indicates User will be defining the Rule information.
 	 */
 	CUSTOM("Custom"),
 	/**
-	 * Indicates AAF will be providing the Rule information. 
+	 * Indicates AAF will be providing the Rule information.
 	 */
 	AAF("AAF"),
 	/**
@@ -42,37 +42,39 @@ public enum RuleProvider {
 	 */
 	GUARD_YAML("GUARD_YAML"),
 	/**
-	 * Indicates Guard BLACKLIST YAML 
+	 * Indicates Guard BLACKLIST YAML
 	 */
 	GUARD_BL_YAML("GUARD_BL_YAML"),
 	/**
-	 * Indicates Guard BLACKLIST YAML 
+	 * Indicates Guard BLACKLIST YAML
 	 */
-	RAINY_DAY("Rainy_Day")
-	;
-	
-	private String name;
-	
-	private RuleProvider(String typeName){
+	RAINY_DAY("Rainy_Day");
+
+	private final String name;
+
+	private RuleProvider(final String typeName) {
 		this.name = typeName;
 	}
-	
+
 	/**
-	 * Returns the <code>String</code> format of Type for this <code>AttributeType</code>
-	 * @return the <code>String</code> of the Type for this <code>AttributeType</code>
+	 * Returns the <code>String</code> format of Type for this
+	 * <code>AttributeType</code>
+	 * 
+	 * @return the <code>String</code> of the Type for this
+	 *         <code>AttributeType</code>
 	 */
 	@Override
 	public String toString() {
 		return this.name;
 	}
-	
+
 	@JsonCreator
-    public static RuleProvider create (String value) {
-        for(RuleProvider type: values()){
-            if(type.toString().equals(value) || type.equals(RuleProvider.valueOf(value))){
-                return type;
-            }
-        }
-        throw new IllegalArgumentException();
-    }
+	public static RuleProvider create(final String value) {
+		for (final RuleProvider type : values()) {
+			if (type.toString().equalsIgnoreCase(value) || type.name().equalsIgnoreCase(value)) {
+				return type;
+			}
+		}
+		throw new IllegalArgumentException("Invalid value: " + value);
+	}
 }

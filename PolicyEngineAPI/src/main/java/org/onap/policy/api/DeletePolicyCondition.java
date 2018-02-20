@@ -29,38 +29,41 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @version 0.1
  */
 public enum DeletePolicyCondition {
-	
+
 	/**
-	 * Indicates a condition to only delete the current version of the policy. 
+	 * Indicates a condition to only delete the current version of the policy.
 	 */
 	ONE("Current Version"),
-	
+
 	/**
 	 * Indicates a condition to delete all versions of the policy.
 	 */
 	ALL("All Versions");
-	private String name;
 
-	private DeletePolicyCondition(String name){
+	private final String name;
+
+	private DeletePolicyCondition(final String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Returns the <code>String</code> format of delete condition for this Policy
+	 * Returns the <code>String</code> format of delete condition for this
+	 * Policy
+	 * 
 	 * @return the <code>String</code> of the delete condition for this Policy
 	 */
 	@Override
-	public String toString(){
+	public String toString() {
 		return this.name;
 	}
 
 	@JsonCreator
-    public static DeletePolicyCondition create (String value) {
-        for(DeletePolicyCondition type: values()){
-            if(type.toString().equals(value) || type.equals(DeletePolicyCondition.valueOf(value))){
-                return type;
-            }
-        }
-        throw new IllegalArgumentException();
-    }
+	public static DeletePolicyCondition create(final String value) {
+		for (final DeletePolicyCondition type : values()) {
+			if (type.toString().equalsIgnoreCase(value) || type.name().equalsIgnoreCase(value)) {
+				return type;
+			}
+		}
+		throw new IllegalArgumentException("Invalid value: " + value);
+	}
 }

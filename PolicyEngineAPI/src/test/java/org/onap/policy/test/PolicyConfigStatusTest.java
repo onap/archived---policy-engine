@@ -20,13 +20,17 @@
 
 package org.onap.policy.test;
 
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.onap.policy.api.PolicyConfigStatus;
 
-import static org.junit.Assert.*;
-
 /**
- * The class <code>PolicyConfigStatusTest</code> contains tests for the class <code>{@link PolicyConfigStatus}</code>.
+ * The class <code>PolicyConfigStatusTest</code> contains tests for the class
+ * <code>{@link PolicyConfigStatus}</code>.
  *
  * @generatedBy CodePro at 6/1/16 1:41 PM
  * @version $Revision: 1.0 $
@@ -40,18 +44,17 @@ public class PolicyConfigStatusTest {
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@Test
-	public void testGetStatus_1()
-		throws Exception {
-		String configStatus = "";
+	public void testGetStatus_1() throws Exception {
+		final String configStatus = "";
 
-		PolicyConfigStatus result = PolicyConfigStatus.getStatus(configStatus);
+		final PolicyConfigStatus result = PolicyConfigStatus.getStatus(configStatus);
 
 		// add additional test code here
 		assertNotNull(result);
 		assertEquals("not_found", result.toString());
 		assertEquals("CONFIG_NOT_FOUND", result.name());
 		assertEquals(1, result.ordinal());
-		
+
 		assertEquals(PolicyConfigStatus.CONFIG_RETRIEVED, PolicyConfigStatus.create("retrieved"));
 	}
 
@@ -63,11 +66,10 @@ public class PolicyConfigStatusTest {
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@Test
-	public void testGetStatus_2()
-		throws Exception {
-		String configStatus = "retrieved";
+	public void testGetStatus_2() throws Exception {
+		final String configStatus = "retrieved";
 
-		PolicyConfigStatus result = PolicyConfigStatus.getStatus(configStatus);
+		final PolicyConfigStatus result = PolicyConfigStatus.getStatus(configStatus);
 
 		// add additional test code here
 		assertNotNull(result);
@@ -76,39 +78,38 @@ public class PolicyConfigStatusTest {
 		assertEquals(0, result.ordinal());
 	}
 
-	/**
-	 * Run the String toString() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
 	@Test
-	public void testToString_1()
-		throws Exception {
-		PolicyConfigStatus fixture = PolicyConfigStatus.CONFIG_NOT_FOUND;
+	public void testCreate_EnumName_PolicyConfigStatusEnum() {
+		for (final PolicyConfigStatus policyConfigStatus : PolicyConfigStatus.values()) {
+			final PolicyConfigStatus actualPolicyConfigStatus = PolicyConfigStatus.create(policyConfigStatus.name());
+			assertEquals(policyConfigStatus, actualPolicyConfigStatus);
+			assertEquals(policyConfigStatus.toString(), actualPolicyConfigStatus.toString());
+		}
+	}
 
-		String result = fixture.toString();
-
-		// add additional test code here
-		assertEquals("not_found", result);
+	@Test
+	public void testCreate_StringValue_PolicyClassEnum() {
+		for (final PolicyConfigStatus policyConfigStatus : PolicyConfigStatus.values()) {
+			final PolicyConfigStatus actualPolicyClass = PolicyConfigStatus.create(policyConfigStatus.toString());
+			assertEquals(policyConfigStatus, actualPolicyClass);
+		}
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testException () {
+	public void testException() {
 		PolicyConfigStatus.create("foobar");
 	}
+
 	/**
 	 * Perform pre-test initialization.
 	 *
 	 * @throws Exception
-	 *         if the initialization fails for some reason
+	 *             if the initialization fails for some reason
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@Before
-	public void setUp()
-		throws Exception {
+	public void setUp() throws Exception {
 		// add additional set up code here
 	}
 
@@ -116,24 +117,24 @@ public class PolicyConfigStatusTest {
 	 * Perform post-test clean-up.
 	 *
 	 * @throws Exception
-	 *         if the clean-up fails for some reason
+	 *             if the clean-up fails for some reason
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@After
-	public void tearDown()
-		throws Exception {
+	public void tearDown() throws Exception {
 		// Add additional tear down code here
 	}
 
 	/**
 	 * Launch the test.
 	 *
-	 * @param args the command line arguments
+	 * @param args
+	 *            the command line arguments
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		new org.junit.runner.JUnitCore().run(PolicyConfigStatusTest.class);
 	}
 }

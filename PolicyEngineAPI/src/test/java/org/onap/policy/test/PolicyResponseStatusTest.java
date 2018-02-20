@@ -20,13 +20,17 @@
 
 package org.onap.policy.test;
 
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.onap.policy.api.PolicyResponseStatus;
 
-import static org.junit.Assert.*;
-
 /**
- * The class <code>PolicyResponseStatusTest</code> contains tests for the class <code>{@link PolicyResponseStatus}</code>.
+ * The class <code>PolicyResponseStatusTest</code> contains tests for the class
+ * <code>{@link PolicyResponseStatus}</code>.
  *
  * @generatedBy CodePro at 6/1/16 1:41 PM
  * @version $Revision: 1.0 $
@@ -40,17 +44,34 @@ public class PolicyResponseStatusTest {
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@Test
-	public void testGetStatus_1()
-		throws Exception {
-		String responseStatus = "";
+	public void testGetStatus_1() throws Exception {
+		final String responseStatus = "";
 
-		PolicyResponseStatus result = PolicyResponseStatus.getStatus(responseStatus);
+		final PolicyResponseStatus result = PolicyResponseStatus.getStatus(responseStatus);
 
 		// add additional test code here
 		assertNotNull(result);
 		assertEquals("no_action", result.toString());
 		assertEquals("NO_ACTION_REQUIRED", result.name());
 		assertEquals(0, result.ordinal());
+	}
+
+	@Test
+	public void testCreate_EnumName_PolicyResponseStatusEnum() {
+		for (final PolicyResponseStatus policyResponseStatus : PolicyResponseStatus.values()) {
+			final PolicyResponseStatus actualPolicyResponseStatus = PolicyResponseStatus
+					.create(policyResponseStatus.name());
+			assertEquals(policyResponseStatus, actualPolicyResponseStatus);
+			assertEquals(policyResponseStatus.toString(), actualPolicyResponseStatus.toString());
+		}
+	}
+
+	@Test
+	public void testCreate_StringValue_PolicyResponseStatusEnum() {
+		for (final PolicyResponseStatus policyResponseStatus : PolicyResponseStatus.values()) {
+			final PolicyResponseStatus actualPolicyResponseStatus = PolicyResponseStatus.create(policyResponseStatus.toString());
+			assertEquals(policyResponseStatus, actualPolicyResponseStatus);
+		}
 	}
 
 	/**
@@ -61,11 +82,10 @@ public class PolicyResponseStatusTest {
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@Test
-	public void testGetStatus_2()
-		throws Exception {
-		String responseStatus = "action_advised";
+	public void testGetStatus_2() throws Exception {
+		final String responseStatus = "action_advised";
 
-		PolicyResponseStatus result = PolicyResponseStatus.getStatus(responseStatus);
+		final PolicyResponseStatus result = PolicyResponseStatus.getStatus(responseStatus);
 
 		// add additional test code here
 		assertNotNull(result);
@@ -82,11 +102,10 @@ public class PolicyResponseStatusTest {
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@Test
-	public void testGetStatus_3()
-		throws Exception {
-		String responseStatus = "action_taken";
+	public void testGetStatus_3() throws Exception {
+		final String responseStatus = "action_taken";
 
-		PolicyResponseStatus result = PolicyResponseStatus.getStatus(responseStatus);
+		final PolicyResponseStatus result = PolicyResponseStatus.getStatus(responseStatus);
 
 		// add additional test code here
 		assertNotNull(result);
@@ -103,18 +122,17 @@ public class PolicyResponseStatusTest {
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@Test
-	public void testToString_1()
-		throws Exception {
-		PolicyResponseStatus fixture = PolicyResponseStatus.ACTION_ADVISED;
+	public void testToString_1() throws Exception {
+		final PolicyResponseStatus fixture = PolicyResponseStatus.ACTION_ADVISED;
 
-		String result = fixture.toString();
+		final String result = fixture.toString();
 
 		// add additional test code here
 		assertEquals("action_advised", result);
 
 		assertEquals(PolicyResponseStatus.ACTION_ADVISED, PolicyResponseStatus.create("ACTION_ADVISED"));
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testTheRest() {
 		PolicyResponseStatus.create("foobar");
@@ -124,13 +142,12 @@ public class PolicyResponseStatusTest {
 	 * Perform pre-test initialization.
 	 *
 	 * @throws Exception
-	 *         if the initialization fails for some reason
+	 *             if the initialization fails for some reason
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@Before
-	public void setUp()
-		throws Exception {
+	public void setUp() throws Exception {
 		// add additional set up code here
 	}
 
@@ -138,24 +155,24 @@ public class PolicyResponseStatusTest {
 	 * Perform post-test clean-up.
 	 *
 	 * @throws Exception
-	 *         if the clean-up fails for some reason
+	 *             if the clean-up fails for some reason
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
 	@After
-	public void tearDown()
-		throws Exception {
+	public void tearDown() throws Exception {
 		// Add additional tear down code here
 	}
 
 	/**
 	 * Launch the test.
 	 *
-	 * @param args the command line arguments
+	 * @param args
+	 *            the command line arguments
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		new org.junit.runner.JUnitCore().run(PolicyResponseStatusTest.class);
 	}
 }

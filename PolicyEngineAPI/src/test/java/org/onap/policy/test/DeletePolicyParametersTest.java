@@ -29,12 +29,18 @@ import org.onap.policy.api.DeletePolicyParameters;
 import static org.junit.Assert.*;
 
 /**
- * The class <code>DeletePolicyParametersTest</code> contains tests for the class <code>{@link DeletePolicyParameters}</code>.
+ * The class <code>DeletePolicyParametersTest</code> contains tests for the
+ * class <code>{@link DeletePolicyParameters}</code>.
  *
  * @generatedBy CodePro at 6/1/16 1:40 PM
  * @version $Revision: 1.0 $
  */
 public class DeletePolicyParametersTest {
+	private static final String POLICY_TYPE = "POLICYTYPE";
+	private static final String PDP_GROUP = "PDPGROUP";
+	private static final String POLICY_NAME = "Apex";
+	private static final String POLICY_COMPONENT = "ApexComponent";
+
 	/**
 	 * Run the DeletePolicyCondition getDeleteCondition() method test.
 	 *
@@ -43,16 +49,15 @@ public class DeletePolicyParametersTest {
 	 * @generatedBy CodePro at 6/1/16 1:40 PM
 	 */
 	@Test
-	public void testGetDeleteCondition_1()
-		throws Exception {
-		DeletePolicyParameters fixture = new DeletePolicyParameters();
+	public void testGetDeleteCondition_1() throws Exception {
+		final DeletePolicyParameters fixture = new DeletePolicyParameters();
 		fixture.setPolicyComponent("");
 		fixture.setPolicyName("");
 		fixture.setDeleteCondition(DeletePolicyCondition.ALL);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setPdpGroup("");
 
-		DeletePolicyCondition result = fixture.getDeleteCondition();
+		final DeletePolicyCondition result = fixture.getDeleteCondition();
 
 		// add additional test code here
 		assertNotNull(result);
@@ -69,16 +74,15 @@ public class DeletePolicyParametersTest {
 	 * @generatedBy CodePro at 6/1/16 1:40 PM
 	 */
 	@Test
-	public void testGetPdpGroup_1()
-		throws Exception {
-		DeletePolicyParameters fixture = new DeletePolicyParameters();
+	public void testGetPdpGroup_1() throws Exception {
+		final DeletePolicyParameters fixture = new DeletePolicyParameters();
 		fixture.setPolicyComponent("");
 		fixture.setPolicyName("");
 		fixture.setDeleteCondition(DeletePolicyCondition.ALL);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setPdpGroup("");
 
-		String result = fixture.getPdpGroup();
+		final String result = fixture.getPdpGroup();
 
 		// add additional test code here
 		assertEquals("", result);
@@ -92,39 +96,15 @@ public class DeletePolicyParametersTest {
 	 * @generatedBy CodePro at 6/1/16 1:40 PM
 	 */
 	@Test
-	public void testGetPolicyComponent_1()
-		throws Exception {
-		DeletePolicyParameters fixture = new DeletePolicyParameters();
+	public void testGetPolicyComponent_1() throws Exception {
+		final DeletePolicyParameters fixture = new DeletePolicyParameters();
 		fixture.setPolicyComponent("");
 		fixture.setPolicyName("");
 		fixture.setDeleteCondition(DeletePolicyCondition.ALL);
 		fixture.setRequestID(UUID.randomUUID());
 		fixture.setPdpGroup("");
 
-		String result = fixture.getPolicyComponent();
-
-		// add additional test code here
-		assertEquals("", result);
-	}
-
-	/**
-	 * Run the String getPolicyName() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testGetPolicyName_1()
-		throws Exception {
-		DeletePolicyParameters fixture = new DeletePolicyParameters();
-		fixture.setPolicyComponent("");
-		fixture.setPolicyName("");
-		fixture.setDeleteCondition(DeletePolicyCondition.ALL);
-		fixture.setRequestID(UUID.randomUUID());
-		fixture.setPdpGroup("");
-
-		String result = fixture.getPolicyName();
+		final String result = fixture.getPolicyComponent();
 
 		// add additional test code here
 		assertEquals("", result);
@@ -138,16 +118,18 @@ public class DeletePolicyParametersTest {
 	 * @generatedBy CodePro at 6/1/16 1:40 PM
 	 */
 	@Test
-	public void testGetRequestID_1()
-		throws Exception {
-		DeletePolicyParameters fixture = new DeletePolicyParameters();
-		fixture.setPolicyComponent("");
-		fixture.setPolicyName("");
-		fixture.setDeleteCondition(DeletePolicyCondition.ALL);
-		fixture.setRequestID(UUID.fromString("482e90e2-2ad7-4265-9893-4cfe08ef1e3d"));
-		fixture.setPdpGroup("");
+	public void testGetRequestID_1() throws Exception {
+		final UUID requestID = UUID.fromString("482e90e2-2ad7-4265-9893-4cfe08ef1e3d");
 
-		UUID result = fixture.getRequestID();
+		final DeletePolicyParameters objUnderTest = new DeletePolicyParameters();
+		objUnderTest.setPolicyComponent(POLICY_COMPONENT);
+		objUnderTest.setPolicyName(POLICY_NAME);
+		objUnderTest.setDeleteCondition(DeletePolicyCondition.ALL);
+		objUnderTest.setRequestID(requestID);
+		objUnderTest.setPdpGroup(PDP_GROUP);
+		objUnderTest.setPolicyType(POLICY_TYPE);
+
+		final UUID result = objUnderTest.getRequestID();
 
 		// add additional test code here
 		assertNotNull(result);
@@ -166,124 +148,34 @@ public class DeletePolicyParametersTest {
 	 * @generatedBy CodePro at 6/1/16 1:40 PM
 	 */
 	@Test
-	public void testSetDeleteCondition_1()
-		throws Exception {
-		DeletePolicyParameters fixture = new DeletePolicyParameters();
-		fixture.setPolicyComponent("");
-		fixture.setPolicyName("");
-		fixture.setDeleteCondition(DeletePolicyCondition.ALL);
-		fixture.setRequestID(UUID.randomUUID());
-		fixture.setPdpGroup("");
-		DeletePolicyCondition deleteCondition = DeletePolicyCondition.ALL;
+	public void testSetDeleteCondition_1() throws Exception {
+		final UUID requestID = UUID.fromString("482e90e2-2ad7-4265-9893-4cfe08ef1e3d");
 
-		fixture.setDeleteCondition(deleteCondition);
+		final DeletePolicyParameters objUnderTest = new DeletePolicyParameters();
+		objUnderTest.setPolicyComponent(POLICY_COMPONENT);
+		objUnderTest.setPolicyName(POLICY_NAME);
+		objUnderTest.setDeleteCondition(DeletePolicyCondition.ALL);
+		objUnderTest.setRequestID(requestID);
+		objUnderTest.setPdpGroup(PDP_GROUP);
+		objUnderTest.setPolicyType(POLICY_TYPE);
 
-		// add additional test code here
-	}
-
-	/**
-	 * Run the void setPdpGroup(String) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testSetPdpGroup_1()
-		throws Exception {
-		DeletePolicyParameters fixture = new DeletePolicyParameters();
-		fixture.setPolicyComponent("");
-		fixture.setPolicyName("");
-		fixture.setDeleteCondition(DeletePolicyCondition.ALL);
-		fixture.setRequestID(UUID.randomUUID());
-		fixture.setPdpGroup("");
-		String pdpGroup = "";
-
-		fixture.setPdpGroup(pdpGroup);
-
-		// add additional test code here
-	}
-
-	/**
-	 * Run the void setPolicyComponent(String) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testSetPolicyComponent_1()
-		throws Exception {
-		DeletePolicyParameters fixture = new DeletePolicyParameters();
-		fixture.setPolicyComponent("");
-		fixture.setPolicyName("");
-		fixture.setDeleteCondition(DeletePolicyCondition.ALL);
-		fixture.setRequestID(UUID.randomUUID());
-		fixture.setPdpGroup("");
-		String policyComponent = "";
-
-		fixture.setPolicyComponent(policyComponent);
-
-		// add additional test code here
-	}
-
-	/**
-	 * Run the void setPolicyName(String) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testSetPolicyName_1()
-		throws Exception {
-		DeletePolicyParameters fixture = new DeletePolicyParameters();
-		fixture.setPolicyComponent("");
-		fixture.setPolicyName("");
-		fixture.setDeleteCondition(DeletePolicyCondition.ALL);
-		fixture.setRequestID(UUID.randomUUID());
-		fixture.setPdpGroup("");
-		String policyName = "";
-
-		fixture.setPolicyName(policyName);
-
-		// add additional test code here
-	}
-
-	/**
-	 * Run the void setRequestID(UUID) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testSetRequestID_1()
-		throws Exception {
-		DeletePolicyParameters fixture = new DeletePolicyParameters();
-		fixture.setPolicyComponent("");
-		fixture.setPolicyName("");
-		fixture.setDeleteCondition(DeletePolicyCondition.ALL);
-		fixture.setRequestID(UUID.randomUUID());
-		fixture.setPdpGroup("");
-		UUID requestID = UUID.randomUUID();
-
-		fixture.setRequestID(requestID);
-
-		// add additional test code here
+		assertEquals(POLICY_COMPONENT, objUnderTest.getPolicyComponent());
+		assertEquals(POLICY_NAME, objUnderTest.getPolicyName());
+		assertEquals(POLICY_TYPE, objUnderTest.getPolicyType());
+		assertEquals(DeletePolicyCondition.ALL, objUnderTest.getDeleteCondition());
+		assertEquals(requestID, objUnderTest.getRequestID());
 	}
 
 	/**
 	 * Perform pre-test initialization.
 	 *
 	 * @throws Exception
-	 *         if the initialization fails for some reason
+	 *             if the initialization fails for some reason
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:40 PM
 	 */
 	@Before
-	public void setUp()
-		throws Exception {
+	public void setUp() throws Exception {
 		// add additional set up code here
 	}
 
@@ -291,24 +183,24 @@ public class DeletePolicyParametersTest {
 	 * Perform post-test clean-up.
 	 *
 	 * @throws Exception
-	 *         if the clean-up fails for some reason
+	 *             if the clean-up fails for some reason
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:40 PM
 	 */
 	@After
-	public void tearDown()
-		throws Exception {
+	public void tearDown() throws Exception {
 		// Add additional tear down code here
 	}
 
 	/**
 	 * Launch the test.
 	 *
-	 * @param args the command line arguments
+	 * @param args
+	 *            the command line arguments
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:40 PM
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		new org.junit.runner.JUnitCore().run(DeletePolicyParametersTest.class);
 	}
 }

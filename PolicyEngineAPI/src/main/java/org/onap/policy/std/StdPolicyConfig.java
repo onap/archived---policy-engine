@@ -18,7 +18,6 @@
  * ============LICENSE_END=========================================================
  */
 
-
 package org.onap.policy.std;
 
 import java.util.Map;
@@ -33,13 +32,14 @@ import org.onap.policy.api.PolicyType;
 import org.w3c.dom.Document;
 
 /**
- * PolicyConfig Implementation. 
+ * PolicyConfig Implementation.
  * 
  * @version 0.3
  *
  */
 
-public class StdPolicyConfig implements PolicyConfig{
+public class StdPolicyConfig implements PolicyConfig {
+	private static final String XML = ".xml";
 	private PolicyType policyType;
 	private Properties properties;
 	private JsonObject jsonObject;
@@ -50,9 +50,9 @@ public class StdPolicyConfig implements PolicyConfig{
 	private String policyName;
 	private String policyVersion;
 	private PolicyConfigType type;
-	private Map<String,String> matchingConditions; 
-	private Map<String,String> responseAttributes;
-	
+	private Map<String, String> matchingConditions;
+	private Map<String, String> responseAttributes;
+
 	@Override
 	public PolicyType getType() {
 		return policyType;
@@ -72,7 +72,7 @@ public class StdPolicyConfig implements PolicyConfig{
 	public Document toXML() {
 		return document;
 	}
-	
+
 	@Override
 	public String toOther() {
 		return other;
@@ -87,94 +87,92 @@ public class StdPolicyConfig implements PolicyConfig{
 	public String getPolicyConfigMessage() {
 		return configStatus;
 	}
-	
+
 	@Override
 	public String getPolicyName() {
-		if(policyName!=null && policyName.contains(".xml")){
+		if (policyName != null && policyName.contains(XML)) {
 			return policyName.substring(0, policyName.substring(0, policyName.lastIndexOf('.')).lastIndexOf('.'));
 		}
 		return policyName;
 	}
-	
+
 	@Override
 	public String getPolicyVersion() {
 		return policyVersion;
 	}
-	
+
 	@Override
-	public Map<String,String> getMatchingConditions(){
+	public Map<String, String> getMatchingConditions() {
 		return matchingConditions;
 	}
-	
+
 	@Override
-	public Map<String,String> getResponseAttributes(){
+	public Map<String, String> getResponseAttributes() {
 		return responseAttributes;
 	}
-	
-	public void setPolicyType(PolicyType policyType) {
+
+	public void setPolicyType(final PolicyType policyType) {
 		this.policyType = policyType;
 	}
-	
-	public void setPolicyName(String policyName) {
+
+	public void setPolicyName(final String policyName) {
 		this.policyName = policyName;
 	}
-	
-	public void setPolicyVersion(String policyVersion) {
+
+	public void setPolicyVersion(final String policyVersion) {
 		this.policyVersion = policyVersion;
 	}
-	
-	public void setProperties(Properties properties) {
+
+	public void setProperties(final Properties properties) {
 		this.properties = properties;
 	}
 
-	public void setJsonObject(JsonObject jsonObject) {
+	public void setJsonObject(final JsonObject jsonObject) {
 		this.jsonObject = jsonObject;
 	}
-	
-	public void setDocument(Document document) {
+
+	public void setDocument(final Document document) {
 		this.document = document;
 	}
-	
-	public void setOther(String other) {
+
+	public void setOther(final String other) {
 		this.other = other;
 	}
-	
-	public void setConfigStatus(String configStatus) {
+
+	public void setConfigStatus(final String configStatus) {
 		this.configStatus = configStatus;
-	}
-	
-	public void setPolicyConfigStatus(PolicyConfigStatus policyConfigStatus) {
-		this.policyConfigStatus = policyConfigStatus;
-	}
-	
-	public void setConfigStatus(String configStatus, PolicyConfigStatus policyConfigStatus) {
-		this.configStatus = configStatus;
-		this.policyConfigStatus = policyConfigStatus;
-	}
-	
-	public void setMatchingConditions(Map<String,String> matchingConditions){
-		this.matchingConditions = matchingConditions;
-	}
-	
-	public void setResponseAttributes(Map<String,String> responseAttributes){
-		this.responseAttributes = responseAttributes;
-	}
-	
-	
-	public void setPolicyType(PolicyConfigType policyType) {
-        this.type = policyType;
-    }
-	
-	@Override
-	public PolicyConfigType getPolicyType(){
-	    return this.type;
 	}
 
-    @Override
+	public void setPolicyConfigStatus(final PolicyConfigStatus policyConfigStatus) {
+		this.policyConfigStatus = policyConfigStatus;
+	}
+
+	public void setConfigStatus(final String configStatus, final PolicyConfigStatus policyConfigStatus) {
+		this.configStatus = configStatus;
+		this.policyConfigStatus = policyConfigStatus;
+	}
+
+	public void setMatchingConditions(final Map<String, String> matchingConditions) {
+		this.matchingConditions = matchingConditions;
+	}
+
+	public void setResponseAttributes(final Map<String, String> responseAttributes) {
+		this.responseAttributes = responseAttributes;
+	}
+
+	public void setPolicyType(final PolicyConfigType policyType) {
+		this.type = policyType;
+	}
+
+	@Override
+	public PolicyConfigType getPolicyType() {
+		return this.type;
+	}
+
+	@Override
 	public String toString() {
-		return "PolicyConfig [ policyConfigStatus=" + policyConfigStatus + ", policyConfigMessage=" + configStatus + ", policyName=" + policyName + 
-				""
-				+ "]";
+		return "PolicyConfig [ policyConfigStatus=" + policyConfigStatus + ", policyConfigMessage=" + configStatus
+				+ ", policyName=" + policyName + "" + "]";
 	}
 
 }

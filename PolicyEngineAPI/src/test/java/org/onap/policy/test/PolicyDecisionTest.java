@@ -20,79 +20,51 @@
 
 package org.onap.policy.test;
 
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 import org.onap.policy.api.PolicyDecision;
 
-import static org.junit.Assert.*;
-
 /**
- * The class <code>PolicyDecisionTest</code> contains tests for the class <code>{@link PolicyDecision}</code>.
+ * The class <code>PolicyDecisionTest</code> contains tests for the class
+ * <code>{@link PolicyDecision}</code>.
  *
  * @generatedBy CodePro at 6/1/16 1:41 PM
  * @version $Revision: 1.0 $
  */
 public class PolicyDecisionTest {
-	/**
-	 * Run the String toString() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
+
 	@Test
-	public void testToString_1()
-		throws Exception {
-		PolicyDecision fixture = PolicyDecision.DENY;
-
-		String result = fixture.toString();
-
-		// add additional test code here
-		assertEquals("deny", result);
-		
-		assertEquals(PolicyDecision.PERMIT, PolicyDecision.create(PolicyDecision.PERMIT.name()));
+	public void testCreate_EnumName_PolicyDecisionEnum() {
+		for (final PolicyDecision policyDecision : PolicyDecision.values()) {
+			final PolicyDecision actualPolicyDecision = PolicyDecision.create(policyDecision.name());
+			assertEquals(policyDecision, actualPolicyDecision);
+			assertEquals(policyDecision.toString(), actualPolicyDecision.toString());
+		}
 	}
-	
+
+	@Test
+	public void testCreate_StringValue_PolicyDecisionEnum() {
+		for (final PolicyDecision policyDecision : PolicyDecision.values()) {
+			final PolicyDecision autalPolicyDecision = PolicyDecision.create(policyDecision.toString());
+			assertEquals(policyDecision, autalPolicyDecision);
+		}
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testException() {
 		PolicyDecision.create("foobar");
 	}
 
 	/**
-	 * Perform pre-test initialization.
-	 *
-	 * @throws Exception
-	 *         if the initialization fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Before
-	public void setUp()
-		throws Exception {
-		// add additional set up code here
-	}
-
-	/**
-	 * Perform post-test clean-up.
-	 *
-	 * @throws Exception
-	 *         if the clean-up fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@After
-	public void tearDown()
-		throws Exception {
-		// Add additional tear down code here
-	}
-
-	/**
 	 * Launch the test.
 	 *
-	 * @param args the command line arguments
+	 * @param args
+	 *            the command line arguments
 	 *
 	 * @generatedBy CodePro at 6/1/16 1:41 PM
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		new org.junit.runner.JUnitCore().run(PolicyDecisionTest.class);
 	}
 }
