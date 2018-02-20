@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_31107c58",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/model/RemoveGroupPolicy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-20T19:06:40Z",
+      "side": 1,
+      "message": "Ok - that is weird.",
+      "parentUuid": "5a93c517_b1556c1f",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 52
+      },
+      "revId": "22ba44228a6bfc3b640fdbbbbc5b057e88da7dfa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_b1748cfe",
         "filename": "ONAP-PAP-REST/src/test/resources/pdps/testgroup2/xacml.pip.properties",
         "patchSetId": 2
