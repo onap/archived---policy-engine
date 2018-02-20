@@ -21,33 +21,43 @@ package org.onap.policy.models;
 
 public class APIDictionaryResponse {
     private Object dictionaryData;
+
     private Object dictionaryJson;
+
     private int responseCode;
+
     private String responseMessage;
+
     public Object getDictionaryData() {
         return dictionaryData;
     }
-    public void setDictionaryData(Object dictionaryData) {
+
+    public void setDictionaryData(final Object dictionaryData) {
         this.dictionaryData = dictionaryData;
     }
+
     public Object getDictionaryJson() {
         return dictionaryJson;
     }
-    public void setDictionaryJson(Object dictionaryJson) {
+
+    public void setDictionaryJson(final Object dictionaryJson) {
         this.dictionaryJson = dictionaryJson;
     }
+
     public int getResponseCode() {
         return responseCode;
     }
-    public void setResponseCode(int responseCode) {
+
+    public void setResponseCode(final int responseCode) {
         this.responseCode = responseCode;
     }
+
     public String getResponseMessage() {
         return responseMessage;
     }
-    public void setResponseMessage(String responseMessage) {
+
+    public void setResponseMessage(final String responseMessage) {
         this.responseMessage = responseMessage;
     }
-    
-    
+
 }

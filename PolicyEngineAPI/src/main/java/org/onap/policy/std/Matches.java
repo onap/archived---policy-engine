@@ -23,26 +23,61 @@ package org.onap.policy.std;
 import java.util.Map;
 
 public class Matches {
-	private String onapName = null;
-	private String configName = null;
-	private Map<String,String> configAttributes = null;
-	public String getOnapName() {
-		return onapName;
-	}
-	public void setOnapName(String onapName) {
-		this.onapName = onapName;
-	}
-	public String getConfigName() {
-		return configName;
-	}
-	public void setConfigName(String configName) {
-		this.configName = configName;
-	}
-	public Map<String,String> getConfigAttributes() {
-		return configAttributes;
-	}
-	public void setConfigAttributes(Map<String,String> configAttributes) {
-		this.configAttributes = configAttributes;
-	}
-	
+    private String onapName = null;
+
+    private String configName = null;
+
+    private Map<String, String> configAttributes = null;
+
+    public String getOnapName() {
+        return onapName;
+    }
+
+    public void setOnapName(final String onapName) {
+        this.onapName = onapName;
+    }
+
+    public String getConfigName() {
+        return configName;
+    }
+
+    public void setConfigName(final String configName) {
+        this.configName = configName;
+    }
+
+    public Map<String, String> getConfigAttributes() {
+        return configAttributes;
+    }
+
+    public void setConfigAttributes(final Map<String, String> configAttributes) {
+        this.configAttributes = configAttributes;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((configAttributes == null) ? 0 : configAttributes.hashCode());
+        result = prime * result + ((configName == null) ? 0 : configName.hashCode());
+        result = prime * result + ((onapName == null) ? 0 : onapName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof Matches) {
+            final Matches other = (Matches) obj;
+            return isEqual(onapName, other.onapName) && isEqual(configName, other.configName)
+                    && isEqual(configAttributes, other.configAttributes);
+        }
+        return false;
+    }
+
+    private boolean isEqual(final Object objectA, final Object objectB) {
+        if (objectA == null) {
+            return objectB == null;
+        }
+        return objectA.equals(objectB);
+    }
+
 }

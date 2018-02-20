@@ -22,80 +22,82 @@ package org.onap.policy.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-public enum DictionaryType{
-	/**
-	 * Indicates Common Dictionaries. 
-	 */
-	Common("Common"),
-	/**
-	 * Indicates Action Policy Dictionaries
-	 */
-	Action("Action"),
-	/**
-	 * Indicates ClosedLoop Policy Dictionaries. 
-	 */
-	ClosedLoop("ClosedLoop"),
-	/**
-	 * Indicates Firewall Config Policy Dictionaries. 
-	 */
-	Firewall("Firewall"),
-	/**
-	 * Indicates Decision Policy Dictionaries. 
-	 */
-	Decision("Decision"),
-	/**
-	 * Indicates BRMS Policy Dictionaries. 
-	 */
-	BRMS("BRMS"),
-	/**
-	 * Indicates DCAE Micro Service Policy Dictionaries. 
-	 */
-	MicroService("MicroService"),
-	/**
-	 * Indicates Descriptive Scope Dictionaries
-	 */
-	DescriptiveScope("DescriptiveScope"),
-	/**
-	 * Indicates Policy Scope Dictionaries
-	 */
-	PolicyScope("PolicyScope"),
-	/**
-	 * Indicates Enforcer Dictionaries
-	 */
-	Enforcer("Enforcer"),
-	/**
-	 * Indicates SafePolicy Dictionaries
-	 */
-	SafePolicy("SafePolicy"),
-	/**
-	 * Enum support entry to extend dictionary 
-	 */
-	Extended("Extended"),
-	;
-	
-	private String name;
-	
-	private DictionaryType(String typeName){
-		this.name = typeName;
-	}
-	
-	/**
-	 * Returns the <code>String</code> format of Type for this <code>PolicyClass</code>
-	 * @return the <code>String</code> of the Type for this <code>PolicyClass</code>
-	 */
-	@Override
-	public String toString() {
-		return this.name;
-	}
-	
-	@JsonCreator
-    public static DictionaryType create (String value) {
-        for(DictionaryType type: values()){
-            if(type.toString().equals(value) || type.equals(DictionaryType.valueOf(value))){
+public enum DictionaryType {
+    /**
+     * Indicates Common Dictionaries.
+     */
+    Common("Common"),
+    /**
+     * Indicates Action Policy Dictionaries
+     */
+    Action("Action"),
+    /**
+     * Indicates ClosedLoop Policy Dictionaries.
+     */
+    ClosedLoop("ClosedLoop"),
+    /**
+     * Indicates Firewall Config Policy Dictionaries.
+     */
+    Firewall("Firewall"),
+    /**
+     * Indicates Decision Policy Dictionaries.
+     */
+    Decision("Decision"),
+    /**
+     * Indicates BRMS Policy Dictionaries.
+     */
+    BRMS("BRMS"),
+    /**
+     * Indicates DCAE Micro Service Policy Dictionaries.
+     */
+    MicroService("MicroService"),
+    /**
+     * Indicates Descriptive Scope Dictionaries
+     */
+    DescriptiveScope("DescriptiveScope"),
+    /**
+     * Indicates Policy Scope Dictionaries
+     */
+    PolicyScope("PolicyScope"),
+    /**
+     * Indicates Enforcer Dictionaries
+     */
+    Enforcer("Enforcer"),
+    /**
+     * Indicates SafePolicy Dictionaries
+     */
+    SafePolicy("SafePolicy"),
+    /**
+     * Enum support entry to extend dictionary
+     */
+    Extended("Extended");
+
+    private final String name;
+
+    private DictionaryType(final String typeName) {
+        this.name = typeName;
+    }
+
+    /**
+     * Returns the <code>String</code> format of Type for this
+     * <code>PolicyClass</code>
+     * 
+     * @return the <code>String</code> of the Type for this
+     *         <code>PolicyClass</code>
+     */
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
+    @JsonCreator
+    public static DictionaryType create(final String value) {
+        for (final DictionaryType type : values()) {
+            if (type.toString().equalsIgnoreCase(value) || type.name().equalsIgnoreCase(value)) {
                 return type;
             }
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Invalid value: " + value);
     }
 
 }

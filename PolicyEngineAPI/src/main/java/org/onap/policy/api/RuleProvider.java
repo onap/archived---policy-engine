@@ -29,50 +29,52 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @version 0.1
  */
 public enum RuleProvider {
-	/**
-	 * Indicates User will be defining the Rule information. 
-	 */
-	CUSTOM("Custom"),
-	/**
-	 * Indicates AAF will be providing the Rule information. 
-	 */
-	AAF("AAF"),
-	/**
-	 * Indicates Guard YAML will be providing the Rule information.
-	 */
-	GUARD_YAML("GUARD_YAML"),
-	/**
-	 * Indicates Guard BLACKLIST YAML 
-	 */
-	GUARD_BL_YAML("GUARD_BL_YAML"),
-	/**
-	 * Indicates Guard BLACKLIST YAML 
-	 */
-	RAINY_DAY("Rainy_Day")
-	;
-	
-	private String name;
-	
-	private RuleProvider(String typeName){
-		this.name = typeName;
-	}
-	
-	/**
-	 * Returns the <code>String</code> format of Type for this <code>AttributeType</code>
-	 * @return the <code>String</code> of the Type for this <code>AttributeType</code>
-	 */
-	@Override
-	public String toString() {
-		return this.name;
-	}
-	
-	@JsonCreator
-    public static RuleProvider create (String value) {
-        for(RuleProvider type: values()){
-            if(type.toString().equals(value) || type.equals(RuleProvider.valueOf(value))){
+    /**
+     * Indicates User will be defining the Rule information.
+     */
+    CUSTOM("Custom"),
+    /**
+     * Indicates AAF will be providing the Rule information.
+     */
+    AAF("AAF"),
+    /**
+     * Indicates Guard YAML will be providing the Rule information.
+     */
+    GUARD_YAML("GUARD_YAML"),
+    /**
+     * Indicates Guard BLACKLIST YAML
+     */
+    GUARD_BL_YAML("GUARD_BL_YAML"),
+    /**
+     * Indicates Guard BLACKLIST YAML
+     */
+    RAINY_DAY("Rainy_Day");
+
+    private final String name;
+
+    private RuleProvider(final String typeName) {
+        this.name = typeName;
+    }
+
+    /**
+     * Returns the <code>String</code> format of Type for this
+     * <code>AttributeType</code>
+     * 
+     * @return the <code>String</code> of the Type for this
+     *         <code>AttributeType</code>
+     */
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
+    @JsonCreator
+    public static RuleProvider create(final String value) {
+        for (final RuleProvider type : values()) {
+            if (type.toString().equalsIgnoreCase(value) || type.name().equalsIgnoreCase(value)) {
                 return type;
             }
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Invalid value: " + value);
     }
 }

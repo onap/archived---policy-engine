@@ -29,40 +29,44 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @version 0.1
  */
 public enum PolicyClass {
-	/**
-	 * Indicates Config based Policy. 
-	 */
-	Config("Config"),
-	/**
-	 * Indicates Action based Policy. 
-	 */
-	Action("Action"),
-	/**
-	 * Indicates Decision based Policy. 
-	 */
-	Decision("Decision")
-	;
-	private String name;
-	
-	private PolicyClass(String typeName){
-		this.name = typeName;
-	}
-	
-	/**
-	 * Returns the <code>String</code> format of Type for this <code>PolicyClass</code>
-	 * @return the <code>String</code> of the Type for this <code>PolicyClass</code>
-	 */
-	@Override
-	public String toString() {
-		return this.name;
-	}
-	@JsonCreator
-    public static PolicyClass create (String value) {
-        for(PolicyClass type: values()){
-            if(type.toString().equals(value) || type.equals(PolicyClass.valueOf(value))){
+    /**
+     * Indicates Config based Policy.
+     */
+    Config("Config"),
+    /**
+     * Indicates Action based Policy.
+     */
+    Action("Action"),
+    /**
+     * Indicates Decision based Policy.
+     */
+    Decision("Decision");
+
+    private final String name;
+
+    private PolicyClass(final String typeName) {
+        this.name = typeName;
+    }
+
+    /**
+     * Returns the <code>String</code> format of Type for this
+     * <code>PolicyClass</code>
+     * 
+     * @return the <code>String</code> of the Type for this
+     *         <code>PolicyClass</code>
+     */
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
+    @JsonCreator
+    public static PolicyClass create(final String value) {
+        for (final PolicyClass type : values()) {
+            if (type.toString().equalsIgnoreCase(value) || type.name().equalsIgnoreCase(value)) {
                 return type;
             }
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Invalid value: " + value);
     }
 }

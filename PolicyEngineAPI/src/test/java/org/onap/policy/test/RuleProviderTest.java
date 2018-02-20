@@ -19,21 +19,38 @@
  */
 package org.onap.policy.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.onap.policy.api.RuleProvider;
 
 public class RuleProviderTest {
 
-	@Test
-	public void test() {
-		assertEquals(RuleProvider.RAINY_DAY, RuleProvider.create(RuleProvider.RAINY_DAY.name()));
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void testException() {
-		RuleProvider.create("foobar");
-	}
+    @Test
+    public void test() {
+        assertEquals(RuleProvider.RAINY_DAY, RuleProvider.create(RuleProvider.RAINY_DAY.name()));
+    }
+
+    @Test
+    public void testCreate_EnumName_RuleProviderEnum() {
+        for (final RuleProvider ruleProvider : RuleProvider.values()) {
+            final RuleProvider actualRuleProvider = RuleProvider.create(ruleProvider.name());
+            assertEquals(ruleProvider, actualRuleProvider);
+            assertEquals(ruleProvider.toString(), actualRuleProvider.toString());
+        }
+    }
+
+    @Test
+    public void testCreate_StringValue_RuleProviderEnum() {
+        for (final RuleProvider ruleProvider : RuleProvider.values()) {
+            final RuleProvider actualRuleProvider = RuleProvider.create(ruleProvider.toString());
+            assertEquals(ruleProvider, actualRuleProvider);
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testException() {
+        RuleProvider.create("foobar");
+    }
 
 }
