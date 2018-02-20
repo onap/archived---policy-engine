@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import io.searchbox.client.JestResult;
-
 import java.lang.reflect.Method;
-
 import org.junit.Test;
 import org.onap.policy.pap.xacml.rest.elk.client.ElkConnector.PolicyIndexType;
 import org.onap.policy.pap.xacml.rest.elk.client.ElkConnectorImpl;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
 
 public class ElkConnectorImplTest {
 
@@ -96,5 +95,48 @@ public class ElkConnectorImplTest {
 		assertNull(r3);
 		assertNull(r4);
 	}
-
+	
+	@Test
+	public void testDelete() {
+		ElkConnectorImpl impl = new ElkConnectorImpl();
+		PolicyRestAdapter adapter = new PolicyRestAdapter();
+		try {
+			boolean is = impl.delete(adapter);
+		}
+		catch (Exception ex) {
+		}
+	}
+	
+	@Test
+	public void testPut() {
+		ElkConnectorImpl impl = new ElkConnectorImpl();
+		PolicyRestAdapter adapter = new PolicyRestAdapter();
+		try {
+			boolean is = impl.put(adapter);
+		}
+		catch (Exception ex) {
+		}
+	}
+	
+	@Test
+	public void testUpdate() {
+		ElkConnectorImpl impl = new ElkConnectorImpl();
+		PolicyRestAdapter adapter = new PolicyRestAdapter();
+		try {
+			boolean is = impl.update(adapter);
+		}
+		catch (Exception ex) {
+		}
+	}
+	
+	@Test
+	public void testSearchWithFilter() {
+		ElkConnectorImpl impl = new ElkConnectorImpl();
+		PolicyRestAdapter adapter = new PolicyRestAdapter();
+		try {
+			JestResult result = impl.search(PolicyIndexType.config, "search", null);
+		}
+		catch (Exception ex) {
+		}
+	}
 }
