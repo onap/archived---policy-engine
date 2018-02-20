@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_29ca521b",
+        "filename": "LogParser/src/test/resources/test_config_debug.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-20T14:52:46Z",
+      "side": 1,
+      "message": "2018 Ericsson etc...",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 69
+      },
+      "revId": "d81d7ff08e3119cf85894297e16135708ca9e8d8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_894926b9",
+        "filename": "LogParser/src/test/resources/test_config_error.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-20T14:52:46Z",
+      "side": 1,
+      "message": "You probably want this as 2018 Ericsson",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 69
+      },
+      "revId": "d81d7ff08e3119cf85894297e16135708ca9e8d8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
