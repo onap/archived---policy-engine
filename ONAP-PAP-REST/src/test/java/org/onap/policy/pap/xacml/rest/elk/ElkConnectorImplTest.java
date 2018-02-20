@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,15 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import io.searchbox.client.JestResult;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.onap.policy.pap.xacml.rest.elk.client.ElkConnector.PolicyIndexType;
 import org.onap.policy.pap.xacml.rest.elk.client.ElkConnectorImpl;
+import org.onap.policy.rest.adapter.PolicyRestAdapter;
 
 public class ElkConnectorImplTest {
 
@@ -96,5 +100,47 @@ public class ElkConnectorImplTest {
 		assertNull(r3);
 		assertNull(r4);
 	}
+	
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
+	
+	@Test
+	public void testDelete() {
+		thrown.expect(NullPointerException.class);
 
+		ElkConnectorImpl impl = new ElkConnectorImpl();
+		PolicyRestAdapter adapter = new PolicyRestAdapter();
+		impl.delete(adapter);
+		fail("Expected exception to be thrown");
+	}
+
+	
+	@Test
+	public void testPut() throws IOException {
+		thrown.expect(NullPointerException.class);
+		
+		ElkConnectorImpl impl = new ElkConnectorImpl();
+		PolicyRestAdapter adapter = new PolicyRestAdapter();
+		impl.put(adapter);
+		fail("Expected exception to be thrown");
+	}
+	
+	@Test
+	public void testUpdate() {
+		thrown.expect(IllegalStateException.class);
+		
+		ElkConnectorImpl impl = new ElkConnectorImpl();
+		PolicyRestAdapter adapter = new PolicyRestAdapter();
+		impl.update(adapter);
+		fail("Expected exception to be thrown");
+	}
+	
+	@Test
+	public void testSearchWithFilter() {
+		thrown.expect(IllegalStateException.class);
+
+		ElkConnectorImpl impl = new ElkConnectorImpl();
+		impl.search(PolicyIndexType.config, "search", null);
+		fail("Expected exception to be thrown");
+	}
 }
