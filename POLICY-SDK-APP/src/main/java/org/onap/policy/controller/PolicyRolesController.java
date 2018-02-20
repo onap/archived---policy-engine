@@ -59,7 +59,11 @@ public class PolicyRolesController extends RestrictedBaseController{
 	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyRolesController.class);
 	
 	@Autowired
-	CommonClassDao commonClassDao;
+	private static CommonClassDao commonClassDao;
+	
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
+		PolicyRolesController.commonClassDao = commonClassDao;
+	}
 	
 	List<String> scopelist;
 	
