@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_7114c49f",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-20T17:55:23Z",
+      "side": 1,
+      "message": "Double checking this is the intention to reset this value",
+      "range": {
+        "startLine": 345,
+        "startChar": 4,
+        "endLine": 345,
+        "endChar": 17
+      },
+      "revId": "22ba44228a6bfc3b640fdbbbbc5b057e88da7dfa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b11d6cc0",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/model/RemoveGroupPolicy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-20T17:55:23Z",
+      "side": 1,
+      "message": "Seems that this is going to become an unused import???",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 52
+      },
+      "revId": "22ba44228a6bfc3b640fdbbbbc5b057e88da7dfa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
