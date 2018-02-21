@@ -20,78 +20,63 @@
 
 package org.onap.policy.test;
 
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 import org.onap.policy.api.PolicyClass;
 
-import static org.junit.Assert.*;
-
 /**
- * The class <code>PolicyClassTest</code> contains tests for the class <code>{@link PolicyClass}</code>.
+ * The class <code>PolicyClassTest</code> contains tests for the class
+ * <code>{@link PolicyClass}</code>.
  *
  * @generatedBy CodePro at 6/1/16 1:40 PM
  * @version $Revision: 1.0 $
  */
 public class PolicyClassTest {
-	/**
-	 * Run the String toString() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testToString_1() {
-		PolicyClass fixture = PolicyClass.Action;
 
-		String result = fixture.toString();
+    @Test
+    public void testToString_1() {
+        final PolicyClass fixture = PolicyClass.Action;
 
-		// add additional test code here
-		assertEquals("Action", result);
-		
-		assertEquals(PolicyClass.Decision, PolicyClass.create(PolicyClass.Decision.toString()));
-	}
+        final String result = fixture.toString();
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testException() {
-		PolicyClass.create("foobar");
-	}
-	
-	/**
-	 * Perform pre-test initialization.
-	 *
-	 * @throws Exception
-	 *         if the initialization fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Before
-	public void setUp()
-		throws Exception {
-		// add additional set up code here
-	}
+        // add additional test code here
+        assertEquals("Action", result);
 
-	/**
-	 * Perform post-test clean-up.
-	 *
-	 * @throws Exception
-	 *         if the clean-up fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@After
-	public void tearDown()
-		throws Exception {
-		// Add additional tear down code here
-	}
+        assertEquals(PolicyClass.Decision, PolicyClass.create(PolicyClass.Decision.toString()));
+    }
 
-	/**
-	 * Launch the test.
-	 *
-	 * @param args the command line arguments
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	public static void main(String[] args) {
-		new org.junit.runner.JUnitCore().run(PolicyClassTest.class);
-	}
+    @Test
+    public void testCreate_EnumName_PolicyClassEnum() {
+        for (final PolicyClass policyClass : PolicyClass.values()) {
+            final PolicyClass actualPolicyClass = PolicyClass.create(policyClass.name());
+            assertEquals(policyClass, actualPolicyClass);
+            assertEquals(policyClass.toString(), actualPolicyClass.toString());
+        }
+    }
+
+    @Test
+    public void testCreate_StringValue_PolicyClassEnum() {
+        for (final PolicyClass policyClass : PolicyClass.values()) {
+            final PolicyClass actualPolicyClass = PolicyClass.create(policyClass.toString());
+            assertEquals(policyClass, actualPolicyClass);
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testException() {
+        PolicyClass.create("foobar");
+    }
+
+    /**
+     * Launch the test.
+     *
+     * @param args
+     *            the command line arguments
+     *
+     * @generatedBy CodePro at 6/1/16 1:40 PM
+     */
+    public static void main(final String[] args) {
+        new org.junit.runner.JUnitCore().run(PolicyClassTest.class);
+    }
 }

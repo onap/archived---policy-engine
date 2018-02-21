@@ -31,40 +31,48 @@ import org.onap.policy.api.UpdateType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class NotificationUnMarshal {
-	
-	private NotificationUnMarshal() {
-		// Empty constructor
-	}
-	
-	public static StdPDPNotification notificationJSON(String json) throws IOException{
-		ObjectMapper mapper = new ObjectMapper();
-		StdPDPNotification notification = mapper.readValue(json, StdPDPNotification.class);
-		if(notification == null || notification.getLoadedPolicies() == null){
-			return notification;
-		}
-	    Collection<StdLoadedPolicy> stdLoadedPolicies = new ArrayList<>();
-	    for(LoadedPolicy loadedPolicy: notification.getLoadedPolicies()){
-	        StdLoadedPolicy stdLoadedPolicy = (StdLoadedPolicy) loadedPolicy;
-	        if(notification.getRemovedPolicies()!=null){
-	            Boolean updated = false;
-	            for(RemovedPolicy removedPolicy: notification.getRemovedPolicies()){
-	                String regex = ".(\\d)*.xml";
-	                if(removedPolicy.getPolicyName().replaceAll(regex, "").equals(stdLoadedPolicy.getPolicyName().replaceAll(regex, ""))){
-	                    updated  = true;
-	                    break;
-	                }
-	            }
-	            if(updated){
-	                stdLoadedPolicy.setUpdateType(UpdateType.UPDATE);
-	            }else{
-	                stdLoadedPolicy.setUpdateType(UpdateType.NEW);
-	            }
-	        }else{
-	            stdLoadedPolicy.setUpdateType(UpdateType.NEW);
-	        }
-	        stdLoadedPolicies.add(stdLoadedPolicy);
-	    }
-	    notification.setLoadedPolicies(stdLoadedPolicies);
-		return notification;
-	}
+
+    private static final String EMPTY_STRING = "";
+
+    private static final String REGEX = ".(\\d)*.xml";
+
+    private NotificationUnMarshal() {
+        // Empty constructor
+    }
+
+    public static StdPDPNotification notificationJSON(final String json) throws IOException {
+        final ObjectMapper mapper = new ObjectMapper();
+        final StdPDPNotification notification = mapper.readValue(json, StdPDPNotification.class);
+        if (notification == null || notification.getLoadedPolicies() == null) {
+            return notification;
+        }
+        final Collection<StdLoadedPolicy> stdLoadedPolicies = new ArrayList<>();
+        for (final LoadedPolicy loadedPolicy : notification.getLoadedPolicies()) {
+            final StdLoadedPolicy stdLoadedPolicy = (StdLoadedPolicy) loadedPolicy;
+            if (notification.getRemovedPolicies() != null) {
+                if (isUpdated(notification, stdLoadedPolicy)) {
+                    stdLoadedPolicy.setUpdateType(UpdateType.UPDATE);
+                } else {
+                    stdLoadedPolicy.setUpdateType(UpdateType.NEW);
+                }
+            } else {
+                stdLoadedPolicy.setUpdateType(UpdateType.NEW);
+            }
+            stdLoadedPolicies.add(stdLoadedPolicy);
+        }
+        notification.setLoadedPolicies(stdLoadedPolicies);
+        return notification;
+    }
+
+    private static Boolean isUpdated(final StdPDPNotification notification, final StdLoadedPolicy stdLoadedPolicy) {
+        for (final RemovedPolicy removedPolicy : notification.getRemovedPolicies()) {
+            final String removedPolicyName = removedPolicy.getPolicyName();
+            final String loadedPolicyName = stdLoadedPolicy.getPolicyName();
+            if (removedPolicyName.replaceAll(REGEX, EMPTY_STRING)
+                    .equals(loadedPolicyName.replaceAll(REGEX, EMPTY_STRING))) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

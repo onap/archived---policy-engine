@@ -29,45 +29,48 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @version 0.2
  */
 public enum PolicyType {
-	/**
-	 * Indicates the response is Properties type
-	 */
-	PROPERTIES("Properties"),
-	/**
-	 * Indicates the response is JSON type
-	 */
-	JSON("json"),
-	/**
-	 * Indicates the response is XML type
-	 */
-	XML("xml"),
-	/**
-	 * Indicates the response is Other type
-	 */
-	OTHER("other")
-	;
-	
-	private String name; 
-	
-	private PolicyType(String typeName) {
-		this.name = typeName;
-	}
-	
-	/**
-	 * Returns the <code>String</code> format of Type for this <code>PolicyType</code>
-	 * @return the <code>String</code> of the Type for this <code>PolicyType</code>
-	 */
-	@Override
-	public String toString() {
-		return this.name;
-	}
-	@JsonCreator
-    public static PolicyType create (String value) {
-        for(PolicyType type: values()){
-            if(type.toString().equalsIgnoreCase(value)){
+    /**
+     * Indicates the response is Properties type
+     */
+    PROPERTIES("Properties"),
+    /**
+     * Indicates the response is JSON type
+     */
+    JSON("json"),
+    /**
+     * Indicates the response is XML type
+     */
+    XML("xml"),
+    /**
+     * Indicates the response is Other type
+     */
+    OTHER("other");
+
+    private final String name;
+
+    private PolicyType(final String typeName) {
+        this.name = typeName;
+    }
+
+    /**
+     * Returns the <code>String</code> format of Type for this
+     * <code>PolicyType</code>
+     * 
+     * @return the <code>String</code> of the Type for this
+     *         <code>PolicyType</code>
+     */
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
+    @JsonCreator
+    public static PolicyType create(final String value) {
+        for (final PolicyType type : values()) {
+            if (type.toString().equalsIgnoreCase(value) || type.name().equalsIgnoreCase(value)) {
                 return type;
             }
         }
-        throw new IllegalArgumentException();
-    }	
+        throw new IllegalArgumentException("Invalid value: " + value);
+    }
 }

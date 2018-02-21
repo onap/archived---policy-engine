@@ -29,38 +29,41 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @version 0.1
  */
 public enum DeletePolicyCondition {
-	
-	/**
-	 * Indicates a condition to only delete the current version of the policy. 
-	 */
-	ONE("Current Version"),
-	
-	/**
-	 * Indicates a condition to delete all versions of the policy.
-	 */
-	ALL("All Versions");
-	private String name;
 
-	private DeletePolicyCondition(String name){
-		this.name = name;
-	}
+    /**
+     * Indicates a condition to only delete the current version of the policy.
+     */
+    ONE("Current Version"),
 
-	/**
-	 * Returns the <code>String</code> format of delete condition for this Policy
-	 * @return the <code>String</code> of the delete condition for this Policy
-	 */
-	@Override
-	public String toString(){
-		return this.name;
-	}
+    /**
+     * Indicates a condition to delete all versions of the policy.
+     */
+    ALL("All Versions");
 
-	@JsonCreator
-    public static DeletePolicyCondition create (String value) {
-        for(DeletePolicyCondition type: values()){
-            if(type.toString().equals(value) || type.equals(DeletePolicyCondition.valueOf(value))){
+    private final String name;
+
+    private DeletePolicyCondition(final String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the <code>String</code> format of delete condition for this
+     * Policy
+     * 
+     * @return the <code>String</code> of the delete condition for this Policy
+     */
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
+    @JsonCreator
+    public static DeletePolicyCondition create(final String value) {
+        for (final DeletePolicyCondition type : values()) {
+            if (type.toString().equalsIgnoreCase(value) || type.name().equalsIgnoreCase(value)) {
                 return type;
             }
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Invalid value: " + value);
     }
 }

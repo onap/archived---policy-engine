@@ -19,27 +19,34 @@
  */
 package org.onap.policy.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.api.DictionaryType;
 
 public class DictionaryTypeTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Test
+    public void testCreate_EnumName_DictionaryTypeEnum() {
+        for (final DictionaryType dictionaryType : DictionaryType.values()) {
+            final DictionaryType actualDictionaryType = DictionaryType.create(dictionaryType.name());
+            assertEquals(dictionaryType, actualDictionaryType);
+            assertEquals(dictionaryType.toString(), actualDictionaryType.toString());
+        }
+    }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    @Test
+    public void testCreate_StringValue_DictionaryTypeEnum() {
+        for (final DictionaryType dictionaryType : DictionaryType.values()) {
+            final DictionaryType actualDictionaryType = DictionaryType.create(dictionaryType.toString());
+            assertEquals(dictionaryType, actualDictionaryType);
+        }
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void test() {
-		assertEquals(DictionaryType.Action, DictionaryType.create(DictionaryType.Action.toString()));
-		DictionaryType.create("foobar");
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void test() {
+        assertEquals(DictionaryType.Action, DictionaryType.create(DictionaryType.Action.toString()));
+        DictionaryType.create("foobar");
+    }
 
 }
