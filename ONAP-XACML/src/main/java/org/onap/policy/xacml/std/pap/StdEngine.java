@@ -349,7 +349,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 					props.store(os, "");
 				}
 			} catch (IOException e) {
-				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "StdEngine", "Failed to create " + policyProperties);
+				PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "StdEngine", "Failed to create policyProperties");
 				throw new PAPException("Failed to create " + id);
 			}
 		}
@@ -368,7 +368,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 					props.store(os, "");
 				}
 			} catch (IOException e) {
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdEngine", "Failed to create " + pipProperties);
+				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "StdEngine", "Failed to create pipProperties");
 				throw new PAPException("Failed to create " + id);
 			}	
 
