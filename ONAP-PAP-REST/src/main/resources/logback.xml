@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP-PAP-REST
   ================================================================================
-  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -114,16 +114,13 @@
     class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${logDirectory}/${auditLogName}.log</file>
     <rollingPolicy
-      class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      <fileNamePattern>${logDirectory}/${auditLogName}.%i.log.zip
-      </fileNamePattern>
-      <minIndex>1</minIndex>
-      <maxIndex>9</maxIndex>
+      class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${logDirectory}/${auditLogName}.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+      
+      <!-- keep 30 days' worth of history capped at 3GB total size --> 
+      <maxHistory>30</maxHistory> 
+      <totalSizeCap>3GB</totalSizeCap>
     </rollingPolicy>
-    <triggeringPolicy
-      class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-      <maxFileSize>5MB</maxFileSize>
-    </triggeringPolicy>
     <encoder>
          <pattern>${defaultAuditPattern}</pattern>
     </encoder>
@@ -141,19 +138,14 @@
     class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${logDirectory}/${metricsLogName}.log</file>
     <rollingPolicy
-      class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      <fileNamePattern>${logDirectory}/${metricsLogName}.%i.log.zip
-      </fileNamePattern>
-      <minIndex>1</minIndex>
-      <maxIndex>9</maxIndex>
+      class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${logDirectory}/${metricsLogName}.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+      
+      <!-- keep 30 days' worth of history capped at 3GB total size --> 
+      <maxHistory>30</maxHistory> 
+      <totalSizeCap>3GB</totalSizeCap>
     </rollingPolicy>
-    <triggeringPolicy
-      class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-      <maxFileSize>5MB</maxFileSize>
-    </triggeringPolicy>
     <encoder>
-      <!-- <pattern>"%d{HH:mm:ss.SSS} [%thread] %-5level %logger{1024} - 
-        %msg%n"</pattern> -->
       <pattern>${defaultMetricPattern}</pattern>
     </encoder>
   </appender>
@@ -170,19 +162,16 @@
     class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${logDirectory}/${errorLogName}.log</file>
     <rollingPolicy
-      class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      <fileNamePattern>${logDirectory}/${errorLogName}.%i.log.zip
-      </fileNamePattern>
-      <minIndex>1</minIndex>
-      <maxIndex>9</maxIndex>
+      class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${logDirectory}/${errorLogName}.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+      
+  	<!-- keep 30 days' worth of history capped at 3GB total size --> 
+      <maxHistory>30</maxHistory> 
+      <totalSizeCap>3GB</totalSizeCap>
     </rollingPolicy>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
      <level>ERROR</level>
-     </filter>
-    <triggeringPolicy
-      class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-      <maxFileSize>5MB</maxFileSize>
-    </triggeringPolicy>
+    </filter>
     <encoder>
       <pattern>${defaultErrorPattern}</pattern>
     </encoder>
@@ -199,19 +188,16 @@
     class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${debugLogDirectory}/${debugLogName}.log</file>
     <rollingPolicy
-      class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      <fileNamePattern>${debugLogDirectory}/${debugLogName}.%i.log.zip
-      </fileNamePattern>
-      <minIndex>1</minIndex>
-      <maxIndex>9</maxIndex>
+      class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${debugLogDirectory}/${debugLogName}.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+      
+       <!-- keep 30 days' worth of history capped at 3GB total size --> 
+      <maxHistory>30</maxHistory> 
+      <totalSizeCap>3GB</totalSizeCap>
     </rollingPolicy>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
      <level>DEBUG</level>
-     </filter>
-    <triggeringPolicy
-      class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-      <maxFileSize>5MB</maxFileSize>
-    </triggeringPolicy>
+    </filter>
     <encoder>
       <pattern>${debugLoggerPattern}</pattern>
     </encoder>
