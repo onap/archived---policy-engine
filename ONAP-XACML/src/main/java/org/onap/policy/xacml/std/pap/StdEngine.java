@@ -320,7 +320,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		// If it exists already
 		//
 		if (Files.exists(groupPath)) {
-			logger.warn(addGroup + id + " directory exists" + groupPath.toString());
+			//fixed Fortify Log Forging issue
+			logger.warn("addGroup:this directory exists.");
 		} else {
 			try {
 				//
@@ -338,7 +339,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 
 		Path policyProperties = Paths.get(groupPath.toString(), "xacml.policy.properties");
 		if (Files.exists(policyProperties)) {
-			logger.warn(addGroup + id + " file exists: " + policyProperties.toString());
+			//fixed Fortify Log Forging issue
+			logger.warn("addGroup:this directory exists.");
 		} else {
 			Properties props = new Properties();
 			props.setProperty(XACMLProperties.PROP_REFERENCEDPOLICIES, "");
@@ -359,7 +361,7 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		Path pipProperties = Paths.get(groupPath.toString(), "xacml.pip.properties");
 		Properties props = new Properties();
 		if (Files.exists(pipProperties)) {
-			logger.warn(addGroup + id + " file exists: " + pipProperties.toString());
+			logger.warn("addGroup: this file exists.");
 		} else {
 			try {
 				props = setPIPProperties(props);
