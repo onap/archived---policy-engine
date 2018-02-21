@@ -104,6 +104,14 @@ public class DictionaryImportController {
 			response.getWriter().write("Error");
 			return;
 		}
+		
+		// fix Fortify Path Manipulation issue
+		if(!isValidDictionaryName(dictionaryName)){
+			LOGGER.error("dictionaryName is invalid");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().write("Error");
+			return;			
+		}
 				
 		boolean dictionaryImportExists = false;
 		try{
@@ -709,5 +717,82 @@ public class DictionaryImportController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().write("Error");
 		}
+	}
+	
+	private boolean isValidDictionaryName(String dictionaryName){
+		
+		if(dictionaryName.startsWith("Attribute")){
+			return true;
+		}
+		if(dictionaryName.startsWith("ActionPolicyDictionary")){
+			return true;
+		}
+		if(dictionaryName.startsWith("OnapName")){
+			return true;
+		}
+		if(dictionaryName.startsWith("MSPolicyDictionary")){
+			return true;
+		}
+		if(dictionaryName.startsWith("VNFType")){
+			return true;
+		}
+		if(dictionaryName.startsWith("VSCLAction")){
+			return true;
+		}
+		if(dictionaryName.startsWith("ClosedLoopService")){
+			return true;
+		}
+		if(dictionaryName.startsWith("ClosedLoopSite")){
+			return true;
+		}
+		if(dictionaryName.startsWith("PEPOptions")){
+			return true;
+		}
+		if(dictionaryName.startsWith("VarbindDictionary")){
+			return true;
+		}
+		if(dictionaryName.startsWith("BRMSParamDictionary")){
+			return true;
+		}
+		if(dictionaryName.startsWith("BRMSControllerDictionary")){
+			return true;
+		}
+		if(dictionaryName.startsWith("BRMSDependencyDictionary")){
+			return true;
+		}
+		if(dictionaryName.startsWith("Settings")){
+			return true;
+		}
+		if(dictionaryName.startsWith("PrefixList")){
+			return true;
+		}
+		if(dictionaryName.startsWith("SecurityZone")){
+			return true;
+		}
+		if(dictionaryName.startsWith("Zone")){
+			return true;
+		}
+		if(dictionaryName.startsWith("ServiceList")){
+			return true;
+		}
+		if(dictionaryName.startsWith("ServiceGroup")){
+			return true;
+		}
+		if(dictionaryName.startsWith("AddressGroup")){
+			return true;
+		}
+		if(dictionaryName.startsWith("ProtocolList")){
+			return true;
+		}
+		if(dictionaryName.startsWith("ActionList")){
+			return true;
+		}
+		if(dictionaryName.startsWith("TermList")){
+			return true;
+		}
+		if(dictionaryName.startsWith("SearchCriteria")){
+			return true;
+		}
+		return false;
 	}
 }
