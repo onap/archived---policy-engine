@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_25c91259",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-21T15:55:08Z",
+      "side": 1,
+      "message": "Frank, the id means it is just a name of pdp group.\nSo, there is no use of below logging.",
+      "revId": "623ffaedff8da94fba3174ed7787df6af8246af8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
