@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_1a24705e",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/DictionaryImportController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-22T16:49:37Z",
+      "side": 1,
+      "message": "Is it possible to maintain all the literal strings in a central place, such as an enum, or at least as \"public final static String\" as this will generate sonars?  it will also help with maintenance in the code and avoid mispellings, etc ..",
+      "revId": "d2b95cc726431fec05f1050ac8ab7d96ab31d648",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
