@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.compress.utils.IOUtils;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.pap.xacml.rest.DisctionaryNames;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionList;
 import org.onap.policy.rest.jpa.ActionPolicyDict;
@@ -103,6 +104,14 @@ public class DictionaryImportController {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().write("Error");
 			return;
+		}
+		
+		// fix Fortify Path Manipulation issue
+		if(!isValidDictionaryName(dictionaryName)){
+			LOGGER.error("dictionaryName is invalid");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().write("Error");
+			return;			
 		}
 				
 		boolean dictionaryImportExists = false;
@@ -709,5 +718,82 @@ public class DictionaryImportController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().write("Error");
 		}
+	}
+	
+	public boolean isValidDictionaryName(String dictionaryName){
+		
+		if(dictionaryName.startsWith(DisctionaryNames.Attribute.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ActionPolicyDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.OnapName.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.MSPolicyDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.VNFType.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.VSCLAction.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ClosedLoopService.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ClosedLoopSite.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.PEPOptions.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.VarbindDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.BRMSParamDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.BRMSControllerDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.BRMSDependencyDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.Settings.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.PrefixList.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.SecurityZone.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.Zone.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ServiceList.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ServiceGroup.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.AddressGroup.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ProtocolList.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ActionList.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.TermList.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.SearchCriteria.toString())){
+			return true;
+		}
+		return false;
 	}
 }
