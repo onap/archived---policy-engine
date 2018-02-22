@@ -19,8 +19,45 @@
  */
 package org.onap.policy.xacml.test.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import java.util.Properties;
+import org.junit.Test;
+import org.onap.policy.xacml.std.pip.engines.aaf.AAFEngine;
+import com.att.research.xacml.api.pip.PIPFinder;
+import com.att.research.xacml.api.pip.PIPRequest;
+import com.att.research.xacml.api.pip.PIPResponse;
+import com.att.research.xacml.std.pip.StdPIPFinderFactory;
+import com.att.research.xacml.std.pip.StdPIPRequest;
+import com.att.research.xacml.api.XACML3;
+
 public class AAFEngineTest {
-	//
-	// Some tests to be added
-	//
+	@Test
+	public void aafEngineTest(){
+		String testId = "testId";
+		AAFEngine aafEngine = new AAFEngine();
+		assertTrue(AAFEngine.DEFAULT_DESCRIPTION.equals("PIP for authenticating aaf attributes using the AAF REST interface"));
+		assertTrue(AAFEngine.DEFAULT_ISSUER.equals("aaf"));
+		
+		Properties props = new Properties();
+		try {
+			aafEngine.configure(testId, props);
+			assertEquals(aafEngine.getName(), testId);
+			assertEquals(aafEngine.getDescription(), AAFEngine.DEFAULT_DESCRIPTION);
+			assertEquals(aafEngine.getIssuer(), AAFEngine.DEFAULT_ISSUER);
+			assertEquals(aafEngine.attributesProvided().size(), 2);
+			assertEquals(aafEngine.attributesRequired().size(), 5);
+			
+			PIPRequest pipRequest = new StdPIPRequest(XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, AAFEngine.AAF_RESPONSE_ID, XACML3.ID_DATATYPE_STRING);
+			StdPIPFinderFactory pipFactory = new StdPIPFinderFactory();
+			PIPFinder pipFinder = pipFactory.getFinder();
+			assertEquals(pipFinder.getPIPEngines().size(), 0);
+			PIPResponse pipResponse = aafEngine.getAttributes(pipRequest, pipFinder);
+			assertEquals(pipResponse.getStatus().isOk(), true);
+		}
+		catch (Exception ex) {
+			fail("Not expecting any exceptions");
+		}
+	}
 }
