@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineUtils
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -284,7 +285,9 @@ public class PolicyUtils {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setValidating(false);
         factory.setNamespaceAware(true);
-        try {
+        
+        try {    
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);		
             SAXParser parser = factory.newSAXParser();
             XMLReader reader = parser.getXMLReader();
             reader.setErrorHandler(new XMLErrorHandler());
