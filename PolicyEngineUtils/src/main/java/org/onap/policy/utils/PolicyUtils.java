@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineUtils
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -43,6 +45,8 @@ import org.kie.api.io.ResourceType;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -284,10 +288,30 @@ public class PolicyUtils {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setValidating(false);
         factory.setNamespaceAware(true);
+        
+        try {
+        	
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+	        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+	        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+
+		} catch (SAXNotRecognizedException e1) {
+			 LOGGER.error("SAXNotRecognizedException Occurred While Validating", e1);
+		} catch (SAXNotSupportedException e1) {
+			 LOGGER.error("SAXNotSupportedException Occurred While Validating", e1);
+		} catch (ParserConfigurationException e1) {
+			 LOGGER.error("ParserConfigurationException Occurred While Validating", e1);
+		} catch (Exception e1) {
+			 LOGGER.error("Exception Occurred While Validating", e1);
+		}
+        
         try {
             SAXParser parser = factory.newSAXParser();
             XMLReader reader = parser.getXMLReader();
             reader.setErrorHandler(new XMLErrorHandler());
+            if(data == null || data.isEmpty()){
+            	return false;
+            }
             reader.parse(new InputSource(new StringReader(data)));
         } catch (Exception e) {
             LOGGER.error("Exception Occured While Validating"+e);
