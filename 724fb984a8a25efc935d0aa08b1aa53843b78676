@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_106bf1f1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-23T12:08:38Z",
+      "side": 1,
+      "message": "Commit messages should be in imperative mode. See the instructions at:\nhttps://wiki.onap.org/display/DW/Commit+Messages",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 44
+      },
+      "revId": "724fb984a8a25efc935d0aa08b1aa53843b78676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f07525cb",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-23T12:08:38Z",
+      "side": 1,
+      "message": "You changed the string literals to constants in some places which was great, maybe use constants for \"401\" and \"400\" as well.",
+      "range": {
+        "startLine": 391,
+        "startChar": 59,
+        "endLine": 391,
+        "endChar": 64
+      },
+      "revId": "724fb984a8a25efc935d0aa08b1aa53843b78676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_907e21ae",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-23T12:08:38Z",
+      "side": 1,
+      "message": "See comment above",
+      "range": {
+        "startLine": 399,
+        "startChar": 59,
+        "endLine": 399,
+        "endChar": 64
+      },
+      "revId": "724fb984a8a25efc935d0aa08b1aa53843b78676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_303e2ddb",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/utils/PolicyCommonConfigConstants.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-23T12:08:38Z",
+      "side": 1,
+      "message": "PolicyEngineAPI",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 24
+      },
+      "revId": "724fb984a8a25efc935d0aa08b1aa53843b78676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_d026e9cd",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/utils/PolicyConfigConstants.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-23T12:08:38Z",
+      "side": 1,
+      "message": "PolicyEngineAPI",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 24
+      },
+      "revId": "724fb984a8a25efc935d0aa08b1aa53843b78676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f023e5ba",
+        "filename": "PolicyEngineAPI/src/test/java/org/onap/policy/std/StdPolicyEngineTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-23T12:08:38Z",
+      "side": 1,
+      "message": "PolicyEngineAPI",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 24
+      },
+      "revId": "724fb984a8a25efc935d0aa08b1aa53843b78676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
