@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_73335fab",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/auth/test/AuthenticationServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-23T14:48:49Z",
+      "side": 1,
+      "message": "note the //foo below",
+      "revId": "9092983343fd0324b46b491cd755ebbc1ce3bcdc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
