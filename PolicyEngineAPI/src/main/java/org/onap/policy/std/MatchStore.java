@@ -20,12 +20,13 @@
 
 package org.onap.policy.std;
 
+import static org.onap.policy.std.utils.PolicyCommonConfigConstants.CONFIG_NAME;
+import static org.onap.policy.std.utils.PolicyCommonConfigConstants.ONAP_NAME;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import org.onap.policy.api.LoadedPolicy;
 import org.onap.policy.api.NotificationType;
 import org.onap.policy.api.PDPNotification;
@@ -34,9 +35,6 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class MatchStore {
-    private static final String CONFIG_NAME = "ConfigName";
-
-    private static final String ONAP_NAME = "ONAPName";
 
     private static final Set<Matches> MATCH_STORE = new HashSet<>();
 
