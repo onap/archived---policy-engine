@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_73da7f4d",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PolicyUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-23T15:13:53Z",
+      "side": 1,
+      "message": "create static final strings for these 2 urls below",
+      "revId": "de25b8c9a66dd1f64b4191ce9ffb8e2a25420b78",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_73a83f8d",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PolicyUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-23T15:13:53Z",
+      "side": 1,
+      "message": "Is it OK to continue if the \"setFeature calls above fail?",
+      "revId": "de25b8c9a66dd1f64b4191ce9ffb8e2a25420b78",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_53d5031a",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PolicyUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-23T15:13:53Z",
+      "side": 1,
+      "message": "why does it have to be checked again here? it is done in line 285.",
+      "revId": "de25b8c9a66dd1f64b4191ce9ffb8e2a25420b78",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
