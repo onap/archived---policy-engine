@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_5328a385",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/utils/PolicyCommonConfigConstants.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-23T12:30:00Z",
+      "side": 1,
+      "message": "I think this should be \"PolicyEngineAPI\", the module name.",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 30
+      },
+      "revId": "e0047af3eadd9e93c863e15eb1a7b5448875bab7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_732d9f94",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/utils/PolicyConfigConstants.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-23T12:30:00Z",
+      "side": 1,
+      "message": "I think this should be \"PolicyEngineAPI\", the module name.",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 24
+      },
+      "revId": "e0047af3eadd9e93c863e15eb1a7b5448875bab7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_131e9b5f",
+        "filename": "PolicyEngineAPI/src/test/java/org/onap/policy/std/StdPolicyEngineTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-23T12:30:00Z",
+      "side": 1,
+      "message": "I think this should be \"PolicyEngineAPI\", the module name.",
+      "range": {
+        "startLine": 3,
+        "startChar": 3,
+        "endLine": 3,
+        "endChar": 22
+      },
+      "revId": "e0047af3eadd9e93c863e15eb1a7b5448875bab7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
