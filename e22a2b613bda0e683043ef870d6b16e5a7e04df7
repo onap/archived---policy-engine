@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_1333fb62",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1183,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-23T16:56:24Z",
+      "side": 0,
+      "message": "Are we sure we wanted to remove this code?",
+      "range": {
+        "startLine": 1174,
+        "startChar": 8,
+        "endLine": 1183,
+        "endChar": 9
+      },
+      "revId": "e22a2b613bda0e683043ef870d6b16e5a7e04df7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_3338773c",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1218,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-23T16:56:24Z",
+      "side": 0,
+      "message": "Same here - maybe you are removing duplicate code and this is caught elsewhere??",
+      "range": {
+        "startLine": 1209,
+        "startChar": 8,
+        "endLine": 1218,
+        "endChar": 9
+      },
+      "revId": "e22a2b613bda0e683043ef870d6b16e5a7e04df7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
