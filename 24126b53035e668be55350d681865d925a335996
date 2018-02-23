@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_5333c313",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/PolicyUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-02-23T19:18:22Z",
+      "side": 1,
+      "message": "you can place lines 299-302 and place them right here.  No reason to have 2 try/catch (the exception handling is exactly the same)",
+      "revId": "24126b53035e668be55350d681865d925a335996",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
