@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,10 +46,15 @@ import org.onap.policy.common.im.IntegrityMonitor;
 import org.onap.policy.common.im.IntegrityMonitorException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.xacml.std.pap.StdPDPPolicy;
+import org.onap.policy.xacml.std.pap.StdPDPStatus;
 import org.powermock.api.mockito.PowerMockito;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
+
+import com.att.research.xacml.util.XACMLProperties;
 import com.mockrunner.mock.web.MockServletInputStream;
 
 import junit.framework.TestCase;
@@ -81,10 +86,19 @@ public class XACMLPdpServletTest extends TestCase{
 	private static final String DEFAULT_DB_USER = "sa";
 	private static final String DEFAULT_DB_PWD = "";
 
-	 
+	private StdPDPStatus status;
+	private StdPDPPolicy foobarPolicy;
+
     @Before
     public void setUp(){
-    	
+    	status = new StdPDPStatus();
+    	foobarPolicy = new StdPDPPolicy();
+		foobarPolicy.setId("foobar");
+		foobarPolicy.setVersion("123");	
+		foobarPolicy.setName("nothing");
+		status.addLoadedPolicy(foobarPolicy);
+
+
     	properties = new Properties();
 		properties.put(IntegrityAuditProperties.DB_DRIVER, XACMLPdpServletTest.DEFAULT_DB_DRIVER);
 		properties.put(IntegrityAuditProperties.DB_URL, "jdbc:h2:file:./sql/xacmlTest");
@@ -170,12 +184,13 @@ public class XACMLPdpServletTest extends TestCase{
 		}
 		Mockito.doNothing().when(im).endTransaction();
     }
-    
+
 	@Test
     public void testInit(){
 		LOGGER.info("XACMLPdpServletTest - testInit");
 		try {	
 			pdpServlet.init(servletConfig);
+
 			assertTrue(true);
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured"+e);
@@ -184,7 +199,60 @@ public class XACMLPdpServletTest extends TestCase{
 		}
 
 	}
+
+	@Test
+	public void testUebNotification() {
+		System.out.println("drewtest1");
+		LOGGER.info("XACMLPdpServletTest - drewTest1");
+		try {	
+
+			XACMLProperties.reloadProperties();
+			System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pdp.ueb.properties");
+			XACMLProperties.getProperties();
+			XACMLProperties.setProperty(XACMLRestProperties.PROP_NOTIFICATION_TYPE, "ueb");
+
+		   pdpServlet.init(servletConfig);
+
+			status.setStatus(com.att.research.xacml.api.pap.PDPStatus.Status.UPDATING_CONFIGURATION);
+			
+			XACMLPdpLoader.validatePolicies(properties, status);
+			XACMLPdpLoader.sendNotification();
+			assertTrue(true);
+		} catch (Exception e) {
+			LOGGER.error("Exception Occured"+e);
+			fail();
+			
+		}
+		
+	}
+
+	@Test
+	public void testDmaapNotification() {
+		System.out.println("drewtest2");
+		LOGGER.info("XACMLPdpServletTest - drewTest2");
+		try {	
+			
+			XACMLProperties.reloadProperties();
+			System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pdp.dmaap.properties");
+			XACMLProperties.getProperties();
+			XACMLProperties.setProperty(XACMLRestProperties.PROP_NOTIFICATION_TYPE, "dmaap");
+		
+			pdpServlet.init(servletConfig);
+
+			status.setStatus(com.att.research.xacml.api.pap.PDPStatus.Status.UPDATING_CONFIGURATION);
+			
+			XACMLPdpLoader.validatePolicies(properties, status);
+			XACMLPdpLoader.sendNotification();
+			assertTrue(true);
+		} catch (Exception e) {
+			LOGGER.error("Exception Occured"+e);
+			fail();
+			
+		}
+		
+	}
 	
+
 	@Test
 	public void testDoGetNoTypeError(){
 		LOGGER.info("XACMLPdpServletTest - testDoGetNoTypeError");
@@ -200,7 +268,7 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}
-	
+   
 	@Test
 	public void testDoGetConfigType(){
 		LOGGER.info("XACMLPdpServletTest - testDoGetConfigType");
@@ -218,7 +286,7 @@ public class XACMLPdpServletTest extends TestCase{
 		}
 
 	}
-	
+    
 	@Test
 	public void testDoGetTypeHb(){
 		LOGGER.info("XACMLPdpServletTest - testDoGetTypeHb");
@@ -234,7 +302,7 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}
-	
+    
 	@Test
 	public void testDoGetTypeStatus(){
 		LOGGER.info("XACMLPdpServletTest - testDoGetTypeStatus");
@@ -250,7 +318,7 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}	
-	
+    
 	@Test
 	public void testDoPost(){
 		LOGGER.info("XACMLPdpServletTest - testDoPost");
@@ -264,7 +332,7 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}
-	
+
 	@Test
 	public void testDoPostToLong(){
 		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
@@ -281,7 +349,7 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}	
-	
+
 	@Test
 	public void testDoPostContentLengthNegative(){
 		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
@@ -298,7 +366,7 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}	
-	
+
 	@Test
 	public void testDoPostContentTypeNonValid(){
 		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
@@ -315,7 +383,7 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}	
-	
+    
 	@Test
 	public void testDoPostContentTypeConfigurationError(){
 		LOGGER.info("XACMLPdpServletTest - testDoPostToLong");
@@ -332,7 +400,7 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}	
-	
+    
 	@Test
 	public void testDoPutCacheEmpty(){
 		LOGGER.info("XACMLPdpServletTest - testDoPutCacheEmpty");
@@ -352,7 +420,7 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}
-	
+    
 	@Test
 	public void testDoPutConfigPolicies(){
 		LOGGER.info("XACMLPdpServletTest - testDoPutConfigPolicies");
@@ -413,7 +481,7 @@ public class XACMLPdpServletTest extends TestCase{
 			fail();
 		}
 	}		
-	
+
 	@Test
 	public void testDestroy(){
 		LOGGER.info("XACMLPdpServletTest - testDestroy");
