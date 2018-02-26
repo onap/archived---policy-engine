@@ -22,6 +22,7 @@ package org.onap.policy.pap.xacml.rest.controller;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
@@ -36,6 +37,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.adapter.Term;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionList;
@@ -85,6 +87,9 @@ public class FirewallDictionaryControllerTest {
 		
 		request = Mockito.mock(HttpServletRequest.class);
 		response =  new MockHttpServletResponse();  
+		new DictionaryUtils(commonClassDao);
+        DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
+        mock(DictionaryUtils.class);
 		logger.info("setUp: exit");
 	}
 	

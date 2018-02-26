@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 app.controller('editMSConfigController' ,  function ($scope, $modalInstance, message, UserInfoServiceDS2, Notification){
-    if(message.microServiceCongigNameDictionaryData==null)
+    if(message.microServiceConfigNameDictionaryData==null)
         $scope.label='Add Config Name'
     else{
         $scope.label='Edit Config Name'
@@ -33,15 +33,15 @@ app.controller('editMSConfigController' ,  function ($scope, $modalInstance, mes
 	  		userid = response.userid;	  	
 	 });
 	
-    $scope.editMSConfig = message.microServiceCongigNameDictionaryData;
+    $scope.editMSConfig = message.microServiceConfigNameDictionaryData;
 
-    $scope.saveMSConfig = function(microServiceCongigNameDictionaryData) {
+    $scope.saveMSConfig = function(microServiceConfigNameDictionaryData) {
     	var regex = new RegExp("^[a-zA-Z0-9_]*$");
-    	if(!regex.test(microServiceCongigNameDictionaryData.name)) {
+    	if(!regex.test(microServiceConfigNameDictionaryData.name)) {
     		Notification.error("Enter Valid Config Name without spaces or special characters");
     	}else{
     		var uuu = "saveDictionary/ms_dictionary/save_configName";
-    		var postData={microServiceCongigNameDictionaryData: microServiceCongigNameDictionaryData, userid: userid};
+    		var postData={microServiceConfigNameDictionaryData: microServiceConfigNameDictionaryData, userid: userid};
     		$.ajax({
     			type : 'POST',
     			url : uuu,
@@ -50,12 +50,12 @@ app.controller('editMSConfigController' ,  function ($scope, $modalInstance, mes
     			data: JSON.stringify(postData),
     			success : function(data){
     				$scope.$apply(function(){
-    					$scope.microServiceCongigNameDictionaryDatas=data.microServiceCongigNameDictionaryDatas;});
-    				if($scope.microServiceCongigNameDictionaryDatas == "Duplicate"){
+    					$scope.microServiceConfigNameDictionaryDatas=data.microServiceConfigNameDictionaryDatas;});
+    				if($scope.microServiceConfigNameDictionaryDatas == "Duplicate"){
     					Notification.error("MS ConfigName Dictionary exists with Same Config Name.")
     				}else{      
-    					console.log($scope.microServiceCongigNameDictionaryDatas);
-    					$modalInstance.close({microServiceCongigNameDictionaryDatas:$scope.microServiceCongigNameDictionaryDatas});
+    					console.log($scope.microServiceConfigNameDictionaryDatas);
+    					$modalInstance.close({microServiceConfigNameDictionaryDatas:$scope.microServiceConfigNameDictionaryDatas});
     				}
     			},
     			error : function(data){

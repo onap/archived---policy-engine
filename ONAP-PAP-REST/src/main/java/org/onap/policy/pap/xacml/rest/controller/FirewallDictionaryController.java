@@ -24,10 +24,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +34,7 @@ import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.adapters.GridData;
-import org.onap.policy.pap.xacml.rest.util.JsonMessage;
+import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionList;
 import org.onap.policy.rest.jpa.AddressGroup;
@@ -53,12 +50,11 @@ import org.onap.policy.rest.jpa.ServiceList;
 import org.onap.policy.rest.jpa.TermList;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.jpa.Zone;
-import org.onap.policy.utils.PolicyUtils;
-import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -73,20 +69,13 @@ public class FirewallDictionaryController {
 
 	private static CommonClassDao commonClassDao;
 	private static String prefixListName = "prefixListName";
-	private static String successMapKey = "successMapKey";
 	private static String successMessage = "success";
 	private static String operation = "operation";
-	private static String getDictionary =  "getDictionary";
 	private static String errorMsg	= "error";
-	private static String dictionaryDBQuery = "dictionaryDBQuery";
-	private static String apiflag = "apiflag";
 	private static String dictionaryFields ="dictionaryFields";
-	private static String update = "update";
 	private static String duplicateResponseString = "Duplicate";
-	private static String successMsg = "Success";
 	private static String utf8 = "UTF-8";
 	private static String applicationJsonContentType = "application / json";
-	private static String existsResponseString = "Exists";
 	private static String protocolName = "protocolName";
 	private static String groupNameStart = "Group_";
 	private static String option = "option";
@@ -95,7 +84,19 @@ public class FirewallDictionaryController {
 	private static String termName = "termName";
 	private static String userid = "userid";
 	private static String tagPickerName = "tagPickerName";
-	private static String fwTagDictionaryDatas = "fwTagDictionaryDatas";
+	private static String pfListDatas = "prefixListDictionaryDatas";
+	private static String portListDatas = "portListDictionaryDatas";
+	private static String protocolListDatas = "protocolListDictionaryDatas";
+	private static String addressGroupDatas = "addressGroupDictionaryDatas";
+	private static String actionListDatas = "actionListDictionaryDatas";
+	private static String serviceGroupDatas = "serviceGroupDictionaryDatas";
+	private static String securityZoneDatas = "securityZoneDictionaryDatas";
+	private static String serviceListDatas = "serviceListDictionaryDatas";
+	private static String zoneDatas = "zoneDictionaryDatas";
+	private static String termListDictDatas = "termListDictionaryDatas";
+	private static String fwDictListDatas = "fwDictListDictionaryDatas";
+	private static String fwTagPickerDatas = "fwTagPickerDictionaryDatas";
+	private static String fwTagDatas = "fwTagDictionaryDatas";
 	
 	
 	@Autowired
@@ -108,159 +109,82 @@ public class FirewallDictionaryController {
 	}
 	
 	public FirewallDictionaryController(){
-		/*
-		 * This is an empty constructor
-		 */
+		super();
 	}	
 
-	public UserInfo getUserInfo(String loginId){
-		return (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);	
+	private DictionaryUtils getDictionaryUtilsInstance(){
+		return DictionaryUtils.dictionaryUtils != null ? DictionaryUtils.getDictionaryUtils() : new DictionaryUtils();
 	}
-
-
-	@RequestMapping(value={"/get_PrefixListDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	
+	@RequestMapping(value={"/get_PrefixListDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPrefixListDictionaryEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("prefixListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(PrefixList.class, prefixListName)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, pfListDatas, prefixListName, PrefixList.class);
 	}
 
-	@RequestMapping(value={"/get_PrefixListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_PrefixListData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPrefixListDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("prefixListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PrefixList.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW, e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-			response.addHeader(errorMsg, dictionaryDBQuery);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, pfListDatas, PrefixList.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_prefixList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_prefixList"}, method={RequestMethod.POST})
 	public ModelAndView savePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-			boolean isFakeUpdate = false;
-			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
-				fromAPI = true;
-			}
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			PrefixList prefixList;
 			if (fromAPI) {
 				prefixList = mapper.readValue(root.get(dictionaryFields).toString(), PrefixList.class);
-
-				//check if update operation or create, get id for data to be updated and update attributeData
-				if (update.equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(prefixList.getPrefixListName(), prefixListName, PrefixList.class);
-					PrefixList data = (PrefixList) duplicateData.get(0);
-					int id = data.getId();
-					if(id==0){
-						isFakeUpdate=true;
-						prefixList.setId(1);
-					} else {
-						prefixList.setId(id);
-					}
-				}
 			} else {
 				prefixList = mapper.readValue(root.get("prefixListDictionaryData").toString(), PrefixList.class);
 			}
-			if(prefixList.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(prefixList.getPrefixListName(), prefixListName, PrefixList.class);
-				if(!duplicateData.isEmpty()){
+			
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(prefixList.getPrefixListName(), prefixListName, PrefixList.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				PrefixList data = (PrefixList) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					prefixList.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != prefixList.getId()))){
 					duplicateflag = true;
-				}else{
-					commonClassDao.save(prefixList);
-				}		
-			}else{
-				if(!isFakeUpdate) {
-					commonClassDao.update(prefixList); 
 				}
-			} 
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
-				responseString = mapper.writeValueAsString(commonClassDao.getData(PrefixList.class));
 			}
-
-			if (fromAPI) {
-				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
-					if(isFakeUpdate){
-						responseString = existsResponseString;
-					} else {
-						responseString = successMsg;
-					}
-				}
-				ModelAndView result = new ModelAndView();
-				result.setViewName(responseString);
-				return result;
-			} else {
-				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType);
-				request.setCharacterEncoding(utf8);
-
-				PrintWriter out = response.getWriter();
-				JSONObject j = new JSONObject("{prefixListDictionaryDatas: " + responseString + "}");
-				out.write(j.toString());
-				return null;
+			String responseString = null;
+			if(!duplicateflag){
+				if(prefixList.getId() == 0){
+					commonClassDao.save(prefixList);
+				}else{
+					commonClassDao.update(prefixList); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(PrefixList.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, pfListDatas, responseString);
 			}
 		}catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW, e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_PrefixList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_PrefixList"}, method={RequestMethod.POST})
 	public void removePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			PrefixList prefixList = mapper.readValue(root.get("data").toString(), PrefixList.class);
-			commonClassDao.delete(prefixList);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(PrefixList.class));
-			JSONObject j = new JSONObject("{prefixListDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, pfListDatas, PrefixList.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/validate_prefixList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/validate_prefixList"}, method={RequestMethod.POST})
 	public void validatePrefixListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -282,626 +206,298 @@ public class FirewallDictionaryController {
 			out.write(j.toString());
 		}
 		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 	}
 
-	@RequestMapping(value={"/get_PortListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_PortListData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPortListDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("portListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(PortList.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-			response.addHeader(errorMsg, dictionaryDBQuery);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, portListDatas, PortList.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_portName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_portName"}, method={RequestMethod.POST})
 	public ModelAndView savePortListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			PortList portList = mapper.readValue(root.get("portListDictionaryData").toString(), PortList.class);
-			if(portList.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(portList.getPortName(), "portName", PortList.class);
-				if(!duplicateData.isEmpty()){
-					duplicateflag = true;
-				}else{
-					commonClassDao.save(portList);
-				}
+			PortList portList;
+			if(fromAPI){
+				portList = mapper.readValue(root.get(dictionaryFields).toString(), PortList.class);
 			}else{
-				commonClassDao.update(portList); 
-			} 
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
-				responseString = mapper.writeValueAsString(commonClassDao.getData(PortList.class));
+				portList = mapper.readValue(root.get("portListDictionaryData").toString(), PortList.class);
 			}
-			JSONObject j = new JSONObject("{portListDictionaryDatas: " + responseString + "}");
-
-			out.write(j.toString());
-
-			return null;
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(portList.getPortName(), "portName", PortList.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				PortList data = (PortList) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					portList.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != portList.getId()))){
+					duplicateflag = true;
+				}
+			}
+			String responseString = null;
+			if(!duplicateflag){
+				if(portList.getId() == 0){
+					commonClassDao.save(portList);
+				}else{
+					commonClassDao.update(portList); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(PortList.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, portListDatas, responseString);
+			}
+		}catch (Exception e){
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_PortList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_PortList"}, method={RequestMethod.POST})
 	public void removePortListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			PortList portList = mapper.readValue(root.get("data").toString(), PortList.class);
-			commonClassDao.delete(portList);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(PortList.class));
-			JSONObject j = new JSONObject("{portListDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, portListDatas, PortList.class);
 	}
 
-	@RequestMapping(value={"/get_ProtocolListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_ProtocolListData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getProtocolListDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("protocolListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ProtocolList.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-			response.addHeader(errorMsg, dictionaryDBQuery);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, protocolListDatas, ProtocolList.class);
 	}
 
-	@RequestMapping(value={"/get_ProtocolListDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_ProtocolListDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getProtocolListDictionaryEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("protocolListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(ProtocolList.class, protocolName)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, protocolListDatas, protocolName, ProtocolList.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_protocolList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_protocolList"}, method={RequestMethod.POST})
 	public ModelAndView saveProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-			boolean isFakeUpdate = false;
-			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
-				fromAPI = true;
-			}
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			ProtocolList protocolList;
-			if (fromAPI) {
+			if(fromAPI){
 				protocolList = mapper.readValue(root.get(dictionaryFields).toString(), ProtocolList.class);
-
-				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(protocolList.getProtocolName(), protocolName, ProtocolList.class);
-					ProtocolList data = (ProtocolList) duplicateData.get(0);
-					int id = data.getId();
-					if(id==0){
-						isFakeUpdate=true;
-						protocolList.setId(1);
-					} else {
-						protocolList.setId(id);
-					}
-				}
-			} else {
+			}else{
 				protocolList = mapper.readValue(root.get("protocolListDictionaryData").toString(), ProtocolList.class);
 			}
-			if(protocolList.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(protocolList.getProtocolName(), protocolName, ProtocolList.class);
-				if(!duplicateData.isEmpty()){
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(protocolList.getProtocolName(), protocolName, ProtocolList.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				ProtocolList data = (ProtocolList) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					protocolList.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != protocolList.getId()))){
 					duplicateflag = true;
-				}else{
-					commonClassDao.save(protocolList);
 				}
-			}else{
-				if(!isFakeUpdate){
-					commonClassDao.update(protocolList);
-				}
-			} 
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
-				responseString = mapper.writeValueAsString(commonClassDao.getData(ProtocolList.class));
 			}
-
-			if (fromAPI) {
-				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
-					if(isFakeUpdate){
-						responseString = existsResponseString;
-					} else {
-						responseString = successMsg;
-					}
-				}
-				ModelAndView result = new ModelAndView();
-				result.setViewName(responseString);
-				return result;
-			} else {
-				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType);
-				request.setCharacterEncoding(utf8);
-
-				PrintWriter out = response.getWriter();
-				JSONObject j = new JSONObject("{protocolListDictionaryDatas: " + responseString + "}");
-				out.write(j.toString());
-				return null;
+			String responseString = null;
+			if(!duplicateflag){
+				if(protocolList.getId() == 0){
+					commonClassDao.save(protocolList);
+				}else{
+					commonClassDao.update(protocolList); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(ProtocolList.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, protocolListDatas, responseString);
 			}
 		}catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_protocol"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_protocol"}, method={RequestMethod.POST})
 	public void removeProtocolListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			ProtocolList protocolList = mapper.readValue(root.get("data").toString(), ProtocolList.class);
-			commonClassDao.delete(protocolList);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(ProtocolList.class));
-			JSONObject j = new JSONObject("{protocolListDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, protocolListDatas, ProtocolList.class);
 	}
 
-	@RequestMapping(value={"/get_AddressGroupDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_AddressGroupDictionaryDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getAddressGroupDictionaryEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("addressGroupDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(AddressGroup.class, "name")));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, addressGroupDatas, "name", AddressGroup.class);
 	}
 
-	@RequestMapping(value={"/get_AddressGroupData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_AddressGroupData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getAddressGroupDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("addressGroupDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(AddressGroup.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-			response.addHeader(errorMsg, dictionaryDBQuery);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, addressGroupDatas, AddressGroup.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_addressGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_addressGroup"}, method={RequestMethod.POST})
 	public ModelAndView saveAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-			boolean isFakeUpdate = false;
-			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
-				fromAPI = true;
-			}
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			AddressGroup addressGroup;
 			GridData gridData;
-			if (fromAPI) {
+			if(fromAPI){
 				addressGroup = mapper.readValue(root.get(dictionaryFields).toString(), AddressGroup.class);
 				gridData = mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
-
-				if(!addressGroup.getGroupName().startsWith(groupNameStart)){
-					String groupName = groupNameStart+addressGroup.getGroupName();
-					addressGroup.setGroupName(groupName);
-				}
-
-				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(addressGroup.getGroupName(), "name", AddressGroup.class);
-					AddressGroup data = (AddressGroup) duplicateData.get(0);
-					int id = data.getId();
-					if(id==0){
-						isFakeUpdate=true;
-						addressGroup.setId(1);
-					} else {
-						addressGroup.setId(id);
-					}            
-				}
-			} else {
+			}else{
 				addressGroup = mapper.readValue(root.get("addressGroupDictionaryData").toString(), AddressGroup.class);
 				gridData = mapper.readValue(root.get("addressGroupDictionaryData").toString(), GridData.class);
-				if(!addressGroup.getGroupName().startsWith(groupNameStart)){
-					String groupName = groupNameStart+addressGroup.getGroupName();
-					addressGroup.setGroupName(groupName);
-				}
 			}
-			StringBuilder userValue = new StringBuilder();
-			int counter = 0;
-			if(!gridData.getAttributes().isEmpty()){
-				for(Object attribute : gridData.getAttributes()){
-					if(attribute instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
-						if(counter>0){
-							userValue.append(",");
-						}
-						userValue.append(key) ;
-						counter ++;
-					}
-				}
+			if(!addressGroup.getGroupName().startsWith(groupNameStart)){
+				String groupName = groupNameStart+addressGroup.getGroupName();
+				addressGroup.setGroupName(groupName);
 			}
-			addressGroup.setServiceList(userValue.toString());
-			if(addressGroup.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(addressGroup.getGroupName(), "name", AddressGroup.class);
-				if(!duplicateData.isEmpty()){
+			addressGroup.setServiceList(utils.appendKey(gridData.getAttributes(), option, ","));
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(addressGroup.getGroupName(), "name", AddressGroup.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				AddressGroup data = (AddressGroup) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					addressGroup.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != addressGroup.getId()))){
 					duplicateflag = true;
-				}else{
-					commonClassDao.save(addressGroup);
 				}
-			}else{
-				if (!isFakeUpdate) {
-					commonClassDao.update(addressGroup); 
-				}
-			} 
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
-				responseString = mapper.writeValueAsString(commonClassDao.getData(AddressGroup.class));
 			}
-			if (fromAPI) {
-				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
-					if(isFakeUpdate){
-						responseString = existsResponseString;
-					} else {
-						responseString = successMsg;
-					}
-				}
-				ModelAndView result = new ModelAndView();
-				result.setViewName(responseString);
-				return result;
-			} else {
-				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType);
-				request.setCharacterEncoding(utf8);
-
-				PrintWriter out = response.getWriter();
-				JSONObject j = new JSONObject("{addressGroupDictionaryDatas: " + responseString + "}");
-				out.write(j.toString());
-				return null;
+			String responseString = null;
+			if(!duplicateflag){
+				if(addressGroup.getId() == 0){
+					commonClassDao.save(addressGroup);
+				}else{
+					commonClassDao.update(addressGroup); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(AddressGroup.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, addressGroupDatas, responseString);
 			}
 		}catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_AddressGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_AddressGroup"}, method={RequestMethod.POST})
 	public void removeAddressGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			AddressGroup addressGroup = mapper.readValue(root.get("data").toString(), AddressGroup.class);
-			commonClassDao.delete(addressGroup);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(AddressGroup.class));
-			JSONObject j = new JSONObject("{addressGroupDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, addressGroupDatas, AddressGroup.class);
 	}
 
-	@RequestMapping(value={"/get_ActionListDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_ActionListDictionaryDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getActionListDictionaryEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			List<String> list = commonClassDao.getDataByColumn(ActionList.class, "actionName");
-			model.put("actionListDictionaryDatas", mapper.writeValueAsString(list));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, actionListDatas, "actionName", ActionList.class);
 	}
 
-	@RequestMapping(value={"/get_ActionListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_ActionListData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getActionListDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("actionListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ActionList.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-			response.addHeader(errorMsg, dictionaryDBQuery);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, actionListDatas, ActionList.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_ActionList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_ActionList"}, method={RequestMethod.POST})
 	public ModelAndView saveActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-			boolean isFakeUpdate = false;
-			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
-				fromAPI = true;
-			}
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			ActionList actionList;
 			if (fromAPI) {
 				actionList = mapper.readValue(root.get(dictionaryFields).toString(), ActionList.class);
-
-				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionList.getActionName(), "actionName", ActionList.class);
-					ActionList data = (ActionList) duplicateData.get(0);
-					int id = data.getId();
-					if(id==0){
-						isFakeUpdate=true;
-						actionList.setId(1);
-					} else {
-						actionList.setId(id);
-					}  
-				}
 			} else {
 				actionList = mapper.readValue(root.get("actionListDictionaryData").toString(), ActionList.class);
 			}
-			if(actionList.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionList.getActionName(), "actionName", ActionList.class);
-				if(!duplicateData.isEmpty()){
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionList.getActionName(), "actionName", ActionList.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				ActionList data = (ActionList) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					actionList.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != actionList.getId()))){
 					duplicateflag = true;
-				}else{
-					commonClassDao.save(actionList);
 				}
-			}else{
-				if(!isFakeUpdate) {
-					commonClassDao.update(actionList);
-				}
-			} 
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
-				responseString = mapper.writeValueAsString(commonClassDao.getData(ActionList.class));
 			}
-
-			if (fromAPI) {
-				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
-					if(isFakeUpdate){
-						responseString = existsResponseString;
-					} else {
-						responseString = successMsg;
-					}
-				}
-				ModelAndView result = new ModelAndView();
-				result.setViewName(responseString);
-				return result;
-			} else {
-				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType);
-				request.setCharacterEncoding(utf8);
-
-				PrintWriter out = response.getWriter();
-				JSONObject j = new JSONObject("{actionListDictionaryDatas: " + responseString + "}");
-				out.write(j.toString());
-				return null;
+			String responseString = null;
+			if(!duplicateflag){
+				if(actionList.getId() == 0){
+					commonClassDao.save(actionList);
+				}else{
+					commonClassDao.update(actionList); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(ActionList.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, actionListDatas, responseString);
 			}
 		}catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_ActionList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_ActionList"}, method={RequestMethod.POST})
 	public void removeActionListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			ActionList actionList = mapper.readValue(root.get("data").toString(), ActionList.class);
-			commonClassDao.delete(actionList);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(ActionList.class));
-			JSONObject j = new JSONObject("{actionListDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, actionListDatas, ActionList.class);
 	}
 
-	@RequestMapping(value={"/get_ServiceGroupData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_ServiceGroupData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getServiceGroupDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("serviceGroupDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(GroupServiceList.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-			response.addHeader(errorMsg, dictionaryDBQuery);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, serviceGroupDatas, GroupServiceList.class);
 	}
 
-	@RequestMapping(value={"/get_ServiceGroupDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_ServiceGroupDictionaryDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getServiceGroupDictionaryEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("serviceGroupDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(GroupServiceList.class, "name")));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, serviceGroupDatas, "name", GroupServiceList.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_serviceGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_serviceGroup"}, method={RequestMethod.POST})
 	public ModelAndView saveServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-			boolean isFakeUpdate = false;
-			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
-				fromAPI = true;
-			}
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			GroupServiceList groupServiceList;
 			GridData gridData;
-			if (fromAPI) {
+			if(fromAPI){
 				groupServiceList = mapper.readValue(root.get(dictionaryFields).toString(), GroupServiceList.class);
 				gridData = mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
-
-				if(!groupServiceList.getGroupName().startsWith(groupNameStart)){
-					String groupName = groupNameStart+groupServiceList.getGroupName();
-					groupServiceList.setGroupName(groupName);
-				}
-				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(groupServiceList.getGroupName(), "name", GroupServiceList.class);
-					GroupServiceList data = (GroupServiceList) duplicateData.get(0);
-					int id = data.getId();
-
-					if(id==0){
-						isFakeUpdate=true;
-						groupServiceList.setId(1);
-					} else {
-						groupServiceList.setId(id);
-					}   
-				}
-			} else {
+			}else{
 				groupServiceList = mapper.readValue(root.get("serviceGroupDictionaryData").toString(), GroupServiceList.class);
 				gridData = mapper.readValue(root.get("serviceGroupDictionaryData").toString(), GridData.class);
 			}
@@ -909,1272 +505,563 @@ public class FirewallDictionaryController {
 				String groupName = groupNameStart+groupServiceList.getGroupName();
 				groupServiceList.setGroupName(groupName);
 			}
-			StringBuilder userValue = new StringBuilder();
-			int counter = 0;
-			if(!gridData.getAttributes().isEmpty()){
-				for(Object attribute : gridData.getAttributes()){
-					if(attribute instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
-						if(counter>0){
-							userValue.append(",");
-						}
-						userValue.append(key);
-						counter ++;
-					}
-				}
-			}
-			groupServiceList.setServiceList(userValue.toString());
-			if(groupServiceList.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(groupServiceList.getGroupName(), "name", GroupServiceList.class);
-				if(!duplicateData.isEmpty()){
+			groupServiceList.setServiceList(utils.appendKey(gridData.getAttributes(), option, ","));
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(groupServiceList.getGroupName(), "name", GroupServiceList.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				GroupServiceList data = (GroupServiceList) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					groupServiceList.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != groupServiceList.getId()))){
 					duplicateflag = true;
-				}else{
-					commonClassDao.save(groupServiceList);
 				}
-			}else{
-				if(!isFakeUpdate) {
-					commonClassDao.update(groupServiceList); 
-				}
-			} 
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
-				responseString = mapper.writeValueAsString(commonClassDao.getData(GroupServiceList.class));
 			}
-
-			if (fromAPI) {
-				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
-					if(isFakeUpdate){
-						responseString = existsResponseString;
-					} else {
-						responseString = successMsg;
-					}
-				}
-				ModelAndView result = new ModelAndView();
-				result.setViewName(responseString);
-				return result;
-			} else {
-				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType);
-				request.setCharacterEncoding(utf8);
-
-				PrintWriter out = response.getWriter();
-				JSONObject j = new JSONObject("{serviceGroupDictionaryDatas: " + responseString + "}");
-				out.write(j.toString());
-				return null;
+			String responseString = null;
+			if(!duplicateflag){
+				if(groupServiceList.getId() == 0){
+					commonClassDao.save(groupServiceList);
+				}else{
+					commonClassDao.update(groupServiceList); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(GroupServiceList.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, serviceGroupDatas, responseString);
 			}
 		}catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_serviceGroup"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_serviceGroup"}, method={RequestMethod.POST})
 	public void removeServiceGroupDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			GroupServiceList groupServiceList = mapper.readValue(root.get("data").toString(), GroupServiceList.class);
-			commonClassDao.delete(groupServiceList);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(GroupServiceList.class));
-			JSONObject j = new JSONObject("{serviceGroupDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, serviceGroupDatas, GroupServiceList.class);
 	}
 
-	@RequestMapping(value={"/get_SecurityZoneDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_SecurityZoneDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSecurityZoneDictionaryEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("securityZoneDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(SecurityZone.class, zoneName)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, securityZoneDatas, zoneName, SecurityZone.class);
 	}
 
-	@RequestMapping(value={"/get_SecurityZoneData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_SecurityZoneData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSecurityZoneDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("securityZoneDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(SecurityZone.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-			response.addHeader(errorMsg, dictionaryDBQuery);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, securityZoneDatas, SecurityZone.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_securityZone"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_securityZone"}, method={RequestMethod.POST})
 	public ModelAndView saveSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-			boolean isFakeUpdate = false;
-			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
-				fromAPI = true;
-			}
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			SecurityZone securityZone;
-			if (fromAPI) {
+			if(fromAPI){
 				securityZone = mapper.readValue(root.get(dictionaryFields).toString(), SecurityZone.class);
-
-				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(securityZone.getZoneName(), zoneName, SecurityZone.class);
-					SecurityZone data = (SecurityZone) duplicateData.get(0);
-					int id = data.getId();
-					if(id==0){
-						isFakeUpdate=true;
-						securityZone.setId(1);
-					} else {
-						securityZone.setId(id);
-					}               
-				}
-			} else {
+			}else{
 				securityZone = mapper.readValue(root.get("securityZoneDictionaryData").toString(), SecurityZone.class);
 			}
-			if(securityZone.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(securityZone.getZoneName(), zoneName, SecurityZone.class);
-				if(!duplicateData.isEmpty()){
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(securityZone.getZoneName(), zoneName, SecurityZone.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				SecurityZone data = (SecurityZone) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					securityZone.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != securityZone.getId()))){
 					duplicateflag = true;
-				}else{
+				}
+			}
+			String responseString = null;
+			if(!duplicateflag){
+				if(securityZone.getId() == 0){
 					commonClassDao.save(securityZone);
-				}			
-			}else{
-				if(!isFakeUpdate) {
+				}else{
 					commonClassDao.update(securityZone); 
-				}
-			} 
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
+				} 
 				responseString = mapper.writeValueAsString(commonClassDao.getData(SecurityZone.class));
+			}else{
+				responseString = duplicateResponseString;
 			}
-
-			if (fromAPI) {
-				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
-					if(isFakeUpdate){
-						responseString = existsResponseString;
-					} else {
-						responseString = successMsg;
-					}   
-				}
-				ModelAndView result = new ModelAndView();
-				result.setViewName(responseString);
-				return result;
-			} else {
-				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType);
-				request.setCharacterEncoding(utf8);
-
-				PrintWriter out = response.getWriter();
-				JSONObject j = new JSONObject("{securityZoneDictionaryDatas: " + responseString + "}");
-				out.write(j.toString());
-				return null;
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, securityZoneDatas, responseString);
 			}
-
 		}catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_securityZone"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_securityZone"}, method={RequestMethod.POST})
 	public void removeSecurityZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			SecurityZone securityZone = mapper.readValue(root.get("data").toString(), SecurityZone.class);
-			commonClassDao.delete(securityZone);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(SecurityZone.class));
-			JSONObject j = new JSONObject("{securityZoneDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, securityZoneDatas, SecurityZone.class);
 	}
 
 
-	@RequestMapping(value={"/get_ServiceListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_ServiceListData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getServiceListDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("serviceListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(ServiceList.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-			response.addHeader(errorMsg, dictionaryDBQuery);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, serviceListDatas, ServiceList.class);
 	}
 
-	@RequestMapping(value={"/get_ServiceListDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_ServiceListDictionaryDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getServiceListDictionaryEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("serviceListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(ServiceList.class, serviceName)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, serviceListDatas, serviceName, ServiceList.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_serviceList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_serviceList"}, method={RequestMethod.POST})
 	public ModelAndView saveServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-			boolean isFakeUpdate = false;
-			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
-				fromAPI = true;
-			}
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			ServiceList serviceList;
 			GridData serviceListGridData;
-			if (fromAPI) {
+			if(fromAPI){
 				serviceList = mapper.readValue(root.get(dictionaryFields).toString(), ServiceList.class);
 				serviceListGridData = mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
-
-				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(serviceList.getServiceName(), serviceName, ServiceList.class);
-					ServiceList data = (ServiceList) duplicateData.get(0);
-					int id = data.getId();
-					if(id==0){
-						isFakeUpdate=true;
-						serviceList.setId(1);
-					} else {
-						serviceList.setId(id);
-					}
-				}
 			}else{
 				serviceList = mapper.readValue(root.get("serviceListDictionaryData").toString(), ServiceList.class);
 				serviceListGridData = mapper.readValue(root.get("serviceListDictionaryData").toString(), GridData.class);
 			}
-			StringBuilder tcpValue = new StringBuilder();
-			int counter = 0;
-			if(!serviceListGridData.getTransportProtocols().isEmpty()){
-				for(Object attribute : serviceListGridData.getTransportProtocols()){
-					if(attribute instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
-						if(counter>0){
-							tcpValue.append(",");
-						}
-						tcpValue.append(key);
-						counter ++;
-					}
-				}
-			}
-			serviceList.setServiceTransProtocol(tcpValue.toString());
-			StringBuilder appValue = new StringBuilder();
-			int counter1 = 0;
-			if(!serviceListGridData.getAppProtocols().isEmpty()){
-				for(Object attribute : serviceListGridData.getAppProtocols()){
-					if(attribute instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
-						if(counter1>0){
-							appValue.append(",");
-						}
-						appValue.append(key);
-						counter1 ++;
-					}
-				}
-			}
-			serviceList.setServiceAppProtocol(appValue.toString());
+			serviceList.setServiceTransProtocol(utils.appendKey(serviceListGridData.getTransportProtocols(), option, ","));
+			serviceList.setServiceAppProtocol(utils.appendKey(serviceListGridData.getAppProtocols(), option, ","));
 			serviceList.setServiceType("SERVICE");
-			if(serviceList.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(serviceList.getServiceName(), serviceName, ServiceList.class);
-				if(!duplicateData.isEmpty()){
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(serviceList.getServiceName(), serviceName, ServiceList.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				ServiceList data = (ServiceList) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					serviceList.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != serviceList.getId()))){
 					duplicateflag = true;
-				}else{
+				}
+			}
+			String responseString = null;
+			if(!duplicateflag){
+				if(serviceList.getId() == 0){
 					commonClassDao.save(serviceList);
-				}
-			}else{
-				if(!isFakeUpdate) {
+				}else{
 					commonClassDao.update(serviceList); 
-				}
-			} 
-
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
+				} 
 				responseString = mapper.writeValueAsString(commonClassDao.getData(ServiceList.class));
-			} 
-			if (fromAPI) {
-				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
-					if(isFakeUpdate){
-						responseString = existsResponseString;
-					} else {
-						responseString = successMsg;
-					}
-				}
-				ModelAndView result = new ModelAndView();
-				result.setViewName(responseString);
-				return result;
-			} else {
-				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType);
-				request.setCharacterEncoding(utf8);
-
-				PrintWriter out = response.getWriter();
-				JSONObject j = new JSONObject("{serviceListDictionaryDatas: " + responseString + "}");
-				out.write(j.toString());
-				return null;
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, serviceListDatas, responseString);
 			}
 		}catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_serviceList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_serviceList"}, method={RequestMethod.POST})
 	public void removeServiceListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			ServiceList serviceList = mapper.readValue(root.get("data").toString(), ServiceList.class);
-			commonClassDao.delete(serviceList);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(ServiceList.class));
-			JSONObject j = new JSONObject("{serviceListDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, serviceListDatas, ServiceList.class);
 	}
 
-	@RequestMapping(value={"/get_ZoneData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_ZoneData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getZoneDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("zoneDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(Zone.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error("Exception Occured"+e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, zoneDatas, Zone.class);
 	}
 
-	@RequestMapping(value={"/get_ZoneDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_ZoneDictionaryDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getZoneDictionaryEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("zoneDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(Zone.class, zoneName)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, zoneDatas, zoneName, PrefixList.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_zoneName"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_zoneName"}, method={RequestMethod.POST})
 	public ModelAndView saveZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-			boolean isFakeUpdate = false;
-			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
-				fromAPI = true;
-			}
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			Zone zone;
 			if (fromAPI) {
 				zone = mapper.readValue(root.get(dictionaryFields).toString(), Zone.class);
-
-				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
-					List<Object> duplicateData = commonClassDao.checkDuplicateEntry(zone.getZoneName(), zoneName, Zone.class);
-					Zone data = (Zone) duplicateData.get(0);
-					int id = data.getId();
-					if(id==0){
-						isFakeUpdate=true;
-						zone.setId(1);
-					} else {
-						zone.setId(id);
-					}
-				}
 			} else {
 				zone = mapper.readValue(root.get("zoneDictionaryData").toString(), Zone.class);
 			}
-			if(zone.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(zone.getZoneName(), zoneName, Zone.class);
-				if(!duplicateData.isEmpty()){
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(zone.getZoneName(), zoneName, Zone.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				Zone data = (Zone) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					zone.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != zone.getId()))){
 					duplicateflag = true;
-				}else{
-					commonClassDao.save(zone);
-				}	
-			}else{
-				if(!isFakeUpdate) {
-					commonClassDao.update(zone); 
 				}
-			} 
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
-				responseString = mapper.writeValueAsString(commonClassDao.getData(Zone.class));
 			}
-
-			if (fromAPI) {
-				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
-					if(isFakeUpdate){
-						responseString = existsResponseString;
-					} else {
-						responseString = successMsg;
-					}
-				}
-				ModelAndView result = new ModelAndView();
-				result.setViewName(responseString);
-				return result;
-			} else {
-				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType);
-				request.setCharacterEncoding(utf8);
-
-				PrintWriter out = response.getWriter();
-				JSONObject j = new JSONObject("{zoneDictionaryDatas: " + responseString + "}");
-				out.write(j.toString());
-				return null;
+			String responseString = null;
+			if(!duplicateflag){
+				if(zone.getId() == 0){
+					commonClassDao.save(zone);
+				}else{
+					commonClassDao.update(zone); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(Zone.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, zoneDatas, responseString);
 			}
 		}catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_zone"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_zone"}, method={RequestMethod.POST})
 	public void removeZoneDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			Zone zone = mapper.readValue(root.get("data").toString(), Zone.class);
-			commonClassDao.delete(zone);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(Zone.class));
-			JSONObject j = new JSONObject("{zoneDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, zoneDatas, Zone.class);
 	}
 
-	@RequestMapping(value={"/get_TermListDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_TermListDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getTermListDictionaryEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("termListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(TermList.class, termName)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, termListDictDatas, termName, TermList.class);
 	}
 
-	@RequestMapping(value={"/get_TermListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_TermListData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getTermListDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("termListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(TermList.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-			response.addHeader(errorMsg, dictionaryDBQuery);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, termListDictDatas, TermList.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_termList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_termList"}, method={RequestMethod.POST})
 	public ModelAndView saveTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-			boolean isFakeUpdate = false;
-			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
-				fromAPI = true;
-			}
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			TermList termList;
 			TermListData termListDatas;
 			String userId = null;
-			if (fromAPI) {
+			if(fromAPI){
 				termList = mapper.readValue(root.get(dictionaryFields).toString(), TermList.class);
 				termListDatas = mapper.readValue(root.get(dictionaryFields).toString(), TermListData.class);
 				userId = "API";
-
-				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(termList.getTermName(), termName, TermList.class);
-					TermList data = (TermList) duplicateData.get(0);
-					int id = data.getId();
-					if(id==0){
-						isFakeUpdate=true;
-						termList.setId(1);
-					} else {
-						termList.setId(id);
-					}                 
-					termList.setUserCreatedBy(this.getUserInfo(userId));
-				}
-			} else {
+			}else{
 				termList = mapper.readValue(root.get("termListDictionaryData").toString(), TermList.class);
 				termListDatas = mapper.readValue(root.get("termListDictionaryData").toString(), TermListData.class);
 				userId = root.get(userid).textValue();
 			}
-			StringBuilder fromZoneValue = new StringBuilder();
-			int counter = 0;
-			if(!termListDatas.getFromZoneDatas().isEmpty()){
-				for(Object fromZone : termListDatas.getFromZoneDatas()){
-					if(fromZone instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) fromZone).get(option).toString();
-						if(counter>0){
-							fromZoneValue.append(",");
-						}
-						fromZoneValue.append(key);
-						counter ++;
-					}
-				}
-			}
-			termList.setFromZones(fromZoneValue.toString());
-
-			StringBuilder toZoneValue = new StringBuilder();
-			int toZonecounter = 0;
-			if(!termListDatas.getToZoneDatas().isEmpty()){
-				for(Object toZone : termListDatas.getToZoneDatas()){
-					if(toZone instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) toZone).get(option).toString();
-						if(toZonecounter>0){
-							toZoneValue.append(",");
-						}
-						toZoneValue.append(key);
-						toZonecounter ++;
-					}
-				}
-			}
-			termList.setToZones(toZoneValue.toString());
-
-			StringBuilder srcListValues = new StringBuilder();
-			int srcListcounter = 0;
-			if(!termListDatas.getSourceListDatas().isEmpty()){
-				for(Object srcList : termListDatas.getSourceListDatas()){
-					if(srcList instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) srcList).get(option).toString();
-						if(srcListcounter>0){
-							srcListValues.append(",");
-						}
-						srcListValues.append(key);
-						srcListcounter ++;
-					}
-				}
-			}
-			termList.setSrcIPList(srcListValues.toString());
-
-			StringBuilder desListValues = new StringBuilder();
-			int destListcounter = 0;
-			if(!termListDatas.getDestinationListDatas().isEmpty()){
-				for(Object desList : termListDatas.getDestinationListDatas()){
-					if(desList instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) desList).get(option).toString();
-						if(destListcounter>0){
-							desListValues.append(",");
-						}
-						desListValues.append(key);
-						destListcounter ++;
-					}
-				}
-			}
-			termList.setDestIPList(desListValues.toString());
-
-			StringBuilder srcSerValue = new StringBuilder();
-			int srcSercounter = 0;
-			if(!termListDatas.getSourceServiceDatas().isEmpty()){
-				for(Object srcSrc : termListDatas.getSourceServiceDatas()){
-					if(srcSrc instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) srcSrc).get(option).toString();
-						if(srcSercounter>0){
-							srcSerValue.append(",");
-						}
-						srcSerValue.append(key);
-						srcSercounter ++;
-					}
-				}
-			}
-			termList.setSrcPortList(srcSerValue.toString());
-
-			StringBuilder desSrcValue = new StringBuilder();
-			int desSrccounter = 0;
-			if(!termListDatas.getDestinationServiceDatas().isEmpty()){
-				for(Object desSrc : termListDatas.getDestinationServiceDatas()){
-					if(desSrc instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) desSrc).get(option).toString();
-						if(desSrccounter>0){
-							desSrcValue.append(",");
-						}
-						desSrcValue.append(key);
-						desSrccounter ++;
-					}
-				}
-			}
-			termList.setDestPortList(desSrcValue.toString());
-
-			StringBuilder actionValue = new StringBuilder();
-			int actioncounter = 0;
-			if(!termListDatas.getActionListDatas().isEmpty()){
-				for(Object actionList : termListDatas.getActionListDatas()){
-					if(actionList instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) actionList).get(option).toString();
-						if(actioncounter>0){
-							actionValue.append(",");
-						}
-						actionValue.append(key);
-						actioncounter ++;
-					}
-				}
-			}
-			termList.setAction(actionValue.toString());
-
-			if(termList.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(termList.getTermName(), termName, TermList.class);
-				if(!duplicateData.isEmpty()){
+			
+			termList.setFromZones(utils.appendKey(termListDatas.getFromZoneDatas(), option, ","));
+			termList.setToZones(utils.appendKey(termListDatas.getToZoneDatas(), option, ","));
+			termList.setSrcIPList(utils.appendKey(termListDatas.getSourceListDatas(), option, ","));
+			termList.setDestIPList(utils.appendKey(termListDatas.getDestinationListDatas(), option, ","));
+			termList.setSrcPortList(utils.appendKey(termListDatas.getSourceServiceDatas(), option, ","));
+			termList.setDestPortList(utils.appendKey(termListDatas.getDestinationServiceDatas(), option, ","));
+			termList.setAction(utils.appendKey(termListDatas.getActionListDatas(), option, ","));
+			
+			UserInfo userInfo = utils.getUserInfo(userId);
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(termList.getTermName(), termName, TermList.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				TermList data = (TermList) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					termList.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != termList.getId()))){
 					duplicateflag = true;
-				}else{
-					termList.setUserCreatedBy(this.getUserInfo(userId));
-					termList.setUserModifiedBy(this.getUserInfo(userId));
-					termList.setCreatedDate(new Date());
-					commonClassDao.save(termList);
 				}
-			}else{
-				if(!isFakeUpdate) {
-					termList.setUserModifiedBy(this.getUserInfo(userId));
+			}
+			String responseString = null;
+			if(!duplicateflag){
+				termList.setUserModifiedBy(userInfo);
+				if(termList.getId() == 0){
+					termList.setUserCreatedBy(userInfo);
+					commonClassDao.save(termList);
+				}else{
 					termList.setModifiedDate(new Date());
 					commonClassDao.update(termList); 
-				}
-			} 
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
+				} 
 				responseString = mapper.writeValueAsString(commonClassDao.getData(TermList.class));
+			}else{
+				responseString = duplicateResponseString;
 			}
-
-			if (fromAPI) {
-				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
-					if(isFakeUpdate){
-						responseString = existsResponseString;
-					} else {
-						responseString = successMsg;
-					}
-				}
-				ModelAndView result = new ModelAndView();
-				result.setViewName(responseString);
-				return result;
-			} else {
-				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType);
-				request.setCharacterEncoding(utf8);
-
-				PrintWriter out = response.getWriter();
-				JSONObject j = new JSONObject("{termListDictionaryDatas: " + responseString + "}");
-				out.write(j.toString());
-				return null;
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, termListDictDatas, responseString);
 			}
 		}catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_termList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_termList"}, method={RequestMethod.POST})
 	public void removeTermListDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			TermList termList = mapper.readValue(root.get("data").toString(), TermList.class);
-			commonClassDao.delete(termList);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(TermList.class));
-			JSONObject j = new JSONObject("{termListDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, termListDictDatas, TermList.class);
 	}
+	
 	//ParentList Dictionary Data
-	@RequestMapping(value={"/get_FWDictionaryListDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_FWDictionaryListDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getFWDictListDictionaryEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("fwDictListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(FirewallDictionaryList.class, "parentItemName")));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, fwDictListDatas, "parentItemName", FirewallDictionaryList.class);
 	}
 
-	@RequestMapping(value={"/get_FWDictionaryListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_FWDictionaryListData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getFWDictionaryListEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("fwDictListDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(FirewallDictionaryList.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-			response.addHeader(errorMsg, dictionaryDBQuery);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, fwDictListDatas, FirewallDictionaryList.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_FWDictionaryList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_FWDictionaryList"}, method={RequestMethod.POST})
 	public ModelAndView saveFWDictionaryList(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
-			FirewallDictionaryList fwDictList = mapper.readValue(root.get("fwDictListDictionaryData").toString(), FirewallDictionaryList.class);
-			GridData gridData = mapper.readValue(root.get("fwDictListDictionaryData").toString(), GridData.class);
-			StringBuilder userSLValue = new StringBuilder();
-			int slcounter = 0;
-			if(!gridData.getAttributes().isEmpty()){
-				for(Object attribute : gridData.getAttributes()){
-					if(attribute instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
-						if(slcounter>0){
-							userSLValue.append(",");
-						}
-						userSLValue.append(key);
-						slcounter ++;
-					}
-				}
+			FirewallDictionaryList fwDictList;
+			GridData gridData;
+			if (fromAPI) {
+				fwDictList = mapper.readValue(root.get(dictionaryFields).toString(), FirewallDictionaryList.class);
+				gridData = mapper.readValue(root.get(dictionaryFields).toString(), GridData.class);
+			} else {
+				fwDictList = mapper.readValue(root.get("fwDictListDictionaryData").toString(), FirewallDictionaryList.class);
+				gridData = mapper.readValue(root.get("fwDictListDictionaryData").toString(), GridData.class);
 			}
-			fwDictList.setServiceList(userSLValue.toString());
-			StringBuilder userALValue = new StringBuilder();
-			int alcounter = 0;
-			if(!gridData.getAlAttributes().isEmpty()){
-				for(Object attribute : gridData.getAlAttributes()){
-					if(attribute instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) attribute).get(option).toString();
-						if(alcounter>0){
-							userALValue.append(",");
-						}
-						userALValue.append(key);
-						alcounter ++;
-					}
-				}
-			}
-			fwDictList.setAddressList(userALValue.toString());
-			if(fwDictList.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwDictList.getParentItemName(), "parentItemName", FirewallDictionaryList.class);
-				if(!duplicateData.isEmpty()){
+			
+			fwDictList.setServiceList(utils.appendKey(gridData.getAttributes(), option, ","));
+			fwDictList.setAddressList(utils.appendKey(gridData.getAlAttributes(), option, ","));
+			
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwDictList.getParentItemName(), "parentItemName", FirewallDictionaryList.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				FirewallDictionaryList data = (FirewallDictionaryList) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					fwDictList.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != fwDictList.getId()))){
 					duplicateflag = true;
-				}else{
-					commonClassDao.save(fwDictList);
 				}
-			}else{
-				commonClassDao.update(fwDictList); 
-			} 
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
-				responseString = mapper.writeValueAsString(commonClassDao.getData(FirewallDictionaryList.class));
 			}
-			JSONObject j = new JSONObject("{fwDictListDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-			return null;
+			String responseString = null;
+			if(!duplicateflag){
+				if(fwDictList.getId() == 0){
+					commonClassDao.save(fwDictList);
+				}else{
+					commonClassDao.update(fwDictList); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(FirewallDictionaryList.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, fwDictListDatas, responseString);
+			}
 		}
 		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_FWDictionaryList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_FWDictionaryList"}, method={RequestMethod.POST})
 	public void removeFWDictionaryList(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			FirewallDictionaryList fwDictList = mapper.readValue(root.get("data").toString(), FirewallDictionaryList.class);
-			commonClassDao.delete(fwDictList);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(FirewallDictionaryList.class));
-			JSONObject j = new JSONObject("{fwDictListDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, fwDictListDatas, FirewallDictionaryList.class);
 	}
 
 
-	@RequestMapping(value={"/get_TagPickerNameByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_TagPickerNameByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getTagPickerNameEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("fwTagPickerDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(FWTagPicker.class, tagPickerName)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, fwTagPickerDatas, tagPickerName, FWTagPicker.class);
 	}
 
-	@RequestMapping(value={"/get_TagPickerListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_TagPickerListData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getTagPickerDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("fwTagPickerDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(FWTagPicker.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, fwTagPickerDatas, FWTagPicker.class);
 	}
 
-	@RequestMapping(value={"/fw_dictionary/save_fwTagPicker"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_fwTagPicker"}, method={RequestMethod.POST})
 	public ModelAndView saveFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase (request.getParameter(apiflag))) {
-				fromAPI = true;
-			}
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			FWTagPicker fwTagPicker;
-			
+			TagGridValues data;
 			String userId = "";
 			if (fromAPI) {
 				fwTagPicker = mapper.readValue(root.get(dictionaryFields).toString(), FWTagPicker.class);
+				data = mapper.readValue(root.get(dictionaryFields).toString(), TagGridValues.class);
 				userId = "API";
-				//check if update operation or create, get id for data to be updated and update attributeData
-				if ((update).equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(), tagPickerName, FWTagPicker.class);
-					int id = 0;
-					FWTagPicker dbdata = (FWTagPicker) duplicateData.get(0);
-					id = dbdata.getId();
-					fwTagPicker.setId(id);
-					fwTagPicker.setUserCreatedBy(this.getUserInfo(userId));
-				}
 			} else {
-				TagGridValues data;
 				fwTagPicker = mapper.readValue(root.get("fwTagPickerDictionaryData").toString(), FWTagPicker.class);
 				data = mapper.readValue(root.get("fwTagPickerDictionaryData").toString(), TagGridValues.class);
 				userId = root.get(userid).textValue();
-				
-				StringBuilder header = new StringBuilder();
-				int counter = 0;
-				if(!data.getTags().isEmpty()){
-					for(Object attribute : data.getTags()){
-						if(attribute instanceof LinkedHashMap<?, ?>){
-							String key = ((LinkedHashMap<?, ?>) attribute).get("option").toString();
-							String value = ((LinkedHashMap<?, ?>) attribute).get("number").toString();
-							if(counter>0){
-								header.append("#");
-							}
-							header.append(key+":"+value);
-							counter ++;
-						}
-					}
-				}
-				fwTagPicker.setTagValues(header.toString());
 			}
+			fwTagPicker.setTagValues(utils.appendKeyValue(data.getTags(), "#", ":"));
 			
-			if(fwTagPicker.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(), tagPickerName, FWTagPicker.class);
-				if(!duplicateData.isEmpty()){
+			UserInfo userInfo = utils.getUserInfo(userId);
+			
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTagPicker.getTagPickerName(), tagPickerName, FWTagPicker.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				FWTagPicker data1 = (FWTagPicker) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					fwTagPicker.setId(data1.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data1.getId() != fwTagPicker.getId()))){
 					duplicateflag = true;
-				}else{
-					fwTagPicker.setUserCreatedBy(this.getUserInfo(userId));
-					fwTagPicker.setUserModifiedBy(this.getUserInfo(userId));
-					commonClassDao.save(fwTagPicker);
 				}
-			}else{
-				fwTagPicker.setUserModifiedBy(this.getUserInfo(userId));
-				fwTagPicker.setModifiedDate(new Date());
-				commonClassDao.update(fwTagPicker); 
-			} 
-			String responseString = "";
-			if(duplicateflag){
-				responseString = duplicateResponseString;
-			}else{
-				responseString =  mapper.writeValueAsString(commonClassDao.getData(FWTagPicker.class));
 			}
-
-			if (fromAPI) {
-				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
-					responseString = successMsg;
-				}
-				ModelAndView result = new ModelAndView();
-				result.setViewName(responseString);
-				return result;
-			} else {
-				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType);
-				request.setCharacterEncoding(utf8);
-
-				PrintWriter out = response.getWriter();
-				JSONObject j = new JSONObject("{fwTagPickerDictionaryDatas: " + responseString + "}");
-				out.write(j.toString());
-				return null;
+			String responseString = null;
+			if(!duplicateflag){
+				fwTagPicker.setUserModifiedBy(userInfo);
+				if(fwTagPicker.getId() == 0){
+					fwTagPicker.setUserCreatedBy(userInfo);
+					commonClassDao.save(fwTagPicker);
+				}else{
+					fwTagPicker.setModifiedDate(new Date());
+					commonClassDao.update(fwTagPicker); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(FWTagPicker.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, fwTagPickerDatas, responseString);
 			}
 		}
 		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_tagPicker"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_tagPicker"}, method={RequestMethod.POST})
 	public void removeFirewallTagPickerDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			FWTagPicker fwTagPicker = mapper.readValue(root.get("data").toString(), FWTagPicker.class);
-			commonClassDao.delete(fwTagPicker);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(FWTagPicker.class));
-			JSONObject j = new JSONObject("{fwTagPickerDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, fwTagPickerDatas, FWTagPicker.class);
 	}
 
-	@RequestMapping(value={"/get_TagListData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_TagListData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getTagDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put(fwTagDictionaryDatas, mapper.writeValueAsString(commonClassDao.getData(FWTag.class)));	
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.addHeader(successMapKey, successMessage); 
-			response.addHeader(operation, getDictionary);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, fwTagDatas, FWTag.class);
 	}
 	
-	@RequestMapping(value={"/get_TagNameByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_TagNameByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getTagNameEntityDataByName(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("fwTagDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(FWTag.class, "fwTagName")));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, fwTagDatas, "fwTagName", FWTag.class);
 	}
 
 
-	@RequestMapping(value={"/fw_dictionary/save_fwTag"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/save_fwTag"}, method={RequestMethod.POST})
 	public ModelAndView saveFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-			boolean fromAPI = false;
-			if (request.getParameter(apiflag)!=null && ("api").equalsIgnoreCase(request.getParameter(apiflag))) {
-				fromAPI = true;
-			}
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			FWTag fwTag;
-			
+			TagGridValues tagGridValues;
 			String userId="";
-			if (fromAPI) {
+			if(fromAPI){
 				fwTag = mapper.readValue(root.get(dictionaryFields).toString(), FWTag.class);
+				tagGridValues = mapper.readValue(root.get(dictionaryFields).toString(), TagGridValues.class);
 				userId = "API";
-				//check if update operation or create, get id for data to be updated and update attributeData
-				if (update.equals(request.getParameter(operation))) {
-					List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTag.getFwTagName(), "fwTagName", FWTag.class);
-					int id = 0;
-					FWTag data = (FWTag) duplicateData.get(0);
-					id = data.getId();
-					fwTag.setId(id);
-					fwTag.setUserCreatedBy(this.getUserInfo(userId));
-				}
-			} else {
-				TagGridValues tagGridValues;
+			}else{
 				fwTag = mapper.readValue(root.get("fwTagDictionaryData").toString(), FWTag.class);
 				tagGridValues = mapper.readValue(root.get("fwTagDictionaryData").toString(), TagGridValues.class);
 				userId = root.get(userid).textValue();
-				
-				StringBuilder userValue = new StringBuilder();
-				int counter = 0;
-				if(!tagGridValues.getTags().isEmpty()){
-					for(Object attribute : tagGridValues.getTags()){
-						if(attribute instanceof LinkedHashMap<?, ?>){
-							String key = ((LinkedHashMap<?, ?>) attribute).get("tags").toString();
-							if(counter>0){
-								userValue.append(",");
-							}
-							userValue.append(key);
-							counter ++;
-						}
-					}
-				}
-				fwTag.setTagValues(userValue.toString());
 			}
+			fwTag.setTagValues(utils.appendKey(tagGridValues.getTags(), "tags", ","));
 			
-			if(fwTag.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTag.getFwTagName(), "fwTagName", FWTag.class);
-				if(!duplicateData.isEmpty()){
+			UserInfo userInfo = utils.getUserInfo(userId);
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(fwTag.getFwTagName(), "fwTagName", FWTag.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				FWTag data = (FWTag) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					fwTag.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != fwTag.getId()))){
 					duplicateflag = true;
-				}else{
-					fwTag.setUserCreatedBy(this.getUserInfo(userId));
-					fwTag.setUserModifiedBy(this.getUserInfo(userId));
-					commonClassDao.save(fwTag);
-				}		
-			}else{
-				fwTag.setUserModifiedBy(this.getUserInfo(userId));
-				commonClassDao.update(fwTag); 
-			} 
-			String responseString = "";
-			if(duplicateflag){
-				responseString = "Duplicate";
-			}else{
-				responseString = mapper.writeValueAsString(commonClassDao.getData(FWTag.class));
-			}
-
-			if (fromAPI) {
-				if (responseString!=null && !(duplicateResponseString).equals(responseString)) {
-					responseString = successMsg;
 				}
-				ModelAndView result = new ModelAndView();
-				result.setViewName(responseString);
-				return result;
-			} else {
-				response.setCharacterEncoding(utf8);
-				response.setContentType(applicationJsonContentType);
-				request.setCharacterEncoding(utf8);
-
-				PrintWriter out = response.getWriter();
-				JSONObject j = new JSONObject("{fwTagDictionaryDatas: " + responseString + "}");
-				out.write(j.toString());
-				return null;
+			}
+			String responseString = null;
+			if(!duplicateflag){
+				fwTag.setUserModifiedBy(userInfo);
+				if(fwTag.getId() == 0){
+					fwTag.setUserCreatedBy(userInfo);
+					commonClassDao.save(fwTag);
+				}else{
+					fwTag.setModifiedDate(new Date());
+					commonClassDao.update(fwTag); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(FWTag.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, fwTagDatas, responseString);
 			}
 		}
 		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/fw_dictionary/remove_tagList"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/fw_dictionary/remove_tagList"}, method={RequestMethod.POST})
 	public void removeFirewallTagDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			FWTag fwTag = mapper.readValue(root.get("data").toString(), FWTag.class);
-			commonClassDao.delete(fwTag);
-			response.setCharacterEncoding(utf8);
-			response.setContentType(applicationJsonContentType);
-			request.setCharacterEncoding(utf8);
-
-			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(FWTag.class));
-			JSONObject j = new JSONObject("{fwTagDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding(utf8);
-			request.setCharacterEncoding(utf8);
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, fwTagDatas, FWTag.class);
 	}
 }
 
