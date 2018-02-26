@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ app.controller('msConfigNameDictGridController', function ($scope, PolicyAppServ
     	var j = data;
     	$scope.data = JSON.parse(j.data);
     	console.log($scope.data);
-    	$scope.microServiceCongigNameDictionaryDatas = JSON.parse($scope.data.microServiceCongigNameDictionaryDatas);
-    	console.log($scope.microServiceCongigNameDictionaryDatas);
+    	$scope.microServiceConfigNameDictionaryDatas = JSON.parse($scope.data.microServiceConfigNameDictionaryDatas);
+    	console.log($scope.microServiceConfigNameDictionaryDatas);
     }, function (error) {
     	console.log("failed");
     });
@@ -69,7 +69,7 @@ app.controller('msConfigNameDictGridController', function ($scope, PolicyAppServ
             resolve: {
                 message: function () {
                     var message = {
-                        microServiceCongigNameDictionaryDatas: $scope.editMSConfig
+                        microServiceConfigNameDictionaryDatas: $scope.editMSConfig
                     };
                     return message;
                 }
@@ -77,12 +77,12 @@ app.controller('msConfigNameDictGridController', function ($scope, PolicyAppServ
         });
         modalInstance.result.then(function(response){
             console.log('response', response);
-            $scope.microServiceCongigNameDictionaryDatas=response.microServiceCongigNameDictionaryDatas;
+            $scope.microServiceConfigNameDictionaryDatas=response.microServiceConfigNameDictionaryDatas;
         });
     };
 
-    $scope.editMSConfigNameWindow = function(microServiceCongigNameDictionaryData) {
-        $scope.editMSConfig = microServiceCongigNameDictionaryData;
+    $scope.editMSConfigNameWindow = function(microServiceConfigNameDictionaryData) {
+        $scope.editMSConfig = microServiceConfigNameDictionaryData;
         var modalInstance = $modal.open({
         	backdrop: 'static', keyboard: false,
             templateUrl : 'add_msConfigName_popup.html',
@@ -90,7 +90,7 @@ app.controller('msConfigNameDictGridController', function ($scope, PolicyAppServ
             resolve: {
                 message: function () {
                     var message = {
-                        microServiceCongigNameDictionaryData: $scope.editMSConfig
+                        microServiceConfigNameDictionaryData: $scope.editMSConfig
                     };
                     return message;
                 }
@@ -98,7 +98,7 @@ app.controller('msConfigNameDictGridController', function ($scope, PolicyAppServ
         });
         modalInstance.result.then(function(response){
             console.log('response', response);
-            $scope.microServiceCongigNameDictionaryDatas = response.microServiceCongigNameDictionaryDatas;
+            $scope.microServiceConfigNameDictionaryDatas = response.microServiceConfigNameDictionaryDatas;
         });
     };
 
@@ -114,7 +114,7 @@ app.controller('msConfigNameDictGridController', function ($scope, PolicyAppServ
                     contentType: 'application/json',
                     data: JSON.stringify(postData),
                     success : function(data){
-                        $scope.$apply(function(){$scope.microServiceCongigNameDictionaryDatas=data.microServiceCongigNameDictionaryDatas;});
+                        $scope.$apply(function(){$scope.microServiceConfigNameDictionaryDatas=data.microServiceConfigNameDictionaryDatas;});
                     },
                     error : function(data){
                         console.log(data);

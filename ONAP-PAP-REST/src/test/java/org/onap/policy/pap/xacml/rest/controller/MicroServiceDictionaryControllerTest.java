@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
@@ -36,12 +35,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.DCAEuuid;
 import org.onap.policy.rest.jpa.MicroServiceLocation;
@@ -109,27 +108,12 @@ public class MicroServiceDictionaryControllerTest {
         br = new BufferedReader(new StringReader(jsonString));
         //--- mock the getReader() call
         when(request.getReader()).thenReturn(br);   
-                
+        new DictionaryUtils(commonClassDao);
+        DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
+        mock(DictionaryUtils.class);        
         logger.info("setUp: exit");
 	}
 
-	@After
-	public void tearDown() throws Exception {
-	}
-
-
-	@Test
-	public void testGetUserInfo() {
-		
-		logger.info("testGetUserInfo: Entering");		
-
-		UserInfo userInfo = controller.getUserInfo("testing");
-		logger.info("userInfo.getUserName() : " + userInfo.getUserName());
-		
-		assertEquals("John", userInfo.getUserName());
-	
-		logger.info("testGetUserInfo: exit");		
-	}
 
 	@Test
 	public void testGetDCAEUUIDDictionaryByNameEntityData() {
@@ -220,7 +204,7 @@ public class MicroServiceDictionaryControllerTest {
 			when(request.getReader()).thenReturn(br); 		    
 			controller.removeMicroServiceConfigNameDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
+			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceConfigNameDictionaryDatas"));
 
 		} catch (Exception e) {
 			fail("Exception: " + e);
@@ -238,7 +222,7 @@ public class MicroServiceDictionaryControllerTest {
 		controller.getMicroServiceConfigNameByNameDictionaryEntityData(response);
 		
 		try {
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
+			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceConfigNameDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
 			fail("Exception: " + e);
@@ -256,7 +240,7 @@ public class MicroServiceDictionaryControllerTest {
 		controller.getMicroServiceConfigNameDictionaryEntityData(response);
 		
 		try {
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
+			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceConfigNameDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
 			fail("Exception: " + e);
@@ -274,7 +258,7 @@ public class MicroServiceDictionaryControllerTest {
 	
 		try {
 		    // mock the getReader() call
-			jsonString = "{\"microServiceCongigNameDictionaryData\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
+			jsonString = "{\"microServiceConfigNameDictionaryData\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
 					+ " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
 					+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
 					+ " \"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"	},"
@@ -286,7 +270,7 @@ public class MicroServiceDictionaryControllerTest {
 			when(request.getReader()).thenReturn(br); 		    
 			controller.saveMicroServiceConfigNameDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
+			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceConfigNameDictionaryDatas"));
 
 		} catch (Exception e) {
 			fail("Exception: " + e);
@@ -316,7 +300,7 @@ public class MicroServiceDictionaryControllerTest {
 			when(request.getReader()).thenReturn(br); 		    
 			controller.removeMicroServiceConfigNameDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceCongigNameDictionaryDatas"));
+			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceConfigNameDictionaryDatas"));
 
 		} catch (Exception e) {
 			fail("Exception: " + e);

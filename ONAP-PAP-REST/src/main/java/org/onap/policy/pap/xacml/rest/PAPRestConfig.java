@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.utils.CryptoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -64,7 +65,7 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
 			setDbDriver(prop.getProperty("javax.persistence.jdbc.driver"));
 			setDbUrl(prop.getProperty("javax.persistence.jdbc.url"));
 			setDbUserName(prop.getProperty("javax.persistence.jdbc.user"));
-			setDbPassword(prop.getProperty("javax.persistence.jdbc.password"));
+			setDbPassword( CryptoUtils.decryptTxtNoExStr(prop.getProperty("javax.persistence.jdbc.password", "")));
 		}catch(Exception e){
 			LOGGER.error("Exception Occured while loading properties file"+e);
 		}finally{
@@ -138,8 +139,8 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
 		return dbPassword;
 	}
 
-	public static void setDbPassword(String dbPassword) {
-		PAPRestConfig.dbPassword = dbPassword;
+	public static void setDbPassword(String dbPassword) {	
+		PAPRestConfig.dbPassword = CryptoUtils.decryptTxtNoExStr(dbPassword);
 	}
 	
 }
