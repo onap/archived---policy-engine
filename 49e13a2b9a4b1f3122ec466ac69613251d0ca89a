@@ -34,6 +34,24 @@
       "revId": "49e13a2b9a4b1f3122ec466ac69613251d0ca89a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_7fcf9d29",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-26T19:30:58Z",
+      "side": 1,
+      "message": "if it is the old file which has copyright as 2017 and when you modify it should be updated with 2017-2018\n\nif it is new file then 2018 is fine.",
+      "parentUuid": "5a93c517_bfc9a527",
+      "revId": "49e13a2b9a4b1f3122ec466ac69613251d0ca89a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
