@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.onap.policy.api.PolicyException;
 import org.onap.policy.api.PolicyParameters;
 
-public class BRMSRawPolicyServiceTest {
+public class ConfigPolicyServiceTest {
 	@Test
 	public void testRaw() throws PolicyException  {
 		String systemKey = "xacml.properties";
@@ -35,9 +35,9 @@ public class BRMSRawPolicyServiceTest {
 		String oldProperty = System.getProperty(systemKey);
 		System.setProperty(systemKey, "xacml.pdp.properties");
 		
-		BRMSRawPolicyService service = new BRMSRawPolicyService(testVal, testVal, testParams, testVal);
+		ConfigPolicyService service = new ConfigPolicyService(testVal, testVal, testParams, testVal);
 		assertEquals(service.getValidation(), false);
-		assertEquals(service.getMessage(), "PE300 - Data Issue:  No Rule Body given");
+		assertEquals(service.getMessage(), "PE300 - Data Issue: No Config Body given.");
 		
 		// Restore the original system property
 		if (oldProperty != null) {
