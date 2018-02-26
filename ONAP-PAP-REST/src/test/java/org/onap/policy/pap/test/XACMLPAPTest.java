@@ -51,6 +51,7 @@ import org.onap.policy.pap.xacml.rest.controller.ClosedLoopDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.FirewallDictionaryController;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.pap.xacml.rest.policycontroller.PolicyCreation;
+import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.BRMSParamTemplate;
 import org.onap.policy.rest.jpa.PolicyEditorScopes;
@@ -89,6 +90,10 @@ public class XACMLPAPTest {
                 .thenReturn("src/test/resources/xacml.pap.properties");
         pap = new XACMLPapServlet();
         pap.init(servletConfig);
+        CommonClassDao commonClassDao = Mockito.mock(CommonClassDao.class);
+        new DictionaryUtils(commonClassDao);
+        DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
+        Mockito.mock(DictionaryUtils.class);  
     }
     
     @Test

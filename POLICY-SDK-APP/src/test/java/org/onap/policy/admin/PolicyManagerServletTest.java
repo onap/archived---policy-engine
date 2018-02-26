@@ -21,7 +21,6 @@ package org.onap.policy.admin;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
 
 import java.io.BufferedReader;
 import java.io.File;

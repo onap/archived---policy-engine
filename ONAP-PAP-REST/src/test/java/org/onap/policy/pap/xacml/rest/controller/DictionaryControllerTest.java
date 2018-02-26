@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,14 +35,15 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.Attribute;
+import org.onap.policy.rest.jpa.Category;
 import org.onap.policy.rest.jpa.MicroServiceModels;
 import org.onap.policy.rest.jpa.PolicyEditorScopes;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -67,7 +68,6 @@ public class DictionaryControllerTest {
 	public void setUp() throws Exception {
 		logger.info("setUp: Entering");
         commonClassDao = Mockito.mock(CommonClassDao.class);
-	    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 
         MicroServiceModels testData = new MicroServiceModels();
         testData.setVersion("1707.4.1.2-Junit");        
@@ -77,34 +77,23 @@ public class DictionaryControllerTest {
         microList.add("123");
         List<Object>  listId = new ArrayList<Object>();
         when(commonClassDao.getDataByColumn(Attribute.class, "xacmlId")).thenReturn(microList);
+        List<Object> object = new ArrayList<>();
+        object.add(new Category());
+        when(commonClassDao.getDataById(Category.class, "shortName", "resource")).thenReturn(object);
         PolicyEditorScopes editorScope = new PolicyEditorScopes();
         doNothing().when(commonClassDao).save(editorScope);
         doNothing().when(commonClassDao).update(editorScope);
         
         when(commonClassDao.getData(Attribute.class)).thenReturn(listId);
         
-		jsonString = "{\"attributeDictionaryDatas\": {\"error\": \"\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
-				+ " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
-				+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
-				+ " \"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"	},"
-				+ " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\",\"policyName\": \"may1501\", "
-				+ "	\"policyDescription\": \"testing input\", \"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\",\"riskLevel\": \"2\","
-				+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
-				+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 		request = mock(HttpServletRequest.class);        
-        BufferedReader br = new BufferedReader(new StringReader(jsonString));
-        //--- mock the getReader() call
-        when(request.getReader()).thenReturn(br);   
-        
         controller = new DictionaryController(commonClassDao);
-        
+        new DictionaryUtils(commonClassDao);
+        DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
+        mock(DictionaryUtils.class);
         logger.info("setUp: exit");
 	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
+	
 	@Test
 	public void testGetAttributeDictionaryEntityDatabyAttributeName() {
 		logger.info("testGetAttributeDictionaryEntityDatabyAttributeName: Entering");
@@ -148,17 +137,8 @@ public class DictionaryControllerTest {
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 	    request = mock(HttpServletRequest.class);  
         
-		try {
-		    // mock the getReader() call
-			jsonString = "{\"attributeDictionaryData\": {\"userDataTypeValues\": [{\"attributeValues\": \"Values1\"}, {\"attributeValues\": \"Values2\"}],	\"datatypeBean\": {\"type\": \"C\"},\"model\": {\"name\": \"testingdata\", "
-					+ " \"subScopename\": \"\",\"userDataTypeValues\": [\"user-type\"],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
-					+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
-					+ " \"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"	},"
-					+ " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\",\"policyName\": \"may1501\", "
-					+ "	\"policyDescription\": \"testing input\", \"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\",\"riskLevel\": \"2\","
-					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
-					+ "	\"policyJSON\": {\"some\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"}, \"userid\":\"smetest\", \"userDataTypeValues\":[\"type-one\"]}";
-			
+		try {	
+			jsonString = "{\"attributeDictionaryData\":{\"datatypeBean\":{\"shortName\":\"string\"},\"description\":\"Qwerty\",\"priority\":\"High\",\"userDataTypeValues\":[{\"$$hashKey\":\"object:641\",\"attributeValues\":\"test\",\"id\":\"choice1\"},{\"$$hashKey\":\"object:646\",\"attributeValues\":\"test\",\"id\":\"choice2\"}],\"xacmlId\":\"Qwerty\"},\"userid\":\"demo\"}";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
 			when(request.getReader()).thenReturn(br); 		    
 			controller.saveAttributeDictionary(request, response);
@@ -180,16 +160,8 @@ public class DictionaryControllerTest {
 	    request = mock(HttpServletRequest.class);   
 	
 		try {
-		    // mock the getReader() call
-			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
-					+ " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
-					+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
-					+ " \"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"	},"
-					+ " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\",\"policyName\": \"may1501\", "
-					+ "	\"policyDescription\": \"testing input\", \"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\",\"riskLevel\": \"2\","
-					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
-					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
-			BufferedReader br = new BufferedReader(new StringReader(jsonString));
+			jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"xacmlId\":\"Test\"}}";
+				BufferedReader br = new BufferedReader(new StringReader(jsonString));
 			when(request.getReader()).thenReturn(br); 		    
 			controller.removeAttributeDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
@@ -246,17 +218,8 @@ public class DictionaryControllerTest {
 		MockHttpServletResponse response =  new MockHttpServletResponse();
 	    request = mock(HttpServletRequest.class);  
         
-		try {
-		    // mock the getReader() call
-			jsonString = "{\"onapNameDictionaryData\": {\"userDataTypeValues\": [{\"attributeValues\": \"Values1\"}, {\"attributeValues\": \"Values2\"}],	\"datatypeBean\": {\"type\": \"C\"},\"model\": {\"name\": \"testingdata\", "
-					+ " \"subScopename\": \"\",\"userDataTypeValues\": [\"user-type\"],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
-					+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
-					+ " \"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"	},"
-					+ " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\",\"policyName\": \"may1501\", "
-					+ "	\"policyDescription\": \"testing input\", \"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\",\"riskLevel\": \"2\","
-					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
-					+ "	\"policyJSON\": {\"some\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"}, \"userid\":\"smetest\", \"userDataTypeValues\":[\"type-one\"]}";
-			
+		try {	
+			jsonString = "{\"userid\":\"demo\",\"onapNameDictionaryData\":{\"description\":\"test\",\"onapName\":\"Test\"}}";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
 			when(request.getReader()).thenReturn(br); 		    
 			controller.saveOnapDictionary(request, response);
@@ -278,16 +241,8 @@ public class DictionaryControllerTest {
 	    request = mock(HttpServletRequest.class);   
 	
 		try {
-		    // mock the getReader() call
-			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
-					+ " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
-					+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
-					+ " \"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"	},"
-					+ " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\",\"policyName\": \"may1501\", "
-					+ "	\"policyDescription\": \"testing input\", \"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\",\"riskLevel\": \"2\","
-					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
-					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
-			BufferedReader br = new BufferedReader(new StringReader(jsonString));
+			jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"onapName\":\"Test\"}}";
+				BufferedReader br = new BufferedReader(new StringReader(jsonString));
 			when(request.getReader()).thenReturn(br); 		    
 			controller.removeOnapDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());

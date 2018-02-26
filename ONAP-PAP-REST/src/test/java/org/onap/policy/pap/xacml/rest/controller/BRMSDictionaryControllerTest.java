@@ -19,7 +19,6 @@
  */
 package org.onap.policy.pap.xacml.rest.controller;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
@@ -39,6 +38,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.BRMSParamTemplate;
 import org.onap.policy.rest.jpa.UserInfo;
@@ -69,16 +69,10 @@ public class BRMSDictionaryControllerTest {
 		controller = new BRMSDictionaryController();
 		request = Mockito.mock(HttpServletRequest.class);
 		response =  new MockHttpServletResponse();  
+		new DictionaryUtils(commonClassDao);
+        DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
+        mock(DictionaryUtils.class);
 		logger.info("setUp: exit");
-	}
-
-	@Test
-	public void testGetUserInfo() {
-		logger.info("testGetUserInfo: Entering");		
-		UserInfo userInfo = controller.getUserInfo("testing");
-		logger.info("userInfo.getUserName() : " + userInfo.getUserName());
-		assertEquals("John", userInfo.getUserName());
-		logger.info("testGetUserInfo: exit");		
 	}
 
 	@Test

@@ -558,10 +558,6 @@ public class CreateDcaeMicroServiceControllerTest {
 	public void testSetMSModelData() {		
 		
 		logger.debug("testSetMSModelData: enter");
-		
-		CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
-		
-	    MockHttpServletResponse response = new MockHttpServletResponse();
 
 	    HttpServletRequest request = createMock(HttpServletRequest.class);
 	    expect(request.getContentType()).andReturn("multipart/form-data; boundary=----WebKitFormBoundaryWcRUaIbC8kXgjr3p");
