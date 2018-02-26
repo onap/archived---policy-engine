@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_9f9ce95e",
+        "filename": "BRMSGateway/src/test/java/org/onap/brmsgw/test/BRMSJpaTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-26T19:03:12Z",
+      "side": 1,
+      "message": "Lets have at least one assert following this code",
+      "range": {
+        "startLine": 51,
+        "startChar": 2,
+        "endLine": 55,
+        "endChar": 33
+      },
+      "revId": "f85f7410a5decb2e4d294d032e3459cddb00f807",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
