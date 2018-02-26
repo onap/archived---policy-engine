@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PDP-REST
+ * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -18,36 +18,28 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pdp.rest.auth.test;
+package org.onap.brmsgw.test;
 
 import static org.junit.Assert.assertEquals;
-import java.io.UnsupportedEncodingException;
-import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Test;
-import org.onap.policy.pdp.rest.restAuth.AuthenticationService;
+import org.onap.policy.brmsInterface.ControllerPOJO;
 
-public class AuthenticationServiceTest {
-	private final String testCred = "testpdp:alpha456";
-	private final String testCredEncoded = new String(Base64.getEncoder().encode(testCred.getBytes()));
-	private final String basicCred = "Basic " + testCredEncoded;
-	
+public class ControllerPOJOTest {
 	@Test
-	public void testAuth() throws UnsupportedEncodingException {
-		String systemKey = "xacml.properties";
-
-		// Set the system property temporarily
-		String oldProperty = System.getProperty(systemKey);
-		System.setProperty(systemKey, "xacml.pdp.properties");
+	public void testPojo() {
+		String testKey = "testKey";
+		String testVal = "testVal";
+		Map<String, String> testMap = new HashMap<String, String>();
+		testMap.put(testKey, testVal);
+		ControllerPOJO pojo = new ControllerPOJO();
 		
-		AuthenticationService service = new AuthenticationService();
-		assertEquals(service.authenticate(basicCred), true);
-		
-		// Restore the original system property
-		if (oldProperty != null) {
-			System.setProperty(systemKey, oldProperty);
-		}
-		else {
-			System.clearProperty(systemKey);
-		}
+		pojo.setName(testVal);
+		assertEquals(pojo.getName(), testVal);
+		pojo.setDrools(testMap);
+		assertEquals(pojo.getDrools(), testMap);
+		pojo.setOperation(testVal);
+		assertEquals(pojo.getOperation(), testVal);
 	}
 }

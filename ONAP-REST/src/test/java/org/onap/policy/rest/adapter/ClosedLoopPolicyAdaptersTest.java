@@ -19,8 +19,8 @@
  */
 package org.onap.policy.rest.adapter;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -157,5 +157,11 @@ public class ClosedLoopPolicyAdaptersTest {
 		assertTrue(pmBody.getAttributes() != null);
 		pmBody.setGeoLink("Test");
 		assertTrue("Test".equals(pmBody.getGeoLink()));
+	}
+	
+	@Test
+	public void testClosedLoopPolicyStatus() {
+		assertEquals(ClosedLoopPolicyStatus.ACTIVE.toString(), "active");
+		assertEquals(ClosedLoopPolicyStatus.INACTIVE.toString(), "inactive");
 	}
 }
