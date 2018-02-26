@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_ff008dac",
+        "filename": "BRMSGateway/src/test/java/org/onap/brmsgw/test/BRMSJpaTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-26T18:16:45Z",
+      "side": 1,
+      "message": "license header need to be changed from 2017 to 2018 for all newly added files",
+      "revId": "9dbf6699d61924e29d6bd72d3f8165357d8c8122",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_1ffe99ae",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/notifications/RemovedTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-26T18:16:45Z",
+      "side": 1,
+      "message": "missing license header",
+      "revId": "9dbf6699d61924e29d6bd72d3f8165357d8c8122",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
