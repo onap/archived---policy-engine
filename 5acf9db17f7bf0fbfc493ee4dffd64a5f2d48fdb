@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_7f0a3d7a",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1645
+      },
+      "writtenOn": "2018-02-26T19:19:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_9f5b89f5",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_dff03100",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
         "patchSetId": 1
@@ -60,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_ff464dbf",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1645
+      },
+      "writtenOn": "2018-02-26T19:19:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_dff03100",
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_bfebe511",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
         "patchSetId": 1
@@ -71,6 +113,24 @@
       "writtenOn": "2018-02-26T17:07:20Z",
       "side": 1,
       "message": "Why are we ignoring this test case?",
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_1f4459b5",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1645
+      },
+      "writtenOn": "2018-02-26T19:19:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_bfebe511",
       "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -100,6 +160,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_9f38693e",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/notifications/test/NotificationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1645
+      },
+      "writtenOn": "2018-02-26T19:19:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_5f718174",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_7ff1ddff",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/notifications/test/NotificationTest.java",
         "patchSetId": 1
@@ -111,6 +195,24 @@
       "writtenOn": "2018-02-26T17:07:20Z",
       "side": 1,
       "message": "List\u003cRemoved\u003e removedPolicies \u003d new ArrayList\u003c\u003e();\n\nCan you modify similar to this?\nSonar will throw errors.",
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5f3e6129",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/notifications/test/NotificationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1645
+      },
+      "writtenOn": "2018-02-26T19:19:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_7ff1ddff",
       "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -134,6 +236,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_bf1445a0",
+        "filename": "ONAP-PDP-REST/src/test/resources/xacml.pdp.dmaap.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1645
+      },
+      "writtenOn": "2018-02-26T19:19:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_9ff629f8",
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_ff696d8c",
         "filename": "ONAP-PDP-REST/src/test/resources/xacml.pdp.ueb.properties",
         "patchSetId": 1
@@ -145,6 +265,30 @@
       "writtenOn": "2018-02-26T18:04:25Z",
       "side": 1,
       "message": "2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 20
+      },
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9f0f0988",
+        "filename": "ONAP-PDP-REST/src/test/resources/xacml.pdp.ueb.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1645
+      },
+      "writtenOn": "2018-02-26T19:19:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_ff696d8c",
       "range": {
         "startLine": 5,
         "startChar": 16,
