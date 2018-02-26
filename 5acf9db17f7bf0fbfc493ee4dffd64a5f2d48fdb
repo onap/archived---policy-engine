@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_9f5b89f5",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-26T18:04:25Z",
+      "side": 1,
+      "message": "Update license to 2017-2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_dff03100",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
         "patchSetId": 1
@@ -54,6 +77,29 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_5f718174",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/notifications/test/NotificationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-26T18:04:25Z",
+      "side": 1,
+      "message": "2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_7ff1ddff",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/notifications/test/NotificationTest.java",
         "patchSetId": 1
@@ -82,6 +128,29 @@
       "writtenOn": "2018-02-26T17:07:20Z",
       "side": 1,
       "message": "change to 2018 instead of 2017 in license header. applies similar for all newly added files",
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ff696d8c",
+        "filename": "ONAP-PDP-REST/src/test/resources/xacml.pdp.ueb.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-26T18:04:25Z",
+      "side": 1,
+      "message": "2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 20
+      },
       "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
