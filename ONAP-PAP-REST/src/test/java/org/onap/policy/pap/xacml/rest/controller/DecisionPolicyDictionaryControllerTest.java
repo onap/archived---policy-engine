@@ -35,6 +35,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -66,7 +67,9 @@ public class DecisionPolicyDictionaryControllerTest {
         when(request.getReader()).thenReturn(br);   
         
         controller = new DecisionPolicyDictionaryController(commonClassDao);
-        
+        new DictionaryUtils(commonClassDao);
+        DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
+        mock(DictionaryUtils.class);
         logger.info("setUp: exit");
 	}
 

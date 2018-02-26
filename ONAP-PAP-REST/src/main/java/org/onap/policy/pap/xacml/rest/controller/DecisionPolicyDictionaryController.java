@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,410 +20,213 @@
 
 package org.onap.policy.pap.xacml.rest.controller;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.json.JSONObject;
-import org.onap.policy.common.logging.flexlogger.FlexLogger;
-import org.onap.policy.common.logging.flexlogger.Logger;
-import org.onap.policy.pap.xacml.rest.util.JsonMessage;
-import org.onap.policy.rest.dao.CommonClassDao;
-import org.onap.policy.rest.jpa.Datatype;
-import org.onap.policy.rest.jpa.DecisionSettings;
-import org.onap.policy.rest.jpa.RainyDayTreatments;
-import org.onap.policy.rest.jpa.UserInfo;
-import org.onap.policy.utils.PolicyUtils;
-import org.onap.policy.xacml.api.XACMLErrorConstants;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
+import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.DecisionSettings;
+import org.onap.policy.rest.jpa.RainyDayTreatments;
+import org.onap.policy.rest.jpa.UserInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class DecisionPolicyDictionaryController {
-
-	private static final Logger LOGGER  = FlexLogger.getLogger(DecisionPolicyDictionaryController.class);
 	
 	private static CommonClassDao commonClassDao;
+	private static String xacmlId = "xacmlId";
+	private static String bbID = "bbid";
+	private static String operation = "operation";
+	private static String duplicateResponseString = "Duplicate";
+	private static String settingDatas = "settingsDictionaryDatas";
+	private static String rainDayDatas = "rainyDayDictionaryDatas";
+	private static String dictionaryFields ="dictionaryFields";
 	
 	@Autowired
 	public DecisionPolicyDictionaryController(CommonClassDao commonClassDao){
 		DecisionPolicyDictionaryController.commonClassDao = commonClassDao;
 	}
 	
-	public DecisionPolicyDictionaryController(){}
-	
-	public UserInfo getUserInfo(String loginId){
-		UserInfo name = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", loginId);
-		return name;	
+	public DecisionPolicyDictionaryController(){
+		super();
 	}
 	
-	@RequestMapping(value={"/get_SettingsDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	private DictionaryUtils getDictionaryUtilsInstance(){
+		return DictionaryUtils.dictionaryUtils != null ? DictionaryUtils.getDictionaryUtils() : new DictionaryUtils();
+	}
+	
+	@RequestMapping(value={"/get_SettingsDictionaryDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSettingsDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("settingsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(DecisionSettings.class, "xacmlId")));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, settingDatas, xacmlId, DecisionSettings.class);
 	}
 
 	
-	@RequestMapping(value={"/get_SettingsDictionaryData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_SettingsDictionaryData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getSettingsDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("settingsDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-            response.addHeader("successMapKey", "success"); 
-            response.addHeader("operation", "getDictionary");
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-            response.addHeader("error", "dictionaryDBQuery");
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, settingDatas, DecisionSettings.class);
 	}
 	
-	@RequestMapping(value={"/decision_dictionary/save_Settings"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	@RequestMapping(value={"/decision_dictionary/save_Settings"}, method={RequestMethod.POST})
+	public ModelAndView saveSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-            boolean isFakeUpdate = false;
-            boolean fromAPI = false;
-            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
-                fromAPI = true;
-            }
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			DecisionSettings decisionSettings;
-            String userId = null;
-            
-            if (fromAPI) {
-            	decisionSettings = (DecisionSettings)mapper.readValue(root.get("dictionaryFields").toString(), DecisionSettings.class);
-            	userId = "API";
+			String userId = null;
 
-            	//check if update operation or create, get id for data to be updated and update attributeData
-            	if (request.getParameter("operation").equals("update")) {
-            		List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionSettings.getXacmlId(), "xacmlId", DecisionSettings.class);
-            		int id = 0;
-            		DecisionSettings data = (DecisionSettings) duplicateData.get(0);
-            		id = data.getId();
-            		if(id==0){
-            			isFakeUpdate=true;
-            			decisionSettings.setId(1);
-            		} else {
-            			decisionSettings.setId(id);
-            		}
-            		decisionSettings.setUserCreatedBy(this.getUserInfo(userId));
-            	}
-            } else {
-            	decisionSettings = (DecisionSettings)mapper.readValue(root.get("settingsDictionaryData").toString(), DecisionSettings.class);
-            	userId = root.get("userid").textValue();
-            }
+			if(fromAPI){
+				decisionSettings = mapper.readValue(root.get(dictionaryFields).toString(), DecisionSettings.class);
+				userId = "API";
+			}else{
+				decisionSettings = mapper.readValue(root.get("settingsDictionaryData").toString(), DecisionSettings.class);
+				userId = root.get("userid").textValue();
+			}
+			UserInfo userInfo = utils.getUserInfo(userId);
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionSettings.getXacmlId(), xacmlId, DecisionSettings.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				DecisionSettings data = (DecisionSettings) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					decisionSettings.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != decisionSettings.getId()))){
+					duplicateflag = true;
+				}
+			}
 			if(decisionSettings.getDatatypeBean().getShortName() != null){
 				String datatype = decisionSettings.getDatatypeBean().getShortName();
-				Datatype a = new Datatype();
-				if(datatype.equalsIgnoreCase("string")){
-					a.setId(26);	
-				}else if(datatype.equalsIgnoreCase("integer")){
-					a.setId(12);	
-				}else if(datatype.equalsIgnoreCase("boolean")){
-					a.setId(18);	
-				}else if(datatype.equalsIgnoreCase("double")){
-					a.setId(25);	
-				}else if(datatype.equalsIgnoreCase("user")){
-					a.setId(29);	
-				}
-				decisionSettings.setDatatypeBean(a);
+				decisionSettings.setDatatypeBean(utils.getDataType(datatype));
 			}
-			if(decisionSettings.getId() == 0){
-				List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionSettings.getXacmlId(), "xacmlId", DecisionSettings.class);
-				if(!duplicateData.isEmpty()){
-					duplicateflag = true;
-				}else{
-					decisionSettings.setUserCreatedBy(this.getUserInfo(userId));
-					decisionSettings.setUserModifiedBy(this.getUserInfo(userId));
+			String responseString = null;
+			if(!duplicateflag){
+				decisionSettings.setUserModifiedBy(userInfo);
+				if(decisionSettings.getId() == 0){
+					decisionSettings.setUserCreatedBy(userInfo);
 					commonClassDao.save(decisionSettings);
-				}
-			}else{
-				if(!isFakeUpdate) {
-					decisionSettings.setUserModifiedBy(this.getUserInfo(userId));
+				}else{
 					decisionSettings.setModifiedDate(new Date());
 					commonClassDao.update(decisionSettings); 
-				}
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class));
+			}else{
+				responseString = duplicateResponseString;
 			}
-            String responseString = "";
-            if(duplicateflag){
-                responseString = "Duplicate";
-            }else{
-                responseString =  mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class));
-            }
-          
-            if (fromAPI) {
-                if (!"Duplicate".equals(responseString)) {
-                    if(isFakeUpdate){
-                        responseString = "Exists";
-                    } else {
-                        responseString = "Success";
-                    }
-                }
-                ModelAndView result = new ModelAndView();
-                result.setViewName(responseString);
-                return result;
-            } else {
-                response.setCharacterEncoding("UTF-8");
-                response.setContentType("application / json");
-                request.setCharacterEncoding("UTF-8");
- 
-                PrintWriter out = response.getWriter();
-                JSONObject j = new JSONObject("{settingsDictionaryDatas: " + responseString + "}");
-                out.write(j.toString());
-                return null;
-            }
- 
-        }catch (Exception e){
-        	LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, settingDatas, responseString);
+			}
+		}catch (Exception e){
+			utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/settings_dictionary/remove_settings"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			DecisionSettings decisionSettings = (DecisionSettings)mapper.readValue(root.get("data").toString(), DecisionSettings.class);
-			commonClassDao.delete(decisionSettings);
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-
-			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(DecisionSettings.class));
-			JSONObject j = new JSONObject("{settingsDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-
-			return null;
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
-		return null;
+	@RequestMapping(value={"/settings_dictionary/remove_settings"}, method={RequestMethod.POST})
+	public void removeSettingsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, settingDatas, DecisionSettings.class);
 	}
 	
-	
-	
-	@RequestMapping(value={"/get_RainyDayDictionaryDataByName"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_RainyDayDictionaryDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getRainyDayDictionaryByNameEntityData(HttpServletRequest request, HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("rainyDayDictionaryDatas", mapper.writeValueAsString(commonClassDao.getDataByColumn(RainyDayTreatments.class, "bbid")));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, rainDayDatas, bbID, RainyDayTreatments.class);
 	}
 
-	
-	@RequestMapping(value={"/get_RainyDayDictionaryData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value={"/get_RainyDayDictionaryData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getRainyDayDictionaryEntityData(HttpServletResponse response){
-		try{
-			Map<String, Object> model = new HashMap<>();
-			ObjectMapper mapper = new ObjectMapper();
-			model.put("rainyDayDictionaryDatas", mapper.writeValueAsString(commonClassDao.getData(RainyDayTreatments.class)));
-			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
-			JSONObject j = new JSONObject(msg);
-            response.addHeader("successMapKey", "success"); 
-            response.addHeader("operation", "getDictionary");
-			response.getWriter().write(j.toString());
-		}
-		catch (Exception e){
-            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);                             
-            response.addHeader("error", "dictionaryDBQuery");
-		}
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, rainDayDatas, RainyDayTreatments.class);
 	}
 	
-	@RequestMapping(value={"/decision_dictionary/save_RainyDay"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView saveRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException{
+	@RequestMapping(value={"/decision_dictionary/save_RainyDay"}, method={RequestMethod.POST})
+	public ModelAndView saveRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DictionaryUtils utils = getDictionaryUtilsInstance();
 		try {
-			boolean duplicateflag = false;
-            boolean isFakeUpdate = false;
-            boolean fromAPI = false;
-            if (request.getParameter("apiflag")!=null && request.getParameter("apiflag").equalsIgnoreCase("api")) {
-                fromAPI = true;
-            }
+			boolean fromAPI = utils.isRequestFromAPI(request);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			JsonNode root = mapper.readTree(request.getReader());
 			RainyDayTreatments decisionRainyDay;
             TreatmentValues treatmentsData = null;
-            if (fromAPI) {
-            	decisionRainyDay = (RainyDayTreatments)mapper.readValue(root.get("dictionaryFields").toString(), RainyDayTreatments.class);
-            	treatmentsData = (TreatmentValues)mapper.readValue(root.get("dictionaryFields").toString(), TreatmentValues.class);
-            	//check if update operation or create, get id for data to be updated and update attributeData
-            	if (request.getParameter("operation").equals("update")) {
-            		List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionRainyDay.getBbid()+":"+decisionRainyDay.getWorkstep(), "bbid:workstep", RainyDayTreatments.class);
-            		int id = 0;
-            		RainyDayTreatments data = (RainyDayTreatments) duplicateData.get(0);
-            		id = data.getId();
-            		if(id==0){
-            			isFakeUpdate=true;
-            		} else {
-            			decisionRainyDay.setId(id);
-            		}
-            	}
-            } else {
-            	decisionRainyDay = (RainyDayTreatments)mapper.readValue(root.get("rainyDayDictionaryData").toString(), RainyDayTreatments.class);
-            	treatmentsData = (TreatmentValues)mapper.readValue(root.get("rainyDayDictionaryData").toString(), TreatmentValues.class);
-            }
-            
-			String userValue = "";
-			int counter = 0;
-			if(treatmentsData.getUserDataTypeValues().size() > 0){
-				for(Object treatment : treatmentsData.getUserDataTypeValues()){
-					if(treatment instanceof LinkedHashMap<?, ?>){
-						String key = ((LinkedHashMap<?, ?>) treatment).get("treatment").toString();
-						if(counter>0){
-							userValue = userValue + ",";
-						}
-						userValue = userValue + key ;
-						counter ++;
-					}
-				}
-				decisionRainyDay.setTreatments(userValue);
-			}
-			
-			if(decisionRainyDay.getId() == 0){
-        		List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionRainyDay.getBbid()+":"+decisionRainyDay.getWorkstep(), "bbid:workstep", RainyDayTreatments.class);
-				if(!duplicateData.isEmpty()){
-					duplicateflag = true;
-				}else{
-					commonClassDao.save(decisionRainyDay);
-				}
-			}else{
-				if(!isFakeUpdate) {
-					commonClassDao.update(decisionRainyDay); 
-				}
-			}
-            String responseString = "";
-            if(duplicateflag){
-                responseString = "Duplicate";
+            if(fromAPI){
+            	decisionRainyDay = mapper.readValue(root.get(dictionaryFields).toString(), RainyDayTreatments.class);
+            	treatmentsData = mapper.readValue(root.get(dictionaryFields).toString(), TreatmentValues.class);
             }else{
-                responseString =  mapper.writeValueAsString(commonClassDao.getData(RainyDayTreatments.class));
+            	decisionRainyDay = mapper.readValue(root.get("rainyDayDictionaryData").toString(), RainyDayTreatments.class);
+            	treatmentsData = mapper.readValue(root.get("rainyDayDictionaryData").toString(), TreatmentValues.class);
             }
-          
-            if (fromAPI) {
-                if (!"Duplicate".equals(responseString)) {
-                    if(isFakeUpdate){
-                        responseString = "Exists";
-                    } else {
-                        responseString = "Success";
-                    }
-                }
-                ModelAndView result = new ModelAndView();
-                result.setViewName(responseString);
-                return result;
-            } else {
-                response.setCharacterEncoding("UTF-8");
-                response.setContentType("application / json");
-                request.setCharacterEncoding("UTF-8");
- 
-                PrintWriter out = response.getWriter();
-                JSONObject j = new JSONObject("{rainyDayDictionaryDatas: " + responseString + "}");
-                out.write(j.toString());
-                return null;
-            }
- 
+			decisionRainyDay.setTreatments(utils.appendKey(treatmentsData.getUserDataTypeValues(), "treatment", ","));
+			
+			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(decisionRainyDay.getBbid()+":"+decisionRainyDay.getWorkstep(), "bbid:workstep", RainyDayTreatments.class);
+			boolean duplicateflag = false;
+			if(!duplicateData.isEmpty()){
+				RainyDayTreatments data = (RainyDayTreatments) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					decisionRainyDay.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != decisionRainyDay.getId()))){
+					duplicateflag = true;
+				}
+			}
+			String responseString = null;
+			if(!duplicateflag){
+				if(decisionRainyDay.getId() == 0){
+					commonClassDao.save(decisionRainyDay);
+				}else{
+					commonClassDao.update(decisionRainyDay); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(RainyDayTreatments.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, rainDayDatas, responseString);
+			}
         }catch (Exception e){
-        	LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
+        	utils.setErrorResponseData(response, e);
 		}
 		return null;
 	}
 
-	@RequestMapping(value={"/decision_dictionary/remove_rainyDay"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView removeRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
-		try{
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			RainyDayTreatments decisionRainyDay = (RainyDayTreatments)mapper.readValue(root.get("data").toString(), RainyDayTreatments.class);
-			commonClassDao.delete(decisionRainyDay);
-			response.setCharacterEncoding("UTF-8");
-			response.setContentType("application / json");
-			request.setCharacterEncoding("UTF-8");
-
-			PrintWriter out = response.getWriter();
-
-			String responseString = mapper.writeValueAsString(commonClassDao.getData(RainyDayTreatments.class));
-			JSONObject j = new JSONObject("{rainyDayDictionaryDatas: " + responseString + "}");
-			out.write(j.toString());
-
-			return null;
-		}
-		catch (Exception e){
-			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-			response.setCharacterEncoding("UTF-8");
-			request.setCharacterEncoding("UTF-8");
-			PrintWriter out = response.getWriter();
-			out.write(PolicyUtils.CATCH_EXCEPTION);
-		}
-		return null;
+	@RequestMapping(value={"/decision_dictionary/remove_rainyDay"}, method={RequestMethod.POST})
+	public void removeRainyDayDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, rainDayDatas, RainyDayTreatments.class);
 	}
 	
 }
 
 class TreatmentValues { 
-	private ArrayList<Object> userDataTypeValues = new ArrayList<>();
+	private List<Object> userDataTypeValues = new ArrayList<>();
 
-	public ArrayList<Object> getUserDataTypeValues() {
+	public List<Object> getUserDataTypeValues() {
 		return userDataTypeValues;
 	}
 
-	public void setUserDataTypeValues(ArrayList<Object> userDataTypeValues) {
+	public void setUserDataTypeValues(List<Object> userDataTypeValues) {
 		this.userDataTypeValues = userDataTypeValues;
 	}
 }
