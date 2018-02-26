@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_dff03100",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-26T17:07:20Z",
+      "side": 1,
+      "message": "please remove the commented line.",
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_bfebe511",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/XACMLPdpServletTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-26T17:07:20Z",
+      "side": 1,
+      "message": "Why are we ignoring this test case?",
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_7ff1ddff",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/notifications/test/NotificationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-26T17:07:20Z",
+      "side": 1,
+      "message": "List\u003cRemoved\u003e removedPolicies \u003d new ArrayList\u003c\u003e();\n\nCan you modify similar to this?\nSonar will throw errors.",
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9ff629f8",
+        "filename": "ONAP-PDP-REST/src/test/resources/xacml.pdp.dmaap.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-26T17:07:20Z",
+      "side": 1,
+      "message": "change to 2018 instead of 2017 in license header. applies similar for all newly added files",
+      "revId": "5acf9db17f7bf0fbfc493ee4dffd64a5f2d48fdb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
