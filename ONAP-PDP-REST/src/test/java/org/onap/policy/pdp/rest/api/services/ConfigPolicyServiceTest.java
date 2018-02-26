@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PDP-REST
+ * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,30 +17,27 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
-package org.onap.policy.pdp.rest.auth.test;
+package org.onap.policy.pdp.rest.api.services;
 
 import static org.junit.Assert.assertEquals;
-import java.io.UnsupportedEncodingException;
-import java.util.Base64;
 import org.junit.Test;
-import org.onap.policy.pdp.rest.restAuth.AuthenticationService;
+import org.onap.policy.api.PolicyException;
+import org.onap.policy.api.PolicyParameters;
 
-public class AuthenticationServiceTest {
-	private final String testCred = "testpdp:alpha456";
-	private final String testCredEncoded = new String(Base64.getEncoder().encode(testCred.getBytes()));
-	private final String basicCred = "Basic " + testCredEncoded;
-	
+public class ConfigPolicyServiceTest {
 	@Test
-	public void testAuth() throws UnsupportedEncodingException {
+	public void testRaw() throws PolicyException  {
 		String systemKey = "xacml.properties";
-
+		String testVal = "testVal";
+		PolicyParameters testParams = new PolicyParameters();
+		
 		// Set the system property temporarily
 		String oldProperty = System.getProperty(systemKey);
 		System.setProperty(systemKey, "xacml.pdp.properties");
 		
-		AuthenticationService service = new AuthenticationService();
-		assertEquals(service.authenticate(basicCred), true);
+		ConfigPolicyService service = new ConfigPolicyService(testVal, testVal, testParams, testVal);
+		assertEquals(service.getValidation(), false);
+		assertEquals(service.getMessage(), "PE300 - Data Issue: No Config Body given.");
 		
 		// Restore the original system property
 		if (oldProperty != null) {
@@ -48,6 +45,6 @@ public class AuthenticationServiceTest {
 		}
 		else {
 			System.clearProperty(systemKey);
-		}
-	}
+		} 
+	} 
 }

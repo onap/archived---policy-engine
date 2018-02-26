@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PAP-REST
+ * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,34 +17,30 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.policy.pdp.rest.api.services;
+
+package org.onap.brmsgw.test;
 
 import static org.junit.Assert.assertEquals;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
-import org.onap.policy.api.PolicyException;
-import org.onap.policy.api.PolicyParameters;
+import org.onap.policy.brmsInterface.ControllerPOJO;
+import org.onap.policy.brmsInterface.NotificationPOJO;
 
-public class BRMSRawPolicyServiceTest {
+public class NotificationPOJOTest {
 	@Test
-	public void testRaw() throws PolicyException  {
-		String systemKey = "xacml.properties";
+	public void testPojo() {
 		String testVal = "testVal";
-		PolicyParameters testParams = new PolicyParameters();
+		ControllerPOJO ctrlPojo = new ControllerPOJO();
+		List<ControllerPOJO> controllers = new ArrayList<ControllerPOJO>();
+		controllers.add(ctrlPojo);
+		NotificationPOJO pojo = new NotificationPOJO();
 		
-		// Set the system property temporarily
-		String oldProperty = System.getProperty(systemKey);
-		System.setProperty(systemKey, "xacml.pdp.properties");
-		
-		BRMSRawPolicyService service = new BRMSRawPolicyService(testVal, testVal, testParams, testVal);
-		assertEquals(service.getValidation(), false);
-		assertEquals(service.getMessage(), "PE300 - Data Issue:  No Rule Body given");
-		
-		// Restore the original system property
-		if (oldProperty != null) {
-			System.setProperty(systemKey, oldProperty);
-		}
-		else {
-			System.clearProperty(systemKey);
-		} 
-	} 
+		pojo.setRequestID(testVal);
+		assertEquals(pojo.getRequestID(), testVal);
+		pojo.setEntity(testVal);
+		assertEquals(pojo.getEntity(), testVal);
+		pojo.setControllers(controllers);
+		assertEquals(pojo.getControllers(), controllers);
+	}
 }
