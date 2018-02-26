@@ -20,9 +20,7 @@
 package org.onap.policy.pdp.rest.api.services;
 
 import static org.junit.Assert.assertEquals;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.onap.policy.api.PolicyException;
 import org.onap.policy.api.PolicyParameters;
 
