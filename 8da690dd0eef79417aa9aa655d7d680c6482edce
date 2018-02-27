@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f3b6863d",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/test/XACMLPAPTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-27T13:12:58Z",
+      "side": 1,
+      "message": "add 2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "8da690dd0eef79417aa9aa655d7d680c6482edce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b3847e5e",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/test/XACMLPAPTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-27T13:12:58Z",
+      "side": 1,
+      "message": "Seems ineffective? Or is that needed for the tests?",
+      "range": {
+        "startLine": 94,
+        "startChar": 8,
+        "endLine": 94,
+        "endChar": 44
+      },
+      "revId": "8da690dd0eef79417aa9aa655d7d680c6482edce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_937f0266",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/DecisionPolicyDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-27T13:12:58Z",
+      "side": 1,
+      "message": "add 2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "8da690dd0eef79417aa9aa655d7d680c6482edce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_53dc1a73",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/MicroServiceDictionaryControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-27T13:12:58Z",
+      "side": 1,
+      "message": "add 2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "8da690dd0eef79417aa9aa655d7d680c6482edce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f3e4463d",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryController/MSConfigNameDictController.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-27T13:12:58Z",
+      "side": 1,
+      "message": "add 2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "8da690dd0eef79417aa9aa655d7d680c6482edce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_13e2122f",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryGridController/MSConfigNameDictGridController.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-27T13:12:58Z",
+      "side": 1,
+      "message": "add 2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "8da690dd0eef79417aa9aa655d7d680c6482edce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b3d23e5a",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/admin/PolicyManagerServletTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-27T13:12:58Z",
+      "side": 1,
+      "message": "add 2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "8da690dd0eef79417aa9aa655d7d680c6482edce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_d3d7ca49",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/controller/CreateDcaeMicroServiceControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-27T13:12:58Z",
+      "side": 1,
+      "message": "add 2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "8da690dd0eef79417aa9aa655d7d680c6482edce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
