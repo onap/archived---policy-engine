@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_e8c3f1ea",
+        "filename": "LogParser/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-02-27T11:32:34Z",
+      "side": 1,
+      "message": "DOn\u0027t know if this is in ONAP already. Apache license so should be fine.",
+      "range": {
+        "startLine": 133,
+        "startChar": 2,
+        "endLine": 145,
+        "endChar": 15
+      },
+      "revId": "d4d97233bf8aae575241080909370f81f68b6e82",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
