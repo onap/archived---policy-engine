@@ -20,6 +20,9 @@
 
 package org.onap.policy.pdp.rest;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +47,7 @@ import org.onap.policy.common.ia.DbDAO;
 import org.onap.policy.common.ia.IntegrityAuditProperties;
 import org.onap.policy.common.im.IntegrityMonitor;
 import org.onap.policy.common.im.IntegrityMonitorException;
+import org.onap.policy.common.logging.ONAPLoggingContext;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XACMLRestProperties;
@@ -209,7 +213,6 @@ public class XACMLPdpServletTest extends TestCase{
 			XACMLProperties.reloadProperties();
 			System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pdp.ueb.properties");
 			XACMLProperties.getProperties();
-			XACMLProperties.setProperty(XACMLRestProperties.PROP_NOTIFICATION_TYPE, "ueb");
 
 		   pdpServlet.init(servletConfig);
 
@@ -235,7 +238,6 @@ public class XACMLPdpServletTest extends TestCase{
 			XACMLProperties.reloadProperties();
 			System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pdp.dmaap.properties");
 			XACMLProperties.getProperties();
-			XACMLProperties.setProperty(XACMLRestProperties.PROP_NOTIFICATION_TYPE, "dmaap");
 		
 			pdpServlet.init(servletConfig);
 
@@ -253,6 +255,20 @@ public class XACMLPdpServletTest extends TestCase{
 	}
 	
 
+	@Test
+	public void testXACMLPdpRegisterThread() {
+		try {
+			ONAPLoggingContext baseLoggingContext = new ONAPLoggingContext();
+			baseLoggingContext.setServer("localhost");
+			XACMLPdpRegisterThread regThread = new XACMLPdpRegisterThread(baseLoggingContext);
+			regThread.run();
+			assertTrue(true);
+		} catch (Exception e) {
+			LOGGER.error("Exception Occured"+e);
+			fail();
+		}
+	}
+	
 	@Test
 	public void testDoGetNoTypeError(){
 		LOGGER.info("XACMLPdpServletTest - testDoGetNoTypeError");
