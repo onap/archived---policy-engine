@@ -1,0 +1,2 @@
+Id,Term-Name,Term-Description,From Zone,To Zone,Source-IP-List,Destination-IP-List,Source-Port-List,Destination-Port-List,Action List,Created By,Modified By,Created Date,Modified Date
+118837,basicRule,BasicRule,Trusted,UnTrusted,PL_Astra,PL_CCE,,snmp,deny,demo,demo,Fri Dec 01 2017 10:30:45 GMT-0500 (Eastern Standard Time),Fri Dec 01 2017 10:30:45 GMT-0500 (Eastern Standard Time)

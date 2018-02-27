@@ -26,7 +26,7 @@ package org.onap.policy.pap.xacml.rest;
  * MessageCodes contains all the valid Dictionary names
  *
  */
-public enum DisctionaryNames {
+public enum DictionaryNames {
 	
 	Attribute,
 	ActionPolicyDictionary,
