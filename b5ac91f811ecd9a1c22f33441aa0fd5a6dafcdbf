@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_39dfed6a",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/controller/AutoPushControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-27T19:34:24Z",
+      "side": 1,
+      "message": "properties should not start with an underscore",
+      "range": {
+        "startLine": 30,
+        "startChar": 26,
+        "endLine": 30,
+        "endChar": 37
+      },
+      "revId": "b5ac91f811ecd9a1c22f33441aa0fd5a6dafcdbf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_59dc3973",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/controller/AutoPushControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-27T19:34:24Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 31,
+        "startChar": 28,
+        "endLine": 31,
+        "endChar": 41
+      },
+      "revId": "b5ac91f811ecd9a1c22f33441aa0fd5a6dafcdbf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
