@@ -989,9 +989,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			LOGGER.info("allkeys : " + allkeys);
 		}
 		
-		String allManyTrueKeys = "";
+		String nameOfTrueKey = "";
 		if(allkeys != null){
-			allManyTrueKeys = allkeys.toString();
+			nameOfTrueKey = allkeys.toString();
 		}
 		
 		String jsonModel = createMicroSeriveJson(returnModel, allkeys);
@@ -1035,10 +1035,10 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		PrintWriter out = response.getWriter();
 		String responseString = mapper.writeValueAsString(returnModel);
 		JSONObject j;
-		if("".equals(allManyTrueKeys)){
+		if("".equals(nameOfTrueKey)){
 			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + "}");	
 		}else{
-			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + ",allManyTrueKeys: " + allManyTrueKeys+ "}");	
+			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + ",allManyTrueKeys: " + nameOfTrueKey+ "}");	
 		}
 		list.add(j);
 		out.write(list.toString());
@@ -1716,9 +1716,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	}
 		
 	private List<File> listModelFiles(String directoryName) {
-		File directory = new File(directoryName);
+		File fileDirectory = new File(directoryName);
 		List<File> resultList = new ArrayList<>();
-		File[] fList = directory.listFiles();
+		File[] fList = fileDirectory.listFiles();
 		for (File file : fList) {
 			if (file.isFile()) {
 				resultList.add(file);
