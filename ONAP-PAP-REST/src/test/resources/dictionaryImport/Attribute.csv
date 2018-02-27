@@ -1,0 +1,6 @@
+Id,Attribute ID,Data Type,Attribute Value,Description,Priority,Created By,Modified By,Created Date,Modified Date
+7,Test,string,"test,test",test,High,Demo,Demo,Mon Feb 26 2018 23:26:24 GMT-0500 (Eastern Standard Time),Mon Feb 26 2018 23:26:37 GMT-0500 (Eastern Standard Time)
+1,Test,integer,,,,,,,
+2,Test,double,,,,,,,
+3,Test,boolean,,,,,,,
+4,Test,user,,,,,,,

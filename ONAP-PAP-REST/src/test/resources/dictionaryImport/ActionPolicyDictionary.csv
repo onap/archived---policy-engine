@@ -1,0 +1,2 @@
+Id,Attribute Name,Type,Url,Method,Headers,Description,Created By,Modified By,Created Date,Modified Date,,body
+10051,AttribName5,REST,www.testitc.com,PUT,TestHeader=TestHeaderVal,Action policy attribute for GET method ,demo,demo ,Mon Jun 20 2016 11:10:05 GMT-0400 (Eastern Daylight Time),Mon Jun 20 2016 11:10:05 GMT-0400 (Eastern Daylight Time),,"{""a"":""b""}"

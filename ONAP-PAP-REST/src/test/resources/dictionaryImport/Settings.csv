@@ -1,0 +1,6 @@
+Id,Settings ID,Data Type,Description,Created By,Modified By,Created Date,Modified Date,priority
+7681,2.2112E+11,string,test,API,API,Tue Nov 21 2017 14:33:28 GMT-0500 (Eastern Standard Time),Tue Nov 21 2017 14:33:28 GMT-0500 (Eastern Standard Time),high
+1,test,integer,,,,,,
+2,test,double,,,,,,
+3,test,boolean,,,,,,
+4,test,user,,,,,,
