@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.policy.common.im.AdministrativeStateException;
 import org.onap.policy.common.im.IntegrityMonitor;
@@ -45,8 +46,12 @@ import org.onap.policy.common.im.StandbyStatusException;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.xacml.parser.LogEntryObject.LOGTYPE;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-
+@PrepareForTest({ParseLogTest.class, IntegrityMonitor.class})
+@RunWith(PowerMockRunner.class)
 public class ParseLogTest {
 	
 	private static Logger logger = FlexLogger.getLogger(ParseLogTest.class);
@@ -568,4 +573,30 @@ public class ParseLogTest {
 		    logger.debug("exception occured while executing the test: exit");
 		}
 	}
+	
+	@Test
+    public void testMainDebug() {
+        try {
+            final Properties returnConfig = ParseLog.getPropertiesValue(configFileDebug);
+            PowerMockito.mockStatic(IntegrityMonitor.class);
+            Mockito.when(IntegrityMonitor.getInstance("test", returnConfig)).thenReturn(im);
+            ParseLog.main(new String[] {});
+            Thread.sleep(30000);
+        } catch (final Exception e) {
+            logger.debug("exception occured while executing the test: exit");
+        }
+    }
+
+    @Test
+    public void testMainError() {
+        try {
+            final Properties returnConfig = ParseLog.getPropertiesValue(configFileError);
+            PowerMockito.mockStatic(IntegrityMonitor.class);
+            Mockito.when(IntegrityMonitor.getInstance("test", returnConfig)).thenReturn(im);
+            ParseLog.main(new String[] {});
+            Thread.sleep(30000);
+        } catch (final Exception e) {
+            logger.debug("exception occured while executing the test: exit");
+        }
+    }
 }
