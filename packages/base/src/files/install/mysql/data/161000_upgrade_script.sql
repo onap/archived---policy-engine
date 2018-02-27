@@ -48,9 +48,6 @@ set foreign_key_checks=0;
 -- Increasing the Database variable timeouts
 --
 
-set global wait_timeout=2147483;   
-set global interactive_timeout=2147483;
-
 set wait_timeout=2147483;   
 set interactive_timeout=2147483;
 
