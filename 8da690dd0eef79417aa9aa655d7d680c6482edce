@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_7397d63a",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/test/XACMLPAPTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-27T14:32:04Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "5a93c517_f3b6863d",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "8da690dd0eef79417aa9aa655d7d680c6482edce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_b3847e5e",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/test/XACMLPAPTest.java",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2018-02-27T13:12:58Z",
       "side": 1,
       "message": "Seems ineffective? Or is that needed for the tests?",
+      "range": {
+        "startLine": 94,
+        "startChar": 8,
+        "endLine": 94,
+        "endChar": 44
+      },
+      "revId": "8da690dd0eef79417aa9aa655d7d680c6482edce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_d396ea3e",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/test/XACMLPAPTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-02-27T14:32:04Z",
+      "side": 1,
+      "message": "Yes, it is required to execute the dictionary tests.",
+      "parentUuid": "5a93c517_b3847e5e",
       "range": {
         "startLine": 94,
         "startChar": 8,
