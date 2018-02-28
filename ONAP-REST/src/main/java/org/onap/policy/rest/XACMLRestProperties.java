@@ -452,4 +452,7 @@ public class XACMLRestProperties extends XACMLProperties {
 	 * */
 	public static final String PROP_PAP_INCOMINGNOTIFICATION_TRIES = "xacml.rest.pap.incomingnotification.tries";
 	
+	
+	// Static class, hide constructor
+    private XACMLRestProperties() {}
 }
