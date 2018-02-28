@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,26 +23,18 @@ package org.onap.policy.pap.xacml.rest.elk.client;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.pap.xacml.rest.adapters.SearchData;
 import org.onap.policy.pap.xacml.rest.elk.client.ElkConnector.PolicyIndexType;
 import org.onap.policy.pap.xacml.rest.util.JsonMessage;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -55,10 +47,10 @@ import org.onap.policy.rest.jpa.ClosedLoopSite;
 import org.onap.policy.rest.jpa.DCAEuuid;
 import org.onap.policy.rest.jpa.DecisionSettings;
 import org.onap.policy.rest.jpa.DescriptiveScope;
-import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.GroupPolicyScopeList;
 import org.onap.policy.rest.jpa.MicroServiceLocation;
 import org.onap.policy.rest.jpa.MicroServiceModels;
+import org.onap.policy.rest.jpa.OnapName;
 import org.onap.policy.rest.jpa.PEPOptions;
 import org.onap.policy.rest.jpa.RiskType;
 import org.onap.policy.rest.jpa.SafePolicyWarning;
@@ -66,6 +58,7 @@ import org.onap.policy.rest.jpa.TermList;
 import org.onap.policy.rest.jpa.VNFType;
 import org.onap.policy.rest.jpa.VSCLAction;
 import org.onap.policy.rest.jpa.VarbindDictionary;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -98,53 +91,22 @@ public class PolicyElasticSearchController{
 	};
 	
 	private static CommonClassDao commonClassDao;
+	private static final String action = "action";
+	private static final String config = "config";
+	private static final String decision = "decision";
+	private static final String pholder = "pholder";
+	private static final String jsonBodyData = "jsonBodyData";
+	private static final String success = "success";
 
 	@Autowired
 	public PolicyElasticSearchController(CommonClassDao commonClassDao) {
 		PolicyElasticSearchController.commonClassDao = commonClassDao;
 	}
 
-	public PolicyElasticSearchController() {}
-
-	public static void TurnOffCertsCheck() {
-		// Create a trust manager that does not validate certificate chains
-		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-				return null;
-			}
-			public void checkClientTrusted(X509Certificate[] certs,
-					String authType) {
-			}
-			public void checkServerTrusted(X509Certificate[] certs,
-					String authType) {
-			}
-		} };
-
-		// Install all-trusting trust manager
-		SSLContext ctx;
-		try {
-			ctx = SSLContext.getInstance("SSL");
-			ctx.init(null, trustAllCerts, new java.security.SecureRandom());
-			HttpsURLConnection.setDefaultSSLSocketFactory(ctx
-					.getSocketFactory());
-		} catch (NoSuchAlgorithmException | KeyManagementException e) {
-			LOGGER.error("SSL Security Error: " + e);
-		}
-
-		// Create all-trusting host name verifier
-		HostnameVerifier allHostsValid = new HostnameVerifier() {
-			public boolean verify(String hostname, SSLSession session) {
-				return true;
-			}
-		};
-
-		// Install the all-trusting host verifier
-		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+	public PolicyElasticSearchController() {
+		super();
 	}
 
-	
-
-	
 	public ElkConnector.PolicyIndexType toPolicyIndexType(String type) throws IllegalArgumentException {
 		if (type == null || type.isEmpty()){
 			return PolicyIndexType.all;
@@ -196,8 +158,10 @@ public class PolicyElasticSearchController{
 	@RequestMapping(value="/searchPolicy", method= RequestMethod.POST)
 	public void searchPolicy(HttpServletRequest request, HttpServletResponse response) {
 		try{
+			String message="";
 			boolean result = false;
 			boolean policyResult = false;
+			boolean validationCheck = true;
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			PolicyRestAdapter policyData = new PolicyRestAdapter();
@@ -207,16 +171,16 @@ public class PolicyElasticSearchController{
 			if(request.getParameter("policyName") != null){
 				String policyName = request.getParameter("policyName");
 				policyData.setNewFileName(policyName);
-				if("delete".equalsIgnoreCase(request.getParameter("action"))){
+				if("delete".equalsIgnoreCase(request.getParameter(action))){
 					result = controller.deleteElk(policyData);
 				}else{
 					result = controller.updateElk(policyData);
 				}
 			}
-			if("search".equalsIgnoreCase(request.getParameter("action"))){
+			if("search".equalsIgnoreCase(request.getParameter(action))){
 				try {
 					JsonNode root = mapper.readTree(request.getReader());
-					SearchData searchData = (SearchData)mapper.readValue(root.get("searchdata").toString(), SearchData.class);
+					SearchData searchData = mapper.readValue(root.get("searchdata").toString(), SearchData.class);
 
 					String policyType = searchData.getPolicyType();
 					
@@ -229,12 +193,21 @@ public class PolicyElasticSearchController{
 							for(String keyValue : descriptiveList){
 								String[] entry = keyValue.split(":");
 								if(searchData.getPolicyType() != null && "closedLoop".equals(searchData.getPolicyType())){
-									searchKeyValue.put("jsonBodyData", "*" +entry[1] +"*");
+									if(!PolicyUtils.policySpecialCharValidator(entry[1]).contains(success)){
+										message = "The Descriptive Scope Dictionary value contains space and it is invalid for Search :   "+entry[1];
+										validationCheck = false;
+									}
+									searchKeyValue.put(jsonBodyData, "*" +entry[1] +"*");
 								}else{
 									searchText = entry[1];
 								}
 							}
 						}
+					}
+					
+					if(!PolicyUtils.policySpecialCharValidator(searchText).contains(success)){
+						message = "The Search value contains space and it is invalid for Search :   "+searchText;
+						validationCheck = false;
 					}
 					
 					if(searchData.getClosedLooppolicyType() != null){
@@ -251,27 +224,27 @@ public class PolicyElasticSearchController{
 					}
 					if(searchData.getD2Service() != null){
 						String d2Service = searchData.getD2Service().trim();
-						if(d2Service.equalsIgnoreCase("Hosted Voice (Trinity)")){
+						if("Hosted Voice (Trinity)".equalsIgnoreCase(d2Service)){
 							d2Service = "trinity";
-						}else if(d2Service.equalsIgnoreCase("vUSP")){
+						}else if("vUSP".equalsIgnoreCase(d2Service)){
 							d2Service = "vUSP";
-						}else if(d2Service.equalsIgnoreCase("MCR")){
+						}else if("MCR".equalsIgnoreCase(d2Service)){
 							d2Service = "mcr";
-						}else if(d2Service.equalsIgnoreCase("Gamma")){
+						}else if("Gamma".equalsIgnoreCase(d2Service)){
 							d2Service = "gamma";
-						}else if(d2Service.equalsIgnoreCase("vDNS")){
+						}else if("vDNS".equalsIgnoreCase(d2Service)){
 							d2Service = "vDNS";
 						}
 						searchKeyValue.put("jsonBodyData."+d2Service+"", "true");
 					}	
 					if(searchData.getVnfType() != null){
-						searchKeyValue.put("jsonBodyData", "*"+searchData.getVnfType()+"*");					
+						searchKeyValue.put(jsonBodyData, "*"+searchData.getVnfType()+"*");					
 					}
 					if(searchData.getPolicyStatus() != null){
-						searchKeyValue.put("jsonBodyData", "*"+searchData.getPolicyStatus()+"*");
+						searchKeyValue.put(jsonBodyData, "*"+searchData.getPolicyStatus()+"*");
 					}
 					if(searchData.getVproAction() != null){
-						searchKeyValue.put("jsonBodyData", "*"+searchData.getVproAction()+"*");
+						searchKeyValue.put(jsonBodyData, "*"+searchData.getVproAction()+"*");
 					}
 					if(searchData.getServiceType() != null){
 						searchKeyValue.put("serviceType", searchData.getServiceType());
@@ -282,13 +255,13 @@ public class PolicyElasticSearchController{
 					}
 					PolicyIndexType type = null;
 					if(policyType != null){
-						if(policyType.equalsIgnoreCase("action")){
+						if(action.equalsIgnoreCase(policyType)){
 							type = ElkConnector.PolicyIndexType.action;
-						}else if(policyType.equalsIgnoreCase("decision")){
+						}else if(decision.equalsIgnoreCase(policyType)){
 							type = ElkConnector.PolicyIndexType.decision;
-						}else if(policyType.equalsIgnoreCase("config")){
+						}else if(config.equalsIgnoreCase(policyType)){
 							type = ElkConnector.PolicyIndexType.config;
-						}else if(policyType.equalsIgnoreCase("closedloop")){
+						}else if("closedloop".equalsIgnoreCase(policyType)){
 							type = ElkConnector.PolicyIndexType.closedloop;
 						}else{
 							type = ElkConnector.PolicyIndexType.all;
@@ -296,32 +269,35 @@ public class PolicyElasticSearchController{
 					}else{
 						type = ElkConnector.PolicyIndexType.all;
 					}
-					JestResult policyResultList = controller.search(type, searchText, searchKeyValue);
-					if(policyResultList.isSucceeded()){
-						result = true;
-						policyResult = true;
-						JsonArray resultObject = policyResultList.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray();
-						for(int i =0; i < resultObject.size(); i++){
-							String policyName = resultObject.get(i).getAsJsonObject().get("_id").toString();
-							policyList.add(policyName);
+					if(validationCheck){
+						JestResult policyResultList = controller.search(type, searchText, searchKeyValue);
+						if(policyResultList.isSucceeded()){
+							result = true;
+							policyResult = true;
+							JsonArray resultObject = policyResultList.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray();
+							for(int i =0; i < resultObject.size(); i++){
+								String policyName = resultObject.get(i).getAsJsonObject().get("_id").toString();
+								policyList.add(policyName);
+							}
+						}else{
+							LOGGER.error("Exception Occured While Searching for Data in Elastic Search Server, Check the Logs");
 						}
-					}else{
-						LOGGER.error("Exception Occured While Searching for Data in Elastic Search Server, Check the Logs");
 					}
 				}catch(Exception e){
 					LOGGER.error("Exception Occured While Searching for Data in Elastic Search Server" + e);
 				}
 			}
-			String message="";
-			if(result){
-				message = "Elastic Server Transaction is success";
-			}else{
-				message = "Elastic Server Transaction is failed, please check the logs";
+			if(validationCheck){
+				if(result){
+					message = "Elastic Server Transaction is success";
+				}else{
+					message = "Elastic Server Transaction is failed, please check the logs";
+				}
 			}
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(message));
 			JSONObject j = new JSONObject(msg);
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.addHeader("success", "success"); 
+			response.addHeader(success, success); 
 			if(policyResult){
 				JSONObject k = new JSONObject("{policyresult: " + policyList + "}");
 				response.getWriter().write(k.toString());
@@ -353,107 +329,107 @@ public class PolicyElasticSearchController{
 			List<String> policyList = new ArrayList<>();
 			switch (mode){
 			case attribute :
-				Attribute attributedata = (Attribute)mapper.readValue(root.get("data").toString(), Attribute.class);
+				Attribute attributedata = mapper.readValue(root.get("data").toString(), Attribute.class);
 				value = attributedata.getXacmlId();
-				policyList = searchElkDatabase(all, "pholder",value);
+				policyList = searchElkDatabase(all, pholder,value);
 				break;
 			case onapName :
-				OnapName onapName = (OnapName)mapper.readValue(root.get("data").toString(), OnapName.class);
+				OnapName onapName = mapper.readValue(root.get("data").toString(), OnapName.class);
 				value = onapName.getOnapName();
 				policyList = searchElkDatabase(all, "onapName",value);
 				break;
 			case actionPolicy :
-				ActionPolicyDict actionPolicyDict = (ActionPolicyDict)mapper.readValue(root.get("data").toString(), ActionPolicyDict.class);
+				ActionPolicyDict actionPolicyDict = mapper.readValue(root.get("data").toString(), ActionPolicyDict.class);
 				value = actionPolicyDict.getAttributeName();
 				policyList = searchElkDatabase(action, "actionAttributeValue",value);
 				break;
 			case brmsParam :
-				BRMSParamTemplate bRMSParamTemplate = (BRMSParamTemplate)mapper.readValue(root.get("data").toString(), BRMSParamTemplate.class);
+				BRMSParamTemplate bRMSParamTemplate = mapper.readValue(root.get("data").toString(), BRMSParamTemplate.class);
 				value = bRMSParamTemplate.getRuleName();
 				policyList = searchElkDatabase(config, "ruleName",value);
 				break;
 			case pepOptions :
-				PEPOptions pEPOptions = (PEPOptions)mapper.readValue(root.get("data").toString(), PEPOptions.class);
+				PEPOptions pEPOptions = mapper.readValue(root.get("data").toString(), PEPOptions.class);
 				value = pEPOptions.getPepName();
 				policyList = searchElkDatabase(closedloop,"jsonBodyData.pepName",value);
 				break;
 			case clSite :
-				ClosedLoopSite closedLoopSite = (ClosedLoopSite)mapper.readValue(root.get("data").toString(), ClosedLoopSite.class);
+				ClosedLoopSite closedLoopSite = mapper.readValue(root.get("data").toString(), ClosedLoopSite.class);
 				value = closedLoopSite.getSiteName();
 				policyList = searchElkDatabase(closedloop,"siteNames",value);
 				break;
 			case clService :
-				ClosedLoopD2Services closedLoopD2Services = (ClosedLoopD2Services)mapper.readValue(root.get("data").toString(), ClosedLoopD2Services.class);
+				ClosedLoopD2Services closedLoopD2Services = mapper.readValue(root.get("data").toString(), ClosedLoopD2Services.class);
 				value = closedLoopD2Services.getServiceName();
-				policyList = searchElkDatabase(closedloop, "pholder",value);
+				policyList = searchElkDatabase(closedloop, pholder,value);
 				break;
 			case clVarbind :
-				VarbindDictionary varbindDictionary = (VarbindDictionary)mapper.readValue(root.get("data").toString(), VarbindDictionary.class);
+				VarbindDictionary varbindDictionary = mapper.readValue(root.get("data").toString(), VarbindDictionary.class);
 				value = varbindDictionary.getVarbindName();
-				policyList = searchElkDatabase(closedloop, "jsonBodyData","*"+value+"*");
+				policyList = searchElkDatabase(closedloop, jsonBodyData,"*"+value+"*");
 				break;
 			case clVnf :
-				VNFType vNFType = (VNFType)mapper.readValue(root.get("data").toString(), VNFType.class);
+				VNFType vNFType = mapper.readValue(root.get("data").toString(), VNFType.class);
 				value = vNFType.getVnftype();
-				policyList = searchElkDatabase(closedloop, "jsonBodyData","*"+value+"*");
+				policyList = searchElkDatabase(closedloop, jsonBodyData,"*"+value+"*");
 				break;
 			case clVSCL :
-				VSCLAction vsclAction = (VSCLAction)mapper.readValue(root.get("data").toString(), VSCLAction.class);
+				VSCLAction vsclAction = mapper.readValue(root.get("data").toString(), VSCLAction.class);
 				value = vsclAction.getVsclaction();
-				policyList = searchElkDatabase(closedloop, "jsonBodyData","*"+value+"*");
+				policyList = searchElkDatabase(closedloop, jsonBodyData,"*"+value+"*");
 				break;
 			case decision :
-				DecisionSettings decisionSettings = (DecisionSettings)mapper.readValue(root.get("data").toString(), DecisionSettings.class);
+				DecisionSettings decisionSettings = mapper.readValue(root.get("data").toString(), DecisionSettings.class);
 				value = decisionSettings.getXacmlId();
-				policyList = searchElkDatabase(decision,"pholder",value);
+				policyList = searchElkDatabase(decision,pholder,value);
 				break;	
 			case fwTerm :
-				TermList term = (TermList)mapper.readValue(root.get("data").toString(), TermList.class);
+				TermList term = mapper.readValue(root.get("data").toString(), TermList.class);
 				value = term.getTermName();
-				policyList = searchElkDatabase(config, "pholder",value);
+				policyList = searchElkDatabase(config, pholder,value);
 				break;
 			case msDCAEUUID :
-				DCAEuuid dcaeUUID = (DCAEuuid)mapper.readValue(root.get("data").toString(), DCAEuuid.class);
+				DCAEuuid dcaeUUID = mapper.readValue(root.get("data").toString(), DCAEuuid.class);
 				value = dcaeUUID.getName();
 				policyList = searchElkDatabase(config, "uuid",value);
 				break;
 			case msLocation :
-				MicroServiceLocation mslocation = (MicroServiceLocation)mapper.readValue(root.get("data").toString(), MicroServiceLocation.class);
+				MicroServiceLocation mslocation = mapper.readValue(root.get("data").toString(), MicroServiceLocation.class);
 				value = mslocation.getName();
 				policyList = searchElkDatabase(config, "location",value);
 				break;
 			case msModels :
-				MicroServiceModels msModels = (MicroServiceModels)mapper.readValue(root.get("data").toString(), MicroServiceModels.class);
+				MicroServiceModels msModels = mapper.readValue(root.get("data").toString(), MicroServiceModels.class);
 				value = msModels.getModelName();
 				policyList = searchElkDatabase(config, "serviceType",value);
 				break;
 			case psGroupPolicy :
-				GroupPolicyScopeList groupPoilicy = (GroupPolicyScopeList)mapper.readValue(root.get("data").toString(), GroupPolicyScopeList.class);
+				GroupPolicyScopeList groupPoilicy = mapper.readValue(root.get("data").toString(), GroupPolicyScopeList.class);
 				value = groupPoilicy.getGroupName();
-				policyList = searchElkDatabase(config, "pholder",value);
+				policyList = searchElkDatabase(config, pholder,value);
 				break;
 			case safeRisk :
-				RiskType riskType= (RiskType)mapper.readValue(root.get("data").toString(), RiskType.class);
+				RiskType riskType= mapper.readValue(root.get("data").toString(), RiskType.class);
 				value = riskType.getRiskName();
 				policyList = searchElkDatabase(config, "riskType",value);
 				break;
 			case safePolicyWarning :
-				SafePolicyWarning safePolicy = (SafePolicyWarning)mapper.readValue(root.get("data").toString(), SafePolicyWarning.class);
+				SafePolicyWarning safePolicy = mapper.readValue(root.get("data").toString(), SafePolicyWarning.class);
 				value = safePolicy.getName();
-				policyList = searchElkDatabase(config, "pholder",value);
+				policyList = searchElkDatabase(config, pholder,value);
 				break;
 			default: 		
 			}
 			
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.addHeader("success", "success"); 
+			response.addHeader(success, success); 
 			JSONObject k = new JSONObject("{policyresult: " + policyList + "}");
 			response.getWriter().write(k.toString());
 		}catch(Exception e){
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 			LOGGER.error(e);
 		}
 		return null;
@@ -463,7 +439,7 @@ public class PolicyElasticSearchController{
 	public List<String> searchElkDatabase(PolicyIndexType type, String key, String value){
 		PolicyElasticSearchController controller = new PolicyElasticSearchController();
 		Map<String, String> searchKeyValue = new HashMap<>();
-		if(!"pholder".equals(key)){
+		if(!pholder.equals(key)){
 			searchKeyValue.put(key, value);
 		}
 		
@@ -485,84 +461,4 @@ public class PolicyElasticSearchController{
 		 return ElkConnector.singleton.search(type, text, searchKeyValue);
 	}
 	
-}
-
-class SearchData{
-	private String query;
-	private String policyType;
-	private String descriptiveScope;
-	private String closedLooppolicyType;
-	private String onapName;
-	private String d2Service;
-	private String vnfType;
-	private String policyStatus;
-	private String vproAction;
-	private String serviceType;
-	private String bindTextSearch;
-	public String getQuery() {
-		return query;
-	}
-	public void setQuery(String query) {
-		this.query = query;
-	}
-	public String getPolicyType() {
-		return policyType;
-	}
-	public void setPolicyType(String policyType) {
-		this.policyType = policyType;
-	}
-	public String getDescriptiveScope() {
-		return descriptiveScope;
-	}
-	public void setDescriptiveScope(String descriptiveScope) {
-		this.descriptiveScope = descriptiveScope;
-	}
-	public String getClosedLooppolicyType() {
-		return closedLooppolicyType;
-	}
-	public void setClosedLooppolicyType(String closedLooppolicyType) {
-		this.closedLooppolicyType = closedLooppolicyType;
-	}
-	public String getOnapName() {
-		return onapName;
-	}
-	public void setOnapName(String onapName) {
-		this.onapName = onapName;
-	}
-	public String getD2Service() {
-		return d2Service;
-	}
-	public void setD2Service(String d2Service) {
-		this.d2Service = d2Service;
-	}
-	public String getVnfType() {
-		return vnfType;
-	}
-	public void setVnfType(String vnfType) {
-		this.vnfType = vnfType;
-	}
-	public String getPolicyStatus() {
-		return policyStatus;
-	}
-	public void setPolicyStatus(String policyStatus) {
-		this.policyStatus = policyStatus;
-	}
-	public String getVproAction() {
-		return vproAction;
-	}
-	public void setVproAction(String vproAction) {
-		this.vproAction = vproAction;
-	}
-	public String getServiceType() {
-		return serviceType;
-	}
-	public void setServiceType(String serviceType) {
-		this.serviceType = serviceType;
-	}
-	public String getBindTextSearch() {
-		return bindTextSearch;
-	}
-	public void setBindTextSearch(String bindTextSearch) {
-		this.bindTextSearch = bindTextSearch;
-	}
 }
