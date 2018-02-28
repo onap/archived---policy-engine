@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_a12dffff",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/XACMLRestProperties.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-28T21:58:19Z",
+      "side": 1,
+      "message": "Just add super(), else our friend sonar will flag",
+      "range": {
+        "startLine": 457,
+        "startChar": 34,
+        "endLine": 457,
+        "endChar": 36
+      },
+      "revId": "92b983849cb5811d4dd2a2d46c05b67dc91692ff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c1328b5e",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/api/XACMLErrorConstants.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-28T21:58:19Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 56,
+        "startChar": 34,
+        "endLine": 56,
+        "endChar": 36
+      },
+      "revId": "92b983849cb5811d4dd2a2d46c05b67dc91692ff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
