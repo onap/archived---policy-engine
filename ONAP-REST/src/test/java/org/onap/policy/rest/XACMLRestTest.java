@@ -20,9 +20,13 @@
 
 package org.onap.policy.rest;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -95,6 +99,13 @@ public class XACMLRestTest extends Mockito{
 		} catch (Exception e) {
 			fail();
 		}
-
+	}
+	
+	@Test
+	public void testConstructorIsPrivate() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+		Constructor<XACMLRestProperties> constructor = XACMLRestProperties.class.getDeclaredConstructor();
+		assertTrue(Modifier.isPrivate(constructor.getModifiers()));
+		constructor.setAccessible(true);
+		constructor.newInstance();
 	}
 }
