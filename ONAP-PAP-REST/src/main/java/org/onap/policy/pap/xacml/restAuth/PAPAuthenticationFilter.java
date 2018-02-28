@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,22 +56,9 @@ public class PAPAuthenticationFilter implements Filter {
 			String url = httpServletRequest.getRequestURI();
 			
 			logger.info("Request URI: " + url);
-			System.out.println("Request URI: " + url);
 			
 			//getting authentication credentials
-			if(url.contains("@Auth@")){
-				int authIndex = url.lastIndexOf("@");
-				int endAuthIndex = url.indexOf("/onap");
-				authCredentials = "Basic " + url.substring(authIndex+1, endAuthIndex);
-				
-				//parse the url for /pap/onap/
-				String url1 = url.substring(0, 4);
-				String url2 = url.substring(endAuthIndex, url.length());
-				url = url1 + url2;
-
-			} else {
-				authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
-			}
+			authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
 			
 			// Check Authentication credentials
 			AuthenticationService authenticationService = new AuthenticationService();
@@ -79,28 +66,18 @@ public class PAPAuthenticationFilter implements Filter {
 			
 			if (authenticationStatus) {
 				//indicates the request comes from Traditional Admin Console or PolicyEngineAPI
-				if (url.equals("/pap/")){
+				if ("/pap/".equals(url)){
 					logger.info("Request comes from Traditional Admin Console or PolicyEngineAPI");						
-					
 					//forward request to the XACMLPAPServlet if authenticated
 					request.getRequestDispatcher("/pap/pap/").forward(request, response);
-					
-				}else if (url.startsWith("/pap/onap/")){
-					
+				}else if (url.startsWith("/pap/onap/") && response instanceof HttpServletResponse){
 					//indicates the request comes from the ONAP Portal onap-sdk-app
-					if(response instanceof HttpServletResponse) {
-						HttpServletResponse alteredResponse = ((HttpServletResponse)response);
-						addCorsHeader(alteredResponse);
-						logger.info("Request comes from Onap Portal");
-						//Spring dispatcher servlet is at the end of the filter chain at /pap/onap/ path
-						System.out.println("New Request URI: " + url);
-						filter.doFilter(request, response);
-						/*url = url.substring(url.indexOf("/pap/")+4);
-						request.getRequestDispatcher(url).forward(request, response);*/
-					}
-					
+					HttpServletResponse alteredResponse = ((HttpServletResponse)response);
+					addCorsHeader(alteredResponse);
+					logger.info("Request comes from Onap Portal");
+					//Spring dispatcher servlet is at the end of the filter chain at /pap/onap/ path
+					filter.doFilter(request, response);
 				}
-				
 			} else {
 				if (response instanceof HttpServletResponse) {
 					HttpServletResponse httpServletResponse = (HttpServletResponse) response;
@@ -122,9 +99,11 @@ public class PAPAuthenticationFilter implements Filter {
 
 	@Override
 	public void destroy() {
+		//Empty
 	}
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
+		//Empty
 	}
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,6 +66,7 @@ import org.onap.policy.rest.jpa.TermList;
 import org.onap.policy.rest.jpa.VNFType;
 import org.onap.policy.rest.jpa.VSCLAction;
 import org.onap.policy.rest.jpa.VarbindDictionary;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -196,8 +197,10 @@ public class PolicyElasticSearchController{
 	@RequestMapping(value="/searchPolicy", method= RequestMethod.POST)
 	public void searchPolicy(HttpServletRequest request, HttpServletResponse response) {
 		try{
+			String message="";
 			boolean result = false;
 			boolean policyResult = false;
+			boolean validationCheck = true;
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			PolicyRestAdapter policyData = new PolicyRestAdapter();
@@ -229,12 +232,21 @@ public class PolicyElasticSearchController{
 							for(String keyValue : descriptiveList){
 								String[] entry = keyValue.split(":");
 								if(searchData.getPolicyType() != null && "closedLoop".equals(searchData.getPolicyType())){
+									if(!PolicyUtils.policySpecialCharValidator(entry[1]).contains("success")){
+										message = "The Descriptive Scope Dictionary value contains space and it is invalid for Search :   "+entry[1];
+										validationCheck = false;
+									}
 									searchKeyValue.put("jsonBodyData", "*" +entry[1] +"*");
 								}else{
 									searchText = entry[1];
 								}
 							}
 						}
+					}
+					
+					if(!PolicyUtils.policySpecialCharValidator(searchText).contains("success")){
+						message = "The Search value contains space and it is invalid for Search :   "+searchText;
+						validationCheck = false;
 					}
 					
 					if(searchData.getClosedLooppolicyType() != null){
@@ -296,27 +308,30 @@ public class PolicyElasticSearchController{
 					}else{
 						type = ElkConnector.PolicyIndexType.all;
 					}
-					JestResult policyResultList = controller.search(type, searchText, searchKeyValue);
-					if(policyResultList.isSucceeded()){
-						result = true;
-						policyResult = true;
-						JsonArray resultObject = policyResultList.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray();
-						for(int i =0; i < resultObject.size(); i++){
-							String policyName = resultObject.get(i).getAsJsonObject().get("_id").toString();
-							policyList.add(policyName);
+					if(validationCheck){
+						JestResult policyResultList = controller.search(type, searchText, searchKeyValue);
+						if(policyResultList.isSucceeded()){
+							result = true;
+							policyResult = true;
+							JsonArray resultObject = policyResultList.getJsonObject().get("hits").getAsJsonObject().get("hits").getAsJsonArray();
+							for(int i =0; i < resultObject.size(); i++){
+								String policyName = resultObject.get(i).getAsJsonObject().get("_id").toString();
+								policyList.add(policyName);
+							}
+						}else{
+							LOGGER.error("Exception Occured While Searching for Data in Elastic Search Server, Check the Logs");
 						}
-					}else{
-						LOGGER.error("Exception Occured While Searching for Data in Elastic Search Server, Check the Logs");
 					}
 				}catch(Exception e){
 					LOGGER.error("Exception Occured While Searching for Data in Elastic Search Server" + e);
 				}
 			}
-			String message="";
-			if(result){
-				message = "Elastic Server Transaction is success";
-			}else{
-				message = "Elastic Server Transaction is failed, please check the logs";
+			if(validationCheck){
+				if(result){
+					message = "Elastic Server Transaction is success";
+				}else{
+					message = "Elastic Server Transaction is failed, please check the logs";
+				}
 			}
 			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(message));
 			JSONObject j = new JSONObject(msg);
@@ -453,7 +468,7 @@ public class PolicyElasticSearchController{
 			response.setCharacterEncoding("UTF-8");
 			request.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
-			out.write(e.getMessage());
+			out.write(PolicyUtils.CATCH_EXCEPTION);
 			LOGGER.error(e);
 		}
 		return null;
