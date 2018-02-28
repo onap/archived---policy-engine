@@ -19,9 +19,10 @@
  */
 package org.onap.policy.pap.xacml.rest.elk.client;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -36,6 +37,8 @@ import java.util.Properties;
 
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.utils.CryptoUtils;
+import org.onap.policy.xacml.util.XACMLPolicyScanner;
 
 import com.google.gson.Gson;
 
@@ -77,13 +80,13 @@ public class ElasticSearchPolicyUpdate {
 		String elkURL = null;
 		String databseUrl = null;
 		String userName = null;
-		String password = null;
+		String txt = null;
 		String databaseDriver = null; 
 		
 		String propertyFile = System.getProperty("PROPERTY_FILE");
 		Properties config = new Properties();
 		Path file = Paths.get(propertyFile);
-		if(Files.notExists(file)){
+		if(!file.toFile().exists()){
 			LOGGER.error("Config File doesn't Exist in the specified Path " + file.toString());
 		}else{
 			if(file.toString().endsWith(".properties")){
@@ -93,9 +96,9 @@ public class ElasticSearchPolicyUpdate {
 					elkURL = config.getProperty("policy.elk.url");
 					databseUrl = config.getProperty("policy.database.url");
 					userName = config.getProperty("policy.database.username");
-					password = config.getProperty("policy.database.password");
+					txt = CryptoUtils.decryptTxtNoExStr(config.getProperty("policy.database.password"));
 					databaseDriver = config.getProperty("policy.database.driver");
-					if(elkURL == null || databseUrl == null || userName == null || password == null || databaseDriver == null){
+					if(elkURL == null || databseUrl == null || userName == null || txt == null || databaseDriver == null){
 						LOGGER.error("please check the elk configuration");
 					}
 				} catch (Exception e) {
@@ -113,11 +116,11 @@ public class ElasticSearchPolicyUpdate {
 		Connection conn = null;
 		Statement stmt = null;
 		
-		List<Index> listIndex = new ArrayList<Index>();
+		List<Index> listIndex = new ArrayList<>();
 		
 		try {
 			Class.forName(databaseDriver);
-			conn = DriverManager.getConnection(databseUrl, userName, password);
+			conn = DriverManager.getConnection(databseUrl, userName, txt);
 			stmt = conn.createStatement();
 			
 			String policyEntityQuery = "Select * from PolicyEntity";
@@ -252,7 +255,9 @@ public class ElasticSearchPolicyUpdate {
 		}
 	}
 	
-	private static String constructPolicyData(Object policyData, StringBuilder policyDataString){
+	public static String constructPolicyData(Object policyContent, StringBuilder policyDataString){
+		InputStream stream = new ByteArrayInputStream(policyContent.toString().getBytes(StandardCharsets.UTF_8));
+		Object policyData = XACMLPolicyScanner.readPolicy(stream);
 		if(policyData instanceof PolicyType){
 			PolicyType policy = (PolicyType) policyData;
 			TargetType target = policy.getTarget();

@@ -715,7 +715,7 @@ public class XACMLPAPTest {
         setDBDao();
     }
 
-    private void setDBDao() throws SQLException {
+    public void setDBDao() throws SQLException {
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("org.h2.Driver");
         // In-memory DB for testing
