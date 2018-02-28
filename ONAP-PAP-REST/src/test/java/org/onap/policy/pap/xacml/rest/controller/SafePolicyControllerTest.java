@@ -22,6 +22,7 @@ package org.onap.policy.pap.xacml.rest.controller;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
@@ -36,6 +37,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
+import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.RiskType;
 import org.onap.policy.rest.jpa.SafePolicyWarning;
@@ -57,20 +59,22 @@ public class SafePolicyControllerTest {
 	public void setUp() throws Exception {
 		logger.info("setUp: Entering");
 		commonClassDao = Mockito.mock(CommonClassDao.class);
-		
+
 		data = new ArrayList<>();
 		data.add("Test");
-		
+
 		userInfo = new UserInfo();
 		userInfo.setUserLoginId("Test");
 		userInfo.setUserName("Test");
-	
+
 		doNothing().when(commonClassDao).delete(new RiskType());
 		doNothing().when(commonClassDao).save(new RiskType());
-		
+
 		controller = new SafePolicyController();
 		controller.setCommonClassDao(commonClassDao);
-		
+		new DictionaryUtils(commonClassDao);
+		DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
+		mock(DictionaryUtils.class);
 		request = Mockito.mock(HttpServletRequest.class);
 		response =  new MockHttpServletResponse();  
 		logger.info("setUp: exit");
