@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_4b53fa6a",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-02-28T12:28:00Z",
+      "side": 1,
+      "message": "This isn\u0027t how Sonar wants to fix this.\ntry (FileOutputStream fos \u003d new FileOutputStream(filename)) {\n...\n// remove the fos.close()\n} catch( IOException e) {\nLOGGER....\n}\n\nThere should not be a finally clause at all.",
+      "range": {
+        "startLine": 565,
+        "startChar": 1,
+        "endLine": 589,
+        "endChar": 9
+      },
+      "revId": "541c67bd3f44385369d72768d5f5a005b50862ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
