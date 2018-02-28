@@ -562,16 +562,30 @@ public class BRMSPush {
         String dirName = getDirectoryName(selectedName);
         URL website;
         String fileName = "rule.jar";
+		ReadableByteChannel rbc = null;
+        FileOutputStream fos = null;
         try {
             website = new URL(artifact.getResourceURI());
-            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-            FileOutputStream fos = new FileOutputStream(fileName);
+            rbc = Channels.newChannel(website.openStream());
+            fos = new FileOutputStream(fileName);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             fos.close();
             extractJar(fileName, dirName);
             new File(fileName).delete();
         } catch (IOException e) {
             LOGGER.error("Error while downloading the project to File System. " + e.getMessage(), e);
+        }
+		finally {
+        	try {
+				rbc.close();
+			} catch (IOException e1) {
+				 LOGGER.error("Error while downloading the project to File System. " + e1.getMessage(), e1);
+			}
+        	try {
+				fos.close();
+			} catch (IOException e2) {
+				 LOGGER.error("Error while closing the  File System. " + e2.getMessage(), e2);
+			}
         }
     }
 
