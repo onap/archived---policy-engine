@@ -52,5 +52,9 @@ public class XACMLErrorConstants {
 	//Captures all the errors that not related to the list of above error codes
 	public static final String ERROR_UNKNOWN = "PE900 - Unknown Error: ";
 	
+	// Static class, hide constructor
+    private XACMLErrorConstants() {
+    	super();
+    }
 
 }
