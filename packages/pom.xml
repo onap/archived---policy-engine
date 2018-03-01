@@ -46,6 +46,7 @@
 			<modules>
 				<module>base</module>
 				<module>install</module>
+				<module>docker</module>
 			</modules>
 		</profile>
 
@@ -61,5 +62,6 @@
  	<modules>
  		<module>base</module>
  		<module>install</module>
+		<module>docker</docker>
  	</modules>
 </project>
