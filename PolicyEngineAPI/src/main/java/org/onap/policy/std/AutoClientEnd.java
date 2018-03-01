@@ -84,7 +84,7 @@ public class AutoClientEnd {
 		if (scheme == null || handler == null ||
 			! (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) &&
 					scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS) ) ||
-			AutoClientEnd.client == null) {
+			AutoClientEnd.client != null) {
 			return;
 		}
 		
