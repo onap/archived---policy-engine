@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_d2aa5b70",
+        "filename": "ONAP-REST/src/test/java/org/onap/policy/rest/XACMLRestTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-01T11:50:27Z",
+      "side": 1,
+      "message": "Is this being used? Don\u0027t see where, don\u0027t want to get a sonar \"Unused import\" flag",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 53
+      },
+      "revId": "6b5d566c9b0204f814bc2bb24047af3a50b8ef0f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
