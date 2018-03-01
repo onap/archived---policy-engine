@@ -2,7 +2,7 @@
  * ================================================================================
  * ONAP Portal SDK
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property
+ * Copyright (C) 2017-2018 AT&T Intellectual Property
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,19 +45,23 @@ public class AdminAuthExtension implements IAdminAuthExtension {
 	@Autowired
 	CommonClassDao commonClassDao;
 	
+	public void setCommonClassDao(CommonClassDao dao){
+		commonClassDao = dao;
+	}
+	
 	
 	/*
 	 * (non-Javadoc)
-	 * @see org.openecomp.portalapp.service.IAdminAuthExtension#saveUserExtension(org.openecomp.portalsdk.core.domain.User)
+	 * @see org.onap.portalapp.service.IAdminAuthExtension#saveUserExtension(org.onap.portalsdk.core.domain.User)
 	 */
 	public void saveUserExtension(User user) {
 		logger.debug("saveUserExtension");
-		savePolicyRole(null, user);
+		savePolicyRole(user);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.openecomp.portalapp.service.IAdminAuthExtension#editUserExtension(org.openecomp.portalsdk.core.domain.User)
+	 * @see org.onap.portalapp.service.IAdminAuthExtension#editUserExtension(org.onap.portalsdk.core.domain.User)
 	 */
 	public void editUserExtension(User user) {
 		logger.debug("editUserExtension");
@@ -65,15 +69,15 @@ public class AdminAuthExtension implements IAdminAuthExtension {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.openecomp.portalapp.service.IAdminAuthExtension#saveUserRoleExtension(java.util.Set, org.openecomp.portalsdk.core.domain.User)
+	 * @see org.onap.portalapp.service.IAdminAuthExtension#saveUserRoleExtension(java.util.Set, org.onap.portalsdk.core.domain.User)
 	 */
 	public void saveUserRoleExtension(Set<Role> roles, User user) {
 		logger.debug("saveUserRoleExtension");
-		savePolicyRole(roles, user);
+		savePolicyRole(user);
 	}
 	
-	private void savePolicyRole(Set<Role> roles, User user){
-		System.out.println("User Object Recieved");
+	private void savePolicyRole(User user){
+		logger.info("User Object Recieved");
 		try{
 			Roles roles1 = new Roles();
 			roles1.setName(user.getFullName());
@@ -82,18 +86,18 @@ public class AdminAuthExtension implements IAdminAuthExtension {
 				String query = "delete from Roles where loginid='"+user.getLoginId()+"'";
 				commonClassDao.updateQuery(query);
 				for(Role role : user.getRoles()){ 
-					System.out.println("User Role"+role);
-					if(role.getName().trim().equalsIgnoreCase("Policy Super Admin") || role.getName().trim().equalsIgnoreCase("System Administrator") || role.getName().trim().equalsIgnoreCase("Standard User") ){
+					logger.info("User Role"+role);
+					if("Policy Super Admin".equalsIgnoreCase(role.getName().trim()) || "System Administrator".equalsIgnoreCase(role.getName().trim()) || "Standard User".equalsIgnoreCase(role.getName().trim()) ){
 						roles1.setRole("super-admin");
-					}else if(role.getName().trim().equalsIgnoreCase("Policy Super Editor")){
+					}else if("Policy Super Editor".equalsIgnoreCase(role.getName().trim())){
 						roles1.setRole("super-editor");
-					}else if(role.getName().trim().equalsIgnoreCase("Policy Super Guest")){
+					}else if("Policy Super Guest".equalsIgnoreCase(role.getName().trim())){
 						roles1.setRole("super-guest");
-					}else if(role.getName().trim().equalsIgnoreCase("Policy Admin")){
+					}else if("Policy Admin".equalsIgnoreCase(role.getName().trim())){
 						roles1.setRole("admin");
-					}else if(role.getName().trim().equalsIgnoreCase("Policy Editor")){
+					}else if("Policy Editor".equalsIgnoreCase(role.getName().trim())){
 						roles1.setRole("editor");
-					}else if(role.getName().trim().equalsIgnoreCase("Policy Guest")){
+					}else if("Policy Guest".equalsIgnoreCase(role.getName().trim())){
 						roles1.setRole("guest");
 					}	
 					commonClassDao.save(roles1);
@@ -104,7 +108,7 @@ public class AdminAuthExtension implements IAdminAuthExtension {
 			userInfo.setUserLoginId(user.getLoginId());
 			userInfo.setUserName(user.getFullName());
 			commonClassDao.save(userInfo);
-			System.out.println("User Object Updated Successfully");
+			logger.info("User Object Updated Successfully");
 		}
 		catch(Exception e){
 			logger.error("Exception caused while Setting role to Policy DB"+e);
