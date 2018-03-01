@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PDP-REST
+ * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -17,7 +17,6 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-//foo
 package org.onap.policy.pap.xacml.restAuth;
 
 import static org.junit.Assert.assertEquals;
