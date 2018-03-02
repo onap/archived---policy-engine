@@ -83,7 +83,7 @@ import org.onap.policy.drools.system.PolicyEngine;
 //
 // These parameters are required to build the runtime policy
 //
-declare PapParams
+declare Params
     closedLoopControlName : String
     actor : String
     aaiURL : String
