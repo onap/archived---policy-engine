@@ -83,6 +83,15 @@
 			<groupId>com.att.research.xacml</groupId>
 			<artifactId>xacml</artifactId>
 			<version>1.0.1</version>
+            <exclusions>
+            <!-- The LDAP PIP uses velocity which pulls this insecure jar in. We
+            are not using that PIP and can safely exclude this jar to resolve CLM issue.
+             -->
+              <exclusion>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+              </exclusion>
+            </exclusions>
 		</dependency>
 	</dependencies>
 </project>
