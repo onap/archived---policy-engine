@@ -154,30 +154,59 @@ public class PolicyApiUtils {
         		return message;
         	}
         	if(json.containsKey("headers")){
+        		
         		JsonArray array = json.getJsonArray("headers");
+        		StringBuilder nullParameters = new StringBuilder();
+        		StringBuilder missingParameters = new StringBuilder();
+        		StringBuilder errorMessage = new StringBuilder(XACMLErrorConstants.ERROR_DATA_ISSUE + " for the following parameters: ");
+        		boolean optionFound = false;
+        		boolean numberFound = false;
+        		boolean goodHeader = true;
         		
         		for (int i = 0;i<array.size(); i++) { 
     				JsonObject jsonObj = array.getJsonObject(i);
     				if(jsonObj.containsKey("option")){
+    					optionFound = true;
         				if(jsonObj.getString("option")==null || jsonObj.getString("option").trim().isEmpty()){
-        					message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing required Option value";
-        	    			return message;
+        					goodHeader = false;
+        					nullParameters.append("option ");
+        					continue;
         				}
-    				}else{
-    	        		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing option key in the headers list of the dictionaryJson parameter.";
-    	        		return message;
     				}
-
     				if(jsonObj.containsKey("number")){
+    					numberFound = true;
         				if(jsonObj.getString("number")==null || jsonObj.getString("number").trim().isEmpty()){
-        					message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing required Number value";
-        	    			return message;
+        					goodHeader = false;
+        					nullParameters.append("number ");
+        					continue;
         				}
-    				}else{
-    	        		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing number key in the headers list of the dictionaryJson parameter.";
-    	        		return message;
+        				
     				}
         		}
+        		
+        		if (!optionFound) {
+        			goodHeader = false;
+					missingParameters.append("option ");
+				}
+        		if (!numberFound) {
+        			goodHeader = false;
+					missingParameters.append("number ");
+				}
+        		
+        		if (nullParameters.length() > 0) {
+        			errorMessage.append("NULL/EMPTY parameters: [" + nullParameters.toString().trim() + "] "); 
+        		}
+        		if (missingParameters.length() > 0) {
+        			errorMessage.append("MISSING parameters: [" + missingParameters.toString().trim() + "] ");
+        		}
+        		
+        		if (!goodHeader) {
+        			return errorMessage.toString().trim();
+        		}
+        		else {
+        			return SUCCESS;
+        		}
+        		
         	}
 
     	}
