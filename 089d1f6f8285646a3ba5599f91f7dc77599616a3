@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_f90e578b",
+        "filename": "ONAP-SDK-APP/src/test/java/org/onap/portalapp/scheduler/RegisterTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-02T20:31:15Z",
+      "side": 1,
+      "message": "remove commented out code so sonar does not flag",
+      "range": {
+        "startLine": 45,
+        "startChar": 2,
+        "endLine": 45,
+        "endChar": 32
+      },
+      "revId": "089d1f6f8285646a3ba5599f91f7dc77599616a3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
