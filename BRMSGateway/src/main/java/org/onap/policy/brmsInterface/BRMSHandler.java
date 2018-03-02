@@ -120,6 +120,8 @@ public class BRMSHandler implements BackUpHandler{
 	 */
 	@Override
 	public void runOnNotification(PDPNotification notification){
+		// reset the BRMSPush data structures
+		bRMSPush.resetDS();
 		if(notification.getNotificationType().equals(NotificationType.REMOVE)){
 			removedPolicies(notification.getRemovedPolicies());
 		}else if(notification.getNotificationType().equals(NotificationType.UPDATE)|| notification.getNotificationType().equals(NotificationType.BOTH)){

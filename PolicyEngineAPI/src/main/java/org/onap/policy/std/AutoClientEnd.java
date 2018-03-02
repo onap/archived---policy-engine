@@ -82,7 +82,7 @@ public class AutoClientEnd {
 		AutoClientEnd.url = url;
 		
 		if (scheme == null || handler == null ||
-			! (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) &&
+			! (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) ||
 					scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS) ) ||
 			AutoClientEnd.client != null) {
 			return;
