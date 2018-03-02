@@ -46,8 +46,8 @@ public class BRMSPolicyTest {
 	
 	@Test
 	public void testReadFile() throws IOException {
-		String goodRule = "declare PapParams\nparam1 : int\nend\n";
-		String badRule = "declare PapParams\nparam1+ : int\nend\n";
+		String goodRule = "declare Params\nparam1 : int\nend\n";
+		String badRule = "declare Params\nparam1+ : int\nend\n";
 		assertEquals(CreateBRMSRuleTemplate.validateRuleParams(goodRule), true);
 		assertEquals(CreateBRMSRuleTemplate.validateRuleParams(badRule), false);
 	}
