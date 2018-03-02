@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineUtils
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,7 +148,7 @@ public class PolicyUtilsTest {
 	public void testBRMSValidate(){
 	    String rule = "package com.sample;\n"
 	            + "import com.sample.DroolsTest.Message;\n"
-	            + "declare PapParams\n"
+	            + "declare Params\n"
 	            + "samPoll : int\n"
 	            + "value : String\n"
 	            + "end\n"

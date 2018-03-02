@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -374,6 +374,11 @@ public class BRMSPush {
         if (flag)
             syncGroupInfo();
     }
+    
+    public void resetDS(){
+    	resetModifiedGroups();
+        controllers = new ArrayList<>();
+    }
 
     private static void resetModifiedGroups() {
         modifiedGroups = new HashMap<>();
@@ -410,6 +415,7 @@ public class BRMSPush {
                         PEDependency dependency = PolicyUtils.jsonStringToObject(value,
                                 PEDependency.class);
                         userControllerName = key.replaceFirst("$controller:", "");
+                        LOGGER.info("addRule: userControllerName - " + userControllerName + ", dependency: - " + dependency);
                         addToGroup(userControllerName, dependency);
                     } catch (Exception e) {
                         LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while resolving Controller: " + e);
@@ -445,6 +451,7 @@ public class BRMSPush {
             // If the key is not got as parameters set by the user, setting the default value for kSessionName as
             // closedLoop
             if (kSessionName == null) {
+            	LOGGER.info("kSessionName is null, selectedName is  : " + selectedName );
                 if (selectedName == defaultName) {
                     kSessionName = "closedloop";
                 } else {
@@ -747,6 +754,7 @@ public class BRMSPush {
                 InvocationResult result = null;
 		String group = entry.getKey();
                 try {
+                	LOGGER.info("PushRules: ModifiedGroups, Key: " + group + ", Value: " + entry.getValue());
                     InvocationRequest request = new DefaultInvocationRequest();
                     setVersion(group);
                     createPom(group);
