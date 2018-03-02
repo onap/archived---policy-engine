@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import org.junit.Ignore;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import com.att.research.xacml.api.pap.PAPException;
 
@@ -46,6 +47,7 @@ public class MicroServicePolicyTest {
 		assertNull(policy.getCorrectPolicyDataObject());
 	}
 	
+	@Ignore
 	@Test
 	public void testPrepareToSave() throws PAPException {
 		thrown.expect(NullPointerException.class);
