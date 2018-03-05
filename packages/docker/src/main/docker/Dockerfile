@@ -1,4 +1,4 @@
-FROM onap/policy/policy-base
+FROM nexus3.onap.org:10003/onap/policy/policy-base
 
 RUN mkdir -p /opt/app/policy /tmp/policy-install && chown policy /opt/app/policy /tmp/policy-install
 

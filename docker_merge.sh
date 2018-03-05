@@ -61,6 +61,7 @@ TAGS="${TAGS} --tag ${DOCKER_REPOSITORY}/onap/policy/${IMAGE}:${MVN_VERSION}-${T
 
 echo $TAGS
 
+sed -i -e "s/policy-base/policy-base:${MVN_MAJMIN_VERSION}-latest/g" packages/docker/target/$IMAGE/Dockerfile
 docker build --quiet ${PROXY_ARGS} $TAGS packages/docker/target/$IMAGE
 
 if [ $? -ne 0 ]
