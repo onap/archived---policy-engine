@@ -67,7 +67,7 @@
 
 		<!-- Project common dependency versions -->
 		<jetty.plugin.version>9.2.3.v20140905</jetty.plugin.version>
-		<dmaap.version>1.0.0</dmaap.version>
+		<dmaap.version>1.1.3-SNAPSHOT</dmaap.version>
 		<httpclient.version>4.5.5</httpclient.version>
 		<jackson.version>2.9.4</jackson.version>
 		<commons.fileupload.version>1.3.3</commons.fileupload.version>
@@ -106,31 +106,6 @@
 			<url>dav:${nexusproxy}${sitePath}</url>
 		</site>
 	</distributionManagement>
-
-        <repositories>
-                <!-- LF repositories -->
-                <repository>
-                        <id>ecomp-releases</id>
-                        <name>Release Repository</name>
-                        <url>${nexusproxy}/content/repositories/releases/</url>
-                </repository>
-                <repository>
-                        <id>ecomp-staging</id>
-                        <name>Staging Repository</name>
-                        <url>${nexusproxy}/content/repositories/staging/</url>
-                </repository>
-                <repository>
-                        <id>ecomp-snapshots</id>
-                        <name>Snapshots Repository</name>
-                        <url>${nexusproxy}/content/repositories/snapshots/</url>
-                </repository>
-                <repository>
-                        <id>ecomp-public</id>
-                        <name>Public Repository</name>
-                        <url>${nexusproxy}/content/repositories/public/</url>
-                </repository>
-                <!-- LF repositories END-->
-        </repositories>
 
 	<reporting>
 	  <plugins>
