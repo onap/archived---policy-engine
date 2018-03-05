@@ -19,15 +19,25 @@
  */
 package org.onap.policy.pap.xacml.rest.components;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-import org.junit.Ignore;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
-import com.att.research.xacml.api.pap.PAPException;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(MicroServiceConfigPolicy.class)
 public class MicroServicePolicyTest {
 	@Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -47,10 +57,13 @@ public class MicroServicePolicyTest {
 		assertNull(policy.getCorrectPolicyDataObject());
 	}
 	
-	@Ignore
 	@Test
-	public void testPrepareToSave() throws PAPException {
-		thrown.expect(NullPointerException.class);
+	public void testPrepareToSave() throws Exception {
+		// Need to mock internal dictionary retrieval
+		CommonClassDaoImpl impl = Mockito.mock(CommonClassDaoImpl.class);
+		PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(impl);
+		when(impl.getDataById(any(), anyString(), anyString())).thenReturn(null);
+		
 		PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
 		MicroServiceConfigPolicy policy = new MicroServiceConfigPolicy(policyAdapter);
 		policyAdapter.setHighestVersion(1);
@@ -59,6 +72,6 @@ public class MicroServicePolicyTest {
 		policyAdapter.setJsonBody("{ \"version\": \"1.0\"}");
 		policyAdapter.setServiceType("foo");
 		policy.prepareToSave();
-		fail("Expected an exception");
+		assertEquals(policy.isPreparedToSave(), true);
 	}
 }
