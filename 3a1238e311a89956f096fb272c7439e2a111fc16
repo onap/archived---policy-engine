@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_eeb5267e",
+        "filename": "packages/docker/src/main/docker/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1581
+      },
+      "writtenOn": "2018-03-05T14:01:26Z",
+      "side": 1,
+      "message": "This change, combined with the change in the docker_merge.sh should correct the cause of the failure in\nhttps://jenkins.onap.org/job/policy-engine-master-merge-scm-mvn-script/1/",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 50
+      },
+      "revId": "3a1238e311a89956f096fb272c7439e2a111fc16",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
