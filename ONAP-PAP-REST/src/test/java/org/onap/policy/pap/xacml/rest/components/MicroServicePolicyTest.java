@@ -20,6 +20,7 @@
 package org.onap.policy.pap.xacml.rest.components;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyString;
@@ -35,9 +36,11 @@ import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import java.io.File;
+import java.util.Collections;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(MicroServiceConfigPolicy.class)
+@PrepareForTest({MicroServiceConfigPolicy.class, CreateNewMicroServiceModel.class})
 public class MicroServicePolicyTest {
 	@Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -73,5 +76,35 @@ public class MicroServicePolicyTest {
 		policyAdapter.setServiceType("foo");
 		policy.prepareToSave();
 		assertEquals(policy.isPreparedToSave(), true);
+	}
+	
+	@Test
+	public void testCreateConstructor1() {
+		CreateNewMicroServiceModel model = new CreateNewMicroServiceModel(null, null, null, null);
+		assertNotNull(model);
+	}
+	
+	@Test
+	public void testCreateModel() throws Exception {
+		// Mock file retrieval
+		File testFile = new File("testFile");
+		File[] testList = new File[1];
+		testList[0] = testFile;
+		File impl = Mockito.mock(File.class);
+		PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(impl);
+		when(impl.listFiles()).thenReturn(testList);
+		when(impl.isFile()).thenReturn(true);
+
+		// Mock internal dictionary retrieval
+		CommonClassDaoImpl daoImpl = Mockito.mock(CommonClassDaoImpl.class);
+		PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(daoImpl);
+		when(daoImpl.getDataById(any(), anyString(), anyString())).thenReturn(Collections.emptyList());
+
+		// Test create methods
+		String testFileName = "testFile.zip";
+		String testVal = "testVal";
+		CreateNewMicroServiceModel model = new CreateNewMicroServiceModel(testFileName, testVal, testVal, testVal, testVal);
+		model.addValuesToNewModel();
+		model.saveImportService();
 	}
 }
