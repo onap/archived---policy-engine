@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_3130539e",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/utils/PolicyApiUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-05T15:26:11Z",
+      "side": 1,
+      "message": "Drew, here Mike is validating the ActionDictionary header fields. So, it contains multiple key values. Even if one value is missing he immediately return error like missing field is option or number.",
+      "revId": "7f6905861722219beed1d49b3575213abb121471",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
