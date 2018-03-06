@@ -40,8 +40,82 @@
 		<nexusproxy>https://nexus.onap.org</nexusproxy>
 	</properties>
 
+        <repositories>
+                <!-- LF repositories -->
+                <repository>
+                        <id>ecomp-releases</id>
+                        <name>Release Repository</name>
+                        <url>${nexusproxy}/content/repositories/releases/</url>
+                </repository>
+                <repository>
+                        <id>ecomp-staging</id>
+                        <name>Staging Repository</name>
+                        <url>${nexusproxy}/content/repositories/staging/</url>
+                </repository>
+                <repository>
+                        <id>ecomp-snapshots</id>
+                        <name>Snapshots Repository</name>
+                        <url>${nexusproxy}/content/repositories/snapshots/</url>
+                </repository>
+                <repository>
+                        <id>ecomp-public</id>
+                        <name>Public Repository</name>
+                        <url>${nexusproxy}/content/repositories/public/</url>
+                </repository>
+                <!-- LF repositories END-->
+        </repositories>
+
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-pe-zip</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/policy-pe</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.onap.policy.engine</groupId>
+									<artifactId>install</artifactId>
+									<version>${project.version}</version>
+									<type>zip</type>
+									<destFileName>install.zip</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/policy-pe</outputDirectory>
+							<resources>          
+								<resource>
+									<directory>src/main/docker</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>              
+						</configuration>            
+					</execution>
+				</executions>
+			</plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
