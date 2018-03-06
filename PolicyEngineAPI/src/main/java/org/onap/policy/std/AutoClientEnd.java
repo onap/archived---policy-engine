@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ public class AutoClientEnd {
 		AutoClientEnd.url = url;
 		
 		if (scheme == null || handler == null ||
-			! (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) &&
+			! (scheme.equals(NotificationScheme.AUTO_ALL_NOTIFICATIONS) ||
 					scheme.equals(NotificationScheme.AUTO_NOTIFICATIONS) ) ||
 			AutoClientEnd.client != null) {
 			return;
