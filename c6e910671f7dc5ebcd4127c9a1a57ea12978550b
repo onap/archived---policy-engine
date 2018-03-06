@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_dd233ebb",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/api/PolicyEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-06T14:14:08Z",
+      "side": 1,
+      "message": "change to 2017-2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "c6e910671f7dc5ebcd4127c9a1a57ea12978550b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_7d2eaaa6",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-06T14:14:08Z",
+      "side": 1,
+      "message": "Change to 2017-2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "c6e910671f7dc5ebcd4127c9a1a57ea12978550b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
