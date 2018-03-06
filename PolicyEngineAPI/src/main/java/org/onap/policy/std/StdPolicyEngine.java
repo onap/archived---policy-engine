@@ -175,6 +175,13 @@ public class StdPolicyEngine {
     public StdPolicyEngine(final String propertyFilePath, final String clientKey) throws PolicyEngineException {
         setProperty(propertyFilePath, clientKey);
     }
+    
+    /*
+     * Taking the Property structure even if it null.
+     */
+    public StdPolicyEngine(final Properties properties, final String clientKey) throws PolicyEngineException {
+        setProperty(properties, clientKey);
+    }
 
     /*
      * Taking the Notification Constructor.
@@ -840,14 +847,22 @@ public class StdPolicyEngine {
             throw new PolicyEngineException(
                     XACMLErrorConstants.ERROR_DATA_ISSUE + "Error NO PropertyFile Path provided");
         }
-
         final Properties prop = getProperties(propertyFilePath);
+        setProperty(prop,clientKey);
+    }
+    
+    private void setProperty(final Properties properties, String clientKey) throws PolicyEngineException {
+        if (properties == null) {
+            throw new PolicyEngineException(
+                    XACMLErrorConstants.ERROR_DATA_ISSUE + "NO properties provided, the value is NULL");
+        }
+
         // UEB and DMAAP Settings
-        final String notificationTypeValue = prop.getProperty(NOTIFICATION_TYPE_PROP_NAME);
-        final String serverList = prop.getProperty(NOTIFICATION_SERVERS_PROP_NAME);
-        topic = prop.getProperty(NOTIFICATION_TOPIC_PROP_NAME);
-        apiKey = prop.getProperty(UEB_API_KEY_PROP_NAME);
-        apiSecret = prop.getProperty(UEB_API_SECRET_PROP_NAME);
+        final String notificationTypeValue = properties.getProperty(NOTIFICATION_TYPE_PROP_NAME);
+        final String serverList = properties.getProperty(NOTIFICATION_SERVERS_PROP_NAME);
+        topic = properties.getProperty(NOTIFICATION_TOPIC_PROP_NAME);
+        apiKey = properties.getProperty(UEB_API_KEY_PROP_NAME);
+        apiSecret = properties.getProperty(UEB_API_SECRET_PROP_NAME);
 
         setNotificationType(notificationTypeValue, DEFAULT_NOTIFICATION);
 
@@ -867,9 +882,9 @@ public class StdPolicyEngine {
         }
 
         // Client ID Authorization Settings.
-        final String clientID = prop.getProperty(CLIENT_ID_PROP_NAME);
+        final String clientID = properties.getProperty(CLIENT_ID_PROP_NAME);
         if (clientKey == null) {
-            clientKey = getClientKeyFromProperties(prop);
+            clientKey = getClientKeyFromProperties(properties);
         }
         if (clientID == null || clientKey == null || clientID.isEmpty() || clientKey.isEmpty()) {
             LOGGER.error(XACMLErrorConstants.ERROR_PERMISSIONS
@@ -880,12 +895,12 @@ public class StdPolicyEngine {
             setClientId(clientID.trim());
             setClientKey(clientKey.trim());
         }
-        setEnvironment(prop);
+        setEnvironment(properties);
         // Initializing the values.
         init();
-        readPdpProperites(prop);
+        readPdpProperites(properties);
         // Get JUNIT property from properties file when running tests
-        checkJunit(prop);
+        checkJunit(properties);
     }
 
     private void readPdpProperites(final Properties prop) throws PolicyEngineException {

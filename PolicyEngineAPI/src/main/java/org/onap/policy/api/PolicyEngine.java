@@ -22,6 +22,7 @@ package org.onap.policy.api;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 
 import javax.json.JsonObject;
@@ -36,10 +37,19 @@ import org.onap.policy.std.StdPolicyEngine;
  * @version 2.0
  */
 public class PolicyEngine{
-	private String propertyFilePath = null;
 	private final StdPolicyEngine stdPolicyEngine;
 	private NotificationScheme scheme = null;
 	private NotificationHandler handler = null;
+	
+	 /**
+   * PolicyEngine Constructor with <code>Properties</code> structure
+   * 
+   * @param properties the <code>Properties</code> structure containing the Policy engine parameters 
+   * @throws PolicyEngineException PolicyEngine Exception
+   */
+  public PolicyEngine(final Properties properties) throws PolicyEngineException {
+    this.stdPolicyEngine= new StdPolicyEngine(properties, (String)null);
+  }
 	
 	/**
 	 * PolicyEngine Constructor with <code>String</code> format of propertiesFilePathname
@@ -48,21 +58,30 @@ public class PolicyEngine{
 	 * @throws PolicyEngineException PolicyEngine Exception
 	 */
 	public PolicyEngine(final String propertiesFilePathname) throws PolicyEngineException {
-		this.propertyFilePath = propertiesFilePathname ; 
-		this.stdPolicyEngine= new StdPolicyEngine(this.propertyFilePath, (String)null);
+		this.stdPolicyEngine= new StdPolicyEngine(propertiesFilePathname, (String)null);
 	}
 	
 	/**
-	 * PolicyEngine Constructor with <code>String</code> format of propertiesFilePathname
+	 * PolicyEngine Constructor with <code>Properties</code> structure
 	 * 
-	 * @param propertiesFilePathname the <code>String</code> format of the propertiesFilePathname
+	 * @param properties the <code>Properties</code> structure containing the Policy engine parameters 
 	 * @param clientKey depicts String format of Password/ Client_Key.  
 	 * @throws PolicyEngineException PolicyEngine Exception
 	 */
-	public PolicyEngine(final String propertiesFilePathname, final String clientKey) throws PolicyEngineException {
-		this.propertyFilePath = propertiesFilePathname ; 
-		this.stdPolicyEngine= new StdPolicyEngine(this.propertyFilePath, clientKey);
+	public PolicyEngine(final Properties properties, final String clientKey) throws PolicyEngineException {
+		this.stdPolicyEngine= new StdPolicyEngine(properties, clientKey);
 	}
+	
+	 /**
+   * PolicyEngine Constructor with <code>String</code> format of propertiesFilePathname
+   * 
+   * @param propertiesFilePathname the <code>String</code> format of the propertiesFilePathname
+   * @param clientKey depicts String format of Password/ Client_Key.  
+   * @throws PolicyEngineException PolicyEngine Exception
+   */
+  public PolicyEngine(final String propertiesFilePathname, final String clientKey) throws PolicyEngineException {
+    this.stdPolicyEngine= new StdPolicyEngine(propertiesFilePathname, clientKey);
+  }
 	
 	/**
 	 * PolicyEngine Constructor with <code>String</code> format of PropertiesFilePathname and <code>NotificationScheme</code>
@@ -72,9 +91,8 @@ public class PolicyEngine{
 	 * @throws PolicyEngineException PolicyEngine Exception
 	 */
 	public PolicyEngine(final String propertiesFilePathname, final NotificationScheme scheme) throws PolicyEngineException{
-		this.propertyFilePath = propertiesFilePathname;
 		this.scheme = scheme;
-		this.stdPolicyEngine = new StdPolicyEngine(this.propertyFilePath, this.scheme);
+		this.stdPolicyEngine = new StdPolicyEngine(propertiesFilePathname, this.scheme);
 	}
 	
 	/**
@@ -86,10 +104,9 @@ public class PolicyEngine{
 	 *  @throws PolicyEngineException PolicyEngine Exception
 	 */
 	public PolicyEngine(final String propertiesFilePathname, final NotificationScheme scheme, final NotificationHandler handler) throws PolicyEngineException {
-		this.propertyFilePath = propertiesFilePathname ;
 		this.scheme = scheme;
 		this.handler = handler;
-		this.stdPolicyEngine= new StdPolicyEngine(this.propertyFilePath,this.scheme,this.handler);
+		this.stdPolicyEngine= new StdPolicyEngine(propertiesFilePathname,this.scheme,this.handler);
 	}
 	
 	/**
