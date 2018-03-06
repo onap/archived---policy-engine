@@ -142,6 +142,16 @@ public class StdPolicyEngineTest {
         assertEquals(Arrays.asList(UEB, DMAAP), policyEngine.getNotificationType());
         assertEquals(Arrays.asList(SERVER_NAME, SERVER_NAME), policyEngine.getNotificationURLList());
     }
+    
+    @Test
+    public void testStdPolicyEngineWithPropertiesInitialize_noException() throws Exception {
+        final StdPolicyEngine policyEngine = new StdPolicyEngine(getDefaultProperties(), (String) null);
+        policyEngine.setScheme(NotificationScheme.MANUAL_NOTIFICATIONS);
+        assertEquals("TEST", StdPolicyEngine.getEnvironment());
+        assertEquals("http://localhost:8092/pdp/", StdPolicyEngine.getPDPURL());
+        assertEquals(Arrays.asList(UEB, DMAAP), policyEngine.getNotificationType());
+        assertEquals(Arrays.asList(SERVER_NAME, SERVER_NAME), policyEngine.getNotificationURLList());
+    }
 
     @Test
     public void testStdPolicyEngineInitializeWithSingleServerName_noException() throws Exception {
@@ -194,7 +204,12 @@ public class StdPolicyEngineTest {
 
     @Test(expected = PolicyEngineException.class)
     public void testStdPolicyEngineInitialize_NullArguments_Exception() throws Exception {
-        new StdPolicyEngine(null, (String) null);
+        new StdPolicyEngine((String)null, (String) null);
+    }
+
+    @Test(expected = PolicyEngineException.class)
+    public void testStdPolicyEngineWithPropertiesInitialize_NullArguments_Exception() throws Exception {
+        new StdPolicyEngine((Properties)null, (String) null);
     }
 
     @Test(expected = PolicyEngineException.class)
