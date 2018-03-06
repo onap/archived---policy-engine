@@ -31,7 +31,6 @@ import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
@@ -53,6 +52,7 @@ import org.onap.policy.rest.jpa.PolicyVersion;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.portalsdk.core.domain.User;
 import org.onap.portalsdk.core.util.SystemProperties;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 public class PolicyManagerServletTest extends Mockito{
 	
@@ -64,15 +64,16 @@ public class PolicyManagerServletTest extends Mockito{
 	private static List<Object> policyEditorScopes;
 	private static List<Object> policyVersion;
 	private static CommonClassDao commonClassDao;
+	private ConfigurationDataEntity configurationEntity;
 	private HttpServletRequest request;       
-	private HttpServletResponse response; 
+	private MockHttpServletResponse response; 
 	
 	@Before
 	public void setUp() throws Exception{
 		logger.info("setUp: Entering");
 		
 		request = mock(HttpServletRequest.class);       
-        response = mock(HttpServletResponse.class); 
+        response = new MockHttpServletResponse(); 
         
 		PolicyController.setjUnit(true);
 		UserInfo userinfo = new UserInfo();
@@ -103,7 +104,7 @@ public class PolicyManagerServletTest extends Mockito{
         entity.setPolicyName("Config_SampleTest.1.xml");
         entity.setPolicyData(policyContent);
         entity.setScope("com");
-        ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
+        configurationEntity = new ConfigurationDataEntity();
         configurationEntity.setConfigBody("Sample Test");
         configurationEntity.setConfigType("OTHER");
         configurationEntity.setConfigurationName("com.Config_SampleTest1206.1.txt");
@@ -139,6 +140,7 @@ public class PolicyManagerServletTest extends Mockito{
 		user.setOrgUserId("Test");
 		Mockito.when(mockSession.getAttribute(SystemProperties.getProperty("user_attribute_name"))).thenReturn(user);
 		Mockito.when(request.getSession(false)).thenReturn(mockSession);
+		commonClassDao = mock(CommonClassDao.class);
 	
 	}
 	
@@ -602,6 +604,88 @@ public class PolicyManagerServletTest extends Mockito{
     			servlet.setPolicyController(controller);
     			servlet.setTestUserId("Test");
     			servlet.doPost(request, response);
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
+	
+	@Test
+	public void testAddScope(){
+		PolicyManagerServlet servlet = new PolicyManagerServlet(); 
+        PolicyController controller = mock(PolicyController.class);
+        List<BufferedReader> readers = new ArrayList<>();
+        readers.add(new BufferedReader(new StringReader("{params: { mode: 'ADDFOLDER', path: '/', name: 'Test'}}")));
+        readers.add(new BufferedReader(new StringReader("{params: { mode: 'ADDFOLDER', path: '/', name: 'Test*&'}}")));
+        readers.add(new BufferedReader(new StringReader("{params: { mode: 'ADDFOLDER', path: '/Test', subScopename: 'Test1'}}")));
+        for(int i=0; i<readers.size(); i++){
+        	try {
+    			when(request.getReader()).thenReturn(readers.get(i));
+    			PolicyManagerServlet.setPolicyController(controller);
+    			servlet.doPost(request, response);
+    			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("success"));
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
+	
+	@Test
+	public void testClone(){
+		PolicyManagerServlet servlet = new PolicyManagerServlet(); 
+        PolicyController controller = mock(PolicyController.class);
+        List<BufferedReader> readers = new ArrayList<>();
+        when(controller.getEntityItem(ConfigurationDataEntity.class, "configurationName", "com.Config_SampleTest1206.1.txt")).thenReturn(configurationEntity);
+		when(controller.getDataByQuery("FROM PolicyEntity where policyName = :oldPolicySplit_1 and scope = :oldPolicySplit_0", null)).thenReturn(basePolicyData); 
+        readers.add(new BufferedReader(new StringReader("{params: { mode: 'COPY', path: 'com.Config_test.1.xml', newPath: 'com.Config_testClone.1.xml'}}")));
+        for(int i=0; i<readers.size(); i++){
+        	try {
+    			when(request.getReader()).thenReturn(readers.get(i));
+    			PolicyManagerServlet.setPolicyController(controller);
+    			servlet.doPost(request, response);
+    			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("success"));
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
+	
+	@Test
+	public void testRename(){
+		PolicyManagerServlet servlet = new PolicyManagerServlet(); 
+        PolicyController controller = mock(PolicyController.class);
+        List<BufferedReader> readers = new ArrayList<>();
+        when(controller.getEntityItem(ConfigurationDataEntity.class, "configurationName", "com.Config_SampleTest1206.1.txt")).thenReturn(configurationEntity);
+		when(controller.getDataByQuery("FROM PolicyEntity where policyName = :oldPolicySplit_1 and scope = :oldPolicySplit_0", null)).thenReturn(basePolicyData); 
+        readers.add(new BufferedReader(new StringReader("{params: { mode: 'RENAME', path: 'com.Config_test.1.xml', newPath: 'com.Config_testClone.1.xml'}}")));
+        for(int i=0; i<readers.size(); i++){
+        	try {
+    			when(request.getReader()).thenReturn(readers.get(i));
+    			PolicyManagerServlet.setPolicyController(controller);
+    			servlet.doPost(request, response);
+    			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("success"));
+    		} catch (Exception e1) {
+    			logger.error("Exception Occured"+e1);
+    			fail();
+    		}
+        }
+	}
+	
+	@Test
+	public void testRenameScope(){
+		PolicyManagerServlet servlet = new PolicyManagerServlet(); 
+        PolicyController controller = mock(PolicyController.class);
+        List<BufferedReader> readers = new ArrayList<>();
+        readers.add(new BufferedReader(new StringReader("{params: { mode: 'RENAME', path: 'com', newPath: 'Test'}}")));
+        for(int i=0; i<readers.size(); i++){
+        	try {
+    			when(request.getReader()).thenReturn(readers.get(i));
+    			PolicyManagerServlet.setPolicyController(controller);
+    			servlet.doPost(request, response);
+    			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("success"));
     		} catch (Exception e1) {
     			logger.error("Exception Occured"+e1);
     			fail();
