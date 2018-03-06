@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_33861367",
+        "filename": "packages/docker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1581
+      },
+      "writtenOn": "2018-03-06T17:36:16Z",
+      "side": 1,
+      "message": "Using this here removes the need to copy the files in the docker_*.sh and csit scripts. I think it is better to do it here in one place in the pom, rather than having steps in every script which builds the docker image.\nAlso allows us to only build the packages/docker module in the csit script instead of having to build the base.zip and install.zip files.\n\nSee also CSIT change: https://gerrit.onap.org/r/#/c/34319/",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 52
+      },
+      "revId": "b6578cbfdb837c0af33a23859e57f72e33e1d9d8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
