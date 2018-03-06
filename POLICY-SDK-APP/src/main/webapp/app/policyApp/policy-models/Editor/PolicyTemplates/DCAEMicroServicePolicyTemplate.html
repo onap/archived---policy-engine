@@ -80,7 +80,7 @@
 						ng-model="temp.policy.version"
 						ng-options="option for option in microServiceModelsDictionaryVersionDatas track by option"
 						ng-init="addDataToFields(temp.policy.serviceType, temp.policy.version);"
-						ng-click="addDataToFields(temp.policy.serviceType, temp.policy.version);"
+						ng-change="addDataToFields(temp.policy.serviceType, temp.policy.version);"
 						title="Select the dropdown value driven based on MicroService Models (MicroService Policy)Dictionary selection."></select>
 				</div>
 			</div>
