@@ -88,15 +88,20 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
+		<!--
+		CLM security fix - force use of xstream
+		Remove this if a new version of drools-verifier is upgraded
+		that upgrades to xstream.
+		 -->
 		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>1.2.3</version>
+		    <groupId>com.thoughtworks.xstream</groupId>
+		    <artifactId>xstream</artifactId>
+		    <version>1.4.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.drools</groupId>
 			<artifactId>drools-verifier</artifactId>
-			<version>6.3.0.Final</version>
+			<version>6.5.0.Final</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.google.guava</groupId>
@@ -105,6 +110,10 @@
 				<exclusion>
 					<groupId>com.lowagie</groupId>
     				<artifactId>itext</artifactId>
+				</exclusion>
+				<exclusion>
+				    <groupId>com.thoughtworks.xstream</groupId>
+				    <artifactId>xstream</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

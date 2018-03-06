@@ -279,11 +279,6 @@
 			<artifactId>epsdk-workflow</artifactId>
 			<version>${epsdk.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.att.eelf</groupId>
-			<artifactId>eelf-core</artifactId>
-			<version>0.0.1</version>
-		</dependency>
 		<!-- bridge to implement commons-logging using slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
