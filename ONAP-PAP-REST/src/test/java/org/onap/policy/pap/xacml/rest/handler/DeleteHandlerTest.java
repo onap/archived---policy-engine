@@ -46,7 +46,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({DeleteHandler.class, XACMLPapServlet.class})
 public class DeleteHandlerTest {
 	@Test
 	public void testGets() {
@@ -62,6 +61,7 @@ public class DeleteHandlerTest {
 		assertNotNull(handler);
 	}
 	
+	@PrepareForTest({DeleteHandler.class, XACMLPapServlet.class})
 	@Test
 	public void testDeletes() throws Exception {
 		// Mock request

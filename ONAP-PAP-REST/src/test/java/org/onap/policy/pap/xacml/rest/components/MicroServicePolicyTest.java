@@ -40,7 +40,6 @@ import java.io.File;
 import java.util.Collections;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MicroServiceConfigPolicy.class, CreateNewMicroServiceModel.class})
 public class MicroServicePolicyTest {
 	@Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -60,6 +59,7 @@ public class MicroServicePolicyTest {
 		assertNull(policy.getCorrectPolicyDataObject());
 	}
 	
+	@PrepareForTest({MicroServiceConfigPolicy.class})
 	@Test
 	public void testPrepareToSave() throws Exception {
 		// Need to mock internal dictionary retrieval
@@ -84,6 +84,7 @@ public class MicroServicePolicyTest {
 		assertNotNull(model);
 	}
 	
+	@PrepareForTest({CreateNewMicroServiceModel.class})
 	@Test
 	public void testCreateModel() throws Exception {
 		// Mock file retrieval
