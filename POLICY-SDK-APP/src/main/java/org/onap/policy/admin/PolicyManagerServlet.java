@@ -1123,7 +1123,11 @@ public class PolicyManagerServlet extends HttpServlet {
 			SimpleBindings peParams = new SimpleBindings();
 			peParams.put("oldPolicySplit_1", oldPolicySplit[1]);
 			peParams.put("oldPolicySplit_0", oldPolicySplit[0]);
-			queryData = controller.getDataByQuery(policyEntityquery, peParams);
+			if(PolicyController.isjUnit()){
+				queryData = controller.getDataByQuery(policyEntityquery, null);
+			}else{
+				queryData = controller.getDataByQuery(policyEntityquery, peParams);
+			}
 			if(!queryData.isEmpty()){
 				entity = (PolicyEntity) queryData.get(0);
 			}
