@@ -567,14 +567,12 @@ public class BRMSPush {
         if (artifact == null)
             return;
         String dirName = getDirectoryName(selectedName);
-        URL website;
+        URL website = null;
         String fileName = "rule.jar";
-        try {
+        try (FileOutputStream fos = new FileOutputStream(fileName);
+            ReadableByteChannel rbc = Channels.newChannel(website.openStream())) {
             website = new URL(artifact.getResourceURI());
-            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-            FileOutputStream fos = new FileOutputStream(fileName);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            fos.close();
             extractJar(fileName, dirName);
             new File(fileName).delete();
         } catch (IOException e) {
