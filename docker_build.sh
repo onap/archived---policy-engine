@@ -42,9 +42,6 @@ fi
 echo $MVN_MAJMIN_VERSION
 
 echo "Building $IMAGE"
-mkdir -p packages/docker/target/$IMAGE
-cp packages/docker/src/main/docker/* packages/docker/target/$IMAGE
-cp packages/install/target/install-$MVN_VERSION.zip packages/docker/target/$IMAGE/install.zip
 
 #
 # This is the local latest tagged image. The Dockerfile's need this to build images
