@@ -16,6 +16,24 @@
       "revId": "59970ebe3e2fe3c93b1cc30f67376e84e6a047e6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2771e80b",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-07T21:51:32Z",
+      "side": 1,
+      "message": "Oh good catch Jorge, yes we may have to have 2 try-with-resources.",
+      "parentUuid": "5a93c517_5c572b58",
+      "revId": "59970ebe3e2fe3c93b1cc30f67376e84e6a047e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
