@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_5c572b58",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-07T14:29:56Z",
+      "side": 1,
+      "message": "If you don\u0027t mind to explain, I can\u0027t see how this could work, website is null, and creates a newChannel(null) ..   rbc would probably need to be closed at some point (may be another try-with-resources for it).",
+      "revId": "59970ebe3e2fe3c93b1cc30f67376e84e6a047e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
