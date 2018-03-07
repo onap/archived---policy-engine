@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_9cfdb370",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-07T14:05:50Z",
+      "side": 1,
+      "message": "Frank, do not put JIRA Id\u0027s in the summary. Make the summary concise as to the bug being fixed. Then use the description section to explain a bit more, prefixed with a verb. Suggest:\n\nChange ng-click to ng-change\n\nThe bug was due to.....blah blah blah",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 25
+      },
+      "revId": "be9a9c0f8a2ea08e10dd09ec81e3ee8b7429e34f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
