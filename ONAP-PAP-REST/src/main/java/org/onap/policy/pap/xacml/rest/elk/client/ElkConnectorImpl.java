@@ -166,7 +166,7 @@ public class ElkConnectorImpl implements ElkConnector{
 
 			String errorMessage = result.getErrorMessage();
 			if (errorMessage != null && !errorMessage.isEmpty()) {
-				String xMessage = errorMessage;
+				String xMessage;
 				if (errorMessage.contains("TokenMgrError")) {
 					int indexError = errorMessage.lastIndexOf("TokenMgrError");
 					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
