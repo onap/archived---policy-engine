@@ -56,10 +56,6 @@ public class AutoClientEnd {
 	private static boolean error = false;
 	private static Logger logger = FlexLogger.getLogger(AutoClientEnd.class.getName());
 	
-	private AutoClientEnd() {
-		// Empty constructor
-	}
-	
 	public static void setAuto(NotificationScheme scheme,
 			NotificationHandler handler) {
 		AutoClientEnd.scheme = scheme;
