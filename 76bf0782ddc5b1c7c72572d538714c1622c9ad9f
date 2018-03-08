@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_b5c99dad",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/elk/client/ElkConnectorImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-08T19:32:34Z",
+      "side": 1,
+      "message": "you could do xMessage \u003d errorMessage; here",
+      "revId": "76bf0782ddc5b1c7c72572d538714c1622c9ad9f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
