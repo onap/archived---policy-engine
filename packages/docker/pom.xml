@@ -82,7 +82,6 @@
 							<resources>          
 								<resource>
 									<directory>src/main/docker</directory>
-									<filtering>true</filtering>
 								</resource>
 							</resources>              
 						</configuration>            
