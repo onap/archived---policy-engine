@@ -2,9 +2,11 @@ FROM ubuntu:14.04
 
 ARG HTTP_PROXY=${HTTP_PROXY}
 ARG HTTPS_PROXY=${HTTPS_PROXY}
+ARG POLICY_LOGS=/var/log/policy
 
 ENV http_proxy $HTTP_PROXY
 ENV https_proxy $HTTPS_PROXY
+ENV POLICY_LOGS ${POLICY_LOGS}
 
 RUN \
         apt-get clean && \
@@ -29,7 +31,8 @@ RUN \
         apt-get update && \
         apt-get install -y mariadb-client
 
-RUN mkdir -p /opt/app/policy /tmp/policy-install && chown policy /opt/app/policy /tmp/policy-install
+RUN mkdir -p /opt/app/policy /tmp/policy-install ${POLICY_LOGS} && \
+    chown policy /opt/app/policy /tmp/policy-install ${POLICY_LOGS}
 
 WORKDIR /tmp/policy-install
 
