@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,17 @@ package org.onap.policy.xacml.action;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.xacml.custom.OnapFunctionDefinitionFactory;
-
 import com.att.research.xacml.api.Decision;
 import com.att.research.xacml.api.Request;
 import com.att.research.xacml.api.XACML3;
+import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.std.StdAttributeValue;
 import com.att.research.xacml.std.StdMutableAdvice;
 import com.att.research.xacml.std.StdMutableAttributeAssignment;
@@ -41,17 +45,22 @@ import com.att.research.xacml.std.StdMutableStatusDetail;
 import com.att.research.xacml.std.StdStatusCode;
 import com.att.research.xacml.std.datatypes.DataTypes;
 import com.att.research.xacml.std.json.JSONRequest;
+import com.att.research.xacml.util.XACMLProperties;
 
+import org.onap.policy.drools.http.server.HttpServletServer;
+import org.onap.policy.drools.utils.NetworkUtil;
 
 public class FindActionTest {
 	
+	private static Log LOGGER = LogFactory.getLog(FindActionTest.class);
+
 	String xPathExampleFromSpec = "{ " +
 			"\"Request\" : { " +
 				"\"Resource\" : { " +
 					"\"Attribute\": [ " +
 						"{ " +
 						 	"\"Id\" : \"urn:oasis:names:tc:xacml:3.0:content-selector\", " +
-				            "\"DataType\" : \"xpathExpression\", " +
+						 	"\"DataType\" : \"xpathExpression\", " +
 				            "\"Value\" : { " +
 				                "\"XPathCategory\" : \"urn:oasis:names:tc:xacml:3.0:attribute-category:resource\", " +
 				                "\"Namespaces\" : [{ " +
@@ -71,14 +80,48 @@ public class FindActionTest {
 		"} ";
 	
 	String jsonResponse;
-	
 	Request request;
+	private static final int MOCK_SERVER_PORT = 6670;
 	
+	@BeforeClass
+	public static void setUpServer() {
+        try {
+        	final HttpServletServer testServer = HttpServletServer.factory.build("dmaapSim",
+        			"localhost", MOCK_SERVER_PORT, "/", false, true);
+        	testServer.addServletClass("/*", DummyRest.class.getName());
+        	testServer.waitedStart(2000);
+        	if (!NetworkUtil.isTcpPortOpen("localhost", testServer.getPort(), 5, 10000L))
+        		throw new IllegalStateException("cannot connect to port " + testServer.getPort());
+        } catch (final Exception e) {
+        	fail(e.getMessage());
+        }
+		
+	}
+	
+    @AfterClass
+    public static void tearDownSimulator() {
+        HttpServletServer.factory.destroy();
+    }
+    
 	@Before
 	public void setUp() throws Exception {
 		new OnapFunctionDefinitionFactory();
 		request = JSONRequest.load(xPathExampleFromSpec);
+
+		LOGGER.info("XACMLPdpPolicyFinderFactoryTest - testDefaultConstructor");
+		try {	
+			XACMLProperties.reloadProperties();
+			System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "src/test/resources/xacml.pdp.properties");
+			XACMLProperties.getProperties();
+			
+			assertTrue(true);
+		} catch (Exception e) {
+			LOGGER.error("Exception Occured"+e);
+			fail();
+			
+		}
 	}
+	
 
 	@Test
 	public final void testRun() {
@@ -126,6 +169,105 @@ public class FindActionTest {
 				"advice-issuer1", 
 				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "Test")));
 		response.add(result);
+		
+			//	The logic below exercises the  callRest and takeAction methods in FindAction
+			//	GET request
+		status = new StdMutableStatus(StdStatusCode.STATUS_CODE_OK);
+		result = new StdMutableResult(status);
+		result.setDecision(Decision.PERMIT);
+		
+		obligation = new StdMutableObligation();
+		obligation.setId(XACML3.ID_ACTION_IMPLIED_ACTION);
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("performer"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "PDPACTION")));
+		
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("URL"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "http://localhost:" + MOCK_SERVER_PORT)));
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("method"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "GET")));
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("headers"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "foobar")));
+
+		
+		result.addObligation(obligation);
+		response.add(result);
+	
+			//	POST request
+		status = new StdMutableStatus(StdStatusCode.STATUS_CODE_OK);
+		result = new StdMutableResult(status);
+		result.setDecision(Decision.PERMIT);
+		
+		obligation = new StdMutableObligation();
+		obligation.setId(XACML3.ID_ACTION_IMPLIED_ACTION);
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("performer"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "PDPACTION")));
+		
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("URL"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "http://localhost:" + MOCK_SERVER_PORT)));
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("method"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "POST")));
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("body"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "http://localhost:" + MOCK_SERVER_PORT + "/foobar")));
+		
+		result.addObligation(obligation);
+		response.add(result);
+		
+			//PUT request
+		status = new StdMutableStatus(StdStatusCode.STATUS_CODE_OK);
+		result = new StdMutableResult(status);
+		result.setDecision(Decision.PERMIT);
+		
+		obligation = new StdMutableObligation();
+		obligation.setId(XACML3.ID_ACTION_IMPLIED_ACTION);
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("performer"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "PDPACTION")));
+		
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("URL"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "http://localhost:" + MOCK_SERVER_PORT)));
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("method"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "PUT")));
+		obligation.addAttributeAssignment(new StdMutableAttributeAssignment(
+				XACML3.ID_ATTRIBUTE_CATEGORY_RESOURCE, 
+				new IdentifierImpl("body"), 
+				"obligation-issuer", 
+				new StdAttributeValue<String>(DataTypes.DT_STRING.getId(), "http://localhost:" + MOCK_SERVER_PORT + "/foobar")));
+		
+		result.addObligation(obligation);
+		response.add(result);
+		
 		try {
 			assertTrue(action.run(response, request) != null);
 		} catch (Exception e) {
