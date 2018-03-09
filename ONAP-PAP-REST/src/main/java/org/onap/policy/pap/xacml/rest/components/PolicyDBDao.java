@@ -358,7 +358,7 @@ public class PolicyDBDao {
 				} catch(Exception e2){
 					PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e2, policyDBDaoVar, "COULD NOT CREATE DATABASELOCK ROW.  WILL TRY ONE MORE TIME");
 				}
-				em = null;
+				
 				em = emf.createEntityManager();
 				try{
 					startTransactionSynced(em, 1000);
