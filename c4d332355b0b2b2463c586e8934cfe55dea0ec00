@@ -39,6 +39,30 @@
       "revId": "c4d332355b0b2b2463c586e8934cfe55dea0ec00",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c1590736",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-09T16:10:54Z",
+      "side": 1,
+      "message": "Yes, thanks!",
+      "parentUuid": "5a93c517_8694758b",
+      "range": {
+        "startLine": 574,
+        "startChar": 63,
+        "endLine": 574,
+        "endChar": 83
+      },
+      "revId": "c4d332355b0b2b2463c586e8934cfe55dea0ec00",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
