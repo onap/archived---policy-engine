@@ -571,14 +571,17 @@ public class BRMSPush {
         String fileName = "rule.jar";
         try {
             website = new URL(artifact.getResourceURI());
-            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-            FileOutputStream fos = new FileOutputStream(fileName);
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            fos.close();
-            extractJar(fileName, dirName);
-            new File(fileName).delete();
-        } catch (IOException e) {
-            LOGGER.error("Error while downloading the project to File System. " + e.getMessage(), e);
+            try( ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+            		FileOutputStream fos = new FileOutputStream(fileName)){
+            	fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                extractJar(fileName, dirName);
+                new File(fileName).delete();
+            }catch (IOException e) {
+         LOGGER.error("Error while downloading the project to File System. " + e.getMessage(), e);
+			}
+          
+        } catch (IOException e1) {
+            LOGGER.error("Error while retrieve the artifact. " + e1.getMessage(), e1);
         }
     }
 
