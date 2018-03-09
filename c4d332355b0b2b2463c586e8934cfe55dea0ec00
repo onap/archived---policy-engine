@@ -16,6 +16,29 @@
       "revId": "c4d332355b0b2b2463c586e8934cfe55dea0ec00",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8694758b",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-09T11:49:43Z",
+      "side": 1,
+      "message": "It is used right here? Is that what you were looking for Jorge?",
+      "range": {
+        "startLine": 574,
+        "startChar": 63,
+        "endLine": 574,
+        "endChar": 83
+      },
+      "revId": "c4d332355b0b2b2463c586e8934cfe55dea0ec00",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
