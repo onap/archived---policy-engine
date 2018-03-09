@@ -24,16 +24,16 @@ package org.onap.policy.utils;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.onap.aaf.cadi.Access.Level;
+import org.onap.aaf.cadi.CadiException;
+import org.onap.aaf.cadi.PropAccess;
+import org.onap.aaf.cadi.aaf.AAFPermission;
+import org.onap.aaf.cadi.aaf.v2_0.AAFAuthn;
+import org.onap.aaf.cadi.aaf.v2_0.AAFCon;
+import org.onap.aaf.cadi.aaf.v2_0.AAFConDME2;
+import org.onap.aaf.cadi.aaf.v2_0.AAFLurPerm;
+import org.onap.aaf.cadi.config.Config;
 
-import com.att.cadi.Access;
-import com.att.cadi.Access.Level;
-import com.att.cadi.CadiException;
-import com.att.cadi.aaf.AAFPermission;
-import com.att.cadi.aaf.v2_0.AAFAuthn;
-import com.att.cadi.aaf.v2_0.AAFCon;
-import com.att.cadi.aaf.v2_0.AAFConDME2;
-import com.att.cadi.aaf.v2_0.AAFLurPerm;
-import com.att.cadi.config.Config;
 
 
 /**
@@ -62,7 +62,7 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 	private static AAFCon<?> aafCon = null;
 	private static AAFLurPerm aafLurPerm = null;
 	private static AAFAuthn<?> aafAuthn = null;
-	private static Access access = null;
+	private static PropAccess access = null;
 
 	private AAFPolicyClientImpl(Properties properties) throws AAFPolicyException{
 		setup(properties);
