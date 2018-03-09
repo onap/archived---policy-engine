@@ -192,7 +192,7 @@ public class CreateNewMicroServiceModel {
 			dependency = utils.getFullDependencyList(dependency, classMap);
 			if (!dependency.isEmpty()){
 				for (String element : dependency){
-					MSAttributeObject temp = new MSAttributeObject();
+				    MSAttributeObject temp;
 					if (classMap.containsKey(element)){
 						temp = classMap.get(element);
 						mainClass.addAllRefAttribute(temp.getRefAttribute());
