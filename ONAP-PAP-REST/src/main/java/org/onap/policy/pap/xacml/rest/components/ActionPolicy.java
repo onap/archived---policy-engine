@@ -256,13 +256,14 @@ public class ActionPolicy extends Policy {
 
     // Saving the json Configurations file if exists at server location for action policy.
     private void saveActionBody(String policyName, String actionBodyData) {
-        try {
+        
             if(policyName.endsWith(".xml")){
                 policyName = policyName.replace(".xml", "");
             }
             File file = new File(ACTION_HOME+ File.separator + policyName + ".json");
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
+            
+           
+			try (FileWriter fw = new FileWriter(file.getAbsoluteFile()); BufferedWriter bw = new BufferedWriter(fw)){
             bw.write(actionBodyData);
             bw.close();
             if (LOGGER.isInfoEnabled()) {
