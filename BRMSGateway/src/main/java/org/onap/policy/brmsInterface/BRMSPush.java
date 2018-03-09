@@ -46,6 +46,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -423,7 +424,7 @@ public class BRMSPush {
 
                 } else if ("$dependency$".equals(key) && value.startsWith("[") && value.endsWith("]")) {
                     value = value.substring(1, value.length() - 1).trim();
-                    List<String> dependencyStrings = Arrays.asList(value.split("},{"));
+                    List<String> dependencyStrings = Arrays.asList(value.split(Pattern.quote("},{")));
                     for (String dependencyString : dependencyStrings) {
                         try {
                             userDependencies
@@ -452,7 +453,7 @@ public class BRMSPush {
             // closedLoop
             if (kSessionName == null) {
             	LOGGER.info("kSessionName is null, selectedName is  : " + selectedName );
-                if (selectedName == defaultName) {
+                if (selectedName.equalsIgnoreCase(defaultName)) {
                     kSessionName = "closedloop";
                 } else {
                     kSessionName = "closedloop-" + selectedName;
