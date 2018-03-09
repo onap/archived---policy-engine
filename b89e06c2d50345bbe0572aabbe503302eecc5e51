@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_a611715e",
+        "filename": "ONAP-PDP/src/test/java/org/onap/policy/xacml/action/FindActionTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1645
+      },
+      "writtenOn": "2018-03-09T15:47:54Z",
+      "side": 1,
+      "message": "Jorge, the problem with using the DMaapSimulatorJaxRs class is that it does not have a resource path that returns a json message. I won\u0027t get as much coverage because the callRest() method in FindAction will throw an exception when it tries to parse a non-json message.",
+      "parentUuid": "5a93c517_c6b83d77",
+      "revId": "b89e06c2d50345bbe0572aabbe503302eecc5e51",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_66612904",
         "filename": "ONAP-PDP/src/test/resources/xacml.pdp.properties",
         "patchSetId": 4
