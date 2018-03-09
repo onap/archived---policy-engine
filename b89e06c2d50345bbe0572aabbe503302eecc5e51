@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_c6b83d77",
+        "filename": "ONAP-PDP/src/test/java/org/onap/policy/xacml/action/FindActionTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-09T15:19:16Z",
+      "side": 1,
+      "message": "Cole, added a dmaap simulator here, probably better to use this one instead :\n\nhttps://git.onap.org/policy/drools-pdp/tree/feature-simulators",
+      "revId": "b89e06c2d50345bbe0572aabbe503302eecc5e51",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
