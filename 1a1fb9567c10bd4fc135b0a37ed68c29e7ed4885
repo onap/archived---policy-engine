@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_c6111d05",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ActionPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-09T12:53:21Z",
+      "side": 1,
+      "message": "Now that we are using try-with-resources, we can remove the bw.close() statement.",
+      "range": {
+        "startLine": 268,
+        "startChar": 1,
+        "endLine": 269,
+        "endChar": 1
+      },
+      "revId": "1a1fb9567c10bd4fc135b0a37ed68c29e7ed4885",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
