@@ -16,6 +16,29 @@
       "revId": "b89e06c2d50345bbe0572aabbe503302eecc5e51",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_66612904",
+        "filename": "ONAP-PDP/src/test/resources/xacml.pdp.properties",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-09T15:34:23Z",
+      "side": 1,
+      "message": "2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 20
+      },
+      "revId": "b89e06c2d50345bbe0572aabbe503302eecc5e51",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
