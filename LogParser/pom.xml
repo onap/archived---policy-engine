@@ -125,7 +125,7 @@
 					<artifactId>cambriaClient</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>com.att.cadi</groupId>
+					<groupId>org.onap.aaf.cadi</groupId>
 					<artifactId>cadi-aaf</artifactId>
 				</exclusion>
 			</exclusions>
