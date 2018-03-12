@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_929b4e65",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/FirewallConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-12T12:27:45Z",
+      "side": 1,
+      "message": "This will need to move before the try statement as the new FileWriter uses configurationName",
+      "range": {
+        "startLine": 103,
+        "startChar": 3,
+        "endLine": 105,
+        "endChar": 4
+      },
+      "revId": "5c68ebf4d56553c67fc163ee1b4627f806ca1cd8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
