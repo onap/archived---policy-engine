@@ -22,6 +22,29 @@
       "revId": "307afa93d037423056a00b5f9e0d267d06f274cf",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9d227fa1",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsParamPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-12T14:16:51Z",
+      "side": 1,
+      "message": "I also would leave a space either side of the \u0026\u0026 operator, it helps with code readability",
+      "range": {
+        "startLine": 217,
+        "startChar": 27,
+        "endLine": 217,
+        "endChar": 31
+      },
+      "revId": "307afa93d037423056a00b5f9e0d267d06f274cf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
