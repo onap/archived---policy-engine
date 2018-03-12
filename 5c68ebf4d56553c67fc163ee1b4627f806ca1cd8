@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_bd509b0b",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/FirewallConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-12T14:24:54Z",
+      "side": 1,
+      "message": "Also, nest the filewriter in the bufferedwriter to avoid the unnecessary fw variable.",
+      "range": {
+        "startLine": 101,
+        "startChar": 6,
+        "endLine": 102,
+        "endChar": 48
+      },
+      "revId": "5c68ebf4d56553c67fc163ee1b4627f806ca1cd8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_929b4e65",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/FirewallConfigPolicy.java",
         "patchSetId": 1
@@ -18,6 +41,29 @@
         "startChar": 3,
         "endLine": 105,
         "endChar": 4
+      },
+      "revId": "5c68ebf4d56553c67fc163ee1b4627f806ca1cd8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_fd494360",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/FirewallConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-12T14:24:54Z",
+      "side": 1,
+      "message": "I know that this is not raised in the Sonar issue but as I see it here, this error message will do nothing except annoy a user.\n\nCould you improve this exception message to something like:\nLOGGER.error (\"Save of configuration to file {} failed\", CONFIG_HOME + File.separator + configurationName + \".json\", e);\n\nBetter still declare a string variable for the file name before the \"try\"\nString fileName \u003d CONFIG_HOME + File.separator + configurationName + \".json\";\n\nand then use the variable fileName wherever is appropriate.",
+      "range": {
+        "startLine": 111,
+        "startChar": 16,
+        "endLine": 111,
+        "endChar": 35
       },
       "revId": "5c68ebf4d56553c67fc163ee1b4627f806ca1cd8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
