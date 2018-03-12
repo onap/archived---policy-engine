@@ -587,7 +587,7 @@ public class BRMSPush {
     }
 
     private void extractJar(String jarFileName, String artifactId) throws IOException {
-        JarFile jar = new JarFile(jarFileName);
+        try(JarFile jar = new JarFile(jarFileName);){
         Enumeration<?> enumEntries = jar.entries();
         while (enumEntries.hasMoreElements()) {
             JarEntry file = (JarEntry) enumEntries.nextElement();
@@ -613,17 +613,21 @@ public class BRMSPush {
                 f = new File(path + File.separator + fileName);
             }
             if (f != null) {
-                InputStream is = jar.getInputStream(file);
-                FileOutputStream fos = new FileOutputStream(f);
+                try(InputStream is = jar.getInputStream(file);
+            			FileOutputStream fos = new FileOutputStream(f)){
                 while (is.available() > 0) {
                     fos.write(is.read());
                 }
-                fos.close();
-                is.close();
                 LOGGER.info(fileName + " Created..");
+				}catch (IOException e) {
+            	LOGGER.info("exception Occured"+e);
+			}
             }
         }
-        jar.close();
+       }catch (IOException e) {
+    	LOGGER.info("exception Occured"+e);
+		
+	}
     }
 
     private NexusArtifact getLatestArtifactFromNexus(String selectedName) {
