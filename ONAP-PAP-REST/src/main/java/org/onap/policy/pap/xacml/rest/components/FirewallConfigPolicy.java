@@ -98,30 +98,20 @@ public class FirewallConfigPolicy extends Policy {
 	// Saving the Configurations file at server location for config policy.
 	protected void saveConfigurations(String policyName, String jsonBody) {
 		String configurationName = policyName;
-		FileWriter fw = null;
-		try{
+		try(FileWriter fw = new FileWriter(CONFIG_HOME + File.separator + configurationName + ".json");
+		    BufferedWriter bw = new BufferedWriter(fw)){
 			if(configurationName.endsWith(".xml")){
 				configurationName = configurationName.replace(".xml", "");
 			}
-			fw = new FileWriter(CONFIG_HOME + File.separator + configurationName + ".json");
-			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(jsonBody);
-			bw.close();
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Configuration is succesfully saved");
 			}
 		} catch (IOException e) {
 			LOGGER.error("Exception Occured"+e);
-		}finally{
-			try{
-				if(fw != null){
-					fw.close();
-				}
-			}catch(Exception e){
-				LOGGER.error("Exception Occured"+e);
-			}
 		}
-	}
+		}
+	
 
 	//Utility to read json data from the existing file to a string
 	static String readFile(String path, Charset encoding) throws IOException {
