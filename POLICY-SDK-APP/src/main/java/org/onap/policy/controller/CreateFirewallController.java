@@ -344,7 +344,7 @@ public class CreateFirewallController extends RestrictedBaseController {
 				jpaTermList = (TermList) tmList.get(0);
 				if (jpaTermList != null){				
 					ruleSrcList= jpaTermList.getSrcIPList();	
-					if ((ruleSrcList!= null) && (!ruleSrcList.isEmpty()) && !ruleSrcList.equals("null")){
+					if ((ruleSrcList!= null) && (!ruleSrcList.isEmpty()) && !"null".equals(ruleSrcList)){
 						displayString.append("Source IP List: " + jpaTermList.getSrcIPList());
 						displayString.append(" ; \t\n");
 						for(String srcList:ruleSrcList.split(",")){	
