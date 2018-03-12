@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_9d0b5f23",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ActionPolicy.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-12T14:13:50Z",
+      "side": 1,
+      "message": "Personally I prefer to nest the FileWriter in the BufferedWriter especially if I\u0027m never going to explicitly use the FileWriter:\nBufferedWriter bw \u003d new BufferedWriter(new FileWriter(file.getAbsoluteFile()))\n\nIt just leaves one less variable (fw) to deal with.",
+      "range": {
+        "startLine": 263,
+        "startChar": 12,
+        "endLine": 264,
+        "endChar": 59
+      },
+      "revId": "5b2f8ad595f0f2d546e9bb0235f690d1f4ce5846",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
