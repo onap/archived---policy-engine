@@ -214,11 +214,10 @@ public class CreateBrmsParamPolicy extends Policy {
 						comment = true;
 						continue;
 					}
-					if (line.contains("//")) {
-						if(!(line.contains("http://") || line.contains("https://"))){
+					if (line.contains("//")&&(!(line.contains("http://") || line.contains("https://")))){
 							line = line.split("\\/\\/")[0];
 						}
-					}
+					
 					if (line.contains("/*")) {
 						comment = true;
 						if (line.contains("*/")) {
