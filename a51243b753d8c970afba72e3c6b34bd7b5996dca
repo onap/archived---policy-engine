@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_527aa624",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ActionPolicy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-12T12:25:53Z",
+      "side": 1,
+      "message": "The fix is good - let\u0027s just get the formatting right. There should be a newline after the semicolon.",
+      "range": {
+        "startLine": 264,
+        "startChar": 0,
+        "endLine": 264,
+        "endChar": 107
+      },
+      "revId": "a51243b753d8c970afba72e3c6b34bd7b5996dca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
