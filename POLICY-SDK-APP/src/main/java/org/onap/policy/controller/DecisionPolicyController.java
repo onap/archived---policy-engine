@@ -205,7 +205,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 								ApplyType decisionApply = (ApplyType) condition.getExpression().getValue();
 								decisionApply = (ApplyType) decisionApply.getExpression().get(0).getValue();
 								ruleAlgoirthmTracker = new LinkedList<>();
-								if(policyAdapter.getRuleProvider()!=null && ("GUARD_YAML".equals(policyAdapter.getRuleProvider())||(policyAdapter.getRuleProvider().equals("GUARD_BL_YAML")))){
+								if(policyAdapter.getRuleProvider()!=null && ("GUARD_YAML".equals(policyAdapter.getRuleProvider())||("GUARD_BL_YAML".equals(policyAdapter.getRuleProvider())))){
 									YAMLParams yamlParams = new YAMLParams();
 									for(int i=0; i<attributeList.size() ; i++){
 										Map<String, String> map = (Map<String,String>)attributeList.get(i);
