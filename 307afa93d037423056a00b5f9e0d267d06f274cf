@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_12a73ea8",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsParamPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-12T12:28:38Z",
+      "side": 1,
+      "message": "The change is fine, just remove the extra parens (sonar flags these).",
+      "range": {
+        "startLine": 217,
+        "startChar": 30,
+        "endLine": 217,
+        "endChar": 31
+      },
+      "revId": "307afa93d037423056a00b5f9e0d267d06f274cf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
