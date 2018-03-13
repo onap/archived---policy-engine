@@ -22,9 +22,6 @@ package org.onap.policy.rest.adapter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -167,13 +164,5 @@ public class ClosedLoopPolicyAdaptersTest {
 	public void testClosedLoopPolicyStatus() {
 		assertEquals(ClosedLoopPolicyStatus.ACTIVE.toString(), "active");
 		assertEquals(ClosedLoopPolicyStatus.INACTIVE.toString(), "inactive");
-	}
-	
-	@Test
-	public void testConstructorIsPrivate() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-	  Constructor<ClosedLoopPerformanceMetrics> constructor = ClosedLoopPerformanceMetrics.class.getDeclaredConstructor();
-	  assertTrue(Modifier.isPrivate(constructor.getModifiers()));
-	  constructor.setAccessible(true);
-	  constructor.newInstance();
 	}
 }
