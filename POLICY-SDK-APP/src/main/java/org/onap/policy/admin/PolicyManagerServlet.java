@@ -530,16 +530,15 @@ public class PolicyManagerServlet extends HttpServlet {
 		}
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(temp))) {
 			bw.write(entity.getPolicyData());
-			object = HumanPolicyComponent.DescribePolicy(temp);
 		} catch (IOException e) {
 			LOGGER.error("Exception Occured while Describing the Policy"+e);
-		}finally{
-			if(temp != null){
-				try {
-					Files.delete(temp.toPath());
-				} catch (IOException e) {
-					LOGGER.warn("Failed to delete " + temp.getName() + e);
-				}
+		}
+		object = HumanPolicyComponent.DescribePolicy(temp);
+		if(temp != null){
+			try {
+				Files.delete(temp.toPath());
+			} catch (IOException e) {
+				LOGGER.warn("Failed to delete " + temp.getName() + e);
 			}
 		}
 		return object;

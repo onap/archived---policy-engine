@@ -85,6 +85,9 @@ public class PolicyManagerServletTest extends Mockito{
         roles.setLoginId("Test");
         roles.setRole("super-admin");
         Roles roles1 = new Roles();
+        roles1.setId(1);
+        roles1.setName("Test");
+        assertTrue("Test".equals(roles1.getName()));
         roles1.setLoginId("Test");
         roles1.setRole("admin");
         roles1.setScope("['com','Test']");
