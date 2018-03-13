@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_325cb54a",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brmsInterface/BRMSPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-13T12:47:22Z",
+      "side": 1,
+      "message": "Please sort out the indentation here.",
+      "range": {
+        "startLine": 622,
+        "startChar": 0,
+        "endLine": 630,
+        "endChar": 2
+      },
+      "revId": "bf1ec8c287511651c6ee58151eb57060bb6f818b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
