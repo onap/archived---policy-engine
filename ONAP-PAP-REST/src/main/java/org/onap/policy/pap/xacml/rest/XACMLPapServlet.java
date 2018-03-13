@@ -1176,7 +1176,7 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.audit("Transaction Ended Successfully");
 			im.endTransaction();
 			return;
-		} else if (apiflag != null && apiflag.equalsIgnoreCase("api")) {
+		} else if (apiflag != null && "api".equalsIgnoreCase(apiflag)) {
 			// this request is from the Policy Creation API 
 			if(authorizeRequest(request)){
 				APIRequestHandler apiRequestHandler = new APIRequestHandler();
