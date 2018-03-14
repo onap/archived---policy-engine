@@ -586,45 +586,47 @@ public class BRMSPush {
         }
     }
 
-    private void extractJar(String jarFileName, String artifactId) throws IOException {
-        JarFile jar = new JarFile(jarFileName);
-        Enumeration<?> enumEntries = jar.entries();
-        while (enumEntries.hasMoreElements()) {
-            JarEntry file = (JarEntry) enumEntries.nextElement();
-            File f = null;
-            String fileName = file.getName().substring(file.getName().lastIndexOf("/") + 1);
-            if (file.getName().endsWith(".drl")) {
-                String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src" + File.separator
-                        + "main" + File.separator + RESOURCES + File.separator + RULES;
-                new File(path).mkdirs();
-                if (syncFlag && policyMap.containsKey(fileName.replace(".drl", ""))) {
-                    f = new File(path + File.separator + fileName);
-                } else {
-                    f = new File(path + File.separator + fileName);
-                }
-            } else if (file.getName().endsWith(POM_XML_FILE)) {
-                String path = PROJECTSLOCATION + File.separator + artifactId;
-                new File(path).mkdirs();
-                f = new File(path + File.separator + fileName);
-            } else if (file.getName().endsWith(KMODULE_XML_FILE)) {
-                String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src" + File.separator
-                        + "main" + File.separator + RESOURCES + File.separator + META_INF;
-                new File(path).mkdirs();
-                f = new File(path + File.separator + fileName);
-            }
-            if (f != null) {
-                InputStream is = jar.getInputStream(file);
-                FileOutputStream fos = new FileOutputStream(f);
-                while (is.available() > 0) {
-                    fos.write(is.read());
-                }
-                fos.close();
-                is.close();
-                LOGGER.info(fileName + " Created..");
-            }
-        }
-        jar.close();
-    }
+	private void extractJar(String jarFileName, String artifactId) {
+		try (JarFile jar = new JarFile(jarFileName)) {
+			Enumeration<?> enumEntries = jar.entries();
+			while (enumEntries.hasMoreElements()) {
+				JarEntry file = (JarEntry) enumEntries.nextElement();
+				File f = null;
+				String fileName = file.getName().substring(file.getName().lastIndexOf("/") + 1);
+				if (file.getName().endsWith(".drl")) {
+					String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src"
+							+ File.separator + "main" + File.separator + RESOURCES + File.separator + RULES;
+					new File(path).mkdirs();
+					if (syncFlag && policyMap.containsKey(fileName.replace(".drl", ""))) {
+						f = new File(path + File.separator + fileName);
+					} else {
+						f = new File(path + File.separator + fileName);
+					}
+				} else if (file.getName().endsWith(POM_XML_FILE)) {
+					String path = PROJECTSLOCATION + File.separator + artifactId;
+					new File(path).mkdirs();
+					f = new File(path + File.separator + fileName);
+				} else if (file.getName().endsWith(KMODULE_XML_FILE)) {
+					String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src"
+							+ File.separator + "main" + File.separator + RESOURCES + File.separator + META_INF;
+					new File(path).mkdirs();
+					f = new File(path + File.separator + fileName);
+				}
+				if (f != null) {
+					try (InputStream is = jar.getInputStream(file); FileOutputStream fos = new FileOutputStream(f)) {
+						while (is.available() > 0) {
+							fos.write(is.read());
+						}
+						LOGGER.info(fileName + " Created..");
+					} catch (IOException e) {
+						LOGGER.info("exception Occured" + e);
+					}
+				}
+			}
+		} catch (IOException e) {
+			LOGGER.info("exception Occured" + e);
+		}
+	}
 
     private NexusArtifact getLatestArtifactFromNexus(String selectedName) {
         List<NexusArtifact> artifacts = getArtifactFromNexus(selectedName, null);
