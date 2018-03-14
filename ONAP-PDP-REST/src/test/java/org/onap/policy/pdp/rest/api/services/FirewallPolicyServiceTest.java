@@ -37,7 +37,8 @@ import org.onap.policy.api.PolicyParameters;
 public class FirewallPolicyServiceTest {
 
     FirewallPolicyService firewallPolicyService = null;
-	
+   
+    
 	@Before
 	public void setUp() throws Exception {
 		Properties prop = new Properties();
@@ -65,6 +66,8 @@ public class FirewallPolicyServiceTest {
 
 	@After
 	public void tearDown() throws Exception {
+		PAPServices.setPaps(null);
+		PAPServices.junit = false;
 	}
 
 	@Test
@@ -89,5 +92,4 @@ public class FirewallPolicyServiceTest {
 		String result = firewallPolicyService.getResult(false);
 		assertEquals("success",result);
 	}
-
 }

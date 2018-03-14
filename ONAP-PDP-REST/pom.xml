@@ -145,6 +145,12 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>com.att.aft</groupId>
+			<artifactId>dme2</artifactId>
+			<version>3.1.200-oss</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>1.9.5</version>
