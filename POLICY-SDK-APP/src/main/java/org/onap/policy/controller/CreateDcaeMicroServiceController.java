@@ -113,7 +113,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 @RequestMapping("/")
 public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	private static final Logger LOGGER = FlexLogger.getLogger(CreateDcaeMicroServiceController.class);
-
+	private Map<String, String>  matchableValues;
 	private static CommonClassDao commonClassDao;
 	
 	public static CommonClassDao getCommonClassDao() {
@@ -151,7 +151,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	public static final String DEFAULT=".default";
 	public static final String REQUIRED=".required";
 	public static final String MANYFALSE=":MANY-false";
-	
+	public static final String MATCHABLE=".matchable";
 	
 	@Autowired
 	private CreateDcaeMicroServiceController(CommonClassDao commonClassDao){
@@ -520,6 +520,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	
 	HashMap<String,String> parseDataNodes(Map<String,String> map){
 		HashMap<String,String> dataMapForJson=new HashMap <>(); 
+		matchableValues = new HashMap <>(); 
 		for(String uniqueDataKey: uniqueDataKeys){
 			if(uniqueDataKey.contains("%")){
 				String[] uniqueDataKeySplit= uniqueDataKey.split("%");
@@ -538,6 +539,20 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					String requiredValue= map.get(findRequired);
 					LOGGER.info("requiredValue is:"+ requiredValue);
 					
+					String matchable =DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+MATCHABLE;
+
+					String matchableValue= map.get(matchable);
+
+					if(matchableValue != null && matchableValue.equalsIgnoreCase("true")){
+						if(uniqueDataKey.contains("%")){
+							String[] keys= uniqueDataKey.split("%");
+							String key=keys[keys.length -1];
+							matchableValues.put(key, "matching-true");
+						}else{
+							matchableValues.put(uniqueDataKey, "matching-true");
+						}
+					}
+					
 					StringBuilder attributeIndividualStringBuilder= new StringBuilder();
 					attributeIndividualStringBuilder.append(typeValue+":defaultValue-");
 					attributeIndividualStringBuilder.append(defaultValue+":required-");
@@ -545,6 +560,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					dataMapForJson.put(uniqueDataKey, attributeIndividualStringBuilder.toString());		
 				}
 				else if(typeValue != null && typeValue.equalsIgnoreCase(LIST)){
+					
+
 					String findList= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.type";
 					String listValue=map.get(findList);
 					if(listValue!=null){
@@ -569,6 +586,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 									break;
 								}
 								else{
+									if(constraintsValue.contains("=")){
+										constraintsValue = constraintsValue.replace("=", "equal-sign");
+									}
 									dataConstraints.add(constraintsValue);
 									dataListBuffer.append(constraintsValue+",");
 								}
@@ -695,9 +715,15 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				attributeIndividualStringBuilder.append(keyValues.get("default")+":required-");
 				attributeIndividualStringBuilder.append(keyValues.get("required")+":MANY-false");
 				attributeStringBuilder.append(attributeIndividualStringBuilder+",");	
-
+                if(keyValues.get("matchable") != null && keyValues.get("matchable").equalsIgnoreCase("true")){
+				    matchableValues.put(keySetString, "matching-true");
+                }
 			}
 			else if(keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(LIST)){
+				
+                if(keyValues.get("matchable") != null && keyValues.get("matchable").equalsIgnoreCase("true")){
+				    matchableValues.put(keySetString, "matching-true");
+                }
 				//List Datatype
 				Set<String> keys= keyValues.keySet();
 				Iterator<String> itr=keys.iterator();
@@ -731,6 +757,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				}
 			}else{
 				//User defined Datatype. 
+                if(keyValues.get("matchable") != null && keyValues.get("matchable").equalsIgnoreCase("true")){
+				    matchableValues.put(keySetString, "matching-true");
+                }
 				String value=keyValues.get("type");
 				if(value != null && !value.isEmpty()){
 					String trimValue=value.substring(value.lastIndexOf('.')+1);
@@ -1612,7 +1641,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			msAttributes.setAttribute(returnAttributeList);
 			
 			msAttributes.setSubClass(this.retmap);
-			
+			msAttributes.setMatchingSet(matchableValues);
 			HashMap<String, String> returnReferenceList =new HashMap<>();
 			returnReferenceList.put(className, this.referenceAttributes);
 			msAttributes.setRefAttribute(returnReferenceList);

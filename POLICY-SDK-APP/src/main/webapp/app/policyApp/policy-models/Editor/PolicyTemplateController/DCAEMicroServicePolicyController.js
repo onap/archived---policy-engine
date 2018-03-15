@@ -900,6 +900,11 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	}
 	
 	for (i=0; i < listemunerateValues.length; i += 1) {
+		
+		if(listemunerateValues[i].includes("equal-sign")){
+			listemunerateValues[i] = listemunerateValues[i].replace('equal-sign','=');
+		}		
+		
 	    option = document.createElement('option');
 	    option.setAttribute('value', listemunerateValues[i]);
 	    option.appendChild(document.createTextNode(listemunerateValues[i]));
