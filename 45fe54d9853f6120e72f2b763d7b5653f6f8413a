@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_713a2e9a",
+        "filename": "ONAP-PDP-REST/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-15T17:15:01Z",
+      "side": 1,
+      "message": "I am not sure we should be including this - if there are tests for this that may not be right. We could go forward anyway and remove in Casablanca.",
+      "range": {
+        "startLine": 148,
+        "startChar": 0,
+        "endLine": 153,
+        "endChar": 14
+      },
+      "revId": "45fe54d9853f6120e72f2b763d7b5653f6f8413a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
