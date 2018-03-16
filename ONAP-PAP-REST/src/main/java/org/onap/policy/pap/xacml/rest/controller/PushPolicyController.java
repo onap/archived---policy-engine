@@ -161,10 +161,8 @@ public class PushPolicyController {
 			return;
 		}
 		File temp = new File(policyName);
-		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(temp))){
 			bw.write(policyEntity.getPolicyData());
-			bw.close();
 			URI selectedURI = temp.toURI();
 			// Create the policy Object
 			selectedPolicy = new StdPDPPolicy(policyName, true, policyID, selectedURI);

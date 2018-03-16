@@ -67,23 +67,15 @@ public class CreateClosedLoopPerformanceMetrics extends Policy {
 	}
 
 	//save configuration of the policy based on the policyname
-	private void saveConfigurations(String policyName, String jsonBody) {
-		try {
-			String body = null;
-			try {
-				body = jsonBody;
-			} catch (Exception e) {
-				LOGGER.error("Exception Occured"+e);
-			}
-			if(policyName.endsWith(".xml")){
-				policyName	 = policyName.substring(0, policyName.lastIndexOf(".xml"));	
-			}
-			PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + "."+ policyName +".json");
-			out.println(body);
-			policyAdapter.setJsonBody(body);
-			policyAdapter.setConfigBodyData(body);
-			out.close();
-
+	private void saveConfigurations(String policyName, final String jsonBody) {
+	    
+	        if(policyName.endsWith(".xml")){
+	            policyName   = policyName.substring(0, policyName.lastIndexOf(".xml"));
+	        }
+		try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + "."+ policyName +".json")){
+			out.println(jsonBody);
+			policyAdapter.setJsonBody(jsonBody);
+			policyAdapter.setConfigBodyData(jsonBody);
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured"+e);
 		}

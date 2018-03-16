@@ -70,27 +70,16 @@ public class ClosedLoopPolicy extends Policy {
 	
 	//save configuration of the policy based on the policyname
 	private void saveConfigurations(String policyName, String jsonBody) {
-		try {
+	    
+	        if(policyName.endsWith(".xml")){
+	            policyName = policyName.replace(".xml", "");
+	        }
+		try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator+ policyName +".json")){
 			String body = jsonBody;
-			try {
-				try{
-					//Remove the trapMaxAge in Verification Signature
-					body = body.replace(",\"trapMaxAge\":null", "");
-				}catch(Exception e){
-					LOGGER.debug("No Trap Max Age in JSON body", e);
-				}
-				this.policyAdapter.setJsonBody(body);
-			} catch (Exception e) {
-				LOGGER.error("Exception Occured"+e);
-			}
-
-			if(policyName.endsWith(".xml")){
-				policyName = policyName.replace(".xml", "");
-			}
-			PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator+ policyName +".json");
+			//Remove the trapMaxAge in Verification Signature
+			body = body.replace(",\"trapMaxAge\":null", "");
+			this.policyAdapter.setJsonBody(body);
 			out.println(body);
-			out.close();
-
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured while writing Configuration Data"+e);
 		} 

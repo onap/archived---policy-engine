@@ -180,18 +180,8 @@ public class StdEngine extends StdPDPItemSetChangeNotifier implements PAPPolicyE
 		// We don't have the default group, create it
 		//
 		String defaultId = properties.getProperty(PROP_PAP_GROUPS_DEFAULT, PROP_PAP_GROUPS_DEFAULT_NAME);
-		if(defaultId == null){
-			defaultId = PROP_PAP_GROUPS_DEFAULT_NAME;
-		}
 		if("".equals(defaultId)){
-			defaultId = PROP_PAP_GROUPS_DEFAULT_NAME;
-		}
-		//we're going to check one more time in case the PROP_PAP_GROUPS_DEFAULT_NAME doesn't exist
-		if(defaultId == null){
-			defaultId = "default";
-		}
-		if("".equals(defaultId)){
-			defaultId = "default";
+		   defaultId = PROP_PAP_GROUPS_DEFAULT_NAME;
 		}
 		logger.warn("Default group does NOT exist, creating " + defaultId);
 		Path defaultPath = Paths.get(this.repository.toString(), defaultId);

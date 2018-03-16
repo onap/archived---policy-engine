@@ -115,6 +115,7 @@ public class ElasticSearchPolicyUpdate {
 	    
 		Connection conn = null;
 		Statement stmt = null;
+		ResultSet result = null;
 		
 		List<Index> listIndex = new ArrayList<>();
 		
@@ -124,7 +125,7 @@ public class ElasticSearchPolicyUpdate {
 			stmt = conn.createStatement();
 			
 			String policyEntityQuery = "Select * from PolicyEntity";
-			ResultSet result = stmt.executeQuery(policyEntityQuery);
+			result = stmt.executeQuery(policyEntityQuery);
 			
 			while(result.next()){
 				StringBuilder policyDataString = new StringBuilder("{");
@@ -171,36 +172,10 @@ public class ElasticSearchPolicyUpdate {
 				
 				if(!"decision".equals(_type)){
 					if(configurationdataid != null){
-						String configEntityQuery = "Select * from ConfigurationDataEntity where configurationDataId = ?";
-						PreparedStatement pstmt = null;
-						pstmt = conn.prepareStatement(configEntityQuery);
-					    pstmt.setString(1, configurationdataid);
-						ResultSet configResult = pstmt.executeQuery();
-						while(configResult.next()){
-							String configBody = configResult.getString("configbody");
-							String configType = configResult.getString("configtype");
-							if(configBody!=null){
-								configBody = configBody.replace("null", "\"\"");
-								configBody= configBody.replace("\"", "\\\"");
-								policyDataString.append("\"jsonBodyData\":\""+configBody+"\",\"configType\":\""+configType+"\",");
-							}
-						}
-						configResult.close();
+					    updateConfigData(conn, configurationdataid, policyDataString);
 					}
-					
 					if(actionbodyid != null){
-						String actionEntityQuery = "Select * from ActionBodyEntity where actionBodyId = ?";
-						PreparedStatement pstmt = null;
-						pstmt = conn.prepareStatement(actionEntityQuery);
-					    pstmt.setString(1, actionbodyid);
-						ResultSet actionResult = pstmt.executeQuery();
-						while(actionResult.next()){
-							String actionBody = actionResult.getString("actionbody");
-							actionBody = actionBody.replace("null", "\"\"");
-							actionBody = actionBody.replace("\"", "\\\"");
-							policyDataString.append("\"jsonBodyData\":\""+actionBody+"\",");
-						}
-						actionResult.close();
+					    updateActionData(conn, actionbodyid, policyDataString);
 					}	
 				}
 				
@@ -245,6 +220,20 @@ public class ElasticSearchPolicyUpdate {
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured while performing database Operation for Elastic Search Policy Upgrade"+e);
 		}finally{
+		        if(result != null){
+		            try {
+		                result.close();
+		            } catch (Exception e) {
+		                LOGGER.error("Exception Occured while closing the resultset"+e);
+		            }
+		        }
+		        if(stmt != null){
+		            try {
+		                stmt.close();
+		            } catch (Exception e) {
+		                LOGGER.error("Exception Occured while closing the statement"+e);
+		            }
+		        }
 			if(conn != null){
 				try {
 					conn.close();
@@ -315,4 +304,79 @@ public class ElasticSearchPolicyUpdate {
 		return policyDataString.toString();
 	}
 	
+	private static void updateConfigData(Connection conn, String configurationdataid, StringBuilder policyDataString) throws Exception {
+
+	        PreparedStatement pstmt = null;
+	        ResultSet configResult = null;
+	        try {
+	            String configEntityQuery = "Select * from ConfigurationDataEntity where configurationDataId = ?";
+	            pstmt = null;
+	            pstmt = conn.prepareStatement(configEntityQuery);
+	            pstmt.setString(1, configurationdataid);
+	            configResult = pstmt.executeQuery();
+	            while(configResult.next()){
+	                String configBody = configResult.getString("configbody");
+	                String configType = configResult.getString("configtype");
+	                if(configBody!=null){
+	                    configBody = configBody.replace("null", "\"\"");
+	                    configBody= configBody.replace("\"", "\\\"");
+	                    policyDataString.append("\"jsonBodyData\":\""+configBody+"\",\"configType\":\""+configType+"\",");
+	                }
+	            }
+	        } catch(Exception e) {
+	            LOGGER.error("Exception Occured while updating configData"+e);
+	            throw(e);
+	        } finally {
+	            if(configResult != null){
+	                try {
+	                    configResult.close();
+	                } catch (Exception e) {
+	                    LOGGER.error("Exception Occured while closing the ResultSet"+e);
+	                }
+	            }
+	            if(pstmt != null){
+	                try {
+	                    pstmt.close();
+	                } catch (Exception e) {
+	                    LOGGER.error("Exception Occured while closing the PreparedStatement"+e);
+	                }
+	            }
+	       }
+	}
+	
+	private static void updateActionData(Connection conn, String actionbodyid, StringBuilder policyDataString) throws Exception {
+
+            PreparedStatement pstmt = null;
+            ResultSet actionResult = null;
+            try {
+                String actionEntityQuery = "Select * from ActionBodyEntity where actionBodyId = ?";
+                pstmt = conn.prepareStatement(actionEntityQuery);
+                pstmt.setString(1, actionbodyid);
+                actionResult = pstmt.executeQuery();
+                while(actionResult.next()){
+                    String actionBody = actionResult.getString("actionbody");
+                    actionBody = actionBody.replace("null", "\"\"");
+                    actionBody = actionBody.replace("\"", "\\\"");
+                    policyDataString.append("\"jsonBodyData\":\""+actionBody+"\",");
+                }
+            } catch(Exception e) {
+                LOGGER.error("Exception Occured while updating actionData"+e);
+                throw(e);
+            } finally {
+                if(actionResult != null){
+                    try {
+                        actionResult.close();
+                    } catch (Exception e) {
+                        LOGGER.error("Exception Occured while closing the ResultSet"+e);
+                    }
+                }
+                if(pstmt != null){
+                    try {
+                        pstmt.close();
+                    } catch (Exception e) {
+                        LOGGER.error("Exception Occured while closing the PreparedStatement"+e);
+                    }
+                }
+           }
+	}
 }

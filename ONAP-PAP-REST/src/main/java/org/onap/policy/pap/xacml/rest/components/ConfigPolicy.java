@@ -80,17 +80,24 @@ public class ConfigPolicy extends Policy {
 	
 	// Saving the Configurations file at server location for config policy.
 	protected void saveConfigurations(String policyName) {
+	        BufferedWriter bw = null;
 		try {
 			String fileName = getConfigFile(policyName);
-			FileWriter fw = new FileWriter(CONFIG_HOME + File.separator + fileName);
-			BufferedWriter bw = new BufferedWriter(fw);
+			bw = new BufferedWriter(new FileWriter(CONFIG_HOME + File.separator + fileName));
 			bw.write(configBodyData);
-			bw.close();
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Configuration is succesfully saved");
+			    LOGGER.debug("Configuration is succesfully saved");
 			}
 		} catch (IOException e) {
 			LOGGER.error("Exception Occured while writing Configuration Data"+e);
+		} finally {
+		    if(bw != null){
+                    try {
+                        bw.close();
+                    } catch (Exception e) {
+                        LOGGER.error("Exception Occured while closing the BufferedWriter"+e);
+                    }
+               }
 		}
 	}
 
