@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_a36aa77e",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-16T12:35:49Z",
+      "side": 1,
+      "message": "Frank please swap this so we don\u0027t continue to get Sonar issues. Then you don\u0027t need to check for null.\n\"true\".equalsIgnoreCase(matchableValue)",
+      "range": {
+        "startLine": 546,
+        "startChar": 34,
+        "endLine": 546,
+        "endChar": 73
+      },
+      "revId": "495a34e6b2c98c974d9d1bb300f91a66a31e0087",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_63081fda",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-16T12:35:49Z",
+      "side": 1,
+      "message": "Swap - then remove first part of the IF",
+      "range": {
+        "startLine": 718,
+        "startChar": 57,
+        "endLine": 718,
+        "endChar": 108
+      },
+      "revId": "495a34e6b2c98c974d9d1bb300f91a66a31e0087",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_830bebd4",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-16T12:35:49Z",
+      "side": 1,
+      "message": "swap",
+      "range": {
+        "startLine": 724,
+        "startChar": 57,
+        "endLine": 724,
+        "endChar": 108
+      },
+      "revId": "495a34e6b2c98c974d9d1bb300f91a66a31e0087",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_43116302",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-16T12:35:49Z",
+      "side": 1,
+      "message": "swap - then remove the first part of the IF",
+      "range": {
+        "startLine": 760,
+        "startChar": 57,
+        "endLine": 760,
+        "endChar": 110
+      },
+      "revId": "495a34e6b2c98c974d9d1bb300f91a66a31e0087",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
