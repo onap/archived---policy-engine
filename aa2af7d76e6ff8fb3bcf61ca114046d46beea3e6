@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_76d9bf55",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ClosedLoopPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-16T16:29:16Z",
+      "side": 1,
+      "message": "A lot of try/catch embedding here, did Sonar not complain?",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 4
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_56d60329",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ClosedLoopPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-16T16:29:16Z",
+      "side": 1,
+      "message": "In a try with resources, the resource in the try statement is automatically closed so you don\u0027t need this line.",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 15
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_16dcfb44",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-16T16:29:16Z",
+      "side": 1,
+      "message": "Can we can get this down to one try/catch or to a swquence of try/catch rather than nesting?",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 3
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_36dfb73b",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsRawPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-16T16:29:16Z",
+      "side": 1,
+      "message": "As before",
+      "range": {
+        "startLine": 81,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 15
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_76c0df4f",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateClosedLoopPerformanceMetrics.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-16T16:29:16Z",
+      "side": 1,
+      "message": "I don\u0027t think an exception can be thrown here, string assigned to string, also I think the string \"body\" is not needed, the incoming parameter jsonBody can be used 9and probably should be final)",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 4
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f6cb8f6f",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/FirewallConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1269,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-16T16:29:16Z",
+      "side": 1,
+      "message": "Just wondering why you removed the null check?",
+      "range": {
+        "startLine": 1269,
+        "startChar": 37,
+        "endLine": 1269,
+        "endChar": 47
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_56a4c3b8",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/MicroServiceConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-16T16:29:16Z",
+      "side": 1,
+      "message": "close not needed",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 15
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b698a775",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/GetDictionaryService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-16T16:29:16Z",
+      "side": 1,
+      "message": "Returning jsonString is not the same as returning null. Is this OK?",
+      "range": {
+        "startLine": 250,
+        "startChar": 12,
+        "endLine": 250,
+        "endChar": 17
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_768e9f2f",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/test/getDictionaryTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-16T16:29:16Z",
+      "side": 1,
+      "message": "How did test pass before?",
+      "range": {
+        "startLine": 44,
+        "startChar": 2,
+        "endLine": 44,
+        "endChar": 15
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5692834c",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-16T16:29:16Z",
+      "side": 1,
+      "message": "What if defaultId is null, you\u0027ll get a NPE here?",
+      "range": {
+        "startLine": 183,
+        "startChar": 15,
+        "endLine": 183,
+        "endChar": 24
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
