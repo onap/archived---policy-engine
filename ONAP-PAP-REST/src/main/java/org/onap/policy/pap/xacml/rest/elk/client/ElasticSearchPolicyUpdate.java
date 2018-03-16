@@ -115,6 +115,8 @@ public class ElasticSearchPolicyUpdate {
 	    
 		Connection conn = null;
 		Statement stmt = null;
+		ResultSet result = null;
+		PreparedStatement pstmt = null;
 		
 		List<Index> listIndex = new ArrayList<>();
 		
@@ -124,7 +126,7 @@ public class ElasticSearchPolicyUpdate {
 			stmt = conn.createStatement();
 			
 			String policyEntityQuery = "Select * from PolicyEntity";
-			ResultSet result = stmt.executeQuery(policyEntityQuery);
+			result = stmt.executeQuery(policyEntityQuery);
 			
 			while(result.next()){
 				StringBuilder policyDataString = new StringBuilder("{");
@@ -144,7 +146,7 @@ public class ElasticSearchPolicyUpdate {
 				}
 				String actionbodyid = result.getString("actionbodyid");
 				String configurationdataid = result.getString("configurationdataid");
-				
+				result.close();
 				
 				String policyWithScopeName = scope + "." + policyName;
 				String _type = null;
@@ -172,35 +174,33 @@ public class ElasticSearchPolicyUpdate {
 				if(!"decision".equals(_type)){
 					if(configurationdataid != null){
 						String configEntityQuery = "Select * from ConfigurationDataEntity where configurationDataId = ?";
-						PreparedStatement pstmt = null;
 						pstmt = conn.prepareStatement(configEntityQuery);
 					    pstmt.setString(1, configurationdataid);
-						ResultSet configResult = pstmt.executeQuery();
-						while(configResult.next()){
-							String configBody = configResult.getString("configbody");
-							String configType = configResult.getString("configtype");
+					        result = pstmt.executeQuery();
+						while(result.next()){
+							String configBody = result.getString("configbody");
+							String configType = result.getString("configtype");
 							if(configBody!=null){
 								configBody = configBody.replace("null", "\"\"");
 								configBody= configBody.replace("\"", "\\\"");
 								policyDataString.append("\"jsonBodyData\":\""+configBody+"\",\"configType\":\""+configType+"\",");
 							}
 						}
-						configResult.close();
+						result.close();
 					}
 					
 					if(actionbodyid != null){
 						String actionEntityQuery = "Select * from ActionBodyEntity where actionBodyId = ?";
-						PreparedStatement pstmt = null;
 						pstmt = conn.prepareStatement(actionEntityQuery);
 					    pstmt.setString(1, actionbodyid);
-						ResultSet actionResult = pstmt.executeQuery();
-						while(actionResult.next()){
-							String actionBody = actionResult.getString("actionbody");
+					        result = pstmt.executeQuery();
+						while(result.next()){
+							String actionBody = result.getString("actionbody");
 							actionBody = actionBody.replace("null", "\"\"");
 							actionBody = actionBody.replace("\"", "\\\"");
 							policyDataString.append("\"jsonBodyData\":\""+actionBody+"\",");
 						}
-						actionResult.close();
+						result.close();
 					}	
 				}
 				
@@ -245,6 +245,20 @@ public class ElasticSearchPolicyUpdate {
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured while performing database Operation for Elastic Search Policy Upgrade"+e);
 		}finally{
+		        if(result != null){
+		            try {
+		                result.close();
+		            } catch (Exception e) {
+		                LOGGER.error("Exception Occured while closing the resultset"+e);
+		            }
+		        }
+		        if(stmt != null){
+		            try {
+		                stmt.close();
+		            } catch (Exception e) {
+		                LOGGER.error("Exception Occured while closing the statement"+e);
+		            }
+		        }
 			if(conn != null){
 				try {
 					conn.close();

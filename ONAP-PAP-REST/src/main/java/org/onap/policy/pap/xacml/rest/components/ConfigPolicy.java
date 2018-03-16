@@ -82,12 +82,12 @@ public class ConfigPolicy extends Policy {
 	protected void saveConfigurations(String policyName) {
 		try {
 			String fileName = getConfigFile(policyName);
-			FileWriter fw = new FileWriter(CONFIG_HOME + File.separator + fileName);
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(configBodyData);
-			bw.close();
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Configuration is succesfully saved");
+			try (FileWriter fw = new FileWriter(CONFIG_HOME + File.separator + fileName); BufferedWriter bw = new BufferedWriter(fw)){
+			    bw.write(configBodyData);
+			    bw.close();
+			    if (LOGGER.isDebugEnabled()) {
+			        LOGGER.debug("Configuration is succesfully saved");
+			    }
 			}
 		} catch (IOException e) {
 			LOGGER.error("Exception Occured while writing Configuration Data"+e);

@@ -88,11 +88,10 @@ public class MicroServiceConfigPolicy extends Policy {
 
 	//save configuration of the policy based on the policyname
 	private void saveConfigurations(String policyName, String jsonBody) {
-		try {
+		try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName +".json")){
 			if(policyName.endsWith(".xml")){
 				policyName = policyName.replace(".xml", "");
 			}
-			PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName +".json");
 			out.println(jsonBody);
 			out.close();
 		} catch (Exception e) {

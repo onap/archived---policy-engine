@@ -70,7 +70,7 @@ public class ClosedLoopPolicy extends Policy {
 	
 	//save configuration of the policy based on the policyname
 	private void saveConfigurations(String policyName, String jsonBody) {
-		try {
+		try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator+ policyName +".json")){
 			String body = jsonBody;
 			try {
 				try{
@@ -87,7 +87,6 @@ public class ClosedLoopPolicy extends Policy {
 			if(policyName.endsWith(".xml")){
 				policyName = policyName.replace(".xml", "");
 			}
-			PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator+ policyName +".json");
 			out.println(body);
 			out.close();
 

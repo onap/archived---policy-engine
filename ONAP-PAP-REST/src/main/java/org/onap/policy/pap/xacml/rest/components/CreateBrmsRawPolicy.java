@@ -72,12 +72,11 @@ public class CreateBrmsRawPolicy extends Policy {
 
 	// Saving the Configurations file at server location for CreateBrmsRawPolicy policy.
 	protected void saveConfigurations(String policyName, String jsonBody) {		
-		try {
+		try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName + ".txt")){
 			if (policyName.endsWith(".xml")) {
 				policyName = policyName.substring(0,
 						policyName.lastIndexOf(".xml"));
 			}
-			PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName + ".txt");
 			out.println(jsonBody);
 			out.close();
 

@@ -1265,16 +1265,11 @@ public class FirewallConfigPolicy extends Policy {
 	}
 
 	private JsonObject stringToJson(String jsonString) {
-		JsonObject json = null;
-		if (jsonString != null) {
-			//Read jsonBody to JsonObject
-			StringReader in = null;
-			in = new StringReader(jsonString);
-
-			JsonReader jsonReader = Json.createReader(in);
-			json = jsonReader.readObject();
-			jsonReader.close();
-		}
+		//Read jsonBody to JsonObject
+		StringReader in = new StringReader(jsonString);
+		JsonReader jsonReader = Json.createReader(in);
+		JsonObject json = jsonReader.readObject();
+		jsonReader.close();
 		return json;
 	}
 

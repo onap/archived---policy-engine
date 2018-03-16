@@ -479,11 +479,14 @@ public class PolicyDBDao {
 			HttpURLConnection connection = null;
 			UUID requestID = UUID.randomUUID();
 			URL url;
+			String papUrl;
 			try {
-				String papUrl = getPapUrlUserPass()[0];
-				if(papUrl == null){
-					papUrl = "undefined";
-				}
+			        String[] papUrlUserPass = getPapUrlUserPass();
+			        if(papUrlUserPass == null ){
+			            papUrl = "undefined";
+			        } else {
+			            papUrl = papUrlUserPass[0];
+			        }
 				logger.debug("We are going to try to notify "+o);
 				//is this our own url?
 				String ourUrl = o;
@@ -1315,8 +1318,7 @@ public class PolicyDBDao {
 	private String[] getNameScopeAndVersionFromPdpPolicy(String fileName){
 		String[] splitByDots = fileName.split("\\.");
 		if(splitByDots.length < 3){
-			//should we throw something
-			return null;
+		        return null;
 		}
 		String policyName = splitByDots[splitByDots.length-3];
 		String version = splitByDots[splitByDots.length-2];
@@ -1365,10 +1367,7 @@ public class PolicyDBDao {
 	 */
 	private static boolean isNullOrEmpty(String... strings){
 		for(String s : strings){
-			if(!(s instanceof String)){
-				return true;
-			}
-			if("".equals(s)){
+			if(s == null || "".equals(s)){
 				return true;
 			}
 		}
@@ -1532,7 +1531,7 @@ public class PolicyDBDao {
 					}
 				}
 			}
-			if(transactionTimer instanceof Thread){
+			if(transactionTimer != null){
 				transactionTimer.interrupt();
 			}
 		}
@@ -1563,7 +1562,7 @@ public class PolicyDBDao {
 				}
 
 			}
-			if(transactionTimer instanceof Thread){
+			if(transactionTimer != null){
 				transactionTimer.interrupt();
 			}
 		}
@@ -2042,7 +2041,7 @@ public class PolicyDBDao {
 					}
 					em.close();
 				}
-				if(transactionTimer instanceof Thread){
+				if(transactionTimer != null){
 					transactionTimer.interrupt();
 				}
 			}
@@ -2544,7 +2543,10 @@ public class PolicyDBDao {
 								
 				//we need to convert the form of the policy id that is used groups into the form that is used 
 				//for the database. (com.Config_mypol.1.xml) to (Config_mypol.xml)
-				String[] policyNameScopeAndVersion = getNameScopeAndVersionFromPdpPolicy(policyID);			
+				String[] policyNameScopeAndVersion = getNameScopeAndVersionFromPdpPolicy(policyID);
+				if(policyNameScopeAndVersion == null) {
+				    throw new IllegalArgumentException("Invalid input - policyID must contain name, scope and version");
+				}
 				Query policyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.policyName=:policyName AND p.scope=:scope AND p.deleted=:deleted");
 				policyQuery.setParameter("policyName", policyNameScopeAndVersion[0]);
 				policyQuery.setParameter(scope, policyNameScopeAndVersion[1]);			

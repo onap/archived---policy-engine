@@ -240,6 +240,7 @@ public class FindAction {
 		Pattern pattern = Pattern.compile("\\$([a-zA-Z0-9.:]*)");
 		Matcher match = pattern.matcher(configURL);
 		StringBuffer sb = new StringBuffer();
+		JsonReader jsonReader = null;
 		while (match.find()) {
 			LOGGER.info("Found Macro : " + match.group(1));
 			String replaceValue = matchValues.get(match.group(1));
@@ -292,7 +293,7 @@ public class FindAction {
 				connection = configURL.openConnection();
 				// InputStream in = connection.getInputStrem();
 				// LOGGER.info("The Body Content is : " + IOUtils.toString(in));
-				JsonReader jsonReader = Json.createReader(connection.getInputStream());
+				jsonReader = Json.createReader(connection.getInputStream());
 				StringEntity input = new StringEntity(jsonReader.readObject().toString());
 				input.setContentType("application/json");
 				postRequest.setEntity(input);
@@ -312,6 +313,13 @@ public class FindAction {
 				LOGGER.error(e.getMessage() +e);
 				response = e.getMessage();
 			} finally {
+			        if(jsonReader != null) {
+			            try {
+			                jsonReader.close();
+			            } catch (Exception e) {
+			                LOGGER.error("Exception Occured while closing the JsonReader"+e);
+			            }
+			        }
 				httpClient.getConnectionManager().shutdown();
 			}
 		} else if(matchValues.get("method").equalsIgnoreCase("PUT")) {
@@ -330,7 +338,7 @@ public class FindAction {
 				connection = configURL.openConnection();
 				//InputStream in = connection.getInputStream();
 				//LOGGER.info("The Body Content is : " + IOUtils.toString(in));
-				JsonReader jsonReader = Json.createReader(connection.getInputStream());
+				jsonReader = Json.createReader(connection.getInputStream());
 				StringEntity input = new StringEntity(jsonReader.readObject().toString());
 				input.setContentType("application/json");
 				putRequest.setEntity(input);
@@ -349,6 +357,13 @@ public class FindAction {
 				LOGGER.error(e.getMessage() +e);
 				response = e.getMessage();
 			}finally {
+			        if(jsonReader != null) {
+			            try {
+			                jsonReader.close();
+			            } catch (Exception e) {
+			                LOGGER.error("Exception Occured while closing the JsonReader"+e);
+			            }
+			        }
 				httpClient.getConnectionManager().shutdown();
 			}
 		}
