@@ -23,9 +23,11 @@ package org.onap.policy.xacml.test.std.pip.engines;
 import static org.junit.Assert.assertEquals;
 import java.util.Collection;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.onap.policy.xacml.std.pip.engines.OperationHistoryEngine;
 import com.att.research.xacml.api.Attribute;
 import com.att.research.xacml.api.pip.PIPException;
+import com.att.research.xacml.api.pip.PIPFinder;
 import com.att.research.xacml.api.pip.PIPRequest;
 import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.StdMutableAttribute;
@@ -45,4 +47,16 @@ public class OperationHistoryEngineTest {
 		PIPResponse response = engine.getAttributes(pipRequest, null);
 		assertEquals(response.getStatus().isOk(), true);
 	}
+	
+    @Test(expected=NullPointerException.class)
+    public void testGetAttributes() throws PIPException {
+        String testIssuer = "testIssuertw:1234:5678";
+        OperationHistoryEngine engine = new OperationHistoryEngine();
+        engine.setIssuer(testIssuer);
+        StdPIPRequest pipRequest = new StdPIPRequest(null, null, null, testIssuer);
+        PIPFinder finder = Mockito.mock(PIPFinder.class);
+        PIPResponse response = engine.getAttributes(pipRequest, finder);
+        assertEquals(response.getStatus().isOk(), true);
+    }
+
 }
