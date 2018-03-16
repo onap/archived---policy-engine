@@ -82,7 +82,7 @@
             "artifactId": "actor.appclcm",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
-            "groupId": "org.onap.policy.drools-application.controlloop.common.actorss",
+            "groupId": "org.onap.policy.drools-application.controlloop.common.actors",
             "artifactId": "actor.so",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
