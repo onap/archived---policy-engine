@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -47,18 +43,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -77,7 +65,7 @@ import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.GroupPolicyScopeList;
-import org.onap.policy.rest.jpa.MicroServiceModels;
+import org.onap.policy.rest.jpa.OptimizationModels;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.util.MSAttributeObject;
 import org.onap.policy.rest.util.MSModelUtils;
@@ -97,8 +85,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -111,9 +97,9 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 @Controller
 @RequestMapping("/")
-public class CreateDcaeMicroServiceController extends RestrictedBaseController {
-	private static final Logger LOGGER = FlexLogger.getLogger(CreateDcaeMicroServiceController.class);
-
+public class CreateOptimizationController extends RestrictedBaseController {
+	private static final Logger LOGGER = FlexLogger.getLogger(CreateOptimizationController.class);
+	private Map<String, String>  matchableValues;
 	private static CommonClassDao commonClassDao;
 	
 	public static CommonClassDao getCommonClassDao() {
@@ -121,15 +107,16 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	}
 
 	public static void setCommonClassDao(CommonClassDao commonClassDao) {
-		CreateDcaeMicroServiceController.commonClassDao = commonClassDao;
+		CreateOptimizationController.commonClassDao = commonClassDao;
 	}
 
-	private MicroServiceModels newModel;
+	private OptimizationModels newModel;
 	private String newFile;
 	private String directory;
 	private List<String> modelList = new ArrayList<>();
 	private List<String> dirDependencyList = new ArrayList<>();
 	private HashMap<String,MSAttributeObject > classMap = new HashMap<>();
+	
 	//Tosca Model related Datastructure. 
 	String referenceAttributes;
 	String attributeString;
@@ -151,24 +138,24 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	public static final String DEFAULT=".default";
 	public static final String REQUIRED=".required";
 	public static final String MANYFALSE=":MANY-false";
+	public static final String MATCHABLE=".matchable";
 	
 	
 	@Autowired
-	private CreateDcaeMicroServiceController(CommonClassDao commonClassDao){
-		CreateDcaeMicroServiceController.commonClassDao = commonClassDao;
+	private CreateOptimizationController(CommonClassDao commonClassDao){
+		CreateOptimizationController.commonClassDao = commonClassDao;
 	}
 
-	public CreateDcaeMicroServiceController(){
+	public CreateOptimizationController(){
 		// Empty Constructor
 	}
 
 	protected PolicyRestAdapter policyAdapter = null;
-	private int priorityCount; 
 	private Map<String, String> attributesListRefMap =  new HashMap<>();
 	private Map<String, LinkedList<String>> arrayTextList =  new HashMap<>();
+	CreateDcaeMicroServiceController msController = new CreateDcaeMicroServiceController();
 
 	public PolicyRestAdapter setDataToPolicyRestAdapter(PolicyRestAdapter policyData, JsonNode root) {
-		
 		String jsonContent = null;
 		try{
 			LOGGER.info("policyJSON :" + (root.get("policyJSON")).toString());
@@ -181,7 +168,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			tempJson = StringUtils.replaceEach(tempJson, new String[]{"\"\""}, new String[]{"\""+dummyValue+"\""});
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode tempJsonNode = mapper.readTree(tempJson);
-			jsonContent = decodeContent(tempJsonNode).toString();
+			jsonContent = msController.decodeContent(tempJsonNode).toString();
 			constructJson(policyData, jsonContent, dummyValue);
 		}catch(Exception e){
 			LOGGER.error("Error while decoding microservice content", e);
@@ -190,201 +177,30 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return policyData;
 	}
 	
-	private GroupPolicyScopeList getPolicyObject(String policyScope) {
-		return (GroupPolicyScopeList) commonClassDao.getEntityItem(GroupPolicyScopeList.class, "name", policyScope);
-	}
-	
 	private PolicyRestAdapter constructJson(PolicyRestAdapter policyAdapter, String jsonContent, String dummyValue) {
 		ObjectWriter om = new ObjectMapper().writer();
 		String json="";
-		DCAEMicroServiceObject microServiceObject = new DCAEMicroServiceObject();
-		MicroServiceModels returnModel = new MicroServiceModels();
-		microServiceObject.setTemplateVersion(XACMLProperties.getProperty(XACMLRestProperties.TemplateVersion_MS));
-		if(policyAdapter.getServiceType() !=null){
-			microServiceObject.setService(policyAdapter.getServiceType());
-			microServiceObject.setVersion(policyAdapter.getVersion());
-			returnModel = getAttributeObject(microServiceObject.getService(), microServiceObject.getVersion());
-		}
-		if (returnModel.getAnnotation()==null || returnModel.getAnnotation().isEmpty()){
-			if(policyAdapter.getUuid()!=null){
-				microServiceObject.setUuid(policyAdapter.getUuid());
-			}
-			if(policyAdapter.getLocation()!=null){
-				microServiceObject.setLocation(policyAdapter.getLocation());
-			} 
-			if(policyAdapter.getConfigName()!=null){
-				microServiceObject.setConfigName(policyAdapter.getConfigName());
-			}
-			GroupPolicyScopeList policyScopeValue = getPolicyObject(policyAdapter.getPolicyScope());
-			if(policyScopeValue!=null){
-				microServiceObject.setPolicyScope(policyScopeValue.getGroupList());	
-			}
-		}
+		OptimizationObject optimizationObject = setOptimizationObjectValues(policyAdapter);
 		
-		if(policyAdapter.getPolicyName()!=null){
-			microServiceObject.setPolicyName(policyAdapter.getPolicyName());
-		}
-		if(policyAdapter.getPolicyDescription()!=null){
-			microServiceObject.setDescription(policyAdapter.getPolicyDescription());
-		}
-		if (policyAdapter.getPriority()!=null){
-			microServiceObject.setPriority(policyAdapter.getPriority());
-		}else {
-			microServiceObject.setPriority("9999");
-		}
-		
-		if (policyAdapter.getRiskLevel()!=null){
-			microServiceObject.setRiskLevel(policyAdapter.getRiskLevel());
-		}
-		if (policyAdapter.getRiskType()!=null){
-			microServiceObject.setRiskType(policyAdapter.getRiskType());
-		}
-		if (policyAdapter.getGuard()!=null){
-			microServiceObject.setGuard(policyAdapter.getGuard());
-		}
-		microServiceObject.setContent(jsonContent);
-		
+		optimizationObject.setContent(jsonContent);
+
 		try {
-			json = om.writeValueAsString(microServiceObject);
+			json = om.writeValueAsString(optimizationObject);
 		} catch (JsonProcessingException e) {
 			LOGGER.error("Error writing out the object", e);
 		}
 		LOGGER.info("input json: " + json);
 		LOGGER.info("input jsonContent: " + jsonContent);
-		String cleanJson = cleanUPJson(json);
+		String cleanJson = msController.cleanUPJson(json);
+		
         //--- reset empty value back after called cleanUPJson method and before calling removeNullAttributes
 		String tempJson = StringUtils.replaceEach(cleanJson, new String[]{"\""+dummyValue+"\""},  new String[]{"\"\""});
 		LOGGER.info("tempJson: " + tempJson);
-		cleanJson = removeNullAttributes(tempJson);
+		cleanJson = msController.removeNullAttributes(tempJson);
 		policyAdapter.setJsonBody(cleanJson);
 		return policyAdapter;
 	}
-	
-	public String removeNullAttributes(String cleanJson) {
-		ObjectMapper mapper = new ObjectMapper();
-
-		try {
-			JsonNode rootNode = mapper.readTree(cleanJson);
-			JsonNode returnNode = mapper.readTree(cleanJson);
-			Iterator<Map.Entry<String, JsonNode>> fieldsIterator = rootNode.fields();
-			boolean remove = false;
-			JsonObject removed = null;
-			boolean contentChanged = false;
-			while (fieldsIterator.hasNext()) {
-				Map.Entry<String, JsonNode> field = fieldsIterator.next();
-				final String key = field.getKey();
-				final JsonNode value = field.getValue();
-				if("content".equalsIgnoreCase(key)){
-					String contentStr = value.toString();
-					try(JsonReader reader = Json.createReader(new StringReader(contentStr))){
-	                        JsonObject jsonContent = reader.readObject();                 
-							removed = removeNull(jsonContent);
-							if(!jsonContent.toString().equals(removed.toString())){
-							contentChanged = true;  
-						}
-                    }
-
-					if  (value==null || value.isNull()){
-						((ObjectNode) returnNode).remove(key);
-						remove = true;
-					}
-				}
-				if (remove){
-					cleanJson = returnNode.toString();
-				}
-				if  (value==null || value.isNull()){
-					((ObjectNode) returnNode).remove(key);
-					remove = true;
-				}
-			}
-			if (remove){
-				cleanJson = returnNode.toString();
-			}
-			
-			if(contentChanged){
-				//set modified content to cleanJson
-				JSONObject  jObject  =  new JSONObject(cleanJson);	
-				jObject.put("content",removed.toString());
-				cleanJson = cleanUPJson(jObject.toString());
-			}
-			
-		} catch (IOException e) {
-			LOGGER.error("Error writing out the JsonNode",e);
-		}
-		return cleanJson;
-	}
-	
-	public static JsonArray removeNull(JsonArray array) {
-	    JsonArrayBuilder builder = Json.createArrayBuilder();
-	    int i = 0;
-	    for (Iterator<JsonValue> it = array.iterator(); it.hasNext(); ++i) {
-	        JsonValue value = it.next();
-	        switch (value.getValueType()) {
-	        case ARRAY:
-	            JsonArray a = removeNull(array.getJsonArray(i));
-	            if (!a.isEmpty())
-	                builder.add(a);
-	            break;
-	        case OBJECT:
-	            JsonObject object = removeNull(array.getJsonObject(i));
-	            if (!object.isEmpty())
-	                builder.add(object);
-	            break;
-	        case STRING:
-	            String s = array.getString(i);
-	            if (s != null && !s.isEmpty())
-	                builder.add(s);
-	            break;
-	        case NUMBER:
-	            builder.add(array.getJsonNumber(i));
-	            break;
-	        case TRUE:
-	        case FALSE:
-	            builder.add(array.getBoolean(i));
-	            break;
-	        case NULL:
-	            break;
-	        }
-	    }
-	    return builder.build();
-	}
-
-	public static JsonObject removeNull(JsonObject obj) {
-	    JsonObjectBuilder builder = Json.createObjectBuilder();
-	    for (Iterator<Entry<String, JsonValue>> it = obj.entrySet().iterator(); it.hasNext();) {
-	        Entry<String, JsonValue> e = it.next();
-	        String key = e.getKey();
-	        JsonValue value = e.getValue();
-	        switch (value.getValueType()) {
-	        case ARRAY:
-	            JsonArray array = removeNull(obj.getJsonArray(key));
-	            if (!array.isEmpty())
-	                builder.add(key, array);
-	            break;
-	        case OBJECT:
-	            JsonObject object = removeNull(obj.getJsonObject(key));
-	            if (!object.isEmpty())
-	                builder.add(key, object);
-	            break;
-	        case STRING:
-	            String s = obj.getString(key);
-	            if (s != null && !s.isEmpty())
-	                builder.add(key, s);
-	            break;
-	        case NUMBER:
-	            builder.add(key, obj.getJsonNumber(key));
-	            break;
-	        case TRUE:
-	        case FALSE:
-	            builder.add(key, obj.getBoolean(key));
-	            break;
-	        case NULL:
-	            break;
-	        }
-	    }
-	    return builder.build();
-	}
-	
+		
 	// Second index of dot should be returned. 
 	public int stringBetweenDots(String str){
 		String stringToSearch=str;
@@ -411,7 +227,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 	}
 	
- 
 	@SuppressWarnings("unchecked")
 	public Map<String, String> load(String fileName) throws IOException { 
 		File newConfiguration = new File(fileName);
@@ -520,6 +335,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	
 	HashMap<String,String> parseDataNodes(Map<String,String> map){
 		HashMap<String,String> dataMapForJson=new HashMap <>(); 
+		matchableValues = new HashMap<>();
 		for(String uniqueDataKey: uniqueDataKeys){
 			if(uniqueDataKey.contains("%")){
 				String[] uniqueDataKeySplit= uniqueDataKey.split("%");
@@ -527,9 +343,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				String typeValue=map.get(findType);
 				LOGGER.info(typeValue);
 				if(typeValue != null && typeValue.equalsIgnoreCase(STRING)||
-						typeValue.equalsIgnoreCase(INTEGER)
-				  )
-				{
+						typeValue.equalsIgnoreCase(INTEGER)){
 					String findDefault=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+DEFAULT;
 					String defaultValue= map.get(findDefault);
 					LOGGER.info("defaultValue is:"+ defaultValue);
@@ -537,6 +351,20 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 					String findRequired=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+REQUIRED;
 					String requiredValue= map.get(findRequired);
 					LOGGER.info("requiredValue is:"+ requiredValue);
+					
+					String matchable =DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+MATCHABLE;
+
+					String matchableValue= map.get(matchable);
+
+					if(matchableValue != null && "true".equalsIgnoreCase(matchableValue)){
+						if(uniqueDataKey.contains("%")){
+							String[] keys= uniqueDataKey.split("%");
+							String key=keys[keys.length -1];
+							matchableValues.put(key, "matching-true");
+						}else{
+							matchableValues.put(uniqueDataKey, "matching-true");
+						}
+					}
 					
 					StringBuilder attributeIndividualStringBuilder= new StringBuilder();
 					attributeIndividualStringBuilder.append(typeValue+":defaultValue-");
@@ -558,7 +386,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 						}//Its string
 						else{
 							StringBuilder stringListItems= new StringBuilder();
-							stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+":MANY-false");
+							stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+MANYFALSE);
 							dataMapForJson.put(uniqueDataKey, stringListItems.toString());
 							dataListBuffer.append(uniqueDataKeySplit[1].toUpperCase()+"=[");
 							for(int i=0;i<10;i++){
@@ -569,24 +397,25 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 									break;
 								}
 								else{
+									if(constraintsValue.contains("=")){
+										constraintsValue = constraintsValue.replace("=", "equal-sign");
+									}
 									dataConstraints.add(constraintsValue);
 									dataListBuffer.append(constraintsValue+",");
 								}
 							}
 							dataListBuffer.append("]#");
-							
 							LOGGER.info(dataListBuffer);
 						}
 					}
 				}
 				else{
-					String findUserDefined="data_types.policy.data."+uniqueDataKeySplit[0]+"."+"properties"+"."+uniqueDataKeySplit[1]+".type";
+					String findUserDefined=DATATYPE+uniqueDataKeySplit[0]+"."+"properties"+"."+uniqueDataKeySplit[1]+TYPE;
 					String userDefinedValue=map.get(findUserDefined);
 					String trimValue=userDefinedValue.substring(userDefinedValue.lastIndexOf('.')+1);
 					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-					referenceIndividualStringBuilder.append(trimValue+":MANY-false");
+					referenceIndividualStringBuilder.append(trimValue+MANYFALSE);
 					dataMapForJson.put(uniqueDataKey, referenceIndividualStringBuilder.toString());
-					
 				}
 			}
 		}
@@ -635,8 +464,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		LOGGER.info(mainObject);
 		LOGGER.info("###############################################################################");	
 	}
-	
-	
+		
 	HashMap<String,HashMap<String,String>> parsePolicyNodes(Map<String,String> map){
 		HashMap<String,HashMap<String,String>> mapKey= new HashMap <>();
 		for(String uniqueKey: uniqueKeys){
@@ -693,11 +521,18 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				attributeIndividualStringBuilder.append(keySetString+"=");
 				attributeIndividualStringBuilder.append(keyValues.get("type")+":defaultValue-");
 				attributeIndividualStringBuilder.append(keyValues.get("default")+":required-");
-				attributeIndividualStringBuilder.append(keyValues.get("required")+":MANY-false");
+				attributeIndividualStringBuilder.append(keyValues.get("required")+MANYFALSE);
 				attributeStringBuilder.append(attributeIndividualStringBuilder+",");	
-
+				if(keyValues.get("matchable") != null && "true".equalsIgnoreCase(keyValues.get("matchable"))){
+				    matchableValues.put(keySetString, "matching-true");
+                }
 			}
-			else if(keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(LIST)){
+			else if(keyValues.get("type") != null && LIST.equalsIgnoreCase(keyValues.get("type"))){
+				
+				if(keyValues.get("matchable") != null && "true".equalsIgnoreCase(keyValues.get("matchable"))){
+				    matchableValues.put(keySetString, "matching-true");
+                }
+				
 				//List Datatype
 				Set<String> keys= keyValues.keySet();
 				Iterator<String> itr=keys.iterator();
@@ -731,6 +566,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				}
 			}else{
 				//User defined Datatype. 
+				if(keyValues.get("matchable") != null && "true".equalsIgnoreCase(keyValues.get("matchable"))){
+				    matchableValues.put(keySetString, "matching-true");
+                }
 				String value=keyValues.get("type");
 				if(value != null && !value.isEmpty()){
 					String trimValue=value.substring(value.lastIndexOf('.')+1);
@@ -773,9 +611,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		this.referenceAttributes=referenceStringBuilder.toString();
 		this.attributeString=attributeStringBuilder.toString();
 	}
-	
-	
-    
+	   
+
 	public void parseTosca (String fileName){
 		Map<String,String> map= new HashMap<>();
     
@@ -795,177 +632,10 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
     	} catch (IOException e) {
     		LOGGER.error(e);
     	}
-	
 	} 
-
-	public String cleanUPJson(String json) {
-		String cleanJson = StringUtils.replaceEach(json, new String[]{"\\\\", "\\\\\\", "\\\\\\\\"}, new String[]{"\\", "\\", "\\"});
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\\\\\\"}, new String[]{"\\"});
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\\\\", "[[", "]]"}, new String[]{"\\", "[", "]"});
-		
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\\\\\"", "\\\"", "\"[{", "}]\""}, new String[]{"\"", "\"", "[{", "}]"});
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\"[{", "}]\""}, new String[]{"[{", "}]"});
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\"[", "]\""}, new String[]{"[", "]"});
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\"{", "}\""}, new String[]{"{", "}"});
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\"\"\"", "\"\""}, new String[]{"\"", "\""});
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\\\""}, new String[]{""});
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\"\""}, new String[]{"\""});
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\"\\\\\\"}, new String[]{"\""});
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\\\\\\\""}, new String[]{"\""});
-		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\"[", "]\""}, new String[]{"[", "]"});
-		return cleanJson;
-	}
 	
-	public JSONObject decodeContent(JsonNode jsonNode){
-		Iterator<JsonNode> jsonElements = jsonNode.elements();
-		Iterator<String> jsonKeys = jsonNode.fieldNames();
-		Map<String,String> element = new TreeMap<>();
-		while(jsonElements.hasNext() && jsonKeys.hasNext()){
-			element.put(jsonKeys.next(), jsonElements.next().toString());
-		}
-		JSONObject jsonResult = new JSONObject();
-		JSONArray jsonArray = null;
-		String oldValue = null;
-		String nodeKey = null;
-		String arryKey = null;
-		Boolean isArray = false;
-		JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
-		ObjectNode node = nodeFactory.objectNode();
-		String prevKey = null;
-		String presKey;
-		for(Entry<String, String> entry: element.entrySet()){
-			String key = entry.getKey();
-			String value = entry.getValue();
-			if(key.contains(".")){
-				presKey = key.substring(0,key.indexOf('.'));
-			}else if(key.contains("@")){
-				presKey = key.substring(0,key.indexOf('@'));
-			}else{
-				presKey = key;
-			}
-			// first check if we are different from old.
-			LOGGER.info(key+"\n");
-			if(jsonArray!=null && jsonArray.length()>0 && key.contains("@") && !key.contains(".") && oldValue!=null){
-				if(!oldValue.equals(key.substring(0,key.indexOf('@')))){
-					jsonResult.put(oldValue, jsonArray);
-					jsonArray = new JSONArray();
-				}
-			}else if(jsonArray!=null && jsonArray.length()>0 && !presKey.equals(prevKey) && oldValue!=null){ 
-				jsonResult.put(oldValue, jsonArray);
-				isArray = false;
-				jsonArray = new JSONArray();
-			}
-	
-			prevKey = presKey;
-			// 
-			if(key.contains(".")){
-				if(nodeKey==null){
-					nodeKey = key.substring(0,key.indexOf('.'));
-				}
-				if(nodeKey.equals(key.substring(0,key.indexOf('.')))){
-					node.put(key.substring(key.indexOf('.')+1), value);
-				}else{
-					if(node.size()!=0){
-						if(nodeKey.contains("@")){
-							if(arryKey==null){
-								arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
-							}
-							if(nodeKey.endsWith("@0")){
-								isArray = true;
-								jsonArray = new JSONArray();
-							}
-							if(jsonArray != null && arryKey.equals(nodeKey.substring(0,nodeKey.indexOf('@')))){
-								jsonArray.put(decodeContent(node));
-							} 
-							if((key.contains("@") && !arryKey.equals(key.substring(0,nodeKey.indexOf('@')))) || !key.contains("@")){
-								jsonResult.put(arryKey, jsonArray);
-								jsonArray = new JSONArray();
-							}
-							arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
-						}else{
-							isArray = false;
-							jsonResult.put(nodeKey, decodeContent(node));
-						}
-						node = nodeFactory.objectNode();
-					}
-					nodeKey = key.substring(0,key.indexOf('.'));
-					if(nodeKey.contains("@")){
-						arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
-					}
-					node.put(key.substring(key.indexOf('.')+1), value);
-				}
-			}else {
-				if(node.size()!=0){
-					if(nodeKey.contains("@")){
-						if(arryKey==null){
-							arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
-						}
-						if(nodeKey.endsWith("@0")){
-							isArray = true;
-							jsonArray = new JSONArray();
-						}
-						if(jsonArray != null && arryKey.equals(nodeKey.substring(0,nodeKey.indexOf('@')))){
-							jsonArray.put(decodeContent(node));
-						}
-						jsonResult.put(arryKey, jsonArray);
-						jsonArray = new JSONArray();
-						arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
-					}else{
-						isArray = false;
-						jsonResult.put(nodeKey, decodeContent(node));
-					}
-					node = nodeFactory.objectNode();
-				}
-				if(key.contains("@")){
-					isArray = true;
-					if(key.endsWith("@0")|| jsonArray==null){
-						jsonArray = new JSONArray();
-					}
-				}else if(!key.contains("@")){
-					isArray = false;
-				}
-				if(isArray){
-					if(oldValue==null){
-						oldValue = key.substring(0,key.indexOf('@'));
-					}
-					if(oldValue!=prevKey){
-						oldValue = key.substring(0,key.indexOf('@'));
-					}
-					if(oldValue.equals(key.substring(0,key.indexOf('@')))){
-						jsonArray.put(value);
-					}else{
-						jsonResult.put(oldValue, jsonArray);
-						jsonArray = new JSONArray();
-					}
-					oldValue = key.substring(0,key.indexOf('@'));
-				}else{
-					jsonResult.put(key, value);
-				}
-			}
-		}
-		if(node.size()>0){
-			if(nodeKey.contains("@")){
-				if(jsonArray==null){
-					jsonArray = new JSONArray();
-				}
-				if(arryKey==null){
-					arryKey = nodeKey.substring(0,nodeKey.indexOf('@'));
-				}
-				jsonArray.put(decodeContent(node));
-				jsonResult.put(arryKey, jsonArray);
-				isArray = false;
-			}else{
-				jsonResult.put(nodeKey, decodeContent(node));
-			}
-		}
-		if(isArray && jsonArray.length() > 0){
-			jsonResult.put(oldValue, jsonArray);
-		}
-		return jsonResult;
-	}
-	
-	@RequestMapping(value={"/policyController/getDCAEMSTemplateData.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public ModelAndView getDCAEMSTemplateData(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	@RequestMapping(value={"/policyController/getOptimizationTemplateData.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	public ModelAndView getOptimizationTemplateData(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		JsonNode root = mapper.readTree(request.getReader());
@@ -976,13 +646,13 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		if (value.contains("-v")){
 			version = value.split("-v")[1];
 		}
-		MicroServiceModels returnModel = getAttributeObject(servicename, version);
 		
+		OptimizationModels returnModel = getAttributeObject(servicename, version);
 		
 		//Get all keys with "MANY-true" defined in their value from subAttribute 
 		Set<String> allkeys = null;
-		if(returnModel.getSub_attributes() != null && !returnModel.getSub_attributes().isEmpty()){
-			JSONObject json = new JSONObject(returnModel.getSub_attributes());	
+		if(returnModel.getSubattributes() != null && !returnModel.getSubattributes().isEmpty()){
+			JSONObject json = new JSONObject(returnModel.getSubattributes());	
 			getAllKeys(json); 
 			allkeys = allManyTrueKeys;
 			allManyTrueKeys = new  HashSet <>();
@@ -994,7 +664,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			nameOfTrueKey = allkeys.toString();
 		}
 		
-		String jsonModel = createMicroSeriveJson(returnModel, allkeys);
+		String jsonModel = createOptimizationJson(returnModel, allkeys);
 		
 		JSONObject jsonObject = new JSONObject(jsonModel);
 		
@@ -1003,7 +673,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			Iterator<String> iter = allkeys.iterator();
 			while(iter.hasNext()){
 				//Convert to array values for MANY-true keys
-				finalJsonObject = convertToArrayElement(jsonObject, iter.next());
+				finalJsonObject = CreateDcaeMicroServiceController.convertToArrayElement(jsonObject, iter.next());
 			}
 		}
 
@@ -1013,19 +683,17 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 		
 		//get all properties with "MANY-true" defined in Ref_attributes
-		Set<String> manyTrueProperties = getManyTrueProperties(returnModel.getRef_attributes());
-		if(manyTrueProperties != null){
-			JSONObject jsonObj = new JSONObject(jsonModel);
-			for (String s : manyTrueProperties) {
-				LOGGER.info(s);
-				//convert to array element for MANY-true properties
-				finalJsonObject = convertToArrayElement(jsonObj, s.trim());
-			}
-			
-			if(finalJsonObject != null){
-			    LOGGER.info(finalJsonObject.toString());
-			    jsonModel = finalJsonObject.toString();
-			}
+		Set<String> manyTrueProperties = CreateDcaeMicroServiceController.getManyTrueProperties(returnModel.getRefattributes());
+		JSONObject jsonObj = new JSONObject(jsonModel);
+		for (String s : manyTrueProperties) {
+			LOGGER.info(s);
+			//convert to array element for MANY-true properties
+			finalJsonObject = CreateDcaeMicroServiceController.convertToArrayElement(jsonObj, s.trim());
+		}
+		
+		if(finalJsonObject != null){
+		    LOGGER.info(finalJsonObject.toString());
+		    jsonModel = finalJsonObject.toString();
 		}
 		
 		response.setCharacterEncoding("UTF-8");
@@ -1036,48 +704,61 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		String responseString = mapper.writeValueAsString(returnModel);
 		JSONObject j;
 		if("".equals(nameOfTrueKey)){
-			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + "}");	
+			j = new JSONObject("{optimizationModelData: " + responseString + ",jsonValue: " + jsonModel + "}");	
 		}else{
-			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + ",allManyTrueKeys: " + nameOfTrueKey+ "}");	
+			j = new JSONObject("{optimizationModelData: " + responseString + ",jsonValue: " + jsonModel + ",allManyTrueKeys: " + nameOfTrueKey+ "}");	
 		}
 		list.add(j);
 		out.write(list.toString());
 		return null;
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private String createMicroSeriveJson(MicroServiceModels returnModel, Set<String> allkeys) {
+	@SuppressWarnings("rawtypes")
+	private String createOptimizationJson(OptimizationModels returnModel, Set<String> allkeys) {
 		Map<String, String> attributeMap = new HashMap<>();
 		Map<String, String> refAttributeMap = new HashMap<>();
+		
 		String attribute = returnModel.getAttributes();
 		if(attribute != null){
 			attribute = attribute.trim();
 		}
-		String refAttribute = returnModel.getRef_attributes();
+		String refAttribute = returnModel.getRefattributes();
 		if(refAttribute != null){
 			refAttribute = refAttribute.trim();
 		}
+		
 		String enumAttribute = returnModel.getEnumValues();
 		if(enumAttribute != null){
 			enumAttribute = enumAttribute.trim();
 		}
+		
 		if (!StringUtils.isEmpty(attribute)){
-			attributeMap = convert(attribute, ",");
+			attributeMap = CreateDcaeMicroServiceController.convert(attribute, ",");
 		}
+		
 		if (!StringUtils.isEmpty(refAttribute)){
-			refAttributeMap = convert(refAttribute, ",");
+			refAttributeMap = CreateDcaeMicroServiceController.convert(refAttribute, ",");
 		}
 
 		Gson gson = new Gson();
 		
-		String subAttributes = returnModel.getSub_attributes();
+		String subAttributes = returnModel.getSubattributes();
 		if(subAttributes != null){
 			subAttributes = subAttributes.trim();
 		}else{
 			subAttributes = "";
 		}
+		
 		Map gsonObject = (Map) gson.fromJson(subAttributes, Object.class);
 		
+		JSONObject object = getModelAttributesObject(gsonObject,attributeMap,refAttributeMap, enumAttribute);
+
+		return object.toString();
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private JSONObject getModelAttributesObject(Map gsonObject, Map<String,String> attributeMap, 
+			Map<String,String> refAttributeMap, String enumAttribute) {
 		JSONObject object = new JSONObject();
 		JSONArray array;
 		
@@ -1112,9 +793,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			}
 		}
 		
-		
-
-		return object.toString();
+		return object;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1146,54 +825,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		  }  
 		
 		return object;
-	}
-	
-	
-	public static JSONObject convertToArrayElement(JSONObject json, String keyValue) {
-	    return convertToArrayElement(json, new HashSet<>(), keyValue);
-	}
-	
-	private static JSONObject convertToArrayElement(JSONObject json, Set<String> keys, String keyValue) {
-	    for (String key : json.keySet()) {
-	        Object obj = json.get(key);
-	        if(key.equals(keyValue.trim())){
-	        	if(!(obj instanceof JSONArray)){
-	        		JSONArray newJsonArray = new JSONArray();
-	        		newJsonArray.put(obj);
-	        		json.put(key, newJsonArray);
-	        	}
-	        	LOGGER.info("key : " + key);
-	        	LOGGER.info("obj : " + obj);
-	        	LOGGER.info("json.get(key) : " + json.get(key));
-	        	LOGGER.info("keyValue : " + keyValue);
-	    	    keys.addAll(json.keySet());
-	    	    
-	    	    return json;
-	        }
-
-	        if (obj instanceof JSONObject) convertToArrayElement(json.getJSONObject(key), keyValue);	    
-	    }
-
-	    return json;
-	}
-	
-	// call this method to get all MANY-true properties 
-	public static Set<String> getManyTrueProperties(String referAttributes){
-		LOGGER.info("referAttributes : " + referAttributes);
-		Set<String> manyTrueProperties = new HashSet<>();
-		
-		if(referAttributes != null){
-			String[] referAarray = referAttributes.split(",");
-			String []element;
-			for(int i=0; i<referAarray.length; i++){
-				element = referAarray[i].split("=");	  
-				if(element.length > 1 && element[1].contains("MANY-true")){
-					manyTrueProperties.add(element[0]);
-				}
-			}		
-		}
-		
-		return manyTrueProperties;
 	}
 	
 	//call this method to start the recursive
@@ -1229,9 +860,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
 	    return keys;
 	}
-
 	
-	@RequestMapping(value={"/policyController/getModelServiceVersioneData.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@RequestMapping(value={"/policyController/getModelServiceVersionData.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
 	public ModelAndView getModelServiceVersionData(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -1247,18 +877,18 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         List<Object>  list = new ArrayList<>();
 		PrintWriter out = response.getWriter();
 		String responseString = mapper.writeValueAsString(returnList);
-		JSONObject j = new JSONObject("{dcaeModelVersionData: " + responseString +"}");
+		JSONObject j = new JSONObject("{optimizationModelVersionData: " + responseString +"}");
 		list.add(j);
 		out.write(list.toString());
 		return null;
 	}
 
 	private Set<String> getVersionList(String name) {	
-		MicroServiceModels workingModel;
+		OptimizationModels workingModel;
 		Set<String> list = new HashSet<>();
-		List<Object> microServiceModelsData = commonClassDao.getDataById(MicroServiceModels.class, "modelName", name);
-		for (int i = 0; i < microServiceModelsData.size(); i++) {
-			workingModel = (MicroServiceModels) microServiceModelsData.get(i);
+		List<Object> optimizationModelsData = commonClassDao.getDataById(OptimizationModels.class, "modelName", name);
+		for (int i = 0; i < optimizationModelsData.size(); i++) {
+			workingModel = (OptimizationModels) optimizationModelsData.get(i);
 			if (workingModel.getVersion()!=null){
 				list.add(workingModel.getVersion());
 			}else{
@@ -1268,11 +898,11 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return list;
 	}
 	
-	private MicroServiceModels getAttributeObject(String name, String version) {	
-		MicroServiceModels workingModel = new MicroServiceModels();
-		List<Object> microServiceModelsData = commonClassDao.getDataById(MicroServiceModels.class, "modelName", name);
-		for (int i = 0; i < microServiceModelsData.size(); i++) {
-			workingModel = (MicroServiceModels) microServiceModelsData.get(i);
+	private OptimizationModels getAttributeObject(String name, String version) {	
+		OptimizationModels workingModel = new OptimizationModels();
+		List<Object> optimizationModelsData = commonClassDao.getDataById(OptimizationModels.class, "modelName", name);
+		for (int i = 0; i < optimizationModelsData.size(); i++) {
+			workingModel = (OptimizationModels) optimizationModelsData.get(i);
 			if(version != null){
 				if (workingModel.getVersion()!=null){
 					if (workingModel.getVersion().equals(version)){
@@ -1289,13 +919,13 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return workingModel;
 	}
 
-	@RequestMapping(value={"/get_DCAEPriorityValues"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getDCAEPriorityValuesData(HttpServletRequest request, HttpServletResponse response){
+	@RequestMapping(value={"/get_PriorityValues"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	public void getPriorityValuesData(HttpServletRequest request, HttpServletResponse response){
 		try{
 			Map<String, Object> model = new HashMap<>();
 			ObjectMapper mapper = new ObjectMapper();
 			List<String> priorityList = new ArrayList<>();
-			priorityCount = 10;
+			int priorityCount = 10;
 			for (int i = 1; i < priorityCount; i++) {
 				priorityList.add(String.valueOf(i));
 			}
@@ -1309,23 +939,23 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 	}
 
-	public void prePopulateDCAEMSPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
+	public void prePopulatePolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		if (policyAdapter.getPolicyData() instanceof PolicyType) {
 			Object policyData = policyAdapter.getPolicyData();
 			PolicyType policy = (PolicyType) policyData;
 			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("MS_") +3);
+			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf("OOF_") +3);
 			policyAdapter.setPolicyName(policyNameValue);
 			String description = "";
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
 			}catch(Exception e){
-			    LOGGER.error("Error while collecting the desciption tag in ActionPolicy " + policyNameValue ,e);
+			    LOGGER.error("Error while collecting the description tag in " + policyNameValue ,e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);
 			// Get the target data under policy.
-			TargetType target = policy.getTarget();
+			TargetType target = policy.getTarget();			
 			if (target != null) {
 				// Under target we have AnyOFType
 				List<AnyOfType> anyOfList = target.getAnyOf();
@@ -1357,15 +987,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 										if ("ONAPName".equals(attributeId)) {
 											policyAdapter.setOnapName(value);
 										}
-										if ("ConfigName".equals(attributeId)){
-											policyAdapter.setConfigName(value);
-										}
-										if ("uuid".equals(attributeId)){
-											policyAdapter.setUuid(value);
-										}
-										if ("location".equals(attributeId)){
-											policyAdapter.setLocation(value);
-										}
 										if ("RiskType".equals(attributeId)){
 											policyAdapter.setRiskType(value);
 										}
@@ -1390,38 +1011,28 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			}
 		}
 	}
-	
-	public static Map<String, String> convert(String str, String split) {
-		Map<String, String> map = new HashMap<>();
-		for(final String entry : str.split(split)) {
-		    String[] parts = entry.split("=");
-		    map.put(parts[0], parts[1]);
-		}
-		return map;
-	}
-
 
 	@SuppressWarnings("unchecked")
 	private void readFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		String policyScopeName = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			DCAEMicroServiceObject msBody = mapper.readValue(entity.getConfigurationData().getConfigBody(), DCAEMicroServiceObject.class);
-			policyScopeName = getPolicyScope(msBody.getPolicyScope());
+			OptimizationObject optimizationBody = mapper.readValue(entity.getConfigurationData().getConfigBody(), OptimizationObject.class);
+			policyScopeName = msController.getPolicyScope(optimizationBody.getPolicyScope());
 			policyAdapter.setPolicyScope(policyScopeName);
 
-			policyAdapter.setPriority(msBody.getPriority());
+			policyAdapter.setPriority(optimizationBody.getPriority());
 
-			if (msBody.getVersion()!= null){
-				policyAdapter.setServiceType(msBody.getService());
-				policyAdapter.setVersion(msBody.getVersion());
+			if (optimizationBody.getVersion()!= null){
+				policyAdapter.setServiceType(optimizationBody.getService());
+				policyAdapter.setVersion(optimizationBody.getVersion());
 			}else{
-				policyAdapter.setServiceType(msBody.getService());
+				policyAdapter.setServiceType(optimizationBody.getService());
 			}
-			if(msBody.getContent() != null){
+			if(optimizationBody.getContent() != null){
 				LinkedHashMap<String, Object>  data = new LinkedHashMap<>();
-				LinkedHashMap<String, ?> map = (LinkedHashMap<String, ?>) msBody.getContent();
-				readRecursivlyJSONContent(map, data);
+				LinkedHashMap<String, ?> map = (LinkedHashMap<String, ?>) optimizationBody.getContent();
+				msController.readRecursivlyJSONContent(map, data);
 				policyAdapter.setRuleData(data);
 			}
 
@@ -1430,93 +1041,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 
 	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void readRecursivlyJSONContent(LinkedHashMap<String, ?> map, LinkedHashMap<String, Object> data){
-		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
-			Object key =  iterator.next();
-			Object value = map.get(key);
-			if(value instanceof LinkedHashMap<?, ?>){
-				LinkedHashMap<String, Object> secondObjec = new LinkedHashMap<>(); 
-				readRecursivlyJSONContent((LinkedHashMap<String, ?>) value, secondObjec);
-				for( Entry<String, Object> entry : secondObjec.entrySet()){
-					data.put(key+"." + entry.getKey(), entry.getValue());
-				}
-			}else if(value instanceof ArrayList){
-				ArrayList<?> jsonArrayVal = (ArrayList<?>)value;
-				for(int i = 0; i < jsonArrayVal.size(); i++){
-					Object arrayvalue = jsonArrayVal.get(i);
-					if(arrayvalue instanceof LinkedHashMap<?, ?>){
-						LinkedHashMap<String, Object> newData = new LinkedHashMap<>();   
-						readRecursivlyJSONContent((LinkedHashMap<String, ?>) arrayvalue, newData);
-						for(Entry<String, Object> entry: newData.entrySet()){
-							data.put(key+"@"+i+"." +entry.getKey(), entry.getValue());
-						}
-					}else if(arrayvalue instanceof ArrayList){
-						ArrayList<?> jsonArrayVal1 = (ArrayList<?>)value;
-						for(int j = 0; j < jsonArrayVal1.size(); j++){
-							Object arrayvalue1 = jsonArrayVal1.get(i);
-							data.put(key+"@"+j, arrayvalue1.toString());
-						}	
-					}else{
-						data.put(key+"@"+i, arrayvalue.toString());
-					}	
-				}
-			}else{
-				data.put(key.toString(), value.toString());
-			}	
-		}
-	}
-
-	public String getPolicyScope(String value) {
-		List<Object> groupList= commonClassDao.getDataById(GroupPolicyScopeList.class, "groupList", value);
-		if(groupList != null && !groupList.isEmpty()){
-			GroupPolicyScopeList pScope = (GroupPolicyScopeList) groupList.get(0);
-			return pScope.getGroupName();		
-		}
-		return null;
-	}
-
-	//Convert the map values and set into JSON body
-	public Map<String, String> convertMap(Map<String, String> attributesMap, Map<String, String> attributesRefMap) {
-		Map<String, String> attribute = new HashMap<>();
-		StringBuilder temp;
-		String key;
-		String value;
-		for (Entry<String, String> entry : attributesMap.entrySet()) {
-			key = entry.getKey();
-			value = entry.getValue();
-			attribute.put(key, value);
-		}
-		for (Entry<String, String> entryRef : attributesRefMap.entrySet()) {
-			key = entryRef.getKey();
-			value = entryRef.getValue();
-			attribute.put(key, value);
-		}
-		for (Entry<String, String> entryList : attributesListRefMap.entrySet()) {
-			key = entryList.getKey();
-			value = entryList.getValue();
-			attribute.put(key, value);
-		}
-		for (Entry<String, LinkedList<String>> arrayList : arrayTextList.entrySet()){
-			key = arrayList.getKey();
-			temp = null;
-			for (Object textList : arrayList.getValue()){
-				if (temp == null){
-					temp = new StringBuilder();
-					temp.append("[" + textList);
-				}else{
-					temp.append("," + textList);
-				}
-			}
-			attribute.put(key, temp+ "]");			
-		}
-
-		return  attribute;
-	}
 	
-	@RequestMapping(value={"/ms_dictionary/set_MSModelData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public void SetMSModelData(HttpServletRequest request, HttpServletResponse response) throws IOException, FileUploadException{
+	@RequestMapping(value={"/oof_dictionary/set_ModelData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	public void SetModelData(HttpServletRequest request, HttpServletResponse response) throws IOException, FileUploadException{
 		modelList = new ArrayList<>();
 		dirDependencyList = new ArrayList<>();
 		classMap = new HashMap<>();
@@ -1531,7 +1058,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		String errorMsg = "";
 		for (FileItem item : items) {
 			if(item.getName().endsWith(".zip") || item.getName().endsWith(".xmi")||item.getName().endsWith(".yml")){
-				this.newModel = new MicroServiceModels();
+				this.newModel = new OptimizationModels();
 				try{
 					File file = new File(item.getName());
 					OutputStream outputStream = new FileOutputStream(file);
@@ -1592,30 +1119,31 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			classMap = new HashMap<>();
 			for (File file : fileList) {
 				if(!file.isDirectory() && file.getName().endsWith(".xmi")){
-	            	retreiveDependency(file.toString(), true);
+	            	retrieveDependency(file.toString());
 	            }	
 			}
 			
 			modelList = createList();
 			
-			cleanUp(this.newFile);
-			cleanUp(directory);
+			msController.cleanUp(this.newFile);
+			msController.cleanUp(directory);
 		}else{
 			modelType="yml";
 			modelList.add(this.newModel.getModelName());
 			String className=this.newModel.getModelName();
-			MSAttributeObject msAttributes= new MSAttributeObject();
-			msAttributes.setClassName(className);
+			MSAttributeObject optimizationAttributes= new MSAttributeObject();
+			optimizationAttributes.setClassName(className);
 			
 			HashMap<String, String> returnAttributeList =new HashMap<>();
 			returnAttributeList.put(className, this.attributeString);
-			msAttributes.setAttribute(returnAttributeList);
+			optimizationAttributes.setAttribute(returnAttributeList);
 			
-			msAttributes.setSubClass(this.retmap);
+			optimizationAttributes.setSubClass(this.retmap);
+			optimizationAttributes.setMatchingSet(matchableValues);
 			
 			HashMap<String, String> returnReferenceList =new HashMap<>();
 			returnReferenceList.put(className, this.referenceAttributes);
-			msAttributes.setRefAttribute(returnReferenceList);
+			optimizationAttributes.setRefAttribute(returnReferenceList);
 			
 			if(this.listConstraints!=""){
 				HashMap<String, String> enumList =new HashMap<>();
@@ -1626,11 +1154,11 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
                         enumList.put(strArr[0], strArr[1]);
                     }
                 }
-				msAttributes.setEnumType(enumList);
+                optimizationAttributes.setEnumType(enumList);
 			}
 			
 			classMap=new HashMap<>();
-			classMap.put(className, msAttributes);
+			classMap.put(className, optimizationAttributes);
 			
 		}
 		
@@ -1659,7 +1187,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		try (ZipFile zip = new ZipFile(file)) {
 		    String newPath =  "model" + File.separator + zipFile.substring(0, zipFile.length() - 4);
 		    this.directory = "model" + File.separator + zipFile.substring(0, zipFile.length() - 4);
-		    checkZipDirectory(this.directory);
+		    msController.checkZipDirectory(this.directory);
 		    new File(newPath).mkdir();
 		    Enumeration zipFileEntries = zip.entries();
 	
@@ -1701,7 +1229,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 	}
 	
-	private void retreiveDependency(String workingFile, Boolean modelClass) {
+	private void retrieveDependency(String workingFile) {
 		
 		MSModelUtils utils = new MSModelUtils(PolicyController.getMsOnapName(), PolicyController.getMsPolicyName());
 	    Map<String, MSAttributeObject> tempMap;
@@ -1730,24 +1258,6 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return resultList;
 	}
 	
-	public void cleanUp(String path) {
-        if (path!=null){
-            try {
-                FileUtils.forceDelete(new File(path));
-            } catch (IOException e) {
-            	LOGGER.error("Failed to delete folder " + path, e);
-            }  
-        }
-    }
- 
-	public void checkZipDirectory(String zipDirectory) {
-        Path path = Paths.get(zipDirectory);
- 
-        if (Files.exists(path)) {
-            cleanUp(zipDirectory);
-        }
-    }
-	
     private List<String> createList() {
         List<String> list = new  ArrayList<>();
         for (Entry<String, MSAttributeObject> cMap : classMap.entrySet()){
@@ -1775,9 +1285,39 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return arrayTextList;
 	}
 
+	private OptimizationObject setOptimizationObjectValues(PolicyRestAdapter policyAdapter) {
+		OptimizationObject optimizationObject = new OptimizationObject();
+		optimizationObject.setTemplateVersion(XACMLProperties.getProperty(XACMLRestProperties.TemplateVersion_OOF));
+
+		if(policyAdapter.getServiceType() !=null){
+			optimizationObject.setService(policyAdapter.getServiceType());
+			optimizationObject.setVersion(policyAdapter.getVersion());
+		}
+		if(policyAdapter.getPolicyName()!=null){
+			optimizationObject.setPolicyName(policyAdapter.getPolicyName());
+		}
+		if(policyAdapter.getPolicyDescription()!=null){
+			optimizationObject.setDescription(policyAdapter.getPolicyDescription());
+		}
+		if (policyAdapter.getPriority()!=null){
+			optimizationObject.setPriority(policyAdapter.getPriority());
+		}else {
+			optimizationObject.setPriority("9999");
+		}
+		if (policyAdapter.getRiskLevel()!=null){
+			optimizationObject.setRiskLevel(policyAdapter.getRiskLevel());
+		}
+		if (policyAdapter.getRiskType()!=null){
+			optimizationObject.setRiskType(policyAdapter.getRiskType());
+		}
+		if (policyAdapter.getGuard()!=null){
+			optimizationObject.setGuard(policyAdapter.getGuard());
+		}		
+		return optimizationObject;
+	}
 }
 
-class DCAEMicroServiceObject {
+class OptimizationObject {
 
 	private String service;
 	private String location;

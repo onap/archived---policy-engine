@@ -38,6 +38,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.components.CreateBRMSRuleTemplate;
 import org.onap.policy.pap.xacml.rest.components.CreateNewMicroServiceModel;
+import org.onap.policy.pap.xacml.rest.components.CreateNewOptimizationModel;
 
 public class ImportService {
 	private static final Logger logger = FlexLogger.getLogger(ImportService.class);
@@ -143,6 +144,21 @@ public class ImportService {
 				if (successMap.containsKey(successMessage)) {
 					successMap.clear();
 					successMap = newMS.saveImportService();
+				}
+			}
+		} else if(("OPTIMIZATION").equals(importServiceCreation)){
+			CreateNewOptimizationModel newOOF = null;
+			String randomID = UUID.randomUUID().toString();
+			if ( fileName != null) {
+				File extracDir = new File(extractDir);
+				if (!extracDir.exists()){
+					extracDir.mkdirs();
+				}
+				newOOF =  new CreateNewOptimizationModel(fileName, serviceName, "API", version, randomID);
+				successMap = newOOF.addValuesToNewModel();
+				if (successMap.containsKey(successMessage)) {
+					successMap.clear();
+					successMap = newOOF.saveImportService();
 				}
 			}
 		}

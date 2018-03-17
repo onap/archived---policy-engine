@@ -176,6 +176,12 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
                 // Get Result. 
                 response = microServicesPolicyService.getResult(updateFlag);
                 break;
+            case Optimization:
+            	OptimizationPolicyService optimizationPolicyService = new OptimizationPolicyService(policyName, policyScope, policyParameters, date);
+
+            	// Get Result
+            	response = optimizationPolicyService.getResult(updateFlag);
+            	break;
             default:
                 message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " Invalid Config Type Present";
                 LOGGER.error(message);

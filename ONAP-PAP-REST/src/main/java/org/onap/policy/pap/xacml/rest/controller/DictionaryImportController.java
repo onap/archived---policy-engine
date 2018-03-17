@@ -245,6 +245,50 @@ public class DictionaryImportController {
 						if("Sub Attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
 							attribute.setSub_attributes(rows[j]);
 						}
+						if("annotations".equalsIgnoreCase(dictSheet.get(0)[j])) {
+							attribute.setAnnotation(rows[j]);
+						}
+					}
+
+					commonClassDao.save(attribute);
+				}
+			}		
+
+			if(dictionaryName.startsWith("OptimizationPolicyDictionary")){
+				for(int i = 1; i< dictSheet.size(); i++){
+					MicroServiceModels attribute = new MicroServiceModels();
+					UserInfo userinfo = new UserInfo();
+					userinfo.setUserLoginId(userId);
+					attribute.setUserCreatedBy(userinfo);
+					String[] rows = dictSheet.get(i);
+					for (int j=0 ; j<rows.length; j++ ){
+						if("modelName".equalsIgnoreCase(dictSheet.get(0)[j]) || "Optimization Service Model".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setModelName(rows[j]);
+						}
+						if("version".equalsIgnoreCase(dictSheet.get(0)[j]) || "Model Version".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setVersion(rows[j]);
+						}
+						if(DESCRIPTION.equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setDescription(rows[j]);
+						}
+						if("dependency".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setDependency(rows[j]);
+						}
+						if("attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setAttributes(rows[j]);
+						}
+						if("enumValues".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setEnumValues(rows[j]);
+						}
+						if("Ref Attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setRef_attributes(rows[j]);
+						}
+						if("Sub Attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setSub_attributes(rows[j]);
+						}
+						if("annotations".equalsIgnoreCase(dictSheet.get(0)[j])) {
+							attribute.setAnnotation(rows[j]);
+						}
 					}
 
 					commonClassDao.save(attribute);
@@ -696,6 +740,7 @@ public class DictionaryImportController {
 				case ActionPolicyDictionary:
 				case OnapName:
 				case MSPolicyDictionary:
+				case OptimizationPolicyDictionary:
 				case VNFType:
 				case VSCLAction:
 				case ClosedLoopService:

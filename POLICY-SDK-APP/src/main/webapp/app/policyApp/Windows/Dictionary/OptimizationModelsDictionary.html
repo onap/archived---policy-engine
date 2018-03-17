@@ -1,0 +1,61 @@
+<!--/*-
+ * ============LICENSE_START=======================================================
+ * ONAP Policy Engine
+ * ================================================================================
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */-->
+<script type="text/ng-template" id="add_optimizationModel_popup.html">
+<div class="modal" tabindex="-1">
+		 <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+        <div class="modal-header">
+            <h2 class="font-showcase-font-name" style="color : #157bb2">{{label}}</h2>
+        </div>
+		<form name="formdata" ng-submit="saveOptimizationModel(editOptimizationModelName);" novalidate>
+        <div class="modal-body">
+			<div class="form-group row">
+            <div class="form-group col-sm-12">
+                <label>Description:</label><br>
+                <input type="text" ng-model="editOptimizationModelName.description" class="form-control"/>
+            </div>
+			</div>
+			<div class="form-group row">
+ 			<div  class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.file.$invalid && !formdata.file.$pristine }">
+				<input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" name= "file"  required/>
+				<p ng-show="formdata.file.$invalid && !formdata.file.$pristine" class="help-block">Uploading Model is required.</p>
+            </div>
+			</div>
+			<div class="form-group row">
+  			<div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.modelName.$invalid && !formdata.modelName.$pristine }">
+            	<label>Optimization Model Name:<sup><b>*</b></sup></label><br>
+            	<select class="form-control" name= "editOptimizationModelName.modelName"  required   ng-model="editOptimizationModelName.modelName"  ng-options="option for option in classListDatas track by option" ></select>
+				<p ng-show="formdata.classList.$invalid && !formdata.classList.$pristine" class="help-block">Optimization Model is required.</p>
+     		 </div>
+			 <div class="form-group col-sm-6">
+            	<label>Version:<sup><b>*</b></sup></label><br>
+            	<input type="text" required ng-model="editOptimizationModelName.version" class="form-control"/>
+         	</div>
+			</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" type="submit" ng-disabled="formdata.$invalid">Save</button>
+            <button class="btn btn-default"  type="button" ng-click="close()">Close</button>
+		</div>
+		</form>
+			</div>
+</div>
+    </div>
+</script>

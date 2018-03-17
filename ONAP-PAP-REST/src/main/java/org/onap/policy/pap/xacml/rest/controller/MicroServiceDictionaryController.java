@@ -44,7 +44,6 @@ import org.onap.policy.rest.jpa.MicroServiceAttribute;
 import org.onap.policy.rest.jpa.MicroServiceConfigName;
 import org.onap.policy.rest.jpa.MicroServiceLocation;
 import org.onap.policy.rest.jpa.MicroServiceModels;
-import org.onap.policy.rest.jpa.PrefixList;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.util.MSAttributeObject;
 import org.onap.policy.rest.util.MSModelUtils;
@@ -590,7 +589,7 @@ public class MicroServiceDictionaryController {
 				}else{
 					commonClassDao.update(microServiceModels); 
 				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(PrefixList.class));
+				responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceModels.class));
 			}else{
 				responseString = duplicateResponseString;
 			}
@@ -659,7 +658,6 @@ public class MicroServiceDictionaryController {
 				for(String depend : workingList){
 					if (!returnList.contains(depend) && !depend.isEmpty()){
 						returnList.add(depend.trim());
-						//getFullDepedency(workingList)
 					}
 				}
 			}

@@ -246,6 +246,8 @@ public abstract class Policy {
 				fileName = policyType + "_" + "Fault" + "_" +java.lang.String.format(policyFileName) +  "." + version + ".xml";
 			}else if(policyConfigType.equals("Micro Service")){
 				fileName = policyType + "_" + "MS" + "_" + java.lang.String.format(policyFileName) + "." + version + ".xml";
+			}else if(policyConfigType.equals("Optimization")) {
+				fileName = policyType + "_" + "OOF" + "_" + java.lang.String.format(policyFileName) + "." + version + ".xml";
 			}
 		} 
 		if (fileName != null) {

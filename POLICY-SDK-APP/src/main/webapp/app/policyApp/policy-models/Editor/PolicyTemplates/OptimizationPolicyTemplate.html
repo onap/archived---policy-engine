@@ -1,0 +1,106 @@
+<div ng-controller="optimizationController">
+	<form>
+		<div class="well">
+			<div class="form-group row">
+				<div class="form-group col-sm-6">
+					<label>Policy Name:<sup><b>*</b></sup></label> <input type="text"
+						class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-readonly="temp.policy.editPolicy"
+						ng-model="temp.policy.policyName" required pattern="\S+"
+						title="Enter Policy Name without any spaces and special characters and will accept _." />
+				</div>
+				<div class="form-group col-sm-6">
+					<label>Description:</label> <input type="text" class="form-control"
+						ng-disabled="temp.policy.readOnly"
+						ng-model="temp.policy.policyDescription" 
+						title="Description field will accept any type of data."/>
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="form-group col-sm-3">
+					<label>Onap Name:<sup><b>*</b></sup></label> <select
+						class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-model="temp.policy.onapName"
+						ng-options="option for option in onapNameDictionaryDatas track by option"
+						required pattern="\S+" title="Select the dropdown value driven from OnapName (common)Dictionary."></select>
+				</div>
+				<div class="form-group col-sm-3">
+					<label>Time to Live Date:</label> <input type="text" id="ttlDate"
+						class="form-control" name="ttlDate" ng-disabled="temp.policy.readOnly"
+						ng-model="temp.policy.ttlDate" title="Select the date from calender onclick on the field."/>
+				</div>
+				<div class="form-group col-sm-3">
+					<label>Guard:<sup><b>*</b></sup></label> <select
+						class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-model="temp.policy.guard"
+						required pattern="\S+" title="Select the dropdown Guard value.">
+						<option>True</option>
+						<option>False</option></select>
+				</div>
+				<div class="form-group col-sm-3">
+					<label>Risk Type:<sup><b>*</b></sup></label> <select
+						class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-model="temp.policy.riskType"
+						ng-options="option for option in riskTypeDictionaryDatas track by option"
+						required pattern="\S+" title="Select the dropdown value driven from RiskType (Safe Policy)Dictionary."></select>
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="form-group col-sm-3">
+					<label>Risk Level:<sup><b>*</b></sup></label> <select
+						class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-model="temp.policy.riskLevel"
+						required pattern="\S+" title="Select the dropdown Risk level value.">
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option></select>
+				</div>
+				<div class="form-group col-sm-3">
+					<label>Priority:<sup><b>*</b></sup></label> <select
+						class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-model="temp.policy.priority"
+						ng-options="option for option in priorityDatas track by option" title="Select the dropdown Priority value.">
+						<option value="">{{temp.policy.priority}}</option>
+					</select>
+				</div>
+				<div class="form-group col-sm-3">
+					<label>Optimization Model:<sup><b>*</b></sup></label> <select
+						class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-model="temp.policy.serviceType"
+						ng-options="option for option in optimizationModelsDictionaryDatas track by option"
+						ng-init="pullVersion(temp.policy.serviceType);"
+						ng-click="pullVersion(temp.policy.serviceType);"
+						title="Select the dropdown value driven from Optimization Models (Optimization Policy)Dictionary."></select>
+				</div>
+				<div class="form-group col-sm-3">
+					<label>Optimization Model Version:<sup><b>*</b></sup></label> <select
+						class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-model="temp.policy.version"
+						ng-options="option for option in optimizationModelsDictionaryVersionDatas track by option"
+						ng-init="addDataToFields(temp.policy.serviceType, temp.policy.version);"
+						ng-click="addDataToFields(temp.policy.serviceType, temp.policy.version);"
+						title="Select the dropdown value driven based on Optimization Models (Optimization Policy)Dictionary selection."></select>
+				</div>
+			</div>
+		</div>
+		<div class="well">
+			<div class="form-group col-sm-12" id="DynamicTemplate">
+				<label>Optimization Model Attributes:<sup><b>*</b></sup></label><br>
+			</div>
+		</div>
+		<br />
+		<div id="validate" style="width: 70%"></div>
+		<br>
+		<div class="modal-footer">
+			<button class="btn btn-primary" herf="javascript:void(0)"
+				ng-disabled="temp.policy.readOnly"
+				ng-click="validatePolicy(temp.policy);" title="Validate the data entered in the Policy fields.">Validate</button>
+			<button class="btn btn-success" herf="javascript:void(0)"
+				ng-disabled="savebutton" ng-disabled="temp.policy.readOnly"
+				ng-click="savePolicy(temp);" title="Save the Policy with validated data.">Save</button>
+			<button type="button" class="btn btn-default" ng-click="refresh();" title="Close the template.">Close</button>
+		</div>
+	</form>
+</div>

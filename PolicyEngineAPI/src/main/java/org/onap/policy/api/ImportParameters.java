@@ -39,7 +39,8 @@ public class ImportParameters {
 	
 	public enum IMPORT_TYPE {
 	    MICROSERVICE,
-	    BRMSPARAM
+	    BRMSPARAM,
+	    OPTIMIZATION
 	}
 
 	/**
