@@ -45,6 +45,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.controller.CreateClosedLoopFaultController;
 import org.onap.policy.controller.CreateDcaeMicroServiceController;
 import org.onap.policy.controller.CreateFirewallController;
+import org.onap.policy.controller.CreateOptimizationController;
 import org.onap.policy.controller.PolicyController;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -79,7 +80,7 @@ public class PolicyRestController extends RestrictedBaseController{
 
 	private static final Logger policyLogger = FlexLogger.getLogger(PolicyRestController.class);
 	
-	private static final String modal = "model";
+	private static final String model = "model";
 	private static final String importDictionary = "import_dictionary";
 	
 	private static CommonClassDao commonClassDao;
@@ -117,21 +118,21 @@ public class PolicyRestController extends RestrictedBaseController{
 			
 			PolicyRestAdapter policyData = mapper.readValue(root.get(PolicyController.getPolicydata()).get("policy").toString(), PolicyRestAdapter.class);
 
-			if("file".equals(root.get(PolicyController.getPolicydata()).get(modal).get("type").toString().replace("\"", ""))){
+			if("file".equals(root.get(PolicyController.getPolicydata()).get(model).get("type").toString().replace("\"", ""))){
 				policyData.setEditPolicy(true);
 			}
-			if(root.get(PolicyController.getPolicydata()).get(modal).get("path").size() != 0){
+			if(root.get(PolicyController.getPolicydata()).get(model).get("path").size() != 0){
 				String dirName = "";
-				for(int i = 0; i < root.get(PolicyController.getPolicydata()).get(modal).get("path").size(); i++){
-					dirName = dirName.replace("\"", "") + root.get(PolicyController.getPolicydata()).get(modal).get("path").get(i).toString().replace("\"", "") + File.separator;
+				for(int i = 0; i < root.get(PolicyController.getPolicydata()).get(model).get("path").size(); i++){
+					dirName = dirName.replace("\"", "") + root.get(PolicyController.getPolicydata()).get(model).get("path").get(i).toString().replace("\"", "") + File.separator;
 				}
 				if(policyData.isEditPolicy()){
 					policyData.setDomainDir(dirName.substring(0, dirName.lastIndexOf(File.separator)));
 				}else{
-					policyData.setDomainDir(dirName + root.get(PolicyController.getPolicydata()).get(modal).get("name").toString().replace("\"", ""));
+					policyData.setDomainDir(dirName + root.get(PolicyController.getPolicydata()).get(model).get("name").toString().replace("\"", ""));
 				}
 			}else{
-				String domain = root.get(PolicyController.getPolicydata()).get(modal).get("name").toString();
+				String domain = root.get(PolicyController.getPolicydata()).get(model).get("name").toString();
 				if(domain.contains("/")){
 					domain = domain.substring(0, domain.lastIndexOf('/')).replace("/", File.separator);
 				}
@@ -146,6 +147,8 @@ public class PolicyRestController extends RestrictedBaseController{
 					policyData = new CreateFirewallController().setDataToPolicyRestAdapter(policyData);
 				}else if("Micro Service".equalsIgnoreCase(policyData.getConfigPolicyType())){
 					policyData = new CreateDcaeMicroServiceController().setDataToPolicyRestAdapter(policyData, root);
+				}else if("Optimization".equalsIgnoreCase(policyData.getConfigPolicyType())){
+					policyData = new CreateOptimizationController().setDataToPolicyRestAdapter(policyData, root);
 				}
 			}
 

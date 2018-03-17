@@ -20,13 +20,21 @@
 
 package org.onap.policy.rest.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
@@ -54,6 +62,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.json.JSONObject;
 import org.onap.policy.rest.XACMLRestProperties;
+import org.yaml.snakeyaml.Yaml;
 
 import com.att.research.xacml.util.XACMLProperties;
 import com.google.gson.Gson;
@@ -71,6 +80,30 @@ public class MSModelUtils {
 	private String onap = "";
 	private String policy = "";
 	private String eProxyURI = "eProxyURI:";
+	private List<String> orderedElements = new ArrayList<String>();
+	private String dataOrderInfo = null;
+	private Set<String> uniqueDataKeys= new HashSet<>();
+	private Set<String> uniqueKeys= new HashSet<>();
+	private String listConstraints = null;
+	private String referenceAttributes;
+	private LinkedHashMap<String, Object> retmap = new LinkedHashMap<>();
+	private Map<String, String>  matchableValues;
+	public static final String PROPERTIES=".properties.";
+	public static final String DATATYPE  = "data_types.policy.data.";
+	public static final String TYPE=".type";
+	public static final String REQUIRED=".required";
+	public static final String MATCHABLE=".matchable";
+	public static final String STRING="string";
+	public static final String INTEGER="integer";
+	public static final String LIST="list";
+	public static final String DEFAULT=".default";
+	public static final String MANYFALSE=":MANY-false";
+	private StringBuilder dataListBuffer=new StringBuilder();
+	private List<String> dataConstraints= new ArrayList <>();
+	private String attributeString = null;
+	
+	public MSModelUtils(){
+	}
 	
 	public MSModelUtils(String onap, String policy){
 		this.onap = onap;
@@ -702,4 +735,537 @@ public class MSModelUtils {
 
 		return returnList;
 	}
+	
+    /*
+     * For TOSCA Model
+     */
+	public void parseTosca (String fileName){
+		LinkedHashMap<String,String> map= new LinkedHashMap<>();
+    
+		System.out.println(MSModelUtils.class.getName() + " parseTosca got called.");
+    	try {
+			map=load(fileName);
+			
+			parseDataAndPolicyNodes(map);
+			
+			LinkedHashMap<String,String> dataMapForJson=parseDataNodes(map);
+			
+			constructJsonForDataFields(dataMapForJson);	
+			
+			LinkedHashMap<String,LinkedHashMap<String,String>> mapKey= parsePolicyNodes(map);
+			
+			createAttributes(mapKey);
+		
+    	} catch (IOException e) {
+    		logger.error(e);
+    	}
+	
+	} 
+	
+	@SuppressWarnings("unchecked")
+	public LinkedHashMap<String, String> load(String fileName) throws IOException { 
+		File newConfiguration = new File(fileName);
+		StringBuffer orderInfo = new StringBuffer("[");
+		Yaml yaml = new Yaml();
+		LinkedHashMap<Object, Object> yamlMap = null;
+		try(InputStream is = new FileInputStream(newConfiguration)){
+			yamlMap = (LinkedHashMap<Object, Object>) yaml.load(is); 
+		} catch (FileNotFoundException e) {
+			logger.error(e);
+		}
+
+		StringBuilder sb = new StringBuilder(); 
+		LinkedHashMap<String, String> settings = new LinkedHashMap<>(); 
+		if (yamlMap == null) { 
+			return settings; 
+		} 
+		
+		findNode(yamlMap);
+		
+		orderedElements.stream().forEach((string) -> {
+			orderInfo.append(string);
+			orderInfo.append(",");
+			logger.info("Content: " + string);
+		});
+		
+		orderInfo.append("]");
+		
+		dataOrderInfo = orderInfo.toString();
+		dataOrderInfo = dataOrderInfo.replace(",]", "]");
+		
+		logger.info("dataOrderInfo :" + dataOrderInfo);
+		
+		List<String> path = new ArrayList <>(); 
+		serializeMap(settings, sb, path, yamlMap); 
+		return settings; 
+	} 
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void serializeMap(LinkedHashMap<String, String> settings, StringBuilder sb, List<String> path, Map<Object, Object> yamlMap) { 
+		for (Map.Entry<Object, Object> entry : yamlMap.entrySet()) { 
+				        
+			if (entry.getValue() instanceof Map) { 
+				path.add((String) entry.getKey()); 
+				serializeMap(settings, sb, path, (Map<Object, Object>) entry.getValue()); 
+				path.remove(path.size() - 1); 
+			} else if (entry.getValue() instanceof List) { 
+				path.add((String) entry.getKey()); 
+				serializeList(settings, sb, path, (List) entry.getValue()); 
+				path.remove(path.size() - 1); 
+			} else { 
+				serializeValue(settings, sb, path, (String) entry.getKey(), entry.getValue()); 
+			} 
+		} 
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void serializeList(LinkedHashMap<String, String> settings, StringBuilder sb, List<String> path, List<String> yamlList) { 
+		int counter = 0; 
+		for (Object listEle : yamlList) { 
+			if (listEle instanceof Map) { 
+				path.add(Integer.toString(counter)); 
+				serializeMap(settings, sb, path, (Map<Object, Object>) listEle); 
+				path.remove(path.size() - 1); 
+			} else if (listEle instanceof List) { 
+				path.add(Integer.toString(counter)); 
+				serializeList(settings, sb, path, (List<String>) listEle); 
+				path.remove(path.size() - 1); 
+			} else { 
+				serializeValue(settings, sb, path, Integer.toString(counter), listEle); 
+			} 
+			counter++; 
+		} 
+	} 
+
+	private void serializeValue(LinkedHashMap<String, String> settings, StringBuilder sb, List<String> path, String name, Object value) { 		
+	    if (value == null) { 
+			return; 
+		} 
+		sb.setLength(0); 
+		for (String pathEle : path) { 
+			sb.append(pathEle).append('.'); 
+		} 
+		sb.append(name); 
+		settings.put(sb.toString(), value.toString()); 
+	} 
+	
+	
+	void parseDataAndPolicyNodes(LinkedHashMap<String,String> map){
+		for(String key:map.keySet()){
+			if(key.contains("policy.nodes.Root"))
+			{
+				continue;
+			}
+			else if(key.contains("policy.nodes")){
+				String wordToFind = "policy.nodes.";
+				int indexForPolicyNode=key.indexOf(wordToFind);
+				String subNodeString= key.substring(indexForPolicyNode+13, key.length());
+
+				stringBetweenDots(subNodeString);
+			}
+			else if(key.contains("policy.data")){
+				String wordToFind="policy.data.";
+				int indexForPolicyNode=key.indexOf(wordToFind);
+				String subNodeString= key.substring(indexForPolicyNode+12, key.length());
+
+				stringBetweenDotsForDataFields(subNodeString);
+			}
+		}
+	}
+	
+	// Second index of dot should be returned. 
+	public int stringBetweenDots(String str){
+		String stringToSearch=str;
+		String[]ss=stringToSearch.split("\\.");
+		if(ss!=null){
+			int len= ss.length;
+			if(len>2){
+				uniqueKeys.add(ss[2]);
+			}
+		}
+		
+		return uniqueKeys.size();
+	}
+	
+	
+	public void stringBetweenDotsForDataFields(String str){
+		String stringToSearch=str;
+		String[]ss=stringToSearch.split("\\.");
+		if(ss!=null){
+			int len= ss.length;
+
+			if(len>2){
+				uniqueDataKeys.add(ss[0]+"%"+ss[2]);
+			}
+		}
+	}
+	
+	void constructJsonForDataFields(LinkedHashMap<String,String> dataMapForJson){
+		LinkedHashMap<String,LinkedHashMap<String,String>> dataMapKey= new LinkedHashMap <>();
+		LinkedHashMap<String, String> hmSub;
+		for(Map.Entry<String, String> entry: dataMapForJson.entrySet()){
+			String uniqueDataKey= entry.getKey();
+			String[] uniqueDataKeySplit=uniqueDataKey.split("%");
+			String value= dataMapForJson.get(uniqueDataKey);
+			if(dataMapKey.containsKey(uniqueDataKeySplit[0])){
+				hmSub = dataMapKey.get(uniqueDataKeySplit[0]);
+				hmSub.put(uniqueDataKeySplit[1], value);
+			}
+			else{
+				hmSub=new LinkedHashMap <>();
+				hmSub.put(uniqueDataKeySplit[1], value);
+			}
+				
+			dataMapKey.put(uniqueDataKeySplit[0], hmSub);
+		}
+				
+		JSONObject mainObject= new JSONObject();
+		JSONObject json;
+		for(Map.Entry<String,LinkedHashMap<String,String>> entry: dataMapKey.entrySet()){
+			String s=entry.getKey();
+			json= new JSONObject();
+			HashMap<String,String> jsonHm=dataMapKey.get(s);
+			for(Map.Entry<String,String> entryMap:jsonHm.entrySet()){
+				String key=entryMap.getKey();
+				json.put(key, jsonHm.get(key));
+			}
+			mainObject.put(s,json);
+		}	
+		Iterator<String> keysItr = mainObject.keys();
+		while(keysItr.hasNext()) {
+			String key = keysItr.next();
+			String value = mainObject.get(key).toString();
+			retmap.put(key, value);
+		}
+		
+		logger.info("#############################################################################");
+		logger.info(mainObject);
+		logger.info("###############################################################################");	
+	}
+	
+	LinkedHashMap<String,String> parseDataNodes(LinkedHashMap<String,String> map){
+		LinkedHashMap<String,String> dataMapForJson=new LinkedHashMap <>(); 
+		matchableValues = new HashMap <>(); 
+		for(String uniqueDataKey: uniqueDataKeys){
+			if(uniqueDataKey.contains("%")){
+				String[] uniqueDataKeySplit= uniqueDataKey.split("%");
+				String findType=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+TYPE;
+				String typeValue=map.get(findType);
+				logger.info(typeValue);
+				
+				String findRequired=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+REQUIRED;
+				String requiredValue= map.get(findRequired);
+				
+				String matchable =DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+MATCHABLE;
+
+				String matchableValue= map.get(matchable);
+
+				if(matchableValue != null && matchableValue.equalsIgnoreCase("true")){
+					if(uniqueDataKey.contains("%")){
+						String[] keys= uniqueDataKey.split("%");
+						String key=keys[keys.length -1];
+						matchableValues.put(key, "matching-true");
+					}else{
+						matchableValues.put(uniqueDataKey, "matching-true");
+					}
+				}
+					
+				if(requiredValue == null || requiredValue.isEmpty()){
+					requiredValue = "false";
+				}
+				if(typeValue != null && typeValue.equalsIgnoreCase(STRING)||
+						typeValue.equalsIgnoreCase(INTEGER)
+				  )
+				{
+					String findDefault=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+DEFAULT;
+					String defaultValue= map.get(findDefault);
+					logger.info("defaultValue is:"+ defaultValue);
+					logger.info("requiredValue is:"+ requiredValue);
+					
+					StringBuilder attributeIndividualStringBuilder= new StringBuilder();
+					attributeIndividualStringBuilder.append(typeValue+":defaultValue-");
+					attributeIndividualStringBuilder.append(defaultValue+":required-");
+					attributeIndividualStringBuilder.append(requiredValue+MANYFALSE);
+					dataMapForJson.put(uniqueDataKey, attributeIndividualStringBuilder.toString());		
+				}
+				else if(typeValue != null && typeValue.equalsIgnoreCase(LIST)){
+					logger.info("requiredValue is:"+ requiredValue);
+					String findList= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.type";
+					String listValue=map.get(findList);
+					if(listValue!=null){
+						logger.info("Type of list is:"+ listValue);
+						//Its userdefined
+						if(listValue.contains(".")){
+							String trimValue=listValue.substring(listValue.lastIndexOf('.')+1);
+							StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+							referenceIndividualStringBuilder.append(trimValue+":required-");
+							referenceIndividualStringBuilder.append(requiredValue+":MANY-true");
+							dataMapForJson.put(uniqueDataKey, referenceIndividualStringBuilder.toString());
+						}//Its string
+						else{
+							StringBuilder stringListItems= new StringBuilder();
+							stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+":required-"+requiredValue +":MANY-false");
+							dataMapForJson.put(uniqueDataKey, stringListItems.toString());
+							dataListBuffer.append(uniqueDataKeySplit[1].toUpperCase()+"=[");
+							for(int i=0;i<10;i++){
+								String findConstraints= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.constraints.0.valid_values."+i;
+								System.out.println("findConstraints => " + findConstraints);
+								String constraintsValue=map.get(findConstraints);
+								logger.info(constraintsValue);
+								if(constraintsValue==null){
+									break;
+								}
+								else{
+									System.out.println("constraintsValue => " + constraintsValue);
+									if(constraintsValue.contains("=")){
+										constraintsValue = constraintsValue.replace("=", "equal-sign");
+									}
+									dataConstraints.add(constraintsValue);									
+									dataListBuffer.append(constraintsValue+",");
+								}
+							}
+							dataListBuffer.append("]#");
+							System.out.println("dataListBuffer => " + dataListBuffer);
+							logger.info(dataListBuffer);
+						}
+					}
+				}
+				else{
+					String findUserDefined="data_types.policy.data."+uniqueDataKeySplit[0]+"."+"properties"+"."+uniqueDataKeySplit[1]+".type";
+					//String required="data_types.policy.data."+uniqueDataKeySplit[0]+"."+"properties"+"."+uniqueDataKeySplit[1]+".required";
+					String userDefinedValue=map.get(findUserDefined);
+					//String requiredValue = map.get(required);
+					String trimValue=userDefinedValue.substring(userDefinedValue.lastIndexOf('.')+1);
+					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+					referenceIndividualStringBuilder.append(trimValue+":required-");
+					referenceIndividualStringBuilder.append(requiredValue+":MANY-false");
+					dataMapForJson.put(uniqueDataKey, referenceIndividualStringBuilder.toString());
+					
+				}
+			}
+		}
+		
+		return dataMapForJson;
+	}
+	
+	
+	LinkedHashMap<String, LinkedHashMap<String, String>> parsePolicyNodes(Map<String,String> map){
+		LinkedHashMap<String,LinkedHashMap<String,String>> mapKey= new LinkedHashMap <>();
+		for(String uniqueKey: uniqueKeys){
+			LinkedHashMap<String,String> hm;
+
+			for(Map.Entry<String,String> entry:map.entrySet()){
+				String key=entry.getKey();
+				if(key.contains(uniqueKey) && key.contains("policy.nodes")){
+					if(mapKey.containsKey(uniqueKey)){
+						hm = mapKey.get(uniqueKey);
+						String keyStr= key.substring(key.lastIndexOf('.')+1);
+						String valueStr= map.get(key);
+						if(("type").equals(keyStr)){
+							if(!key.contains("entry_schema"))
+							{
+								hm.put(keyStr,valueStr);
+							}
+						}else{
+							hm.put(keyStr,valueStr);
+						}
+
+					} else {
+						hm = new LinkedHashMap <>();
+						String keyStr= key.substring(key.lastIndexOf('.')+1);
+						String valueStr= map.get(key);
+						if(("type").equals(keyStr)){
+							if(!key.contains("entry_schema"))
+							{
+								hm.put(keyStr,valueStr);
+							}
+						}else{
+							hm.put(keyStr,valueStr);
+						}
+						mapKey.put(uniqueKey, hm);
+					}
+				}
+			}
+		}
+		return mapKey;
+	}
+
+	void createAttributes(LinkedHashMap<String,LinkedHashMap<String,String>> mapKey){
+		StringBuilder attributeStringBuilder= new StringBuilder();
+		StringBuilder referenceStringBuilder= new StringBuilder();
+		StringBuilder listBuffer= new StringBuilder();
+		List<String> constraints= new ArrayList<>();
+		for(Map.Entry<String,LinkedHashMap<String,String>> entry: mapKey.entrySet()){
+			String keySetString= entry.getKey();
+			LinkedHashMap<String,String> keyValues=mapKey.get(keySetString);
+			if(keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(STRING)||
+					keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(INTEGER)
+					){
+				StringBuilder attributeIndividualStringBuilder= new StringBuilder();
+				attributeIndividualStringBuilder.append(keySetString+"=");
+				attributeIndividualStringBuilder.append(keyValues.get("type")+":defaultValue-");
+				attributeIndividualStringBuilder.append(keyValues.get("default")+":required-");
+				attributeIndividualStringBuilder.append(keyValues.get("required")+":MANY-false");
+				attributeStringBuilder.append(attributeIndividualStringBuilder+",");	
+                if(keyValues.get("matchable") != null && keyValues.get("matchable").equalsIgnoreCase("true")){
+				    matchableValues.put(keySetString, "matching-true");
+                }
+			}
+			else if(keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(LIST)){
+				
+                if(keyValues.get("matchable") != null && keyValues.get("matchable").equalsIgnoreCase("true")){
+				    matchableValues.put(keySetString, "matching-true");
+                }
+				//List Datatype
+				Set<String> keys= keyValues.keySet();
+				Iterator<String> itr=keys.iterator();
+				boolean isDefinedType = false;
+				while(itr.hasNext()){
+					String key= itr.next();
+					if((!("type").equals(key) ||("required").equals(key)))
+					{
+						String value= keyValues.get(key);
+						//The "." in the value determines if its a string or a user defined type.  
+						if (!value.contains(".")){
+							//This is string
+							if(StringUtils.isNumeric(key) ){  //only integer key for the value of Constrains 
+							    constraints.add(keyValues.get(key));
+							}
+						}else{
+							//This is user defined type
+							String trimValue=value.substring(value.lastIndexOf('.')+1);
+							StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+							referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-true");
+							referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+							isDefinedType = true;
+						}
+					}				
+
+				}
+
+				if(!isDefinedType && keyValues.get("type").equalsIgnoreCase(LIST)){ //type is not user defined and is a list but no constraints defined.
+					if(constraints == null || constraints.isEmpty()){
+						referenceStringBuilder.append(keySetString+"=MANY-true"+",");
+					}
+				}
+			}else{
+				//User defined Datatype.
+                if(keyValues.get("matchable") != null && keyValues.get("matchable").equalsIgnoreCase("true")){
+				    matchableValues.put(keySetString, "matching-true");
+                }
+				String value=keyValues.get("type");
+				if(value != null && !value.isEmpty()){
+					String trimValue=value.substring(value.lastIndexOf('.')+1);
+					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+					referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-false");
+					referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+				}else{
+					logger.info("keyValues.get(type) is null/empty");
+				}
+
+			}
+			if(constraints!=null &&constraints.isEmpty()==false){
+				//List handling. 
+				listBuffer.append(keySetString.toUpperCase()+"=[");
+				for(String str:constraints){
+					listBuffer.append(str+",");
+				}
+				listBuffer.append("]#");
+				logger.info(listBuffer);
+
+
+				StringBuilder referenceIndividualStringBuilder= new StringBuilder();
+				referenceIndividualStringBuilder.append(keySetString+"="+keySetString.toUpperCase()+":MANY-false");
+				referenceStringBuilder.append(referenceIndividualStringBuilder+",");
+				constraints.clear();
+			}
+		}
+		
+		dataListBuffer.append(listBuffer);
+		
+
+		logger.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		logger.info("Whole attribute String is:"+attributeStringBuilder);	
+		logger.info("Whole reference String is:"+referenceStringBuilder);
+		logger.info("List String is:"+listBuffer);
+		logger.info("Data list buffer is:"+dataListBuffer);
+		logger.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		
+		this.listConstraints=dataListBuffer.toString();
+		this.referenceAttributes=referenceStringBuilder.toString();
+		this.attributeString=attributeStringBuilder.toString();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void findNode(LinkedHashMap<Object, Object> map) {
+		
+		map.forEach((key,value) -> {
+			// if the value is properties and its type is map object, then save all the keys
+			if(key.equals("properties") && value instanceof Map){
+				saveNodes((LinkedHashMap<?, ?>)value);
+			}
+			
+			if(!key.equals("policy.nodes.Root")){
+				//value is a Map object, then make a recursive call
+			    if(value instanceof Map){
+			    	findNode((LinkedHashMap<Object, Object>) value);
+			    }
+			}
+		});
+
+	}
+	
+	public void saveNodes(LinkedHashMap<?, ?> map) {
+		
+		map.forEach((key,value) -> {
+			
+		    orderedElements.add((String)key);
+	    
+		});
+
+	}
+	
+	public String getAttributeString() {
+		return attributeString;
+	}
+	public void setAttributeString(String attributeString) {
+		this.attributeString = attributeString;
+	}
+	
+	public LinkedHashMap<String, Object> getRetmap() {
+		return retmap;
+	}
+
+	public void setRetmap(LinkedHashMap<String, Object> retmap) {
+		this.retmap = retmap;
+	}
+	public Map<String, String> getMatchableValues() {
+		return matchableValues;
+	}
+
+	public void setMatchableValues(Map<String, String> matchableValues) {
+		this.matchableValues = matchableValues;
+	}
+	public String getReferenceAttributes() {
+		return referenceAttributes;
+	}
+
+	public void setReferenceAttributes(String referenceAttributes) {
+		this.referenceAttributes = referenceAttributes;
+	}
+	public String getListConstraints() {
+		return listConstraints;
+	}
+
+	public void setListConstraints(String listConstraints) {
+		this.listConstraints = listConstraints;
+	}
+	public String getDataOrderInfo() {
+		return dataOrderInfo;
+	}
+
+	public void setDataOrderInfo(String dataOrderInfo) {
+		this.dataOrderInfo = dataOrderInfo;
+	}
+
 }

@@ -38,6 +38,12 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
+	    <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+		<dependency>
+		    <groupId>org.yaml</groupId>
+		    <artifactId>snakeyaml</artifactId>
+		    <version>1.16</version>
+		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>

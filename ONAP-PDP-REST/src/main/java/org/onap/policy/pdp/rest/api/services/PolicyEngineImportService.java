@@ -110,7 +110,8 @@ public class PolicyEngineImportService {
         String fileName = file.getOriginalFilename();
         switch (importParameters.getServiceType()){
 		case MICROSERVICE:
-			if (fileName.endsWith(".xmi") ||  fileName.endsWith(".zip")){
+		case OPTIMIZATION:
+			if (fileName.endsWith(".yml") || fileName.endsWith(".xmi") ||  fileName.endsWith(".zip")){
 	            try {
 	                targetStream = new BufferedInputStream(file.getInputStream());
 	            } catch (IOException e) {
@@ -164,7 +165,8 @@ public class PolicyEngineImportService {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing service Type value.";
             return false;
         }
-        if(importParameters.getServiceType().equals(IMPORT_TYPE.MICROSERVICE) && (importParameters.getVersion()==null || importParameters.getVersion().trim().isEmpty())){
+        if((IMPORT_TYPE.MICROSERVICE.equals(importParameters.getServiceType()) || IMPORT_TYPE.OPTIMIZATION.equals(importParameters.getServiceType()))
+        		&& (importParameters.getVersion()==null || importParameters.getVersion().trim().isEmpty())){
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Missing version value.";
             return false;
         }

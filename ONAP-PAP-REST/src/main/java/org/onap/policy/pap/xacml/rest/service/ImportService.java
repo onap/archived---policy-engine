@@ -38,6 +38,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.components.CreateBRMSRuleTemplate;
 import org.onap.policy.pap.xacml.rest.components.CreateNewMicroServiceModel;
+import org.onap.policy.pap.xacml.rest.components.CreateNewOptimizationModel;
 
 public class ImportService {
 	private static final Logger logger = FlexLogger.getLogger(ImportService.class);
@@ -88,12 +89,16 @@ public class ImportService {
 		else if(("MICROSERVICE").equals(importServiceCreation)){
 			CreateNewMicroServiceModel newMS = null;
 			String randomID = UUID.randomUUID().toString();
+			String type = ".xmi"; 
 			if ( fileName != null) {
 				File extracDir = new File(extractDir);
 				if (!extracDir.exists()){
 					extracDir.mkdirs();
 				}
-				if (fileName.contains(".xmi")){
+				if (fileName.contains(".xmi") || fileName.contains(".yml")){
+					if(fileName.contains(".yml")){
+						type = ".yml";
+					}
 					// get the request content into a String
 					String xmi = null;
 					java.util.Scanner scanner;
@@ -107,9 +112,9 @@ public class ImportService {
 						PolicyLogger.error(errorMessage);
 						return;
 					}
-					PolicyLogger.info("XML request from API for import new Service"); 
+					PolicyLogger.info("Request from API to import new Service"); 
 					try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-							new FileOutputStream(extractDir + File.separator + randomID+".xmi"), "utf-8"))) {
+							new FileOutputStream(extractDir + File.separator + randomID+type), "utf-8"))) {
 						writer.write(xmi);
 					} catch (IOException e) {
 						logger.error(e);
@@ -138,11 +143,55 @@ public class ImportService {
 						}
 					}
 				}
+				
 				newMS =  new CreateNewMicroServiceModel(fileName, serviceName, "API", version, randomID);
-				successMap = newMS.addValuesToNewModel();
+				
+				successMap = newMS.addValuesToNewModel(type);
+				
 				if (successMap.containsKey(successMessage)) {
 					successMap.clear();
 					successMap = newMS.saveImportService();
+				}
+			}
+		} else if(("OPTIMIZATION").equals(importServiceCreation)){
+			CreateNewOptimizationModel newOOF = null;
+			String randomID = UUID.randomUUID().toString();
+			if ( fileName != null) {
+				File extracDir = new File(extractDir);
+				if (!extracDir.exists()){
+					extracDir.mkdirs();
+				}
+				
+				String type = ".yml";
+				
+				// get the request content into a String
+				String yml = null;
+				java.util.Scanner scanner;
+				try {
+					scanner = new java.util.Scanner(request.getInputStream());
+					scanner.useDelimiter("\\A");
+					yml =  scanner.hasNext() ? scanner.next() : "";
+					scanner.close();
+				} catch (IOException e1) {
+					logger.error(e1);
+					PolicyLogger.error(errorMessage);
+					return;
+				}
+				PolicyLogger.info("Request from API to import new Optimization Service Model"); 
+				try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(extractDir + File.separator + randomID+type), "utf-8"))) {
+					writer.write(yml);
+				} catch (IOException e) {
+					logger.error(e);
+					PolicyLogger.error(errorMessage);
+					return;
+				}
+				
+				newOOF =  new CreateNewOptimizationModel(fileName, serviceName, "API", version, randomID);
+				successMap = newOOF.addValuesToNewModel();
+				if (successMap.containsKey(successMessage)) {
+					successMap.clear();
+					successMap = newOOF.saveImportService();
 				}
 			}
 		}

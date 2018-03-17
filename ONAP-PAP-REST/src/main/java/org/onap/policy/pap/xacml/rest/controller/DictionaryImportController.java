@@ -34,6 +34,7 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.DictionaryNames;
+import org.onap.policy.pap.xacml.rest.DisctionaryNames;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionList;
 import org.onap.policy.rest.jpa.ActionPolicyDict;
@@ -86,9 +87,8 @@ public class DictionaryImportController {
 	}
 	
 	public DictionaryImportController(){
-		super();
-	}	
-
+		super();	
+	}
 
 	@RequestMapping(value={"/dictionary/import_dictionary"}, method={RequestMethod.POST})
 	public void importDictionaryData(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -107,8 +107,8 @@ public class DictionaryImportController {
 		// fix Fortify Path Manipulation issue
 		if(!isValidDictionaryName(dictionaryName)){
 			LOGGER.error("dictionaryName is invalid");
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write("Dictionary Import failed. Hence the following dictionary doen't support import function  : "+ dictionaryName);
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().write("Error");
 			return;			
 		}
 		File file = new File(dictionaryName);	
@@ -244,6 +244,50 @@ public class DictionaryImportController {
 						}
 						if("Sub Attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
 							attribute.setSub_attributes(rows[j]);
+						}
+						if("annotations".equalsIgnoreCase(dictSheet.get(0)[j])) {
+							attribute.setAnnotation(rows[j]);
+						}
+					}
+
+					commonClassDao.save(attribute);
+				}
+			}		
+
+			if(dictionaryName.startsWith("OptimizationPolicyDictionary")){
+				for(int i = 1; i< dictSheet.size(); i++){
+					MicroServiceModels attribute = new MicroServiceModels();
+					UserInfo userinfo = new UserInfo();
+					userinfo.setUserLoginId(userId);
+					attribute.setUserCreatedBy(userinfo);
+					String[] rows = dictSheet.get(i);
+					for (int j=0 ; j<rows.length; j++ ){
+						if("modelName".equalsIgnoreCase(dictSheet.get(0)[j]) || "Optimization Service Model".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setModelName(rows[j]);
+						}
+						if("version".equalsIgnoreCase(dictSheet.get(0)[j]) || "Model Version".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setVersion(rows[j]);
+						}
+						if(DESCRIPTION.equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setDescription(rows[j]);
+						}
+						if("dependency".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setDependency(rows[j]);
+						}
+						if("attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setAttributes(rows[j]);
+						}
+						if("enumValues".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setEnumValues(rows[j]);
+						}
+						if("Ref Attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setRef_attributes(rows[j]);
+						}
+						if("Sub Attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setSub_attributes(rows[j]);
+						}
+						if("annotations".equalsIgnoreCase(dictSheet.get(0)[j])) {
+							attribute.setAnnotation(rows[j]);
 						}
 					}
 
@@ -688,41 +732,81 @@ public class DictionaryImportController {
 	
 	public boolean isValidDictionaryName(String dictionaryName){
 		
-		String nameCheck = dictionaryName.replace(".csv", "");
-		try{
-			DictionaryNames mode = DictionaryNames.valueOf(nameCheck);
-			switch (mode){
-				case Attribute:
-				case ActionPolicyDictionary:
-				case OnapName:
-				case MSPolicyDictionary:
-				case VNFType:
-				case VSCLAction:
-				case ClosedLoopService:
-				case ClosedLoopSite:
-				case PEPOptions:
-				case VarbindDictionary:
-				case BRMSParamDictionary:
-				case BRMSControllerDictionary:
-				case BRMSDependencyDictionary:
-				case Settings:
-				case PrefixList:
-				case SecurityZone:
-				case Zone:
-				case ServiceList:
-				case ServiceGroup:
-				case AddressGroup:
-				case ProtocolList:
-				case ActionList:
-				case TermList:
-				case SearchCriteria:
-					return true;
-				default:
-					return false;
-			}
-		}catch(Exception e){
-			LOGGER.error("Dictionary not exits: " +dictionaryName +e);
-			return false;
-		}	
+		if(dictionaryName.startsWith(DisctionaryNames.Attribute.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ActionPolicyDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.OnapName.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.MSPolicyDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DictionaryNames.OptimizationPolicyDictionary.toString())) {
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.VNFType.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.VSCLAction.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ClosedLoopService.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ClosedLoopSite.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.PEPOptions.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.VarbindDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.BRMSParamDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.BRMSControllerDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.BRMSDependencyDictionary.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.Settings.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.PrefixList.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.SecurityZone.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.Zone.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ServiceList.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ServiceGroup.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.AddressGroup.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ProtocolList.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.ActionList.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.TermList.toString())){
+			return true;
+		}
+		if(dictionaryName.startsWith(DisctionaryNames.SearchCriteria.toString())){
+			return true;
+		}
+		return false;
 	}
 }
