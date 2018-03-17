@@ -68,6 +68,9 @@ public class MicroServiceModels implements Serializable{
 	@Column (name="sub_attributes", nullable=false, length=2000)
 	private String sub_attributes;
 	
+	@Column (name="dataOrderInfo", nullable=true, length=2000)
+	private String dataOrderInfo;
+
 	@Column (name="version", nullable=false, length=2000)
 	private String version;
 	
@@ -83,6 +86,14 @@ public class MicroServiceModels implements Serializable{
 
 	public void setSub_attributes(String sub_attributes) {
 		this.sub_attributes = sub_attributes;
+	}
+	
+	public String getDataOrderInfo() {
+		return dataOrderInfo;
+	}
+
+	public void setDataOrderInfo(String dataOrderInfo) {
+		this.dataOrderInfo = dataOrderInfo;
 	}
 
 	public String getVersion() {

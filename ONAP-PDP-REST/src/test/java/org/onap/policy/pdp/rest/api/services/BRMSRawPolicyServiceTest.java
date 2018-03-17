@@ -20,24 +20,39 @@
 package org.onap.policy.pdp.rest.api.services;
 
 import static org.junit.Assert.assertEquals;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
 import org.junit.Test;
-import org.onap.policy.api.PolicyException;
 import org.onap.policy.api.PolicyParameters;
 
 public class BRMSRawPolicyServiceTest {
 	@Test
-	public void testRaw() throws PolicyException  {
+	public void testRaw() throws FileNotFoundException, IOException  {
+		Properties prop = new Properties();
+		prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
+		String succeeded = prop.getProperty("xacml.rest.pap.url");
+		List<String> paps = Arrays.asList(succeeded.split(","));
+		PAPServices.setPaps(paps);
+		PAPServices.setJunit(true);
+		prop.clear();
+		
 		String systemKey = "xacml.properties";
 		String testVal = "testVal";
 		PolicyParameters testParams = new PolicyParameters();
-		
+				
 		// Set the system property temporarily
 		String oldProperty = System.getProperty(systemKey);
 		System.setProperty(systemKey, "xacml.pdp.properties");
 		
 		BRMSRawPolicyService service = new BRMSRawPolicyService(testVal, testVal, testParams, testVal);
-		assertEquals(service.getValidation(), false);
-		assertEquals(service.getMessage(), "PE300 - Data Issue:  No Rule Body given");
+		assertEquals(false, service.getValidation());
+		assertEquals("PE300 - Data Issue:  No Rule Body given", service.getMessage());
 		
 		// Restore the original system property
 		if (oldProperty != null) {

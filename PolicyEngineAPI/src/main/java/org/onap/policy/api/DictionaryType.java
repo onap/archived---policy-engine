@@ -52,6 +52,10 @@ public enum DictionaryType {
      */
     MicroService("MicroService"),
     /**
+     * Indicates Optimization Policy Dictionaries
+     */
+    Optimization("Optimization"),
+    /**
      * Indicates Descriptive Scope Dictionaries
      */
     DescriptiveScope("DescriptiveScope"),

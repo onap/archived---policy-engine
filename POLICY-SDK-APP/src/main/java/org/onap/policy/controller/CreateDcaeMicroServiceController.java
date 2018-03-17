@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,8 @@ package org.onap.policy.controller;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -36,7 +33,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -78,6 +74,7 @@ import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.GroupPolicyScopeList;
 import org.onap.policy.rest.jpa.MicroServiceModels;
+import org.onap.policy.rest.jpa.MicroserviceHeaderdeFaults;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.util.MSAttributeObject;
 import org.onap.policy.rest.util.MSModelUtils;
@@ -89,8 +86,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.yaml.snakeyaml.Yaml;
-
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -113,7 +108,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 @RequestMapping("/")
 public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	private static final Logger LOGGER = FlexLogger.getLogger(CreateDcaeMicroServiceController.class);
-	private Map<String, String>  matchableValues;
+
 	private static CommonClassDao commonClassDao;
 	
 	public static CommonClassDao getCommonClassDao() {
@@ -129,19 +124,11 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	private String directory;
 	private List<String> modelList = new ArrayList<>();
 	private List<String> dirDependencyList = new ArrayList<>();
-	private HashMap<String,MSAttributeObject > classMap = new HashMap<>();
-	//Tosca Model related Datastructure. 
+	private LinkedHashMap<String,MSAttributeObject > classMap = new LinkedHashMap<>();
 	String referenceAttributes;
 	String attributeString;
-	String listConstraints;
-	String subAttributeString;
-	HashMap<String, Object> retmap = new HashMap<>();
-	Set<String> uniqueKeys= new HashSet<>();
-	Set<String> uniqueDataKeys= new HashSet<>();
-	StringBuilder dataListBuffer=new StringBuilder();
-	List<String> dataConstraints= new ArrayList <>();
 	Set<String> allManyTrueKeys= new HashSet <>();
-	
+
 	public static final String DATATYPE  = "data_types.policy.data.";
 	public static final String PROPERTIES=".properties.";
 	public static final String TYPE=".type";
@@ -150,8 +137,9 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	public static final String LIST="list";
 	public static final String DEFAULT=".default";
 	public static final String REQUIRED=".required";
-	public static final String MANYFALSE=":MANY-false";
 	public static final String MATCHABLE=".matchable";
+	public static final String MANYFALSE=":MANY-false";
+	
 	
 	@Autowired
 	private CreateDcaeMicroServiceController(CommonClassDao commonClassDao){
@@ -260,7 +248,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return policyAdapter;
 	}
 	
-	private String removeNullAttributes(String cleanJson) {
+	public String removeNullAttributes(String cleanJson) {
 		ObjectMapper mapper = new ObjectMapper();
 
 		try {
@@ -385,446 +373,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	    return builder.build();
 	}
 	
-	// Second index of dot should be returned. 
-	public int stringBetweenDots(String str){
-		String stringToSearch=str;
-		String[]ss=stringToSearch.split("\\.");
-		if(ss!=null){
-			int len= ss.length;
-			if(len>2){
-				uniqueKeys.add(ss[2]);
-			}
-		}
-		
-		return uniqueKeys.size();
-	}
-	
-	public void stringBetweenDotsForDataFields(String str){
-		String stringToSearch=str;
-		String[]ss=stringToSearch.split("\\.");
-		if(ss!=null){
-			int len= ss.length;
-
-			if(len>2){
-				uniqueDataKeys.add(ss[0]+"%"+ss[2]);
-			}
-		}
-	}
-	
- 
-	@SuppressWarnings("unchecked")
-	public Map<String, String> load(String fileName) throws IOException { 
-		File newConfiguration = new File(fileName);
-		Yaml yaml = new Yaml();
-		Map<Object, Object> yamlMap = null;
-		try(InputStream is = new FileInputStream(newConfiguration)){
-			yamlMap = (Map<Object, Object>) yaml.load(is); 
-		} catch (FileNotFoundException e) {
-			LOGGER.error(e);
-		}
-
-		StringBuilder sb = new StringBuilder(); 
-		Map<String, String> settings = new HashMap<>(); 
-		if (yamlMap == null) { 
-			return settings; 
-		} 
-		List<String> path = new ArrayList <>(); 
-		serializeMap(settings, sb, path, yamlMap); 
-		return settings; 
-	} 
-
-	public Map<String, String> load(byte[] source) { 
-		Yaml yaml = new Yaml(); 
-		@SuppressWarnings("unchecked")
-		Map<Object, Object> yamlMap = (Map<Object, Object>) yaml.load(Arrays.toString(source)); 
-		StringBuilder sb = new StringBuilder(); 
-		Map<String, String> settings = new HashMap <>(); 
-		if (yamlMap == null) { 
-			return settings; 
-		} 
-		List<String> path = new ArrayList <>(); 
-		serializeMap(settings, sb, path, yamlMap); 
-		return settings; 
-	} 
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void serializeMap(Map<String, String> settings, StringBuilder sb, List<String> path, Map<Object, Object> yamlMap) { 
-		for (Map.Entry<Object, Object> entry : yamlMap.entrySet()) { 
-			if (entry.getValue() instanceof Map) { 
-				path.add((String) entry.getKey()); 
-				serializeMap(settings, sb, path, (Map<Object, Object>) entry.getValue()); 
-				path.remove(path.size() - 1); 
-			} else if (entry.getValue() instanceof List) { 
-				path.add((String) entry.getKey()); 
-				serializeList(settings, sb, path, (List) entry.getValue()); 
-				path.remove(path.size() - 1); 
-			} else { 
-				serializeValue(settings, sb, path, (String) entry.getKey(), entry.getValue()); 
-			} 
-		} 
-	} 
-
-	@SuppressWarnings("unchecked")
-	private void serializeList(Map<String, String> settings, StringBuilder sb, List<String> path, List<String> yamlList) { 
-		int counter = 0; 
-		for (Object listEle : yamlList) { 
-			if (listEle instanceof Map) { 
-				path.add(Integer.toString(counter)); 
-				serializeMap(settings, sb, path, (Map<Object, Object>) listEle); 
-				path.remove(path.size() - 1); 
-			} else if (listEle instanceof List) { 
-				path.add(Integer.toString(counter)); 
-				serializeList(settings, sb, path, (List<String>) listEle); 
-				path.remove(path.size() - 1); 
-			} else { 
-				serializeValue(settings, sb, path, Integer.toString(counter), listEle); 
-			} 
-			counter++; 
-		} 
-	} 
-
-	private void serializeValue(Map<String, String> settings, StringBuilder sb, List<String> path, String name, Object value) { 
-		if (value == null) { 
-			return; 
-		} 
-		sb.setLength(0); 
-		for (String pathEle : path) { 
-			sb.append(pathEle).append('.'); 
-		} 
-		sb.append(name); 
-		settings.put(sb.toString(), value.toString()); 
-	} 
-    
-	void parseDataAndPolicyNodes(Map<String,String> map){
-		for(String key:map.keySet()){
-			if(key.contains("policy.nodes.Root"))
-			{
-				continue;
-			}
-			else if(key.contains("policy.nodes")){
-				String wordToFind = "policy.nodes.";
-				int indexForPolicyNode=key.indexOf(wordToFind);
-				String subNodeString= key.substring(indexForPolicyNode+13, key.length());
-
-				stringBetweenDots(subNodeString);
-			}
-			else if(key.contains("policy.data")){
-				String wordToFind="policy.data.";
-				int indexForPolicyNode=key.indexOf(wordToFind);
-				String subNodeString= key.substring(indexForPolicyNode+12, key.length());
-
-				stringBetweenDotsForDataFields(subNodeString);
-			}
-		}
-	}
-	
-	HashMap<String,String> parseDataNodes(Map<String,String> map){
-		HashMap<String,String> dataMapForJson=new HashMap <>(); 
-		matchableValues = new HashMap <>(); 
-		for(String uniqueDataKey: uniqueDataKeys){
-			if(uniqueDataKey.contains("%")){
-				String[] uniqueDataKeySplit= uniqueDataKey.split("%");
-				String findType=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+TYPE;
-				String typeValue=map.get(findType);
-				LOGGER.info(typeValue);
-				if(typeValue != null && typeValue.equalsIgnoreCase(STRING)||
-						typeValue.equalsIgnoreCase(INTEGER)
-				  )
-				{
-					String findDefault=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+DEFAULT;
-					String defaultValue= map.get(findDefault);
-					LOGGER.info("defaultValue is:"+ defaultValue);
-					
-					String findRequired=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+REQUIRED;
-					String requiredValue= map.get(findRequired);
-					LOGGER.info("requiredValue is:"+ requiredValue);
-					
-					String matchable =DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+MATCHABLE;
-
-					String matchableValue= map.get(matchable);
-
-					if("true".equalsIgnoreCase(matchableValue)){						
-						String key=uniqueDataKeySplit[uniqueDataKeySplit.length -1];
-						matchableValues.put(key, "matching-true");						
-					}
-					
-					StringBuilder attributeIndividualStringBuilder= new StringBuilder();
-					attributeIndividualStringBuilder.append(typeValue+":defaultValue-");
-					attributeIndividualStringBuilder.append(defaultValue+":required-");
-					attributeIndividualStringBuilder.append(requiredValue+MANYFALSE);
-					dataMapForJson.put(uniqueDataKey, attributeIndividualStringBuilder.toString());		
-				}
-				else if(typeValue != null && typeValue.equalsIgnoreCase(LIST)){
-					
-
-					String findList= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.type";
-					String listValue=map.get(findList);
-					if(listValue!=null){
-						LOGGER.info("Type of list is:"+ listValue);
-						//Its userdefined
-						if(listValue.contains(".")){
-							String trimValue=listValue.substring(listValue.lastIndexOf('.')+1);
-							StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-							referenceIndividualStringBuilder.append(trimValue+":MANY-true");
-							dataMapForJson.put(uniqueDataKey, referenceIndividualStringBuilder.toString());
-						}//Its string
-						else{
-							StringBuilder stringListItems= new StringBuilder();
-							stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+":MANY-false");
-							dataMapForJson.put(uniqueDataKey, stringListItems.toString());
-							dataListBuffer.append(uniqueDataKeySplit[1].toUpperCase()+"=[");
-							for(int i=0;i<10;i++){
-								String findConstraints= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.constraints.0.valid_values."+i;
-								String constraintsValue=map.get(findConstraints);
-								LOGGER.info(constraintsValue);
-								if(constraintsValue==null){
-									break;
-								}
-								else{
-									if(constraintsValue.contains("=")){
-										constraintsValue = constraintsValue.replace("=", "equal-sign");
-									}
-									dataConstraints.add(constraintsValue);
-									dataListBuffer.append(constraintsValue+",");
-								}
-							}
-							dataListBuffer.append("]#");
-							
-							LOGGER.info(dataListBuffer);
-						}
-					}
-				}
-				else{
-					String findUserDefined="data_types.policy.data."+uniqueDataKeySplit[0]+"."+"properties"+"."+uniqueDataKeySplit[1]+".type";
-					String userDefinedValue=map.get(findUserDefined);
-					String trimValue=userDefinedValue.substring(userDefinedValue.lastIndexOf('.')+1);
-					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-					referenceIndividualStringBuilder.append(trimValue+":MANY-false");
-					dataMapForJson.put(uniqueDataKey, referenceIndividualStringBuilder.toString());
-					
-				}
-			}else{
-				matchableValues.put(uniqueDataKey, "matching-true");
-			}
-		}
-		return dataMapForJson;
-	}
-	
-	void constructJsonForDataFields(HashMap<String,String> dataMapForJson){
-		HashMap<String,HashMap<String,String>> dataMapKey= new HashMap <>();
-		HashMap<String,String> hmSub;
-		for(Map.Entry<String, String> entry: dataMapForJson.entrySet()){
-			String uniqueDataKey= entry.getKey();
-			String[] uniqueDataKeySplit=uniqueDataKey.split("%");
-			String value= dataMapForJson.get(uniqueDataKey);
-			if(dataMapKey.containsKey(uniqueDataKeySplit[0])){
-				hmSub = dataMapKey.get(uniqueDataKeySplit[0]);
-				hmSub.put(uniqueDataKeySplit[1], value);
-			}
-			else{
-				hmSub=new HashMap <>();
-				hmSub.put(uniqueDataKeySplit[1], value);
-			}
-				
-			dataMapKey.put(uniqueDataKeySplit[0], hmSub);
-		}
-				
-		JSONObject mainObject= new JSONObject();
-		JSONObject json;
-		for(Map.Entry<String,HashMap<String,String>> entry: dataMapKey.entrySet()){
-			String s=entry.getKey();
-			json= new JSONObject();
-			HashMap<String,String> jsonHm=dataMapKey.get(s);
-			for(Map.Entry<String,String> entryMap:jsonHm.entrySet()){
-				String key=entryMap.getKey();
-				json.put(key, jsonHm.get(key));
-			}
-			mainObject.put(s,json);
-		}	
-		Iterator<String> keysItr = mainObject.keys();
-		while(keysItr.hasNext()) {
-			String key = keysItr.next();
-			String value = mainObject.get(key).toString();
-			retmap.put(key, value);
-		}
-		
-		LOGGER.info("#############################################################################");
-		LOGGER.info(mainObject);
-		LOGGER.info("###############################################################################");	
-	}
-	
-	
-	HashMap<String,HashMap<String,String>> parsePolicyNodes(Map<String,String> map){
-		HashMap<String,HashMap<String,String>> mapKey= new HashMap <>();
-		for(String uniqueKey: uniqueKeys){
-			HashMap<String,String> hm;
-
-			for(Map.Entry<String,String> entry:map.entrySet()){
-				String key=entry.getKey();
-				if(key.contains(uniqueKey) && key.contains("policy.nodes")){
-					if(mapKey.containsKey(uniqueKey)){
-						hm = mapKey.get(uniqueKey);
-						String keyStr= key.substring(key.lastIndexOf('.')+1);
-						String valueStr= map.get(key);
-						if(("type").equals(keyStr)){
-							if(!key.contains("entry_schema"))
-							{
-								hm.put(keyStr,valueStr);
-							}
-						}else{
-							hm.put(keyStr,valueStr);
-						}
-
-					} else {
-						hm = new HashMap <>();
-						String keyStr= key.substring(key.lastIndexOf('.')+1);
-						String valueStr= map.get(key);
-						if(("type").equals(keyStr)){
-							if(!key.contains("entry_schema"))
-							{
-								hm.put(keyStr,valueStr);
-							}
-						}else{
-							hm.put(keyStr,valueStr);
-						}
-						mapKey.put(uniqueKey, hm);
-					}
-				}
-			}
-		}
-		return mapKey;
-	}
-
-	void createAttributes(HashMap<String,HashMap<String,String>> mapKey){
-		StringBuilder attributeStringBuilder= new StringBuilder();
-		StringBuilder referenceStringBuilder= new StringBuilder();
-		StringBuilder listBuffer= new StringBuilder();
-		List<String> constraints= new ArrayList<>();
-		for(Map.Entry<String,HashMap<String,String>> entry: mapKey.entrySet()){
-			String keySetString= entry.getKey();
-			HashMap<String,String> keyValues=mapKey.get(keySetString);
-			if(keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(STRING)||
-					keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(INTEGER)
-					){
-				StringBuilder attributeIndividualStringBuilder= new StringBuilder();
-				attributeIndividualStringBuilder.append(keySetString+"=");
-				attributeIndividualStringBuilder.append(keyValues.get("type")+":defaultValue-");
-				attributeIndividualStringBuilder.append(keyValues.get("default")+":required-");
-				attributeIndividualStringBuilder.append(keyValues.get("required")+":MANY-false");
-				attributeStringBuilder.append(attributeIndividualStringBuilder+",");	
-                if("true".equalsIgnoreCase(keyValues.get("matchable"))){
-				    matchableValues.put(keySetString, "matching-true");
-                }
-			}
-			else if(keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(LIST)){
-				
-                if("true".equalsIgnoreCase(keyValues.get("matchable"))){
-				    matchableValues.put(keySetString, "matching-true");
-                }
-				//List Datatype
-				Set<String> keys= keyValues.keySet();
-				Iterator<String> itr=keys.iterator();
-				boolean isDefinedType = false;
-				while(itr.hasNext()){
-					String key= itr.next();
-					if(!("type").equals(key) ||("required").equals(key))
-					{
-						String value= keyValues.get(key);
-						//The "." in the value determines if its a string or a user defined type.  
-						if (!value.contains(".")){
-							//This is string
-							if(StringUtils.isNumeric(key) ){  //only integer key for the value of Constrains 
-							    constraints.add(keyValues.get(key));
-							}
-						}else{
-							//This is user defined type
-							String trimValue=value.substring(value.lastIndexOf('.')+1);
-							StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-							referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-true");
-							referenceStringBuilder.append(referenceIndividualStringBuilder+",");
-							isDefinedType = true;
-						}
-					}				
-
-				}
-
-				if(!isDefinedType && keyValues.get("type").equalsIgnoreCase(LIST) &&
-					(constraints == null || constraints.isEmpty()) ) {   //type is list but no constraints defined.
-						referenceStringBuilder.append(keySetString+"=MANY-true"+",");
-				}
-			}else{
-				//User defined Datatype. 
-                if("true".equalsIgnoreCase(keyValues.get("matchable"))){
-				    matchableValues.put(keySetString, "matching-true");
-                }
-				String value=keyValues.get("type");
-				if(value != null && !value.isEmpty()){
-					String trimValue=value.substring(value.lastIndexOf('.')+1);
-					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-					referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-false");
-					referenceStringBuilder.append(referenceIndividualStringBuilder+",");
-				}else{
-					LOGGER.info("keyValues.get(type) is null/empty");
-				}
-
-			}
-			if(constraints!=null && ! constraints.isEmpty()){
-				//List handling. 
-				listBuffer.append(keySetString.toUpperCase()+"=[");
-				for(String str:constraints){
-					listBuffer.append(str+",");
-				}
-				listBuffer.append("]#");
-				LOGGER.info(listBuffer);
-
-
-				StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-				referenceIndividualStringBuilder.append(keySetString+"="+keySetString.toUpperCase()+":MANY-false");
-				referenceStringBuilder.append(referenceIndividualStringBuilder+",");
-				constraints.clear();
-			}
-		}
-		
-		dataListBuffer.append(listBuffer);
-		
-
-		LOGGER.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		LOGGER.info("Whole attribute String is:"+attributeStringBuilder);	
-		LOGGER.info("Whole reference String is:"+referenceStringBuilder);
-		LOGGER.info("List String is:"+listBuffer);
-		LOGGER.info("Data list buffer is:"+dataListBuffer);
-		LOGGER.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		
-		this.listConstraints=dataListBuffer.toString();
-		this.referenceAttributes=referenceStringBuilder.toString();
-		this.attributeString=attributeStringBuilder.toString();
-	}
-	
-	
-    
-	public void parseTosca (String fileName){
-		Map<String,String> map= new HashMap<>();
-    
-    	try {
-			map=load(fileName);
-			
-			parseDataAndPolicyNodes(map);
-			
-			HashMap<String,String> dataMapForJson=parseDataNodes(map);
-			
-			constructJsonForDataFields(dataMapForJson);	
-			
-			HashMap<String,HashMap<String,String>> mapKey= parsePolicyNodes(map);
-			
-			createAttributes(mapKey);
-		
-    	} catch (IOException e) {
-    		LOGGER.error(e);
-    	}
-	
-	} 
-
-	private String cleanUPJson(String json) {
+	public String cleanUPJson(String json) {
 		String cleanJson = StringUtils.replaceEach(json, new String[]{"\\\\", "\\\\\\", "\\\\\\\\"}, new String[]{"\\", "\\", "\\"});
 		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\\\\\\"}, new String[]{"\\"});
 		cleanJson = StringUtils.replaceEach(cleanJson, new String[]{"\\\\", "[[", "]]"}, new String[]{"\\", "[", "]"});
@@ -842,7 +391,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return cleanJson;
 	}
 	
-	private JSONObject decodeContent(JsonNode jsonNode){
+	public JSONObject decodeContent(JsonNode jsonNode){
 		Iterator<JsonNode> jsonElements = jsonNode.elements();
 		Iterator<String> jsonKeys = jsonNode.fieldNames();
 		Map<String,String> element = new TreeMap<>();
@@ -1004,6 +553,22 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 		MicroServiceModels returnModel = getAttributeObject(servicename, version);
 		
+		MicroserviceHeaderdeFaults returnHeaderDefauls = getHeaderDefaultsObject(value);
+		JSONObject jsonHdDefaultObj = null;
+		if(returnHeaderDefauls != null){
+			jsonHdDefaultObj = new JSONObject();
+			jsonHdDefaultObj.put("onapName", returnHeaderDefauls.getOnapName());
+			jsonHdDefaultObj.put("guard", returnHeaderDefauls.getGuard());
+			jsonHdDefaultObj.put("riskLevel", returnHeaderDefauls.getRiskLevel());
+			jsonHdDefaultObj.put("riskType", returnHeaderDefauls.getRiskType());
+			jsonHdDefaultObj.put("priority", returnHeaderDefauls.getPriority());
+		}
+		String headDefautlsData = "";
+		if(jsonHdDefaultObj != null){			
+			headDefautlsData = jsonHdDefaultObj.toString();
+		}else{
+			headDefautlsData = "null";
+		}
 		
 		//Get all keys with "MANY-true" defined in their value from subAttribute 
 		Set<String> allkeys = null;
@@ -1015,9 +580,12 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			LOGGER.info("allkeys : " + allkeys);
 		}
 		
-		String nameOfTrueKey = "";
+		//Get element order info 
+		String dataOrderInfo = returnModel.getDataOrderInfo();
+		
+		String allManyTrueKeys = "";
 		if(allkeys != null){
-			nameOfTrueKey = allkeys.toString();
+			allManyTrueKeys = allkeys.toString();
 		}
 		
 		String jsonModel = createMicroSeriveJson(returnModel, allkeys);
@@ -1060,11 +628,13 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		List<Object>  list = new ArrayList<>();
 		PrintWriter out = response.getWriter();
 		String responseString = mapper.writeValueAsString(returnModel);
-		JSONObject j;
-		if("".equals(nameOfTrueKey)){
-			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + "}");	
+
+		JSONObject j = null;
+		
+		if("".equals(allManyTrueKeys)){
+			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + ",dataOrderInfo:" + dataOrderInfo + ",headDefautlsData:" + headDefautlsData +"}");	
 		}else{
-			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + ",allManyTrueKeys: " + nameOfTrueKey+ "}");	
+			j = new JSONObject("{dcaeModelData: " + responseString + ",jsonValue: " + jsonModel + ",allManyTrueKeys: " + allManyTrueKeys+",dataOrderInfo:" + dataOrderInfo + ",headDefautlsData:" + headDefautlsData+ "}");	
 		}
 		list.add(j);
 		out.write(list.toString());
@@ -1102,10 +672,11 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}else{
 			subAttributes = "";
 		}
+		
 		Map gsonObject = (Map) gson.fromJson(subAttributes, Object.class);
 		
 		JSONObject object = new JSONObject();
-		JSONArray array;
+		JSONArray array = new JSONArray();
 		
 		for (Entry<String, String> keySet : attributeMap.entrySet()){
 			array = new JSONArray();
@@ -1210,7 +781,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		
 		if(referAttributes != null){
 			String[] referAarray = referAttributes.split(",");
-			String []element;
+			String []element= null;
 			for(int i=0; i<referAarray.length; i++){
 				element = referAarray[i].split("=");	  
 				if(element.length > 1 && element[1].contains("MANY-true")){
@@ -1240,6 +811,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
 	    return keys;
 	}
+	
     // this method returns a set of keys with "MANY-true" defined in their value.
 	private Set<String> getAllKeys(JSONObject json, Set<String> keys) {
 	    for (String key : json.keySet()) {
@@ -1314,6 +886,10 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 		return workingModel;
 	}
+	
+	private MicroserviceHeaderdeFaults getHeaderDefaultsObject(String modelName) {	
+		return (MicroserviceHeaderdeFaults) commonClassDao.getEntityItem(MicroserviceHeaderdeFaults.class, "modelName", modelName);
+	}	
 
 	@RequestMapping(value={"/get_DCAEPriorityValues"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getDCAEPriorityValuesData(HttpServletRequest request, HttpServletResponse response){
@@ -1457,8 +1033,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void readRecursivlyJSONContent(LinkedHashMap<String, ?> map, LinkedHashMap<String, Object> data){
+	@SuppressWarnings({ "rawtypes", "unchecked" }) 
+	public void readRecursivlyJSONContent(LinkedHashMap<String, ?> map, LinkedHashMap<String, Object> data){
 		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
 			Object key =  iterator.next();
 			Object value = map.get(key);
@@ -1494,7 +1070,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 	}
 
-	private String getPolicyScope(String value) {
+	public String getPolicyScope(String value) {
 		List<Object> groupList= commonClassDao.getDataById(GroupPolicyScopeList.class, "groupList", value);
 		if(groupList != null && !groupList.isEmpty()){
 			GroupPolicyScopeList pScope = (GroupPolicyScopeList) groupList.get(0);
@@ -1545,12 +1121,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 	public void SetMSModelData(HttpServletRequest request, HttpServletResponse response) throws IOException, FileUploadException{
 		modelList = new ArrayList<>();
 		dirDependencyList = new ArrayList<>();
-		classMap = new HashMap<>();
-		retmap = new HashMap<>();
-		uniqueKeys= new HashSet<>();
-		uniqueDataKeys= new HashSet<>();
-		dataListBuffer=new StringBuilder();
-		dataConstraints= new ArrayList <>();
+		classMap = new LinkedHashMap<>();
 		List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 		boolean zip = false;
 		boolean yml= false;
@@ -1593,7 +1164,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application / json");
 			request.setCharacterEncoding("UTF-8");
-			
+
 			JSONObject j = new JSONObject();
 			j.put("errorMsg", errorMsg);
 			out.write(j.toString());
@@ -1601,21 +1172,24 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		}
 		
 		List<File> fileList = new ArrayList<>();
+		MSModelUtils msMLUtils =  new MSModelUtils();
 		this.directory = "model";
 		if (zip){
 			extractFolder(this.newFile);
 			fileList = listModelFiles(this.directory);
-		}else if (yml){
-			parseTosca(this.newFile);
+		}else if (yml==true){
+			
+			msMLUtils.parseTosca(this.newFile);
+			
 		}else {
 			File file = new File(this.newFile);
 			fileList.add(file);
 		}
-		String modelType;
-		if(! yml){
+		String modelType= "";
+		if(!yml){
 			modelType="xmi";
 			//Process Main Model file first
-			classMap = new HashMap<>();
+			classMap = new LinkedHashMap<>();
 			for (File file : fileList) {
 				if(!file.isDirectory() && file.getName().endsWith(".xmi")){
 	            	retreiveDependency(file.toString(), true);
@@ -1633,19 +1207,22 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			MSAttributeObject msAttributes= new MSAttributeObject();
 			msAttributes.setClassName(className);
 			
-			HashMap<String, String> returnAttributeList =new HashMap<>();
-			returnAttributeList.put(className, this.attributeString);
+			LinkedHashMap<String, String> returnAttributeList =new LinkedHashMap<>();
+			returnAttributeList.put(className, msMLUtils.getAttributeString());
 			msAttributes.setAttribute(returnAttributeList);
 			
-			msAttributes.setSubClass(this.retmap);
-			msAttributes.setMatchingSet(matchableValues);
-			HashMap<String, String> returnReferenceList =new HashMap<>();
-			returnReferenceList.put(className, this.referenceAttributes);
+			msAttributes.setSubClass(msMLUtils.getRetmap());
+			
+			msAttributes.setMatchingSet(msMLUtils.getMatchableValues());
+			
+			LinkedHashMap<String, String> returnReferenceList =new LinkedHashMap<>();
+
+			returnReferenceList.put(className, msMLUtils.getReferenceAttributes());
 			msAttributes.setRefAttribute(returnReferenceList);
 			
-			if(this.listConstraints!=""){
-				HashMap<String, String> enumList =new HashMap<>();
-				String[] listArray=this.listConstraints.split("#");
+			if(msMLUtils.getListConstraints()!=""){
+				LinkedHashMap<String, String> enumList =new LinkedHashMap<>();
+				String[] listArray=msMLUtils.getListConstraints().split("#");
                 for(String str:listArray){
                     String[] strArr= str.split("=");
                     if(strArr.length>1){
@@ -1655,7 +1232,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 				msAttributes.setEnumType(enumList);
 			}
 			
-			classMap=new HashMap<>();
+			classMap=new LinkedHashMap<>();
 			classMap.put(className, msAttributes);
 			
 		}
@@ -1671,6 +1248,8 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		j.put("classListDatas", modelList);
 		j.put("modelDatas", mapper.writeValueAsString(classMap));
 		j.put("modelType", modelType);
+		j.put("dataOrderInfo", msMLUtils.getDataOrderInfo());
+		
 		out.write(j.toString());
 	}
 	
@@ -1756,7 +1335,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return resultList;
 	}
 	
-    private void cleanUp(String path) {
+    public void cleanUp(String path) {
         if (path!=null){
             try {
                 FileUtils.forceDelete(new File(path));
@@ -1766,7 +1345,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
         }
     }
  
-    private void checkZipDirectory(String zipDirectory) {
+    public void checkZipDirectory(String zipDirectory) {
         Path path = Paths.get(zipDirectory);
  
         if (Files.exists(path)) {

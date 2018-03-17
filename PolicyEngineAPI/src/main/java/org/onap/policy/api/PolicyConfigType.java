@@ -58,8 +58,12 @@ public enum PolicyConfigType{
 	 */
 	MicroService("MS"),
 	/**
-	 * Indicates Custom Extended Policy type. 
+	 * Indicates OOF Optimization Policy. 
 	 */
+	Optimization("Optimization"),
+	/**
+	 * Indicates Custom Extended Policy type. 
+	 */	
 	Extended("EXTENDED")
 	;
 	

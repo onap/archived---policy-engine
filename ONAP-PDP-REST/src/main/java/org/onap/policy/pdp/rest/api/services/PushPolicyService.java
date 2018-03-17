@@ -176,6 +176,9 @@ public class PushPolicyService {
         } else if ("MicroService".equalsIgnoreCase(policyType)) {
             clientScope = "ConfigMS";
             filePrefix = "Config_MS_";
+        } else if ("Optimization".equalsIgnoreCase(policyType)) {
+        	clientScope = "ConfigOptimization";
+        	filePrefix = "Config_OOF_";
         } else if ("BRMS_RAW".equalsIgnoreCase(policyType)) {
             clientScope = "ConfigBrmsRaw";
             filePrefix = "Config_BRMS_Raw_";

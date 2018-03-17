@@ -114,6 +114,98 @@ public class MicroServiceDictionaryControllerTest {
         logger.info("setUp: exit");
 	}
 
+	
+	@Test
+	public void testSaveMicroServiceHeaderDefaultValues() {
+		logger.info("testSaveMicroServiceHeaderDefaultValues: Entering");
+
+		MockHttpServletResponse response =  new MockHttpServletResponse();
+	    request = mock(HttpServletRequest.class);   
+	
+		try {
+		    // mock the getReader() call
+			jsonString = "{\"modelAttributeDictionaryData\": {\"onapName\": \"test\",	\"guard\": false,\"priority\": \"3\","
+					+ " \"riskType\": \"test\", \"riskLevel\": \"7\", \"modelName\": \"testname\"}}";
+			BufferedReader br = new BufferedReader(new StringReader(jsonString));
+			when(request.getReader()).thenReturn(br); 		    
+			controller.saveMicroServiceHeaderDefaultValues(request, response);
+			logger.info("response.getContentAsString(): " + response.getContentAsString());
+			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceHeaderDefaultDatas"));
+
+		} catch (Exception e) {
+			fail("Exception: " + e);
+		}
+		
+		logger.info("testSaveMicroServiceHeaderDefaultValues: exit");
+	}
+	
+	
+	@Test
+	public void testGetMicroServiceHeaderDefaultsEntityDataByName() {
+		logger.info("testGetMicroServiceHeaderDefaultsEntityDataByName: Entering");
+
+		MockHttpServletResponse response =  new MockHttpServletResponse();
+		
+		controller.getMicroServiceHeaderDefaultsEntityDataByName(response);
+		
+		try {
+			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceHeaderDefaultDatas"));
+			logger.info("response.getContentAsString(): " + response.getContentAsString());
+		} catch (UnsupportedEncodingException e) {
+			fail("Exception: " + e);
+		}
+		
+		logger.info("testGetMicroServiceHeaderDefaultsEntityDataByName: exit");
+	}
+
+	@Test
+	public void testGetMicroServiceHeaderDefaultsEntityData() {
+		logger.info("testGetMicroServiceHeaderDefaultsEntityData: Entering");
+
+		MockHttpServletResponse response =  new MockHttpServletResponse();
+		
+		controller.getMicroServiceHeaderDefaultsEntityData(response);
+		
+		try {
+			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceHeaderDefaultDatas"));
+			logger.info("response.getContentAsString(): " + response.getContentAsString());
+		} catch (UnsupportedEncodingException e) {
+			fail("Exception: " + e);
+		}
+		
+		logger.info("testGetMicroServiceHeaderDefaultsEntityData: exit");
+	}
+	
+	@Test
+	public void testRemoveMicroServiceHeaderDefaults() {
+		logger.info("testRemoveMicroServiceHeaderDefaults: Entering");
+
+		MockHttpServletResponse response =  new MockHttpServletResponse();
+	    request = mock(HttpServletRequest.class);   
+	
+		try {
+		    // mock the getReader() call
+			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
+					+ " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
+					+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
+					+ " \"tempModel\": {\"name\": \"testingdata\",\"subScopename\": \"\"	},"
+					+ " \"policy\": {\"policyType\": \"Config\",\"configPolicyType\": \"Micro Service\",\"policyName\": \"may1501\", "
+					+ "	\"policyDescription\": \"testing input\", \"onapName\": \"RaviTest\",\"guard\": \"False\",\"riskType\": \"Risk12345\",\"riskLevel\": \"2\","
+					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
+					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
+			BufferedReader br = new BufferedReader(new StringReader(jsonString));
+			when(request.getReader()).thenReturn(br); 		    
+			controller.removeMicroServiceHeaderDefaults(request, response);
+			logger.info("response.getContentAsString(): " + response.getContentAsString());
+			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("microServiceHeaderDefaultDatas"));
+
+		} catch (Exception e) {
+			fail("Exception: " + e);
+		}
+		
+		logger.info("testRemoveMicroServiceHeaderDefaults: exit");
+	}
+
 
 	@Test
 	public void testGetDCAEUUIDDictionaryByNameEntityData() {

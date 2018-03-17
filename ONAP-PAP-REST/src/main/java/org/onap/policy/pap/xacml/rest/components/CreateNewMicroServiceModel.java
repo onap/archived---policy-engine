@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -47,6 +48,8 @@ import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.util.MSAttributeObject;
 import org.onap.policy.rest.util.MSModelUtils;
 import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
+
+import com.google.gson.Gson;
 
 public class CreateNewMicroServiceModel {
 	private static final Logger logger = FlexLogger.getLogger(CreateNewMicroServiceModel.class);
@@ -79,8 +82,18 @@ public class CreateNewMicroServiceModel {
 	        //get all the files from a director
 	        for (File file : fileList){
 	            if (file.isFile()){
-				    tempMap = utils.processEpackage(file.getAbsolutePath(), MODEL_TYPE.XMI);
-				    classMap.putAll(tempMap);
+	            	int i = file.getName().lastIndexOf('.');
+	            	String type = file.getName().substring(i+1);
+	            	
+	            	if(type != null && "yml".equalsIgnoreCase(type)){
+	            		
+	            		processYmlModel(file.toString(), modelName);
+	            		
+	            	}else{
+	            		
+				        tempMap = utils.processEpackage(file.getAbsolutePath(), MODEL_TYPE.XMI);
+				        classMap.putAll(tempMap);
+	            	}
 	            }
 	        }
 	        cleanUpFile = "ExtractDir" + File.separator + randomID + ".zip";
@@ -92,13 +105,65 @@ public class CreateNewMicroServiceModel {
 			} catch (IOException e) {
 				logger.error("Failed to unzip model file " + randomID, e);
 			}
-	    }else {
-		    tempMap = utils.processEpackage("ExtractDir" + File.separator + randomID+".xmi", MODEL_TYPE.XMI);
-		    classMap.putAll(tempMap);
-		    cleanUpFile = "ExtractDir" + File.separator + randomID+".xmi";
+	    }else {	    	
+	    	if(importFile.contains(".yml")){
+	    		
+				processYmlModel("ExtractDir" + File.separator + randomID+".yml", modelName);
+			    cleanUpFile = "ExtractDir" + File.separator + randomID+".yml";
+	    		
+	    	}else{
+			    tempMap = utils.processEpackage("ExtractDir" + File.separator + randomID+".xmi", MODEL_TYPE.XMI);
+			    classMap.putAll(tempMap);
+			    cleanUpFile = "ExtractDir" + File.separator + randomID+".xmi";
+	    	}
+	    	
 		    File deleteFile = new File(cleanUpFile); 
 			deleteFile.delete();
 	    }
+	}
+	
+	private void processYmlModel(String fileName, String  modelName){
+
+		try {
+			
+			
+			utils.parseTosca(fileName);
+			
+			MSAttributeObject msAttributes= new MSAttributeObject();
+			msAttributes.setClassName(modelName);
+			
+			LinkedHashMap<String, String> returnAttributeList =new LinkedHashMap<>();
+			returnAttributeList.put(modelName, utils.getAttributeString());
+			msAttributes.setAttribute(returnAttributeList);
+			
+			msAttributes.setSubClass(utils.getRetmap());
+			
+			msAttributes.setMatchingSet(utils.getMatchableValues());
+			
+			LinkedHashMap<String, String> returnReferenceList =new LinkedHashMap<>();
+
+			returnReferenceList.put(modelName, utils.getReferenceAttributes());
+			msAttributes.setRefAttribute(returnReferenceList);
+			
+			if(utils.getListConstraints()!=""){
+				LinkedHashMap<String, String> enumList =new LinkedHashMap<>();
+				String[] listArray=utils.getListConstraints().split("#");
+                for(String str:listArray){
+                    String[] strArr= str.split("=");
+                    if(strArr.length>1){
+                        enumList.put(strArr[0], strArr[1]);
+                    }
+                }
+				msAttributes.setEnumType(enumList);
+			}
+			
+			classMap=new LinkedHashMap<>();
+			classMap.put(modelName, msAttributes);
+			
+		} catch (Exception e) {
+			logger.error("Failed to process yml model" + e);
+		}
+	
 	}
 	
 	private List<File> listModelFiles(String directoryName) {
@@ -171,7 +236,7 @@ public class CreateNewMicroServiceModel {
 		}
 	}
 
-	public Map<String, String> addValuesToNewModel() {
+	public Map<String, String> addValuesToNewModel(String type) {
 		
 		Map<String, String> successMap = new HashMap<>();
 		MSAttributeObject mainClass  = null;
@@ -185,29 +250,75 @@ public class CreateNewMicroServiceModel {
 			return successMap;
 		}
 		mainClass = classMap.get(this.newModel.getModelName());
-		String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[]{"[", "]", " "}, new String[]{"", "", ""});
-		this.newModel.setDependency(dependTemp);
-		if (!this.newModel.getDependency().equals("")){
-			dependency = new ArrayList<String>(Arrays.asList(dependTemp.split(",")));	
-			dependency = utils.getFullDependencyList(dependency, classMap);
-			if (!dependency.isEmpty()){
-				for (String element : dependency){
-				    MSAttributeObject temp;
-					if (classMap.containsKey(element)){
-						temp = classMap.get(element);
-						mainClass.addAllRefAttribute(temp.getRefAttribute());
-						mainClass.addAllAttribute(temp.getAttribute());
+		
+		
+		if(".yml".equalsIgnoreCase(type)){
+			
+			newModel.setDependency("[]");
+			if(mainClass.getSubClass() != null){
+			   String value = new Gson().toJson(mainClass.getSubClass());
+			   newModel.setSub_attributes(value);
+			}
+			
+			if(mainClass.getAttribute() != null){
+				String attributes= mainClass.getAttribute().toString().replace("{", "").replace("}", "");
+				int equalsIndexForAttributes= attributes.indexOf("=");
+				String atttributesAfterFirstEquals= attributes.substring(equalsIndexForAttributes+1);
+				this.newModel.setAttributes(atttributesAfterFirstEquals);
+			}
+			
+			if(mainClass.getRefAttribute() != null){
+				String refAttributes= mainClass.getRefAttribute().toString().replace("{", "").replace("}", "");
+				int equalsIndex= refAttributes.indexOf("=");
+				String refAttributesAfterFirstEquals= refAttributes.substring(equalsIndex+1);
+				this.newModel.setRef_attributes(refAttributesAfterFirstEquals);
+			}
+			
+			if(mainClass.getEnumType() != null){
+			    this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
+			}
+			
+			if(mainClass.getMatchingSet() != null){
+			    this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
+			}
+			
+		}else{
+		
+			String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[]{"[", "]", " "}, new String[]{"", "", ""});
+			this.newModel.setDependency(dependTemp);
+			if (this.newModel.getDependency() != null && !this.newModel.getDependency().isEmpty()){
+				dependency = new ArrayList<String>(Arrays.asList(dependTemp.split(",")));	
+				dependency = utils.getFullDependencyList(dependency, classMap);
+				if (!dependency.isEmpty()){
+					for (String element : dependency){
+						MSAttributeObject temp = new MSAttributeObject();
+						if (classMap.containsKey(element)){
+							temp = classMap.get(element);
+							mainClass.addAllRefAttribute(temp.getRefAttribute());
+							mainClass.addAllAttribute(temp.getAttribute());
+						}
 					}
-				}
-			}		
+				}		
+			}
+			subAttribute = utils.createSubAttributes(dependency, classMap, this.newModel.getModelName());
+	
+			this.newModel.setSub_attributes(subAttribute);
+			if(mainClass.getAttribute() != null && !mainClass.getAttribute().isEmpty()){
+			    this.newModel.setAttributes(mainClass.getAttribute().toString().replace("{", "").replace("}", ""));
+			}
+			
+			if(mainClass.getRefAttribute() != null && !mainClass.getRefAttribute().isEmpty()){
+			   this.newModel.setRef_attributes(mainClass.getRefAttribute().toString().replace("{", "").replace("}", ""));
+			}
+			
+			if(mainClass.getEnumType() != null && !mainClass.getEnumType().isEmpty()){
+		        this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
+			}
+			
+			if(mainClass.getMatchingSet() != null && !mainClass.getMatchingSet().isEmpty()){
+	            this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
+			}
 		}
-		subAttribute = utils.createSubAttributes(dependency, classMap, this.newModel.getModelName());
-
-		this.newModel.setSub_attributes(subAttribute);
-		this.newModel.setAttributes(mainClass.getAttribute().toString().replace("{", "").replace("}", ""));
-		this.newModel.setRef_attributes(mainClass.getRefAttribute().toString().replace("{", "").replace("}", ""));
-		this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
-        this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
 		successMap.put("success", "success");
 		return successMap;
 		
@@ -231,6 +342,7 @@ public class CreateNewMicroServiceModel {
 			model.setEnumValues(this.newModel.getEnumValues());
 			model.setRef_attributes(this.newModel.getRef_attributes());
 			model.setSub_attributes(this.newModel.getSub_attributes());
+			model.setDataOrderInfo(this.newModel.getDataOrderInfo());
 			UserInfo userInfo = new UserInfo();
 			userInfo.setUserLoginId(imported_by);
 			userInfo.setUserName(imported_by);

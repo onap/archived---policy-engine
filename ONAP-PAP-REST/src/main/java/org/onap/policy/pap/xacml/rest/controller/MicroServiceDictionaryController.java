@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +45,7 @@ import org.onap.policy.rest.jpa.MicroServiceAttribute;
 import org.onap.policy.rest.jpa.MicroServiceConfigName;
 import org.onap.policy.rest.jpa.MicroServiceLocation;
 import org.onap.policy.rest.jpa.MicroServiceModels;
+import org.onap.policy.rest.jpa.MicroserviceHeaderdeFaults;
 import org.onap.policy.rest.jpa.PrefixList;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.util.MSAttributeObject;
@@ -72,9 +74,11 @@ public class MicroServiceDictionaryController {
     private static String getDictionary = "getDictionary";
     private static String errorMsg = "error";
     private static String dictionaryDBQuery = "dictionaryDBQuery";
-    private HashMap<String,MSAttributeObject > classMap;
+    private LinkedHashMap<String,MSAttributeObject > classMap;
     private List<String> modelList = new ArrayList<>();
+    private static String apiflag = "apiflag";
 	private static String dictionaryFields ="dictionaryFields";
+	private static String update = "update";
 	private static String duplicateResponseString = "Duplicate";
 	private static String microServiceModelsDictionaryDatas = "microServiceModelsDictionaryDatas";
 	private static String modelName = "modelName";
@@ -86,6 +90,7 @@ public class MicroServiceDictionaryController {
 	private static String microServiceConfigNameDatas = "microServiceConfigNameDictionaryDatas";
 	private static String microServiceLocationDatas = "microServiceLocationDictionaryDatas";
 	private static String microServiceAttributeDatas = "microServiceAttributeDictionaryDatas";
+	private static String microServiceHeaderDefaultDatas = "microServiceHeaderDefaultDatas";
 
     public MicroServiceDictionaryController(){
     	super();
@@ -136,7 +141,7 @@ public class MicroServiceDictionaryController {
             
             List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(dCAEuuid.getName(), "name", DCAEuuid.class);
 			boolean duplicateflag = false;
-			if(!duplicateData.isEmpty()){
+			if(duplicateData != null && !duplicateData.isEmpty()){
 				DCAEuuid data = (DCAEuuid) duplicateData.get(0);
 				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
 					dCAEuuid.setId(data.getId());
@@ -201,7 +206,7 @@ public class MicroServiceDictionaryController {
             }
             List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(microServiceConfigName.getName(), "name", MicroServiceConfigName.class);
 			boolean duplicateflag = false;
-			if(!duplicateData.isEmpty()){
+			if(duplicateData != null && !duplicateData.isEmpty()){
 				MicroServiceConfigName data = (MicroServiceConfigName) duplicateData.get(0);
 				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
 					microServiceConfigName.setId(data.getId());
@@ -267,7 +272,7 @@ public class MicroServiceDictionaryController {
             
             List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(microServiceLocation.getName(), "name", MicroServiceLocation.class);
 			boolean duplicateflag = false;
-			if(!duplicateData.isEmpty()){
+			if(duplicateData != null && !duplicateData.isEmpty()){
 				MicroServiceLocation data = (MicroServiceLocation) duplicateData.get(0);
 				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
 					microServiceLocation.setId(data.getId());
@@ -329,16 +334,13 @@ public class MicroServiceDictionaryController {
             String checkValue;
             if (fromAPI) {
                 microServiceAttribute = mapper.readValue(root.get(dictionaryFields).toString(), MicroServiceAttribute.class);
-                MicroServiceAttribute initialAttribute = (MicroServiceAttribute)mapper.readValue(root.get("initialFields").toString(), MicroServiceAttribute.class);
-                checkValue = initialAttribute.getName() + ":" + initialAttribute.getValue() + ":" + initialAttribute.getModelName();
             } else {
                 microServiceAttribute = mapper.readValue(root.get("modelAttributeDictionaryData").toString(), MicroServiceAttribute.class);
-                checkValue = microServiceAttribute.getName() + ":" + microServiceAttribute.getValue() + ":" + microServiceAttribute.getModelName();
             }
-      
+            checkValue = microServiceAttribute.getName() + ":" + microServiceAttribute.getValue() + ":" + microServiceAttribute.getModelName();
             List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(checkValue, "name:value:modelName", MicroServiceAttribute.class);
 			boolean duplicateflag = false;
-			if(!duplicateData.isEmpty()){
+			if(duplicateData != null && !duplicateData.isEmpty()){
 				MicroServiceAttribute data = (MicroServiceAttribute) duplicateData.get(0);
 				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
 					microServiceAttribute.setId(data.getId());
@@ -472,6 +474,11 @@ public class MicroServiceDictionaryController {
 			JsonNode root = mapper.readTree(request.getReader());
 			MicroServiceModels microServiceModels = new MicroServiceModels();
 			String userId = null;
+			
+			String dataOrderInfo = null;
+			if(root.has("dataOrderInfo")){
+				dataOrderInfo = root.get("dataOrderInfo").toString();
+			}
 
 			if(root.has("modelType")){
 				JsonNode dataType = root.get("modelType");
@@ -491,7 +498,7 @@ public class MicroServiceDictionaryController {
 						}
 					}
 
-					classMap = new HashMap<>();
+					classMap = new LinkedHashMap<>();
 					JsonNode data = root.get(classMapData);
 					ObjectMapper mapper1 = new ObjectMapper();
 					String data1 = data.toString().substring(1, data.toString().length()-1);
@@ -513,11 +520,11 @@ public class MicroServiceDictionaryController {
 					this.newModel.setSub_attributes(value);
 					String attributes= mainClass.getAttribute().toString().replace("{", "").replace("}", "");
 					int equalsIndexForAttributes= attributes.indexOf('=');
-					String atttributesAfterFirstEquals= attributes.substring(equalsIndexForAttributes+1, attributes.length()-1);
+					String atttributesAfterFirstEquals= attributes.substring(equalsIndexForAttributes+1);
 					this.newModel.setAttributes(atttributesAfterFirstEquals);
 					String refAttributes= mainClass.getRefAttribute().toString().replace("{", "").replace("}", "");
-					int equalsIndex= refAttributes.indexOf('=');
-					String refAttributesAfterFirstEquals= refAttributes.substring(equalsIndex+1, refAttributes.length()-1);
+					int equalsIndex= refAttributes.indexOf("=");
+					String refAttributesAfterFirstEquals= refAttributes.substring(equalsIndex+1);
 					this.newModel.setRef_attributes(refAttributesAfterFirstEquals);
 					this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
 					this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
@@ -541,7 +548,7 @@ public class MicroServiceDictionaryController {
 							}
 						}
 						if(root.has(classMapData)){
-							classMap = new HashMap<>();
+							classMap = new LinkedHashMap<>();
 							JsonNode data = root.get(classMapData);
 							ObjectMapper mapper1 = new ObjectMapper();
 							String data1 = data.toString().substring(1, data.toString().length()-1);
@@ -567,11 +574,13 @@ public class MicroServiceDictionaryController {
 			microServiceModels.setVersion(this.newModel.getVersion());
 			microServiceModels.setEnumValues(this.newModel.getEnumValues());
 			microServiceModels.setAnnotation(this.newModel.getAnnotation());
-			
+			if(dataOrderInfo != null){
+				 microServiceModels.setDataOrderInfo(dataOrderInfo);
+			}
 			String checkName = microServiceModels.getModelName() + ":" + microServiceModels.getVersion();
 			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(checkName, "modelName:version", MicroServiceModels.class);
 			boolean duplicateflag = false;
-			if(!duplicateData.isEmpty()){
+			if(duplicateData != null && !duplicateData.isEmpty()){
 				MicroServiceModels data = (MicroServiceModels) duplicateData.get(0);
 				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
 					microServiceModels.setId(data.getId());
@@ -667,5 +676,74 @@ public class MicroServiceDictionaryController {
 		
 		return returnList;
 	}
-
+	
+	@RequestMapping(value={"/get_MicroServiceHeaderDefaultsDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	public void getMicroServiceHeaderDefaultsEntityDataByName(HttpServletResponse response){
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getDataByEntity(response, microServiceHeaderDefaultDatas, "modelName", MicroserviceHeaderdeFaults.class);
+	}
+	
+    @RequestMapping(value={"/get_MicroServiceHeaderDefaultsData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getMicroServiceHeaderDefaultsEntityData(HttpServletResponse response){
+		DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.getData(response, microServiceHeaderDefaultDatas, MicroserviceHeaderdeFaults.class);
+    }
+    
+    
+    @RequestMapping(value={"/ms_dictionary/save_headerDefaults"}, method={RequestMethod.POST})
+    public ModelAndView saveMicroServiceHeaderDefaultValues(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    	DictionaryUtils utils = getDictionaryUtilsInstance();
+        try {
+        	boolean fromAPI = utils.isRequestFromAPI(request);
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			JsonNode root = mapper.readTree(request.getReader());
+            
+            MicroserviceHeaderdeFaults msHeaderdeFaults;
+            if(fromAPI){
+            	msHeaderdeFaults = mapper.readValue(root.get(dictionaryFields).toString(), MicroserviceHeaderdeFaults.class);
+            }else{
+            	msHeaderdeFaults = mapper.readValue(root.get("modelAttributeDictionaryData").toString(), MicroserviceHeaderdeFaults.class);
+            }
+            
+            List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(msHeaderdeFaults.getModelName(), "modelName", MicroserviceHeaderdeFaults.class);
+			boolean duplicateflag = false;
+			if(duplicateData != null && !duplicateData.isEmpty()){
+				MicroserviceHeaderdeFaults data = (MicroserviceHeaderdeFaults) duplicateData.get(0);
+				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+					msHeaderdeFaults.setId(data.getId());
+				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
+						(request.getParameter(operation) == null && (data.getId() != msHeaderdeFaults.getId()))){
+					duplicateflag = true;
+				}
+			}
+            
+			String responseString = null;
+			if(!duplicateflag){
+				if(msHeaderdeFaults.getId() == 0){
+					commonClassDao.save(msHeaderdeFaults);
+				}else{
+					commonClassDao.update(msHeaderdeFaults); 
+				} 
+				responseString = mapper.writeValueAsString(commonClassDao.getData(MicroserviceHeaderdeFaults.class));
+			}else{
+				responseString = duplicateResponseString;
+			}
+			if(fromAPI){
+				return utils.getResultForApi(responseString);
+			}else{
+				utils.setResponseData(response, microServiceHeaderDefaultDatas, responseString);
+			}
+        }
+        catch (Exception e){
+        	utils.setErrorResponseData(response, e);
+        }
+        return null;
+    }
+    
+    @RequestMapping(value={"/ms_dictionary/remove_headerDefaults"}, method={RequestMethod.POST})
+    public void removeMicroServiceHeaderDefaults(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    	DictionaryUtils utils = getDictionaryUtilsInstance();
+		utils.removeData(request, response, microServiceHeaderDefaultDatas, MicroserviceHeaderdeFaults.class);
+    }
 }
