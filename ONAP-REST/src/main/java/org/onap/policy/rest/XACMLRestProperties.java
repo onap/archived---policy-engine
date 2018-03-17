@@ -347,6 +347,10 @@ public class XACMLRestProperties extends XACMLProperties {
 	 */
 	public static final String TemplateVersion_MS= "xacml.rest.microServices";
 	/*
+	 * Optimization Policy Template Version
+	 */
+	public static final String TemplateVersion_OOF= "xacml.rest.optimization";
+	/*
 	 * Firewall Policy Template Version
 	 */
 	public static final String TemplateVersion_FW= "xacml.rest.firewallPolicy";

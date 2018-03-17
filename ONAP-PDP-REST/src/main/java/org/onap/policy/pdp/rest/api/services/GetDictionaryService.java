@@ -222,6 +222,9 @@ public class GetDictionaryService {
         case "MicroServiceModels":
             jsonString = jsonString.replace("microServiceModelsDictionaryDatas", "DictionaryDatas");
             break;
+        case "OptimizationModels":
+        	jsonString = jsonString.replace("optmizationModelsDictionaryDatas", "DictionaryDatas");
+        	break;
         case "PolicyScopeService":
             jsonString = jsonString.replace("psServiceDictionaryDatas", "DictionaryDatas");
             break;

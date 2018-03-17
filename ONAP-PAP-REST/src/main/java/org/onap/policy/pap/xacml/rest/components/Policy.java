@@ -204,9 +204,9 @@ public abstract class Policy {
 		String policyDir = EMPTY_STRING;
 		String absolutePath = parent.toString();
 		if (absolutePath != null && !absolutePath.equals(EMPTY_STRING)) {
-			policyDir = absolutePath.substring(absolutePath.lastIndexOf("\\") + 1, absolutePath.length());
+			policyDir = absolutePath.substring(absolutePath.lastIndexOf('\\') + 1, absolutePath.length());
 			if (policyDir == null || policyDir.equals(EMPTY_STRING)) {
-				policyDir = absolutePath.substring(absolutePath.lastIndexOf("/") + 1, absolutePath.length());
+				policyDir = absolutePath.substring(absolutePath.lastIndexOf('/') + 1, absolutePath.length());
 			}
 		}
 
@@ -214,10 +214,9 @@ public abstract class Policy {
 		if (policyDir != null && !policyDir.equals(EMPTY_STRING)) {
 			fileName = policyType + "_" + String.format(polcyFileName) + "." + version + ".xml";
 		} 
-		if (fileName != null) {
-			newFile = Paths.get(parent.toString(), fileName);
-		}
-		if (Files.notExists(newFile)) {
+			
+		newFile = Paths.get(parent.toString(), fileName);
+		if (newFile.toFile().exists()) {
 			return newFile;
 		}
 		return null;
@@ -231,26 +230,28 @@ public abstract class Policy {
 		String policyDir = EMPTY_STRING;
 		String absolutePath = parentPath.toString();
 		if (absolutePath != null && !absolutePath.equals(EMPTY_STRING)) {
-			policyDir = absolutePath.substring(absolutePath.lastIndexOf("\\") + 1, absolutePath.length());
+			policyDir = absolutePath.substring(absolutePath.lastIndexOf('\\') + 1, absolutePath.length());
 			if (policyDir == null || policyDir.equals(EMPTY_STRING)) {
-				policyDir = absolutePath.substring(absolutePath.lastIndexOf("/") + 1, absolutePath.length());
+				policyDir = absolutePath.substring(absolutePath.lastIndexOf('/') + 1, absolutePath.length());
 			}
 		}
 
 		String fileName = "default";
 		if (policyDir != null && !policyDir.equals(EMPTY_STRING)) {
-			if(policyConfigType.equals("ClosedLoop_PM")){
+			if("ClosedLoop_PM".equals(policyConfigType)){
 				fileName = policyType + "_" + "PM" + "_" +java.lang.String.format(policyFileName) + "." +version +".xml";
-			}else if(policyConfigType.equals("ClosedLoop_Fault")){
+			}else if("ClosedLoop_Fault".equals(policyConfigType)){
 				fileName = policyType + "_" + "Fault" + "_" +java.lang.String.format(policyFileName) +  "." + version + ".xml";
-			}else if(policyConfigType.equals("Micro Service")){
+			}else if("Micro Service".equals(policyConfigType)){
 				fileName = policyType + "_" + "MS" + "_" + java.lang.String.format(policyFileName) + "." + version + ".xml";
+			}else if("Optimization".equals(policyConfigType)) {
+				fileName = policyType + "_" + "OOF" + "_" + java.lang.String.format(policyFileName) + "." + version + ".xml";
 			}
 		} 
-		if (fileName != null) {
-			newFile = Paths.get(parentPath.toString(), fileName);
-		}
-		if (Files.notExists(newFile)) {
+
+		newFile = Paths.get(parentPath.toString(), fileName);
+
+		if (newFile.toFile().exists()) {
 			return newFile;
 		}
 		return null;

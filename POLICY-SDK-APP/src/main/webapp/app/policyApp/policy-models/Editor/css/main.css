@@ -103,6 +103,11 @@ body {
 	margin-top: 10px;
 }
 
+div#HeaderDefaultValues.modal-body {	
+    position: relative;
+    padding: 30px;
+}
+
 .btn {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
   font-weight: 500;
@@ -420,4 +425,31 @@ table th > a:focus {
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+}
+
+.mstooltip {
+    position: relative;
+    display: inline-block;
+    color: orange;
+    font-weight: lighter;
+}
+
+.mstooltip .tooltiptext {
+    font-weight: lighter;
+    visibility: hidden;
+    width: 150px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 4px 5px;
+    margin-left: 5px;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    z-index: 1;
+}
+
+.mstooltip:hover .tooltiptext {
+    visibility: visible;
 }

@@ -117,6 +117,12 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 			case "MicroServiceModels":
 				dictionary.getMicroServiceModelsDictionary(response);
 				break;
+			case "MicroServiceDictionary":
+				dictionary.getMicroServiceDictionary(response);
+				break;
+			case "OptimizationModels":
+				dictionary.getOptimizationModelsDictionary(response);
+				break;
 			case "PolicyScopeService":
 				dictionary.getPSServiceDictionary(response);
 				break;
@@ -137,9 +143,6 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 				break;
 			case "SafePolicyWarning":
 				dictionary.getSafePolicyWarningDictionary(response);
-				break;
-			case "MicroServiceDictionary":
-				dictionary.getMicroServiceDictionary(response);
 				break;
 			default:
 				extendedOptions(dictionaryType, request, response, true);
@@ -260,6 +263,12 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 			case "MicroServiceModels":
 				result = dictionary.saveMicroServiceModelsDictionary(request, response);
 				break;
+			case "MicroServiceDictionary":
+				result = dictionary.saveMicroServiceDictionary(request, response);
+				break;
+			case "OptimizationModels":
+				result = dictionary.saveOptimizationModelsDictionary(request, response);
+				break;
 			case "PolicyScopeService":
 				result = dictionary.savePSServiceDictionary(request, response);
 				break;
@@ -280,9 +289,6 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 				break;
 			case "SafePolicyWarning":
 				result = dictionary.saveSafePolicyWarningDictionary(request, response);
-				break;
-			case "MicroServiceDictionary":
-				result = dictionary.saveMicroServiceDictionary(request, response);
 				break;
 			default:
 				result = extendedOptions(dictionaryType, request, response, false);

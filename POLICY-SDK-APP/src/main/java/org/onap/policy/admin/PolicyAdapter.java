@@ -29,6 +29,7 @@ import org.onap.policy.controller.CreateClosedLoopFaultController;
 import org.onap.policy.controller.CreateClosedLoopPMController;
 import org.onap.policy.controller.CreateDcaeMicroServiceController;
 import org.onap.policy.controller.CreateFirewallController;
+import org.onap.policy.controller.CreateOptimizationController;
 import org.onap.policy.controller.CreatePolicyController;
 import org.onap.policy.controller.DecisionPolicyController;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -58,6 +59,8 @@ public class PolicyAdapter {
 			configPolicyName = "BRMS_Param";
 		}else if(policyAdapter.getPolicyName().startsWith("Config_MS")){
 			configPolicyName = "Micro Service";
+		}else if(policyAdapter.getPolicyName().startsWith("Config_OOF")){
+			configPolicyName = "Optimization";
 		}else if(policyAdapter.getPolicyName().startsWith("Action") || policyAdapter.getPolicyName().startsWith("Decision") ){
 			// No configPolicyName is applicable
 		}else{
@@ -94,6 +97,9 @@ public class PolicyAdapter {
 			}
 			else if("Micro Service".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
 				new CreateDcaeMicroServiceController().prePopulateDCAEMSPolicyData(policyAdapter, entity);
+			}
+			else if("Optimization".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
+				new CreateOptimizationController().prePopulatePolicyData(policyAdapter, entity);
 			}
 			else if("Firewall Config".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
 				new CreateFirewallController().prePopulateFWPolicyData(policyAdapter, entity);
