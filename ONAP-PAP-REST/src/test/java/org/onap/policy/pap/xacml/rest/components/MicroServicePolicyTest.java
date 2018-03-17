@@ -105,7 +105,7 @@ public class MicroServicePolicyTest {
 		String testFileName = "testFile.zip";
 		String testVal = "testVal";
 		CreateNewMicroServiceModel model = new CreateNewMicroServiceModel(testFileName, testVal, testVal, testVal, testVal);
-		model.addValuesToNewModel();
+		model.addValuesToNewModel(".xmi");
 		model.saveImportService();
 	}
 }

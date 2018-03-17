@@ -54,8 +54,18 @@ public class PolicyValidationRequestWrapper {
 	public static final String CONFIG_NAME="configName";
 	public static final String INVALIDJSON = " improper JSON format: ";
 	public static final String ONAPNAME = "onapname";
-	public static final String SERVICETYPE_POLICY_NAME = "serviceTypePolicyName";
+	public static final String CONTENT = "content";
+	public static final String GUARD = "guard";
+	public static final String LOCATION = "location";
+	public static final String POLICYSCOPE = "policyScope";
+	public static final String PRIORITY = "priority";
+	public static final String RISKLEVEL = "riskLevel";
+	public static final String RISKTYPE = "riskType";
+	public static final String SERVICE = "service";
+	public static final String VERSION = "version";
 
+	public static final String SERVICETYPE_POLICY_NAME = "serviceTypePolicyName";
+	
 	public PolicyRestAdapter populateRequestParameters(HttpServletRequest request) {
 		
 		PolicyRestAdapter policyData = null;
@@ -281,8 +291,8 @@ public class PolicyValidationRequestWrapper {
 				
 		        // get values and attributes from the JsonObject
 				if(json != null){
-					if (json.containsKey("content")){
-						String content = json.get("content").toString();
+					if (json.containsKey(CONTENT)){
+						String content = json.get(CONTENT).toString();
 						ObjectMapper mapper = new ObjectMapper();
 						JsonNode policyJSON = null;
 						try {
@@ -294,50 +304,111 @@ public class PolicyValidationRequestWrapper {
 				        }
 						policyData.setPolicyJSON(policyJSON);
 					}
-			        if (json.containsKey("service")){
-			        	String serviceType = json.get("service").toString().replace("\"", "");
+			        if (json.containsKey(SERVICE)){
+			        	String serviceType = json.get(SERVICE).toString().replace("\"", "");
 			        	policyData.setServiceType(serviceType);
 			        }
 			        if (json.containsKey("uuid")){
 			            String uuid = json.get("uuid").toString().replace("\"", "");
 			            policyData.setUuid(uuid);
 			        }
-			        if (json.containsKey("location")){
-			            String msLocation = json.get("location").toString().replace("\"", "");
+			        if (json.containsKey(LOCATION)){
+			            String msLocation = json.get(LOCATION).toString().replace("\"", "");
 			            policyData.setLocation(msLocation);
 			        }
 			        if (json.containsKey(CONFIG_NAME)){
 			            String configName = json.get(CONFIG_NAME).toString().replace("\"", "");
 			            policyData.setConfigName(configName);
 			        }
-			        if(json.containsKey("priority")){
-			        	String priority = json.get("priority").toString().replace("\"", "");
+			        if(json.containsKey(PRIORITY)){
+			        	String priority = json.get(PRIORITY).toString().replace("\"", "");
 			        	policyData.setPriority(priority);
 			        }
-			        if(json.containsKey("version")){
-			        	String version = json.get("version").toString().replace("\"", "");
+			        if(json.containsKey(VERSION)){
+			        	String version = json.get(VERSION).toString().replace("\"", "");
 			        	policyData.setVersion(version);
 			        }
-			        if(json.containsKey("policyScope")){
-			        	String policyScope = json.get("policyScope").toString().replace("\"", "");
+			        if(json.containsKey(POLICYSCOPE)){
+			        	String policyScope = json.get(POLICYSCOPE).toString().replace("\"", "");
 			        	policyData.setPolicyScope(policyScope);
 			        }
-			        if(json.containsKey("riskType")){
-			        	String riskType = json.get("riskType").toString().replace("\"", "");
+			        if(json.containsKey(RISKTYPE)){
+			        	String riskType = json.get(RISKTYPE).toString().replace("\"", "");
 			        	policyData.setRiskType(riskType);
 			        }
-			        if(json.containsKey("riskLevel")){
-			        	String riskLevel = json.get("riskLevel").toString().replace("\"", "");
+			        if(json.containsKey(RISKLEVEL)){
+			        	String riskLevel = json.get(RISKLEVEL).toString().replace("\"", "");
 			        	policyData.setRiskLevel(riskLevel);
 			        }
-			        if(json.containsKey("guard")){
-			        	String guard = json.get("guard").toString().replace("\"", "");
+			        if(json.containsKey(GUARD)){
+			        	String guard = json.get(GUARD).toString().replace("\"", "");
 			        	policyData.setGuard(guard);
 			        }
 				} else {
 		            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ INVALIDJSON + parameters.getConfigBody();
 		            LOGGER.error(message);
 		            return null;				
+				}
+				
+			}else if("Optimization".equals(parameters.getPolicyConfigType().toString())){
+				
+				policyData.setConfigPolicyType("Optimization");
+				
+		        // get values and attributes from the JsonObject
+				if(json != null){
+					if (json.containsKey(CONTENT)){
+						String content = json.get(CONTENT).toString();
+						ObjectMapper mapper = new ObjectMapper();
+						JsonNode policyJSON = null;
+						try {
+							policyJSON = mapper.readTree(content);
+						} catch (IOException e) {
+				            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ INVALIDJSON + parameters.getConfigBody();
+				            LOGGER.error(message, e);
+				            return null;					
+				        }
+						policyData.setPolicyJSON(policyJSON);
+					}
+			        if (json.containsKey(SERVICE)){
+			        	String serviceType = json.get(SERVICE).toString().replace("\"", "");
+			        	policyData.setServiceType(serviceType);
+			        }
+			        if (json.containsKey("uuid")){
+			            String uuid = json.get("uuid").toString().replace("\"", "");
+			            policyData.setUuid(uuid);
+			        }
+			        if (json.containsKey(LOCATION)){
+			            String msLocation = json.get(LOCATION).toString().replace("\"", "");
+			            policyData.setLocation(msLocation);
+			        }
+			        if (json.containsKey(CONFIG_NAME)){
+			            String configName = json.get(CONFIG_NAME).toString().replace("\"", "");
+			            policyData.setConfigName(configName);
+			        }
+			        if(json.containsKey(PRIORITY)){
+			        	String priority = json.get(PRIORITY).toString().replace("\"", "");
+			        	policyData.setPriority(priority);
+			        }
+			        if(json.containsKey(VERSION)){
+			        	String version = json.get(VERSION).toString().replace("\"", "");
+			        	policyData.setVersion(version);
+			        }
+			        if(json.containsKey(POLICYSCOPE)){
+			        	String policyScope = json.get(POLICYSCOPE).toString().replace("\"", "");
+			        	policyData.setPolicyScope(policyScope);
+			        }
+			        if(json.containsKey(RISKTYPE)){
+			        	String riskType = json.get(RISKTYPE).toString().replace("\"", "");
+			        	policyData.setRiskType(riskType);
+			        }
+			        if(json.containsKey(RISKLEVEL)){
+			        	String riskLevel = json.get(RISKLEVEL).toString().replace("\"", "");
+			        	policyData.setRiskLevel(riskLevel);
+			        }
+			        if(json.containsKey(GUARD)){
+			        	String guard = json.get(GUARD).toString().replace("\"", "");
+			        	policyData.setGuard(guard);
+			        }
 				}
 				
 			} else if("Fault".equals(parameters.getPolicyConfigType().toString())){
