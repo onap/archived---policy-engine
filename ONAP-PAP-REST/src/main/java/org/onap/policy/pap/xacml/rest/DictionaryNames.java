@@ -32,6 +32,7 @@ public enum DictionaryNames {
 	ActionPolicyDictionary,
 	OnapName,
 	MSPolicyDictionary,
+	OptimizationPolicyDictionary,
 	VNFType,
 	VSCLAction,
 	ClosedLoopService,

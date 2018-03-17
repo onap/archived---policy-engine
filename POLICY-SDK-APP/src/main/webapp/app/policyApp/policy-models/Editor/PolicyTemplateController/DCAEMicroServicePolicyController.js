@@ -167,7 +167,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	 $scope.attributeDatas = [{"attributes" : $scope.choices}];
 	 $scope.isInitEditTemplate = true;  //just initially create the edit template, didn't click add button yet.
 	 $scope.addNewChoice = function(value) {
-		 console.log(value);
+		 console.log("input value : " + value);
 		 if(value != undefined){
 			if (value.startsWith('div.')){
 				value = value.replace('div.','');
@@ -184,20 +184,24 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 						if($scope.temp.policy.ruleData[clone.id]){
 						    clone.value = $scope.temp.policy.ruleData[clone.id];
 						}
-						clone.className += ' child_single'; //here cloned is single element
+						if(!clone.className.includes("child_single")){
+						   clone.className += ' child_single'; //here cloned is single element
+						}
 						document.getElementById("div."+value).appendChild(clone);
 						plainAttributeKeys.push(''+value+'@'+addElement);
 					}
 				}else{ //not view or edit
-					clone.className += ' child_single'; //here cloned is single element
+					if(!clone.className.includes("child_single")){
+					    clone.className += ' child_single'; //here cloned is single element
+					}
 					document.getElementById("div."+value).appendChild(clone);
 					plainAttributeKeys.push(''+value+'@'+addElement);
 				}
 			}else{
 				div = document.getElementById("div."+value+"@0");
-				
-				div.className += ' children_group'; //here is div with a group of children.
-				
+				if(div){
+			    	div.className += ' children_group'; //here is div with a group of children.
+				}
 				var childElement = parentElement.firstElementChild;
 				var countParent = parentElement.childElementCount;
 				var childElementString = childElement.innerHTML;
@@ -279,6 +283,21 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		 }
 	 };
 	 
+	 function findVal(object, key) {
+		    var value;
+		    Object.keys(object).some(function(k) {
+		        if (k === key) {
+		            value = object[k];
+		            return true;
+		        }
+		        if (object[k] && typeof object[k] === 'object') {
+		            value = findVal(object[k], key);
+		            return value !== undefined;
+		        }
+		    });
+		    return value;
+	}
+	 
 	 $scope.pullVersion = function(serviceName) {
 		 console.log(serviceName);
 		 if(serviceName != undefined){
@@ -320,6 +339,11 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
         	myNode.innerHTML = '';
             var uuu = "policyController/getDCAEMSTemplateData.htm";
             var postData={policyData: service};
+            
+            console.log("service: " +service);
+
+            var dataOrderInfo = "";
+
             $.ajax({
                 type : 'POST',
                 url : uuu,
@@ -328,10 +352,15 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                 data: JSON.stringify(postData),
                 success : function(data){
                     $scope.$apply(function(){
-                    	$scope.addNewChoice();
+                    //	$scope.addNewChoice();  
                     	var plainAttributeKeys = [];
                     	$scope.dcaeModelData = data[0].dcaeModelData;
                     	$scope.dcaeJsonDate = data[0].jsonValue;
+                        $scope.dataOrderInfo = null;
+                    	$scope.dataOrderInfo = data[0].dataOrderInfo;
+                    	console.log("data[0].dataOrderInfo: " + data[0].dataOrderInfo);
+                    	console.log("$scope.dataOrderInfo: " + $scope.dataOrderInfo);	
+                    	
                     	if(data[0].allManyTrueKeys){
 	                    	console.log("$scope.allManyTrueKeys: " + $scope.allManyTrueKeys);
                     	}
@@ -341,6 +370,22 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                     	var subAttributes = 	$scope.dcaeModelData.sub_attributes;                    	
                     	console.log("subAttributes: " + subAttributes);	
                     	console.log("refAttributes: " + refAttributes);	
+                    	var headDefautlsData  = data[0].headDefautlsData;
+                    	if(headDefautlsData != null){
+	               			 $scope.temp.policy.onapName = headDefautlsData.onapName;
+	               			 $scope.temp.policy.guard = headDefautlsData.guard;
+	               			 $scope.temp.policy.riskType = headDefautlsData.riskType;
+	               			 $scope.temp.policy.riskLevel = headDefautlsData.riskLevel;
+	               			 $scope.temp.policy.priority = headDefautlsData.priority;
+	               			 
+                    	}else if(!$scope.temp.policy.editPolicy && !$scope.temp.policy.readOnly){
+	               			 $scope.temp.policy.onapName = "";
+	               			 $scope.temp.policy.guard = "";
+	               			 $scope.temp.policy.riskType = "";
+	               			 $scope.temp.policy.riskLevel = "";
+	               			 $scope.temp.policy.priority = "";
+                    	}
+                    	  
                        	var enumAttributes = $scope.dcaeModelData.enumValues;
                        	var annotation = $scope.dcaeModelData.annotation;
                        	var dictionary = $scope.microServiceAttributeDictionaryDatas;
@@ -380,6 +425,10 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 
                 		$scope.temp.policy.ruleGridData = [];
                 		
+                		if($scope.temp.policy.editPolicy || $scope.temp.policy.readOnly){
+                			dataOrderInfo = $scope.dataOrderInfo;
+                		}
+                		
                 		$scope.jsonLayout($scope.dcaeJsonDate);
                 		
                     });
@@ -401,59 +450,97 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	                    		
 	                    		var extraElements = data;
 	                    		
-	            		    	if(plainAttributeKeys != null){
-	            		    		for(b = 0; b < plainAttributeKeys.length; b++){ // Remove already populated elements from data array
-	            		    			var newValue = plainAttributeKeys[b].split("*");
-	            		    			for(a = 0; a < data.length; a++){
-		            		    			if(data[a] === newValue[0] || data[a] === (newValue[0]+"@0")){
-		            		    				extraElements.splice(a, 1);
+		            		    if(plainAttributeKeys != null){
+		            		    		for(b = 0; b < plainAttributeKeys.length; b++){ // Remove already populated elements from data array
+		            		    			var newValue = plainAttributeKeys[b].split("*");
+		            		    			for(a = 0; a < data.length; a++){
+			            		    			if(data[a] === newValue[0] || data[a] === (newValue[0]+"@0")){
+			            		    				extraElements.splice(a, 1);
+			            		    			}
 		            		    			}
-	            		    			}
-	            		    	}
-	                    		
-	            		    	//--- Populate these extra elements created by clicked add button 
-		                    	for(a = 0; a < extraElements.length; a++){            			
-		                    		if(extraElements[a].includes("@")){
-				                    	var index = extraElements[a].lastIndexOf("@");
-				                    	if(index > 0){
-				                    	    // Get the number after @
-				                    	    var n = getNumOfDigits(extraElements[a], index+1);
-				                    				
-					                        var key = extraElements[a].substring(0, index+n+1); //include @x in key also by n+2 since x can be 1,12, etc
-					                    	console.log("key: " + key);
-					                    	checkData.push(key);
-				                    	}
-		                    		}
-		                    	}
-	                    		var unique = checkData.filter(onlyUnique);
-	                    		for(i =0; i < unique.length; i++){
-	                    			//remove @x and let addNewChoice add @1 or @2...
-	                    			//var newKey = unique[i].substring(0, unique[i].length-2);
-	                    			var index = unique[i].lastIndexOf("@");
-	                    			var newKey = unique[i].substring(0, index);
-	                    			console.log("newKey: " + newKey);	
-	                    			$scope.addNewChoice(newKey);
-	                    		}
+		            		    	}
+		                    		
+		            		    	//--- Populate these extra elements created by clicked add button 
+			                    	for(a = 0; a < extraElements.length; a++){            			
+			                    		if(extraElements[a].includes("@")){
+					                    	var index = extraElements[a].lastIndexOf("@");
+					                    	if(index > 0){
+					                    	    // Get the number after @
+					                    	    var n = getNumOfDigits(extraElements[a], index+1);
+					                    				
+						                        var key = extraElements[a].substring(0, index+n+1); //include @x in key also by n+2 since x can be 1,12, etc
+						                    	console.log("key: " + key);
+						                    	checkData.push(key);
+					                    	}
+			                    		}
+			                    	}
+		                    		var unique = checkData.filter(onlyUnique);
+		                    		//if no layout order info, keep the process as before
+		                    		if(!dataOrderInfo){
+			                    		for(i =0; i < unique.length; i++){
+			                    			//remove @x and let addNewChoice add @1 or @2...
+			                    			//var newKey = unique[i].substring(0, unique[i].length-2);
+			                    			var index = unique[i].lastIndexOf("@");
+			                    			var newKey = unique[i].substring(0, index);
+			                    			console.log("newKey: " + newKey);	
+			                    			$scope.addNewChoice(newKey);
+			                    		}
+		            		    	}else{
+
+				              	    		for (i = 0; i < $scope.labelManyKeys.length; i++) {
+				              	    			//console.log("dataOrderInfo["+i+"]"+  dataOrderInfo[i]);
+				              	    		    var label = $scope.labelManyKeys[i];
+				              	    				// first add parent/label level
+				             	 	    			for (k = 0; k < unique.length; k++){
+						                    			var index = unique[k].lastIndexOf("@");
+						                    			var newKey = unique[k].substring(0, index);
+		 		             	 	    			    if(label == newKey){
+	                                                        //Check this label has bee created or not
+		 		             	 	    			    	if(!document.getElementById(unique[k])){
+		 		             	 	    			    		$scope.addNewChoice(newKey);
+		 		             	 	    			    	}
+		 		             	 	    			    	unique[k] = "*processed*";
+				             	 	    					break;
+		 		             	 	    			    }
+				             	 	    			}				             	 	    			
+				              	    		}
+				              	    		
+				              	    		//---reset to default
+				              	    		dataOrderInfo = [];
+				              	    		$scope.labelManyKeys = [];
+				              	    		
+		             	 	    			//---process none labels
+					              	    	for (j = 0; j < unique.length; j++){
+					              	    		if(unique[j] != "*processed*"){
+					              	    			// if not created yet
+					              	    			if(!document.getElementById(unique[j])){
+						                    			var index = unique[j].lastIndexOf("@");
+						                    			var newKey = unique[j].substring(0, index);
+			 		             	 	    		    $scope.addNewChoice(newKey);
+					              	    			}
+					              	    		}
+					              	    	}
+			              	    		}
+		            		    }
 	                    	}
-	                    }
-                        //After initially create the edit template, reset it to false.
-	                    $scope.isInitEditTemplate = false;
+	                    	
 	                    if($scope.temp.policy.editPolicy){
-	                    	//reset it to false since the template has been created
-	                    	$scope.temp.policy.editPolicy = false;
 	                    	//clean all the events of addNewChoice
 	                    	$scope.$on('$destroy', addNewChoice);
 	                    }
-	                    
                     }
                     var ele = angular.element(document.getElementById("DynamicTemplate"));
             		$compile(ele.contents())($scope);
                     $scope.$apply();
+                    
                 },
                 error : function(data){
                     alert("Error While Retriving the Template Layout Pattren.");
                 }
             });
+            
+            
+
         }
     };
     
@@ -538,9 +625,16 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	        return Object.prototype.toString.call(arrayTest) === '[object Array]';
 	    }
 	    var lableList = [];
-		function deconstructJSON(dataTest, level , name) {
-			var array = false;
-			var label = level;
+	    
+	    $scope.layOutElementList = [];
+	    $scope.layOutOnlyLableList = [];
+	    
+	    var elementOrderNum = 0;
+	    
+		function deconstructJSON(layOutData, level , name) {
+
+			 var array = false;
+			 var label = level;
 			 var stringValue = "java.lang.String";
 			 var string = "string";
 			 var intValue = "int";
@@ -548,18 +642,33 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			 var double = "double";
 			 var boolean = "boolean";
 			 var baseLevel = level;
+			 var list = "list";
+			 var String = "String";
+			 
+			 var attributekey = "";
 			 
 			if (name.length > 1){
 				label = label + name + '.';
 			}
 			
-		    for (key in dataTest) {
-		    	array = isArray(dataTest[key]);
-		    	console.log(key , dataTest[key]);
+		    for (key in layOutData) {
+		    	array = isArray(layOutData[key]);
+		    	console.log("key: " + key , "value: " + layOutData[key]);
 	    	
-		    	if (!!dataTest[key] && typeof(dataTest[key])=="object") {
+		    	if (!!layOutData[key] && typeof(layOutData[key])=="object") {
+		    		
 		    		if (array==false && key!=="0"){
-		    			$scope.labelLayout(label, key, array ); 			
+		    			
+		    			if($scope.dataOrderInfo){
+		    			    var labelObject = {"label" : key, "level" : label, "array" : array};
+		    			    //save it to the list
+		    			    $scope.layOutOnlyLableList.push(labelObject);
+		    			    
+		    			}else {
+		    				//call label layout
+		    				$scope.labelLayout(label, key, array );
+		    			}
+		    			
 		    		}
 		    		
 		    		if (array == true && key!=0){
@@ -571,20 +680,31 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		    		}
 		    		if ( key==="0"){
 		    			var newKey = lableList.pop();
-		    			$scope.labelLayout(baseLevel, newKey, array );
+		    			
+		    			if($scope.dataOrderInfo){
+		    				
+			    			var labelObject = {"label" : newKey, "level" : baseLevel, "array" : array};
+			    			//save it to the list
+			    			$scope.layOutOnlyLableList.push(labelObject);
+			    			
+		    			}else {
+		    				//call label layout 
+		    			    $scope.labelLayout(baseLevel, newKey, array );
+		    			}
+		    			
 		    			if (array){
 		    				label = baseLevel + newKey + '@0.';
 		    			} else {
 		    				label = baseLevel + newKey + '.';
 		    			}
 		    		}
-		        	deconstructJSON(dataTest[key] , label, key);
+		        	deconstructJSON(layOutData[key] , label, key);
 		        } else {
 		        	var attirbuteLabel = label;
 		        	var defaultValue='';
 		        	var isRequired = false;
-		        	if (dataTest[key].includes('defaultValue-')){
-		        		defaultValue = dataTest[key].split('defaultValue-')[1];
+		        	if (layOutData[key].includes('defaultValue-')){
+		        		defaultValue = layOutData[key].split('defaultValue-')[1];
 		        	}
 
 		        	if (key==="0"){
@@ -595,7 +715,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		        		attributekey = key.split();
 		        	}
 		        	
-		        	if (dataTest[key].includes('required-true')){
+		        	if (layOutData[key].includes('required-true')){
 		        		isRequired = true;
 		        	}
 		    		
@@ -620,45 +740,176 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		    			}		    			
 		    		}
 		    		
-		        	switch (dataTest[key].split(splitcolon)[0]){
+		    		var elementObject = {};
+		        	switch (layOutData[key].split(splitcolon)[0]){
+		        	
 		        		case stringValue:
-			        		$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "text");
-		        			break;
 		        		case string:
-			        		$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "text");
+		        			if($scope.dataOrderInfo){		        				
+				        		elementOrderNum++;
+				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue, "isRequired": isRequired, "type":"text"};
+				        		$scope.layOutElementList.push(elementObject);
+		        			}else{
+		        				$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "text");
+		        			}
 		        			break;		        			
 		        		case intValue: 
-		        			$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "number");
-		        			break;
 		        		case integerValue: 
-		        			$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "number");
+		        			if($scope.dataOrderInfo){
+			        			elementOrderNum++;
+				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue,"isRequired": isRequired, "type":"number"};
+				        		$scope.layOutElementList.push(elementObject);
+		        			}else{
+		        				$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "number");
+		        			}
 		        			break;		        			
 		        		case double:
-		        			$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "double");
+		        			if($scope.dataOrderInfo){
+			        			elementOrderNum++;
+				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue,"isRequired": isRequired, "type":"double"};
+				        		$scope.layOutElementList.push(elementObject);		        				
+		        			}else{
+		        				$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "double");
+		        			}
 		        			break;
 		        		case boolean:
-		        			$scope.dropBoxLayout(attirbuteLabel, attributekey, array, dataTest[key], getBooleanList());
+		        			if($scope.dataOrderInfo){
+			        			elementOrderNum++;
+				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": layOutData[key], "list": getBooleanList, "isRequired": isRequired, "type":"dropBox"};
+				        		$scope.layOutElementList.push(elementObject);
+		        			}else{
+		        				$scope.dropBoxLayout(attirbuteLabel, attributekey, array, layOutData[key], getBooleanList());
+		        			}
 		        			break;
 		        		default:
-		        			if (dataTest[key].includes('dictionary-')){
-		        				var list = getDictionary(dataTest[key].split('dictionary-')[1]);
+		        			if (layOutData[key].includes('dictionary-')){
+		        				var list = getDictionary(layOutData[key].split('dictionary-')[1]);
 		        			}else{
 		        				//--- get dropdown values from enumValues
-		        				var list = getList(dataTest[key]);
+		        				var list = getList(layOutData[key]);
 		        			}
 		        			if (list.length===0){ //not dropdown element
-		        				$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "text");
+		        				if($scope.dataOrderInfo){
+		        					elementOrderNum++;
+					        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue,"isRequired": isRequired, "type":"text"};
+					        		$scope.layOutElementList.push(elementObject);
+		        					
+		        				}else{
+		        					$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "text");
+		        				}		        				
 		        			}else{
-		        				$scope.dropBoxLayout(attirbuteLabel, attributekey, array, dataTest[key], list, isRequired);
+		        				if($scope.dataOrderInfo){
+			        				elementOrderNum++;
+					        		elementObject = {"id": elementOrderNum, "attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": layOutData[key],"isRequired": isRequired, "list":list, "type":"dropBox"};
+					        		$scope.layOutElementList.push(elementObject);		        					
+		        				}else{
+		        					$scope.dropBoxLayout(attirbuteLabel, attributekey, array, layOutData[key], list, isRequired);
+		        				}
 		        			}
 		        			break;
 		        	}
 		        }
 		    }
 		}  
+		
+		
+	    $scope.validContionalRequired = function(parentId) {
+	        console.log("ng-blur event: parentId : " + parentId);
+	        var c = document.getElementById(parentId).children;
+	        var i;
+	        var hasValue = false;
+	        for (i = 0; i < c.length; i++) {
+	        	if(c[i].getAttribute("data-conditional")){
+	        	    console.log(c[i].getAttribute("data-conditional"));
+	        	    console.log(c[i].value);
+	        	    if(c[i].value != null && c[i].value.trim() != ""){
+	        	    	hasValue = true;
+	        	    }
+	        	}
+	        }
 
-	    $scope.jsonLayout = function(dataTest){
-	    	deconstructJSON(dataTest , "", "");
+		    for (i = 0; i < c.length; i++) {
+		        if(c[i].getAttribute("data-conditional")){
+		        	if(hasValue){
+		        	    c[i].setAttribute("required", true);
+		        	}else{
+		        		c[i].removeAttribute("required");
+		        	}
+		        }
+		    }        	
+	     }
+				
+	    $scope.jsonLayout = function(layOutData){
+	    	
+ 	    	   deconstructJSON(layOutData , "", "");
+ 	    	   
+ 	    	   var orderValue = $scope.dataOrderInfo;
+ 	    	   var layOutElementList = $scope.layOutElementList;
+ 	    	   var labelList = $scope.layOutOnlyLableList;
+ 	    	    
+ 	    	   //reset to default
+ 	    	   elementOrderNum = 0;
+ 	    	   $scope.layOutElementList = [];
+ 	    	   $scope.layOutOnlyLableList = [];
+ 	    	   
+ 	    	   // Only layout in order if order info provided
+ 	    	   if(orderValue){
+ 	    		   
+ 	    		   if(orderValue.includes("[")){
+ 	    			  orderValue = orderValue.replace("[", "") ;
+ 	    			  orderValue = orderValue.replace("]", "") ;
+ 	    		   }
+ 	    		   
+ 	    		   orderValue = orderValue.split(',') ;
+ 	    		   
+ 	    		   for (i = 0; i < orderValue.length; i++) {
+ 	    			   console.log("orderValue["+i+"]"+  orderValue[i]);
+ 	    			   var key = orderValue[i].trim();
+ 	    			 
+ 	    			    //--- Create labels first {"label" : newKey, "level" : baseLevel, "array" : array};
+ 	    			   if(labelList){
+	 	    			   for (k = 0; k < labelList.length; k++){
+	 	    				   
+	 	    				  var label = labelList[k].label.toString().trim();
+	 	    				  var level = labelList[k].level.toString().trim();
+	 	    				  var array = labelList[k].array;
+	 	    				  
+	 	    				  if(key == label){	 	    					  
+	 	    					 $scope.labelLayout(level, label, array);
+		 	 	  	    		 //in case to have duplicate label names
+	 	    					 labelList[k].label = "*processed*";
+	 	    					 break;
+	 	    				  }
+	 	    			   }
+ 	    			   }
+ 	    			   //--- then layout each element based on its order defined in YAML file
+	 	  	    	   for (j = 0; j < layOutElementList.length; j++) { 
+	 	  	    		   
+	 	  	    		   var attributekey = layOutElementList[j].attributekey.toString().trim();	 	  	    		   
+	 	  	    		
+	 	  	    		   if(key == attributekey){ 	
+
+		 	  	    		   var attirbuteLabel = layOutElementList[j].attirbuteLabel.toString().trim();
+		 	  	    		   var defaultValue = layOutElementList[j].defaultValue.toString().trim();
+		 	  	    		   var isRequired = layOutElementList[j].isRequired;
+	 	 	  	    		   
+	 	 	  	    		   console.log("layOutElementList[" +j+ "]: id:" + layOutElementList[j].id + ", attributekey:"+ layOutElementList[j].attributekey + ", attirbuteLabel:" + layOutElementList[j].attirbuteLabel);
+	 		        		  
+	 	 	  	    		   if (layOutElementList[j].type == "dropBox"){ 
+	 		        				$scope.dropBoxLayout(attirbuteLabel, attributekey, layOutElementList[j].array, defaultValue, layOutElementList[j].list, isRequired);
+	                                
+			        		   }else{
+			        			    $scope.attributeBox(attributekey, layOutElementList[j].array, attirbuteLabel, defaultValue, isRequired, layOutElementList[j].type);	
+	
+			        		   }
+	 	 	  	    		   
+	 	 	  	    		   //in case to have duplicate attribute names
+	 	 	  	    		   layOutElementList[j].attributekey = "*processed*";
+	 		        		   break;
+	 	  	    		   }
+	 	  	    	   }
+ 	    		   }
+ 	    	   }
 	    }
 	    
 	    
@@ -674,7 +925,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			isRequired = true;  //set required as true for matching element
 		}else {
 			if(isRequired){
-				requiredLabName = attibuteKey + " *";
+				requiredLabName = attibuteKey + " * ";
 				labeltext = document.createTextNode(requiredLabName);
 			}else{
 			    labeltext = document.createTextNode(attibuteKey);	
@@ -706,6 +957,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		textField.setAttribute("style" , "width:300px;");
 		textField.setAttribute("ng-disabled" , "temp.policy.readOnly");
 		var checkKey;
+		var id = "";
 		if(attributeManyKey){
 			checkKey = labelValue + attibuteKey+'@0';
 			textField.setAttribute("id" , ''+labelValue + attibuteKey+'@0'+''); 
@@ -727,8 +979,8 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			document.getElementById(divID).appendChild(addButton); 
 			document.getElementById(divID).appendChild(removeButton); 
 			document.getElementById(divID).appendChild(label); 
-			var id = "div."+labelValue+attibuteKey;
-			var divTag = document.createElement("div");
+			id = "div."+labelValue+attibuteKey;
+			//var divTag = document.createElement("div");
 			divTag.setAttribute("id", id); 
 			document.getElementById(divID).appendChild(divTag);
 			textField.className += ' first_child';	
@@ -741,15 +993,33 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		}else{
 			checkKey = labelValue + attibuteKey;
 			textField.setAttribute("id" , ''+labelValue +attibuteKey+'');
-			if(requiredLabName.includes("*")){
-				textField.setAttribute("required", "true");
+			if(document.getElementById(divID).hasAttribute('required') || !document.getElementById(divID).hasAttribute('data-conditional')){
+				if(requiredLabName.includes("*") || isRequired){
+					textField.setAttribute("required", "true");
+				}
+			}else if (document.getElementById(divID).hasAttribute('data-conditional')){
+				if(requiredLabName.includes("*")){					
+					var requiredNode = document.createElement('span');
+					requiredNode.setAttribute("class", "mstooltip");
+					requiredNode.textContent = "?";
+					label.appendChild(requiredNode);
+					
+					var requiredNodeToolTip = document.createElement('span');
+					requiredNodeToolTip.setAttribute("class", "tooltiptext");
+					requiredNodeToolTip.textContent = "Conditional Required";
+					requiredNode.appendChild(requiredNodeToolTip);
+					
+					textField.setAttribute("data-conditional", divID);
+					textField.setAttribute("ng-blur", "validContionalRequired('"+divID+"')");
+				}
 			}
+            
 			document.getElementById(divID).appendChild(label);  
 			document.getElementById(divID).appendChild(textField);  
 			document.getElementById(divID).appendChild(br); 
 
 		}
-		
+
 		if(divID.includes("@0") && divID.includes("div.")){
 			var firstChild_Id = divID.split("@0")[0];
 			var firstChild_element = document.getElementById(firstChild_Id);
@@ -767,7 +1037,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 					defaultValue = "";
 				}				
 			}
-			if(defaultValue != "undefined" && defaultValue != undefined){
+			if(defaultValue != "undefined" && defaultValue != undefined && defaultValue != "null"){
 		    	document.getElementById(checkKey).value = defaultValue;
 			}
 		}
@@ -788,6 +1058,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		plainAttributeKeys.push(labelValue + attibuteKey+'*'+attributeManyKey);	
     };
   
+    $scope.labelManyKeys = [];
     $scope.labelLayout = function(labelValue, lableName, labelManyKey ){
 		var label = document.createElement("Label")
 		var divID = labelValue;
@@ -803,11 +1074,25 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			var divID = 'div.'+ labelValue.substring(0, labelValue.length-1);
 		}
 		
-		var labeltext = document.createTextNode(lableName);
+		var subAttributes = $scope.dcaeModelData.sub_attributes;
+	    var jsonObject = JSON.parse(subAttributes);	
+	    var lablInfo = findVal(jsonObject, lableName);
+		console.log("findValue : " + lableName +": "+ lablInfo);
+		var star = "";
+		var required = null;
+		if(lablInfo){
+			if(lablInfo.includes("required-true")){
+				star = " *";
+				required = true;
+			}else if (lablInfo.includes("required-false")){
+				required = false
+			}
+		}
+		
+		var labeltext = document.createTextNode(lableName + star);
 	
 		label.appendChild(labeltext);
-		
-		var subAttributes = $scope.dcaeModelData.sub_attributes;
+
 
 		if(labelManyKey){
 			var addButton = document.createElement("BUTTON");
@@ -835,117 +1120,147 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			
 			divTag.className += ' children_group'; //here is div with a group of children.
 			
+			if(required){
+			   divTag.setAttribute("required", required);  
+			}else if(required == false){
+			   divTag.setAttribute("data-conditional", "yes");  
+			}
+			
 			document.getElementById(id).appendChild(divTag);
+			
+			$scope.labelManyKeys.push(lableName);
+			
 		}else{
 			var divTag = document.createElement("div");
 			divTag.setAttribute("id", "div."+labelValue+lableName);
 			divTag.className += ' children_group'; //here is div with a group of children.
+			if(required){
+			    divTag.setAttribute("required", required);  
+			}else if(required == false){
+				divTag.setAttribute("data-conditional", "yes");  
+			}  
 			document.getElementById(divID).appendChild(label);  
 			document.getElementById(divID).appendChild(divTag);			
 		}
     };
 
     $scope.dropBoxLayout = function(labelLevel, attributeName, many , refValue, listemunerateValues, isRequired){
-		var br = document.createElement("BR");
-
-		if (labelLevel.length  < 1){
-			var divID = "DynamicTemplate";
-		} else if (labelLevel.endsWith('.')){
-			var divID = 'div.'+ labelLevel.substring(0, labelLevel.length-1);
-		}	
-
-
-	var label = document.createElement("Label")
-	
-	var refAttributes = $scope.dcaeModelData.ref_attributes;
-	if(isRequired != true && refAttributes){ //check refAttributes also		
-	   		var refAttributesList = refAttributes.split(splitComma);
-	   		for (k = 0; k < refAttributesList.length; k++){
-	       		var refAttribute = refAttributesList[k].split(splitEqual);	       		
-	       		if (attributeName == refAttribute[0].trim() && refAttribute[1].includes("required-true")){
-	       			isRequired = true;
-	       		}
-	   		}
-	}
-	
-	if (matching.includes(attributeName)){
-		var labeltext = document.createTextNode(attributeName + "*!");
-		label.appendChild(labeltext);
-		isRequired = true;  //set required as true for matching element
-	}else {
-		var labeltext = document.createTextNode(attributeName);		
-		if(isRequired){
-			requiredLabName = attributeName+ " *";
-			labeltext = document.createTextNode(requiredLabName);
-		}else{
-		    labeltext = document.createTextNode(attributeName);	
-		}
-	
-	    label.appendChild(labeltext);		
-	}
-	label.appendChild(labeltext);
-
-	var listField = document.createElement("SELECT");
-	listField.setAttribute("class" , "form-control");
-	listField.setAttribute("style" , "width:300px;");
-	listField.setAttribute("ng-disabled" , "temp.policy.readOnly");
-	
-	if(isRequired){
-	   listField.setAttribute("required", true);
-	}
-	if( many != true || isRequired != true){ // add an empty option for not required or not multiple select element
-		var optionFirst = document.createElement('option');
-		optionFirst.setAttribute('value', "");
-		listField.appendChild(optionFirst);	
-	}
-	
-	for (i=0; i < listemunerateValues.length; i += 1) {
+			var br = document.createElement("BR");
 		
-		if(listemunerateValues[i].includes("equal-sign")){
-			listemunerateValues[i] = listemunerateValues[i].replace('equal-sign','=');
-		}		
+			if (labelLevel.length  < 1){
+					var divID = "DynamicTemplate";
+			} else if (labelLevel.endsWith('.')){
+					var divID = 'div.'+ labelLevel.substring(0, labelLevel.length-1);
+			}	
 		
-	    option = document.createElement('option');
-	    option.setAttribute('value', listemunerateValues[i]);
-	    option.appendChild(document.createTextNode(listemunerateValues[i]));
-	    option.setAttribute('value', listemunerateValues[i]);
-	    listField.appendChild(option);
-	}
-	listField.setAttribute("id" , ''+ labelLevel + attributeName + '');
-	
-	enumKeyList.push(attributeName);
-	
-	document.getElementById(divID).appendChild(label);  
-	document.getElementById(divID).appendChild(br);	
+		
+			var label = document.createElement("Label")
 			
-	if(many == true){
-		document.getElementById(divID).appendChild(listField).multiple = true;
-		plainAttributeKeys.push(labelLevel + attributeName+'*'+true);
-	}else {
-		document.getElementById(divID).appendChild(listField).multiple = false;
-		plainAttributeKeys.push(labelLevel + attributeName+'*'+false);
-	}
-
-	if($scope.temp.policy.ruleData != null){
-		if (many == true){
-			document.getElementById(labelLevel +attributeName).options[0].selected = false;
-			for (i=0; i < listemunerateValues.length; i += 1) {
-				var testValue = $scope.temp.policy.ruleData[labelLevel +attributeName+'@' + i];
-				if (testValue === undefined){
-					testValue = $scope.temp.policy.ruleData[labelLevel +attributeName];
-					}
-				var location = listemunerateValues.indexOf(testValue);
-				if (location!=-1){
-					document.getElementById(labelLevel +attributeName).options[location].selected = true;
-					}
-				}			
-			}else {
-				    if($scope.temp.policy.ruleData[labelLevel + attributeName] != undefined && $scope.temp.policy.ruleData[labelLevel + attributeName] != "undefined"){
-	                    document.getElementById(labelLevel + attributeName).value = $scope.temp.policy.ruleData[labelLevel + attributeName];	
-				    }
+			var refAttributes = $scope.dcaeModelData.ref_attributes;
+			if(isRequired != true && refAttributes){ //check refAttributes also		
+			   		var refAttributesList = refAttributes.split(splitComma);
+			   		for (k = 0; k < refAttributesList.length; k++){
+			       		var refAttribute = refAttributesList[k].split(splitEqual);	       		
+			       		if (attributeName == refAttribute[0].trim() && refAttribute[1].includes("required-true")){
+			       			isRequired = true;
+			       		}
+			   		}
 			}
-		}
-    };
+			
+			if (matching.includes(attributeName)){
+				var labeltext = document.createTextNode(attributeName + "*!");
+				label.appendChild(labeltext);
+				isRequired = true;  //set required as true for matching element
+			}else {
+				var labeltext = document.createTextNode(attributeName);		
+				if(isRequired){
+				    var requiredLabName = attributeName+ " * ";
+					labeltext = document.createTextNode(requiredLabName);
+				}else{
+				    labeltext = document.createTextNode(attributeName);	
+				}
+			
+			    label.appendChild(labeltext);		
+			}
+			label.appendChild(labeltext);
+			// if this field is required, but its parent is not required
+			if(isRequired && document.getElementById(divID).hasAttribute('data-conditional')){
+			   	var requiredNode = document.createElement('span');
+				requiredNode.setAttribute("class", "mstooltip");
+				requiredNode.textContent = "?";
+				label.appendChild(requiredNode);
+					
+				var requiredNodeToolTip = document.createElement('span');
+				requiredNodeToolTip.setAttribute("class", "tooltiptext");
+				requiredNodeToolTip.textContent = "Conditional Required";
+				requiredNode.appendChild(requiredNodeToolTip);
+
+			}
+		
+			var listField = document.createElement("SELECT");
+			listField.setAttribute("class" , "form-control");
+			listField.setAttribute("style" , "width:300px;");
+			listField.setAttribute("ng-disabled" , "temp.policy.readOnly");
+			
+			if(isRequired){
+			    if(document.getElementById(divID).hasAttribute('data-conditional')){
+			    	listField.setAttribute("data-conditional", divID);
+			    	listField.setAttribute("ng-blur", "validContionalRequired('"+divID+"')");
+			    }else{
+					listField.setAttribute("required", true);
+			    }
+			}
+			if( many != true || isRequired != true){ // add an empty option for not required or not multiple select element
+				var optionFirst = document.createElement('option');
+				optionFirst.setAttribute('value', "");
+				listField.appendChild(optionFirst);	
+			}
+			
+			for (i=0; i < listemunerateValues.length; i += 1) {
+				if(listemunerateValues[i].includes("equal-sign")){
+					listemunerateValues[i] = listemunerateValues[i].replace('equal-sign','=');
+				}
+			    option = document.createElement('option');
+			    option.setAttribute('value', listemunerateValues[i]);
+			    option.appendChild(document.createTextNode(listemunerateValues[i]));
+			    option.setAttribute('value', listemunerateValues[i]);
+			    listField.appendChild(option);
+			}
+			listField.setAttribute("id" , ''+ labelLevel + attributeName + '');
+			
+			enumKeyList.push(attributeName);
+			
+			document.getElementById(divID).appendChild(label);  
+			document.getElementById(divID).appendChild(br);	
+					
+			if(many == true){
+				document.getElementById(divID).appendChild(listField).multiple = true;
+				plainAttributeKeys.push(labelLevel + attributeName+'*'+true);
+			}else {
+				document.getElementById(divID).appendChild(listField).multiple = false;
+				plainAttributeKeys.push(labelLevel + attributeName+'*'+false);
+			}
+		
+			if($scope.temp.policy.ruleData != null){
+				if (many == true){
+					document.getElementById(labelLevel +attributeName).options[0].selected = false;
+					for (i=0; i < listemunerateValues.length; i += 1) {
+						var testValue = $scope.temp.policy.ruleData[labelLevel +attributeName+'@' + i];
+						if (testValue === undefined){
+							testValue = $scope.temp.policy.ruleData[labelLevel +attributeName];
+							}
+						var location = listemunerateValues.indexOf(testValue);
+						if (location!=-1){
+							document.getElementById(labelLevel +attributeName).options[location].selected = true;
+							}
+						}			
+					}else {
+						    if($scope.temp.policy.ruleData[labelLevel + attributeName] != undefined && $scope.temp.policy.ruleData[labelLevel + attributeName] != "undefined"){
+			                    document.getElementById(labelLevel + attributeName).value = $scope.temp.policy.ruleData[labelLevel + attributeName];	
+						    }
+					}
+				}
+		    };
     
     function onlyUnique(value, index, self) { 
         return self.indexOf(value) === index;

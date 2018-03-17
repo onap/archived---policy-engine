@@ -57,6 +57,7 @@ app.controller('editMSModelController' ,  function ($scope, $modalInstance, mess
                 	$scope.classListDatas=data.classListDatas;
                 	$scope.modalDatas = data.modelDatas;
                 	$scope.modelType= data.modelType;
+                	$scope.dataOrderInfo= data.dataOrderInfo;
                 	console.log($scope.classListDatas);
                 }
             }).error( );
@@ -70,7 +71,7 @@ app.controller('editMSModelController' ,  function ($scope, $modalInstance, mess
     $scope.saveMSModel = function(microServiceModelsDictionaryData) {
     	if(valid){
     		 var uuu = "saveDictionary/ms_dictionary/save_model";
-    	        var postData={microServiceModelsDictionaryData: microServiceModelsDictionaryData, userid: userid, classMap: $scope.modalDatas,modelType:$scope.modelType};
+    	        var postData={microServiceModelsDictionaryData: microServiceModelsDictionaryData, userid: userid, classMap: $scope.modalDatas,modelType:$scope.modelType, dataOrderInfo:$scope.dataOrderInfo};
     	        $.ajax({
     	            type : 'POST',
     	            url : uuu,

@@ -1,0 +1,90 @@
+<!--/*-
+ * ============LICENSE_START=======================================================
+ * ONAP Policy Engine
+ * ================================================================================
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END=========================================================
+ */-->
+<script type="text/ng-template" id="add_HeaderDefaultValues_popup.html">
+<div class="modal" tabindex="-1">
+		 <div class="modal-dialog modal-lg">
+			<div class="modal-content">
+        <div class="modal-header">
+            <h2 class="font-showcase-font-name" style="color : #157bb2">{{label}}</h2>
+        </div>
+		<form name="formdata" ng-submit="saveHeaderDefaults(editHeaderDefaults);" novalidate>
+        <div class="modal-body" id="HeaderDefaultValues">
+			<div class="form-group row">
+  			  <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.modelName.$invalid && !formdata.modelName.$pristine }">
+            	 <label>Micro Service:<sup><b>*</b></sup></label><br>
+            	 <select class="form-control" name= "modelName"  required  ng-model="editHeaderDefaults.modelName"  ng-options="option for option in microServiceModelsDictionaryDatas track by option" ></select>
+				 <p ng-show="formdata.modelName.$invalid && !formdata.modelName.$pristine" class="help-block">Micro Service is required.</p>
+     		   </div>
+  			   <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.modelName.$invalid && !formdata.modelName.$pristine }">
+            	  <label>Onap Name:<sup><b>*</b></sup></label><br>
+            	  <select class="form-control" name= "modelName"  required  ng-model="editHeaderDefaults.onapName"  ng-options="option for option in onapNameDictionaryDatas track by option" ></select>
+				  <p ng-show="formdata.modelName.$invalid && !formdata.modelName.$pristine" class="help-block">Micro Service is required.</p>
+     		    </div>
+			</div>
+
+			<div class="form-group row">
+  			  <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.modelName.$invalid && !formdata.modelName.$pristine }">
+            	  <label>Guard:<sup><b>*</b></sup></label><br>
+            	  <select
+						class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-model="editHeaderDefaults.guard" >
+						<option>True</option>
+						<option>False</option>
+                  </select>
+				  <p ng-show="formdata.modelName.$invalid && !formdata.modelName.$pristine" class="help-block">Guard is required.</p>
+     		   </div>
+  			   <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.modelName.$invalid && !formdata.modelName.$pristine }">
+            	  <label>Priority:<sup><b>*</b></sup></label><br>
+                   <select
+						class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-model="editHeaderDefaults.priority"
+						ng-options="option for option in priorityDatas track by option">
+					</select>				  
+                    <p ng-show="formdata.modelName.$invalid && !formdata.modelName.$pristine" class="help-block">Priority is required.</p>
+     		    </div>
+			</div>
+			<div class="form-group row">
+  			     <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.modelName.$invalid && !formdata.modelName.$pristine }">
+            	 <label>Risk Type:<sup><b>*</b></sup></label><br>
+            	 <select  name= "riskType"  required class="form-control"  ng-model="editHeaderDefaults.riskType"  ng-options="option for option in riskTypeDictionaryDatas track by option"></select>
+      			 <p ng-show="formdata.riskType.$invalid && !formdata.riskType.$pristine" class="help-block">Policy riskType is required.</p>
+     		     </div>
+  			     <div class="form-group col-sm-6" ng-class="{ 'has-error' : formdata.modelName.$invalid && !formdata.modelName.$pristine }">
+            	    <label>Risk Level:<sup><b>*</b></sup></label><br>
+            	    <select class="form-control" ng-disabled="temp.policy.readOnly"
+						ng-model="editHeaderDefaults.riskLevel">
+                        <option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option></select>
+				    <p ng-show="formdata.modelName.$invalid && !formdata.modelName.$pristine" class="help-block">Risk Level is required.</p>
+     		     </div>
+			</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" type="submit" ng-disabled="formdata.$invalid">Save</button>
+            <button class="btn btn-default"  type="button" ng-click="close()">Close</button>
+		</div>
+		</form>
+    </div>
+			</div>
+</div>
+</script>

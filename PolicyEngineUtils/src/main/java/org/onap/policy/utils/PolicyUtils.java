@@ -158,6 +158,21 @@ public class PolicyUtils {
     } 
     
     /**
+     * Validate a field (accepts Dash) if it contains unacceptable policy input and return "success" if good. 
+     * 
+     * @param field
+     * @return
+     */
+    public static String  policySpecialCharWithDashValidator(String field){
+        String error;
+        if ("".equals(field) || !field.matches("^[a-zA-Z0-9_-]*$")) {
+            error = "The Value in Required Field will allow only '{0-9}, {a-z}, {A-Z}, _, -' following set of Combinations";
+            return error;
+        }
+        return SUCCESS;   
+    } 
+    
+    /**
      * Validate the XACML description tag and return "success" if good. 
      * 
      * @param field

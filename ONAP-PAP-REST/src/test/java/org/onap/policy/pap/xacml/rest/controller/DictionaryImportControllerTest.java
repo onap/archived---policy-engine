@@ -42,15 +42,15 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-public class DictionaryImportControllerTest  extends Mockito{
+public class DictionaryImportControllerTest extends Mockito{
 	
 	private static Logger logger = FlexLogger.getLogger(DictionaryImportController.class);
-
+	
 	private static CommonClassDao commonClassDao;
 	private HttpServletRequest request = null;
 	private HttpServletResponse response = null;
 	private DictionaryImportController controller = null;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		logger.info("setUp: Entering");
@@ -59,7 +59,7 @@ public class DictionaryImportControllerTest  extends Mockito{
 		controller = new DictionaryImportController(); 
 		new DictionaryImportController(commonClassDao);
 		request = Mockito.mock(HttpServletRequest.class);
-		response =  new MockHttpServletResponse();
+		response =  new MockHttpServletResponse();	
 	}
 	
 	@Test
@@ -70,7 +70,7 @@ public class DictionaryImportControllerTest  extends Mockito{
 		//test valid name
 		assertTrue(cotroller.isValidDictionaryName("ActionList"));
 	}
-	
+
 	@Test
 	public void testImportDictionaryData() throws ServletException, IOException{
 		List<String> fileNames = new ArrayList<>();
@@ -78,6 +78,7 @@ public class DictionaryImportControllerTest  extends Mockito{
 		fileNames.add("ActionPolicyDictionary.csv");
 		fileNames.add("OnapName.csv");
 		fileNames.add("MSPolicyDictionary.csv");
+		fileNames.add("OptimizationPolicyDictionary.csv");
 		fileNames.add("ClosedLoopService.csv");
 		fileNames.add("ClosedLoopSite.csv");
 		fileNames.add("VarbindDictionary.csv");
