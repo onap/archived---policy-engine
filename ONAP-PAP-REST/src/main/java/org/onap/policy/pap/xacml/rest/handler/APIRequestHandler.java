@@ -60,7 +60,7 @@ public class APIRequestHandler {
 	}
 
 	public void doPut(HttpServletRequest request, HttpServletResponse response, String service) throws IOException {
-		if ("MICROSERVICE".equalsIgnoreCase(service) || "BRMSPARAM".equalsIgnoreCase(service)){
+		if ("MICROSERVICE".equalsIgnoreCase(service) || "BRMSPARAM".equalsIgnoreCase(service) || "OPTIMIZATION".equalsIgnoreCase(service)){
 			ImportService importService = new ImportService();
 			importService.doImportMicroServicePut(request, response);
 			return;

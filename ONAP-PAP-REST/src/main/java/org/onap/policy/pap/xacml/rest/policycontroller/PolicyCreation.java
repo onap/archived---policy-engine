@@ -44,6 +44,7 @@ import org.onap.policy.pap.xacml.rest.components.CreateClosedLoopPerformanceMetr
 import org.onap.policy.pap.xacml.rest.components.DecisionPolicy;
 import org.onap.policy.pap.xacml.rest.components.FirewallConfigPolicy;
 import org.onap.policy.pap.xacml.rest.components.MicroServiceConfigPolicy;
+import org.onap.policy.pap.xacml.rest.components.OptimizationConfigPolicy;
 import org.onap.policy.pap.xacml.rest.components.Policy;
 import org.onap.policy.pap.xacml.rest.components.PolicyDBDao;
 import org.onap.policy.pap.xacml.rest.components.PolicyDBDaoTransaction;
@@ -133,6 +134,8 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					filePrefix = "Config_PM_";
 				}else if ("Micro Service".equalsIgnoreCase(policyConfigType)) {
 					filePrefix = "Config_MS_";
+				}else if ("Optimization".equalsIgnoreCase(policyConfigType)) {
+					filePrefix = "Config_OOF_";
 				}else if ("BRMS_Raw".equalsIgnoreCase(policyConfigType)) {
 					filePrefix = "Config_BRMS_Raw_";
 				}else if ("BRMS_Param".equalsIgnoreCase(policyConfigType)) {
@@ -247,14 +250,14 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			policyData.setHighestVersion(version);
 
 			// Calling Component class per policy type
-			if (policyType.equalsIgnoreCase("Config")) {
-				if (policyConfigType.equalsIgnoreCase("Firewall Config")) {
+			if ("Config".equalsIgnoreCase(policyType)) {
+				if ("Firewall Config".equalsIgnoreCase(policyConfigType)) {
 					newPolicy = new FirewallConfigPolicy(policyData);
-				}else if (policyConfigType.equalsIgnoreCase("BRMS_Raw")) { 
+				}else if ("BRMS_Raw".equalsIgnoreCase(policyConfigType)) { 
 					policyData.setOnapName("DROOLS");
 					policyData.setConfigName("BRMS_RAW_RULE");
 					newPolicy = new CreateBrmsRawPolicy(policyData);
-				}else if (policyConfigType.equalsIgnoreCase("BRMS_Param")) {
+				}else if ("BRMS_Param".equalsIgnoreCase(policyConfigType)) {
 					policyData.setOnapName("DROOLS");
 					policyData.setConfigName("BRMS_PARAM_RULE");
 					Map<String, String> drlRuleAndUIParams = new HashMap<>();
@@ -287,11 +290,11 @@ public class PolicyCreation extends AbstractPolicyCreation{
 		                }
 					}		
 					newPolicy = new CreateBrmsParamPolicy(policyData);
-				}else if (policyConfigType.equalsIgnoreCase("Base")) {
+				}else if ("Base".equalsIgnoreCase(policyConfigType)) {
 					newPolicy =  new ConfigPolicy(policyData);
-				}else if (policyConfigType.equalsIgnoreCase("ClosedLoop_Fault")) {
+				}else if ("ClosedLoop_Fault".equalsIgnoreCase(policyConfigType)) {
 					newPolicy = new ClosedLoopPolicy(policyData);
-				}else if (policyConfigType.equalsIgnoreCase("ClosedLoop_PM")) {
+				}else if ("ClosedLoop_PM".equalsIgnoreCase(policyConfigType)) {
 					if(policyData.getApiflag() == null){
 						policyData.setServiceType(policyData.getServiceTypePolicyName().get("serviceTypePolicyName").toString());
 						ObjectMapper jsonMapper = new ObjectMapper();
@@ -301,10 +304,12 @@ public class PolicyCreation extends AbstractPolicyCreation{
 						policyData.setJsonBody(jsonBody);
 					}
 					newPolicy = new CreateClosedLoopPerformanceMetrics(policyData);
-				}else if (policyConfigType.equalsIgnoreCase("Micro Service")) {
+				}else if ("Micro Service".equalsIgnoreCase(policyConfigType)) {
 					newPolicy = new MicroServiceConfigPolicy(policyData);
+				}else if ("Optimization".equalsIgnoreCase(policyConfigType)) {
+					newPolicy = new OptimizationConfigPolicy(policyData);
 				}
-			}else if(policyType.equalsIgnoreCase("Action")) {
+			}else if("Action".equalsIgnoreCase(policyType)) {
 				if(policyData.getApiflag() == null){
 					List<String> dynamicRuleAlgorithmLabels = new LinkedList<>();
 					List<String> dynamicRuleAlgorithmCombo = new LinkedList<>();
@@ -361,7 +366,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					}
 				}
 				newPolicy = new ActionPolicy(policyData, commonClassDao);
-			} else if (policyType.equalsIgnoreCase("Decision")) {
+			} else if ("Decision".equalsIgnoreCase(policyType)) {
 				if(policyData.getApiflag() == null){
 					Map<String, String> settingsMap = new HashMap<>();
 					Map<String, String> treatmentMap = new HashMap<>();

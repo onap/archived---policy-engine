@@ -20,13 +20,27 @@
 package org.onap.policy.pdp.rest.api.services;
 
 import static org.junit.Assert.assertEquals;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
 import org.junit.Test;
-import org.onap.policy.api.PolicyException;
 import org.onap.policy.api.PolicyParameters;
 
 public class ConfigPolicyServiceTest {
 	@Test
-	public void testRaw() throws PolicyException  {
+	public void testRaw() throws FileNotFoundException, IOException  {
+		Properties prop = new Properties();
+		prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
+		String succeeded = prop.getProperty("xacml.rest.pap.url");
+		List<String> paps = Arrays.asList(succeeded.split(","));
+		PAPServices.setPaps(paps);
+		PAPServices.junit = true;
+		
 		String systemKey = "xacml.properties";
 		String testVal = "testVal";
 		PolicyParameters testParams = new PolicyParameters();

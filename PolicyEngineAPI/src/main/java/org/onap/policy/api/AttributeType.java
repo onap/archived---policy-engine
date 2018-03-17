@@ -42,6 +42,10 @@ public enum AttributeType {
 	 */
 	MICROSERVICE("microService"),
 	/**
+	 * Indicates Attributes required to create Optimization policy.
+	 */
+	OPTIMIZATION("optimization"),
+	/**
 	 * Indicates Attributes required to create settings for Decision Policy.
 	 */
 	SETTINGS("settings"),
