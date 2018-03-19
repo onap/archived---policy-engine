@@ -68,6 +68,8 @@ public class ClosedLoopPMPolicyServiceTest {
 
 	@After
 	public void tearDown() throws Exception {
+		PAPServices.setPaps(null);
+		PAPServices.junit = false;
 	}
 
 	@Test

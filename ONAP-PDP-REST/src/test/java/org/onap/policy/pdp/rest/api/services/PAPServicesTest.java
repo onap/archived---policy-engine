@@ -31,7 +31,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.api.PolicyException;
-import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 
@@ -53,6 +52,7 @@ public class PAPServicesTest {
 
 	@After
 	public void tearDown() throws Exception {
+		PAPServices.setPaps(null);
 		PAPServices.junit = false;
 	}
 
