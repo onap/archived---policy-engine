@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_00f4a885",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewOptimizationModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-19T12:46:43Z",
+      "side": 1,
+      "message": "Use try-with-resources",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 58
+      },
+      "revId": "e5f17fa2169c773d3a38f6e4dfaceef6172abd06",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a0f05492",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewOptimizationModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-19T12:46:43Z",
+      "side": 1,
+      "message": "try-with-resources",
+      "range": {
+        "startLine": 154,
+        "startChar": 10,
+        "endLine": 154,
+        "endChar": 25
+      },
+      "revId": "e5f17fa2169c773d3a38f6e4dfaceef6172abd06",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_802f58f6",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewOptimizationModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-19T12:46:43Z",
+      "side": 1,
+      "message": "Sonar will flag unnecessary initializations",
+      "range": {
+        "startLine": 177,
+        "startChar": 0,
+        "endLine": 179,
+        "endChar": 29
+      },
+      "revId": "e5f17fa2169c773d3a38f6e4dfaceef6172abd06",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_20344449",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewOptimizationModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-19T12:46:43Z",
+      "side": 1,
+      "message": "swap the equals else sonar will flag it",
+      "range": {
+        "startLine": 190,
+        "startChar": 5,
+        "endLine": 190,
+        "endChar": 49
+      },
+      "revId": "e5f17fa2169c773d3a38f6e4dfaceef6172abd06",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
