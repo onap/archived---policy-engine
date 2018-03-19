@@ -35,6 +35,9 @@ As illustrated in the Figure below, the POLICY components are supported by a num
 .. image:: PolicyArchitectureDetails.png
 
 
+.. image:: PolicyArchitectureDetailsKey.png
+
+
 The PAP provides interfaces for the management of policies.  It utilizes the XACML database to store policies, which are then distributed to the PDPs.
 
 The XACML and Drools databases are hosted in a MariaDB cluster.  The XACML database is used to persist policies and policy dictionaries and provide a point for PDPs to retrieve policies.  The XACML database also has tables used for node state management, detection of node failure and failover. As indicated above, the state management tables will only include entries for the PAP and PDP-X as the testing is not yet complete for the PDP-D.
@@ -95,6 +98,8 @@ Attributes can be specified for each dimension. In addition to being defined for
 
 Policy writers can define attributes so that policy events or requests self-indicate their scope. The scope is then examined by a suitable function and subsequently acted upon accordingly. Policy decisions and enforcement functions can self-indicate their scope of decision-making, enforcement, or other capabilities. Virtual functions can be automatically attached to the appropriate POLICY Framework and distribution mechanisms.
 
+
+.. image:: PolicySummary.png
 
 End of Document
 

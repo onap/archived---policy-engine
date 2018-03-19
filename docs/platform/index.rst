@@ -35,6 +35,7 @@ Policy Platform Tutorials
 .. toctree::
    :maxdepth: 1
 
+   cookbook.rst
    deployPDPPAP.rst
    guardpolicy.rst
    guardpdp.rst
