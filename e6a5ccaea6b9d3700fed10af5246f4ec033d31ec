@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_69a31050",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-20T09:54:34Z",
+      "side": 1,
+      "message": "I don\u0027t think you need this if statement because the if statement at line 525 means that you can\u0027t gt there unless uniqueDataKey contains a \"%\" string",
+      "range": {
+        "startLine": 547,
+        "startChar": 6,
+        "endLine": 547,
+        "endChar": 38
+      },
+      "revId": "e6a5ccaea6b9d3700fed10af5246f4ec033d31ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_09884cc5",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-03-20T09:54:34Z",
+      "side": 1,
+      "message": "I think this else statement can never happen because the if statement if executed will always be true.",
+      "range": {
+        "startLine": 552,
+        "startChar": 0,
+        "endLine": 552,
+        "endChar": 59
+      },
+      "revId": "e6a5ccaea6b9d3700fed10af5246f4ec033d31ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
