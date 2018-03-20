@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_9c8c9c37",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-20T12:45:43Z",
+      "side": 1,
+      "message": "Good catch",
+      "parentUuid": "5a93c517_69a31050",
+      "range": {
+        "startLine": 547,
+        "startChar": 6,
+        "endLine": 547,
+        "endChar": 38
+      },
+      "revId": "e6a5ccaea6b9d3700fed10af5246f4ec033d31ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_09884cc5",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
         "patchSetId": 2
