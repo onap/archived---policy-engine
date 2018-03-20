@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_3a78e82a",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ClosedLoopPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_568b631e",
+      "range": {
+        "startLine": 73,
+        "startChar": 2,
+        "endLine": 73,
+        "endChar": 93
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_76d9bf55",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ClosedLoopPolicy.java",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2018-03-16T16:29:16Z",
       "side": 1,
       "message": "A lot of try/catch embedding here, did Sonar not complain?",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 4
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_fa712045",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ClosedLoopPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Removed all nesting. And now we have only one try/catch. Somehow sonar was not complaining about it.",
+      "parentUuid": "5a93c517_76d9bf55",
       "range": {
         "startLine": 75,
         "startChar": 0,
@@ -94,6 +142,54 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_daab0474",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ClosedLoopPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_56d60329",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 15
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_faa84079",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ClosedLoopPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_f692af55",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 15
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_36849709",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
         "patchSetId": 1
@@ -105,6 +201,30 @@
       "writtenOn": "2018-03-16T16:29:52Z",
       "side": 1,
       "message": "You could combine into one statement since fw isn\u0027t used.",
+      "range": {
+        "startLine": 85,
+        "startChar": 3,
+        "endLine": 85,
+        "endChar": 125
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5aaff47d",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_36849709",
       "range": {
         "startLine": 85,
         "startChar": 3,
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_7ab430d1",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_f6794f2f",
+      "range": {
+        "startLine": 87,
+        "startChar": 7,
+        "endLine": 87,
+        "endChar": 18
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_16dcfb44",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
         "patchSetId": 1
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_1ac96c5a",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_16dcfb44",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 3
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_96748b36",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsRawPolicy.java",
         "patchSetId": 1
@@ -174,6 +342,30 @@
       "writtenOn": "2018-03-16T16:29:52Z",
       "side": 1,
       "message": "Again move above the try",
+      "range": {
+        "startLine": 76,
+        "startChar": 3,
+        "endLine": 79,
+        "endChar": 4
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_dac22434",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsRawPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_96748b36",
       "range": {
         "startLine": 76,
         "startChar": 3,
@@ -232,6 +424,54 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_bae158d2",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsRawPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_b66f475f",
+      "range": {
+        "startLine": 81,
+        "startChar": 3,
+        "endLine": 81,
+        "endChar": 15
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9adc9c1a",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsRawPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_36dfb73b",
+      "range": {
+        "startLine": 81,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 15
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_76c0df4f",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateClosedLoopPerformanceMetrics.java",
         "patchSetId": 1
@@ -243,6 +483,30 @@
       "writtenOn": "2018-03-16T16:29:16Z",
       "side": 1,
       "message": "I don\u0027t think an exception can be thrown here, string assigned to string, also I think the string \"body\" is not needed, the incoming parameter jsonBody can be used 9and probably should be final)",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 4
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5ae614ea",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateClosedLoopPerformanceMetrics.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_76c0df4f",
       "range": {
         "startLine": 72,
         "startChar": 0,
@@ -278,6 +542,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_3acd485e",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/FirewallConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1269,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "The caller of this method is already checking that the parameter \"jsonstring\" passed is not null. Hence null check was not needed here.",
+      "parentUuid": "5a93c517_f6cb8f6f",
+      "range": {
+        "startLine": 1269,
+        "startChar": 37,
+        "endLine": 1269,
+        "endChar": 47
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_56a4c3b8",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/MicroServiceConfigPolicy.java",
         "patchSetId": 1
@@ -289,6 +577,30 @@
       "writtenOn": "2018-03-16T16:29:16Z",
       "side": 1,
       "message": "close not needed",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 15
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_dad9c423",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/MicroServiceConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_56a4c3b8",
       "range": {
         "startLine": 96,
         "startChar": 0,
@@ -324,6 +636,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_3a3b083a",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/GetDictionaryService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Looking at the method and its caller I found that returning back the original jsonString is better than returning null and then handling null in caller. \n@Pamela Dragosh - Is it ok?",
+      "parentUuid": "5a93c517_b698a775",
+      "range": {
+        "startLine": 250,
+        "startChar": 12,
+        "endLine": 250,
+        "endChar": 17
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_768e9f2f",
         "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/test/getDictionaryTest.java",
         "patchSetId": 1
@@ -347,6 +683,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_ba1638a6",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/test/getDictionaryTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "Because earlier the default case in switch statement was returning null which is now changed to return the original jsonString.",
+      "parentUuid": "5a93c517_768e9f2f",
+      "range": {
+        "startLine": 44,
+        "startChar": 2,
+        "endLine": 44,
+        "endChar": 15
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_5692834c",
         "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
         "patchSetId": 1
@@ -358,6 +718,30 @@
       "writtenOn": "2018-03-16T16:29:16Z",
       "side": 1,
       "message": "What if defaultId is null, you\u0027ll get a NPE here?",
+      "range": {
+        "startLine": 183,
+        "startChar": 15,
+        "endLine": 183,
+        "endChar": 24
+      },
+      "revId": "aa2af7d76e6ff8fb3bcf61ca114046d46beea3e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_da1ea4bb",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2018-03-20T15:41:36Z",
+      "side": 1,
+      "message": "defaultId will never be null as we are passing a default value to the getProperty method.",
+      "parentUuid": "5a93c517_5692834c",
       "range": {
         "startLine": 183,
         "startChar": 15,
