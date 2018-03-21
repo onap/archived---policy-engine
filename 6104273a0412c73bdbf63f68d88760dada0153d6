@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_850d143a",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1037,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-21T21:35:48Z",
+      "side": 1,
+      "message": "Hmmm - I thought all of these were combined at earlier this year to clear a sonar issue - there is duplicate code here. But now sonar complains for instanceof requiring the opposite. Ugh.",
+      "range": {
+        "startLine": 1020,
+        "startChar": 2,
+        "endLine": 1037,
+        "endChar": 13
+      },
+      "revId": "6104273a0412c73bdbf63f68d88760dada0153d6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_25120059",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2220,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-21T21:35:48Z",
+      "side": 1,
+      "message": "same here could this be combined?",
+      "range": {
+        "startLine": 2204,
+        "startChar": 4,
+        "endLine": 2220,
+        "endChar": 3
+      },
+      "revId": "6104273a0412c73bdbf63f68d88760dada0153d6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
