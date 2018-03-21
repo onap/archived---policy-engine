@@ -127,7 +127,7 @@ public class PolicyDBDao {
 	public static final String duplicatePolicyId = "Somehow, more than one policy with the id ";
 	public static final String foundInDB = " were found in the database";
 	
-	public static boolean isJunit = false;
+	private static boolean isJunit = false;
 
 	public static void setJunit(boolean isJunit) {
 		PolicyDBDao.isJunit = isJunit;
@@ -1250,6 +1250,9 @@ public class PolicyDBDao {
 					for(PDPPolicy policy : policies){
 						try{
 							String[] stringArray = getNameScopeAndVersionFromPdpPolicy(policy.getId());
+							if(stringArray == null) {
+							    throw new IllegalArgumentException("Invalid input - policyID must contain name, scope and version");
+							}
 							List<PolicyEntity> policyEntityList;
 							Query getPolicyEntitiesQuery = em.createNamedQuery("PolicyEntity.findByNameAndScope");
 							getPolicyEntitiesQuery.setParameter("name", stringArray[0]);

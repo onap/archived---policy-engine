@@ -54,12 +54,16 @@ public class PAPServices {
     
     private int responseCode = 0;
     private static String environment = "DEVL";
-    public static Boolean junit = false;
+    private static Boolean isJunit = false;
     private static List<String> paps = null;
 	private static final Object papResourceLock = new Object();
     private String operation = null;
     private String requestMethod = null;
-    private String encoding = null; 
+    private String encoding = null;
+
+    public static void setJunit(boolean isJunit) {
+        PAPServices.isJunit = isJunit;
+    }
 
     public PAPServices() {
         environment = PDPApiAuth.getEnvironment();
@@ -164,7 +168,7 @@ public class PAPServices {
                 } else if(content != null){
                     // the content is an object to be encoded in JSON
                     ObjectMapper mapper = new ObjectMapper();
-                    if (!junit) {
+                    if (!isJunit) {
                         mapper.writeValue(connection.getOutputStream(),
                                 content);
                     }
@@ -174,7 +178,7 @@ public class PAPServices {
                 responseCode = connection.getResponseCode();
                 // If Connected to PAP then break from the loop and continue
                 // with the Request
-                if (connection.getResponseCode() > 0 || junit) {
+                if (connection.getResponseCode() > 0 || isJunit) {
                     connected = true;
                     break;
                 } else {
@@ -183,7 +187,7 @@ public class PAPServices {
                 }
             } catch (Exception e) {
                 // This means that the PAP is not working
-                if (junit) {
+                if (isJunit) {
                     connected = true;
                     break;
                 }
@@ -212,7 +216,7 @@ public class PAPServices {
             				XACMLErrorConstants.ERROR_SYSTEM_ERROR
             				+ "Decoding the result ", e);
             	}
-            	if (junit) {
+            	if (isJunit) {
             		response = SUCCESS;
             	}
             }else{
@@ -326,10 +330,10 @@ public class PAPServices {
     
     private String checkResponse(HttpURLConnection connection, UUID requestID) throws IOException {
         String response = null;
-        if (responseCode == 200 || junit) {         
+        if (responseCode == 200 || isJunit) {         
             // Check for successful creation of policy
             String isSuccess = null;
-            if (!junit) { // is this a junit test?
+            if (!isJunit) { // is this a junit test?
                 isSuccess = connection.getHeaderField("successMapKey");
                 operation = connection.getHeaderField("operation");
             } else {
@@ -603,7 +607,7 @@ public class PAPServices {
                 responseCode = connection.getResponseCode();
                 // If Connected to PAP then break from the loop and continue
                 // with the Request
-                if (connection.getResponseCode() > 0 || junit) {
+                if (connection.getResponseCode() > 0 || isJunit) {
                     connected = true;
                     break;
                 } else {
@@ -612,7 +616,7 @@ public class PAPServices {
                 }
             } catch (Exception e) {
                 // This means that the PAP is not working
-                if (junit) {
+                if (isJunit) {
                     connected = true;
                     break;
                 }

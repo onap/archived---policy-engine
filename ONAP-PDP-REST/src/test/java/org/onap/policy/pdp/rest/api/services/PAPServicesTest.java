@@ -40,7 +40,7 @@ public class PAPServicesTest {
 
 	@Before
 	public void setUp() throws Exception {
-		PAPServices.junit = true;
+		PAPServices.setJunit(true);
 		Properties prop = new Properties();
 		prop.load(new FileInputStream("src/test/resources/pass.xacml.pdp.properties"));
 		String succeeded = prop.getProperty("xacml.rest.pap.url");
@@ -53,7 +53,7 @@ public class PAPServicesTest {
 	@After
 	public void tearDown() throws Exception {
 		PAPServices.setPaps(null);
-		PAPServices.junit = false;
+		PAPServices.setJunit(false);
 	}
 
 	@Test

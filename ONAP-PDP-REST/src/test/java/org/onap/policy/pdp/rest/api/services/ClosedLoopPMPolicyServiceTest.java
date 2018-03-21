@@ -47,7 +47,7 @@ public class ClosedLoopPMPolicyServiceTest {
 		String succeeded = prop.getProperty("xacml.rest.pap.url");
 		List<String> paps = Arrays.asList(succeeded.split(","));
 		PAPServices.setPaps(paps);
-		PAPServices.junit = true;
+		PAPServices.setJunit(true);
 		
 		PolicyParameters policyParameters = new PolicyParameters();
         policyParameters.setPolicyConfigType(PolicyConfigType.ClosedLoop_PM);
@@ -69,7 +69,7 @@ public class ClosedLoopPMPolicyServiceTest {
 	@After
 	public void tearDown() throws Exception {
 		PAPServices.setPaps(null);
-		PAPServices.junit = false;
+		PAPServices.setJunit(false);
 	}
 
 	@Test
