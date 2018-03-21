@@ -13,6 +13,106 @@ Policy Release Notes
 ..      * This note must be removed after content has been added.
 
 
+Version: 1.2.0
+--------------
+
+:Release Date: 2018-05-24 (Beijing Release)
+
+**New Features**
+
+The Beijing release for POLICY delivered the following Epics. For a full list of stories and tasks delivered in the Beijing release, refer to `JiraPolicyBeijing`_.
+
+    * [POLICY-390] - This epic covers the work to harden the Policy platform software base (incl 50% JUnit coverage)
+        - POLICY-238	policy/drools-applications: clean up maven structure
+        - POLICY-336	Address Technical Debt
+        - POLICY-338	Address JUnit Code Coverage
+        - POLICY-377	Policy Create API should validate input matches DCAE microservice template
+        - POLICY-389	Cleanup Jenkin's CI/CD process's
+        - POLICY-449	Policy API + Console : Common Policy Validation
+        - POLICY-520	SSL 64-bit Block Size Cipher Suites Supported (SWEET32)
+        - POLICY-568	Integration with org.onap AAF project
+        - POLICY-610	Support vDNS scale out for multiple times in Beijing release
+
+
+    * [POLICY-391] - This epic covers the work to support Release Planning activities
+        - POLICY-552	ONAP Licensing Scan - Use Restrictions
+
+
+    * [POLICY-392] - Platform Maturity Requirements - Performance Level 1
+        - POLICY-529	Platform Maturity Performance - Drools PDP
+        - POLICY-567	Platform Maturity Performance - PDP-X
+
+    * [POLICY-393] - This epic covers the body of work involved in deploying the Policy Platform components
+    * [POLICY-394] - This epic covers the work required to support a Policy developer environment in which Policy Developers can create, update policy templates/rules separate from the policy Platform runtime platform.
+        - POLICY-172	Use MSB for service discovery during Control Loop Operational Policy execution
+        - POLICY-488	pap should not add rules to official template provided in drools applications
+
+    * [POLICY-396] - This epic covers the work required to capture, update, extend Policy(s) during Service Design.
+    * [POLICY-398] - This epic covers the body of work involved in supporting policy that is platform specific.
+        - POLICY-434	need PDP /getConfig to return an indicator of where to find the config data - in config.content versus config field
+
+    * [POLICY-399] - This epic covers the work required to policy enable Hardware Platform Enablement
+        - POLICY-56	VNF Placement Optimization
+        - POLICY-622	Integrate OOF Policy Model into Policy Platform
+
+    * [POLICY-400] - This epic covers the work required to support the Policy Platform during runtime.
+    * [POLICY-493] - This epic covers the work required to build Policy Lifecycle API.
+    * [POLICY-512] - This epic covers the work to support Platform Maturity Requirements - Stability Level 1
+        - POLICY-525	Platform Maturity Stability - Drools PDP
+        - POLICY-526	Platform Maturity Stability - XACML PDP
+
+    * [POLICY-513] - Platform Maturity Requirements - Resiliency Level 2
+        - POLICY-527	Platform Maturity Resiliency - Policy Engine GUI and PAP
+        - POLICY-528	Platform Maturity Resiliency - Drools PDP
+        - POLICY-569	Platform Maturity Resiliency - BRMS Gateway
+        - POLICY-585	Platform Maturity Resiliency - XACML PDP
+        - POLICY-586	Platform Maturity Resiliency - Planning
+        - POLICY-681	Regression Test Use Cases
+
+    * [POLICY-514] - This epic covers the work to support Platform Maturity Requirements - Security Level 1
+        - POLICY-523	Platform Maturity Security - CII Badging - Project Website
+        - POLICY-524	Platform Maturity Security - CII Badging - Automated Test Suite
+
+    * [POLICY-515] - This epic covers the work to support Platform Maturity Requirements - Escalability Level 1
+        - POLICY-530	Platform Maturity Scalability - Policy Distribution API
+        - POLICY-531	Platform Maturity Scalability - XACML PDP
+        - POLICY-532	Platform Maturity Scalability - Drools PDP
+        - POLICY-623	Docker image re-design
+
+    * [POLICY-516] - This epic covers the work to support Platform Maturity Requirements - Manageability Level 1
+        - POLICY-533	Platform Maturity Manageability L1 - Logging
+        - POLICY-534	Platform Maturity Manageability - Instantiation < 1 hour
+
+    * [POLICY-517] - This epic covers the work to support Platform Maturity Requirements - Usability Level 1
+        - POLICY-535	Platform Maturity Usability - User Guide
+        - POLICY-536	Platform Maturity Usability - Deployment Documentation
+        - POLICY-537	Platform Maturity Usability - API Documentation
+
+    * [POLICY-545] - R2 Beijing - Standardize user roles and access levels across all ONAP components.
+    * [POLICY-546] - R2 Beijing - Various enhancements requested by clients to the way we handle TOSCA models.
+    * [POLICY-547] - R2 Beijing - Implement a new decision type policy that handles naming using policy
+
+    * [OTHER] - Other User stories 
+        - POLICY-5	Deploy a Policy high availability environment 
+        - POLICY-45	VNF Onboarding
+        - POLICY-138	Policy Code Re-Organization
+        - POLICY-148	CLI Integration
+
+
+**Bug Fixes**
+
+    * POLICY-454	brmsgw 1.1.2 policy rules generation in a 1.1.1 docker image
+    * POLICY-484	Extend election handler run window and clean up error messages
+    * POLICY-494	POLICY EELF Audit.log not in ECOMP Standards Compliance
+    * POLICY-501	Fix issues blocking election handler and add directed interface for opstate
+    * POLICY-509	Add IntelliJ file to .gitingore
+    * POLICY-510	Do not enforce hostname validation
+    * POLICY-518	StateManagement creation of EntityManagers.
+    * POLICY-519	Correctly initialize the value of allSeemsWell in DroolsPdpsElectionHandler
+    * POLICY-629	Fixed a bug on editor screen
+    * POLICY-684	Fix regex for brmsgw dependency handling
+
+
 Version: 1.1.3
 --------------
 
@@ -32,7 +132,7 @@ Version: 1.1.1
 
 **New Features**
 
-The Amsterdam release continued evolving the design driven architecture of and functionality for POLICY.  The following is a list of Epics delivered with the release. For a full list of stories and tasks delivered in the Amsterdam release, refer to `JiraPolicyReleaseNotes`_.
+The Amsterdam release continued evolving the design driven architecture of and functionality for POLICY.  The following is a list of Epics delivered with the release. For a full list of stories and tasks delivered in the Amsterdam release, refer to `JiraPolicyAmsterdam`_.
 
     * [POLICY-31] - Stabilization of Seed Code
         - POLICY-25  Replace any remaining openecomp reference by onap
@@ -83,11 +183,9 @@ The Amsterdam release continued evolving the design driven architecture of and f
         - POLICY-387  Deliver the released policy artifacts  
 
 
-
 **Bug Fixes**
-    - This is technically the first release of POLICY, previous release was the seed code contribution. As such, the defects fixed in this release were raised during the course of the release. Anything not closed is captured below under Known Issues. For a list of defects fixed in the Amsterdam release, refer to `JiraPolicyReleaseNotes`_.
+    - This is technically the first release of POLICY, previous release was the seed code contribution. As such, the defects fixed in this release were raised during the course of the release. Anything not closed is captured below under Known Issues. For a list of defects fixed in the Amsterdam release, refer to `JiraPolicyAmsterdam`_.
 
-.. _JiraPolicyReleaseNotes: https://jira.onap.org/secure/ReleaseNote.jspa?projectId=10106&version=10300
 
 **Known Issues**
     - The operational policy template has been tested with the vFW, vCPE, vDNS and VOLTE use cases.  Additional development may/may not be required for other scenarios.
@@ -107,8 +205,17 @@ The Amsterdam release continued evolving the design driven architecture of and f
     - None at this time
 
 
+.. Links to jira release notes
+
+.. _JiraPolicyBeijing: https://jira.onap.org/secure/ReleaseNote.jspa?projectId=10106&version=10349
+.. _JiraPolicyAmsterdam: https://jira.onap.org/secure/ReleaseNote.jspa?projectId=10106&version=10300
+
+
 .. note
 ..      CHANGE  HISTORY
+..      03/22/2018 - Initial document for Beijing release.
+..		For initial document: list epic and user stories for each, list user stories with no epics.  
+..      	For Bugs section, list bugs that are not tied to an epic.
 ..      01/15/2018 - Added change for version 1.1.3 to the Amsterdam branch.  Also corrected prior version (1.2.0) to (1.1.1)
 ..      11/16/2017 - Initial document for Amsterdam release.
  
