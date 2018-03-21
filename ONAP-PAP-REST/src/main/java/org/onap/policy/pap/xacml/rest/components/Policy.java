@@ -108,7 +108,6 @@ public abstract class Policy {
 	public static final String URI_DATATYPE = "http://www.w3.org/2001/XMLSchema#anyURI";
 	public static final String RULE_VARIABLE = "var:";
 	public static final String EMPTY_STRING = "";
-	private static final String String = null;
 
 	protected static String CONFIG_HOME = null;
 	protected static String ACTION_HOME = null;

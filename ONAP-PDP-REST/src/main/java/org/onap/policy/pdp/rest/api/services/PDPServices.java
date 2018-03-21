@@ -341,12 +341,13 @@ public class PDPServices {
             pdpConfigLocation = pdpConfigLocation.replace("/", File.separator);
         }
         InputStream inputStream = null;
+        JsonReader jsonReader = null;
         try {
             inputStream = new FileInputStream(new File(pdpConfigLocation));
             try {
                 if (pdpConfigLocation.endsWith("json")) {
                     pdpResponse.setType(PolicyType.JSON);
-                    JsonReader jsonReader = Json.createReader(inputStream);
+                    jsonReader = Json.createReader(inputStream);
                     pdpResponse.setConfig(jsonReader.readObject().toString());
                     jsonReader.close();
                 } else if (pdpConfigLocation.endsWith("xml")) {
@@ -400,6 +401,14 @@ public class PDPServices {
                 LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
                 throw new PDPException(XACMLErrorConstants.ERROR_PROCESS_FLOW +
                         "Cannot open a connection to the configURL", e);
+            } finally {
+                if(jsonReader != null) {
+                    try {
+                        jsonReader.close();
+                    } catch (Exception e) {
+                        LOGGER.error("Exception Occured while closing the JsonReader"+e);
+                    }
+                }
             }
         } catch (FileNotFoundException e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);

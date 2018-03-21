@@ -247,7 +247,7 @@ public class GetDictionaryService {
             jsonString = jsonString.replace("microServiceDictionaryDatas", "DictionaryDatas");
             break;
         default:
-            return null;
+            break;
         }
         return jsonString;
     }
