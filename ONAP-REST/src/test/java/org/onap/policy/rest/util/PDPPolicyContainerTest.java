@@ -128,11 +128,11 @@ public class PDPPolicyContainerTest {
   @Test
   public void testPDPPolicyItem() {
     PDPPolicyItem item = container.new PDPPolicyItem(policy);
-    assertEquals(item.getId(), "Config_test");
-    assertEquals(item.getName(), "Config_test.1.xml");
-    assertEquals(item.getVersion(), "1.0");
-    assertEquals(item.getDescription(), "testDescription");
+    assertEquals("Config_test", item.getId());
+    assertEquals("Config_test.1.xml", item.getName());
+    assertEquals("1.0", item.getVersion());
+    assertEquals("testDescription", item.getDescription());
     item.setRoot(true);
-    assertEquals(item.getRoot(), true);
+    assertEquals(true, item.getRoot());
   }
 }
