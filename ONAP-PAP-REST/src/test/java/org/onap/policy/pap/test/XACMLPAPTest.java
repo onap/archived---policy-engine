@@ -35,18 +35,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.onap.policy.common.ia.IntegrityAuditProperties;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 import org.onap.policy.pap.xacml.rest.controller.ActionPolicyDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.ClosedLoopDictionaryController;
@@ -73,8 +80,8 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 
 import com.mockrunner.mock.web.MockServletInputStream;
 
-
 public class XACMLPAPTest {
+	private static final Log logger = LogFactory.getLog(XACMLPAPTest.class);
 
     private static final String ENVIRONMENT_HEADER = "Environment";
     private List<String> headers = new ArrayList<>();
@@ -85,6 +92,48 @@ public class XACMLPAPTest {
     private XACMLPapServlet pap;
     private SessionFactory sessionFactory;
     private CommonClassDao commonClassDao;
+
+	private static final String DEFAULT_DB_DRIVER = "org.h2.Driver";
+	private static final String DEFAULT_DB_USER = "sa";
+	private static final String DEFAULT_DB_PWD = "";
+
+	@Before
+	public void setUpDB() throws Exception {
+		logger.info("setUpDB: Entering");
+
+		Properties properties = new Properties();
+		properties.put(IntegrityAuditProperties.DB_DRIVER, XACMLPAPTest.DEFAULT_DB_DRIVER);
+		properties.put(IntegrityAuditProperties.DB_URL, "jdbc:h2:file:./sql/xacmlTest");
+		properties.put(IntegrityAuditProperties.DB_USER, XACMLPAPTest.DEFAULT_DB_USER);
+		properties.put(IntegrityAuditProperties.DB_PWD, XACMLPAPTest.DEFAULT_DB_PWD);
+		properties.put(IntegrityAuditProperties.SITE_NAME, "SiteA");
+		properties.put(IntegrityAuditProperties.NODE_TYPE, "pap");
+
+		//Clean the iaTest DB table for IntegrityAuditEntity entries
+		cleanDb("testPapPU", properties);
+
+		logger.info("setUpDB: Exiting");
+	}
+
+	public void cleanDb(String persistenceUnit, Properties properties){
+		logger.debug("cleanDb: enter");
+
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnit, properties);
+
+		EntityManager em = emf.createEntityManager();
+		// Start a transaction
+		EntityTransaction et = em.getTransaction();
+
+		et.begin();
+
+		// Clean up the DB
+		em.createQuery("Delete from IntegrityAuditEntity").executeUpdate();
+
+		// commit transaction
+		et.commit();
+		em.close();
+		logger.debug("cleanDb: exit");
+	}
 
     @Before
     public void setUp() throws ServletException {
