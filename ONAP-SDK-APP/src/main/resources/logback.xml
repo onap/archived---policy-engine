@@ -28,15 +28,16 @@
   <!--<jmxConfigurator /> -->
 
   <!--  specify the component name -->
-  <property name="componentName" value="epsdk_app_os"></property>
+  <property name="componentName" value="policy"></property>
+    <property name="subComponentName" value="epsdk"></property>
   
   <!--  specify the base path of the log directory -->
-  <property name="logDirPrefix" value="${catalina.base}/logs"></property>
+  <property name="logDirPrefix" value="${{POLICY_LOGS}}"></property>
   
   <!-- The directories where logs are written -->
-  <property name="logDirectory" value="${logDirPrefix}/${componentName}" />
+  <property name="logDirectory" value="${logDirPrefix}/${componentName}/${subComponentName}" />
   <!-- Can easily relocate debug logs by modifying this path. -->
-  <property name="debugLogDirectory" value="${logDirPrefix}/${componentName}" />
+  <property name="debugLogDirectory" value="${logDirPrefix}/${componentName}/${subComponentName}" />
   
   <!--  log file names -->
   <property name="generalLogName" value="application" />
