@@ -1767,7 +1767,7 @@ public class PolicyDBDao {
 					policyId = policyName;
 					policyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.policyName=:name AND p.scope=:scope");
 					policyQuery.setParameter("name", policyId);
-					policyQuery.setParameter(scope, scope);
+					policyQuery.setParameter("scope", scope);
 				} else{
 					policyId = String.valueOf(policyID);
 					policyQuery = em.createNamedQuery("PolicyEntity.FindById");
