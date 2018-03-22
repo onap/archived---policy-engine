@@ -63,6 +63,12 @@ function backup_database
 
 
 # MAIN
+if [ -z ${POLICY_LOGS} ]; then
+  POLICY_LOGS=/var/log
+fi
+mkdir -p $POLICY_LOGS/ONAP/db
+LOG=$POLICY_LOGS/ONAP/db/db_backup_$DATE.log
+ERR=$POLICY_LOGS/ONAP/db/db_backup_$DATE.err  
 echo "db_backup.sh started ... `date`" | tee -a $LOG
 if [ $# -eq 3 ]; then 
   DB_USER="${1}"
@@ -71,8 +77,6 @@ if [ $# -eq 3 ]; then
   echo "DB_USER: $DB_USER" | tee -a $LOG
     
   DAILY_BACKUP_DIR=$POLICY_HOME/data/mysql/$DATE
-  LOG=$POLICY_HOME/logs/db_backup_$DATE.log
-  ERR=$POLICY_HOME/logs/db_backup_$DATE.err
   create_backup_dir 
 
   backup_database

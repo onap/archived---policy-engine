@@ -31,7 +31,7 @@
   <property name="componentName" value="epsdk_app_os"></property>
   
   <!--  specify the base path of the log directory -->
-  <property name="logDirPrefix" value="${catalina.base}/logs"></property>
+  <property name="logDirPrefix" value="${{POLICY_LOGS}}/ONAP"></property>
   
   <!-- The directories where logs are written -->
   <property name="logDirectory" value="${logDirPrefix}/${componentName}" />

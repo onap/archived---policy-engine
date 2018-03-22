@@ -151,6 +151,7 @@ function configure_component() {
 	SED_LINE+=" -e 's!\${{KEYSTORE_PASSWD}}!${KEYSTORE_PASSWD}!g' "
 	SED_LINE+=" -e 's!\${{JAVA_HOME}}!${JAVA_HOME}!g' "
 	SED_LINE+=" -e 's!\${{COMPONENT_TYPE}}!${COMPONENT_TYPE}!g' "
+	SED_LINE+=" -e 's!\${{POLICY_LOGS}}!${POLICY_LOGS}!g' "
 		
 	while read line || [ -n "${line}" ]; do
         if [[ -n $line ]] && [[ $line != \#* ]]; then
@@ -657,6 +658,12 @@ if [[ -z ${POLICY_GROUP} ]]; then
 	usage
 	exit 1
 fi
+
+if [[ -z ${POLICY_LOGS} ]]; then
+    echo "POLICY_LOGS environment variable NOT set, default to /var/log"
+    export POLICY_LOGS="/var/log"
+fi
+
 
 FQDN=$(hostname -f 2> /dev/null)
 if [[ $? != 0 || -z ${FQDN} ]]; then

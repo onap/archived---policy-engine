@@ -146,8 +146,12 @@ function check_directory
 
 # MAIN
 #check_directory
-LOG=$POLICY_HOME/logs/db_upgrade_remote_$DATE.log
-ERR=$POLICY_HOME/logs/db_upgrade_remote_$DATE.err
+if [ -z ${POLICY_LOGS} ]; then
+  POLICY_LOGS=/var/log
+fi
+mkdir -p $POLICY_LOGS/ONAP/db
+LOG=$POLICY_LOGS/ONAP/db/db_upgrade_remote_$DATE.log
+ERR=$POLICY_LOGS/ONAP/db/db_upgrade_remote_$DATE.err
 echo "db_upgrade_remote.sh started ..." | tee -a $LOG
 if [ $# -eq 3 ]; then 
   DB_UPGRADE_USER="${1}"

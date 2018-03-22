@@ -40,6 +40,8 @@ BACKUP_FILE=""
 DATABASE=""
 TABLE=""
 TEMP_FILE=/tmp/db_restore_data_$$.sql
+DATE=`date +"%Y%m%d"`
+LOG=""
 
 function restore_all
 {
@@ -85,6 +87,11 @@ if [ $# -eq 5 ]; then
   typeset -l DATABASE="${4}"
   typeset -l TABLE="${5}"
   echo "DB_USER: $DB_USER" 
+  if [ -z ${POLICY_LOGS} ]; then
+    POLICY_LOGS=/var/log
+  fi
+  mkdir -p $POLICY_LOGS/ONAP/db
+  LOG=$POLICY_LOGS/ONAP/db/db_restore_data_$DATE.log
   if [ -f $BACKUP_FILE ]; then 
     if [ "${TABLE}" != "all" ]; then 
       restore_table ${DATABASE} ${TABLE}
