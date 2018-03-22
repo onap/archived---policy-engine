@@ -46,7 +46,7 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import javax.json.JsonException;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
@@ -1017,26 +1017,24 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			im.startTransaction();
 			loggingContext.metricEnded();
 			PolicyLogger.metrics("XACMLPapServlet doPut im startTransaction");
+		} catch(AdministrativeStateException e) {
+		    String message = "PUT interface called for PAP " + papResourceName + 
+		            " but it has an Administrative state of " + im.getStateManager().getAdminState() +
+		            "\n Exception Message: " + e.getMessage();
+		    logMessage(e, message, loggingContext, response);
+		    return;
+		} catch(StandbyStatusException e) {
+		    String message = "PUT interface called for PAP " + papResourceName + 
+		            " but it has a Standby Status of " + im.getStateManager().getStandbyStatus() +
+		            "\n Exception Message: " + e.getMessage();
+		    logMessage(e, message, loggingContext, response);
+		    return;
 		} catch (IntegrityMonitorException e) {
-			String message = "PUT interface called for PAP " + papResourceName;
-			if (e instanceof AdministrativeStateException) {
-				message += " but it has an Administrative state of "
-					+ im.getStateManager().getAdminState();
-			} else if (e instanceof StandbyStatusException) {
-				message += " but it has a Standby Status of "
-					+ im.getStateManager().getStandbyStatus();
-			} else {
-				message += " but an exception occurred";
-
-			}
-			message += "\n Exception Message: " + e.getMessage();
-
-			LOGGER.info(message, e);
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
-			loggingContext.transactionEnded();
-			PolicyLogger.audit("Transaction Failed - See Error.log");
-			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-			return;
+		    String message = "PUT interface called for PAP " + papResourceName +
+		            " but an exception occurred" +
+		            "\n Exception Message: " + e.getMessage();
+		    logMessage(e, message, loggingContext, response);
+		    return;
 		}
 
 		loggingContext.metricStarted();
@@ -2211,6 +2209,14 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.audit("Transaction Failed - See Error.log");
 			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			return;
+		} catch (IOException | JsonException e) {
+		    LOGGER.debug(e);
+		    acPutTransaction.rollbackTransaction();
+		    PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " AC PUT exception");
+		    loggingContext.transactionEnded();
+		    PolicyLogger.audit("Transaction Failed - See Error.log");
+		    setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+		    return;
 		}
 	}
 	
@@ -2822,24 +2828,21 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.audit("Transaction Failed - See Error.log");
 			response.setStatus(HttpServletResponse.SC_OK);
 			return;
-		}catch (ForwardProgressException | AdministrativeStateException | StandbyStatusException e){
-			String submsg;
-			if (e instanceof ForwardProgressException) {
-				submsg = " is not making forward progress.";
-			} else if (e instanceof AdministrativeStateException) {
-				submsg = " Administrative State is LOCKED.";
-			} else {
-				submsg = " Standby Status is NOT PROVIDING SERVICE.";
-			}
-
-			String message = "GET:/pap/test called and PAP " + papResourceName + submsg
-					+ " Exception Message: " + e.getMessage();
-			LOGGER.info(message, e);
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
-			loggingContext.transactionEnded();
-			PolicyLogger.audit("Transaction Failed - See Error.log");
-			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-			return;
+		}catch (ForwardProgressException e){
+		    String message = "GET:/pap/test called and PAP " + papResourceName + " is not making forward progress."
+		            + " Exception Message: " + e.getMessage();
+		    logMessage(e, message, loggingContext, response);
+		    return;
+		}catch (AdministrativeStateException e){
+		    String message = "GET:/pap/test called and PAP " + papResourceName + " Administrative State is LOCKED."
+		            + " Exception Message: " + e.getMessage();
+		    logMessage(e, message, loggingContext, response);
+		    return;
+		}catch (StandbyStatusException e){
+		    String message = "GET:/pap/test called and PAP " + papResourceName + " Standby Status is NOT PROVIDING SERVICE."
+		            + " Exception Message: " + e.getMessage();
+		    logMessage(e, message, loggingContext, response);
+		    return;
 		}catch (Exception e) {
 			//A subsystem is not making progress, is locked, standby or is not responding
 			String eMsg = e.getMessage();
@@ -3013,5 +3016,13 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 
 	public static void setMsPolicyName(String msPolicyName) {
 		XACMLPapServlet.msPolicyName = msPolicyName;
+	}
+	
+	private void logMessage(Exception e, String message, ONAPLoggingContext loggingContext, HttpServletResponse response) {
+	    LOGGER.info(message, e);
+	    PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR + " " + message);
+	    loggingContext.transactionEnded();
+	    PolicyLogger.audit("Transaction Failed - See Error.log");
+	    setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
 	}
 }

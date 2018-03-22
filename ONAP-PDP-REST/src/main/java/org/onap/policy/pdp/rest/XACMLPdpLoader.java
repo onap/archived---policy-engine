@@ -550,20 +550,14 @@ public class XACMLPdpLoader {
 									// properties
 									//
 									changed = true;
+								} catch (MalformedURLException e) {
+								        papUrls.failed();
+								        LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Policy '" + policy
+								                + "' had bad URL in new configuration, URL='" + propLocation + "'");
 								} catch (Exception e) {
 									papUrls.failed();
-									if (e instanceof MalformedURLException) {
-										LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Policy '"
-												+ policy
-												+ "' had bad URL in new configuration, URL='"
-												+ propLocation + "'");
-										
-									} else {
-										LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while retrieving policy "
-												+ policy
-												+ " from URL "
-												+ url + ", e=" + e);
-									}
+									LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while retrieving policy "
+									        + policy + " from URL " + url + ", e=" + e);
 								}
 								papUrls.getNext();
 							}
