@@ -16,6 +16,108 @@
       "revId": "d13c28896e33c2e447686f95c73e7133d2c82f18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5580108b",
+        "filename": "packages/base/src/files/etc/profile.d/env.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-23T18:04:01Z",
+      "side": 1,
+      "message": "This needs to be ${{POLICY_LOGS}} since it is being expanded.   The previous won\u0027t work.",
+      "revId": "d13c28896e33c2e447686f95c73e7133d2c82f18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_757d0cb1",
+        "filename": "packages/base/src/files/install/mysql/bin/cleanup_policy.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-23T18:04:01Z",
+      "side": 1,
+      "message": "/var/log/onap/policy/db instead",
+      "revId": "d13c28896e33c2e447686f95c73e7133d2c82f18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_1531280b",
+        "filename": "packages/base/src/files/install/servers/common/tomcat/conf/server.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-23T18:04:01Z",
+      "side": 1,
+      "message": "This needs to be either expanded with ${{POLICY_LOGS}} or if server.xml could understand environment variables.\n\nAn additional problem is that the directory below is missing the component name as \"common\" is very generic.  If there are multiple tomcats in the same image (case pap, and console) they will override each other files.   Ideally should go into its component directory, ie. /var/log/onap/policy/pap and /var/log/onap/policy/console.",
+      "revId": "d13c28896e33c2e447686f95c73e7133d2c82f18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_3536a404",
+        "filename": "packages/base/src/files/install/servers/configs/conf/server.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-23T18:04:01Z",
+      "side": 1,
+      "message": "same comment as before",
+      "revId": "d13c28896e33c2e447686f95c73e7133d2c82f18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_d53ae0e6",
+        "filename": "packages/base/src/files/install/servers/console/conf/server.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-23T18:04:01Z",
+      "side": 1,
+      "message": "should be expanded to ${{POLICY_LOGS}} ..",
+      "revId": "d13c28896e33c2e447686f95c73e7133d2c82f18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f53fdcd4",
+        "filename": "packages/install/src/files/base.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-23T18:04:01Z",
+      "side": 1,
+      "message": "/var/log/onap or /var/log/onap/policy as you find it more convenient .. see previous comments",
+      "revId": "d13c28896e33c2e447686f95c73e7133d2c82f18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
