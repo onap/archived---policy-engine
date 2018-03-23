@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "5a93c517_277e7ae5",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/DisctionaryNames.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-23T13:43:52Z",
+      "side": 1,
+      "message": "Can we rename this file? It is misspelled",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_799e6c09",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/DisctionaryNames.java",
         "patchSetId": 4
@@ -30,6 +47,29 @@
       "writtenOn": "2018-03-23T13:28:44Z",
       "side": 1,
       "message": "add try with resources to autoclose zip.",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c759d68f",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewOptimizationModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-23T13:43:52Z",
+      "side": 1,
+      "message": "ZipFile is autocloseable, sonar will mark blocker for not use try-with-resources",
+      "range": {
+        "startLine": 177,
+        "startChar": 3,
+        "endLine": 177,
+        "endChar": 58
+      },
       "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -155,6 +195,29 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_27f3da74",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-23T13:43:52Z",
+      "side": 1,
+      "message": "Does Properties close() this? Seems like this is a resource leak and there should be a try-with-resources surrounding it even though this is a test we still want to write efficient code.",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 79
+      },
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_f956fc29",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/MicroserviceHeaderdeFaults.java",
         "patchSetId": 4
@@ -183,6 +246,98 @@
       "writtenOn": "2018-03-23T13:28:44Z",
       "side": 1,
       "message": "change to new ArrayList\u003c\u003e();",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4a1ceb6a",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-23T13:43:52Z",
+      "side": 1,
+      "message": "remove commented out code",
+      "range": {
+        "startLine": 1035,
+        "startChar": 5,
+        "endLine": 1035,
+        "endChar": 23
+      },
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6a19a778",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1037,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-23T13:43:52Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1037,
+        "startChar": 5,
+        "endLine": 1037,
+        "endChar": 32
+      },
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2a2b9f83",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1116,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-23T13:43:52Z",
+      "side": 1,
+      "message": "reverse these operations and remove the null check",
+      "range": {
+        "startLine": 1116,
+        "startChar": 101,
+        "endLine": 1116,
+        "endChar": 107
+      },
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4a338bf6",
+        "filename": "ONAP-SDK-APP/xacml.admin.properties",
+        "patchSetId": 4
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-23T13:43:52Z",
+      "side": 1,
+      "message": "Things like this really concern me. I realize this isn\u0027t code, but it is a form of hard coding versions etc. This really limits the platform as a whole from being able to import models easily.",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 0
+      },
       "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
