@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PAP-REST
+ * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -18,30 +18,34 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pap.xacml.rest.util;
+package org.onap.policy.rest.adapter;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-public class JPAUtilsTest {
-  @Test(expected = IllegalAccessException.class)
-  public void testJPAUtils() throws IllegalAccessException {
+public class ServiceGroupJsonTest {
+  @Test
+  public void testJson() {
     // Setup test data
-    EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
-    EntityManager em = Mockito.mock(EntityManager.class);
-    Query query = Mockito.mock(Query.class);
-    Mockito.when(emf.createEntityManager()).thenReturn(em);
-    Mockito.when(em.createNamedQuery(Mockito.any())).thenReturn(query);
+    String value = "testVal";
+    String value2 = "testVal2";
 
-    // Test lockdown
-    JPAUtils utils = JPAUtils.getJPAUtilsInstance(emf);
-    assertEquals(utils.dbLockdownIgnoreErrors(), false);
-    utils.dbLockdown();
-    fail("Expecting an exception");
+    // Test constructors
+    ServiceGroupJson json = new ServiceGroupJson();
+    json.setName(value);
+    ServiceGroupJson json2 = new ServiceGroupJson();
+    json2.setName(value);
+    ServiceGroupJson json3 = new ServiceGroupJson();
+    json3.setName(value2);
+
+    // Test equals and hash functions
+    assertTrue(json.equals(json2));
+    assertFalse(json.equals(json3));
+    assertFalse(json.equals(null));
+    assertFalse(json.equals(value));
+    assertEquals(217, json.hashCode());
+    assertEquals(0, json.getMembers().size());
   }
 }

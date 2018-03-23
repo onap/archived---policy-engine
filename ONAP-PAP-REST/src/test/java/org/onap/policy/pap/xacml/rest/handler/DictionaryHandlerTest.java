@@ -18,30 +18,27 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pap.xacml.rest.util;
+package org.onap.policy.pap.xacml.rest.handler;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-public class JPAUtilsTest {
-  @Test(expected = IllegalAccessException.class)
-  public void testJPAUtils() throws IllegalAccessException {
-    // Setup test data
-    EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
-    EntityManager em = Mockito.mock(EntityManager.class);
-    Query query = Mockito.mock(Query.class);
-    Mockito.when(emf.createEntityManager()).thenReturn(em);
-    Mockito.when(em.createNamedQuery(Mockito.any())).thenReturn(query);
+public class DictionaryHandlerTest {
+  @Test
+  public void negTestHandler() {
+    // Set the system property temporarily
+    String systemKey = "dictionary.impl.className";
+    String oldProperty = System.getProperty(systemKey);
+    System.setProperty(systemKey, "foobar");
 
-    // Test lockdown
-    JPAUtils utils = JPAUtils.getJPAUtilsInstance(emf);
-    assertEquals(utils.dbLockdownIgnoreErrors(), false);
-    utils.dbLockdown();
-    fail("Expecting an exception");
+    // Run negative test on instance
+    assertNull(DictionaryHandler.getInstance());
+
+    // Restore the original system property
+    if (oldProperty != null) {
+      System.setProperty(systemKey, oldProperty);
+    } else {
+      System.clearProperty(systemKey);
+    }
   }
 }

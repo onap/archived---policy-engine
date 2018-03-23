@@ -22,18 +22,23 @@ package org.onap.policy.conf;
 
 import static org.junit.Assert.assertNull;
 import org.hibernate.SessionFactory;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.controller.PolicyController;
 
 public class HibernateSessionTest {
-  @Test
-  public void testSession() {
+  @Before
+  public void setup() {
     PolicyController.setLogdbUrl("testURL");
     PolicyController.setLogdbUserName("testUser");
     PolicyController.setLogdbPassword("testPass");
     PolicyController.setLogdbDialect("testDialect");
     PolicyController.setLogdbDriver("testDriver");
+  }
+
+  @Test
+  public void testSession() {
     SessionFactory factory = Mockito.mock(SessionFactory.class);
     HibernateSession.setSession(factory);
     assertNull(HibernateSession.getSession());
