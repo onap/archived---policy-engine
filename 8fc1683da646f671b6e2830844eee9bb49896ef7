@@ -1,0 +1,259 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_799e6c09",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/DisctionaryNames.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "Delete this file. I have earlier renamed this file as DictionaryNames.java",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_79b50c7d",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewOptimizationModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "add try with resources to autoclose zip.",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_39af842d",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/OptimizationConfigPolicy.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "add try with resources",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_19a64854",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/DictionaryImportController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 734,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "replace with head revision code in this method.",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_796c2c09",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/MicroServiceDictionaryController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "Can you change this method similar to other save methods?",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b9495490",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/MicroServiceDictionaryController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "replace \"initialFields\" with \"modelAttributeDictionaryData\"",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0126ceba",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/MicroServiceDictionaryController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "The key passing here is correct, but in js the parsing data is wrong. please verify it in .js file",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_d94ea096",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/service/ImportService.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "try with resources",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_99481889",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/MicroServiceDictionaryControllerTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "to pass the test case change initialFields to modelAttributeDictionaryData",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f956fc29",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/MicroserviceHeaderdeFaults.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "Remove all 3 unnecessary constructors",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b9307408",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "change to new ArrayList\u003c\u003e();",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b9171454",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateOptimizationController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "use genEntityItem function instead of getDataById.\nSo, below loop is not required.",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_390b042d",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateOptimizationController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "this controller not required here. I think same request mapping we have in MicroService Policy controller class.",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e12402b1",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryGridController/MSHeaderDefaultValuesDictGridController.js",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "check the key parsing from backend controller.",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a136fae5",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryGridController/MSHeaderDefaultValuesDictGridController.js",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-03-23T13:28:44Z",
+      "side": 1,
+      "message": "both parsing and assigning key also wrong here. please verify above function modalInstance result",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
