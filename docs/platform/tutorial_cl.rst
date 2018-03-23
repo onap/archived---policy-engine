@@ -35,21 +35,16 @@ When the processing is done, you get the choice of immediately deploying the pol
 
 Proceed with testing your new policy as described in the specific tutorials:
 
-• vCPE - Tutorial: Testing the vCPE use case in a standalone PDP-D
-• vDNS - Tutorial: Testing the vDNS Use Case in a standalone PDP-D
-• vFW - Tutorial: Testing the vFW flow in a standalone PDP-D
-• VoLTE - Tutorial: Testing the VOLTE Use Case in a standalone PDP-D
-
-If you would like to deploy a control loop in Eclipse from the control loop archetype template:
-
-• Modifying the Release Template
+• vCPE - `Tutorial: Testing the vCPE use case in a standalone PDP-D <tutorial_vCPE.html>`_
+• vDNS - `Tutorial: Testing the vDNS Use Case in a standalone PDP-D <tutorial_vDNS.html>`_
+• vFW - `Tutorial: Testing the vFW flow in a standalone PDP-D <tutorial_vFW.html>`_
+• VoLTE - `Tutorial: Testing the VOLTE Use Case in a standalone PDP-D <tutorial_VOLTE.html>`_
 
 
+.. seealso:: To deploy a control loop in Eclipse from the control loop archetype template, refer to `Modifying the Release Template  <modAmsterTemplate.html>`_.
 
 
 End of Document
-
-
 
 
 .. SSNote: Wiki page ref. https://wiki.onap.org/display/DW/Tutorial%3A+Generating+and+Testing+your+own+Control+Loop+Operational+Policy+in+a+standalone+PDP-D
