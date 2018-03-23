@@ -42,7 +42,7 @@ Proceed with testing your new policy as described in the specific tutorials:
 
 If you would like to deploy a control loop in Eclipse from the control loop archetype template:
 
-• Modifying the Amsterdam release template
+• Modifying the Release Template
 
 
 
