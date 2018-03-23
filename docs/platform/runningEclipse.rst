@@ -44,7 +44,7 @@ An HTTP 200 message for the GET request will also appear in the console in Eclip
 
     .. image:: RunEcl_pdpd_200.png
 
-.. seealso:: To create a controller and run a control loop please refer to Modifying the Amsterdam release template.
+.. seealso:: To create a controller and run a control loop please refer to Modifying the Release Template.
 
 
 End of Document

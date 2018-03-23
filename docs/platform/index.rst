@@ -10,7 +10,6 @@ Policy Engine Platform
    offeredapis.rst
    installation.rst
    policygui.rst
-   modAmsterTemplate.rst
 
 Policy Software Architecture
 ----------------------------
@@ -39,8 +38,9 @@ Policy Platform Tutorials
    deployPDPPAP.rst
    guardpolicy.rst
    guardpdp.rst
-   runningEclipse.rst
    clsimulation.rst
+   modAmsterTemplate.rst
+   runningEclipse.rst
    tutorial_cl.rst
    tutorial_vDNS.rst
    tutorial_VOLTE.rst
