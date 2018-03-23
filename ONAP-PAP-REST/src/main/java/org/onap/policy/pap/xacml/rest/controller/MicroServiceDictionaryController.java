@@ -92,7 +92,7 @@ public class MicroServiceDictionaryController {
     }	
 	
     private DictionaryUtils getDictionaryUtilsInstance(){
-		return DictionaryUtils.dictionaryUtils != null ? DictionaryUtils.getDictionaryUtils() : new DictionaryUtils();
+		return DictionaryUtils.getDictionaryUtils();
 	}
     
 	@Autowired

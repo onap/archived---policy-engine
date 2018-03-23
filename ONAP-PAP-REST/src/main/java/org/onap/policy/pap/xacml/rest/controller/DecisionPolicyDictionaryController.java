@@ -66,7 +66,7 @@ public class DecisionPolicyDictionaryController {
 	}
 	
 	private DictionaryUtils getDictionaryUtilsInstance(){
-		return DictionaryUtils.dictionaryUtils != null ? DictionaryUtils.getDictionaryUtils() : new DictionaryUtils();
+		return DictionaryUtils.getDictionaryUtils();
 	}
 	
 	@RequestMapping(value={"/get_SettingsDictionaryDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)

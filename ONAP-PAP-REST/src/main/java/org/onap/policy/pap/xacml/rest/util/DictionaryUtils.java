@@ -58,10 +58,10 @@ public class DictionaryUtils {
 	
 	private static CommonClassDao commonClassDao;
 	
-	public static DictionaryUtils dictionaryUtils;
+	private static DictionaryUtils dictionaryUtils;
 	
 	public static synchronized DictionaryUtils getDictionaryUtils() {
-		return dictionaryUtils;
+	    return dictionaryUtils != null ? dictionaryUtils : new DictionaryUtils();
 	}
 
 	public static synchronized void setDictionaryUtils(DictionaryUtils dictionaryUtils) {

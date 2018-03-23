@@ -792,7 +792,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		} else {
 			PolicyLogger.info("requestID was provided in call to XACMLPapSrvlet (doGet)");
 		}
-		try {
 			loggingContext.metricStarted();
 			XACMLRest.dumpRequest(request);
 			loggingContext.metricEnded();
@@ -907,7 +906,18 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 						request.getRemoteHost().equals(request.getLocalAddr())) {
 					// Return status information - basically all the groups
 					loggingContext.setServiceName("PAP.getGroups");
-					Set<OnapPDPGroup> groups = papEngine.getOnapPDPGroups();
+					Set<OnapPDPGroup> groups = null;
+					try {
+					    groups = papEngine.getOnapPDPGroups();
+					} catch(PAPException e) {
+					    LOGGER.debug(e);
+					    PolicyLogger.error(MessageCodes.ERROR_UNKNOWN, e, "XACMLPapServlet", " GET exception");
+					    loggingContext.transactionEnded();
+					    PolicyLogger.audit("Transaction Failed - See Error.log");
+					    setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+					    im.endTransaction();
+					    return;
+					}
 					// convert response object to JSON and include in the response
 					mapperWriteValue(new ObjectMapper(), response,  groups);
 					response.setHeader("content-type", "application/json");
@@ -984,15 +994,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				PolicyLogger.audit("Transaction Failed - See Error.log");
 				setResponseError(response,HttpServletResponse.SC_NOT_FOUND, message);
 			}
-		}  catch (PAPException e) {
-			LOGGER.debug(e);
-			PolicyLogger.error(MessageCodes.ERROR_UNKNOWN, e, "XACMLPapServlet", " GET exception");
-			loggingContext.transactionEnded();
-			PolicyLogger.audit("Transaction Failed - See Error.log");
-			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-			im.endTransaction();
-			return;
-		}
 		loggingContext.transactionEnded();
 		PolicyLogger.audit("Transaction Ended");
 		im.endTransaction();
@@ -1892,7 +1893,16 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				} else {
 					// request is for top-level properties about all groups
 					loggingContext.setServiceName("AC:PAP.getAllGroups");
-					Set<OnapPDPGroup> groups = papEngine.getOnapPDPGroups();
+					Set<OnapPDPGroup> groups = null;
+					try {
+					    groups = papEngine.getOnapPDPGroups();
+					} catch(PAPException e) {
+					    PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " AC Get exception");
+					    loggingContext.transactionEnded();
+					    PolicyLogger.audit("Transaction Failed - See Error.log");
+					    setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+					    return;
+					}
 					// convert response object to JSON and include in the response
 					mapperWriteValue(new ObjectMapper(), response,  groups);
 					if (LOGGER.isDebugEnabled()) {
@@ -2039,7 +2049,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				LOGGER.info("JSON request from AC: " + json);
 				// convert Object sent as JSON into local object
 				ObjectMapper mapper = new ObjectMapper();
-				Object objectFromJSON = mapper.readValue(json, StdPDP.class);
+				Object objectFromJSON = null;
+				try {
+				    objectFromJSON = mapper.readValue(json, StdPDP.class);
+				} catch(Exception e) {
+				    LOGGER.error(e);
+				}
 				if (pdpId == null ||
 						objectFromJSON == null ||
 						! (objectFromJSON instanceof StdPDP) ||
@@ -2144,7 +2159,12 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 				LOGGER.info("JSON request from AC: " + json);
 				// convert Object sent as JSON into local object
 				ObjectMapper mapper = new ObjectMapper();
-				Object objectFromJSON  = mapper.readValue(json, StdPDPGroup.class);
+				Object objectFromJSON = null;
+				try {
+				    objectFromJSON  = mapper.readValue(json, StdPDPGroup.class);
+				} catch(Exception e) {
+				    LOGGER.error(e);
+				}
 				if (objectFromJSON == null || ! (objectFromJSON instanceof StdPDPGroup) ||
 						! ((StdPDPGroup)objectFromJSON).getId().equals(group.getId())) {
 					PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " Group update had bad input. id=" + group.getId() + " objectFromJSON="+objectFromJSON);
@@ -2209,14 +2229,6 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 			PolicyLogger.audit("Transaction Failed - See Error.log");
 			setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			return;
-		} catch (IOException | JsonException e) {
-		    LOGGER.debug(e);
-		    acPutTransaction.rollbackTransaction();
-		    PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "XACMLPapServlet", " AC PUT exception");
-		    loggingContext.transactionEnded();
-		    PolicyLogger.audit("Transaction Failed - See Error.log");
-		    setResponseError(response,HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-		    return;
 		}
 	}
 	
