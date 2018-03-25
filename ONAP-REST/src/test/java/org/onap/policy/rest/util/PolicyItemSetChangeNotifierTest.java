@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP-PAP-REST
+ * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,30 +18,33 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.pap.xacml.rest.util;
+package org.onap.policy.rest.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.onap.policy.rest.util.PolicyContainer.ItemSetChangeEvent;
+import org.onap.policy.rest.util.PolicyContainer.ItemSetChangeListener;
 
-public class JPAUtilsTest {
-  @Test(expected = IllegalAccessException.class)
-  public void testJPAUtils() throws IllegalAccessException {
+public class PolicyItemSetChangeNotifierTest {
+  @Test
+  public void testNotifier() {
     // Setup test data
-    EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
-    EntityManager em = Mockito.mock(EntityManager.class);
-    Query query = Mockito.mock(Query.class);
-    Mockito.when(emf.createEntityManager()).thenReturn(em);
-    Mockito.when(em.createNamedQuery(Mockito.any())).thenReturn(query);
+    ItemSetChangeListener listener = Mockito.mock(ItemSetChangeListener.class);
+    ItemSetChangeEvent event = Mockito.mock(ItemSetChangeEvent.class);
 
-    // Test lockdown
-    JPAUtils utils = JPAUtils.getJPAUtilsInstance(emf);
-    assertEquals(utils.dbLockdownIgnoreErrors(), false);
-    utils.dbLockdown();
-    fail("Expecting an exception");
+    // Test constructor
+    PolicyItemSetChangeNotifier notifier = new PolicyItemSetChangeNotifier();
+    assertNotNull(notifier);
+
+    // Test listener methods
+    try {
+      notifier.addItemSetChangeListener(listener);
+      notifier.fireItemSetChange(event);
+      notifier.removeItemSetChangeListener(listener);
+    } catch (Exception ex) {
+      fail("Not expecting any exceptions: " + ex);
+    }
   }
 }
