@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_fbeb4bae",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/DisctionaryNames.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_799e6c09",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_79b50c7d",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewOptimizationModel.java",
         "patchSetId": 4
@@ -65,6 +83,24 @@
       "writtenOn": "2018-03-23T13:28:44Z",
       "side": 1,
       "message": "add try with resources to autoclose zip.",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_9bd007f9",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewOptimizationModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_79b50c7d",
       "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -94,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_bbcdc35f",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewOptimizationModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_c759d68f",
+      "range": {
+        "startLine": 177,
+        "startChar": 3,
+        "endLine": 177,
+        "endChar": 58
+      },
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_39af842d",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/OptimizationConfigPolicy.java",
         "patchSetId": 4
@@ -111,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_7bd73bee",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/OptimizationConfigPolicy.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_39af842d",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_19a64854",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/DictionaryImportController.java",
         "patchSetId": 4
@@ -122,6 +200,24 @@
       "writtenOn": "2018-03-23T13:28:44Z",
       "side": 1,
       "message": "replace with head revision code in this method.",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_1b04f77c",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/DictionaryImportController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 734,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_19a64854",
       "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -162,6 +258,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_6a6c4237",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/MicroServiceDictionaryController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_b9495490",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_0126ceba",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/MicroServiceDictionaryController.java",
         "patchSetId": 4
@@ -173,6 +287,24 @@
       "writtenOn": "2018-03-23T13:28:44Z",
       "side": 1,
       "message": "The key passing here is correct, but in js the parsing data is wrong. please verify it in .js file",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8a698e27",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/controller/MicroServiceDictionaryController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_0126ceba",
       "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -196,6 +328,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_0a657e44",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/service/ImportService.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_d94ea096",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_99481889",
         "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/MicroServiceDictionaryControllerTest.java",
         "patchSetId": 4
@@ -207,6 +357,24 @@
       "writtenOn": "2018-03-23T13:28:44Z",
       "side": 1,
       "message": "to pass the test case change initialFields to modelAttributeDictionaryData",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6a53e26c",
+        "filename": "ONAP-PAP-REST/src/test/java/org/onap/policy/pap/xacml/rest/controller/MicroServiceDictionaryControllerTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_99481889",
       "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -236,6 +404,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_aae7aaab",
+        "filename": "ONAP-PDP-REST/src/test/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyServiceTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Properties does not support autoclosable() so I could not use try-with-resources.  I added prop.clear(); to clear the hashtable so it contains no keys.",
+      "parentUuid": "5a93c517_27f3da74",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 79
+      },
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_f956fc29",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/MicroserviceHeaderdeFaults.java",
         "patchSetId": 4
@@ -247,6 +439,24 @@
       "writtenOn": "2018-03-23T13:28:44Z",
       "side": 1,
       "message": "Remove all 3 unnecessary constructors",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2a4ddac4",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/MicroserviceHeaderdeFaults.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_f956fc29",
       "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -270,6 +480,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_eac61216",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_b9307408",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_4a1ceb6a",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
         "patchSetId": 4
@@ -281,6 +509,30 @@
       "writtenOn": "2018-03-23T13:43:52Z",
       "side": 1,
       "message": "remove commented out code",
+      "range": {
+        "startLine": 1035,
+        "startChar": 5,
+        "endLine": 1035,
+        "endChar": 23
+      },
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_caec7692",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_4a1ceb6a",
       "range": {
         "startLine": 1035,
         "startChar": 5,
@@ -316,6 +568,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_6a01a238",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1037,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_6a19a778",
+      "range": {
+        "startLine": 1037,
+        "startChar": 5,
+        "endLine": 1037,
+        "endChar": 32
+      },
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_2a2b9f83",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
         "patchSetId": 4
@@ -327,6 +603,30 @@
       "writtenOn": "2018-03-23T13:43:52Z",
       "side": 1,
       "message": "reverse these operations and remove the null check",
+      "range": {
+        "startLine": 1116,
+        "startChar": 101,
+        "endLine": 1116,
+        "endChar": 107
+      },
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8afe6e37",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1116,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_2a2b9f83",
       "range": {
         "startLine": 1116,
         "startChar": 101,
@@ -379,6 +679,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_aad00aca",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateOptimizationController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_b9171454",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_390b042d",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateOptimizationController.java",
         "patchSetId": 4
@@ -390,6 +708,24 @@
       "writtenOn": "2018-03-23T13:28:44Z",
       "side": 1,
       "message": "this controller not required here. I think same request mapping we have in MicroService Policy controller class.",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_cad556ba",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateOptimizationController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_390b042d",
       "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -413,6 +749,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_0af33e74",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryGridController/MSHeaderDefaultValuesDictGridController.js",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_e12402b1",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_a136fae5",
         "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryGridController/MSHeaderDefaultValuesDictGridController.js",
         "patchSetId": 4
@@ -424,6 +778,24 @@
       "writtenOn": "2018-03-23T13:28:44Z",
       "side": 1,
       "message": "both parsing and assigning key also wrong here. please verify above function modalInstance result",
+      "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_eaedb28f",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/controller/dictionaryGridController/MSHeaderDefaultValuesDictGridController.js",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-03-26T21:33:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_a136fae5",
       "revId": "8fc1683da646f671b6e2830844eee9bb49896ef7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
