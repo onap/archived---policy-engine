@@ -227,7 +227,7 @@ public class XACMLPolicyWriter {
 										AdviceExpressionType adviceExpressionType = (AdviceExpressionType) iterator
 												.next();
 										if (adviceExpressionType.getAdviceId() != null && !"".equals(adviceExpressionType.getAdviceId()) && ("configID".equals(adviceExpressionType.getAdviceId())
-												|| "faultID".equals(adviceExpressionType.getAdviceId()) || "PMID".equals(adviceExpressionType.getAdviceId())||"firewallConfigID".equals(adviceExpressionType.getAdviceId()) 
+												|| "faultID".equals(adviceExpressionType.getAdviceId()) || "PMID".equals(adviceExpressionType.getAdviceId())||"firewallConfigID".equals(adviceExpressionType.getAdviceId()) || "OptimizationID".equals(adviceExpressionType.getAdviceId())
 												|| "MSID".equals(adviceExpressionType.getAdviceId())) || "GocID".equals(adviceExpressionType.getAdviceId())||"GocHPID".equals(adviceExpressionType.getAdviceId())||"BRMSRAWID".equals(adviceExpressionType.getAdviceId())
 												|| "BRMSPARAMID".equals(adviceExpressionType.getAdviceId())|| "HPSuppID".equals(adviceExpressionType.getAdviceId()) || "HPFlapID".equals(adviceExpressionType.getAdviceId()) || "HPOverID".equals(adviceExpressionType.getAdviceId()))
 										{

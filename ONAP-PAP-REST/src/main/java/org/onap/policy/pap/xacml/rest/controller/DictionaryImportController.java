@@ -79,16 +79,21 @@ public class DictionaryImportController {
 	
 	private static CommonClassDao commonClassDao;
 	private static final String DESCRIPTION= "description";
+	private static final String ERROR= "Error";
+	private static final String DEPENDENCY= "dependency";
 	
 	@Autowired
 	public DictionaryImportController(CommonClassDao commonClassDao){
+		setCommonClassDao(commonClassDao);
+	}
+	
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
 		DictionaryImportController.commonClassDao = commonClassDao;
 	}
 	
 	public DictionaryImportController(){
-		super();
-	}	
-
+		super();	
+	}
 
 	@RequestMapping(value={"/dictionary/import_dictionary"}, method={RequestMethod.POST})
 	public void importDictionaryData(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -100,15 +105,15 @@ public class DictionaryImportController {
 		if(dictionaryName == null || dictionaryName.isEmpty()){
 			LOGGER.error("dictionaryName is null/empty");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().write("Error");
+			response.getWriter().write(ERROR);
 			return;
 		}
 		
 		// fix Fortify Path Manipulation issue
 		if(!isValidDictionaryName(dictionaryName)){
 			LOGGER.error("dictionaryName is invalid");
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write("Dictionary Import failed. Hence the following dictionary doen't support import function  : "+ dictionaryName);
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().write(ERROR);
 			return;			
 		}
 		File file = new File(dictionaryName);	
@@ -230,7 +235,7 @@ public class DictionaryImportController {
 						if(DESCRIPTION.equalsIgnoreCase(dictSheet.get(0)[j])){
 							attribute.setDescription(rows[j]);
 						}
-						if("dependency".equalsIgnoreCase(dictSheet.get(0)[j])){
+						if(DEPENDENCY.equalsIgnoreCase(dictSheet.get(0)[j])){
 							attribute.setDependency(rows[j]);
 						}
 						if("attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
@@ -244,6 +249,50 @@ public class DictionaryImportController {
 						}
 						if("Sub Attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
 							attribute.setSub_attributes(rows[j]);
+						}
+						if("annotations".equalsIgnoreCase(dictSheet.get(0)[j])) {
+							attribute.setAnnotation(rows[j]);
+						}
+					}
+
+					commonClassDao.save(attribute);
+				}
+			}		
+
+			if(dictionaryName.startsWith("OptimizationPolicyDictionary")){
+				for(int i = 1; i< dictSheet.size(); i++){
+					MicroServiceModels attribute = new MicroServiceModels();
+					UserInfo userinfo = new UserInfo();
+					userinfo.setUserLoginId(userId);
+					attribute.setUserCreatedBy(userinfo);
+					String[] rows = dictSheet.get(i);
+					for (int j=0 ; j<rows.length; j++ ){
+						if("modelName".equalsIgnoreCase(dictSheet.get(0)[j]) || "Optimization Service Model".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setModelName(rows[j]);
+						}
+						if("version".equalsIgnoreCase(dictSheet.get(0)[j]) || "Model Version".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setVersion(rows[j]);
+						}
+						if(DESCRIPTION.equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setDescription(rows[j]);
+						}
+						if(DEPENDENCY.equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setDependency(rows[j]);
+						}
+						if("attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setAttributes(rows[j]);
+						}
+						if("enumValues".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setEnumValues(rows[j]);
+						}
+						if("Ref Attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setRef_attributes(rows[j]);
+						}
+						if("Sub Attributes".equalsIgnoreCase(dictSheet.get(0)[j])){
+							attribute.setSub_attributes(rows[j]);
+						}
+						if("annotations".equalsIgnoreCase(dictSheet.get(0)[j])) {
+							attribute.setAnnotation(rows[j]);
 						}
 					}
 
@@ -427,7 +476,7 @@ public class DictionaryImportController {
 						if(DESCRIPTION.equalsIgnoreCase(dictSheet.get(0)[j])){
 							attribute.setDescription(rows[j]);
 						}
-						if("dependency".equalsIgnoreCase(dictSheet.get(0)[j])){
+						if(DEPENDENCY.equalsIgnoreCase(dictSheet.get(0)[j])){
 							attribute.setDependency(rows[j]);
 						}
 					}
@@ -677,7 +726,7 @@ public class DictionaryImportController {
 		}catch(Exception e){
 			LOGGER.error("Exception Occured while importing dictionary"+e);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().write("Error");
+			response.getWriter().write(ERROR);
 		}finally{
 			if(file != null && file.exists()){
 				boolean deleted = file.delete();
@@ -696,6 +745,7 @@ public class DictionaryImportController {
 				case ActionPolicyDictionary:
 				case OnapName:
 				case MSPolicyDictionary:
+				case OptimizationPolicyDictionary:
 				case VNFType:
 				case VSCLAction:
 				case ClosedLoopService:

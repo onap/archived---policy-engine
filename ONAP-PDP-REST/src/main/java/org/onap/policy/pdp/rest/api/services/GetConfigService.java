@@ -173,6 +173,8 @@ public class GetConfigService {
                 return PolicyConfigType.ClosedLoop_PM;
             } else if(name.startsWith("Config_MS_")) {
                 return PolicyConfigType.MicroService;
+            } else if(name.startsWith("Config_OOF_")) {
+            	return PolicyConfigType.Optimization;
             } else if(name.startsWith("Config_")) {
                 return PolicyConfigType.Base;
             }

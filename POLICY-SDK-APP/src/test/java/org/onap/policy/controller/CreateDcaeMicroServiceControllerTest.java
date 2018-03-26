@@ -158,90 +158,6 @@ public class CreateDcaeMicroServiceControllerTest {
 	}
 
 	/**
-	 * Run the void stringBetweenDots(String, String) method test
-	 */
-	
-	 @Test
-	public void testStringBetweenDots() {
-
-		logger.debug("testStringBetweenDots: enter");
-		
-		//expect: uniqueKeys should contain a string value 
-		CreateDcaeMicroServiceController controllerA = new CreateDcaeMicroServiceController();
-		String str = "testing\\.byCorrectWay\\.OfDATA";
-		assertEquals(1, controllerA.stringBetweenDots(str));
-		
-		//expect: uniqueKeys should not contain a string value 
-		str = "testing\byWrongtWay.\\OfDATA";
-		CreateDcaeMicroServiceController controllerB = new CreateDcaeMicroServiceController();
-	    assertEquals(0, controllerB.stringBetweenDots(str));
-	    
-		logger.debug("testStringBetweenDots: exit");
-	}
-
-	/**
-	 * Run the Map<String,String> load(String) method test
-	 */
-	
-	@Test
-	public void testLoad() {
-		
-		logger.debug("testLoad: enter");
-		
-		boolean isLocalTesting = true;
-		CreateDcaeMicroServiceController controller = new CreateDcaeMicroServiceController();
-		String fileName = null;
-		Map<String,String> result = null;
-		try {
-			ClassLoader classLoader = getClass().getClassLoader();
-			fileName = new File(classLoader.getResource("policy_tosca_tca_v1707.yml").getFile()).getAbsolutePath();
-		} catch (Exception e1) {
-			logger.error("Exception Occured while loading file"+e1);
-		}
-		if(isLocalTesting){
-			try {
-				result = controller.load(fileName);
-			} catch (IOException e) {
-				logger.error("testLoad", e);
-				result = null;
-			}
-			
-			assertTrue(result != null && !result.isEmpty());				
-			logger.debug("result : " + result);
-		}
-
-		logger.debug("testLoad: exit");
-	}
-	
-	/**
-	 * Run the void parseTosca(String) method test
-	 */
-	
-	@Test
-	public void testParseTosca() {
-		
-		logger.debug("testParseTosca: enter");
-		boolean isLocalTesting = true;
-		String fileName = null;
-		try {
-			ClassLoader classLoader = getClass().getClassLoader();
-			fileName = new File(classLoader.getResource("policy_tosca_tca_v1707.yml").getFile()).getAbsolutePath();
-		} catch (Exception e1) {
-			logger.error("Exception Occured while loading file"+e1);
-		}
-		
-		CreateDcaeMicroServiceController contoller = new CreateDcaeMicroServiceController();
-        if(isLocalTesting){
-			try {
-			    contoller.parseTosca(fileName);
-			}catch (Exception e) {
-				fail("parseTosca caused error: " + e);
-			}
-        }
-		logger.debug("testParseTosca: exit");
-	}
-
-	/**
 	 * Run the ModelAndView getDCAEMSTemplateData(HttpServletRequest,
 	 * HttpServletResponse) method test
 	 */
@@ -584,9 +500,7 @@ public class CreateDcaeMicroServiceControllerTest {
 			logger.error("testSetMSModelData" + e);
 			e.printStackTrace();
 		}
-	    
-		//assertTrue(false);
-		
+	    		
 		logger.debug("testSetMSModelData: exit");
 	}
 

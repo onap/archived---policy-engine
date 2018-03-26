@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  */
 
 var mainDictionarys = ["Action Policy", "BRMS Policy", "Common Dictionary", "ClosedLoop Policy","Decision Policy", "Descriptive Policy",
-	 "Firewall Policy", "MicroService Policy", "Policy Scope", "Safe Policy Dictionary"];
+	 "Firewall Policy", "MicroService Policy", "Optimization Policy", "Policy Scope", "Safe Policy Dictionary"];
 var subDictionarys = [["Action Dictionary"],
 	["BRMS Controller" , "BRMS Dependency", "BRMS Param Template"],
 	["Attribute Dictionary","OnapName Dictionary"],
@@ -27,7 +27,8 @@ var subDictionarys = [["Action Dictionary"],
 	["Settings Dictionary","Rainy Day Allowed Treatments"],
 	["Descriptive Scope"],
 	["Action List", "Address Group", "Parent Dictionary List", "Port List", "Prefix List", "Protocol List", "Security Zone", "Service Group", "Service List", "Tag List", "Tag Picker List", "Term List", "Zone"],
-	["DCAE UUID","MicroService ConfigName","MicroService Location", "MicroService Models", "MicroService Dictionary"],
+	["DCAE UUID","Header Default Values","MicroService ConfigName","MicroService Location", "MicroService Models", "MicroService Dictionary"],
+	["ONAP Optimization Models"],
 	["Closed Loop", "Group Policy Scope", "Resource", "Service", "Type"],
 	["Risk Type", "Safe Policy Warning"]];
 app.controller('dictionaryTabController', function ($scope, PolicyAppService, modalService, $modal){

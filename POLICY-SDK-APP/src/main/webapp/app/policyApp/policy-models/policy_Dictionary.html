@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP Policy Engine
   ================================================================================
-  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -101,9 +101,12 @@
 	<!--Micro Service Policy Dictionary's-->
 	<div  ng-if="option2 == 'DCAE UUID'" ng-include = "'app/policyApp/policy-models/Dictionary/MSDcaeUUIDDictionary.html'"></div>
 	<div  ng-if="option2 == 'MicroService ConfigName'" ng-include = "'app/policyApp/policy-models/Dictionary/MSConfigNameDictionary.html'"></div>
+	<div  ng-if="option2 == 'Header Default Values'" ng-include = "'app/policyApp/policy-models/Dictionary/MSHeaderDefaultValuesDictionary.html'"></div>
 	<div  ng-if="option2 == 'MicroService Location'" ng-include = "'app/policyApp/policy-models/Dictionary/MSLocationDictionary.html'"></div>
 	<div  ng-if="option2 == 'MicroService Models'" ng-include = "'app/policyApp/policy-models/Dictionary/MSModelDictionary.html'"></div>
 	<div  ng-if="option2 == 'MicroService Dictionary'" ng-include = "'app/policyApp/policy-models/Dictionary/ModelAttributeDictionary.html'"></div>
+	<!--Optimization Policy Dictionary's-->
+	<div  ng-if="option2 == 'ONAP Optimization Models'" ng-include = "'app/policyApp/policy-models/Dictionary/OptimizationModelDictionary.html'"></div>
 	<!-- Policy Scope Dictionary's -->
 	<div  ng-if="option2 == 'Closed Loop'" ng-include = "'app/policyApp/policy-models/Dictionary/PSClosedLoopDictionary.html'"></div>
 	<div  ng-if="option2 == 'Group Policy Scope'" ng-include = "'app/policyApp/policy-models/Dictionary/PSGroupPolicyScopeDictionary.html'"></div>
@@ -120,7 +123,7 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 class="font-showcase-font-name" style="color : #157bb2">Import  Dictionary's</h2>
+            <h2 class="font-showcase-font-name" style="color : #157bb2">Import Dictionary's</h2>
         </div>
         <div class="modal-body">
             <div class="fn-ebz-container">

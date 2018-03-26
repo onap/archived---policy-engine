@@ -47,6 +47,7 @@ public interface ElkConnector {
 		Config_PM,
 		Config_FW,
 		Config_MS,
+		Config_OOF,
 		none,
 	}
 	
@@ -84,6 +85,8 @@ public interface ElkConnector {
 		} else if (policyName.startsWith("Config_FW")) {
 			return PolicyIndexType.config;
 		} else if (policyName.startsWith("Config_MS")) {
+			return PolicyIndexType.config;
+		} else if (policyName.startsWith("Config_OOF")) {
 			return PolicyIndexType.config;
 		}else if (policyName.startsWith("Action")) {
 			return PolicyIndexType.action;

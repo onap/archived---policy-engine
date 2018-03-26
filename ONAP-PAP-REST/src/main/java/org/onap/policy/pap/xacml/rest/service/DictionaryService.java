@@ -32,6 +32,7 @@ import org.onap.policy.pap.xacml.rest.controller.DescriptiveDictionaryController
 import org.onap.policy.pap.xacml.rest.controller.DictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.FirewallDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.MicroServiceDictionaryController;
+import org.onap.policy.pap.xacml.rest.controller.OptimizationDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.PolicyScopeDictionaryController;
 import org.onap.policy.pap.xacml.rest.controller.SafePolicyController;
 import org.springframework.stereotype.Service;
@@ -236,6 +237,13 @@ public class DictionaryService {
 		return result.getViewName();
 	}
 	
+	public String saveOptimizationModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		
+		OptimizationDictionaryController dictionary = new OptimizationDictionaryController();
+			ModelAndView result = dictionary.saveOptimizationModelsDictionary(request, response);
+		return result.getViewName();
+	}
+	
 	public String savePSServiceDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		PolicyScopeDictionaryController dictionary = new PolicyScopeDictionaryController();
@@ -422,6 +430,11 @@ public class DictionaryService {
 	public void getMicroServiceDictionary(HttpServletResponse response){
 		MicroServiceDictionaryController dictionary = new MicroServiceDictionaryController();
 			dictionary.getMicroServiceModelsDictionaryEntityData(response);
+	}
+	
+	public void getOptimizationModelsDictionary(HttpServletResponse response){
+		OptimizationDictionaryController dictionary = new OptimizationDictionaryController();
+			dictionary.getOptimizationModelsDictionaryEntityData(response);
 	}
 	
 	public void getPSServiceDictionary(HttpServletResponse response){
