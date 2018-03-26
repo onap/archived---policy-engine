@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_b93aa6e5",
+        "filename": "PolicyEngineAPI/src/main/resources/logback.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-26T13:44:03Z",
+      "side": 1,
+      "message": "Question, what is API, in theory should be a component?   May be Ravi knows?",
+      "revId": "669931e76de18aabb14f9ff873da4783f8c83d7a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_592b6294",
+        "filename": "packages/install/src/files/paplp.conf",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-26T13:44:03Z",
+      "side": 1,
+      "message": "this integritymonitor log in theory should go away - can you check with Ravi on this?",
+      "revId": "669931e76de18aabb14f9ff873da4783f8c83d7a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_191dda73",
+        "filename": "packages/install/src/files/pdplp.conf",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-03-26T13:44:03Z",
+      "side": 1,
+      "message": "this integritymonitor log in theory should go away - can you check with Ravi on this?",
+      "revId": "669931e76de18aabb14f9ff873da4783f8c83d7a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
