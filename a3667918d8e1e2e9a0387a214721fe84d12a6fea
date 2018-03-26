@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_5eacb635",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/DisctionaryNames.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2018-03-26T15:07:48Z",
+      "side": 1,
+      "message": "is this file needed? same as DictionaryNames.java?",
+      "range": {
+        "startLine": 29,
+        "startChar": 12,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "a3667918d8e1e2e9a0387a214721fe84d12a6fea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
