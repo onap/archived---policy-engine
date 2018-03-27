@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 
 ARG HTTP_PROXY=${HTTP_PROXY}
 ARG HTTPS_PROXY=${HTTPS_PROXY}
-ARG POLICY_LOGS=/var/log/ONAP/policy
+ARG POLICY_LOGS=/var/log/onap
 
 ENV http_proxy $HTTP_PROXY
 ENV https_proxy $HTTPS_PROXY
