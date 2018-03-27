@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,32 +21,66 @@ package org.onap.policy.xacml.pdp;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import java.util.Properties;
-
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import com.att.research.xacml.util.FactoryException;
+import com.att.research.xacml.util.FactoryFinder;
+import com.att.research.xacmlatt.pdp.eval.EvaluationContextFactory;
 
+@RunWith(PowerMockRunner.class)
 public class ONAPPDPEngineFactoryTest {
+  @Test
+  public final void testNewEngine() {
+    ONAPPDPEngineFactory pdpEngine = new ONAPPDPEngineFactory();
+    try {
+      assertTrue(pdpEngine.newEngine() != null);
+    } catch (Exception e) {
+      fail("operation failed, e=" + e);
+    }
+  }
 
-	@Test
-	public final void testNewEngine() {
-		ONAPPDPEngineFactory pdpEngine = new ONAPPDPEngineFactory();
-		try{
-			assertTrue(pdpEngine.newEngine() != null);
-		}catch (Exception e) {
-			fail("operation failed, e="+e);
-		}
+  @Test
+  public final void testNewEngineProperties() {
+    ONAPPDPEngineFactory pdpEngine = new ONAPPDPEngineFactory();
+    Properties properties = new Properties();
+    try {
+      assertTrue(pdpEngine.newEngine(properties) != null);
+    } catch (Exception e) {
+      fail("operation failed, e=" + e);
+    }
+  }
 
-	}
+  @PrepareForTest({EvaluationContextFactory.class, FactoryFinder.class})
+  @Test(expected = FactoryException.class)
+  public void negTestEngine() throws FactoryException {
+    // Setup test data
+    PowerMockito.mockStatic(FactoryFinder.class);
+    PowerMockito.when(FactoryFinder.find(Mockito.any(), Mockito.any(), Mockito.any()))
+        .thenReturn(null);
 
-	@Test
-	public final void testNewEngineProperties() {
-		ONAPPDPEngineFactory pdpEngine = new ONAPPDPEngineFactory();
-		Properties properties = new Properties();
-		try{
-			assertTrue(pdpEngine.newEngine(properties) != null);
-		}catch (Exception e) {
-			fail("operation failed, e="+e);
-		}
-	}
+    // Negative test factory
+    ONAPPDPEngineFactory factory = new ONAPPDPEngineFactory();
+    factory.newEngine();
+    fail("Expecting an exception.");
+  }
+
+  @PrepareForTest({EvaluationContextFactory.class, FactoryFinder.class})
+  @Test(expected = FactoryException.class)
+  public void negTestEngine2() throws FactoryException {
+    // Setup test data
+    PowerMockito.mockStatic(FactoryFinder.class);
+    PowerMockito.when(FactoryFinder.find(Mockito.any(), Mockito.any(), Mockito.any()))
+        .thenReturn(null);
+
+    // Negative test factory
+    ONAPPDPEngineFactory factory = new ONAPPDPEngineFactory();
+    Properties properties = new Properties();
+    factory.newEngine(properties);
+    fail("Expecting an exception.");
+  }
 }

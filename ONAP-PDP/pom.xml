@@ -34,6 +34,25 @@
 	</parent>
 	<dependencies>
 		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.10.19</version>
+			<scope>test</scope>
+		</dependency>  
+		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito -->
+		<dependency>
+    		<groupId>org.powermock</groupId>
+    		<artifactId>powermock-api-mockito</artifactId>
+    		<version>1.7.3</version>
+    		<scope>test</scope>
+		</dependency>
+		<dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.7.3</version>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
 			<groupId>org.onap.policy.engine</groupId>
 			<version>${project.version}</version>
 			<artifactId>ONAP-REST</artifactId>
@@ -94,6 +113,11 @@
       		<version>${project.version}</version>
       		<scope>test</scope>
     	</dependency>
+    	<dependency>
+			<groupId>com.mockrunner</groupId>
+			<artifactId>mockrunner</artifactId>
+			<version>0.3.1</version>
+		</dependency>
 	</dependencies>
 
 </project>
