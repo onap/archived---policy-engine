@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,35 +18,30 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.brmsInterface;
+package org.onap.brmsgw.test;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.HashMap;
 import java.util.Map;
 
-/**
- * POJO for controller information. 
- * 
- */
-public class ControllerPOJO {
-	private String name;
-	private Map<String,String> drools;
-	private String operation;
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public Map<String,String> getDrools() {
-		return drools;
-	}
-	public void setDrools(Map<String,String> drools) {
-		this.drools = drools;
-	}
-	public String getOperation() {
-		return operation;
-	}
-	public void setOperation(String operation) {
-		this.operation = operation;
-	}
-}
+import org.junit.Test;
+import org.onap.policy.brms.api.ControllerPojo;
 
+public class ControllerPojoTest {
+    @Test
+    public void testPojo() {
+        final String testKey = "testKey";
+        final String testVal = "testVal";
+        final Map<String, String> testMap = new HashMap<String, String>();
+        testMap.put(testKey, testVal);
+        final ControllerPojo pojo = new ControllerPojo();
+
+        pojo.setName(testVal);
+        assertEquals(pojo.getName(), testVal);
+        pojo.setDrools(testMap);
+        assertEquals(pojo.getDrools(), testMap);
+        pojo.setOperation(testVal);
+        assertEquals(pojo.getOperation(), testVal);
+    }
+}

@@ -17,59 +17,41 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.policy.brmsInterface.jpa;
+
+package org.onap.policy.brms.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="brmsgroup_info")
-public class BRMSGroupInfo{
-	
-	@Id
-	@Column(name = "controllerName", nullable=false, length=255)
-	private String controllerName;
-	
-	@Column(name = "groupId", nullable=false, length=255)
-	private String groupId;
-	
-	@Column(name = "artifactId", nullable=false, length=255)
-	private String artifactId;
-	
-	@Column(name = "version", length=255)
-	private String version;
-	
-	public String getControllerName() {
-		return controllerName;
-	}
+@Table(name = "brmsgroup_policy")
+public class BrmsPolicyInfo {
 
-	public void setControllerName(String controllerName) {
-		this.controllerName = controllerName;
-	}
+    @Id
+    @Column(name = "policyName")
+    private String policyName;
 
-	public String getGroupId() {
-		return groupId;
-	}
+    @ManyToOne
+    @JoinColumn(name = "controllerName")
+    private BrmsGroupInfo controllerName;
 
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
+    public String getPolicyName() {
+        return policyName;
+    }
 
-	public String getArtifactId() {
-		return artifactId;
-	}
+    public void setPolicyName(final String policyName) {
+        this.policyName = policyName;
+    }
 
-	public void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
-	}
+    public BrmsGroupInfo getControllerName() {
+        return controllerName;
+    }
 
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    public void setControllerName(final BrmsGroupInfo controllerName) {
+        this.controllerName = controllerName;
+    }
 }
