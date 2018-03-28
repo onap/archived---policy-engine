@@ -21,15 +21,15 @@
 <configuration scan="true" scanPeriod="3 seconds" debug="true">
   <!--<jmxConfigurator /> -->
   <!-- directory path for all other type logs -->
-  <property name="logDir" value="${{POLICY_LOGS}}" />
+  <property name="logDir" value="logs" />
   
   <!-- directory path for debugging type logs -->
-  <property name="debugDir" value="${{POLICY_LOGS}}" />
+  <property name="debugDir" value="logs" />
   
   <!--  specify the component name 
     <ONAP-component-name>::= "MSO" | "DCAE" | "ASDC " | "AAI" |"Policy" | "SDNC" | "AC"  -->
-  <property name="componentName" value="policy"></property>
-  <property name="subComponentName" value="pap"></property>
+  <property name="componentName" value="Policy"></property>
+  <property name="subComponentName" value="ONAP-PAP-REST"></property>
   
   <!--  log file names -->
   <property name="errorLogName" value="error" />
@@ -84,8 +84,8 @@
           <property name="debugLogDirectory" value="${debugDir}/${componentName}/${subComponentName}" />
 
    -->   
-   <property name="logDirectory" value="${logDir}/${componentName}/${subComponentName}" />
-   <property name="debugLogDirectory" value="${debugDir}/${componentName}/${subComponentName}" />
+   <property name="logDirectory" value="${catalina.base}/${logDir}/${componentName}/${subComponentName}" />
+   <property name="debugLogDirectory" value="${catalina.base}/${debugDir}/${componentName}/${subComponentName}" />
    
 
  

@@ -25,5 +25,3 @@ export KEYSTORE_PASSWD=${{KEYSTORE_PASSWD}}
 
 export JAVA_HOME=${{JAVA_HOME}}
 export PATH=${PATH}:${{POLICY_HOME}}/bin
-
-export POLICY_LOGS=${{POLICY_LOGS}}
