@@ -10,6 +10,7 @@ Policy Engine Platform
    offeredapis.rst
    installation.rst
    policygui.rst
+   deployment.rst
 
 Policy Software Architecture
 ----------------------------
