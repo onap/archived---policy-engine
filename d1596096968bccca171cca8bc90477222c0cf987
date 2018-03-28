@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_2adb7bee",
+        "filename": "BRMSGateway/src/main/resources/META-INF/persistenceBRMS.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-03-28T13:34:33Z",
+      "side": 1,
+      "message": "Fix license format",
+      "range": {
+        "startLine": 2,
+        "startChar": 1,
+        "endLine": 11,
+        "endChar": 154
+      },
+      "revId": "d1596096968bccca171cca8bc90477222c0cf987",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
