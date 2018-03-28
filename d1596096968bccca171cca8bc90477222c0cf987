@@ -22,6 +22,30 @@
       "revId": "d1596096968bccca171cca8bc90477222c0cf987",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5e3a4c35",
+        "filename": "BRMSGateway/src/main/resources/META-INF/persistenceBRMS.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 3237
+      },
+      "writtenOn": "2018-03-28T14:00:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a93c517_2adb7bee",
+      "range": {
+        "startLine": 2,
+        "startChar": 1,
+        "endLine": 11,
+        "endChar": 154
+      },
+      "revId": "d1596096968bccca171cca8bc90477222c0cf987",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
