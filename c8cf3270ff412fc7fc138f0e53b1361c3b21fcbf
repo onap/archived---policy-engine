@@ -22,6 +22,30 @@
       "revId": "c8cf3270ff412fc7fc138f0e53b1361c3b21fcbf",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6a9f4304",
+        "filename": "ONAP-PDP-REST/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 781
+      },
+      "writtenOn": "2018-03-28T13:06:53Z",
+      "side": 1,
+      "message": "These dependencies weren\u0027t changed, but I can try that in a separate commit and put them in test scope as well.  Let\u0027s keep this commit separate if we can.  Thanks.",
+      "parentUuid": "5a93c517_7dff18ab",
+      "range": {
+        "startLine": 174,
+        "startChar": 3,
+        "endLine": 181,
+        "endChar": 27
+      },
+      "revId": "c8cf3270ff412fc7fc138f0e53b1361c3b21fcbf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
