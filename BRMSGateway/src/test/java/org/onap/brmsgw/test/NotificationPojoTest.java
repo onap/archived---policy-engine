@@ -21,26 +21,28 @@
 package org.onap.brmsgw.test;
 
 import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import org.onap.policy.brmsInterface.ControllerPOJO;
-import org.onap.policy.brmsInterface.NotificationPOJO;
 
-public class NotificationPOJOTest {
-	@Test
-	public void testPojo() {
-		String testVal = "testVal";
-		ControllerPOJO ctrlPojo = new ControllerPOJO();
-		List<ControllerPOJO> controllers = new ArrayList<ControllerPOJO>();
-		controllers.add(ctrlPojo);
-		NotificationPOJO pojo = new NotificationPOJO();
-		
-		pojo.setRequestID(testVal);
-		assertEquals(pojo.getRequestID(), testVal);
-		pojo.setEntity(testVal);
-		assertEquals(pojo.getEntity(), testVal);
-		pojo.setControllers(controllers);
-		assertEquals(pojo.getControllers(), controllers);
-	}
+import org.junit.Test;
+import org.onap.policy.brms.api.ControllerPojo;
+import org.onap.policy.brms.api.NotificationPojo;
+
+public class NotificationPojoTest {
+    @Test
+    public void testPojo() {
+        final String testVal = "testVal";
+        final ControllerPojo ctrlPojo = new ControllerPojo();
+        final List<ControllerPojo> controllers = new ArrayList<ControllerPojo>();
+        controllers.add(ctrlPojo);
+        final NotificationPojo pojo = new NotificationPojo();
+
+        pojo.setRequestId(testVal);
+        assertEquals(pojo.getRequestId(), testVal);
+        pojo.setEntity(testVal);
+        assertEquals(pojo.getEntity(), testVal);
+        pojo.setControllers(controllers);
+        assertEquals(pojo.getControllers(), controllers);
+    }
 }

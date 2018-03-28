@@ -18,11 +18,12 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.brmsInterface;
+package org.onap.policy.brms.api;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -31,31 +32,30 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-public class BRMSGatewayTest {
-	@Test
-	public void testGet() {
-		assertNull(BRMSGateway.getPolicyEngine());
-	}
+public class BrmsGatewayTest {
+    @Test
+    public void testGet() {
+        assertNull(BrmsGateway.getPolicyEngine());
+    }
 
-	@PrepareForTest({Thread.class, BRMSGateway.class})
-	@Test
-	public void testMain() throws Exception {
-		// Mock Thread
-		PowerMockito.spy(Thread.class);
-		PowerMockito.doNothing().when(Thread.class);
-		Thread.sleep(1000);
+    @PrepareForTest({Thread.class, BrmsGateway.class})
+    @Test
+    public void testMain() throws Exception {
+        // Mock Thread
+        PowerMockito.spy(Thread.class);
+        PowerMockito.doNothing().when(Thread.class);
+        Thread.sleep(1000);
 
-		// Mock handler
-		BRMSHandler handler = Mockito.mock(BRMSHandler.class);
-		PowerMockito.whenNew(BRMSHandler.class).withArguments(any()).thenReturn(handler);
+        // Mock handler
+        final BrmsHandler handler = Mockito.mock(BrmsHandler.class);
+        PowerMockito.whenNew(BrmsHandler.class).withArguments(any()).thenReturn(handler);
 
-		// Run app
-		try {
-			String[] args = null;
-			BRMSGateway.main(args);
-		}
-		catch (Exception ex) {
-			fail("Not expected an exception: " + ex);
-		}
-	}
+        // Run app
+        try {
+            final String[] args = null;
+            BrmsGateway.main(args);
+        } catch (final Exception ex) {
+            fail("Not expected an exception: " + ex);
+        }
+    }
 }
