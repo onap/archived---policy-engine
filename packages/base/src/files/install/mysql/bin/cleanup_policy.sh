@@ -71,12 +71,8 @@ function cleanup_deleted_policy
 }
 
 # MAIN
-if [ -z ${POLICY_LOGS} ]; then
-  POLICY_LOGS=/var/log/onap
-fi
-mkdir -p $POLICY_LOGS/policy/db
-LOG=$POLICY_LOGS/policy/db/cleanup_policy_$DATE.log
-ERR=$POLICY_LOGS/policy/db/cleanup_policy_$DATE.err
+LOG=$POLICY_HOME/logs/cleanup_policy_$DATE.log
+ERR=$POLICY_HOME/logs/cleanup_policy_$DATE.err
 echo "cleanup_policy.sh started ... `date`" | tee -a $LOG
 if [ $# -eq 3 ]; then 
   DB_USER="${1}"

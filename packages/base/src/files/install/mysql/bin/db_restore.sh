@@ -38,8 +38,6 @@ BACKUP_FILE=""
 DATABASE=""
 TABLE=""
 TEMP_FILE=/tmp/db_restore_$$.sql
-DATE=`date +"%Y%m%d"`
-LOG=""
 
 function restore_all
 {
@@ -56,7 +54,7 @@ function restore_table
 {
   database="${1}"
   table="${2}"
-  echo "restore_table [$database] [$table] started ...@`date`" | tee -a $LOG
+  echo "restore_table [$database] [$table] started ...@`date`"
   # extract sql statement from backup file
   echo "use $database;" > $TEMP_FILE 
   echo "set foreign_key_checks=0; " >> $TEMP_FILE
@@ -68,18 +66,12 @@ function restore_table
   echo "Before restore table ..." | tee -a $LOG
   mysql -u${DB_USER} -p${DB_PASSWORD} < $TEMP_FILE 
   echo "--" 
-  echo "restore_table [$database] [$table] completed ...@`date`" | tee -a $LOG
+  echo "restore_table [$database] [$table] completed ...@`date`"
 }
 
 
 # MAIN
-if [ -z ${POLICY_LOGS} ]; then
-  POLICY_LOGS=/var/log/onap
-fi
-mkdir -p $POLICY_LOGS/policy/db
-LOG=$POLICY_LOGS/policy/db/db_restore_$DATE.log
-  
-echo "db_restore.sh started ... `date`" | tee -a $LOG
+echo "db_restore.sh started ... `date`"
 if [ $# -eq 5 ]; then 
   DB_USER="${1}"
   DB_PASSWORD="${2}"
@@ -94,7 +86,7 @@ if [ $# -eq 5 ]; then
       restore_all
     fi
   else
-    echo "BACKUP FILE NOT FOUND: $BACKUP_FILE" | tee -a $LOG
+    echo "BACKUP FILE NOT FOUND: $BACKUP_FILE"
   fi
 else
   echo "Usage  : db_restore.sh db_user_id  db_password  backup_file database table_name" 
@@ -102,4 +94,4 @@ else
 fi
 
 rm -f $TEMP_FILE
-echo "db_restore.sh completed ... `date`" | tee -a $LOG
+echo "db_restore.sh completed ... `date`"

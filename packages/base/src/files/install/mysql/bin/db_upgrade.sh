@@ -124,12 +124,8 @@ function check_directory
 
 # MAIN
 #check_directory
-if [ -z ${POLICY_LOGS} ]; then
-  POLICY_LOGS=/var/log/onap
-fi
-mkdir -p $POLICY_LOGS/policy/db
-LOG=$POLICY_LOGS/policy/db/db_upgrade_$DATE.log
-ERR=$POLICY_LOGS/policy/db/db_upgrade_$DATE.err
+LOG=$POLICY_HOME/logs/db_upgrade_$DATE.log
+ERR=$POLICY_HOME/logs/db_upgrade_$DATE.err
 echo "db_upgrade.sh started ..." | tee -a $LOG
 if [ $# -eq 3 ]; then 
   TARGET_RELEASE="${1}"
