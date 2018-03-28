@@ -112,6 +112,10 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
     * POLICY-629	Fixed a bug on editor screen
     * POLICY-684	Fix regex for brmsgw dependency handling
 
+**Security Issues**
+
+Please see the `Policy R2 Beijing Security/Vulnerability Threat <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_ page for security related issues.
+
 
 Version: 1.1.3
 --------------

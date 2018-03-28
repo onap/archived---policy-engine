@@ -245,8 +245,6 @@ Starting the ONAP Policy Framework Docker Images
 
 In order to run the containers, you can use *docker-compose*. This uses the *docker-compose.yml* yaml file to bring up the ONAP Policy Framework.
 
-SSS
-
 **Step 1.** Make the file config/drools/drools-tweaks.sh executable.
 
 		.. code-block:: bash 
