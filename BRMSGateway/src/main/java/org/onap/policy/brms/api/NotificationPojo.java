@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,28 +18,41 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.brmsgw.test;
+package org.onap.policy.brms.api;
 
-import static org.junit.Assert.assertEquals;
-import java.util.HashMap;
-import java.util.Map;
-import org.junit.Test;
-import org.onap.policy.brmsInterface.ControllerPOJO;
+import java.util.List;
 
-public class ControllerPOJOTest {
-	@Test
-	public void testPojo() {
-		String testKey = "testKey";
-		String testVal = "testVal";
-		Map<String, String> testMap = new HashMap<String, String>();
-		testMap.put(testKey, testVal);
-		ControllerPOJO pojo = new ControllerPOJO();
-		
-		pojo.setName(testVal);
-		assertEquals(pojo.getName(), testVal);
-		pojo.setDrools(testMap);
-		assertEquals(pojo.getDrools(), testMap);
-		pojo.setOperation(testVal);
-		assertEquals(pojo.getOperation(), testVal);
-	}
+/**
+ * This POJO will be transformed to JSON for Notification Purposes.
+ * 
+ */
+public class NotificationPojo {
+    private String requestId;
+    private String entity;
+    private List<ControllerPojo> controllers;
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(final String requestId) {
+        this.requestId = requestId;
+    }
+
+    public String getEntity() {
+        return entity;
+    }
+
+    public void setEntity(final String entity) {
+        this.entity = entity;
+    }
+
+    public List<ControllerPojo> getControllers() {
+        return controllers;
+    }
+
+    public void setControllers(final List<ControllerPojo> controllers) {
+        this.controllers = controllers;
+    }
+
 }

@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.brmsInterface;
+package org.onap.policy.brms.api;
 
 import org.onap.policy.api.NotificationScheme;
 import org.onap.policy.api.PolicyEngine;
@@ -28,29 +28,30 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 /**
- * BRMSGateway: This application acts as the Gateway interface between the PDP XACML and PDP Drools. The listens for
- * BRMS based policies and pushes them to the specified Policy Repository, from where the PDP Drools reads the Rule Jar.
+ * BRMSGateway: This application acts as the Gateway interface between the PDP XACML and PDP Drools.
+ * The listens for BRMS based policies and pushes them to the specified Policy Repository, from
+ * where the PDP Drools reads the Rule Jar.
  * 
  * @version 0.1
  */
-class BRMSGateway {
-	
-    private static final Logger logger = FlexLogger.getLogger(BRMSGateway.class);
+class BrmsGateway {
+
+    private static final Logger logger = FlexLogger.getLogger(BrmsGateway.class);
     private static final String CONFIGFILE = "config.properties";
 
     private static PolicyEngine policyEngine = null;
 
-    private BRMSGateway() {
-    	// Default private constructor
+    private BrmsGateway() {
+        // Default private constructor
     }
-    
-    public static void main(String[] args) throws Exception {
+
+    public static void main(final String[] args) throws Exception {
         // Initialize Handler.
         logger.info("Initializing BRMS Handler");
-        BRMSHandler bRMSHandler = null;
+        BrmsHandler brmsHandler = null;
         try {
-            bRMSHandler = new BRMSHandler(CONFIGFILE);
-        } catch (PolicyException e) {
+            brmsHandler = new BrmsHandler(CONFIGFILE);
+        } catch (final PolicyException e) {
             logger.error("Check your property file: " + e.getMessage(), e);
             System.exit(1);
         }
@@ -58,24 +59,24 @@ class BRMSGateway {
         // Set Handler with Auto Notification and initialize policyEngine
         try {
             logger.info("Initializing policyEngine with Auto Notifications");
-            policyEngine = new PolicyEngine(CONFIGFILE, NotificationScheme.AUTO_ALL_NOTIFICATIONS, bRMSHandler);
-        } catch (Exception e) {
+            policyEngine = new PolicyEngine(CONFIGFILE, NotificationScheme.AUTO_ALL_NOTIFICATIONS, brmsHandler);
+        } catch (final Exception e) {
             logger.error(XACMLErrorConstants.ERROR_UNKNOWN + "Error while Initializing Policy Engine " + e.getMessage(),
                     e);
         }
 
         // Keep Running....
-        Runnable runnable = () -> {
+        final Runnable runnable = () -> {
             while (true) {
                 try {
                     Thread.sleep(30000);
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Thread Exception " + e.getMessage());
                     Thread.currentThread().interrupt();
                 }
             }
         };
-        Thread thread = new Thread(runnable);
+        final Thread thread = new Thread(runnable);
         thread.start();
     }
 
