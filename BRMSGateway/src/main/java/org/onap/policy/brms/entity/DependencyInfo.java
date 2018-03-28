@@ -17,7 +17,8 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.policy.brmsInterface.jpa;
+
+package org.onap.policy.brms.entity;
 
 import java.util.List;
 import java.util.Map;
@@ -25,14 +26,14 @@ import java.util.Map;
 import org.onap.policy.api.PEDependency;
 
 public class DependencyInfo {
-	private Map<String, List<PEDependency>> dependencies;
+    private Map<String, List<PEDependency>> dependencies;
 
-	public Map<String, List<PEDependency>> getDependencies() {
-		return dependencies;
-	}
+    public Map<String, List<PEDependency>> getDependencies() {
+        return dependencies;
+    }
 
-	public void setDependencies(Map<String, List<PEDependency>> dependencies) {
-		this.dependencies = dependencies;
-	}
-	
+    public void setDependencies(final Map<String, List<PEDependency>> dependencies) {
+        this.dependencies = dependencies;
+    }
+
 }

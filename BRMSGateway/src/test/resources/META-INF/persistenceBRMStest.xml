@@ -24,8 +24,8 @@
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="BRMSGW" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <class>org.onap.policy.brmsInterface.jpa.BRMSGroupInfo</class>
-        <class>org.onap.policy.brmsInterface.jpa.BRMSPolicyInfo</class>
+        <class>org.onap.policy.brms.entity.BrmsGroupInfo</class>
+        <class>org.onap.policy.brms.entity.BrmsPolicyInfo</class>
         <property name="javax.persistence.schema-generation.scripts.action"
             value="drop-and-create" />
         <property name="javax.persistence.schema-generation.scripts.create-target"
