@@ -27,7 +27,6 @@
 	</parent>
 	<artifactId>ONAP-SDK-APP</artifactId>
 	<packaging>war</packaging>
-
 	<properties>
 		<encoding>UTF-8</encoding>
 		<epsdk.version>2.1.0</epsdk.version>
@@ -318,11 +317,6 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
 		</dependency>
 	</dependencies>
 </project>

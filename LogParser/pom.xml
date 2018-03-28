@@ -22,14 +22,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
 	<parent>
 		<groupId>org.onap.policy.engine</groupId>
 		<artifactId>PolicyEngineSuite</artifactId>
 		<version>1.2.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>LogParser</artifactId>
-	
 	<dependencies>
 		<dependency>
             <groupId>com.h2database</groupId>
@@ -44,27 +42,11 @@
 			<groupId>org.onap.policy.common</groupId>
 			<artifactId>ONAP-Logging</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.powermock</groupId>
-					<artifactId>powermock-module-junit4</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.powermock</groupId>
-					<artifactId>powermock-api-mockito</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.onap.policy.common</groupId>
 			<artifactId>integrity-monitor</artifactId>
 			<version>${project.version}</version>			
-			<exclusions>
-				<exclusion>
-					<groupId>org.powermock</groupId>
-					<artifactId>powermock-api-mockito</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -86,23 +68,6 @@
 			<artifactId>eclipselink</artifactId>
 			<version>2.6.0</version>
 		</dependency>
-				<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>   
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>2.7.22</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
-		<dependency>
-		    <groupId>org.mockito</groupId>
-		    <artifactId>mockito-all</artifactId>
-		    <version>1.10.19</version>
-		</dependency> 
 		<dependency>
 			<groupId>org.onap.policy.engine</groupId>
 			<artifactId>PolicyEngineUtils</artifactId>
@@ -129,18 +94,6 @@
 					<artifactId>cadi-aaf</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-module-junit4</artifactId>
-			<version>1.7.3</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito2</artifactId>
-			<version>1.7.3</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
