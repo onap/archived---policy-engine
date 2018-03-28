@@ -18,35 +18,23 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.brmsInterface;
+package org.onap.policy.brms.entity;
 
+import java.util.List;
 import java.util.Map;
 
-/**
- * POJO for controller information. 
- * 
- */
-public class ControllerPOJO {
-	private String name;
-	private Map<String,String> drools;
-	private String operation;
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public Map<String,String> getDrools() {
-		return drools;
-	}
-	public void setDrools(Map<String,String> drools) {
-		this.drools = drools;
-	}
-	public String getOperation() {
-		return operation;
-	}
-	public void setOperation(String operation) {
-		this.operation = operation;
-	}
-}
+import org.onap.policy.api.PEDependency;
 
+public class DependencyInfo {
+    
+    private Map<String, List<PEDependency>> dependencies;
+
+    public Map<String, List<PEDependency>> getDependencies() {
+        return dependencies;
+    }
+
+    public void setDependencies(final Map<String, List<PEDependency>> dependencies) {
+        this.dependencies = dependencies;
+    }
+
+}
