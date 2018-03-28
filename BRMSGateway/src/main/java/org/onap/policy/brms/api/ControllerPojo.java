@@ -18,35 +18,40 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.brmsInterface;
+package org.onap.policy.brms.api;
 
-import java.util.List;
+import java.util.Map;
 
 /**
- * This POJO will be transformed to JSON for Notification Purposes.  
+ * POJO for controller information.
  * 
  */
-public class NotificationPOJO {
-	private String requestID;
-	private String entity;
-	private List<ControllerPOJO> controllers;
-	public String getRequestID() {
-		return requestID;
-	}
-	public void setRequestID(String requestID) {
-		this.requestID = requestID;
-	}
-	public String getEntity() {
-		return entity;
-	}
-	public void setEntity(String entity) {
-		this.entity = entity;
-	}
-	public List<ControllerPOJO> getControllers() {
-		return controllers;
-	}
-	public void setControllers(List<ControllerPOJO> controllers) {
-		this.controllers = controllers;
-	}
-	
+public class ControllerPojo {
+    private String name;
+    private Map<String, String> drools;
+    private String operation;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public Map<String, String> getDrools() {
+        return drools;
+    }
+
+    public void setDrools(final Map<String, String> drools) {
+        this.drools = drools;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(final String operation) {
+        this.operation = operation;
+    }
 }
