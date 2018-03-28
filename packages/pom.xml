@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP Policy Engine
   ================================================================================
-  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,24 +20,18 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
 		<groupId>org.onap.policy.engine</groupId>
 		<artifactId>PolicyEngineSuite</artifactId>
 		<version>1.2.0-SNAPSHOT</version>
 	</parent>
-
 	<artifactId>packages</artifactId>
 	<packaging>pom</packaging>
-
 	<name>Policy Packages</name>
 	<description>D2 ONAP Policy Installation Packages</description>
-
 	<profiles>
 		<!-- DO NOT CHANGE THE *ORDER* IN WHICH THESE PROFILES ARE DEFINED! -->
-
 		<profile>
 			<id>default</id>
 			<activation>
@@ -49,7 +43,6 @@
 				<module>docker</module>
 			</modules>
 		</profile>
-
 		<profile>
 			<id>with-integration-tests</id>
 			<modules>
@@ -58,7 +51,6 @@
 			</modules>
 		</profile>
 	</profiles>
-
  	<modules>
  		<module>base</module>
  		<module>install</module>

@@ -253,12 +253,6 @@
 		    <artifactId>yamlbeans</artifactId>
 		    <version>1.08</version>
 		</dependency>		
-		<!-- https://mvnrepository.com/artifact/org.easymock/easymock -->
-		<dependency>
-		    <groupId>org.easymock</groupId>
-		    <artifactId>easymock</artifactId>
-		    <version>3.1</version>
-		</dependency>	
 		<!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
 		<dependency>
 		    <groupId>org.yaml</groupId>
