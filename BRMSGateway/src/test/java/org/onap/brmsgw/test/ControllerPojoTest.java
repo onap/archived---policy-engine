@@ -21,25 +21,27 @@
 package org.onap.brmsgw.test;
 
 import static org.junit.Assert.assertEquals;
+
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
-import org.onap.policy.brmsInterface.ControllerPOJO;
 
-public class ControllerPOJOTest {
-	@Test
-	public void testPojo() {
-		String testKey = "testKey";
-		String testVal = "testVal";
-		Map<String, String> testMap = new HashMap<String, String>();
-		testMap.put(testKey, testVal);
-		ControllerPOJO pojo = new ControllerPOJO();
-		
-		pojo.setName(testVal);
-		assertEquals(pojo.getName(), testVal);
-		pojo.setDrools(testMap);
-		assertEquals(pojo.getDrools(), testMap);
-		pojo.setOperation(testVal);
-		assertEquals(pojo.getOperation(), testVal);
-	}
+import org.junit.Test;
+import org.onap.policy.brms.api.ControllerPojo;
+
+public class ControllerPojoTest {
+    @Test
+    public void testPojo() {
+        final String testKey = "testKey";
+        final String testVal = "testVal";
+        final Map<String, String> testMap = new HashMap<String, String>();
+        testMap.put(testKey, testVal);
+        final ControllerPojo pojo = new ControllerPojo();
+
+        pojo.setName(testVal);
+        assertEquals(pojo.getName(), testVal);
+        pojo.setDrools(testMap);
+        assertEquals(pojo.getDrools(), testMap);
+        pojo.setOperation(testVal);
+        assertEquals(pojo.getOperation(), testVal);
+    }
 }
