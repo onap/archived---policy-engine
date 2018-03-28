@@ -20,22 +20,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
 		<groupId>org.onap.oparent</groupId>
 		<artifactId>oparent</artifactId>
 		<version>1.1.0</version>
 		<relativePath/>
 	</parent>
-
 	<groupId>org.onap.policy.engine</groupId>
 	<artifactId>PolicyEngineSuite</artifactId>
 	<version>1.2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>policy-engine</name>
-
 	<description>The ONAP Policy Engine main pom</description>
-
 	<properties>
 		<!-- Project common build settings -->
 		<project.source.version>1.8</project.source.version>
@@ -56,14 +52,10 @@
 		<sonar.jacoco.itReportPath>${project.basedir}/../target/code-coverage/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 
-		<!--
-        	Shared between policy/* project repositories - same version 
-        -->
+		<!-- Shared between policy/* project repositories - same version -->
 		<h2.version>1.4.186</h2.version>
 
-		<!--
-        	Shared between policy/* project repositories - different version 
-        -->
+		<!-- Shared between policy/* project repositories - different version -->
 
 		<!-- Project common dependency versions -->
 		<jetty.plugin.version>9.2.3.v20140905</jetty.plugin.version>
@@ -72,8 +64,6 @@
 		<jackson.version>2.9.4</jackson.version>
 		<commons.fileupload.version>1.3.3</commons.fileupload.version>
 	</properties>
-
-
 	<modules>
 		<module>PolicyEngineUtils</module>
 		<module>ONAP-XACML</module>
@@ -89,7 +79,6 @@
 		<module>ONAP-SDK-APP</module>
 		<module>packages</module>
 	</modules>
-
 	<distributionManagement>
 		<repository>
 			<id>ecomp-releases</id>
@@ -106,7 +95,6 @@
 			<url>dav:${nexusproxy}${sitePath}</url>
 		</site>
 	</distributionManagement>
-
 	<reporting>
 	  <plugins>
 	    <plugin>
@@ -127,7 +115,6 @@
 	    </plugin>
 	  </plugins>
 	</reporting>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -138,9 +125,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
 	<dependencies>
-
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -152,8 +137,51 @@
 			<artifactId>xml-apis</artifactId>
 			<version>1.3.03</version>
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-mock</artifactId>
+			<version>2.0.8</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.mockrunner</groupId>
+			<artifactId>mockrunner</artifactId>
+			<version>0.3.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito -->
+		<dependency>
+    		<groupId>org.powermock</groupId>
+    		<artifactId>powermock-api-mockito</artifactId>
+    		<version>1.7.3</version>
+    		<scope>test</scope>
+		</dependency>
+		<dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.7.3</version>
+            <scope>test</scope>
+        </dependency>
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+		<dependency>
+		    <groupId>org.mockito</groupId>
+		    <artifactId>mockito-all</artifactId>
+		    <version>1.10.19</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.easymock</groupId>
+		    <artifactId>easymock</artifactId>
+		    <version>3.1</version>
+   		    <scope>test</scope>
+		</dependency>	
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -236,7 +264,6 @@
 			</plugin>
 			<!-- The Jetty plugin allows us to easily test the development build by
 				running jetty:run on the command line. -->
-
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
