@@ -99,6 +99,23 @@ body {
     border-radius: 4px;
 }
 
+.border1 {
+    border: 2px solid #0000a0;
+}
+
+.border2 {
+    border: 2px solid #a94442;
+}
+
+.border3 {
+    border: 2px solid #808000;
+}
+
+.border4 {
+    border: 2px solid #ffb900;
+}
+
+
 .first_child {
 	margin-top: 10px;
 }
