@@ -25,6 +25,8 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
     $scope.savebutton = true;
     $scope.refreshCheck = false;
     
+    var layer = 0;
+    
     if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
     	$scope.temp.policy = {
     			policyType : "Config",
@@ -97,7 +99,10 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		var j = data;
 		$scope.data = JSON.parse(j.data);
 		console.log($scope.data);
-		$scope.microServiceCongigNameDictionaryDatas = JSON.parse($scope.data.microServiceCongigNameDictionaryDatas);
+		console.log("$scope.data.microServiceCongigNameDictionaryDatas : " + $scope.data.microServiceCongigNameDictionaryDatas);
+		if($scope.data.microServiceCongigNameDictionaryDatas){
+ 		    $scope.microServiceCongigNameDictionaryDatas = JSON.parse($scope.data.microServiceCongigNameDictionaryDatas);
+		}
 		console.log($scope.microServiceCongigNameDictionaryDatas);
 	}, function (error) {
 		console.log("failed");
@@ -166,13 +171,16 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	 $scope.choices = [];
 	 $scope.attributeDatas = [{"attributes" : $scope.choices}];
 	 $scope.isInitEditTemplate = true;  //just initially create the edit template, didn't click add button yet.
-	 $scope.addNewChoice = function(value) {
+	 addNewChoice = function(value) {
 		 console.log("input value : " + value);
 		 if(value != undefined){
 			if (value.startsWith('div.')){
 				value = value.replace('div.','');
 			}
+			
+			console.log(" document.getElementById : div."+value);
 			var parentElement = document.getElementById("div."+value);
+			console.log("parentElement : " + parentElement);
 			var div = document.getElementById(value+"@0");
 			if(div != null){
 				var clone = div.cloneNode(true); 
@@ -198,9 +206,20 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 					plainAttributeKeys.push(''+value+'@'+addElement);
 				}
 			}else{
+				
+				if(parentElement == null){
+					return;
+				}
 				div = document.getElementById("div."+value+"@0");
 				if(div){
-			    	div.className += ' children_group'; //here is div with a group of children.
+					
+					if(!div.className.includes('children_group border')){
+						layer++;
+						if(layer > 4){ 
+							layer = 1
+						};
+			    	    div.className += ' children_group border' + layer; //here is div with a group of children.
+					}
 				}
 				var childElement = parentElement.firstElementChild;
 				var countParent = parentElement.childElementCount;
@@ -228,13 +247,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 					if ($scope.temp.policy.ruleData!=undefined){
 						var checkValue = $scope.temp.policy.ruleData[inputs[i].id];
 						if (checkValue!=undefined && checkValue != "undefined"){
-							if($scope.temp.policy.ruleData != null){
-								var checkValue = $scope.temp.policy.ruleData[inputs[i].id];
-								document.getElementById(inputs[i].id).value = $scope.temp.policy.ruleData[inputs[i].id];
+							document.getElementById(inputs[i].id).value = checkValue;
 								plainAttributeKeys.push(inputs[i].id);
-							}
 						} else {
-//							removeValues.push(inputs[i].id);
 							plainAttributeKeys.push(inputs[i].id);
 						}
 					}else {
@@ -264,13 +279,13 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 					elem.parentNode.removeChild(elem);
 				}
 				var ele = angular.element(document.getElementById("div."+value));
-	    		$compile(ele.contents())($scope);
-	            $scope.$apply();
+	    		$compile(ele.contents())($scope)
 			}
 		 }
 	 };
 	 
-	 $scope.removeChoice = function(value) {
+	
+	 removeChoice = function(value) {
 		 console.log(value);
 		 if(value != undefined){
 			 var c = document.getElementById("div."+value).childElementCount;
@@ -341,7 +356,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
             var postData={policyData: service};
             
             console.log("service: " +service);
-
+            
             var dataOrderInfo = "";
 
             $.ajax({
@@ -352,7 +367,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                 data: JSON.stringify(postData),
                 success : function(data){
                     $scope.$apply(function(){
-                    //	$scope.addNewChoice();  
                     	var plainAttributeKeys = [];
                     	$scope.dcaeModelData = data[0].dcaeModelData;
                     	$scope.dcaeJsonDate = data[0].jsonValue;
@@ -365,7 +379,8 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	                    	console.log("$scope.allManyTrueKeys: " + $scope.allManyTrueKeys);
                     	}
                     	console.log("$scope.dcaeJsonDate: " + $scope.dcaeJsonDate);	
-                    	var attributes = $scope.dcaeModelData.attributes;
+                    	var attributes = $scope.dcaeModelData.attributes;                    	
+                    	console.log("attributes: " +attributes);                    	
                     	var refAttributes = $scope.dcaeModelData.ref_attributes;
                     	var subAttributes = 	$scope.dcaeModelData.sub_attributes;                    	
                     	console.log("subAttributes: " + subAttributes);	
@@ -377,15 +392,8 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	               			 $scope.temp.policy.riskType = headDefautlsData.riskType;
 	               			 $scope.temp.policy.riskLevel = headDefautlsData.riskLevel;
 	               			 $scope.temp.policy.priority = headDefautlsData.priority;
-	               			 
-                    	}else if(!$scope.temp.policy.editPolicy && !$scope.temp.policy.readOnly){
-	               			 $scope.temp.policy.onapName = "";
-	               			 $scope.temp.policy.guard = "";
-	               			 $scope.temp.policy.riskType = "";
-	               			 $scope.temp.policy.riskLevel = "";
-	               			 $scope.temp.policy.priority = "";
                     	}
-                    	  
+                    	
                        	var enumAttributes = $scope.dcaeModelData.enumValues;
                        	var annotation = $scope.dcaeModelData.annotation;
                        	var dictionary = $scope.microServiceAttributeDictionaryDatas;
@@ -451,9 +459,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	                    		var extraElements = data;
 	                    		
 		            		    if(plainAttributeKeys != null){
-		            		    		for(b = 0; b < plainAttributeKeys.length; b++){ // Remove already populated elements from data array
+		            		    		for(var b = 0; b < plainAttributeKeys.length; b++){ // Remove already populated elements from data array
 		            		    			var newValue = plainAttributeKeys[b].split("*");
-		            		    			for(a = 0; a < data.length; a++){
+		            		    			for(var a = 0; a < data.length; a++){
 			            		    			if(data[a] === newValue[0] || data[a] === (newValue[0]+"@0")){
 			            		    				extraElements.splice(a, 1);
 			            		    			}
@@ -461,7 +469,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		            		    	}
 		                    		
 		            		    	//--- Populate these extra elements created by clicked add button 
-			                    	for(a = 0; a < extraElements.length; a++){            			
+			                    	for(var a = 0; a < extraElements.length; a++){            			
 			                    		if(extraElements[a].includes("@")){
 					                    	var index = extraElements[a].lastIndexOf("@");
 					                    	if(index > 0){
@@ -475,34 +483,45 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			                    		}
 			                    	}
 		                    		var unique = checkData.filter(onlyUnique);
+		                    		var parentLevelElements = [];
+		                    		if(unique){
+		                    			//--- get all root level exta elments first (only contains one "@")
+		                    			for(var i =0; i < unique.length; i++){
+			                    			var firstIndex = unique[i].indexOf("@");
+			                    			var lastIndex = unique[i].lastIndexOf("@");
+			                    			if(firstIndex == lastIndex){	
+				                    			var newKey = unique[i].substring(0, firstIndex);
+				                    			console.log("root element: " + newKey);
+				                    			parentLevelElements.push(newKey);
+				                    			unique[i] = "*processed*";
+			                    			}
+			                    		}		                    			
+		                    		}
 		                    		//if no layout order info, keep the process as before
 		                    		if(!dataOrderInfo){
-			                    		for(i =0; i < unique.length; i++){
+			                    		for(var i =0; i < unique.length; i++){
 			                    			//remove @x and let addNewChoice add @1 or @2...
 			                    			//var newKey = unique[i].substring(0, unique[i].length-2);
 			                    			var index = unique[i].lastIndexOf("@");
 			                    			var newKey = unique[i].substring(0, index);
 			                    			console.log("newKey: " + newKey);	
-			                    			$scope.addNewChoice(newKey);
+			                    			addNewChoice(newKey);
 			                    		}
 		            		    	}else{
 
-				              	    		for (i = 0; i < $scope.labelManyKeys.length; i++) {
+				              	    		for (var i = 0; i < $scope.labelManyKeys.length; i++) {
 				              	    			//console.log("dataOrderInfo["+i+"]"+  dataOrderInfo[i]);
 				              	    		    var label = $scope.labelManyKeys[i];
-				              	    				// first add parent/label level
-				             	 	    			for (k = 0; k < unique.length; k++){
-						                    			var index = unique[k].lastIndexOf("@");
-						                    			var newKey = unique[k].substring(0, index);
-		 		             	 	    			    if(label == newKey){
-	                                                        //Check this label has bee created or not
-		 		             	 	    			    	if(!document.getElementById(unique[k])){
-		 		             	 	    			    		$scope.addNewChoice(newKey);
-		 		             	 	    			    	}
-		 		             	 	    			    	unique[k] = "*processed*";
-				             	 	    					break;
-		 		             	 	    			    }
-				             	 	    			}				             	 	    			
+				              	    		    
+				              	    		    if(parentLevelElements){
+				              	    		    	for (var k = 0; k < parentLevelElements.length; k++){
+				              	    		    		if(label == parentLevelElements[k]){
+				              	    		    			addNewChoice(label);
+				              	    		    		}
+				              	    		    	}
+				              	    		    	
+				              	    		    }
+				             	 	    			
 				              	    		}
 				              	    		
 				              	    		//---reset to default
@@ -510,24 +529,34 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 				              	    		$scope.labelManyKeys = [];
 				              	    		
 		             	 	    			//---process none labels
-					              	    	for (j = 0; j < unique.length; j++){
+					              	    	for (var j = 0; j < unique.length; j++){
 					              	    		if(unique[j] != "*processed*"){
 					              	    			// if not created yet
 					              	    			if(!document.getElementById(unique[j])){
 						                    			var index = unique[j].lastIndexOf("@");
 						                    			var newKey = unique[j].substring(0, index);
-			 		             	 	    		    $scope.addNewChoice(newKey);
+						                    			
+						                    			var newElement = document.getElementById("div."+unique[j]);
+						                    			
+						                    			//check weather it has been created already
+                                                        if(newElement != null){
+                                                        	continue;
+                                                        }else{
+                                                        	newElement = document.getElementById(unique[j]);
+                                                        	if(newElement != null){
+                                                        		continue;
+                                                        	}
+                                                        } 
+                                                        //if not created yet, then create it.						                    				
+						                    			addNewChoice(newKey);
+			 		             	 	    		   
 					              	    			}
 					              	    		}
 					              	    	}
 			              	    		}
 		            		    }
 	                    	}
-	                    	
-	                    if($scope.temp.policy.editPolicy){
-	                    	//clean all the events of addNewChoice
-	                    	$scope.$on('$destroy', addNewChoice);
-	                    }
+
                     }
                     var ele = angular.element(document.getElementById("DynamicTemplate"));
             		$compile(ele.contents())($scope);
@@ -538,8 +567,6 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                     alert("Error While Retriving the Template Layout Pattren.");
                 }
             });
-            
-            
 
         }
     };
@@ -862,13 +889,13 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
  	    		   
  	    		   orderValue = orderValue.split(',') ;
  	    		   
- 	    		   for (i = 0; i < orderValue.length; i++) {
+ 	    		   for (var i = 0; i < orderValue.length; i++) {
  	    			   console.log("orderValue["+i+"]"+  orderValue[i]);
  	    			   var key = orderValue[i].trim();
  	    			 
  	    			    //--- Create labels first {"label" : newKey, "level" : baseLevel, "array" : array};
  	    			   if(labelList){
-	 	    			   for (k = 0; k < labelList.length; k++){
+	 	    			   for (var k = 0; k < labelList.length; k++){
 	 	    				   
 	 	    				  var label = labelList[k].label.toString().trim();
 	 	    				  var level = labelList[k].level.toString().trim();
@@ -883,7 +910,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	 	    			   }
  	    			   }
  	    			   //--- then layout each element based on its order defined in YAML file
-	 	  	    	   for (j = 0; j < layOutElementList.length; j++) { 
+	 	  	    	   for (var j = 0; j < layOutElementList.length; j++) { 
 	 	  	    		   
 	 	  	    		   var attributekey = layOutElementList[j].attributekey.toString().trim();	 	  	    		   
 	 	  	    		
@@ -894,7 +921,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		 	  	    		   var isRequired = layOutElementList[j].isRequired;
 	 	 	  	    		   
 	 	 	  	    		   console.log("layOutElementList[" +j+ "]: id:" + layOutElementList[j].id + ", attributekey:"+ layOutElementList[j].attributekey + ", attirbuteLabel:" + layOutElementList[j].attirbuteLabel);
-	 		        		  
+	 	 	  	    		console.log("layOutElementList[" +j+ "]: type:" + layOutElementList[j].type);
 	 	 	  	    		   if (layOutElementList[j].type == "dropBox"){ 
 	 		        				$scope.dropBoxLayout(attirbuteLabel, attributekey, layOutElementList[j].array, defaultValue, layOutElementList[j].list, isRequired);
 	                                
@@ -968,13 +995,13 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			addButton.appendChild(buttonaddLabel); 
 			addButton.setAttribute("id", labelValue + attibuteKey);
 			addButton.setAttribute("class", "btn btn-add-remove");
-			addButton.setAttribute("ng-click" ,  'addNewChoice("'+labelValue + attibuteKey+'");');
+			addButton.setAttribute("onclick" ,  'addNewChoice("'+labelValue + attibuteKey+'");');
 			addButton.setAttribute("ng-disabled" , "temp.policy.readOnly");
 			var removeButton = document.createElement("BUTTON");
 			var buttonremoveLabel = document.createTextNode("-");       
 			removeButton.appendChild(buttonremoveLabel); 
 			removeButton.setAttribute("class", "btn btn-add-remove");
-			removeButton.setAttribute("ng-click" ,  'removeChoice("'+labelValue + attibuteKey+'");');
+			removeButton.setAttribute("onclick" ,  'removeChoice("'+labelValue + attibuteKey+'");');
 			removeButton.setAttribute("ng-disabled" , "temp.policy.readOnly");
 			document.getElementById(divID).appendChild(addButton); 
 			document.getElementById(divID).appendChild(removeButton); 
@@ -1024,7 +1051,14 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			var firstChild_Id = divID.split("@0")[0];
 			var firstChild_element = document.getElementById(firstChild_Id);
 			if(firstChild_element){
-				firstChild_element.className += ' children_group';  //here is a div with a group of children.
+			
+				if(!firstChild_element.className.includes('children_group border')){
+					layer++;
+					if(layer > 4){ 
+						layer = 1
+					};
+					firstChild_element.className += ' children_group border' + layer; //here is div with a group of children.
+				}
 			}
 		}
 		console.log('firstChild_Id: ' + firstChild_Id);
@@ -1099,13 +1133,13 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			var buttonLabel = document.createTextNode("+");       
 			addButton.appendChild(buttonLabel); 
 			addButton.setAttribute("class", "btn btn-add-remove");
-			addButton.setAttribute("ng-click" ,  'addNewChoice("'+labelValue + lableName+'");');
+			addButton.setAttribute("onclick" ,  'addNewChoice("'+labelValue + lableName+'");');
 			addButton.setAttribute("ng-disabled" , "temp.policy.readOnly");
 			var removeButton = document.createElement("BUTTON");
 			var buttonremoveLabel = document.createTextNode("-");       
 			removeButton.appendChild(buttonremoveLabel); 
 			removeButton.setAttribute("class", "btn btn-add-remove");
-			removeButton.setAttribute("ng-click" ,  'removeChoice("'+labelValue +lableName+'");');
+			removeButton.setAttribute("onclick" ,  'removeChoice("'+labelValue +lableName+'");');
 			removeButton.setAttribute("ng-disabled" , "temp.policy.readOnly"); 
 			document.getElementById(divID).appendChild(addButton); 
 			document.getElementById(divID).appendChild(removeButton);
@@ -1118,8 +1152,13 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			var divTag = document.createElement("div");
 			divTag.setAttribute("id", id +'@0');  
 			
-			divTag.className += ' children_group'; //here is div with a group of children.
-			
+			if(!divTag.className.includes('children_group border')){
+				layer++;
+				if(layer > 4){ 
+					layer = 1
+				};
+				divTag.className += ' children_group border' + layer; //here is div with a group of children.
+			}
 			if(required){
 			   divTag.setAttribute("required", required);  
 			}else if(required == false){
@@ -1133,7 +1172,14 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		}else{
 			var divTag = document.createElement("div");
 			divTag.setAttribute("id", "div."+labelValue+lableName);
-			divTag.className += ' children_group'; //here is div with a group of children.
+			
+			if(!divTag.className.includes('children_group border')){
+				layer++;
+				if(layer > 4){ 
+					layer = 1
+				};
+				divTag.className += ' children_group border' + layer; //here is div with a group of children.
+			}
 			if(required){
 			    divTag.setAttribute("required", required);  
 			}else if(required == false){
