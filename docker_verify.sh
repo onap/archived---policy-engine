@@ -57,7 +57,7 @@ TAGS="${TAGS} --tag ${DOCKER_REPOSITORY}/onap/${IMAGE}:${MVN_MAJMIN_VERSION}-lat
 #
 # This has the nexus repo prepended and major/minor/patch version with timestamp
 #
-TAGS="${TAGS} --tag ${DOCKER_REPOSITORY}/onap/${IMAGE}:${MVN_VERSION}-${TIMESTAMP}"
+TAGS="${TAGS} --tag ${DOCKER_REPOSITORY}/onap/${IMAGE}:${MVN_VERSION}-${TIMESTAMP}Z"
 
 echo $TAGS
 
