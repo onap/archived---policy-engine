@@ -30,11 +30,6 @@
 	<artifactId>PolicyEngineAPI</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.json</artifactId>
 			<version>1.0.4</version>
