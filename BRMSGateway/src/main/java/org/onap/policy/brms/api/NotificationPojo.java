@@ -17,22 +17,42 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.policy.brmsInterface.jpa;
+
+package org.onap.policy.brms.api;
 
 import java.util.List;
-import java.util.Map;
 
-import org.onap.policy.api.PEDependency;
+/**
+ * This POJO will be transformed to JSON for Notification Purposes.
+ * 
+ */
+public class NotificationPojo {
+    private String requestId;
+    private String entity;
+    private List<ControllerPojo> controllers;
 
-public class DependencyInfo {
-	private Map<String, List<PEDependency>> dependencies;
+    public String getRequestId() {
+        return requestId;
+    }
 
-	public Map<String, List<PEDependency>> getDependencies() {
-		return dependencies;
-	}
+    public void setRequestId(final String requestId) {
+        this.requestId = requestId;
+    }
 
-	public void setDependencies(Map<String, List<PEDependency>> dependencies) {
-		this.dependencies = dependencies;
-	}
-	
+    public String getEntity() {
+        return entity;
+    }
+
+    public void setEntity(final String entity) {
+        this.entity = entity;
+    }
+
+    public List<ControllerPojo> getControllers() {
+        return controllers;
+    }
+
+    public void setControllers(final List<ControllerPojo> controllers) {
+        this.controllers = controllers;
+    }
+
 }
