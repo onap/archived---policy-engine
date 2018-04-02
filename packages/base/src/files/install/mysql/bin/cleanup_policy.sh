@@ -71,8 +71,12 @@ function cleanup_deleted_policy
 }
 
 # MAIN
-LOG=$POLICY_HOME/logs/cleanup_policy_$DATE.log
-ERR=$POLICY_HOME/logs/cleanup_policy_$DATE.err
+if [ -z ${POLICY_LOGS} ]; then
+  POLICY_LOGS=/var/log/onap
+fi
+mkdir -p $POLICY_LOGS/policy/db
+LOG=$POLICY_LOGS/policy/db/cleanup_policy_$DATE.log
+ERR=$POLICY_LOGS/policy/db/cleanup_policy_$DATE.err
 echo "cleanup_policy.sh started ... `date`" | tee -a $LOG
 if [ $# -eq 3 ]; then 
   DB_USER="${1}"
@@ -89,4 +93,3 @@ else
   echo "Usage  : cleanup_policy.sh db_user_id  db_user_password retention_period" 
   echo "Example: cleanup_policy.sh policy_user password         90" 
 fi
-
