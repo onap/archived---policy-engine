@@ -31,27 +31,54 @@ Installing the Archetype Project in Eclipse
 
     .. image:: mat_configure.JPG
 
-**STEP 5:** Click "Add Remote Catalog..."
+**STEP 5:** Add a Remote and/or a Local catalog
+
+**STEP 5.1:** Add a Remote Catalog to find the ONAP staged drools-applications
+
+**STEP 5.1.1:** Click "Add Remote Catalog..."
 
     .. image:: mat_add_local_catalog.JPG
 
-**STEP 6:** Add the ONAP Staging repository archetype-catalog.xml with a description if desired. Click "OK" then "Apply", then "OK".
+**STEP 5.1.2:** Add the ONAP Staging repository archetype-catalog.xml with a description if desired. Click "OK" then "Apply", then "OK".
 
     .. image:: mat_nexus_catalog.JPG
 
-**STEP 7:** The ONAP staging archetypes are now an option:
+**STEP 5.1.3:** The ONAP staging archetypes are now an option:
 
     .. image:: mat_archetypes.JPG
 
-**STEP 8:** Highlight the option with the Artifact Id "archetype-cl-amsterdam" and hit next. The following screen allows the user to modify some of the configurable parameters of the control loop. For this demo the default parameters that are already populated will be used. Fill out the Groud Id, Artifact Id, Version, and Package and hit "Finish". For the demo the following is used:
+**STEP 5.2:** Add a Local Catalog to find a local drools-applications in your .m2 local repository
+
+**STEP 5.2.1:** Click "Add Local Catalog..."
+
+    .. image:: mat_add_local_catalog.JPG
+
+**STEP 5.2.2:** Browse to or type in the path to your .m2 repository, give it a name and click "OK"
+
+    .. image:: mat_nexus_local_catalog.png
+
+**STEP 5.2.3:** The new local repository appears on the catalog list, click "Apply and Close"
+
+    .. image:: mat_local_archetypes.png
+
+**STEP 6:** If you wish to use a snapshot version of drools-applications, make sure to check the "Include snapshot archetypes" box. Highlight the option with the Artifact Id "archetype-cl-amsterdam" and click next. 
+
+    .. image:: mat_select_archetypes.png
+
+**STEP 7:** The following screen allows the user to modify some of the configurable parameters of the control loop. For this demo the default parameters that are already populated will be used. Fill out the Groud Id, Artifact Id, Version, and Package and hit "Finish". For the demo the following is used:
 
     .. image:: mat_archetype_params.JPG
 
-**STEP 9:** Depending on the IDE in use, an error may be generated about handling the kie-maven-plugin:6.5.0.Final:build plugin. This can be ignored, click "Finish" and then "OK" if a warning pops up about having build errors.
+**NOTE:** If you are using a snapshot version of drools-applications. make sure that the "dependenciesVersion" variable value you specify matches the drools-applications artifact versions
+
+    .. image:: mat_archetype_checkparams.png
+
+
+**STEP 8:** Depending on the IDE in use, an error may be generated about handling the kie-maven-plugin:6.5.0.Final:build plugin. This can be ignored, click "Finish" and then "OK" if a warning pops up about having build errors.
 
     .. image:: mat_error.JPG
 
-**STEP 10:** Amsterdam can now be seen in the Project Explorer:
+**STEP 9:** Amsterdam can now be seen in the Project Explorer:
 
     .. image:: mat_amsterdam_project.JPG
 
@@ -97,6 +124,7 @@ Running the PDP-D with the Amsterdam Controller
 End of Document
 
 
+.. SSNote: Beijing release update. https://wiki.onap.org/display/DW/Modifying+the+Release+template
 .. SSNote: Wiki page ref. https://wiki.onap.org/display/DW/Modifying+the+Amsterdam+release+template
 
 
