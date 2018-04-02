@@ -25,7 +25,8 @@ function um_start() {
 	
 	# Redirects default and error output to a log file
 	cd ${POLICY_HOME}/servers/${COMPONENT}/bin
-	nohup $JAVA_HOME/bin/java -jar ${JAVA_OPTS} ${SERVICE} ${SERVER} ${LOGTYPE} >> ${POLICY_LOG}/policy/${COMPONENT}/stdout 2>&1 &
+	mkdir -p ${POLICY_LOGS}/policy/${COMPONENT} 2>/dev/null
+	nohup $JAVA_HOME/bin/java -jar ${JAVA_OPTS} ${SERVICE} ${SERVER} ${LOGTYPE} >> ${POLICY_LOGS}/policy/${COMPONENT}/stdout 2>&1 &
 RETVAL=$?
 	RETVAL=$?	
 }
