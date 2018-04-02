@@ -73,7 +73,7 @@ angular.module('abs').controller('optimizationController', ['$scope', '$window',
 		console.log("failed");
 	});
 
-	PolicyAppService.getData('get_PriorityValues').then(function (data) {
+	PolicyAppService.getData('get_DCAEPriorityValues').then(function (data) {
 		var j = data;
 		$scope.data = JSON.parse(j.data);
 		console.log($scope.data);
