@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_b6f043ca",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-04-02T19:57:44Z",
+      "side": 1,
+      "message": "Frank, please do not use an Epic as an Issue-ID.",
+      "range": {
+        "startLine": 11,
+        "startChar": 10,
+        "endLine": 11,
+        "endChar": 20
+      },
+      "revId": "8bcf7f446b9043b812ffb9f419582a6b02c1f15c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
