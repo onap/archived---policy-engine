@@ -48,6 +48,7 @@ function um_start() {
 	JAVA_OPTS=("${JVM_JAVA_OPTS[@]}" "${JMX_JAVA_OPTS[@]}" "${JVM_SECURITY[@]}") 
  
 	cd $POLICY_HOME/servers/brmsgw
+	mkdir -p $POLICY_LOGS/policy/brmsgw 2>/dev/null
 	nohup $JAVA_HOME/bin/java -jar "${JAVA_OPTS[@]}" $POLICY_HOME/servers/brmsgw/BRMSGateway.jar>> $POLICY_LOGS/policy/brmsgw/brmsgw.log 2>&1 &
 	RETVAL=$?
 }
