@@ -22,6 +22,7 @@ package org.onap.policy.rest.util;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,10 +31,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
+import org.onap.policy.common.logging.flexlogger.FlexLogger;
+import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.util.MSModelUtils.MODEL_TYPE;
 
 public class MSModelUtilsTest {
-	
+	private static Logger logger = FlexLogger.getLogger(MSModelUtilsTest.class);	
 	@Test
 	public void testMSModelUtils(){
 		HashMap<String, MSAttributeObject> classMap = new HashMap<>();
@@ -49,4 +52,84 @@ public class MSModelUtilsTest {
 		String subAttribute = utils.createSubAttributes(dependency, classMap, "StandardDeviationThreshold");
 		assertTrue(subAttribute != null);
 	}
+	
+	
+	/**
+	 * Run the void stringBetweenDots(String, String) method test
+	 */
+	
+	 @Test
+	public void testStringBetweenDots() {
+
+		//expect: uniqueKeys should contain a string value 
+		 MSModelUtils controllerA = new MSModelUtils();
+		String str = "testing\\.byCorrectWay\\.OfDATA";
+		assertEquals(1, controllerA.stringBetweenDots(str));
+		
+		//expect: uniqueKeys should not contain a string value 
+		str = "testing\byWrongtWay.\\OfDATA";
+		MSModelUtils controllerB = new MSModelUtils();
+	    assertEquals(0, controllerB.stringBetweenDots(str));
+	}
+
+	/**
+	 * Run the Map<String,String> load(String) method test
+	 */
+	
+	@Test
+	public void testLoad() {
+		
+		boolean isLocalTesting = true;
+		MSModelUtils controller = new MSModelUtils();
+		String fileName = null;
+		Map<String,String> result = null;
+		try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			fileName = new File(classLoader.getResource("policy_tosca_tca-v1707.yml").getFile()).getAbsolutePath();
+		} catch (Exception e1) {
+			logger.error("Exception Occured while loading file"+e1);
+		}
+		if(isLocalTesting){
+			try {
+				result = controller.load(fileName);
+			} catch (IOException e) {
+				logger.error("testLoad", e);
+				result = null;
+			}
+			
+			assertTrue(result != null && !result.isEmpty());				
+			logger.debug("result : " + result);
+		}
+
+		logger.debug("testLoad: exit");
+	}
+	
+	/**
+	 * Run the void parseTosca(String) method test
+	 */
+	
+	@Test
+	public void testParseTosca() {
+		
+		logger.debug("testParseTosca: enter");
+		boolean isLocalTesting = true;
+		String fileName = null;
+		try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			fileName = new File(classLoader.getResource("policy_tosca_tca-v1707.yml").getFile()).getAbsolutePath();
+		} catch (Exception e1) {
+			logger.error("Exception Occured while loading file"+e1);
+		}
+		
+		MSModelUtils controller = new MSModelUtils();
+        if(isLocalTesting){
+			try {
+			    controller.parseTosca(fileName);
+			}catch (Exception e) {
+				fail("parseTosca caused error: " + e);
+			}
+        }
+		logger.debug("testParseTosca: exit");
+	}
+
 }

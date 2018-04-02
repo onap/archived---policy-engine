@@ -97,10 +97,6 @@ public class CreateOptimizationController extends RestrictedBaseController {
 		return commonClassDao;
 	}
 
-	public static void setCommonClassDao(CommonClassDao commonClassDao) {
-		CreateOptimizationController.commonClassDao = commonClassDao;
-	}
-
 	private OptimizationModels newModel;
 	private String newFile;
 	private String directory;
@@ -130,6 +126,10 @@ public class CreateOptimizationController extends RestrictedBaseController {
 	
 	@Autowired
 	private CreateOptimizationController(CommonClassDao commonClassDao){
+		setCommonClassDao(commonClassDao);
+	}
+	
+	public static void setCommonClassDao(CommonClassDao commonClassDao) {
 		CreateOptimizationController.commonClassDao = commonClassDao;
 	}
 
@@ -595,7 +595,7 @@ public class CreateOptimizationController extends RestrictedBaseController {
 	}
 	
 	@RequestMapping(value={"/oof_dictionary/set_ModelData"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-	public void SetModelData(HttpServletRequest request, HttpServletResponse response) throws IOException, FileUploadException{
+	public void setModelData(HttpServletRequest request, HttpServletResponse response) throws IOException, FileUploadException{
 		modelList = new ArrayList<>();
 		dirDependencyList = new ArrayList<>();
 		classMap = new LinkedHashMap<>();

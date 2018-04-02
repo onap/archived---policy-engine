@@ -386,8 +386,10 @@ public class CreateOptimizationControllerTest {
 	public void testSetModelData() {		
 		
 		logger.debug("testSetModelData: enter");
-
+		
+		CreateOptimizationController controller = new CreateOptimizationController();
 	    HttpServletRequest request = createMock(HttpServletRequest.class);
+		MockHttpServletResponse response =  new MockHttpServletResponse();
 	    expect(request.getContentType()).andReturn("multipart/form-data; boundary=----WebKitFormBoundaryWcRUaIbC8kXgjr3p");
 	    expect(request.getMethod()).andReturn("post");
 	    expect(request.getHeader("Content-length")).andReturn("7809");
@@ -407,12 +409,14 @@ public class CreateOptimizationControllerTest {
 		    expect(request.getCharacterEncoding()).andReturn("UTF-8");
 		    expect(request.getContentLength()).andReturn(1024);
 		    replay(request);
-			
+		    controller.setModelData(request, response);
+
 		} catch (Exception e) {
 			logger.error("testSetModelData" + e);
 			e.printStackTrace();
 		}
 	    		
+	    
 		logger.debug("testSetModelData: exit");
 	}
 
