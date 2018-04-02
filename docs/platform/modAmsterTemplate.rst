@@ -33,33 +33,33 @@ Installing the Archetype Project in Eclipse
 
 **STEP 5:** Add a Remote and/or a Local catalog
 
-**STEP 5.1:** Add a Remote Catalog to find the ONAP staged drools-applications
+   **STEP 5.1:** Add a Remote Catalog to find the ONAP staged drools-applications
 
-**STEP 5.1.1:** Click "Add Remote Catalog..."
+      **STEP 5.1.1:** Click "Add Remote Catalog..."
 
-    .. image:: mat_add_local_catalog.JPG
+          .. image:: mat_add_local_catalog.JPG
 
-**STEP 5.1.2:** Add the ONAP Staging repository archetype-catalog.xml with a description if desired. Click "OK" then "Apply", then "OK".
+      **STEP 5.1.2:** Add the ONAP Staging repository archetype-catalog.xml with a description if desired. Click "OK" then "Apply", then "OK".
 
-    .. image:: mat_nexus_catalog.JPG
+          .. image:: mat_nexus_catalog.JPG
 
-**STEP 5.1.3:** The ONAP staging archetypes are now an option:
+      **STEP 5.1.3:** The ONAP staging archetypes are now an option:
 
-    .. image:: mat_archetypes.JPG
+          .. image:: mat_archetypes.JPG
 
-**STEP 5.2:** Add a Local Catalog to find a local drools-applications in your .m2 local repository
+   **STEP 5.2:** Add a Local Catalog to find a local drools-applications in your .m2 local repository
 
-**STEP 5.2.1:** Click "Add Local Catalog..."
+      **STEP 5.2.1:** Click "Add Local Catalog..."
 
-    .. image:: mat_add_local_catalog.JPG
+          .. image:: mat_add_local_catalog.JPG
 
-**STEP 5.2.2:** Browse to or type in the path to your .m2 repository, give it a name and click "OK"
+      **STEP 5.2.2:** Browse to or type in the path to your .m2 repository, give it a name and click "OK"
 
-    .. image:: mat_nexus_local_catalog.png
+          .. image:: mat_nexus_local_catalog.png
 
-**STEP 5.2.3:** The new local repository appears on the catalog list, click "Apply and Close"
+      **STEP 5.2.3:** The new local repository appears on the catalog list, click "Apply and Close"
 
-    .. image:: mat_local_archetypes.png
+          .. image:: mat_local_archetypes.png
 
 **STEP 6:** If you wish to use a snapshot version of drools-applications, make sure to check the "Include snapshot archetypes" box. Highlight the option with the Artifact Id "archetype-cl-amsterdam" and click next. 
 
