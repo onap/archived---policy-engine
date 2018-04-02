@@ -22,36 +22,45 @@ package org.onap.portalapp.scheduler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Rule;
+
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 
 public class RegisterTest {
-	@Rule 
-	public final ExpectedException thrown = ExpectedException.none();
+    @Test
+    public void testRegister() {
+        Register register = new Register();
+        TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger();
+        Trigger trigger = triggerBuilder.build();
+        List<Trigger> triggers = new ArrayList<Trigger>();
+        triggers.add(trigger);
 
-	@Test
-	public void testRegister() {
-		Register register = new Register();
-		TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger();
-		Trigger trigger = triggerBuilder.build();
-		List<Trigger> triggers = new ArrayList<Trigger>();
-		triggers.add(trigger);
-		
-		register.setScheduleTriggers(triggers);
-		assertEquals(register.getScheduleTriggers(), triggers);
-		assertEquals(register.getTriggers().length, 1);
-	}
-	
-	@Test
-	public void testRegisterNegativeCase() {
-		thrown.expect(NullPointerException.class);
-		Register register = new Register();
-		register.registerTriggers();
-		fail("Expecting an exception.");
-	}
+        register.setScheduleTriggers(triggers);
+        assertEquals(register.getScheduleTriggers(), triggers);
+        assertEquals(register.getTriggers().length, 1);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testRegisterNegativeCase() {
+        Register register = new Register();
+        register.registerTriggers();
+        fail("Expecting an exception.");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testRegisterNegativeCase2() {
+        // Setup test data
+        String value = "testVal";
+        Register register = new Register();
+        List<Trigger> triggers = new ArrayList<Trigger>();
+        register.setScheduleTriggers(triggers);
+
+        // Test register
+        register.registerTriggers();
+        fail("Expecting an exception.");
+    }
 }
