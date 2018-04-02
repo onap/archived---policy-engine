@@ -1115,11 +1115,13 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		var star = "";
 		var required = null;
 		if(lablInfo){
-			if(lablInfo.includes("required-true")){
-				star = " *";
-				required = true;
-			}else if (lablInfo.includes("required-false")){
-				required = false
+			if(lablInfo.hasOwnProperty('includes')){
+			   if(lablInfo.includes("required-true")){
+				   star = " *";
+				   required = true;
+			    }else if (lablInfo.includes("required-false")){
+				   required = false
+			    }
 			}
 		}
 		
