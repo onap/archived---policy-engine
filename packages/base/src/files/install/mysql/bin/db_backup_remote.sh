@@ -70,14 +70,19 @@ if [ $# -eq 4 ]; then
   DB_PASSWORD="${2}"
   DATABASE="${3}"
   DB_HOSTNAME="${4}"
+  if [ -z ${POLICY_LOGS} ]; then
+    POLICY_LOGS=/var/log/onap
+  fi
+  mkdir -p $POLICY_LOGS/policy/db
+  LOG=$POLICY_LOGS/policy/db/db_backup_remote_$DATE.log
+  ERR=$POLICY_LOGS/policy/db/db_backup_remote_$DATE.err
+
   echo "db_backup_remote.sh for [$DATABASE]@[${DB_HOSTNAME}] started ... `date`" | tee -a $LOG
   echo "DB_USER    : $DB_USER"     | tee -a $LOG
   echo "DATABASE   : $DATABASE"    | tee -a $LOG
   echo "DB_HOSTNAME: $DB_HOSTNAME" | tee -a $LOG
     
   DAILY_BACKUP_DIR=$POLICY_HOME/data/mysql/$DATE
-  LOG=$POLICY_HOME/logs/db_backup_remote_$DATE.log
-  ERR=$POLICY_HOME/logs/db_backup_remote_$DATE.err
   create_backup_dir 
 
   backup_database
