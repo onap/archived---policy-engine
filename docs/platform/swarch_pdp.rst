@@ -51,14 +51,14 @@ Extensions are optional modules that are commonly known as **features** that ext
 
 The current extensions supported are:
 
-- Feature Test Transaction  (disabled by default)
-- Feature State Management (disabled by default)
-- Feature EELF (disabled by default)
-- Feature Healthcheck (enabled by default)
-- Feature Session Persistence (disabled by default)
-- Feature Active/Standby Management (disabled by default)
+- `Feature Test Transaction  <feature_testtransaction.html>`_ (disabled by default)
+- `Feature State Management <feature_statemgmt.html>`_ (disabled by default)
+- `Feature EELF <feature_eelf.html>`_ (disabled by default)
+- `Feature Healthcheck <feature_healthcheck.html>`_ (enabled by default)
+- `Feature Session Persistence <feature_sesspersist.html>`_ (disabled by default)
+- `Feature Active/Standby Management <feature_activestdbymgmt.html>`_ (disabled by default)
 
-.. seealso:: Please see the individual feature wiki pages for more information 
+.. seealso:: Click on the individual feature links for more information 
 
 
 .. _Control Loop Operational Policy: https://wiki.onap.org/display/DW/Control+Loop+Operational+Policy
