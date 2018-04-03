@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_11cca160",
+        "filename": "ONAP-PDP/logging.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-04-03T01:39:09Z",
+      "side": 1,
+      "message": "project being \"ONAP-PDP\", shouldn\u0027t it be \"../policy/pdpx/..\" below ? instead of \"../policy/console/..\"",
+      "revId": "48e9355ef3fb804ffdd77ea1a392071bb4ee61d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_d1ecf9bd",
+        "filename": "ONAP-SDK-APP/src/main/resources/logback.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-04-03T01:39:09Z",
+      "side": 1,
+      "message": "we should not use \"eCOMP\" ..  \nlicense is 2017-2018.",
+      "revId": "48e9355ef3fb804ffdd77ea1a392071bb4ee61d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_712ba5eb",
+        "filename": "ONAP-SDK-APP/src/main/resources/logback.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-04-03T01:39:09Z",
+      "side": 1,
+      "message": "same",
+      "revId": "48e9355ef3fb804ffdd77ea1a392071bb4ee61d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f13ed528",
+        "filename": "ONAP-SDK-APP/src/main/resources/logback.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-04-03T01:39:09Z",
+      "side": 1,
+      "message": "We have to use sizeantimebasedrollingpolicy , the way that it was before.\n\nComment here is why this file has been reverted back to an old version ??",
+      "revId": "48e9355ef3fb804ffdd77ea1a392071bb4ee61d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_113a6134",
+        "filename": "ONAP-SDK-APP/src/main/resources/logback.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-04-03T01:39:09Z",
+      "side": 1,
+      "message": "Same here, appenders, etc .. should not change",
+      "revId": "48e9355ef3fb804ffdd77ea1a392071bb4ee61d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_310c3d94",
+        "filename": "PolicyEngineAPI/src/main/resources/log4j.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-04-03T01:39:09Z",
+      "side": 1,
+      "message": "astragw .. is this correct Ravi?   astragw is not an ONAP component ..",
+      "revId": "48e9355ef3fb804ffdd77ea1a392071bb4ee61d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f125750a",
+        "filename": "packages/base/src/files/install/servers/common/tomcat/conf/server.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-04-03T01:39:09Z",
+      "side": 1,
+      "message": "I don\u0027t think it should be using policy/common directory ..",
+      "revId": "48e9355ef3fb804ffdd77ea1a392071bb4ee61d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_112101fc",
+        "filename": "packages/base/src/files/install/servers/configs/conf/server.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-04-03T01:39:09Z",
+      "side": 1,
+      "message": "I don\u0027t think it should be logging to policy/configs ..",
+      "revId": "48e9355ef3fb804ffdd77ea1a392071bb4ee61d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
