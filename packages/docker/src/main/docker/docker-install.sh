@@ -577,7 +577,7 @@ DEBUG=n
 
 BASE_CONF=base.conf
 
-TOMCAT_PACKAGE_NAME=apache-tomcat-8.0.23
+TOMCAT_PACKAGE_NAME=apache-tomcat-8.0.50
 
 INSTALL_DIR="$(pwd)"
 
