@@ -162,7 +162,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.onap.policy.brmsInterface.BRMSGateway</mainClass>
+                            <mainClass>org.onap.policy.brms.api.BrmsGateway</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
