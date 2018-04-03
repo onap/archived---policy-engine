@@ -80,7 +80,7 @@ public class MSModelUtils {
 	private String onap = "";
 	private String policy = "";
 	private String eProxyURI = "eProxyURI:";
-	private List<String> orderedElements = new ArrayList<>();
+	private List<String> orderedElements = new ArrayList<String>();
 	private String dataOrderInfo = null;
 	private Set<String> uniqueDataKeys= new HashSet<>();
 	private Set<String> uniqueKeys= new HashSet<>();
@@ -98,14 +98,6 @@ public class MSModelUtils {
 	public static final String LIST="list";
 	public static final String DEFAULT=".default";
 	public static final String MANYFALSE=":MANY-false";
-	public static final String MANYTRUE=":MANY-true";
-	public static final String DEFAULTVALUE=":defaultValue-";
-	public static final String REQUIREDVALUE=":required-";
-	public static final String MATCHABLEKEY="matchable";
-	public static final String REQUIREDFALSE=":required-false";
-	public static final String REQUIREDTRUE=":required-true";
-	public static final String MATCHINGTRUE="matching-true";
-
 	private StringBuilder dataListBuffer=new StringBuilder();
 	private List<String> dataConstraints= new ArrayList <>();
 	private String attributeString = null;
@@ -151,7 +143,7 @@ public class MSModelUtils {
 				if (obj instanceof EEnum) {
 					enumMap.putAll(getEEnum(obj));
 				}else if (obj instanceof EClass) {
-					String temp = getDependencyList(eClassifier).toString();
+					String temp = getDependencyList(eClassifier, className).toString();
 					returnValue = StringUtils.replaceEach(temp, new String[]{"[", "]"}, new String[]{"", ""});
 					getAttributes(className, returnValue, root);
 				}        		   		
@@ -176,11 +168,11 @@ public class MSModelUtils {
 				Map<String, String> listRef = classMap.get(key).getRefAttribute();
 				for (  Entry<String, String> eSet : listAttributes.entrySet()){
 					String key2 = eSet.getKey();
-					tempAttribute.put(key2, MATCHINGTRUE);
+					tempAttribute.put(key2, "matching-true");
 				}
 				for (  Entry<String, String> eSet : listRef.entrySet()){
 					String key3 = eSet.getKey();
-					tempAttribute.put(key3, MATCHINGTRUE);
+					tempAttribute.put(key3, "matching-true");
 				}
 
 			}
@@ -273,7 +265,7 @@ public class MSModelUtils {
 		HashMap<String, String> annotationSet = new HashMap<>();
 		String  matching;
 		String range;
-		String annotationDict;
+		String dictionary;
 
 		//    Pulling out dependency from file
 		while (treeItr.hasNext()) {	    
@@ -295,13 +287,14 @@ public class MSModelUtils {
 						if (range!=null){
 							annotationSet.put(eStrucClassifier.getName(), range);
 						}
-						annotationDict = annotationValue(eStrucClassifier, ANNOTATION_TYPE.DICTIONARY, policy);
-						if (annotationDict!=null){
-							annotationSet.put(eStrucClassifier.getName(), annotationDict);
+						dictionary = annotationValue(eStrucClassifier, ANNOTATION_TYPE.DICTIONARY, policy);
+						if (dictionary!=null){
+							annotationSet.put(eStrucClassifier.getName(), dictionary);
 						}
 					}
 				}
-			} else if (requiredMatchAttribute && (obj instanceof EStructuralFeature)) {
+			} else if (requiredMatchAttribute){
+				if (obj instanceof EStructuralFeature) {
 					EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
 					if (!eStrucClassifier.getEAnnotations().isEmpty()) {
 						matching  = annotationValue(eStrucClassifier, ANNOTATION_TYPE.MATCHING, policy);
@@ -315,6 +308,7 @@ public class MSModelUtils {
 							}
 						}
 					}
+				}
 			}
 		}
 		return annotationSet;
@@ -344,20 +338,22 @@ public class MSModelUtils {
 				rollingCount = rollingCount+processClass;
 			}
 
-			if (requiredAttribute && (obj instanceof EStructuralFeature)) {
-				EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
-				if (!eStrucClassifier.getEAnnotations().isEmpty()) {
-					annotation = annotationTest(eStrucClassifier, configuration, onap);
-					if (annotation &&  obj instanceof EReference) {
-						EClass refType = ((EReference) obj).getEReferenceType();
-						if(!refType.toString().contains(eProxyURI)){
-							String required = REQUIREDFALSE;
-							if(eStrucClassifier.getLowerBound() == 1){
-								required = REQUIREDTRUE;
+			if (requiredAttribute)   {
+				if (obj instanceof EStructuralFeature) {
+					EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
+					if (!eStrucClassifier.getEAnnotations().isEmpty()) {
+						annotation = annotationTest(eStrucClassifier, configuration, onap);
+						if (annotation &&  obj instanceof EReference) {
+							EClass refType = ((EReference) obj).getEReferenceType();
+							if(!refType.toString().contains(eProxyURI)){
+								String required = ":required-false";
+								if(eStrucClassifier.getLowerBound() == 1){
+									required = ":required-true";
+								}
+								subAttribute.put(eStrucClassifier.getName(), refType.getName() + required);						
 							}
-							subAttribute.put(eStrucClassifier.getName(), refType.getName() + required);						
-						}
-					}	
+						}	
+					}
 				}
 			}
 		}
@@ -366,7 +362,7 @@ public class MSModelUtils {
 
 	public String checkDefultValue(String defultValue) {
 		if (defultValue!=null){
-			return DEFAULTVALUE+ defultValue;
+			return ":defaultValue-"+ defultValue;
 		}
 		return ":defaultValue-NA";
 
@@ -378,11 +374,11 @@ public class MSModelUtils {
 
 		if (pattern!=null){
 			if (upper == Integer.parseInt(pattern.split(",")[1]) && lower==Integer.parseInt(pattern.split(",")[0])){
-				return REQUIREDTRUE;
+				return ":required-true";
 			}
 		}
 
-		return REQUIREDFALSE;
+		return ":required-false";
 	}
 
 	public JSONObject buildJavaObject(Map<String, String> map){
@@ -413,7 +409,8 @@ public class MSModelUtils {
 				rollingCount = rollingCount+processClass;
 			}
 
-			if (requiredAttribute && (obj instanceof EStructuralFeature)) {
+			if (requiredAttribute)   {
+				if (obj instanceof EStructuralFeature) {
 					EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
 					if (!eStrucClassifier.getEAnnotations().isEmpty()) {
 						annotation = annotationTest(eStrucClassifier, configuration, onap);
@@ -425,9 +422,9 @@ public class MSModelUtils {
 								refAttribute.put(eStrucClassifier.getName(), refValue);							
 							} else {
 								String array = arrayCheck(((EStructuralFeature) obj).getUpperBound());
-								String required = REQUIREDFALSE;
+								String required = ":required-false";
 								if(((EStructuralFeature) obj).getLowerBound() == 1){
-									required = REQUIREDTRUE;
+									required = ":required-true";
 								}
 								refAttribute.put(eStrucClassifier.getName(), refType.getName() + array + required);
 							}
@@ -435,14 +432,15 @@ public class MSModelUtils {
 							EClassifier refType = ((EAttributeImpl) obj).getEType();
 							if (refType instanceof EEnumImpl){
 								String array = arrayCheck(((EStructuralFeature) obj).getUpperBound());
-								String required = REQUIREDFALSE;
+								String required = ":required-false";
 								if(((EStructuralFeature) obj).getLowerBound() == 1){
-									required = REQUIREDTRUE;
+									required = ":required-true";
 								}
 								refAttribute.put(eStrucClassifier.getName(), refType.getName() + array + required);							
 							}
 						}	
 					}
+				}
 			}
 		}
 		
@@ -462,12 +460,9 @@ public class MSModelUtils {
 			eAnnotation = eStrucClassifier.getEAnnotations().get(i);
 			onapType = eAnnotation.getDetails().get(0).getValue();
 			onapValue = eAnnotation.getDetails().get(0).getKey();
-			
 			if (annotationType.contains(type) && onapType.contains(annotation)){
 				return true;
-			}
-			
-			if (annotationType.contains(type) && onapValue.contains(annotation)){
+			} else if (annotationType.contains(type) && onapValue.contains(annotation)){
 				return true;
 			}
 		}
@@ -502,7 +497,8 @@ public class MSModelUtils {
 	}
 	public boolean isRequiredAttribute(EObject obj, String className){
 		EClassifier eClassifier = (EClassifier) obj;
-		String workingClass = eClassifier.getName().trim();
+		String workingClass = eClassifier.getName();
+		workingClass.trim();
 		if (workingClass.equalsIgnoreCase(className)){
 			return  true;
 		}
@@ -567,7 +563,8 @@ public class MSModelUtils {
 
 			}
 
-			if (requiredAttribute && (obj instanceof EStructuralFeature)) {
+			if (requiredAttribute){
+				if (obj instanceof EStructuralFeature) {
 					EStructuralFeature eStrucClassifier = (EStructuralFeature) obj;
 					if (!eStrucClassifier.getEAnnotations().isEmpty()) {
 						annotation = annotationTest(eStrucClassifier, configuration, onap);
@@ -588,6 +585,7 @@ public class MSModelUtils {
 							refAttribute.put(name, attributeValue);	
 						}
 					}
+				}
 			}
 		}
 		return refAttribute;
@@ -597,13 +595,13 @@ public class MSModelUtils {
 	public String arrayCheck(int upperBound) {
 
 		if (upperBound == -1){
-			return MANYTRUE;
+			return ":MANY-true";
 		}
 
-		return MANYFALSE;
+		return ":MANY-false";
 	}
 
-	public List<String> getDependencyList(EClassifier eClassifier){
+	public List<String> getDependencyList(EClassifier eClassifier, String className){
 		List<String> returnValue = new ArrayList<>();;
 		EList<EClass> somelist = ((EClass) eClassifier).getEAllSuperTypes();
 		if (somelist.isEmpty()){
@@ -652,9 +650,10 @@ public class MSModelUtils {
 		Map<String, String> returnClass = getRefclass(classMap, className);
 		returnObject.put(className, returnClass);
 		for (Entry<String, String> reAttribute :returnClass.entrySet()){
-			if (reAttribute.getValue().split(":")[1].contains("MANY") && 
-					classMap.get(reAttribute.getValue().split(":")[0]) != null){
+			if (reAttribute.getValue().split(":")[1].contains("MANY")){
+				if (classMap.get(reAttribute.getValue().split(":")[0]) != null){
 					returnObject.putAll(recursiveReference(classMap, reAttribute.getValue().split(":")[0]));
+				}
 			}
 
 		}
@@ -663,16 +662,18 @@ public class MSModelUtils {
 
 	}
 
-	public String createJson(Map<String, MSAttributeObject> classMap, String className) {
+	public String createJson(Map<String, Object> subClassAttributes, Map<String, MSAttributeObject> classMap, String className) {
 		boolean enumType;
 		Map<String, Map<String, String>> myObject = new HashMap<>();
 		for ( Entry<String, String> map : classMap.get(className).getRefAttribute().entrySet()){
 			String value = map.getValue().split(":")[0];
 			if (value!=null){
 				enumType = classMap.get(className).getEnumType().containsKey(value);
-				if (!enumType && map.getValue().split(":")[1].contains("MANY")){
+				if (!enumType){
+					if (map.getValue().split(":")[1].contains("MANY")){
 						Map<String, Map<String, String>> testRecursive = recursiveReference(classMap, map.getValue().split(":")[0] );
 						myObject.putAll(testRecursive);
+					}
 				}
 			}
 		}
@@ -712,7 +713,7 @@ public class MSModelUtils {
 			}
 		}
 
-		return createJson(classMap, modelName);
+		return createJson(workingMap, classMap, modelName);
 	}
 
 	public List<String> getFullDependencyList(List<String> dependency, Map<String,MSAttributeObject > classMap) {
@@ -738,11 +739,18 @@ public class MSModelUtils {
     /*
      * For TOSCA Model
      */
-	public void parseTosca (String fileName){
+	public String parseTosca (String fileName){
 		LinkedHashMap<String,String> map= new LinkedHashMap<>();
     
+		System.out.println(MSModelUtils.class.getName() + " parseTosca got called.");
     	try {
 			map=load(fileName);
+			
+			if(map != null){
+				if(map.get("error") != null){
+					return map.get("error");
+				}
+			}
 			
 			parseDataAndPolicyNodes(map);
 			
@@ -757,13 +765,14 @@ public class MSModelUtils {
     	} catch (IOException e) {
     		logger.error(e);
     	}
-	
+	   
+    	return null;
 	} 
 	
 	@SuppressWarnings("unchecked")
 	public LinkedHashMap<String, String> load(String fileName) throws IOException { 
 		File newConfiguration = new File(fileName);
-		StringBuilder orderInfo = new StringBuilder("[");
+		StringBuffer orderInfo = new StringBuffer("[");
 		Yaml yaml = new Yaml();
 		LinkedHashMap<Object, Object> yamlMap = null;
 		try(InputStream is = new FileInputStream(newConfiguration)){
@@ -777,6 +786,13 @@ public class MSModelUtils {
 		if (yamlMap == null) { 
 			return settings; 
 		} 
+				
+		String message = validations(yamlMap);	
+		
+		if(message != null){
+			settings.put("error", message);
+			return settings;					
+		}
 		
 		findNode(yamlMap);
 		
@@ -796,7 +812,83 @@ public class MSModelUtils {
 		List<String> path = new ArrayList <>(); 
 		serializeMap(settings, sb, path, yamlMap); 
 		return settings; 
-	} 
+	}
+	
+	@SuppressWarnings("unchecked")
+	private String validations(@SuppressWarnings("rawtypes") LinkedHashMap yamlMap){
+		
+		boolean isNoteTypeFound = false;
+		boolean isDataTypeFound = false;
+		boolean isToscaVersionKeyFound = false;
+		boolean isToscaVersionValueFound = false;
+		@SuppressWarnings("rawtypes")
+		Map m1 = new HashMap();
+		short order =0;
+		if(yamlMap != null){
+			// Get a set of the entries
+		     @SuppressWarnings("rawtypes")
+			Set set = yamlMap.entrySet();		      
+		     // Get an iterator
+		     @SuppressWarnings("rawtypes")
+			Iterator i = set.iterator();		      
+		      // Display elements
+		     while(i.hasNext()) {
+		         @SuppressWarnings("rawtypes")		         
+				 Map.Entry me = (Map.Entry)i.next();
+		         
+		         if("tosca_definitions_version".equals(me.getKey())){
+		        	 isToscaVersionKeyFound = true;
+		        	 order++;
+		        	 m1.put("tosca_definitions_version", order);
+		         }
+		         
+		         if("tosca_simple_yaml_1_0_0".equals(me.getValue())){
+		        	 isToscaVersionValueFound = true;
+		         }
+
+		         if("node_types".equals(me.getKey())){
+		        	 isNoteTypeFound = true;
+		        	 order++;
+		        	 m1.put("node_types", order);
+		         }
+		         
+		         if("data_types".equals(me.getKey())){
+		        	 isDataTypeFound = true;
+		        	 order++;
+		        	 m1.put("data_types", order);
+		         }
+
+		     }
+		     
+	         
+	         if(!isDataTypeFound){
+	        	 return "data_types are missing or invalid.";
+	         }  
+	         
+	         if(!isToscaVersionKeyFound || !isToscaVersionValueFound){
+	        	 return "tosca_definitions_version is missing or invalid.";
+	         }  
+	         
+	         if(!isNoteTypeFound){
+	        	 return "node_types are missing or invalid.";
+	         }  
+	         
+	         short version = (short) m1.get("tosca_definitions_version");
+	         
+	         if(version > 1 ){
+	        	return "tosca_definitions_version should be defined first.";
+	         }
+	         
+	         short data = (short) m1.get("data_types");
+	         short node = (short) m1.get("node_types");
+	         if(node > data){
+	        	return "node_types should be defined before data_types.";	        	 
+	         }	         
+	         
+		}
+		
+		return null;
+	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void serializeMap(LinkedHashMap<String, String> settings, StringBuilder sb, List<String> path, Map<Object, Object> yamlMap) { 
@@ -958,34 +1050,30 @@ public class MSModelUtils {
 
 				String matchableValue= map.get(matchable);
 
-				if(matchableValue != null && matchableValue.equalsIgnoreCase("true")){
-					if(uniqueDataKey.contains("%")){
-						String[] keys= uniqueDataKey.split("%");
-						String key=keys[keys.length -1];
-						matchableValues.put(key, MATCHINGTRUE);
-					}else{
-						matchableValues.put(uniqueDataKey, MATCHINGTRUE);
-					}
+				if("true".equalsIgnoreCase(matchableValue)){
+				    String key=uniqueDataKeySplit[uniqueDataKeySplit.length -1];
+				    matchableValues.put(key, "matching-true");
 				}
 					
 				if(requiredValue == null || requiredValue.isEmpty()){
 					requiredValue = "false";
 				}
-				if(typeValue != null && (typeValue.equalsIgnoreCase(STRING)||
-						typeValue.equalsIgnoreCase(INTEGER))){
-					
+				if(typeValue != null && typeValue.equalsIgnoreCase(STRING)||
+						typeValue.equalsIgnoreCase(INTEGER)
+				  )
+				{
 					String findDefault=DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+DEFAULT;
 					String defaultValue= map.get(findDefault);
 					logger.info("defaultValue is:"+ defaultValue);
 					logger.info("requiredValue is:"+ requiredValue);
 					
 					StringBuilder attributeIndividualStringBuilder= new StringBuilder();
-					attributeIndividualStringBuilder.append(typeValue+DEFAULTVALUE);
-					attributeIndividualStringBuilder.append(defaultValue+REQUIREDVALUE);
+					attributeIndividualStringBuilder.append(typeValue+":defaultValue-");
+					attributeIndividualStringBuilder.append(defaultValue+":required-");
 					attributeIndividualStringBuilder.append(requiredValue+MANYFALSE);
 					dataMapForJson.put(uniqueDataKey, attributeIndividualStringBuilder.toString());		
 				}
-				else if(typeValue != null && typeValue.equalsIgnoreCase(LIST)){
+				else if(LIST.equalsIgnoreCase(typeValue)){
 					logger.info("requiredValue is:"+ requiredValue);
 					String findList= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.type";
 					String listValue=map.get(findList);
@@ -995,25 +1083,25 @@ public class MSModelUtils {
 						if(listValue.contains(".")){
 							String trimValue=listValue.substring(listValue.lastIndexOf('.')+1);
 							StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-							referenceIndividualStringBuilder.append(trimValue+REQUIREDVALUE);
-							referenceIndividualStringBuilder.append(requiredValue+MANYTRUE);
+							referenceIndividualStringBuilder.append(trimValue+":required-");
+							referenceIndividualStringBuilder.append(requiredValue+":MANY-true");
 							dataMapForJson.put(uniqueDataKey, referenceIndividualStringBuilder.toString());
 						}//Its string
 						else{
 							StringBuilder stringListItems= new StringBuilder();
-							stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+REQUIREDVALUE+requiredValue +MANYFALSE);
+							stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+":required-"+requiredValue +":MANY-false");
 							dataMapForJson.put(uniqueDataKey, stringListItems.toString());
 							dataListBuffer.append(uniqueDataKeySplit[1].toUpperCase()+"=[");
 							for(int i=0;i<10;i++){
 								String findConstraints= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.constraints.0.valid_values."+i;
-								logger.info("findConstraints => " + findConstraints);
+								System.out.println("findConstraints => " + findConstraints);
 								String constraintsValue=map.get(findConstraints);
-								logger.info("constraintsValue => " + constraintsValue);
+								logger.info(constraintsValue);
 								if(constraintsValue==null){
 									break;
 								}
 								else{
-									logger.info("constraintsValue => " + constraintsValue);
+									System.out.println("constraintsValue => " + constraintsValue);
 									if(constraintsValue.contains("=")){
 										constraintsValue = constraintsValue.replace("=", "equal-sign");
 									}
@@ -1022,20 +1110,25 @@ public class MSModelUtils {
 								}
 							}
 							dataListBuffer.append("]#");
+							System.out.println("dataListBuffer => " + dataListBuffer);
 							logger.info(dataListBuffer);
 						}
 					}
 				}
 				else{
-					String findUserDefined=DATATYPE+uniqueDataKeySplit[0]+"."+"properties"+"."+uniqueDataKeySplit[1]+TYPE;
+					String findUserDefined="data_types.policy.data."+uniqueDataKeySplit[0]+"."+"properties"+"."+uniqueDataKeySplit[1]+".type";
+					//String required="data_types.policy.data."+uniqueDataKeySplit[0]+"."+"properties"+"."+uniqueDataKeySplit[1]+".required";
 					String userDefinedValue=map.get(findUserDefined);
+					//String requiredValue = map.get(required);
 					String trimValue=userDefinedValue.substring(userDefinedValue.lastIndexOf('.')+1);
 					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-					referenceIndividualStringBuilder.append(trimValue+REQUIREDVALUE);
-					referenceIndividualStringBuilder.append(requiredValue+MANYFALSE);
+					referenceIndividualStringBuilder.append(trimValue+":required-");
+					referenceIndividualStringBuilder.append(requiredValue+":MANY-false");
 					dataMapForJson.put(uniqueDataKey, referenceIndividualStringBuilder.toString());
 					
 				}
+			}else{
+				matchableValues.put(uniqueDataKey, "matching-true");
 			}
 		}
 		
@@ -1092,22 +1185,23 @@ public class MSModelUtils {
 		for(Map.Entry<String,LinkedHashMap<String,String>> entry: mapKey.entrySet()){
 			String keySetString= entry.getKey();
 			LinkedHashMap<String,String> keyValues=mapKey.get(keySetString);
-			if(STRING.equalsIgnoreCase(keyValues.get("type"))|| 
-					INTEGER.equalsIgnoreCase(keyValues.get("type"))){
+			if(keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(STRING)||
+					keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(INTEGER)
+					){
 				StringBuilder attributeIndividualStringBuilder= new StringBuilder();
 				attributeIndividualStringBuilder.append(keySetString+"=");
-				attributeIndividualStringBuilder.append(keyValues.get("type")+DEFAULTVALUE);
-				attributeIndividualStringBuilder.append(keyValues.get("default")+REQUIREDVALUE);
-				attributeIndividualStringBuilder.append(keyValues.get("required")+MANYFALSE);
+				attributeIndividualStringBuilder.append(keyValues.get("type")+":defaultValue-");
+				attributeIndividualStringBuilder.append(keyValues.get("default")+":required-");
+				attributeIndividualStringBuilder.append(keyValues.get("required")+":MANY-false");
 				attributeStringBuilder.append(attributeIndividualStringBuilder+",");	
-                if("true".equalsIgnoreCase(keyValues.get(MATCHABLEKEY))){
-				    matchableValues.put(keySetString, MATCHINGTRUE);
+                if(keyValues.get("matchable") != null && keyValues.get("matchable").equalsIgnoreCase("true")){
+				    matchableValues.put(keySetString, "matching-true");
                 }
 			}
 			else if(LIST.equalsIgnoreCase(keyValues.get("type"))){
 				
-                if(("true").equalsIgnoreCase(keyValues.get(MATCHABLEKEY))){
-				    matchableValues.put(keySetString, MATCHINGTRUE);
+                if("true".equalsIgnoreCase(keyValues.get("matchable"))){
+				    matchableValues.put(keySetString, "matching-true");
                 }
 				//List Datatype
 				Set<String> keys= keyValues.keySet();
@@ -1128,7 +1222,7 @@ public class MSModelUtils {
 							//This is user defined type
 							String trimValue=value.substring(value.lastIndexOf('.')+1);
 							StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-							referenceIndividualStringBuilder.append(keySetString+"="+trimValue+MANYTRUE);
+							referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-true");
 							referenceStringBuilder.append(referenceIndividualStringBuilder+",");
 							isDefinedType = true;
 						}
@@ -1143,21 +1237,21 @@ public class MSModelUtils {
 				}
 			}else{
 				//User defined Datatype.
-                if("true".equalsIgnoreCase(keyValues.get(MATCHABLEKEY))){
-				    matchableValues.put(keySetString, MATCHINGTRUE);
+                if("true".equalsIgnoreCase(keyValues.get("matchable"))){
+				    matchableValues.put(keySetString, "matching-true");
                 }
 				String value=keyValues.get("type");
 				if(value != null && !value.isEmpty()){
 					String trimValue=value.substring(value.lastIndexOf('.')+1);
 					StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-					referenceIndividualStringBuilder.append(keySetString+"="+trimValue+MANYFALSE);
+					referenceIndividualStringBuilder.append(keySetString+"="+trimValue+":MANY-false");
 					referenceStringBuilder.append(referenceIndividualStringBuilder+",");
 				}else{
 					logger.info("keyValues.get(type) is null/empty");
 				}
 
 			}
-			if(constraints!=null && !constraints.isEmpty()){
+			if(constraints!=null &&constraints.isEmpty()==false){
 				//List handling. 
 				listBuffer.append(keySetString.toUpperCase()+"=[");
 				for(String str:constraints){
@@ -1168,7 +1262,7 @@ public class MSModelUtils {
 
 
 				StringBuilder referenceIndividualStringBuilder= new StringBuilder();
-				referenceIndividualStringBuilder.append(keySetString+"="+keySetString.toUpperCase()+MANYFALSE);
+				referenceIndividualStringBuilder.append(keySetString+"="+keySetString.toUpperCase()+":MANY-false");
 				referenceStringBuilder.append(referenceIndividualStringBuilder+",");
 				constraints.clear();
 			}
@@ -1198,9 +1292,11 @@ public class MSModelUtils {
 				saveNodes((LinkedHashMap<?, ?>)value);
 			}
 			
-			if(!key.equals("policy.nodes.Root") && value instanceof Map){
+			if(!key.equals("policy.nodes.Root")){
 				//value is a Map object, then make a recursive call
-			    findNode((LinkedHashMap<Object, Object>) value);   
+			    if(value instanceof Map){
+			    	findNode((LinkedHashMap<Object, Object>) value);
+			    }
 			}
 		});
 
