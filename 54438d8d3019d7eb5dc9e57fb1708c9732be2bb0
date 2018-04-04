@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_4509f9db",
+        "filename": "packages/base/src/files/install/servers/common/logparser/init.d/logparserd",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-04-04T17:23:27Z",
+      "side": 1,
+      "message": "I believe you also need to create the following directory (see my notes in POLICY-727):\n\nmkdir -p /var/log/onap/policy/paplp\n\nwhich I think it is equivalent to inserting this line in the script:\n\nmkdir -p ${POLICY_LOGS}/${COMPONENT} 2\u003e /dev/null",
+      "revId": "54438d8d3019d7eb5dc9e57fb1708c9732be2bb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
