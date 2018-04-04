@@ -738,11 +738,17 @@ public class MSModelUtils {
     /*
      * For TOSCA Model
      */
-	public void parseTosca (String fileName){
+	public String parseTosca (String fileName){
 		LinkedHashMap<String,String> map= new LinkedHashMap<>();
     
     	try {
 			map=load(fileName);
+			
+			if(map != null){
+				if(map.get("error") != null){
+					return map.get("error");
+				}
+			}
 			
 			parseDataAndPolicyNodes(map);
 			
@@ -757,7 +763,8 @@ public class MSModelUtils {
     	} catch (IOException e) {
     		logger.error(e);
     	}
-	
+	   
+    	return null;
 	} 
 	
 	@SuppressWarnings("unchecked")
@@ -777,6 +784,13 @@ public class MSModelUtils {
 		if (yamlMap == null) { 
 			return settings; 
 		} 
+				
+		String message = validations(yamlMap);	
+		
+		if(message != null){
+			settings.put("error", message);
+			return settings;					
+		}
 		
 		findNode(yamlMap);
 		
@@ -796,7 +810,83 @@ public class MSModelUtils {
 		List<String> path = new ArrayList <>(); 
 		serializeMap(settings, sb, path, yamlMap); 
 		return settings; 
-	} 
+	}
+	
+	@SuppressWarnings("unchecked")
+	private String validations(@SuppressWarnings("rawtypes") LinkedHashMap yamlMap){
+		
+		boolean isNoteTypeFound = false;
+		boolean isDataTypeFound = false;
+		boolean isToscaVersionKeyFound = false;
+		boolean isToscaVersionValueFound = false;
+		@SuppressWarnings("rawtypes")
+		Map m1 = new HashMap();
+		short order =0;
+		if(yamlMap != null){
+			// Get a set of the entries
+		     @SuppressWarnings("rawtypes")
+			Set set = yamlMap.entrySet();		      
+		     // Get an iterator
+		     @SuppressWarnings("rawtypes")
+			Iterator i = set.iterator();		      
+		      // Display elements
+		     while(i.hasNext()) {
+		         @SuppressWarnings("rawtypes")		         
+				 Map.Entry me = (Map.Entry)i.next();
+		         
+		         if("tosca_definitions_version".equals(me.getKey())){
+		        	 isToscaVersionKeyFound = true;
+		        	 order++;
+		        	 m1.put("tosca_definitions_version", order);
+		         }
+		         
+		         if("tosca_simple_yaml_1_0_0".equals(me.getValue())){
+		        	 isToscaVersionValueFound = true;
+		         }
+
+		         if("node_types".equals(me.getKey())){
+		        	 isNoteTypeFound = true;
+		        	 order++;
+		        	 m1.put("node_types", order);
+		         }
+		         
+		         if("data_types".equals(me.getKey())){
+		        	 isDataTypeFound = true;
+		        	 order++;
+		        	 m1.put("data_types", order);
+		         }
+
+		     }
+		     
+	         
+	         if(!isDataTypeFound){
+	        	 return "data_types are missing or invalid.";
+	         }  
+	         
+	         if(!isToscaVersionKeyFound || !isToscaVersionValueFound){
+	        	 return "tosca_definitions_version is missing or invalid.";
+	         }  
+	         
+	         if(!isNoteTypeFound){
+	        	 return "node_types are missing or invalid.";
+	         }  
+	         
+	         short version = (short) m1.get("tosca_definitions_version");
+	         
+	         if(version > 1 ){
+	        	return "tosca_definitions_version should be defined first.";
+	         }
+	         
+	         short data = (short) m1.get("data_types");
+	         short node = (short) m1.get("node_types");
+	         if(node > data){
+	        	return "node_types should be defined before data_types.";	        	 
+	         }	         
+	         
+		}
+		
+		return null;
+	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void serializeMap(LinkedHashMap<String, String> settings, StringBuilder sb, List<String> path, Map<Object, Object> yamlMap) { 

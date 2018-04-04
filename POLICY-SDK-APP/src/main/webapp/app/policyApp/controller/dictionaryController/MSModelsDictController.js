@@ -36,9 +36,16 @@ app.controller('editMSModelController' ,  function ($scope, $modalInstance, mess
     $scope.editMSmodelName = message.microServiceModelsDictionaryData;
 
     $scope.uploadFile = function(files) {
+		valid = true;
     	var extn = files[0].name.substr(files[0].name.lastIndexOf('.')+1);
     	if(extn == 'zip' || extn == 'xmi'||  extn == 'yml'){
-    		valid = true;
+    		if(extn == 'yml'){
+    			if(!files[0].name.includes("-v")){
+    				Notification.error("File name should contain -v, such as myModel-v123.yml");
+    				valid = false;
+    				return;
+    			}
+    		}
     		var fd = new FormData();
     		fd.append("file", files[0]);
     		$http.post("ms_dictionary/set_MSModelData", fd, {
@@ -46,7 +53,7 @@ app.controller('editMSModelController' ,  function ($scope, $modalInstance, mess
     			headers: {'Content-Type': undefined },
     			transformRequest: angular.identity
     		}).success(function(data){
-    			if(data.errorMsg != undefined){
+    			if(data.errorMsg != undefined || data.errorMsg != null){
     				Notification.error(data.errorMsg);
     				valid = false;
     				return;
@@ -62,7 +69,7 @@ app.controller('editMSModelController' ,  function ($scope, $modalInstance, mess
                 }
             }).error( );
     	}else{
-    		Notification.error("Micro Service Model Upload file should ends with .zip or .xmi extension");
+    		Notification.error("Micro Service Model Upload file should ends with .zip .yml or .xmi extension");
     		valid = false;
     	}
 

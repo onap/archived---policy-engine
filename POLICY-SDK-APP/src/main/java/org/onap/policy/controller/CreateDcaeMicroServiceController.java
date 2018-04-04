@@ -1177,7 +1177,17 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 			fileList = listModelFiles(this.directory);
 		}else if (yml==true){
 			
-			msMLUtils.parseTosca(this.newFile);
+			errorMsg = msMLUtils.parseTosca(this.newFile);
+			if(errorMsg != null){
+				PrintWriter out = response.getWriter();				
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("application / json");
+				request.setCharacterEncoding("UTF-8");
+				JSONObject j = new JSONObject();
+				j.put("errorMsg", errorMsg);
+			    out.write(j.toString());
+			    return;
+			}
 			
 		}else {
 			File file = new File(this.newFile);
