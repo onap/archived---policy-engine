@@ -32,7 +32,7 @@ create table `onap_sdk`.`optimizationmodels` (
 `version` varchar(45) default null,
 `annotation` longtext,
 `enumValues` longtext, 
-`dataOrder` varchar(2000) DEFAULT NULL,
+`dataOrderInfo` varchar(2000) DEFAULT NULL,
 primary key (`id`),
 unique key `optimizationmodels_uniq` (`modelname`,`version`)
 );
