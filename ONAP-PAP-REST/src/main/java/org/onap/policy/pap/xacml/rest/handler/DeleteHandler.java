@@ -64,7 +64,7 @@ public class DeleteHandler {
 	public static final String POLICY_IN_PDP = "PolicyInPDP";
 	public static final String ERROR = "error";
 	public static final String UNKNOWN = "unknown";
-
+	private static final String REGEX = "[0-9a-zA-Z._ ]*";
 
 	public void doAPIDeleteFromPAP(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException  {
 		// get the request content into a String
@@ -320,6 +320,13 @@ public class DeleteHandler {
 		String groupId = request.getParameter("groupId");
 		String responseString = null;
 		
+		if(groupId != null && !groupId.matches(REGEX) ){
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.addHeader("error",ERROR);
+			response.addHeader("message", "Group Id is not valid");
+			return;
+		}
+				
 		PolicyLogger.info("JSON request from API to Delete Policy from the PDP: " + policyName);
 
 		// for PUT operations the group may or may not need to exist before the operation can be done
