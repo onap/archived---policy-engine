@@ -97,9 +97,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-  			<groupId>org.onap.aaf.cadi</groupId>
-  			<artifactId>cadi-aaf</artifactId>
-  			<version>1.0.0</version>
+		  	<groupId>org.onap.aaf.authz</groupId>
+		  	<artifactId>aaf-cadi-aaf</artifactId>
+		  	<version>2.1.0</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.google.code.gson</groupId>

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineUtils
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
-
 package org.onap.policy.utils;
 
+import java.security.Principal;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -30,9 +29,11 @@ import org.onap.aaf.cadi.PropAccess;
 import org.onap.aaf.cadi.aaf.AAFPermission;
 import org.onap.aaf.cadi.aaf.v2_0.AAFAuthn;
 import org.onap.aaf.cadi.aaf.v2_0.AAFCon;
-import org.onap.aaf.cadi.aaf.v2_0.AAFConDME2;
+import org.onap.aaf.cadi.aaf.v2_0.AAFConHttp;
 import org.onap.aaf.cadi.aaf.v2_0.AAFLurPerm;
 import org.onap.aaf.cadi.config.Config;
+import org.onap.aaf.cadi.locator.PropertyLocator;
+import org.onap.aaf.cadi.principal.UnAuthPrincipal;
 
 
 
@@ -187,7 +188,8 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 				try {
 					aafCon.basicAuth(userName, pass);
 					AAFPermission perm = new AAFPermission(type, instance, action);
-					result = aafLurPerm.fish(userName, perm);
+					final Principal p = new UnAuthPrincipal(userName); 
+					result = aafLurPerm.fish(p, perm);
 				} catch (CadiException e) {
 					logger.error(e.getMessage() + e);
 					aafLurPerm.destroy();
@@ -200,7 +202,7 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
 
 	private static boolean setUpAAF(){
 		try {
-			aafCon = new AAFConDME2(access);
+			aafCon = new AAFConHttp(access,new PropertyLocator("https://aaf-onap-beijing-test.osaaf.org:8100"));
 			aafLurPerm = aafCon.newLur();
 			aafAuthn = aafCon.newAuthn(aafLurPerm);
 			return true;
