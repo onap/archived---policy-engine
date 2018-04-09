@@ -29,7 +29,6 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
         - POLICY-377	Policy Create API should validate input matches DCAE microservice template
         - POLICY-389	Cleanup Jenkin's CI/CD process's
         - POLICY-449	Policy API + Console : Common Policy Validation
-        - POLICY-520	SSL 64-bit Block Size Cipher Suites Supported (SWEET32)
         - POLICY-568	Integration with org.onap AAF project
         - POLICY-610	Support vDNS scale out for multiple times in Beijing release
 
@@ -42,21 +41,15 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
         - POLICY-529	Platform Maturity Performance - Drools PDP
         - POLICY-567	Platform Maturity Performance - PDP-X
 
-    * [POLICY-393] - This epic covers the body of work involved in deploying the Policy Platform components
     * [POLICY-394] - This epic covers the work required to support a Policy developer environment in which Policy Developers can create, update policy templates/rules separate from the policy Platform runtime platform.
-        - POLICY-172	Use MSB for service discovery during Control Loop Operational Policy execution
         - POLICY-488	pap should not add rules to official template provided in drools applications
 
-    * [POLICY-396] - This epic covers the work required to capture, update, extend Policy(s) during Service Design.
     * [POLICY-398] - This epic covers the body of work involved in supporting policy that is platform specific.
         - POLICY-434	need PDP /getConfig to return an indicator of where to find the config data - in config.content versus config field
 
     * [POLICY-399] - This epic covers the work required to policy enable Hardware Platform Enablement
-        - POLICY-56	VNF Placement Optimization
         - POLICY-622	Integrate OOF Policy Model into Policy Platform
 
-    * [POLICY-400] - This epic covers the work required to support the Policy Platform during runtime.
-    * [POLICY-493] - This epic covers the work required to build Policy Lifecycle API.
     * [POLICY-512] - This epic covers the work to support Platform Maturity Requirements - Stability Level 1
         - POLICY-525	Platform Maturity Stability - Drools PDP
         - POLICY-526	Platform Maturity Stability - XACML PDP
@@ -71,10 +64,8 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
 
     * [POLICY-514] - This epic covers the work to support Platform Maturity Requirements - Security Level 1
         - POLICY-523	Platform Maturity Security - CII Badging - Project Website
-        - POLICY-524	Platform Maturity Security - CII Badging - Automated Test Suite
 
     * [POLICY-515] - This epic covers the work to support Platform Maturity Requirements - Escalability Level 1
-        - POLICY-530	Platform Maturity Scalability - Policy Distribution API
         - POLICY-531	Platform Maturity Scalability - XACML PDP
         - POLICY-532	Platform Maturity Scalability - Drools PDP
         - POLICY-623	Docker image re-design
@@ -88,15 +79,7 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
         - POLICY-536	Platform Maturity Usability - Deployment Documentation
         - POLICY-537	Platform Maturity Usability - API Documentation
 
-    * [POLICY-545] - R2 Beijing - Standardize user roles and access levels across all ONAP components.
     * [POLICY-546] - R2 Beijing - Various enhancements requested by clients to the way we handle TOSCA models.
-    * [POLICY-547] - R2 Beijing - Implement a new decision type policy that handles naming using policy
-
-    * [OTHER] - Other User stories 
-        - POLICY-5	Deploy a Policy high availability environment 
-        - POLICY-45	VNF Onboarding
-        - POLICY-138	Policy Code Re-Organization
-        - POLICY-148	CLI Integration
 
 
 **Bug Fixes**
@@ -111,10 +94,13 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
     * POLICY-519	Correctly initialize the value of allSeemsWell in DroolsPdpsElectionHandler
     * POLICY-629	Fixed a bug on editor screen
     * POLICY-684	Fix regex for brmsgw dependency handling
+    * POLICY-707	ONAO-PAP-REST unit tests fail on first build on clean checkout 
+    * POLICY-717	Fix a bug in checking required fields if the object has include function
+
 
 **Security Issues**
 
-Please see the `Policy R2 Beijing Security/Vulnerability Threat <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_ page for security related issues.
+   * Please see the `Policy R2 Beijing Security/Vulnerability Threat <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_ page for security related issues.
 
 
 Version: 1.1.3
@@ -219,7 +205,7 @@ The Amsterdam release continued evolving the design driven architecture of and f
 ..      CHANGE  HISTORY
 ..      03/22/2018 - Initial document for Beijing release.
 ..		For initial document: list epic and user stories for each, list user stories with no epics.  
-..      	For Bugs section, list bugs that are not tied to an epic.
+..      	For Bugs section, list bugs that are not tied to an epic.  Remove all items with "Won't Do" resolution.
 ..      01/15/2018 - Added change for version 1.1.3 to the Amsterdam branch.  Also corrected prior version (1.2.0) to (1.1.1)
 ..      11/16/2017 - Initial document for Amsterdam release.
  
