@@ -16,6 +16,24 @@
       "revId": "53378cefec4cf0750f6ee2f6ab154e52520f53d9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a709c685",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DeleteHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-04-11T16:05:10Z",
+      "side": 1,
+      "message": "Sorry I meant Frank",
+      "parentUuid": "5a93c517_474322af",
+      "revId": "53378cefec4cf0750f6ee2f6ab154e52520f53d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
