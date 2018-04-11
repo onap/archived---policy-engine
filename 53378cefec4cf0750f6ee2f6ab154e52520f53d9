@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_474322af",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/DeleteHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-04-11T16:04:28Z",
+      "side": 1,
+      "message": "Quick question Pam before I merge:\nThe regex contains space, which is used for groupid matching, and don\u0027t think is allowed in group id, if it is a maven one ?\n\nAnother q, not sure, if group id assuming maven related, allows for \"-\" ?",
+      "revId": "53378cefec4cf0750f6ee2f6ab154e52520f53d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
