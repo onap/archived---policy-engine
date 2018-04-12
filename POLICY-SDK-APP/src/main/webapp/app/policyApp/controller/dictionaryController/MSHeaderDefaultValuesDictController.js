@@ -112,12 +112,13 @@ app.controller('editMSHeaderDefaultValuesController' ,  function ($scope, $modal
 	    			data: JSON.stringify(postData),
 	    			success : function(data){
 	    				$scope.$apply(function(){
-	    					$scope.microServiceAttributeDictionaryDatas=data.microServiceHeaderDefaultDatas;});
+	    					$scope.microServiceHeaderDefaultDatas=data.microServiceHeaderDefaultDatas;});
+	    				    console.log("microServiceHeaderDefaultDatas returned after saved: " + $scope.microServiceHeaderDefaultDatas);
 	    				if($scope.microServiceAttributeDictionaryDatas == "Duplicate"){
 	    					Notification.error("Model Attribute Dictionary exists with Same Attribute Name.")
 	    				}else{      
-	    					console.log($scope.microServiceAttributeDictionaryDatas);
-	    					$modalInstance.close({microServiceAttributeDictionaryDatas:$scope.microServiceAttributeDictionaryDatas});
+	    					console.log($scope.microServiceHeaderDefaultDatas);
+	    					$modalInstance.close({microServiceHeaderDefaultDatas:$scope.microServiceHeaderDefaultDatas});
 	    				}
 	    			},
 	    			error : function(data){

@@ -143,7 +143,7 @@ app.controller('msHeaderDefaultValuesDictGridController', function ($scope, Poli
     };
 
     $scope.deleteModelAttribute = function(data) {
-        modalService.popupConfirmWin("Confirm","You are about to delete the Header Default Values :  "+data.name+". Do you want to continue?",
+        modalService.popupConfirmWin("Confirm","You are about to delete the Header Default Values :  "+data.modelName+". Do you want to continue?",
             function(){
                 var uuu =  "deleteDictionary/ms_dictionary/remove_headerDefaults";
                 var postData={data: data};
