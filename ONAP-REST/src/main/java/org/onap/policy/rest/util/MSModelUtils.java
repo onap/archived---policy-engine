@@ -96,6 +96,7 @@ public class MSModelUtils {
 	public static final String STRING="string";
 	public static final String INTEGER="integer";
 	public static final String LIST="list";
+	public static final String MAP="map";
 	public static final String DEFAULT=".default";
 	public static final String MANYFALSE=":MANY-false";
 	public static final String MANYTRUE=":MANY-true";
@@ -1075,7 +1076,7 @@ public class MSModelUtils {
 					attributeIndividualStringBuilder.append(requiredValue+MANYFALSE);
 					dataMapForJson.put(uniqueDataKey, attributeIndividualStringBuilder.toString());		
 				}
-				else if(typeValue != null && typeValue.equalsIgnoreCase(LIST)){
+				else if(LIST.equalsIgnoreCase(typeValue) || MAP.equalsIgnoreCase(typeValue)){
 					logger.info("requiredValue is:"+ requiredValue);
 					String findList= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.type";
 					String listValue=map.get(findList);
@@ -1091,7 +1092,11 @@ public class MSModelUtils {
 						}//Its string
 						else{
 							StringBuilder stringListItems= new StringBuilder();
-							stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+REQUIREDVALUE+requiredValue +MANYFALSE);
+							if(LIST.equalsIgnoreCase(typeValue)){
+							    stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+":required-"+requiredValue +":MANY-false");
+							}else if( MAP.equalsIgnoreCase(typeValue)){
+								stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+":required-"+requiredValue +":MANY-true");
+							}
 							dataMapForJson.put(uniqueDataKey, stringListItems.toString());
 							dataListBuffer.append(uniqueDataKeySplit[1].toUpperCase()+"=[");
 							for(int i=0;i<10;i++){
