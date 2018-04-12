@@ -88,10 +88,12 @@ public class OptimizationConfigPolicy extends Policy {
 
 	//save configuration of the policy based on the policyname
 	private void saveConfigurations(String policyName, String jsonBody) {
+		
+		if(policyName.endsWith(".xml")){
+			policyName = policyName.replace(".xml", "");
+		}
+		
 		try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName +".json");){
-			if(policyName.endsWith(".xml")){
-				policyName = policyName.replace(".xml", "");
-			}
 			out.println(jsonBody);
 		} catch (Exception e) {
 			LOGGER.error("Exception Occured While writing Configuration data"+e);
