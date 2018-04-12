@@ -748,23 +748,32 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		    		
 		    		var subAttributes = $scope.dcaeModelData.sub_attributes;
 		    		
-		    		if(subAttributes){		    			
-		    			var jsonObject = JSON.parse(subAttributes);		    			
-		    			var allkeys = Object.keys(jsonObject);
-		    			if(allkeys){
-		    				for (var k = 0; k < allkeys.length; k++) {
-		    					var keyValue = allkeys[k];
-		    					console.log(" keyValue:jsonObject["+keyValue+ "]: " + jsonObject[keyValue]);
-		    					if(jsonObject[keyValue]){
-		    						var tempObject = jsonObject[keyValue];
-		    						if(tempObject && tempObject[key]){
-		    				        	if (tempObject[key].includes('required-true')){
+ 		    		if(subAttributes){		    			
+		    			var jsonObject = JSON.parse(subAttributes);	
+		    			
+		    		    var lablInfo = findVal(jsonObject, attributekey);
+		    			console.log("deconstructJSON:findValue : " + attributekey +": "+ lablInfo);
+			        	if (lablInfo){
+			        		if(lablInfo.includes('required-true')){
+			        			isRequired = true;
+			        		}	
+			        	}else{			        	
+		    		 	   var allkeys = Object.keys(jsonObject);
+		    			   if(allkeys){
+		    				   for (var k = 0; k < allkeys.length; k++) {
+		    					  var keyValue = allkeys[k];
+		    					  console.log(" keyValue:jsonObject["+keyValue+ "]: " + jsonObject[keyValue]);
+		    					  if(jsonObject[keyValue]){
+		    						 var tempObject = jsonObject[keyValue];
+		    						 if(tempObject && tempObject[key]){
+		    				        	 if (tempObject[key].includes('required-true')){
 		    				        		isRequired = true;
-		    				        	}	
-		    						}
-		    					}
-		    				}		    				
-		    			}		    			
+		    				        	 }	
+		    						 }
+		    					  }
+		    				   }		    				
+		    			   }		    			
+			        	} 
 		    		}
 		    		
 		    		var elementObject = {};
