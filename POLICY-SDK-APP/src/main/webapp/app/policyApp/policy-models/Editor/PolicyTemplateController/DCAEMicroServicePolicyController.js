@@ -99,9 +99,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		var j = data;
 		$scope.data = JSON.parse(j.data);
 		console.log($scope.data);
-		console.log("$scope.data.microServiceCongigNameDictionaryDatas : " + $scope.data.microServiceCongigNameDictionaryDatas);
-		if($scope.data.microServiceCongigNameDictionaryDatas){
- 		    $scope.microServiceCongigNameDictionaryDatas = JSON.parse($scope.data.microServiceCongigNameDictionaryDatas);
+		console.log("$scope.data.microServiceConfigNameDictionaryDatas : " + $scope.data.microServiceConfigNameDictionaryDatas);
+		if($scope.data.microServiceConfigNameDictionaryDatas){
+ 		    $scope.microServiceCongigNameDictionaryDatas = JSON.parse($scope.data.microServiceConfigNameDictionaryDatas);
 		}
 		console.log($scope.microServiceCongigNameDictionaryDatas);
 	}, function (error) {
