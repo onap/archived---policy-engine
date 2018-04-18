@@ -613,12 +613,8 @@ public class XACMLPolicyScanner {
 		    // Parse the policy file
 		    //
 		    Document doc = db.parse(is);
-		    //
-		    // Because there is no root defined in xacml,
-		    // find the first element
-		    //
-			NodeList nodes = doc.getChildNodes();
-			Node node = nodes.item(0);
+		    Node node = doc.getDocumentElement();
+			
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				Element e = (Element) node;
 				//
