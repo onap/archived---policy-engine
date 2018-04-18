@@ -22,18 +22,17 @@ package org.onap.policy.std;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 
 import javax.websocket.ClientEndpoint;
-import javax.websocket.DeploymentException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
-import org.glassfish.tyrus.client.ClientManager;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.onap.policy.api.NotificationScheme;
 import org.onap.policy.api.NotificationType;
 import org.onap.policy.api.PDPNotification;
@@ -44,24 +43,51 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.common.logging.flexlogger.*; 
 
 @ClientEndpoint
-public class ManualClientEnd {
+public class ManualClientEnd extends WebSocketClient {
 	private static CountDownLatch latch;
 	private static StdPDPNotification notification = null;
 	private static String resultJson = null;
 	private static Logger logger = FlexLogger.getLogger(ManualClientEnd.class.getName());
+	private static ManualClientEnd client;
 	
+	public ManualClientEnd(URI serverUri) {
+		super(serverUri);
+	}
+
+	@Override
+	public void onClose(int arg0, String arg1, boolean arg2) {
+		// Not implemented
+	}
+
+	@Override
+	public void onError(Exception arg0) {
+		// Not implemented
+	}
+
+	@Override
+	public void onMessage(String arg0) {
+		// Not implemented
+	}
+
+	@Override
+	public void onOpen(ServerHandshake arg0) {
+		// Not implemented
+	}
+
 	public static void start(String url) {
 		latch = new CountDownLatch(1);
-		ClientManager client = ClientManager.createClient();
-		if(url.contains("https")){
+
+		if (url.contains("https")) {
 			url = url.replaceAll("https", "wss");
-		}else {
+		}
+		else {
 			url = url.replaceAll("http", "ws");
 		}
+		
 		try {
-			client.connectToServer(ManualClientEnd.class, new URI(url+"notifications"));
+			client = new ManualClientEnd(new URI(url+"notifications"));
 			latch.await();
-		} catch (DeploymentException | URISyntaxException | InterruptedException |IOException e) {
+		} catch (Exception e) {
 			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 		}
 	}
@@ -113,6 +139,7 @@ public class ManualClientEnd {
 	public void onClose(Session session) {
 		logger.info("Session ended with "+ session.getId());
 		latch.countDown();
+		client.close();
 	}
 	
 	@OnMessage
