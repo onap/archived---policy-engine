@@ -23,6 +23,9 @@ package org.onap.policy.std.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.net.URI;
+import java.net.URL;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,8 +48,9 @@ public class ManualClientEndTest {
 	@Test
 	public void testManualClientEnd_1()
 		throws Exception {
-		ManualClientEnd result = new ManualClientEnd();
-		assertNotNull(result);
+		ManualClientEnd mce = new ManualClientEnd(new URI("http://www.onap.org"));
+		assertNotNull(mce);
+		mce.close();
 		// add additional test code here
 	}
 
@@ -79,7 +83,7 @@ public class ManualClientEndTest {
 	@Test
 	public void testStart_1()
 		throws Exception {
-		String url = "";
+		String url = "This is not a URL";
 
 		ManualClientEnd.start(url);
 

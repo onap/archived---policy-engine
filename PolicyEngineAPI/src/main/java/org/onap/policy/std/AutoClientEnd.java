@@ -22,17 +22,16 @@ package org.onap.policy.std;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.websocket.ClientEndpoint;
-import javax.websocket.DeploymentException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
-import org.glassfish.tyrus.client.ClientManager;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.onap.policy.api.NotificationHandler;
 import org.onap.policy.api.NotificationScheme;
 import org.onap.policy.api.NotificationType;
@@ -42,10 +41,10 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.xacml.api.XACMLErrorConstants; 
 
 @ClientEndpoint
-public class AutoClientEnd {
+public class AutoClientEnd extends WebSocketClient {
 	private static StdPDPNotification notification = null;
 	private static StdPDPNotification oldNotification = null;
-	private static ClientManager client = null;
+	private static AutoClientEnd client = null;
 	private static NotificationScheme scheme = null;
 	private static NotificationHandler handler = null;
 	private static String url = null;
@@ -56,6 +55,30 @@ public class AutoClientEnd {
 	private static boolean error = false;
 	private static Logger logger = FlexLogger.getLogger(AutoClientEnd.class.getName());
 	
+	private AutoClientEnd(URI serverUri) {
+		super(serverUri);
+	}
+
+	@Override
+	public void onClose(int arg0, String arg1, boolean arg2) {
+		// Not implemented
+	}
+
+	@Override
+	public void onError(Exception arg0) {
+		// Not implemented
+	}
+
+	@Override
+	public void onMessage(String arg0) {
+		// Not implemented
+	}
+
+	@Override
+	public void onOpen(ServerHandshake arg0) {
+		// Not implemented
+	}
+
 	public static void setAuto(NotificationScheme scheme,
 			NotificationHandler handler) {
 		AutoClientEnd.scheme = scheme;
@@ -83,17 +106,19 @@ public class AutoClientEnd {
 			AutoClientEnd.client != null) {
 			return;
 		}
-		
-		// Stop and Start needs to be done.
-		client = ClientManager.createClient();
-		if(url.contains("https")){
+
+		if (url.contains("https")) {
 			url = url.replaceAll("https", "wss");
-		}else {
+		}
+		else {
 			url = url.replaceAll("http", "ws");
 		}
+		
+		
+		// Stop and Start needs to be done.
 		try {
 			logger.info("Starting Auto Notification with the PDP server : " + url);
-			client.connectToServer(AutoClientEnd.class, new URI(url	+ "notifications"));
+			client = new AutoClientEnd(new URI(url	+ "notifications"));
 			status = true;
 			if(error){
 				// The URL's will be in Sync according to design Spec. 
@@ -107,7 +132,7 @@ public class AutoClientEnd {
 				error = false;
 			}
 			//
-		} catch (DeploymentException | IOException | URISyntaxException e) {
+		} catch (Exception e) {
 			logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
 			client = null;
 			status = false;
@@ -125,7 +150,7 @@ public class AutoClientEnd {
 		if (client == null) {
 			return;
 		}
-		client.shutdown();
+		client.close();
 		if(session!=null){
 			try {
 				stop = true;
