@@ -613,59 +613,45 @@ public class XACMLPolicyScanner {
 		    // Parse the policy file
 		    //
 		    Document doc = db.parse(is);
-		    //
-		    // Because there is no root defined in xacml,
-		    // find the first element
-		    //
-			NodeList nodes = doc.getChildNodes();
-			Node node = nodes.item(0);
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				Element e = (Element) node;
+		    Element e = doc.getDocumentElement();
+			//
+			// Is it a 3.0 policy?
+			//
+			if ("urn:oasis:names:tc:xacml:3.0:core:schema:wd-17".equals(e.getNamespaceURI())) {
 				//
-				// Is it a 3.0 policy?
+				// A policyset or policy could be the root
 				//
-				if ("urn:oasis:names:tc:xacml:3.0:core:schema:wd-17".equals(e.getNamespaceURI())) {
+				if (e.getNodeName().endsWith("Policy")) {
 					//
-					// A policyset or policy could be the root
+					// Now we can create the context for the policy set
+					// and unmarshall the policy into a class.
 					//
-					if (e.getNodeName().endsWith("Policy")) {
-						//
-						// Now we can create the context for the policy set
-						// and unmarshall the policy into a class.
-						//
-						JAXBContext context = JAXBContext.newInstance(PolicyType.class);
-						Unmarshaller um = context.createUnmarshaller();
-						JAXBElement<PolicyType> root = um.unmarshal(e, PolicyType.class);
-						//
-						// Here is our policy set class
-						//
-						return root.getValue();
-					} else if (e.getNodeName().endsWith("PolicySet")) {
-						//
-						// Now we can create the context for the policy set
-						// and unmarshall the policy into a class.
-						//
-						JAXBContext context = JAXBContext.newInstance(PolicySetType.class);
-						Unmarshaller um = context.createUnmarshaller();
-						JAXBElement<PolicySetType> root = um.unmarshal(e, PolicySetType.class);
-						//
-						// Here is our policy set class
-						//
-						return root.getValue();
-					} else {
-						if (logger.isDebugEnabled()) {
-							logger.debug("Not supported yet: " + e.getNodeName());
-						}
-					}
+					JAXBContext context = JAXBContext.newInstance(PolicyType.class);
+					Unmarshaller um = context.createUnmarshaller();
+					JAXBElement<PolicyType> root = um.unmarshal(e, PolicyType.class);
+					//
+					// Here is our policy set class
+					//
+					return root.getValue();
+				} else if (e.getNodeName().endsWith("PolicySet")) {
+					//
+					// Now we can create the context for the policy set
+					// and unmarshall the policy into a class.
+					//
+					JAXBContext context = JAXBContext.newInstance(PolicySetType.class);
+					Unmarshaller um = context.createUnmarshaller();
+					JAXBElement<PolicySetType> root = um.unmarshal(e, PolicySetType.class);
+					//
+					// Here is our policy set class
+					//
+					return root.getValue();
 				} else {
-					logger.warn("unsupported namespace: " + e.getNamespaceURI());
+					if (logger.isDebugEnabled()) {
+						logger.debug("Not supported yet: " + e.getNodeName());
+					}
 				}
 			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug("No root element contained in policy " + 
-								" Name: " + node.getNodeName() + " type: " + node.getNodeType() + 
-								" Value: " + node.getNodeValue());
-				}
+				logger.warn("unsupported namespace: " + e.getNamespaceURI());
 			}
 		} catch (Exception e) {
 			PolicyLogger.error(MessageCodes.ERROR_SCHEMA_INVALID, e, "XACMLPolicyScanner", "Exception in readPolicy");
