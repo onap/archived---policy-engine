@@ -111,7 +111,7 @@ public class StdPDPPolicyTest {
   public void negTestStream() throws URISyntaxException, IOException, PAPException {
     // Set up test data
     String value = "testVal";
-    URI uri = new URI("http://localhost/");
+    URI uri = new URI("http://localhost:54287");
     StdPDPPolicy policy = new StdPDPPolicy(value, true, value, uri, false, value, value, "1");
 
     // Negative test stream
@@ -122,7 +122,7 @@ public class StdPDPPolicyTest {
   public void negTestConstructor1() throws URISyntaxException, IOException {
     // Set up test data
     String value = "testVal";
-    URI uri = new URI("http://localhost/");
+    URI uri = new URI("http://localhost:54287");
 
     // Test constructor
     StdPDPPolicy policy = new StdPDPPolicy(value, true, value, uri);
@@ -133,7 +133,7 @@ public class StdPDPPolicyTest {
   public void negTestConstructor2() throws URISyntaxException, IOException {
     // Set up test data
     String value = "testVal";
-    URI uri = new URI("http://localhost/");
+    URI uri = new URI("http://localhost:54287");
     Properties props = new Properties();
 
     // Test constructor
