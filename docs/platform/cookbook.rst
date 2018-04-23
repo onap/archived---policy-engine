@@ -2,9 +2,9 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
 
-*******************************
-Policy Cookbook  |cookbooklogo|
-*******************************
+***************
+Policy Cookbook
+***************
 
 Policy VM/Docker Recipes
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -110,15 +110,6 @@ PDP-D Recipes ("drools" container)
         source ${POLICY_HOME}/config/feature-healthcheck.conf
         curl --silent --user "${HEALTHCHECK_USER}:${HEALTHCHECK_PASSWORD}" 
              -X GET http://localhost:6969/healthcheck | python -m json.tool
-
-
-.. |recipelogo| image:: recipecard.png
-    :width: 80pt
-    :height: 80pt
-
-.. |cookbooklogo| image:: cookbook.gif
-    :width: 80pt
-    :height: 80pt
 
 End of Document
 
