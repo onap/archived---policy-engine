@@ -45,11 +45,12 @@ public class NexusRestSearchParameters {
     private static final String COUNT_QUERY_PARAM          = "count";
     private static final String REPOSITORY_ID_QUERY_PARAM = "repositoryId";
 
-    private enum SearchType {
-        KEYWORD,    // Search using a keyword
-        FILTER,     // Search using a group ID, artifact ID, version, packaging type, and/or classifier filter
-        CLASS_NAME, // Search for a class name
-        CHECKSUM    // Search for artifacts matching a certain checksum
+    /** The type of searches that can be performed. */
+    public enum SearchType {
+        KEYWORD,    /** Search using a keyword. */
+        FILTER,     /** Search using a group ID, artifact ID, version, packaging type, and/or classifier filter. */
+        CLASS_NAME, /** Search for a class name. */
+        CHECKSUM    /** Search for artifacts matching a certain checksum. */
     }
 
     // The type of search to perform
@@ -76,15 +77,19 @@ public class NexusRestSearchParameters {
      * Specify searching using a keyword.
      * 
      * @param keyword The keyword to search for
+     * @return this object to allow chaining of methods
      * @throws NexusRestWrapperException on invalid keywords
      */
-    public void useKeywordSearch(final String keyword) throws NexusRestWrapperException {
+    public NexusRestSearchParameters useKeywordSearch(final String keyword) throws NexusRestWrapperException {
+        clearSearchParameters();
+
         if (isNullOrBlank(keyword)) {
             throw new NexusRestWrapperException("keyword must be specified for Nexus keyword searches");
         }
 
         searchType = SearchType.KEYWORD;
         this.keyword = keyword;
+        return this;
     }
 
     /**
@@ -95,14 +100,18 @@ public class NexusRestSearchParameters {
      * @param version The version to filter on
      * @param packagingType The packaging type to filter on
      * @param classifier The classifier to filter on
+     * @return this object to allow chaining of methods
      * @throws NexusRestWrapperException on invalid filters
      */
-    public void useFilterSearch(final String groupId, final String artifactId, final String version,
-            final String packagingType, final String classifier) throws NexusRestWrapperException {
+    public NexusRestSearchParameters useFilterSearch(final String groupId, final String artifactId,
+                    final String version, final String packagingType, final String classifier)
+                                    throws NexusRestWrapperException {
+        clearSearchParameters();
+
         if (isNullOrBlank(groupId) && isNullOrBlank(artifactId) && isNullOrBlank(version)
-                && isNullOrBlank(packagingType) && isNullOrBlank(classifier)) {
+                        && isNullOrBlank(packagingType) && isNullOrBlank(classifier)) {
             throw new NexusRestWrapperException(
-                    "at least one filter parameter must be specified for Nexus keyword searches");
+                            "at least one filter parameter must be specified for Nexus filter searches");
         }
 
         searchType = SearchType.FILTER;
@@ -111,36 +120,45 @@ public class NexusRestSearchParameters {
         this.version = version;
         this.packagingType = packagingType;
         this.classifier = classifier;
+        return this;
     }
 
     /**
      * Specify searching using a class name.
      * 
      * @param className The class name to search for
+     * @return this object to allow chaining of methods
      * @throws NexusRestWrapperException on invalid className
      */
-    public void useClassNameSearch(final String className) throws NexusRestWrapperException {
+    public NexusRestSearchParameters useClassNameSearch(final String className) throws NexusRestWrapperException {
+        clearSearchParameters();
+
         if (isNullOrBlank(className)) {
-            throw new NexusRestWrapperException("className must be specified for Nexus keyword searches");
+            throw new NexusRestWrapperException("className must be specified for Nexus class name searches");
         }
 
         searchType = SearchType.CLASS_NAME;
         this.className = className;
+        return this;
     }
 
     /**
      * Specify searching using a checksum.
      * 
      * @param checksum The checksum to search for
+     * @return this object to allow chaining of methods
      * @throws NexusRestWrapperException on invalid checksum
      */
-    public void useChecksumSearch(final String checksum) throws NexusRestWrapperException {
+    public NexusRestSearchParameters useChecksumSearch(final String checksum) throws NexusRestWrapperException {
+        clearSearchParameters();
+
         if (isNullOrBlank(checksum)) {
-            throw new NexusRestWrapperException("checksum must be specified for Nexus keyword searches");
+            throw new NexusRestWrapperException("checksum must be specified for Nexus checksum searches");
         }
 
         searchType = SearchType.CHECKSUM;
         this.checksum = checksum;
+        return this;
     }
 
     /**
@@ -152,7 +170,7 @@ public class NexusRestSearchParameters {
      */
     public NexusRestSearchParameters setRepositoryId(String repositoryId) throws NexusRestWrapperException {
         if (isNullOrBlank(repositoryId)) {
-            throw new NexusRestWrapperException("repositoryId must be specified for Nexus keyword searches");
+            throw new NexusRestWrapperException("a repositoryId must be specified");
         }
 
         this.repositoryId = repositoryId;
@@ -168,7 +186,7 @@ public class NexusRestSearchParameters {
      */
     public NexusRestSearchParameters setFrom(int from) throws NexusRestWrapperException {
         if (from < 0) {
-            throw new NexusRestWrapperException("from cannot be less than 0 for Nexus keyword searches");
+            throw new NexusRestWrapperException("from cannot be less than 0 when from is specified");
         }
 
         this.from = from;
@@ -184,7 +202,7 @@ public class NexusRestSearchParameters {
      */
     public NexusRestSearchParameters setCount(int count) throws NexusRestWrapperException {
         if (count < 1) {
-            throw new NexusRestWrapperException("count cannot be less than 1 for Nexus keyword searches");
+            throw new NexusRestWrapperException("count cannot be less than 1 when count is specified");
         }
 
         this.count = count;
@@ -200,13 +218,17 @@ public class NexusRestSearchParameters {
      */
     public URI getSearchUri(final String nexusServerUrl) throws NexusRestWrapperException {
         if (isNullOrBlank(nexusServerUrl)) {
-            throw new NexusRestWrapperException("nexusServerUrl must be specified for Nexus keyword searches");
+            throw new NexusRestWrapperException("nexusServerUrl must be specified for the search URI");
+        }
+
+        if (searchType == null) {
+            throw new NexusRestWrapperException("search parameters have not been set");
         }
 
         // Use a URI builder to build up the search URI
         UriBuilder uriBuilder = UriBuilder
-                .fromPath(nexusServerUrl)
-                .path(NEXUS_LUCENE_SEARCH_PATH);
+                        .fromPath(nexusServerUrl)
+                        .path(NEXUS_LUCENE_SEARCH_PATH);
 
         switch (searchType) {
             case KEYWORD:
@@ -226,7 +248,7 @@ public class NexusRestSearchParameters {
                 break;
 
             default:
-                throw new NexusRestWrapperException("search parameters have not been specified for the NExus search");
+                throw new NexusRestWrapperException("search parameters have not been specified for the Nexus search");
         }
 
         // Add the repository ID query parameter is required
@@ -258,19 +280,19 @@ public class NexusRestSearchParameters {
      * @param uriBuilder The builder to add query parameters to
      */
     private void getFitlerSearchUri(UriBuilder uriBuilder) {
-        if (null != groupId) {
+        if (!isNullOrBlank(groupId)) {
             uriBuilder.queryParam(GROUP_ID_QUERY_PARAM, groupId);
         }
-        if (null != artifactId) {
+        if (!isNullOrBlank(artifactId)) {
             uriBuilder.queryParam(ARTIFACT_ID_QUERY_PARAM, artifactId);
         }
-        if (null != version) {
+        if (!isNullOrBlank(version)) {
             uriBuilder.queryParam(VERSION_QUERY_PARAM, version);
         }
-        if (null != packagingType) {
+        if (!isNullOrBlank(packagingType)) {
             uriBuilder.queryParam(PACKAGING_TYPE_QUERY_PARAM, packagingType);
         }
-        if (null != classifier) {
+        if (!isNullOrBlank(classifier)) {
             uriBuilder.queryParam(CLASSIFIER_QUERY_PARAM, classifier);
         }
     }
@@ -346,11 +368,34 @@ public class NexusRestSearchParameters {
         return null == parameter || parameter.trim().isEmpty();
     }
 
+    /**
+     * Clear all search parameters.
+     * 
+     */
+    private void clearSearchParameters() {
+        searchType = null;
+
+        keyword = null;
+        groupId = null;
+        artifactId = null;
+        version = null;
+        packagingType = null;
+        classifier = null;
+        className = null;
+        checksum = null;
+
+        repositoryId = null;
+
+        // Scope filters
+        from = -1;
+        count = -1;
+    }
+
     @Override
     public String toString() {
         return "NexusRestSearchParameters [searchType=" + searchType + ", keyword=" + keyword + ", groupId=" + groupId
-                + ", artifactId=" + artifactId + ", version=" + version + ", packagingType=" + packagingType
-                + ", classifier=" + classifier + ", className=" + className + ", checksum=" + checksum
-                + ", repositoryId=" + repositoryId + ", from=" + from + ", count=" + count + "]";
+                        + ", artifactId=" + artifactId + ", version=" + version + ", packagingType=" + packagingType
+                        + ", classifier=" + classifier + ", className=" + className + ", checksum=" + checksum
+                        + ", repositoryId=" + repositoryId + ", from=" + from + ", count=" + count + "]";
     }
 }
