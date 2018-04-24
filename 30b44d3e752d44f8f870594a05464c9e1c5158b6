@@ -22,6 +22,30 @@
       "revId": "30b44d3e752d44f8f870594a05464c9e1c5158b6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c805d57a",
+        "filename": "BRMSGateway/src/test/java/org/onap/policy/brms/api/nexus/NexusRestWrapperTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-04-24T19:38:22Z",
+      "side": 1,
+      "message": "Yes, you are correct. I\u0027ll do a complete proper suite of tests. This one is just a preliminary one.\n\nUnit tests should not work towards an address that might or might not be there or might or might not have access. The Nexus server should be stubbed with Mockito or else a test Nexus server should be fired up for Unit test.",
+      "parentUuid": "5a93c517_08697d8b",
+      "range": {
+        "startLine": 37,
+        "startChar": 56,
+        "endLine": 37,
+        "endChar": 80
+      },
+      "revId": "30b44d3e752d44f8f870594a05464c9e1c5158b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
