@@ -46,6 +46,30 @@
       "revId": "30b44d3e752d44f8f870594a05464c9e1c5158b6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4840e5a4",
+        "filename": "BRMSGateway/src/test/java/org/onap/policy/brms/api/nexus/NexusRestWrapperTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-04-24T20:12:58Z",
+      "side": 1,
+      "message": "Oh duh, I didn\u0027t see that this was a JUnit.",
+      "parentUuid": "5a93c517_c805d57a",
+      "range": {
+        "startLine": 37,
+        "startChar": 56,
+        "endLine": 37,
+        "endChar": 80
+      },
+      "revId": "30b44d3e752d44f8f870594a05464c9e1c5158b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
