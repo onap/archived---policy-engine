@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_08697d8b",
+        "filename": "BRMSGateway/src/test/java/org/onap/policy/brms/api/nexus/NexusRestWrapperTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-04-24T18:18:04Z",
+      "side": 1,
+      "message": "I\u0027m ok with this for now - but I think in the future there needs to be a configurable list for which repos an organization wants the software to pull from. Maybe the .settings would have these details?",
+      "range": {
+        "startLine": 37,
+        "startChar": 56,
+        "endLine": 37,
+        "endChar": 80
+      },
+      "revId": "30b44d3e752d44f8f870594a05464c9e1c5158b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
