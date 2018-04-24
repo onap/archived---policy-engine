@@ -60,25 +60,6 @@
             <artifactId>integrity-monitor</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- CLM security fix - force use of commons-collections 3.2.2. Remove 
-            this if a new version of nexus-rest-client-java is upgraded to not use velocity 
-            (and then subsequently commons-collections v3.1 -->
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.sonatype.nexus</groupId>
-            <artifactId>nexus-rest-client-java</artifactId>
-            <version>2.3.1-01</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-collections</groupId>
-                    <artifactId>commons-collections</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>

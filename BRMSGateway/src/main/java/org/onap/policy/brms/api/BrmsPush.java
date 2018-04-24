@@ -58,6 +58,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.ws.rs.ProcessingException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -76,6 +77,10 @@ import org.codehaus.plexus.util.WriterFactory;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.onap.policy.api.PEDependency;
 import org.onap.policy.api.PolicyException;
+import org.onap.policy.brms.api.nexus.NexusRestSearchParameters;
+import org.onap.policy.brms.api.nexus.NexusRestWrapper;
+import org.onap.policy.brms.api.nexus.NexusRestWrapperException;
+import org.onap.policy.brms.api.nexus.pojo.NexusArtifact;
 import org.onap.policy.brms.entity.BrmsGroupInfo;
 import org.onap.policy.brms.entity.BrmsPolicyInfo;
 import org.onap.policy.brms.entity.DependencyInfo;
@@ -89,11 +94,6 @@ import org.onap.policy.utils.BackUpMonitor;
 import org.onap.policy.utils.BusPublisher;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
-import org.sonatype.nexus.client.NexusClient;
-import org.sonatype.nexus.client.NexusClientException;
-import org.sonatype.nexus.client.NexusConnectionException;
-import org.sonatype.nexus.client.rest.NexusRestClient;
-import org.sonatype.nexus.rest.model.NexusArtifact;
 
 /**
  * BRMSPush: Application responsible to push policies to the BRMS PDP Policy Repository (PR).
@@ -102,7 +102,6 @@ import org.sonatype.nexus.rest.model.NexusArtifact;
  * @version 1.0
  */
 
-@SuppressWarnings("deprecation")
 public class BrmsPush {
     private static final String GROUP_NAMES = "groupNames";
     private static final String DROOLS_APPS_TEMPLATE_GROUP =
@@ -587,7 +586,7 @@ public class BrmsPush {
         URL website;
         final String fileName = "rule.jar";
         try {
-            website = new URL(artifact.getResourceURI());
+            website = new URL(artifact.getUrlPath() + ".jar");
             try (ReadableByteChannel rbc = Channels.newChannel(website.openStream());
                     FileOutputStream fos = new FileOutputStream(fileName)) {
                 fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
@@ -685,34 +684,30 @@ public class BrmsPush {
     }
 
     private List<NexusArtifact> getArtifactFromNexus(final String selectedName, final String version) {
-        final NexusClient client = new NexusRestClient();
+        NexusRestWrapper restWrapper = null;
         int index = 0;
         boolean flag = false;
         while (index < repUrlList.size()) {
             try {
                 final String repUrl = repUrlList.get(0);
-                client.connect(repUrl.substring(0, repUrl.indexOf(repUrl.split(":[0-9]+\\/nexus")[1])), repUserName,
-                        repPassword);
-                final NexusArtifact template = new NexusArtifact();
-                template.setGroupId(getGroupId(selectedName));
-                template.setArtifactId(getArtifactId(selectedName));
-                if (version != null) {
-                    template.setVersion(version);
-                }
-                final List<NexusArtifact> resultList = client.searchByGAV(template);
+                restWrapper =
+                        new NexusRestWrapper(repUrl.substring(0, repUrl.indexOf(repUrl.split(":[0-9]+\\/nexus")[1])),
+                                repUserName,  repPassword);
+                final NexusRestSearchParameters searchParameters = new NexusRestSearchParameters();
+                searchParameters.useFilterSearch(
+                        getGroupId(selectedName), getArtifactId(selectedName), version, null, null);
+
+                final List<NexusArtifact> resultList = restWrapper.findArtifact(searchParameters).getArtifactList();
                 if (resultList != null) {
                     flag = true;
                     return resultList;
                 }
-            } catch (NexusClientException | NexusConnectionException | NullPointerException e) {
+            } catch (NexusRestWrapperException | ProcessingException e) {
                 LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Connection to remote Nexus has failed. "
                         + e.getMessage(), e);
-            } finally {
-                try {
-                    client.disconnect();
-                } catch (NexusClientException | NexusConnectionException e) {
-                    LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "failed to disconnect Connection from Nexus."
-                            + e.getMessage(), e);
+            }  finally {
+                if (null != restWrapper) {
+                    restWrapper.close();
                 }
                 if (!flag) {
                     Collections.rotate(repUrlList, -1);
@@ -937,7 +932,7 @@ public class BrmsPush {
             pomWriter.write(writer, model);
         } catch (final Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while creating POM for " + getArtifactId(name)
-                    + e.getMessage(), e);
+                + e.getMessage(), e);
         } finally {
             IOUtil.close(writer);
         }
