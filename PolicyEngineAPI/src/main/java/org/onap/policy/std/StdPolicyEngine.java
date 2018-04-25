@@ -1103,7 +1103,7 @@ public class StdPolicyEngine {
                 this.dmaapThread = true;
             } else {
                 if (pdps.get(0) != null) {
-                    if (AutoClientEnd.getURL() == null) {
+                    if (AutoClientEnd.getUrl() == null) {
                         AutoClientEnd.start(pdps.get(0));
                     } else {
                         AutoClientEnd.stop();

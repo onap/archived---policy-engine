@@ -21,196 +21,111 @@
 package org.onap.policy.std.test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import org.junit.After;
-import org.junit.Before;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.concurrent.CountDownLatch;
+import org.java_websocket.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.WebSocketServer;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.api.NotificationHandler;
 import org.onap.policy.api.NotificationScheme;
+import org.onap.policy.api.PDPNotification;
 import org.onap.policy.std.AutoClientEnd;
-import org.onap.policy.std.StdPolicyEngine;
+import org.onap.policy.std.StdPDPNotification;
+import org.springframework.util.SocketUtils;
 
 /**
  * The class <code>AutoClientEndTest</code> contains tests for the class <code>{@link AutoClientEnd}</code>.
  *
- * @generatedBy CodePro at 6/1/16 1:40 PM
- * @version $Revision: 1.0 $
  */
 public class AutoClientEndTest {
+    private static WebSocketServer ws;
 
-	/**
-	 * Run the boolean getStatus() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testGetStatus_1()
-		throws Exception {
+    private static int port = 18080;
+    private static CountDownLatch countServerDownLatch = null;
+    private StdPDPNotification notification = null;
 
-		boolean result = AutoClientEnd.getStatus();
+    /**
+     * Start server.
+     *
+     * @throws Exception the exception
+     */
+    @BeforeClass
+    public static void startServer() throws Exception {
+        port = SocketUtils.findAvailableTcpPort();
+        ws = new WebSocketServer(new InetSocketAddress(port), 16) {
+            @Override
+            public void onOpen(WebSocket conn, ClientHandshake handshake) {
+                conn.send("{\"removedPolicies\": [],\"loadedPolicies\": "
+                        + "[{\"policyName\": \"Test.Config_BRMS_Param_BrmsParamTestPa.1.xml\","
+                        + "\"versionNo\": \"1\",\"matches\": {\"ECOMPName\": \"DROOLS\","
+                        + "\"ONAPName\": \"DROOLS\",\"ConfigName\": \"BRMS_PARAM_RULE\","
+                        + "\"guard\": \"false\",\"TTLDate\": \"NA\",\"RiskLevel\": \"5\","
+                        + "\"RiskType\": \"default\"},\"updateType\": \"NEW\"}],\"notificationType\": \"UPDATE\"}");
+            }
 
-		assertNotNull(result);
-	}
+            @Override
+            public void onClose(WebSocket conn, int code, String reason, boolean remote) {
 
-	/**
-	 * Run the String getURL() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testGetURL_1()
-		throws Exception {
+            }
 
-		String result = AutoClientEnd.getURL();
+            @Override
+            public void onMessage(WebSocket conn, String message) {}
 
-		// add additional test code here
-		// An unexpected exception was thrown in user code while executing this test:
-		//    java.lang.NoClassDefFoundError: Could not initialize class org.onap.policy.std.AutoClientEnd
-		assertNotNull(result);
-	}
+            @Override
+            public void onError(WebSocket conn, Exception ex) {
 
+                ex.printStackTrace();
+                fail("There should be no exception!");
+            }
 
-	/**
-	 * Run the void setAuto(NotificationScheme,NotificationHandler) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testSetAuto()
-		throws Exception {
-		NotificationScheme scheme = NotificationScheme.AUTO_ALL_NOTIFICATIONS;
-		NotificationHandler handler = null;
-
-		AutoClientEnd.setAuto(scheme, handler);
-
-		// add additional test code here
-		// An unexpected exception was thrown in user code while executing this test:
-		//    java.lang.ExceptionInInitializerError
-		//       at org.apache.log4j.Logger.getLogger(Logger.java:104)
-		//       at org.onap.policy.std.AutoClientEnd.<clinit>(AutoClientEnd.java:39)
-	}
-
-	/**
-	 * Run the void setScheme(NotificationScheme) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testSetScheme()
-		throws Exception {
-		
-		NotificationScheme scheme = NotificationScheme.AUTO_ALL_NOTIFICATIONS;
-		AutoClientEnd.setScheme(scheme);
-
-	}
-
-	/**
-	 * Run the void start(String) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testStart()
-		throws Exception {
-		String url = "http://test.com";
-
-		AutoClientEnd.start(url);
-
-		// add additional test code here
-		// An unexpected exception was thrown in user code while executing this test:
-		//    java.lang.NoClassDefFoundError: Could not initialize class org.onap.policy.std.AutoClientEnd
-	}
+            @Override
+            public void onStart() {}
 
 
-	/**
-	 * Run the void start(String) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testStart_2()
-		throws Exception {
-		String url = null;
+        };
 
-		AutoClientEnd.start(url);
+        ws.setConnectionLostTimeout(30);
+        ws.start();
+    }
 
-		// add additional test code here
-		// An unexpected exception was thrown in user code while executing this test:
-		//    java.lang.NoClassDefFoundError: Could not initialize class org.onap.policy.std.AutoClientEnd
-	}
+    @Test
+    public void testAutoClient() throws Exception {
 
-	/**
-	 * Run the void stop() method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Test
-	public void testStop_1()
-		throws Exception {
+        NotificationScheme scheme = NotificationScheme.AUTO_ALL_NOTIFICATIONS;
+        NotificationHandler handler = new NotificationHandler() {
 
-		AutoClientEnd.stop();
+            @Override
+            public void notificationReceived(PDPNotification notifi) {
+                notification = (StdPDPNotification) notifi;
+                countServerDownLatch.countDown();
 
-		// add additional test code here
-		// An unexpected exception was thrown in user code while executing this test:
-		//    java.lang.NoClassDefFoundError: Could not initialize class org.onap.policy.std.AutoClientEnd
-	}
+            }
+        };
 
-	/**
-	 * Perform pre-test initialization.
-	 *
-	 * @throws Exception
-	 *         if the initialization fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@Before
-	public void setUp()
-		throws Exception {
-		// add set up code here
-		StdPolicyEngine policyEngine = new StdPolicyEngine("Test/config_pass.properties", (String) null);
-		
-		NotificationHandler handler = policyEngine.getNotificationHandler();
-		AutoClientEnd.setAuto(NotificationScheme.AUTO_ALL_NOTIFICATIONS, handler);
-		AutoClientEnd.start("http://testurl.com");
-		
-	}
+        AutoClientEnd.setAuto(scheme, handler);
+        countServerDownLatch = new CountDownLatch(1);
 
-	/**
-	 * Perform post-test clean-up.
-	 *
-	 * @throws Exception
-	 *         if the clean-up fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	@After
-	public void tearDown()
-		throws Exception {
-		// Add additional tear down code here
-	}
+        AutoClientEnd.start("http://localhost:" + port + "/");
+        countServerDownLatch.await();
 
-	/**
-	 * Launch the test.
-	 *
-	 * @param args the command line arguments
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:40 PM
-	 */
-	public static void main(String[] args) {
-		new org.junit.runner.JUnitCore().run(AutoClientEndTest.class);
-	}
+
+        assertNotNull(notification);
+        assertTrue(AutoClientEnd.getStatus());
+    }
+
+    @AfterClass
+    public static void successTests() throws InterruptedException, IOException {
+        AutoClientEnd.stop();
+        ws.stop();
+    }
+
+
+
 }

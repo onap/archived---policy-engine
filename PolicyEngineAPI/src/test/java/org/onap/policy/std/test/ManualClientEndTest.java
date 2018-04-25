@@ -21,17 +21,21 @@
 package org.onap.policy.std.test;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.net.URI;
-import java.net.URL;
-
-import org.junit.After;
-import org.junit.Before;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.concurrent.CountDownLatch;
+import org.java_websocket.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.WebSocketServer;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.api.NotificationScheme;
-import org.onap.policy.api.PDPNotification;
 import org.onap.policy.std.ManualClientEnd;
+import org.springframework.util.SocketUtils;
 
 /**
  * The class <code>ManualClientEndTest</code> contains tests for the class <code>{@link ManualClientEnd}</code>.
@@ -40,91 +44,72 @@ import org.onap.policy.std.ManualClientEnd;
  * @version $Revision: 1.0 $
  */
 public class ManualClientEndTest {
-	/**
-	 * Run the ManualClientEnd() constructor test.
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Test
-	public void testManualClientEnd_1()
-		throws Exception {
-		ManualClientEnd mce = new ManualClientEnd(new URI("http://www.onap.org"));
-		assertNotNull(mce);
-		mce.close();
-		// add additional test code here
-	}
+    private static WebSocketServer ws;
+
+    private static int port = 18080;
+    private static CountDownLatch countServerDownLatch = null;
+    private static String recvMsg = null;
+
+    /**
+     * Start server.
+     *
+     * @throws Exception the exception
+     */
+    @BeforeClass
+    public static void startServer() throws Exception {
+        port = SocketUtils.findAvailableTcpPort();
+        ws = new WebSocketServer(new InetSocketAddress(port), 16) {
+            @Override
+            public void onOpen(WebSocket conn, ClientHandshake handshake) {
+
+            }
+
+            @Override
+            public void onClose(WebSocket conn, int code, String reason, boolean remote) {
+                countServerDownLatch.countDown();
+            }
+
+            @Override
+            public void onMessage(WebSocket conn, String message) {
+                recvMsg = message;
+                conn.send("{\"removedPolicies\": [],\"loadedPolicies\":"
+                        + "[{\"policyName\": \"Test.Config_BRMS_Param_BrmsParamTestPa.1.xml\","
+                        + "\"versionNo\": \"1\",\"matches\": {\"ECOMPName\": \"DROOLS\","
+                        + "\"ONAPName\": \"DROOLS\",\"ConfigName\": \"BRMS_PARAM_RULE\","
+                        + "\"guard\": \"false\",\"TTLDate\": \"NA\",\"RiskLevel\": \"5\","
+                        + "\"RiskType\": \"default\"},\"updateType\": \"NEW\"}],\"notificationType\": \"UPDATE\"}");
+            }
+
+            @Override
+            public void onError(WebSocket conn, Exception ex) {
+
+                ex.printStackTrace();
+                fail("There should be no exception!");
+            }
+
+            @Override
+            public void onStart() {}
 
 
-	/**
-	 * Run the PDPNotification result(NotificationScheme) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Test
-	public void testResult_1()
-		throws Exception {
-		NotificationScheme scheme = NotificationScheme.AUTO_ALL_NOTIFICATIONS;
+        };
 
-		PDPNotification result = ManualClientEnd.result(scheme);
+        ws.setConnectionLostTimeout(30);
+        ws.start();
+    }
 
-		assertNull(result);
-	}
+    @Test
+    public void testAutoClient() throws Exception {
+        countServerDownLatch = new CountDownLatch(1);
 
+        ManualClientEnd.start("http://localhost:" + port + "/");
+        countServerDownLatch.await();
 
-	/**
-	 * Run the void start(String) method test.
-	 *
-	 * @throws Exception
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Test
-	public void testStart_1()
-		throws Exception {
-		String url = "This is not a URL";
+        assertNotNull(ManualClientEnd.result(NotificationScheme.MANUAL_ALL_NOTIFICATIONS));
+        assertTrue("Manual".equalsIgnoreCase(recvMsg));
+    }
 
-		ManualClientEnd.start(url);
-
-	}
-
-	/**
-	 * Perform pre-test initialization.
-	 *
-	 * @throws Exception
-	 *         if the initialization fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@Before
-	public void setUp()
-		throws Exception {
-		// add additional set up code here
-	}
-
-	/**
-	 * Perform post-test clean-up.
-	 *
-	 * @throws Exception
-	 *         if the clean-up fails for some reason
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	@After
-	public void tearDown()
-		throws Exception {
-		// Add additional tear down code here
-	}
-
-	/**
-	 * Launch the test.
-	 *
-	 * @param args the command line arguments
-	 *
-	 * @generatedBy CodePro at 6/1/16 1:41 PM
-	 */
-	public static void main(String[] args) {
-		new org.junit.runner.JUnitCore().run(ManualClientEndTest.class);
-	}
+    @AfterClass
+    public static void successTests() throws InterruptedException, IOException {
+        ws.stop();
+    }
 }
