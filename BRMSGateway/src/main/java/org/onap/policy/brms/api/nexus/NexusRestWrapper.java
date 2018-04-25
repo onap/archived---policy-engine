@@ -54,25 +54,6 @@ public class NexusRestWrapper {
     private String nexusPassword;
 
     /**
-     * Instantiates a new Nexus REST agent.
-     *
-     * @param nexusServerUrl the URL of the Nexus server as a string
-     * @throws NexusRestWrapperException on errors on the Nexus server URL
-     */
-    public NexusRestWrapper(final String nexusServerUrl) throws NexusRestWrapperException {
-        LOGGER.trace("new NexusRestWrapper: nexusServerUrl=" + nexusServerUrl);
-
-        if (isNullOrBlank(nexusServerUrl)) {
-            throw new NexusRestWrapperException("nexusServerUrl must be specified for the Nexus server");
-        }
-
-        this.nexusServerUrl = nexusServerUrl;
-
-        // Create a client for RST calls towards the Nexus server
-        client = ClientBuilder.newClient();
-    }
-
-    /**
      * Instantiates a new Nexus REST agent with credentials.
      *
      * @param nexusServerUrl the URL of the Nexus server as a string
@@ -81,15 +62,17 @@ public class NexusRestWrapper {
      * @throws NexusRestWrapperException on parameter exceptions
      */
     public NexusRestWrapper(final String nexusServerUrl, final String nexusUser, final String nexusPassword)
-            throws NexusRestWrapperException {
+                    throws NexusRestWrapperException {
         LOGGER.trace("new NexusRestWrapper: nexusServerUrl=" + nexusServerUrl);
 
         if (isNullOrBlank(nexusServerUrl)) {
             throw new NexusRestWrapperException("nexusServerUrl must be specified for the Nexus server");
         }
 
-        if (isNullOrBlank(nexusUser) || isNullOrBlank(nexusPassword)) {
-            throw new NexusRestWrapperException("nexuusUser and nexusPassword must both be specified");
+        if ((isNullOrBlank(nexusUser) && !isNullOrBlank(nexusPassword))
+                        || (!isNullOrBlank(nexusUser) && isNullOrBlank(nexusPassword))) {
+            throw new NexusRestWrapperException(
+                            "if either nexusUser or nexusPassword are specified, both must be specified");
         }
 
         this.nexusServerUrl = nexusServerUrl;
@@ -124,9 +107,12 @@ public class NexusRestWrapper {
      *         Exceptions accessing the Nexus server
      */
     public NexusSearchResult findArtifact(final NexusRestSearchParameters searchParameters)
-            throws NexusRestWrapperException {
-
+                    throws NexusRestWrapperException {
         LOGGER.trace("new search with search parameters: " + searchParameters);
+
+        if (null == searchParameters) {
+            throw new NexusRestWrapperException("searchParameters may not be null");
+        }
 
         // Issue the REST request to perform the search
         URI searchUri = searchParameters.getSearchUri(nexusServerUrl);
@@ -138,14 +124,22 @@ public class NexusRestWrapper {
         getAuthorizationHeader(requestBuilder);
 
         // Issue the REST request
-        Response response = requestBuilder.get();
+        Response response = null;
+        try {
+            response = requestBuilder.get();
+        } catch (Exception e) {
+            String message = "search to URI " + searchUri.toString() + " failed with message: " + e.getMessage();
+            LOGGER.warn(message, e);
+            throw new NexusRestWrapperException(message, e);
+        }
 
         LOGGER.debug("search response is: " + response.toString());
 
         // Check the HTTP response code for the search
         if (Response.Status.OK.getStatusCode() != response.getStatus()) {
-            LOGGER.warn("search to URI " + searchUri.toString() + "failed, response was: " + response.toString());
-            throw new NexusRestWrapperException("query to Nexus failed with message: " + response.toString());
+            String message = "search to URI " + searchUri.toString() + " failed, response was: " + response.toString();
+            LOGGER.warn(message);
+            throw new NexusRestWrapperException(message);
         }
 
         try {
@@ -160,23 +154,22 @@ public class NexusRestWrapper {
 
             return searchResult;
         } catch (Exception e) {
-            LOGGER.warn("processing of result from search to URI " + searchUri
-                    + " failed with message " + e.getMessage());
-            throw new NexusRestWrapperException(
-                    "processing of result from query to Nexus failed with message: " + e.getMessage(), e);
+            String message = "processing of result from query to Nexus failed with message: " + e.getMessage();
+            LOGGER.warn(message, e);
+            throw new NexusRestWrapperException(message, e);
         }
     }
 
     /**
      * Get the authorisation header for the user name and password.
-     * @param requestBuilder the request builder to add authorization to
+     * @param requestBuilder the request builder to add authorisation to
      * @return the authorisation header
      */
     private Builder getAuthorizationHeader(Builder requestBuilder) {
         if (null != nexusUser && null != nexusPassword) {
             String userPassString = nexusUser + ":" + nexusPassword;
             requestBuilder.header("Authorization", "Basic "
-                    + java.util.Base64.getEncoder().encodeToString(userPassString.getBytes()));
+                            + java.util.Base64.getEncoder().encodeToString(userPassString.getBytes()));
         }
 
         return requestBuilder;
@@ -210,18 +203,18 @@ public class NexusRestWrapper {
         NexusRepository repository = repositoryMap.get(artifact.getArtifactHits().get(0).getRepositoryId());
 
         return new StringBuilder()
-                .append(repository.getRepositoryUrl())
-                .append("/content/")
-                .append(artifact.getGroupId().replace('.', '/'))
-                .append('/')
-                .append(artifact.getArtifactId())
-                .append('/')
-                .append(artifact.getVersion())
-                .append('/')
-                .append(artifact.getArtifactId())
-                .append('-')
-                .append(artifact.getVersion())
-                .toString();
+                        .append(repository.getRepositoryUrl())
+                        .append("/content/")
+                        .append(artifact.getGroupId().replace('.', '/'))
+                        .append('/')
+                        .append(artifact.getArtifactId())
+                        .append('/')
+                        .append(artifact.getVersion())
+                        .append('/')
+                        .append(artifact.getArtifactId())
+                        .append('-')
+                        .append(artifact.getVersion())
+                        .toString();
     }
 
     /**
