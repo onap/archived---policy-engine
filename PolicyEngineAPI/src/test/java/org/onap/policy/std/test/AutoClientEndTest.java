@@ -27,6 +27,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -37,7 +38,6 @@ import org.onap.policy.api.NotificationHandler;
 import org.onap.policy.api.NotificationScheme;
 import org.onap.policy.api.PDPNotification;
 import org.onap.policy.std.AutoClientEnd;
-import org.onap.policy.std.StdPDPNotification;
 import org.springframework.util.SocketUtils;
 
 /**
@@ -47,9 +47,9 @@ import org.springframework.util.SocketUtils;
 public class AutoClientEndTest {
     private static WebSocketServer ws;
 
-    private static int port = 18080;
+    private static int port = 0;
     private static CountDownLatch countServerDownLatch = null;
-    private StdPDPNotification notification = null;
+    private PDPNotification notification = null;
 
     /**
      * Start server.
@@ -59,7 +59,7 @@ public class AutoClientEndTest {
     @BeforeClass
     public static void startServer() throws Exception {
         port = SocketUtils.findAvailableTcpPort();
-        ws = new WebSocketServer(new InetSocketAddress(port), 16) {
+        ws = new WebSocketServer(new InetSocketAddress(port), 2) {
             @Override
             public void onOpen(WebSocket conn, ClientHandshake handshake) {
                 conn.send("{\"removedPolicies\": [],\"loadedPolicies\": "
@@ -102,8 +102,8 @@ public class AutoClientEndTest {
         NotificationHandler handler = new NotificationHandler() {
 
             @Override
-            public void notificationReceived(PDPNotification notifi) {
-                notification = (StdPDPNotification) notifi;
+            public void notificationReceived(PDPNotification notify) {
+                notification = notify;
                 countServerDownLatch.countDown();
 
             }
@@ -113,7 +113,7 @@ public class AutoClientEndTest {
         countServerDownLatch = new CountDownLatch(1);
 
         AutoClientEnd.start("http://localhost:" + port + "/");
-        countServerDownLatch.await();
+        countServerDownLatch.await(30, TimeUnit.SECONDS);
 
 
         assertNotNull(notification);
@@ -123,7 +123,7 @@ public class AutoClientEndTest {
     @AfterClass
     public static void successTests() throws InterruptedException, IOException {
         AutoClientEnd.stop();
-        ws.stop();
+        ws.stop(5000);
     }
 
 

@@ -192,11 +192,10 @@ public class AutoClientEnd extends WebSocketClient {
         }
         logger.info("\n Closing Auto Notification WebSocket Connection.. ");
         stop = true;
-        try {
-            client.closeBlocking();
-        } catch (InterruptedException e) {
-            logger.info("\n Error Closing Auto Notification WebSocket Connection.. InterruptedException");
-        }
+        
+        // close the connection
+        client.close();
+        
         logger.info("\n Closed the Auto Notification WebSocket Connection.. ");
         client = null;
         status = false;
