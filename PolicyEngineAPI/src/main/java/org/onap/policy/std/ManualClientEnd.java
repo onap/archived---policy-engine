@@ -63,12 +63,11 @@ public class ManualClientEnd extends WebSocketClient {
         logger.info("Manual Notification Recieved Message from : " + getURI() + ", Notification: " + message);
         ManualClientEnd.resultJson = message;
         try {
-            ManualClientEnd.notification = NotificationUnMarshal.notificationJSON(message);
-            latch.countDown();
+            ManualClientEnd.notification = NotificationUnMarshal.notificationJSON(message);     
         } catch (Exception e) {
             logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
-            latch.countDown();
         }
+        latch.countDown();
     }
 
     @Override
@@ -95,7 +94,7 @@ public class ManualClientEnd extends WebSocketClient {
             client = new ManualClientEnd(new URI(url + "notifications"));
             client.connect();
             latch.await();
-            client.close();
+            client.closeBlocking();
         } catch (Exception e) {
             logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
         }

@@ -21,6 +21,9 @@
 package org.onap.policy.std;
 
 import java.net.URI;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.websocket.ClientEndpoint;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -42,8 +45,9 @@ public class AutoClientEnd extends WebSocketClient {
     private static String url = null;
     private static boolean status = false;
     private static boolean stop = false;
-    private static boolean message = false;
     private static boolean error = false;
+    private static boolean restartNeeded = false;
+    private static ScheduledExecutorService restartExecutorService = null;
     private static Logger logger = FlexLogger.getLogger(AutoClientEnd.class.getName());
 
     private AutoClientEnd(URI serverUri) {
@@ -53,7 +57,6 @@ public class AutoClientEnd extends WebSocketClient {
     @Override
     public void onMessage(String msg) {
         logger.info("Received Auto Notification from : " + getURI() + ", Notification: " + msg);
-        AutoClientEnd.message = true;
         try {
             AutoClientEnd.notification = NotificationUnMarshal.notificationJSON(msg);
         } catch (Exception e) {
@@ -68,43 +71,36 @@ public class AutoClientEnd extends WebSocketClient {
             AutoClientEnd.oldNotification = AutoClientEnd.notification;
             callHandler();
         }
-
-        AutoClientEnd.message = false;
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
         logger.info("AutoClientEnd disconnected from: " + getURI() + "; Code: " + code + ", reason :  " + reason);
-        if (!AutoClientEnd.stop && !AutoClientEnd.message) {
-            // This Block of code is executed if there is any Network Failure or
-            // if the Notification is Down.
-            logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Disconnected from Notification Server");
-            AutoClientEnd.client = null;
-            AutoClientEnd.status = false;
-            // Try to connect Back to available PDP.
-            AutoClientEnd.error = true;
-            start(url);
-        }
-        AutoClientEnd.message = false;
+        AutoClientEnd.restartNeeded = true;
     }
 
     @Override
     public void onError(Exception ex) {
         logger.error("XACMLErrorConstants.ERROR_PROCESS_FLOW + Error connecting to: " + getURI()
                 + ", Exception occured ...\n" + ex);
-        // trying to Restart by self.
-        stop();
-        if (AutoClientEnd.url != null) {
-            AutoClientEnd.client = null;
-            AutoClientEnd.status = false;
-            AutoClientEnd.error = true;
-            AutoClientEnd.start(AutoClientEnd.url);
-        }
+        AutoClientEnd.restartNeeded = true;
     }
 
     @Override
     public void onOpen(ServerHandshake arg0) {
+        restartNeeded = false;
         logger.info("Auto Notification Session Started... " + getURI());
+    }
+
+    private static void restart() {
+        try {
+            if (client != null && restartNeeded && !stop) {
+                logger.info("Auto Notification Session Restarting ... " + getUrl());
+                client.reconnect();
+            }
+        } catch (Exception e) {
+            logger.info("Auto Notification Session Error Started... " + getUrl());
+        }
     }
 
     /**
@@ -156,6 +152,10 @@ public class AutoClientEnd extends WebSocketClient {
             client = new AutoClientEnd(new URI(url + "notifications"));
             client.connect();
             status = true;
+            restartExecutorService = Executors.newSingleThreadScheduledExecutor();
+            Runnable task = AutoClientEnd::restart;
+            restartExecutorService.scheduleAtFixedRate(task, 60, 60, TimeUnit.SECONDS);
+
             if (error) {
                 // will not trigger. leave it in to later add checks
                 // The URL's will be in Sync according to design Spec.
@@ -192,15 +192,25 @@ public class AutoClientEnd extends WebSocketClient {
         }
         logger.info("\n Closing Auto Notification WebSocket Connection.. ");
         stop = true;
+        // first stop the restart service
+        try {
+            restartExecutorService.shutdown();
+        } catch (Exception e1) {
+            logger.info("\n AutoClientEnd: Error stoppping the restart Scheduler ");
+        }
+
+        // close the connection
         try {
             client.closeBlocking();
-        } catch (InterruptedException e) {
-            logger.info("\n Error Closing Auto Notification WebSocket Connection.. InterruptedException");
+        } catch (Exception e) {
+            logger.error("\n ERROR Closing Auto Notification WebSocket Connection.. ");
         }
+
         logger.info("\n Closed the Auto Notification WebSocket Connection.. ");
         client = null;
         status = false;
         stop = false;
+        restartNeeded = false;
     }
 
     private static void callHandler() {
