@@ -356,7 +356,6 @@ function install_base() {
 		exit 1
 	fi
 
-	/bin/mkdir -p ${POLICY_HOME}/etc/ssl > /dev/null 2>&1
 	/bin/mkdir -p ${POLICY_HOME}/etc/init.d > /dev/null 2>&1
 	/bin/mkdir -p ${POLICY_HOME}/tmp > /dev/null 2>&1
 	/bin/mkdir -p ${POLICY_HOME}/var > /dev/null 2>&1
@@ -393,6 +392,21 @@ function configure_base() {
 		echo "${PROFILE_LINE}" >> "${HOME}/.profile"
 	fi
 }
+
+function configure_keystore() {
+	if [[ $DEBUG == y ]]; then
+		echo "-- ${FUNCNAME[0]} --"
+		set -x
+	fi
+
+    local DEFAULT_KEYSTORE_PASSWORD="Pol1cy_0nap"
+
+	if [[ -n ${KEYSTORE_PASSWD} ]]; then
+	    keytool -storepasswd -storepass ${DEFAULT_KEYSTORE_PASSWORD} -keystore ${POLICY_HOME}/etc/ssl/policy-keystore -new ${KEYSTORE_PASSWD}
+	    keytool -list -keystore ${POLICY_HOME}/etc/ssl/policy-keystore -storepass ${KEYSTORE_PASSWD}
+	fi
+}
+
 
 function install_tomcat_component() {
 	if [[ $DEBUG == y ]]; then
@@ -731,6 +745,7 @@ if [[ ${OPERATION} == configure ]]; then
 		base)	
 			configure_base
 			component_preconfigure
+			configure_keystore
 			;;
 		pdp)	
 			configure_component "${COMPONENT_TYPE}.conf" "${POLICY_HOME}/servers/${COMPONENT_TYPE}/"

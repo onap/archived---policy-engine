@@ -64,9 +64,10 @@ else
 
 	. /opt/app/policy/etc/profile.d/env.sh
 
-	# install policy keystore
-	mkdir -p $POLICY_HOME/etc/ssl
-	cp config/policy-keystore $POLICY_HOME/etc/ssl
+	if [[ -f config/policy-keystore ]]; then
+	    # install policy keystore
+	    cp config/policy-keystore $POLICY_HOME/etc/ssl
+	fi
 
 	if [[ -f config/$container-tweaks.sh ]] ; then
 		# file may not be executable; running it as an
