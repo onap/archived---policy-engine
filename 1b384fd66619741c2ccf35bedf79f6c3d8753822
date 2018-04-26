@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_9eb702d8",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/AutoClientEnd.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-04-26T10:37:21Z",
+      "side": 1,
+      "message": "We don\u0027t need this import for the new WS library",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 38
+      },
+      "revId": "1b384fd66619741c2ccf35bedf79f6c3d8753822",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_bebc3ebc",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/AutoClientEnd.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-04-26T10:37:21Z",
+      "side": 1,
+      "message": "We don\u0027t need this annotation for the new WS library",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 15
+      },
+      "revId": "1b384fd66619741c2ccf35bedf79f6c3d8753822",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_1ecbf253",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/AutoClientEnd.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-04-26T10:37:21Z",
+      "side": 1,
+      "message": "OK, start does nothing if the client is already started :-)",
+      "range": {
+        "startLine": 139,
+        "startChar": 76,
+        "endLine": 139,
+        "endChar": 104
+      },
+      "revId": "1b384fd66619741c2ccf35bedf79f6c3d8753822",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_febde6b1",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/AutoClientEnd.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-04-26T10:37:21Z",
+      "side": 1,
+      "message": "I think we need to do a stop() before changing to the new URL, otherwise when we call start() we\u0027ll overwrite the URL on line  136 and then we\u0027ll come to the if statement on line 138/139 and see that \"AutoClientEnd.client !\u003d null\" and finish. We\u0027ll have the situation with the client configured with the new URL but still happily connected to the web socket at the old URL.",
+      "range": {
+        "startLine": 181,
+        "startChar": 2,
+        "endLine": 184,
+        "endChar": 1
+      },
+      "revId": "1b384fd66619741c2ccf35bedf79f6c3d8753822",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_5eadfa82",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/ManualClientEnd.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-04-26T10:37:21Z",
+      "side": 1,
+      "message": "We don\u0027t need this import for the new WS library",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 38
+      },
+      "revId": "1b384fd66619741c2ccf35bedf79f6c3d8753822",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_7eb236e6",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/ManualClientEnd.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-04-26T10:37:21Z",
+      "side": 1,
+      "message": "We don\u0027t need this annotation for the new WS library",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 15
+      },
+      "revId": "1b384fd66619741c2ccf35bedf79f6c3d8753822",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
