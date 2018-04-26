@@ -106,7 +106,9 @@ Healthcheck / Testing
 
 - The Policy PDP health check can be checked using the generic procedure documented above for PAP which applies to all policy components. 
 
-* Apart from the above check PDP also provides the swagger UI from which PDP REST APIs which can be tested and used, this also lets us know the PDP Status. In order to access PDP's swagger UI visit http://{PDP_URL}:8081/pdp/swagger-ui.html 
+- Apart from the above check PDP also provides the swagger UI from which PDP REST APIs which can be tested and used, this also lets us know the PDP Status. In order to access PDP's swagger UI visit ``http://{PDP_URL}:8081/pdp/swagger-ui.html.``
+
+- Apart from the above check PDP also provides the swagger UI from which PDP REST APIs which can be tested and used, this also lets us know the PDP Status. ``In order to access PDP's swagger UI visit http://{PDP_URL}:8081/pdp/swagger-ui.html.``
 
 - In order to test the Policy components, the swagger UI provided by PDP can be used to test PDP and PAP. 
 

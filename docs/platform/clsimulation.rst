@@ -30,7 +30,7 @@ Alternatively, this command could be used:
 
         curl --silent --user <userName>:<password> -X PUT --header "Content-Type: text/plain" –data @<onsetFile> http://localhost:9696/policy/pdp/engine/topics/sources/ueb/<topic>/events
 
-The topic beeing used is *unauthenticated.DCAE_CL_OUTPUT*, which is subject to change.  The onset file is a file that contains the data to inject as the onset.  The data contained depends on the use case. This is an example for VoLTE:
+The topic being used is *unauthenticated.DCAE_CL_OUTPUT*, which is subject to change.  The onset file is a file that contains the data to inject as the onset.  The data contained depends on the use case. This is an example for VoLTE:
 
     .. code-block:: json
        :caption: VoLTE_Sample_Onset
