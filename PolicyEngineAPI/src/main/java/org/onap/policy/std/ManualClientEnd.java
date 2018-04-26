@@ -22,7 +22,6 @@ package org.onap.policy.std;
 
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
-import javax.websocket.ClientEndpoint;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.onap.policy.api.NotificationScheme;
@@ -33,7 +32,6 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.std.StdPDPNotification;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
-@ClientEndpoint
 public class ManualClientEnd extends WebSocketClient {
     private static CountDownLatch latch;
     private static StdPDPNotification notification = null;
@@ -63,12 +61,11 @@ public class ManualClientEnd extends WebSocketClient {
         logger.info("Manual Notification Recieved Message from : " + getURI() + ", Notification: " + message);
         ManualClientEnd.resultJson = message;
         try {
-            ManualClientEnd.notification = NotificationUnMarshal.notificationJSON(message);
-            latch.countDown();
+            ManualClientEnd.notification = NotificationUnMarshal.notificationJSON(message);     
         } catch (Exception e) {
             logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
-            latch.countDown();
         }
+        latch.countDown();
     }
 
     @Override
@@ -95,7 +92,7 @@ public class ManualClientEnd extends WebSocketClient {
             client = new ManualClientEnd(new URI(url + "notifications"));
             client.connect();
             latch.await();
-            client.close();
+            client.closeBlocking();
         } catch (Exception e) {
             logger.error(XACMLErrorConstants.ERROR_SYSTEM_ERROR + e);
         }

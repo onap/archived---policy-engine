@@ -27,6 +27,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -40,13 +41,11 @@ import org.springframework.util.SocketUtils;
 /**
  * The class <code>ManualClientEndTest</code> contains tests for the class <code>{@link ManualClientEnd}</code>.
  *
- * @generatedBy CodePro at 6/1/16 1:41 PM
- * @version $Revision: 1.0 $
  */
 public class ManualClientEndTest {
     private static WebSocketServer ws;
 
-    private static int port = 18080;
+    private static int port = SocketUtils.findAvailableTcpPort();
     private static CountDownLatch countServerDownLatch = null;
     private static String recvMsg = null;
 
@@ -57,8 +56,7 @@ public class ManualClientEndTest {
      */
     @BeforeClass
     public static void startServer() throws Exception {
-        port = SocketUtils.findAvailableTcpPort();
-        ws = new WebSocketServer(new InetSocketAddress(port), 16) {
+        ws = new WebSocketServer(new InetSocketAddress(port), 1) {
             @Override
             public void onOpen(WebSocket conn, ClientHandshake handshake) {
 
@@ -93,16 +91,16 @@ public class ManualClientEndTest {
 
         };
 
-        ws.setConnectionLostTimeout(30);
+        ws.setConnectionLostTimeout(0);
         ws.start();
     }
 
     @Test
-    public void testAutoClient() throws Exception {
+    public void testManualClient() throws Exception {
         countServerDownLatch = new CountDownLatch(1);
 
         ManualClientEnd.start("http://localhost:" + port + "/");
-        countServerDownLatch.await();
+        countServerDownLatch.await(45, TimeUnit.SECONDS);
 
         assertNotNull(ManualClientEnd.result(NotificationScheme.MANUAL_ALL_NOTIFICATIONS));
         assertTrue("Manual".equalsIgnoreCase(recvMsg));
@@ -110,6 +108,6 @@ public class ManualClientEndTest {
 
     @AfterClass
     public static void successTests() throws InterruptedException, IOException {
-        ws.stop();
+        ws.stop(30000);
     }
 }
