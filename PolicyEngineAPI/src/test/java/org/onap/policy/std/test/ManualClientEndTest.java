@@ -23,7 +23,6 @@ package org.onap.policy.std.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
@@ -87,11 +86,10 @@ public class ManualClientEndTest {
 
             @Override
             public void onStart() {}
-
-
         };
 
         ws.setConnectionLostTimeout(0);
+        ws.setReuseAddr(true);
         ws.start();
     }
 
