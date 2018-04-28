@@ -86,7 +86,9 @@ public class ManualClientEndTest {
             }
 
             @Override
-            public void onStart() {}
+            public void onStart() {
+                System.out.println("Server started on port: " + port);
+            }
 
 
         };

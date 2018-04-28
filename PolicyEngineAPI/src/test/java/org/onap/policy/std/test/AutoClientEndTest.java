@@ -60,6 +60,7 @@ public class AutoClientEndTest {
         ws = new WebSocketServer(new InetSocketAddress(port), 1) {
             @Override
             public void onOpen(WebSocket conn, ClientHandshake handshake) {
+                System.out.println("Connection Opened");
                 conn.send("{\"removedPolicies\": [],\"loadedPolicies\": "
                         + "[{\"policyName\": \"Test.Config_BRMS_Param_BrmsParamTestPa.1.xml\","
                         + "\"versionNo\": \"1\",\"matches\": {\"ECOMPName\": \"DROOLS\","
@@ -70,7 +71,7 @@ public class AutoClientEndTest {
 
             @Override
             public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-
+                System.out.println("Connection Closed - code: " + code + ", reason: " + reason);
             }
 
             @Override
@@ -84,7 +85,9 @@ public class AutoClientEndTest {
             }
 
             @Override
-            public void onStart() {}
+            public void onStart() {
+                System.out.println("Server started on port: " + port);
+            }
 
 
         };
@@ -121,7 +124,7 @@ public class AutoClientEndTest {
         countServerDownLatch = new CountDownLatch(1);
         ws.stop(30000);
         startServer();
-        countServerDownLatch.await(60+10, TimeUnit.SECONDS);
+        countServerDownLatch.await(60 + 10, TimeUnit.SECONDS);
         assertNotNull(notification);
 
         AutoClientEnd.stop();
@@ -132,7 +135,4 @@ public class AutoClientEndTest {
     public static void stopServer() throws InterruptedException, IOException {
         ws.stop(30000);
     }
-
-
-
 }
