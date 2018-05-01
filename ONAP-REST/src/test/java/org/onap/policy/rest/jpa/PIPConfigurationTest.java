@@ -115,6 +115,7 @@ public class PIPConfigurationTest {
     assertEquals(id, config.getName());
 
     // Test toString
-    assertEquals(332, config.toString().length());
+    String configString = config.toString().replaceAll("@[0-9a-f]*", "");
+    assertEquals(323, configString.length());
   }
 }
