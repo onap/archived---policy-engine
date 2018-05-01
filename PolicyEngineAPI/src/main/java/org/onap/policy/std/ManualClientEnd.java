@@ -90,6 +90,7 @@ public class ManualClientEnd extends WebSocketClient {
 
         try {
             client = new ManualClientEnd(new URI(url + "notifications"));
+            client.setConnectionLostTimeout(0);
             client.connect();
             latch.await();
             client.closeBlocking();

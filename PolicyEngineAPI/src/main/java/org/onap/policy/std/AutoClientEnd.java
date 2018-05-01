@@ -148,6 +148,7 @@ public class AutoClientEnd extends WebSocketClient {
         try {
             logger.info("Starting Auto Notification with the PDP server : " + url);
             client = new AutoClientEnd(new URI(url + "notifications"));
+            client.setConnectionLostTimeout(0);
             client.connect();
             status = true;
             restartExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -212,6 +213,7 @@ public class AutoClientEnd extends WebSocketClient {
     }
 
     private static void callHandler() {
+        logger.info("AutoClientEnd: In callHandler");
         if (handler == null || scheme == null) {
             return;
         }
