@@ -38,6 +38,8 @@ BRMSGateway/sql/
 BRMSGateway/src/test/resources/META-INF/generatedCreate.ddl
 BRMSGateway/src/test/resources/META-INF/generatedDrop.ddl
 BRMSGateway/src/test/resources/failure.properties
+BRMSGateway/POLICY_LOGS_IS_UNDEFINED/
+BRMSGateway/RuleProjects/
 LogParser/logs/
 ONAP-PAP-REST/catalina.base_IS_UNDEFINED/
 ONAP-PAP-REST/pdps/
@@ -51,10 +53,13 @@ ONAP-PDP-REST/src/test/resources/config_testing/
 ONAP-PDP-REST/src/test/resources/generatedCreate.ddl
 ONAP-PDP-REST/src/test/resources/generatedDrop.ddl
 ONAP-PDP-REST/topicBackup.txt
+ONAP-PAP-REST/POLICY_LOGS_IS_UNDEFINED/
+ONAP-PDP-REST/POLICY_LOGS_IS_UNDEFINED/
 ONAP-PDP/logs/
 ONAP-XACML/logs/
 ONAP-XACML/src/test/resources/pdpstest/
 POLICY-SDK-APP/catalina.base_IS_UNDEFINED/
 PolicyEngineAPI/logs/
+PolicyEngineAPI/POLICY_LOGS_IS_UNDEFINED/
 PolicyEngineUtils/logs/
 ONAP-REST/logs/common-modules/integrity-monitor/*.log
