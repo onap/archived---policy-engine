@@ -8,9 +8,19 @@ Policy Engine Platform
 
    architecture.rst
    offeredapis.rst
-   installation.rst
    policygui.rst
    deployment.rst
+
+Policy Installation
+-------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   installation.rst
+   installationVM.rst
+   installAmsterController.rst
+   installBeijingController.rst
 
 Policy Software Architecture
 ----------------------------

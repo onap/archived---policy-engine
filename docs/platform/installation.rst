@@ -1,18 +1,15 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
 
-************
-Installation
-************
+Standalone Quick Start Installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. contents::
-    :depth: 3
+    :depth: 2
 
 The installation of ONAP Policy is **automated** by design and can be done via Docker as a standalone system.  
 Various tools, including healthcheck, logs, and Swagger can be used to ensure proper operation.
 
-ONAP Policy Framework: Standalone Quick Start
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 This article explains how to build the ONAP Policy Framework and get it running in Docker as a standalone system. 
 This article assumes that:
 
@@ -152,7 +149,7 @@ Execution of the script above results in the following directory hierarchy in yo
 Building ONAP
 -------------
 
-**Step 1.** Optionally, for a completely clean build, remove the ONAP built modules from your local repository.
+**Step 1:** Optionally, for a completely clean build, remove the ONAP built modules from your local repository.
 
 	.. code-block:: bash 
 	
@@ -161,7 +158,7 @@ Building ONAP
 	    rm -fr ~/.m2/repisotory/com/att
 
 
-**Step 2**.  A pom such as the one below can be used to build the ONAP Policy Framework modules. Create the *pom.xml* file in the directory *~/git/onap/policy*.
+**Step 2:**  A pom such as the one below can be used to build the ONAP Policy Framework modules. Create the *pom.xml* file in the directory *~/git/onap/policy*.
 
 .. code-block:: xml 
    :caption: Typical pom.xml to build the ONAP Policy Framework
@@ -193,22 +190,12 @@ Building ONAP
     </project>
 
 
-**Step 3**. You can now build the ONAP framework
+**Step 3:** You can now build the ONAP framework
 
-   *  On *Ubuntu*, just build the Policy Framework tests and all
+	.. code-block:: bash 
 
-		.. code-block:: bash 
-		
-	            cd ~/git/onap
-	            mvn clean install 
-
-   *  On *macOS*, you must build build the ONAP framework with tests turned off first. Then rebuild the framework with tests turned on and all tests will pass. Note: The reason for this behaviour will be explored later. 
-    
-		.. code-block:: bash 
-
-	            cd ~/git/onap
-	            mvn clean install -DskipTests
- 	            mvn install
+	   cd ~/git/onap
+	   mvn clean install 
  
 
 Building the ONAP Policy Framework Docker Images
@@ -216,28 +203,20 @@ Building the ONAP Policy Framework Docker Images
 The instructions here are based on the instructions in the file *~/git/onap/policy/docker/README.md*.
 
 
-**Step 1.** Build the policy engine docker image:
+**Step 1:** Build the policy engine docker image:
 
-		.. code-block:: bash 
+	.. code-block:: bash 
 
-		    cd ~/git/onap/policy/engine/packages/docker/target
-		    docker build -t onap/policy-pe policy-pe
-
-
-**Step 2.** Build the Drools PDP docker image:
-
-		.. code-block:: bash 
-
-		    cd ~/git/onap/policy/drools-pdp/packages/docker/target
-		    docker build -t onap/policy-drools policy-drools
+	    cd ~/git/onap/policy/engine/packages/docker/target
+	    docker build -t onap/policy-pe policy-pe
 
 
-**Step 3.** Build the Policy Nexus docker image:
+**Step 2:** Build the Drools PDP docker image:
 
-		.. code-block:: bash 
+	.. code-block:: bash 
 
-		    cd ~/git/onap/policy/docker
-		    docker build -t onap/policy-nexus policy-nexus
+	    cd ~/git/onap/policy/drools-pdp/packages/docker/target
+	    docker build -t onap/policy-drools policy-drools
 
 
 Starting the ONAP Policy Framework Docker Images
@@ -245,41 +224,48 @@ Starting the ONAP Policy Framework Docker Images
 
 In order to run the containers, you can use *docker-compose*. This uses the *docker-compose.yml* yaml file to bring up the ONAP Policy Framework.
 
-**Step 1.** Make the file config/drools/drools-tweaks.sh executable.
+**Step 1:** Make the file config/drools/drools-tweaks.sh executable.
 
-		.. code-block:: bash 
+	.. code-block:: bash 
 
-		    chmod +x config/drools/drools-tweaks.sh
-
-
-**Step 2.** Set the IP address to use to be an IP address of a suitable interface on your machine. Save the IP address into the file *config/pe/ip_addr.txt*.
+	    chmod +x config/drools/drools-tweaks.sh
 
 
-**Step 3.** Set the environment variable *MTU* to be a suitable MTU size for the application.
-
-		.. code-block:: bash 
-
-		    export MTU=9126
+**Step 2:** Set the IP address to use to be an IP address of a suitable interface on your machine. Save the IP address into the file *config/pe/ip_addr.txt*.
 
 
-**Step 4.** Determine if you want policies pre-loaded or not. By default, all the configuration and operational policies will be pre-loaded by the docker compose script. If you do not wish for that to happen, then export this variable:
+**Step 3:** Set the environment variable *MTU* to be a suitable MTU size for the application.
 
-		.. code-block:: bash 
+	.. code-block:: bash 
 
-		    export PRELOAD_POLICIES=false
-
-
-**Step 5.** Run the system using *docker-compose*. Note that on some systems you may have to run the *docker-compose* command as root or using *sudo*. Note that this command takes a number of minutes to execute on a laptop or desktop computer.
-
-		.. code-block:: bash 
-
-		    docker-compose up
+	    export MTU=9126
 
 
-Installation Complete
----------------------
+**Step 4:** Determine if you want policies pre-loaded or not. By default, all the configuration and operational policies will be pre-loaded by the docker compose script. If you do not wish for that to happen, then export this variable:
+
+	.. code-block:: bash 
+
+	    export PRELOAD_POLICIES=false
+
+
+**Step 5:** Run the system using *docker-compose*. Note that on some systems you may have to run the *docker-compose* command as root or using *sudo*. Note that this command takes a number of minutes to execute on a laptop or desktop computer.
+
+	.. code-block:: bash 
+
+	    docker-compose up
+
 
 **You now have a full standalone ONAP Policy framework up and running!**
+
+
+Installation of Controllers and Policies
+----------------------------------------
+
+You may now install a controller and policies on the ONAP Policy Framework. Follow either of the HowTos below to install either the Amsterdam or Beijing controller and policies.
+
+    * `Installation of Amsterdam Controller and vCPE Policy <installAmsterController.html>`_
+    * `Installation of Beijing Controller and Policies <installBeijingController.html>`_
+
 
 
 .. _Standalone Quick Start : https://wiki.onap.org/display/DW/ONAP+Policy+Framework%3A+Standalone+Quick+Start
