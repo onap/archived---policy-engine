@@ -98,6 +98,7 @@ function component_preconfigure() {
 
 	/bin/sed -i -e 's!${{POLICY_HOME}}!'"${POLICY_HOME}!g" \
 		-e 's!${{FQDN}}!'"${FQDN}!g" \
+		-e 's!${{POLICY_LOGS}}!'"${POLICY_LOGS}!g" \
 		*.conf > /dev/null 2>&1
 }
 
