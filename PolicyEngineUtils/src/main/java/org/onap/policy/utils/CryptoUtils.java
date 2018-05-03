@@ -145,7 +145,11 @@ public class CryptoUtils {
 			return decryptTxt(encryptedTxt);
 		} catch (Exception e) {
 			try {
-				LOGGER.error("decryptTxtNoEx: Exception while decryption : " + e);
+				if (encryptedTxt != null) {
+					LOGGER.info("decryptTxtNoEx: Exception while decryption : " + e);	
+				} else {
+				    LOGGER.error("decryptTxtNoEx: Exception while decryption : " + e);
+				}
 				return (encryptedTxt != null) ? encryptedTxt.getBytes(StandardCharsets.UTF_8) : new byte[0];
 			} catch (Exception e1) {
 				LOGGER.error("decryptTxtNoEx: Exception on sending default : " + e1);
