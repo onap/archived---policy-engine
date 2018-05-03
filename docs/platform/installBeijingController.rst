@@ -1,8 +1,8 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
 
-Installation of Beijing Controller and vCPE Policy 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Installation of Beijing Controller and Policies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. contents::
     :depth: 2
@@ -78,10 +78,10 @@ Install the Beijing policy controller
 
 	   vi apps-controlloop-installer
 
-	   Change the line
-		"features enable controlloop-amsterdam"
-	   to
-		"features enable controlloop-beijing"
+	   # Change the line
+ 	   #    "features enable controlloop-amsterdam"
+	   # to
+	   #    "features enable controlloop-beijing"
 
  
 **Step 6:** Stop the policy engine
@@ -307,15 +307,15 @@ We now install the Beijing policies for the vCPE, vFirewall, vDNS & VOLTE use ca
 
 	   bin/create-cl-beijing
 
-	   - Type Y when asked for confirmation of parameters
-	   - Accept /tmp as the install directory
-	   - Type Y to agree to creation of a Maven Artifact
+	   # - Type Y when asked for confirmation of parameters
+	   # - Accept /tmp as the install directory
+	   # - Type Y to agree to creation of a Maven Artifact
 
  
 **Step 6:** Maven artifact creation now proceeds.  After some minutes, confirmation is requested for deployment of rules into Maven. 
 	.. code-block:: bash 
 
-	   - Type Y to deploy the rules. 
+	   # - Type Y to deploy the rules. 
 
 	The rules are deployed into Maven. Expect the rule deployment process to take a number of minutes, perhaps 10 minutes.
 
@@ -341,8 +341,8 @@ We now install the Beijing policies for the vCPE, vFirewall, vDNS & VOLTE use ca
 
 	   bin/push-policies-beijing
 
-	   When the script prompts for the path to the properties file, enter the following:
-	 	/opt/app/policy/config/beijing-controller.properties
+	   # When the script prompts for the path to the properties file, enter the following:
+	   #    /opt/app/policy/config/beijing-controller.properties
 
 
 **Step 10:** Now verify that the Beijing policies are loaded, there should be four facts (one per use case) in the Drools PDP

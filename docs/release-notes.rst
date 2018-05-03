@@ -101,6 +101,7 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
     * POLICY-753	Policy Health Check failed with multi-node cluster
     * POLICY-763	PDP-D throwing NullPointerException for multiple vDNS and VOLTE messages injected in parallel
     * POLICY-765	junit test for guard fails intermittently
+    * POLICY-773	brmsgw failure pushing notification when executing update-vfw-op-policy.sh 
 
 
 

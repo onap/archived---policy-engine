@@ -264,15 +264,15 @@ We now install the Amsterdam policies for the vCPE, vFirewall, vDNS & VOLTE use 
 
 	   bin/create-cl-amsterdam
 
-	   - Type Y when asked for confirmation of parameters
-	   - Accept /tmp as the install directory
-	   - Type Y to agree to creation of a Maven Artifact
+	   # - Type Y when asked for confirmation of parameters
+	   # - Accept /tmp as the install directory
+	   # - Type Y to agree to creation of a Maven Artifact
 
  
 **Step 6:** Maven artifact creation now proceeds.  After some minutes, confirmation is requested for deployment of rules into Maven. 
 	.. code-block:: bash 
 
-	   - Type Y to deploy the rules. 
+	   # - Type Y to deploy the rules. 
 
 	The rules are deployed into Maven. Expect the rule deployment process to take a number of minutes, perhaps 10 minutes.
 
