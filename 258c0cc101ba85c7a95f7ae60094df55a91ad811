@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_795b1954",
+        "filename": "ONAP-PAP-REST/src/main/resources/logback.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-05-03T14:18:53Z",
+      "side": 1,
+      "message": "Why did you change this to ONAP Portal SDK?  This is the ONAP-PAP-REST project.",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "258c0cc101ba85c7a95f7ae60094df55a91ad811",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
