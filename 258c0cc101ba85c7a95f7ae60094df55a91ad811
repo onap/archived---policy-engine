@@ -22,6 +22,23 @@
       "revId": "258c0cc101ba85c7a95f7ae60094df55a91ad811",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b9452170",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/CryptoUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-05-03T14:20:38Z",
+      "side": 1,
+      "message": "has to make a check to see if it is a real error or just that encryption was not applied.  If encryptedTxt !\u003d null, print an INFO message, etc .. print an error message",
+      "revId": "258c0cc101ba85c7a95f7ae60094df55a91ad811",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
