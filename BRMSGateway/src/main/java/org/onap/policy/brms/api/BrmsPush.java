@@ -57,7 +57,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.ProcessingException;
 
 import org.apache.commons.io.FileUtils;
@@ -73,6 +73,7 @@ import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.Invoker;
 import org.codehaus.plexus.util.IOUtil;
+
 import org.codehaus.plexus.util.WriterFactory;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.onap.policy.api.PEDependency;
@@ -481,31 +482,39 @@ public class BrmsPush {
     private void syncGroupInfo() {
         // Sync DB to JMemory.
         final EntityTransaction et = em.getTransaction();
-        et.begin();
-        Query query = em.createQuery("select b from BrmsGroupInfo AS b");
-        List<?> result = query.getResultList();
-        if (result.size() != groupMap.size()) {
-            for (final Object value : result) {
-                final BrmsGroupInfo brmsGroupInfo = (BrmsGroupInfo) value;
-                final PEDependency dependency = new PEDependency();
-                dependency.setArtifactId(brmsGroupInfo.getArtifactId());
-                dependency.setGroupId(brmsGroupInfo.getGroupId());
-                dependency.setVersion(brmsGroupInfo.getVersion());
-                final ArrayList<Object> values = new ArrayList<>();
-                values.add(dependency);
-                groupMap.put(brmsGroupInfo.getControllerName(), values);
+        try {
+            et.begin();
+            final TypedQuery<BrmsGroupInfo> groupInfoQuery =
+                    em.createQuery("select b from BrmsGroupInfo AS b", BrmsGroupInfo.class);
+            final List<BrmsGroupInfo> groupInfoResult = groupInfoQuery.getResultList();
+            if (groupInfoResult.size() != groupMap.size()) {
+                for (final BrmsGroupInfo brmsGroupInfo : groupInfoResult) {
+                    final PEDependency dependency = new PEDependency();
+                    dependency.setArtifactId(brmsGroupInfo.getArtifactId());
+                    dependency.setGroupId(brmsGroupInfo.getGroupId());
+                    dependency.setVersion(brmsGroupInfo.getVersion());
+                    final ArrayList<Object> values = new ArrayList<>();
+                    values.add(dependency);
+                    groupMap.put(brmsGroupInfo.getControllerName(), values);
+                }
             }
-        }
-        query = em.createQuery("select g from BrmsPolicyInfo AS g");
-        result = query.getResultList();
-        if (result.size() != policyMap.size()) {
-            for (final Object value : result) {
-                final BrmsPolicyInfo brmsPolicyInfo = (BrmsPolicyInfo) value;
-                policyMap.put(brmsPolicyInfo.getPolicyName(), brmsPolicyInfo.getControllerName().getControllerName());
+
+            final TypedQuery<BrmsPolicyInfo> policyInfoQuery =
+                    em.createQuery("select g from BrmsPolicyInfo AS g", BrmsPolicyInfo.class);
+            final List<BrmsPolicyInfo> policyInfoResult = policyInfoQuery.getResultList();
+            if (policyInfoResult.size() != policyMap.size()) {
+                for (final BrmsPolicyInfo brmsPolicyInfo : policyInfoResult) {
+                    policyMap.put(brmsPolicyInfo.getPolicyName(),
+                            brmsPolicyInfo.getControllerName().getControllerName());
+                }
             }
+            et.commit();
+            LOGGER.info("Updated Local Memory values with values from database.");
+        } catch (final Exception exception) {
+            LOGGER.error("Unable to sync group info", exception);
+            et.rollback();
+            throw exception;
         }
-        et.commit();
-        LOGGER.info("Updated Local Memory values with values from database.");
     }
 
     private void manageProject(final String selectedName, final String ksessionName, final String name,
@@ -524,37 +533,47 @@ public class BrmsPush {
      * Add Policy to JMemory and DataBase.
      */
     private void addToPolicy(final String policyName, final String controllerName) {
-        policyMap.put(policyName, controllerName);
+
         final EntityTransaction et = em.getTransaction();
-        et.begin();
-        Query query = em.createQuery("select b from BrmsPolicyInfo as b where b.policyName = :pn");
-        query.setParameter("pn", policyName);
-        final List<?> pList = query.getResultList();
-        boolean create = false;
-        BrmsPolicyInfo brmsPolicyInfo = new BrmsPolicyInfo();
-        if (!pList.isEmpty()) {
-            // Already exists.
-            brmsPolicyInfo = (BrmsPolicyInfo) pList.get(0);
-            if (!brmsPolicyInfo.getControllerName().getControllerName().equals(controllerName)) {
+        try {
+            et.begin();
+            boolean create = false;
+            final TypedQuery<BrmsPolicyInfo> policyInfoQuery =
+                    em.createQuery("select b from BrmsPolicyInfo as b where b.policyName = :pn", BrmsPolicyInfo.class);
+            policyInfoQuery.setParameter("pn", policyName);
+            final List<BrmsPolicyInfo> policyInfoResultList = policyInfoQuery.getResultList();
+            BrmsPolicyInfo brmsPolicyInfo = new BrmsPolicyInfo();
+            if (!policyInfoResultList.isEmpty()) {
+                // Already exists.
+                brmsPolicyInfo = policyInfoResultList.get(0);
+                if (!brmsPolicyInfo.getControllerName().getControllerName().equals(controllerName)) {
+                    create = true;
+                }
+            } else {
                 create = true;
             }
-        } else {
-            create = true;
-        }
-        if (create) {
-            query = em.createQuery("select b from BrmsGroupInfo as b where b.controllerName = :cn");
-            query.setParameter("cn", controllerName);
-            final List<?> bList = query.getResultList();
-            BrmsGroupInfo brmsGroupInfo = new BrmsGroupInfo();
-            if (!bList.isEmpty()) {
-                brmsGroupInfo = (BrmsGroupInfo) bList.get(0);
+            if (create) {
+                final TypedQuery<BrmsGroupInfo> groupInfoQuery = em.createQuery(
+                        "select b from BrmsGroupInfo as b where b.controllerName = :cn", BrmsGroupInfo.class);
+                groupInfoQuery.setParameter("cn", controllerName);
+                final List<BrmsGroupInfo> groupInfoResultList = groupInfoQuery.getResultList();
+                BrmsGroupInfo brmsGroupInfo = new BrmsGroupInfo();
+                if (!groupInfoResultList.isEmpty()) {
+                    brmsGroupInfo = groupInfoResultList.get(0);
+                }
+                brmsPolicyInfo.setPolicyName(policyName);
+                brmsPolicyInfo.setControllerName(brmsGroupInfo);
+                em.persist(brmsPolicyInfo);
+                em.flush();
             }
-            brmsPolicyInfo.setPolicyName(policyName);
-            brmsPolicyInfo.setControllerName(brmsGroupInfo);
-            em.persist(brmsPolicyInfo);
-            em.flush();
+            et.commit();
+
+            policyMap.put(policyName, controllerName);
+        } catch (final Exception exception) {
+            LOGGER.error("Unable add policy to database", exception);
+            et.rollback();
+            throw exception;
         }
-        et.commit();
     }
 
     private void syncProject(final String selectedName) {
@@ -692,10 +711,10 @@ public class BrmsPush {
                 final String repUrl = repUrlList.get(0);
                 restWrapper =
                         new NexusRestWrapper(repUrl.substring(0, repUrl.indexOf(repUrl.split(":[0-9]+\\/nexus")[1])),
-                                repUserName,  repPassword);
+                                repUserName, repPassword);
                 final NexusRestSearchParameters searchParameters = new NexusRestSearchParameters();
-                searchParameters.useFilterSearch(
-                        getGroupId(selectedName), getArtifactId(selectedName), version, null, null);
+                searchParameters.useFilterSearch(getGroupId(selectedName), getArtifactId(selectedName), version, null,
+                        null);
 
                 final List<NexusArtifact> resultList = restWrapper.findArtifact(searchParameters).getArtifactList();
                 if (resultList != null) {
@@ -705,7 +724,7 @@ public class BrmsPush {
             } catch (NexusRestWrapperException | ProcessingException e) {
                 LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Connection to remote Nexus has failed. "
                         + e.getMessage(), e);
-            }  finally {
+            } finally {
                 if (null != restWrapper) {
                     restWrapper.close();
                 }
@@ -932,7 +951,7 @@ public class BrmsPush {
             pomWriter.write(writer, model);
         } catch (final Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while creating POM for " + getArtifactId(name)
-                + e.getMessage(), e);
+                    + e.getMessage(), e);
         } finally {
             IOUtil.close(writer);
         }
@@ -1083,29 +1102,37 @@ public class BrmsPush {
     }
 
     private void addToGroup(final String name, final PEDependency dependency) {
-        final ArrayList<Object> values = new ArrayList<>();
-        values.add(dependency);
-        groupMap.put(name, values);
         final EntityTransaction et = em.getTransaction();
-        et.begin();
-        final Query query = em.createQuery("select b from BrmsGroupInfo as b where b.controllerName = :cn");
-        query.setParameter("cn", name);
-        final List<?> groupList = query.getResultList();
-        BrmsGroupInfo brmsGroupInfo = null;
-        if (!groupList.isEmpty()) {
-            LOGGER.info("Controller name already Existing in DB. Will be updating the DB Values" + name);
-            brmsGroupInfo = (BrmsGroupInfo) groupList.get(0);
+        try {
+            et.begin();
+            final TypedQuery<BrmsGroupInfo> query = em
+                    .createQuery("select b from BrmsGroupInfo as b where b.controllerName = :cn", BrmsGroupInfo.class);
+            query.setParameter("cn", name);
+            final List<BrmsGroupInfo> groupList = query.getResultList();
+            BrmsGroupInfo brmsGroupInfo = null;
+            if (!groupList.isEmpty()) {
+                LOGGER.info("Controller name already Existing in DB. Will be updating the DB Values" + name);
+                brmsGroupInfo = groupList.get(0);
+            }
+            if (brmsGroupInfo == null) {
+                brmsGroupInfo = new BrmsGroupInfo();
+            }
+            brmsGroupInfo.setControllerName(name);
+            brmsGroupInfo.setGroupId(dependency.getGroupId());
+            brmsGroupInfo.setArtifactId(dependency.getArtifactId());
+            brmsGroupInfo.setVersion(dependency.getVersion());
+            em.persist(brmsGroupInfo);
+            em.flush();
+            et.commit();
+
+            final ArrayList<Object> values = new ArrayList<>();
+            values.add(dependency);
+            groupMap.put(name, values);
+        } catch (final Exception exception) {
+            LOGGER.error("Unable add/update policy group to database for controller name: " + name, exception);
+            et.rollback();
+            throw exception;
         }
-        if (brmsGroupInfo == null) {
-            brmsGroupInfo = new BrmsGroupInfo();
-        }
-        brmsGroupInfo.setControllerName(name);
-        brmsGroupInfo.setGroupId(dependency.getGroupId());
-        brmsGroupInfo.setArtifactId(dependency.getArtifactId());
-        brmsGroupInfo.setVersion(dependency.getVersion());
-        em.persist(brmsGroupInfo);
-        em.flush();
-        et.commit();
     }
 
     private String getArtifactId(final String name) {
@@ -1139,22 +1166,29 @@ public class BrmsPush {
 
     // Removes Policy from Memory and Database.
     private void removePolicyFromGroup(final String policyName, final String controllerName) {
-        policyMap.remove(policyName);
         final EntityTransaction et = em.getTransaction();
-        et.begin();
-        final Query query = em.createQuery("select b from BrmsPolicyInfo as b where b.policyName = :pn");
-        query.setParameter("pn", policyName);
-        final List<?> pList = query.getResultList();
-        BrmsPolicyInfo brmsPolicyInfo;
-        if (!pList.isEmpty()) {
-            // Already exists.
-            brmsPolicyInfo = (BrmsPolicyInfo) pList.get(0);
-            if (brmsPolicyInfo.getControllerName().getControllerName().equals(controllerName)) {
-                em.remove(brmsPolicyInfo);
-                em.flush();
+        try {
+            et.begin();
+            final TypedQuery<BrmsPolicyInfo> query =
+                    em.createQuery("select b from BrmsPolicyInfo as b where b.policyName = :pn", BrmsPolicyInfo.class);
+            query.setParameter("pn", policyName);
+            final List<BrmsPolicyInfo> pList = query.getResultList();
+            BrmsPolicyInfo brmsPolicyInfo;
+            if (!pList.isEmpty()) {
+                // Already exists.
+                brmsPolicyInfo = pList.get(0);
+                if (brmsPolicyInfo.getControllerName().getControllerName().equals(controllerName)) {
+                    em.remove(brmsPolicyInfo);
+                    em.flush();
+                }
             }
+            et.commit();
+            policyMap.remove(policyName);
+        } catch (final Exception exception) {
+            LOGGER.error("Unable remove policy from group to database for policy name: " + policyName, exception);
+            et.rollback();
+            throw exception;
         }
-        et.commit();
     }
 
     private void setVersion(final String selectedName) {
