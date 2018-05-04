@@ -30,6 +30,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,8 +55,8 @@ public class BrmsHandlerTest {
         PowerMockito.when(Persistence.createEntityManagerFactory(any(), any())).thenReturn(emf);
         final EntityTransaction et = Mockito.mock(EntityTransaction.class);
         Mockito.when(em.getTransaction()).thenReturn(et);
-        final Query query = Mockito.mock(Query.class);
-        Mockito.when(em.createQuery(Mockito.anyString())).thenReturn(query);
+        final TypedQuery<?> query = Mockito.mock(TypedQuery.class);
+        Mockito.when(em.createQuery(Mockito.anyString(), Mockito.any())).thenReturn((TypedQuery<Object>) query);
 
         // Mock backup monitor
         PowerMockito.mockStatic(BackUpMonitor.class);
