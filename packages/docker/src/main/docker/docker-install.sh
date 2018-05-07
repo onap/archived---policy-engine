@@ -544,6 +544,11 @@ function install_brmsgw() {
 	
 	install_prereqs "${BASE_CONF}"
 
+	if [[ -n ${BUILD_VERSION} ]]; then
+		echo "Replacing ${BUILD_VERSION} in ${COMPONENT_TYPE}.conf"
+		sed -i -e "s/^BRMS_DEPENDENCY_VERSION=.*$/BRMS_DEPENDENCY_VERSION=${BUILD_VERSION}/g" "${COMPONENT_TYPE}.conf"
+	fi
+	
 	if ! process_configuration "${COMPONENT_TYPE}.conf"; then
 		echo "error: aborting ${COMPONENT_TYPE} installation: cannot process configuration ${COMPONENT_TYPE}.conf"
 		exit 1
@@ -562,7 +567,7 @@ function install_brmsgw() {
 		echo "error: aborting base installation: cannot create ${POLICY_HOME}/servers/${COMPONENT_TYPE}"
 		exit 1
 	fi	
-	
+
 	/bin/cp -fr "${POLICY_HOME}"/install/servers/${COMPONENT_TYPE}/BRMSGateway.jar "${POLICY_HOME}/servers/${COMPONENT_TYPE}"
 	/bin/cp -fr "${POLICY_HOME}"/install/servers/${COMPONENT_TYPE}/*.properties "${POLICY_HOME}/servers/${COMPONENT_TYPE}"
 	/bin/cp -fr "${POLICY_HOME}"/install/servers/${COMPONENT_TYPE}/config "${POLICY_HOME}/servers/${COMPONENT_TYPE}"
