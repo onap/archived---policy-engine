@@ -32,98 +32,104 @@ import org.springframework.http.HttpStatus;
 
 public class DeletePolicyService {
     private static final Logger LOGGER = FlexLogger.getLogger(DeletePolicyService.class.getName());
-    
+
     private String deleteResult = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private DeletePolicyParameters deletePolicyParameters = null;
     private String message = null;
     private String filePrefix = null;
-    private String clientScope = null; 
+    private String clientScope = null;
     private String policyType = null;
     private String policyName = null;
     private String policyScope = null;
 
-    public DeletePolicyService(DeletePolicyParameters deletePolicyParameters,
-            String requestID) {
+    public DeletePolicyService(final DeletePolicyParameters deletePolicyParameters, final String requestID) {
         this.deletePolicyParameters = deletePolicyParameters;
-        if(deletePolicyParameters.getRequestID()==null){
+        if (deletePolicyParameters.getRequestID() == null) {
             UUID requestUUID = null;
             if (requestID != null && !requestID.isEmpty()) {
                 try {
                     requestUUID = UUID.fromString(requestID);
-                } catch (IllegalArgumentException e) {
+                } catch (final IllegalArgumentException e) {
                     requestUUID = UUID.randomUUID();
                     LOGGER.info("Generated Random UUID: " + requestUUID.toString(), e);
                 }
-            }else{
+            } else {
                 requestUUID = UUID.randomUUID();
                 LOGGER.info("Generated Random UUID: " + requestUUID.toString());
             }
             this.deletePolicyParameters.setRequestID(requestUUID);
         }
-        try{
+        try {
             run();
             specialCheck();
-        }catch(PolicyException e){
+        } catch (final PolicyException e) {
+            LOGGER.error("Unable to process delete policy request for : " + this.deletePolicyParameters);
             deleteResult = XACMLErrorConstants.ERROR_DATA_ISSUE + e;
             status = HttpStatus.BAD_REQUEST;
         }
     }
 
     private void specialCheck() {
-    	if(deleteResult==null){
-    		return;
-    	}
-        if (deleteResult.contains("BAD REQUEST")||deleteResult.contains("PE300")||deleteResult.contains("PE200")||deleteResult.contains("not exist")||deleteResult.contains("Invalid policyName")) {
-            if(deleteResult.contains("groupId")) {
+        if (deleteResult == null) {
+            return;
+        }
+        if (deleteResult.contains("BAD REQUEST") || deleteResult.contains("PE300") || deleteResult.contains("PE200")
+                || deleteResult.contains("not exist") || deleteResult.contains("Invalid policyName")) {
+            if (deleteResult.contains("groupId")) {
                 status = HttpStatus.NOT_FOUND;
             } else {
-            	status = HttpStatus.BAD_REQUEST;
+                status = HttpStatus.BAD_REQUEST;
             }
-        } else if (deleteResult.contains("locked down")){
+        } else if (deleteResult.contains("locked down")) {
             status = HttpStatus.ACCEPTED;
         } else if (deleteResult.contains("not Authorized")) {
             status = HttpStatus.FORBIDDEN;
-        } else if (deleteResult.contains("JPAUtils")||deleteResult.contains("database")||deleteResult.contains("policy file")||
-                deleteResult.contains("unknown")||deleteResult.contains("configuration")) {
+        } else if (deleteResult.contains("JPAUtils") || deleteResult.contains("database")
+                || deleteResult.contains("policy file") || deleteResult.contains("unknown")
+                || deleteResult.contains("configuration")) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
-        } 
+        }
     }
 
-    private void run() throws PolicyException{
-        // Check Validation. 
-        if(!getValidation()){
+    private void run() throws PolicyException {
+        // Check Validation.
+        if (!getValidation()) {
             LOGGER.error(message);
             throw new PolicyException(message);
         }
-        // Get Result. 
-        try{
+        // Get Result.
+        try {
+            LOGGER.debug("Processing delete request:  " + deletePolicyParameters.toString());
             status = HttpStatus.OK;
             deleteResult = processResult();
-        }catch (Exception e){
+        } catch (final Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
             status = HttpStatus.BAD_REQUEST;
             throw new PolicyException(e);
         }
     }
 
-    private String processResult() throws PolicyException{
+    private String processResult() throws PolicyException {
         String response = null;
         String fullPolicyName = null;
         String pdpGroup = deletePolicyParameters.getPdpGroup();
-        // PDP Group Check. 
-        if (pdpGroup==null){
-            pdpGroup="NA";
+        // PDP Group Check.
+        if (pdpGroup == null) {
+            pdpGroup = "NA";
         }
-        PAPServices papServices = new PAPServices();
+        final PAPServices papServices = new PAPServices();
         if (!deletePolicyParameters.getPolicyName().contains("xml")) {
-            
-            String activeVersion = papServices.getActiveVersion(policyScope, filePrefix, policyName, clientScope, deletePolicyParameters.getRequestID());
-            LOGGER.debug("The active version of " + policyScope + File.separator + filePrefix + policyName + " is " + activeVersion);
+
+            final String activeVersion = papServices.getActiveVersion(policyScope, filePrefix, policyName, clientScope,
+                    deletePolicyParameters.getRequestID());
+            LOGGER.debug("The active version of " + policyScope + File.separator + filePrefix + policyName + " is "
+                    + activeVersion);
             String id = null;
             if ("pe100".equalsIgnoreCase(activeVersion)) {
-                response = XACMLErrorConstants.ERROR_PERMISSIONS + "response code of the URL is 403. PEP is not Authorized for making this Request!! "
-                        + "Contact Administrator for this Scope. "; 
+                response = XACMLErrorConstants.ERROR_PERMISSIONS
+                        + "response code of the URL is 403. PEP is not Authorized for making this Request!! "
+                        + "Contact Administrator for this Scope. ";
                 LOGGER.error(response);
                 return response;
             } else if ("pe300".equalsIgnoreCase(activeVersion)) {
@@ -132,86 +138,99 @@ public class DeletePolicyService {
                 LOGGER.error(response);
                 return response;
             }
-            if (!activeVersion.equalsIgnoreCase("0")) {
+            if (!"0".equalsIgnoreCase(activeVersion)) {
                 id = policyScope + "." + filePrefix + policyName + "." + activeVersion + ".xml";
                 LOGGER.debug("The policyId is " + id);
             } else {
-                response = XACMLErrorConstants.ERROR_DATA_ISSUE + "could not retrieve the activeVersion for this policy. could not retrieve the activeVersion for this policy.  "
-                        + "This indicates the policy does not exist, please verify the policy exists."; 
+                response = XACMLErrorConstants.ERROR_DATA_ISSUE
+                        + "could not retrieve the activeVersion for this policy. could not retrieve the activeVersion for this policy.  "
+                        + "This indicates the policy does not exist, please verify the policy exists.";
                 LOGGER.error(response);
                 return response;
             }
-            
+
             fullPolicyName = policyScope + "." + filePrefix + policyName + "." + activeVersion + ".xml";
-            
+
         } else {
             fullPolicyName = policyName;
         }
 
         if ("PAP".equalsIgnoreCase(deletePolicyParameters.getPolicyComponent())) {
-            if (deletePolicyParameters.getDeleteCondition()==null||deletePolicyParameters.getDeleteCondition().toString().trim().isEmpty()){
+            if (deletePolicyParameters.getDeleteCondition() == null
+                    || deletePolicyParameters.getDeleteCondition().toString().trim().isEmpty()) {
                 message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Delete Condition given.";
                 LOGGER.error(message);
                 return message;
             }
-            
-            StdPAPPolicy deletePapPolicy = new StdPAPPolicy(fullPolicyName, deletePolicyParameters.getDeleteCondition().toString());
-            //send JSON object to PAP
-            response = (String) papServices.callPAP(deletePapPolicy, new String[] {"groupId="+pdpGroup, "apiflag=deletePapApi", "operation=delete" }, deletePolicyParameters.getRequestID(), clientScope);
+
+            final StdPAPPolicy deletePapPolicy =
+                    new StdPAPPolicy(fullPolicyName, deletePolicyParameters.getDeleteCondition().toString());
+            // send JSON object to PAP
+            response = (String) papServices.callPAP(deletePapPolicy,
+                    new String[] {"groupId=" + pdpGroup, "apiflag=deletePapApi", "operation=delete"},
+                    deletePolicyParameters.getRequestID(), clientScope);
         } else if ("PDP".equalsIgnoreCase(deletePolicyParameters.getPolicyComponent())) {
-            if (deletePolicyParameters.getPdpGroup()==null||deletePolicyParameters.getPdpGroup().trim().isEmpty()){
-                message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No PDP Group given."; 
+            if (deletePolicyParameters.getPdpGroup() == null || deletePolicyParameters.getPdpGroup().trim().isEmpty()) {
+                message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No PDP Group given.";
                 LOGGER.error(message);
                 return message;
             }
-            //send JSON object to PAP
-            response = (String) papServices.callPAP(null, new String[] {"policyName="+fullPolicyName, "groupId="+pdpGroup, "apiflag=deletePdpApi", "operation=delete" }, deletePolicyParameters.getRequestID(), clientScope);
+            // send JSON object to PAP
+            response =
+                    (String) papServices.callPAP(
+                            null, new String[] {"policyName=" + fullPolicyName, "groupId=" + pdpGroup,
+                                "apiflag=deletePdpApi", "operation=delete"},
+                            deletePolicyParameters.getRequestID(), clientScope);
         } else {
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Policy Component does not exist. Please enter either PAP or PDP to delete the policy from a specified Policy Component.";
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE
+                    + "Policy Component does not exist. Please enter either PAP or PDP to delete the policy from a specified Policy Component.";
             LOGGER.error(message);
             response = message;
         }
         return response;
     }
 
- private boolean getValidation() {
-     // While Validating, extract the required values.
-	 if (deletePolicyParameters.getPolicyName()==null||deletePolicyParameters.getPolicyName().trim().isEmpty()){
-         message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Name given.";
-         return false;
-     }
-     if (!deletePolicyParameters.getPolicyName().contains("xml")) {
-         if (deletePolicyParameters.getPolicyName() != null
-                 && deletePolicyParameters.getPolicyName().contains(".")) {
-             policyName = deletePolicyParameters.getPolicyName().substring(deletePolicyParameters.getPolicyName().lastIndexOf('.') + 1,
-                     deletePolicyParameters.getPolicyName().length());
-             policyScope = deletePolicyParameters.getPolicyName().substring(0,deletePolicyParameters.getPolicyName().lastIndexOf('.'));
-             LOGGER.info("Name is " + policyName + "   scope is " + policyScope);
-         } else {
-             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Scope given.";
-             return false;
-         }
-     } else {
-         policyName = deletePolicyParameters.getPolicyName();
-     }
-     policyType = deletePolicyParameters.getPolicyType();
-     if(policyType== null || policyType.trim().isEmpty()){
-         message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No PolicyType given.";
-         return false;
-     }
-     setClientScope();
-     if (clientScope==null||clientScope.trim().isEmpty()){
-         message = XACMLErrorConstants.ERROR_DATA_ISSUE + deletePolicyParameters.getPolicyType() + " is not a valid Policy Type."; 
-         LOGGER.error(message);
-         return false;
-     }
-     LOGGER.debug("clientScope is " + clientScope);
-     LOGGER.debug("filePrefix is " + filePrefix);
-     if(deletePolicyParameters.getPolicyComponent()==null){
-         message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Component given.";
-         return false;
-     }
-     return true;
+    private boolean getValidation() {
+        // While Validating, extract the required values.
+        if (deletePolicyParameters.getPolicyName() == null || deletePolicyParameters.getPolicyName().trim().isEmpty()) {
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Name given.";
+            return false;
+        }
+        if (!deletePolicyParameters.getPolicyName().contains("xml")) {
+            if (deletePolicyParameters.getPolicyName() != null
+                    && deletePolicyParameters.getPolicyName().contains(".")) {
+                policyName = deletePolicyParameters.getPolicyName().substring(
+                        deletePolicyParameters.getPolicyName().lastIndexOf('.') + 1,
+                        deletePolicyParameters.getPolicyName().length());
+                policyScope = deletePolicyParameters.getPolicyName().substring(0,
+                        deletePolicyParameters.getPolicyName().lastIndexOf('.'));
+                LOGGER.info("Name is " + policyName + "   scope is " + policyScope);
+            } else {
+                message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Scope given.";
+                return false;
+            }
+        } else {
+            policyName = deletePolicyParameters.getPolicyName();
+        }
+        policyType = deletePolicyParameters.getPolicyType();
+        if (policyType == null || policyType.trim().isEmpty()) {
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No PolicyType given.";
+            return false;
+        }
+        setClientScope();
+        if (clientScope == null || clientScope.trim().isEmpty()) {
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + deletePolicyParameters.getPolicyType()
+                    + " is not a valid Policy Type.";
+            LOGGER.error(message);
+            return false;
+        }
+        LOGGER.debug("clientScope is " + clientScope);
+        LOGGER.debug("filePrefix is " + filePrefix);
+        if (deletePolicyParameters.getPolicyComponent() == null) {
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Component given.";
+            return false;
+        }
+        return true;
     }
 
     private void setClientScope() {
@@ -237,9 +256,9 @@ public class DeletePolicyService {
             clientScope = "ConfigMS";
             filePrefix = "Config_MS_";
         } else if ("Optimization".equalsIgnoreCase(policyType)) {
-        	clientScope = "ConfigOptimization";
-        	filePrefix = "Config_OOF_";
-        }else if ("BRMS_RAW".equalsIgnoreCase(policyType)) {
+            clientScope = "ConfigOptimization";
+            filePrefix = "Config_OOF_";
+        } else if ("BRMS_RAW".equalsIgnoreCase(policyType)) {
             clientScope = "ConfigBrmsRaw";
             filePrefix = "Config_BRMS_Raw_";
         } else if ("BRMS_PARAM".equalsIgnoreCase(policyType)) {
@@ -247,8 +266,7 @@ public class DeletePolicyService {
             filePrefix = "Config_BRMS_Param_";
         } else {
             clientScope = null;
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE + policyType
-                    + " is not a valid Policy Type.";
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + policyType + " is not a valid Policy Type.";
         }
     }
 

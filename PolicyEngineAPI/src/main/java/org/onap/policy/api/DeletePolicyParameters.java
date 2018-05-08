@@ -23,92 +23,108 @@ package org.onap.policy.api;
 import java.util.UUID;
 
 /**
- * <code>PushPolicyParameters</code> defines the Policy Parameters
- *  which are required to Push a Policy to PDPGroup. 
+ * <code>PushPolicyParameters</code> defines the Policy Parameters which are required to Push a
+ * Policy to PDPGroup.
  * 
  * @version 0.1
  */
 public class DeletePolicyParameters {
-	
-	private String policyName;
-	private String policyType;
-	private String policyComponent;
-	private DeletePolicyCondition deleteCondition;
-	private String pdpGroup;
-	private UUID requestID;
 
-	
-	/**
-	 * @return the policyName
-	 */
-	public String getPolicyName() {
-		return policyName;
-	}
-	/**
-	 * @param policyName the policyName to set
-	 */
-	public void setPolicyName(String policyName) {
-		this.policyName = policyName;
-	}
-	/**
-	 * @return the policyComponent
-	 */
-	public String getPolicyComponent() {
-		return policyComponent;
-	}
-	/**
-	 * @return the policyType
-	 */
-	public String getPolicyType() {
-		return policyType;
-	}
-	/**
-	 * @param policyType the policyType to set
-	 */
-	public void setPolicyType(String policyType) {
-		this.policyType = policyType;
-	}
-	/**
-	 * @param policyComponent the policyComponent to set
-	 */
-	public void setPolicyComponent(String policyComponent) {
-		this.policyComponent = policyComponent;
-	}
-	/**
-	 * @return the deleteCondition
-	 */
-	public DeletePolicyCondition getDeleteCondition() {
-		return deleteCondition;
-	}
-	/**
-	 * @param deleteCondition the deleteCondition to set
-	 */
-	public void setDeleteCondition(DeletePolicyCondition deleteCondition) {
-		this.deleteCondition = deleteCondition;
-	}
-	/**
-	 * @return the requestID
-	 */
-	public UUID getRequestID() {
-		return requestID;
-	}
-	/**
-	 * @param requestID the requestID to set
-	 */
-	public void setRequestID(UUID requestID) {
-		this.requestID = requestID;
-	}
-	/**
-	 * @return the pdpGroup
-	 */
-	public String getPdpGroup() {
-		return pdpGroup;
-	}
-	/**
-	 * @param pdpGroup the pdpGroup to set
-	 */
-	public void setPdpGroup(String pdpGroup) {
-		this.pdpGroup = pdpGroup;
-	}
+    private String policyName;
+    private String policyType;
+    private String policyComponent;
+    private DeletePolicyCondition deleteCondition;
+    private String pdpGroup;
+    private UUID requestID;
 
+    /**
+     * @return the policyName
+     */
+    public String getPolicyName() {
+        return policyName;
+    }
+
+    /**
+     * @param policyName the policyName to set
+     */
+    public void setPolicyName(final String policyName) {
+        this.policyName = policyName;
+    }
+
+    /**
+     * @return the policyComponent
+     */
+    public String getPolicyComponent() {
+        return policyComponent;
+    }
+
+    /**
+     * @return the policyType
+     */
+    public String getPolicyType() {
+        return policyType;
+    }
+
+    /**
+     * @param policyType the policyType to set
+     */
+    public void setPolicyType(final String policyType) {
+        this.policyType = policyType;
+    }
+
+    /**
+     * @param policyComponent the policyComponent to set
+     */
+    public void setPolicyComponent(final String policyComponent) {
+        this.policyComponent = policyComponent;
+    }
+
+    /**
+     * @return the deleteCondition
+     */
+    public DeletePolicyCondition getDeleteCondition() {
+        return deleteCondition;
+    }
+
+    /**
+     * @param deleteCondition the deleteCondition to set
+     */
+    public void setDeleteCondition(final DeletePolicyCondition deleteCondition) {
+        this.deleteCondition = deleteCondition;
+    }
+
+    /**
+     * @return the requestID
+     */
+    public UUID getRequestID() {
+        return requestID;
+    }
+
+    /**
+     * @param requestID the requestID to set
+     */
+    public void setRequestID(final UUID requestID) {
+        this.requestID = requestID;
+    }
+
+    /**
+     * @return the pdpGroup
+     */
+    public String getPdpGroup() {
+        return pdpGroup;
+    }
+
+    /**
+     * @param pdpGroup the pdpGroup to set
+     */
+    public void setPdpGroup(final String pdpGroup) {
+        this.pdpGroup = pdpGroup;
+    }
+
+    @Override
+    public String toString() {
+        return "DeletePolicyParameters [policyName=" + policyName + ", policyType=" + policyType + ", policyComponent="
+                + policyComponent + ", deleteCondition=" + deleteCondition + ", pdpGroup=" + pdpGroup + ", requestID="
+                + requestID + "]";
+    }
 }
