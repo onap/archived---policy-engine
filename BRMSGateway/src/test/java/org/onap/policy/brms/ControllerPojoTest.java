@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.brmsgw.test;
+package org.onap.policy.brms;
 
 import static org.junit.Assert.assertEquals;
 

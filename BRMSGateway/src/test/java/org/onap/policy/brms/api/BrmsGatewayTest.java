@@ -52,7 +52,7 @@ public class BrmsGatewayTest {
 
         // Run app
         try {
-            final String[] args = null;
+            final String[] args = new String[0];
             BrmsGateway.main(args);
         } catch (final Exception ex) {
             fail("Not expected an exception: " + ex);
