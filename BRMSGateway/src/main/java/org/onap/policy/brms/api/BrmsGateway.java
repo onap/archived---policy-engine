@@ -34,7 +34,7 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
  * 
  * @version 0.1
  */
-class BrmsGateway {
+public class BrmsGateway {
 
     private static final Logger logger = FlexLogger.getLogger(BrmsGateway.class);
     private static final String CONFIGFILE = "config.properties";
@@ -45,15 +45,34 @@ class BrmsGateway {
         // Default private constructor
     }
 
+    /**
+     * Main method.
+     * @param args The path to the configuration file is the only allowed optional argument
+     * @throws Exception on BRMS Gateway errors
+     */
     public static void main(final String[] args) throws Exception {
+        // The configuration file containing the configuration for the BRMS Gateway
+        String configFile = CONFIGFILE;
+
+        // Check if a configuration file has been specified as a parameter
+        if (args.length == 1) {
+            configFile = args[0];
+        }
+        else if (args.length > 1) {
+            String errorString = "usage: " + BrmsGateway.class.getCanonicalName() + " [configFile]";
+            logger.error(errorString);
+            throw new PolicyException(errorString);
+        }
+
         // Initialize Handler.
         logger.info("Initializing BRMS Handler");
         BrmsHandler brmsHandler = null;
         try {
-            brmsHandler = new BrmsHandler(CONFIGFILE);
+            brmsHandler = new BrmsHandler(configFile);
         } catch (final PolicyException e) {
-            logger.error("Check your property file: " + e.getMessage(), e);
-            System.exit(1);
+            String errorString = "Check your property file: " + e.getMessage();
+            logger.error(errorString);
+            throw new PolicyException(errorString);
         }
 
         // Set Handler with Auto Notification and initialize policyEngine
@@ -62,7 +81,7 @@ class BrmsGateway {
             policyEngine = new PolicyEngine(CONFIGFILE, NotificationScheme.AUTO_ALL_NOTIFICATIONS, brmsHandler);
         } catch (final Exception e) {
             logger.error(XACMLErrorConstants.ERROR_UNKNOWN + "Error while Initializing Policy Engine " + e.getMessage(),
-                    e);
+                            e);
         }
 
         // Keep Running....

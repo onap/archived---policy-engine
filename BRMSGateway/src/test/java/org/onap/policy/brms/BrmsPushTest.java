@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.brmsgw.test;
+package org.onap.policy.brms;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -100,8 +100,8 @@ public class BrmsPushTest {
     public void brmsHandlerFailTest6() throws PolicyException {
         PropertyChange prop = new PropertyChange();
         prop.key = "repositoryURL";
-        prop.value =
-                "http://nexus:8081/nexus/content/repositories/releases, http://nexus:8081/nexus/content/repositories/releases";
+        prop.value = "http://nexus:8081/nexus/content/repositories/releases,"
+                        + "http://nexus:8081/nexus/content/repositories/releases";
         prop.remove = false;
         final List<PropertyChange> props = new LinkedList<>();
         props.add(prop);
