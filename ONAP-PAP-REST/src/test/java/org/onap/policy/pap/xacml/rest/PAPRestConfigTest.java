@@ -45,7 +45,7 @@ public class PAPRestConfigTest {
 	@Test
 	public void testInit() {
 		String driver = "org.mariadb.jdbc.Driver";
-		String url = "jdbc:mariadb://localhost:3306/onap_sdk?failOverReadOnly=false&autoReconnect=true";
+		String url = "jdbc:mariadb://localhost:3306/onap_sdk?connectTimeout=30000&socketTimeout=60000&log=true&sessionVariables=max_statement_time=30";
 		String user = "policy_user";
 		String password = "policy_user";
 		
