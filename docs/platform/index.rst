@@ -58,6 +58,7 @@ Policy Platform Tutorials
    tutorial_vFW.rst
    tutorial_vCPE.rst
    modAAIdata.rst
+   oofhpa.rst
 
 
 
