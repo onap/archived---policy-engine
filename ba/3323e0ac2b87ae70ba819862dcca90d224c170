@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Jim Hahn <jrh3@att.com>
+Code-Review+1: Pamela Dragosh <pdragosh@research.att.com>
+Code-Review+2: Jorge Hernandez <jh1730@att.com>
+Submitted-by: Jorge Hernandez <jh1730@att.com>
+Submitted-at: Fri, 11 May 2018 03:10:35 +0000
+Reviewed-on: https://gerrit.onap.org/r/47147
+Project: policy/engine
+Branch: refs/heads/master
