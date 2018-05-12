@@ -59,6 +59,7 @@ Policy Platform Tutorials
    tutorial_vCPE.rst
    modAAIdata.rst
    oofhpa.rst
+   oofSpec.rst
 
 
 

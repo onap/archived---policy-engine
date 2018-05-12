@@ -256,7 +256,7 @@ Semantics of  Policy attributes
     ]
 
 
-.. seealso:: `Policy Specification and Retrieval for OOF <https://wiki.onap.org/display/DW/Policy+Specification+and+Retrieval+for+OOF>`_
+.. seealso:: `Policy Specification and Retrieval for OOF <oofSpec.html>`_
 
 
 End of Document
