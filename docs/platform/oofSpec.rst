@@ -11,7 +11,11 @@ Policy Specification and Retrieval for OOF
 Introduction
 ^^^^^^^^^^^^
 
-The OOF retrieves applicable constraints and objective functions as policies from the policy platform. These policies are retrieved at runtime, thus allowing an operator to change policies as and when needed. These policies are specified using policy models that are on-boarded during the OOF application deployment-time in the policy platform. The OOF-related policy models are typically derived from the constraints and objective functions of an OOF-application. Currently, for R2, these models will be pushed into the policy platform manually using the OOF policy uploader module.
+The OOF retrieves applicable constraints and objective functions as policies from the policy platform. 
+These policies are retrieved at runtime, thus allowing an operator to change policies as and when needed. 
+These policies are specified using policy models that are on-boarded during the OOF application deployment-time in the policy platform. 
+The OOF-related policy models are typically derived from the constraints and objective functions of an OOF-application. 
+Currently, for R2, these models will be pushed into the policy platform manually using the OOF policy uploader module.
 
 Policy Platform
 ^^^^^^^^^^^^^^^
@@ -82,7 +86,9 @@ Note that all HPA requirements for a given VM can be put in one policy or across
     
     # NOTE:
     #
-    # The fields in this example policy are typically generated from a TOSCA service model specified by VNF vendors or service designers. This policy cannot be changed during the life-cycle of a service.
+    # The fields in this example policy are typically generated from a TOSCA service model specified by 
+    # VNF vendors or service designers. 
+    # This policy cannot be changed during the life-cycle of a service.
     #
     # CPUTHREADPOLICY = prefer, isolate, require
     # CPUPOLICY = shared, dedicated
@@ -115,12 +121,18 @@ Note that all HPA requirements for a given VM can be put in one policy or across
                   "architecture": "generic",
                   "hpa-version": "v1",
                   "hpa-feature-attributes": [
-                    {"hpa-attribute-key":"numCpuSockets", "hpa-attribute-value": "2","operator": ">=", "unit": ""},
-                    {"hpa-attribute-key":"numCpuSockets", "hpa-attribute-value": "4","operator": "<=", "unit": ""},
-                    {"hpa-attribute-key":"numCpuCores", "hpa-attribute-value": "2", "operator":">=", "unit": ""},
-                    {"hpa-attribute-key":"numCpuCores", "hpa-attribute-value": "4", "operator":"<=", "unit": ""},
-                    {"hpa-attribute-key":"numCpuThreads", "hpa-attribute-value": "4", "operator":">=", "unit": ""},
-                    {"hpa-attribute-key":"numCpuThreads", "hpa-attribute-value": "8", "operator":"<=", "unit": ""}
+                    {"hpa-attribute-key":"numCpuSockets", 
+                     "hpa-attribute-value":"2","operator": ">=", "unit":""},
+                    {"hpa-attribute-key":"numCpuSockets", 
+                     "hpa-attribute-value":"4","operator": "<=", "unit":""},
+                    {"hpa-attribute-key":"numCpuCores", 
+                     "hpa-attribute-value":"2", "operator":">=", "unit":""},
+                    {"hpa-attribute-key":"numCpuCores", 
+                     "hpa-attribute-value":"4", "operator":"<=", "unit":""},
+                    {"hpa-attribute-key":"numCpuThreads", 
+                     "hpa-attribute-value":"4", "operator":">=", "unit":""},
+                    {"hpa-attribute-key":"numCpuThreads", 
+                     "hpa-attribute-value":"8", "operator":"<=", "unit":""}
                   ]
                 },
                 {
@@ -129,8 +141,10 @@ Note that all HPA requirements for a given VM can be put in one policy or across
                   "architecture": "generic",
                   "hpa-version": "v1",
                   "hpa-feature-attributes": [
-                    {"hpa-attribute-key": "numVirtualCpu", "hpa-attribute-value": "6", "operator": "=", "unit": ""},
-                    {"hpa-attribute-key": "virtualMemSize", "hpa-attribute-value":"6", "operator": "=", "unit": "GB"}
+                    {"hpa-attribute-key":"numVirtualCpu", 
+                     "hpa-attribute-value":"6", "operator":"=", "unit":""},
+                    {"hpa-attribute-key":"virtualMemSize", 
+                     "hpa-attribute-value":"6", "operator":"=", "unit":"GB"}
                   ]
                 },
                 {
@@ -140,7 +154,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
                   "architecture": "generic",
                   "hpa-version": "v1",
                   "hpa-feature-attributes": [
-                     {"hpa-attribute-key":"dataProcessingAccelerationLibrary", "hpa-attribute-value":"ovsDpdk_version", "operator": "=", "unit":""}
+                     {"hpa-attribute-key":"dataProcessingAccelerationLibrary", 
+                      "hpa-attribute-value":"ovsDpdk_version", "operator": "=", "unit":""}
                   ]
                 },
                 {
@@ -149,7 +164,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
                   "architecture": "INTEL-64",
                   "hpa-version": "v1",
                   "hpa-feature-attributes": [
-                    {"hpa-attribute-key":"instructionSetExtensions", "hpa-attribute-value":["<CPUINST>", "<CPUINST>"] "operator": "ALL", "unit":""}
+                    {"hpa-attribute-key":"instructionSetExtensions", 
+                     "hpa-attribute-value":["<CPUINST>", "<CPUINST>"] "operator": "ALL", "unit":""}
                   ]
                 }
               ] 
@@ -163,8 +179,10 @@ Note that all HPA requirements for a given VM can be put in one policy or across
                   "architecture": "generic",
                   "hpa-version": "v1",
                   "hpa-feature-attributes": [
-                    {"hpa-attribute-key":"logicalCpuThreadPinningPolicy", "hpa-attribute-value":"<CPUTHREADPOLICY>", "operator": "=", "unit":""},
-                    {"hpa-attribute-key":"logicalCpuPinningPolicy", "hpa-attribute-value": "<CPUPOLICY>","operator": "=", "unit":""},
+                    {"hpa-attribute-key":"logicalCpuThreadPinningPolicy", 
+                     "hpa-attribute-value":"<CPUTHREADPOLICY>", "operator": "=", "unit":""},
+                    {"hpa-attribute-key":"logicalCpuPinningPolicy", 
+                     "hpa-attribute-value": "<CPUPOLICY>","operator": "=", "unit":""},
                   ]
                 },
                 {
@@ -173,8 +191,10 @@ Note that all HPA requirements for a given VM can be put in one policy or across
                   "architecture": "generic",
                   "hpa-version": "v1",
                   "hpa-feature-attributes": [
-                    {"hpa-attribute-key": "numVirtualCpu", "hpa-attribute-value": "6", "operator": "=", "unit": ""},
-                    {"hpa-attribute-key": "virtualMemSize", "hpa-attribute-value":"6", "operator": "=", "unit": "GB"}
+                    {"hpa-attribute-key": "numVirtualCpu", 
+                     "hpa-attribute-value": "6", "operator": "=", "unit": ""},
+                    {"hpa-attribute-key": "virtualMemSize", 
+                     "hpa-attribute-value":"6", "operator": "=", "unit": "GB"}
                   ]
                 },
                 {
@@ -184,9 +204,12 @@ Note that all HPA requirements for a given VM can be put in one policy or across
                   "architecture": "generic",
                   "hpa-version": "v1",
                   "hpa-feature-attributes": [
-                    {"hpa-attribute-key": "diskSize", "hpa-attribute-value": "2", "operator": "=", "unit": "GB"},   
-                    {"hpa-attribute-key": "ephemeralDiskSize", "hpa-attribute-value": "2", "operator": "=", "unit": "GB"},
-                    {"hpa-attribute-key": "swapMemSize", "hpa-attribute-value":"16", "operator": "=", "unit": "MB"},
+                    {"hpa-attribute-key": "diskSize", 
+                     "hpa-attribute-value": "2", "operator": "=", "unit": "GB"},   
+                    {"hpa-attribute-key": "ephemeralDiskSize", 
+                     "hpa-attribute-value": "2", "operator": "=", "unit": "GB"},
+                    {"hpa-attribute-key": "swapMemSize", 
+                     "hpa-attribute-value":"16", "operator": "=", "unit": "MB"},
                   ]
                 },
                 {
@@ -195,10 +218,14 @@ Note that all HPA requirements for a given VM can be put in one policy or across
                   "architecture": "generic",
                   "hpa-version": "v1",
                   "hpa-feature-attributes": [
-                    {"hpa-attribute-key": "pciCount", "hpa-attribute-value": "2", "operator": "=", "unit": ""},
-                    {"hpa-attribute-key": "pciVendorId", "hpa-attribute-value":"8086", "operator": "=", "unit": ""},
-                    {"hpa-attribute-key": "pciDeviceId", "hpa-attribute-value": "2", "operator": "=", "unit": ""} 
-                    {"hpa-attribute-key": "functionType", "hpa-attribute-value": "<PCITYPEVALUE>","operator": "=", "unit": ""} 
+                    {"hpa-attribute-key": "pciCount", 
+                     "hpa-attribute-value": "2", "operator": "=", "unit": ""},
+                    {"hpa-attribute-key": "pciVendorId", 
+                     "hpa-attribute-value":"8086", "operator": "=", "unit": ""},
+                    {"hpa-attribute-key": "pciDeviceId", 
+                     "hpa-attribute-value": "2", "operator": "=", "unit": ""} 
+                    {"hpa-attribute-key": "functionType", 
+                     "hpa-attribute-value": "<PCITYPEVALUE>","operator": "=", "unit": ""} 
                   ]
                 }
               ] 
@@ -213,10 +240,14 @@ Note that all HPA requirements for a given VM can be put in one policy or across
                   "architecture": "generic",
                   "hpa-version": "v1",
                   "hpa-feature-attributes": [
-                    {"hpa-attribute-key": "numaNodes", "hpa-attribute-value": "2", "operator": "=", "unit": ""},
-                    {"hpa-attribute-key": "numaCpu-0", "hpa-attribute-value":"2", "operator": "=", "unit": ""},
-                    {"hpa-attribute-key": "numaMem-0", "hpa-attribute-value": "2048", "operator": "=", "unit": "MB"}
-                    {"hpa-attribute-key": "numaCpu-1", "hpa-attribute-value":"4", "operator": "=", "unit": ""},
+                    {"hpa-attribute-key": "numaNodes", 
+                     "hpa-attribute-value": "2", "operator": "=", "unit": ""},
+                    {"hpa-attribute-key": "numaCpu-0", 
+                     "hpa-attribute-value":"2", "operator": "=", "unit": ""},
+                    {"hpa-attribute-key": "numaMem-0", 
+                     "hpa-attribute-value": "2048", "operator": "=", "unit": "MB"}
+                    {"hpa-attribute-key": "numaCpu-1", 
+                     "hpa-attribute-value":"4", "operator": "=", "unit": ""},
                     {"hpa-attribute-key": "numaMem-1", "value": "4096", "operator": "=", "unit": "MB"}
                   ]
                 },
@@ -226,8 +257,10 @@ Note that all HPA requirements for a given VM can be put in one policy or across
                   "architecture": "generic",
                   "hpa-version": "v1",
                   "hpa-feature-attributes": [
-                    {"hpa-attribute-key": "numVirtualCpu", "hpa-attribute-value": "6", "operator": "=", "unit": ""},
-                    {"hpa-attribute-key": "virtualMemSize", "hpa-attribute-value":"6", "operator": "=", "unit": "GB"}
+                    {"hpa-attribute-key": "numVirtualCpu", 
+                     "hpa-attribute-value": "6", "operator": "=", "unit": ""},
+                    {"hpa-attribute-key": "virtualMemSize", 
+                     "hpa-attribute-value":"6", "operator": "=", "unit": "GB"}
                   ]
                 },
                 {
@@ -237,7 +270,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
                   "architecture": "generic",
                   "hpa-version": "v1",
                   "hpa-feature-attributes": [
-                     {"hpa-attribute-key": "memoryPageSize", "hpa-attribute-value": "<MEMORYPAGESIZE>", "operator": "=", "unit": ""}
+                     {"hpa-attribute-key": "memoryPageSize", 
+                      "hpa-attribute-value": "<MEMORYPAGESIZE>", "operator": "=", "unit": ""}
                   ]
                 }
               ] 
@@ -253,8 +287,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
         
     # NOTE:
     #
-    # The fields in this example policy are typically generated from a TOSCA service model specified by VNF vendors 
-    # or service designers. However, the policy can be updated over time by operators.
+    # The fields in this example policy are typically generated from a TOSCA service model specified by 
+    # VNF vendors or service designers. However, the policy can be updated over time by operators.
 
     {
       "service": "distancePolicy",
@@ -287,7 +321,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
     # NOTE:
     #
     # The fields in this example policy are typically generated from a TOSCA service model specified by 
-    # VNF vendors or service designers. This policy cannot be changed during the life-cycle of a service.
+    # VNF vendors or service designers. 
+    # This policy cannot be changed during the life-cycle of a service.
 
     {
         "hpa-feature" : "basicCapabilities",
@@ -296,8 +331,10 @@ Note that all HPA requirements for a given VM can be put in one policy or across
         "architecture": "generic",
         "hpa-version": "v1",
         "hpa-feature-attributes": [
-           {"hpa-attribute-key": "numVirtualCpu", "hpa-attribute-value": "6", "operator": "=", "unit": ""},
-           {"hpa-attribute-key": "virtualMemSize", "hpa-attribute-value":"6", "operator": "=", "unit": "GB"}
+           {"hpa-attribute-key": "numVirtualCpu", 
+                     "hpa-attribute-value": "6", "operator": "=", "unit": ""},
+           {"hpa-attribute-key": "virtualMemSize", 
+                     "hpa-attribute-value":"6", "operator": "=", "unit": "GB"}
         ]
     }
     
@@ -309,7 +346,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
     # NOTE:
     #
     # The fields in this example policy are typically generated from a TOSCA service model specified by 
-    # VNF vendors or service designers. This policy cannot be changed during the life-cycle of a service.
+    # VNF vendors or service designers. 
+    # This policy cannot be changed during the life-cycle of a service.
     #
     # For this policy others architectures are also applicable.
 
@@ -320,7 +358,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
         "architecture": "INTEL-64",
         "hpa-version": "v1",
         "hpa-feature-attributes": [
-          {"hpa-attribute-key":"dataProcessingAccelerationLibrary", "hpa-attribute-value":"ovsDpdk_version", "operator": "=", "unit":""}
+          {"hpa-attribute-key":"dataProcessingAccelerationLibrary", 
+           "hpa-attribute-value":"ovsDpdk_version", "operator": "=", "unit":""}
          ]
     }
     
@@ -332,7 +371,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
     # NOTE:
     #
     # The fields in this example policy are typically generated from a TOSCA service model specified by 
-    # VNF vendors or service designers. This policy cannot be changed during the life-cycle of a service.
+    # VNF vendors or service designers. 
+    # This policy cannot be changed during the life-cycle of a service.
 
     {
        "hpa-feature" : "cpuPinning",
@@ -341,8 +381,10 @@ Note that all HPA requirements for a given VM can be put in one policy or across
        "architecture": "generic",
        "hpa-version": "v1",
        "hpa-feature-attributes": [
-         {"hpa-attribute-key":"logicalCpuThreadPinningPolicy", "hpa-attribute-value":"<CPUTHREADPOLICY>", "operator": "=", "unit":""},
-         {"hpa-attribute-key":"logicalCpuPinningPolicy", "hpa-attribute-value": "<CPUPOLICY>","operator": "=", "unit":""},
+         {"hpa-attribute-key":"logicalCpuThreadPinningPolicy", 
+          "hpa-attribute-value":"<CPUTHREADPOLICY>", "operator": "=", "unit":""},
+         {"hpa-attribute-key":"logicalCpuPinningPolicy", 
+          "hpa-attribute-value": "<CPUPOLICY>","operator": "=", "unit":""},
         ]
     }
     
@@ -354,7 +396,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
     # NOTE:
     #
     # The fields in this example policy are typically generated from a TOSCA service model specified by 
-    # VNF vendors or service designers. This policy cannot be changed during the life-cycle of a service.
+    # VNF vendors or service designers. 
+    # This policy cannot be changed during the life-cycle of a service.
 
     {
         "hpa-feature" : "numa",
@@ -363,11 +406,16 @@ Note that all HPA requirements for a given VM can be put in one policy or across
         "architecture": "generic",
         "hpa-version": "v1",
         "hpa-feature-attributes": [
-           {"hpa-attribute-key": "numaNodes", "hpa-attribute-value": "2", "operator": "=", "unit": ""},
-           {"hpa-attribute-key": "numaCpu-0", "hpa-attribute-value":"2", "operator": "=", "unit": ""},
-           {"hpa-attribute-key": "numaMem-0", "hpa-attribute-value": "2048", "operator": "=", "unit": "MB"},
-           {"hpa-attribute-key": "numaCpu-1", "hpa-attribute-value":"4", "operator": "=", "unit": ""},
-           {"hpa-attribute-key": "numaMem-1", "hpa-attribute-value": "4096", "operator": "=", "unit": "MB"}
+           {"hpa-attribute-key": "numaNodes", 
+            "hpa-attribute-value": "2", "operator": "=", "unit": ""},
+           {"hpa-attribute-key": "numaCpu-0", 
+            "hpa-attribute-value":"2", "operator": "=", "unit": ""},
+           {"hpa-attribute-key": "numaMem-0", 
+            "hpa-attribute-value": "2048", "operator": "=", "unit": "MB"},
+           {"hpa-attribute-key": "numaCpu-1", 
+            "hpa-attribute-value":"4", "operator": "=", "unit": ""},
+           {"hpa-attribute-key": "numaMem-1", 
+            "hpa-attribute-value": "4096", "operator": "=", "unit": "MB"}
         ]
     }
     
@@ -379,7 +427,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
     # NOTE:
     #
     # The fields in this example policy are typically generated from a TOSCA service model specified by 
-    # VNF vendors or service designers. This policy cannot be changed during the life-cycle of a service.
+    # VNF vendors or service designers. 
+    # This policy cannot be changed during the life-cycle of a service.
 
     {
        "hpa-feature" : "cpuTopology",
@@ -388,12 +437,18 @@ Note that all HPA requirements for a given VM can be put in one policy or across
        "architecture": "generic",
        "hpa-version": "v1",
        "hpa-feature-attributes": [
-          {"hpa-attribute-key":"numCpuSockets", "hpa-attribute-value": "2","operator": ">=", "unit": ""},
-          {"hpa-attribute-key":"numCpuSockets", "hpa-attribute-value": "4","operator": "<=", "unit": ""},
-          {"hpa-attribute-key":"numCpuCores", "hpa-attribute-value": "2", "operator":">=", "unit": ""},
-          {"hpa-attribute-key":"numCpuCores", "hpa-attribute-value": "4", "operator":"<=", "unit": ""},
-          {"hpa-attribute-key":"numCpuThreads", "hpa-attribute-value": "4", "operator":">=", "unit": ""},
-          {"hpa-attribute-key":"numCpuThreads", "hpa-attribute-value": "8", "operator":"<=", "unit": ""}
+          {"hpa-attribute-key":"numCpuSockets", 
+           "hpa-attribute-value": "2","operator": ">=", "unit": ""},
+          {"hpa-attribute-key":"numCpuSockets", 
+           "hpa-attribute-value": "4","operator": "<=", "unit": ""},
+          {"hpa-attribute-key":"numCpuCores", 
+           "hpa-attribute-value": "2", "operator":">=", "unit": ""},
+          {"hpa-attribute-key":"numCpuCores", 
+           "hpa-attribute-value": "4", "operator":"<=", "unit": ""},
+          {"hpa-attribute-key":"numCpuThreads", 
+           "hpa-attribute-value": "4", "operator":">=", "unit": ""},
+          {"hpa-attribute-key":"numCpuThreads", 
+           "hpa-attribute-value": "8", "operator":"<=", "unit": ""}
        ]
     }
     
@@ -565,7 +620,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
           {"hpa-attribute-key": "pciCount", "hpa-attribute-value": "2", "operator": "=", "unit": ""},
           {"hpa-attribute-key": "pciVendorId", "hpa-attribute-value":"8086", "operator": "=", "unit": ""},
           {"hpa-attribute-key": "pciDeviceId", "hpa-attribute-value": "2", "operator": "=", "unit": ""} 
-          {"hpa-attribute-key": "functionType", "hpa-attribute-value": "<PCIETYPEVALUE>","operator": "=", "unit": ""} 
+          {"hpa-attribute-key": "functionType", 
+           "hpa-attribute-value": "<PCIETYPEVALUE>","operator": "=", "unit": ""} 
          ]
     }
     
@@ -577,7 +633,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
     # NOTE:
     #
     # The fields in this example policy are typically generated from a TOSCA service model specified by 
-    # VNF vendors or service designers.  This policy cannot be changed during the life-cycle of a service. 
+    # VNF vendors or service designers.  
+    # This policy cannot be changed during the life-cycle of a service. 
 
     {
         "hpa-feature" : "localStorage",
@@ -586,9 +643,12 @@ Note that all HPA requirements for a given VM can be put in one policy or across
         "architecture": "generic",
         "hpa-version": "v1",
         "hpa-feature-attributes": [
-           {"hpa-attribute-key": "diskSize", "hpa-attribute-value": "2", "operator": "=", "unit": "GB"},   
-           {"hpa-attribute-key": "ephemeralDiskSize", "hpa-attribute-value": "2", "operator": "=", "unit": "GB"},
-           {"hpa-attribute-key": "swapMemSize", "hpa-attribute-value":"16", "operator": "=", "unit": "MB"},
+           {"hpa-attribute-key": "diskSize", 
+            "hpa-attribute-value": "2", "operator": "=", "unit": "GB"},   
+           {"hpa-attribute-key": "ephemeralDiskSize", 
+            "hpa-attribute-value": "2", "operator": "=", "unit": "GB"},
+           {"hpa-attribute-key": "swapMemSize", 
+            "hpa-attribute-value":"16", "operator": "=", "unit": "MB"},
          ]
     }
     
@@ -609,7 +669,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
         "architecture": "INTEL-64",
         "hpa-version": "v1",
         "hpa-feature-attributes": [
-          {"hpa-attribute-key":"instructionSetExtensions", "hpa-attribute-value":["<CPUINST>", "<CPUINST>"] "operator": "ALL", "unit":""}
+          {"hpa-attribute-key":"instructionSetExtensions", 
+           "hpa-attribute-value":["<CPUINST>", "<CPUINST>"] "operator": "ALL", "unit":""}
          ]
     }
     
@@ -629,7 +690,8 @@ Note that all HPA requirements for a given VM can be put in one policy or across
         "architecture": "generic",
         "hpa-version": "v1",
         "hpa-feature-attributes": [
-          {"hpa-attribute-key": "memoryPageSize", "hpa-attribute-value": "<MEMORYPAGESIZE>", "operator": "=", "unit": ""}
+          {"hpa-attribute-key": "memoryPageSize", 
+           "hpa-attribute-value": "<MEMORYPAGESIZE>", "operator": "=", "unit": ""}
         ]
     }
     
