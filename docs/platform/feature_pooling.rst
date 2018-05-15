@@ -27,11 +27,11 @@ Assumptions and Limitations
 Key Points
 ^^^^^^^^^^
     * Requests are received on a common DMaaP topic
-    * DMaaP distributes the requests randomly to the hosts
-    * The request topic should have at least as many partitions as there are hosts
+        - DMaaP distributes the requests randomly to the hosts
+        - The request topic should have at least as many partitions as there are hosts
     * Uses a single, internal DMaaP topic for all inter-host communication
     * Allocates buckets to each host
-    * Requests are assigned to buckets based on their respective “request IDs”
+        - Requests are assigned to buckets based on their respective “request IDs”
     * No session persistence
     * No objects copied between hosts
     * Requires feature(s): distributed-locking
@@ -46,7 +46,7 @@ Example Scenario
     5. Publish “forward” message to internal DMaaP topic, including remote host, bucket number, DMaaP topic information, and message body
     6. Remote host verifies ownership of bucket, and routes the DMaaP message to its own rule engine for processing
 
-    The figure below shows several different hosts in a pool.  Each host as a copy of the bucket assignments, which specifies which buckets are assigned to which hosts.  Incoming requests are mapped to a bucket, and a bucket is mapped to a host, to which the request is routed.  The host table includes an entry for each active host in the pool, to which one or more buckets are mapped.
+    The figure below shows several different hosts in a pool.  Each host has a copy of the bucket assignments, which specifies which buckets are assigned to which hosts.  Incoming requests are mapped to a bucket, and a bucket is mapped to a host, to which the request is routed.  The host table includes an entry for each active host in the pool, to which one or more buckets are mapped.
 
     .. image:: poolingPdps.png
 
