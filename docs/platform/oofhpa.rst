@@ -107,15 +107,15 @@ The following HPA TOSCA policy models need to be uploaded as a dictionary during
                         type: string
                         constraints:
                         -   valid_values:
-                            - <
-                            - <=
+                            - '<'
+                            - '<='
                             - '>'
                             - '>='
                             - '='
                             - '!='
-                            - any
-                            - all
-                            - subset
+                            - 'any'
+                            - 'all'
+                            - 'subset'
                 unit:
                     type: string
                     required: true
