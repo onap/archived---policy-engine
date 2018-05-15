@@ -28,6 +28,7 @@ Policy Software Architecture
 .. toctree::
    :maxdepth: 1
 
+   swarch_srm.rst
    swarch_pdp.rst
    feature_eelf.rst
    feature_testtransaction.rst
@@ -35,6 +36,8 @@ Policy Software Architecture
    feature_sesspersist.rst
    feature_statemgmt.rst
    feature_activestdbymgmt.rst
+   feature_locking.rst
+   feature_pooling.rst
    swarch_pdpx.rst
    swarch_pap.rst
    swarch_brmsgw.rst

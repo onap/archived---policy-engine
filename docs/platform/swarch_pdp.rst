@@ -57,6 +57,8 @@ The current extensions supported are:
 - `Feature Healthcheck <feature_healthcheck.html>`_ (enabled by default)
 - `Feature Session Persistence <feature_sesspersist.html>`_ (disabled by default)
 - `Feature Active/Standby Management <feature_activestdbymgmt.html>`_ (disabled by default)
+- `Feature Distributed Locking <feature_locking.html>`_ (disabled by default)
+- `Feature Pooling <feature_pooling.html>`_ (disabled by default)
 
 .. seealso:: Click on the individual feature links for more information 
 
