@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_962c8bad",
+        "filename": "BRMSGateway/dependency.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-05-16T21:34:33Z",
+      "side": 1,
+      "message": "Jorge, are we ok with this not having SNAPSHOT?",
+      "revId": "1da88553b5bc956d0d4bf7d9f460e81e25a5fe88",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_561a837d",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-05-16T21:34:33Z",
+      "side": 1,
+      "message": "same question with this one?",
+      "revId": "1da88553b5bc956d0d4bf7d9f460e81e25a5fe88",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_761d3f72",
+        "filename": "BRMSGateway/src/test/resources/config.properties",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-05-16T21:34:33Z",
+      "side": 1,
+      "message": "?",
+      "revId": "1da88553b5bc956d0d4bf7d9f460e81e25a5fe88",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_16107b57",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/CSS/bootstrap/test-infra/npm-shrinkwrap.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-05-16T21:34:33Z",
+      "side": 1,
+      "message": "hmmm, not hurting anything :)",
+      "revId": "1da88553b5bc956d0d4bf7d9f460e81e25a5fe88",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
