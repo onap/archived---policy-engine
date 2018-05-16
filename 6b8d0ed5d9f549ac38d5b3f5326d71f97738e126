@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_c01809cf",
+        "filename": "BRMSGateway/config.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-05-16T13:13:35Z",
+      "side": 1,
+      "message": "Set to 1.2.2 because all dependencies should be on hard revisions",
+      "range": {
+        "startLine": 80,
+        "startChar": 28,
+        "endLine": 80,
+        "endChar": 29
+      },
+      "revId": "6b8d0ed5d9f549ac38d5b3f5326d71f97738e126",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
