@@ -28,7 +28,7 @@
 	<parent>
 		<groupId>org.onap.policy.engine</groupId>
 		<artifactId>PolicyEngineSuite</artifactId>
-		<version>1.2.1-SNAPSHOT</version>
+		<version>1.2.2-SNAPSHOT</version>
 	</parent>
 	<build>
 		<plugins>
@@ -197,7 +197,9 @@
 		<dependency>
 			<groupId>org.onap.policy.drools-applications.controlloop.common</groupId>
 			<artifactId>policy-yaml</artifactId>
-			<version>${project.version}</version>
+                        <!-- Temporary version during snapshot upgrade due to looped layering -->
+			<!-- version>${project.version}</version -->
+                        <version>1.2.2-SNAPSHOT</version>
 		</dependency>
 		<!-- Spring -->
 		<dependency>
