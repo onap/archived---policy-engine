@@ -118,7 +118,7 @@ public class BrmsPush {
     private static final Logger LOGGER = FlexLogger.getLogger(BrmsPush.class.getName());
     private static final String PROJECTSLOCATION = "RuleProjects";
     private static final String[] GOALS = {"clean", "deploy"};
-    private static final String DEFAULT_VERSION = "1.2.1-SNAPSHOT";
+    private static final String DEFAULT_VERSION = "1.2.2";
     private static final String DEPENDENCY_FILE = "dependency.json";
     private static final String BRMSPERSISTENCE = "brmsEclipselink.persistencexml";
 
