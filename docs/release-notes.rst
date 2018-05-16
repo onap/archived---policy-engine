@@ -13,7 +13,7 @@ Policy Release Notes
 ..      * This note must be removed after content has been added.
 
 
-Version: 1.2.0
+Version: 1.2.2
 --------------
 
 :Release Date: 2018-05-24 (Beijing Release)
@@ -84,23 +84,23 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
 
 **Bug Fixes**
 
-    * POLICY-454	brmsgw 1.1.2 policy rules generation in a 1.1.1 docker image
-    * POLICY-484	Extend election handler run window and clean up error messages
-    * POLICY-494	POLICY EELF Audit.log not in ECOMP Standards Compliance
-    * POLICY-501	Fix issues blocking election handler and add directed interface for opstate
-    * POLICY-509	Add IntelliJ file to .gitingore
-    * POLICY-510	Do not enforce hostname validation
-    * POLICY-518	StateManagement creation of EntityManagers.
-    * POLICY-519	Correctly initialize the value of allSeemsWell in DroolsPdpsElectionHandler
-    * POLICY-629	Fixed a bug on editor screen
-    * POLICY-684	Fix regex for brmsgw dependency handling
-    * POLICY-707	ONAO-PAP-REST unit tests fail on first build on clean checkout 
-    * POLICY-717	Fix a bug in checking required fields if the object has include function
-    * POLICY-734	Fix Fortify Header Manipulation Issue
-    * POLICY-743	Fixed data name since its name was changed on server side
-    * POLICY-753	Policy Health Check failed with multi-node cluster
-    * POLICY-765	junit test for guard fails intermittently
-    * POLICY-795	PDP-D allow configuration on OOM install to survive upgrades
+    * `[POLICY-454] <https://jira.onap.org/browse/POLICY-454>`_ - brmsgw 1.1.2 policy rules generation in a 1.1.1 docker image
+    * `[POLICY-484] <https://jira.onap.org/browse/POLICY-484>`_ - Extend election handler run window and clean up error messages
+    * `[POLICY-494] <https://jira.onap.org/browse/POLICY-494>`_ - POLICY EELF Audit.log not in ECOMP Standards Compliance
+    * `[POLICY-501] <https://jira.onap.org/browse/POLICY-501>`_ - Fix issues blocking election handler and add directed interface for opstate
+    * `[POLICY-509] <https://jira.onap.org/browse/POLICY-509>`_ - Add IntelliJ file to .gitingore
+    * `[POLICY-510] <https://jira.onap.org/browse/POLICY-510>`_ - Do not enforce hostname validation
+    * `[POLICY-518] <https://jira.onap.org/browse/POLICY-518>`_ - StateManagement creation of EntityManagers.
+    * `[POLICY-519] <https://jira.onap.org/browse/POLICY-519>`_ - Correctly initialize the value of allSeemsWell in DroolsPdpsElectionHandler
+    * `[POLICY-629] <https://jira.onap.org/browse/POLICY-629>`_ - Fixed a bug on editor screen
+    * `[POLICY-684] <https://jira.onap.org/browse/POLICY-684>`_ - Fix regex for brmsgw dependency handling
+    * `[POLICY-707] <https://jira.onap.org/browse/POLICY-707>`_ - ONAO-PAP-REST unit tests fail on first build on clean checkout 
+    * `[POLICY-717] <https://jira.onap.org/browse/POLICY-717>`_ - Fix a bug in checking required fields if the object has include function
+    * `[POLICY-734] <https://jira.onap.org/browse/POLICY-734>`_ - Fix Fortify Header Manipulation Issue
+    * `[POLICY-743] <https://jira.onap.org/browse/POLICY-743>`_ - Fixed data name since its name was changed on server side
+    * `[POLICY-753] <https://jira.onap.org/browse/POLICY-753>`_ - Policy Health Check failed with multi-node cluster
+    * `[POLICY-765] <https://jira.onap.org/browse/POLICY-765>`_ - junit test for guard fails intermittently
+    * `[POLICY-796] <https://jira.onap.org/browse/POLICY-796>`_ - VirtualControlLoopEvent facts are piling up 
 
 
 **Security Issues**
