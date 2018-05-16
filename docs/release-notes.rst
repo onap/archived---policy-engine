@@ -32,10 +32,8 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
         - POLICY-568	Integration with org.onap AAF project
         - POLICY-610	Support vDNS scale out for multiple times in Beijing release
 
-
     * [POLICY-391] - This epic covers the work to support Release Planning activities
         - POLICY-552	ONAP Licensing Scan - Use Restrictions
-
 
     * [POLICY-392] - Platform Maturity Requirements - Performance Level 1
         - POLICY-529	Platform Maturity Performance - Drools PDP
@@ -107,6 +105,15 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
 
    * Please see the `Policy R2 Beijing Security/Vulnerability Threat <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_ page for security related issues.
 
+**Known Issues**
+
+    * `[POLICY-522] <https://jira.onap.org/browse/POLICY-522>`_ - PAP REST APIs undesired HTTP response body for 500 responses
+    * `[POLICY-608] <https://jira.onap.org/browse/POLICY-608>`_ - xacml components : remove hardcoded secret key from source code
+    * `[POLICY-764] <https://jira.onap.org/browse/POLICY-764>`_ - Policy Engine PIP Configuration JUnit Test fails intermittently
+    * `[POLICY-776] <https://jira.onap.org/browse/POLICY-776>`_ - OOF Policy TOSCA models are not correctly rendered
+    * `[POLICY-799] <https://jira.onap.org/browse/POLICY-799>`_ - Policy API Validation Does Not Validate Required Parent Attributes in the Model
+
+
 
 Version: 1.1.3
 --------------
@@ -115,7 +122,7 @@ Version: 1.1.3
 
 **Bug Fixes**
 
-The following bugs were deployed with the Amsterdam Maintenance Release:
+The following fixes were deployed with the Amsterdam Maintenance Release:
 
     * `[POLICY-486] <https://jira.onap.org/browse/POLICY-486>`_ - pdp-x api pushPolicy fails to push latest version
 
