@@ -82,7 +82,6 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
 
 **Bug Fixes**
 
-    * `[POLICY-454] <https://jira.onap.org/browse/POLICY-454>`_ - brmsgw 1.1.2 policy rules generation in a 1.1.1 docker image
     * `[POLICY-484] <https://jira.onap.org/browse/POLICY-484>`_ - Extend election handler run window and clean up error messages
     * `[POLICY-494] <https://jira.onap.org/browse/POLICY-494>`_ - POLICY EELF Audit.log not in ECOMP Standards Compliance
     * `[POLICY-501] <https://jira.onap.org/browse/POLICY-501>`_ - Fix issues blocking election handler and add directed interface for opstate
@@ -98,12 +97,11 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
     * `[POLICY-743] <https://jira.onap.org/browse/POLICY-743>`_ - Fixed data name since its name was changed on server side
     * `[POLICY-753] <https://jira.onap.org/browse/POLICY-753>`_ - Policy Health Check failed with multi-node cluster
     * `[POLICY-765] <https://jira.onap.org/browse/POLICY-765>`_ - junit test for guard fails intermittently
-    * `[POLICY-796] <https://jira.onap.org/browse/POLICY-796>`_ - VirtualControlLoopEvent facts are piling up 
 
 
 **Security Issues**
 
-   * Please see the `Policy R2 Beijing Security/Vulnerability Threat <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_ page for security related issues.
+   * Refer to the `Policy R2 Beijing Security/Vulnerability Threat <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_ page for security related issues.
 
 **Known Issues**
 
@@ -112,6 +110,7 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
     * `[POLICY-764] <https://jira.onap.org/browse/POLICY-764>`_ - Policy Engine PIP Configuration JUnit Test fails intermittently
     * `[POLICY-776] <https://jira.onap.org/browse/POLICY-776>`_ - OOF Policy TOSCA models are not correctly rendered
     * `[POLICY-799] <https://jira.onap.org/browse/POLICY-799>`_ - Policy API Validation Does Not Validate Required Parent Attributes in the Model
+    * `[POLICY-801] <https://jira.onap.org/browse/POLICY-801>`_ - fields mismatch for OOF flavorFeatures between implementation and wiki
 
 
 
@@ -219,7 +218,9 @@ The Amsterdam release continued evolving the design driven architecture of and f
 ..		For initial document: list epic and user stories for each, list user stories with no epics.  
 ..      	For Bugs section, list bugs that are not tied to an epic.  Remove all items with "Won't Do" resolution.
 ..      01/15/2018 - Added change for version 1.1.3 to the Amsterdam branch.  Also corrected prior version (1.2.0) to (1.1.1)
-..      11/16/2017 - Initial document for Amsterdam release.
+..		Also, Set up initial information for Beijing.
+..	05/21/2018 - Information for Beijing release.
+..		Excluded POLICY-454 from bug list since it doesn't apply to Beijing per Jorge.
  
 
 End of Release Notes
