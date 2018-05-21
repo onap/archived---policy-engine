@@ -29,7 +29,7 @@ function usage() {
 }
 
 function log() {
-	echo "$(date +"%Y-%m-%d_%H-%M-%S") $1" >> ${POLICY_HOME}/logs/elk.log
+	echo "$(date +"%Y-%m-%d_%H-%M-%S") $1" >> ${POLICY_LOGS}/policy/elk.log
 	echo "$1"
 }
 
@@ -174,6 +174,8 @@ if pidof -o %PPID -x $(basename $0) > /dev/null 2>&1; then
 	echo "WARNING: an $(basename $0) process is already running.  Exiting."
 	exit 1
 fi
+
+. ${POLICY_HOME}/etc/profile.d/env.sh
 
 case $OPERATION in
 	audit)	

@@ -329,6 +329,11 @@ function install_base() {
 		exit 1
 	fi	
 	
+	if ! /bin/mkdir -p "/var/log/onap" > /dev/null 2>&1; then	
+		echo "error: aborting base installation: cannot create /var/log/onap"
+		exit 1
+	fi	
+	
 	if ! /bin/mkdir -p "${POLICY_HOME}/logs/" > /dev/null 2>&1; then	
 		echo "error: aborting base installation: cannot create ${POLICY_HOME}/logs/"
 		exit 1
