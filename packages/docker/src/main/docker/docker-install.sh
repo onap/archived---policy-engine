@@ -329,8 +329,8 @@ function install_base() {
 		exit 1
 	fi	
 	
-	if ! /bin/mkdir -p "${POLICY_HOME}/logs/" > /dev/null 2>&1; then	
-		echo "error: aborting base installation: cannot create ${POLICY_HOME}/logs/"
+	if ! /bin/mkdir -p "${POLICY_LOGS}/policy" > /dev/null 2>&1; then	
+		echo "error: aborting base installation: cannot create ${POLICY_LOGS}/policy/"
 		exit 1
 	fi	
 	
