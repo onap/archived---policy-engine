@@ -9,6 +9,8 @@ JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote.port=${{ELK_JMX_P
 JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote.ssl=false" 
 JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote.authenticate=false"
 
+CMD_JAVA_OPTS="${CMD_JAVA_OPTS} -DPOLICY_LOGS=${POLICY_LOGS}"
+
 RETVAL=0
 
 function update_monitor() {
@@ -34,7 +36,7 @@ function stop() {
 }
 
 function start() {
-	export ES_JAVA_OPTS="${JAVA_OPTS} ${JMX_JAVA_OPTS}" 
+	export ES_JAVA_OPTS="${JAVA_OPTS} ${JMX_JAVA_OPTS} ${CMD_JAVA_OPTS}" 
 	$POLICY_HOME/elk/bin/elasticsearch -d
 	RETVAL=$?
 	if [[ ${RETVAL} != 0 ]]; then
@@ -45,6 +47,8 @@ function start() {
 }
 
 # main
+
+. ${POLICY_HOME}/etc/profile.d/env.sh
 
 case "$1" in
     status)
