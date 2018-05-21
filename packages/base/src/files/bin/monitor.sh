@@ -26,7 +26,7 @@ function usage() {
 }
 
 function log() {
-	echo "$(date +"%Y-%m-%d_%H-%M-%S") $1" >> ${POLICY_HOME}/logs/monitor.log
+	echo "$(date +"%Y-%m-%d_%H-%M-%S") $1" >> ${{POLICY_LOGS}}/policy/monitor.log
 }
 
 function monitor() {

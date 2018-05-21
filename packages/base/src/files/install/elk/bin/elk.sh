@@ -29,7 +29,7 @@ function usage() {
 }
 
 function log() {
-	echo "$(date +"%Y-%m-%d_%H-%M-%S") $1" >> ${POLICY_HOME}/logs/elk.log
+	echo "$(date +"%Y-%m-%d_%H-%M-%S") $1" >> ${{POLICY_LOGS}}/policy/elk.log
 	echo "$1"
 }
 
