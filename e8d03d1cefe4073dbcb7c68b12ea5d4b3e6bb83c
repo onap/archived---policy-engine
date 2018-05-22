@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_92a48aba",
+        "filename": "packages/base/src/files/bin/monitor.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-05-22T13:42:56Z",
+      "side": 1,
+      "message": "Ok.  Removed the extra braces.",
+      "parentUuid": "5a93c517_4c5d0779",
+      "revId": "e8d03d1cefe4073dbcb7c68b12ea5d4b3e6bb83c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_ec517364",
         "filename": "packages/base/src/files/install/elk/bin/elk.sh",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_f292ae57",
+        "filename": "packages/base/src/files/install/elk/bin/elk.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-05-22T13:42:56Z",
+      "side": 1,
+      "message": "Ok.  Removed the extra braces and dotted in env.sh",
+      "parentUuid": "5a93c517_ec517364",
+      "revId": "e8d03d1cefe4073dbcb7c68b12ea5d4b3e6bb83c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_8cca2f19",
         "filename": "packages/base/src/files/install/servers/paplp/bin/parserlog.properties",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2018-05-22T03:02:53Z",
       "side": 1,
       "message": "take a look at my other comments, in  other files.   For an installer is easier to understand absolute path locations vs. suffixes, ..   To me is better to preserve old variable names LOGPATH and PARSERLOGPATH and keep absolute path semantics, it reduces risks a little bit too.",
+      "revId": "e8d03d1cefe4073dbcb7c68b12ea5d4b3e6bb83c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_72777e09",
+        "filename": "packages/base/src/files/install/servers/paplp/bin/parserlog.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-05-22T13:42:56Z",
+      "side": 1,
+      "message": "Ok",
+      "parentUuid": "5a93c517_8cca2f19",
       "revId": "e8d03d1cefe4073dbcb7c68b12ea5d4b3e6bb83c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_528602dd",
+        "filename": "packages/docker/src/main/docker/docker-install.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-05-22T13:42:56Z",
+      "side": 1,
+      "message": "Ok.  Will keep both",
+      "parentUuid": "5a93c517_0c4fffbf",
+      "revId": "e8d03d1cefe4073dbcb7c68b12ea5d4b3e6bb83c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_ac4b6bb0",
         "filename": "packages/install/src/files/paplp.conf",
         "patchSetId": 2
@@ -104,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_b2c5065e",
+        "filename": "packages/install/src/files/paplp.conf",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-05-22T13:42:56Z",
+      "side": 1,
+      "message": "OK.  Will replace the variable with the expanded value.",
+      "parentUuid": "5a93c517_ac4b6bb0",
+      "revId": "e8d03d1cefe4073dbcb7c68b12ea5d4b3e6bb83c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_2ccf5b2b",
         "filename": "packages/install/src/files/paplp.conf",
         "patchSetId": 2
@@ -115,6 +205,24 @@
       "writtenOn": "2018-05-22T03:02:53Z",
       "side": 1,
       "message": "The original locations were incorrect from the start.\n\nLOGPATH\u003d...../policy/pap/pap-rest.log\n\nshould be something like,\n\nLOGPATH\u003d...../policy/paplp/paplp.log\n\nFor:\n\nPARSERLOGPATH\u003d.../policy/pap/IntegrityMonitor.log\n\nshould be\n\nPARSERLOGPATH\u003d.../policy/paplp/paplp.log\n\nThe same, not sure why there are 2 for just a library, may be there is some problem underneath.  You know better Jim, if it will cause a problem to reuse the same file, give it another name but still under paplp component.",
+      "revId": "e8d03d1cefe4073dbcb7c68b12ea5d4b3e6bb83c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f2cb8e71",
+        "filename": "packages/install/src/files/paplp.conf",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-05-22T13:42:56Z",
+      "side": 1,
+      "message": "I\u0027m uncomfortable changing the file names at this point.  Will leave them as is.",
+      "parentUuid": "5a93c517_2ccf5b2b",
       "revId": "e8d03d1cefe4073dbcb7c68b12ea5d4b3e6bb83c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
