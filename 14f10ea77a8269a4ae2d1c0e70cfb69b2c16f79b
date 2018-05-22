@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_c9b6e43e",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 768,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-05-22T20:14:03Z",
+      "side": 1,
+      "message": "You must log this else sonar will complain",
+      "range": {
+        "startLine": 766,
+        "startChar": 5,
+        "endLine": 768,
+        "endChar": 5
+      },
+      "revId": "14f10ea77a8269a4ae2d1c0e70cfb69b2c16f79b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e9b3a04b",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1168,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-05-22T20:14:03Z",
+      "side": 1,
+      "message": "Please reverse this:\n\"type\".equalsIgnoreCase(keyStr)",
+      "range": {
+        "startLine": 1168,
+        "startChar": 9,
+        "endLine": 1168,
+        "endChar": 40
+      },
+      "revId": "14f10ea77a8269a4ae2d1c0e70cfb69b2c16f79b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a985985a",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/ParserException.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-05-22T20:14:03Z",
+      "side": 1,
+      "message": "If this is a new file then you only need 2018",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 26
+      },
+      "revId": "14f10ea77a8269a4ae2d1c0e70cfb69b2c16f79b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
