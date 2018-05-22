@@ -13,10 +13,10 @@ Policy Release Notes
 ..      * This note must be removed after content has been added.
 
 
-Version: 1.2.2
+Version: 1.2.3
 --------------
 
-:Release Date: 2018-05-24 (Beijing Release)
+:Release Date: 2018-06-07 (Beijing Release)
 
 **New Features**
 
