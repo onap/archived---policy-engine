@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_e62e6f8c",
+        "filename": "packages/install/src/files/base.conf",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-05-22T15:08:18Z",
+      "side": 1,
+      "message": "I think here, it can be left as /opt/app/policy/logs, that\u0027s OK.   What is important is to modify the \"docker\" project, repo which is the one that customizes for ONAP.   I think for pdp-d we have like this, for any other installation that is not ONAP, it will install under $POLICY_HOME (which is kind of nice, keeping all together, without needing any root privileges).\n\nThe important thing that drives the ONAP installation, is the docker repo project, so that base.conf is the one that needs to be modified for onap installs.",
+      "revId": "29a65be27a3dcfb395d226ef98caae4a3341c8e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_665a5f2c",
+        "filename": "packages/install/src/files/paplp.conf",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-05-22T15:08:18Z",
+      "side": 1,
+      "message": "I think here, it can be left as /opt/app/policy/logs ..  the important thing is to have them point to /var/log/onap/.. in the docker project.   \n\nLeaving it as /opt/app/policy/logs won\u0027t interfere with other non-ONAP installations.   This may have side effects for non-ONAP installs.",
+      "revId": "29a65be27a3dcfb395d226ef98caae4a3341c8e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_063fdbb6",
+        "filename": "packages/install/src/files/pdplp.conf",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-05-22T15:08:18Z",
+      "side": 1,
+      "message": "same comment as in previous file with regards to leaving path under /opt/app/policy ..  The important thing for ONAP is what goes in the \"docker\" repo.",
+      "revId": "29a65be27a3dcfb395d226ef98caae4a3341c8e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

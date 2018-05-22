@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_46072319",
+        "filename": "packages/docker/src/main/docker/docker-install.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-05-22T15:08:18Z",
+      "side": 0,
+      "message": "Question Jim, POLICY_LOGS is known here, correct?   can we do \"mkdir -p $POLICY_LOGS\"?   In theory, POLICY_LOGS should be anywhere in the file system.    Typically developer installation won\u0027t install logs directory under /var/log/onap.   It requires priviledge access, and typically this script will run as non-root user, so will fail and exit.\n\nThe point I am trying to make is that /var/log is typically root owned.   Some developer scenarions will want to use the \"policy\" owned directory (or non-root directory).   In those scenarios, installation would abort, since not having root privilege, or will create directory unnecessarily.",
+      "revId": "1da6b3b6a28f40322a13e6fb5142206f1eefa027",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
