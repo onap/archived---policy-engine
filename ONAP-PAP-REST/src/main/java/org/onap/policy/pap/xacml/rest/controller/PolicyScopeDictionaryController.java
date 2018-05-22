@@ -197,7 +197,7 @@ public class PolicyScopeDictionaryController {
 	@RequestMapping(value={"/get_PSClosedLoopDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getPSClosedLoopEntityDataByName(HttpServletResponse response){
 		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, psCLDatas, "name", OnapName.class);
+		utils.getDataByEntity(response, psCLDatas, "onapName", OnapName.class);
 	}
 
 	@RequestMapping(value={"/get_PSClosedLoopData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
