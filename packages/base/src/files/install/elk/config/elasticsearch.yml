@@ -56,7 +56,7 @@ node.name: "${{FQDN}}"
 #
 # Path to log files:
 #
-path.logs: ${{POLICY_HOME}}/logs
+path.logs: ${{POLICY_LOGS}}
 #
 # ----------------------------------- Memory -----------------------------------
 #
