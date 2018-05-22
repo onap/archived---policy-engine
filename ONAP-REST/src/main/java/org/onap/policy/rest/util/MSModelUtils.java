@@ -763,13 +763,16 @@ public class MSModelUtils {
 		
     	} catch (IOException e) {
     		logger.error(e);
+    	}catch(ParserException e){
+    		logger.error(e);
+    		return e.getMessage();
     	}
 	   
     	return null;
 	} 
 	
 	@SuppressWarnings("unchecked")
-	public LinkedHashMap<String, String> load(String fileName) throws IOException { 
+	public LinkedHashMap<String, String> load(String fileName) throws IOException,ParserException { 
 		File newConfiguration = new File(fileName);
 		StringBuilder orderInfo = new StringBuilder("[");
 		Yaml yaml = new Yaml();
@@ -778,6 +781,8 @@ public class MSModelUtils {
 			yamlMap = (LinkedHashMap<Object, Object>) yaml.load(is); 
 		} catch (FileNotFoundException e) {
 			logger.error(e);
+		}catch(Exception e){
+			throw new ParserException("Invalid TOSCA Model format. Please make sure it is a valid YAML file");
 		}
 
 		StringBuilder sb = new StringBuilder(); 
@@ -1098,17 +1103,25 @@ public class MSModelUtils {
 								stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+":required-"+requiredValue +":MANY-true");
 							}
 							dataMapForJson.put(uniqueDataKey, stringListItems.toString());
-							dataListBuffer.append(uniqueDataKeySplit[1].toUpperCase()+"=[");
+							boolean isConstraintsFound = false;
 							for(int i=0;i<10;i++){
 								String findConstraints= DATATYPE+uniqueDataKeySplit[0]+PROPERTIES+uniqueDataKeySplit[1]+".entry_schema.constraints.0.valid_values."+i;
 								logger.info("findConstraints => " + findConstraints);
 								String constraintsValue=map.get(findConstraints);
 								logger.info("constraintsValue => " + constraintsValue);
-								if(constraintsValue==null){
+								if((constraintsValue==null || constraintsValue.isEmpty()) && i==0){ //if no constraints at all ( index i as 0 can tell this )
+									isConstraintsFound = false;
+									//if type is list but no constraints
+									String newValue = dataMapForJson.get(uniqueDataKey).replace("MANY-false", "MANY-true");	
+									newValue = newValue.replace(uniqueDataKeySplit[1].toUpperCase()+":", "");	
+									dataMapForJson.put(uniqueDataKey, newValue);
 									break;
-								}
-								else{
-									logger.info("constraintsValue => " + constraintsValue);
+								} else{
+									isConstraintsFound = true;
+									if(i == 0){ // only need to add one time for the same attribute
+									   dataListBuffer.append(uniqueDataKeySplit[1].toUpperCase()+"=[");
+									}
+
 									if(constraintsValue.contains("=")){
 										constraintsValue = constraintsValue.replace("=", "equal-sign");
 									}
@@ -1116,9 +1129,12 @@ public class MSModelUtils {
 									dataListBuffer.append(constraintsValue+",");
 								}
 							}
-							dataListBuffer.append("]#");
-							logger.info(dataListBuffer);
+							if(isConstraintsFound){							
+							    dataListBuffer.append("]#");
+							}
 						}
+					}else{
+						logger.info("entry_schema.type is not defined correctly");
 					}
 				}
 				else{
@@ -1138,7 +1154,7 @@ public class MSModelUtils {
 	}
 	
 	
-	LinkedHashMap<String, LinkedHashMap<String, String>> parsePolicyNodes(Map<String,String> map){
+	LinkedHashMap<String, LinkedHashMap<String, String>> parsePolicyNodes(Map<String,String> map) throws ParserException{
 		LinkedHashMap<String,LinkedHashMap<String,String>> mapKey= new LinkedHashMap <>();
 		for(String uniqueKey: uniqueKeys){
 			LinkedHashMap<String,String> hm;
@@ -1150,6 +1166,11 @@ public class MSModelUtils {
 						hm = mapKey.get(uniqueKey);
 						String keyStr= key.substring(key.lastIndexOf('.')+1);
 						String valueStr= map.get(key);
+						if(("type").equalsIgnoreCase(keyStr)){
+							if(key.contains("entry_schema.0.type") || key.contains("entry_schema.type") && valueStr.contains("policy.data.")){
+								throw new ParserException("For using user defined object type, Please make sure no space between 'type:' and object " + valueStr );
+							}
+						}	
 						if(("type").equals(keyStr)){
 							if(!key.contains("entry_schema"))
 							{
@@ -1163,6 +1184,9 @@ public class MSModelUtils {
 						hm = new LinkedHashMap <>();
 						String keyStr= key.substring(key.lastIndexOf('.')+1);
 						String valueStr= map.get(key);
+						if(key.contains(".objective.")){							
+							throw new ParserException("Attribute objective is a key word. Please use a different name");
+						}
 						if(("type").equals(keyStr)){
 							if(!key.contains("entry_schema"))
 							{

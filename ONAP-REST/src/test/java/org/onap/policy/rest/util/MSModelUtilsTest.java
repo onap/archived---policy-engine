@@ -95,6 +95,8 @@ public class MSModelUtilsTest {
 			} catch (IOException e) {
 				logger.error("testLoad", e);
 				result = null;
+			}catch(ParserException e){
+				logger.error("testLoad", e);
 			}
 			
 			assertTrue(result != null && !result.isEmpty());				
