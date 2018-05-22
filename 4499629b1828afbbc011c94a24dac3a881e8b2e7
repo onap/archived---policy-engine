@@ -22,6 +22,30 @@
       "revId": "4499629b1828afbbc011c94a24dac3a881e8b2e7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_927c8aed",
+        "filename": "packages/docker/src/main/docker/docker-install.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-05-22T13:42:56Z",
+      "side": 1,
+      "message": "Yes, per Jorge\u0027s previous comment",
+      "parentUuid": "5a93c517_32fc9672",
+      "range": {
+        "startLine": 337,
+        "startChar": 1,
+        "endLine": 340,
+        "endChar": 3
+      },
+      "revId": "4499629b1828afbbc011c94a24dac3a881e8b2e7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
