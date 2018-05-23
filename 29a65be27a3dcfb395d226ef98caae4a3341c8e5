@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_5ac854a8",
+        "filename": "packages/install/src/files/base.conf",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-05-23T13:50:32Z",
+      "side": 1,
+      "message": "Unfortunately, there are still places where the path is hard-coded (e.g., log4j.properties).  Until those are updated, this must continue to point to /var/log/onap.  (The same holds true for the pdplp.conf \u0026 paplp.conf files.)  The only way to remove the hard coding from log4j.properties is to add $POLICY_LOGS to the JVM options, which I can do, but not sure we want to make that change at this point.",
+      "parentUuid": "5a93c517_e62e6f8c",
+      "revId": "29a65be27a3dcfb395d226ef98caae4a3341c8e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_665a5f2c",
         "filename": "packages/install/src/files/paplp.conf",
         "patchSetId": 4

@@ -16,6 +16,24 @@
       "revId": "1da6b3b6a28f40322a13e6fb5142206f1eefa027",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_7af670fb",
+        "filename": "packages/docker/src/main/docker/docker-install.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-05-23T13:50:32Z",
+      "side": 0,
+      "message": "Yes, changed to use $POLICY_LOGS.  I\u0027m leaving the \"exit 1\" as that it won\u0027t cause an issue if the directory already exists, and it will abort, as seems appropriate, if the directory does not exist and cannot be created.",
+      "parentUuid": "5a93c517_46072319",
+      "revId": "1da6b3b6a28f40322a13e6fb5142206f1eefa027",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
