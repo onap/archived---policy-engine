@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_fce4c00f",
+        "filename": "packages/docker/src/main/docker/docker-install.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-05-23T03:38:40Z",
+      "side": 1,
+      "message": "I think we should remove the exit 1, case /var/log/onap is not used for logging (installation dependent) (see comments on patch 4 for this one and other files)",
+      "revId": "771e9ee0aae63223665071da1e47d430aaba9829",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
