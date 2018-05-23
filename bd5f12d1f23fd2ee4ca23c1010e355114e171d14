@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_75b763f6",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 766,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-05-23T17:39:15Z",
+      "side": 1,
+      "message": "Frank, Ravi, I don\u0027t know this code but I can clearly see that there are sideeffects on this on previous behavior.  In the case of an exception, the error message is returned, previously it will throw an exception or return null case of parsing failures.\n\nWhat are the implications on caller functions for this, returning an exception message?\n\nWe cannot afford breakage of functionality at this point.",
+      "revId": "bd5f12d1f23fd2ee4ca23c1010e355114e171d14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_f5a7f3a5",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-05-23T17:39:15Z",
+      "side": 1,
+      "message": "In addition, there should logging statements, and log the exception properly.\n\nHas this been tested?",
+      "revId": "bd5f12d1f23fd2ee4ca23c1010e355114e171d14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_95b46fd5",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-05-23T17:39:15Z",
+      "side": 1,
+      "message": "Do caller methods catch ParserException?",
+      "revId": "bd5f12d1f23fd2ee4ca23c1010e355114e171d14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
