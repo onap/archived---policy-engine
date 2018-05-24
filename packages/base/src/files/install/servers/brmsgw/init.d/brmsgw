@@ -34,7 +34,7 @@ function stop() {
 
 # unmonitored start, does not change monitor status (immutable)
 function um_start() {
-	unset JMX_JAVA_OPTS JVM_SECURITY 
+	unset JMX_JAVA_OPTS JVM_SECURITY CMD_JAVA_OPTS
 	JMX_JAVA_OPTS+=("-Dcom.sun.management.jmxremote") 
 	JMX_JAVA_OPTS+=("-Dcom.sun.management.jmxremote.port=$BRMSGW_JMX_PORT") 
 	JMX_JAVA_OPTS+=("-Dcom.sun.management.jmxremote.ssl=false") 
@@ -44,8 +44,9 @@ function um_start() {
 	JVM_SECURITY+=("-Djavax.net.ssl.keyStorePassword=${KEYSTORE_PASSWD}") 
 	JVM_SECURITY+=("-Djavax.net.ssl.trustStore=${POLICY_HOME}/etc/ssl/policy-keystore") 
 	JVM_SECURITY+=("-Djavax.net.ssl.trustStorePassword=${KEYSTORE_PASSWD}") 
+	CMD_JAVA_OPTS+=("-DPOLICY_LOGS=${POLICY_LOGS}") 
  
-	JAVA_OPTS=("${JVM_JAVA_OPTS[@]}" "${JMX_JAVA_OPTS[@]}" "${JVM_SECURITY[@]}") 
+	JAVA_OPTS=("${JVM_JAVA_OPTS[@]}" "${JMX_JAVA_OPTS[@]}" "${JVM_SECURITY[@]}" "${CMD_JAVA_OPTS[@]}") 
  
 	cd $POLICY_HOME/servers/brmsgw
 	mkdir -p $POLICY_LOGS/policy/brmsgw 2>/dev/null

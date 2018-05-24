@@ -20,8 +20,10 @@ function um_start() {
 	JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote.ssl=false" 
 	JMX_JAVA_OPTS="${JMX_JAVA_OPTS} -Dcom.sun.management.jmxremote.authenticate=false"
 	JVM_JAVA_OPTS="-Xms${LOGPARSER_X_MS_MB}M -Xmx${LOGPARSER_X_MX_MB}M"
+	
+	CMD_JAVA_OPTS="-DPOLICY_LOGS=${POLICY_LOGS}"
 
-	JAVA_OPTS="${JAVA_OPTS} ${JMX_JAVA_OPTS} ${JVM_JAVA_OPTS}"
+	JAVA_OPTS="${JAVA_OPTS} ${JMX_JAVA_OPTS} ${JVM_JAVA_OPTS} ${CMD_JAVA_OPTS}"
 	
 	# Redirects default and error output to a log file
 	cd ${POLICY_HOME}/servers/${COMPONENT}/bin
