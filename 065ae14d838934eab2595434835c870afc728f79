@@ -22,6 +22,30 @@
       "revId": "065ae14d838934eab2595434835c870afc728f79",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a5161057",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1126,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-05-25T18:50:37Z",
+      "side": 1,
+      "message": "I don\u0027t see how it would be possible for it to be null here in the first place.. since if it was null it would execute the code before else and break.  I am not sure why sonar flagged in the first place but this change removes the sonar issue minimal disruption to Frank\u0027s original design in the code.  The other option if this does not work to resolve is to flip the if and else and make it if(!null or empty) then... I just thought this would be safer than making more changes than needed.  Unless there is something here that I am missing.",
+      "parentUuid": "5a93c517_2523e0bf",
+      "range": {
+        "startLine": 1126,
+        "startChar": 9,
+        "endLine": 1126,
+        "endChar": 44
+      },
+      "revId": "065ae14d838934eab2595434835c870afc728f79",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
