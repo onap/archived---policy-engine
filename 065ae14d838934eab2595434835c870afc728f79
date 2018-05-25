@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_2523e0bf",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1126,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-05-25T18:44:49Z",
+      "side": 1,
+      "message": "The Sonar bug was that this could be null. I don\u0027t see how this is fixed.",
+      "range": {
+        "startLine": 1126,
+        "startChar": 9,
+        "endLine": 1126,
+        "endChar": 44
+      },
+      "revId": "065ae14d838934eab2595434835c870afc728f79",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
