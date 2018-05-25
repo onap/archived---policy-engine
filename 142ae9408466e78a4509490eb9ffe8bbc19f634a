@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_a0991ed2",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-05-25T19:44:13Z",
+      "side": 1,
+      "message": "is there any reason to use MANYTRUE/MANYFALSE constant above but not here?   Are they different?",
+      "revId": "142ae9408466e78a4509490eb9ffe8bbc19f634a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
