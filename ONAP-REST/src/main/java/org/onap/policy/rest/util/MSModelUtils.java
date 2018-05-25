@@ -35,6 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
@@ -1036,7 +1037,6 @@ public class MSModelUtils {
 		logger.info(mainObject);
 		logger.info("###############################################################################");	
 	}
-	
 	LinkedHashMap<String,String> parseDataNodes(LinkedHashMap<String,String> map){
 		LinkedHashMap<String,String> dataMapForJson=new LinkedHashMap <>(); 
 		matchableValues = new HashMap <>(); 
@@ -1098,9 +1098,9 @@ public class MSModelUtils {
 						else{
 							StringBuilder stringListItems= new StringBuilder();
 							if(LIST.equalsIgnoreCase(typeValue)){
-							    stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+":required-"+requiredValue +":MANY-false");
+							    stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+REQUIREDVALUE+requiredValue +MANYFALSE);
 							}else if( MAP.equalsIgnoreCase(typeValue)){
-								stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+":required-"+requiredValue +":MANY-true");
+								stringListItems.append(uniqueDataKeySplit[1].toUpperCase()+REQUIREDVALUE+requiredValue +MANYTRUE);
 							}
 							dataMapForJson.put(uniqueDataKey, stringListItems.toString());
 							boolean isConstraintsFound = false;
@@ -1109,7 +1109,8 @@ public class MSModelUtils {
 								logger.info("findConstraints => " + findConstraints);
 								String constraintsValue=map.get(findConstraints);
 								logger.info("constraintsValue => " + constraintsValue);
-								if((constraintsValue==null || constraintsValue.isEmpty()) && i==0){ //if no constraints at all ( index i as 0 can tell this )
+
+								if((constraintsValue==null || constraintsValue.isEmpty()) && i==0){ //if no constraints at all ( index i as 0 can tell this )									
 									isConstraintsFound = false;
 									//if type is list but no constraints
 									String newValue = dataMapForJson.get(uniqueDataKey).replace("MANY-false", "MANY-true");	
@@ -1121,10 +1122,13 @@ public class MSModelUtils {
 									if(i == 0){ // only need to add one time for the same attribute
 									   dataListBuffer.append(uniqueDataKeySplit[1].toUpperCase()+"=[");
 									}
-
-									if(constraintsValue.contains("=")){
+									
+									if(constraintsValue==null){
+										constraintsValue = "";
+									}else if (constraintsValue.contains("=")) {
 										constraintsValue = constraintsValue.replace("=", "equal-sign");
 									}
+
 									dataConstraints.add(constraintsValue);									
 									dataListBuffer.append(constraintsValue+",");
 								}
