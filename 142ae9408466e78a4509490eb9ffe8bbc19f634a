@@ -16,6 +16,24 @@
       "revId": "142ae9408466e78a4509490eb9ffe8bbc19f634a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_20942e8b",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-05-25T19:46:52Z",
+      "side": 1,
+      "message": "Yes.. here there is no \":\" MANYTRUE for example represents the string \":MANY-true\"",
+      "parentUuid": "5a93c517_a0991ed2",
+      "revId": "142ae9408466e78a4509490eb9ffe8bbc19f634a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
