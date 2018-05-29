@@ -82,6 +82,8 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
 
 **Bug Fixes**
 
+The following bug fixes have been deployed with this release:
+
     * `[POLICY-484] <https://jira.onap.org/browse/POLICY-484>`_ - Extend election handler run window and clean up error messages
     * `[POLICY-494] <https://jira.onap.org/browse/POLICY-494>`_ - POLICY EELF Audit.log not in ECOMP Standards Compliance
     * `[POLICY-501] <https://jira.onap.org/browse/POLICY-501>`_ - Fix issues blocking election handler and add directed interface for opstate
@@ -105,12 +107,17 @@ The Beijing release for POLICY delivered the following Epics. For a full list of
 
 **Known Issues**
 
+The following known issues will be addressed in a future release:
+
     * `[POLICY-522] <https://jira.onap.org/browse/POLICY-522>`_ - PAP REST APIs undesired HTTP response body for 500 responses
     * `[POLICY-608] <https://jira.onap.org/browse/POLICY-608>`_ - xacml components : remove hardcoded secret key from source code
     * `[POLICY-764] <https://jira.onap.org/browse/POLICY-764>`_ - Policy Engine PIP Configuration JUnit Test fails intermittently
     * `[POLICY-776] <https://jira.onap.org/browse/POLICY-776>`_ - OOF Policy TOSCA models are not correctly rendered
     * `[POLICY-799] <https://jira.onap.org/browse/POLICY-799>`_ - Policy API Validation Does Not Validate Required Parent Attributes in the Model
     * `[POLICY-801] <https://jira.onap.org/browse/POLICY-801>`_ - fields mismatch for OOF flavorFeatures between implementation and wiki
+    * `[POLICY-869] <https://jira.onap.org/browse/POLICY-869>`_  - Control Loop Drools Rules should not have exceptions as well as die upon an exception
+    * `[POLICY-872] <https://jira.onap.org/browse/POLICY-872>`_  - investigate potential race conditions during rules version upgrades during call loads
+
 
 
 
@@ -215,15 +222,17 @@ The Amsterdam release continued evolving the design driven architecture of and f
 .. note
 ..      CHANGE  HISTORY
 ..      03/22/2018 - Initial document for Beijing release.
-..		For initial document: list epic and user stories for each, list user stories with no epics.  
-..      	For Bugs section, list bugs that are not tied to an epic.  Remove all items with "Won't Do" resolution.
 ..      01/15/2018 - Added change for version 1.1.3 to the Amsterdam branch.  Also corrected prior version (1.2.0) to (1.1.1)
 ..		Also, Set up initial information for Beijing.
-..	05/21/2018 - Information for Beijing release.
+..	05/29/2018 - Information for Beijing release.
 ..		Excluded POLICY-454 from bug list since it doesn't apply to Beijing per Jorge.
  
 
 End of Release Notes
 
+.. How to notes for SS 
+..	For initial document: list epic and user stories for each, list user stories with no epics.  
+..     	For Bugs section, list bugs that are not tied to an epic.  Remove all items with "Won't Do" resolution.
+..     	For Known issues, list bugs that are slotted for a future release.
 
 
