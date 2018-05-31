@@ -101,9 +101,16 @@ The following bug fixes have been deployed with this release:
     * `[POLICY-765] <https://jira.onap.org/browse/POLICY-765>`_ - junit test for guard fails intermittently
 
 
-**Security Issues**
+**Security Notes**
 
-   * Refer to the `Policy R2 Beijing Security/Vulnerability Threat <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_ page for security related issues.
+POLICY code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The POLICY open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_.
+
+Quick Links:
+ 	- `POLICY project page <https://wiki.onap.org/display/DW/Policy+Framework+Project>`_
+
+ 	- `Passing Badge information for POLICY <https://bestpractices.coreinfrastructure.org/en/projects/1614>`_
+
+ 	- `Project Vulnerability Review Table for POLICY <https://wiki.onap.org/pages/viewpage.action?pageId=25437092>`_
 
 **Known Issues**
 
