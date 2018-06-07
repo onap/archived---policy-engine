@@ -20,6 +20,7 @@ Policy Installation and Deployment
    installationVM.rst
    installAmsterController.rst
    installBeijingController.rst
+   swarch_srm.rst
    deployment.rst
 
 Policy Software Architecture
@@ -28,7 +29,6 @@ Policy Software Architecture
 .. toctree::
    :maxdepth: 1
 
-   swarch_srm.rst
    swarch_pdp.rst
    feature_eelf.rst
    feature_testtransaction.rst

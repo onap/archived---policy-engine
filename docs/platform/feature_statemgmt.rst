@@ -7,22 +7,22 @@ Feature: State Management
 *************************
 
 .. contents::
-    :depth: 3
+    :depth: 2
 
 Summary
 ^^^^^^^
 The State Management Feature provides:
 
-    - Node-level health monitoring
-    - Monitoring the health of dependency nodes - nodes on which a particular node is dependent
-    - Ability to lock/unlock a node and suspend or resume all application processing
-    - Ability to suspend application processing on a node that is disabled or in a standby state
-    - Interworking/Coordination of state values
-    - Support for ITU X.731 states and state transitions for:
-            - Administrative State
-            - Operational State
-            - Availability Status
-            - Standby Status
+- Node-level health monitoring
+- Monitoring the health of dependency nodes - nodes on which a particular node is dependent
+- Ability to lock/unlock a node and suspend or resume all application processing
+- Ability to suspend application processing on a node that is disabled or in a standby state
+- Interworking/Coordination of state values
+- Support for ITU X.731 states and state transitions for:
+        - Administrative State
+        - Operational State
+        - Availability Status
+        - Standby Status
 
 Usage
 ^^^^^
@@ -152,6 +152,16 @@ Node Health Monitoring
     If the *startTransaction()* method is not called within a provisioned period of time, a timer will expire which calls the *testTransaction()* method.  The default implementation of this method simply increments the forward progress counter.  The *testTransaction()* method may be overwritten to perform a more meaningful test of system sanity, if desired.
     
     If the forward progress counter stops incrementing, the integrity monitoring routine will assume the node application has lost sanity and it will trigger a *statechange* (disableFailed) to cause the operational state to become disabled and the availability status attribute to become failed.  Once the forward progress counter again begins incrementing, the operational state will return to enabled.
+
+**Application Monitoring with AllSeemsWell**
+
+    The IntegrityMonitor class provides a facility for applications to directly control updates of the forwardprogressentity table.  As previously described, *startTransaction()* and *endTransaction()* are provided to monitor the forward progress of transactions.  This, however, does not monitor things such as internal threads that may be blocked or die.  An example is the feature-state-management *DroolsPdpElectionHandler.run()* method. 
+
+    The *run()* method is monitored by a timer task, *checkWaitTimer()*.  If the *run()* method is stalled an extended period of time, the *checkWaitTimer()* method will call *StateManagementFeature.allSeemsWell(<className>, <AllSeemsWell State>, <String message>)* with the AllSeemsWell state of Boolean.FALSE.
+
+    The IntegrityMonitor instance owned by StateManagementFeature will then store an entry in the allSeemsWellMap and block updates of the forwardprogressentity table.  This in turn, will cause the Drools PDP operational state to be set to “disabled” and availability status to be set to “failed”.  
+
+    Once the blocking condition is cleared, the *checkWaiTimer()* will again call the *allSeemsWell()* method and include an AllSeemsWell state of Boolean.True. This will cause the IntegrityMonitor to remove the entry for that className from the allSeemsWellMap and allow updating of the forwardprogressentity table, so long as there are no other entries in the map.
 
 **Dependency Monitoring**
 
