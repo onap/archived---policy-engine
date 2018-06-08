@@ -139,13 +139,13 @@ public class CryptoUtils {
 
 		try {
 			if (encryptedTxt == null || encryptedTxt.isEmpty()) {
-				LOGGER.error("decryptTxtNoEx: Input param encryptedTxt is not valid");
+				LOGGER.info("decryptTxtNoEx: Input param encryptedTxt is empty");
 				return new byte[0];
 			}
 			return decryptTxt(encryptedTxt);
 		} catch (Exception e) {
 			try {
-				LOGGER.warn("decryptTxtNoEx: Exception while decryption : " + e);
+				LOGGER.info("decryptTxtNoEx: Exception while decrypting : " + e);
 				return (encryptedTxt != null) ? encryptedTxt.getBytes(StandardCharsets.UTF_8) : new byte[0];
 			} catch (Exception e1) {
 				LOGGER.warn("decryptTxtNoEx: Exception on sending default : " + e1);
