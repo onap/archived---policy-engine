@@ -1085,9 +1085,11 @@ public class PolicyValidation {
 			final JsonNode value = field.getValue();
 			
 			if (value.isContainerNode() && !value.isArray()) {
+				jsonRequestMap.put(key, "containerNode");
 				pullModelJsonKeyPairs(value); // RECURSIVE CALL
 			} else if (value.isArray()) {
 				try {
+					jsonRequestMap.put(key, "array");
 					String stringValue = StringUtils.replaceEach(value.toString(), new String[]{"[", "]"}, new String[]{"",""});
 					ObjectMapper mapper = new ObjectMapper();
 					JsonNode newValue = mapper.readTree(stringValue);
@@ -1098,8 +1100,7 @@ public class PolicyValidation {
 			} else {
 				jsonRequestMap.put(key, value.toString().trim());
 			}
-		}
-				
+		}				
 	}
 	
     private JsonObject stringToJsonObject(String value) {
