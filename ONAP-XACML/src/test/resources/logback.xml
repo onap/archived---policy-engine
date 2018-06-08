@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP-XACML
   ================================================================================
-  Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@
           <property name="defaultPatternOld" value="%d{MM/dd-HH:mm:ss.SSS}|%logger|%X{RequestId}|%X{ServiceInstanceId}|%thread|%X{ServiceName}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Timer}|%msg%n" />
           <property name="defaultPattern" value="%X{BeginTimestamp}|%X{EndTimestamp}|%X{RequestId}|%X{ServiceInstanceId}|%thread|%X{ServerName}|%X{ServiceName}|%X{PartnerName}|%X{TargetEntity}|%X{TargetServiceName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}||%X{ProcessKey}|%X{TargetVirtualEntity}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|%msg%n" />
    -->
-   <property name="defaultPattern" value="%d{&quot;yyyy-MM-dd'T'HH:mm:ss.SSSXXX&quot;, UTC}|%X{requestId}|%X{serviceInstanceId}|%t|%X{serverName}|%X{serviceName}|%X{instanceUuid}|%p|%X{severity}|%X{serverIpAddress}|%X{server}|%X{clientIpAddress}|%c||%msg%n" />
+   <property name="defaultPattern" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX, UTC}|%X{requestId}|%X{serviceInstanceId}|%t|%X{serverName}|%X{serviceName}|%X{instanceUuid}|%p|%X{severity}|%X{serverIpAddress}|%X{server}|%X{clientIpAddress}|%c||%msg%n" />
    
  
  
