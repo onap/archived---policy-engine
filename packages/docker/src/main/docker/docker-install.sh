@@ -469,7 +469,22 @@ function configure_mysql() {
 		set -x
 	fi
 	
-	# nothing to do
+	# get user/pass/host from base.conf 
+	if ! check_r_file "${BASE_CONF}"; then
+	     echo "error: aborting ${COMPONENT_TYPE} installation: ${BASE_CONF} is not accessible"
+	     exit 1
+	fi
+	DB_USER=`grep "^JDBC_USER=" ${BASE_CONF}     | awk -F'=' '{print $2}'`
+	DB_PASS=`grep "^JDBC_PASSWORD=" ${BASE_CONF} | awk -F'=' '{print $2}'`
+	DB_HOST=`grep "^JDBC_URL=" ${BASE_CONF}      | awk -F'=' '{print $2}' | awk -F':' '{print $3}' | sed -e"s/\///g"`
+	echo "Perform DB schema upgrade on: $DB_HOST"
+	if ! check_x_file "${POLICY_HOME}/bin/db_upgrade_remote.sh"; then
+	     echo "error: ${POLICY_HOME}/bin/db_upgrade_remote.sh is not accessible"
+	     exit 1
+	else
+	     ${POLICY_HOME}/bin/db_upgrade_remote.sh "${DB_USER}" "${DB_PASS}" "${DB_HOST}"
+	fi
+	return 0
 }
 
 # This function installs elk related shell scripts and sql files in the proper locations
