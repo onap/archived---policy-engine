@@ -21,11 +21,15 @@ package org.onap.policy.pap.xacml.rest.controller;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,811 +69,610 @@ public class FirewallDictionaryControllerTest {
 	private FirewallDictionaryController controller = null;
 	private MockHttpServletResponse response = null;
 	private UserInfo userInfo;
-	private List<String>  data;
+	private List<String> data;
 
 	@Before
 	public void setUp() throws Exception {
 		logger.info("setUp: Entering");
 		commonClassDao = Mockito.mock(CommonClassDao.class);
-		
+
 		data = new ArrayList<>();
 		data.add("Test");
-		
+
 		userInfo = new UserInfo();
 		userInfo.setUserLoginId("Test");
 		userInfo.setUserName("Test");
-	
-		doNothing().when(commonClassDao).delete(new Term());
-		doNothing().when(commonClassDao).save(new Term());
-		
+
+		doNothing().when(commonClassDao).delete(any(Term.class));
+		doNothing().when(commonClassDao).save(any(Term.class));
+
 		controller = new FirewallDictionaryController();
 		FirewallDictionaryController.setCommonClassDao(commonClassDao);
-		
+
 		request = Mockito.mock(HttpServletRequest.class);
-		response =  new MockHttpServletResponse();  
+		response = new MockHttpServletResponse();
 		new DictionaryUtils(commonClassDao);
-        DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
-        mock(DictionaryUtils.class);
+		DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
+		mock(DictionaryUtils.class);
 		logger.info("setUp: exit");
 	}
-	
+
 	@Test
-	public void testGetPrefixListDictionaryEntityDataByName(){
-		when(commonClassDao.getDataByColumn(PrefixList.class, "prefixListName")).thenReturn(data);
-		controller.getPrefixListDictionaryEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("prefixListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetPrefixListDictionaryEntityDataByName() {
+		test_WithGetDataByColumn(PrefixList.class, "prefixListDictionaryDatas", "prefixListName",
+				() -> controller.getPrefixListDictionaryEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetPrefixListDictionaryEntityData(){
-		when(commonClassDao.getData(PrefixList.class)).thenReturn(new ArrayList<>());
-		controller.getPrefixListDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("prefixListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetPrefixListDictionaryEntityData() {
+		test_WithGetData(PrefixList.class, "prefixListDictionaryDatas",
+				() -> controller.getPrefixListDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetPortListDictionaryEntityData(){
-		when(commonClassDao.getData(PortList.class)).thenReturn(new ArrayList<>());
-		controller.getPortListDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("portListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetPortListDictionaryEntityData() {
+		test_WithGetData(PortList.class, "portListDictionaryDatas",
+				() -> controller.getPortListDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetProtocolListDictionaryEntityDataByName(){
-		when(commonClassDao.getDataByColumn(ProtocolList.class, "protocolName")).thenReturn(data);
-		controller.getProtocolListDictionaryEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("protocolListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetProtocolListDictionaryEntityDataByName() {
+		test_WithGetDataByColumn(ProtocolList.class, "protocolListDictionaryDatas", "protocolName",
+				() -> controller.getProtocolListDictionaryEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetProtocolListDictionaryEntityData(){
-		when(commonClassDao.getData(ProtocolList.class)).thenReturn(new ArrayList<>());
-		controller.getProtocolListDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("protocolListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetProtocolListDictionaryEntityData() {
+		test_WithGetData(ProtocolList.class, "protocolListDictionaryDatas",
+				() -> controller.getProtocolListDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetAddressGroupDictionaryEntityDataByName(){
-		when(commonClassDao.getDataByColumn(AddressGroup.class, "name")).thenReturn(data);
-		controller.getAddressGroupDictionaryEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("addressGroupDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetAddressGroupDictionaryEntityDataByName() {
+		test_WithGetDataByColumn(AddressGroup.class, "addressGroupDictionaryDatas", "name",
+				() -> controller.getAddressGroupDictionaryEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetAddressGroupDictionaryEntityData(){
-		when(commonClassDao.getData(AddressGroup.class)).thenReturn(new ArrayList<>());
-		controller.getAddressGroupDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("addressGroupDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetAddressGroupDictionaryEntityData() {
+		test_WithGetData(AddressGroup.class, "addressGroupDictionaryDatas",
+				() -> controller.getAddressGroupDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetActionListDictionaryEntityDataByName(){
-		when(commonClassDao.getDataByColumn(ActionList.class, "actionName")).thenReturn(data);
-		controller.getActionListDictionaryEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("actionListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetActionListDictionaryEntityDataByName() {
+		test_WithGetDataByColumn(ActionList.class, "actionListDictionaryDatas", "actionName",
+				() -> controller.getActionListDictionaryEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetActionListDictionaryEntityData(){
-		when(commonClassDao.getData(ActionList.class)).thenReturn(new ArrayList<>());
-		controller.getActionListDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("actionListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetActionListDictionaryEntityData() {
+		test_WithGetData(ActionList.class, "actionListDictionaryDatas",
+				() -> controller.getActionListDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetServiceGroupDictionaryEntityDataByName(){
-		when(commonClassDao.getDataByColumn(GroupServiceList.class, "name")).thenReturn(data);
-		controller.getServiceGroupDictionaryEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("serviceGroupDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetServiceGroupDictionaryEntityDataByName() {
+		test_WithGetDataByColumn(GroupServiceList.class, "serviceGroupDictionaryDatas", "name",
+				() -> controller.getServiceGroupDictionaryEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetServiceGroupDictionaryEntityData(){
-		when(commonClassDao.getData(GroupServiceList.class)).thenReturn(new ArrayList<>());
-		controller.getServiceGroupDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("serviceGroupDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetServiceGroupDictionaryEntityData() {
+		test_WithGetData(GroupServiceList.class, "serviceGroupDictionaryDatas",
+				() -> controller.getServiceGroupDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetSecurityZoneDictionaryEntityDataByName(){
-		when(commonClassDao.getDataByColumn(SecurityZone.class, "zoneName")).thenReturn(data);
-		controller.getSecurityZoneDictionaryEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("securityZoneDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetSecurityZoneDictionaryEntityDataByName() {
+		test_WithGetDataByColumn(SecurityZone.class, "securityZoneDictionaryDatas", "zoneName",
+				() -> controller.getSecurityZoneDictionaryEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetSecurityZoneDictionaryEntityData(){
-		when(commonClassDao.getData(SecurityZone.class)).thenReturn(new ArrayList<>());
-		controller.getSecurityZoneDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("securityZoneDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetSecurityZoneDictionaryEntityData() {
+		test_WithGetData(SecurityZone.class, "securityZoneDictionaryDatas",
+				() -> controller.getSecurityZoneDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetServiceListDictionaryEntityDataByName(){
-		when(commonClassDao.getDataByColumn(ServiceList.class, "serviceName")).thenReturn(data);
-		controller.getServiceListDictionaryEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("serviceListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetServiceListDictionaryEntityDataByName() {
+		test_WithGetDataByColumn(ServiceList.class, "serviceListDictionaryDatas", "serviceName",
+				() -> controller.getServiceListDictionaryEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetServiceListDictionaryEntityData(){
-		when(commonClassDao.getData(ServiceList.class)).thenReturn(new ArrayList<>());
-		controller.getServiceListDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("serviceListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetServiceListDictionaryEntityData() {
+		test_WithGetData(ServiceList.class, "serviceListDictionaryDatas",
+				() -> controller.getServiceListDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetZoneDictionaryEntityDataByName(){
-		when(commonClassDao.getDataByColumn(Zone.class, "zoneName")).thenReturn(data);
-		controller.getZoneDictionaryEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("zoneDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetZoneDictionaryEntityDataByName() {
+		test_WithGetDataByColumn(Zone.class, "zoneDictionaryDatas", "zoneName",
+				() -> controller.getZoneDictionaryEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetZoneDictionaryEntityData(){
-		when(commonClassDao.getData(Zone.class)).thenReturn(new ArrayList<>());
-		controller.getZoneDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("zoneDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetZoneDictionaryEntityData() {
+		test_WithGetData(Zone.class, "zoneDictionaryDatas", () -> controller.getZoneDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetTermListDictionaryEntityDataByName(){
-		when(commonClassDao.getDataByColumn(TermList.class, "termName")).thenReturn(data);
-		controller.getTermListDictionaryEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("termListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetTermListDictionaryEntityDataByName() {
+		test_WithGetDataByColumn(TermList.class, "termListDictionaryDatas", "termName",
+				() -> controller.getTermListDictionaryEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetTermListDictionaryEntityData(){
-		when(commonClassDao.getData(TermList.class)).thenReturn(new ArrayList<>());
-		controller.getTermListDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("termListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetTermListDictionaryEntityData() {
+		test_WithGetData(TermList.class, "termListDictionaryDatas",
+				() -> controller.getTermListDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetFWDictListDictionaryEntityDataByName(){
-		when(commonClassDao.getDataByColumn(FirewallDictionaryList.class, "parentItemName")).thenReturn(data);
-		controller.getFWDictListDictionaryEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("fwDictListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetFWDictListDictionaryEntityDataByName() {
+		test_WithGetDataByColumn(FirewallDictionaryList.class, "fwDictListDictionaryDatas", "parentItemName",
+				() -> controller.getFWDictListDictionaryEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetFWDictionaryListEntityData(){
-		when(commonClassDao.getData(FirewallDictionaryList.class)).thenReturn(new ArrayList<>());
-		controller.getFWDictionaryListEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("fwDictListDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetFWDictionaryListEntityData() {
+		test_WithGetData(FirewallDictionaryList.class, "fwDictListDictionaryDatas",
+				() -> controller.getFWDictionaryListEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetTagPickerNameEntityDataByName(){
-		when(commonClassDao.getDataByColumn(FWTagPicker.class, "tagPickerName")).thenReturn(data);
-		controller.getTagPickerNameEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("fwTagPickerDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetTagPickerNameEntityDataByName() {
+		test_WithGetDataByColumn(FWTagPicker.class, "fwTagPickerDictionaryDatas", "tagPickerName",
+				() -> controller.getTagPickerNameEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetTagPickerDictionaryEntityData(){
-		when(commonClassDao.getData(FWTagPicker.class)).thenReturn(new ArrayList<>());
-		controller.getTagPickerDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("fwTagPickerDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetTagPickerDictionaryEntityData() {
+		test_WithGetData(FWTagPicker.class, "fwTagPickerDictionaryDatas",
+				() -> controller.getTagPickerDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testGetTagNameEntityDataByName(){
-		when(commonClassDao.getDataByColumn(FWTag.class, "fwTagName")).thenReturn(data);
-		controller.getTagNameEntityDataByName(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("fwTagDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetTagNameEntityDataByName() {
+		test_WithGetDataByColumn(FWTag.class, "fwTagDictionaryDatas", "fwTagName",
+				() -> controller.getTagNameEntityDataByName(response));
 	}
-	
+
 	@Test
-	public void testGetTagDictionaryEntityData(){
-		when(commonClassDao.getData(FWTag.class)).thenReturn(new ArrayList<>());
-		controller.getTagDictionaryEntityData(response);
-		try {
-			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains("fwTagDictionaryDatas"));
-		} catch (Exception e) {
-			fail();
-			logger.error(e.getMessage(),e);
-		}
+	public void testGetTagDictionaryEntityData() {
+		test_WithGetData(FWTag.class, "fwTagDictionaryDatas", () -> controller.getTagDictionaryEntityData(response));
 	}
-	
+
 	@Test
-	public void testSavePrefixListDictionary(){
+	public void testSavePrefixListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"prefixListDictionaryData\":{\"description\":\"test\",\"prefixListName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.savePrefixListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("prefixListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(PrefixList.class, "prefixListDictionaryDatas", "prefixListName",
+				() -> controller.savePrefixListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdatePrefixListDictionary(){
+	public void testUpdatePrefixListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"prefixListDictionaryData\":{\"id\":1,\"description\":\"test\",\"prefixListName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.savePrefixListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("prefixListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testUpdate(PrefixList.class, "prefixListDictionaryDatas", "prefixListName",
+				() -> controller.savePrefixListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testRemovePrefixListDictionary(){
+	public void testRemovePrefixListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"prefixListName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removePrefixListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("prefixListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(PrefixList.class, "prefixListDictionaryDatas",
+				() -> controller.removePrefixListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testValidatePrefixListDictionary(){
+	public void testValidatePrefixListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"prefixListDictionaryData\":{\"id\":1,\"description\":\"test\",\"prefixListName\":\"Test\",\"prefixListValue\":\"10.10.10\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.validatePrefixListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("result"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testValidate(PrefixList.class, "result", () -> controller.validatePrefixListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testSavePortListDictionary(){
+	public void testSavePortListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"portListDictionaryData\":{\"description\":\"test\",\"portName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.savePortListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("portListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(PortList.class, "portListDictionaryDatas", "portName",
+				() -> controller.savePortListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdatePortListDictionary(){
+	public void testUpdatePortListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"portListDictionaryData\":{\"id\":1,\"description\":\"test\",\"portName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.savePortListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("portListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testUpdate(PortList.class, "portListDictionaryDatas", "portName",
+				() -> controller.savePortListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testRemovePortListDictionary(){
+	public void testRemovePortListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"portName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removePortListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("portListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(PortList.class, "portListDictionaryDatas",
+				() -> controller.removePortListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testSaveProtocolListDictionary(){
+	public void testSaveProtocolListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"protocolListDictionaryData\":{\"description\":\"test\",\"protocolName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveProtocolListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("protocolListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(ProtocolList.class, "protocolListDictionaryDatas", "protocolName",
+				() -> controller.saveProtocolListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdateProtocolListDictionary(){
+	public void testUpdateProtocolListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"protocolListDictionaryData\":{\"id\":1,\"description\":\"test\",\"protocolName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveProtocolListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("protocolListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testUpdate(ProtocolList.class, "protocolListDictionaryDatas", "protocolName",
+				() -> controller.saveProtocolListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testRemoveProtocolListDictionary(){
+	public void testRemoveProtocolListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"protocolName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removeProtocolListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("protocolListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(ProtocolList.class, "protocolListDictionaryDatas",
+				() -> controller.removeProtocolListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testSaveAddressGroupDictionary(){
+	public void testSaveAddressGroupDictionary() {
 		jsonString = "{\"addressGroupDictionaryData\":{\"attributes\":[{\"$$hashKey\":\"object:409\",\"id\":\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"groupName\":\"Test\"},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveAddressGroupDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("addressGroupDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(AddressGroup.class, "addressGroupDictionaryDatas", "name", "Group_Test",
+				() -> controller.saveAddressGroupDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdateAddressGroupDictionary(){
-		jsonString = "{\"addressGroupDictionaryData\":{\"attributes\":[{\"$$hashKey\":\"object:409\",\"id\":\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"groupName\":\"Test\"},\"userid\":\"demo\",\"id\":1}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveAddressGroupDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("addressGroupDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+	public void testUpdateAddressGroupDictionary() {
+		jsonString = "{\"addressGroupDictionaryData\":{\"id\":1, \"attributes\":[{\"$$hashKey\":\"object:409\",\"id\":\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"groupName\":\"Test\"},\"userid\":\"demo\"}";
+		testUpdate(AddressGroup.class, "addressGroupDictionaryDatas", "name", "Group_Test",
+				() -> controller.saveAddressGroupDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testRemoveAddressGroupDictionary(){
+	public void testRemoveAddressGroupDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"name\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removeAddressGroupDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("addressGroupDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(AddressGroup.class, "addressGroupDictionaryDatas",
+				() -> controller.removeAddressGroupDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testSaveActionListDictionary(){
+	public void testSaveActionListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"actionListDictionaryData\":{\"description\":\"test\",\"actionName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveActionListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("actionListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(ActionList.class, "actionListDictionaryDatas", "actionName",
+				() -> controller.saveActionListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdateActionListDictionary(){
+	public void testUpdateActionListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"actionListDictionaryData\":{\"id\":1,\"description\":\"test\",\"actionName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveActionListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("actionListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testUpdate(ActionList.class, "actionListDictionaryDatas", "actionName",
+				() -> controller.saveActionListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testRemoveActionListDictionary(){
+	public void testRemoveActionListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"actionName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removeActionListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("actionListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(ActionList.class, "actionListDictionaryDatas",
+				() -> controller.removeActionListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testSaveServiceGroupDictionary(){
+	public void testSaveServiceGroupDictionary() {
 		jsonString = "{\"serviceGroupDictionaryData\":{\"attributes\":[{\"$$hashKey\":\"object:657\",\"id\":\"choice1\",\"option\":\"Test\"}],\"groupName\":\"Test\"},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveServiceGroupDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("serviceGroupDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(GroupServiceList.class, "serviceGroupDictionaryDatas", "name", "Group_Test",
+				() -> controller.saveServiceGroupDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdateServiceGroupDictionary(){
-		jsonString = "{\"serviceGroupDictionaryData\":{\"attributes\":[{\"$$hashKey\":\"object:657\",\"id\":\"choice1\",\"option\":\"Test\"}],\"groupName\":\"Test\"},\"userid\":\"demo\",\"id\":1}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveServiceGroupDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("serviceGroupDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+	public void testUpdateServiceGroupDictionary() {
+		jsonString = "{\"serviceGroupDictionaryData\":{\"id\":1, \"attributes\":[{\"$$hashKey\":\"object:657\",\"id\":\"choice1\",\"option\":\"Test\"}],\"groupName\":\"Test\"},\"userid\":\"demo\"}";
+		testUpdate(GroupServiceList.class, "serviceGroupDictionaryDatas", "name", "Group_Test",
+				() -> controller.saveServiceGroupDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testRemoveServiceGroupDictionary(){
+	public void testRemoveServiceGroupDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"name\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removeServiceGroupDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("serviceGroupDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(GroupServiceList.class, "serviceGroupDictionaryDatas",
+				() -> controller.removeServiceGroupDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testSaveSecurityZoneDictionary(){
+	public void testSaveSecurityZoneDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"securityZoneDictionaryData\":{\"description\":\"test\",\"zoneName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveSecurityZoneDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("securityZoneDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(SecurityZone.class, "securityZoneDictionaryDatas", "zoneName",
+				() -> controller.saveSecurityZoneDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdateSecurityZoneDictionary(){
+	public void testUpdateSecurityZoneDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"securityZoneDictionaryData\":{\"id\":1,\"description\":\"test\",\"zoneName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveSecurityZoneDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("securityZoneDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testUpdate(SecurityZone.class, "securityZoneDictionaryDatas", "zoneName",
+				() -> controller.saveSecurityZoneDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testRemoveSecurityZoneDictionary(){
+	public void testRemoveSecurityZoneDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"zoneName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removeSecurityZoneDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("securityZoneDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(SecurityZone.class, "securityZoneDictionaryDatas",
+				() -> controller.removeSecurityZoneDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testSaveServiceListDictionary(){
+	public void testSaveServiceListDictionary() {
 		jsonString = "{\"serviceListDictionaryData\":{\"appProtocols\":[{\"$$hashKey\":\"object:560\",\"id\":\"choice1\",\"option\":\"Test\"}],\"serviceDescription\":\"test\",\"serviceName\":\"Test\",\"servicePorts\":\"1010\",\"transportProtocols\":[{\"$$hashKey\":\"object:555\",\"id\":\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveServiceListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("serviceListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(ServiceList.class, "serviceListDictionaryDatas", "serviceName",
+				() -> controller.saveServiceListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdateServiceListDictionary(){
+	public void testUpdateServiceListDictionary() {
 		jsonString = "{\"serviceListDictionaryData\":{\"appProtocols\":[{\"$$hashKey\":\"object:560\",\"id\":\"choice1\",\"option\":\"Test\"}],\"serviceDescription\":\"test\",\"id\":1,\"serviceName\":\"Test\",\"servicePorts\":\"1010\",\"transportProtocols\":[{\"$$hashKey\":\"object:555\",\"id\":\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveServiceListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("serviceListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testUpdate(ServiceList.class, "serviceListDictionaryDatas", "serviceName",
+				() -> controller.saveServiceListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testRemoveServiceListDictionary(){
+	public void testRemoveServiceListDictionary() {
 		jsonString = "{\"data\":{\"appProtocols\":[{\"$$hashKey\":\"object:560\",\"id\":\"choice1\",\"option\":\"Test\"}],\"serviceDescription\":\"test\",\"id\":1,\"serviceName\":\"Test\",\"servicePorts\":\"1010\",\"transportProtocols\":[{\"$$hashKey\":\"object:555\",\"id\":\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removeServiceListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("serviceListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(ServiceList.class, "serviceListDictionaryDatas",
+				() -> controller.removeServiceListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testSaveZoneDictionary(){
+	public void testSaveZoneDictionary() {
+		jsonString = "{\"userid\":\"demo\",\"zoneDictionaryData\":{\"zoneValue\":\"test\",\"zoneName\":\"Test\"}}";
+		testSave(Zone.class, "zoneDictionaryDatas", "zoneName", () -> controller.saveZoneDictionary(request, response));
+	}
+
+	@Test
+	public void testUpdateZoneDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"zoneDictionaryData\":{\"id\":1,\"zoneValue\":\"test\",\"zoneName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveZoneDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("zoneDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testUpdate(Zone.class, "zoneDictionaryDatas", "zoneName",
+				() -> controller.saveZoneDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdateZoneDictionary(){
-		jsonString = "{\"userid\":\"demo\",\"zoneDictionaryData\":{\"id\":1,\"zoneValue\":\"test\",\"zoneName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveZoneDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("zoneDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
-	}
-	
-	@Test
-	public void testRemoveZoneDictionary(){
+	public void testRemoveZoneDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"zoneValue\":\"test\",\"zoneName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removeZoneDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("zoneDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(Zone.class, "zoneDictionaryDatas", () -> controller.removeZoneDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testSaveTermListDictionary(){
+	public void testSaveTermListDictionary() {
 		jsonString = "{\"termListDictionaryData\":{\"actionListDatas\":[{\"$$hashKey\":\"object:1220\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"destinationListDatas\":[{\"$$hashKey\":\"object:1220\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"destinationServiceDatas\":[{\"$$hashKey\":\"object:1230\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"fromZoneDatas\":[{\"$$hashKey\":\"object:1245\",\"id\":\"choice1\",\"option\":\"Test\"}],\"sourceListDatas\":[{\"$$hashKey\":\"object:1215\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"sourceServiceDatas\":[{\"$$hashKey\":\"object:1225\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"termDescription\":\"test\",\"termName\":\"Test\",\"toZoneDatas\":[{\"$$hashKey\":\"object:1240\",\"id\":\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveTermListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("termListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(TermList.class, "termListDictionaryDatas", "termName",
+				() -> controller.saveTermListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdateTermListDictionary(){
+	public void testUpdateTermListDictionary() {
 		jsonString = "{\"termListDictionaryData\":{\"id\":1,\"actionListDatas\":[{\"$$hashKey\":\"object:1220\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"destinationListDatas\":[{\"$$hashKey\":\"object:1220\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"destinationServiceDatas\":[{\"$$hashKey\":\"object:1230\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"fromZoneDatas\":[{\"$$hashKey\":\"object:1245\",\"id\":\"choice1\",\"option\":\"Test\"}],\"sourceListDatas\":[{\"$$hashKey\":\"object:1215\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"sourceServiceDatas\":[{\"$$hashKey\":\"object:1225\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"termDescription\":\"test\",\"termName\":\"Test\",\"toZoneDatas\":[{\"$$hashKey\":\"object:1240\",\"id\":\"choice1\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveTermListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("termListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testUpdate(TermList.class, "termListDictionaryDatas", "termName",
+				() -> controller.saveTermListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testRemoveTermListDictionary(){
+	public void testRemoveTermListDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"termDescription\":\"test\",\"termName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removeTermListDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("termListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(TermList.class, "termListDictionaryDatas",
+				() -> controller.removeTermListDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testSaveFWDictionaryList(){
+	public void testSaveFWDictionaryList() {
 		jsonString = "{\"fwDictListDictionaryData\":{\"alAttributes\":[{\"$$hashKey\":\"object:1379\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"attributes\":[{\"$$hashKey\":\"object:1374\",\"id\":\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"parentItemName\":\"Test\"},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveFWDictionaryList(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("fwDictListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(FirewallDictionaryList.class, "fwDictListDictionaryDatas", "parentItemName",
+				() -> controller.saveFWDictionaryList(request, response));
 	}
-	
+
 	@Test
-	public void testUpdateFWDictionaryList(){
+	public void testUpdateFWDictionaryList() {
 		jsonString = "{\"fwDictListDictionaryData\":{\"id\":1,\"alAttributes\":[{\"$$hashKey\":\"object:1379\",\"id\":\"choice1\",\"option\":\"Group_Test\"}],\"attributes\":[{\"$$hashKey\":\"object:1374\",\"id\":\"choice1\",\"option\":\"Test\"}],\"description\":\"test\",\"parentItemName\":\"Test\"},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveFWDictionaryList(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("fwDictListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testUpdate(FirewallDictionaryList.class, "fwDictListDictionaryDatas", "parentItemName",
+				() -> controller.saveFWDictionaryList(request, response));
 	}
-	
+
 	@Test
-	public void testRemoveFWDictionaryList(){
+	public void testRemoveFWDictionaryList() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"parentItemName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removeFWDictionaryList(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("fwDictListDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(FirewallDictionaryList.class, "fwDictListDictionaryDatas",
+				() -> controller.removeFWDictionaryList(request, response));
 	}
-	
+
 	@Test
-	public void testSaveFirewallTagPickerDictionary(){
+	public void testSaveFirewallTagPickerDictionary() {
 		jsonString = "{\"fwTagPickerDictionaryData\":{\"description\":\"test\",\"networkRole\":\"test\",\"tagPickerName\":\"Test\",\"tags\":[{\"$$hashKey\":\"object:1855\",\"id\":\"choice1\",\"number\":\"test\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveFirewallTagPickerDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("fwTagPickerDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(FWTagPicker.class, "fwTagPickerDictionaryDatas", "tagPickerName",
+				() -> controller.saveFirewallTagPickerDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdateFirewallTagPickerDictionary(){
+	public void testUpdateFirewallTagPickerDictionary() {
 		jsonString = "{\"fwTagPickerDictionaryData\":{\"id\":1,\"description\":\"test\",\"networkRole\":\"test\",\"tagPickerName\":\"Test\",\"tags\":[{\"$$hashKey\":\"object:1855\",\"id\":\"choice1\",\"number\":\"test\",\"option\":\"Test\"}]},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveFirewallTagPickerDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("fwTagPickerDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testUpdate(FWTagPicker.class, "fwTagPickerDictionaryDatas", "tagPickerName",
+				() -> controller.saveFirewallTagPickerDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testRemoveFirewallTagPickerDictionary(){
+	public void testRemoveFirewallTagPickerDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"tagPickerName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.removeFirewallTagPickerDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("fwTagPickerDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testRemove(FWTagPicker.class, "fwTagPickerDictionaryDatas",
+				() -> controller.removeFirewallTagPickerDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testSaveFirewallTagDictionary(){
+	public void testSaveFirewallTagDictionary() {
 		jsonString = "{\"fwTagDictionaryData\":{\"description\":\"test\",\"fwTagName\":\"Test\",\"tags\":[{\"$$hashKey\":\"object:1690\",\"id\":\"choice1\",\"tags\":\"test\"}]},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveFirewallTagDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("fwTagDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testSave(FWTag.class, "fwTagDictionaryDatas", "fwTagName",
+				() -> controller.saveFirewallTagDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testUpdateFirewallTagDictionary(){
+	public void testUpdateFirewallTagDictionary() {
 		jsonString = "{\"fwTagDictionaryData\":{\"id\":1,\"description\":\"test\",\"fwTagName\":\"Test\",\"tags\":[{\"$$hashKey\":\"object:1690\",\"id\":\"choice1\",\"tags\":\"test\"}]},\"userid\":\"demo\"}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
-			when(request.getReader()).thenReturn(br);
-			controller.saveFirewallTagDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("fwTagDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+		testUpdate(FWTag.class, "fwTagDictionaryDatas", "fwTagName",
+				() -> controller.saveFirewallTagDictionary(request, response));
 	}
-	
+
 	@Test
-	public void testRemoveFirewallTagDictionary(){
+	public void testRemoveFirewallTagDictionary() {
 		jsonString = "{\"userid\":\"demo\",\"data\":{\"id\":1,\"description\":\"test\",\"fwTagName\":\"Test\"}}";
-		try(BufferedReader br = new BufferedReader(new StringReader(jsonString))){
+		testRemove(FWTag.class, "fwTagDictionaryDatas",
+				() -> controller.removeFirewallTagDictionary(request, response));
+	}
+
+	/**
+	 * Tests a "get" function that uses commonClassDao.getDataByColumn().
+	 * 
+	 * @param clazz
+	 * @param contentData
+	 * @param contentName
+	 * @param func
+	 */
+	private void test_WithGetDataByColumn(Class<?> clazz, String contentData, String contentName, VoidFunc func) {
+		when(commonClassDao.getDataByColumn(clazz, contentName)).thenReturn(data);
+		try {
+			func.apply();
+			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains(contentData));
+			verify(commonClassDao).getDataByColumn(clazz, contentName);
+		} catch (Exception e) {
+			fail("get " + clazz.getName() + e);
+		}
+	}
+
+	/**
+	 * Tests a "get" function that uses commonClassDao.getData().
+	 * 
+	 * @param clazz
+	 * @param contentData
+	 * @param contentName
+	 * @param func
+	 */
+	private void test_WithGetData(Class<?> clazz, String contentData, VoidFunc func) {
+		when(commonClassDao.getData(clazz)).thenReturn(new ArrayList<>());
+		try {
+			func.apply();
+			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains(contentData));
+			verify(commonClassDao).getData(clazz);
+		} catch (Exception e) {
+			fail("get " + clazz.getName() + e);
+		}
+	}
+
+	/**
+	 * Tests a function that uses commonClassDao.save().
+	 * 
+	 * @param clazz
+	 * @param contentData
+	 * @param contentName
+	 * @param func
+	 */
+	private void testSave(Class<?> clazz, String contentData, String contentName, VoidFunc func) {
+		testSave(clazz, contentData, contentName, "Test", func);
+	}
+
+	/**
+	 * Tests a function that uses commonClassDao.save().
+	 * 
+	 * @param clazz
+	 * @param contentData
+	 * @param contentName
+	 * @param testName
+	 * @param func
+	 */
+	private void testSave(Class<?> clazz, String contentData, String contentName, String testName, VoidFunc func) {
+		try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
 			when(request.getReader()).thenReturn(br);
-			controller.removeFirewallTagDictionary(request, response);
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("fwTagDictionaryDatas"));
-		}catch(Exception e){
-			logger.error("Exception"+ e);
-		} 
+			func.apply();
+			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains(contentData));
+			verify(commonClassDao).checkDuplicateEntry(testName, contentName, clazz);
+			verify(commonClassDao).save(any());
+			verify(commonClassDao, never()).update(any());
+			verify(commonClassDao).getData(clazz);
+
+		} catch (IOException e) {
+			fail("save " + clazz.getName() + e);
+		}
+	}
+
+	/**
+	 * Tests a function that uses commonClassDao.update().
+	 * 
+	 * @param clazz
+	 * @param contentData
+	 * @param contentName
+	 * @param func
+	 */
+	private void testUpdate(Class<?> clazz, String contentData, String contentName, VoidFunc func) {
+		testUpdate(clazz, contentData, contentName, "Test", func);
+	}
+
+	/**
+	 * Tests a function that uses commonClassDao.update().
+	 * 
+	 * @param clazz
+	 * @param contentData
+	 * @param contentName
+	 * @param testName
+	 * @param func
+	 */
+	private void testUpdate(Class<?> clazz, String contentData, String contentName, String testName, VoidFunc func) {
+		try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
+			when(request.getReader()).thenReturn(br);
+			func.apply();
+			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains(contentData));
+			verify(commonClassDao).checkDuplicateEntry(testName, contentName, clazz);
+			verify(commonClassDao, never()).save(any());
+			verify(commonClassDao).update(any());
+			verify(commonClassDao).getData(clazz);
+
+		} catch (IOException e) {
+			fail("update " + clazz.getName() + e);
+		}
+	}
+
+	/**
+	 * Tests a function that uses commonClassDao.delete() and
+	 * commonClassDao.getData().
+	 * 
+	 * @param clazz
+	 * @param contentData
+	 * @param func
+	 */
+	private void testRemove(Class<?> clazz, String contentData, VoidFunc func) {
+		try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
+			when(request.getReader()).thenReturn(br);
+			func.apply();
+			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains(contentData));
+			verify(commonClassDao).delete(any());
+			verify(commonClassDao).getData(clazz);
+
+		} catch (IOException e) {
+			fail("remove " + clazz.getName() + e);
+		}
+	}
+
+	/**
+	 * Tests a "validate" function.
+	 * 
+	 * @param clazz
+	 * @param contentData
+	 * @param func
+	 */
+	private void testValidate(Class<?> clazz, String contentData, VoidFunc func) {
+		try (BufferedReader br = new BufferedReader(new StringReader(jsonString))) {
+			when(request.getReader()).thenReturn(br);
+			func.apply();
+			assertTrue(response.getContentAsString() != null && response.getContentAsString().contains(contentData));
+
+		} catch (IOException e) {
+			fail("save " + clazz.getName() + e);
+		}
+	}
+
+	@FunctionalInterface
+	private static interface VoidFunc {
+		public void apply() throws IOException;
 	}
 }

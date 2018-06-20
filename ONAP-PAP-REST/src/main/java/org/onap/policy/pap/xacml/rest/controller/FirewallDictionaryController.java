@@ -691,7 +691,7 @@ public class FirewallDictionaryController {
 	@RequestMapping(value={"/get_ZoneDictionaryDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
 	public void getZoneDictionaryEntityDataByName(HttpServletResponse response){
 		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, zoneDatas, zoneName, PrefixList.class);
+		utils.getDataByEntity(response, zoneDatas, zoneName, Zone.class);
 	}
 
 	@RequestMapping(value={"/fw_dictionary/save_zoneName"}, method={RequestMethod.POST})
