@@ -21,10 +21,13 @@ package org.onap.policy.xacml.test.std.pap;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.Properties;
+
 import org.junit.Test;
 import org.onap.policy.xacml.std.pap.StdEngineFactory;
+
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.pap.StdEngine;
 import com.att.research.xacml.util.FactoryException;
@@ -45,15 +48,16 @@ public class StdEngineFactoryTest {
   }
 
   @Test
-  public void testNegativeCase() throws FactoryException, PAPException {
+  public void testNegativeCase() throws Exception {
     // Setup test data
     Properties props = new Properties();
-    props.setProperty(StdEngine.PROP_PAP_REPO, "/tmp");
+    String tmpdir = System.getProperty("java.io.tmpdir");
+    props.setProperty(StdEngine.PROP_PAP_REPO, tmpdir);
 
     // Set the system property temporarily
     String systemKey = StdEngine.PROP_PAP_REPO;
     String oldProperty = System.getProperty(systemKey);
-    System.setProperty(systemKey, "/tmp");
+    System.setProperty(systemKey, tmpdir);
 
     // Test factory failure cases
     try {
