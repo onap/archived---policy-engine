@@ -30,12 +30,14 @@ import com.att.research.xacml.api.pip.PIPRequest;
 import com.att.research.xacml.api.pip.PIPResponse;
 import com.att.research.xacml.std.pip.StdPIPFinderFactory;
 import com.att.research.xacml.std.pip.StdPIPRequest;
+import com.att.research.xacml.util.XACMLProperties;
 import com.att.research.xacml.api.XACML3;
 
 public class AAFEngineTest {
 	@Test
 	public void aafEngineTest(){
 		String testId = "testId";
+		System.setProperty(XACMLProperties.XACML_PROPERTIES_NAME, "xacml.properties");
 		AAFEngine aafEngine = new AAFEngine();
 		assertTrue(AAFEngine.DEFAULT_DESCRIPTION.equals("PIP for authenticating aaf attributes using the AAF REST interface"));
 		assertTrue(AAFEngine.DEFAULT_ISSUER.equals("aaf"));
