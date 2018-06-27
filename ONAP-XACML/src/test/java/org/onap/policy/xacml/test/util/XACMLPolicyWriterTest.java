@@ -1,8 +1,8 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * ONAP-XACML
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,17 +21,19 @@ package org.onap.policy.xacml.test.util;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
+
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
@@ -65,12 +67,19 @@ public class XACMLPolicyWriterTest {
   }
 
   @Test
-  public void testWrites() {
+  public void testWrites() throws Exception {
     // Set up test data
     PolicyType policyType = new PolicyType();
     OutputStream os = new ByteArrayOutputStream();
-    Path filename = Paths.get("/tmp/foo");
+    File tmpfile = File.createTempFile("foo", null);
+    Path filename = tmpfile.toPath();
     PolicySetType policySet = new PolicySetType();
+    
+    // delete tmp file before running the test
+    tmpfile.delete();
+
+    // ensure its deleted after writePolicyFile() re-creates it
+    tmpfile.deleteOnExit();
 
     // Test write combinations
     assertNotNull(XACMLPolicyWriter.writePolicyFile(filename, policySet));
