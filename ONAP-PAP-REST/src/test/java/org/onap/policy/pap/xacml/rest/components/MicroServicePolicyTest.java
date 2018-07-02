@@ -33,11 +33,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.policy.pap.xacml.rest.daoimpl.CommonClassDaoImpl;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
+import org.onap.policy.rest.jpa.MicroServiceModels;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @RunWith(PowerMockRunner.class)
 public class MicroServicePolicyTest {
@@ -63,9 +66,13 @@ public class MicroServicePolicyTest {
 	@Test
 	public void testPrepareToSave() throws Exception {
 		// Need to mock internal dictionary retrieval
+	    MicroServiceModels model = new MicroServiceModels();
+        model.setAnnotation("naming-type=matching-true, nfRole=matching-true, property-name=matching-true");
+        List<Object> list = new ArrayList<>();
+        list.add(model);
 		CommonClassDaoImpl impl = Mockito.mock(CommonClassDaoImpl.class);
 		PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(impl);
-		when(impl.getDataById(any(), anyString(), anyString())).thenReturn(null);
+		when(impl.getDataById(any(), anyString(), anyString())).thenReturn(list);
 		
 		PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
 		MicroServiceConfigPolicy policy = new MicroServiceConfigPolicy(policyAdapter);
@@ -104,7 +111,7 @@ public class MicroServicePolicyTest {
 		// Test create methods
 		String testFileName = "testFile.zip";
 		String testVal = "testVal";
-		CreateNewMicroServiceModel model = new CreateNewMicroServiceModel(testFileName, testVal, testVal, testVal, testVal);
+		CreateNewMicroServiceModel model = new CreateNewMicroServiceModel(testFileName, testVal, testVal, testVal, testVal, false);
 		model.addValuesToNewModel(".xmi");
 		model.saveImportService();
 	}

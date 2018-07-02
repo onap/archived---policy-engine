@@ -20,13 +20,18 @@
 package org.onap.policy.pap.xacml.rest.controller;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.After;
@@ -37,6 +42,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.util.DictionaryUtils;
 import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.NamingSequences;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 public class DecisionPolicyDictionaryControllerTest {
@@ -45,13 +51,13 @@ public class DecisionPolicyDictionaryControllerTest {
 	private String jsonString = null;
 	private HttpServletRequest request = null;
 	private DecisionPolicyDictionaryController controller = null;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		logger.info("setUp: Entering");
-        commonClassDao = Mockito.mock(CommonClassDao.class);
-	    HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        
+		commonClassDao = Mockito.mock(CommonClassDao.class);
+		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
 		jsonString = "{\"attributeDictionaryDatas\": {\"error\": \"\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
 				+ " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
 				+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
@@ -61,16 +67,16 @@ public class DecisionPolicyDictionaryControllerTest {
 				+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 				+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 
-        BufferedReader br = new BufferedReader(new StringReader(jsonString));
-        
-        //--- mock the getReader() call
-        when(request.getReader()).thenReturn(br);   
-        
-        controller = new DecisionPolicyDictionaryController(commonClassDao);
-        new DictionaryUtils(commonClassDao);
-        DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
-        mock(DictionaryUtils.class);
-        logger.info("setUp: exit");
+		BufferedReader br = new BufferedReader(new StringReader(jsonString));
+
+		// --- mock the getReader() call
+		when(request.getReader()).thenReturn(br);
+
+		controller = new DecisionPolicyDictionaryController(commonClassDao);
+		new DictionaryUtils(commonClassDao);
+		DictionaryUtils.setDictionaryUtils(new DictionaryUtils());
+		mock(DictionaryUtils.class);
+		logger.info("setUp: exit");
 	}
 
 	@After
@@ -81,77 +87,80 @@ public class DecisionPolicyDictionaryControllerTest {
 	public void testGetSettingsDictionaryByNameEntityData() {
 		logger.info("testGetSettingsDictionaryByNameEntityData: Entering");
 
-		MockHttpServletResponse response =  new MockHttpServletResponse();
+		MockHttpServletResponse response = new MockHttpServletResponse();
 
 		controller.getSettingsDictionaryByNameEntityData(request, response);
-		
+
 		try {
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("settingsDictionaryDatas"));
+			assertTrue(response.getContentAsString() != null
+					&& response.getContentAsString().contains("settingsDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Exception Occured"+e);
+			logger.error("Exception Occured" + e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testGetSettingsDictionaryByNameEntityData: exit");	
-		
+
+		logger.info("testGetSettingsDictionaryByNameEntityData: exit");
+
 	}
 
 	@Test
 	public void testGetSettingsDictionaryEntityData() {
 		logger.info("testGetSettingsDictionaryEntityData: Entering");
 
-		MockHttpServletResponse response =  new MockHttpServletResponse();
+		MockHttpServletResponse response = new MockHttpServletResponse();
 
 		controller.getSettingsDictionaryEntityData(response);
-		
+
 		try {
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("settingsDictionaryDatas"));
+			assertTrue(response.getContentAsString() != null
+					&& response.getContentAsString().contains("settingsDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Exception Occured"+e);
+			logger.error("Exception Occured" + e);
 			fail("Exception: " + e);
 		}
-		
+
 		logger.info("testGetSettingsDictionaryEntityData: exit");
-		
+
 	}
 
 	@Test
 	public void testSaveSettingsDictionary() {
 		logger.info("testSaveSettingsDictionary: Entering");
 
-		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);  
-        
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		request = mock(HttpServletRequest.class);
+
 		try {
-		    // mock the getReader() call
+			// mock the getReader() call
 			jsonString = "{\"settingsDictionaryData\":{\"xacmlId\":\"testMMRestAPI1\",\"datatypeBean\":{\"shortName\":\"string\"},\"description\":\"test\",\"priority\":\"High\"}, \"userid\":\"test\"}";
-			
+
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br);
 			controller.saveSettingsDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("settingsDictionaryDatas"));
+			assertTrue(response.getContentAsString() != null
+					&& response.getContentAsString().contains("settingsDictionaryDatas"));
 
 		} catch (Exception e) {
-			logger.error("Exception Occured"+e);
+			logger.error("Exception Occured" + e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testSaveSettingsDictionary: exit");	
-		
+
+		logger.info("testSaveSettingsDictionary: exit");
+
 	}
 
 	@Test
 	public void testRemoveSettingsDictionary() {
 		logger.info("testRemoveSettingsDictionary: Entering");
 
-		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		request = mock(HttpServletRequest.class);
+
 		try {
-		    // mock the getReader() call
+			// mock the getReader() call
 			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
 					+ " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
 					+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
@@ -161,95 +170,99 @@ public class DecisionPolicyDictionaryControllerTest {
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br);
 			controller.removeSettingsDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("settingsDictionaryDatas"));
+			assertTrue(response.getContentAsString() != null
+					&& response.getContentAsString().contains("settingsDictionaryDatas"));
 
 		} catch (Exception e) {
-			logger.error("Exception Occured"+e);
+			logger.error("Exception Occured" + e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testRemoveSettingsDictionary: exit");	
-		
+
+		logger.info("testRemoveSettingsDictionary: exit");
+
 	}
 
 	@Test
 	public void testGetRainyDayDictionaryByNameEntityData() {
 		logger.info("testGetRainyDayDictionaryByNameEntityData: Entering");
 
-		MockHttpServletResponse response =  new MockHttpServletResponse();
+		MockHttpServletResponse response = new MockHttpServletResponse();
 
 		controller.getRainyDayDictionaryByNameEntityData(request, response);
-		
+
 		try {
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("rainyDayDictionaryDatas"));
+			assertTrue(response.getContentAsString() != null
+					&& response.getContentAsString().contains("rainyDayDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Exception Occured"+e);
+			logger.error("Exception Occured" + e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testGetRainyDayDictionaryByNameEntityData: exit");		
-		
+
+		logger.info("testGetRainyDayDictionaryByNameEntityData: exit");
+
 	}
 
 	@Test
 	public void testGetRainyDayDictionaryEntityData() {
 		logger.info("testGetRainyDayDictionaryEntityData: Entering");
 
-		MockHttpServletResponse response =  new MockHttpServletResponse();
+		MockHttpServletResponse response = new MockHttpServletResponse();
 
 		controller.getRainyDayDictionaryEntityData(response);
-		
+
 		try {
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("rainyDayDictionaryDatas"));
+			assertTrue(response.getContentAsString() != null
+					&& response.getContentAsString().contains("rainyDayDictionaryDatas"));
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Exception Occured"+e);
+			logger.error("Exception Occured" + e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testGetRainyDayDictionaryEntityData: exit");	
-		
+
+		logger.info("testGetRainyDayDictionaryEntityData: exit");
+
 	}
 
 	@Test
 	public void testSaveRainyDayDictionary() {
 		logger.info("testSaveRainyDayDictionary: Entering");
 
-		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);  
-        
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		request = mock(HttpServletRequest.class);
+
 		try {
-		    // mock the getReader() call
+			// mock the getReader() call
 			jsonString = "{\"rainyDayDictionaryData\":{\"bbid\":\"BB2\",\"workstep\":\"1\",\"userDataTypeValues\":[{\"$$hashKey\":\"object:233\",\"treatment\":\"test1\"},{\"$$hashKey\":\"object:239\",\"treatment\":\"test2\"}]},\"userid\":\"mm117s\"}";
-			
+
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br);
 			controller.saveRainyDayDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("rainyDayDictionaryDatas"));
+			assertTrue(response.getContentAsString() != null
+					&& response.getContentAsString().contains("rainyDayDictionaryDatas"));
 
 		} catch (Exception e) {
-			logger.error("Exception Occured"+e);
+			logger.error("Exception Occured" + e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testSaveRainyDayDictionary: exit");		
-		
+
+		logger.info("testSaveRainyDayDictionary: exit");
+
 	}
 
 	@Test
 	public void testRemoveRainyDayDictionary() {
 		logger.info("testRemoveRainyDayDictionary: Entering");
 
-		MockHttpServletResponse response =  new MockHttpServletResponse();
-	    request = mock(HttpServletRequest.class);   
-	
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		request = mock(HttpServletRequest.class);
+
 		try {
-		    // mock the getReader() call
+			// mock the getReader() call
 			jsonString = "{\"data\": {\"modelName\": \"test\",	\"inprocess\": false,\"model\": {\"name\": \"testingdata\", "
 					+ " \"subScopename\": \"\",\"path\": [],\"type\": \"dir\",\"size\": 0,\"date\": \"2017-04-12T21:26:57.000Z\", "
 					+ " \"version\": \"\",\"createdBy\": \"someone\",	\"modifiedBy\": \"someone\",	\"content\": \"\",\"recursive\": false},"
@@ -259,18 +272,52 @@ public class DecisionPolicyDictionaryControllerTest {
 					+ "	\"priority\": \"6\",\"serviceType\": \"DkatPolicyBody\",\"version\": \"1707.41.02\",\"ruleGridData\": [	[\"fileId\"]],\"ttlDate\": null}}, "
 					+ "	\"policyJSON\": {\"pmTableName\": \"test\",	\"dmdTopic\": \"1\",\"fileId\": \"56\"} }";
 			BufferedReader br = new BufferedReader(new StringReader(jsonString));
-			when(request.getReader()).thenReturn(br); 		    
+			when(request.getReader()).thenReturn(br);
 			controller.removeRainyDayDictionary(request, response);
 			logger.info("response.getContentAsString(): " + response.getContentAsString());
-			assertTrue( response.getContentAsString() != null && response.getContentAsString().contains("rainyDayDictionaryDatas"));
+			assertTrue(response.getContentAsString() != null
+					&& response.getContentAsString().contains("rainyDayDictionaryDatas"));
 
 		} catch (Exception e) {
-			logger.error("Exception Occured"+e);
+			logger.error("Exception Occured" + e);
 			fail("Exception: " + e);
 		}
-		
-		logger.info("testRemoveRainyDayDictionary: exit");		
-		
+
+		logger.info("testRemoveRainyDayDictionary: exit");
+
+	}
+
+	@Test
+	public void testRemoveNamingSequence() {
+		logger.info("testRemoveNamingSequence: Entering");
+
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		request = mock(HttpServletRequest.class);
+
+		try {
+			// mock the getReader() call
+			jsonString = "{\"dictionaryFields\": {\"name\": \"test\", \"naming-type\": \"vm\"}}";
+			BufferedReader br = new BufferedReader(new StringReader(jsonString));
+			List<Object> list = new ArrayList<>();
+			NamingSequences seq = new NamingSequences("vm", "test", "test", "test", 100, 200, 5, 100, null, null);
+			list.add(seq);
+
+			when(request.getReader()).thenReturn(br);
+			doNothing().when(commonClassDao).delete(any(NamingSequences.class));
+			when(request.getParameter("apiflag")).thenReturn("api");
+			when(commonClassDao.getDataByQuery(anyString(), anyObject())).thenReturn(list);
+			
+			String result = controller.removeNamingSequence(request, response);
+			logger.info("response: " + result);
+			assertEquals("Success", result);
+
+		} catch (Exception e) {
+			logger.error("Exception Occured" + e);
+			fail("Exception: " + e);
+		}
+
+		logger.info("testRemoveNamingSequence: exit");
+
 	}
 
 }

@@ -55,6 +55,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
+import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -94,6 +95,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -215,20 +217,29 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		if(policyAdapter.getPolicyDescription()!=null){
 			microServiceObject.setDescription(policyAdapter.getPolicyDescription());
 		}
-		if (policyAdapter.getPriority()!=null){
+		if (!StringUtils.isBlank(policyAdapter.getPriority())){
 			microServiceObject.setPriority(policyAdapter.getPriority());
 		}else {
 			microServiceObject.setPriority("9999");
 		}
 		
-		if (policyAdapter.getRiskLevel()!=null){
+		if (!StringUtils.isBlank(policyAdapter.getRiskLevel())){
 			microServiceObject.setRiskLevel(policyAdapter.getRiskLevel());
+		} else {
+			// for decision MS models it needs to be set to null
+			microServiceObject.setRiskLevel(null);
 		}
-		if (policyAdapter.getRiskType()!=null){
+		if (!StringUtils.isBlank(policyAdapter.getRiskType())){
 			microServiceObject.setRiskType(policyAdapter.getRiskType());
+		}  else {
+			// for decision MS models it needs to be set to null
+			microServiceObject.setRiskType(null);
 		}
-		if (policyAdapter.getGuard()!=null){
+		if (!StringUtils.isBlank(policyAdapter.getGuard())){
 			microServiceObject.setGuard(policyAdapter.getGuard());
+		}  else {
+			// for decision MS models it needs to be set to null
+			microServiceObject.setGuard(null);
 		}
 		microServiceObject.setContent(jsonContent);
 		
@@ -834,8 +845,14 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		JsonNode root = mapper.readTree(request.getReader());
 
 		String value = root.get("policyData").toString().replaceAll("^\"|\"$", "");
-		String  servicename = value.split("-v")[0];
-		Set<String> returnList = getVersionList(servicename);
+		String  servicename = value.toString().split("-v")[0];
+		JsonNode modelType = root.get("modelType");
+		String isDecisionModel = null;
+		if (modelType != null) {
+			isDecisionModel = modelType.toString().replaceAll("^\"|\"$", "");
+		}
+		Set<String> returnList = getVersionList(servicename, isDecisionModel);
+
 		
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application / json");
@@ -849,10 +866,19 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		return null;
 	}
 
-	private Set<String> getVersionList(String name) {	
+	private Set<String> getVersionList(String name, String isDecisionModel) {	
 		MicroServiceModels workingModel;
 		Set<String> list = new HashSet<>();
-		List<Object> microServiceModelsData = commonClassDao.getDataById(MicroServiceModels.class, "modelName", name);
+		List<Object> microServiceModelsData = null;
+		if (!Strings.isNullOrEmpty(isDecisionModel) && "decision".equalsIgnoreCase(isDecisionModel)) {
+			String query = "From MicroServiceModels where modelName=:modelName and decisionModel=1";
+			SimpleBindings params = new SimpleBindings();
+			params.put("modelName", name);
+			microServiceModelsData = commonClassDao.getDataByQuery(query, params);
+		} else {
+			microServiceModelsData = commonClassDao.getDataById(MicroServiceModels.class, "modelName", name);
+		}
+		
 		for (int i = 0; i < microServiceModelsData.size(); i++) {
 			workingModel = (MicroServiceModels) microServiceModelsData.get(i);
 			if (workingModel.getVersion()!=null){
@@ -1002,7 +1028,7 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 
 
 	@SuppressWarnings("unchecked")
-	private void readFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
+	public void readFile(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		String policyScopeName = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {

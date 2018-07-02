@@ -67,14 +67,14 @@ public class MicroServiceConfigPolicy extends Policy {
 	
 	private static final Logger LOGGER = FlexLogger.getLogger(MicroServiceConfigPolicy.class);
 	
-    private static Map<String, String> mapAttribute = new HashMap<>();
-    private static Map<String, String> mapMatch = new HashMap<>();
+    private Map<String, String> mapAttribute = new HashMap<>();
+    private Map<String, String> mapMatch = new HashMap<>();
 
-	private static synchronized Map<String, String> getMatchMap () {
+	private  Map<String, String> getMatchMap () {
 		return mapMatch;
 	}
 
-	private static synchronized void setMatchMap(Map<String, String> mm) {
+	private void setMatchMap(Map<String, String> mm) {
 		mapMatch = mm;
 	}
 
@@ -187,12 +187,12 @@ public class MicroServiceConfigPolicy extends Policy {
                 }
                 if (matching != null && !matching.isEmpty()){
                     matchMap = Splitter.on(",").withKeyValueSeparator("=").split(matching);
-            setMatchMap(matchMap);
+                    setMatchMap(matchMap);
                     if(policyAdapter.getJsonBody() != null){
                         pullMatchValue(rootNode);           
                     }
-                }
-            } catch (IOException e1) {
+                } 
+            } catch (IOException|PAPException e1) {
                 throw new PAPException(e1);
             }
             
@@ -331,7 +331,7 @@ public class MicroServiceConfigPolicy extends Policy {
        
    }
 
-   private String getValueFromDictionary(String service){
+   private String getValueFromDictionary(String service) throws PAPException{
        String ruleTemplate=null;
        String modelName = service.split("-v")[0];
        String modelVersion = service.split("-v")[1];
@@ -341,6 +341,8 @@ public class MicroServiceConfigPolicy extends Policy {
        if(result != null && !result.isEmpty()){
     	   MicroServiceModels model = (MicroServiceModels) result.get(0);
     	   ruleTemplate = model.getAnnotation();
+       }  else {
+           throw new PAPException("Model not Found");
        }
        return ruleTemplate;
    }

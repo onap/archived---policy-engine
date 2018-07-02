@@ -151,6 +151,11 @@ public class PolicyRestController extends RestrictedBaseController{
 					policyData = new CreateOptimizationController().setDataToPolicyRestAdapter(policyData, root);
 				}
 			}
+			
+			if ("MicroService_Model".equals(policyData.getRuleProvider())) {
+				CreateDcaeMicroServiceController msController = new CreateDcaeMicroServiceController();
+				policyData = msController.setDataToPolicyRestAdapter(policyData, root);
+			}
 
 			policyData.setUserId(userId);
 

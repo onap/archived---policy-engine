@@ -165,7 +165,11 @@ public class ElasticSearchPolicyUpdate {
 				}else if(policyWithScopeName.contains(".Action_")){
 					_type = "action";
 					policyDataString.append("\"policyType\":\"Action\",");
-				}else if(policyWithScopeName.contains(".Decision_")){
+				}else if(policyWithScopeName.contains(".Decision_MS_")){
+					_type = "decision_ms";
+					policyDataString.append("\"policyType\":\"Decision\",");
+				}
+				else if(policyWithScopeName.contains(".Decision_")){
 					_type = "decision";
 					policyDataString.append("\"policyType\":\"Decision\",");
 				}
@@ -201,7 +205,7 @@ public class ElasticSearchPolicyUpdate {
 					listIndex.add(new Index.Builder(dataString).index("policy").type("closedloop").id(_id).build());
 				}else if("action".equals(_type)){
 					listIndex.add(new Index.Builder(dataString).index("policy").type("action").id(_id).build());
-				}else if("decision".equals(_type)){
+				}else if("decision".equals(_type) || "decision_ms".equals(_type)){
 					listIndex.add(new Index.Builder(dataString).index("policy").type("decision").id(_id).build());
 				}
 			}

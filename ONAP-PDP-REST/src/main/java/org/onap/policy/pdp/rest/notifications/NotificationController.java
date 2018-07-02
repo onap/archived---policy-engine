@@ -260,6 +260,13 @@ public class NotificationController {
                     updated.setMatches(matchValues);
                 }
             }
+        } else if (newPolicy.getName().contains(".Decision_MS_")) {
+        	// Take Configuration copy to PDP Webapps.
+            // Decision MS policies have .json as extension.
+        	String policy = policyContainer.get(newPolicy.getId()).toString();
+            String urlString = "$URL/Config/" + newPolicy.getId().substring(0, newPolicy.getId().lastIndexOf("."))
+                    + ".json";
+            callPap(urlString, "Config");
         } else if (newPolicy.getName().contains(".Action_")) {
             // Take Configuration copy to PDP Webapps.
             // Action policies have .json as extension.
@@ -387,7 +394,7 @@ public class NotificationController {
             Files.deleteIfExists(removedPolicyFile);
             boolean delete = false;
             File dir = null;
-            if (oldPolicy.getName().contains(".Config_")) {
+            if (oldPolicy.getName().contains(".Config_") || oldPolicy.getName().contains(".Decision_MS_")) {
                 delete = true;
                 dir = new File(
                         XACMLProperties.getProperty(XACMLRestProperties.PROP_PDP_WEBAPPS) + File.separator + "Config");

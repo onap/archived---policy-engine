@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ package org.onap.policy.api;
 
 import java.util.Map;
 import java.util.UUID;
+
+import com.google.gson.Gson;
 
 /**
  * <code>DecisionRequestParameters</code> defines the Decision Policy Request Parameters
@@ -125,5 +127,15 @@ public class DecisionRequestParameters {
 	 */
 	public void setRequestID(UUID requestID) {
 		this.requestID = requestID;
+	}
+	
+	/**
+	 * Used to print the input Params for getDecision REST call. 
+	 * 
+	 * @return JSON String of this object. 
+	 */
+	@Override
+	public String toString() {
+		return new Gson().toJson(this);	
 	}
 }

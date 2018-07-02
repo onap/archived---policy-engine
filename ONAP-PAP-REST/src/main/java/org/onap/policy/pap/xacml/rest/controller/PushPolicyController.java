@@ -58,10 +58,10 @@ public class PushPolicyController {
 	private static final Logger LOGGER  = FlexLogger.getLogger(PushPolicyController.class);
 	
 	private static CommonClassDao commonClassDao;
-	private static String policyNames = "policyName";
-	private static String errorMsg	= "error";
-	private static String operation = "operation";
-	private static String messageContent = "message";
+	private static final String POLICY_NAME = "policyName";
+	private static final String ERROR_MSG	= "error";
+	private static final String OPERATION = "operation";
+	private static final String MSG_CONTENT = "message";
 	
 	private static final String REGEX = "[0-9a-zA-Z._ ]*";
 	
@@ -86,7 +86,7 @@ public class PushPolicyController {
 			JsonNode root = mapper.readTree(request.getInputStream());
 			String policyScope = root.get("policyScope").asText();
 			String filePrefix = root.get("filePrefix").asText();
-			String policyName = root.get(policyNames).asText();
+			String policyName = root.get(POLICY_NAME).asText();
 			String pdpGroup = root.get("pdpGroup").asText();
 			String requestID = request.getHeader("X-ECOMP-RequestID");
 			if(requestID==null){
@@ -96,7 +96,7 @@ public class PushPolicyController {
 			LOGGER.info("Push policy Request to get the selectedPolicy : " + root.asText());
 			String policyVersionName = policyScope.replace(".", File.separator) + File.separator
 					+ filePrefix + policyName;
-			List<?> policyVersionObject = commonClassDao.getDataById(PolicyVersion.class, policyNames, policyVersionName);
+			List<?> policyVersionObject = commonClassDao.getDataById(PolicyVersion.class, POLICY_NAME, policyVersionName);
 			if(policyVersionObject!=null){
 				PolicyVersion policyVersion = (PolicyVersion) policyVersionObject.get(0);
 				String policyID = policyVersionName.replace(File.separator, "."); // This is before adding version.
@@ -105,17 +105,17 @@ public class PushPolicyController {
 			}else{
 				String message = "Unknown Policy '" + policyName + "'";
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
-				response.addHeader(errorMsg, "unknownPolicy");
-				response.addHeader(operation, "push");
-				response.addHeader(messageContent, message);
+				response.addHeader(ERROR_MSG, "unknownPolicy");
+				response.addHeader(OPERATION, "push");
+				response.addHeader(MSG_CONTENT, message);
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				return;
 			}
 		} catch (NullPointerException | IOException e) {
 			LOGGER.error(e);
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			response.addHeader(errorMsg, "unknown");
-			response.addHeader(operation, "push");
+			response.addHeader(ERROR_MSG, "unknown");
+			response.addHeader(OPERATION, "push");
 			return;
 		}
 	}
@@ -135,9 +135,9 @@ public class PushPolicyController {
 				message = "Unknown groupId";
 			}
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
-			response.addHeader(errorMsg, "unknownGroupId");
-			response.addHeader(operation, "push");
-			response.addHeader(messageContent, message);
+			response.addHeader(ERROR_MSG, "unknownGroupId");
+			response.addHeader(OPERATION, "push");
+			response.addHeader(MSG_CONTENT, message);
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
@@ -145,7 +145,7 @@ public class PushPolicyController {
 		EntityManager em = XACMLPapServlet.getEmf().createEntityManager();
 		Query createPolicyQuery = em.createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");			
 		createPolicyQuery.setParameter("scope", policyScope);
-		createPolicyQuery.setParameter(policyNames, policyName.substring(policyScope.length()+1));
+		createPolicyQuery.setParameter(POLICY_NAME, policyName.substring(policyScope.length()+1));
 		List<?> createPolicyQueryList = createPolicyQuery.getResultList();
 		PolicyEntity policyEntity = null;
 		if(!createPolicyQueryList.isEmpty()){
@@ -154,9 +154,9 @@ public class PushPolicyController {
 			PolicyLogger.error("Somehow, more than one policy with the same scope, name, and deleted status were found in the database");
 			String message = "Unknown Policy '" + policyName + "'";
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + " " + message);
-			response.addHeader(errorMsg, "unknownPolicy");
-			response.addHeader(operation, "push");
-			response.addHeader(messageContent, message);
+			response.addHeader(ERROR_MSG, "unknownPolicy");
+			response.addHeader(OPERATION, "push");
+			response.addHeader(MSG_CONTENT, message);
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
@@ -173,14 +173,14 @@ public class PushPolicyController {
 			new ObjectOutputStream(response.getOutputStream()).writeObject(selectedPolicy);
 		} catch (IOException e) {
 			LOGGER.error(e);
-			response.addHeader(errorMsg, "policyCopyError");
-			response.addHeader(messageContent, e.getMessage());
+			response.addHeader(ERROR_MSG, "policyCopyError");
+			response.addHeader(MSG_CONTENT, e.getMessage());
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return;
 		}
 		response.addHeader("Content-Type","application/json");
 		response.setStatus(HttpServletResponse.SC_ACCEPTED);
-		response.addHeader(operation, "push");
+		response.addHeader(OPERATION, "push");
 		response.addHeader("policyId", policyName);
 		return;
 		// TODO : Check point to push policies within PAP. 

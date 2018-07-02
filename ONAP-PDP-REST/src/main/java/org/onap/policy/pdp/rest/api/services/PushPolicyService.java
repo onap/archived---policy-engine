@@ -42,8 +42,8 @@ public class PushPolicyService {
     private String policyScope = null;
     private String pdpGroup = null;
     private String policyType = null;
-    private String filePrefix = null;
-    private String clientScope = null; 
+    public String filePrefix = null;
+    public String clientScope = null; 
 
     public PushPolicyService(PushPolicyParameters pushPolicyParameters,
             String requestID) {
@@ -153,14 +153,23 @@ public class PushPolicyService {
 
         return true;
     }
+    
+    public void extendedClientScope(String policyType){
+ 		clientScope = null;
+ 		message = XACMLErrorConstants.ERROR_DATA_ISSUE + policyType
+                 + " is not a valid Policy Type.";
+ 	}
 
-    private void setClientScope() {
+    public void setClientScope() {
         if ("Firewall".equalsIgnoreCase(policyType)) {
             clientScope = "ConfigFirewall";
             filePrefix = "Config_FW_";
         } else if ("Action".equalsIgnoreCase(policyType)) {
             clientScope = "Action";
             filePrefix = "Action_";
+        } else if ("Decision_MS".equalsIgnoreCase(policyType)) {
+            clientScope = "Decision_MS";
+            filePrefix = "Decision_MS_";
         } else if ("Decision".equalsIgnoreCase(policyType)) {
             clientScope = "Decision";
             filePrefix = "Decision_";
@@ -186,9 +195,7 @@ public class PushPolicyService {
             clientScope = "ConfigBrmsParam";
             filePrefix = "Config_BRMS_Param_";
         } else {
-            clientScope = null;
-            message = XACMLErrorConstants.ERROR_DATA_ISSUE + policyType
-                    + " is not a valid Policy Type.";
+        	extendedClientScope(policyType);
         }
     }
 

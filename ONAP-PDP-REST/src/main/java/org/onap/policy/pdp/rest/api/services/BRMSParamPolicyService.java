@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.onap.policy.xacml.std.pap.StdPAPPolicy;
  * 
  * @version 0.1
  */
-public class BRMSParamPolicyService{
+public class BRMSParamPolicyService implements PolicyService {
 	private static final Logger LOGGER = FlexLogger.getLogger(BRMSParamPolicyService.class.getName());
 	private PAPServices papServices = null;
 	

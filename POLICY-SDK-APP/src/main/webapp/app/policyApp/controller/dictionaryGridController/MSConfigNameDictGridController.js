@@ -46,7 +46,7 @@ app.controller('msConfigNameDictGridController', function ($scope, PolicyAppServ
     });
 	
     $scope.msConfigNameDictionaryGrid = {
-        data : 'microServiceCongigNameDictionaryDatas',
+        data : 'microServiceConfigNameDictionaryDatas',
         enableFiltering: true,
         columnDefs: [{
             field: 'id', enableFiltering: false, headerCellTemplate: '' +

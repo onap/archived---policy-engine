@@ -22,7 +22,6 @@ package org.onap.policy.brms.api;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.onap.policy.api.ConfigRequestParameters;
 import org.onap.policy.api.LoadedPolicy;
 import org.onap.policy.api.NotificationType;
@@ -72,6 +71,16 @@ public class BrmsHandler implements BackUpHandler {
         brmsPush.initiate(flag);
         if (flag) {
             logger.info("Master Application performing on Notification ");
+            logger.info("Removed Policies: \n");
+            for (RemovedPolicy removedPolicy: notification.getRemovedPolicies()) {
+                logger.info(removedPolicy.getPolicyName());
+                logger.info(removedPolicy.getVersionNo());
+            }
+            logger.info("Updated Policies: \n");
+            for (LoadedPolicy updatedPolicy: notification.getLoadedPolicies()) {
+                logger.info("policyName : " + updatedPolicy.getPolicyName());
+                logger.info("policyVersion :" + updatedPolicy.getVersionNo());
+            }
             runOnNotification(notification);
         } else {
             logger.info("Slave application Skipping Notification.. ");
@@ -113,8 +122,7 @@ public class BrmsHandler implements BackUpHandler {
                 }
             }
             index++;
-        } 
-        while (failureFlag && index < brmsPush.urlListSize());
+        } while (failureFlag && index < brmsPush.urlListSize());
     }
 
     /*

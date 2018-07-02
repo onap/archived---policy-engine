@@ -71,6 +71,7 @@ public class UpdateOthersPAPS {
 	
 	private static final String contentType = "application/json";
 	private static String configType =".Config_";
+	private final static  String DECISION_MS_TYPE =".Decision_MS_";
 	private static String actionType =".Action_";
 	private static String error ="error";
 	public static CommonClassDao getCommonClassDao() {
@@ -98,7 +99,8 @@ public class UpdateOthersPAPS {
 		body.setAction(request.getParameter("action"));
 		body.setNewPolicyName(request.getParameter("newPolicyName"));
 		body.setOldPolicyName(request.getParameter("oldPolicyName"));
-
+		//Update Current PAP Webapps Configuration files.
+		updateConfiguration(body, response);
 		String currentPap = XACMLRestProperties.getProperty("xacml.rest.pap.url");
 		List<Object> getPAPUrls = commonClassDao.getData(PolicyDBDaoEntity.class);
 		if(getPAPUrls != null && !getPAPUrls.isEmpty()){
@@ -176,16 +178,16 @@ public class UpdateOthersPAPS {
 		String oldPolicyName = data.getOldPolicyName();
 		try{
 			if("rename".equals(action)){
-				if(oldPolicyName.contains(configType) || oldPolicyName.contains(actionType)){
+				if(oldPolicyName.contains(configType) || oldPolicyName.contains(actionType) || oldPolicyName.contains(DECISION_MS_TYPE)){
 					File file;
-					if(oldPolicyName.contains(configType)){
+					if(oldPolicyName.contains(configType) || oldPolicyName.contains(DECISION_MS_TYPE)){
 						file = new File(Policy.getConfigHome() + File.separator + oldPolicyName);
 					}else{
 						file = new File(Policy.getActionHome() + File.separator + oldPolicyName);
 					}
 					if(file.exists()){
 						File renamefile;
-						if(oldPolicyName.contains(configType)){
+						if(oldPolicyName.contains(configType) || oldPolicyName.contains(DECISION_MS_TYPE)){
 							renamefile = new File(Policy.getConfigHome() + File.separator + newPolicyName);
 						}else{
 							renamefile = new File(Policy.getActionHome() + File.separator + newPolicyName);
@@ -199,13 +201,13 @@ public class UpdateOthersPAPS {
 					}
 				}
 			}else if("delete".equals(action)){
-				if(oldPolicyName.contains(configType)){
+				if(oldPolicyName.contains(configType) || oldPolicyName.contains(DECISION_MS_TYPE)){
 					Files.deleteIfExists(Paths.get(Policy.getConfigHome() + File.separator + oldPolicyName));
 				}else if(oldPolicyName.contains("Action_")){
 					Files.deleteIfExists(Paths.get(Policy.getActionHome() + File.separator + oldPolicyName));
 				}
-			}else if("clonePolicy".equals(action) || "exportPolicy".equals(action)){
-				if(newPolicyName.contains(configType)){
+			}else if("clonePolicy".equals(action) || "importPolicy".equals(action)){
+				if(newPolicyName.contains(configType) || newPolicyName.contains(DECISION_MS_TYPE)){
 					ConfigurationDataEntity configEntiy = (ConfigurationDataEntity) commonClassDao.getEntityItem(ConfigurationDataEntity.class, "configurationName", newPolicyName);
 					saveConfigurationData(configEntiy, newPolicyName);
 				}else if(newPolicyName.contains(actionType)){

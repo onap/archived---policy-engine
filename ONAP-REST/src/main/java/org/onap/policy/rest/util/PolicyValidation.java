@@ -19,23 +19,35 @@
  */
 package org.onap.policy.rest.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+
+
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonValue;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -51,10 +63,6 @@ import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
 
 @Service
 public class PolicyValidation {
@@ -64,6 +72,7 @@ public class PolicyValidation {
 	public static final String CONFIG_POLICY = "Config";
 	public static final String ACTION_POLICY = "Action";
 	public static final String DECISION_POLICY = "Decision";
+	public static final String DECISION_POLICY_MS = "Decision_MS";
 	public static final String CLOSEDLOOP_POLICY = "ClosedLoop_Fault";
 	public static final String CLOSEDLOOP_PM = "ClosedLoop_PM";
 	public static final String ENFORCER_CONFIG_POLICY = "Enforcer Config";
@@ -79,10 +88,13 @@ public class PolicyValidation {
 	public static final String SPACESINVALIDCHARS = " : value has spaces or invalid characters</i><br>";
 	public static final String RULEALGORITHMS = "<b>Rule Algorithms</b>:<i>";
 	public static final String VALUE = "value";
+	private static final String REQUIRED_ATTRIBUTE = "required-true";
+	private static final String DECISION_MS_MODEL = "MicroService_Model";
 	
 	private static Map<String, String> mapAttribute = new HashMap<>();
 	private static Map<String, String> jsonRequestMap = new HashMap<>();
 	private static List<String> modelRequiredFieldsList = new ArrayList<>();
+	private Set<String> allReqTrueKeys = new HashSet<>();
 	
 	private static CommonClassDao commonClassDao;
 	
@@ -99,6 +111,13 @@ public class PolicyValidation {
 	}
 	
 	
+	/**
+     * Validate policy.
+     *
+     * @param policyData the policy data
+     * @return the string builder
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
 	public StringBuilder validatePolicy(PolicyRestAdapter policyData) throws IOException{
 		try{
 			boolean valid = true;
@@ -529,165 +548,14 @@ public class PolicyValidation {
 						valid = false; 
 					}
 				}
+				if (MICROSERVICES.equals(policyData.getConfigPolicyType())) {
+                 		   boolean tmpValid = validateMsModel(policyData, responseString);
+		                    if (!tmpValid) {
+                		        valid = false;
+                    			}
+                		}
 				
-				// Validate MicroServices Policy Data
-				if (MICROSERVICES.equals(policyData.getConfigPolicyType())){
-					
-					if(!Strings.isNullOrEmpty(policyData.getServiceType())){
-						
-						modelRequiredFieldsList.clear();
-						pullJsonKeyPairs((JsonNode) policyData.getPolicyJSON());
-
-						String service;
-						String version;
-						if (policyData.getServiceType().contains("-v")){
-							service = policyData.getServiceType().split("-v")[0];
-							version = policyData.getServiceType().split("-v")[1];
-						}else {
-							service = policyData.getServiceType();
-							version = policyData.getVersion();
-						}
-						
-						if(!Strings.isNullOrEmpty(version)) {
-							MicroServiceModels returnModel = getMSModelData(service, version);
-							
-							if(returnModel != null) {
-								
-								String annotation = returnModel.getAnnotation();
-								String refAttributes = returnModel.getRef_attributes();
-								String subAttributes = returnModel.getSub_attributes();
-								String modelAttributes = returnModel.getAttributes();
-								
-								if (!Strings.isNullOrEmpty(annotation)){ 
-									Map<String, String> rangeMap = Splitter.on(",").withKeyValueSeparator("=").split(annotation);
-									for (Entry<String, String> rMap : rangeMap.entrySet()){
-										if (rMap.getValue().contains("range::")){
-											String value = mapAttribute.get(rMap.getKey().trim());
-											String[] tempString = rMap.getValue().split("::")[1].split("-");
-											int startNum = Integer.parseInt(tempString[0]);
-											int endNum = Integer.parseInt(tempString[1]);
-											String returnString = "InvalidreturnModel Range:" + rMap.getKey() + " must be between " 
-													+ startNum + " - "  + endNum + ",";
-											
-											if(value != null) {
-												if (PolicyUtils.isInteger(value.replace("\"", ""))){
-													int result = Integer.parseInt(value.replace("\"", ""));
-													if (result < startNum || result > endNum){
-														responseString.append(returnString);									
-														valid = false;
-													}
-												}else {
-													responseString.append(returnString);
-													valid = false;
-												}
-											} else {
-												responseString.append("<b>"+rMap.getKey()+"</b>:<i>" + rMap.getKey() 
-												+ " is required for the MicroService model " + service + HTML_ITALICS_LNBREAK);
-												valid = false;
-											}
-
-										}
-									}
-								} else {
-									// Validate for configName, location, uuid, and policyScope if no annotations exist for this model
-									if(Strings.isNullOrEmpty(policyData.getLocation())){
-										responseString.append("<b>Micro Service Model</b>:<i> location is required for this model" + HTML_ITALICS_LNBREAK);
-										valid = false;
-									}
-									
-									if(Strings.isNullOrEmpty(policyData.getConfigName())){
-										responseString.append("<b>Micro Service Model</b>:<i> configName is required for this model" + HTML_ITALICS_LNBREAK);
-										valid = false;
-									}	
-									
-									if(Strings.isNullOrEmpty(policyData.getUuid())){
-										responseString.append("<b>Micro Service Model</b>:<i> uuid is required for this model" + HTML_ITALICS_LNBREAK);
-										valid = false;
-									}	
-									
-									if(Strings.isNullOrEmpty(policyData.getPolicyScope())){
-										responseString.append("<b>Micro Service Model</b>:<i> policyScope is required for this model" + HTML_ITALICS_LNBREAK);
-										valid = false;
-									}	
-								}
-								
-								// If request comes from the API we need to validate required fields in the Micro Service Model 
-								// GUI request are already validated from the SDK-APP
-								if("API".equals(policyData.getApiflag())){
-									// get list of required fields from the sub_Attributes of the Model
-									if(!Strings.isNullOrEmpty(subAttributes)) {
-										JsonObject subAttributesJson = stringToJsonObject(subAttributes);
-										findRequiredFields(subAttributesJson);
-									}
-									
-									// get list of required fields from the attributes of the Model
-									if (!Strings.isNullOrEmpty(modelAttributes)) {
-										Map<String, String> modelAttributesMap = null;
-										if (",".equals(modelAttributes.substring(modelAttributes.length()-1))) {
-											String attributeString = modelAttributes.substring(0, modelAttributes.length()-1);
-											modelAttributesMap = Splitter.on(",").withKeyValueSeparator("=").split(attributeString);
-										} else {
-											modelAttributesMap = Splitter.on(",").withKeyValueSeparator("=").split(modelAttributes);
-										}
-										String json = new ObjectMapper().writeValueAsString(modelAttributesMap);
-										findRequiredFields(stringToJsonObject(json));
-									}
-									
-									// get list of required fields from the ref_Attributes of the Model
-									if (!Strings.isNullOrEmpty(refAttributes)) {
-										Map<String, String> refAttributesMap = null;
-										if (",".equals(refAttributes.substring(refAttributes.length()-1))) {
-											String attributesString = refAttributes.substring(0, refAttributes.length()-1);
-											refAttributesMap = Splitter.on(",").withKeyValueSeparator("=").split(attributesString);
-										} else {
-											refAttributesMap = Splitter.on(",").withKeyValueSeparator("=").split(modelAttributes);
-										}
-										String json = new ObjectMapper().writeValueAsString(refAttributesMap);
-										findRequiredFields(stringToJsonObject(json));
-									}
-									
-									if (modelRequiredFieldsList!=null || !modelRequiredFieldsList.isEmpty()) {
-										// create jsonRequestMap with all json keys and values from request
-										JsonNode rootNode = (JsonNode) policyData.getPolicyJSON();
-										jsonRequestMap.clear();
-										pullModelJsonKeyPairs(rootNode);
-										
-										// validate if the requiredFields are in the request
-										for(String requiredField : modelRequiredFieldsList) {
-											if (jsonRequestMap.containsKey(requiredField)) {
-												String value = jsonRequestMap.get(requiredField);
-												if(Strings.isNullOrEmpty(jsonRequestMap.get(requiredField)) || 
-														"\"\"".equals(value) || 
-														"".equals(jsonRequestMap.get(requiredField))){
-													responseString.append("<b>Micro Service Model</b>:<i> " + requiredField + ISREQUIRED + HTML_ITALICS_LNBREAK);
-													valid = false; 
-												}
-											} else {
-												responseString.append("<b>Micro Service Model</b>:<i> " + requiredField + ISREQUIRED + HTML_ITALICS_LNBREAK);
-												valid = false; 
-											}
-										}
-									}
-								}								
-							} else {
-								responseString.append("<b>Micro Service Model</b>:<i> Invalid Model. The model name, " + service + 
-										" of version, " + version + " was not found in the dictionary" + HTML_ITALICS_LNBREAK);
-								valid = false;
-							}
-						} else {
-							responseString.append("<b>Micro Service Version</b>:<i> Micro Service Version is required" + HTML_ITALICS_LNBREAK);
-							valid = false;
-						}
-					} else {
-						responseString.append("<b>Micro Service</b>:<i> Micro Service Model is required" + HTML_ITALICS_LNBREAK);
-						valid = false;
-					}
-
-					if(Strings.isNullOrEmpty(policyData.getPriority())){
-						responseString.append("<b>Priority</b>:<i> Priority is required" + HTML_ITALICS_LNBREAK);
-						valid = false;
-					}
-				}
+				
 				
 				// Validate Optimization Policy Data
 				if (OPTIMIZATION.equals(policyData.getConfigPolicyType())){
@@ -838,6 +706,14 @@ public class PolicyValidation {
 					responseString.append("Onap Name: Onap Name Should not be empty" + HTML_ITALICS_LNBREAK);
 					valid = false;
 				}
+				if (DECISION_MS_MODEL.equals(policyData.getRuleProvider())) {
+                    LOGGER.info("Validating Decision MS Policy - ");
+                    boolean tmpValid = validateMsModel(policyData, responseString);
+                    if (!tmpValid) {
+                        valid = false;
+                    }
+                }
+
 
 				if("Rainy_Day".equals(policyData.getRuleProvider())){
 					if(policyData.getRainyday()==null){
@@ -1022,7 +898,7 @@ public class PolicyValidation {
 		return res;
 	}
 
-	private MicroServiceModels getMSModelData(String name, String version) {	
+	private MicroServiceModels getAttributeObject(String name, String version) {	
 		MicroServiceModels workingModel = null;
 		try{
 			List<Object> microServiceModelsData = commonClassDao.getDataById(MicroServiceModels.class, "modelName:version", name+":"+version);
@@ -1090,7 +966,8 @@ public class PolicyValidation {
 			} else if (value.isArray()) {
 				try {
 					jsonRequestMap.put(key, "array");
-					String stringValue = StringUtils.replaceEach(value.toString(), new String[]{"[", "]"}, new String[]{"",""});
+					String valueStr = value.toString();
+                    String stringValue = valueStr.substring(valueStr.indexOf('[') + 1, valueStr.lastIndexOf(']'));
 					ObjectMapper mapper = new ObjectMapper();
 					JsonNode newValue = mapper.readTree(stringValue);
 					pullModelJsonKeyPairs(newValue);
@@ -1113,23 +990,272 @@ public class PolicyValidation {
     }
     
     private void findRequiredFields(JsonObject json) {
+        if (json == null) {
+            return;
+        }
+        for (Entry<String, JsonValue> keyMap : json.entrySet()) {
+            Object obj = keyMap.getValue();
+            String key = keyMap.getKey();
+            if (obj instanceof JsonObject) {
+                if (allReqTrueKeys.contains(key)) {
+                    JsonObject jsonObj = (JsonObject) obj;
+                    // only check fields in obj if obj itself is required.
+                    for (Entry<String, JsonValue> jsonMap : jsonObj.entrySet()) {
+                        if (jsonMap.getValue().toString().contains(REQUIRED_ATTRIBUTE)) {
+                            modelRequiredFieldsList.add(jsonMap.getKey());
+                        }
+                    }
+                }
+            } else if (keyMap.getValue().toString().contains(REQUIRED_ATTRIBUTE)) {
+                modelRequiredFieldsList.add(key);
 
-    	for(Entry<String, JsonValue> keyMap : json.entrySet()){
-    		Object obj = keyMap.getValue();
-    		if(obj instanceof JsonObject){
-    			JsonObject jsonObj = (JsonObject)obj;
-    			for(Entry<String, JsonValue> jsonMap : jsonObj.entrySet()){
-    				if(jsonMap.getValue().toString().contains("required-true")){
-    					modelRequiredFieldsList.add(jsonMap.getKey());
-    				}
-    			}
-    		} else {
-    			if(keyMap.getValue().toString().contains("required-true")){
-    				modelRequiredFieldsList.add(keyMap.getKey());
-    			}
-    		}
-    	}
-    	    	
+            }
+        }
+
     }
+
+    // call this method to start the recursive
+    private Set<String> getAllKeys(JSONObject json) {
+        return getAllKeys(json, new HashSet<>());
+    }
+
+    private Set<String> getAllKeys(JSONArray arr) {
+        return getAllKeys(arr, new HashSet<>());
+    }
+
+    private Set<String> getAllKeys(JSONArray arr, Set<String> keys) {
+        for (int i = 0; i < arr.length(); i++) {
+            Object obj = arr.get(i);
+            if (obj instanceof JSONObject) {
+                keys.addAll(getAllKeys(arr.getJSONObject(i)));
+            }
+            if (obj instanceof JSONArray) {
+                keys.addAll(getAllKeys(arr.getJSONArray(i)));
+            }
+        }
+
+        return keys;
+    }
+
+    // this method returns a set of keys with "required-true" defined in their value.
+    private Set<String> getAllKeys(JSONObject json, Set<String> keys) {
+        for (String key : json.keySet()) {
+            Object obj = json.get(key);
+            if (obj instanceof String && ((String) obj).contains(REQUIRED_ATTRIBUTE)) {
+                LOGGER.debug("key : " + key);
+                LOGGER.debug("obj : " + obj);
+                allReqTrueKeys.add(key);
+                // get the type from value and add that one also
+                String type = StringUtils.substringBefore((String) obj, ":");
+                if (!StringUtils.isBlank(type) && !StringUtils.containsAny(type.toLowerCase(), MSModelUtils.STRING,
+                        MSModelUtils.INTEGER, MSModelUtils.LIST, MSModelUtils.MAP, "java", "boolean")) {
+                    allReqTrueKeys.add(type);
+                }
+            }
+            if (obj instanceof JSONObject) {
+                keys.addAll(getAllKeys(json.getJSONObject(key)));
+            }
+            if (obj instanceof JSONArray) {
+                keys.addAll(getAllKeys(json.getJSONArray(key)));
+            }
+        }
+
+        return keys;
+    }
+
+    private boolean validateMsModel(PolicyRestAdapter policyData, StringBuilder responseString)
+            throws JsonProcessingException {
+        boolean valid = true;
+        if (!Strings.isNullOrEmpty(policyData.getServiceType())) {
+
+            modelRequiredFieldsList.clear();
+            pullJsonKeyPairs((JsonNode) policyData.getPolicyJSON());
+
+            String service;
+            String version;
+            if (policyData.getServiceType().contains("-v")) {
+                service = policyData.getServiceType().split("-v")[0];
+                version = policyData.getServiceType().split("-v")[1];
+            } else {
+                service = policyData.getServiceType();
+                version = policyData.getVersion();
+            }
+
+            if (!Strings.isNullOrEmpty(version)) {
+                MicroServiceModels returnModel = getAttributeObject(service, version);
+
+                if (returnModel != null) {
+
+                    String annotation = returnModel.getAnnotation();
+                    String refAttributes = returnModel.getRef_attributes();
+                    String subAttributes = returnModel.getSub_attributes();
+                    String modelAttributes = returnModel.getAttributes();
+
+                    if (!Strings.isNullOrEmpty(annotation)) {
+                        Map<String, String> rangeMap = Splitter.on(",").withKeyValueSeparator("=").split(annotation);
+                        for (Entry<String, String> raMap : rangeMap.entrySet()) {
+                            if (raMap.getValue().contains("range::")) {
+                                String value = mapAttribute.get(raMap.getKey().trim());
+                                String[] tempString = raMap.getValue().split("::")[1].split("-");
+                                int startNum = Integer.parseInt(tempString[0]);
+                                int endNum = Integer.parseInt(tempString[1]);
+                                String returnString = "InvalidreturnModel Range:" + raMap.getKey() + " must be between "
+                                        + startNum + " - " + endNum + ",";
+
+                                if (value != null) {
+                                    if (PolicyUtils.isInteger(value.replace("\"", ""))) {
+                                        int result = Integer.parseInt(value.replace("\"", ""));
+                                        if (result < startNum || result > endNum) {
+                                            responseString.append(returnString);
+                                            valid = false;
+                                        }
+                                    } else {
+                                        responseString.append(returnString);
+                                        valid = false;
+                                    }
+                                } else {
+                                    responseString.append("<b>" + raMap.getKey() + "</b>:<i>" + raMap.getKey()
+                                            + " is required for the MicroService model " + service
+                                            + HTML_ITALICS_LNBREAK);
+                                    valid = false;
+                                }
+
+                            }
+                        }
+                    } else if (!DECISION_MS_MODEL.equals(policyData.getRuleProvider())) {
+                        // Validate for configName, location, uuid, and policyScope if no annotations exist for this
+                        // model
+                        if (Strings.isNullOrEmpty(policyData.getLocation())) {
+                            responseString.append("<b>Micro Service Model</b>:<i> location is required for this model"
+                                    + HTML_ITALICS_LNBREAK);
+                            valid = false;
+                        }
+
+                        if (Strings.isNullOrEmpty(policyData.getConfigName())) {
+                            responseString.append("<b>Micro Service Model</b>:<i> configName is required for this model"
+                                    + HTML_ITALICS_LNBREAK);
+                            valid = false;
+                        }
+
+                        if (Strings.isNullOrEmpty(policyData.getUuid())) {
+                            responseString.append("<b>Micro Service Model</b>:<i> uuid is required for this model"
+                                    + HTML_ITALICS_LNBREAK);
+                            valid = false;
+                        }
+
+                        if (Strings.isNullOrEmpty(policyData.getPolicyScope())) {
+                            responseString
+                                    .append("<b>Micro Service Model</b>:<i> policyScope is required for this model"
+                                            + HTML_ITALICS_LNBREAK);
+                            valid = false;
+                        }
+                    }
+
+                    // If request comes from the API we need to validate required fields in the Micro Service Model
+                    // GUI request are already validated from the SDK-APP
+                    if ("API".equals(policyData.getApiflag())) {
+                        // first , get the complete set of required fields
+                        populateReqFieldSet(new String[] {refAttributes, modelAttributes}, subAttributes);
+
+                        // ignore req fields in which parent is not reqd
+                        populateRequiredFields(new String[] {refAttributes, modelAttributes}, subAttributes,
+                                modelAttributes);
+
+                        if (modelRequiredFieldsList != null && !modelRequiredFieldsList.isEmpty()) {
+                            // create jsonRequestMap with all json keys and values from request
+                            JsonNode rootNode = (JsonNode) policyData.getPolicyJSON();
+                            jsonRequestMap.clear();
+                            pullModelJsonKeyPairs(rootNode);
+
+                            // validate if the requiredFields are in the request
+                            for (String requiredField : modelRequiredFieldsList) {
+                                if (jsonRequestMap.containsKey(requiredField)) {
+                                    String value = jsonRequestMap.get(requiredField);
+                                    if (StringUtils.isBlank(value) || "\"\"".equals(value)) {
+                                        responseString.append("<b>Micro Service Model</b>:<i> " + requiredField
+                                                + " is required" + HTML_ITALICS_LNBREAK);
+                                        valid = false;
+                                    }
+                                } else {
+                                    responseString.append("<b>Micro Service Model</b>:<i> " + requiredField
+                                            + " is required" + HTML_ITALICS_LNBREAK);
+                                    valid = false;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    responseString.append("<b>Micro Service Model</b>:<i> Invalid Model. The model name, " + service
+                            + " of version, " + version + " was not found in the dictionary" + HTML_ITALICS_LNBREAK);
+                    valid = false;
+                }
+            } else {
+                responseString.append(
+                        "<b>Micro Service Version</b>:<i> Micro Service Version is required" + HTML_ITALICS_LNBREAK);
+                valid = false;
+            }
+        } else {
+            responseString.append("<b>Micro Service</b>:<i> Micro Service Model is required" + HTML_ITALICS_LNBREAK);
+            valid = false;
+        }
+
+        if (Strings.isNullOrEmpty(policyData.getPriority())
+                && !DECISION_MS_MODEL.equals(policyData.getRuleProvider())) {
+            responseString.append("<b>Priority</b>:<i> Priority is required" + HTML_ITALICS_LNBREAK);
+        }
+
+
+        return valid;
+    }
+
+    private void populateRequiredFields(String[] attrArr, String subAttributes, String modelAttributes)
+            throws JsonProcessingException {
+        // get list of required fields from the ref_Attributes of the Model
+        for (String attributes : attrArr) {
+            if (!StringUtils.isBlank(attributes)) {
+                Map<String, String> attributesMap = null;
+                if (",".equals(attributes.substring(attributes.length() - 1))) {
+                    String attributesString = attributes.substring(0, attributes.length() - 1);
+                    attributesMap = Splitter.on(",").withKeyValueSeparator("=").split(attributesString);
+                } else {
+                    attributesMap = Splitter.on(",").withKeyValueSeparator("=").split(modelAttributes);
+                }
+                String json = new ObjectMapper().writeValueAsString(attributesMap);
+                findRequiredFields(stringToJsonObject(json));
+            }
+
+        }
+
+
+        // get list of required fields from the sub_Attributes of the Model
+        if (!StringUtils.isBlank(subAttributes)) {
+            JsonObject subAttributesJson = stringToJsonObject(subAttributes);
+            findRequiredFields(subAttributesJson);
+        }
+
+    }
+
+    private void populateReqFieldSet(String[] attrArr, String subAttributes) {
+        allReqTrueKeys.clear();
+        JSONObject jsonSub = new JSONObject(subAttributes);
+        // Get all keys with "required-true" defined in their value from subAttribute
+        getAllKeys(jsonSub);
+
+
+        // parse refAttrbutes
+        for (String attr : attrArr) {
+            if (attr != null) {
+                String[] referAarray = attr.split(",");
+                String[] element = null;
+                for (int i = 0; i < referAarray.length; i++) {
+                    element = referAarray[i].split("=");
+                    if (element.length > 1 && element[1].contains("required-true")) {
+                        allReqTrueKeys.add(element[0]);
+                    }
+                }
+            }
+        }
+    }
+
 
 }

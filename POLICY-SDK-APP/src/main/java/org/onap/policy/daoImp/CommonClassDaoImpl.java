@@ -311,7 +311,9 @@ public class CommonClassDaoImpl implements CommonClassDao{
 			}else{
 				cr.add(Restrictions.eq(columnName, key));	
 			}
-			data = cr.list().get(0);
+			if(!cr.list().isEmpty()){
+				data = cr.list().get(0);
+			}
 			tx.commit();
 		} catch (Exception e) {
 			LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error While Querying Database Table"+e);	

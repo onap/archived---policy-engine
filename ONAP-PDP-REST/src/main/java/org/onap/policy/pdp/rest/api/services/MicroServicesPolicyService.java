@@ -35,7 +35,7 @@ import org.onap.policy.xacml.std.pap.StdPAPPolicy;
  * 
  * @version 0.1
  */
-public class MicroServicesPolicyService{
+public class MicroServicesPolicyService implements PolicyService {
 	private static final Logger LOGGER = FlexLogger.getLogger(MicroServicesPolicyService.class.getName());
 	
 	private PAPServices papServices = null;

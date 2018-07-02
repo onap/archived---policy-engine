@@ -55,6 +55,7 @@ import javax.persistence.LockModeType;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
+import javax.persistence.TypedQuery;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -126,6 +127,7 @@ public class PolicyDBDao {
 	public static final String policyDBDaoVar = "PolicyDBDao";
 	public static final String duplicatePolicyId = "Somehow, more than one policy with the id ";
 	public static final String foundInDB = " were found in the database";
+	private static final String DECISION_MS_MODEL = "MicroService_Model";
 	
 	private static boolean isJunit = false;
 
@@ -1195,6 +1197,59 @@ public class PolicyDBDao {
 		
 	}
 	
+    /*
+     * This method is called at startup to recreate config data from DB to the file system.
+     * 
+     */
+    public void synchronizeConfigDataInFileSystem() {
+
+        logger.info("Starting Local File System Config data Sync");
+        // sync both webaaps Config and Action
+        syncConfigData(ConfigurationDataEntity.class, config);
+        syncConfigData(ActionBodyEntity.class, action);
+    }
+    
+    private <T> void syncConfigData(Class<T> cl, String type) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            final TypedQuery<T> configDataQuery = em.createQuery("select b from " + cl.getName() + " AS b", cl);
+            final List<T> configDataResult = configDataQuery.getResultList();
+            Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS), type);
+
+            for (final T configData : configDataResult) {
+                String configName = null;
+                byte[] configBody;
+                try {
+                    if (config.equalsIgnoreCase(type)) {
+                        configName = ((ConfigurationDataEntity) configData).getConfigurationName();
+                        configBody = (((ConfigurationDataEntity) configData).getConfigBody() != null)
+                                ? ((ConfigurationDataEntity) configData).getConfigBody()
+                                        .getBytes(StandardCharsets.UTF_8)
+                                : "".getBytes();
+                    } else {
+                        configName = ((ActionBodyEntity) configData).getActionBodyName();
+                        configBody = (((ActionBodyEntity) configData).getActionBody() != null)
+                                ? ((ActionBodyEntity) configData).getActionBody().getBytes(StandardCharsets.UTF_8)
+                                : "".getBytes();
+                    }
+                    Path filePath = Paths.get(webappsPath.toString(), configName);
+                    if (!filePath.toFile().exists()) {
+                        Files.write(filePath, configBody);
+                        logger.info("Created Config File from DB - " + filePath.toString());
+                    }
+                } catch (Exception e) {
+                    // log and keep going
+                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
+                            "Exception occured while creating Configuration File - " + configName);
+                }
+            }
+        } catch (final Exception exception) {
+            logger.error("Unable to synchronizeConfigDataInFileSystem", exception);
+        }
+        em.close();
+    }
+    
+	
 	public void deleteAllGroupTables(){
 		logger.debug("PolicyDBDao.deleteAllGroupTables() called");
 		EntityManager em = emf.createEntityManager();
@@ -1580,6 +1635,8 @@ public class PolicyDBDao {
 					policyName = policyName.replace(".Config_", ":Config_");
 				}else if(policyName.contains("Action_")){
 					policyName = policyName.replace(".Action_", ":Action_");
+				}else if(policyName.contains("Decision_MS_")){
+					policyName = policyName.replace(".Decision_MS_", ":Decision_MS_");
 				}else if(policyName.contains("Decision_")){
 					policyName = policyName.replace(".Decision_", ":Decision_");
 				}
@@ -1656,7 +1713,7 @@ public class PolicyDBDao {
 				}
 
 				ConfigurationDataEntity newConfigurationDataEntity;
-				if(policy.getPolicyType().equals(config)){
+				if(config.equals(policy.getPolicyType()) || DECISION_MS_MODEL.equals(policy.getRuleProvider())){
 					boolean configUpdate;
 					if(newPolicyEntity.getConfigurationData() == null){
 						newConfigurationDataEntity = new ConfigurationDataEntity();
@@ -1965,15 +2022,16 @@ public class PolicyDBDao {
 					policyDataString = policy.policyAdapter.getParentPath();
 				}
 				String configPath = "";
-				if (policy.policyAdapter.getPolicyType().equalsIgnoreCase(config)) {
+				if (config.equalsIgnoreCase(policy.policyAdapter.getPolicyType())) {
 					configPath = evaluateXPath("/Policy/Rule/AdviceExpressions/AdviceExpression[contains(@AdviceId,'ID')]/AttributeAssignmentExpression[@AttributeId='URLID']/AttributeValue/text()", policyDataString);
-				} else if (policy.policyAdapter.getPolicyType().equalsIgnoreCase(action)) {
+				} else if (action.equalsIgnoreCase(policy.policyAdapter.getPolicyType())) {
 					configPath = evaluateXPath("/Policy/Rule/ObligationExpressions/ObligationExpression[contains(@ObligationId, " +policy.policyAdapter.getActionAttribute()+ ")]/AttributeAssignmentExpression[@AttributeId='body']/AttributeValue/text()", policyDataString);
+				} else if (DECISION_MS_MODEL.equalsIgnoreCase(policy.policyAdapter.getRuleProvider())) {
+					configPath = evaluateXPath("/Policy/Rule/AdviceExpressions/AdviceExpression[contains(@AdviceId,'MicroService')]/AttributeAssignmentExpression[@AttributeId='URLID']/AttributeValue/text()", policyDataString);
 				}
 
 				String prefix = null;
-				if (policy.policyAdapter.getPolicyType().equalsIgnoreCase(config)) {
-
+				if (config.equalsIgnoreCase(policy.policyAdapter.getPolicyType()) || DECISION_MS_MODEL.equalsIgnoreCase(policy.policyAdapter.getRuleProvider())) {
 					prefix = configPath.substring(configPath.indexOf(policyScope+".")+policyScope.concat(".").length(), configPath.lastIndexOf(policy.policyAdapter.getPolicyName()));
 					if(isNullOrEmpty(policy.policyAdapter.getConfigBodyData())){
 						String configData = "";

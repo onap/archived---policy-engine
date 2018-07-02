@@ -92,6 +92,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class PolicyManagerServlet extends HttpServlet {
 	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyManagerServlet.class);
 	private static final long serialVersionUID = -8453502699403909016L;
+	private static final String DECISION_POLICY_MS = "Decision_MS";
 
 	private enum Mode {
 		LIST, RENAME, COPY, DELETE, EDITFILE, ADDFOLDER, DESCRIBEPOLICYFILE, VIEWPOLICY, ADDSUBSCOPE, SWITCHVERSION, EXPORT, SEARCHLIST
@@ -444,6 +445,8 @@ public class PolicyManagerServlet extends HttpServlet {
 			dbCheckName = dbCheckName.replace(".Config_", ":Config_");
 		}else if(dbCheckName.contains("Action_")){
 			dbCheckName = dbCheckName.replace(".Action_", ":Action_");
+		}else if(dbCheckName.contains(DECISION_POLICY_MS)){
+			dbCheckName = dbCheckName.replace(".Decision_MS_", ":Decision_MS_");
 		}else if(dbCheckName.contains("Decision_")){
 			dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
 		}
@@ -460,7 +463,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		if(policyName.contains("/")){
 			policyName = policyName.replace("/", File.separator);
 		}
-		policyName = policyName.substring(policyName.indexOf(File.separator)+1);
+		policyName = policyName.substring(policyName.lastIndexOf(File.separator)+1);
 		if(policyName.contains("\\")){
 			policyName = policyName.replace(File.separator, "\\");
 		}
@@ -501,6 +504,8 @@ public class PolicyManagerServlet extends HttpServlet {
 			path = path.replace(".Config_", ":Config_");
 		}else if(path.contains("Action_")){
 			path = path.replace(".Action_", ":Action_");
+		}else if(path.contains(DECISION_POLICY_MS)){
+			path = path.replace(".Decision_MS_", ":Decision_MS_");
 		}else if(path.contains("Decision_")){
 			path = path.replace(".Decision_", ":Decision_");
 		}
@@ -857,6 +862,8 @@ public class PolicyManagerServlet extends HttpServlet {
 				newPolicyCheck = newPolicyCheck.replace(".Config_", ":Config_");
 			}else if(newPolicyCheck.contains("Action_")){
 				newPolicyCheck = newPolicyCheck.replace(".Action_", ":Action_");
+			}else if(newPolicyCheck.contains(DECISION_POLICY_MS)){
+				newPolicyCheck = newPolicyCheck.replace(".Decision_MS_", ":Decision_MS_");
 			}else if(newPolicyCheck.contains("Decision_")){
 				newPolicyCheck = newPolicyCheck.replace(".Decision_", ":Decision_");
 			}
@@ -868,6 +875,8 @@ public class PolicyManagerServlet extends HttpServlet {
 				oldPolicyCheck = oldPolicyCheck.replace(".Config_", ":Config_");
 			}else if(oldPolicyCheck.contains("Action_")){
 				oldPolicyCheck = oldPolicyCheck.replace(".Action_", ":Action_");
+			}else if(oldPolicyCheck.contains(DECISION_POLICY_MS)){
+				oldPolicyCheck = oldPolicyCheck.replace(".Decision_MS_", ":Decision_MS_");
 			}else if(oldPolicyCheck.contains("Decision_")){
 				oldPolicyCheck = oldPolicyCheck.replace(".Decision_", ":Decision_");
 			}
@@ -949,7 +958,7 @@ public class PolicyManagerServlet extends HttpServlet {
 			
 			String oldConfigurationName = null;
 			String newConfigurationName = null;
-			if(newpolicyName.contains("Config_")){
+			if(newpolicyName.contains("Config_") || newpolicyName.contains(DECISION_POLICY_MS)){
 				oldConfigurationName = configEntity.getConfigurationName();
 				configEntity.setConfigurationName(configEntity.getConfigurationName().replace(oldScope +"."+oldPolicyNameWithoutExtension, newScope+"."+newPolicyNameWithoutExtension));
 				controller.updateData(configEntity);
@@ -1006,7 +1015,7 @@ public class PolicyManagerServlet extends HttpServlet {
 		String oldConfigRemoveExtension = removeoldPolicyExtension.replace(".xml", "");
 		String newConfigRemoveExtension = removenewPolicyExtension.replace(".xml", "");
 		String newConfigurationName = null;
-		if(newpolicyName.contains("Config_")){
+		if(newpolicyName.contains("Config_") || newpolicyName.contains(DECISION_POLICY_MS)){
 			ConfigurationDataEntity configurationDataEntity = new ConfigurationDataEntity();
 			configurationDataEntity.setConfigurationName(entity.getConfigurationData().getConfigurationName().replace(oldScope+"."+oldConfigRemoveExtension, newScope+"."+newConfigRemoveExtension));
 			queryEntityName = configurationDataEntity.getConfigurationName();
@@ -1078,6 +1087,8 @@ public class PolicyManagerServlet extends HttpServlet {
 				newPolicyCheck = newPolicyCheck.replace(".Config_", ":Config_");
 			}else if(newPolicyCheck.contains("Action_")){
 				newPolicyCheck = newPolicyCheck.replace(".Action_", ":Action_");
+			}else if(newPolicyCheck.contains(DECISION_POLICY_MS)){
+				newPolicyCheck = newPolicyCheck.replace(".Decision_MS_", ":Decision_MS_");
 			}else if(newPolicyCheck.contains("Decision_")){
 				newPolicyCheck = newPolicyCheck.replace(".Decision_", ":Decision_");
 			}
@@ -1097,6 +1108,8 @@ public class PolicyManagerServlet extends HttpServlet {
 				oldPolicyCheck = oldPolicyCheck.replace(".Config_", ":Config_");
 			}else if(oldPolicyCheck.contains("Action_")){
 				oldPolicyCheck = oldPolicyCheck.replace(".Action_", ":Action_");
+			}else if(oldPolicyCheck.contains(DECISION_POLICY_MS)){
+				oldPolicyCheck = oldPolicyCheck.replace(".Decision_MS_", ":Decision_MS_");
 			}else if(oldPolicyCheck.contains("Decision_")){
 				oldPolicyCheck = oldPolicyCheck.replace(".Decision_", ":Decision_");
 			}
@@ -1182,6 +1195,8 @@ public class PolicyManagerServlet extends HttpServlet {
 					splitPolicyName = policyNamewithoutExtension.replace(".Config_", ":Config_");
 				}else if(policyNamewithoutExtension.contains("Action_")){
 					splitPolicyName = policyNamewithoutExtension.replace(".Action_", ":Action_");
+				}else if(policyNamewithoutExtension.contains(DECISION_POLICY_MS)){
+					splitPolicyName = policyNamewithoutExtension.replace(".Decision_MS_", ":Decision_MS_");
 				}else if(policyNamewithoutExtension.contains("Decision_")){
 					splitPolicyName = policyNamewithoutExtension.replace(".Decision_", ":Decision_");
 				}
@@ -1275,7 +1290,7 @@ public class PolicyManagerServlet extends HttpServlet {
 							restController.deleteElasticData(searchFileName);
 							//Delete the entity from Policy Entity table
 							controller.deleteData(policyEntity);
-							if(policyNamewithoutExtension.contains("Config_")){
+							if(policyNamewithoutExtension.contains("Config_") || policyNamewithoutExtension.contains(DECISION_POLICY_MS)){
 								Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator + policyEntity.getConfigurationData().getConfigurationName()));
 								controller.deleteData(policyEntity.getConfigurationData());
 								restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getConfigurationData().getConfigurationName());
@@ -1342,7 +1357,7 @@ public class PolicyManagerServlet extends HttpServlet {
 							//Delete the entity from Policy Entity table
 							controller.deleteData(policyEntity);
 							policyNamewithoutExtension = policyEntity.getPolicyName();
-							if(policyNamewithoutExtension.contains("Config_")){
+							if(policyNamewithoutExtension.contains("Config_") || policyNamewithoutExtension.contains(DECISION_POLICY_MS)){
 								Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator + policyEntity.getConfigurationData().getConfigurationName()));
 								controller.deleteData(policyEntity.getConfigurationData());
 								restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getConfigurationData().getConfigurationName());
@@ -1413,6 +1428,8 @@ public class PolicyManagerServlet extends HttpServlet {
 				dbCheckName = dbCheckName.replace(".Config_", ":Config_");
 			}else if(dbCheckName.contains("Action_")){
 				dbCheckName = dbCheckName.replace(".Action_", ":Action_");
+			}else if(dbCheckName.contains(DECISION_POLICY_MS)){
+				dbCheckName = dbCheckName.replace(".Decision_MS_", ":Decision_MS_");
 			}else if(dbCheckName.contains("Decision_")){
 				dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
 			}

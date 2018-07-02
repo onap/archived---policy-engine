@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,15 @@ public enum RuleProvider {
     /**
      * Indicates Guard BLACKLIST YAML
      */
-    RAINY_DAY("Rainy_Day");
+    RAINY_DAY("Rainy_Day"),
+    /**
+     * Indicates MicroService_Model
+     */
+    MICROSERVICE_MODEL("MicroService_Model"),
+    /**
+     * Indicates Raw
+     */
+    RAW("Raw");
 
     private final String name;
 
