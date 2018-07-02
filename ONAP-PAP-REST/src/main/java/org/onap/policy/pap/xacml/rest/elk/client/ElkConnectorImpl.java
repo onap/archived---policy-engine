@@ -326,6 +326,8 @@ public class ElkConnectorImpl implements ElkConnector{
 				policyName = policyName.replace(".Config_", ":Config_");
 			}else if(policyName.contains("Action_")){
 				policyName = policyName.replace(".Action_", ":Action_");
+			}else if(policyName.contains("Decision_MS_")){
+				policyName = policyName.replace(".Decision_MS_", ":Decision_MS_");
 			}else if(policyName.contains("Decision_")){
 				policyName = policyName.replace(".Decision_", ":Decision_");
 			}
@@ -375,6 +377,8 @@ public class ElkConnectorImpl implements ElkConnector{
 				policyName = policyName.replace(".Config_", ":Config_");
 			}else if(policyName.contains("Action_")){
 				policyName = policyName.replace(".Action_", ":Action_");
+			}else if(policyName.contains("Decision_MS_")){
+				policyName = policyName.replace(".Decision_MS_", ":Decision_MS_");
 			}else if(policyName.contains("Decision_")){
 				policyName = policyName.replace(".Decision_", ":Decision_");
 			}

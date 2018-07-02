@@ -41,7 +41,7 @@ public class getDictionaryTest {
 		dp.setDictionary("test");
 		GetDictionaryService gds = new GetDictionaryService(dp, null);
 		String result = (String) formatDictionary.invoke(gds, input);
-		assertNotNull(result);
+		assertNull(result);
 		//
 		dp.setDictionary("OnapName");
 		gds = new GetDictionaryService(dp, null);

@@ -23,6 +23,7 @@ package org.onap.policy.pap.xacml.rest.components;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -40,6 +41,7 @@ import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -93,6 +95,7 @@ public class DecisionPolicy extends Policy {
 	public static final String GUARD_YAML = "GUARD_YAML";
     public static final String GUARD_BL_YAML = "GUARD_BL_YAML";
     public static final String RAINY_DAY = "Rainy_Day";
+    public static final String MS_MODEL = "MicroService_Model";
     private static final String XACML_GUARD_TEMPLATE = "Decision_GuardPolicyTemplate.xml";
     private static final String XACML_BLGUARD_TEMPLATE = "Decision_GuardBLPolicyTemplate.xml";
 
@@ -118,6 +121,19 @@ public class DecisionPolicy extends Policy {
 		this.commonClassDao = commonClassDao;
 	}
 	
+	// save configuration of the policy based on the policyname
+	private void saveConfigurations(String policyName, String jsonBody) {
+		if (policyName.endsWith(".xml")) {
+			policyName = policyName.replace(".xml", "");
+		}
+		LOGGER.info("INFO: Saving Decision config JSON to " + CONFIG_HOME + File.separator + policyName + ".json");
+		try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName + ".json")) {
+			out.println(jsonBody);
+		} catch (Exception e) {
+			LOGGER.error("Exception Occured While writing Configuration data for Decision Policy" + e);
+		}
+	}
+
 	@Override
 	public Map<String, String> savePolicies() throws PAPException {
 
@@ -208,8 +224,14 @@ public class DecisionPolicy extends Policy {
 			allOf.getMatch().add(createMatch(ONAPNAME, (policyAdapter.getOnapName())));
 			
 			Map<String, String> dynamicFieldComponentAttributes = policyAdapter.getDynamicFieldConfigAttributes();
-			if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFPROVIDER)){
+			if (!StringUtils.isBlank(policyAdapter.getRuleProvider()) && AAFPROVIDER.equals(policyAdapter.getRuleProvider())){
 				dynamicFieldComponentAttributes = new HashMap<>();
+			}
+			
+			// MS Model - Save the Configurations file with the policy name with extention based on selection.
+			if (!StringUtils.isBlank(policyAdapter.getRuleProvider()) && MS_MODEL.equals(policyAdapter.getRuleProvider())){
+				String jsonBody = policyAdapter.getJsonBody();
+				saveConfigurations(policyName, jsonBody);
 			}
 			
 			// If there is any dynamic field attributes create the matches here
@@ -222,15 +244,18 @@ public class DecisionPolicy extends Policy {
 
 			AnyOfType anyOf = new AnyOfType();
 			anyOf.getAllOf().add(allOfOne);
-			anyOf.getAllOf().add(allOf);
+			if (allOf.getMatch() != null && allOf.getMatch().size() > 0) {
+			    anyOf.getAllOf().add(allOf); 
+			}
 
 			TargetType target = new TargetType();
 			target.getAnyOf().add(anyOf);
 			decisionPolicy.setTarget(target);
 
 			Map<String, String> dynamicFieldDecisionSettings = policyAdapter.getDynamicSettingsMap();
-			if(policyAdapter.getRuleProvider()!=null && (policyAdapter.getRuleProvider().equals(AAFPROVIDER)||
-					policyAdapter.getRuleProvider().equals(RAINY_DAY))){
+			if (dynamicFieldDecisionSettings == null || (!StringUtils.isBlank(policyAdapter.getRuleProvider())
+                    && (AAFPROVIDER.equals(policyAdapter.getRuleProvider())
+                            || RAINY_DAY.equals(policyAdapter.getRuleProvider())))) {
 				dynamicFieldDecisionSettings = new HashMap<>();
 			}
 			
@@ -244,12 +269,14 @@ public class DecisionPolicy extends Policy {
 			}
 			
 			Map<String, String> dynamicFieldTreatmentAttributes = policyAdapter.getRainydayMap();
-			if(policyAdapter.getRuleProvider().equals(RAINY_DAY)){
+			if (policyAdapter.getRuleProvider().equals(RAINY_DAY)){
 				for(String keyField : dynamicFieldTreatmentAttributes.keySet()) {
 					String errorcode = keyField;
 					String treatment = dynamicFieldTreatmentAttributes.get(errorcode);
 					createRainydayRule(decisionPolicy, errorcode, treatment, true);
 				}
+			} else if (MS_MODEL.equals(policyAdapter.getRuleProvider())) {
+				createMSModelRule(decisionPolicy, name, true);
 			} else {
 				createRule(decisionPolicy, true);
 				createRule(decisionPolicy, false);
@@ -610,6 +637,97 @@ public class DecisionPolicy extends Policy {
 		policyAdapter.setPolicyData(decisionPolicy);
 		
 	}
+	
+	private void createMSModelRule(PolicyType decisionPolicy, String policyName, boolean permitRule) {
+		RuleType rule = new RuleType();
+		
+		rule.setRuleId(UUID.randomUUID().toString());
+			
+		if (permitRule) {
+			rule.setEffect(EffectType.PERMIT);
+		} else {
+			rule.setEffect(EffectType.DENY);
+		}
+		rule.setTarget(new TargetType());
+
+		// Create Target in Rule
+		AllOfType allOfInRule = new AllOfType();
+
+		// Creating match for DECIDE in rule target
+		MatchType accessMatch = new MatchType();
+		AttributeValueType accessAttributeValue = new AttributeValueType();
+		accessAttributeValue.setDataType(STRING_DATATYPE);
+		accessAttributeValue.getContent().add("DECIDE");
+		accessMatch.setAttributeValue(accessAttributeValue);
+		AttributeDesignatorType accessAttributeDesignator = new AttributeDesignatorType();
+		URI accessURI = null;
+		try {
+			accessURI = new URI(ACTION_ID);
+		} catch (URISyntaxException e) {
+			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "DecisionPolicy MS Model", "Exception creating ACCESS URI");
+		}
+		accessAttributeDesignator.setCategory(CATEGORY_ACTION);
+		accessAttributeDesignator.setDataType(STRING_DATATYPE);
+		accessAttributeDesignator.setAttributeId(new IdentifierImpl(accessURI).stringValue());
+		accessMatch.setAttributeDesignator(accessAttributeDesignator);
+		accessMatch.setMatchId(FUNCTION_STRING_EQUAL_IGNORE);
+		
+		allOfInRule.getMatch().add(accessMatch);
+		
+		// Creating match for ErrorCode in rule target
+		MatchType policyNameMatch = new MatchType();
+		AttributeValueType policyNameAttributeValue = new AttributeValueType();
+		policyNameAttributeValue.setDataType(STRING_DATATYPE);
+		policyNameAttributeValue.getContent().add(policyName);
+		policyNameMatch.setAttributeValue(policyNameAttributeValue);
+		AttributeDesignatorType policyNameAttributeDesignator = new AttributeDesignatorType();
+		policyNameAttributeDesignator.setCategory(CATEGORY_RESOURCE);
+		policyNameAttributeDesignator.setDataType(STRING_DATATYPE);
+		policyNameAttributeDesignator.setAttributeId("policyName");
+		policyNameMatch.setAttributeDesignator(policyNameAttributeDesignator);
+		policyNameMatch.setMatchId(FUNCTION_STRING_REGEXP_MATCH);
+		
+		allOfInRule.getMatch().add(policyNameMatch);
+		
+		AnyOfType anyOfInRule = new AnyOfType();
+		anyOfInRule.getAllOf().add(allOfInRule);
+		
+		TargetType targetInRule = new TargetType();
+		targetInRule.getAnyOf().add(anyOfInRule);
+		
+		rule.setTarget(targetInRule);
+		
+		AdviceExpressionsType adviceExpressions = new AdviceExpressionsType();
+		AdviceExpressionType adviceExpression = new AdviceExpressionType();		
+		adviceExpression.setAdviceId(MS_MODEL);
+		adviceExpression.setAppliesTo(EffectType.PERMIT);
+		
+		// For Config file Url if configurations are provided.
+		AttributeAssignmentExpressionType assignment = new AttributeAssignmentExpressionType();
+		assignment.setAttributeId("URLID");
+		assignment.setCategory(CATEGORY_RESOURCE);
+		assignment.setIssuer("");
+		
+		AttributeValueType AttributeValue = new AttributeValueType();
+		AttributeValue.setDataType(URI_DATATYPE);
+		String configName;
+		if(policyName.endsWith(".xml")){
+			configName = policyName.replace(".xml", "");
+		}else{
+			configName = policyName;
+		}
+		String content = CONFIG_URL +"/Config/" + configName + ".json";
+		AttributeValue.getContent().add(content);
+		assignment.setExpression(new ObjectFactory().createAttributeValue(AttributeValue));
+		
+		adviceExpression.getAttributeAssignmentExpression().add(assignment);
+		adviceExpressions.getAdviceExpression().add(adviceExpression);
+		rule.setAdviceExpressions(adviceExpressions);
+		decisionPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
+		policyAdapter.setPolicyData(decisionPolicy);
+		
+	}
+	
 	
 	// if compound setting the inner apply here
 	protected ApplyType getInnerDecisionApply(String value1Label) {

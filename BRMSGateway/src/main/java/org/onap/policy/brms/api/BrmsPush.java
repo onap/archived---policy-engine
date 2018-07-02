@@ -417,10 +417,10 @@ public class BrmsPush {
                 String value = entry.getValue();
                 if (key.equals(policyKeyId)) {
                     selectedName = value;
-                }
-                // kmodule configurations
-                else if ("kSessionName".equals(key)) {
+                    LOGGER.debug("addRule: selectedName - " + selectedName);
+                } else if ("kSessionName".equals(key)) { // kmodule configurations
                     ksessionName = value;
+                    LOGGER.debug("addRule: kSessionName - " + ksessionName);
                 }
                 // Check User Specific values.
                 if ("$controller:".equals(key)) {

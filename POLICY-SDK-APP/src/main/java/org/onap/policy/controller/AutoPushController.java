@@ -245,6 +245,8 @@ public class AutoPushController extends RestrictedBaseController{
 						dbCheckName = dbCheckName.replace(".Config_", ":Config_");
 					}else if(dbCheckName.contains("Action_")){
 						dbCheckName = dbCheckName.replace(".Action_", ":Action_");
+					}else if(dbCheckName.contains("Decision_MS_")){
+						dbCheckName = dbCheckName.replace(".Decision_MS_", ":Decision_MS_");
 					}else if(dbCheckName.contains("Decision_")){
 						dbCheckName = dbCheckName.replace(".Decision_", ":Decision_");
 					}

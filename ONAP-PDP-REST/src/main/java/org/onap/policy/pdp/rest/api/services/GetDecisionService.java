@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import org.apache.commons.lang3.StringUtils;
 
 import org.onap.policy.api.DecisionRequestParameters;
 import org.onap.policy.api.DecisionResponse;
@@ -48,52 +49,66 @@ public class GetDecisionService {
     private DecisionRequestParameters decisionRequestParameters = null;
     private String message = null;
     private String onapComponentName = null;
-    private Map<String,String> decisionAttributes = null;
-    
-    public GetDecisionService(
-            DecisionRequestParameters decisionRequestParameters,
-            String requestID) {
+    private Map<String, String> decisionAttributes = null;
+    private UUID requestUuid = null;
+    private String requestType = null;
+
+    /**
+     * Instantiates a new gets the decision service.
+     *
+     * @param decisionRequestParameters the decision request parameters
+     * @param requestId the request id
+     */
+    public GetDecisionService(DecisionRequestParameters decisionRequestParameters, String requestId) {
         this.decisionRequestParameters = decisionRequestParameters;
-        if(decisionRequestParameters.getRequestID()==null){
-            UUID requestUUID = null;
-            if (requestID != null && !requestID.isEmpty()) {
+        if (decisionRequestParameters.getRequestID() == null) {
+            if (!StringUtils.isBlank(requestId)) {
                 try {
-                    requestUUID = UUID.fromString(requestID);
+                    requestUuid = UUID.fromString(requestId);
                 } catch (IllegalArgumentException e) {
-                    requestUUID = UUID.randomUUID();
-                    LOGGER.info("Generated Random UUID: " + requestUUID.toString(),e);
+                    requestUuid = UUID.randomUUID();
+                    LOGGER.info("Generated Random UUID: " + requestUuid.toString(), e);
                 }
-            }else{
-                requestUUID = UUID.randomUUID();
-                LOGGER.info("Generated Random UUID: " + requestUUID.toString());
+            } else {
+                requestUuid = UUID.randomUUID();
+                LOGGER.info("Generated Random UUID: " + requestUuid.toString());
             }
-            this.decisionRequestParameters.setRequestID(requestUUID);
+            this.decisionRequestParameters.setRequestID(requestUuid);
         }
-        try{
+        try {
             run();
-        }catch(PolicyDecisionException e){
-            StdDecisionResponse decisionResponse = new StdDecisionResponse();
-            decisionResponse.setDecision(PolicyDecision.ERROR);
-            decisionResponse.setDetails(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
-            this.decisionResponse = decisionResponse;
+        } catch (PolicyDecisionException e) {
+            StdDecisionResponse decisionResp = new StdDecisionResponse();
+            decisionResp.setDecision(PolicyDecision.ERROR);
+            decisionResp.setDetails(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
+            this.decisionResponse = decisionResp;
             status = HttpStatus.BAD_REQUEST;
         }
     }
 
-    private void run() throws PolicyDecisionException{
+    private void run() throws PolicyDecisionException {
         // Get Validation.
-        if(!getValidation()){
+        if (!getValidation()) {
             LOGGER.error(message);
             throw new PolicyDecisionException(message);
         }
-        // Generate Request. 
-        String modelString = getModel().toString();
-        LOGGER.debug("Generated JSON Request is: " + modelString);
-        // Process Result. 
+
         try {
+
+            // Generate Request.
+            String modelString = getModel().toString();
+            LOGGER.debug("Generated JSON Request is: " + modelString);
+            // Process Result.
             PDPServices pdpServices = new PDPServices();
+            if (modelString.contains(PDPServices.RAINYDAY_TYPE)) {
+                pdpServices.setRequestType(PDPServices.RAINYDAY_TYPE);
+                this.setRequestType(PDPServices.RAINYDAY_TYPE);
+            } else if (PDPServices.DECISION_MS_NAMING_TYPE.equals(requestType)) {
+                pdpServices.setRequestType(PDPServices.DECISION_MS_NAMING_TYPE);
+            }
             status = HttpStatus.OK;
-            decisionResponse = decisionResult(pdpServices.generateRequest(modelString, decisionRequestParameters.getRequestID(), false, true));
+            decisionResponse = decisionResult(
+                    pdpServices.generateRequest(modelString, decisionRequestParameters.getRequestID(), false, true));
         } catch (Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
             status = HttpStatus.BAD_REQUEST;
@@ -109,58 +124,70 @@ public class GetDecisionService {
         }
         if (!generateRequest.isEmpty()) {
             for (PDPResponse stdStatus : generateRequest) {
-                policyDecision.setDecision(stdStatus.getDecision());
-                policyDecision.setDetails(stdStatus.getDetails());
+                if (!StringUtils.isBlank(getRequestType())
+                        && PDPServices.DECISION_MS_NAMING_TYPE.equals(getRequestType())) {
+                    DecisionMsNamingService namingModelProcessor =
+                            new DecisionMsNamingService(decisionRequestParameters.getDecisionAttributes(),
+                                    stdStatus.getDetails(), getRequestUuid().toString());
+                    namingModelProcessor.run();
+                    policyDecision.setDecision(namingModelProcessor.getResult().getDecision());
+                    policyDecision.setDetails(namingModelProcessor.getResult().getDetails());
+                } else {
+                    policyDecision.setDecision(stdStatus.getDecision());
+                    policyDecision.setDetails(stdStatus.getDetails());
+                }
             }
         }
         return policyDecision;
     }
 
-    private JsonObject getModel() throws PolicyDecisionException{
+    private JsonObject getModel() throws PolicyDecisionException {
         JsonArrayBuilder resourceArray = Json.createArrayBuilder();
-        for (Entry<String,String> key : decisionAttributes.entrySet()) {
-            if (key.getKey().isEmpty()) {
-                String message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot have an Empty Key";
-                LOGGER.error(message);
-                throw new PolicyDecisionException(message);
+        for (Entry<String, String> entry : decisionAttributes.entrySet()) {
+            if (entry.getKey().isEmpty()) {
+                String msg = XACMLErrorConstants.ERROR_DATA_ISSUE + "Cannot have an Empty Key";
+                LOGGER.error(msg);
+                throw new PolicyDecisionException(msg);
             }
-            JsonObjectBuilder resourceBuilder = Json.createObjectBuilder();
-            if (key.getValue().matches("[0-9]+")) {
-            	
-            	if ((key.getKey().equals("ErrorCode")) || (key.getKey().equals("WorkStep"))) {
-                    
-            		resourceBuilder.add("Value", key.getValue());
+            if (PDPServices.DECISION_MS_NAMING_TYPE.equalsIgnoreCase(entry.getKey().trim())) {
+                // this is used for only Model execution and not for identifying
+                // policy. It is input data for MS Naming model execution and
+                // will be parsed in the naming service. Skip here.
+                this.setRequestType(PDPServices.DECISION_MS_NAMING_TYPE);
+                continue;
+            }
 
-            	} else {
-            		
-                    int val = Integer.parseInt(key.getValue());
+            JsonObjectBuilder resourceBuilder = Json.createObjectBuilder();
+            if (entry.getValue().matches("[0-9]+")) {
+
+                if ((entry.getKey().equals("ErrorCode")) || (entry.getKey().equals("WorkStep"))) {
+
+                    resourceBuilder.add("Value", entry.getValue());
+
+                } else {
+
+                    int val = Integer.parseInt(entry.getValue());
                     resourceBuilder.add("Value", val);
-                    
-            	}
-            	
+
+                }
+
             } else {
-                resourceBuilder.add("Value", key.getValue());
+                resourceBuilder.add("Value", entry.getValue());
             }
-            resourceBuilder.add("AttributeId", key.getKey());
+            resourceBuilder.add("AttributeId", entry.getKey());
             resourceArray.add(resourceBuilder);
         }
-        return Json.createObjectBuilder()
-                .add("Request", Json.createObjectBuilder()
-                                .add("AccessSubject", Json.createObjectBuilder()
-                                                .add("Attribute", Json.createObjectBuilder()
-                                                                .add("Value", onapComponentName)
-                                                                .add("AttributeId", "ONAPName")))
-                                .add("Resource", Json.createObjectBuilder()
-                                                .add("Attribute", resourceArray))
-                                .add("Action", Json.createObjectBuilder()
-                                                .add("Attribute", Json.createObjectBuilder()
-                                                                .add("Value", "DECIDE")
-                                                                .add("AttributeId", "urn:oasis:names:tc:xacml:1.0:action:action-id"))))
+        return Json.createObjectBuilder().add("Request", Json.createObjectBuilder().add("AccessSubject",
+                Json.createObjectBuilder().add("Attribute",
+                        Json.createObjectBuilder().add("Value", onapComponentName).add("AttributeId", "ONAPName")))
+                .add("Resource", Json.createObjectBuilder().add("Attribute", resourceArray))
+                .add("Action", Json.createObjectBuilder().add("Attribute", Json.createObjectBuilder()
+                        .add("Value", "DECIDE").add("AttributeId", "urn:oasis:names:tc:xacml:1.0:action:action-id"))))
                 .build();
     }
 
     private boolean getValidation() {
-        if(decisionRequestParameters==null){
+        if (decisionRequestParameters == null) {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Decision Request Paramaters";
             return false; 
         }
@@ -185,5 +212,20 @@ public class GetDecisionService {
         return status;
     }
 
-}
+    public UUID getRequestUuid() {
+        return requestUuid;
+    }
 
+    public void setRequestUuid(UUID requestId) {
+        this.requestUuid = requestId;
+    }
+
+    public String getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
+    }
+
+}

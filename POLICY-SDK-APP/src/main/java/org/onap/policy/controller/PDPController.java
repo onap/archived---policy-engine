@@ -122,6 +122,8 @@ public class PDPController extends RestrictedBaseController {
 											policyName = policyName.substring(0, policyName.lastIndexOf(".Config_"));
 										}else if(policyName.contains(".Action_")){
 											policyName = policyName.substring(0, policyName.lastIndexOf(".Action_"));
+										}else if(policyName.contains(".Decision_MS_")){
+											policyName = policyName.substring(0, policyName.lastIndexOf(".Decision_MS_"));
 										}else if(policyName.contains(".Decision_")){
 											policyName = policyName.substring(0, policyName.lastIndexOf(".Decision_"));
 										}

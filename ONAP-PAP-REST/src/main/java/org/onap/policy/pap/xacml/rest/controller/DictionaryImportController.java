@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pap.xacml.rest.DictionaryNames;
@@ -76,7 +77,7 @@ import au.com.bytecode.opencsv.CSVReader;
 @Controller
 public class DictionaryImportController {
 	private static final Logger LOGGER  = FlexLogger.getLogger(DictionaryImportController.class);
-	
+
 	private static CommonClassDao commonClassDao;
 	private static final String DESCRIPTION= "description";
 	private static final String ERROR= "Error";
@@ -252,6 +253,9 @@ public class DictionaryImportController {
 						}
 						if("annotations".equalsIgnoreCase(dictSheet.get(0)[j])) {
 							attribute.setAnnotation(rows[j]);
+						}
+						if("Decision Model".equalsIgnoreCase(dictSheet.get(0)[j])){
+                            				attribute.setDecisionModel(StringUtils.equalsIgnoreCase(rows[j], "TRUE"));
 						}
 					}
 

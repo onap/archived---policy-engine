@@ -122,6 +122,8 @@ public class DeleteHandler {
 						splitPolicyName = removeVersionExtension.replace(".Config_", ":Config_");
 					}else if(policyName.contains("Action_")){
 						splitPolicyName = removeVersionExtension.replace(".Action_", ":Action_");
+					}else if(policyName.contains("Decision_MS_")){
+						splitPolicyName = removeVersionExtension.replace(".Decision_MS_", ":Decision_MS_");
 					}else if(policyName.contains("Decision_")){
 						splitPolicyName = removeVersionExtension.replace(".Decision_", ":Decision_");
 					}
@@ -139,6 +141,8 @@ public class DeleteHandler {
 						splitPolicyName = policyName.replace(".Config_", ":Config_");
 					}else if(policyName.contains("Action_")){
 						splitPolicyName = policyName.replace(".Action_", ":Action_");
+					}else if(policyName.contains("Decision_MS_")){
+						splitPolicyName = policyName.replace(".Decision_MS_", ":Decision_MS_");
 					}else if(policyName.contains("Decision_")){
 						splitPolicyName = policyName.replace(".Decision_", ":Decision_");
 					}
@@ -284,7 +288,7 @@ public class DeleteHandler {
 		PolicyRestAdapter policyData = new PolicyRestAdapter();
 		String policyName = policyEntity.getPolicyName();
 		try{
-			if(policyName.contains("Config_")){
+			if(policyName.contains("Config_") || policyName.contains("Decision_MS_")){
 				em.remove(policyEntity.getConfigurationData());
 			}else if(policyName.contains("Action_")){
 				em.remove(policyEntity.getActionBodyEntity());

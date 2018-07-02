@@ -62,6 +62,7 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.pdp.rest.jmx.PdpRestMonitor;
 import org.onap.policy.rest.XACMLRest;
 import org.onap.policy.rest.XACMLRestProperties;
+import org.onap.policy.utils.CryptoUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.pdp.std.functions.PolicyList;
 import org.onap.policy.xacml.std.pap.StdPDPStatus;
@@ -209,10 +210,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		XACMLRest.xacmlInit(config);
 		// Load the Notification Delay.
 		setNotificationDelay();
-		// Load Queue size. Not sure if we really need to have the queue bounded, we should look further into this
-		int queueSize = 50; // Set default Queue Size here. 
-		queueSize = Integer.parseInt(XACMLProperties.getProperty("REQUEST_BUFFER_SIZE",String.valueOf(queueSize)));
-		initQueue(queueSize);
+		// init queue for requests to sync pushed policies with pap
+		initQueue();
 		// Load our engine - this will use the latest configuration
 		// that was saved to disk and set our initial status object.
 		//
@@ -271,6 +270,9 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		// Create an IntegrityMonitor
 		try {
 			logger.info("Creating IntegrityMonitor");
+			if(properties.getProperty("javax.persistence.jdbc.password") != null ){
+				properties.setProperty("javax.persistence.jdbc.password", CryptoUtils.decryptTxtNoExStr(properties.getProperty("javax.persistence.jdbc.password", "")));
+			}
 			im = IntegrityMonitor.getInstance(pdpResourceName, properties);
 		} catch (Exception e) { 
 			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "Failed to create IntegrityMonitor" +e);
@@ -316,8 +318,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
         }
     }
 
-    private static void initQueue(int queueSize) {
-	    queue = new LinkedBlockingQueue<>(queueSize);
+    private static void initQueue() {
+	    queue = new LinkedBlockingQueue<>();
     }
 
     private static void setNotificationDelay() {
@@ -919,7 +921,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 		// Limit the Content-Length to something reasonable
 		//
 		try{
-			if (request.getContentLength() > Integer.parseInt(XACMLProperties.getProperty("MAX_CONTENT_LENGTH", "32767"))) {
+			if (request.getContentLength() > Integer.parseInt(XACMLProperties.getProperty("MAX_CONTENT_LENGTH", "99999999"))) {
 				String message = "Content-Length larger than server will accept.";
 				logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
 				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, message);
@@ -1322,5 +1324,8 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 			PolicyLogger.error(MessageCodes.MISS_PROPERTY_ERROR, "createUpdatePolicy.impl.className", "xacml.pdp.init" +e);
 			throw new ServletException("Could not find the Class name : " +createUpdateResourceName + "\n" +e.getMessage());
 		}
+	}
+	public static Object getPDPEngineLock() {
+		return pdpEngineLock;
 	}
 }

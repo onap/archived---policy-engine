@@ -48,8 +48,8 @@ import org.springframework.stereotype.Component;
 public class PolicyValidationDaoImpl implements CommonClassDao{
 
 	private static final Logger LOGGER = FlexLogger.getLogger(PolicyValidationDaoImpl.class);
-	private static final String DB_CONNECTION_CLOSING_ERROR = "Error While Closing Connection/Statement";
-	private static final String DBTABLE_QUERY_ERROR = "Error While Querying Table";
+	public static final String DB_CONNECTION_CLOSING_ERROR = "Error While Closing Connection/Statement";
+	public static final String DBTABLE_QUERY_ERROR = "Error While Querying Table";
 	private static SessionFactory sessionfactory;
     
     public static SessionFactory getSessionfactory() {

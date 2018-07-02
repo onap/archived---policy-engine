@@ -132,6 +132,10 @@ public class GetDictionaryService {
         }
         return response;
     }
+    
+    public String extendedClientScope(String jsonString,String dictionary){
+    		return null;
+ 	}
 
     private String formatDictionaryJson(String result) {
         String jsonString = result.substring(82);
@@ -214,7 +218,7 @@ public class GetDictionaryService {
             jsonString = jsonString.replace("microServiceLocationDictionaryDatas", "DictionaryDatas");
             break;
         case "MicroServiceConfigName":
-            jsonString = jsonString.replace("microServiceCongigNameDictionaryDatas", "DictionaryDatas");
+            jsonString = jsonString.replace("microServiceConfigNameDictionaryDatas", "DictionaryDatas");
             break;
         case "DCAEUUID":
             jsonString = jsonString.replace("dcaeUUIDDictionaryDatas", "DictionaryDatas");
@@ -250,7 +254,7 @@ public class GetDictionaryService {
             jsonString = jsonString.replace("microServiceDictionaryDatas", "DictionaryDatas");
             break;
         default:
-            break;
+            jsonString=extendedClientScope(jsonString,dictionary);
         }
         return jsonString;
     }

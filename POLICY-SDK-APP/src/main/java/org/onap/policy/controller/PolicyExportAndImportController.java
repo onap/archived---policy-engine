@@ -82,6 +82,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 	private static String configurationName = "configurationName";
 	private static String configurationbody = "configurationbody";
 	private static String config = "Config_";
+	private static final String DECISION_MS = "Decision_MS_";
 
 	private static CommonClassDao commonClassDao;
 
@@ -151,7 +152,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 				row.createCell(2).setCellValue(policyEntity.getVersion());
 				row.createCell(3).setCellValue(policyEntity.getPolicyData());
 				row.createCell(4).setCellValue(policyEntity.getDescription());
-				if(!policyEntity.getPolicyName().contains("Decision_")){
+				if(policyEntity.getPolicyName().contains(DECISION_MS) || !policyEntity.getPolicyName().contains("Decision_")){
 					if(policyEntity.getConfigurationData() != null){
 						row.createCell(5).setCellValue(policyEntity.getConfigurationData().getConfigurationName());
 						String body = policyEntity.getConfigurationData().getConfigBody();
@@ -273,7 +274,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 						policyEntity.setDescription(cell.getStringCellValue());
 					}
 					if (configurationbody.equalsIgnoreCase(getCellHeaderName(cell))) {
-						if(policyEntity.getPolicyName().contains(config)){
+						if(policyEntity.getPolicyName().contains(config) ||
+								policyEntity.getPolicyName().contains(DECISION_MS)){
 							if(policyEntity.getPolicyName().contains("Config_BRMS_Param_")){
 								setBodySize += 1;
 							}
@@ -299,7 +301,8 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 					}
 					if (configurationName.equalsIgnoreCase(getCellHeaderName(cell))) {
 						configName = cell.getStringCellValue();
-						if(policyEntity.getPolicyName().contains(config)){
+						if(policyEntity.getPolicyName().contains(config) ||
+								policyEntity.getPolicyName().contains(DECISION_MS)){
 							configurationDataEntity.setConfigurationName(cell.getStringCellValue());
 						}else if(policyEntity.getPolicyName().contains("Action_")){
 							actionBodyEntity.setActionBodyName(cell.getStringCellValue());
@@ -381,7 +384,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 							writeActionBodyFile(actionBodyEntity);
 						}
 						if(configName != null){
-							if(configName.contains(config)){
+							if(configName.contains(config) || configName.contains(DECISION_MS)){
 								ConfigurationDataEntity configuration = (ConfigurationDataEntity) commonClassDao.getEntityItem(ConfigurationDataEntity.class, configurationName, configName);
 								policyEntity.setConfigurationData(configuration);
 							}else{
@@ -408,7 +411,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 
 						//Notify Other paps regarding Export Policy.
 						PolicyRestController restController = new PolicyRestController();
-						restController.notifyOtherPAPSToUpdateConfigurations("exportPolicy", configName, null);
+						restController.notifyOtherPAPSToUpdateConfigurations("importPolicy", configName, null);
 					}
 				}
 			}

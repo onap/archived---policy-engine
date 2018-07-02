@@ -34,6 +34,7 @@ import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.api.controller.PolicyEngineServices;
+import org.onap.policy.utils.CryptoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -74,7 +75,7 @@ public class PDPRestConfig extends WebMvcConfigurerAdapter{
 			setDbDriver(prop.getProperty("javax.persistence.jdbc.driver"));
 			setDbUrl(prop.getProperty("javax.persistence.jdbc.url"));
 			setDbUserName(prop.getProperty("javax.persistence.jdbc.user"));
-			setDbPassword(prop.getProperty("javax.persistence.jdbc.password"));
+			setDbPassword(CryptoUtils.decryptTxtNoExStr(prop.getProperty("javax.persistence.jdbc.password", "")));
 		}catch(Exception e){
 			LOGGER.error("Exception Occured while loading properties file"+e);
 		}

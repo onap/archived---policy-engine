@@ -20,6 +20,8 @@
 
 package org.onap.policy.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,6 +33,8 @@ import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
@@ -85,8 +89,13 @@ public class DecisionPolicyController extends RestrictedBaseController {
 			Object policyData = policyAdapter.getPolicyData();
 			PolicyType policy = (PolicyType) policyData;
 			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf('_') + 1);
-			policyAdapter.setPolicyName(policyNameValue);
+
+			if("Decision_MS".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
+				policyAdapter.setRuleProvider("MicroService_Model");
+				policyAdapter.setPolicyName(StringUtils.substringAfter(policyAdapter.getPolicyName(), "Decision_MS_"));
+			} else {
+				policyAdapter.setPolicyName(StringUtils.substringAfter(policyAdapter.getPolicyName(), "Decision_"));
+			}
 			String description = "";
 			try{
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
@@ -266,7 +275,12 @@ public class DecisionPolicyController extends RestrictedBaseController {
 			
 			rainydayParams.setTreatmentTableChoices(treatmentList);
 			policyAdapter.setRainyday(rainydayParams);
-			policyAdapter.setSettings(decisionList);	
+			policyAdapter.setSettings(decisionList);
+			
+			// if it is Decision MS policy, read the config json
+			if("Decision_MS".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
+				new CreateDcaeMicroServiceController().readFile(policyAdapter, entity);
+			} 
 		}	
 
 	}
