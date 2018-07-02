@@ -40,6 +40,8 @@ import com.att.research.xacml.util.XACMLProperties;
 public class PolicyAdapter {
 
 	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyAdapter.class);
+	private static final String DECISION_POLICY_MS = "Decision_MS";
+	
 	
 	public void configure(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		if(extendedOptions(policyAdapter, entity)){
@@ -59,8 +61,8 @@ public class PolicyAdapter {
 			configPolicyName = "BRMS_Param";
 		}else if(policyAdapter.getPolicyName().startsWith("Config_MS")){
 			configPolicyName = "Micro Service";
-		}else if(policyAdapter.getPolicyName().startsWith("Config_OOF")){
-			configPolicyName = "Optimization";
+		}else if(policyAdapter.getPolicyName().startsWith(DECISION_POLICY_MS)){
+			configPolicyName = DECISION_POLICY_MS;
 		}else if(policyAdapter.getPolicyName().startsWith("Action") || policyAdapter.getPolicyName().startsWith("Decision") ){
 			// No configPolicyName is applicable
 		}else{

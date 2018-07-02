@@ -37,8 +37,8 @@ import org.springframework.http.HttpStatus;
 import com.google.common.base.Strings;
 
 public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService {
-	private static final Logger LOGGER = FlexLogger.getLogger(CreateUpdatePolicyServiceImpl.class.getName());
-    
+    private static final Logger LOGGER = FlexLogger.getLogger(CreateUpdatePolicyServiceImpl.class.getName());
+
     private String policyResult = null;
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private Boolean updateFlag = false;
@@ -47,12 +47,11 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
     private String policyName = null;
     private String policyScope = null;
     private String date = null;
-    
-	public CreateUpdatePolicyServiceImpl(PolicyParameters policyParameters,
-			String requestID, boolean updateFlag) {
-		this.updateFlag = updateFlag;
+
+    public CreateUpdatePolicyServiceImpl(PolicyParameters policyParameters, String requestID, boolean updateFlag) {
+        this.updateFlag = updateFlag;
         this.policyParameters = policyParameters;
-        if(policyParameters.getRequestID()==null){
+        if (policyParameters.getRequestID() == null) {
             UUID requestUUID = null;
             if (requestID != null && !requestID.isEmpty()) {
                 try {
@@ -61,264 +60,226 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
                     requestUUID = UUID.randomUUID();
                     LOGGER.info("Generated Random UUID: " + requestUUID.toString(), e);
                 }
-            }else{
+            } else {
                 requestUUID = UUID.randomUUID();
                 LOGGER.info("Generated Random UUID: " + requestUUID.toString());
             }
             this.policyParameters.setRequestID(requestUUID);
         }
-        try{
+        try {
             run();
             specialCheck();
-        }catch(PolicyException e){
+        } catch (PolicyException e) {
             policyResult = XACMLErrorConstants.ERROR_DATA_ISSUE + e;
             status = HttpStatus.BAD_REQUEST;
         }
     }
 
-    public void run() throws PolicyException{
-        // Check Validation. 
-        if(!getValidation()){
+    public void run() throws PolicyException {
+        // Check Validation.
+        if (!getValidation()) {
             LOGGER.error(message);
             throw new PolicyException(message);
         }
-        // Get Result. 
-        try{
+        // Get Result.
+        try {
             status = HttpStatus.OK;
             policyResult = processResult();
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
             status = HttpStatus.BAD_REQUEST;
             throw new PolicyException(e);
         }
     }
-    
-    @SuppressWarnings("incomplete-switch")
-    public String processResult() throws PolicyException{
-        String response = null;
-        if(policyParameters.getPolicyConfigType()!=null){
-            // This is a Config Type Policy. 
-            switch(policyParameters.getPolicyConfigType()){
-            case BRMS_PARAM:
-                BRMSParamPolicyService bRMSParamPolicyService = new BRMSParamPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
-                if(!bRMSParamPolicyService.getValidation()){
-                    LOGGER.error(bRMSParamPolicyService.getMessage());
-                    status = HttpStatus.BAD_REQUEST;
-                    return bRMSParamPolicyService.getMessage();
-                }
-                // Get Result. 
-                response = bRMSParamPolicyService.getResult(updateFlag);
-                break;
-            case BRMS_RAW:
-                BRMSRawPolicyService bRMSRawPolicyService = new BRMSRawPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
-                if(!bRMSRawPolicyService.getValidation()){
-                    LOGGER.error(bRMSRawPolicyService.getMessage());
-                    status = HttpStatus.BAD_REQUEST;
-                    return bRMSRawPolicyService.getMessage();
-                }
-                // Get Result. 
-                response = bRMSRawPolicyService.getResult(updateFlag);
-                break;
-            case Base:
-                ConfigPolicyService configPolicyService = new ConfigPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
-                if(!configPolicyService.getValidation()){
-                    LOGGER.error(configPolicyService.getMessage());
-                    status = HttpStatus.BAD_REQUEST;
-                    return configPolicyService.getMessage();
-                }
-                // Get Result. 
-                response = configPolicyService.getResult(updateFlag);
-                break;
-            case ClosedLoop_Fault:
-                ClosedLoopFaultPolicyService closedLoopFaultPolicyService = new ClosedLoopFaultPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
-                if(!closedLoopFaultPolicyService.getValidation()){
-                    LOGGER.error(closedLoopFaultPolicyService.getMessage());
-                    status = HttpStatus.BAD_REQUEST;
-                    return closedLoopFaultPolicyService.getMessage();
-                }
-                // Get Result. 
-                response = closedLoopFaultPolicyService.getResult(updateFlag);
-                break;
-            case ClosedLoop_PM:
-                ClosedLoopPMPolicyService closedLoopPMPolicyService = new ClosedLoopPMPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
-                if(!closedLoopPMPolicyService.getValidation()){
-                    LOGGER.error(closedLoopPMPolicyService.getMessage());
-                    status = HttpStatus.BAD_REQUEST;
-                    return closedLoopPMPolicyService.getMessage();
-                }
-                // Get Result. 
-                response = closedLoopPMPolicyService.getResult(updateFlag);
-                break;
-            case Firewall:
-                FirewallPolicyService firewallPolicyService = new FirewallPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
-                if(!firewallPolicyService.getValidation()){
-                    LOGGER.error(firewallPolicyService.getMessage());
-                    status = HttpStatus.BAD_REQUEST;
-                    return firewallPolicyService.getMessage();
-                }
-                // Get Result. 
-                response = firewallPolicyService.getResult(updateFlag);
-                break;
-            case MicroService:
-                MicroServicesPolicyService microServicesPolicyService = new MicroServicesPolicyService(policyName, policyScope, policyParameters, date);
-                // Check Validation. 
-                if(!microServicesPolicyService.getValidation()){
-                    LOGGER.error(microServicesPolicyService.getMessage());
-                    status = HttpStatus.BAD_REQUEST;
-                    return microServicesPolicyService.getMessage();
-                }
-                // Get Result. 
-                response = microServicesPolicyService.getResult(updateFlag);
-                break;
-            case Optimization:
-            	OptimizationPolicyService optimizationPolicyService = new OptimizationPolicyService(policyName, policyScope, policyParameters, date);
 
-            	// Get Result
-            	response = optimizationPolicyService.getResult(updateFlag);
-            	break;
-            default:
-                message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " Invalid Config Type Present";
-                LOGGER.error(message);
-                status = HttpStatus.BAD_REQUEST;
-                return message;
-            }
-        }else if (policyParameters.getPolicyClass()!=null){
-            switch (policyParameters.getPolicyClass()){
-            case Action:
-                ActionPolicyService actionPolicyService = new ActionPolicyService(policyScope, policyName, policyParameters);
-                // Check Validation. 
-                if(!actionPolicyService.getValidation()){
-                    LOGGER.error(actionPolicyService.getMessage());
+    public String processResult() throws PolicyException {
+        String response = null;
+        PolicyService policyService = null;
+        if (policyParameters.getPolicyConfigType() != null) {
+            // This is a Config Policy.
+            switch (policyParameters.getPolicyConfigType()) {
+                case BRMS_PARAM:
+                    policyService = new BRMSParamPolicyService(policyName, policyScope, policyParameters, date);
+                    break;
+                case BRMS_RAW:
+                    policyService = new BRMSRawPolicyService(policyName, policyScope, policyParameters, date);
+                    break;
+                case Base:
+                    policyService = new ConfigPolicyService(policyName, policyScope, policyParameters, date);
+                    break;
+                case ClosedLoop_Fault:
+                    policyService = new ClosedLoopFaultPolicyService(policyName, policyScope, policyParameters, date);
+                    break;
+                case ClosedLoop_PM:
+                    policyService = new ClosedLoopPMPolicyService(policyName, policyScope, policyParameters, date);
+                    break;
+                case Firewall:
+                    policyService = new FirewallPolicyService(policyName, policyScope, policyParameters, date);
+                    break;
+                case MicroService:
+                    policyService = new MicroServicesPolicyService(policyName, policyScope, policyParameters, date);
+                    break;
+                case Optimization:
+                    policyService = new OptimizationPolicyService(policyName, policyScope, policyParameters, date);
+                    break;
+                case Extended:
+                    response = extendedOptions();
+                    break;
+                default:
+                    message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Invalid Config Type Present";
+                    LOGGER.error(message);
                     status = HttpStatus.BAD_REQUEST;
-                    return actionPolicyService.getMessage();
-                }
-                // Get Result. 
-                response = actionPolicyService.getResult(updateFlag);
-                break;
-            case Decision:
-                DecisionPolicyService decisionPolicyService = new DecisionPolicyService(policyScope, policyName, policyParameters);
-                // Check Validation. 
-                if(!decisionPolicyService.getValidation()){
-                    LOGGER.error(decisionPolicyService.getMessage());
-                    status = HttpStatus.BAD_REQUEST;
-                    return decisionPolicyService.getMessage();
-                }
-                // Get Result. 
-                response = decisionPolicyService.getResult(updateFlag);
-                break;
+                    response = message;
             }
-        }else {
+        } else if (policyParameters.getPolicyClass() != null) {
+            switch (policyParameters.getPolicyClass()) {
+                case Action:
+                    policyService = new ActionPolicyService(policyScope, policyName, policyParameters);
+                    break;
+                case Decision:
+                    policyService = new DecisionPolicyService(policyScope, policyName, policyParameters);
+                    break;
+                default:
+                    message = XACMLErrorConstants.ERROR_DATA_ISSUE + " Invalid Config Type Present";
+                    LOGGER.error(message);
+                    status = HttpStatus.BAD_REQUEST;
+                    response = message;
+            }
+        } else {
             message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy Class found.";
             LOGGER.error(message);
             status = HttpStatus.BAD_REQUEST;
             response = message;
         }
+
+        // execute the service
+        if (policyService != null) {
+        	// Check Validation.
+
+        	if (!"Raw".equalsIgnoreCase(policyParameters.getRuleProvider().toString()) && !policyService.getValidation()) {
+        		LOGGER.error(policyService.getMessage());
+        		status = HttpStatus.BAD_REQUEST;
+        		return policyService.getMessage();
+        	}
+
+        	// Get Result.
+        	response = policyService.getResult(updateFlag);
+        }
         return response;
     }
 
+    protected String extendedOptions() throws PolicyException {
+        message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Extended Option Found.";
+        LOGGER.error(message);
+        status = HttpStatus.BAD_REQUEST;
+        return message;
+    }
+
     protected boolean getValidation() {
-    	
-    	PolicyValidation validation = new PolicyValidation();
-    	
-		StringBuilder responseString;
-		
-    	if (policyParameters != null) {
-    		
-    		if (!Strings.isNullOrEmpty(policyParameters.getPolicyName())){
-                if (policyParameters.getPolicyName().contains(".")) {
-                    policyName = policyParameters.getPolicyName().substring(policyParameters.getPolicyName().lastIndexOf('.') + 1,
-                            policyParameters.getPolicyName().length());
-                    policyScope = policyParameters.getPolicyName().substring(0,policyParameters.getPolicyName().lastIndexOf('.'));
-                    policyParameters.setPolicyName(policyName);
-                    LOGGER.info("Name is " + policyName + "   scope is " + policyScope);
+
+        PolicyValidation validation = new PolicyValidation();
+
+        StringBuilder responseString;
+
+        if (policyParameters == null) {
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy parameters given. ";
+            return false;
+        }
+
+
+        if (!Strings.isNullOrEmpty(policyParameters.getPolicyName())) {
+            if (policyParameters.getPolicyName().contains(".")) {
+                policyName = policyParameters.getPolicyName().substring(
+                        policyParameters.getPolicyName().lastIndexOf('.') + 1,
+                        policyParameters.getPolicyName().length());
+                policyScope = policyParameters.getPolicyName().substring(0,
+                        policyParameters.getPolicyName().lastIndexOf('.'));
+                policyParameters.setPolicyName(policyName);
+                LOGGER.info("Name is " + policyName + "   scope is " + policyScope);
+            } else {
+                message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Policy Scope: No Policy Scope given";
+                LOGGER.error("Common validation did not return success:  " + message);
+                return false;
+            }
+        } else {
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "PolicyName: PolicyName Should not be empty";
+            LOGGER.error("Common validation did not return success:  " + message);
+            return false;
+        }
+
+        if (policyParameters.getPolicyClass() != null
+                && "Config".equals(policyParameters.getPolicyClass().toString())) {
+            String policyConfigType = policyParameters.getPolicyConfigType().toString();
+            if (!"BRMS_Param".equalsIgnoreCase(policyConfigType)
+                    && Strings.isNullOrEmpty(policyParameters.getConfigBody())) {
+                message = XACMLErrorConstants.ERROR_DATA_ISSUE + "ConfigBody: No Config Body given";
+                LOGGER.error("Common validation did not return success:  " + message);
+                return false;
+            }
+        }
+
+        try {
+            PolicyValidationRequestWrapper wrapper = new PolicyValidationRequestWrapper();
+            PolicyRestAdapter policyData = wrapper.populateRequestParameters(policyParameters);
+            if (policyData != null) {
+                responseString = validation.validatePolicy(policyData);
+            } else {
+                message = XACMLErrorConstants.ERROR_DATA_ISSUE + " improper JSON object : "
+                        + policyParameters.getConfigBody();
+                return false;
+            }
+        } catch (Exception e) {
+            LOGGER.error("Exception Occured during Policy Validation" + e);
+            if (e.getMessage() != null) {
+                if ("Action".equals(policyParameters.getPolicyClass().toString())
+                        && e.getMessage().contains("Index:")) {
+                    message = XACMLErrorConstants.ERROR_DATA_ISSUE
+                            + "Rule Algorithms: One or more Fields in Rule Algorithms is Empty.";
                 } else {
-                    message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Policy Scope: No Policy Scope given";
-            		LOGGER.error("Common validation did not return success:  " + message);
-                    return false;
+                    message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Exception Occured During Policy Validation: " + e;
                 }
-    		} else {
-    			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "PolicyName: PolicyName Should not be empty";
-        		LOGGER.error("Common validation did not return success:  " + message);
-    			return false;
-    		}
-    		
-    		if(policyParameters.getPolicyClass() != null && "Config".equals(policyParameters.getPolicyClass().toString())){
-    			String policyConfigType = policyParameters.getPolicyConfigType().toString();
-    			if(!"BRMS_Param".equalsIgnoreCase(policyConfigType) && Strings.isNullOrEmpty(policyParameters.getConfigBody())){
-    				message = XACMLErrorConstants.ERROR_DATA_ISSUE + "ConfigBody: No Config Body given";
-            		LOGGER.error("Common validation did not return success:  " + message);
-                    return false;
-    			}
-    		}
+            }
+            return false;
+        }
 
-    		try {
-    			PolicyValidationRequestWrapper wrapper = new PolicyValidationRequestWrapper();    			
-    			PolicyRestAdapter policyData = wrapper.populateRequestParameters(policyParameters);
-    			if(policyData!=null) {
-    				responseString = validation.validatePolicy(policyData);
-    			} else {
-    				message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + policyParameters.getConfigBody();
-    				return false;
-    			}
-			} catch (Exception e) {
-				LOGGER.error("Exception Occured during Policy Validation" +e);
-				if(e.getMessage()!=null){
-					if("Action".equals(policyParameters.getPolicyClass().toString()) && e.getMessage().contains("Index:")){
-						message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Rule Algorithms: One or more Fields in Rule Algorithms is Empty.";
-					} else {
-						message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Exception Occured During Policy Validation: " + e;
-					}
-				}
-				return false;
-			}
-    	} else {
-    		message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Policy parameters given. ";
-    		return false;
-    	}
 
-        // Set some default Values. 
-        if (policyParameters.getTtlDate()!=null){
+        // Set some default Values.
+        if (policyParameters.getTtlDate() != null) {
             date = convertDate(policyParameters.getTtlDate());
         }
-        
-        if (responseString!=null){
-    		String response = responseString.toString().substring(0, 7);
-        	if("success".equals(response)) {
-        		return true;
-        	} else {
-    			message = XACMLErrorConstants.ERROR_DATA_ISSUE + PolicyApiUtils.formatResponse(responseString);
-        		LOGGER.error("Common validation did not return success:  " + message);
-        		return false;
-        	}
+
+        if (responseString != null) {
+            String response = responseString.toString().substring(0, 7);
+            if ("success".equals(response)) {
+                return true;
+            } else {
+                message = XACMLErrorConstants.ERROR_DATA_ISSUE + PolicyApiUtils.formatResponse(responseString);
+                LOGGER.error("Common validation did not return success:  " + message);
+                return false;
+            }
         } else {
-			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Unknown Error Occured During Policy Validation";
-			LOGGER.error(message);
-			return false;
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Unknown Error Occured During Policy Validation";
+            LOGGER.error(message);
+            return false;
         }
 
     }
-    
+
     protected String convertDate(Date date) {
         String strDate = null;
-        if (date!=null) {
+        if (date != null) {
             SimpleDateFormat dateformatJava = new SimpleDateFormat("dd-MM-yyyy");
             strDate = dateformatJava.format(date);
         }
-        return (strDate==null) ? "NA": strDate;
+        return (strDate == null) ? "NA" : strDate;
     }
 
     protected void specialCheck() {
-        if(policyResult== null || policyResult.contains("BAD REQUEST")||policyResult.contains("PE300")){
+        if (policyResult == null || policyResult.contains("BAD REQUEST") || policyResult.contains("PE300")) {
             status = HttpStatus.BAD_REQUEST;
         } else if (policyResult.contains("Policy Exist Error")) {
             status = HttpStatus.CONFLICT;
-        } else if (policyResult.contains("PE200")||policyResult.contains("PE900")){
+        } else if (policyResult.contains("PE200") || policyResult.contains("PE900")) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
     }
@@ -329,6 +290,70 @@ public class CreateUpdatePolicyServiceImpl implements CreateUpdatePolicyService 
 
     public HttpStatus getResponseCode() {
         return status;
+    }
+
+    public String getPolicyResult() {
+        return policyResult;
+    }
+
+    public void setPolicyResult(String policyResult) {
+        this.policyResult = policyResult;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(HttpStatus status) {
+        this.status = status;
+    }
+
+    public Boolean getUpdateFlag() {
+        return updateFlag;
+    }
+
+    public void setUpdateFlag(Boolean updateFlag) {
+        this.updateFlag = updateFlag;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public PolicyParameters getPolicyParameters() {
+        return policyParameters;
+    }
+
+    public void setPolicyParameters(PolicyParameters policyParameters) {
+        this.policyParameters = policyParameters;
+    }
+
+    public String getPolicyName() {
+        return policyName;
+    }
+
+    public void setPolicyName(String policyName) {
+        this.policyName = policyName;
+    }
+
+    public String getPolicyScope() {
+        return policyScope;
+    }
+
+    public void setPolicyScope(String policyScope) {
+        this.policyScope = policyScope;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
 }

@@ -29,9 +29,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.TransformerUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -46,7 +49,6 @@ import org.onap.policy.rest.jpa.MicroServiceConfigName;
 import org.onap.policy.rest.jpa.MicroServiceLocation;
 import org.onap.policy.rest.jpa.MicroServiceModels;
 import org.onap.policy.rest.jpa.MicroserviceHeaderdeFaults;
-import org.onap.policy.rest.jpa.PrefixList;
 import org.onap.policy.rest.jpa.UserInfo;
 import org.onap.policy.rest.util.MSAttributeObject;
 import org.onap.policy.rest.util.MSModelUtils;
@@ -385,6 +387,26 @@ public class MicroServiceDictionaryController {
 		utils.getDataByEntity(response, microServiceModelsDictionaryDatas, modelName, MicroServiceModels.class);
 	}
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value={"/get_DecisionMSModelsDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	public void getDecisionMSModelsDictionaryByNameEntityData(HttpServletResponse response){
+		try{
+			Map<String, Object> model = new HashMap<>();
+			ObjectMapper mapper = new ObjectMapper();
+			String query = "From MicroServiceModels where decisionModel=1";
+			List<MicroServiceModels> result = (List<MicroServiceModels>)(Object) commonClassDao.getDataByQuery(query, new SimpleBindings());
+			List<String> decisionModels = (List<String>) CollectionUtils.collect(result, TransformerUtils.invokerTransformer("getModelName"));
+			
+			model.put(microServiceModelsDictionaryDatas, mapper.writeValueAsString(decisionModels));
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
+			JSONObject j = new JSONObject(msg);
+			response.getWriter().write(j.toString());
+		}
+		catch (Exception e){
+			 LOGGER.error(e);
+		}
+	}
+	
     @RequestMapping(value={"/get_MicroServiceModelsDataByVersion"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceModelsDictionaryByVersionEntityData(HttpServletRequest request, HttpServletResponse response){
         try{
@@ -496,6 +518,11 @@ public class MicroServiceDictionaryController {
 							microServiceModels.setVersion(root.get(microServiceModelsDictionaryData).get(version).asText().replace("\"", ""));
 							this.newModel.setVersion(microServiceModels.getVersion());
 						}
+						if (root.get(microServiceModelsDictionaryData).has("isDecisionModel")){
+							// check whether it is a decision model
+							microServiceModels.setDecisionModel(root.get(microServiceModelsDictionaryData).get("isDecisionModel").asBoolean());
+							this.newModel.setDecisionModel(microServiceModels.isDecisionModel());
+						}
 					}
 
 					classMap = new LinkedHashMap<>();
@@ -546,6 +573,11 @@ public class MicroServiceDictionaryController {
 								microServiceModels.setVersion(root.get(microServiceModelsDictionaryData).get(version).asText().replace("\"", ""));
 								this.newModel.setVersion(microServiceModels.getVersion());
 							}
+							if (root.get(microServiceModelsDictionaryData).has("isDecisionModel")){
+								// check whether it is a decision model
+								microServiceModels.setDecisionModel(root.get(microServiceModelsDictionaryData).get("isDecisionModel").asBoolean());
+								this.newModel.setDecisionModel(microServiceModels.isDecisionModel());
+							}
 						}
 						if(root.has(classMapData)){
 							classMap = new LinkedHashMap<>();
@@ -566,6 +598,7 @@ public class MicroServiceDictionaryController {
 					}
 				}		
 			}
+			
 			microServiceModels.setAttributes(this.newModel.getAttributes());
 			microServiceModels.setRef_attributes(this.newModel.getRef_attributes());
 			microServiceModels.setDependency(this.newModel.getDependency());
@@ -574,6 +607,8 @@ public class MicroServiceDictionaryController {
 			microServiceModels.setVersion(this.newModel.getVersion());
 			microServiceModels.setEnumValues(this.newModel.getEnumValues());
 			microServiceModels.setAnnotation(this.newModel.getAnnotation());
+			microServiceModels.setDecisionModel(this.newModel.isDecisionModel());
+		
 			if(dataOrderInfo != null){
 				 microServiceModels.setDataOrderInfo(dataOrderInfo);
 			}
@@ -599,7 +634,7 @@ public class MicroServiceDictionaryController {
 				}else{
 					commonClassDao.update(microServiceModels); 
 				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(PrefixList.class));
+				responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceModels.class));
 			}else{
 				responseString = duplicateResponseString;
 			}

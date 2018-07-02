@@ -35,7 +35,7 @@ import org.onap.policy.xacml.std.pap.StdPAPPolicy;
  *  
  * @version 0.1 
  */
-public class ClosedLoopFaultPolicyService{
+public class ClosedLoopFaultPolicyService implements PolicyService {
 	private static final Logger LOGGER = FlexLogger.getLogger(ClosedLoopFaultPolicyService.class.getName());
 	private PAPServices papServices = null;
 	

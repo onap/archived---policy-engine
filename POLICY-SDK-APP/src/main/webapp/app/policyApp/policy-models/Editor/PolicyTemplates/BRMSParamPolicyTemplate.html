@@ -137,7 +137,7 @@
 						<div class="form-group col-sm-6">
 							<input type="text" class="form-control"
 								ng-disabled="temp.policy.readOnly"
-								ng-model="temp.policy.ruleData[key]" />
+								ng-model="temp.policy.ruleData[findKey(temp.policy.ruleData,key)]" />
 						</div>
 					</div>
 				</div>

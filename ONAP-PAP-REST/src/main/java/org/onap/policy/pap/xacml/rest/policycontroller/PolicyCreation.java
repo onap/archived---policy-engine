@@ -146,7 +146,11 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			} else if ("Action".equalsIgnoreCase(policyType)) {
 				filePrefix = "Action_";
 			} else if ("Decision".equalsIgnoreCase(policyType)) {
-				filePrefix = "Decision_";
+				if ("MicroService_Model".equals(policyData.getRuleProvider())) {
+					filePrefix = "Decision_MS_";
+				} else {
+					filePrefix = "Decision_";
+				}
 			}
 
 			int version = 0;
@@ -154,16 +158,18 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			String createdBy;
 			String modifiedBy;
 			String scopeCheck = policyData.getDomainDir().replace(".", File.separator);
-			PolicyEditorScopes policyEditorScope = (PolicyEditorScopes) commonClassDao.getEntityItem(PolicyEditorScopes.class, "scopeName", scopeCheck);
-			if(policyEditorScope == null){
-				UserInfo userInfo = new UserInfo();
-				userInfo.setUserName("API");
-				userInfo.setUserLoginId("API");
-				PolicyEditorScopes editorScope = new PolicyEditorScopes();
-				editorScope.setScopeName(scopeCheck);
-				editorScope.setUserCreatedBy(userInfo);
-				editorScope.setUserModifiedBy(userInfo);
-				commonClassDao.save(editorScope);
+			if(!StringUtils.isBlank(scopeCheck)){
+				PolicyEditorScopes policyEditorScope = (PolicyEditorScopes) commonClassDao.getEntityItem(PolicyEditorScopes.class, "scopeName", scopeCheck);
+				if(policyEditorScope == null){
+					UserInfo userInfo = new UserInfo();
+					userInfo.setUserName("API");
+					userInfo.setUserLoginId("API");
+					PolicyEditorScopes editorScope = new PolicyEditorScopes();
+					editorScope.setScopeName(scopeCheck);
+					editorScope.setUserCreatedBy(userInfo);
+					editorScope.setUserModifiedBy(userInfo);
+					commonClassDao.save(editorScope);
+				}
 			}
 			//get the highest version of policy from policy version table.
 			String dbCheckPolicyName = policyData.getDomainDir() + File.separator + filePrefix + policyData.getPolicyName();
@@ -388,7 +394,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 							}
 						}
 					}
-					if(policyData.getRuleAlgorithmschoices()!=null && policyData.getRuleAlgorithmschoices().size() > 0){
+					if(policyData.getRuleAlgorithmschoices()!=null && !policyData.getRuleAlgorithmschoices().isEmpty()){
 						for(Object attribute : policyData.getRuleAlgorithmschoices()){
 							if(attribute instanceof LinkedHashMap<?, ?>){
 								String label = ((LinkedHashMap<?, ?>) attribute).get("id").toString();
@@ -427,7 +433,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 						attributeMap.put("BB_ID", policyData.getRainyday().getBbid());
 						attributeMap.put("WorkStep", policyData.getRainyday().getWorkstep());
 						
-						if(policyData.getRainyday().getTreatmentTableChoices()!=null && policyData.getRainyday().getTreatmentTableChoices().size() > 0){
+						if(policyData.getRainyday().getTreatmentTableChoices()!=null && !policyData.getRainyday().getTreatmentTableChoices().isEmpty()){
 							for (Object table : policyData.getRainyday().getTreatmentTableChoices()){
 								if(table instanceof LinkedHashMap<?,?>){
 									String errorcode = ((LinkedHashMap<?,?>) table).get("errorcode").toString();
@@ -521,7 +527,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 					response.addHeader("error", message);
 					response.addHeader("policyName", policyData.getPolicyName());
-				} else if (successMap.get("error").equals("Validation Failed")) {
+				} else if ("Validation Failed".equals(successMap.get("error"))) {
                     policyDBDaoTransaction.rollbackTransaction();
                     String message = XACMLErrorConstants.ERROR_DATA_ISSUE
                 			+ "Error Validating the Policy on the PAP.";

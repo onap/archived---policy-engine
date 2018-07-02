@@ -129,6 +129,12 @@ public class DictionaryService {
 		return result.getViewName();
 	}
 	
+	public String removeNamingSequence(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		DecisionPolicyDictionaryController dictionary = new DecisionPolicyDictionaryController();
+			return dictionary.removeNamingSequence(request, response);
+	}
+	
+	
 	public String saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		
 		DescriptiveDictionaryController dictionary = new DescriptiveDictionaryController();

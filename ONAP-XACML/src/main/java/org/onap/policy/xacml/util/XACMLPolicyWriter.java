@@ -38,6 +38,7 @@ import javax.xml.bind.Unmarshaller;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 
+import com.google.common.base.Strings;
 
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
@@ -60,6 +61,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
  *
  */
 public class XACMLPolicyWriter {
+	private static final String DECISION_POLICY_MS = "Decision_MS_";
 
 	/**
 	 * Helper static class that does the work to write a policy set to a file on disk.
@@ -176,7 +178,9 @@ public class XACMLPolicyWriter {
 		if(filename.toString().contains("Config_")){
 			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.length()+1), filename.toString().indexOf("Config_"));		
 		}else if(filename.toString().contains("Action_")){
-			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.length()+1), filename.toString().indexOf("Action_"));
+			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.toString().length()+1), filename.toString().indexOf("Action_"));
+		}else if(filename.toString().contains(DECISION_POLICY_MS)){
+			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.toString().length()+1), filename.toString().indexOf(DECISION_POLICY_MS));
 		}else if(filename.toString().contains("Decision_")){
 			domain = filename.toString().substring(filename.toString().indexOf(repository) + (repository.length()+1), filename.toString().indexOf("Decision_"));
 		}
@@ -212,7 +216,9 @@ public class XACMLPolicyWriter {
 						}
 					}
 				}
-				if(filename.toString().contains("Config_") || filename.toString().contains("Action_")){	
+				
+
+				if(filename.toString().contains("Config_") || filename.toString().contains("Action_") || filename.toString().contains(DECISION_POLICY_MS)){	
 					List<Object> objects = policyType.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
 					if (objects != null && !objects.isEmpty()) {
 						for (Iterator ite = objects.iterator(); ite.hasNext();) {
@@ -224,12 +230,14 @@ public class XACMLPolicyWriter {
 								if (adviceExpressionTypes != null && !adviceExpressionTypes.isEmpty()) {
 									for (Iterator iterator = adviceExpressionTypes
 											.iterator(); iterator.hasNext();) {
-										AdviceExpressionType adviceExpressionType = (AdviceExpressionType) iterator
-												.next();
-										if (adviceExpressionType.getAdviceId() != null && !"".equals(adviceExpressionType.getAdviceId()) && ("configID".equals(adviceExpressionType.getAdviceId())
-												|| "faultID".equals(adviceExpressionType.getAdviceId()) || "PMID".equals(adviceExpressionType.getAdviceId())||"firewallConfigID".equals(adviceExpressionType.getAdviceId()) || "OptimizationID".equals(adviceExpressionType.getAdviceId())
-												|| "MSID".equals(adviceExpressionType.getAdviceId())) || "GocID".equals(adviceExpressionType.getAdviceId())||"GocHPID".equals(adviceExpressionType.getAdviceId())||"BRMSRAWID".equals(adviceExpressionType.getAdviceId())
-												|| "BRMSPARAMID".equals(adviceExpressionType.getAdviceId())|| "HPSuppID".equals(adviceExpressionType.getAdviceId()) || "HPFlapID".equals(adviceExpressionType.getAdviceId()) || "HPOverID".equals(adviceExpressionType.getAdviceId()))
+										AdviceExpressionType adviceExpressionType = (AdviceExpressionType) iterator.next();
+										if (!Strings.isNullOrEmpty(adviceExpressionType.getAdviceId()) && ("configID".equals(adviceExpressionType.getAdviceId())
+												|| "faultID".equals(adviceExpressionType.getAdviceId()) || "PMID".equals(adviceExpressionType.getAdviceId())
+												|| "firewallConfigID".equals(adviceExpressionType.getAdviceId()) ||  "MicroService_Model".equals(adviceExpressionType.getAdviceId())
+												|| "MSID".equals(adviceExpressionType.getAdviceId())) || "GocID".equals(adviceExpressionType.getAdviceId())
+												|| "GocHPID".equals(adviceExpressionType.getAdviceId()) || "BRMSRAWID".equals(adviceExpressionType.getAdviceId())
+												|| "BRMSPARAMID".equals(adviceExpressionType.getAdviceId())|| "HPSuppID".equals(adviceExpressionType.getAdviceId()) 
+												|| "HPFlapID".equals(adviceExpressionType.getAdviceId()) || "HPOverID".equals(adviceExpressionType.getAdviceId()))
 										{
 											List<AttributeAssignmentExpressionType> attributeAssignmentExpressionTypes = adviceExpressionType.getAttributeAssignmentExpression();
 											if (attributeAssignmentExpressionTypes != null && !attributeAssignmentExpressionTypes.isEmpty()) {

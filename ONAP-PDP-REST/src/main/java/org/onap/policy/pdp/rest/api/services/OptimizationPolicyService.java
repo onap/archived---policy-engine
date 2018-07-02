@@ -34,7 +34,7 @@ import org.onap.policy.xacml.std.pap.StdPAPPolicy;
  * 
  * @version 0.1
  */
-public class OptimizationPolicyService{
+public class OptimizationPolicyService implements PolicyService {
 	private static final Logger LOGGER = FlexLogger.getLogger(OptimizationPolicyService.class.getName());
 	
 	private PAPServices papServices = null;
@@ -107,4 +107,9 @@ public class OptimizationPolicyService{
         LOGGER.info("Response: " + response);
         return response;
 	}
+
+    @Override
+    public Boolean getValidation() {
+        return true;
+    }
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
 package org.onap.policy.api;
 
 import java.util.UUID;
+
+import com.google.gson.Gson;
 
 public class DictionaryParameters {
 	
@@ -77,6 +79,16 @@ public class DictionaryParameters {
 	 */
 	public void setRequestID(UUID requestID) {
 		this.requestID = requestID;
+	}
+	
+	/**
+	 * Used to print the input Params for REST call. 
+	 * 
+	 * @return JSON String of this object. 
+	 */
+	@Override
+	public String toString() {
+		return new Gson().toJson(this);	
 	}
 
 }

@@ -203,12 +203,21 @@ public class PolicyValidationRequestWrapper {
 							}	
 							
 							yamlparams.setBlackList(blackList);
+						}
 
-						}					
+						policyData.setYamlparams(yamlparams);
 					}
-					policyData.setYamlparams(yamlparams);
-				}
-				
+					
+				} else if ("MicroService_Model".equalsIgnoreCase(ruleProvider)) {
+					// Config Specific
+					policyData.setConfigBodyData(parameters.getConfigBody());
+
+					policyData.setConfigPolicyType("Micro Service");
+
+					if (!populateMSModel(json, parameters, policyData)) {
+						return null;
+					}
+				} 
 			} else if("Action".equals(parameters.getPolicyClass().toString())){
 				
 				ArrayList<Object> ruleAlgorithmChoices = new ArrayList<>();
@@ -288,66 +297,8 @@ public class PolicyValidationRequestWrapper {
 			}else if("MS".equals(parameters.getPolicyConfigType().toString())){
 				
 				policyData.setConfigPolicyType("Micro Service");
-				
-		        // get values and attributes from the JsonObject
-				if(json != null){
-					if (json.containsKey(CONTENT)){
-						String content = json.get(CONTENT).toString();
-						ObjectMapper mapper = new ObjectMapper();
-						JsonNode policyJSON = null;
-						try {
-							policyJSON = mapper.readTree(content);
-						} catch (IOException e) {
-				            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ INVALIDJSON + parameters.getConfigBody();
-				            LOGGER.error(message, e);
-				            return null;					
-				        }
-						policyData.setPolicyJSON(policyJSON);
-					}
-			        if (json.containsKey(SERVICE)){
-			        	String serviceType = json.get(SERVICE).toString().replace("\"", "");
-			        	policyData.setServiceType(serviceType);
-			        }
-			        if (json.containsKey("uuid")){
-			            String uuid = json.get("uuid").toString().replace("\"", "");
-			            policyData.setUuid(uuid);
-			        }
-			        if (json.containsKey(LOCATION)){
-			            String msLocation = json.get(LOCATION).toString().replace("\"", "");
-			            policyData.setLocation(msLocation);
-			        }
-			        if (json.containsKey(CONFIG_NAME)){
-			            String configName = json.get(CONFIG_NAME).toString().replace("\"", "");
-			            policyData.setConfigName(configName);
-			        }
-			        if(json.containsKey(PRIORITY)){
-			        	String priority = json.get(PRIORITY).toString().replace("\"", "");
-			        	policyData.setPriority(priority);
-			        }
-			        if(json.containsKey(VERSION)){
-			        	String version = json.get(VERSION).toString().replace("\"", "");
-			        	policyData.setVersion(version);
-			        }
-			        if(json.containsKey(POLICYSCOPE)){
-			        	String policyScope = json.get(POLICYSCOPE).toString().replace("\"", "");
-			        	policyData.setPolicyScope(policyScope);
-			        }
-			        if(json.containsKey(RISKTYPE)){
-			        	String riskType = json.get(RISKTYPE).toString().replace("\"", "");
-			        	policyData.setRiskType(riskType);
-			        }
-			        if(json.containsKey(RISKLEVEL)){
-			        	String riskLevel = json.get(RISKLEVEL).toString().replace("\"", "");
-			        	policyData.setRiskLevel(riskLevel);
-			        }
-			        if(json.containsKey(GUARD)){
-			        	String guard = json.get(GUARD).toString().replace("\"", "");
-			        	policyData.setGuard(guard);
-			        }
-				} else {
-		            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ INVALIDJSON + parameters.getConfigBody();
-		            LOGGER.error(message);
-		            return null;				
+				if (!populateMSModel(json, parameters, policyData)) {
+					return null;
 				}
 				
 			}else if("Optimization".equals(parameters.getPolicyConfigType().toString())){
@@ -451,7 +402,69 @@ public class PolicyValidationRequestWrapper {
 		return policyData;
 				
 	}
-    
+    private boolean populateMSModel(JsonObject json, PolicyParameters parameters, PolicyRestAdapter policyData) {
+		// get values and attributes from the JsonObject
+		if(json != null){
+			if (json.containsKey("content")){
+				String content = json.get("content").toString();
+				ObjectMapper mapper = new ObjectMapper();
+				JsonNode policyJSON = null;
+				try {
+					policyJSON = mapper.readTree(content);
+				} catch (IOException e) {
+		            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ INVALIDJSON + parameters.getConfigBody();
+		            LOGGER.error(message, e);
+		            return false;					
+		        }
+				policyData.setPolicyJSON(policyJSON);
+			}
+	        if (json.containsKey("service")){
+	        	String serviceType = json.get("service").toString().replace("\"", "");
+	        	policyData.setServiceType(serviceType);
+	        }
+	        if (json.containsKey("uuid")){
+	            String uuid = json.get("uuid").toString().replace("\"", "");
+	            policyData.setUuid(uuid);
+	        }
+	        if (json.containsKey("location")){
+	            String msLocation = json.get("location").toString().replace("\"", "");
+	            policyData.setLocation(msLocation);
+	        }
+	        if (json.containsKey(CONFIG_NAME)){
+	            String configName = json.get(CONFIG_NAME).toString().replace("\"", "");
+	            policyData.setConfigName(configName);
+	        }
+	        if(json.containsKey("priority")){
+	        	String priority = json.get("priority").toString().replace("\"", "");
+	        	policyData.setPriority(priority);
+	        }
+	        if(json.containsKey("version")){
+	        	String version = json.get("version").toString().replace("\"", "");
+	        	policyData.setVersion(version);
+	        }
+	        if(json.containsKey("policyScope")){
+	        	String policyScope = json.get("policyScope").toString().replace("\"", "");
+	        	policyData.setPolicyScope(policyScope);
+	        }
+	        if(json.containsKey("riskType")){
+	        	String riskType = json.get("riskType").toString().replace("\"", "");
+	        	policyData.setRiskType(riskType);
+	        }
+	        if(json.containsKey("riskLevel")){
+	        	String riskLevel = json.get("riskLevel").toString().replace("\"", "");
+	        	policyData.setRiskLevel(riskLevel);
+	        }
+	        if(json.containsKey("guard")){
+	        	String guard = json.get("guard").toString().replace("\"", "");
+	        	policyData.setGuard(guard);
+	        }
+		} else {
+            String message = XACMLErrorConstants.ERROR_DATA_ISSUE+ INVALIDJSON + parameters.getConfigBody();
+            LOGGER.error(message);
+            return false;				
+		}
+		return true;
+	}
     private JsonObject stringToJsonObject(String value) {
     	try(JsonReader jsonReader = Json.createReader(new StringReader(value))){
             return jsonReader.readObject();

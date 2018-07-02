@@ -1,0 +1,52 @@
+{
+    "policy-instance-name": "1806NameGenerationPolicyForSRIOV",
+    "naming-models": [
+        {
+            "naming-properties": [
+                {
+                    "property-value": "complex001",
+                    "property-name": "COMPLEX",
+                    "property-operation":"substring(7)"
+                },
+                {
+                    "property-name": "SEQUENCE",
+                    "increment-sequence": {
+                        "max": "zzz",
+                        "scope": "ENTIRETY",
+                        "start-value": "008",
+                        "length": "3",
+                        "increment": "3",
+                        "sequence-type": "alpha-numeric"
+                    }
+                }
+            ],
+            "naming-type": "VNF",
+            "nfRole": "vPE",
+            "naming-recipe": "COMPLEX|SEQUENCE|NF_NAMING_CODE"
+        },
+        {
+            "naming-properties": [
+                {
+                    "property-name": "VNF_NAME"
+                },
+                {
+                    "property-name": "SEQUENCE",
+                    "increment-sequence": {
+                        "max": "999",
+                        "scope": "NAMING_CODE",
+                        "start-value": "001",
+                        "length": "3",
+                        "increment": "1",
+                        "sequence-type": "numeric"
+                    }
+                },
+                {
+                    "property-operation": "substr(-3)",
+                    "property-name": "NFC_NAMING_CODE"
+                }
+            ],
+            "naming-type": "VM",
+            "nfRole": "vPE",
+            "naming-recipe": "VNF_NAME|SEQUENCE|NFC_NAMING_CODE"
+        }
+    ]}

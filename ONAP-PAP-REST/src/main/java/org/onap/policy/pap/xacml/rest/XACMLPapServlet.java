@@ -329,6 +329,10 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                 }    
                 LOGGER.info("PapServlet:  updated group is " + papEngine.getDefaultGroup().toString());
                 
+                // sync up the config data from DB to file system
+                LOGGER.info("PapServlet:  Sync config data from DB to file system");
+                policyDBDao.synchronizeConfigDataInFileSystem();
+                
     			//release the transaction lock
     			auditTrans.close();
     		}
@@ -1041,11 +1045,18 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
 		}
 
 		loggingContext.metricStarted();
-		XACMLRest.dumpRequest(request);
-		loggingContext.metricEnded();
-		PolicyLogger.metrics("XACMLPapServlet doPut dumpRequest");
+		
 		//need to check if request is from the API or Admin console
 		String apiflag = request.getParameter("apiflag");
+		
+		// For Debug purposes
+		if(!"api".equals(apiflag)&& PolicyLogger.isDebugEnabled()) {
+			XACMLRest.dumpRequest(request);
+			PolicyLogger.metrics("XACMLPapServlet doPut dumpRequest");
+
+		}
+		loggingContext.metricEnded();
+
 		//This would occur if a PolicyDBDao notification was received
 		String policyDBDaoRequestUrl = request.getParameter("policydbdaourl");
 		if(policyDBDaoRequestUrl != null){

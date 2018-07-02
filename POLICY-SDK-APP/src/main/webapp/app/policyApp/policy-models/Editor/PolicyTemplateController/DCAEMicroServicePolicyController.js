@@ -101,9 +101,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		console.log($scope.data);
 		console.log("$scope.data.microServiceConfigNameDictionaryDatas : " + $scope.data.microServiceConfigNameDictionaryDatas);
 		if($scope.data.microServiceConfigNameDictionaryDatas){
- 		    $scope.microServiceCongigNameDictionaryDatas = JSON.parse($scope.data.microServiceConfigNameDictionaryDatas);
+ 		    $scope.microServiceConfigNameDictionaryDatas = JSON.parse($scope.data.microServiceConfigNameDictionaryDatas);
 		}
-		console.log($scope.microServiceCongigNameDictionaryDatas);
+		console.log($scope.microServiceConfigNameDictionaryDatas);
 	}, function (error) {
 		console.log("failed");
 	});

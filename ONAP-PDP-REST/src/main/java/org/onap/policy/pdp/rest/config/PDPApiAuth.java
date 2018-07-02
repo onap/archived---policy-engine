@@ -87,7 +87,7 @@ public class PDPApiAuth {
 	 * Security check for authentication and authorizations. 
 	 */
 	public static boolean checkPermissions(String clientEncoding, String requestID,
-			String resource) {
+			String resource, String logUserInfo) {
 		try{
 			String[] userNamePass = PolicyUtils.decodeBasicEncoding(clientEncoding);
 			if(userNamePass==null || userNamePass.length==0){
@@ -99,7 +99,8 @@ public class PDPApiAuth {
 				String password = tokenizer.nextToken();
 				userNamePass=  new String[]{username,  password};
 			}
-			LOGGER.info("User " + userNamePass[0] + " is Accessing Policy Engine API.");
+			LOGGER.info("User " + userNamePass[0] + " is Accessing Policy Engine API - " + logUserInfo);
+
 			Boolean result = false;
 			// Check Backward Compatibility. 
 			try{

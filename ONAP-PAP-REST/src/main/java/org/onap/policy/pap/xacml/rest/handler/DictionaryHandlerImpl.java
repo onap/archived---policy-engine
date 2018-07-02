@@ -218,6 +218,9 @@ public class DictionaryHandlerImpl implements DictionaryHandler{
 			case "RainyDayTreatments":
 				result = dictionary.saveRainyDayDictionary(request, response);
 				break;
+			case "ReuseSequence":
+				result = dictionary.removeNamingSequence(request, response);
+				break;
 			case "DescriptiveScope":
 				result = dictionary.saveDescriptiveDictionary(request, response);
 				break;

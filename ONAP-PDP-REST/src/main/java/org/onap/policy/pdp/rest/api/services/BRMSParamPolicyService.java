@@ -35,7 +35,7 @@ import org.onap.policy.xacml.std.pap.StdPAPPolicy;
  * 
  * @version 0.1
  */
-public class BRMSParamPolicyService{
+public class BRMSParamPolicyService implements PolicyService {
 	private static final Logger LOGGER = FlexLogger.getLogger(BRMSParamPolicyService.class.getName());
 	private PAPServices papServices = null;
 	

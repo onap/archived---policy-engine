@@ -63,7 +63,7 @@ public class CreateNewMicroServiceModel {
 		super();
 	}
 
-	public CreateNewMicroServiceModel(String importFile, String  modelName, String description, String version, String randomID) {
+	public CreateNewMicroServiceModel(String importFile, String  modelName, String description, String version, String randomID, boolean decisionModel) {
 	
 		this.newModel = new MicroServiceModels();
 		this.newModel.setVersion(version);
@@ -71,6 +71,7 @@ public class CreateNewMicroServiceModel {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUserLoginId("API");
 		this.newModel.setUserCreatedBy(userInfo);
+		this.newModel.setDecisionModel(decisionModel);
 		String cleanUpFile = null;
 	
 	    Map<String, MSAttributeObject> tempMap = new HashMap<>();
@@ -257,6 +258,9 @@ public class CreateNewMicroServiceModel {
 			newModel.setDependency("[]");
 			if(mainClass.getSubClass() != null){
 			   String value = new Gson().toJson(mainClass.getSubClass());
+			   value = value.replace("\"{","{");
+               value = value.replace("}\"","}");
+               value = value.replace("\\\"","\"");
 			   newModel.setSub_attributes(value);
 			}
 			
@@ -343,6 +347,7 @@ public class CreateNewMicroServiceModel {
 			model.setRef_attributes(this.newModel.getRef_attributes());
 			model.setSub_attributes(this.newModel.getSub_attributes());
 			model.setDataOrderInfo(this.newModel.getDataOrderInfo());
+			model.setDecisionModel(this.newModel.isDecisionModel());
 			UserInfo userInfo = new UserInfo();
 			userInfo.setUserLoginId(imported_by);
 			userInfo.setUserName(imported_by);

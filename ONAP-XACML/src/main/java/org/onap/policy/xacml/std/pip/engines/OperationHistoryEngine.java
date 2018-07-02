@@ -109,13 +109,13 @@ public class OperationHistoryEngine extends StdConfigurableEngine{
 
 	@Override
 	public PIPResponse getAttributes(PIPRequest pipRequest, PIPFinder pipFinder) throws PIPException {
-		LOGGER.info("Entering FeqLimiter PIP");
+		LOGGER.debug("Entering FeqLimiter PIP");
 		/*
 		 * First check to see if the issuer is set and then match it
 		 */
 		String string;
 		if ((string = pipRequest.getIssuer()) == null) {
-			LOGGER.info("FeqLimiter PIP - No issuer in the request!");
+			LOGGER.debug("FeqLimiter PIP - No issuer in the request!");
 			return StdPIPResponse.PIP_RESPONSE_EMPTY;
 		}
 		else{
