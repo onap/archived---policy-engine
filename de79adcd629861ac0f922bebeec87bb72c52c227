@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_08446b72",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/policycontroller/PolicyCreation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-07-03T14:08:42Z",
+      "side": 1,
+      "message": "2017-2018",
+      "revId": "de79adcd629861ac0f922bebeec87bb72c52c227",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_086d4b04",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/ActionPolicyService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-07-03T14:08:42Z",
+      "side": 1,
+      "message": "2017-2018",
+      "revId": "de79adcd629861ac0f922bebeec87bb72c52c227",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_68664f2b",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/BRMSParamPolicyService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-07-03T14:08:42Z",
+      "side": 1,
+      "message": "2017-2018",
+      "revId": "de79adcd629861ac0f922bebeec87bb72c52c227",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4863531a",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/BRMSRawPolicyService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-07-03T14:08:42Z",
+      "side": 1,
+      "message": "2017-2018",
+      "revId": "de79adcd629861ac0f922bebeec87bb72c52c227",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_a8a4574b",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/ClosedLoopFaultPolicyService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-07-03T14:08:42Z",
+      "side": 1,
+      "message": "2017-2018",
+      "revId": "de79adcd629861ac0f922bebeec87bb72c52c227",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e8aa5f19",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/ClosedLoopPMPolicyService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-07-03T14:08:42Z",
+      "side": 1,
+      "message": "2017-2018",
+      "revId": "de79adcd629861ac0f922bebeec87bb72c52c227",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_c8af632a",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/ConfigPolicyService.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-07-03T14:08:42Z",
+      "side": 1,
+      "message": "2017-2018",
+      "revId": "de79adcd629861ac0f922bebeec87bb72c52c227",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_e8581f59",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-07-03T14:08:42Z",
+      "side": 1,
+      "message": "change this condition to \"\".equals(result)",
+      "revId": "de79adcd629861ac0f922bebeec87bb72c52c227",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
