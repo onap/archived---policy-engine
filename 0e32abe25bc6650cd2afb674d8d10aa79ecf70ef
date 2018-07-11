@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_900bb82a",
+        "filename": "packages/base/src/files/install/mysql/data/181001_upgrade_script.sql",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-07-11T21:35:00Z",
+      "side": 1,
+      "message": "Will these \"alter table\" commands be OK even if the script is run more than once (i.e., on each installation machine)?  Or should maybe add some type of \"if not exists\" condition?  (Or maybe it doesn\u0027t matter, because the sql keeps right on executing the remaining commands.)",
+      "revId": "0e32abe25bc6650cd2afb674d8d10aa79ecf70ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_fbfe9d04",
+        "filename": "packages/base/src/files/install/mysql/data/181001_upgrade_script.sql",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-07-11T21:35:00Z",
+      "side": 1,
+      "message": "would it maybe help to sort these by function_cd so that it\u0027s easy to visually see what\u0027s there?",
+      "revId": "0e32abe25bc6650cd2afb674d8d10aa79ecf70ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
