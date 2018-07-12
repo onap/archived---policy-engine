@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1a9dcd25_9be4abad",
+        "filename": "packages/base/src/files/install/mysql/data/181001_upgrade_script.sql",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-07-12T13:59:58Z",
+      "side": 1,
+      "message": "good to know",
+      "parentUuid": "1a9dcd25_fbf4cf88",
+      "revId": "0e32abe25bc6650cd2afb674d8d10aa79ecf70ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_fbfe9d04",
         "filename": "packages/base/src/files/install/mysql/data/181001_upgrade_script.sql",
         "patchSetId": 1
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Sure Jim, I can do that.  I just realized I have to create a downgrade script and add the \"License\" header as well, I will sort these with the same amend.",
       "parentUuid": "5a93c517_fbfe9d04",
+      "revId": "0e32abe25bc6650cd2afb674d8d10aa79ecf70ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_bbe1679c",
+        "filename": "packages/base/src/files/install/mysql/data/181001_upgrade_script.sql",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-07-12T13:59:58Z",
+      "side": 1,
+      "message": "Still planning to sort these?",
+      "parentUuid": "1a9dcd25_7b30bf56",
       "revId": "0e32abe25bc6650cd2afb674d8d10aa79ecf70ef",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
