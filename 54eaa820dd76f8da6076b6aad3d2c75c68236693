@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a9dcd25_016a6e1a",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1937,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-13T12:02:35Z",
+      "side": 0,
+      "message": "I\u0027d like Mike to look at this and make sure using auto close instead of this utility method is ok.",
+      "range": {
+        "startLine": 1937,
+        "startChar": 4,
+        "endLine": 1937,
+        "endChar": 46
+      },
+      "revId": "54eaa820dd76f8da6076b6aad3d2c75c68236693",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
