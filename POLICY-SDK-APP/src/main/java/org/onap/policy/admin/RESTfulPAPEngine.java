@@ -455,13 +455,10 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 	            	// get the response content into a String
 	            	String json = null;
 	    			// read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)
-	    		    try(java.util.Scanner scanner = new java.util.Scanner(connection.getInputStream())) {
-						scanner.useDelimiter("\\A");
-						json = scanner.hasNext() ? scanner.next() : "";
-					}catch(Exception e) {
-						LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to read inputStream from connection: " + e, e);
-	    		    	throw e;
-					}
+	    		    java.util.Scanner scanner = new java.util.Scanner(connection.getInputStream());
+	    		    scanner.useDelimiter("\\A");
+	    		    json =  scanner.hasNext() ? scanner.next() : "";
+	    		    scanner.close();
 	    		    LOGGER.info("JSON response from PAP: " + json);
 	            	
 	            	// convert Object sent as JSON into local object

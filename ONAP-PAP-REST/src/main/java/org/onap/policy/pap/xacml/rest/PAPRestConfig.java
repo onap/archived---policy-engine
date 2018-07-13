@@ -57,8 +57,9 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
 	@PostConstruct
 	public void init(){
 		Properties prop = new Properties();
-
-		try(InputStream input = new FileInputStream("xacml.pap.properties")) {
+		InputStream input = null;
+		try {
+			input = new FileInputStream("xacml.pap.properties");
 			// load a properties file
 			prop.load(input);
 			setDbDriver(prop.getProperty("javax.persistence.jdbc.driver"));
@@ -67,6 +68,14 @@ public class PAPRestConfig extends WebMvcConfigurerAdapter {
 			setDbPassword( CryptoUtils.decryptTxtNoExStr(prop.getProperty("javax.persistence.jdbc.password", "")));
 		}catch(Exception e){
 			LOGGER.error("Exception Occured while loading properties file"+e);
+		}finally{
+			if(input != null){
+				try {
+					input.close();
+				} catch (IOException e) {
+					LOGGER.error("Exception Occured while clsoing the stream"+e);
+				}
+			}
 		}
 	}
 	

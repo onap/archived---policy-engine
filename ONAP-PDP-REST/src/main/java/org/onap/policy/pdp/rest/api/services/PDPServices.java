@@ -340,9 +340,10 @@ public class PDPServices {
         if(pdpConfigLocation.contains("/")){
             pdpConfigLocation = pdpConfigLocation.replace("/", File.separator);
         }
-
+        InputStream inputStream = null;
         JsonReader jsonReader = null;
-        try(InputStream inputStream = new FileInputStream(new File(pdpConfigLocation))) {
+        try {
+            inputStream = new FileInputStream(new File(pdpConfigLocation));
             try {
                 if (pdpConfigLocation.endsWith("json")) {
                     pdpResponse.setType(PolicyType.JSON);
@@ -412,6 +413,10 @@ public class PDPServices {
         } catch (FileNotFoundException e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
             throw new PDPException(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error in ConfigURL", e);
+        }finally{
+        	if(inputStream != null){
+            	inputStream.close();
+        	}
         }
     }
 
