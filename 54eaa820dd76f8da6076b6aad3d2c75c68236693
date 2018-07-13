@@ -46,6 +46,30 @@
       "revId": "54eaa820dd76f8da6076b6aad3d2c75c68236693",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_6131f20a",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1937,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-07-13T14:12:16Z",
+      "side": 0,
+      "message": "The auto close used by try-with-resources is actually a better solution than the utility method.  As far I can tell the utility method was only used to ignore nulls here.",
+      "parentUuid": "1a9dcd25_c1f8064c",
+      "range": {
+        "startLine": 1937,
+        "startChar": 4,
+        "endLine": 1937,
+        "endChar": 46
+      },
+      "revId": "54eaa820dd76f8da6076b6aad3d2c75c68236693",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

@@ -108,6 +108,30 @@
       "revId": "a97e1eafd731937aab373213ab04c3296cc97595",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_842bec81",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-07-13T14:12:16Z",
+      "side": 1,
+      "message": "Yeah this one is a bit tricky... I would like to look at this a little more and test a couple ideas locally.  I think we can keep this change though, it does eliminate one Sonar issue for try-with-resources, and since the nested trys were already existing it should not add any tech debt right.  Ideally I would like to attempt to get all this under one try block (if possible) but need to do some research to be sure.  Most likely we will have to break this down to smaller methods to avoid the complexity anyway, that may be the better solution.",
+      "parentUuid": "1a9dcd25_219f6a05",
+      "range": {
+        "startLine": 346,
+        "startChar": 11,
+        "endLine": 411,
+        "endChar": 13
+      },
+      "revId": "a97e1eafd731937aab373213ab04c3296cc97595",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
