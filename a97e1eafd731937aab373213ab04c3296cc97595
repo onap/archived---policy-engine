@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "1a9dcd25_41edd68a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-13T12:24:19Z",
+      "side": 1,
+      "message": "It would be helpful to have a 2-3 line summary of the change as well.",
+      "revId": "a97e1eafd731937aab373213ab04c3296cc97595",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a9dcd25_e153c26a",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -41,6 +58,52 @@
         "startChar": 0,
         "endLine": 10,
         "endChar": 0
+      },
+      "revId": "a97e1eafd731937aab373213ab04c3296cc97595",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_01ffce35",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/PAPRestConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-13T12:24:19Z",
+      "side": 1,
+      "message": "The Sonar checks will complain about tabs, all tabs should be converted to spaces.\n\nIf you have time, perhaps you could convert the classes you touch.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 1
+      },
+      "revId": "a97e1eafd731937aab373213ab04c3296cc97595",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_219f6a05",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-13T12:24:19Z",
+      "side": 1,
+      "message": "Sonar will complain about nested try/catch statements.\n\nOpening multiple resources in the try-with resources as shown on one of the answers at the stack overflow answer below looks tricky to implement in this case:\nhttps://stackoverflow.com/questions/884007/correct-way-to-close-nested-streams-and-writers-in-java\n\nThe JSON reader supports auto close but it is only used in one of the clauses in the if statement.\n\nMaybe Mike could have a look at this statement or maybe we should leave it?",
+      "range": {
+        "startLine": 346,
+        "startChar": 11,
+        "endLine": 411,
+        "endChar": 13
       },
       "revId": "a97e1eafd731937aab373213ab04c3296cc97595",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",

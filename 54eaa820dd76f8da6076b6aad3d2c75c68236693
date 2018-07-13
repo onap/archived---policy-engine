@@ -22,6 +22,30 @@
       "revId": "54eaa820dd76f8da6076b6aad3d2c75c68236693",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_c1f8064c",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1937,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-13T12:24:19Z",
+      "side": 0,
+      "message": "I agree.",
+      "parentUuid": "1a9dcd25_016a6e1a",
+      "range": {
+        "startLine": 1937,
+        "startChar": 4,
+        "endLine": 1937,
+        "endChar": 46
+      },
+      "revId": "54eaa820dd76f8da6076b6aad3d2c75c68236693",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
