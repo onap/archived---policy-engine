@@ -132,6 +132,30 @@
       "revId": "a97e1eafd731937aab373213ab04c3296cc97595",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_04659ce0",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-13T14:26:34Z",
+      "side": 1,
+      "message": "Agree",
+      "parentUuid": "1a9dcd25_842bec81",
+      "range": {
+        "startLine": 346,
+        "startChar": 11,
+        "endLine": 411,
+        "endChar": 13
+      },
+      "revId": "a97e1eafd731937aab373213ab04c3296cc97595",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
