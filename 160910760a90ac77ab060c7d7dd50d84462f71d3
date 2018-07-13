@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a9dcd25_e125020b",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-13T11:56:46Z",
+      "side": 1,
+      "message": "This is just debugging information - again it should be included under another JIRA.",
+      "revId": "160910760a90ac77ab060c7d7dd50d84462f71d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_01234e06",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-13T11:56:46Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "160910760a90ac77ab060c7d7dd50d84462f71d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a9dcd25_bb72c747",
         "filename": "ONAP-PAP-REST/pom.xml",
         "patchSetId": 3
@@ -19,6 +53,23 @@
         "endLine": 143,
         "endChar": 14
       },
+      "revId": "160910760a90ac77ab060c7d7dd50d84462f71d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_411156ab",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PolicyService.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-13T11:56:46Z",
+      "side": 1,
+      "message": "It seems like some refactoring of the code is happening. If so, it cannot go in under the same JIRA. ONAP requirements are for small commits that address exact JIRA.",
       "revId": "160910760a90ac77ab060c7d7dd50d84462f71d3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
