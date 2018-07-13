@@ -185,8 +185,9 @@ public class CreateNewMicroServiceModel {
 	    int BUFFER = 2048;
 	    File file = new File(zipFile);
 
-
-		try(ZipFile zip = new ZipFile("ExtractDir" + File.separator +file)) {
+	    ZipFile zip = null;
+		try {
+			zip = new ZipFile("ExtractDir" + File.separator +file);
 		    String newPath =  zipFile.substring(0, zipFile.length() - 4);
 		    new File(newPath).mkdir();
 		    Enumeration zipFileEntries = zip.entries();
@@ -224,6 +225,14 @@ public class CreateNewMicroServiceModel {
 		    }
 	    } catch (IOException e) {
 			logger.error("Failed to unzip model file " + zipFile + e);
+		}finally{
+			if(zip != null){
+				try {
+					zip.close();
+				} catch (Exception e) {
+					logger.error("Exception Occured while closing the zip file"+e);
+				}
+			}
 		}
 	}
 

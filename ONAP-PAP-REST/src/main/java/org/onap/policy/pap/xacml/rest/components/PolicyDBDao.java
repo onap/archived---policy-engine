@@ -1923,15 +1923,18 @@ public class PolicyDBDao {
 		
 		private String readConfigFile(String configPath){
 			String configDataString = null;
-
-			try(InputStream configContentStream = new FileInputStream(configPath)) {
+			InputStream configContentStream = null;
+			try {
+				configContentStream = new FileInputStream(configPath);
 				configDataString = IOUtils.toString(configContentStream);
 			} catch (FileNotFoundException e) {
 				logger.error("Caught FileNotFoundException on new FileInputStream("+configPath+")",e);
 				throw new IllegalArgumentException("The config file path does not exist");
 			} catch(IOException e2){
-				logger.error("Caught IOException on newIOUtils.toString(configContentStream)",e2);
+				logger.error("Caught IOException on newIOUtils.toString("+configContentStream+")",e2);
 				throw new IllegalArgumentException("The config file path cannot be read");
+			} finally {
+				IOUtils.closeQuietly(configContentStream);
 			}
 			if(configDataString == null){
 				throw new IllegalArgumentException("The config file path cannot be read");
