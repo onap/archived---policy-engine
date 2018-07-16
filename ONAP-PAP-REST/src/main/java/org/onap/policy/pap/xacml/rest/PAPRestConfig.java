@@ -47,100 +47,90 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableTransactionManagement
 @ComponentScan(basePackages = { "org.onap.*", "com.*" })
 public class PAPRestConfig extends WebMvcConfigurerAdapter {
-	private static final Logger LOGGER	= FlexLogger.getLogger(PAPRestConfig.class);
-	
-	private static String dbDriver = null;
-	private static String dbUrl = null;
-	private static String dbUserName = null;
-	private static String dbPassword = null;
-	
-	@PostConstruct
-	public void init(){
-		Properties prop = new Properties();
-		InputStream input = null;
-		try {
-			input = new FileInputStream("xacml.pap.properties");
-			// load a properties file
-			prop.load(input);
-			setDbDriver(prop.getProperty("javax.persistence.jdbc.driver"));
-			setDbUrl(prop.getProperty("javax.persistence.jdbc.url"));
-			setDbUserName(prop.getProperty("javax.persistence.jdbc.user"));
-			setDbPassword( CryptoUtils.decryptTxtNoExStr(prop.getProperty("javax.persistence.jdbc.password", "")));
-		}catch(Exception e){
-			LOGGER.error("Exception Occured while loading properties file"+e);
-		}finally{
-			if(input != null){
-				try {
-					input.close();
-				} catch (IOException e) {
-					LOGGER.error("Exception Occured while clsoing the stream"+e);
-				}
-			}
-		}
-	}
-	
-	@Bean(name = "dataSource")
-	public DataSource getDataSource() {
-	    BasicDataSource dataSource = new BasicDataSource();
-	    dataSource.setDriverClassName(PAPRestConfig.getDbDriver());
-	    dataSource.setUrl(PAPRestConfig.getDbUrl());
-	    dataSource.setUsername(PAPRestConfig.getDbUserName());
-	    dataSource.setPassword(PAPRestConfig.getDbPassword());
-	    return dataSource;
-	}
-	
-	@Autowired
-	@Bean(name = "sessionFactory")
-	public SessionFactory getSessionFactory(DataSource dataSource) {
-	    LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
-	    sessionBuilder.scanPackages("org.onap.*", "com.*");
-	    sessionBuilder.addProperties(getHibernateProperties());
-	    return sessionBuilder.buildSessionFactory();
-	}
-	
-	private Properties getHibernateProperties() {
-		Properties properties = new Properties();
-		properties.put("hibernate.show_sql", "true");
-		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-		return properties;
-	}
-	
-	@Autowired
-	@Bean(name = "transactionManager")
-	public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
-		return new HibernateTransactionManager(sessionFactory);
-	}
+    private static final Logger LOGGER	= FlexLogger.getLogger(PAPRestConfig.class);
 
-	public static String getDbDriver() {
-		return dbDriver;
-	}
+    private static String dbDriver = null;
+    private static String dbUrl = null;
+    private static String dbUserName = null;
+    private static String dbPassword = null;
 
-	public static void setDbDriver(String dbDriver) {
-		PAPRestConfig.dbDriver = dbDriver;
-	}
+    @PostConstruct
+    public void init(){
+        Properties prop = new Properties();
+        try(InputStream input = new FileInputStream("xacml.pap.properties")) {
+            // load a properties file
+            prop.load(input);
+            setDbDriver(prop.getProperty("javax.persistence.jdbc.driver"));
+            setDbUrl(prop.getProperty("javax.persistence.jdbc.url"));
+            setDbUserName(prop.getProperty("javax.persistence.jdbc.user"));
+            setDbPassword( CryptoUtils.decryptTxtNoExStr(prop.getProperty("javax.persistence.jdbc.password", "")));
+        }catch(Exception e){
+            LOGGER.error("Exception Occured while loading properties file"+e);
+        }
+    }
 
-	public static String getDbUrl() {
-		return dbUrl;
-	}
+    @Bean(name = "dataSource")
+    public DataSource getDataSource() {
+        BasicDataSource dataSource = new BasicDataSource();
+        dataSource.setDriverClassName(PAPRestConfig.getDbDriver());
+        dataSource.setUrl(PAPRestConfig.getDbUrl());
+        dataSource.setUsername(PAPRestConfig.getDbUserName());
+        dataSource.setPassword(PAPRestConfig.getDbPassword());
+        return dataSource;
+    }
 
-	public static void setDbUrl(String dbUrl) {
-		PAPRestConfig.dbUrl = dbUrl;
-	}
+    @Autowired
+    @Bean(name = "sessionFactory")
+    public SessionFactory getSessionFactory(DataSource dataSource) {
+        LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
+        sessionBuilder.scanPackages("org.onap.*", "com.*");
+        sessionBuilder.addProperties(getHibernateProperties());
+        return sessionBuilder.buildSessionFactory();
+    }
 
-	public static String getDbUserName() {
-		return dbUserName;
-	}
+    private Properties getHibernateProperties() {
+        Properties properties = new Properties();
+        properties.put("hibernate.show_sql", "true");
+        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        return properties;
+    }
 
-	public static void setDbUserName(String dbUserName) {
-		PAPRestConfig.dbUserName = dbUserName;
-	}
+    @Autowired
+    @Bean(name = "transactionManager")
+    public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
+        return new HibernateTransactionManager(sessionFactory);
+    }
 
-	public static String getDbPassword() {
-		return dbPassword;
-	}
+    public static String getDbDriver() {
+        return dbDriver;
+    }
 
-	public static void setDbPassword(String dbPassword) {	
-		PAPRestConfig.dbPassword = CryptoUtils.decryptTxtNoExStr(dbPassword);
-	}
-	
+    public static void setDbDriver(String dbDriver) {
+        PAPRestConfig.dbDriver = dbDriver;
+    }
+
+    public static String getDbUrl() {
+        return dbUrl;
+    }
+
+    public static void setDbUrl(String dbUrl) {
+        PAPRestConfig.dbUrl = dbUrl;
+    }
+
+    public static String getDbUserName() {
+        return dbUserName;
+    }
+
+    public static void setDbUserName(String dbUserName) {
+        PAPRestConfig.dbUserName = dbUserName;
+    }
+
+    public static String getDbPassword() {
+        return dbPassword;
+    }
+
+    public static void setDbPassword(String dbPassword) {
+        PAPRestConfig.dbPassword = CryptoUtils.decryptTxtNoExStr(dbPassword);
+    }
+
 }
