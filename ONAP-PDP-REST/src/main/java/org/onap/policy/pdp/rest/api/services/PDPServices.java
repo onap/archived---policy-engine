@@ -88,9 +88,9 @@ public class PDPServices {
         try {
             Request request = JSONRequest.load(jsonString);
             // Assign a rainy day treatment request to parse the decided treatment
-        	if (jsonString.contains("BB_ID")) {
-        		rainydayRequest = request;
-        	}
+            if (jsonString.contains("BB_ID")) {
+                rainydayRequest = request;
+            }
             // Call the PDP
             LOGGER.info("--- Generating Request: ---\n" + JSONRequest.toString(request));
             response = callPDP(request, requestID);
@@ -128,16 +128,16 @@ public class PDPServices {
                 LOGGER.info("Decision not a Permit. "  + result.getDecision().toString());
                 PDPResponse pdpResponse = new PDPResponse();
                 if (decide) {
-                	String indeterminatePropValue = XACMLProperties.getProperty("decision.indeterminate.response");
-                	if(result.getDecision().equals(Decision.INDETERMINATE)&& indeterminatePropValue != null){
-                		if("PERMIT".equalsIgnoreCase(indeterminatePropValue)){
-                			pdpResponse.setDecision(PolicyDecision.PERMIT);
-                		}else{
-                			pdpResponse.setDecision(PolicyDecision.DENY);
-                		}
-                	}else{
-                		pdpResponse.setDecision(PolicyDecision.DENY);
-                	}
+                    String indeterminatePropValue = XACMLProperties.getProperty("decision.indeterminate.response");
+                    if(result.getDecision().equals(Decision.INDETERMINATE)&& indeterminatePropValue != null){
+                        if("PERMIT".equalsIgnoreCase(indeterminatePropValue)){
+                            pdpResponse.setDecision(PolicyDecision.PERMIT);
+                        }else{
+                            pdpResponse.setDecision(PolicyDecision.DENY);
+                        }
+                    }else{
+                        pdpResponse.setDecision(PolicyDecision.DENY);
+                    }
                     for(Advice advice: result.getAssociatedAdvice()){
                         for(AttributeAssignment attribute: advice.getAttributeAssignments()){
                             pdpResponse.setDetails(attribute.getAttributeValue().getValue().toString());
@@ -156,12 +156,12 @@ public class PDPServices {
                     PDPResponse pdpResponse = new PDPResponse();
                     pdpResponse.setDecision(PolicyDecision.PERMIT);
                     
-                	//if this is a Rainy Day treatment decision we need to get the selected treatment
-                	if(rainydayRequest!=null){
-                		pdpResponse.setDetails(getRainyDayTreatment(result));
-                	} else {
+                    //if this is a Rainy Day treatment decision we need to get the selected treatment
+                    if(rainydayRequest!=null){
+                        pdpResponse.setDetails(getRainyDayTreatment(result));
+                    } else {
                         pdpResponse.setDetails("Decision Permit. OK!");
-                	}
+                    }
                     combinedResult.add(pdpResponse);
                     return combinedResult;
                 }
@@ -319,20 +319,20 @@ public class PDPServices {
     }
     
     private String getRainyDayTreatment(Result result) {
-    	String treatment = null;
-    	if (rainydayRequest!=null&& !result.getAssociatedAdvice().isEmpty()) {
-    		// Get the desired treatment for requested errorCode from the Advice
-    		for (Advice advice : result.getAssociatedAdvice()) {
-    			Map<String, String> adviseAttributes = new HashMap<>();
-    			for (AttributeAssignment attribute : advice.getAttributeAssignments()) {
-    				adviseAttributes.put(attribute.getAttributeId().stringValue(), attribute.getAttributeValue().getValue().toString());
-    				if ("treatment".equalsIgnoreCase(attribute.getAttributeId().stringValue())){
-    					treatment = attribute.getAttributeValue().getValue().toString();
-    				}
-    			}   
-    		}
-    	}
-    	return treatment;
+        String treatment = null;
+        if (rainydayRequest!=null&& !result.getAssociatedAdvice().isEmpty()) {
+            // Get the desired treatment for requested errorCode from the Advice
+            for (Advice advice : result.getAssociatedAdvice()) {
+                Map<String, String> adviseAttributes = new HashMap<>();
+                for (AttributeAssignment attribute : advice.getAttributeAssignments()) {
+                    adviseAttributes.put(attribute.getAttributeId().stringValue(), attribute.getAttributeValue().getValue().toString());
+                    if ("treatment".equalsIgnoreCase(attribute.getAttributeId().stringValue())){
+                        treatment = attribute.getAttributeValue().getValue().toString();
+                    }
+                }
+            }
+        }
+        return treatment;
     }
 
     private PDPResponse configCall(String pdpConfigLocation) throws PDPException, IOException{
@@ -414,9 +414,9 @@ public class PDPServices {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
             throw new PDPException(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error in ConfigURL", e);
         }finally{
-        	if(inputStream != null){
-            	inputStream.close();
-        	}
+            if(inputStream != null){
+                inputStream.close();
+            }
         }
     }
 
