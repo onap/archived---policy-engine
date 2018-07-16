@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a9dcd25_ca733b14",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-16T11:28:50Z",
+      "side": 1,
+      "message": "Some tabs snuck in here.",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 2
+      },
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a9dcd25_ca1c9bc4",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
         "patchSetId": 1
@@ -13,6 +36,29 @@
       "writtenOn": "2018-07-16T11:12:57Z",
       "side": 1,
       "message": "I\u0027m not sure about this one - looks like checkstyle really moved things around a lot.\nWhere are lines that were changed for the try-with-resources?",
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_8a653347",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1344,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-16T11:28:50Z",
+      "side": 1,
+      "message": "This comment doesn\u0027t really help understand the code. I\u0027d remove it.",
+      "range": {
+        "startLine": 1344,
+        "startChar": 0,
+        "endLine": 1344,
+        "endChar": 32
+      },
       "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
