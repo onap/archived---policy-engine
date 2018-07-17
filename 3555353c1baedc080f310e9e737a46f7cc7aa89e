@@ -1,0 +1,129 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a9dcd25_24e4530c",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/PAPRestConfig.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T07:28:49Z",
+      "side": 1,
+      "message": "File name / Line number\n\nPAPRestConfig.java / 61",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 61,
+        "endChar": 10
+      },
+      "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_c4f00fcc",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T07:28:49Z",
+      "side": 1,
+      "message": "File name / Line number\nConfigPolicy.java / 85",
+      "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_e4ed0bf1",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewMicroServiceModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T07:28:49Z",
+      "side": 1,
+      "message": "File name / Line number\nCreateNewMicroServiceModel.java / 189",
+      "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_84ba07e0",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T07:28:49Z",
+      "side": 1,
+      "message": "File name / Line number\nPolicyDBDao.java / 1927",
+      "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_a4bf03d0",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T07:28:49Z",
+      "side": 1,
+      "message": "File name / Line number\nPDPServices.java / only tab-\u003e space conversion",
+      "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_44b4fff1",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyRestController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T07:28:49Z",
+      "side": 1,
+      "message": "File name / Line number\nPolicyRestController.java / 341",
+      "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_64b9fbe8",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T07:28:49Z",
+      "side": 1,
+      "message": "File name / Line number\nRESTfulPAPEngine.java / 458",
+      "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
