@@ -156,6 +156,30 @@
     },
     {
       "key": {
+        "uuid": "1a9dcd25_443b9feb",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyRestController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-17T12:04:42Z",
+      "side": 1,
+      "message": "There are so many nested exceptions in this repo, its crazy. I think we let this review focus solely on removing the sonar try-with-resources complaints. Addressing other sonar problems will take a lot more re-factoring.",
+      "parentUuid": "1a9dcd25_24f53383",
+      "range": {
+        "startLine": 334,
+        "startChar": 12,
+        "endLine": 355,
+        "endChar": 13
+      },
+      "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a9dcd25_64b9fbe8",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
         "patchSetId": 4
