@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a9dcd25_2410d34d",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/PAPRestConfig.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:33:54Z",
+      "side": 1,
+      "message": "1) try-with-resources fix",
+      "range": {
+        "startLine": 60,
+        "startChar": 7,
+        "endLine": 69,
+        "endChar": 9
+      },
+      "revId": "db6da92883efa41446063586eba82b4bd622c8a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_c41c8f6d",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:33:54Z",
+      "side": 1,
+      "message": "2) try-with-resources fix",
+      "range": {
+        "startLine": 84,
+        "startChar": 8,
+        "endLine": 91,
+        "endChar": 9
+      },
+      "revId": "db6da92883efa41446063586eba82b4bd622c8a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_e4198b7a",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewMicroServiceModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:33:54Z",
+      "side": 1,
+      "message": "3) try-with-resources fix",
+      "range": {
+        "startLine": 188,
+        "startChar": 0,
+        "endLine": 228,
+        "endChar": 5
+      },
+      "revId": "db6da92883efa41446063586eba82b4bd622c8a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_44207f9b",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:33:54Z",
+      "side": 1,
+      "message": "try-with-resources fix\n      Line number 1927",
+      "range": {
+        "startLine": 97,
+        "startChar": 0,
+        "endLine": 97,
+        "endChar": 1
+      },
+      "revId": "db6da92883efa41446063586eba82b4bd622c8a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_a42b8381",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1934,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:33:54Z",
+      "side": 1,
+      "message": "4) try-with-resources fix",
+      "range": {
+        "startLine": 1926,
+        "startChar": 12,
+        "endLine": 1934,
+        "endChar": 13
+      },
+      "revId": "db6da92883efa41446063586eba82b4bd622c8a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_64257baa",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:33:54Z",
+      "side": 1,
+      "message": "Only tabs -\u003e space conversion",
+      "range": {
+        "startLine": 82,
+        "startChar": 1,
+        "endLine": 83,
+        "endChar": 2
+      },
+      "revId": "db6da92883efa41446063586eba82b4bd622c8a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_043a77cd",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:33:54Z",
+      "side": 1,
+      "message": "PolicyRestController.java line num 341",
+      "range": {
+        "startLine": 81,
+        "startChar": 2,
+        "endLine": 81,
+        "endChar": 96
+      },
+      "revId": "db6da92883efa41446063586eba82b4bd622c8a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_243773e5",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:33:54Z",
+      "side": 1,
+      "message": "5) try-with-resources fix",
+      "range": {
+        "startLine": 341,
+        "startChar": 16,
+        "endLine": 351,
+        "endChar": 17
+      },
+      "revId": "db6da92883efa41446063586eba82b4bd622c8a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_c4332ff5",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:33:54Z",
+      "side": 1,
+      "message": "RESTfulPAPEngine.java : 458 line number",
+      "range": {
+        "startLine": 74,
+        "startChar": 3,
+        "endLine": 74,
+        "endChar": 86
+      },
+      "revId": "db6da92883efa41446063586eba82b4bd622c8a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_e430abea",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:33:54Z",
+      "side": 1,
+      "message": "6) try-with-resources\n\nFor some reason, even though i changed the tabs to space, these still remain ...",
+      "range": {
+        "startLine": 458,
+        "startChar": 1,
+        "endLine": 458,
+        "endChar": 105
+      },
+      "revId": "db6da92883efa41446063586eba82b4bd622c8a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
