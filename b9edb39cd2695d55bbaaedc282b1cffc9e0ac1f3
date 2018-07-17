@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a9dcd25_50727ae6",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/PAPRestConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:12:47Z",
+      "side": 1,
+      "message": "1) try-with-resource fix",
+      "range": {
+        "startLine": 60,
+        "startChar": 7,
+        "endLine": 70,
+        "endChar": 5
+      },
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a9dcd25_ca733b14",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
         "patchSetId": 1
@@ -18,6 +41,76 @@
         "startChar": 0,
         "endLine": 83,
         "endChar": 2
+      },
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_f07626d8",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:12:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a9dcd25_ca733b14",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 2
+      },
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_1074f2cd",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/ConfigPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:12:47Z",
+      "side": 1,
+      "message": "2) try-with-resources fix",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 5
+      },
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_b0809e8c",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewMicroServiceModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:12:47Z",
+      "side": 1,
+      "message": "3) try-with-resource fix",
+      "range": {
+        "startLine": 188,
+        "startChar": 0,
+        "endLine": 228,
+        "endChar": 5
       },
       "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
@@ -42,6 +135,24 @@
     },
     {
       "key": {
+        "uuid": "1a9dcd25_704a1685",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:12:47Z",
+      "side": 1,
+      "message": "Sorry for not adding the line numbers, I have marked the changes below line 1926",
+      "parentUuid": "1a9dcd25_ca1c9bc4",
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a9dcd25_8a653347",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
         "patchSetId": 1
@@ -58,6 +169,122 @@
         "startChar": 0,
         "endLine": 1344,
         "endChar": 32
+      },
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_9036c202",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1344,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:12:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a9dcd25_8a653347",
+      "range": {
+        "startLine": 1344,
+        "startChar": 0,
+        "endLine": 1344,
+        "endChar": 32
+      },
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_d07d2ab3",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1934,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:12:47Z",
+      "side": 1,
+      "message": "4) try-with-resource fix",
+      "range": {
+        "startLine": 1926,
+        "startChar": 2,
+        "endLine": 1934,
+        "endChar": 13
+      },
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_904fa292",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:12:47Z",
+      "side": 1,
+      "message": "Only tab -\u003e space conversion in this file",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 5
+      },
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_30448e73",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:12:47Z",
+      "side": 1,
+      "message": "5) try-with-resources fix",
+      "range": {
+        "startLine": 341,
+        "startChar": 16,
+        "endLine": 351,
+        "endChar": 17
+      },
+      "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_50491a8a",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-17T01:12:47Z",
+      "side": 1,
+      "message": "6) try with resources fix\n\nIt seems that some tabs have appeared while indenting this lines. \nI will fix on top of this",
+      "range": {
+        "startLine": 458,
+        "startChar": 0,
+        "endLine": 465,
+        "endChar": 67
       },
       "revId": "b9edb39cd2695d55bbaaedc282b1cffc9e0ac1f3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
