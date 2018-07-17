@@ -76,6 +76,29 @@
     },
     {
       "key": {
+        "uuid": "1a9dcd25_a4094397",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1936,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-17T08:03:12Z",
+      "side": 1,
+      "message": "We have removed a closeQuietly(), that should be OK.",
+      "range": {
+        "startLine": 1925,
+        "startChar": 12,
+        "endLine": 1936,
+        "endChar": 13
+      },
+      "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a9dcd25_a4bf03d0",
         "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
         "patchSetId": 4
@@ -110,6 +133,29 @@
     },
     {
       "key": {
+        "uuid": "1a9dcd25_24f53383",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyRestController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-17T08:03:12Z",
+      "side": 1,
+      "message": "Sonar will complain about nested try/catch here. Also I think the cyclic complexity of this method is likely to be high. One suggestion would be to replace the highlighted code with a private method called doConnect(), something like:\n\nreturn doConnect(connection);\n\nprivate String doConnect(final HttpURLConnection connection() throws \u003csomeExceptions\u003e {\n    connection.connect();\n    int responseCode \u003d connection.getResponseCode();\n    if(responseCode \u003d\u003d 200){\n\t// get the response content into a String\n\tString responseJson \u003d null;\n\t// read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)\n\ttry (java.util.Scanner scanner \u003d new java.util.Scanner(connection.getInputStream())) {\n\t    scanner.useDelimiter(\"\\\\A\");\n\t    responseJson \u003d scanner.hasNext() ? scanner.next() : \"\";\n\t} catch (Exception e){\n\t    //Reason for rethrowing the exception is if any exception occurs during reading of inputsteam\n\t    //then the exception handling is done by the outer block without returning the response immediately\n\t    //Also finally block is existing only in outer block and not here so all exception handling is\n\t    //done in only one place\n\t    policyLogger.error(\"Exception Occured\"+e);\n\t    throw e;\n\t}\n\n\tpolicyLogger.info(\"JSON response from PAP: \" + responseJson);\n\treturn responseJson;\n    }\n}\n\nReplace \u003csomeExceptions\u003e in the method declaration with whatever exceptions the method throws.",
+      "range": {
+        "startLine": 334,
+        "startChar": 12,
+        "endLine": 355,
+        "endChar": 13
+      },
+      "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a9dcd25_64b9fbe8",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
         "patchSetId": 4
@@ -121,6 +167,29 @@
       "writtenOn": "2018-07-17T07:28:49Z",
       "side": 1,
       "message": "File name / Line number\nRESTfulPAPEngine.java / 458",
+      "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_842be7ea",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/RESTfulPAPEngine.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-17T08:03:12Z",
+      "side": 1,
+      "message": "You could try the same technique here (create a private method) to solve the nested try issue.",
+      "range": {
+        "startLine": 455,
+        "startChar": 0,
+        "endLine": 465,
+        "endChar": 1
+      },
       "revId": "3555353c1baedc080f310e9e737a46f7cc7aa89e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
