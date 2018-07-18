@@ -940,20 +940,25 @@ public class PolicyValidation {
 								responseString.append("Guard Params <b>Time Units</b> is Required" + HTML_ITALICS_LNBREAK);
 								valid = false;
 							}
-						}else if("GUARD_BL_YAML".equals(policyData.getRuleProvider())){
-							if(policyData.getYamlparams().getBlackList()==null || policyData.getYamlparams().getBlackList().isEmpty()){
-								responseString.append(" Guard Params <b>BlackList</b> is Required " + HTML_ITALICS_LNBREAK);
-								valid = false;
-							}else{
-								for(String blackList: policyData.getYamlparams().getBlackList()){
-									if(blackList==null || !(SUCCESS.equals(PolicyUtils.policySpecialCharValidator(blackList)))){
-										responseString.append(" Guard Params <b>BlackList</b> Should be valid String" + HTML_ITALICS_LNBREAK);
-										valid = false;
-										break;
-									}
-								}
-							}
-						}
+						} else if ("GUARD_BL_YAML".equals(policyData.getRuleProvider())
+                                && "Use Manual Entry".equals(policyData.getBlackListEntryType())) {
+                            if (policyData.getYamlparams().getBlackList() == null
+                                    || policyData.getYamlparams().getBlackList().isEmpty()) {
+                                responseString
+                                        .append(" Guard Params <b>BlackList</b> is Required " + HTML_ITALICS_LNBREAK);
+                                valid = false;
+                            } else {
+                                for (String blackList : policyData.getYamlparams().getBlackList()) {
+                                    if (blackList == null
+                                            || !(SUCCESS.equals(PolicyUtils.policySpecialCharValidator(blackList)))) {
+                                        responseString.append(" Guard Params <b>BlackList</b> Should be valid String"
+                                                + HTML_ITALICS_LNBREAK);
+                                        valid = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
 					}
 				}
 			}

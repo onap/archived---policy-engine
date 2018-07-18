@@ -122,7 +122,7 @@
         <AdviceExpressions>
             <AdviceExpression AdviceId="GUARD_BL_YAML" AppliesTo="Deny">
                 <AttributeAssignmentExpression AttributeId="guard.response" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Denied!</AttributeValue>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Denied By Blacklist</AttributeValue>
                 </AttributeAssignmentExpression>
             </AdviceExpression>
         </AdviceExpressions>
