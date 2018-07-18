@@ -289,12 +289,7 @@ public class PolicyRestController extends RestrictedBaseController{
                     connection.setRequestProperty("Content-Type",PolicyController.getContenttype());
                     ObjectMapper mapper = new ObjectMapper();
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                    JsonNode root = null;
-                    try {
-                        root = mapper.readTree(request.getReader());
-                    }catch (Exception e1) {
-                        policyLogger.error("Exception Occured while calling PAP"+e1);
-                    }
+                    JsonNode root = getJsonNode(request, mapper);
 
                     ObjectMapper mapper1 = new ObjectMapper();
                     mapper1.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
@@ -330,30 +325,7 @@ public class PolicyRestController extends RestrictedBaseController{
                     }
                 }
             }
-
-            connection.connect();
-
-            int responseCode = connection.getResponseCode();
-            if(responseCode == 200){
-                // get the response content into a String
-                String responseJson = null;
-                // read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)
-                try(java.util.Scanner scanner = new java.util.Scanner(connection.getInputStream())) {
-                    scanner.useDelimiter("\\A");
-                    responseJson = scanner.hasNext() ? scanner.next() : "";
-                } catch (Exception e){
-                    //Reason for rethrowing the exception is if any exception occurs during reading of inputsteam
-                    //then the exception handling is done by the outer block without returning the response immediately
-                    //Also finally block is existing only in outer block and not here so all exception handling is
-                    //done in only one place
-                    policyLogger.error("Exception Occured"+e);
-                    throw e;
-                }
-
-                policyLogger.info("JSON response from PAP: " + responseJson);
-                return responseJson;
-            }
-
+            return doConnect(connection);
         } catch (Exception e) {
             policyLogger.error("Exception Occured"+e);
         }finally{
@@ -373,6 +345,41 @@ public class PolicyRestController extends RestrictedBaseController{
                 }
                 connection.disconnect();
             }
+        }
+        return null;
+    }
+
+    private JsonNode getJsonNode(HttpServletRequest request, ObjectMapper mapper) {
+        JsonNode root = null;
+        try {
+            root = mapper.readTree(request.getReader());
+        }catch (Exception e1) {
+            policyLogger.error("Exception Occured while calling PAP"+e1);
+        }
+        return root;
+    }
+
+    private String doConnect(final HttpURLConnection connection) throws IOException{
+        connection.connect();
+        int responseCode = connection.getResponseCode();
+        if(responseCode == 200){
+            // get the response content into a String
+            String responseJson = null;
+            // read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)
+            try(java.util.Scanner scanner = new java.util.Scanner(connection.getInputStream())) {
+                scanner.useDelimiter("\\A");
+                responseJson = scanner.hasNext() ? scanner.next() : "";
+            } catch (Exception e){
+                //Reason for rethrowing the exception is if any exception occurs during reading of inputsteam
+                //then the exception handling is done by the outer block without returning the response immediately
+                //Also finally block is existing only in outer block and not here so all exception handling is
+                //done in only one place
+                policyLogger.error("Exception Occured"+e);
+                throw e;
+            }
+
+            policyLogger.info("JSON response from PAP: " + responseJson);
+            return responseJson;
         }
         return null;
     }

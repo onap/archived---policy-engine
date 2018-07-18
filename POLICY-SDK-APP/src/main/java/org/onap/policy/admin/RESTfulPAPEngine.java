@@ -405,19 +405,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
 
             if (contentObj != null) {
                 if (contentObj instanceof InputStream) {
-                    try {
-                        //
-                        // Send our current policy configuration
-                        //
-                        try (OutputStream os = connection.getOutputStream()) {
-                        int count = IOUtils.copy((InputStream)contentObj, os);
-                            if (LOGGER.isDebugEnabled()) {
-                                LOGGER.debug("copied to output, bytes="+count);
-                            }
-                        }
-                    } catch (Exception e) {
-                        LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to write content in '" + method + "'", e);
-                    }
+                    sendCurrPolicyConfig(method, connection, (InputStream) contentObj);
                 } else {
                     // The contentObj is an object to be encoded in JSON
                     ObjectMapper mapper = new ObjectMapper();
@@ -453,16 +441,7 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
                     return successMap;
                 } else {
                     // get the response content into a String
-                    String json = null;
-                    // read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)
-                    try(java.util.Scanner scanner = new java.util.Scanner(connection.getInputStream())) {
-                        scanner.useDelimiter("\\A");
-                        json = scanner.hasNext() ? scanner.next() : "";
-                    } catch (Exception e){
-                        LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to read inputStream from connection: " + e, e);
-                        throw e;
-                    }
-                    LOGGER.info("JSON response from PAP: " + json);
+                    String json = getJsonString(connection);
 
                     // convert Object sent as JSON into local object
                     ObjectMapper mapper = new ObjectMapper();
@@ -516,5 +495,35 @@ public class RESTfulPAPEngine extends StdPDPItemSetChangeNotifier implements PAP
                 connection.disconnect();
             }
         }
+    }
+
+    private void sendCurrPolicyConfig(String method, final HttpURLConnection connection, InputStream contentObj) {
+        try {
+            //
+            // Send our current policy configuration
+            //
+            try (OutputStream os = connection.getOutputStream()) {
+            int count = IOUtils.copy(contentObj, os);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("copied to output, bytes="+count);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to write content in '" + method + "'", e);
+        }
+    }
+
+    private String getJsonString(final HttpURLConnection connection) throws IOException {
+        String json = null;
+        // read the inputStream into a buffer (trick found online scans entire input looking for end-of-file)
+        try(java.util.Scanner scanner = new java.util.Scanner(connection.getInputStream())) {
+            scanner.useDelimiter("\\A");
+            json = scanner.hasNext() ? scanner.next() : "";
+        } catch (Exception e){
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Failed to read inputStream from connection: " + e, e);
+            throw e;
+        }
+        LOGGER.info("JSON response from PAP: " + json);
+        return json;
     }
 }

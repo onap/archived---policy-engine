@@ -80,31 +80,8 @@ public class CreateNewMicroServiceModel {
             File directory = new File("ExtractDir" + File.separator + randomID);
             List<File> fileList = listModelFiles(directory.toString());
             //get all the files from a director
-            for (File file : fileList){
-                if (file.isFile()){
-                    int i = file.getName().lastIndexOf('.');
-                    String type = file.getName().substring(i+1);
-
-                    if(type != null && "yml".equalsIgnoreCase(type)){
-
-                        processYmlModel(file.toString(), modelName);
-
-                    }else{
-
-                        tempMap = utils.processEpackage(file.getAbsolutePath(), MODEL_TYPE.XMI);
-                        classMap.putAll(tempMap);
-                    }
-                }
-            }
-            cleanUpFile = "ExtractDir" + File.separator + randomID + ".zip";
-            try {
-                FileUtils.deleteDirectory(new File("ExtractDir" + File.separator + randomID));
-                FileUtils.deleteDirectory(new File(randomID));
-                File deleteFile = new File(cleanUpFile);
-                FileUtils.forceDelete(deleteFile);
-            } catch (IOException e) {
-                logger.error("Failed to unzip model file " + randomID, e);
-            }
+            processFiles(modelName, fileList);
+            doCleanUpFiles(randomID);
         }else {
             if(importFile.contains(".yml")){
 
@@ -119,6 +96,39 @@ public class CreateNewMicroServiceModel {
 
             File deleteFile = new File(cleanUpFile);
             deleteFile.delete();
+        }
+    }
+
+    private void processFiles(String modelName, List<File> fileList) {
+        Map<String, MSAttributeObject> tempMap;
+        for (File file : fileList){
+            if (file.isFile()){
+                int i = file.getName().lastIndexOf('.');
+                String type = file.getName().substring(i+1);
+
+                if("yml".equalsIgnoreCase(type)){
+
+                    processYmlModel(file.toString(), modelName);
+
+                }else{
+
+                    tempMap = utils.processEpackage(file.getAbsolutePath(), MODEL_TYPE.XMI);
+                    classMap.putAll(tempMap);
+                }
+            }
+        }
+    }
+
+    private void doCleanUpFiles(String randomID) {
+        String cleanUpFile;
+        cleanUpFile = "ExtractDir" + File.separator + randomID + ".zip";
+        try {
+            FileUtils.deleteDirectory(new File("ExtractDir" + File.separator + randomID));
+            FileUtils.deleteDirectory(new File(randomID));
+            File deleteFile = new File(cleanUpFile);
+            FileUtils.forceDelete(deleteFile);
+        } catch (IOException e) {
+            logger.error("Failed to unzip model file " + randomID, e);
         }
     }
 
