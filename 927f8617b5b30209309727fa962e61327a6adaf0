@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a9dcd25_3d8302ce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-18T11:09:44Z",
+      "side": 1,
+      "message": "Please note, not all refactoring is done. because of complexity of the code. It would be better to do small chunks",
+      "revId": "927f8617b5b30209309727fa962e61327a6adaf0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_dd73fe13",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewMicroServiceModel.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-18T11:09:44Z",
+      "side": 1,
+      "message": "I have purposefully not handled all the issues about 3 or more nested for/try/if blocks in this class. lot of complexity, hence handled only few. it might be difficult for review as well such large chunk of code.\nplease let me know your opinion",
+      "revId": "927f8617b5b30209309727fa962e61327a6adaf0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
