@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -154,16 +154,18 @@ public class PolicyCreation extends AbstractPolicyCreation{
 			String createdBy;
 			String modifiedBy;
 			String scopeCheck = policyData.getDomainDir().replace(".", File.separator);
-			PolicyEditorScopes policyEditorScope = (PolicyEditorScopes) commonClassDao.getEntityItem(PolicyEditorScopes.class, "scopeName", scopeCheck);
-			if(policyEditorScope == null){
-				UserInfo userInfo = new UserInfo();
-				userInfo.setUserName("API");
-				userInfo.setUserLoginId("API");
-				PolicyEditorScopes editorScope = new PolicyEditorScopes();
-				editorScope.setScopeName(scopeCheck);
-				editorScope.setUserCreatedBy(userInfo);
-				editorScope.setUserModifiedBy(userInfo);
-				commonClassDao.save(editorScope);
+			if(!StringUtils.isBlank(scopeCheck)){
+				PolicyEditorScopes policyEditorScope = (PolicyEditorScopes) commonClassDao.getEntityItem(PolicyEditorScopes.class, "scopeName", scopeCheck);
+				if(policyEditorScope == null){
+					UserInfo userInfo = new UserInfo();
+					userInfo.setUserName("API");
+					userInfo.setUserLoginId("API");
+					PolicyEditorScopes editorScope = new PolicyEditorScopes();
+					editorScope.setScopeName(scopeCheck);
+					editorScope.setUserCreatedBy(userInfo);
+					editorScope.setUserModifiedBy(userInfo);
+					commonClassDao.save(editorScope);
+				}
 			}
 			//get the highest version of policy from policy version table.
 			String dbCheckPolicyName = policyData.getDomainDir() + File.separator + filePrefix + policyData.getPolicyName();
@@ -286,7 +288,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 		                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		                    response.addHeader("error", message);
 		                    response.addHeader("modelName", modelName);
-		                    return new ResponseEntity<String>(body, status);
+		                    return new ResponseEntity<>(body, status);
 		                }
 					}		
 					newPolicy = new CreateBrmsParamPolicy(policyData);
@@ -388,7 +390,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 							}
 						}
 					}
-					if(policyData.getRuleAlgorithmschoices()!=null && policyData.getRuleAlgorithmschoices().size() > 0){
+					if(policyData.getRuleAlgorithmschoices()!=null && !policyData.getRuleAlgorithmschoices().isEmpty()){
 						for(Object attribute : policyData.getRuleAlgorithmschoices()){
 							if(attribute instanceof LinkedHashMap<?, ?>){
 								String label = ((LinkedHashMap<?, ?>) attribute).get("id").toString();
@@ -416,6 +418,16 @@ public class PolicyCreation extends AbstractPolicyCreation{
 							String blackList = StringUtils.join(policyData.getYamlparams().getBlackList(), ",");
 							attributeMap.put("blackList", blackList);
 						}
+						if(DecisionPolicy.GUARD_BL_YAML.equals(policyData.getRuleProvider()) && "Use File Upload".equals(policyData.getBlackListEntryType())){
+							if(policyData.getBlackListEntries() != null && !policyData.getBlackListEntries().isEmpty()){
+								String blackList = StringUtils.join(policyData.getBlackListEntries(), ",");
+								attributeMap.put("blackList", blackList);
+							}
+							if(policyData.getAppendBlackListEntries() != null && !policyData.getAppendBlackListEntries().isEmpty()){
+								String blackList = StringUtils.join(policyData.getAppendBlackListEntries(), ",");
+								attributeMap.put("appendBlackList", blackList);
+							}
+						}
 						if(policyData.getYamlparams().getTargets()!=null){
 							String targets = StringUtils.join(policyData.getYamlparams().getTargets(),",");
 							attributeMap.put("targets", targets);
@@ -427,7 +439,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 						attributeMap.put("BB_ID", policyData.getRainyday().getBbid());
 						attributeMap.put("WorkStep", policyData.getRainyday().getWorkstep());
 						
-						if(policyData.getRainyday().getTreatmentTableChoices()!=null && policyData.getRainyday().getTreatmentTableChoices().size() > 0){
+						if(policyData.getRainyday().getTreatmentTableChoices()!=null && !policyData.getRainyday().getTreatmentTableChoices().isEmpty()){
 							for (Object table : policyData.getRainyday().getTreatmentTableChoices()){
 								if(table instanceof LinkedHashMap<?,?>){
 									String errorcode = ((LinkedHashMap<?,?>) table).get("errorcode").toString();
@@ -521,7 +533,7 @@ public class PolicyCreation extends AbstractPolicyCreation{
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 					response.addHeader("error", message);
 					response.addHeader("policyName", policyData.getPolicyName());
-				} else if (successMap.get("error").equals("Validation Failed")) {
+				} else if ("Validation Failed".equals(successMap.get("error"))) {
                     policyDBDaoTransaction.rollbackTransaction();
                     String message = XACMLErrorConstants.ERROR_DATA_ISSUE
                 			+ "Error Validating the Policy on the PAP.";
@@ -543,6 +555,13 @@ public class PolicyCreation extends AbstractPolicyCreation{
 				if(policyDBDaoTransaction != null){
 					policyDBDaoTransaction.rollbackTransaction();
 				}
+				body = "error";
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
+				String message = XACMLErrorConstants.ERROR_DATA_ISSUE
+                        + "Error occurred while adding policy data to the database";
+				PolicyLogger.error(message);
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.addHeader("error", message);
 			}
 		}
 		catch (Exception e){
@@ -567,12 +586,6 @@ public class PolicyCreation extends AbstractPolicyCreation{
 	}
 
 	public PolicyVersion getPolicyVersionData(String dbCheckPolicyName){
-		PolicyVersion entityItem = (PolicyVersion) commonClassDao.getEntityItem(PolicyVersion.class, "policyName", dbCheckPolicyName);
-		if (entityItem != null) {		
-			if(entityItem.getPolicyName().equals(dbCheckPolicyName)){
-				return entityItem;
-			}
-		}	
-		return entityItem;
+		return (PolicyVersion) commonClassDao.getEntityItem(PolicyVersion.class, "policyName", dbCheckPolicyName);
 	}
 }

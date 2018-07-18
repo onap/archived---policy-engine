@@ -127,6 +127,9 @@ public class PolicyRestAdapter {
 	private String actionDictUrl = null;
 	private String actionDictMethod = null;
 	private YAMLParams yamlparams; 
+	private List<String> blackListEntries;
+	private List<String> appendBlackListEntries;
+	private String blackListEntryType;
 	
 	//Rainy Day Decision
 	private RainyDayParams rainyday;
@@ -906,5 +909,23 @@ public class PolicyRestAdapter {
 	}
 	public void setFaultDatas(ClosedLoopFaultTrapDatas faultDatas) {
 		this.faultDatas = faultDatas;
+	}
+	public List<String> getAppendBlackListEntries() {
+		return appendBlackListEntries;
+	}
+	public void setAppendBlackListEntries(List<String> appendBlackListEntries) {
+		this.appendBlackListEntries = appendBlackListEntries;
+	}
+	public List<String> getBlackListEntries() {
+		return blackListEntries;
+	}
+	public void setBlackListEntries(List<String> blackListEntries) {
+		this.blackListEntries = blackListEntries;
+	}
+	public String getBlackListEntryType() {
+		return blackListEntryType;
+	}
+	public void setBlackListEntryType(String blackListEntryType) {
+		this.blackListEntryType = blackListEntryType;
 	}
 }
