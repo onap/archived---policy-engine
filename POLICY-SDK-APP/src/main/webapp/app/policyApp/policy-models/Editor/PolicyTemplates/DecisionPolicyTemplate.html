@@ -31,8 +31,8 @@
 				<div class="form-group col-sm-6">
 					<label>Description:</label> <input type="text" class="form-control"
 						ng-disabled="temp.policy.readOnly"
-						ng-model="temp.policy.policyDescription" 
-						title="Description field will accept any type of data."/>
+						ng-model="temp.policy.policyDescription"
+						title="Description field will accept any type of data." />
 				</div>
 			</div>
 			<div class="form-group row">
@@ -41,7 +41,8 @@
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.onapName"
 						ng-options="option for option in onapNameDictionaryDatas track by option"
-						required pattern="\S+" title="Select the dropdown value driven from OnapName (common)Dictionary."></select>
+						required pattern="\S+"
+						title="Select the dropdown value driven from OnapName (common)Dictionary."></select>
 				</div>
 				<div class="form-group col-sm-6">
 					<label>Rule Provider:<sup><b>*</b></sup></label><select
@@ -53,7 +54,8 @@
 						<option>AAF</option>
 						<option>Rainy_Day</option>
 						<option>GUARD_YAML</option>
-						<option>GUARD_BL_YAML<option>
+						<option>GUARD_BL_YAML
+						<option>
 					</select>
 				</div>
 			</div>
@@ -67,39 +69,40 @@
 						</div>
 						<div class="form-group col-sm-2">
 							<input type="text" class="form-control"
-								ng-disabled="temp.policy.readOnly" ng-model="temp.policy.rainyday.serviceType"
-								placeholder="Service Type" title="Enter Service Type value."/>
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.rainyday.serviceType"
+								placeholder="Service Type" title="Enter Service Type value." />
 						</div>
 						<div class="form-group col-sm-1">
 							<label>VNF Type:<sup><b>*</b></sup></label>
 						</div>
 						<div class="form-group col-sm-2">
 							<input type="text" class="form-control"
-								ng-disabled="temp.policy.readOnly" ng-model="temp.policy.rainyday.vnfType"
-								placeholder="VNF Type" title="Enter VNF Type value."/>
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.rainyday.vnfType" placeholder="VNF Type"
+								title="Enter VNF Type value." />
 						</div>
 						<div class="form-group col-sm-1">
 							<label>Building Block ID:<sup><b>*</b></sup></label>
 						</div>
 						<div class="form-group col-sm-2">
-								<select
-									class="form-control" ng-disabled="temp.policy.readOnly"
-									ng-model="temp.policy.rainyday.bbid"
-									ng-options="option for option in rainyDayDictionaryDatas track by option"
-									ng-change="getWorkstepValues(temp.policy.rainyday.bbid)" title="Select the dropdown value driven from Rainday Allowed Treatments (Decision)Dictionary.">
-									<option value="">{{temp.policy.rainyday.bbid}}</option>
-								</select>
+							<select class="form-control" ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.rainyday.bbid"
+								ng-options="option for option in rainyDayDictionaryDatas track by option"
+								ng-change="getWorkstepValues(temp.policy.rainyday.bbid)"
+								title="Select the dropdown value driven from Rainday Allowed Treatments (Decision)Dictionary.">
+								<option value="">{{temp.policy.rainyday.bbid}}</option>
+							</select>
 						</div>
 						<div class="form-group col-sm-1">
 							<label>Work Step:<sup><b>*</b></sup></label>
 						</div>
 						<div class="form-group col-sm-2">
-							<select
-									class="form-control" ng-disabled="temp.policy.readOnly"
-									ng-model="temp.policy.rainyday.workstep"
-									ng-options="option for option in workstepDictionaryDatas track by option"
-									ng-change="getTreatmentValues(temp.policy.rainyday.bbid, temp.policy.rainyday.workstep)">
-									<option value="">{{temp.policy.rainyday.workstep}}</option>
+							<select class="form-control" ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.rainyday.workstep"
+								ng-options="option for option in workstepDictionaryDatas track by option"
+								ng-change="getTreatmentValues(temp.policy.rainyday.bbid, temp.policy.rainyday.workstep)">
+								<option value="">{{temp.policy.rainyday.workstep}}</option>
 							</select>
 						</div>
 					</div>
@@ -107,45 +110,43 @@
 						<div class="form-group col-sm-3">
 							<label>Desired Automated Treatments:</label>
 							<button type="button" class="btn btn-default"
-								ng-disabled="temp.policy.readOnly"
-								ng-click="addNewTreatment()">
+								ng-disabled="temp.policy.readOnly" ng-click="addNewTreatment()">
 								<i class="fa fa-plus"></i>
 							</button>
 						</div>
 					</div>
 					<div class="form-group row">
-					<div data-ng-repeat="treatmentTableChoice in temp.policy.rainyday.treatmentTableChoices">
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-1">
-								<label>Error Code:<sup><b>*</b></sup></label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly"
-									ng-model="treatmentTableChoice.errorcode"
-									placeholder="Error Code" />
-							</div>
-							<div class="form-group col-sm-1">
-								<label>Desired Treatment:<sup><b>*</b></sup></label>
-							</div>		
-							<div class="form-group col-sm-3">
-								<select
-									class="form-control" 
-									ng-disabled="temp.policy.readOnly"
-									ng-model="treatmentTableChoice.treatment"
-									ng-options="option for option in allowedTreatmentsDatas track by option">
-									<option value="">{{treatmentTableChoice.treatment}}</option>
-								</select>						
-							</div>
-							<div class="form-group col-sm-1">
-								<button type="button" class="btn btn-default"
-									ng-disabled="temp.policy.readOnly"
-									ng-click="removeTreatment()">
-									<i class="fa fa-minus"></i>
-								</button>
+						<div
+							data-ng-repeat="treatmentTableChoice in temp.policy.rainyday.treatmentTableChoices">
+							<div class="form-group row" style="margin-left: 2%">
+								<div class="form-group col-sm-1">
+									<label>Error Code:<sup><b>*</b></sup></label>
+								</div>
+								<div class="form-group col-sm-3">
+									<input type="text" class="form-control"
+										ng-disabled="temp.policy.readOnly"
+										ng-model="treatmentTableChoice.errorcode"
+										placeholder="Error Code" />
+								</div>
+								<div class="form-group col-sm-1">
+									<label>Desired Treatment:<sup><b>*</b></sup></label>
+								</div>
+								<div class="form-group col-sm-3">
+									<select class="form-control" ng-disabled="temp.policy.readOnly"
+										ng-model="treatmentTableChoice.treatment"
+										ng-options="option for option in allowedTreatmentsDatas track by option">
+										<option value="">{{treatmentTableChoice.treatment}}</option>
+									</select>
+								</div>
+								<div class="form-group col-sm-1">
+									<button type="button" class="btn btn-default"
+										ng-disabled="temp.policy.readOnly"
+										ng-click="removeTreatment()">
+										<i class="fa fa-minus"></i>
+									</button>
+								</div>
 							</div>
 						</div>
-					</div>
 					</div>
 				</div>
 			</div>
@@ -158,86 +159,145 @@
 					</div>
 				</div>
 				<div class="form-group row">
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> actor: </label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.actor"
-									placeholder="Actor" />
-							</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> actor: </label>
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> recipe: </label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.recipe"
-									placeholder="Recipe" />
-							</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.actor" placeholder="Actor" />
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> CLName: </label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.clname"
-									placeholder="CLName" />
-							</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> recipe: </label>
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> guardActiveStart: </label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.guardActiveStart"
-									placeholder="00:00:00-05:00" />
-							</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.recipe" placeholder="Recipe" />
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> guardActiveEnd: </label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.guardActiveEnd"
-									placeholder="00:00:00-05:00" />
-							</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> CLName: </label>
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> BlackList: </label>
-								<button type="button" class="btn btn-default"
-									ng-disabled="temp.policy.readOnly" ng-click="addNewBL()">
-									<i class="fa fa-plus"></i>
-								</button>
-							</div>
-							<div class="form-group col-sm-4">
-								<div data-ng-repeat="choice in temp.policy.yamlparams.blackList track by $index">
-									<div class="form-group row">
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.clname" placeholder="CLName" />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> guardActiveStart: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.guardActiveStart"
+								placeholder="00:00:00-05:00" />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> guardActiveEnd: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.guardActiveEnd"
+								placeholder="00:00:00-05:00" />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> BlackList Entry Type: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<select class="form-control"
+								ng-model="temp.policy.blackListEntryType"
+								ng-disabled="temp.policy.readOnly"
+								ng-change="initializeBlackList(temp.policy.blackListEntryType)">
+								<option>Use Manual Entry</option>
+								<option>Use File Upload</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label>Export BlackList Entries:</label>
+						</div>
+						<div class="form-group col-sm-3">
+							<button type="button" class="btn btn-default"
+								ng-disabled="disableOnCreate"
+								ng-click="exportBlackListEntries()">Export BlackList</button>
+						</div>
+					</div>
+					<div ng-if="temp.policy.blackListEntryType == 'Use File Upload'"
+						class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label>Upload BlackList: </label>
+						</div>
+						<div class="form-group col-sm-4">
+							<input type="file" name="file" class="form-control"
+								id="importFile"
+								onchange="angular.element(this).scope().uploadBLFile(this.files)" />
+						</div>
+						<div class="form-group col-sm-2">
+							<button class="btn btn-primary" ng-disabled="importButton"
+								ng-click="submitUpload()">Upload</button>
+						</div>
+					</div>
+					<div ng-if="temp.policy.blackListEntryType == 'Use File Upload'"
+						class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label>Search BlackList: </label>
+						</div>
+						<div class="form-group col-sm-4">
+							<input type="text" class="form-control" class="search"
+								placeholder="{{'search'}}..." ng-model="search"> <select
+								class="form-control" multiple ng-disabled="true"
+								style="height: 400px;"
+								ng-model="temp.policy.blackListSearchEntry"
+								ng-options="option for option in blackListEntries | filter:search"></select>
+						</div>
+					</div>
+					<div ng-if="temp.policy.blackListEntryType == 'Use Manual Entry'"
+						class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> BlackList: </label>
+							<button type="button" class="btn btn-default"
+								ng-disabled="temp.policy.readOnly" ng-click="addNewBL()">
+								<i class="fa fa-plus"></i>
+							</button>
+						</div>
+						<div class="form-group col-sm-4">
+							<div
+								data-ng-repeat="choice in temp.policy.yamlparams.blackList track by $index">
+								<div class="form-group row">
 									<div class="form-group col-sm-9">
 										<input type="text" class="form-control"
-										ng-disabled="temp.policy.readOnly"
-										ng-model="temp.policy.yamlparams.blackList[$index]" placeholder="BlackList" />
+											ng-disabled="temp.policy.readOnly"
+											ng-model="temp.policy.yamlparams.blackList[$index]"
+											placeholder="BlackList" />
 									</div>
 									<div class="form-group col-sm-1">
-										<button type="button" class="btn btn-default" ng-show="$last"
-										ng-disabled="temp.policy.readOnly" ng-click="removeBL()">
-										<i class="fa fa-minus"></i>
+										<button type="button" class="btn btn-default"
+											ng-disabled="temp.policy.readOnly"
+											ng-click="removeBL(temp.policy.yamlparams.blackList[$index])">
+											<i class="fa fa-minus"></i>
 										</button>
-									</div>
 									</div>
 								</div>
 							</div>
 						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-		
+
 		<div ng-if="temp.policy.ruleProvider == 'GUARD_YAML'">
 			<div class="well">
 				<div class="form-group row">
@@ -246,113 +306,122 @@
 					</div>
 				</div>
 				<div class="form-group row">
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> actor: </label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.actor"
-									placeholder="Actor" />
-							</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> actor: </label>
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> recipe: </label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.recipe"
-									placeholder="Recipe" />
-							</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.actor" placeholder="Actor" />
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> CLName: </label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.clname"
-									placeholder="CLName" />
-							</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> recipe: </label>
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> Targets: </label>
-								<button type="button" class="btn btn-default"
-									ng-disabled="temp.policy.readOnly" ng-click="addNewTarget()">
-									<i class="fa fa-plus"></i>
-								</button>
-							</div>
-							<div class="form-group col-sm-4">
-								<div data-ng-repeat="choice in temp.policy.yamlparams.targets track by $index">
-									<div class="form-group row">
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.recipe" placeholder="Recipe" />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> CLName: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.clname" placeholder="CLName" />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> Targets: </label>
+							<button type="button" class="btn btn-default"
+								ng-disabled="temp.policy.readOnly" ng-click="addNewTarget()">
+								<i class="fa fa-plus"></i>
+							</button>
+						</div>
+						<div class="form-group col-sm-4">
+							<div
+								data-ng-repeat="choice in temp.policy.yamlparams.targets track by $index">
+								<div class="form-group row">
 									<div class="form-group col-sm-9">
 										<input type="text" class="form-control"
-										ng-disabled="temp.policy.readOnly"
-										ng-model="temp.policy.yamlparams.targets[$index]" placeholder="Target" />
+											ng-disabled="temp.policy.readOnly"
+											ng-model="temp.policy.yamlparams.targets[$index]"
+											placeholder="Target" />
 									</div>
 									<div class="form-group col-sm-1">
 										<button type="button" class="btn btn-default" ng-show="$last"
-										ng-disabled="temp.policy.readOnly" ng-click="removeTarget()">
-										<i class="fa fa-minus"></i>
+											ng-disabled="temp.policy.readOnly" ng-click="removeTarget()">
+											<i class="fa fa-minus"></i>
 										</button>
-									</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> limit: </label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.limit"
-									placeholder="Limit" title="Enter time limit value."/>
-							</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> limit: </label>
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> timeWindow: </label>
-							</div>
-							<div class="form-group col-sm-2">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.timeWindow"
-									placeholder="Time Window" title="Enter time window value."/>
-							</div>
-							<div class="form-group col-sm-1">
-								<select class="form-control" ng-disabled="temp.policy.readOnly" 
-								ng-model="temp.policy.yamlparams.timeUnits" title="Select the Time Units value from dropdown options.">
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.limit" placeholder="Limit"
+								title="Enter time limit value." />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> timeWindow: </label>
+						</div>
+						<div class="form-group col-sm-2">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.timeWindow"
+								placeholder="Time Window" title="Enter time window value." />
+						</div>
+						<div class="form-group col-sm-1">
+							<select class="form-control" ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.timeUnits"
+								title="Select the Time Units value from dropdown options.">
 								<option>minute</option>
 								<option>hour</option>
 								<option>day</option>
 								<option>week</option>
 								<option>month</option>
 								<option>year</option>
-								</select>
-							</div>
+							</select>
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> guardActiveStart: </label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.guardActiveStart" title="Enter Guard Active Start value in following patren '00:00:00-05:00'."
-									placeholder="00:00:00-05:00" />
-							</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> guardActiveStart: </label>
 						</div>
-						<div class="form-group row" style="margin-left: 2%">
-							<div class="form-group col-sm-3">
-								<label> guardActiveEnd: </label>
-							</div>
-							<div class="form-group col-sm-3">
-								<input type="text" class="form-control"
-									ng-disabled="temp.policy.readOnly" ng-model="temp.policy.yamlparams.guardActiveEnd" title="Enter Guard Active End value in following patren '00:00:00-05:00'."
-									placeholder="00:00:00-05:00" />
-							</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.guardActiveStart"
+								title="Enter Guard Active Start value in following patren '00:00:00-05:00'."
+								placeholder="00:00:00-05:00" />
 						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> guardActiveEnd: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.guardActiveEnd"
+								title="Enter Guard Active End value in following patren '00:00:00-05:00'."
+								placeholder="00:00:00-05:00" />
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -364,7 +433,8 @@
 					<div class="form-group col-sm-1">
 						<label>Component Attributes:</label><br>
 						<button type="button" class="btn btn-default"
-							ng-disabled="temp.policy.readOnly" ng-click="addNewChoice()" title="onClick Component Attribute row is added.">
+							ng-disabled="temp.policy.readOnly" ng-click="addNewChoice()"
+							title="onClick Component Attribute row is added.">
 							<i class="fa fa-plus"></i>
 						</button>
 					</div>
@@ -375,18 +445,21 @@
 							<div class="form-group col-sm-3">
 								<select class="form-control" ng-disabled="temp.policy.readOnly"
 									ng-model="choice.key"
-									ng-options="option for option in attributeDictionaryDatas track by option" title="Select the dropdown value driven from Attribute (common)Dictionary.">
+									ng-options="option for option in attributeDictionaryDatas track by option"
+									title="Select the dropdown value driven from Attribute (common)Dictionary.">
 									<option value="">{{choice.key}}</option>
 								</select>
 							</div>
 							<div class="form-group col-sm-3">
 								<input type="text" class="form-control"
 									ng-disabled="temp.policy.readOnly" ng-model="choice.value"
-									placeholder="Attribute Value" title="Enter the Attribute Value without any spaces and special characters"/>
+									placeholder="Attribute Value"
+									title="Enter the Attribute Value without any spaces and special characters" />
 							</div>
 							<div class="form-group col-sm-1">
 								<button type="button" class="btn btn-default" ng-show="$last"
-									ng-disabled="temp.policy.readOnly" ng-click="removeChoice()" title="onClick will remove the last row">
+									ng-disabled="temp.policy.readOnly" ng-click="removeChoice()"
+									title="onClick will remove the last row">
 									<i class="fa fa-minus"></i>
 								</button>
 							</div>
@@ -403,7 +476,8 @@
 						<label>Settings Attributes:</label><br>
 						<button type="button" class="btn btn-default"
 							ng-disabled="temp.policy.readOnly"
-							ng-click="addNewSettingsChoice()" title="onClick Settings Attribute row is added.">
+							ng-click="addNewSettingsChoice()"
+							title="onClick Settings Attribute row is added.">
 							<i class="fa fa-plus"></i>
 						</button>
 					</div>
@@ -414,19 +488,22 @@
 							<div class="form-group col-sm-3">
 								<select class="form-control" ng-disabled="temp.policy.readOnly"
 									ng-model="settingschoice.key"
-									ng-options="option for option in settingsDictionaryDatas track by option" title="Select the dropdown value driven from Settings (Decision)Dictionary.">
+									ng-options="option for option in settingsDictionaryDatas track by option"
+									title="Select the dropdown value driven from Settings (Decision)Dictionary.">
 									<option value="">{{settingschoice.key}}</option>
 								</select>
 							</div>
 							<div class="form-group col-sm-3">
 								<input type="text" class="form-control"
 									ng-disabled="temp.policy.readOnly"
-									ng-model="settingschoice.value" placeholder="Settings Value" title="Enter the Settings Attribute Value without any spaces and special characters"/>
+									ng-model="settingschoice.value" placeholder="Settings Value"
+									title="Enter the Settings Attribute Value without any spaces and special characters" />
 							</div>
 							<div class="form-group col-sm-1">
 								<button type="button" class="btn btn-default" ng-show="$last"
 									ng-disabled="temp.policy.readOnly"
-									ng-click="removeSettingsChoice()" title="onClick will remove the last row">
+									ng-click="removeSettingsChoice()"
+									title="onClick will remove the last row">
 									<i class="fa fa-minus"></i>
 								</button>
 							</div>
@@ -443,7 +520,8 @@
 					<div class="form-group col-sm-1">
 						<button type="button" class="btn btn-default"
 							ng-disabled="temp.policy.readOnly"
-							ng-click="addNewRuleAlgorithm()" title="onClick Rule Algorithms row is added.">
+							ng-click="addNewRuleAlgorithm()"
+							title="onClick Rule Algorithms row is added.">
 							<i class="fa fa-plus"></i>
 						</button>
 					</div>
@@ -462,7 +540,8 @@
 									ng-disabled="temp.policy.readOnly"
 									ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmField1"
 									ng-options="option for option in attributeDictionaryDatas track by option"
-									name="dynamicRuleAlgorithmField1" title="Select the dropdown value driven from Attribute (common)Dictionary or Settings (Decision)Dictionary.">
+									name="dynamicRuleAlgorithmField1"
+									title="Select the dropdown value driven from Attribute (common)Dictionary or Settings (Decision)Dictionary.">
 									<option value="">{{ruleAlgorithmschoice.dynamicRuleAlgorithmField1}}</option>
 								</select>
 							</div>
@@ -471,18 +550,21 @@
 									ng-disabled="temp.policy.readOnly"
 									ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmCombo"
 									ng-options="option for option in functionDefinitionDatas track by option"
-									name="dynamicRuleAlgorithmCombo" title="Select the dropdown value driven from FunctionDataType."></select>
+									name="dynamicRuleAlgorithmCombo"
+									title="Select the dropdown value driven from FunctionDataType."></select>
 							</div>
 							<div class="form-group col-sm-3">
 								<input type="text" class="form-control"
 									ng-disabled="temp.policy.readOnly"
 									ng-model="ruleAlgorithmschoice.dynamicRuleAlgorithmField2"
-									name="dynamicRuleAlgorithmField2" title="Enter the Value without any spaces and special characters and for rule formation use A1, A2,..etc., based on above Rules."/>
+									name="dynamicRuleAlgorithmField2"
+									title="Enter the Value without any spaces and special characters and for rule formation use A1, A2,..etc., based on above Rules." />
 							</div>
 							<div class="form-group col-sm-1">
 								<button type="button" class="btn btn-default"
 									ng-disabled="temp.policy.readOnly"
-									ng-click="removeRuleAlgorithm()" title="onClick will remove the last row">
+									ng-click="removeRuleAlgorithm()"
+									title="onClick will remove the last row">
 									<i class="fa fa-minus"></i>
 								</button>
 							</div>
@@ -497,11 +579,14 @@
 		<div class="modal-footer">
 			<button class="btn btn-primary" herf="javascript:void(0)"
 				ng-disabled="temp.policy.readOnly"
-				ng-click="validatePolicy(temp.policy);" title="Validate the data entered in the Policy fields.">Validate</button>
+				ng-click="validatePolicy(temp.policy);"
+				title="Validate the data entered in the Policy fields.">Validate</button>
 			<button class="btn btn-success" herf="javascript:void(0)"
 				ng-disabled="savebutton" ng-disabled="temp.policy.readOnly"
-				ng-click="saveDecisionPolicy(temp);" title="Save the Policy with validated data.">Save</button>
-			<button type="button" class="btn btn-default" ng-click="refresh();" title="Close the template.">Close</button>
+				ng-click="saveDecisionPolicy(temp);"
+				title="Save the Policy with validated data.">Save</button>
+			<button type="button" class="btn btn-default" ng-click="refresh();"
+				title="Close the template.">Close</button>
 		</div>
 	</form>
 </div>
