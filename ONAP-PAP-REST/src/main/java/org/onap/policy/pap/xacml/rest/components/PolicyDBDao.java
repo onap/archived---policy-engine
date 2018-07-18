@@ -1945,16 +1945,8 @@ public class PolicyDBDao {
                 String policyScope = policy.policyAdapter.getDomainDir().replace(File.separator, ".");
                 //Does not need to be XACMLPolicyWriterWithPapNotify since it is already in the PAP
                 //and this transaction is intercepted up stream.
-                String policyDataString;
-                try {
-                    policyXmlStream = XACMLPolicyWriter.getXmlAsInputStream((PolicyType)policy.getCorrectPolicyDataObject());
-                    policyDataString = IOUtils.toString(policyXmlStream);
-                } catch (IOException e) {
-                    policyDataString = "could not read";
-                    PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar, "Caught IOException on IOUtils.toString("+policyXmlStream+")");
-                    throw new IllegalArgumentException("Cannot parse the policy xml from the PolicyRestAdapter.");
-                }
-                IOUtils.closeQuietly(policyXmlStream);
+                policyXmlStream = XACMLPolicyWriter.getXmlAsInputStream((PolicyType)policy.getCorrectPolicyDataObject());
+                String policyDataString = getPolicyDataString(policyXmlStream);
                 if(isJunit){
                     //Using parentPath object to set policy data.
                     policyDataString = policy.policyAdapter.getParentPath();
@@ -1971,18 +1963,7 @@ public class PolicyDBDao {
 
                     prefix = configPath.substring(configPath.indexOf(policyScope+".")+policyScope.concat(".").length(), configPath.lastIndexOf(policy.policyAdapter.getPolicyName()));
                     if(isNullOrEmpty(policy.policyAdapter.getConfigBodyData())){
-                        String configData = "";
-                        try{
-                            String newConfigPath = configPath;
-                            try{
-                                newConfigPath = processConfigPath(newConfigPath);
-                            }catch(Exception e2){
-                                logger.error("Could not process config path: "+newConfigPath,e2);
-                            }
-                            configData = readConfigFile(newConfigPath);
-                        }catch(Exception e){
-                            logger.error("Could not read config body data for "+configPath,e);
-                        }
+                        String configData = getConfigData(configPath);
                         policy.policyAdapter.setConfigBodyData(configData);
                     }
                 } else if (action.equalsIgnoreCase(policy.policyAdapter.getPolicyType())) {
@@ -2028,6 +2009,41 @@ public class PolicyDBDao {
                     }
                 }
             }
+        }
+
+        private String getConfigData(String configPath) {
+            String configData = "";
+            try{
+                configData = getConfigPath(configPath);
+            }catch(Exception e){
+                logger.error("Could not read config body data for "+configPath,e);
+            }
+            return configData;
+        }
+
+        private String getConfigPath(String configPath) {
+            String configData = "";
+            String newConfigPath = configPath;
+            try{
+                newConfigPath = processConfigPath(newConfigPath);
+            }catch(Exception e2){
+                logger.error("Could not process config path: "+newConfigPath,e2);
+            }
+            configData = readConfigFile(newConfigPath);
+            return configData;
+        }
+
+        private String getPolicyDataString(InputStream policyXmlStream) {
+            String policyDataString;
+            try {
+                policyDataString = IOUtils.toString(policyXmlStream);
+            } catch (IOException e) {
+                policyDataString = "could not read";
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar, "Caught IOException on IOUtils.toString("+policyXmlStream+")");
+                throw new IllegalArgumentException("Cannot parse the policy xml from the PolicyRestAdapter.");
+            }
+            IOUtils.closeQuietly(policyXmlStream);
+            return policyDataString;
         }
 
         @Override
@@ -2140,37 +2156,7 @@ public class PolicyDBDao {
                         //should be fast since getPolicies uses a HashSet in StdPDPGroup
                         if(!newPolicySet.contains(pol.getId())){
                             String[] scopeAndName = getNameScopeAndVersionFromPdpPolicy(pol.getId());
-                            PolicyEntity policyToDelete = null;
-                            try{
-                                if(scopeAndName!=null){
-                                    policyToDelete = getPolicy(scopeAndName[0],scopeAndName[1]);
-                                    if ("XACMLPapServlet.doDelete".equals(username)) {
-                                        Iterator<PolicyEntity> dbPolicyIt = groupToUpdateInDB.getPolicies().iterator();
-                                        String policyName = getPolicyNameAndVersionFromPolicyFileName(policyToDelete.getPolicyName())[0];
-
-                                        logger.info("PolicyDBDao: delete policy from GroupEntity");
-                                        try{
-                                            while(dbPolicyIt.hasNext()){
-                                                PolicyEntity dbpolicy = dbPolicyIt.next();
-                                                if(policyToDelete.getScope().equals(dbpolicy.getScope()) &&
-                                                        getPolicyNameAndVersionFromPolicyFileName(dbpolicy.getPolicyName())[0].equals(policyName)) {
-                                                    dbPolicyIt.remove();
-
-                                                    logger.info("PolicyDBDao: deleting policy from the existing group:\n "
-                                                            + "policyName is " + policyToDelete.getScope()+"."+policyToDelete.getPolicyName() + "\n"
-                                                            + "group is " + groupToUpdateInDB.getGroupId());
-                                                }
-                                            }
-                                        }catch(Exception e){
-                                            logger.debug(e);
-                                            PolicyLogger.error("Could not delete policy with name: "+ policyToDelete.getScope()+"."+policyToDelete.getPolicyName()+"\n ID: "+ policyToDelete.getPolicyId());
-                                        }
-                                    }
-                                }
-                            }catch(Exception e){
-                                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar, "Could not get policy to remove: "+pol.getId());
-                                throw new PersistenceException("Could not get policy to remove: "+pol.getId());
-                            }
+                            deletePolicyInScope(username, groupToUpdateInDB, pol, scopeAndName);
                         }
                     }
                 }
@@ -2198,6 +2184,44 @@ public class PolicyDBDao {
                 }
                 em.flush();
                 this.groupId = groupToUpdateInDB.getGroupKey();
+            }
+        }
+
+        private void deletePolicyInScope(String username, GroupEntity groupToUpdateInDB, PDPPolicy pol, String[] scopeAndName) {
+            PolicyEntity policyToDelete;
+            try{
+                if(scopeAndName!=null){
+                    policyToDelete = getPolicy(scopeAndName[0],scopeAndName[1]);
+                    if ("XACMLPapServlet.doDelete".equals(username)) {
+                        Iterator<PolicyEntity> dbPolicyIt = groupToUpdateInDB.getPolicies().iterator();
+                        String policyName = getPolicyNameAndVersionFromPolicyFileName(policyToDelete.getPolicyName())[0];
+
+                        logger.info("PolicyDBDao: delete policy from GroupEntity");
+                        deletePolicyFromGroupEntity(groupToUpdateInDB, policyToDelete, dbPolicyIt, policyName);
+                    }
+                }
+            }catch(Exception e){
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar, "Could not get policy to remove: "+pol.getId());
+                throw new PersistenceException("Could not get policy to remove: "+pol.getId());
+            }
+        }
+
+        private void deletePolicyFromGroupEntity(GroupEntity groupToUpdateInDB, PolicyEntity policyToDelete, Iterator<PolicyEntity> dbPolicyIt, String policyName) {
+            try{
+                while(dbPolicyIt.hasNext()){
+                    PolicyEntity dbpolicy = dbPolicyIt.next();
+                    if(policyToDelete.getScope().equals(dbpolicy.getScope()) &&
+                            getPolicyNameAndVersionFromPolicyFileName(dbpolicy.getPolicyName())[0].equals(policyName)) {
+                        dbPolicyIt.remove();
+
+                        logger.info("PolicyDBDao: deleting policy from the existing group:\n "
+                                + "policyName is " + policyToDelete.getScope()+"."+policyToDelete.getPolicyName() + "\n"
+                                + "group is " + groupToUpdateInDB.getGroupId());
+                    }
+                }
+            }catch(Exception e){
+                logger.debug(e);
+                PolicyLogger.error("Could not delete policy with name: "+ policyToDelete.getScope()+"."+policyToDelete.getPolicyName()+"\n ID: "+ policyToDelete.getPolicyId());
             }
         }
 

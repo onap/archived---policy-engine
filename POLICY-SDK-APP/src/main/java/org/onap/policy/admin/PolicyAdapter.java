@@ -39,13 +39,32 @@ import com.att.research.xacml.util.XACMLProperties;
 
 public class PolicyAdapter {
 
-	private static final Logger LOGGER	= FlexLogger.getLogger(PolicyAdapter.class);
-	
-	public void configure(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-		if(extendedOptions(policyAdapter, entity)){
-			return;
+    private static final Logger LOGGER	= FlexLogger.getLogger(PolicyAdapter.class);
+
+    public void configure(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
+        if(extendedOptions(policyAdapter, entity)){
+            return;
+        }
+        String policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
+		String configPolicyName = getConfigPolicyName(policyAdapter);
+        policyAdapter.setPolicyType(policyNameValue);
+
+        if (configPolicyName != null) {
+            policyAdapter.setConfigPolicyType(configPolicyName);
+        }
+
+        if("Action".equalsIgnoreCase(policyAdapter.getPolicyType())){
+            new ActionPolicyController().prePopulateActionPolicyData(policyAdapter, entity);
+        }
+        if("Decision".equalsIgnoreCase(policyAdapter.getPolicyType())){
+            new DecisionPolicyController().prePopulateDecisionPolicyData(policyAdapter, entity);
+        }
+        if("Config".equalsIgnoreCase(policyAdapter.getPolicyType())){
+			prePopulatePolicyData(policyAdapter, entity);
 		}
-		String policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
+    }
+
+	private String getConfigPolicyName(PolicyRestAdapter policyAdapter) {
 		String	configPolicyName = null ;
 		if(policyAdapter.getPolicyName().startsWith("Config_PM")){
 			configPolicyName = "ClosedLoop_PM";
@@ -66,59 +85,48 @@ public class PolicyAdapter {
 		}else{
 			configPolicyName = "Base";
 		}
-		if (policyNameValue != null) {
-			policyAdapter.setPolicyType(policyNameValue);
-		}
-		if (configPolicyName != null) {
-			policyAdapter.setConfigPolicyType(configPolicyName);
-		}
+		return configPolicyName;
+	}
 
-		if("Action".equalsIgnoreCase(policyAdapter.getPolicyType())){
-			new ActionPolicyController().prePopulateActionPolicyData(policyAdapter, entity);
+	private void prePopulatePolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
+		if("Base".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
+			new CreatePolicyController().prePopulateBaseConfigPolicyData(policyAdapter, entity);
 		}
-		if("Decision".equalsIgnoreCase(policyAdapter.getPolicyType())){
-			new DecisionPolicyController().prePopulateDecisionPolicyData(policyAdapter, entity);
+		else if("BRMS_Raw".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
+			new CreateBRMSRawController().prePopulateBRMSRawPolicyData(policyAdapter, entity);
 		}
-		if("Config".equalsIgnoreCase(policyAdapter.getPolicyType())){
-			if("Base".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
-				new CreatePolicyController().prePopulateBaseConfigPolicyData(policyAdapter, entity);
-			}
-			else if("BRMS_Raw".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
-				new CreateBRMSRawController().prePopulateBRMSRawPolicyData(policyAdapter, entity);
-			}
-			else if("BRMS_Param".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
-				new CreateBRMSParamController().prePopulateBRMSParamPolicyData(policyAdapter, entity);
-			}
-			else if("ClosedLoop_Fault".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
-				new CreateClosedLoopFaultController().prePopulateClosedLoopFaultPolicyData(policyAdapter, entity);
-			}
-			else if("ClosedLoop_PM".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
-				new CreateClosedLoopPMController().prePopulateClosedLoopPMPolicyData(policyAdapter, entity);
-			}
-			else if("Micro Service".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
-				new CreateDcaeMicroServiceController().prePopulateDCAEMSPolicyData(policyAdapter, entity);
-			}
-			else if("Optimization".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
-				new CreateOptimizationController().prePopulatePolicyData(policyAdapter, entity);
-			}
-			else if("Firewall Config".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
-				new CreateFirewallController().prePopulateFWPolicyData(policyAdapter, entity);
-			}
+		else if("BRMS_Param".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
+			new CreateBRMSParamController().prePopulateBRMSParamPolicyData(policyAdapter, entity);
+		}
+		else if("ClosedLoop_Fault".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
+			new CreateClosedLoopFaultController().prePopulateClosedLoopFaultPolicyData(policyAdapter, entity);
+		}
+		else if("ClosedLoop_PM".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
+			new CreateClosedLoopPMController().prePopulateClosedLoopPMPolicyData(policyAdapter, entity);
+		}
+		else if("Micro Service".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
+			new CreateDcaeMicroServiceController().prePopulateDCAEMSPolicyData(policyAdapter, entity);
+		}
+		else if("Optimization".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
+			new CreateOptimizationController().prePopulatePolicyData(policyAdapter, entity);
+		}
+		else if("Firewall Config".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
+			new CreateFirewallController().prePopulateFWPolicyData(policyAdapter, entity);
 		}
 	}
-	
+
 	public boolean extendedOptions(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-		return false;
-	}
+        return false;
+    }
 
-	public static PolicyAdapter getInstance() {
-		try {
-			Class<?> policyAdapter = Class.forName(XACMLProperties.getProperty("policyAdapter.impl.className", PolicyAdapter.class.getName()));
-			return (PolicyAdapter) policyAdapter.newInstance();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException e) {
-			LOGGER.error("Exception Occured"+e);
-		}
-		return null;
-	}
+    public static PolicyAdapter getInstance() {
+        try {
+            Class<?> policyAdapter = Class.forName(XACMLProperties.getProperty("policyAdapter.impl.className", PolicyAdapter.class.getName()));
+            return (PolicyAdapter) policyAdapter.newInstance();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException e) {
+            LOGGER.error("Exception Occured"+e);
+        }
+        return null;
+    }
 
 }
