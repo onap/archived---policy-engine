@@ -231,13 +231,13 @@ public abstract class Policy {
 		String absolutePath = parentPath.toString();
 		if (absolutePath != null && !absolutePath.equals(EMPTY_STRING)) {
 			policyDir = absolutePath.substring(absolutePath.lastIndexOf('\\') + 1, absolutePath.length());
-			if (policyDir == null || policyDir.equals(EMPTY_STRING)) {
+			if (policyDir.equals(EMPTY_STRING)) {
 				policyDir = absolutePath.substring(absolutePath.lastIndexOf('/') + 1, absolutePath.length());
 			}
 		}
 
 		String fileName = "default";
-		if (policyDir != null && !policyDir.equals(EMPTY_STRING)) {
+		if (!policyDir.equals(EMPTY_STRING)) {
 			if("ClosedLoop_PM".equals(policyConfigType)){
 				fileName = policyType + "_" + "PM" + "_" +java.lang.String.format(policyFileName) + "." +version +".xml";
 			}else if("ClosedLoop_Fault".equals(policyConfigType)){
@@ -271,9 +271,8 @@ public abstract class Policy {
 			//
 			//Does not need to be XACMLPolicyWriterWithPapNotify since it is already in the PAP
 			//and this transaction is intercepted up stream.
-			InputStream inputStream = null;
-			try {
-				inputStream = XACMLPolicyWriter.getXmlAsInputStream((PolicyType) policyData);
+
+			try(InputStream inputStream = XACMLPolicyWriter.getXmlAsInputStream((PolicyType) policyData)) {
 				PolicyDef policyDef = DOMPolicyDef.load(inputStream);
 				if (policyDef == null) {
 					success.put("validation", "PolicyDef Validation Failed");
@@ -283,13 +282,6 @@ public abstract class Policy {
 			} catch (Exception e) {
 				LOGGER.error("PolicyDef Validation failed"+e);
 				success.put("error", "Validation Failed");
-			}finally{
-				try {
-					if(inputStream != null)
-						inputStream.close();
-				} catch (IOException e) {
-					LOGGER.error("Exception Occured while closing the input stream"+e);
-				}
 			}
 		} else {
 			PolicyLogger.error("Unknown data type sent back.");

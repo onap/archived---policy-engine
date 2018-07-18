@@ -147,7 +147,7 @@ public class XACMLPolicyWriter {
 			return new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
 		} catch (JAXBException e) {
 			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyWriter", "writePolicyFile failed");
-			return null;
+			throw new IllegalArgumentException("XACMLPolicyWriter writePolicyFile failed", e);
 		}		
 	}
 	/**
