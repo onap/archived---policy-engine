@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -415,6 +415,16 @@ public class PolicyCreation extends AbstractPolicyCreation{
 						if(policyData.getYamlparams().getBlackList()!=null){
 							String blackList = StringUtils.join(policyData.getYamlparams().getBlackList(), ",");
 							attributeMap.put("blackList", blackList);
+						}
+						if(DecisionPolicy.GUARD_BL_YAML.equals(policyData.getRuleProvider()) && "Use File Upload".equals(policyData.getBlackListEntryType())){
+							if(policyData.getBlackListEntries() != null && !policyData.getBlackListEntries().isEmpty()){
+								String blackList = StringUtils.join(policyData.getBlackListEntries(), ",");
+								attributeMap.put("blackList", blackList);
+							}
+							if(policyData.getAppendBlackListEntries() != null && !policyData.getAppendBlackListEntries().isEmpty()){
+								String blackList = StringUtils.join(policyData.getAppendBlackListEntries(), ",");
+								attributeMap.put("appendBlackList", blackList);
+							}
 						}
 						if(policyData.getYamlparams().getTargets()!=null){
 							String targets = StringUtils.join(policyData.getYamlparams().getTargets(),",");
