@@ -167,7 +167,9 @@ public class DecisionPolicy extends Policy {
 		
 		if(policyAdapter.getRuleProvider().equals(GUARD_YAML) || policyAdapter.getRuleProvider().equals(GUARD_BL_YAML)){
 			Map<String, String> yamlParams = new HashMap<>();
-			yamlParams.put(DESCRIPTION, (policyAdapter.getPolicyDescription()!=null)? policyAdapter.getPolicyDescription(): "YAML Guard Policy");
+			String blackListEntryType = policyAdapter.getBlackListEntryType() !=null ? policyAdapter.getBlackListEntryType(): "Use Manual Entry";
+			String description = policyAdapter.getPolicyDescription() != null? policyAdapter.getPolicyDescription(): "YAML Guard Policy";
+			yamlParams.put(DESCRIPTION, description + "@blEntry@" + blackListEntryType + "@blEntry@");
 			String fileName = policyAdapter.getNewFileName();
 			String name = fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length());
 			if ((name == null) || ("".equals(name))) {
@@ -295,6 +297,16 @@ public class DecisionPolicy extends Policy {
 					blackList.add(blackListString);
 				}	
 			}
+            if(yamlParams.containsKey("appendBlackList")){
+            	String appendBlackListString = yamlParams.get("appendBlackList");
+                List<String> appendBlackList = null;
+                if(appendBlackListString!=null && !appendBlackListString.trim().isEmpty()){
+                	appendBlackList = Arrays.asList(appendBlackListString.split(","));	
+                	for(int i=0; i<appendBlackList.size();i++){
+                		blackList.remove(appendBlackList.get(i));
+                	}
+                }
+            }
 			File templateFile;
 			Path xacmlTemplatePath;
 			ClassLoader classLoader = getClass().getClassLoader();
@@ -781,7 +793,7 @@ public class DecisionPolicy extends Policy {
 	}
 	
 	public String getFunctionDefinitionId(String key){
-    	FunctionDefinition object = (FunctionDefinition) commonClassDao.getDataById(FunctionDefinition.class, "short_name", key);
+    	FunctionDefinition object = (FunctionDefinition) commonClassDao.getDataById(FunctionDefinition.class, "shortname", key);
     	if(object != null){
     		return object.getXacmlid();
     	}
