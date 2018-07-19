@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_3c147df4",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1967,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-19T10:20:40Z",
+      "side": 1,
+      "message": "You don\u0027t need the configData string, Replace with:\npolicy.policyAdapter.setConfigBodyData(getConfigData(configPath));",
+      "range": {
+        "startLine": 1966,
+        "startChar": 24,
+        "endLine": 1967,
+        "endChar": 75
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_dcf8e1c6",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2034,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-19T10:20:40Z",
+      "side": 1,
+      "message": "I prefer:\nprivate String getConfigData(String configPath) {\n    try {\n\tString newConfigPath \u003d processConfigPath(configPath);\n\treturn readConfigFile(newConfigPath);\n    } catch (ExceptionReturnedFromProcessConfigPath e){\n\tlogger.error(\"Could not process config path: \" + configPath, e);\n    }\n    catch(ExceptionReturnedFromReadsConfigFile e){\n\tlogger.error(\"Could not read config body data for \" + configPath,e);\n    }\n    return \"\";\n}",
+      "range": {
+        "startLine": 2014,
+        "startChar": 8,
+        "endLine": 2034,
+        "endChar": 9
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_dcdc6177",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2039,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-19T10:20:40Z",
+      "side": 1,
+      "message": "This method is deprecated on the latest 2.6 version of Apache commons. It recommends you use the version that specifies the character set.",
+      "range": {
+        "startLine": 2039,
+        "startChar": 0,
+        "endLine": 2039,
+        "endChar": 69
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_9ce6e943",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2045,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-19T10:20:40Z",
+      "side": 1,
+      "message": "This method is also deprecated. It says to use try with resources or handle the exceptions.",
+      "range": {
+        "startLine": 2045,
+        "startChar": 0,
+        "endLine": 2045,
+        "endChar": 50
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_bce3ad32",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2047,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-19T10:20:40Z",
+      "side": 1,
+      "message": "It might be better to use a try-with resources, bring the definition of the input stream and the opening of the input stream into this method. Would something like this work better?\nprivate String getPolicyDataString(PolicyType policyType) {\n\n    try (InputStream policyXmlStream  \u003d XACMLPolicyWriter.getXmlAsInputStream(policyType)) {\n\treturn getPolicyDataString(policyXmlStream);\n    } catch (IOException e) {\n\tpolicyDataString \u003d \"could not read\";\n\tPolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar, \"Caught IOException on IOUtils.toString(\"+policyXmlStream+\")\");\n\tthrow new IllegalArgumentException(\"Cannot parse the policy xml from the PolicyRestAdapter.\");\n    }\n}",
+      "range": {
+        "startLine": 2036,
+        "startChar": 8,
+        "endLine": 2047,
+        "endChar": 9
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_9c0269b3",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2193,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-19T10:20:40Z",
+      "side": 1,
+      "message": "Take outside try/catch and replace with\nif (scopeAndName \u003d\u003d null) {\n    return;\n}",
+      "range": {
+        "startLine": 2193,
+        "startChar": 0,
+        "endLine": 2193,
+        "endChar": 39
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_7c3195a1",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-19T10:20:40Z",
+      "side": 1,
+      "message": "indentation and tabs",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 2
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_1c265969",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-19T10:20:40Z",
+      "side": 1,
+      "message": "tabs",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 217,
+        "endChar": 5
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
