@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_991fdbb7",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-19T13:24:36Z",
+      "side": 0,
+      "message": "created a new method for this",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 3
+      },
+      "revId": "9bfa1d61dc77973f85a42174b199d4c744265521",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_b91c1fc3",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-19T13:24:36Z",
+      "side": 0,
+      "message": "this check is not needed because, policyNameValue cannot be null",
+      "range": {
+        "startLine": 69,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 32
+      },
+      "revId": "9bfa1d61dc77973f85a42174b199d4c744265521",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_597943fb",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-19T13:24:36Z",
+      "side": 0,
+      "message": "created a new method for this set of if-else stmts",
+      "range": {
+        "startLine": 83,
+        "startChar": 1,
+        "endLine": 106,
+        "endChar": 4
+      },
+      "revId": "9bfa1d61dc77973f85a42174b199d4c744265521",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

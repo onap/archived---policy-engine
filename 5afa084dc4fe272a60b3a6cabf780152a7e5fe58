@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "da7095c5_5912a3b5",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateNewMicroServiceModel.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-19T13:24:36Z",
+      "side": 1,
+      "message": "created smaller methods : reducing nested loops count",
+      "range": {
+        "startLine": 83,
+        "startChar": 12,
+        "endLine": 83,
+        "endChar": 13
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_791767a4",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1949,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-19T13:24:36Z",
+      "side": 1,
+      "message": "defined a new method",
+      "range": {
+        "startLine": 1949,
+        "startChar": 16,
+        "endLine": 1949,
+        "endChar": 21
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_190c2b94",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1966,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-19T13:24:36Z",
+      "side": 1,
+      "message": "defined a new method",
+      "range": {
+        "startLine": 1966,
+        "startChar": 44,
+        "endLine": 1966,
+        "endChar": 57
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_3c147df4",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
         "patchSetId": 2
@@ -140,6 +209,52 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_d925530b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/CheckPDP.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-19T13:24:36Z",
+      "side": 1,
+      "message": "tabs to space conversion and ..\nline 128 : try-wth-res construct",
+      "range": {
+        "startLine": 60,
+        "startChar": 3,
+        "endLine": 61,
+        "endChar": 6
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_3911efac",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/CheckPDP.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-19T13:24:36Z",
+      "side": 1,
+      "message": "using try-with-resources construct",
+      "range": {
+        "startLine": 128,
+        "startChar": 8,
+        "endLine": 128,
+        "endChar": 69
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_7c3195a1",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
         "patchSetId": 2
@@ -163,6 +278,46 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_797e87e6",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-19T13:24:36Z",
+      "side": 1,
+      "message": "okay, i see that some tabs managed to stay on...",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 1
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_1983cbcd",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-19T13:24:36Z",
+      "side": 1,
+      "message": "tabs -\u003e space conversion\nline \n217 : refactor to a new method\n344 : refactor to a new method\n352 : refactor to a new method\n397 : new method added parsePolicyList\n421 : new method addScope",
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_1c265969",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
         "patchSetId": 2
@@ -180,6 +335,23 @@
         "endLine": 217,
         "endChar": 5
       },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_39880fe7",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-19T13:24:36Z",
+      "side": 1,
+      "message": "refactor to smaller methods for nested try/catch blocks and reduce nested loops",
       "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
