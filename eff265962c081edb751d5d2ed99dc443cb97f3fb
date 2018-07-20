@@ -139,6 +139,29 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_08e4cf0b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/CheckPDP.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-20T11:09:49Z",
+      "side": 1,
+      "message": "Please add Modified Copyright (C) 2018 TechMahindra",
+      "range": {
+        "startLine": 5,
+        "startChar": 1,
+        "endLine": 5,
+        "endChar": 70
+      },
+      "revId": "eff265962c081edb751d5d2ed99dc443cb97f3fb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_cde1099c",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
         "patchSetId": 3
