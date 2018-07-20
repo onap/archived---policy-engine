@@ -233,6 +233,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_c8733714",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-07-20T13:44:01Z",
+      "side": 1,
+      "message": "If it is not 1, we consider what ever value user enter as \"0\" and will not consider to add.",
+      "parentUuid": "da7095c5_8879bf95",
+      "range": {
+        "startLine": 255,
+        "startChar": 25,
+        "endLine": 255,
+        "endChar": 34
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_0865afe0",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
         "patchSetId": 4
