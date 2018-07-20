@@ -95,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_c81c97c4",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T13:48:48Z",
+      "side": 1,
+      "message": "OK. However, we still have to deal with the nested try.",
+      "parentUuid": "da7095c5_e825db0a",
+      "range": {
+        "startLine": 174,
+        "startChar": 16,
+        "endLine": 174,
+        "endChar": 35
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_0837efe4",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
         "patchSetId": 4
@@ -245,6 +269,30 @@
       "side": 1,
       "message": "If it is not 1, we consider what ever value user enter as \"0\" and will not consider to add.",
       "parentUuid": "da7095c5_8879bf95",
+      "range": {
+        "startLine": 255,
+        "startChar": 25,
+        "endLine": 255,
+        "endChar": 34
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_08512f62",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T13:48:48Z",
+      "side": 1,
+      "message": "I think you must issue an error message if it\u0027s not 1 or 0 because if the user enters something else you do not know what the intention of the user is. I do not think it is safe to assume \"do not blacklist\" if the data entered is other than 1.\n\nA person could have put in \"11\" as a typo and thinks they have put in a valid blacklist entry but they will not have done so.",
+      "parentUuid": "da7095c5_c8733714",
       "range": {
         "startLine": 255,
         "startChar": 25,
