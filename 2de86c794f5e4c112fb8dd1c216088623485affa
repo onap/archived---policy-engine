@@ -1,0 +1,280 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_88a0dff5",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "You should pass the exception, this just appends whatever e.toString() returns.\n\nchange to:\n\", e);\n\nPlease do this for all the logging of exceptions in the class.",
+      "range": {
+        "startLine": 160,
+        "startChar": 113,
+        "endLine": 160,
+        "endChar": 120
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_2820b39a",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "This comment won\u0027t block the review. \nJust for my curiosity, why was Excel selected as an import format? Why not csv? Also do you support xlsx files, for which the specification is somewhat open?",
+      "range": {
+        "startLine": 165,
+        "startChar": 41,
+        "endLine": 165,
+        "endChar": 61
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_e8395bd9",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "I think you will be in trouble with cyclomatic complexity on this method. As a rule of thumb, what I\u0027ve seen with Sonar, if you go beyond three levels of if-then-else statements, then you are in trouble. You go to 7 levels here.",
+      "range": {
+        "startLine": 174,
+        "startChar": 16,
+        "endLine": 174,
+        "endChar": 35
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_0837efe4",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "consider switching this logic so that if items is empty you just return. That gives you back one level.",
+      "range": {
+        "startLine": 184,
+        "startChar": 0,
+        "endLine": 184,
+        "endChar": 31
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_4825e7a9",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "nested try, Sonar will complain on this.",
+      "range": {
+        "startLine": 192,
+        "startChar": 20,
+        "endLine": 192,
+        "endChar": 23
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_a83363f5",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "Please rethink the structure of this code. I would suggest one or even two private methods here to reduce complexity and improve the structure of the class.",
+      "range": {
+        "startLine": 189,
+        "startChar": 0,
+        "endLine": 213,
+        "endChar": 2
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_a84a8353",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "Thanks, this method reads much better and is much easier to follow now.",
+      "range": {
+        "startLine": 229,
+        "startChar": 17,
+        "endLine": 229,
+        "endChar": 30
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_e8407b37",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "Again, not a blocking comment, just a suggestion\n\nIt might be helpful to the user to have a line number in the error message if there is an invalid row. You could change this into a for statement with a line number counter and then use the line number in the error messages:\n\nfor (int lineNo \u003d 1; cellIterator.hasNext(); lineNo++) {",
+      "range": {
+        "startLine": 249,
+        "startChar": 0,
+        "endLine": 249,
+        "endChar": 40
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_8879bf95",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "You will only get an exception if the column value is not numeric, so if the user enters a value like -345543 in the Action column, an exception will not be thrown. Is this correct?",
+      "range": {
+        "startLine": 255,
+        "startChar": 25,
+        "endLine": 255,
+        "endChar": 34
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_0865afe0",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "I\u0027m not sure about this, you probably should be passing the entire exception, \"+ e\" will just append the e.toString() text to the string being passed bacl to",
+      "range": {
+        "startLine": 256,
+        "startChar": 107,
+        "endLine": 256,
+        "endChar": 111
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_e8ae3be7",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "You could change this error message to be\n\npolicyLogger.error(\"Entry at row \" + lineNo + \" not added, the value in the \" + BLACKLISTENTRY + \" column is not a valid string: \" + e.getMessage());",
+      "range": {
+        "startLine": 256,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 113
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_08accfec",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "You could change this error message to be\n\npolicyLogger.error(\"Entry at row \" + lineNo + \" not added, the value in the \" + Action + \" column is neither \\\"0\\\" nor \\\"1\\\": \" + e.getMessage());",
+      "range": {
+        "startLine": 265,
+        "startChar": 0,
+        "endLine": 265,
+        "endChar": 115
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
