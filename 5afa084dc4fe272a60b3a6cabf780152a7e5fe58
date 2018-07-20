@@ -94,6 +94,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_4d1179ab",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1967,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_3c147df4",
+      "range": {
+        "startLine": 1966,
+        "startChar": 24,
+        "endLine": 1967,
+        "endChar": 75
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_dcf8e1c6",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
         "patchSetId": 2
@@ -105,6 +129,30 @@
       "writtenOn": "2018-07-19T10:20:40Z",
       "side": 1,
       "message": "I prefer:\nprivate String getConfigData(String configPath) {\n    try {\n\tString newConfigPath \u003d processConfigPath(configPath);\n\treturn readConfigFile(newConfigPath);\n    } catch (ExceptionReturnedFromProcessConfigPath e){\n\tlogger.error(\"Could not process config path: \" + configPath, e);\n    }\n    catch(ExceptionReturnedFromReadsConfigFile e){\n\tlogger.error(\"Could not read config body data for \" + configPath,e);\n    }\n    return \"\";\n}",
+      "range": {
+        "startLine": 2014,
+        "startChar": 8,
+        "endLine": 2034,
+        "endChar": 9
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_5f4da371",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2034,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "wow ! that was very good comment, I didnt think this way, thanks. \nexception returned by both methods is same, so, its even better.. IllegalArgumentException",
+      "parentUuid": "da7095c5_dcf8e1c6",
       "range": {
         "startLine": 2014,
         "startChar": 8,
@@ -140,6 +188,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_4d5f3973",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2039,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_dcdc6177",
+      "range": {
+        "startLine": 2039,
+        "startChar": 0,
+        "endLine": 2039,
+        "endChar": 69
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_9ce6e943",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
         "patchSetId": 2
@@ -151,6 +223,30 @@
       "writtenOn": "2018-07-19T10:20:40Z",
       "side": 1,
       "message": "This method is also deprecated. It says to use try with resources or handle the exceptions.",
+      "range": {
+        "startLine": 2045,
+        "startChar": 0,
+        "endLine": 2045,
+        "endChar": 50
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_2d5a0584",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2045,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_9ce6e943",
       "range": {
         "startLine": 2045,
         "startChar": 0,
@@ -186,6 +282,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_6d60fd35",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2047,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_bce3ad32",
+      "range": {
+        "startLine": 2036,
+        "startChar": 8,
+        "endLine": 2047,
+        "endChar": 9
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_9c0269b3",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
         "patchSetId": 2
@@ -197,6 +317,30 @@
       "writtenOn": "2018-07-19T10:20:40Z",
       "side": 1,
       "message": "Take outside try/catch and replace with\nif (scopeAndName \u003d\u003d null) {\n    return;\n}",
+      "range": {
+        "startLine": 2193,
+        "startChar": 0,
+        "endLine": 2193,
+        "endChar": 39
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_bfe39f32",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2193,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_9c0269b3",
       "range": {
         "startLine": 2193,
         "startChar": 0,
@@ -278,6 +422,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_ffc0377e",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_7c3195a1",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 2
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_797e87e6",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
         "patchSetId": 2
@@ -329,6 +497,30 @@
       "writtenOn": "2018-07-19T10:20:40Z",
       "side": 1,
       "message": "tabs",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 217,
+        "endChar": 5
+      },
+      "revId": "5afa084dc4fe272a60b3a6cabf780152a7e5fe58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_9fbd7b05",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_1c265969",
       "range": {
         "startLine": 217,
         "startChar": 0,
