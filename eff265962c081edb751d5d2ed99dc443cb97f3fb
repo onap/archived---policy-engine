@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_0d514162",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "these variables are not used outside",
+      "revId": "eff265962c081edb751d5d2ed99dc443cb97f3fb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_ad4db5c6",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "unused outside , hence private",
+      "revId": "eff265962c081edb751d5d2ed99dc443cb97f3fb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_2dd1a5cd",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1367,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "i used this method in CreateNewMicroServiceModel in the same package for checking null or empty.\nearlier in that class(line 158), it was compared using !\u003d\n\"\" !\u003d \u003cstrval\u003e",
+      "revId": "eff265962c081edb751d5d2ed99dc443cb97f3fb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_eddacde8",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1945,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "as per your comments",
+      "revId": "eff265962c081edb751d5d2ed99dc443cb97f3fb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_0dd861ee",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/util/XACMLPolicyWriter.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "Ah., i forgot to run tabs -\u003e space here\n\nif no other comment in this class, i will handle conversion in another subtask,",
+      "revId": "eff265962c081edb751d5d2ed99dc443cb97f3fb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_ade4d5ac",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/util/XACMLPolicyWriter.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "here null was returned and down the line, Illegal Arg exception thrown by java library, so i just throw it from here. \nAlso., throwing null here would cause null ptr exception or need to handle null check, \nto prevent it i throw illegal arg exception here",
+      "revId": "eff265962c081edb751d5d2ed99dc443cb97f3fb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_cde1099c",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "ok, conversions here as well., i will handle this in separate subtask",
+      "revId": "eff265962c081edb751d5d2ed99dc443cb97f3fb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_6deebd8d",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-20T04:14:01Z",
+      "side": 1,
+      "message": "changes in 217, 352, 383, 398, 421",
+      "revId": "eff265962c081edb751d5d2ed99dc443cb97f3fb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
