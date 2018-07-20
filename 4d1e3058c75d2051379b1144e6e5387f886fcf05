@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_c8b57732",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:52:09Z",
+      "side": 1,
+      "message": "That\u0027s fine. I would suggest we move to GSON over time.",
+      "parentUuid": "da7095c5_ff691726",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 51
+      },
+      "revId": "4d1e3058c75d2051379b1144e6e5387f886fcf05",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a9dcd25_137cf71f",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
         "patchSetId": 2
