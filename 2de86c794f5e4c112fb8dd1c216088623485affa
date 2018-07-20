@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_e825db0a",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-07-20T13:33:32Z",
+      "side": 1,
+      "message": "I am using sonar lint on machine and it is not complaining any issues.",
+      "parentUuid": "da7095c5_e8395bd9",
+      "range": {
+        "startLine": 174,
+        "startChar": 16,
+        "endLine": 174,
+        "endChar": 35
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_0837efe4",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
         "patchSetId": 4
