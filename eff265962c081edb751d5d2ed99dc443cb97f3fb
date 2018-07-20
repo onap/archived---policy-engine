@@ -121,6 +121,24 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_08104f4d",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-20T08:10:42Z",
+      "side": 1,
+      "message": "That\u0027s fine.",
+      "parentUuid": "da7095c5_cde1099c",
+      "revId": "eff265962c081edb751d5d2ed99dc443cb97f3fb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_6deebd8d",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
         "patchSetId": 3
