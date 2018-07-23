@@ -142,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_629ec758",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-23T11:52:41Z",
+      "side": 1,
+      "message": "Agree, please change this.",
+      "parentUuid": "da7095c5_0837efe4",
+      "range": {
+        "startLine": 184,
+        "startChar": 0,
+        "endLine": 184,
+        "endChar": 31
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_4825e7a9",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
         "patchSetId": 4
@@ -176,6 +200,30 @@
       "writtenOn": "2018-07-20T08:52:09Z",
       "side": 1,
       "message": "Please rethink the structure of this code. I would suggest one or even two private methods here to reduce complexity and improve the structure of the class.",
+      "range": {
+        "startLine": 189,
+        "startChar": 0,
+        "endLine": 213,
+        "endChar": 2
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_22a0cf8f",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-23T11:52:41Z",
+      "side": 1,
+      "message": "Agree",
+      "parentUuid": "da7095c5_a83363f5",
       "range": {
         "startLine": 189,
         "startChar": 0,
