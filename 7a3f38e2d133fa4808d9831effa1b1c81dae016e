@@ -45,6 +45,74 @@
       "revId": "7a3f38e2d133fa4808d9831effa1b1c81dae016e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_4e888fe7",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/PAPRestConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-23T13:35:09Z",
+      "side": 1,
+      "message": "Please let me know if this right format. \nI wasn\u0027t sure, if \"All rights reserved\" is needed, hence I didnt add.",
+      "revId": "7a3f38e2d133fa4808d9831effa1b1c81dae016e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_2e0c3b94",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/Policy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-23T13:35:09Z",
+      "side": 1,
+      "message": "There are no other changes, just converting tabs -\u003e spaces",
+      "revId": "7a3f38e2d133fa4808d9831effa1b1c81dae016e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_ee25e30a",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/util/XACMLPolicyWriter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-23T13:35:09Z",
+      "side": 1,
+      "message": "There are no other changes, just converting tabs -\u003e spaces",
+      "revId": "7a3f38e2d133fa4808d9831effa1b1c81dae016e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_0e237706",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyAdapter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-23T13:35:09Z",
+      "side": 1,
+      "message": "There are no other changes, just converting tabs -\u003e spaces",
+      "revId": "7a3f38e2d133fa4808d9831effa1b1c81dae016e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
