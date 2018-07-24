@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_36f57183",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-24T19:35:05Z",
+      "side": 1,
+      "message": "OK, that\u0027s fine. I guess it would be too much work to change from Excel format.\n\nFor new software or if we were ever refactoring, we should look at moving to standard open well-supported format for importing and exporting. Maybe we should open a JIRA on it so that we don\u0027t forget about it.",
+      "parentUuid": "da7095c5_5699056d",
+      "range": {
+        "startLine": 165,
+        "startChar": 41,
+        "endLine": 165,
+        "endChar": 61
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_e8395bd9",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
         "patchSetId": 4
