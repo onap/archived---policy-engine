@@ -3,6 +3,7 @@
  * ONAP Policy Engine
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -422,30 +423,7 @@ public class BrmsPush {
                 else if ("kSessionName".equals(key)) {
                     ksessionName = value;
                 }
-                // Check User Specific values.
-                if ("$controller:".equals(key)) {
-                    try {
-                        final PEDependency dependency = PolicyUtils.jsonStringToObject(value, PEDependency.class);
-                        userControllerName = key.replaceFirst("$controller:", "");
-                        LOGGER.info("addRule: userControllerName - " + userControllerName + ", dependency: - "
-                                + dependency);
-                        addToGroup(userControllerName, dependency);
-                    } catch (final Exception e) {
-                        LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while resolving Controller: " + e);
-                    }
-
-                } else if ("$dependency$".equals(key) && value.startsWith("[") && value.endsWith("]")) {
-                    value = value.substring(1, value.length() - 1).trim();
-                    final List<String> dependencyStrings = Arrays.asList(value.split(Pattern.quote("},{")));
-                    for (final String dependencyString : dependencyStrings) {
-                        try {
-                            userDependencies.add(PolicyUtils.jsonStringToObject(dependencyString, PEDependency.class));
-                        } catch (final Exception e) {
-                            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while resolving Dependencies: "
-                                    + e);
-                        }
-                    }
-                }
+                userControllerName = getDependency(userDependencies, key, value);
             }
             if (userControllerName != null) {
                 // Adding custom dependencies here.
@@ -477,6 +455,35 @@ public class BrmsPush {
             // Will check for Create Later after generating the Pom.
             addModifiedGroup(selectedName, "update");
         }
+    }
+
+    private String getDependency(ArrayList<PEDependency> userDependencies, String key, String value) {
+        String userControllerName = null;
+        // Check User Specific values.
+        if ("$controller:".equals(key)) {
+            try {
+                final PEDependency dependency = PolicyUtils.jsonStringToObject(value, PEDependency.class);
+                userControllerName = key.replaceFirst("$controller:", "");
+                LOGGER.info("addRule: userControllerName - " + userControllerName + ", dependency: - "
+                        + dependency);
+                addToGroup(userControllerName, dependency);
+            } catch (final Exception e) {
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while resolving Controller: " + e);
+            }
+
+        } else if ("$dependency$".equals(key) && value.startsWith("[") && value.endsWith("]")) {
+            value = value.substring(1, value.length() - 1).trim();
+            final List<String> dependencyStrings = Arrays.asList(value.split(Pattern.quote("},{")));
+            for (final String dependencyString : dependencyStrings) {
+                try {
+                    userDependencies.add(PolicyUtils.jsonStringToObject(dependencyString, PEDependency.class));
+                } catch (final Exception e) {
+                    LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while resolving Dependencies: "
+                            + e);
+                }
+            }
+        }
+        return userControllerName;
     }
 
     private void syncGroupInfo() {
@@ -624,42 +631,46 @@ public class BrmsPush {
         try (JarFile jar = new JarFile(jarFileName)) {
             final Enumeration<?> enumEntries = jar.entries();
             while (enumEntries.hasMoreElements()) {
-                final JarEntry jarEntry = (JarEntry) enumEntries.nextElement();
-                File file = null;
-                final String fileName = jarEntry.getName().substring(jarEntry.getName().lastIndexOf("/") + 1);
-                if (jarEntry.getName().endsWith(".drl")) {
-                    final String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src"
-                            + File.separator + "main" + File.separator + RESOURCES + File.separator + RULES;
-                    new File(path).mkdirs();
-                    if (syncFlag && policyMap.containsKey(fileName.replace(".drl", ""))) {
-                        file = new File(path + File.separator + fileName);
-                    } else {
-                        file = new File(path + File.separator + fileName);
-                    }
-                } else if (jarEntry.getName().endsWith(POM_XML_FILE)) {
-                    final String path = PROJECTSLOCATION + File.separator + artifactId;
-                    new File(path).mkdirs();
-                    file = new File(path + File.separator + fileName);
-                } else if (jarEntry.getName().endsWith(KMODULE_XML_FILE)) {
-                    final String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src"
-                            + File.separator + "main" + File.separator + RESOURCES + File.separator + META_INF;
-                    new File(path).mkdirs();
-                    file = new File(path + File.separator + fileName);
-                }
-                if (file != null) {
-                    try (InputStream is = jar.getInputStream(jarEntry);
-                            FileOutputStream fos = new FileOutputStream(file)) {
-                        while (is.available() > 0) {
-                            fos.write(is.read());
-                        }
-                        LOGGER.info(fileName + " Created..");
-                    } catch (final IOException e) {
-                        LOGGER.info("exception Occured" + e);
-                    }
-                }
+                parseJarContents(artifactId, jar, enumEntries);
             }
         } catch (final IOException e) {
             LOGGER.info("exception Occured" + e);
+        }
+    }
+
+    private void parseJarContents(String artifactId, JarFile jar, Enumeration<?> enumEntries) {
+        final JarEntry jarEntry = (JarEntry) enumEntries.nextElement();
+        File file = null;
+        final String fileName = jarEntry.getName().substring(jarEntry.getName().lastIndexOf("/") + 1);
+        if (jarEntry.getName().endsWith(".drl")) {
+            final String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src"
+                    + File.separator + "main" + File.separator + RESOURCES + File.separator + RULES;
+            new File(path).mkdirs();
+            if (syncFlag && policyMap.containsKey(fileName.replace(".drl", ""))) {
+                file = new File(path + File.separator + fileName);
+            } else {
+                file = new File(path + File.separator + fileName);
+            }
+        } else if (jarEntry.getName().endsWith(POM_XML_FILE)) {
+            final String path = PROJECTSLOCATION + File.separator + artifactId;
+            new File(path).mkdirs();
+            file = new File(path + File.separator + fileName);
+        } else if (jarEntry.getName().endsWith(KMODULE_XML_FILE)) {
+            final String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src"
+                    + File.separator + "main" + File.separator + RESOURCES + File.separator + META_INF;
+            new File(path).mkdirs();
+            file = new File(path + File.separator + fileName);
+        }
+        if (file != null) {
+            try (InputStream is = jar.getInputStream(jarEntry);
+                 FileOutputStream fos = new FileOutputStream(file)) {
+                while (is.available() > 0) {
+                    fos.write(is.read());
+                }
+                LOGGER.info(fileName + " Created..");
+            } catch (final IOException e) {
+                LOGGER.info("exception Occured" + e);
+            }
         }
     }
 
@@ -771,41 +782,8 @@ public class BrmsPush {
             LOGGER.error("Error while starting Transaction " + e);
         }
         if (!modifiedGroups.isEmpty()) {
-            Boolean flag = false;
-            for (final Map.Entry<String, String> entry : modifiedGroups.entrySet()) {
-                InvocationResult result = null;
-                final String group = entry.getKey();
-                try {
-                    LOGGER.info("PushRules: ModifiedGroups, Key: " + group + ", Value: " + entry.getValue());
-                    final InvocationRequest request = new DefaultInvocationRequest();
-                    setVersion(group);
-                    createPom(group);
-                    request.setPomFile(new File(
-                            PROJECTSLOCATION + File.separator + getArtifactId(group) + File.separator + POM_XML_FILE));
-                    request.setGoals(Arrays.asList(GOALS));
-                    final Invoker invoker = new DefaultInvoker();
-                    result = invoker.execute(request);
-                    if (result.getExecutionException() != null) {
-                        LOGGER.error(result.getExecutionException());
-                    } else if (result.getExitCode() != 0) {
-                        LOGGER.error("Maven Invocation failure..!");
-                    }
-                } catch (final Exception e) {
-                    LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Maven Invocation issue for "
-                            + getArtifactId(group) + e.getMessage(), e);
-                }
-                if (result != null && result.getExitCode() == 0) {
-                    LOGGER.info("Build Completed..!");
-                    if (createFlag) {
-                        addNotification(group, "create");
-                    } else {
-                        addNotification(group, entry.getValue());
-                    }
-                    flag = true;
-                } else {
-                    throw new PolicyException(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Maven Invocation failure!");
-                }
-            }
+            Boolean flag;
+            flag = requestPomFileCreation();
             if (flag) {
                 sendNotification(controllers);
             }
@@ -826,6 +804,45 @@ public class BrmsPush {
         }
         syncProject(controllerName);
         getNameAndSetRemove(controllerName, name);
+    }
+
+    private Boolean requestPomFileCreation() throws PolicyException {
+        Boolean flag = false;
+        for (final Map.Entry<String, String> entry : modifiedGroups.entrySet()) {
+            InvocationResult result = null;
+            final String group = entry.getKey();
+            try {
+                LOGGER.info("PushRules: ModifiedGroups, Key: " + group + ", Value: " + entry.getValue());
+                final InvocationRequest request = new DefaultInvocationRequest();
+                setVersion(group);
+                createPom(group);
+                request.setPomFile(new File(
+                        PROJECTSLOCATION + File.separator + getArtifactId(group) + File.separator + POM_XML_FILE));
+                request.setGoals(Arrays.asList(GOALS));
+                final Invoker invoker = new DefaultInvoker();
+                result = invoker.execute(request);
+                if (result.getExecutionException() != null) {
+                    LOGGER.error(result.getExecutionException());
+                } else if (result.getExitCode() != 0) {
+                    LOGGER.error("Maven Invocation failure..!");
+                }
+            } catch (final Exception e) {
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Maven Invocation issue for "
+                        + getArtifactId(group) + e.getMessage(), e);
+            }
+            if (result != null && result.getExitCode() == 0) {
+                LOGGER.info("Build Completed..!");
+                if (createFlag) {
+                    addNotification(group, "create");
+                } else {
+                    addNotification(group, entry.getValue());
+                }
+                flag = true;
+            } else {
+                throw new PolicyException(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Maven Invocation failure!");
+            }
+        }
+        return flag;
     }
 
     private String getGroupName(final String name) {

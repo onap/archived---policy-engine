@@ -424,30 +424,6 @@ public class PolicyDBDao {
         return true;
     }
 
-    private void notifyOthers(long entityId,String entityType){
-        notifyOthers(entityId,entityType,null);
-    }
-
-    private void notifyOthers(long entityId, String entityType, String newGroupId){
-        logger.debug("notifyOthers(long entityId, String entityType, long newGroupId) as notifyOthers("+entityId+","+entityType+","+newGroupId+") called");
-        LinkedList<Thread> notifyThreads = new LinkedList<>();
-
-        //we're going to run notifications in parallel threads to speed things up
-        for(Object obj : otherServers){
-            Thread newNotifyThread = new Thread(new NotifyOtherThread(obj, entityId, entityType, newGroupId));
-            newNotifyThread.start();
-            notifyThreads.add(newNotifyThread);
-        }
-        //we want to wait for all notifications to complete or timeout before we unlock the interface and allow more changes
-        for(Thread t : notifyThreads){
-            try {
-                t.join();
-            } catch (Exception e) {
-                logger.warn("Could not join a notifcation thread" + e);
-            }
-        }
-    }
-
     private class NotifyOtherThread implements Runnable {
         public NotifyOtherThread(Object obj, long entityId, String entityType, String newGroupId){
             this.obj = obj;
@@ -2643,6 +2619,30 @@ public class PolicyDBDao {
 
                 em.flush();
                 this.pdpId = pdp.getPdpKey();
+            }
+        }
+
+        private void notifyOthers(long entityId,String entityType){
+            notifyOthers(entityId,entityType,null);
+        }
+
+        private void notifyOthers(long entityId, String entityType, String newGroupId){
+            logger.debug("notifyOthers(long entityId, String entityType, long newGroupId) as notifyOthers("+entityId+","+entityType+","+newGroupId+") called");
+            LinkedList<Thread> notifyThreads = new LinkedList<>();
+
+            //we're going to run notifications in parallel threads to speed things up
+            for(Object obj : otherServers){
+                Thread newNotifyThread = new Thread(new NotifyOtherThread(obj, entityId, entityType, newGroupId));
+                newNotifyThread.start();
+                notifyThreads.add(newNotifyThread);
+            }
+            //we want to wait for all notifications to complete or timeout before we unlock the interface and allow more changes
+            for(Thread t : notifyThreads){
+                try {
+                    t.join();
+                } catch (Exception e) {
+                    logger.warn("Could not join a notifcation thread" + e);
+                }
             }
         }
     }
