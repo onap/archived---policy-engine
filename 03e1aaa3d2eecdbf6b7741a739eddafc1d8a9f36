@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_9b17c6a3",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-24T08:11:54Z",
+      "side": 1,
+      "message": "You should pass the exception to the policy logger. Just appending the exception text to the message will probably show up as a Sonar issue.",
+      "range": {
+        "startLine": 159,
+        "startChar": 0,
+        "endLine": 159,
+        "endChar": 120
+      },
+      "revId": "03e1aaa3d2eecdbf6b7741a739eddafc1d8a9f36",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_db1c5ec4",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-24T08:11:54Z",
+      "side": 1,
+      "message": "Pass the exception to policyLogger.error",
+      "range": {
+        "startLine": 226,
+        "startChar": 0,
+        "endLine": 226,
+        "endChar": 42
+      },
+      "revId": "03e1aaa3d2eecdbf6b7741a739eddafc1d8a9f36",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_bb1f2ab7",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-24T08:11:54Z",
+      "side": 1,
+      "message": "Pass the exception to policyLogger.error",
+      "range": {
+        "startLine": 290,
+        "startChar": 0,
+        "endLine": 290,
+        "endChar": 59
+      },
+      "revId": "03e1aaa3d2eecdbf6b7741a739eddafc1d8a9f36",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_1b23b606",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-24T08:11:54Z",
+      "side": 1,
+      "message": "Pass the exception to policyLogger.error",
+      "range": {
+        "startLine": 307,
+        "startChar": 12,
+        "endLine": 307,
+        "endChar": 24
+      },
+      "revId": "03e1aaa3d2eecdbf6b7741a739eddafc1d8a9f36",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
