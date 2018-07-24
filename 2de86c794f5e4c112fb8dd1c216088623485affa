@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_5699056d",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-07-24T13:27:30Z",
+      "side": 1,
+      "message": "We follow standard procedure across all our components during file upload (Ex: PolicyExport), because we read cell by value which is not possible at csv(there we read by comma separate value)",
+      "parentUuid": "da7095c5_7b7992fb",
+      "range": {
+        "startLine": 165,
+        "startChar": 41,
+        "endLine": 165,
+        "endChar": 61
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_e8395bd9",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
         "patchSetId": 4
