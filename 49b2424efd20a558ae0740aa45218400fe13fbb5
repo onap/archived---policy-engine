@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_fbf842c6",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-24T06:08:34Z",
+      "side": 1,
+      "message": "new method defined",
+      "revId": "49b2424efd20a558ae0740aa45218400fe13fbb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_5b14cef4",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-24T06:08:34Z",
+      "side": 0,
+      "message": "nested loops \u003e 3 , hence make new method",
+      "revId": "8cf5ed300190ab386d95758e6d4be6c38e67123d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_bb02cab2",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-24T06:08:34Z",
+      "side": 0,
+      "message": "Sonar flagged issue to move the method into inner class where it is invoked. Hence moved this method into inner class PolicyDBDaoTransactionInstance",
+      "revId": "8cf5ed300190ab386d95758e6d4be6c38e67123d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
