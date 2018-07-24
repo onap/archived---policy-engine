@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_7b7992fb",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-24T08:11:54Z",
+      "side": 1,
+      "message": "I\u0027m still wondering on the use of Excel.",
+      "parentUuid": "da7095c5_2820b39a",
+      "range": {
+        "startLine": 165,
+        "startChar": 41,
+        "endLine": 165,
+        "endChar": 61
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_e8395bd9",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
         "patchSetId": 4
