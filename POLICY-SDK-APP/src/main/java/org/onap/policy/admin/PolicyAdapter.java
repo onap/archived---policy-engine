@@ -43,9 +43,6 @@ public class PolicyAdapter {
     private static final Logger LOGGER	= FlexLogger.getLogger(PolicyAdapter.class);
 
     public void configure(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-        if(extendedOptions(policyAdapter, entity)){
-            return;
-        }
         String policyNameValue = policyAdapter.getPolicyName().substring(0, policyAdapter.getPolicyName().indexOf('_'));
         String configPolicyName = getConfigPolicyName(policyAdapter);
         policyAdapter.setPolicyType(policyNameValue);
@@ -114,10 +111,6 @@ public class PolicyAdapter {
         else if("Firewall Config".equalsIgnoreCase(policyAdapter.getConfigPolicyType())){
             new CreateFirewallController().prePopulateFWPolicyData(policyAdapter, entity);
         }
-    }
-
-    private boolean extendedOptions(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-        return false;
     }
 
     public static PolicyAdapter getInstance() {

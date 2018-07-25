@@ -3,6 +3,7 @@
  * ONAP-REST
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,19 +186,20 @@ public class Category implements Serializable {
 		}
 		if (xacmlId.matches(".*:attribute\\-category:.*")) {
 			String[] parts = xacmlId.split("[:]");
-			if (parts != null && parts.length > 0) {
+			if (parts.length > 0) {
 				return parts[parts.length - 1];
 			}
 		} else if (xacmlId.matches(".*:[a-zA-Z]+[\\-]category:.*")) {
 			String[] parts = xacmlId.split("[:]");
-			if (parts != null && parts.length > 0) {
-				for (String part : parts) {
-					int index = part.indexOf("-category");
-					if (index > 0) {
-						return part.substring(0, index);
-					}
-				}
-			}
+            if (parts.length <= 0) {
+                return null;
+            }
+            for (String part : parts) {
+                int index = part.indexOf("-category");
+                if (index > 0) {
+                    return part.substring(0, index);
+                }
+            }
 		}
 		return null;
 	}

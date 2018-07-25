@@ -93,6 +93,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class PolicyManagerServlet extends HttpServlet {
     private static final Logger LOGGER	= FlexLogger.getLogger(PolicyManagerServlet.class);
     private static final long serialVersionUID = -8453502699403909016L;
+    private static final String VERSION = "version";;
 
     private enum Mode {
         LIST, RENAME, COPY, DELETE, EDITFILE, ADDFOLDER, DESCRIBEPOLICYFILE, VIEWPOLICY, ADDSUBSCOPE, SWITCHVERSION, EXPORT, SEARCHLIST
@@ -207,7 +208,6 @@ public class PolicyManagerServlet extends HttpServlet {
     //Policy Import Functionality
     private void uploadFile(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
-            String newFile;
             Map<String, InputStream> files = new HashMap<>();
 
             List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -387,7 +387,7 @@ public class PolicyManagerServlet extends HttpServlet {
             JSONObject el = new JSONObject();
             el.put("name", policy.getPolicyName().replace(File.separator, "/"));
             el.put("date", policy.getModifiedDate());
-            el.put("version", policy.getActiveVersion());
+            el.put(VERSION, policy.getActiveVersion());
             el.put("size", "");
             el.put("type", "file");
             el.put("createdBy", getUserName(policy.getCreatedBy()));
@@ -403,14 +403,14 @@ public class PolicyManagerServlet extends HttpServlet {
         String policyVersionQuery = "From PolicyVersion where policy_name = :policyName  and active_version = :version and id >0";
         SimpleBindings pvParams = new SimpleBindings();
         pvParams.put("policyName", policyName);
-        pvParams.put("version", version);
+        pvParams.put(VERSION, version);
         List<Object> activeData = controller.getDataByQuery(policyVersionQuery, pvParams);
         if(!activeData.isEmpty()){
             PolicyVersion policy = (PolicyVersion) activeData.get(0);
             JSONObject el = new JSONObject();
             el.put("name", policy.getPolicyName().replace(File.separator, "/"));
             el.put("date", policy.getModifiedDate());
-            el.put("version", policy.getActiveVersion());
+            el.put(VERSION, policy.getActiveVersion());
             el.put("size", "");
             el.put("type", "file");
             el.put("createdBy", getUserName(policy.getCreatedBy()));
@@ -727,7 +727,7 @@ public class PolicyManagerServlet extends HttpServlet {
                     JSONObject el = new JSONObject();
                     el.put("name", policy.getPolicyName().substring(policy.getPolicyName().lastIndexOf(File.separator)+1));
                     el.put("date", policy.getModifiedDate());
-                    el.put("version", policy.getActiveVersion());
+                    el.put(VERSION, policy.getActiveVersion());
                     el.put("size", "");
                     el.put("type", "file");
                     el.put("createdBy", getUserName(policy.getCreatedBy()));
@@ -738,7 +738,7 @@ public class PolicyManagerServlet extends HttpServlet {
                 JSONObject el = new JSONObject();
                 el.put("name", policy.getPolicyName().substring(policy.getPolicyName().lastIndexOf(File.separator)+1));
                 el.put("date", policy.getModifiedDate());
-                el.put("version", policy.getActiveVersion());
+                el.put(VERSION, policy.getActiveVersion());
                 el.put("size", "");
                 el.put("type", "file");
                 el.put("createdBy", getUserName(policy.getCreatedBy()));
