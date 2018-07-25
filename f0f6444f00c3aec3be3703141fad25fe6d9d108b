@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_8de22302",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-25T13:06:43Z",
+      "side": 1,
+      "message": "Using auto-close, is this still necessary?",
+      "range": {
+        "startLine": 390,
+        "startChar": 16,
+        "endLine": 390,
+        "endChar": 36
+      },
+      "revId": "f0f6444f00c3aec3be3703141fad25fe6d9d108b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_0dee13ed",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/Category.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-25T13:06:43Z",
+      "side": 1,
+      "message": "This is repeated, wondering if it could be pulled outside the if-elseif",
+      "range": {
+        "startLine": 188,
+        "startChar": 12,
+        "endLine": 188,
+        "endChar": 50
+      },
+      "revId": "f0f6444f00c3aec3be3703141fad25fe6d9d108b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_4de40b0d",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/Category.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-25T13:06:43Z",
+      "side": 1,
+      "message": "Just checking to ensure that this won\u0027t be null - that check was removed. Correct?",
+      "range": {
+        "startLine": 194,
+        "startChar": 12,
+        "endLine": 196,
+        "endChar": 13
+      },
+      "revId": "f0f6444f00c3aec3be3703141fad25fe6d9d108b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_6dab0f8a",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyNotificationMail.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-25T13:06:43Z",
+      "side": 1,
+      "message": "No real changes in this file - were there any previously that warrant the modification copyright?",
+      "revId": "f0f6444f00c3aec3be3703141fad25fe6d9d108b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
