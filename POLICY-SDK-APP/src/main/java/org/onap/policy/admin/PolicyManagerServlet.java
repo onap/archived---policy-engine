@@ -93,6 +93,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class PolicyManagerServlet extends HttpServlet {
     private static final Logger LOGGER	= FlexLogger.getLogger(PolicyManagerServlet.class);
     private static final long serialVersionUID = -8453502699403909016L;
+    private static final String VERSION = "version";;
+    private static final String NAME = "name";
+    private static final String DATE = "date";
+    private static final String SIZE = "size";
+    private static final String TYPE = "type";
+    private static final String CREATED_BY = "createdBy";
+    private static final String MODIFIED_BY = "modifiedBy";
 
     private enum Mode {
         LIST, RENAME, COPY, DELETE, EDITFILE, ADDFOLDER, DESCRIBEPOLICYFILE, VIEWPOLICY, ADDSUBSCOPE, SWITCHVERSION, EXPORT, SEARCHLIST
@@ -207,7 +214,6 @@ public class PolicyManagerServlet extends HttpServlet {
     //Policy Import Functionality
     private void uploadFile(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
-            String newFile;
             Map<String, InputStream> files = new HashMap<>();
 
             List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -385,13 +391,13 @@ public class PolicyManagerServlet extends HttpServlet {
         for(int i =0; i < policyData.size(); i++){
             PolicyVersion policy = (PolicyVersion) policyData.get(i);
             JSONObject el = new JSONObject();
-            el.put("name", policy.getPolicyName().replace(File.separator, "/"));
-            el.put("date", policy.getModifiedDate());
-            el.put("version", policy.getActiveVersion());
-            el.put("size", "");
-            el.put("type", "file");
-            el.put("createdBy", getUserName(policy.getCreatedBy()));
-            el.put("modifiedBy", getUserName(policy.getModifiedBy()));
+            el.put(NAME, policy.getPolicyName().replace(File.separator, "/"));
+            el.put(DATE, policy.getModifiedDate());
+            el.put(VERSION, policy.getActiveVersion());
+            el.put(SIZE, "");
+            el.put(TYPE, "file");
+            el.put(CREATED_BY, getUserName(policy.getCreatedBy()));
+            el.put(MODIFIED_BY, getUserName(policy.getModifiedBy()));
             resultList.add(el);
         }
     }
@@ -403,18 +409,18 @@ public class PolicyManagerServlet extends HttpServlet {
         String policyVersionQuery = "From PolicyVersion where policy_name = :policyName  and active_version = :version and id >0";
         SimpleBindings pvParams = new SimpleBindings();
         pvParams.put("policyName", policyName);
-        pvParams.put("version", version);
+        pvParams.put(VERSION, version);
         List<Object> activeData = controller.getDataByQuery(policyVersionQuery, pvParams);
         if(!activeData.isEmpty()){
             PolicyVersion policy = (PolicyVersion) activeData.get(0);
             JSONObject el = new JSONObject();
-            el.put("name", policy.getPolicyName().replace(File.separator, "/"));
-            el.put("date", policy.getModifiedDate());
-            el.put("version", policy.getActiveVersion());
-            el.put("size", "");
-            el.put("type", "file");
-            el.put("createdBy", getUserName(policy.getCreatedBy()));
-            el.put("modifiedBy", getUserName(policy.getModifiedBy()));
+            el.put(NAME, policy.getPolicyName().replace(File.separator, "/"));
+            el.put(DATE, policy.getModifiedDate());
+            el.put(VERSION, policy.getActiveVersion());
+            el.put(SIZE, "");
+            el.put(TYPE, "file");
+            el.put(CREATED_BY, getUserName(policy.getCreatedBy()));
+            el.put(MODIFIED_BY, getUserName(policy.getModifiedBy()));
             resultList.add(el);
         }
     }
@@ -602,12 +608,12 @@ public class PolicyManagerServlet extends HttpServlet {
                         PolicyEditorScopes scope = (PolicyEditorScopes) list;
                         if(!(scope.getScopeName().contains(File.separator))){
                             JSONObject el = new JSONObject();
-                            el.put("name", scope.getScopeName());
-                            el.put("date", scope.getModifiedDate());
-                            el.put("size", "");
-                            el.put("type", "dir");
-                            el.put("createdBy", scope.getUserCreatedBy().getUserName());
-                            el.put("modifiedBy", scope.getUserModifiedBy().getUserName());
+                            el.put(NAME, scope.getScopeName());
+                            el.put(DATE, scope.getModifiedDate());
+                            el.put(SIZE, "");
+                            el.put(TYPE, "dir");
+                            el.put(CREATED_BY, scope.getUserCreatedBy().getUserName());
+                            el.put(MODIFIED_BY, scope.getUserModifiedBy().getUserName());
                             resultList.add(el);
                         }
                     }
@@ -617,12 +623,12 @@ public class PolicyManagerServlet extends HttpServlet {
                         List<Object> scopesList = queryPolicyEditorScopes(scope.toString());
                         if(!scopesList.isEmpty()){
                             PolicyEditorScopes scopeById = (PolicyEditorScopes) scopesList.get(0);
-                            el.put("name", scopeById.getScopeName());
-                            el.put("date", scopeById.getModifiedDate());
-                            el.put("size", "");
-                            el.put("type", "dir");
-                            el.put("createdBy", scopeById.getUserCreatedBy().getUserName());
-                            el.put("modifiedBy", scopeById.getUserModifiedBy().getUserName());
+                            el.put(NAME, scopeById.getScopeName());
+                            el.put(DATE, scopeById.getModifiedDate());
+                            el.put(SIZE, "");
+                            el.put(TYPE, "dir");
+                            el.put(CREATED_BY, scopeById.getUserCreatedBy().getUserName());
+                            el.put(MODIFIED_BY, scopeById.getUserModifiedBy().getUserName());
                             resultList.add(el);
                         }
                     }
@@ -703,12 +709,12 @@ public class PolicyManagerServlet extends HttpServlet {
                 }
                 if(scopeName.equalsIgnoreCase(checkScope)){
                     JSONObject el = new JSONObject();
-                    el.put("name", scope);
-                    el.put("date", scopeById.getModifiedDate());
-                    el.put("size", "");
-                    el.put("type", "dir");
-                    el.put("createdBy", scopeById.getUserCreatedBy().getUserName());
-                    el.put("modifiedBy", scopeById.getUserModifiedBy().getUserName());
+                    el.put(NAME, scope);
+                    el.put(DATE, scopeById.getModifiedDate());
+                    el.put(SIZE, "");
+                    el.put(TYPE, "dir");
+                    el.put(CREATED_BY, scopeById.getUserCreatedBy().getUserName());
+                    el.put(MODIFIED_BY, scopeById.getUserModifiedBy().getUserName());
                     resultList.add(el);
                 }
             }
@@ -725,24 +731,24 @@ public class PolicyManagerServlet extends HttpServlet {
                 }
                 if(scopeNameValue.equals(scopeNameCheck)){
                     JSONObject el = new JSONObject();
-                    el.put("name", policy.getPolicyName().substring(policy.getPolicyName().lastIndexOf(File.separator)+1));
-                    el.put("date", policy.getModifiedDate());
-                    el.put("version", policy.getActiveVersion());
-                    el.put("size", "");
-                    el.put("type", "file");
-                    el.put("createdBy", getUserName(policy.getCreatedBy()));
-                    el.put("modifiedBy", getUserName(policy.getModifiedBy()));
+                    el.put(NAME, policy.getPolicyName().substring(policy.getPolicyName().lastIndexOf(File.separator)+1));
+                    el.put(DATE, policy.getModifiedDate());
+                    el.put(VERSION, policy.getActiveVersion());
+                    el.put(SIZE, "");
+                    el.put(TYPE, "file");
+                    el.put(CREATED_BY, getUserName(policy.getCreatedBy()));
+                    el.put(MODIFIED_BY, getUserName(policy.getModifiedBy()));
                     resultList.add(el);
                 }
             }else if(!scopes.isEmpty() && scopes.contains(scopeNameValue)){
                 JSONObject el = new JSONObject();
-                el.put("name", policy.getPolicyName().substring(policy.getPolicyName().lastIndexOf(File.separator)+1));
-                el.put("date", policy.getModifiedDate());
-                el.put("version", policy.getActiveVersion());
-                el.put("size", "");
-                el.put("type", "file");
-                el.put("createdBy", getUserName(policy.getCreatedBy()));
-                el.put("modifiedBy", getUserName(policy.getModifiedBy()));
+                el.put(NAME, policy.getPolicyName().substring(policy.getPolicyName().lastIndexOf(File.separator)+1));
+                el.put(DATE, policy.getModifiedDate());
+                el.put(VERSION, policy.getActiveVersion());
+                el.put(SIZE, "");
+                el.put(TYPE, "file");
+                el.put(CREATED_BY, getUserName(policy.getCreatedBy()));
+                el.put(MODIFIED_BY, getUserName(policy.getModifiedBy()));
                 resultList.add(el);
             }
         }
@@ -1496,10 +1502,10 @@ public class PolicyManagerServlet extends HttpServlet {
                         name = params.getString("path").replace("/", File.separator) + File.separator +params.getString("subScopename");
                     }
                 }else{
-                    name = params.getString("name");
+                    name = params.getString(NAME);
                 }
             }catch(Exception e){
-                name = params.getString("name");
+                name = params.getString(NAME);
                 LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Exception Occured While Adding Scope"+e);
             }
             String validateName;
