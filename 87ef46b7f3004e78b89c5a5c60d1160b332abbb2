@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_70b0c8dd",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/Category.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-25T15:17:44Z",
+      "side": 1,
+      "message": "moved it up., as per prev comments",
+      "revId": "87ef46b7f3004e78b89c5a5c60d1160b332abbb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_b08f4023",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyNotificationMail.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-25T15:17:44Z",
+      "side": 1,
+      "message": "I forgot to add this in my last commit. Hence added it now. \nRelated to : https://gerrit.onap.org/r/#/c/57139/",
+      "revId": "87ef46b7f3004e78b89c5a5c60d1160b332abbb2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
