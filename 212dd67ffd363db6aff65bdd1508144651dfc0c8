@@ -19,6 +19,104 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_0777d5d5",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-25T01:33:04Z",
+      "side": 1,
+      "message": "Thank you for your comment, I have fixed this",
+      "parentUuid": "da7095c5_27ce995b",
+      "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_bb75ea33",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-25T01:33:04Z",
+      "side": 1,
+      "message": "This was modified inside the new method getDependency",
+      "range": {
+        "startLine": 431,
+        "startChar": 27,
+        "endLine": 431,
+        "endChar": 43
+      },
+      "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_7b8f5224",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-25T01:33:04Z",
+      "side": 1,
+      "message": "This was returned by the method",
+      "range": {
+        "startLine": 432,
+        "startChar": 29,
+        "endLine": 432,
+        "endChar": 47
+      },
+      "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_1b79762f",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-25T01:33:04Z",
+      "side": 1,
+      "message": "This string is being found here. This will be returned by this method. Again used by invoker",
+      "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_fb7b6227",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-25T01:33:04Z",
+      "side": 1,
+      "message": "Parameter ArrayList is being modified here. Will be used by its invoking method",
+      "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_e74501b4",
         "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
         "patchSetId": 2
@@ -30,6 +128,75 @@
       "writtenOn": "2018-07-25T00:25:38Z",
       "side": 1,
       "message": "not important but maybe rename the method to indicate that it is performing the build and generating jar.",
+      "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_476dcd03",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-25T01:33:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_e74501b4",
+      "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_3b823a01",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2624,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-25T01:33:04Z",
+      "side": 1,
+      "message": "This method was moved into inner class PolicyDBDaoTransactionInstance from its parent class. \nSonar complained about this method. Since it is only used in the inner class, there is no harm in moving it into inner class.",
+      "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_9b8d8634",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/AAFPolicyClientImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-25T01:33:04Z",
+      "side": 1,
+      "message": "The only change is in line 157-159",
+      "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_5b87ee0f",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/AAFPolicyClientImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-25T01:33:04Z",
+      "side": 1,
+      "message": "to avoid 4 nested stmts., check for null before itself and return false. \nKeeping same behavior as before",
       "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
