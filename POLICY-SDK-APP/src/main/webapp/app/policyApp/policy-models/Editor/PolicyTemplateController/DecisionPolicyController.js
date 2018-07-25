@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,16 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', function ($scope, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
+angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', '$http', function ($scope, PolicyAppService, PolicyNavigator, modalService, $modal, Notification, $http) {
     $("#dialog").hide();
     
     $scope.policyNavigator;
     $scope.savebutton = true;
     $scope.refreshCheck = false;
+    $scope.disableOnCreate = false;
     
     if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
+    	$scope.disableOnCreate = true;
     	$scope.temp.policy = {
     			policyType : "Decision"
     	}
@@ -45,7 +47,11 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
 	if($scope.temp.policy.ruleProvider==undefined){
 		$scope.temp.policy.ruleProvider="Custom";
 	}
-		
+	
+	if($scope.temp.policy.blackListEntryType==undefined){
+		$scope.temp.policy.blackListEntryType="Use Manual Entry";
+	}
+	
 	PolicyAppService.getData('getDictionary/get_OnapNameDataByName').then(function (data) {
 		var j = data;
 		$scope.data = JSON.parse(j.data);
@@ -216,9 +222,15 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
 		   $scope.temp.policy.ruleAlgorithmschoices = [];
 	   }
     }else if($scope.temp.policy.ruleProvider=="GUARD_BL_YAML"){
-	   if($scope.temp.policy.yamlparams.blackList.length==0){
-		   $scope.temp.policy.yamlparams.blackList = [];
-	   }
+    	if($scope.temp.policy.yamlparams.blackList == null || $scope.temp.policy.yamlparams.blackList.length==0){
+    		$scope.temp.policy.yamlparams.blackList = [];
+    	}
+    	if($scope.temp.policy.blackListEntries == null || $scope.temp.policy.blackListEntries.length==0){
+    		$scope.temp.policy.blackListEntries = [];
+    	}
+    	$scope.blackListEntries = [];
+    	$scope.temp.policy.appendBlackListEntries = [];
+    	$scope.blackListEntries = arrayUnique($scope.temp.policy.blackListEntries.concat($scope.temp.policy.yamlparams.blackList));
     }else if($scope.temp.policy.ruleProvider=="GUARD_YAML"){
     	if($scope.temp.policy.yamlparams.targets.length==0){
  		   $scope.temp.policy.yamlparams.targets = [];
@@ -259,9 +271,11 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
     $scope.addNewBL = function() {
     	$scope.temp.policy.yamlparams.blackList.push('');
     };
-    $scope.removeBL = function() {
-    	var lastItem = $scope.temp.policy.yamlparams.blackList.length-1;
-    	$scope.temp.policy.yamlparams.blackList.splice(lastItem);
+    
+    $scope.removeBL = function(id) {
+    	$scope.temp.policy.yamlparams.blackList = $scope.temp.policy.yamlparams.blackList.filter(function (obj){
+			return obj !== id;
+		});
     };
     
     $scope.treatmentDatas = [{"treatmentValues" : $scope.temp.policy.rainyday.treatmentTableChoices}];
@@ -324,4 +338,93 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
     		$scope.temp.policy.attributes = [];
     	}
     };
+    
+    $scope.importButton = true;
+    var fd;
+	$scope.uploadBLFile = function(files) {
+		fd = new FormData();
+		fd.append("file", files[0]);
+		var fileExtension = files[0].name.split(".")[1];
+		if(fileExtension == "xls"){
+			$scope.importButton = false;
+			$scope.$apply();
+		}else{
+			Notification.error("Upload the BlackList file which extends with .xls format.");
+		}
+	};
+	
+	function arrayUnique(array) {
+	    var a = array.concat();
+	    for(var i=0; i<a.length; ++i) {
+	        for(var j=i+1; j<a.length; ++j) {
+	            if(a[i] === a[j])
+	                a.splice(j--, 1);
+	        }
+	    }
+	    return a;
+	}
+	
+	$scope.submitUpload = function(){
+		$http.post("policycreation/importBlackListForDecisionPolicy", fd,  {
+			withCredentials: false,
+			headers: {'Content-Type': undefined},
+			transformRequest: angular.identity
+		}).success(function(data){
+			$scope.data = JSON.parse(data.data);
+			$scope.temp.policy.blackListEntries = $scope.data.blackListEntries;
+			if($scope.temp.policy.blackListEntries[0] !== "error"){
+				$scope.blackListEntries = arrayUnique($scope.temp.policy.blackListEntries.concat($scope.temp.policy.yamlparams.blackList));
+				$scope.temp.policy.appendBlackListEntries = $scope.data.appendBlackListEntries;
+				$scope.blackListEntries = $scope.blackListEntries.filter(function (obj){
+					return !$scope.temp.policy.appendBlackListEntries.includes(obj);
+				});
+				if($scope.blackListEntries.length == 0){
+					$scope.validateButton = true;
+					Notification.error("Black Lists are empty. Minimum one entry required.");
+				}else{
+					$scope.temp.policy.blackListEntries = $scope.blackListEntries;
+					Notification.success("Blacklist File Uploaded Successfully.");
+					$scope.validateButton = false;
+					$scope.importButton = true;
+				}
+			}else{
+				 Notification.error("Blacklist File Upload Failed." + $scope.temp.policy.blackListEntries[1]);
+			}
+		}).error(function(data){
+			 Notification.error("Blacklist File Upload Failed.");
+		});
+	};
+	
+	$scope.initializeBlackList = function(){
+		if($scope.temp.policy.blackListEntryType === "Use File Upload"){
+			 $scope.validateButton = true;	
+		} else {
+			 $scope.validateButton = false;	
+		}
+		$("#importFile").val('');
+	};
+	
+	$scope.exportBlackListEntries = function(){
+		var uuu = "policycreation/exportDecisionBlackListEntries";
+		var postData={policyData: $scope.temp.policy, date : $scope.temp.model.modifiedDate, version : $scope.temp.model.version};
+		$.ajax({
+			type : 'POST',
+			url : uuu,
+			dataType: 'json',
+			contentType: 'application/json',
+			data: JSON.stringify(postData),
+			success : function(data){
+				$scope.$apply(function(){
+					$scope.data=data.data;
+					var url = '../' + $scope.data;
+					window.location = url;
+					Notification.success("BlackList Entries Exported Successfully.");
+				});
+				console.log($scope.data);
+			},
+			error : function(data){      	
+				Notification.error("Error Occured while Exporting BlackList Entries.");
+			}
+		});
+	};	
 }]);
