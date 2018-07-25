@@ -298,15 +298,12 @@ public class PolicyRestController extends RestrictedBaseController{
                     Object obj = mapper1.treeToValue(root, Object.class);
                     String json = mapper1.writeValueAsString(obj);
 
-                    Object content =  new ByteArrayInputStream(json.getBytes());
-
-                    if (content instanceof InputStream) {
-                        // send current configuration
-                        try (OutputStream os = connection.getOutputStream()) {
-                            int count = IOUtils.copy((InputStream) content, os);
-                            if (policyLogger.isDebugEnabled()) {
-                                policyLogger.debug("copied to output, bytes=" + count);
-                            }
+                    // send current configuration
+                    try(InputStream content =  new ByteArrayInputStream(json.getBytes());
+                        OutputStream os = connection.getOutputStream()) {
+                        int count = IOUtils.copy(content, os);
+                        if (policyLogger.isDebugEnabled()) {
+                            policyLogger.debug("copied to output, bytes=" + count);
                         }
                     }
                 }else{
