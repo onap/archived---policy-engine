@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_074b54b1",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/XACMLPdpRegisterThread.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-25T08:14:17Z",
+      "side": 1,
+      "message": "Do you need this semicolon?",
+      "range": {
+        "startLine": 215,
+        "startChar": 145,
+        "endLine": 215,
+        "endChar": 146
+      },
+      "revId": "ab1fb46f584d3c1351ac24881a841377749b6eb9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_e7e420ae",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/XACMLPdpRegisterThread.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-25T08:14:17Z",
+      "side": 1,
+      "message": "I found this change rather hard to read and interpret. Rather than making this change it may be better to look at a more fundamental restructuring of this method.",
+      "range": {
+        "startLine": 214,
+        "startChar": 24,
+        "endLine": 219,
+        "endChar": 82
+      },
+      "revId": "ab1fb46f584d3c1351ac24881a841377749b6eb9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_67e8107d",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-25T08:14:17Z",
+      "side": 1,
+      "message": "This looks OK to me but I\u0027d like to get the opinion of the Policy Engine developers to ensure that it is equivalent to the old code.",
+      "range": {
+        "startLine": 345,
+        "startChar": 1,
+        "endLine": 406,
+        "endChar": 5
+      },
+      "revId": "ab1fb46f584d3c1351ac24881a841377749b6eb9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_87ed248e",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/Category.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-25T08:14:17Z",
+      "side": 1,
+      "message": "Please convert tabs to spaces.",
+      "range": {
+        "startLine": 179,
+        "startChar": 0,
+        "endLine": 179,
+        "endChar": 1
+      },
+      "revId": "ab1fb46f584d3c1351ac24881a841377749b6eb9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_e7fbc045",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-25T08:14:17Z",
+      "side": 1,
+      "message": "Sonar probably only complained about VERSION here but why not create constants for all the string field keys, it would look better.",
+      "range": {
+        "startLine": 411,
+        "startChar": 19,
+        "endLine": 418,
+        "endChar": 31
+      },
+      "revId": "ab1fb46f584d3c1351ac24881a841377749b6eb9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_07f9144d",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyNotificationMail.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-25T08:14:17Z",
+      "side": 1,
+      "message": "I don\u0027t see any change in this file except the copyright change. Is there something missing?",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 11
+      },
+      "revId": "ab1fb46f584d3c1351ac24881a841377749b6eb9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
