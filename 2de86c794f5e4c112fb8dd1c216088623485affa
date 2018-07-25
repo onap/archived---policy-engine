@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_8d1463f6",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-25T12:49:53Z",
+      "side": 1,
+      "message": "Liam, when we re-build the Lifecycle API we can ensure that import/export uses open standards. Companies can then extend the API to satisfy any internal document format requirements.",
+      "parentUuid": "da7095c5_36f57183",
+      "range": {
+        "startLine": 165,
+        "startChar": 41,
+        "endLine": 165,
+        "endChar": 61
+      },
+      "revId": "2de86c794f5e4c112fb8dd1c216088623485affa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_e8395bd9",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/ExportAndImportDecisionBlackListEntries.java",
         "patchSetId": 4
