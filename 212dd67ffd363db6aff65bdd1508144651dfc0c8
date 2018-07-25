@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_27ce995b",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2018-07-25T00:25:38Z",
+      "side": 1,
+      "message": "It is inside loop and this will keep overwriting the controllerName. maybe break the if and else into separate methods and call only if key matches.",
+      "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_e74501b4",
+        "filename": "BRMSGateway/src/main/java/org/onap/policy/brms/api/BrmsPush.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2018-07-25T00:25:38Z",
+      "side": 1,
+      "message": "not important but maybe rename the method to indicate that it is performing the build and generating jar.",
+      "revId": "212dd67ffd363db6aff65bdd1508144651dfc0c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
