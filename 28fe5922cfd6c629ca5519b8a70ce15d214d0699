@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_7cbbbf72",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-26T12:48:55Z",
+      "side": 1,
+      "message": "We can pull this out also into a single statement and bring the complexity down.\nif (! file.toString().endsWith(\".properties\")) {\n  return null;\n}\n\nPut InputStream into try-with-resources",
+      "range": {
+        "startLine": 865,
+        "startChar": 0,
+        "endLine": 866,
+        "endChar": 1
+      },
+      "revId": "28fe5922cfd6c629ca5519b8a70ce15d214d0699",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_1cb0838a",
+        "filename": "ONAP-PDP/src/main/java/org/onap/policy/xacml/custom/OnapFunctionDefinitionFactory.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-26T12:48:55Z",
+      "side": 1,
+      "message": "Let\u0027s remove this commented out line of code. Sonar most likely flagged it.",
+      "range": {
+        "startLine": 67,
+        "startChar": 16,
+        "endLine": 67,
+        "endChar": 65
+      },
+      "revId": "28fe5922cfd6c629ca5519b8a70ce15d214d0699",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
