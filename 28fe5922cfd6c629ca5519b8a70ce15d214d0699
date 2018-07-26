@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_70ad2331",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T15:01:02Z",
+      "side": 1,
+      "message": "You\u0027ll probably have to put the two checks into a single if statement or Sonar will complain about two return statements in the same method.\n\nif (!file.toFile().exists() || file.toString().endsWith(\".properties\")) {\n    logger.debug(\u003cSOME_CATCH_ALL_ERROR_MESSAGE\u003e);\n    return null;\n}",
+      "parentUuid": "da7095c5_7cbbbf72",
+      "range": {
+        "startLine": 865,
+        "startChar": 0,
+        "endLine": 866,
+        "endChar": 1
+      },
+      "revId": "28fe5922cfd6c629ca5519b8a70ce15d214d0699",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_1cb0838a",
         "filename": "ONAP-PDP/src/main/java/org/onap/policy/xacml/custom/OnapFunctionDefinitionFactory.java",
         "patchSetId": 1
