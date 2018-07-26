@@ -3,6 +3,7 @@
  * PolicyEngineAPI
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -348,7 +349,7 @@ public class StdPolicyEngine {
         return deletePolicyImpl(parameters);
     }
 
-    public PolicyChangeResponse deletePolicyImpl(final DeletePolicyParameters parameters) throws PolicyException {
+    private PolicyChangeResponse deletePolicyImpl(final DeletePolicyParameters parameters) throws PolicyException {
         final StdPolicyChangeResponse response = new StdPolicyChangeResponse();
         String body = null;
         // Create Request.
@@ -379,7 +380,7 @@ public class StdPolicyEngine {
         return getDictionaryItemImpl(parameters);
     }
 
-    public DictionaryResponse getDictionaryItemImpl(final DictionaryParameters parameters) throws PolicyException {
+    private DictionaryResponse getDictionaryItemImpl(final DictionaryParameters parameters) throws PolicyException {
         final StdDictionaryResponse response = new StdDictionaryResponse();
         String body = "{}";
         // Create Request.
@@ -450,7 +451,7 @@ public class StdPolicyEngine {
         return createUpdateDictionaryItemImpl(parameters, true);
     }
 
-    public PolicyChangeResponse createUpdateDictionaryItemImpl(final DictionaryParameters parameters,
+    private PolicyChangeResponse createUpdateDictionaryItemImpl(final DictionaryParameters parameters,
             final boolean updateFlag) throws PolicyException {
 
         final String resource = getDictionaryResouceName(updateFlag);
@@ -487,7 +488,7 @@ public class StdPolicyEngine {
         return policyEngineImportImpl(importParameters);
     }
 
-    public PolicyChangeResponse policyEngineImportImpl(final ImportParameters importParameters) throws PolicyException {
+    private PolicyChangeResponse policyEngineImportImpl(final ImportParameters importParameters) throws PolicyException {
         final LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         // Create Request.
         try {
@@ -530,7 +531,7 @@ public class StdPolicyEngine {
         return createUpdatePolicyImpl(policyParameters, true);
     }
 
-    public PolicyChangeResponse createUpdatePolicyImpl(final PolicyParameters policyParameters,
+    private PolicyChangeResponse createUpdatePolicyImpl(final PolicyParameters policyParameters,
             final boolean updateFlag) throws PolicyException {
         final String resource = getPolicyResourceName(updateFlag);
         String body = null;
@@ -575,7 +576,7 @@ public class StdPolicyEngine {
         }
     }
 
-    public DecisionResponse getDecisionImpl(final String onapName, final Map<String, String> decisionAttributes,
+    private DecisionResponse getDecisionImpl(final String onapName, final Map<String, String> decisionAttributes,
             final UUID requestID) throws PolicyDecisionException {
         String body = null;
         // Create Request.
@@ -604,7 +605,7 @@ public class StdPolicyEngine {
         }
     }
 
-    public Collection<PolicyConfig> getConfigImpl(final ConfigRequestParameters configRequestParameters)
+    private Collection<PolicyConfig> getConfigImpl(final ConfigRequestParameters configRequestParameters)
             throws PolicyConfigException {
         String body = null;
         // Create Request.
@@ -632,51 +633,53 @@ public class StdPolicyEngine {
     private ArrayList<PolicyConfig> configResult(final APIPolicyConfigResponse[] response)
             throws PolicyConfigException {
         final ArrayList<PolicyConfig> result = new ArrayList<>();
-        if (response != null) {
-            for (final APIPolicyConfigResponse policyConfigResponse : response) {
-                final StdPolicyConfig policyConfig = new StdPolicyConfig();
-                policyConfig.setConfigStatus(policyConfigResponse.getPolicyConfigMessage());
-                policyConfig.setMatchingConditions(policyConfigResponse.getMatchingConditions());
-                policyConfig.setPolicyConfigStatus(policyConfigResponse.getPolicyConfigStatus());
-                policyConfig.setPolicyName(policyConfigResponse.getPolicyName());
-                policyConfig.setPolicyType(policyConfigResponse.getType());
-                policyConfig.setPolicyVersion(policyConfigResponse.getPolicyVersion());
-                policyConfig.setPolicyType(policyConfigResponse.getPolicyType());
-                policyConfig.setResponseAttributes(policyConfigResponse.getResponseAttributes());
-                setMatches(policyConfig.getMatchingConditions());
-                if (policyConfigResponse.getType() != null) {
-                    try {
-                        switch (policyConfigResponse.getType()) {
-                            case JSON:
-                                final StringReader reader = new StringReader(policyConfigResponse.getConfig());
-                                try (final JsonReader jsonReader = Json.createReader(reader)) {
-                                    final JsonObject object = jsonReader.readObject();
-                                    policyConfig.setJsonObject(object);
-                                }
-                                break;
-                            case OTHER:
-                                policyConfig.setOther(policyConfigResponse.getConfig());
-                                break;
-                            case PROPERTIES:
-                                final Properties props = new Properties();
-                                props.putAll(policyConfigResponse.getProperty());
-                                policyConfig.setProperties(props);
-                                break;
-                            case XML:
-                                final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                                final DocumentBuilder builder = factory.newDocumentBuilder();
-                                final StringReader stringReader = new StringReader(policyConfigResponse.getConfig());
-                                policyConfig.setDocument(builder.parse(new InputSource(stringReader)));
-                                break;
-                        }
-                    } catch (final Exception exception) {
-                        LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID + exception);
-                        throw new PolicyConfigException(
-                                XACMLErrorConstants.ERROR_SCHEMA_INVALID + "Unable to parse the config", exception);
+        if (response == null) {
+            return result;
+        }
+
+        for (final APIPolicyConfigResponse policyConfigResponse : response) {
+            final StdPolicyConfig policyConfig = new StdPolicyConfig();
+            policyConfig.setConfigStatus(policyConfigResponse.getPolicyConfigMessage());
+            policyConfig.setMatchingConditions(policyConfigResponse.getMatchingConditions());
+            policyConfig.setPolicyConfigStatus(policyConfigResponse.getPolicyConfigStatus());
+            policyConfig.setPolicyName(policyConfigResponse.getPolicyName());
+            policyConfig.setPolicyType(policyConfigResponse.getType());
+            policyConfig.setPolicyVersion(policyConfigResponse.getPolicyVersion());
+            policyConfig.setPolicyType(policyConfigResponse.getPolicyType());
+            policyConfig.setResponseAttributes(policyConfigResponse.getResponseAttributes());
+            setMatches(policyConfig.getMatchingConditions());
+            if (policyConfigResponse.getType() != null) {
+                try {
+                    switch (policyConfigResponse.getType()) {
+                        case JSON:
+                            final StringReader reader = new StringReader(policyConfigResponse.getConfig());
+                            try (final JsonReader jsonReader = Json.createReader(reader)) {
+                                final JsonObject object = jsonReader.readObject();
+                                policyConfig.setJsonObject(object);
+                            }
+                            break;
+                        case OTHER:
+                            policyConfig.setOther(policyConfigResponse.getConfig());
+                            break;
+                        case PROPERTIES:
+                            final Properties props = new Properties();
+                            props.putAll(policyConfigResponse.getProperty());
+                            policyConfig.setProperties(props);
+                            break;
+                        case XML:
+                            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                            final DocumentBuilder builder = factory.newDocumentBuilder();
+                            final StringReader stringReader = new StringReader(policyConfigResponse.getConfig());
+                            policyConfig.setDocument(builder.parse(new InputSource(stringReader)));
+                            break;
                     }
+                } catch (final Exception exception) {
+                    LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID + exception);
+                    throw new PolicyConfigException(
+                            XACMLErrorConstants.ERROR_SCHEMA_INVALID + "Unable to parse the config", exception);
                 }
-                result.add(policyConfig);
             }
+            result.add(policyConfig);
         }
         return result;
     }
@@ -774,7 +777,7 @@ public class StdPolicyEngine {
         clientEncoding = encoder.encodeToString((userName + ":" + pass).getBytes(StandardCharsets.UTF_8));
     }
 
-    public Collection<String> listConfigImpl(final ConfigRequestParameters listRequestParameters)
+    private Collection<String> listConfigImpl(final ConfigRequestParameters listRequestParameters)
             throws PolicyConfigException {
         final Collection<String> policyList = new ArrayList<>();
         if (junit) {
@@ -792,7 +795,7 @@ public class StdPolicyEngine {
         return policyList;
     }
 
-    public Collection<PolicyResponse> sendEventImpl(final Map<String, String> eventAttributes, final UUID requestID)
+    private Collection<PolicyResponse> sendEventImpl(final Map<String, String> eventAttributes, final UUID requestID)
             throws PolicyEventException {
         String body = null;
         // Create Request.
@@ -864,7 +867,7 @@ public class StdPolicyEngine {
         apiKey = properties.getProperty(UEB_API_KEY_PROP_NAME);
         apiSecret = properties.getProperty(UEB_API_SECRET_PROP_NAME);
 
-        setNotificationType(notificationTypeValue, DEFAULT_NOTIFICATION);
+        setNotificationType(notificationTypeValue);
 
         if (serverList == null) {
             notificationType.clear();
@@ -872,7 +875,7 @@ public class StdPolicyEngine {
             LOGGER.info(
                     "Properties file doesn't have the NOTIFICATION_SERVERS parameter system will use defualt websockets");
         } else {
-            notificationURLList = getPropertyValueAsList(serverList.trim(), COMMA);
+            notificationURLList = getPropertyValueAsList(serverList.trim());
         }
 
         if (topic != null) {
@@ -907,19 +910,7 @@ public class StdPolicyEngine {
         // Check the Keys for PDP_URLs
         for (final String propertyKey : prop.stringPropertyNames()) {
             if (propertyKey.startsWith(PDP_URL_PROP_NAME)) {
-                final String propertyValue = prop.getProperty(propertyKey);
-                if (propertyValue == null) {
-                    throw new PolicyEngineException(XACMLErrorConstants.ERROR_DATA_ISSUE
-                            + "Properties file doesn't have the PDP_URL parameter");
-                }
-                if (propertyValue.contains(SEMICOLLON)) {
-                    final List<String> pdpDefault = Arrays.asList(propertyValue.split(REGEX));
-                    for (final String pdpVal : pdpDefault) {
-                        readPDPParam(pdpVal);
-                    }
-                } else {
-                    readPDPParam(propertyValue);
-                }
+                readPDPPropertyURL(prop, propertyKey);
             }
         }
         if (pdps == null || pdps.isEmpty()) {
@@ -928,13 +919,29 @@ public class StdPolicyEngine {
         }
     }
 
-    private void setNotificationType(final String propertyValue, final String defaultValue) {
+    private void readPDPPropertyURL(Properties prop, String propertyKey) throws PolicyEngineException {
+        final String propertyValue = prop.getProperty(propertyKey);
         if (propertyValue == null) {
-            notificationType.add(defaultValue);
+            throw new PolicyEngineException(XACMLErrorConstants.ERROR_DATA_ISSUE
+                    + "Properties file doesn't have the PDP_URL parameter");
+        }
+        if (propertyValue.contains(SEMICOLLON)) {
+            final List<String> pdpDefault = Arrays.asList(propertyValue.split(REGEX));
+            for (final String pdpVal : pdpDefault) {
+                readPDPParam(pdpVal);
+            }
+        } else {
+            readPDPParam(propertyValue);
+        }
+    }
+
+    private void setNotificationType(final String propertyValue) {
+        if (propertyValue == null) {
+            notificationType.add(DEFAULT_NOTIFICATION);
             LOGGER.info(
                     "Properties file doesn't have the NOTIFICATION_TYPE parameter system will use defualt websockets");
         } else {
-            notificationType = getPropertyValueAsList(propertyValue.trim(), COMMA);
+            notificationType = getPropertyValueAsList(propertyValue.trim());
         }
     }
 
@@ -992,9 +999,9 @@ public class StdPolicyEngine {
         }
     }
 
-    private List<String> getPropertyValueAsList(final String propertyValue, final String split) {
-        if (propertyValue.contains(split)) {
-            return Arrays.asList(propertyValue.split(split));
+    private List<String> getPropertyValueAsList(final String propertyValue) {
+        if (propertyValue.contains(COMMA)) {
+            return Arrays.asList(propertyValue.split(COMMA));
         }
         final List<String> valuesList = new ArrayList<>();
         valuesList.add(propertyValue);
@@ -1087,28 +1094,29 @@ public class StdPolicyEngine {
         if (junit) {
             return;
         }
+        if (pdps == null) {
+            return;
+        }
 
-        if (pdps != null) {
-            if (UEB.equals(notificationType.get(0)) && !this.uebThread) {
-                this.uebClientThread = new AutoClientUEB(pdps.get(0), notificationURLList, apiKey, apiSecret);
-                AutoClientUEB.setAuto(scheme, handler);
-                this.registerUEBThread = new Thread(this.uebClientThread);
-                this.registerUEBThread.start();
-                this.uebThread = true;
-            } else if (notificationType.get(0).equals(DMAAP) && !this.dmaapThread) {
-                this.dmaapClientThread = new AutoClientDMAAP(notificationURLList, topic, userName, pass);
-                AutoClientDMAAP.setAuto(scheme, handler);
-                this.registerDMAAPThread = new Thread(this.dmaapClientThread);
-                this.registerDMAAPThread.start();
-                this.dmaapThread = true;
-            } else {
-                if (pdps.get(0) != null) {
-                    if (AutoClientEnd.getUrl() == null) {
-                        AutoClientEnd.start(pdps.get(0));
-                    } else {
-                        AutoClientEnd.stop();
-                        AutoClientEnd.start(pdps.get(0));
-                    }
+        if (UEB.equals(notificationType.get(0)) && !this.uebThread) {
+            this.uebClientThread = new AutoClientUEB(pdps.get(0), notificationURLList, apiKey, apiSecret);
+            AutoClientUEB.setAuto(scheme, handler);
+            this.registerUEBThread = new Thread(this.uebClientThread);
+            this.registerUEBThread.start();
+            this.uebThread = true;
+        } else if (notificationType.get(0).equals(DMAAP) && !this.dmaapThread) {
+            this.dmaapClientThread = new AutoClientDMAAP(notificationURLList, topic, userName, pass);
+            AutoClientDMAAP.setAuto(scheme, handler);
+            this.registerDMAAPThread = new Thread(this.dmaapClientThread);
+            this.registerDMAAPThread.start();
+            this.dmaapThread = true;
+        } else {
+            if (pdps.get(0) != null) {
+                if (AutoClientEnd.getUrl() == null) {
+                    AutoClientEnd.start(pdps.get(0));
+                } else {
+                    AutoClientEnd.stop();
+                    AutoClientEnd.start(pdps.get(0));
                 }
             }
         }
@@ -1227,7 +1235,7 @@ public class StdPolicyEngine {
     /*
      * Create Config Policy API Implementation
      */
-    public String createUpdateConfigPolicyImpl(final String policyName, final String policyDescription,
+    private String createUpdateConfigPolicyImpl(final String policyName, final String policyDescription,
             final String onapName, final String configName, final Map<String, String> configAttributes,
             final String configType, final String body, final String policyScope, final UUID requestID,
             final String riskLevel, final String riskType, final String guard, final String ttlDate,
@@ -1276,7 +1284,7 @@ public class StdPolicyEngine {
     /*
      * Create Update Config Firewall Policy API implementation
      */
-    public String createUpdateConfigFirewallPolicyImpl(final String policyName, final JsonObject firewallJson,
+    private String createUpdateConfigFirewallPolicyImpl(final String policyName, final JsonObject firewallJson,
             final String policyScope, final UUID requestID, final String riskLevel, final String riskType,
             final String guard, final String ttlDate, final boolean updateFlag) throws PolicyException {
         validateParameters(policyName, policyScope);
