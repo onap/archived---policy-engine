@@ -3,6 +3,7 @@
  * LogParser
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -377,27 +378,28 @@ public class ParseLog {
             StringBuilder builder = new StringBuilder();
             long length = file.length();
             logger.debug("dataFileName: " + dataFileName);
-            if (length > 0) {
-                length--;
-                randomAccessFile.seek(length);
-                for (long seek = length; seek >= 0; --seek) {
-                    randomAccessFile.seek(seek);
-                    final char c = (char) randomAccessFile.read();
-                    builder.append(c);
-                    if (c == '\n') {
-                        builder = builder.reverse();
-                        logger.debug("builder.toString(): " + builder.toString());
-                        if (builder.toString().contains(last + dataFileName + lineRead)) {
-                            final String[] parseString = builder.toString().split(last + dataFileName + lineRead);
-                            final String returnValue = parseString[1].replace("\r", "");
-                            randomAccessFile.close();
-                            return returnValue.trim();
-                        }
-                        builder = new StringBuilder();
+            if (length == 0) {
+                return null;
+            }
+
+            length--;
+            randomAccessFile.seek(length);
+            for (long seek = length; seek >= 0; --seek) {
+                randomAccessFile.seek(seek);
+                final char c = (char) randomAccessFile.read();
+                builder.append(c);
+                if (c == '\n') {
+                    builder = builder.reverse();
+                    logger.debug("builder.toString(): " + builder.toString());
+                    if (builder.toString().contains(last + dataFileName + lineRead)) {
+                        final String[] parseString = builder.toString().split(last + dataFileName + lineRead);
+                        final String returnValue = parseString[1].replace("\r", "");                        
+                        return returnValue.trim();
                     }
+                    builder = new StringBuilder();
                 }
             }
-            randomAccessFile.close();
+
         }
         return null;
     }
@@ -820,23 +822,25 @@ public class ParseLog {
     }
 
     private static void setLogFileProperties(final String[] splitString) {
-        if (splitString != null) {
-            for (int i = 0; i < splitString.length; i++) {
+        if (splitString == null) {
+            return;
+        }
 
-                if (splitString[i].contains("debug")) {
-                    // get path of debug.log file
-                    setDebuglogFile(splitString[i]);
-                } else if (splitString[i].contains("error")) {
-                    // get path of error.log file
-                    setErrorlogFile(splitString[i]);
+        for (int i = 0; i < splitString.length; i++) {
+
+            if (splitString[i].contains("debug")) {
+                // get path of debug.log file
+                setDebuglogFile(splitString[i]);
+            } else if (splitString[i].contains("error")) {
+                // get path of error.log file
+                setErrorlogFile(splitString[i]);
+            } else {
+                // get path of default file
+                logFile = splitString[i];
+                if (logFile != null && !logFile.isEmpty()) {
+                    logFile = logFile.trim();
                 } else {
-                    // get path of default file
-                    logFile = splitString[i];
-                    if (logFile != null && !logFile.isEmpty()) {
-                        logFile = logFile.trim();
-                    } else {
-                        logFile = null;
-                    }
+                    logFile = null;
                 }
             }
         }
@@ -851,53 +855,47 @@ public class ParseLog {
     public static Properties getPropertiesValue(final String fileName) {
         final Properties config = new Properties();
         final Path file = Paths.get(fileName);
-        if (file.toFile().exists()) {
+        if (!(file.toFile().exists() && file.toString().endsWith(".properties"))) {
+            logger.debug("File doesn't exist in the specified Path Or it is not a properties file" + file.toString());
+            return null;
+        }
 
-            if (file.toString().endsWith(".properties")) {
-                InputStream in;
-                try {
-                    in = new FileInputStream(file.toFile());
-                    config.load(in);
+        try (InputStream in = new FileInputStream(file.toFile())) {
+            config.load(in);
 
-                    resourceName = config.getProperty("RESOURCE_NAME");
-                    system = config.getProperty("SERVER");
-                    type = config.getProperty("LOGTYPE");
-                    systemLogFile = config.getProperty("PARSERLOGPATH");
-                    final String logFiles = config.getProperty("LOGPATH");
-                    final String cleanupInterval = config.getProperty("CHECK_INTERVAL");
-                    final String timeFrame = config.getProperty("TIME_FRAME");
+            resourceName = config.getProperty("RESOURCE_NAME");
+            system = config.getProperty("SERVER");
+            type = config.getProperty("LOGTYPE");
+            systemLogFile = config.getProperty("PARSERLOGPATH");
+            final String logFiles = config.getProperty("LOGPATH");
+            final String cleanupInterval = config.getProperty("CHECK_INTERVAL");
+            final String timeFrame = config.getProperty("TIME_FRAME");
 
-                    setCleanUpProperties(cleanupInterval, timeFrame);
+            setCleanUpProperties(cleanupInterval, timeFrame);
 
-                    if (logFiles == null || logFiles.isEmpty()) {
-                        isMissingLogFile = true;
-                        return null;
-                    }
-
-                    final String[] splitString = getPaths(logFiles);
-
-                    setLogFileProperties(splitString);
-
-                    jdbcUrl = config.getProperty("JDBC_URL").replace("'", "");
-                    jdbcUser = config.getProperty("JDBC_USER");
-                    jdbcDriver = config.getProperty("JDBC_DRIVER");
-                    jdbcPassword = CryptoUtils.decryptTxtNoExStr(config.getProperty("JDBC_PASSWORD", ""));
-                    config.setProperty("javax.persistence.jdbc.password",
-                            CryptoUtils.decryptTxtNoExStr(config.getProperty("javax.persistence.jdbc.password", "")));
-                    return config;
-
-                } catch (final IOException e) {
-                    logger.error("Error porcessing Config file will be unable to create Health Check" + e);
-                } catch (final Exception e) {
-                    logger.error("Error getPropertiesValue on TIME_FRAME", e);
-                    logger.debug("Error getPropertiesValue on TIME_FRAME, so use its default value:" + defaultTimeFrame
-                            + " days");
-                }
+            if (logFiles == null || logFiles.isEmpty()) {
+                isMissingLogFile = true;
+                return null;
             }
 
-        } else {
+            final String[] splitString = getPaths(logFiles);
 
-            logger.debug("File doesn't exist in the specified Path " + file.toString());
+            setLogFileProperties(splitString);
+
+            jdbcUrl = config.getProperty("JDBC_URL").replace("'", "");
+            jdbcUser = config.getProperty("JDBC_USER");
+            jdbcDriver = config.getProperty("JDBC_DRIVER");
+            jdbcPassword = CryptoUtils.decryptTxtNoExStr(config.getProperty("JDBC_PASSWORD", ""));
+            config.setProperty("javax.persistence.jdbc.password",
+                    CryptoUtils.decryptTxtNoExStr(config.getProperty("javax.persistence.jdbc.password", "")));
+            return config;
+
+        } catch (final IOException e) {
+            logger.error("Error porcessing Config file will be unable to create Health Check" + e);
+        } catch (final Exception e) {
+            logger.error("Error getPropertiesValue on TIME_FRAME", e);
+            logger.debug("Error getPropertiesValue on TIME_FRAME, so use its default value:" + defaultTimeFrame
+                    + " days");
         }
         return null;
     }
