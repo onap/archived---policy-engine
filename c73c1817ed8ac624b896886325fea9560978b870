@@ -1,0 +1,326 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_5c583bfa",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "Remove the declaration of matching",
+      "range": {
+        "startLine": 271,
+        "startChar": 8,
+        "endLine": 271,
+        "endChar": 24
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_3c6f8794",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "Replace with statement at start of method:\n\nif (eStrucClassifier.getEAnnotations().isEmpty()) {\n    return;\n}",
+      "range": {
+        "startLine": 272,
+        "startChar": 0,
+        "endLine": 272,
+        "endChar": 60
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_1c72c37c",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "Replace with \"String matching\"",
+      "range": {
+        "startLine": 273,
+        "startChar": 12,
+        "endLine": 273,
+        "endChar": 21
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_9c5ed3e8",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "This might be neater:\nprivate void checkAnnotation(HashMap\u003cString, String\u003e annotationSet, EStructuralFeature obj) {\n    if (eStrucClassifier.getEAnnotations().isEmpty()) {\n\treturn;\n    }\n\n    String matching \u003d annotationValue(eStrucClassifier, ANNOTATION_TYPE.MATCHING, policy);\n    if (matching !\u003d null) {\n\tannotationSet.put(eStrucClassifier.getName(), matching);\n    }\n\n    String range \u003d annotationValue(eStrucClassifier, ANNOTATION_TYPE.VALIDATION, policy);\n    if (range !\u003d null) {\n\tannotationSet.put(eStrucClassifier.getName(), range);\n    }\n\n    string annotationDict \u003d annotationValue(eStrucClassifier, ANNOTATION_TYPE.DICTIONARY, policy);\n    if (annotationDict !\u003d null) {\n\tannotationSet.put(eStrucClassifier.getName(), annotationDict);\n    }\n}",
+      "range": {
+        "startLine": 286,
+        "startChar": 0,
+        "endLine": 305,
+        "endChar": 5
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_dc6beb83",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "boolean annotation \u003d",
+      "range": {
+        "startLine": 337,
+        "startChar": 8,
+        "endLine": 338,
+        "endChar": 18
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_fc682f89",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "I would do this check right at the start of the method:\n\nif (!(obj instanceof EReference)) {\n    return;\n}\n\nThen I would change the if statement to be:\nif (annotationTest(eStrucClassifier, configuration, onap)) {\n    ....\n    blah blah blah\n    ....\n}\n\nThen you don\u0027t need the \"annotation boolean\" variable either.",
+      "range": {
+        "startLine": 339,
+        "startChar": 27,
+        "endLine": 339,
+        "endChar": 52
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_bc0ab7d0",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "Again, lower your nesting level by checking if this is not a EEnumImpl and returning immediately",
+      "range": {
+        "startLine": 414,
+        "startChar": 1,
+        "endLine": 415,
+        "endChar": 1
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_3cf6a7d8",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "You could eliminate this variable by putting the method call in the refAtribute.put..... statement but I\u0027ll leave the choice on that to you.",
+      "range": {
+        "startLine": 431,
+        "startChar": 0,
+        "endLine": 431,
+        "endChar": 59
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_5c26fb69",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "boolean annotation",
+      "range": {
+        "startLine": 575,
+        "startChar": 8,
+        "endLine": 575,
+        "endChar": 18
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_bc3157a4",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "Remove these declarations",
+      "range": {
+        "startLine": 573,
+        "startChar": 1,
+        "endLine": 575,
+        "endChar": 1
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_7c2bbf30",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "boolean dictionaryTest",
+      "range": {
+        "startLine": 576,
+        "startChar": 8,
+        "endLine": 576,
+        "endChar": 22
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_dc19ab23",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "Delete this declaration",
+      "range": {
+        "startLine": 585,
+        "startChar": 1,
+        "endLine": 585,
+        "endChar": 28
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_fc16eff0",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "String defaultValue",
+      "range": {
+        "startLine": 592,
+        "startChar": 8,
+        "endLine": 592,
+        "endChar": 20
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_9cd33338",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T10:29:31Z",
+      "side": 1,
+      "message": "You could merge these statements if you like.",
+      "range": {
+        "startLine": 596,
+        "startChar": 0,
+        "endLine": 597,
+        "endChar": 47
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
