@@ -16,6 +16,24 @@
       "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_1ccac34f",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T11:03:09Z",
+      "side": 0,
+      "message": "I agree, the switch statement should have a default/catch all at the end.\n\nAn expert on the Policy Engine should answer this.",
+      "parentUuid": "da7095c5_815f4c72",
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
