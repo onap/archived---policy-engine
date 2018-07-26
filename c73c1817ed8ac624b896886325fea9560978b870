@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "da7095c5_e16ba883",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Lines modified\nMSModelUtils.java\t260 - 306, 319, 329-350, 389, 401-439, 507-599, 731-744, 1019, 1023",
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_c1eea422",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "newly added method for above reason",
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_5c583bfa",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
         "patchSetId": 1
@@ -13,6 +47,30 @@
       "writtenOn": "2018-07-26T10:29:31Z",
       "side": 1,
       "message": "Remove the declaration of matching",
+      "range": {
+        "startLine": 271,
+        "startChar": 8,
+        "endLine": 271,
+        "endChar": 24
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_1cce4384",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_5c583bfa",
       "range": {
         "startLine": 271,
         "startChar": 8,
@@ -48,6 +106,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_3ccb0774",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_3c6f8794",
+      "range": {
+        "startLine": 272,
+        "startChar": 0,
+        "endLine": 272,
+        "endChar": 60
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_1c72c37c",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
         "patchSetId": 1
@@ -71,6 +153,47 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_dcc76b63",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_1c72c37c",
+      "range": {
+        "startLine": 273,
+        "startChar": 12,
+        "endLine": 273,
+        "endChar": 21
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_a1e9301c",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "newly added methods for above reason",
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_9c5ed3e8",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
         "patchSetId": 1
@@ -82,6 +205,30 @@
       "writtenOn": "2018-07-26T10:29:31Z",
       "side": 1,
       "message": "This might be neater:\nprivate void checkAnnotation(HashMap\u003cString, String\u003e annotationSet, EStructuralFeature obj) {\n    if (eStrucClassifier.getEAnnotations().isEmpty()) {\n\treturn;\n    }\n\n    String matching \u003d annotationValue(eStrucClassifier, ANNOTATION_TYPE.MATCHING, policy);\n    if (matching !\u003d null) {\n\tannotationSet.put(eStrucClassifier.getName(), matching);\n    }\n\n    String range \u003d annotationValue(eStrucClassifier, ANNOTATION_TYPE.VALIDATION, policy);\n    if (range !\u003d null) {\n\tannotationSet.put(eStrucClassifier.getName(), range);\n    }\n\n    string annotationDict \u003d annotationValue(eStrucClassifier, ANNOTATION_TYPE.DICTIONARY, policy);\n    if (annotationDict !\u003d null) {\n\tannotationSet.put(eStrucClassifier.getName(), annotationDict);\n    }\n}",
+      "range": {
+        "startLine": 286,
+        "startChar": 0,
+        "endLine": 305,
+        "endChar": 5
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_fcc4af60",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_9c5ed3e8",
       "range": {
         "startLine": 286,
         "startChar": 0,
@@ -117,6 +264,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_bca637c0",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_dc6beb83",
+      "range": {
+        "startLine": 337,
+        "startChar": 8,
+        "endLine": 338,
+        "endChar": 18
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_fc682f89",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
         "patchSetId": 1
@@ -134,6 +305,47 @@
         "endLine": 339,
         "endChar": 52
       },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_7cb09ff4",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Nice ! suggestion. Done !",
+      "parentUuid": "da7095c5_fc682f89",
+      "range": {
+        "startLine": 339,
+        "startChar": 27,
+        "endLine": 339,
+        "endChar": 52
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_e1e64844",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "newly added 2 methods used above",
       "revId": "c73c1817ed8ac624b896886325fea9560978b870",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -186,6 +398,64 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_fc9b4f70",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_3cf6a7d8",
+      "range": {
+        "startLine": 431,
+        "startChar": 0,
+        "endLine": 431,
+        "endChar": 59
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_a137f0af",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "newly added method",
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_81466c22",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "newly added meth used above",
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_5c26fb69",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
         "patchSetId": 1
@@ -232,6 +502,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_7c873f10",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_bc3157a4",
+      "range": {
+        "startLine": 573,
+        "startChar": 1,
+        "endLine": 575,
+        "endChar": 1
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_7c2bbf30",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
         "patchSetId": 1
@@ -255,6 +549,47 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_1c7c0320",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_7c2bbf30",
+      "range": {
+        "startLine": 576,
+        "startChar": 8,
+        "endLine": 576,
+        "endChar": 22
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_4148542d",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "newly added meth",
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_dc19ab23",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
         "patchSetId": 1
@@ -266,6 +601,30 @@
       "writtenOn": "2018-07-26T10:29:31Z",
       "side": 1,
       "message": "Delete this declaration",
+      "range": {
+        "startLine": 585,
+        "startChar": 1,
+        "endLine": 585,
+        "endChar": 28
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_fca90f7c",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_dc19ab23",
       "range": {
         "startLine": 585,
         "startChar": 1,
@@ -301,6 +660,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_9cb6d3db",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_fc16eff0",
+      "range": {
+        "startLine": 592,
+        "startChar": 8,
+        "endLine": 592,
+        "endChar": 20
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_9cd33338",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
         "patchSetId": 1
@@ -312,6 +695,30 @@
       "writtenOn": "2018-07-26T10:29:31Z",
       "side": 1,
       "message": "You could merge these statements if you like.",
+      "range": {
+        "startLine": 596,
+        "startChar": 0,
+        "endLine": 597,
+        "endChar": 47
+      },
+      "revId": "c73c1817ed8ac624b896886325fea9560978b870",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_bcbb97c3",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da7095c5_9cd33338",
       "range": {
         "startLine": 596,
         "startChar": 0,

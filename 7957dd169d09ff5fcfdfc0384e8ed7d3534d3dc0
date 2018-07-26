@@ -1,0 +1,280 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_e18f2874",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Extracted this code into smaller method checkAnnotation",
+      "range": {
+        "startLine": 289,
+        "startChar": 43,
+        "endLine": 305,
+        "endChar": 5
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_018d7c7b",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Extracted this code into smaller method findMatchingAnnotation",
+      "range": {
+        "startLine": 306,
+        "startChar": 77,
+        "endLine": 321,
+        "endChar": 3
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_61f3180b",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Extract this into updateSubAttributes method",
+      "range": {
+        "startLine": 351,
+        "startChar": 55,
+        "endLine": 363,
+        "endChar": 5
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_81f8ace6",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Just changed this to one line as shown on the right\nrequiredAttribute \u003d isRequiredAttribute(obj, className)...",
+      "range": {
+        "startLine": 407,
+        "startChar": 4,
+        "endLine": 411,
+        "endChar": 5
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_21dd2071",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Extracted meth updRefAttributes",
+      "range": {
+        "startLine": 422,
+        "startChar": 53,
+        "endLine": 436,
+        "endChar": 7
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_41da9479",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Extracted meth updEnumTypeRefAttrib",
+      "range": {
+        "startLine": 436,
+        "startChar": 62,
+        "endLine": 446,
+        "endChar": 7
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_81cf4cb0",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Extracted meth checkPolicyTemplate ., and since it was returning true inside the loop, i would save the result boolean and then break from loop. The sub-meth would return true and based on that, this method will break from outer loop",
+      "range": {
+        "startLine": 520,
+        "startChar": 50,
+        "endLine": 527,
+        "endChar": 6
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_e1bde803",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Extracted sub-meth findSubTypes",
+      "range": {
+        "startLine": 536,
+        "startChar": 37,
+        "endLine": 545,
+        "endChar": 4
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_c13c6496",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Extracted sub-meth IsRequiredAttribute",
+      "range": {
+        "startLine": 563,
+        "startChar": 35,
+        "endLine": 568,
+        "endChar": 5
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_6141d80a",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Extracted sub-meth checkStrucClassifier\n\nAnd extracted one more sub-meth updEReferenceAttrib for the internal if condition",
+      "range": {
+        "startLine": 574,
+        "startChar": 56,
+        "endLine": 592,
+        "endChar": 6
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_01525cdd",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Extracted updDependencyList",
+      "range": {
+        "startLine": 729,
+        "startChar": 36,
+        "endLine": 732,
+        "endChar": 6
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_2172007d",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1019,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T11:01:23Z",
+      "side": 0,
+      "message": "Changed to Entry in several places, \nimported java.util.Map.Entry at the top. I think the IDE modified this while optimizing imports",
+      "range": {
+        "startLine": 1019,
+        "startChar": 6,
+        "endLine": 1019,
+        "endChar": 15
+      },
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
