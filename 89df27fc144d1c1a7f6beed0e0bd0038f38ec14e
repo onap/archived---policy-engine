@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_9ceed38a",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/MSModelUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-26T12:37:28Z",
+      "side": 1,
+      "message": "This is way too much for the team to review at once. Let\u0027s start with fixing the checkstyle and some simple fixes. For example, some of the variables (not all) went from public to private.",
+      "revId": "89df27fc144d1c1a7f6beed0e0bd0038f38ec14e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
