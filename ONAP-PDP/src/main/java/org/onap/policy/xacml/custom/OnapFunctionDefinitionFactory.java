@@ -3,6 +3,7 @@
  * ONAP-PDP
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,21 +59,25 @@ public class OnapFunctionDefinitionFactory extends FunctionDefinitionFactory {
                 needMapInit = false;
                 final Field[] declaredFields = StdFunctions.class.getDeclaredFields();
                 for (final Field field : declaredFields) {
-                    if (Modifier.isStatic(field.getModifiers()) && field.getName().startsWith(StdFunctions.FD_PREFIX)
-                            && FunctionDefinition.class.isAssignableFrom(field.getType())
-                            && Modifier.isPublic(field.getModifiers())) {
-                        try {
-                            register((FunctionDefinition) (field.get(null)));
-                        } catch (final IllegalAccessException ex) {
-                            logger.error(ex.getMessage() + ex);
-                        }
-                    }
+                    registerFunctionDefinition(field);
                 }
                 //
                 // Our custom function
                 //
                 // register(FunctionDefinitionCustomRegexpMatch);
                 register(FD_CUSTOM_REGEXP_MATCH);
+            }
+        }
+    }
+
+    private static void registerFunctionDefinition(Field field) {
+        if (Modifier.isStatic(field.getModifiers()) && field.getName().startsWith(StdFunctions.FD_PREFIX)
+                && FunctionDefinition.class.isAssignableFrom(field.getType())
+                && Modifier.isPublic(field.getModifiers())) {
+            try {
+                register((FunctionDefinition) (field.get(null)));
+            } catch (final IllegalAccessException ex) {
+                logger.error(ex.getMessage() + ex);
             }
         }
     }
