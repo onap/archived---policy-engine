@@ -341,83 +341,66 @@ public class PDPServices {
         if(pdpConfigLocation.contains("/")){
             pdpConfigLocation = pdpConfigLocation.replace("/", File.separator);
         }
-        InputStream inputStream = null;
-        JsonReader jsonReader = null;
-        try {
-            inputStream = new FileInputStream(new File(pdpConfigLocation));
-            try {
-                if (pdpConfigLocation.endsWith("json")) {
-                    pdpResponse.setType(PolicyType.JSON);
-                    jsonReader = Json.createReader(inputStream);
+
+        try(InputStream inputStream = new FileInputStream(new File(pdpConfigLocation))) {
+            if (pdpConfigLocation.endsWith("json")) {
+                pdpResponse.setType(PolicyType.JSON);
+                try(JsonReader jsonReader = Json.createReader(inputStream);) {
                     pdpResponse.setConfig(jsonReader.readObject().toString());
-                    jsonReader.close();
-                } else if (pdpConfigLocation.endsWith("xml")) {
-                    pdpResponse.setType(PolicyType.XML);
-                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                    dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-                    dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-                    DocumentBuilder db = null;
-                    try {
-                        db = dbf.newDocumentBuilder();
-                        Document document = db.parse(inputStream);
-                        DOMSource domSource = new DOMSource(document);
-                        StringWriter writer = new StringWriter();
-                        StreamResult result = new StreamResult(writer);
-                        TransformerFactory tf = TransformerFactory.newInstance();
-                        Transformer transformer;
-                        transformer = tf.newTransformer();
-                        transformer.transform(domSource, result);
-                        pdpResponse.setConfig(writer.toString());
-                    } catch (Exception e) {
-                        LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID+ e);
-                        throw new PDPException(XACMLErrorConstants.ERROR_SCHEMA_INVALID+ "Unable to parse the XML config", e);
-                    }
-                } else if (pdpConfigLocation.endsWith("properties")) {
-                    pdpResponse.setType(PolicyType.PROPERTIES);
-                    Properties configProp = new Properties();
-                    configProp.load(inputStream);
-                    Map<String, String> propVal = new HashMap<>();
-                    for(String name: configProp.stringPropertyNames()) {
-                        propVal.put(name, configProp.getProperty(name));
-                    }
-                    pdpResponse.setProperty(propVal);
-                } else if (pdpConfigLocation.endsWith("txt")) {
-                    pdpResponse.setType(PolicyType.OTHER);
-                    String other = IOUtils.toString(inputStream);
-                    IOUtils.closeQuietly(inputStream);
-                    pdpResponse.setConfig(other);
-                } else {
-                    LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Config Not Found");
-                    pdpResponse.setPolicyConfigStatus(PolicyConfigStatus.CONFIG_NOT_FOUND);
-                    pdpResponse.setPolicyConfigMessage("Illegal form of Configuration Type Found.");
-                    inputStream.close();
-                    return pdpResponse;
                 }
-                LOGGER.info("config Retrieved " + pdpConfigLocation);
-                pdpResponse.setStatus("Config Retrieved! ",
-                        PolicyResponseStatus.NO_ACTION_REQUIRED,
-                        PolicyConfigStatus.CONFIG_RETRIEVED);
+            } else if (pdpConfigLocation.endsWith("xml")) {
+                pdpResponse.setType(PolicyType.XML);
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+                dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                DocumentBuilder db = null;
+                try {
+                    db = dbf.newDocumentBuilder();
+                    Document document = db.parse(inputStream);
+                    DOMSource domSource = new DOMSource(document);
+                    StringWriter writer = new StringWriter();
+                    StreamResult result = new StreamResult(writer);
+                    TransformerFactory tf = TransformerFactory.newInstance();
+                    Transformer transformer;
+                    transformer = tf.newTransformer();
+                    transformer.transform(domSource, result);
+                    pdpResponse.setConfig(writer.toString());
+                } catch (Exception e) {
+                    LOGGER.error(XACMLErrorConstants.ERROR_SCHEMA_INVALID+ e);
+                    throw new PDPException(XACMLErrorConstants.ERROR_SCHEMA_INVALID+ "Unable to parse the XML config", e);
+                }
+            } else if (pdpConfigLocation.endsWith("properties")) {
+                pdpResponse.setType(PolicyType.PROPERTIES);
+                Properties configProp = new Properties();
+                configProp.load(inputStream);
+                Map<String, String> propVal = new HashMap<>();
+                for(String name: configProp.stringPropertyNames()) {
+                    propVal.put(name, configProp.getProperty(name));
+                }
+                pdpResponse.setProperty(propVal);
+            } else if (pdpConfigLocation.endsWith("txt")) {
+                pdpResponse.setType(PolicyType.OTHER);
+                String other = IOUtils.toString(inputStream);
+                IOUtils.closeQuietly(inputStream);
+                pdpResponse.setConfig(other);
+            } else {
+                LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Config Not Found");
+                pdpResponse.setPolicyConfigStatus(PolicyConfigStatus.CONFIG_NOT_FOUND);
+                pdpResponse.setPolicyConfigMessage("Illegal form of Configuration Type Found.");
                 return pdpResponse;
-            } catch (IOException | ParserConfigurationException e) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
-                throw new PDPException(XACMLErrorConstants.ERROR_PROCESS_FLOW +
-                        "Cannot open a connection to the configURL", e);
-            } finally {
-                if(jsonReader != null) {
-                    try {
-                        jsonReader.close();
-                    } catch (Exception e) {
-                        LOGGER.error("Exception Occured while closing the JsonReader"+e);
-                    }
-                }
             }
+            LOGGER.info("config Retrieved " + pdpConfigLocation);
+            pdpResponse.setStatus("Config Retrieved! ",
+                    PolicyResponseStatus.NO_ACTION_REQUIRED,
+                    PolicyConfigStatus.CONFIG_RETRIEVED);
+            return pdpResponse;
         } catch (FileNotFoundException e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + e);
             throw new PDPException(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error in ConfigURL", e);
-        }finally{
-            if(inputStream != null){
-                inputStream.close();
-            }
+        } catch (IOException | ParserConfigurationException e) {
+            LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + e);
+            throw new PDPException(XACMLErrorConstants.ERROR_PROCESS_FLOW +
+                    "Cannot open a connection to the configURL", e);
         }
     }
 
