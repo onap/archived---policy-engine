@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_815f4c72",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T08:07:01Z",
+      "side": 0,
+      "message": "I wanted to refactor this loop as well. There are two options\nOption 1: Negate the if condition for null and return. So 1 level is reduced. \n   if(policyConfigResponse.getType \u003d\u003d null) {\n      result.add(policyConfig);\n      continue;\n   }\n  Issue in this code is \"result.add(policyConfig)\". After analyzing the switch case stmt, it looks like if Type is not (JSON, OTHER, PROPERTIES, XML), then the loop wont break and result.add is executed. \n So, I dont know if this is a valid case ?\n Question: policyConfigResponse.getType() is allways one of JSON/OTHER/PROPERTIES/XML ? \n\n   If answer is yes, then the switch will allways break and result.add is not executed. \n\nOption 2: \n try extract method from try/switch block. However I didnt try this method much. \n\nI was thinking somehow  option1 is simpler. \n\nI didnt do because of the question i have above.",
+      "revId": "7957dd169d09ff5fcfdfc0384e8ed7d3534d3dc0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_014b3cb1",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T08:07:01Z",
+      "side": 1,
+      "message": "reported by IntelliJ that its allways DEFAULT_NOTIFICATION, so just using it inside meth instead of param.\nIn future if there is some other type of notification, then parameter will be needed. \nLet me know if you guys think, its better to keep param now itself.",
+      "revId": "3aa6593923ea8a8886974999805fece332015231",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_e14de8c5",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/StdPolicyEngine.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1002,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T08:07:01Z",
+      "side": 1,
+      "message": "IntelliJ reported that its allways COMMA, so I removed the param.\nLet me know if you guys think, its better to keep param now itself.",
+      "revId": "3aa6593923ea8a8886974999805fece332015231",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_c1cc6438",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/std/NotificationStore.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-26T08:07:01Z",
+      "side": 1,
+      "message": "Please feel free to suggest, if you think of better name. Based on the code snippet I came up with these names, however this might not be the appropriate ones.",
+      "range": {
+        "startLine": 232,
+        "startChar": 24,
+        "endLine": 232,
+        "endChar": 47
+      },
+      "revId": "3aa6593923ea8a8886974999805fece332015231",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
