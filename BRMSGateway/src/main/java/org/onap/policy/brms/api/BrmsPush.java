@@ -787,9 +787,7 @@ public class BrmsPush {
             LOGGER.error("Error while starting Transaction " + e);
         }
         if (!modifiedGroups.isEmpty()) {
-            Boolean flag;
-            flag = buildAndGenerateJarFile();
-            if (flag) {
+            if (buildAndGenerateJarFile()) {
                 sendNotification(controllers);
             }
         }
