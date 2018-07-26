@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_d0950fe5",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/ManualClientEndDMAAP.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T14:53:57Z",
+      "side": 1,
+      "message": "Thanks, this is grand, gets rid of the magic number and is easier to follow.",
+      "range": {
+        "startLine": 112,
+        "startChar": 1,
+        "endLine": 118,
+        "endChar": 5
+      },
+      "revId": "5a9d91a75f1a65074c71652e7f404f460390974a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_f09a9313",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/ManualClientEndUEB.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-07-26T14:53:57Z",
+      "side": 1,
+      "message": "Again, good job.",
+      "range": {
+        "startLine": 142,
+        "startChar": 8,
+        "endLine": 147,
+        "endChar": 9
+      },
+      "revId": "5a9d91a75f1a65074c71652e7f404f460390974a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
