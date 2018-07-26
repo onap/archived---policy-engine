@@ -71,6 +71,29 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_fc7d8fb2",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/ManualClientEndDMAAP.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-26T13:01:21Z",
+      "side": 1,
+      "message": "This is a mess. Perhaps this is a hack to overcome a Dmaap initialization issue. I think there are problems when a first message gets posted to a topic it creates the topic. Thus you need another message. But I could be wrong.\n\nIf there need to be retries to publish messages, then that magic number should come from a properties file at the very least.",
+      "range": {
+        "startLine": 112,
+        "startChar": 8,
+        "endLine": 133,
+        "endChar": 21
+      },
+      "revId": "3aa6593923ea8a8886974999805fece332015231",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_1c95e33f",
         "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/std/ManualClientEndUEB.java",
         "patchSetId": 1
