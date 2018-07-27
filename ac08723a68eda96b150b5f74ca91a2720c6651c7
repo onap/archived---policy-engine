@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da7095c5_89e76ee4",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-07-27T14:01:54Z",
+      "side": 1,
+      "message": "I\u0027m not sure, do we need to close this here since it is auto closed with try-with-resources?",
+      "range": {
+        "startLine": 397,
+        "startChar": 0,
+        "endLine": 397,
+        "endChar": 49
+      },
+      "revId": "ac08723a68eda96b150b5f74ca91a2720c6651c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
