@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "da7095c5_7fabac89",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-28T02:11:05Z",
+      "side": 1,
+      "message": "Thanks, I have fixed this",
+      "parentUuid": "da7095c5_89e76ee4",
+      "range": {
+        "startLine": 397,
+        "startChar": 0,
+        "endLine": 397,
+        "endChar": 49
+      },
+      "revId": "ac08723a68eda96b150b5f74ca91a2720c6651c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da7095c5_845af581",
         "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2018-07-27T20:09:16Z",
       "side": 1,
       "message": "I think this will allow files that exist but don\u0027t have .properties extension that I don\u0027t think is the intent.",
+      "revId": "ac08723a68eda96b150b5f74ca91a2720c6651c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7095c5_5f926858",
+        "filename": "LogParser/src/main/java/org/onap/xacml/parser/ParseLog.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 858,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-07-28T02:11:05Z",
+      "side": 1,
+      "message": "Thanks for noticing this, this should have been \u0026\u0026 not ||",
+      "parentUuid": "da7095c5_845af581",
       "revId": "ac08723a68eda96b150b5f74ca91a2720c6651c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
