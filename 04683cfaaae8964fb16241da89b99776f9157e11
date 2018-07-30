@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a6a9dd7_1a83b9cd",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-07-30T12:35:12Z",
+      "side": 1,
+      "message": "I would think we would want this boolean reversed. eg. Return false if you cannot find any scopes. Thus, the caller would error out. Otherwise return true if scopes were found.",
+      "range": {
+        "startLine": 357,
+        "startChar": 16,
+        "endLine": 357,
+        "endChar": 28
+      },
+      "revId": "04683cfaaae8964fb16241da89b99776f9157e11",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
