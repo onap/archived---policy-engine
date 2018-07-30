@@ -30,58 +30,58 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class DecisionDictionaryJPATest {
 
-	private static Logger logger = FlexLogger.getLogger(DecisionDictionaryJPATest.class);
-	private UserInfo userInfo;
-	
-	@Before
-	public void setUp() throws Exception {
-		logger.info("setUp: Entering");
-		userInfo = new UserInfo();
-		userInfo.setUserLoginId("Test");
-		userInfo.setUserName("Test");
-		logger.info("setUp: exit");
-	}
-	
-	@Test
-	public void testDecisionSettings(){
-		DecisionSettings data = new DecisionSettings();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.preUpdate();
-		data.prePersist();
-		data.setDescription("Test");
-		assertTrue("Test".equals(data.getDescription()));
-		data.setXacmlId("Test");
-		assertTrue("Test".equals(data.getXacmlId()));
-		data.setDatatypeBean(new Datatype());
-		assertTrue(data.getDatatypeBean()!=null);
-		data.setIssuer("Test");
-		assertTrue("Test".equals(data.getIssuer()));
-		data.setMustBePresent(true);
-		assertTrue(data.isMustBePresent());
-		data.setPriority("Test");
-		assertTrue("Test".equals(data.getPriority()));
-		data.setCreatedDate(new Date());
-		assertTrue(data.getCreatedDate()!=null);
-		data.setModifiedDate(new Date());
-		assertTrue(data.getModifiedDate()!=null);
-		data.setUserCreatedBy(userInfo);
-		assertTrue(data.getUserCreatedBy()!=null);
-		data.setUserModifiedBy(userInfo);
-		assertTrue(data.getUserModifiedBy()!=null);
-	}
-	
-	@Test
-	public void testRainyDayTreatments(){
-		RainyDayTreatments data = new RainyDayTreatments();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setBbid("Test");
-		assertTrue("Test".equals(data.getBbid()));
-		data.setWorkstep("Test");
-		assertTrue("Test".equals(data.getWorkstep()));
-		data.setTreatments("Test");
-		assertTrue("Test".equals(data.getTreatments()));
-	}
-	
+    private static Logger logger = FlexLogger.getLogger(DecisionDictionaryJPATest.class);
+    private UserInfo userInfo;
+
+    @Before
+    public void setUp() throws Exception {
+        logger.info("setUp: Entering");
+        userInfo = new UserInfo();
+        userInfo.setUserLoginId("Test");
+        userInfo.setUserName("Test");
+        logger.info("setUp: exit");
+    }
+
+    @Test
+    public void testDecisionSettings(){
+        DecisionSettings data = new DecisionSettings();
+        data.setId(1);
+        assertTrue(1 == data.getId());
+        data.preUpdate();
+        data.prePersist();
+        data.setDescription("Test");
+        assertTrue("Test".equals(data.getDescription()));
+        data.setXacmlId("Test");
+        assertTrue("Test".equals(data.getXacmlId()));
+        data.setDatatypeBean(new Datatype());
+        assertTrue(data.getDatatypeBean()!=null);
+        data.setIssuer("Test");
+        assertTrue("Test".equals(data.getIssuer()));
+        data.setMustBePresent(true);
+        assertTrue(data.isMustBePresent());
+        data.setPriority("Test");
+        assertTrue("Test".equals(data.getPriority()));
+        data.setCreatedDate(new Date());
+        assertTrue(data.getCreatedDate()!=null);
+        data.setModifiedDate(new Date());
+        assertTrue(data.getModifiedDate()!=null);
+        data.setUserCreatedBy(userInfo);
+        assertTrue(data.getUserCreatedBy()!=null);
+        data.setUserModifiedBy(userInfo);
+        assertTrue(data.getUserModifiedBy()!=null);
+    }
+
+    @Test
+    public void testRainyDayTreatments(){
+        RainyDayTreatments data = new RainyDayTreatments();
+        data.setId(1);
+        assertTrue(1 == data.getId());
+        data.setBbid("Test");
+        assertTrue("Test".equals(data.getBbid()));
+        data.setWorkstep("Test");
+        assertTrue("Test".equals(data.getWorkstep()));
+        data.setTreatments("Test");
+        assertTrue("Test".equals(data.getTreatments()));
+    }
+
 }

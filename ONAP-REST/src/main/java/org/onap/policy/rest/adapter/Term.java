@@ -29,23 +29,23 @@ import java.util.Set;
 
 
 public class Term {
-	
-	String position;
-	protected String ruleName;
-	protected List<String> fromZones;  
-	protected List<String> toZones;
-	protected boolean negateSource; //hardcoded
-	protected boolean negateDestination; //hardcoded
-	protected List<AddressJson> sourceList;
-	protected List<AddressJson> destinationList;
-	protected List<ServicesJson> sourceServices;
-	protected Set<ServicesJson> destServices;
-	protected String action;
-	protected String description;
-	boolean enabled;  //hardcoded
-	boolean log;      //hardcoded
-	
-	//position
+
+    String position;
+    protected String ruleName;
+    protected List<String> fromZones;
+    protected List<String> toZones;
+    protected boolean negateSource; //hardcoded
+    protected boolean negateDestination; //hardcoded
+    protected List<AddressJson> sourceList;
+    protected List<AddressJson> destinationList;
+    protected List<ServicesJson> sourceServices;
+    protected Set<ServicesJson> destServices;
+    protected String action;
+    protected String description;
+    boolean enabled;  //hardcoded
+    boolean log;      //hardcoded
+
+    //position
     public String getPosition() {
         return position;
     }
@@ -65,10 +65,10 @@ public class Term {
     
     //From Zone
     public  List<String> getFromZones() {
-    	if (fromZones==null)
-    	{
-    		fromZones= new ArrayList<>();
-    	}
+        if (fromZones==null)
+        {
+            fromZones= new ArrayList<>();
+        }
         return fromZones;
     }
     
@@ -78,10 +78,10 @@ public class Term {
     
     //To Zone
     public  List<String> getToZones() {
-    	if (toZones==null)
-    	{
-    		toZones= new ArrayList<>();
-    	}
+        if (toZones==null)
+        {
+            toZones= new ArrayList<>();
+        }
         return toZones;
     }
     
@@ -111,10 +111,10 @@ public class Term {
     //SourceList
     public List<AddressJson> getSourceList() 
     {
-    	if(sourceList==null)
-    	{
-    		sourceList= new ArrayList<>();
-    	}
+        if(sourceList==null)
+        {
+            sourceList= new ArrayList<>();
+        }
         return this.sourceList;
     }
 
@@ -125,10 +125,10 @@ public class Term {
     //Destination List
     public List<AddressJson> getDestinationList() 
     {
-    	if(destinationList==null)
-    	{
-    		destinationList= new ArrayList<>();
-    	}
+        if(destinationList==null)
+        {
+            destinationList= new ArrayList<>();
+        }
         return this.destinationList;
     }
 
@@ -138,31 +138,31 @@ public class Term {
     
     //Source Services
     public List<ServicesJson> getSourceServices() {
-    	if(sourceServices==null)
-    	{
-    		sourceServices= new ArrayList<>();
-    	}
+        if(sourceServices==null)
+        {
+            sourceServices= new ArrayList<>();
+        }
         return this.sourceServices;
     }
 
     public void setSourceServices(List<ServicesJson> sourceServices) {
         this.sourceServices = sourceServices;
     }
-	
+
     //Destination services. 
     public Set<ServicesJson> getDestServices() {
-    	if(destServices==null)
-    	{
-    		destServices= new HashSet<>();
-    	}
+        if(destServices==null)
+        {
+            destServices= new HashSet<>();
+        }
         return this.destServices;
     }
 
     public void setDestServices(Set<ServicesJson> destServices) {
         this.destServices = destServices;
     }
-	 
-	//Action
+
+    //Action
     public String getAction() {
         return action;
     }

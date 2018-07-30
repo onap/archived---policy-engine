@@ -26,7 +26,7 @@ import java.util.List;
 
 
 public interface PolicyContainer extends Serializable{
-	
+
     public Collection<?> getContainerPropertyIds();
     
     public Collection<?> getItemIds();

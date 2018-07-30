@@ -36,44 +36,44 @@ import javax.persistence.Table;
 @Table(name="protocollist")
 @NamedQuery(name="ProtocolList.findAll", query="SELECT e FROM ProtocolList e ")
 public class ProtocolList implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="protocolname", nullable=false)
-	@OrderBy("asc")
-	private String protocolName;
-	
-	@Column(name="description")
-	private String description;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public String getProtocolName() {
-		return this.protocolName;
-	}
+    @Column(name="protocolname", nullable=false)
+    @OrderBy("asc")
+    private String protocolName;
 
-	public void setProtocolName(String protocolName) {
-		this.protocolName = protocolName;
+    @Column(name="description")
+    private String description;
 
-	}
-	
-	public String getDescription() {
-		return this.description;
-	}
+    public String getProtocolName() {
+        return this.protocolName;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
+    public void setProtocolName(String protocolName) {
+        this.protocolName = protocolName;
 
-	}
-	
-	public int getId() {
-		return this.id;
-	}
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }

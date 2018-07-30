@@ -23,23 +23,23 @@ package org.onap.policy.rest.adapter;
 
 public class AddressJson {
 
-	protected String type;
-	protected String name;
-	public String getName() {
-		return name;
-	}
+    protected String type;
+    protected String name;
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	// type
-	public String getType() {
-		return type;
-	}
+    // type
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
 }

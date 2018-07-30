@@ -42,141 +42,141 @@ import javax.persistence.Table;
 @Table(name="MicroServiceModels")
 @NamedQuery(name="MicroServiceModels.findAll", query="SELECT b FROM MicroServiceModels b ")
 public class MicroServiceModels implements Serializable{
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="modelName", nullable=false, unique=true)
-	@OrderBy("asc")
-	private String modelName;
-	
-	@Column(name="description", nullable=true, length=2048)
-	private String description;
-	
-	@Column(name="dependency", nullable=true, length=2048)
-	private String dependency;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="attributes", nullable=false, length=255)
-	private String attributes;
-	
-	@Column(name="ref_attributes", nullable=false, length=255)
-	private String ref_attributes;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column (name="sub_attributes", nullable=false, length=2000)
-	private String sub_attributes;
-	
-	@Column (name="dataOrderInfo", nullable=true, length=2000)
-	private String dataOrderInfo;
+    @Column(name="modelName", nullable=false, unique=true)
+    @OrderBy("asc")
+    private String modelName;
 
-	@Column (name="version", nullable=false, length=2000)
-	private String version;
-	
-	@Column (name="enumValues", nullable=false, length=2000)
-	private String enumValues;
-	
-	@Column (name="annotation", nullable=false, length=2000)
-	private String annotation;
-	
-	public String getSub_attributes() {
-		return sub_attributes;
-	}
+    @Column(name="description", nullable=true, length=2048)
+    private String description;
 
-	public void setSub_attributes(String sub_attributes) {
-		this.sub_attributes = sub_attributes;
-	}
-	
-	public String getDataOrderInfo() {
-		return dataOrderInfo;
-	}
+    @Column(name="dependency", nullable=true, length=2048)
+    private String dependency;
 
-	public void setDataOrderInfo(String dataOrderInfo) {
-		this.dataOrderInfo = dataOrderInfo;
-	}
+    @Column(name="attributes", nullable=false, length=255)
+    private String attributes;
 
-	public String getVersion() {
-		return version;
-	}
+    @Column(name="ref_attributes", nullable=false, length=255)
+    private String ref_attributes;
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    @Column (name="sub_attributes", nullable=false, length=2000)
+    private String sub_attributes;
 
-	@ManyToOne
-	@JoinColumn(name="imported_by")
-	private UserInfo userCreatedBy;
-	
-	public UserInfo getUserCreatedBy() {
-		return userCreatedBy;
-	}
+    @Column (name="dataOrderInfo", nullable=true, length=2000)
+    private String dataOrderInfo;
 
-	public void setUserCreatedBy(UserInfo userCreatedBy) {
-		this.userCreatedBy = userCreatedBy;
-	}
-	
-	public String getAttributes() {
-		return attributes;
-	}
+    @Column (name="version", nullable=false, length=2000)
+    private String version;
 
-	public void setAttributes(String attributes) {
-		this.attributes = attributes;
-	}
+    @Column (name="enumValues", nullable=false, length=2000)
+    private String enumValues;
 
-	public String getRef_attributes() {
-		return ref_attributes;
-	}
+    @Column (name="annotation", nullable=false, length=2000)
+    private String annotation;
 
-	public void setRef_attributes(String ref_attributes) {
-		this.ref_attributes = ref_attributes;
-	}
+    public String getSub_attributes() {
+        return sub_attributes;
+    }
 
-	public int getId() {
-		return this.id;
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public String getDescription() {
-		return this.description;
-	}
+    public void setSub_attributes(String sub_attributes) {
+        this.sub_attributes = sub_attributes;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	public String getDependency() {
-		return dependency;
-	}
+    public String getDataOrderInfo() {
+        return dataOrderInfo;
+    }
 
-	public void setDependency(String dependency) {
-		this.dependency = dependency;
-	}
-	
-	public String getModelName(){
-		return this.modelName;
-	}
-	
-	public void setModelName(String modelName){
-		this.modelName = modelName;
-	}
-	
-	public String getEnumValues() {
-		return enumValues;
-	}
+    public void setDataOrderInfo(String dataOrderInfo) {
+        this.dataOrderInfo = dataOrderInfo;
+    }
 
-	public void setEnumValues(String enumValues) {
-		this.enumValues = enumValues;
-	}
-	
-	public String getAnnotation() {
-		return annotation;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public void setAnnotation(String annotation) {
-		this.annotation = annotation;
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    @ManyToOne
+    @JoinColumn(name="imported_by")
+    private UserInfo userCreatedBy;
+
+    public UserInfo getUserCreatedBy() {
+        return userCreatedBy;
+    }
+
+    public void setUserCreatedBy(UserInfo userCreatedBy) {
+        this.userCreatedBy = userCreatedBy;
+    }
+
+    public String getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(String attributes) {
+        this.attributes = attributes;
+    }
+
+    public String getRef_attributes() {
+        return ref_attributes;
+    }
+
+    public void setRef_attributes(String ref_attributes) {
+        this.ref_attributes = ref_attributes;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDependency() {
+        return dependency;
+    }
+
+    public void setDependency(String dependency) {
+        this.dependency = dependency;
+    }
+
+    public String getModelName(){
+        return this.modelName;
+    }
+
+    public void setModelName(String modelName){
+        this.modelName = modelName;
+    }
+
+    public String getEnumValues() {
+        return enumValues;
+    }
+
+    public void setEnumValues(String enumValues) {
+        this.enumValues = enumValues;
+    }
+
+    public String getAnnotation() {
+        return annotation;
+    }
+
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
+    }
 }

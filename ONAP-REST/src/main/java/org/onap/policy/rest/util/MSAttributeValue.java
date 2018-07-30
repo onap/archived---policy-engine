@@ -21,40 +21,40 @@
 package org.onap.policy.rest.util;
 
 public class MSAttributeValue{
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public Boolean getRequired() {
-		return required;
-	}
-	public void setRequired(Boolean required) {
-		this.required = required;
-	}
-	public Boolean getArrayValue() {
-		return arrayValue;
-	}
-	public void setArrayValue(Boolean arrayValue) {
-		this.arrayValue = arrayValue;
-	}
-	public String getDefaultValue() {
-		return defaultValue;
-	}
-	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
-	}
-	private String name;
-	private String type;
-	private Boolean required;
-	private Boolean arrayValue;
-	private String defaultValue;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
+    public Boolean getRequired() {
+        return required;
+    }
+    public void setRequired(Boolean required) {
+        this.required = required;
+    }
+    public Boolean getArrayValue() {
+        return arrayValue;
+    }
+    public void setArrayValue(Boolean arrayValue) {
+        this.arrayValue = arrayValue;
+    }
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+    private String name;
+    private String type;
+    private Boolean required;
+    private Boolean arrayValue;
+    private String defaultValue;
 
 }

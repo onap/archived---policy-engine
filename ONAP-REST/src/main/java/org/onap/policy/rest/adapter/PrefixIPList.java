@@ -49,16 +49,16 @@ public class PrefixIPList {
 
     public List<AddressMembers> getMembers() 
     {
-    	if(members==null)
-    	{
-    		members= new ArrayList<>();
-    	}
+        if(members==null)
+        {
+            members= new ArrayList<>();
+        }
         return this.members;
     }
 
-	public void setMembers(List<AddressMembers> members) 
-	{
-	        this.members = members;
-	}
+    public void setMembers(List<AddressMembers> members)
+    {
+            this.members = members;
+    }
 
 }

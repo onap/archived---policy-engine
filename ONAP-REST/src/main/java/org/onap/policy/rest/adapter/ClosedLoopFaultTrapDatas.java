@@ -23,47 +23,47 @@ import java.util.List;
 
 public class ClosedLoopFaultTrapDatas {
 
-	private List<Object> trap1;
-	private List<Object> trap2;
-	private List<Object> trap3;
-	private List<Object> trap4;
-	private List<Object> trap5;
-	private List<Object> trap6;
-	public List<Object> getTrap1() {
-		return trap1;
-	}
-	public void setTrap1(List<Object> trap1) {
-		this.trap1 = trap1;
-	}
-	public List<Object> getTrap2() {
-		return trap2;
-	}
-	public void setTrap2(List<Object> trap2) {
-		this.trap2 = trap2;
-	}
-	public List<Object> getTrap3() {
-		return trap3;
-	}
-	public void setTrap3(List<Object> trap3) {
-		this.trap3 = trap3;
-	}
-	public List<Object> getTrap4() {
-		return trap4;
-	}
-	public void setTrap4(List<Object> trap4) {
-		this.trap4 = trap4;
-	}
-	public List<Object> getTrap5() {
-		return trap5;
-	}
-	public void setTrap5(List<Object> trap5) {
-		this.trap5 = trap5;
-	}
-	public List<Object> getTrap6() {
-		return trap6;
-	}
-	public void setTrap6(List<Object> trap6) {
-		this.trap6 = trap6;
-	}
+    private List<Object> trap1;
+    private List<Object> trap2;
+    private List<Object> trap3;
+    private List<Object> trap4;
+    private List<Object> trap5;
+    private List<Object> trap6;
+    public List<Object> getTrap1() {
+        return trap1;
+    }
+    public void setTrap1(List<Object> trap1) {
+        this.trap1 = trap1;
+    }
+    public List<Object> getTrap2() {
+        return trap2;
+    }
+    public void setTrap2(List<Object> trap2) {
+        this.trap2 = trap2;
+    }
+    public List<Object> getTrap3() {
+        return trap3;
+    }
+    public void setTrap3(List<Object> trap3) {
+        this.trap3 = trap3;
+    }
+    public List<Object> getTrap4() {
+        return trap4;
+    }
+    public void setTrap4(List<Object> trap4) {
+        this.trap4 = trap4;
+    }
+    public List<Object> getTrap5() {
+        return trap5;
+    }
+    public void setTrap5(List<Object> trap5) {
+        this.trap5 = trap5;
+    }
+    public List<Object> getTrap6() {
+        return trap6;
+    }
+    public void setTrap6(List<Object> trap6) {
+        this.trap6 = trap6;
+    }
 
 }

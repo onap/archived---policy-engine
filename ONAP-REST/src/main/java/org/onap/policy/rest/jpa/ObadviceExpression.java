@@ -42,77 +42,77 @@ import javax.persistence.Table;
 @Table(name="ObadviceExpressions")
 @NamedQuery(name="ObadviceExpression.findAll", query="SELECT o FROM ObadviceExpression o")
 public class ObadviceExpression implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public static final String EXPRESSION_APPLY = "Apply";
-	public static final String EXPRESSION_SELECTOR = "Attribute Selector";
-	public static final String EXPRESSION_VALUE = "Attribute Value";
-	public static final String EXPRESSION_FUNCTION = "Function";
-	public static final String EXPRESSION_REFERENCE = "Varable Reference";
-	public static final String EXPRESSION_DESIGNATOR = "Attribute Designator";
+    public static final String EXPRESSION_APPLY = "Apply";
+    public static final String EXPRESSION_SELECTOR = "Attribute Selector";
+    public static final String EXPRESSION_VALUE = "Attribute Value";
+    public static final String EXPRESSION_FUNCTION = "Function";
+    public static final String EXPRESSION_REFERENCE = "Varable Reference";
+    public static final String EXPRESSION_DESIGNATOR = "Attribute Designator";
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	//unidirectional one-to-one association to Attribute
-	@OneToOne
-	@JoinColumn(name="attribute_id")
-	private Attribute attribute;
+    //unidirectional one-to-one association to Attribute
+    @OneToOne
+    @JoinColumn(name="attribute_id")
+    private Attribute attribute;
 
-	@Column(name="type", nullable=false)
-	private String type;
+    @Column(name="type", nullable=false)
+    private String type;
 
-	//bi-directional many-to-one association to Obadvice
-	@ManyToOne
-	@JoinColumn(name="obadvice_id")
-	private Obadvice obadvice;
+    //bi-directional many-to-one association to Obadvice
+    @ManyToOne
+    @JoinColumn(name="obadvice_id")
+    private Obadvice obadvice;
 
-	public ObadviceExpression() {
-		type = EXPRESSION_VALUE;
-	}
+    public ObadviceExpression() {
+        type = EXPRESSION_VALUE;
+    }
 
-	public int getId() {
-		return this.id;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public Attribute getAttribute() {
-		return this.attribute;
-	}
+    public Attribute getAttribute() {
+        return this.attribute;
+    }
 
-	public void setAttribute(Attribute attribute) {
-		this.attribute = attribute;
-	}
+    public void setAttribute(Attribute attribute) {
+        this.attribute = attribute;
+    }
 
-	public String getType() {
-		return this.type;
-	}
+    public String getType() {
+        return this.type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public Obadvice getObadvice() {
-		return this.obadvice;
-	}
+    public Obadvice getObadvice() {
+        return this.obadvice;
+    }
 
-	public void setObadvice(Obadvice obadvice) {
-		this.obadvice = obadvice;
-	}
+    public void setObadvice(Obadvice obadvice) {
+        this.obadvice = obadvice;
+    }
 
-	@Override
-	public ObadviceExpression clone() {
-		ObadviceExpression expression = new ObadviceExpression();
-		
-		expression.attribute = this.attribute;
-		expression.type = this.type;
-		expression.obadvice = this.obadvice;
-		
-		return expression;
-	}
+    @Override
+    public ObadviceExpression clone() {
+        ObadviceExpression expression = new ObadviceExpression();
+
+        expression.attribute = this.attribute;
+        expression.type = this.type;
+        expression.obadvice = this.obadvice;
+
+        return expression;
+    }
 }

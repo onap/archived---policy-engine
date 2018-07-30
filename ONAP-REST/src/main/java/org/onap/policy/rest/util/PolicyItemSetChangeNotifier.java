@@ -32,45 +32,45 @@ import org.onap.policy.rest.util.PolicyContainer.ItemSetChangeListener;
 
 
 public class PolicyItemSetChangeNotifier implements PolicyContainer.ItemSetChangeNotifier {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private Collection<PolicyContainer.ItemSetChangeListener> itemSetChangeListeners = null;
     private PolicyContainer container = null;
     
     public PolicyItemSetChangeNotifier() {
-    	// Empty constructor
+        // Empty constructor
     }
     
     protected void setContainer(PolicyContainer c) {
-    	this.container = c;
+        this.container = c;
     }
 
-	@Override
-	public void addItemSetChangeListener(ItemSetChangeListener listener) {
+    @Override
+    public void addItemSetChangeListener(ItemSetChangeListener listener) {
         if (getItemSetChangeListeners() == null) {
             setItemSetChangeListeners(new LinkedList<PolicyContainer.ItemSetChangeListener>());
         }
         getItemSetChangeListeners().add(listener);	}
 
-	@Override
-	public void removeItemSetChangeListener(ItemSetChangeListener listener) {
+    @Override
+    public void removeItemSetChangeListener(ItemSetChangeListener listener) {
         if (getItemSetChangeListeners() != null) {
             getItemSetChangeListeners().remove(listener);
         }
     }
-	
-	protected static class BaseItemSetChangeEvent extends EventObject implements
-	    PolicyContainer.ItemSetChangeEvent, Serializable {
-		private static final long serialVersionUID = 1L;
 
-		protected BaseItemSetChangeEvent(PolicyContainer source) {
-		    super(source);
-		}
-		
-		@Override
-		public PolicyContainer getContainer() {
-		    return (PolicyContainer) getSource();
-		}
-	}
+    protected static class BaseItemSetChangeEvent extends EventObject implements
+        PolicyContainer.ItemSetChangeEvent, Serializable {
+        private static final long serialVersionUID = 1L;
+
+        protected BaseItemSetChangeEvent(PolicyContainer source) {
+            super(source);
+        }
+
+        @Override
+        public PolicyContainer getContainer() {
+            return (PolicyContainer) getSource();
+        }
+    }
 
     protected void setItemSetChangeListeners(
             Collection<PolicyContainer.ItemSetChangeListener> itemSetChangeListeners) {

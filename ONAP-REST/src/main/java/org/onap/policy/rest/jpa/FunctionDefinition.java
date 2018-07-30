@@ -34,187 +34,187 @@ import java.util.List;
 @Entity
 @Table(name="FunctionDefinition")
 @NamedQueries({
-	@NamedQuery(name="FunctionDefinition.findAll", query="SELECT f FROM FunctionDefinition f")
+    @NamedQuery(name="FunctionDefinition.findAll", query="SELECT f FROM FunctionDefinition f")
 })
 public class FunctionDefinition implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="short_name", nullable=false, length=64)
-	private String shortname;
+    @Column(name="short_name", nullable=false, length=64)
+    private String shortname;
 
-	@Column(name="xacml_id", nullable=false, length=255)
-	private String xacmlid;
-	
-	//bi-directional many-to-one association to Datatype
-	@ManyToOne
-	@JoinColumn(name="return_datatype", nullable=true)
-	private Datatype datatypeBean;
+    @Column(name="xacml_id", nullable=false, length=255)
+    private String xacmlid;
 
-	@Column(name="is_bag_return", nullable=false)
-	private Integer isBagReturn;
-	
-	@Column(name="is_higher_order", nullable=false)
-	private Integer isHigherOrder;
+    //bi-directional many-to-one association to Datatype
+    @ManyToOne
+    @JoinColumn(name="return_datatype", nullable=true)
+    private Datatype datatypeBean;
 
-	@Column(name="arg_lb", nullable=false)
-	private Integer argLb;
+    @Column(name="is_bag_return", nullable=false)
+    private Integer isBagReturn;
 
-	@Column(name="arg_ub", nullable=false)
-	private Integer argUb;
+    @Column(name="is_higher_order", nullable=false)
+    private Integer isHigherOrder;
 
-	@Column(name="ho_arg_lb", nullable=true)
-	private Integer higherOrderArg_LB;
-	
-	@Column(name="ho_arg_ub", nullable=true)
-	private Integer higherOrderArg_UB;
-	
-	@Column(name="ho_primitive", nullable=true)
-	private Character higherOrderIsPrimitive;
+    @Column(name="arg_lb", nullable=false)
+    private Integer argLb;
 
-	//bi-directional many-to-one association to FunctionArgument
-	@OneToMany(mappedBy="functionDefinition")
-	private List<FunctionArgument> functionArguments;
+    @Column(name="arg_ub", nullable=false)
+    private Integer argUb;
 
-	public FunctionDefinition() {
-		//An empty constructor
-	}
+    @Column(name="ho_arg_lb", nullable=true)
+    private Integer higherOrderArg_LB;
 
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="ho_arg_ub", nullable=true)
+    private Integer higherOrderArg_UB;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @Column(name="ho_primitive", nullable=true)
+    private Character higherOrderIsPrimitive;
 
-	public int getArgLb() {
-		return this.argLb;
-	}
+    //bi-directional many-to-one association to FunctionArgument
+    @OneToMany(mappedBy="functionDefinition")
+    private List<FunctionArgument> functionArguments;
 
-	public void setArgLb(Integer argLb) {
-		this.argLb = argLb;
-	}
+    public FunctionDefinition() {
+        //An empty constructor
+    }
 
-	public int getArgUb() {
-		return this.argUb;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setArgUb(Integer argUb) {
-		this.argUb = argUb;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public int getIsBagReturn() {
-		return isBagReturn;
-	}
+    public int getArgLb() {
+        return this.argLb;
+    }
 
-	public void setIsBagReturn(Integer isBagReturn) {
-		this.isBagReturn = isBagReturn;
-	}
+    public void setArgLb(Integer argLb) {
+        this.argLb = argLb;
+    }
 
-	public int getIsHigherOrder() {
-		return isHigherOrder;
-	}
+    public int getArgUb() {
+        return this.argUb;
+    }
 
-	public void setIsHigherOrder(Integer isHigherOrder) {
-		this.isHigherOrder = isHigherOrder;
-	}
+    public void setArgUb(Integer argUb) {
+        this.argUb = argUb;
+    }
 
-	public Datatype getDatatypeBean() {
-		return this.datatypeBean;
-	}
+    public int getIsBagReturn() {
+        return isBagReturn;
+    }
 
-	public void setDatatypeBean(Datatype datatypeBean) {
-		this.datatypeBean = datatypeBean;
-	}
+    public void setIsBagReturn(Integer isBagReturn) {
+        this.isBagReturn = isBagReturn;
+    }
 
-	public String getShortname() {
-		return this.shortname;
-	}
+    public int getIsHigherOrder() {
+        return isHigherOrder;
+    }
 
-	public void setShortname(String shortname) {
-		this.shortname = shortname;
-	}
+    public void setIsHigherOrder(Integer isHigherOrder) {
+        this.isHigherOrder = isHigherOrder;
+    }
 
-	public String getXacmlid() {
-		return this.xacmlid;
-	}
+    public Datatype getDatatypeBean() {
+        return this.datatypeBean;
+    }
 
-	public void setXacmlid(String xacmlid) {
-		this.xacmlid = xacmlid;
-	}
+    public void setDatatypeBean(Datatype datatypeBean) {
+        this.datatypeBean = datatypeBean;
+    }
 
-	public int getHigherOrderArg_LB() {
-		return higherOrderArg_LB;
-	}
+    public String getShortname() {
+        return this.shortname;
+    }
 
-	public void setHigherOrderArg_LB(Integer higherOrderArg_LB) {
-		this.higherOrderArg_LB = higherOrderArg_LB;
-	}
+    public void setShortname(String shortname) {
+        this.shortname = shortname;
+    }
 
-	public int getHigherOrderArg_UB() {
-		return higherOrderArg_UB;
-	}
+    public String getXacmlid() {
+        return this.xacmlid;
+    }
 
-	public void setHigherOrderArg_UB(Integer higherOrderArg_UB) {
-		this.higherOrderArg_UB = higherOrderArg_UB;
-	}
+    public void setXacmlid(String xacmlid) {
+        this.xacmlid = xacmlid;
+    }
 
-	public Character getHigherOrderIsPrimitive() {
-		return higherOrderIsPrimitive;
-	}
+    public int getHigherOrderArg_LB() {
+        return higherOrderArg_LB;
+    }
 
-	public void setHigherOrderIsPrimitive(Character higherOrderIsPrimitive) {
-		this.higherOrderIsPrimitive = higherOrderIsPrimitive;
-	}
+    public void setHigherOrderArg_LB(Integer higherOrderArg_LB) {
+        this.higherOrderArg_LB = higherOrderArg_LB;
+    }
 
-	public List<FunctionArgument> getFunctionArguments() {
-		return this.functionArguments;
-	}
+    public int getHigherOrderArg_UB() {
+        return higherOrderArg_UB;
+    }
 
-	public void setFunctionArguments(List<FunctionArgument> functionArguments) {
-		this.functionArguments = functionArguments;
-	}
+    public void setHigherOrderArg_UB(Integer higherOrderArg_UB) {
+        this.higherOrderArg_UB = higherOrderArg_UB;
+    }
 
-	public FunctionArgument addFunctionArgument(FunctionArgument functionArgument) {
-		getFunctionArguments().add(functionArgument);
-		functionArgument.setFunctionDefinition(this);
+    public Character getHigherOrderIsPrimitive() {
+        return higherOrderIsPrimitive;
+    }
 
-		return functionArgument;
-	}
+    public void setHigherOrderIsPrimitive(Character higherOrderIsPrimitive) {
+        this.higherOrderIsPrimitive = higherOrderIsPrimitive;
+    }
 
-	public FunctionArgument removeFunctionArgument(FunctionArgument functionArgument) {
-		getFunctionArguments().remove(functionArgument);
-		functionArgument.setFunctionDefinition(null);
+    public List<FunctionArgument> getFunctionArguments() {
+        return this.functionArguments;
+    }
 
-		return functionArgument;
-	}
+    public void setFunctionArguments(List<FunctionArgument> functionArguments) {
+        this.functionArguments = functionArguments;
+    }
 
-	@Transient
-	@Override
-	public String toString() {
-		return "FunctionDefinition [id=" + id + ", argLb=" + argLb + ", argUb="
-				+ argUb + ", isBagReturn=" + isBagReturn + ", isHigherOrder="
-				+ isHigherOrder + ", datatypeBean=" + datatypeBean
-				+ ", shortname=" + shortname + ", xacmlid=" + xacmlid
-				+ ", higherOrderArg_LB=" + higherOrderArg_LB
-				+ ", higherOrderArg_UB=" + higherOrderArg_UB
-				+ ", higherOrderIsPrimitive=" + higherOrderIsPrimitive
-				+ ", functionArguments=" + functionArguments + "]";
-	}
+    public FunctionArgument addFunctionArgument(FunctionArgument functionArgument) {
+        getFunctionArguments().add(functionArgument);
+        functionArgument.setFunctionDefinition(this);
 
-	@Transient
-	public boolean isBagReturn() {
-		return this.isBagReturn == 1;
-	}
+        return functionArgument;
+    }
 
-	@Transient
-	public boolean isHigherOrder() {
-		return this.isHigherOrder == 1;
-	}
+    public FunctionArgument removeFunctionArgument(FunctionArgument functionArgument) {
+        getFunctionArguments().remove(functionArgument);
+        functionArgument.setFunctionDefinition(null);
+
+        return functionArgument;
+    }
+
+    @Transient
+    @Override
+    public String toString() {
+        return "FunctionDefinition [id=" + id + ", argLb=" + argLb + ", argUb="
+                + argUb + ", isBagReturn=" + isBagReturn + ", isHigherOrder="
+                + isHigherOrder + ", datatypeBean=" + datatypeBean
+                + ", shortname=" + shortname + ", xacmlid=" + xacmlid
+                + ", higherOrderArg_LB=" + higherOrderArg_LB
+                + ", higherOrderArg_UB=" + higherOrderArg_UB
+                + ", higherOrderIsPrimitive=" + higherOrderIsPrimitive
+                + ", functionArguments=" + functionArguments + "]";
+    }
+
+    @Transient
+    public boolean isBagReturn() {
+        return this.isBagReturn == 1;
+    }
+
+    @Transient
+    public boolean isHigherOrder() {
+        return this.isHigherOrder == 1;
+    }
 
 }

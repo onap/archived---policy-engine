@@ -49,210 +49,210 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name="ConfigurationDataEntity")
 @NamedQueries({
-	@NamedQuery(name="ConfigurationDataEntity.findAll", query="SELECT e FROM ConfigurationDataEntity e "),
-	@NamedQuery(name="ConfigurationDataEntity.deleteAll", query="DELETE FROM ConfigurationDataEntity WHERE 1=1")
+    @NamedQuery(name="ConfigurationDataEntity.findAll", query="SELECT e FROM ConfigurationDataEntity e "),
+    @NamedQuery(name="ConfigurationDataEntity.deleteAll", query="DELETE FROM ConfigurationDataEntity WHERE 1=1")
 })
 
 public class ConfigurationDataEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="configurationDataId")
-	@JsonBackReference
-	private long configurationDataId;
-	
-	@Column(name="configurationName", nullable=false, length=255)
-	private String configurationName = "";
-	
-	@Version 
-	@Column(name="version")
-	private int version;
-	
-	@Column(name="configType", nullable=false, length=255)
-	private String configType = "NoType";
-	
-	@Lob
-	@Column(name="configBody", nullable=false, columnDefinition="TEXT")
-	private String configBody = "NoBody";
-	
-	@Column(name="created_by", nullable=false, length=255)
-	private String createdBy = "guest";
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="configurationDataId")
+    @JsonBackReference
+    private long configurationDataId;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
+    @Column(name="configurationName", nullable=false, length=255)
+    private String configurationName = "";
 
-	@Column(name="description", nullable=false, length=2048)
-	private String description = "NoDescription";
+    @Version
+    @Column(name="version")
+    private int version;
 
-	@Column(name="modified_by", nullable=false, length=255)
-	private String modifiedBy = "guest";
+    @Column(name="configType", nullable=false, length=255)
+    private String configType = "NoType";
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
-	
-	@Column(name="deleted", nullable=false)
-	private boolean deleted = false;
+    @Lob
+    @Column(name="configBody", nullable=false, columnDefinition="TEXT")
+    private String configBody = "NoBody";
 
-	public ConfigurationDataEntity() {
-		//An empty constructor
-	}
+    @Column(name="created_by", nullable=false, length=255)
+    private String createdBy = "guest";
 
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
-	/**
-	 * @return the configurationDataId
-	 */
-	public long getConfigurationDataId() {
-		return configurationDataId;
-	}
-	/**
-	 * @param configurationDataId the configurationDataId to set
-	 */
-	public void setConfigurationName(String configurationName) {
-		this.configurationName = configurationName;
-	}
-	public String getConfigurationName(){
-		return this.configurationName;
-	}
-	/**
-	 * @return the configType
-	 */
-	public String getConfigType() {
-		return configType;
-	}
-	/**
-	 * @param configType the configType to set
-	 */
-	public void setConfigType(String configType) {
-		this.configType = configType;
-	}
-	/**
-	 * @return the configBody
-	 */
-	public String getConfigBody() {
-		return configBody;
-	}
-	/**
-	 * @param configBody the configBody to set
-	 */
-	public void setConfigBody(String configBody) {
-		this.configBody = configBody;
-	}
-	/**
-	 * @return the createdBy
-	 */
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	/**
-	 * @param createdBy the createdBy to set
-	 */
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
-	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	/**
-	 * @return the modifiedBy
-	 */
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-	/**
-	 * @param modifiedBy the modifiedBy to set
-	 */
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	/**
-	 * @return the modifiedDate
-	 */
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	/**
-	 * @param modifiedDate the modifiedDate to set
-	 */
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	/**
-	 * @return the version
-	 */
-	public int getVersion() {
-		return version;
-	}
-	/**
-	 * @return the createdDate
-	 */
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+    @Column(name="description", nullable=false, length=2048)
+    private String description = "NoDescription";
 
-	/**
-	 * @return the deleted
-	 */
-	public boolean isDeleted() {
-		return deleted;
-	}
+    @Column(name="modified_by", nullable=false, length=255)
+    private String modifiedBy = "guest";
 
-	/**
-	 * @param deleted the deleted to set
-	 */
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-	
-	@Override
-	public int hashCode() {
-	return Objects.hash(configurationDataId, configurationName,	version, configType,
-			configBody, createdBy, createdDate, description, modifiedBy, modifiedDate, deleted);
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	@Override
-	public boolean equals(Object obj) {
-		if(obj == null){
-			return false;
-		}
-		if(obj == this){
-			return true;
-		}
-		if(!(obj instanceof ConfigurationDataEntity)){
-			return false;
-		}
-		
-		return configurationDataId == ((ConfigurationDataEntity) obj).configurationDataId &&
-				configurationName.equals(((ConfigurationDataEntity) obj).configurationName) && 
-				version == ((ConfigurationDataEntity) obj).version &&
-				configType.equals(((ConfigurationDataEntity) obj).configType) &&
-				configBody.equals(((ConfigurationDataEntity) obj).configBody) &&
-				createdBy.equals(((ConfigurationDataEntity) obj).createdBy) &&
-				createdDate.equals(((ConfigurationDataEntity) obj).createdDate) &&
-				description.equals(((ConfigurationDataEntity) obj).description) &&
-				modifiedBy.equals(((ConfigurationDataEntity) obj).modifiedBy) &&
-				modifiedDate.equals(((ConfigurationDataEntity) obj).modifiedDate) &&
-				deleted == ((ConfigurationDataEntity) obj).deleted;
-	}
+    @Column(name="deleted", nullable=false)
+    private boolean deleted = false;
+
+    public ConfigurationDataEntity() {
+        //An empty constructor
+    }
+
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
+    /**
+     * @return the configurationDataId
+     */
+    public long getConfigurationDataId() {
+        return configurationDataId;
+    }
+    /**
+     * @param configurationDataId the configurationDataId to set
+     */
+    public void setConfigurationName(String configurationName) {
+        this.configurationName = configurationName;
+    }
+    public String getConfigurationName(){
+        return this.configurationName;
+    }
+    /**
+     * @return the configType
+     */
+    public String getConfigType() {
+        return configType;
+    }
+    /**
+     * @param configType the configType to set
+     */
+    public void setConfigType(String configType) {
+        this.configType = configType;
+    }
+    /**
+     * @return the configBody
+     */
+    public String getConfigBody() {
+        return configBody;
+    }
+    /**
+     * @param configBody the configBody to set
+     */
+    public void setConfigBody(String configBody) {
+        this.configBody = configBody;
+    }
+    /**
+     * @return the createdBy
+     */
+    public String getCreatedBy() {
+        return createdBy;
+    }
+    /**
+     * @param createdBy the createdBy to set
+     */
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    /**
+     * @return the modifiedBy
+     */
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+    /**
+     * @param modifiedBy the modifiedBy to set
+     */
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+    /**
+     * @return the modifiedDate
+     */
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+    /**
+     * @param modifiedDate the modifiedDate to set
+     */
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    /**
+     * @return the version
+     */
+    public int getVersion() {
+        return version;
+    }
+    /**
+     * @return the createdDate
+     */
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    /**
+     * @return the deleted
+     */
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    /**
+     * @param deleted the deleted to set
+     */
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    @Override
+    public int hashCode() {
+    return Objects.hash(configurationDataId, configurationName,	version, configType,
+            configBody, createdBy, createdDate, description, modifiedBy, modifiedDate, deleted);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null){
+            return false;
+        }
+        if(obj == this){
+            return true;
+        }
+        if(!(obj instanceof ConfigurationDataEntity)){
+            return false;
+        }
+
+        return configurationDataId == ((ConfigurationDataEntity) obj).configurationDataId &&
+                configurationName.equals(((ConfigurationDataEntity) obj).configurationName) &&
+                version == ((ConfigurationDataEntity) obj).version &&
+                configType.equals(((ConfigurationDataEntity) obj).configType) &&
+                configBody.equals(((ConfigurationDataEntity) obj).configBody) &&
+                createdBy.equals(((ConfigurationDataEntity) obj).createdBy) &&
+                createdDate.equals(((ConfigurationDataEntity) obj).createdDate) &&
+                description.equals(((ConfigurationDataEntity) obj).description) &&
+                modifiedBy.equals(((ConfigurationDataEntity) obj).modifiedBy) &&
+                modifiedDate.equals(((ConfigurationDataEntity) obj).modifiedDate) &&
+                deleted == ((ConfigurationDataEntity) obj).deleted;
+    }
 }

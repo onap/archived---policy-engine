@@ -24,25 +24,25 @@ package org.onap.policy.rest.adapter;
 
 public class ServiceMembers {
 
-	protected String type;
-	protected String name;
+    protected String type;
+    protected String name;
 
-	// type
-	public String getType() {
-		return type;
-	}
+    // type
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String value) {
-		this.type = value;
-	}
+    public void setType(String value) {
+        this.type = value;
+    }
 
-	// transportProtocol
-	public String getName() {
-		return name;
-	}
+    // transportProtocol
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String value) {
-		this.name = value;
-	}
+    public void setName(String value) {
+        this.name = value;
+    }
 
 }

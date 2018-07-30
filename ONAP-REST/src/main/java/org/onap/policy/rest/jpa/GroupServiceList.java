@@ -37,43 +37,43 @@ import javax.persistence.Table;
 @Table(name="GroupServiceList")
 @NamedQuery(name="GroupServiceList.findAll", query="SELECT e FROM GroupServiceList e ")
 public class GroupServiceList implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false)
-	@OrderBy("asc")
-	private String name;
-	
-	@Column(name="serviceList ")
-	private String serviceList;
-	
-	public int getId() {
-		return this.id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getGroupName() {
-		return this.name;
-	}
+    @Column(name="name", nullable=false)
+    @OrderBy("asc")
+    private String name;
 
-	public void setGroupName(String serviceName) {
-		this.name = serviceName;
+    @Column(name="serviceList ")
+    private String serviceList;
 
-	}
-		
-	public String getServiceList() {
-		return this.serviceList;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setServiceList(String serviceList) {
-		this.serviceList = serviceList;
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getGroupName() {
+        return this.name;
+    }
 
-	}
+    public void setGroupName(String serviceName) {
+        this.name = serviceName;
+
+    }
+
+    public String getServiceList() {
+        return this.serviceList;
+    }
+
+    public void setServiceList(String serviceList) {
+        this.serviceList = serviceList;
+
+    }
 
 }

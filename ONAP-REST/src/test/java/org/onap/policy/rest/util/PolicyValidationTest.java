@@ -31,50 +31,50 @@ import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 
 public class PolicyValidationTest {
-	
-	@Before
-	public void setUp() throws Exception {
-	}
 
-	@After
-	public void tearDown() throws Exception {
-	}
-	
-	@Test
-	public void microServicePolicyTests() throws Exception{
-    	PolicyValidation validation = new PolicyValidation();
-		PolicyValidationRequestWrapper wrapper = new PolicyValidationRequestWrapper();    			
-		PolicyParameters policyParameters = new PolicyParameters();
-		
-		policyParameters.setPolicyConfigType(PolicyConfigType.MicroService);
-		policyParameters.setPolicyName("Test.junitPolicy");
-		policyParameters.setPolicyDescription("This is a sample Micro Service policy Create example");
-		policyParameters.setOnapName("DCAE");
-		policyParameters.setPriority("1");
-		String MSjsonString = "{\"service\":\"TOSCA_namingJenny\",\"location\":\"Test  DictMSLoc\",\"uuid\":\"testDict  DCAEUIID\",\"policyName\":\"testModelValidation\",\"description\":\"test\",\"configName\":\"testDict  MSConfName\",\"templateVersion\":\"1607\",\"version\":\"gw12181031\",\"priority\":\"5\",\"policyScope\":\"resource=ResourcetypeVenktest1,service=ServiceName1707,type=Name1707,closedLoopControlName=Retest_retest1\",\"riskType\":\"Test\",\"riskLevel\":\"3\",\"guard\":\"True\",\"content\":{\"police-instance-name\":\"testing\",\"naming-models\":[{\"naming-properties\":[{\"property-value\":\"test\",\"source-endpoint\":\"test\",\"property-name\":\"testPropertyname\",\"increment-sequence\":{\"scope\":\"VNF\",\"start-value\":\"1\",\"length\":\"3\",\"increment\":\"2\"},\"source-system\":\"TOSCA\"}],\"naming-type\":\"testNamingType\",\"naming-recipe\":\"testNamingRecipe\"}]}}";;
-		policyParameters.setConfigBody(MSjsonString);		
-		policyParameters.setRequestID(UUID.randomUUID());
-		SimpleDateFormat dateformat3 = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = dateformat3.parse("15/10/2016");
-		policyParameters.setTtlDate(date);
-		policyParameters.setGuard(true);
-		policyParameters.setRiskLevel("5");
-		policyParameters.setRiskType("TEST");
-		policyParameters.setRequestID(UUID.randomUUID());
+    @Before
+    public void setUp() throws Exception {
+    }
 
-		
-		PolicyRestAdapter policyData = wrapper.populateRequestParameters(policyParameters);
-		StringBuilder responseString = validation.validatePolicy(policyData);
-		
-		assertNotSame("success", responseString.toString());
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	}
+    @Test
+    public void microServicePolicyTests() throws Exception{
+        PolicyValidation validation = new PolicyValidation();
+        PolicyValidationRequestWrapper wrapper = new PolicyValidationRequestWrapper();
+        PolicyParameters policyParameters = new PolicyParameters();
 
-	@Test
-	public final void testEmailValidation() {
-    	PolicyValidation validation = new PolicyValidation();
-		String result = validation.emailValidation("testemail@test.com", "SUCCESS");
-		assertEquals("success", result);
-	}
+        policyParameters.setPolicyConfigType(PolicyConfigType.MicroService);
+        policyParameters.setPolicyName("Test.junitPolicy");
+        policyParameters.setPolicyDescription("This is a sample Micro Service policy Create example");
+        policyParameters.setOnapName("DCAE");
+        policyParameters.setPriority("1");
+        String MSjsonString = "{\"service\":\"TOSCA_namingJenny\",\"location\":\"Test  DictMSLoc\",\"uuid\":\"testDict  DCAEUIID\",\"policyName\":\"testModelValidation\",\"description\":\"test\",\"configName\":\"testDict  MSConfName\",\"templateVersion\":\"1607\",\"version\":\"gw12181031\",\"priority\":\"5\",\"policyScope\":\"resource=ResourcetypeVenktest1,service=ServiceName1707,type=Name1707,closedLoopControlName=Retest_retest1\",\"riskType\":\"Test\",\"riskLevel\":\"3\",\"guard\":\"True\",\"content\":{\"police-instance-name\":\"testing\",\"naming-models\":[{\"naming-properties\":[{\"property-value\":\"test\",\"source-endpoint\":\"test\",\"property-name\":\"testPropertyname\",\"increment-sequence\":{\"scope\":\"VNF\",\"start-value\":\"1\",\"length\":\"3\",\"increment\":\"2\"},\"source-system\":\"TOSCA\"}],\"naming-type\":\"testNamingType\",\"naming-recipe\":\"testNamingRecipe\"}]}}";;
+        policyParameters.setConfigBody(MSjsonString);
+        policyParameters.setRequestID(UUID.randomUUID());
+        SimpleDateFormat dateformat3 = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = dateformat3.parse("15/10/2016");
+        policyParameters.setTtlDate(date);
+        policyParameters.setGuard(true);
+        policyParameters.setRiskLevel("5");
+        policyParameters.setRiskType("TEST");
+        policyParameters.setRequestID(UUID.randomUUID());
+
+
+        PolicyRestAdapter policyData = wrapper.populateRequestParameters(policyParameters);
+        StringBuilder responseString = validation.validatePolicy(policyData);
+
+        assertNotSame("success", responseString.toString());
+
+    }
+
+    @Test
+    public final void testEmailValidation() {
+        PolicyValidation validation = new PolicyValidation();
+        String result = validation.emailValidation("testemail@test.com", "SUCCESS");
+        assertEquals("success", result);
+    }
 
 }

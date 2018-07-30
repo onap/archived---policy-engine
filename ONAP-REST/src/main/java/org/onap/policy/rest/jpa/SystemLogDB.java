@@ -40,102 +40,102 @@ import javax.persistence.TemporalType;
 @Table(name="SystemLogDB")
 @NamedQuery(name="SystemLogDB.findAll", query="SELECT o FROM SystemLogDB o")
 public class SystemLogDB implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="type", nullable=false)
-	private String type;
+    @Column(name="type", nullable=false)
+    private String type;
 
-	@Column(name="system", nullable=false, length=255)
-	private String system;
+    @Column(name="system", nullable=false, length=255)
+    private String system;
 
-	@Column(name="description", nullable=true, length=2048)
-	private String description;
-	
-	@Column(name="remote", nullable=false, length=255)
-	private String remote;
-	
-	@Column(name="logtype", nullable=false, length=255)
-	private String logtype;
+    @Column(name="description", nullable=true, length=2048)
+    private String description;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="date", nullable=false, updatable=false)
-	private Date date;
+    @Column(name="remote", nullable=false, length=255)
+    private String remote;
 
-	public SystemLogDB() {
-		super();
-	}
-	
-	public SystemLogDB(int id, String system, String description, String remote,
-			String type, String logtype) {
-		this.id = id;
-		this.system = system;
-		this.description = description;
-		this.remote = remote;
-		this.type = type;
-		this.logtype = logtype;
-	}
-	
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="logtype", nullable=false, length=255)
+    private String logtype;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public Date getDate(){
-		return this.date;
-	}
-	
-	public void setDate(Date date){
-		this.date = date;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="date", nullable=false, updatable=false)
+    private Date date;
 
-	public String getDescription() {
-		return this.description;
-	}
+    public SystemLogDB() {
+        super();
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public SystemLogDB(int id, String system, String description, String remote,
+            String type, String logtype) {
+        this.id = id;
+        this.system = system;
+        this.description = description;
+        this.remote = remote;
+        this.type = type;
+        this.logtype = logtype;
+    }
 
-	public String getType() {
-		return this.type;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-		
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getSystem() {
-		return this.system;
-	}
+    public Date getDate(){
+        return this.date;
+    }
 
-	public void setSystem(String system) {
-		this.system = system;
-	}
-	
-	public String getRemote() {
-		return this.remote;
-	}
+    public void setDate(Date date){
+        this.date = date;
+    }
 
-	public void setRemote(String remote) {
-		this.remote = remote;
-		
-	}
-	public String getLogtype() {
-		return this.logtype;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setLogtype(String logtype) {
-		this.logtype = logtype;
-		
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+
+    }
+
+    public String getSystem() {
+        return this.system;
+    }
+
+    public void setSystem(String system) {
+        this.system = system;
+    }
+
+    public String getRemote() {
+        return this.remote;
+    }
+
+    public void setRemote(String remote) {
+        this.remote = remote;
+
+    }
+    public String getLogtype() {
+        return this.logtype;
+    }
+
+    public void setLogtype(String logtype) {
+        this.logtype = logtype;
+
+    }
 }

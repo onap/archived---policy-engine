@@ -33,116 +33,116 @@ import javax.persistence.*;
 @Table(name="PIPResolverParams")
 @NamedQuery(name="PIPResolverParam.findAll", query="SELECT p FROM PIPResolverParam p")
 public class PIPResolverParam implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="PARAM_NAME", nullable=false, length=1024)
-	private String paramName;
+    @Column(name="PARAM_NAME", nullable=false, length=1024)
+    private String paramName;
 
-	@Column(name="PARAM_VALUE", nullable=false, length=2048)
-	private String paramValue;
+    @Column(name="PARAM_VALUE", nullable=false, length=2048)
+    private String paramValue;
 
-	@Column(name="PARAM_DEFAULT", nullable=true, length=2048)
-	private String paramDefault;
-		
-	@Column(name="REQUIRED", nullable=false)
-	private char required = '0';
+    @Column(name="PARAM_DEFAULT", nullable=true, length=2048)
+    private String paramDefault;
 
-	//bi-directional many-to-one association to PIPResolver
-	@ManyToOne
-	@JoinColumn(name="ID_RESOLVER")
-	private PIPResolver pipresolver;
+    @Column(name="REQUIRED", nullable=false)
+    private char required = '0';
 
-	public PIPResolverParam() {
-		// Empty constructor
-	}
+    //bi-directional many-to-one association to PIPResolver
+    @ManyToOne
+    @JoinColumn(name="ID_RESOLVER")
+    private PIPResolver pipresolver;
 
-	public PIPResolverParam(String name) {
-		this.paramName = name;
-	}
+    public PIPResolverParam() {
+        // Empty constructor
+    }
 
-	public PIPResolverParam(String name, String value) {
-		this(name);
-		this.paramValue = value;
-	}
+    public PIPResolverParam(String name) {
+        this.paramName = name;
+    }
 
-	public PIPResolverParam(PIPResolverParam param) {
-		this(param.getParamName(), param.getParamValue());
-		this.paramDefault = param.getParamDefault();
-		this.required = param.required;
-	}
+    public PIPResolverParam(String name, String value) {
+        this(name);
+        this.paramValue = value;
+    }
 
-	public int getId() {
-		return this.id;
-	}
+    public PIPResolverParam(PIPResolverParam param) {
+        this(param.getParamName(), param.getParamValue());
+        this.paramDefault = param.getParamDefault();
+        this.required = param.required;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public String getParamName() {
-		return this.paramName;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setParamName(String paramName) {
-		this.paramName = paramName;
-	}
+    public String getParamName() {
+        return this.paramName;
+    }
 
-	public String getParamValue() {
-		return this.paramValue;
-	}
+    public void setParamName(String paramName) {
+        this.paramName = paramName;
+    }
 
-	public void setParamValue(String paramValue) {
-		this.paramValue = paramValue;
-	}
+    public String getParamValue() {
+        return this.paramValue;
+    }
 
-	public String getParamDefault() {
-		return paramDefault;
-	}
+    public void setParamValue(String paramValue) {
+        this.paramValue = paramValue;
+    }
 
-	public void setParamDefault(String paramDefault) {
-		this.paramDefault = paramDefault;
-	}
+    public String getParamDefault() {
+        return paramDefault;
+    }
 
-	public char getRequired() {
-		return required;
-	}
+    public void setParamDefault(String paramDefault) {
+        this.paramDefault = paramDefault;
+    }
 
-	public void setRequired(char required) {
-		this.required = required;
-	}
+    public char getRequired() {
+        return required;
+    }
 
-	public PIPResolver getPipresolver() {
-		return this.pipresolver;
-	}
+    public void setRequired(char required) {
+        this.required = required;
+    }
 
-	public void setPipresolver(PIPResolver pipresolver) {
-		this.pipresolver = pipresolver;
-	}
+    public PIPResolver getPipresolver() {
+        return this.pipresolver;
+    }
 
-	@Transient
-	public boolean isRequired() {
-		return this.required == '1';
-	}
-	
-	@Transient
-	public void setRequired(boolean required) {
-		if (required) {
-			this.required = '1';
-		} else {
-			this.required = '0';
-		}
-	}
+    public void setPipresolver(PIPResolver pipresolver) {
+        this.pipresolver = pipresolver;
+    }
 
-	@Transient
-	@Override
-	public String toString() {
-		return "PIPResolverParam [id=" + id + ", paramName=" + paramName
-				+ ", paramValue=" + paramValue + ", required=" + required + "]";
-	}
+    @Transient
+    public boolean isRequired() {
+        return this.required == '1';
+    }
+
+    @Transient
+    public void setRequired(boolean required) {
+        if (required) {
+            this.required = '1';
+        } else {
+            this.required = '0';
+        }
+    }
+
+    @Transient
+    @Override
+    public String toString() {
+        return "PIPResolverParam [id=" + id + ", paramName=" + paramName
+                + ", paramValue=" + paramValue + ", required=" + required + "]";
+    }
 
 }

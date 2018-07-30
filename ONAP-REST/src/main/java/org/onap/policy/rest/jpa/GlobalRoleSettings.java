@@ -37,57 +37,57 @@ import javax.persistence.Table;
 @Table(name="GlobalRoleSettings")
 @NamedQuery(name="GlobalRoleSettings.findAll", query="SELECT g FROM GlobalRoleSettings g")
 public class GlobalRoleSettings implements Serializable {	
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@Column(name="role", length=45)
-	private String role;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="lockdown")
-	private boolean lockdown;
+    @Id
+    @Column(name="role", length=45)
+    private String role;
 
-	public GlobalRoleSettings() {
-		super();
-	}
-	
-	public GlobalRoleSettings(boolean lockdown) {
-		this.role = org.onap.policy.rest.XacmlAdminAuthorization.Role.ROLE_SUPERADMIN.toString();
-		this.lockdown = lockdown;
-	}
-	
-	/**
-	 * return the role
-	 * 
-	 * @return the role
-	 */
-	public String getRole() {
-		return role;
-	}
+    @Column(name="lockdown")
+    private boolean lockdown;
 
-	/**
-	 * set role
-	 * 
-	 * @param role the role to set
-	 */
-	public void setRole(String role) {
-		this.role = role;
-	}
+    public GlobalRoleSettings() {
+        super();
+    }
 
-	/**
-	 * is the system locked down
-	 * 
-	 * @return
-	 */
-	public boolean isLockdown() {
-		return lockdown;
-	}
+    public GlobalRoleSettings(boolean lockdown) {
+        this.role = org.onap.policy.rest.XacmlAdminAuthorization.Role.ROLE_SUPERADMIN.toString();
+        this.lockdown = lockdown;
+    }
 
-	/**
-	 * sets lockdown configuration
-	 * 
-	 * @param lockdown
-	 */
-	public void setLockdown(boolean lockdown) {
-		this.lockdown = lockdown;
-	} 
+    /**
+     * return the role
+     *
+     * @return the role
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * set role
+     *
+     * @param role the role to set
+     */
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    /**
+     * is the system locked down
+     *
+     * @return
+     */
+    public boolean isLockdown() {
+        return lockdown;
+    }
+
+    /**
+     * sets lockdown configuration
+     *
+     * @param lockdown
+     */
+    public void setLockdown(boolean lockdown) {
+        this.lockdown = lockdown;
+    }
 }

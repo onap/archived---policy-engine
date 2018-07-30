@@ -36,63 +36,63 @@ import javax.persistence.Table;
 @Table(name="parentdictionaryitems")
 @NamedQuery(name="FirewallDictionaryList.findAll", query="SELECT e FROM FirewallDictionaryList e")
 public class FirewallDictionaryList implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="parentItemName", nullable=false)
-	@OrderBy("asc")
-	private String parentItemName;
-	
-	@Column(name="description")
-	private String description;
-	
-	@Column(name="addressList")
-	private String addressList;
-	
-	@Column(name="serviceList")
-	private String serviceList;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="parentItemName", nullable=false)
+    @OrderBy("asc")
+    private String parentItemName;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public String getParentItemName() {
-		return parentItemName;
-	}
+    @Column(name="description")
+    private String description;
 
-	public String getDescription() {
-		return description;
-	}
+    @Column(name="addressList")
+    private String addressList;
 
-	public String getAddressList() {
-		return addressList;
-	}
+    @Column(name="serviceList")
+    private String serviceList;
 
-	public String getServiceList() {
-		return serviceList;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setParentItemName(String parentItemName) {
-		this.parentItemName = parentItemName;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getParentItemName() {
+        return parentItemName;
+    }
 
-	public void setAddressList(String addressList) {
-		this.addressList = addressList;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setServiceList(String serviceList) {
-		this.serviceList = serviceList;
-	}
+    public String getAddressList() {
+        return addressList;
+    }
+
+    public String getServiceList() {
+        return serviceList;
+    }
+
+    public void setParentItemName(String parentItemName) {
+        this.parentItemName = parentItemName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAddressList(String addressList) {
+        this.addressList = addressList;
+    }
+
+    public void setServiceList(String serviceList) {
+        this.serviceList = serviceList;
+    }
 }

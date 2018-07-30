@@ -39,83 +39,83 @@ import javax.persistence.Table;
 @Table(name="ConstraintType")
 @NamedQuery(name="ConstraintType.findAll", query="SELECT a FROM ConstraintType a")
 public class ConstraintType implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	public static final String ENUMERATION_TYPE = "Enumeration";
-	public static final String RANGE_TYPE = "Range";
-	public static final String REGEXP_TYPE = "Regular Expression";
-	
-	protected static final Map<String, String> defaults = new HashMap<>();
-	static {
-		defaults.put(ENUMERATION_TYPE, "Enumerate a set of values that the attribute may be set to during policy creation.");
-		defaults.put(RANGE_TYPE, "Set a range of min and/or max integer/double values the attribute can be set to during policy creation.");
-		defaults.put(REGEXP_TYPE, "Define a regular expression the attribute must match against during policy creation.");
-	}
-	private static final String[] RANGE_TYPES = {"minExclusive", "minInclusive", "maxExclusive", "maxInclusive"};
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="constraint_type", nullable=false, length=64)
-	private String constraintType;
-	
-	@Column(name="description", nullable=false, length=255)
-	private String description;
+    public static final String ENUMERATION_TYPE = "Enumeration";
+    public static final String RANGE_TYPE = "Range";
+    public static final String REGEXP_TYPE = "Regular Expression";
 
-	//bi-directional many-to-one association to Attribute
-	@OneToMany(mappedBy="constraintType")
-	private Set<Attribute> attributes = new HashSet<>();
+    protected static final Map<String, String> defaults = new HashMap<>();
+    static {
+        defaults.put(ENUMERATION_TYPE, "Enumerate a set of values that the attribute may be set to during policy creation.");
+        defaults.put(RANGE_TYPE, "Set a range of min and/or max integer/double values the attribute can be set to during policy creation.");
+        defaults.put(REGEXP_TYPE, "Define a regular expression the attribute must match against during policy creation.");
+    }
+    private static final String[] RANGE_TYPES = {"minExclusive", "minInclusive", "maxExclusive", "maxInclusive"};
 
-	public ConstraintType() {
-		//An empty constructor
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public ConstraintType(String constraintType) {
-		this();
-		this.constraintType = constraintType;
-	}
-	
-	public ConstraintType(String constraintType, String description) {
-		this(constraintType);
-		this.description = description;
-	}
+    @Column(name="constraint_type", nullable=false, length=64)
+    private String constraintType;
 
-	public int getId() {
-		return id;
-	}
+    @Column(name="description", nullable=false, length=255)
+    private String description;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    //bi-directional many-to-one association to Attribute
+    @OneToMany(mappedBy="constraintType")
+    private Set<Attribute> attributes = new HashSet<>();
 
-	public String getConstraintType() {
-		return constraintType;
-	}
+    public ConstraintType() {
+        //An empty constructor
+    }
 
-	public void setConstraintType(String constraintType) {
-		this.constraintType = constraintType;
-	}
+    public ConstraintType(String constraintType) {
+        this();
+        this.constraintType = constraintType;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public ConstraintType(String constraintType, String description) {
+        this(constraintType);
+        this.description = description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public Set<Attribute> getAttributes() {
-		return attributes;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setAttributes(Set<Attribute> attributes) {
-		this.attributes = attributes;
-	}
+    public String getConstraintType() {
+        return constraintType;
+    }
 
-	public static String[] getRangeTypes() {
-		return RANGE_TYPES;
-	}
+    public void setConstraintType(String constraintType) {
+        this.constraintType = constraintType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<Attribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Set<Attribute> attributes) {
+        this.attributes = attributes;
+    }
+
+    public static String[] getRangeTypes() {
+        return RANGE_TYPES;
+    }
 
 }

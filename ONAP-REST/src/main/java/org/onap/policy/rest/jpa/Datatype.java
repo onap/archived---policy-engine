@@ -49,194 +49,194 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name="Datatype")
 @NamedQuery(name="Datatype.findAll", query="SELECT d FROM Datatype d")
 public class Datatype implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	public static final char STANDARD = 'S';
-	public static final char CUSTOM = 'C';
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    public static final char STANDARD = 'S';
+    public static final char CUSTOM = 'C';
 
-	@Column(name="is_standard", nullable=false)
-	private char isStandard;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="xacml_id", nullable=false, unique=true, length=255)
-	private String xacmlId;
+    @Column(name="is_standard", nullable=false)
+    private char isStandard;
 
-	@Column(name="short_name", nullable=false, length=64)
-	private String shortName;
+    @Column(name="xacml_id", nullable=false, unique=true, length=255)
+    private String xacmlId;
 
-	//bi-directional many-to-one association to Attribute
-	@OneToMany(mappedBy="datatypeBean")
-	@JsonBackReference
-	private Set<Attribute> attributes = new HashSet<>();
+    @Column(name="short_name", nullable=false, length=64)
+    private String shortName;
 
-	//bi-directional many-to-one association to Attribute
-	@OneToMany(mappedBy="datatypeBean")
-	@JsonIgnore
-	private Set<FunctionDefinition> functions = new HashSet<>();
+    //bi-directional many-to-one association to Attribute
+    @OneToMany(mappedBy="datatypeBean")
+    @JsonBackReference
+    private Set<Attribute> attributes = new HashSet<>();
 
-	//bi-directional many-to-one association to Attribute
-	@OneToMany(mappedBy="datatypeBean")
-	@JsonIgnore
-	private Set<FunctionArgument> arguments = new HashSet<>();
+    //bi-directional many-to-one association to Attribute
+    @OneToMany(mappedBy="datatypeBean")
+    @JsonIgnore
+    private Set<FunctionDefinition> functions = new HashSet<>();
 
-	public Datatype() {
-		this.xacmlId = XACML3.ID_DATATYPE_STRING.stringValue();
-		this.isStandard = Datatype.STANDARD;
-	}
-	
-	
-	public Datatype(int id, Datatype dt) {
-		this.id = id;
-		this.isStandard = dt.isStandard;
-		this.xacmlId = dt.xacmlId;
-		this.shortName = dt.shortName;
-		//
-		// Make a copy?
-		//
-		this.attributes = new HashSet<>();
-	}
-	
-	public Datatype(Identifier identifier, char standard) {
-		if (identifier != null) {
-			this.xacmlId = identifier.stringValue();
-			
-		}
-		this.isStandard = standard;
-	}
-	
-	public Datatype(Identifier identifier) {
-		this(identifier, Datatype.STANDARD);
-	}
-	
-	public int getId() {
-		return this.id;
-	}
+    //bi-directional many-to-one association to Attribute
+    @OneToMany(mappedBy="datatypeBean")
+    @JsonIgnore
+    private Set<FunctionArgument> arguments = new HashSet<>();
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public Datatype() {
+        this.xacmlId = XACML3.ID_DATATYPE_STRING.stringValue();
+        this.isStandard = Datatype.STANDARD;
+    }
 
-	public char getIsStandard() {
-		return this.isStandard;
-	}
 
-	public void setIsStandard(char isStandard) {
-		this.isStandard = isStandard;
-	}
+    public Datatype(int id, Datatype dt) {
+        this.id = id;
+        this.isStandard = dt.isStandard;
+        this.xacmlId = dt.xacmlId;
+        this.shortName = dt.shortName;
+        //
+        // Make a copy?
+        //
+        this.attributes = new HashSet<>();
+    }
 
-	public String getXacmlId() {
-		return this.xacmlId;
-	}
+    public Datatype(Identifier identifier, char standard) {
+        if (identifier != null) {
+            this.xacmlId = identifier.stringValue();
 
-	public void setXacmlId(String xacmlId) {
-		this.xacmlId = xacmlId;
-	}
+        }
+        this.isStandard = standard;
+    }
 
-	public String getShortName() {
-		return shortName;
-	}
+    public Datatype(Identifier identifier) {
+        this(identifier, Datatype.STANDARD);
+    }
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}	
+    public int getId() {
+        return this.id;
+    }
 
-	public Set<Attribute> getAttributes() {
-		return this.attributes;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setAttributes(Set<Attribute> attributes) {
-		this.attributes = attributes;
-	}
+    public char getIsStandard() {
+        return this.isStandard;
+    }
 
-	public Attribute addAttribute(Attribute attribute) {
-		getAttributes().add(attribute);
-		attribute.setDatatypeBean(this);
+    public void setIsStandard(char isStandard) {
+        this.isStandard = isStandard;
+    }
 
-		return attribute;
-	}
+    public String getXacmlId() {
+        return this.xacmlId;
+    }
 
-	public Attribute removeAttribute(Attribute attribute) {
-		getAttributes().remove(attribute);
-		attribute.setDatatypeBean(null);
+    public void setXacmlId(String xacmlId) {
+        this.xacmlId = xacmlId;
+    }
 
-		return attribute;
-	}
+    public String getShortName() {
+        return shortName;
+    }
 
-	public Set<FunctionDefinition> getFunctions() {
-		return this.functions;
-	}
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public void setFunctions(Set<FunctionDefinition> functions) {
-		this.functions = functions;
-	}
+    public Set<Attribute> getAttributes() {
+        return this.attributes;
+    }
 
-	public FunctionDefinition addFunction(FunctionDefinition function) {
-		getFunctions().add(function);
-		function.setDatatypeBean(this);
+    public void setAttributes(Set<Attribute> attributes) {
+        this.attributes = attributes;
+    }
 
-		return function;
-	}
+    public Attribute addAttribute(Attribute attribute) {
+        getAttributes().add(attribute);
+        attribute.setDatatypeBean(this);
 
-	public FunctionDefinition removeAttribute(FunctionDefinition function) {
-		getFunctions().remove(function);
-		function.setDatatypeBean(null);
+        return attribute;
+    }
 
-		return function;
-	}
+    public Attribute removeAttribute(Attribute attribute) {
+        getAttributes().remove(attribute);
+        attribute.setDatatypeBean(null);
 
-	public Set<FunctionArgument> getArguments() {
-		return this.arguments;
-	}
+        return attribute;
+    }
 
-	public void setArguments(Set<FunctionArgument> argument) {
-		this.arguments = argument;
-	}
+    public Set<FunctionDefinition> getFunctions() {
+        return this.functions;
+    }
 
-	public FunctionArgument addArgument(FunctionArgument argument) {
-		getArguments().add(argument);
-		argument.setDatatypeBean(this);
+    public void setFunctions(Set<FunctionDefinition> functions) {
+        this.functions = functions;
+    }
 
-		return argument;
-	}
+    public FunctionDefinition addFunction(FunctionDefinition function) {
+        getFunctions().add(function);
+        function.setDatatypeBean(this);
 
-	public FunctionArgument removeArgument(FunctionArgument argument) {
-		getArguments().remove(argument);
-		argument.setDatatypeBean(null);
+        return function;
+    }
 
-		return argument;
-	}
+    public FunctionDefinition removeAttribute(FunctionDefinition function) {
+        getFunctions().remove(function);
+        function.setDatatypeBean(null);
 
-	@Transient
-	public Identifier getIdentifer() {
-		return new IdentifierImpl(this.xacmlId);
-	}
-	
-	@Transient
-	public Identifier getIdentiferByShortName() {
-		return new IdentifierImpl(this.shortName);
-	}
+        return function;
+    }
 
-	@Transient
-	public boolean isStandard() {
-		return this.isStandard == Datatype.STANDARD;
-	}
-	
-	@Transient
-	public boolean isCustom() {
-		return this.isStandard == Datatype.CUSTOM;
-	}
+    public Set<FunctionArgument> getArguments() {
+        return this.arguments;
+    }
 
-	@Transient
-	@Override
-	public String toString() {
-		return "Datatype [id=" + id + ", isStandard=" + isStandard
-				+ ", xacmlId=" + xacmlId + ", shortName=" + shortName
-				+ ", attributes=" + attributes + ", functions=" + functions
-				+ ", arguments=" + arguments + "]";
-	}
+    public void setArguments(Set<FunctionArgument> argument) {
+        this.arguments = argument;
+    }
+
+    public FunctionArgument addArgument(FunctionArgument argument) {
+        getArguments().add(argument);
+        argument.setDatatypeBean(this);
+
+        return argument;
+    }
+
+    public FunctionArgument removeArgument(FunctionArgument argument) {
+        getArguments().remove(argument);
+        argument.setDatatypeBean(null);
+
+        return argument;
+    }
+
+    @Transient
+    public Identifier getIdentifer() {
+        return new IdentifierImpl(this.xacmlId);
+    }
+
+    @Transient
+    public Identifier getIdentiferByShortName() {
+        return new IdentifierImpl(this.shortName);
+    }
+
+    @Transient
+    public boolean isStandard() {
+        return this.isStandard == Datatype.STANDARD;
+    }
+
+    @Transient
+    public boolean isCustom() {
+        return this.isStandard == Datatype.CUSTOM;
+    }
+
+    @Transient
+    @Override
+    public String toString() {
+        return "Datatype [id=" + id + ", isStandard=" + isStandard
+                + ", xacmlId=" + xacmlId + ", shortName=" + shortName
+                + ", attributes=" + attributes + ", functions=" + functions
+                + ", arguments=" + arguments + "]";
+    }
 
 }

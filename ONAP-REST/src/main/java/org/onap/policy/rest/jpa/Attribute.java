@@ -53,298 +53,298 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name="Attribute")
 @NamedQuery(name="Attribute.findAll", query="SELECT a FROM Attribute a order by  a.priority asc, a.xacmlId asc")
 public class Attribute implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    private static final long serialVersionUID = 1L;
 
-	//bi-directional many-to-one association to Category
-	@ManyToOne
-	@JoinColumn(name="constraint_type", nullable=true)
-	@JsonIgnore
-	private ConstraintType constraintType;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
+    //bi-directional many-to-one association to Category
+    @ManyToOne
+    @JoinColumn(name="constraint_type", nullable=true)
+    @JsonIgnore
+    private ConstraintType constraintType;
 
-	@Column(name="description", nullable=true, length=2048)
-	private String description;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
+    @Column(name="description", nullable=true, length=2048)
+    private String description;
 
-	@Column(name="PRIORITY", nullable=true)
-	@OrderBy("asc")
-	private String priority;
-	
-	@Column(name="ATTRIBUTE_VALUE", nullable=true)
-	@OrderBy("asc")
-	private String attributeValue;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	@Column(name="xacml_id",  unique = true, nullable=false)
-	@OrderBy("asc")
-	private String xacmlId = "urn";
+    @Column(name="PRIORITY", nullable=true)
+    @OrderBy("asc")
+    private String priority;
 
-	//bi-directional many-to-one association to ConstraintValue
-	@OneToMany(mappedBy="attribute", orphanRemoval=true, cascade=CascadeType.REMOVE)
-	@JsonIgnore
-	private Set<ConstraintValue> constraintValues = new HashSet<>();
+    @Column(name="ATTRIBUTE_VALUE", nullable=true)
+    @OrderBy("asc")
+    private String attributeValue;
 
-	//bi-directional many-to-one association to Category
-	@ManyToOne
-	@JoinColumn(name="category")
-	@JsonIgnore
-	private Category categoryBean;
+    @Column(name="xacml_id",  unique = true, nullable=false)
+    @OrderBy("asc")
+    private String xacmlId = "urn";
 
-	//bi-directional many-to-one association to Datatype
-	@ManyToOne
-	@JoinColumn(name="datatype")
-	private Datatype datatypeBean;
+    //bi-directional many-to-one association to ConstraintValue
+    @OneToMany(mappedBy="attribute", orphanRemoval=true, cascade=CascadeType.REMOVE)
+    @JsonIgnore
+    private Set<ConstraintValue> constraintValues = new HashSet<>();
 
-	@Column(name="is_designator", nullable=false)
-	@JsonIgnore
-	private char isDesignator = '1';
+    //bi-directional many-to-one association to Category
+    @ManyToOne
+    @JoinColumn(name="category")
+    @JsonIgnore
+    private Category categoryBean;
 
-	@Column(name="selector_path", nullable=true, length=2048)
-	private String selectorPath;
-	
+    //bi-directional many-to-one association to Datatype
+    @ManyToOne
+    @JoinColumn(name="datatype")
+    private Datatype datatypeBean;
 
-	
-	@Transient
-	private String issuer = null;
-	
-	@Transient
-	private boolean mustBePresent = false;
+    @Column(name="is_designator", nullable=false)
+    @JsonIgnore
+    private char isDesignator = '1';
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name="created_by")
-	private UserInfo userCreatedBy;
-
-	@ManyToOne(optional = false)
-	@JoinColumn(name="modified_by")
-	private UserInfo userModifiedBy;
-	
-	public UserInfo getUserCreatedBy() {
-		return userCreatedBy;
-	}
-
-	public void setUserCreatedBy(UserInfo userCreatedBy) {
-		this.userCreatedBy = userCreatedBy;
-	}
-
-	public UserInfo getUserModifiedBy() {
-		return userModifiedBy;
-	}
-
-	public void setUserModifiedBy(UserInfo userModifiedBy) {
-		this.userModifiedBy = userModifiedBy;
-	}
-
-	
-	public Attribute() {
-		//An empty constructor
-	}
-	
-	public Attribute(String domain) {
-		this.xacmlId = domain;
-	}
-	
-	public Attribute(Attribute copy) {
-		this(copy.getXacmlId() + ":(0)");
-		this.constraintType = copy.getConstraintType();
-		this.categoryBean = copy.getCategoryBean();
-		this.datatypeBean = copy.getDatatypeBean();
-		this.description = copy.getDescription();
-		for (ConstraintValue value : copy.getConstraintValues()) {
-			ConstraintValue newValue = new ConstraintValue(value);
-			newValue.setAttribute(this);
-			this.addConstraintValue(newValue);
-		}
-	}
-
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
-	
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
-
-	public int getId() {
-		return this.id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public ConstraintType getConstraintType() {
-		return this.constraintType;
-	}
-
-	public void setConstraintType(ConstraintType constraintType) {
-		this.constraintType = constraintType;
-	}
-
-	public Date getCreatedDate() {
-		return this.createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Date getModifiedDate() {
-		return this.modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	public String getXacmlId() {
-		return this.xacmlId;
-	}
+    @Column(name="selector_path", nullable=true, length=2048)
+    private String selectorPath;
 
 
-	public void setXacmlId(String xacmlId) {
-		this.xacmlId = xacmlId;
-	}
 
-	public Set<ConstraintValue> getConstraintValues() {
-		return this.constraintValues;
-	}
+    @Transient
+    private String issuer = null;
 
-	public void setConstraintValues(Set<ConstraintValue> constraintValues) {
-		for (ConstraintValue value : this.constraintValues) {
-			value.setAttribute(this);
-		}
-		this.constraintValues = constraintValues;
-	}
+    @Transient
+    private boolean mustBePresent = false;
 
-	public ConstraintValue addConstraintValue(ConstraintValue constraintValue) {
-		if (this.constraintValues == null) {
-			this.constraintValues = new HashSet<>();
-		}
-		this.constraintValues.add(constraintValue);
-		constraintValue.setAttribute(this);
+    @ManyToOne(optional = false)
+    @JoinColumn(name="created_by")
+    private UserInfo userCreatedBy;
 
-		return constraintValue;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="modified_by")
+    private UserInfo userModifiedBy;
 
-	public ConstraintValue removeConstraintValue(ConstraintValue constraintValue) {
-		this.constraintValues.remove(constraintValue);
-		constraintValue.setAttribute(null);
+    public UserInfo getUserCreatedBy() {
+        return userCreatedBy;
+    }
 
-		return constraintValue;
-	}
-	
-	public void removeAllConstraintValues() {
-		if (this.constraintValues == null) {
-			return;
-		}
-		for (ConstraintValue value : this.constraintValues) {
-			value.setAttribute(null);
-		}
-		this.constraintValues.clear();
-	}
+    public void setUserCreatedBy(UserInfo userCreatedBy) {
+        this.userCreatedBy = userCreatedBy;
+    }
 
-	public Category getCategoryBean() {
-		return this.categoryBean;
-	}
+    public UserInfo getUserModifiedBy() {
+        return userModifiedBy;
+    }
 
-	public void setCategoryBean(Category categoryBean) {
-		this.categoryBean = categoryBean;
-	}
+    public void setUserModifiedBy(UserInfo userModifiedBy) {
+        this.userModifiedBy = userModifiedBy;
+    }
 
-	public Datatype getDatatypeBean() {
-		return this.datatypeBean;
-	}
 
-	public void setDatatypeBean(Datatype datatypeBean) {
-		this.datatypeBean = datatypeBean;
-	}
+    public Attribute() {
+        //An empty constructor
+    }
 
-	public char getIsDesignator() {
-		return this.isDesignator;
-	}
-	
-	public void setIsDesignator(char is) {
-		this.isDesignator = is;
-	}
-	
-	public String getSelectorPath() {
-		return this.selectorPath;
-	}
-	
-	public void setSelectorPath(String path) {
-		this.selectorPath = path;
-	}
-	
-	@Transient
-	public String getIssuer() {
-		return issuer;
-	}
+    public Attribute(String domain) {
+        this.xacmlId = domain;
+    }
 
-	@Transient
-	public void setIssuer(String issuer) {
-		this.issuer = issuer;
-	}
+    public Attribute(Attribute copy) {
+        this(copy.getXacmlId() + ":(0)");
+        this.constraintType = copy.getConstraintType();
+        this.categoryBean = copy.getCategoryBean();
+        this.datatypeBean = copy.getDatatypeBean();
+        this.description = copy.getDescription();
+        for (ConstraintValue value : copy.getConstraintValues()) {
+            ConstraintValue newValue = new ConstraintValue(value);
+            newValue.setAttribute(this);
+            this.addConstraintValue(newValue);
+        }
+    }
 
-	@Transient
-	public boolean isMustBePresent() {
-		return mustBePresent;
-	}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
 
-	@Transient
-	public void setMustBePresent(boolean mustBePresent) {
-		this.mustBePresent = mustBePresent;
-	}
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
 
-	@Transient
-	public boolean isDesignator() {
-		return this.isDesignator == '1';
-	}
-	
-	@Transient
-	public void setIsDesignator(boolean is) {
-		if (is) {
-			this.isDesignator = '1';
-		} else {
-			this.isDesignator = '0';
-		}
-	}	
-	
-	public String getPriority() {
-		return priority;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setPriority(String priority) {
-		this.priority = priority;
-	}
-	
-	public String getAttributeValue() {
-		return attributeValue;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setAttributeValue(String attributeValue) {
-		this.attributeValue = attributeValue;
-	}
+    public ConstraintType getConstraintType() {
+        return this.constraintType;
+    }
+
+    public void setConstraintType(ConstraintType constraintType) {
+        this.constraintType = constraintType;
+    }
+
+    public Date getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getModifiedDate() {
+        return this.modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public String getXacmlId() {
+        return this.xacmlId;
+    }
+
+
+    public void setXacmlId(String xacmlId) {
+        this.xacmlId = xacmlId;
+    }
+
+    public Set<ConstraintValue> getConstraintValues() {
+        return this.constraintValues;
+    }
+
+    public void setConstraintValues(Set<ConstraintValue> constraintValues) {
+        for (ConstraintValue value : this.constraintValues) {
+            value.setAttribute(this);
+        }
+        this.constraintValues = constraintValues;
+    }
+
+    public ConstraintValue addConstraintValue(ConstraintValue constraintValue) {
+        if (this.constraintValues == null) {
+            this.constraintValues = new HashSet<>();
+        }
+        this.constraintValues.add(constraintValue);
+        constraintValue.setAttribute(this);
+
+        return constraintValue;
+    }
+
+    public ConstraintValue removeConstraintValue(ConstraintValue constraintValue) {
+        this.constraintValues.remove(constraintValue);
+        constraintValue.setAttribute(null);
+
+        return constraintValue;
+    }
+
+    public void removeAllConstraintValues() {
+        if (this.constraintValues == null) {
+            return;
+        }
+        for (ConstraintValue value : this.constraintValues) {
+            value.setAttribute(null);
+        }
+        this.constraintValues.clear();
+    }
+
+    public Category getCategoryBean() {
+        return this.categoryBean;
+    }
+
+    public void setCategoryBean(Category categoryBean) {
+        this.categoryBean = categoryBean;
+    }
+
+    public Datatype getDatatypeBean() {
+        return this.datatypeBean;
+    }
+
+    public void setDatatypeBean(Datatype datatypeBean) {
+        this.datatypeBean = datatypeBean;
+    }
+
+    public char getIsDesignator() {
+        return this.isDesignator;
+    }
+
+    public void setIsDesignator(char is) {
+        this.isDesignator = is;
+    }
+
+    public String getSelectorPath() {
+        return this.selectorPath;
+    }
+
+    public void setSelectorPath(String path) {
+        this.selectorPath = path;
+    }
+
+    @Transient
+    public String getIssuer() {
+        return issuer;
+    }
+
+    @Transient
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
+    }
+
+    @Transient
+    public boolean isMustBePresent() {
+        return mustBePresent;
+    }
+
+    @Transient
+    public void setMustBePresent(boolean mustBePresent) {
+        this.mustBePresent = mustBePresent;
+    }
+
+    @Transient
+    public boolean isDesignator() {
+        return this.isDesignator == '1';
+    }
+
+    @Transient
+    public void setIsDesignator(boolean is) {
+        if (is) {
+            this.isDesignator = '1';
+        } else {
+            this.isDesignator = '0';
+        }
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getAttributeValue() {
+        return attributeValue;
+    }
+
+    public void setAttributeValue(String attributeValue) {
+        this.attributeValue = attributeValue;
+    }
 }
-	
+

@@ -37,51 +37,51 @@ import javax.persistence.Table;
 @Table(name="GroupPolicyScopeList")
 @NamedQuery(name="GroupPolicyScopeList.findAll", query="SELECT e FROM GroupPolicyScopeList e ")
 public class GroupPolicyScopeList implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false)
-	@OrderBy("asc")
-	private String name;
-	
-	@Column(name="groupList")
-	private String groupList;
-	
-	@Column(name="description")
-	private String description;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="name", nullable=false)
+    @OrderBy("asc")
+    private String name;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getGroupName() {
-		return this.name;
-	}
+    @Column(name="groupList")
+    private String groupList;
 
-	public void setGroupName(String serviceName) {
-		this.name = serviceName;
+    @Column(name="description")
+    private String description;
 
-	}
-		
-	public String getGroupList() {
-		return this.groupList;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setGroupList(String groupList) {
-		this.groupList = groupList;
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getGroupName() {
+        return this.name;
+    }
 
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setGroupName(String serviceName) {
+        this.name = serviceName;
+
+    }
+
+    public String getGroupList() {
+        return this.groupList;
+    }
+
+    public void setGroupList(String groupList) {
+        this.groupList = groupList;
+
+    }
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

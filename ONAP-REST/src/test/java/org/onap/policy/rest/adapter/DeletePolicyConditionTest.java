@@ -24,9 +24,9 @@ import org.junit.Test;
 
 public class DeletePolicyConditionTest {
 
-	@Test
-	public void testDeletePolicyCondition(){
-		assertEquals(DeletePolicyCondition.ONE.toString(), "Are you sure you want to delete Current Version of policy");
-		assertEquals(DeletePolicyCondition.ALL.toString(), "Are you sure you want to delete All Versions of policy");
-	}
+    @Test
+    public void testDeletePolicyCondition(){
+        assertEquals(DeletePolicyCondition.ONE.toString(), "Are you sure you want to delete Current Version of policy");
+        assertEquals(DeletePolicyCondition.ALL.toString(), "Are you sure you want to delete All Versions of policy");
+    }
 }

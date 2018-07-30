@@ -57,274 +57,274 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table(name="PolicyEntity")
 
 @NamedQueries({
-	@NamedQuery(name="PolicyEntity.findAll", query="SELECT e FROM PolicyEntity e "),
-	@NamedQuery(name="PolicyEntity.findAllByDeletedFlag", query="SELECT e FROM PolicyEntity e WHERE e.deleted = :deleted"),
-	@NamedQuery(name="PolicyEntity.FindById", query="SELECT e FROM PolicyEntity e WHERE e.policyId = :id"),
-	@NamedQuery(name="PolicyEntity.deleteAll", query="DELETE FROM PolicyEntity WHERE 1=1"),
-	@NamedQuery(name="PolicyEntity.findByNameAndScope", query="SELECT e FROM PolicyEntity e WHERE e.policyName = :name AND e.scope = :scope")
+    @NamedQuery(name="PolicyEntity.findAll", query="SELECT e FROM PolicyEntity e "),
+    @NamedQuery(name="PolicyEntity.findAllByDeletedFlag", query="SELECT e FROM PolicyEntity e WHERE e.deleted = :deleted"),
+    @NamedQuery(name="PolicyEntity.FindById", query="SELECT e FROM PolicyEntity e WHERE e.policyId = :id"),
+    @NamedQuery(name="PolicyEntity.deleteAll", query="DELETE FROM PolicyEntity WHERE 1=1"),
+    @NamedQuery(name="PolicyEntity.findByNameAndScope", query="SELECT e FROM PolicyEntity e WHERE e.policyName = :name AND e.scope = :scope")
 })
 
 public class PolicyEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column (name="policyId")
-	@JsonBackReference
-	private long policyId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column (name="policyId")
+    @JsonBackReference
+    private long policyId;
 
-	@Column(name="policyName", nullable=false, unique=false, length=255)
-	private String policyName;
-	
-	//The scope is the directory structure in dot notation.  For example: org.onap.myproject 
-	@Column(name="scope", nullable=false, unique=false, length=255)
-	private String scope;
-	
-	@Version 
-	@Column(name="version")
-	private int version;
-	
-	//not going to be used
-	@Column(name="policyVersion")
-	private int policyVersion = 0;
-	
-	@Lob
-	@Column(name="policyData", nullable=false, columnDefinition="TEXT")
-	private String policyData = "NoData";
+    @Column(name="policyName", nullable=false, unique=false, length=255)
+    private String policyName;
 
-	@OneToOne(optional=true, orphanRemoval=true)
-	@JoinColumn(name="configurationDataId")
-	@JsonManagedReference
-	private ConfigurationDataEntity configurationDataEntity;
-	
-	@OneToOne(optional=true, orphanRemoval=true)
-	@JoinColumn(name="actionBodyId")
-	@JsonManagedReference
-	private ActionBodyEntity actionBodyEntity;
-	
-	@Column(name="created_by", nullable=false, length=255)
-	private String createdBy = "guest";
+    //The scope is the directory structure in dot notation.  For example: org.onap.myproject
+    @Column(name="scope", nullable=false, unique=false, length=255)
+    private String scope;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
+    @Version
+    @Column(name="version")
+    private int version;
 
-	@Column(name="description", nullable=false, length=2048)
-	private String description = "NoDescription";
+    //not going to be used
+    @Column(name="policyVersion")
+    private int policyVersion = 0;
 
-	@Column(name="modified_by", nullable=false, length=255)
-	private String modifiedBy = "guest";
+    @Lob
+    @Column(name="policyData", nullable=false, columnDefinition="TEXT")
+    private String policyData = "NoData";
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
-	
-	@Column(name="deleted", nullable=false)
-	private boolean deleted = false;
+    @OneToOne(optional=true, orphanRemoval=true)
+    @JoinColumn(name="configurationDataId")
+    @JsonManagedReference
+    private ConfigurationDataEntity configurationDataEntity;
 
-	public PolicyEntity() {
-		super();
-	}
+    @OneToOne(optional=true, orphanRemoval=true)
+    @JoinColumn(name="actionBodyId")
+    @JsonManagedReference
+    private ActionBodyEntity actionBodyEntity;
 
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
+    @Column(name="created_by", nullable=false, length=255)
+    private String createdBy = "guest";
 
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();		
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	/**
-	 * @return the policyId
-	 */
-	public long getPolicyId() {
-		return policyId;
-	}
+    @Column(name="description", nullable=false, length=2048)
+    private String description = "NoDescription";
 
-	/**
-	 * @param policyId cannot be set
-	 */
+    @Column(name="modified_by", nullable=false, length=255)
+    private String modifiedBy = "guest";
 
-	public String getPolicyName() {
-		return policyName;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	public void setPolicyName(String policyName) {
-		this.policyName = policyName;
-	}
+    @Column(name="deleted", nullable=false)
+    private boolean deleted = false;
 
-	/**
-	 * @return the policyData
-	 */
-	public String getPolicyData() {
-		return policyData;
-	}
+    public PolicyEntity() {
+        super();
+    }
 
-	/**
-	 * @param policyData the policyData to set
-	 */
-	public void setPolicyData(String policyData) {
-		this.policyData = policyData;
-	}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
 
-	/**
-	 * @return the configurationDataEntity
-	 */
-	public ConfigurationDataEntity getConfigurationData() {
-		return configurationDataEntity;
-	}
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
 
-	/**
-	 * @param configurationDataEntity the configurationDataEntity to set
-	 */
-	public void setConfigurationData(ConfigurationDataEntity configurationDataEntity) {
-		this.configurationDataEntity = configurationDataEntity;
-	}
+    /**
+     * @return the policyId
+     */
+    public long getPolicyId() {
+        return policyId;
+    }
 
-	/**
-	 * @return the actionBodyEntity
-	 */
-	public ActionBodyEntity getActionBodyEntity() {
-		return actionBodyEntity;
-	}
+    /**
+     * @param policyId cannot be set
+     */
 
-	/**
-	 * @param actionBodyEntity the actionBodyEntity to set
-	 */
-	public void setActionBodyEntity(ActionBodyEntity actionBodyEntity) {
-		this.actionBodyEntity = actionBodyEntity;
-	}
+    public String getPolicyName() {
+        return policyName;
+    }
 
-	/**
-	 * @return the scope
-	 */
-	public String getScope() {
-		return scope;
-	}
+    public void setPolicyName(String policyName) {
+        this.policyName = policyName;
+    }
 
-	/**
-	 * @param scope the scope to set
-	 */
-	public void setScope(String scope) {
-		this.scope = scope;
-	}
+    /**
+     * @return the policyData
+     */
+    public String getPolicyData() {
+        return policyData;
+    }
 
-	/**
-	 * @return the createdBy
-	 */
-	public String getCreatedBy() {
-		return createdBy;
-	}
+    /**
+     * @param policyData the policyData to set
+     */
+    public void setPolicyData(String policyData) {
+        this.policyData = policyData;
+    }
 
-	/**
-	 * @param createdBy the createdBy to set
-	 */
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
+    /**
+     * @return the configurationDataEntity
+     */
+    public ConfigurationDataEntity getConfigurationData() {
+        return configurationDataEntity;
+    }
 
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * @param configurationDataEntity the configurationDataEntity to set
+     */
+    public void setConfigurationData(ConfigurationDataEntity configurationDataEntity) {
+        this.configurationDataEntity = configurationDataEntity;
+    }
 
-	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /**
+     * @return the actionBodyEntity
+     */
+    public ActionBodyEntity getActionBodyEntity() {
+        return actionBodyEntity;
+    }
 
-	/**
-	 * @return the modifiedBy
-	 */
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
+    /**
+     * @param actionBodyEntity the actionBodyEntity to set
+     */
+    public void setActionBodyEntity(ActionBodyEntity actionBodyEntity) {
+        this.actionBodyEntity = actionBodyEntity;
+    }
 
-	/**
-	 * @param modifiedBy the modifiedBy to set
-	 */
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+    /**
+     * @return the scope
+     */
+    public String getScope() {
+        return scope;
+    }
 
-	/**
-	 * @return the version
-	 */
-	public int getVersion() {
-		return version;
-	}
+    /**
+     * @param scope the scope to set
+     */
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
 
-	/**
-	 * @return the createdDate
-	 */
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+    /**
+     * @return the createdBy
+     */
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
-	/**
-	 * @return the modifiedDate
-	 */
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
+    /**
+     * @param createdBy the createdBy to set
+     */
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	/**
-	 * @return the deleted
-	 */
-	public boolean isDeleted() {
-		return deleted;
-	}
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * @param deleted the deleted to set
-	 */
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-	
-	@Override
-	public int hashCode() {
-	return Objects.hash(policyId, policyName, scope, version, policyVersion, policyData, configurationDataEntity, 
-			actionBodyEntity, createdBy, createdDate, description, modifiedBy, modifiedDate, deleted);
-	}
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if(obj == null){
-			return false;
-		}
-		if(obj == this){
-			return true;
-		}
-		if(!(obj instanceof PolicyEntity)){
-			return false;
-		}
+    /**
+     * @return the modifiedBy
+     */
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
 
-		PolicyEntity p = (PolicyEntity) obj;
-		
-		return policyId == p.policyId &&
-				policyName.equals(p.policyName) &&
-				scope.equals(p.scope) &&
-				version == p.version &&
-				policyVersion == p.policyVersion &&
-				policyData.equals(p.policyData) &&
-				((configurationDataEntity == null && p.configurationDataEntity == null) || (configurationDataEntity!=null && configurationDataEntity.equals(p.configurationDataEntity))) &&
-				((actionBodyEntity == null && p.actionBodyEntity == null) || (actionBodyEntity!=null && actionBodyEntity.equals(p.actionBodyEntity))) &&
-				createdBy.equals(p.createdBy) &&
-				createdDate.equals(p.createdDate) &&
-				description.equals(p.description) &&
-				modifiedBy.equals(p.modifiedBy) &&
-				modifiedDate.equals(p.modifiedDate) &&
-				deleted == p.deleted;
-	}
+    /**
+     * @param modifiedBy the modifiedBy to set
+     */
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    /**
+     * @return the version
+     */
+    public int getVersion() {
+        return version;
+    }
+
+    /**
+     * @return the createdDate
+     */
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    /**
+     * @return the modifiedDate
+     */
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    /**
+     * @return the deleted
+     */
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    /**
+     * @param deleted the deleted to set
+     */
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    @Override
+    public int hashCode() {
+    return Objects.hash(policyId, policyName, scope, version, policyVersion, policyData, configurationDataEntity,
+            actionBodyEntity, createdBy, createdDate, description, modifiedBy, modifiedDate, deleted);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null){
+            return false;
+        }
+        if(obj == this){
+            return true;
+        }
+        if(!(obj instanceof PolicyEntity)){
+            return false;
+        }
+
+        PolicyEntity p = (PolicyEntity) obj;
+
+        return policyId == p.policyId &&
+                policyName.equals(p.policyName) &&
+                scope.equals(p.scope) &&
+                version == p.version &&
+                policyVersion == p.policyVersion &&
+                policyData.equals(p.policyData) &&
+                ((configurationDataEntity == null && p.configurationDataEntity == null) || (configurationDataEntity!=null && configurationDataEntity.equals(p.configurationDataEntity))) &&
+                ((actionBodyEntity == null && p.actionBodyEntity == null) || (actionBodyEntity!=null && actionBodyEntity.equals(p.actionBodyEntity))) &&
+                createdBy.equals(p.createdBy) &&
+                createdDate.equals(p.createdDate) &&
+                description.equals(p.description) &&
+                modifiedBy.equals(p.modifiedBy) &&
+                modifiedDate.equals(p.modifiedDate) &&
+                deleted == p.deleted;
+    }
 
 
 }

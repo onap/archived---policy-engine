@@ -48,180 +48,180 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name="ActionBodyEntity")
 @NamedQueries({
-	@NamedQuery(name=" ActionBodyEntity.findAll", query="SELECT e FROM ActionBodyEntity e "),
-	@NamedQuery(name="ActionBodyEntity.deleteAll", query="DELETE FROM ActionBodyEntity WHERE 1=1")
+    @NamedQuery(name=" ActionBodyEntity.findAll", query="SELECT e FROM ActionBodyEntity e "),
+    @NamedQuery(name="ActionBodyEntity.deleteAll", query="DELETE FROM ActionBodyEntity WHERE 1=1")
 })
 
 public class ActionBodyEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="actionBodyId")
-	@JsonBackReference
-	private long actionBodyId;
-	
-	@Column(name="actionBodyName", nullable=false, length=255)
-	private String actionBodyName = "";
-	
-	@Version 
-	@Column(name="version")
-	private int version;
-	
-	@Lob
-	@Column(name="actionBody", nullable=false, columnDefinition="TEXT")
-	private String actionBody = "NoBody";
-	
-	@Column(name="created_by", nullable=false, length=255)
-	private String createdBy = "guest";
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="actionBodyId")
+    @JsonBackReference
+    private long actionBodyId;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
+    @Column(name="actionBodyName", nullable=false, length=255)
+    private String actionBodyName = "";
 
-	@Column(name="modified_by", nullable=false, length=255)
-	private String modifiedBy = "guest";
+    @Version
+    @Column(name="version")
+    private int version;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
-	
-	@Column(name="deleted", nullable=false)
-	private boolean deleted = false;
+    @Lob
+    @Column(name="actionBody", nullable=false, columnDefinition="TEXT")
+    private String actionBody = "NoBody";
 
-	public ActionBodyEntity() {
-		//An empty constructor
-	}
+    @Column(name="created_by", nullable=false, length=255)
+    private String createdBy = "guest";
 
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
-	/**
-	 * @return the configurationDataId
-	 */
-	public long getActionBodyId() {
-		return actionBodyId;
-	}
-	/**
-	 * @param name the configuration body name to set
-	 */
-	public void setActionBodyName(String name) {
-		this.actionBodyName = name;
-	}
-	public String getActionBodyName(){
-		return this.actionBodyName;
-	}
-	
-	/**
-	 * @return the actionBody
-	 */
-	public String getActionBody() {
-		return actionBody;
-	}
-	/**
-	 * @param body the configBody to set
-	 */
-	public void setActionBody(String body) {
-		this.actionBody = body;
-	}
-	/**
-	 * @return the createdBy
-	 */
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	/**
-	 * @param createdBy the createdBy to set
-	 */
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	
-	/**
-	 * @return the modifiedBy
-	 */
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-	/**
-	 * @param modifiedBy the modifiedBy to set
-	 */
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	/**
-	 * @return the modifiedDate
-	 */
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	/**
-	 * @param modifiedDate the modifiedDate to set
-	 */
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	/**
-	 * @return the version
-	 */
-	public int getVersion() {
-		return version;
-	}
-	/**
-	 * @return the createdDate
-	 */
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+    @Column(name="modified_by", nullable=false, length=255)
+    private String modifiedBy = "guest";
 
-	/**
-	 * @return the deleted
-	 */
-	public boolean isDeleted() {
-		return deleted;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	/**
-	 * @param deleted the deleted to set
-	 */
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-	
-	@Override
-	public int hashCode() {
-	return Objects.hash(actionBodyId, actionBodyName, version, actionBody,
-			createdBy, createdDate, modifiedBy, modifiedDate, deleted);
-	}
+    @Column(name="deleted", nullable=false)
+    private boolean deleted = false;
 
-	@Override
-	public boolean equals(Object obj) {
-		if(obj == null){
-			return false;
-		}
-		if(obj == this){
-			return true;
-		}
-		if(!(obj instanceof ActionBodyEntity)){
-			return false;
-		}
+    public ActionBodyEntity() {
+        //An empty constructor
+    }
 
-		return  actionBodyId == ((ActionBodyEntity) obj).actionBodyId &&
-				actionBodyName.equals(((ActionBodyEntity) obj).actionBodyName) && 
-				version == ((ActionBodyEntity) obj).version && 
-				actionBody.equals(((ActionBodyEntity) obj).actionBody) && 
-				createdBy.equals(((ActionBodyEntity) obj).createdBy) && 
-				createdDate.equals(((ActionBodyEntity) obj).createdDate) && 
-				modifiedBy.equals(((ActionBodyEntity) obj).modifiedBy) &&
-				modifiedDate.equals(((ActionBodyEntity) obj).modifiedDate) &&
-				deleted == ((ActionBodyEntity) obj).deleted;
-	}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
+    /**
+     * @return the configurationDataId
+     */
+    public long getActionBodyId() {
+        return actionBodyId;
+    }
+    /**
+     * @param name the configuration body name to set
+     */
+    public void setActionBodyName(String name) {
+        this.actionBodyName = name;
+    }
+    public String getActionBodyName(){
+        return this.actionBodyName;
+    }
+
+    /**
+     * @return the actionBody
+     */
+    public String getActionBody() {
+        return actionBody;
+    }
+    /**
+     * @param body the configBody to set
+     */
+    public void setActionBody(String body) {
+        this.actionBody = body;
+    }
+    /**
+     * @return the createdBy
+     */
+    public String getCreatedBy() {
+        return createdBy;
+    }
+    /**
+     * @param createdBy the createdBy to set
+     */
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    /**
+     * @return the modifiedBy
+     */
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+    /**
+     * @param modifiedBy the modifiedBy to set
+     */
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+    /**
+     * @return the modifiedDate
+     */
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+    /**
+     * @param modifiedDate the modifiedDate to set
+     */
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+    /**
+     * @return the version
+     */
+    public int getVersion() {
+        return version;
+    }
+    /**
+     * @return the createdDate
+     */
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    /**
+     * @return the deleted
+     */
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    /**
+     * @param deleted the deleted to set
+     */
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    @Override
+    public int hashCode() {
+    return Objects.hash(actionBodyId, actionBodyName, version, actionBody,
+            createdBy, createdDate, modifiedBy, modifiedDate, deleted);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null){
+            return false;
+        }
+        if(obj == this){
+            return true;
+        }
+        if(!(obj instanceof ActionBodyEntity)){
+            return false;
+        }
+
+        return  actionBodyId == ((ActionBodyEntity) obj).actionBodyId &&
+                actionBodyName.equals(((ActionBodyEntity) obj).actionBodyName) &&
+                version == ((ActionBodyEntity) obj).version &&
+                actionBody.equals(((ActionBodyEntity) obj).actionBody) &&
+                createdBy.equals(((ActionBodyEntity) obj).createdBy) &&
+                createdDate.equals(((ActionBodyEntity) obj).createdDate) &&
+                modifiedBy.equals(((ActionBodyEntity) obj).modifiedBy) &&
+                modifiedDate.equals(((ActionBodyEntity) obj).modifiedDate) &&
+                deleted == ((ActionBodyEntity) obj).deleted;
+    }
 }

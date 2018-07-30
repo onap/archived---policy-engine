@@ -37,42 +37,42 @@ import javax.persistence.Table;
 @Table(name="RemoteCatalogValues")
 @NamedQuery(name="RemoteCatalogValues.findAll", query="SELECT e FROM RemoteCatalogValues e ")
 public class RemoteCatalogValues implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false)
-	@OrderBy("asc")
-	private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="value")
-	private String value;
+    @Column(name="name", nullable=false)
+    @OrderBy("asc")
+    private String name;
 
-	public String getValue() {
-		return value;
-	}
-	
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="value")
+    private String value;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return this.name;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setName(String name) {
-		this.name = name;
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	}
-	
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+
+    }
+
 }

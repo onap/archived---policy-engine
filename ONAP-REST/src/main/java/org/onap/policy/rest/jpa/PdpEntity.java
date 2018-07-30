@@ -50,192 +50,192 @@ import javax.persistence.TemporalType;
 //Add a non-unique index and a constraint that says the combo of policyName and scopeId must be unique
 @Table(name="PdpEntity")
 @NamedQueries({
-	@NamedQuery(name="PdpEntity.findAll", query="SELECT e FROM PdpEntity e "),
-	@NamedQuery(name="PdpEntity.deleteAll", query="DELETE FROM PdpEntity WHERE 1=1")
+    @NamedQuery(name="PdpEntity.findAll", query="SELECT e FROM PdpEntity e "),
+    @NamedQuery(name="PdpEntity.deleteAll", query="DELETE FROM PdpEntity WHERE 1=1")
 })
 
 public class PdpEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seqPdp")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column (name="pdpKey")
-	private long pdpKey;
-	
-	@Column (name="pdpId", nullable=false, unique=false, length=255)
-	private String pdpId;
+    @Id
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seqPdp")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column (name="pdpKey")
+    private long pdpKey;
 
-	@Column(name="pdpName", nullable=false, unique=false, length=255)
-	private String pdpName;
-	
-	@Column(name="jmxPort", nullable=false, unique=false)
-	private int jmxPort;
-	
-	
-	@ManyToOne(optional=false)
-	@JoinColumn(name="groupKey", referencedColumnName="groupKey")
-	private GroupEntity groupEntity;
-	
-	@Column(name="created_by", nullable=false, length=255)
-	private String createdBy = "guest";
+    @Column (name="pdpId", nullable=false, unique=false, length=255)
+    private String pdpId;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
+    @Column(name="pdpName", nullable=false, unique=false, length=255)
+    private String pdpName;
 
-	@Column(name="description", nullable=false, length=2048)
-	private String description = "NoDescription";
-
-	@Column(name="modified_by", nullable=false, length=255)
-	private String modifiedBy = "guest";
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
-	
-	@Column(name="deleted", nullable=false)
-	private boolean deleted = false;
-
-	public PdpEntity() {
-		super();
-	}
-
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
-
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
-
-	public long getPdpKey(){
-		return pdpKey;
-	}
-	/**
-	 * @return the policyId
-	 */
-	public String getPdpId() {
-		return pdpId;
-	}
-
-	public void setPdpId(String id){
-		pdpId = id;
-	}
-	/**
-	 * @param policyId cannot be set
-	 */
-
-	public String getPdpName() {
-		return pdpName;
-	}
-
-	public void setPdpName(String groupName) {
-		this.pdpName = groupName;
-	}
+    @Column(name="jmxPort", nullable=false, unique=false)
+    private int jmxPort;
 
 
+    @ManyToOne(optional=false)
+    @JoinColumn(name="groupKey", referencedColumnName="groupKey")
+    private GroupEntity groupEntity;
 
-	/**
-	 * @return the configurationDataEntity
-	 */
-	public GroupEntity getGroup() {
-		return groupEntity;
-	}
+    @Column(name="created_by", nullable=false, length=255)
+    private String createdBy = "guest";
 
-	/**
-	 * @param configurationDataEntity the configurationDataEntity to set
-	 */
-	public void setGroup(GroupEntity group) {
-		this.groupEntity = group;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
+
+    @Column(name="description", nullable=false, length=2048)
+    private String description = "NoDescription";
+
+    @Column(name="modified_by", nullable=false, length=255)
+    private String modifiedBy = "guest";
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
+
+    @Column(name="deleted", nullable=false)
+    private boolean deleted = false;
+
+    public PdpEntity() {
+        super();
+    }
+
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
+
+    public long getPdpKey(){
+        return pdpKey;
+    }
+    /**
+     * @return the policyId
+     */
+    public String getPdpId() {
+        return pdpId;
+    }
+
+    public void setPdpId(String id){
+        pdpId = id;
+    }
+    /**
+     * @param policyId cannot be set
+     */
+
+    public String getPdpName() {
+        return pdpName;
+    }
+
+    public void setPdpName(String groupName) {
+        this.pdpName = groupName;
+    }
 
 
 
-	/**
-	 * @return the createdBy
-	 */
-	public String getCreatedBy() {
-		return createdBy;
-	}
+    /**
+     * @return the configurationDataEntity
+     */
+    public GroupEntity getGroup() {
+        return groupEntity;
+    }
 
-	/**
-	 * @param createdBy the createdBy to set
-	 */
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
+    /**
+     * @param configurationDataEntity the configurationDataEntity to set
+     */
+    public void setGroup(GroupEntity group) {
+        this.groupEntity = group;
+    }
 
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
 
-	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
-	/**
-	 * @return the modifiedBy
-	 */
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
+    /**
+     * @return the createdBy
+     */
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
-	/**
-	 * @param modifiedBy the modifiedBy to set
-	 */
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+    /**
+     * @param createdBy the createdBy to set
+     */
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	/**
-	 * @return the version
-	 */
-	public int getJmxPort() {
-		return jmxPort;
-	}
-	
-	public void setJmxPort(int jmxPort){
-		this.jmxPort = jmxPort;
-	}
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * @return the createdDate
-	 */
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * @return the modifiedDate
-	 */
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
+    /**
+     * @return the modifiedBy
+     */
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
 
-	/**
-	 * @return the deleted
-	 */
-	public boolean isDeleted() {
-		return deleted;
-	}
+    /**
+     * @param modifiedBy the modifiedBy to set
+     */
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
 
-	/**
-	 * @param deleted the deleted to set
-	 */
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
+    /**
+     * @return the version
+     */
+    public int getJmxPort() {
+        return jmxPort;
+    }
+
+    public void setJmxPort(int jmxPort){
+        this.jmxPort = jmxPort;
+    }
+
+    /**
+     * @return the createdDate
+     */
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    /**
+     * @return the modifiedDate
+     */
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    /**
+     * @return the deleted
+     */
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    /**
+     * @param deleted the deleted to set
+     */
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
 
 }

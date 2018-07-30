@@ -41,123 +41,123 @@ import javax.persistence.TemporalType;
 @Table(name = "FWTagPicker")
 @NamedQuery(name = "FWTagPicker.findAll", query= "Select p from FWTagPicker p")
 public class FWTagPicker implements Serializable {
-	private static final long serialVersionUID = 1L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "Id")
-	private int id;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "Id")
+    private int id;
 
-	@Column(name="tagPickerName", nullable=false)
-	@OrderBy("asc")
-	private String tagPickerName;
+    @Column(name="tagPickerName", nullable=false)
+    @OrderBy("asc")
+    private String tagPickerName;
 
-	@Column(name="description", nullable=true, length=2048)
-	private String description;
-	
-	@Column(name="networkRole", nullable=true)
-	private String networkRole;
+    @Column(name="description", nullable=true, length=2048)
+    private String description;
 
-	@Column(name="tags", nullable=true)
-	@OrderBy("asc")
-	private String tagValues;
+    @Column(name="networkRole", nullable=true)
+    private String networkRole;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
+    @Column(name="tags", nullable=true)
+    @OrderBy("asc")
+    private String tagValues;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name="created_by")
-	private UserInfo userCreatedBy;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name="modified_by")
-	private UserInfo userModifiedBy;	
-	
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
-	
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
-	
-	public int getId() {
-		return this.id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public String getTagPickerName() {
-		return tagPickerName;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="created_by")
+    private UserInfo userCreatedBy;
 
-	public void setTagPickerName(String tagPickerName) {
-		this.tagPickerName = tagPickerName;
-	}
-	
-	public String getDescription() {
-		return this.description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="modified_by")
+    private UserInfo userModifiedBy;
 
-	public String getNetworkRole() {
-		return networkRole;
-	}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
 
-	public void setNetworkRole(String networkRole) {
-		this.networkRole = networkRole;
-	}
-	
-	public String getTagValues() {
-		return tagValues;
-	}
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
 
-	public void setTagValues(String tagValues) {
-		this.tagValues = tagValues;
-	}
-	
-	public Date getCreatedDate() {
-		return this.createdDate;
-	}
-	
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public Date getModifiedDate() {
-		return this.modifiedDate;
-	}
-	
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
-	public UserInfo getUserCreatedBy() {
-		return userCreatedBy;
-	}
+    public int getId() {
+        return this.id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setUserCreatedBy(UserInfo userCreatedBy) {
-		this.userCreatedBy = userCreatedBy;
-	}
+    public String getTagPickerName() {
+        return tagPickerName;
+    }
 
-	public UserInfo getUserModifiedBy() {
-		return userModifiedBy;
-	}
+    public void setTagPickerName(String tagPickerName) {
+        this.tagPickerName = tagPickerName;
+    }
 
-	public void setUserModifiedBy(UserInfo userModifiedBy) {
-		this.userModifiedBy = userModifiedBy;
-	}
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getNetworkRole() {
+        return networkRole;
+    }
+
+    public void setNetworkRole(String networkRole) {
+        this.networkRole = networkRole;
+    }
+
+    public String getTagValues() {
+        return tagValues;
+    }
+
+    public void setTagValues(String tagValues) {
+        this.tagValues = tagValues;
+    }
+
+    public Date getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getModifiedDate() {
+        return this.modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public UserInfo getUserCreatedBy() {
+        return userCreatedBy;
+    }
+
+    public void setUserCreatedBy(UserInfo userCreatedBy) {
+        this.userCreatedBy = userCreatedBy;
+    }
+
+    public UserInfo getUserModifiedBy() {
+        return userModifiedBy;
+    }
+
+    public void setUserModifiedBy(UserInfo userModifiedBy) {
+        this.userModifiedBy = userModifiedBy;
+    }
 
 }

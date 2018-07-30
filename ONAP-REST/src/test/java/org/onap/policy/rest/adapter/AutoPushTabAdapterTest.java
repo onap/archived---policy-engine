@@ -27,12 +27,12 @@ import org.junit.Test;
 
 public class AutoPushTabAdapterTest {
 
-	@Test
-	public void testAutoPushTabAdapter(){
-		AutoPushTabAdapter adapter = new AutoPushTabAdapter();
-		adapter.setPdpDatas(new ArrayList<>());
-		assertTrue(adapter.getPdpDatas() != null);
-		adapter.setPolicyDatas(new ArrayList<>());
-		assertTrue(adapter.getPolicyDatas() != null);
-	}
+    @Test
+    public void testAutoPushTabAdapter(){
+        AutoPushTabAdapter adapter = new AutoPushTabAdapter();
+        adapter.setPdpDatas(new ArrayList<>());
+        assertTrue(adapter.getPdpDatas() != null);
+        adapter.setPolicyDatas(new ArrayList<>());
+        assertTrue(adapter.getPolicyDatas() != null);
+    }
 }

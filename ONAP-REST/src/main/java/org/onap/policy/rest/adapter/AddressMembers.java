@@ -37,13 +37,13 @@ public class AddressMembers {
     }
 
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getValue() {
         return value;
     }

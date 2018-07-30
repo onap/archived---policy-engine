@@ -37,40 +37,40 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Table(name = "UserInfo")
 @NamedQuery(name="UserInfo.findAll", query="SELECT u FROM UserInfo u ")
 public class UserInfo implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@Column(name="loginid", nullable=false, length=45)
-	private String userLoginId;
-	
-	@Column(name = "name", nullable = false, unique = true)
-	private String userName;
+    private static final long serialVersionUID = 1L;
 
-	public UserInfo(){
-		this.userLoginId = userName;
-		
-	}
+    @Id
+    @Column(name="loginid", nullable=false, length=45)
+    private String userLoginId;
 
-	public String getUserLoginId() {
-		return userLoginId;
-	}
+    @Column(name = "name", nullable = false, unique = true)
+    private String userName;
 
-	public void setUserLoginId(String loginid) {
-		this.userLoginId = loginid;
-	}
+    public UserInfo(){
+        this.userLoginId = userName;
 
-	public String getUserName() {
-		return userName;
-	}
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	
-	@Transient
-	@JsonBackReference
-	public Identifier getIdentiferByUserId() {
-		return new IdentifierImpl(this.userName);
-	}
+    public String getUserLoginId() {
+        return userLoginId;
+    }
+
+    public void setUserLoginId(String loginid) {
+        this.userLoginId = loginid;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    @Transient
+    @JsonBackReference
+    public Identifier getIdentiferByUserId() {
+        return new IdentifierImpl(this.userName);
+    }
 
 }

@@ -36,43 +36,43 @@ import javax.persistence.Table;
 @Table(name="actionlist")
 @NamedQuery(name="ActionList.findAll", query="SELECT e FROM ActionList e ")
 public class ActionList implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="actionname", nullable=false)
-	@OrderBy("asc")
-	private String actionName;
-	
-	@Column(name="description")
-	private String description;
-	
-	public String getActionName() {
-		return this.actionName;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public void setActionName(String actionName) {
-		this.actionName = actionName;
+    @Column(name="actionname", nullable=false)
+    @OrderBy("asc")
+    private String actionName;
 
-	}
-	
-	public String getDescription() {
-		return this.description;
-	}
+    @Column(name="description")
+    private String description;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public int getId() {
-		return this.id;
-	}
+    public String getActionName() {
+        return this.actionName;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	
+    public void setActionName(String actionName) {
+        this.actionName = actionName;
+
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }

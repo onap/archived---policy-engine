@@ -25,14 +25,14 @@ import java.util.List;
 
 public class VendorSpecificData {
 
-	private List<IdMap> idMap= new ArrayList<>();
+    private List<IdMap> idMap= new ArrayList<>();
 
-	public List<IdMap> getIdMap() {
-		return idMap;
-	}
+    public List<IdMap> getIdMap() {
+        return idMap;
+    }
 
-	public void setIdMap(List<IdMap> idMap) {
-		this.idMap = idMap;
-	}
+    public void setIdMap(List<IdMap> idMap) {
+        this.idMap = idMap;
+    }
 
 }

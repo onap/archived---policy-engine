@@ -27,47 +27,47 @@ import org.junit.Test;
 
 public class MSAttributeObjectTest {
 
-	@Test
-	public void testMSAttributeObject(){
-		MSAttributeObject data = new MSAttributeObject();
-		data.setClassName("Test");
-		assertTrue("Test".equals(data.getClassName()));
-		data.setRefAttribute(new HashMap<>());
-		assertTrue(data.getRefAttribute()!=null);
-		data.setAttribute(new HashMap<>());
-		assertTrue(data.getAttribute()!=null);
-		data.setEnumType(new HashMap<>());
-		assertTrue(data.getEnumType()!=null);
-		data.addAttribute("test", "test");
-		data.addRefAttribute("test", "test");
-		data.addAllAttribute(new HashMap<>());
-		data.addAllRefAttribute(new HashMap<>());
-		data.setSubClass(new HashMap<>());
-		assertTrue(data.getSubClass()!=null);
-		data.addAllSubClass(new HashMap<>());
-		data.setDependency("Test");
-		assertTrue("Test".equals(data.getDependency()));
-		data.addSingleEnum("test", "test");
-		data.setMatchingSet(new HashMap<>());
-		assertTrue(data.getMatchingSet()!=null);
-		data.addMatchingSet("test", "test");
-		data.addMatchingSet(new HashMap<>());
-		data.setPolicyTempalate(true);
-		assertTrue(data.isPolicyTempalate());
-	}
-	
-	@Test
-	public void testMSAttributeValue(){
-		MSAttributeValue data = new MSAttributeValue();
-		data.setName("Test");
-		assertTrue("Test".equals(data.getName()));
-		data.setType("Test");
-		assertTrue("Test".equals(data.getType()));
-		data.setRequired(true);
-		assertTrue(data.getRequired());
-		data.setArrayValue(true);
-		assertTrue(data.getArrayValue());
-		data.setDefaultValue("Test");
-		assertTrue("Test".equals(data.getDefaultValue()));
-	}
+    @Test
+    public void testMSAttributeObject(){
+        MSAttributeObject data = new MSAttributeObject();
+        data.setClassName("Test");
+        assertTrue("Test".equals(data.getClassName()));
+        data.setRefAttribute(new HashMap<>());
+        assertTrue(data.getRefAttribute()!=null);
+        data.setAttribute(new HashMap<>());
+        assertTrue(data.getAttribute()!=null);
+        data.setEnumType(new HashMap<>());
+        assertTrue(data.getEnumType()!=null);
+        data.addAttribute("test", "test");
+        data.addRefAttribute("test", "test");
+        data.addAllAttribute(new HashMap<>());
+        data.addAllRefAttribute(new HashMap<>());
+        data.setSubClass(new HashMap<>());
+        assertTrue(data.getSubClass()!=null);
+        data.addAllSubClass(new HashMap<>());
+        data.setDependency("Test");
+        assertTrue("Test".equals(data.getDependency()));
+        data.addSingleEnum("test", "test");
+        data.setMatchingSet(new HashMap<>());
+        assertTrue(data.getMatchingSet()!=null);
+        data.addMatchingSet("test", "test");
+        data.addMatchingSet(new HashMap<>());
+        data.setPolicyTempalate(true);
+        assertTrue(data.isPolicyTempalate());
+    }
+
+    @Test
+    public void testMSAttributeValue(){
+        MSAttributeValue data = new MSAttributeValue();
+        data.setName("Test");
+        assertTrue("Test".equals(data.getName()));
+        data.setType("Test");
+        assertTrue("Test".equals(data.getType()));
+        data.setRequired(true);
+        assertTrue(data.getRequired());
+        data.setArrayValue(true);
+        assertTrue(data.getArrayValue());
+        data.setDefaultValue("Test");
+        assertTrue("Test".equals(data.getDefaultValue()));
+    }
 }

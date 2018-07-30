@@ -41,78 +41,78 @@ import javax.persistence.Table;
 @Table(name="ConstraintValues")
 @NamedQuery(name="ConstraintValue.findAll", query="SELECT c FROM ConstraintValue c")
 public class ConstraintValue implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="property")
-	private String property;
+    @Column(name="property")
+    private String property;
 
-	@Column(name="value")
-	private String value;
+    @Column(name="value")
+    private String value;
 
-	//bi-directional many-to-one association to Attribute
-	@ManyToOne
-	@JoinColumn(name="attribute_id")
-	private Attribute attribute;
+    //bi-directional many-to-one association to Attribute
+    @ManyToOne
+    @JoinColumn(name="attribute_id")
+    private Attribute attribute;
 
-	public ConstraintValue() {
-		//An empty constructor
-	}
+    public ConstraintValue() {
+        //An empty constructor
+    }
 
-	public ConstraintValue(String property, String value) {
-		this.property = property;
-		this.value = value;
-	}
-	
-	public ConstraintValue(ConstraintValue value) {
-		this.property = value.getProperty();
-		this.value = value.getValue();
-	}
+    public ConstraintValue(String property, String value) {
+        this.property = property;
+        this.value = value;
+    }
 
-	public int getId() {
-		return this.id;
-	}
+    public ConstraintValue(ConstraintValue value) {
+        this.property = value.getProperty();
+        this.value = value.getValue();
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public String getProperty() {
-		return this.property;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setProperty(String property) {
-		this.property = property;
-	}
+    public String getProperty() {
+        return this.property;
+    }
 
-	public String getValue() {
-		return this.value;
-	}
+    public void setProperty(String property) {
+        this.property = property;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public String getValue() {
+        return this.value;
+    }
 
-	public Attribute getAttribute() {
-		return this.attribute;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	public void setAttribute(Attribute attribute) {
-		this.attribute = attribute;
-	}
+    public Attribute getAttribute() {
+        return this.attribute;
+    }
 
-	@Override
-	public ConstraintValue clone() {
-		ConstraintValue constraint = new ConstraintValue();
-		
-		constraint.property = this.property;
-		constraint.value = this.value;
-		constraint.attribute = this.attribute;
-		
-		return constraint;
-	}
+    public void setAttribute(Attribute attribute) {
+        this.attribute = attribute;
+    }
+
+    @Override
+    public ConstraintValue clone() {
+        ConstraintValue constraint = new ConstraintValue();
+
+        constraint.property = this.property;
+        constraint.value = this.value;
+        constraint.attribute = this.attribute;
+
+        return constraint;
+    }
 }

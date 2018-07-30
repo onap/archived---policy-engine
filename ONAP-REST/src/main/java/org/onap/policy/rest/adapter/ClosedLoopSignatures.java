@@ -23,30 +23,30 @@ package org.onap.policy.rest.adapter;
 
 public class ClosedLoopSignatures {
 
-	private String signatures;
+    private String signatures;
 
-	private int timeWindow;
-	
-	private Integer trapMaxAge;
-	
-	public String getSignatures() {
-		return signatures;
-	}
-	public void setSignatures(String signatures) {
-		this.signatures = signatures;
-	}
-	
-	public Integer getTimeWindow() {
-		return timeWindow;
-	}
-	public void setTimeWindow(Integer timeWindow) {
-		this.timeWindow = timeWindow;
-	}
-	
-	public Integer getTrapMaxAge() {
-		return trapMaxAge;
-	}
-	public void setTrapMaxAge(Integer trapMaxAge) {
-		this.trapMaxAge = trapMaxAge;
-	}
+    private int timeWindow;
+
+    private Integer trapMaxAge;
+
+    public String getSignatures() {
+        return signatures;
+    }
+    public void setSignatures(String signatures) {
+        this.signatures = signatures;
+    }
+
+    public Integer getTimeWindow() {
+        return timeWindow;
+    }
+    public void setTimeWindow(Integer timeWindow) {
+        this.timeWindow = timeWindow;
+    }
+
+    public Integer getTrapMaxAge() {
+        return trapMaxAge;
+    }
+    public void setTrapMaxAge(Integer trapMaxAge) {
+        this.trapMaxAge = trapMaxAge;
+    }
 }

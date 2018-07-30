@@ -37,42 +37,42 @@ import javax.persistence.Table;
 @Table(name="VMType")
 @NamedQuery(name="VMType.findAll", query="SELECT e FROM VMType e ")
 public class VMType implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false)
-	@OrderBy("asc")
-	private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="description")
-	private String description;
+    @Column(name="name", nullable=false)
+    @OrderBy("asc")
+    private String name;
 
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="description")
+    private String description;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return this.name;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setName(String name) {
-		this.name = name;
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	}
-	
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+
+    }
+
 }

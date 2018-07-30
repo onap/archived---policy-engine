@@ -28,44 +28,44 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class OptimizationModelsJPATest {
 
-	private static Logger logger = FlexLogger.getLogger(OptimizationModelsJPATest.class);
-	private UserInfo userInfo;
-	
-	@Before
-	public void setUp() throws Exception {
-		logger.info("setUp: Entering");
-		userInfo = new UserInfo();
-		userInfo.setUserLoginId("Test");
-		userInfo.setUserName("Test");
-		logger.info("setUp: exit");
-	}
-	
-	@Test
-	public void testMSModels(){
-		OptimizationModels data = new OptimizationModels();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setModelName("Test");
-		assertTrue("Test".equals(data.getModelName()));
-		data.setDescription("Test");
-		assertTrue("Test".equals(data.getDescription()));
-		data.setDependency("Test");
-		assertTrue("Test".equals(data.getDependency()));
-		data.setEnumValues("Test");
-		assertTrue("Test".equals(data.getEnumValues()));
-		data.setAnnotation("Test");
-		assertTrue("Test".equals(data.getAnnotation()));
-		data.setAttributes("Test");
-		assertTrue("Test".equals(data.getAttributes()));
-		data.setRefattributes("Test");
-		assertTrue("Test".equals(data.getRefattributes()));
-		data.setUserCreatedBy(userInfo);
-		assertTrue(data.getUserCreatedBy()!=null);
-		data.setSubattributes("Test");
-		assertTrue("Test".equals(data.getSubattributes()));
-		data.setVersion("Test");
-		assertTrue("Test".equals(data.getVersion()));
-	}
-	
-	
+    private static Logger logger = FlexLogger.getLogger(OptimizationModelsJPATest.class);
+    private UserInfo userInfo;
+
+    @Before
+    public void setUp() throws Exception {
+        logger.info("setUp: Entering");
+        userInfo = new UserInfo();
+        userInfo.setUserLoginId("Test");
+        userInfo.setUserName("Test");
+        logger.info("setUp: exit");
+    }
+
+    @Test
+    public void testMSModels(){
+        OptimizationModels data = new OptimizationModels();
+        data.setId(1);
+        assertTrue(1 == data.getId());
+        data.setModelName("Test");
+        assertTrue("Test".equals(data.getModelName()));
+        data.setDescription("Test");
+        assertTrue("Test".equals(data.getDescription()));
+        data.setDependency("Test");
+        assertTrue("Test".equals(data.getDependency()));
+        data.setEnumValues("Test");
+        assertTrue("Test".equals(data.getEnumValues()));
+        data.setAnnotation("Test");
+        assertTrue("Test".equals(data.getAnnotation()));
+        data.setAttributes("Test");
+        assertTrue("Test".equals(data.getAttributes()));
+        data.setRefattributes("Test");
+        assertTrue("Test".equals(data.getRefattributes()));
+        data.setUserCreatedBy(userInfo);
+        assertTrue(data.getUserCreatedBy()!=null);
+        data.setSubattributes("Test");
+        assertTrue("Test".equals(data.getSubattributes()));
+        data.setVersion("Test");
+        assertTrue("Test".equals(data.getVersion()));
+    }
+
+
 }

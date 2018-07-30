@@ -36,55 +36,55 @@ import javax.persistence.Table;
 @Table(name="AddressGroup")
 @NamedQuery(name="AddressGroup.findAll", query="SELECT e FROM AddressGroup e ")
 public class AddressGroup implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false)
-	@OrderBy("asc")
-	private String name;
-	
-	@Column(name="prefixlist")
-	private String prefixList;
-	
-	
-	@Column(name="description")
-	private String description;
-	
-	public int getId() {
-		return this.id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getGroupName() {
-		return this.name;
-	}
+    @Column(name="name", nullable=false)
+    @OrderBy("asc")
+    private String name;
 
-	public void setGroupName(String serviceName) {
-		this.name = serviceName;
+    @Column(name="prefixlist")
+    private String prefixList;
 
-	}
-		
-	public String getPrefixList() {
-		return this.prefixList;
-	}
 
-	public void setServiceList(String prefixList) {
-		this.prefixList = prefixList;
+    @Column(name="description")
+    private String description;
 
-	}
-	public String getDescription() {
-		return this.description;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getGroupName() {
+        return this.name;
+    }
 
-	}
+    public void setGroupName(String serviceName) {
+        this.name = serviceName;
+
+    }
+
+    public String getPrefixList() {
+        return this.prefixList;
+    }
+
+    public void setServiceList(String prefixList) {
+        this.prefixList = prefixList;
+
+    }
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+
+    }
 
 }

@@ -37,87 +37,87 @@ import javax.persistence.Table;
 @Table(name="MicroserviceHeaderdeFaults")
 @NamedQuery(name="MicroserviceHeaderdeFaults.findAll", query="SELECT e FROM MicroserviceHeaderdeFaults e ")
 public class MicroserviceHeaderdeFaults implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private static String domain;
+    private static String domain;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="onapName")
-	private String onapName;
-	
-	@Column(name="guard")
-	private String guard ;
-	
-	@Column(name="priority")
-	private String priority;
-	
-	@Column(name="riskType")
-	private String riskType ;
-	
-	@Column(name="riskLevel")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	private String riskLevel;
-	
-	@Column(name="modelName", nullable=false)
-	@OrderBy("asc")
-	private String modelName;
+    @Column(name="onapName")
+    private String onapName;
 
-	@PrePersist
-	public void	prePersist() {
-		
-	}
-	@PreUpdate
-	public void preUpdate() {
-	}
+    @Column(name="guard")
+    private String guard ;
 
-	
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="priority")
+    private String priority;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @Column(name="riskType")
+    private String riskType ;
 
-	public String getModelName() {
-		return modelName;
-	}
-	public void setModelName(String modelName) {
-		this.modelName = modelName;
-	}
-	public String getOnapName() {
-		return onapName;
-	}
-	public void setOnapName(String onapName) {
-		this.onapName = onapName;
-	}
-	public String getGuard() {
-		return guard;
-	}
-	public void setGuard(String guard) {
-		this.guard = guard;
-	}
-	public String getPriority() {
-		return priority;
-	}
-	public void setPriority(String priority) {
-		this.priority = priority;
-	}
-	public String getRiskType() {
-		return riskType;
-	}
-	public void setRiskType(String riskType) {
-		this.riskType = riskType;
-	}
-	public String getRiskLevel() {
-		return riskLevel;
-	}
-	public void setRiskLevel(String riskLevel) {
-		this.riskLevel = riskLevel;
-	}
-	
+    @Column(name="riskLevel")
+
+    private String riskLevel;
+
+    @Column(name="modelName", nullable=false)
+    @OrderBy("asc")
+    private String modelName;
+
+    @PrePersist
+    public void	prePersist() {
+
+    }
+    @PreUpdate
+    public void preUpdate() {
+    }
+
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getModelName() {
+        return modelName;
+    }
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+    public String getOnapName() {
+        return onapName;
+    }
+    public void setOnapName(String onapName) {
+        this.onapName = onapName;
+    }
+    public String getGuard() {
+        return guard;
+    }
+    public void setGuard(String guard) {
+        this.guard = guard;
+    }
+    public String getPriority() {
+        return priority;
+    }
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+    public String getRiskType() {
+        return riskType;
+    }
+    public void setRiskType(String riskType) {
+        this.riskType = riskType;
+    }
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
+    }
+
 }

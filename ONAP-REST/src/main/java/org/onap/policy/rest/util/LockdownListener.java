@@ -24,13 +24,13 @@
 package org.onap.policy.rest.util;
 
 public interface LockdownListener {
-	/**
-	 * lockdown has been set in database
-	 */
-	public void lockdownSet();
-	
-	/**
-	 * lockdown has been unset in the database
-	 */
-	public void lockdownUnset();
+    /**
+     * lockdown has been set in database
+     */
+    public void lockdownSet();
+
+    /**
+     * lockdown has been unset in the database
+     */
+    public void lockdownUnset();
 }

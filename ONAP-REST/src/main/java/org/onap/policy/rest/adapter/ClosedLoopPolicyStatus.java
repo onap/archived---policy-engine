@@ -22,20 +22,20 @@ package org.onap.policy.rest.adapter;
 
 
 public enum ClosedLoopPolicyStatus {
-	ACTIVE("active"),
-	
-	INACTIVE("inactive")
-	;
-	
-	private String name;
-	
-	private ClosedLoopPolicyStatus(String name){
-		this.name = name;
-	}
+    ACTIVE("active"),
 
-	@Override
-	public String toString(){
-		return this.name;
-	}
+    INACTIVE("inactive")
+    ;
+
+    private String name;
+
+    private ClosedLoopPolicyStatus(String name){
+        this.name = name;
+    }
+
+    @Override
+    public String toString(){
+        return this.name;
+    }
 }
 
