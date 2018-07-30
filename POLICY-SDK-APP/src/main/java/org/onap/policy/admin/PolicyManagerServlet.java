@@ -326,8 +326,6 @@ public class PolicyManagerServlet extends HttpServlet {
     }
 
     private JSONObject searchPolicyList(JSONObject params, HttpServletRequest request) {
-        Set<String> scopes;
-        List<String> roles;
         List<Object> policyData = new ArrayList<>();
         JSONArray policyList = null;
         if(params.has("policyList")){
@@ -336,55 +334,66 @@ public class PolicyManagerServlet extends HttpServlet {
         PolicyController controller = getPolicyControllerInstance();
         List<JSONObject> resultList = new ArrayList<>();
         try {
-            //Get the Login Id of the User from Request
-            String userId =  UserUtils.getUserSession(request).getOrgUserId();
-            List<Object> userRoles = controller.getRoles(userId);
-            Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
-            roles = pair.u;
-            scopes = pair.t;
-            if (roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST) ) {
-                if(scopes.isEmpty()){
-                    return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
-                }
-                Set<String> tempScopes = scopes;
-                for(String scope : tempScopes){
-                    addScope(scopes, scope);
-                }
-            }
-            if(policyList!= null){
-                for(int i = 0; i < policyList.length(); i++){
-                    String policyName = policyList.get(i).toString().replace(".xml", "");
-                    String version = policyName.substring(policyName.lastIndexOf('.')+1);
-                    policyName = policyName.substring(0, policyName.lastIndexOf('.')).replace(".", File.separator);
-                    parsePolicyList(resultList, controller, policyName, version);
-                }
-            }else{
-                if (roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR)   || roles.contains(SUPERGUEST) ){
-                    policyData = controller.getData(PolicyVersion.class);
-                }else{
-                    List<Object> filterdatas = controller.getData(PolicyVersion.class);
-                    for(Object filter : filterdatas){
-                        PolicyVersion filterdata = (PolicyVersion) filter;
-                        try{
-                            String scopeName = filterdata.getPolicyName().substring(0, filterdata.getPolicyName().lastIndexOf(File.separator));
-                            if(scopes.contains(scopeName)){
-                                policyData.add(filterdata);
-                            }
-                        }catch(Exception e){
-                            LOGGER.error("Exception occured while filtering policyversion data"+e);
-                        }
-                    }
-                }
+            if (lookupPolicyData(request, policyData, policyList, controller, resultList))
+                return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
 
-                if(!policyData.isEmpty()){
-                    updateResultList(policyData, resultList);
-                }
-            }
         }catch(Exception e){
             LOGGER.error("Exception occured while reading policy Data from Policy Version table for Policy Search Data"+e);
         }
 
         return new JSONObject().put(RESULT, resultList);
+    }
+
+    private boolean lookupPolicyData(HttpServletRequest request, List<Object> policyData, JSONArray policyList, PolicyController controller, List<JSONObject> resultList) throws ServletException {
+        List<String> roles;
+        Set<String> scopes;//Get the Login Id of the User from Request
+        String userId =  UserUtils.getUserSession(request).getOrgUserId();
+        List<Object> userRoles = controller.getRoles(userId);
+        Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
+        roles = pair.u;
+        scopes = pair.t;
+        if (roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST) ) {
+            if(scopes.isEmpty()){
+                return true;
+            }
+            Set<String> tempScopes = scopes;
+            for(String scope : tempScopes){
+                addScope(scopes, scope);
+            }
+        }
+        if(policyList!= null){
+            for(int i = 0; i < policyList.length(); i++){
+                String policyName = policyList.get(i).toString().replace(".xml", "");
+                String version = policyName.substring(policyName.lastIndexOf('.')+1);
+                policyName = policyName.substring(0, policyName.lastIndexOf('.')).replace(".", File.separator);
+                parsePolicyList(resultList, controller, policyName, version);
+            }
+        }else{
+            if (roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR)   || roles.contains(SUPERGUEST) ){
+                policyData = controller.getData(PolicyVersion.class);
+            }else{
+                List<Object> filterdatas = controller.getData(PolicyVersion.class);
+                for(Object filter : filterdatas) {
+                    addFilterData(policyData, scopes, (PolicyVersion) filter);
+                }
+            }
+
+            if(!policyData.isEmpty()){
+                updateResultList(policyData, resultList);
+            }
+        }
+        return false;
+    }
+
+    private void addFilterData(List<Object> policyData, Set<String> scopes, PolicyVersion filter) {
+        try{
+            String scopeName = filter.getPolicyName().substring(0, filter.getPolicyName().lastIndexOf(File.separator));
+            if(scopes.contains(scopeName)){
+                policyData.add(filter);
+            }
+        }catch(Exception e){
+            LOGGER.error("Exception occured while filtering policyversion data"+e);
+        }
     }
 
     private void updateResultList(List<Object> policyData, List<JSONObject> resultList) {
@@ -570,82 +579,90 @@ public class PolicyManagerServlet extends HttpServlet {
 
     //Get the List of Policies and Scopes for Showing in Editor tab
     private JSONObject list(JSONObject params, HttpServletRequest request) throws ServletException {
-        Set<String> scopes = null;
-        List<String> roles = null;
         try {
-            PolicyController controller = getPolicyControllerInstance();
-            //Get the Login Id of the User from Request
-            String testUserID = getTestUserId();
-            String userId =  testUserID != null ? testUserID : UserUtils.getUserSession(request).getOrgUserId();
-            List<Object> userRoles = controller.getRoles(userId);
-            Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
-            roles = pair.u;
-            scopes = pair.t;
-
-            List<JSONObject> resultList = new ArrayList<>();
-            boolean onlyFolders = params.getBoolean("onlyFolders");
-            String path = params.getString("path");
-            if(path.contains("..xml")){
-                path = path.replaceAll("..xml", "").trim();
-            }
-
-            if (roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST) ) {
-                if(scopes.isEmpty()){
-                    return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
-                }else{
-                    if(!"/".equals(path)){
-                        String tempScope = path.substring(1, path.length());
-                        tempScope = tempScope.replace("/", File.separator);
-                        scopes.add(tempScope);
-                    }
-                }
-            }
-
-            if("/".equals(path)){
-                if(roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR) || roles.contains(SUPERGUEST)){
-                    List<Object> scopesList = queryPolicyEditorScopes(null);
-                    for(Object list : scopesList){
-                        PolicyEditorScopes scope = (PolicyEditorScopes) list;
-                        if(!(scope.getScopeName().contains(File.separator))){
-                            JSONObject el = new JSONObject();
-                            el.put(NAME, scope.getScopeName());
-                            el.put(DATE, scope.getModifiedDate());
-                            el.put(SIZE, "");
-                            el.put(TYPE, "dir");
-                            el.put(CREATED_BY, scope.getUserCreatedBy().getUserName());
-                            el.put(MODIFIED_BY, scope.getUserModifiedBy().getUserName());
-                            resultList.add(el);
-                        }
-                    }
-                }else if(roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST)){
-                    for(Object scope : scopes){
-                        JSONObject el = new JSONObject();
-                        List<Object> scopesList = queryPolicyEditorScopes(scope.toString());
-                        if(!scopesList.isEmpty()){
-                            PolicyEditorScopes scopeById = (PolicyEditorScopes) scopesList.get(0);
-                            el.put(NAME, scopeById.getScopeName());
-                            el.put(DATE, scopeById.getModifiedDate());
-                            el.put(SIZE, "");
-                            el.put(TYPE, "dir");
-                            el.put(CREATED_BY, scopeById.getUserCreatedBy().getUserName());
-                            el.put(MODIFIED_BY, scopeById.getUserModifiedBy().getUserName());
-                            resultList.add(el);
-                        }
-                    }
-                }
-            }else{
-                try{
-                    String scopeName = path.substring(path.indexOf('/') +1);
-                    activePolicyList(scopeName, resultList, roles, scopes, onlyFolders);
-                } catch (Exception ex) {
-                    LOGGER.error("Error Occured While reading Policy Files List"+ex );
-                }
-            }
-
-            return new JSONObject().put(RESULT, resultList);
+            return processPolicyList(params, request);
         } catch (Exception e) {
             LOGGER.error("list", e);
             return error(e.getMessage());
+        }
+    }
+
+    private JSONObject processPolicyList(JSONObject params, HttpServletRequest request) throws ServletException {
+        List<String> roles;
+        Set<String> scopes;PolicyController controller = getPolicyControllerInstance();
+        //Get the Login Id of the User from Request
+        String testUserID = getTestUserId();
+        String userId =  testUserID != null ? testUserID : UserUtils.getUserSession(request).getOrgUserId();
+        List<Object> userRoles = controller.getRoles(userId);
+        Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
+        roles = pair.u;
+        scopes = pair.t;
+
+        List<JSONObject> resultList = new ArrayList<>();
+        boolean onlyFolders = params.getBoolean("onlyFolders");
+        String path = params.getString("path");
+        if(path.contains("..xml")){
+            path = path.replaceAll("..xml", "").trim();
+        }
+
+        if (roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST) ) {
+            if(scopes.isEmpty()){
+                return error("No Scopes has been Assigned to the User. Please, Contact Super-Admin");
+            }else{
+                if(!"/".equals(path)){
+                    String tempScope = path.substring(1, path.length());
+                    tempScope = tempScope.replace("/", File.separator);
+                    scopes.add(tempScope);
+                }
+            }
+        }
+
+        if (!"/".equals(path)) {
+            try{
+                String scopeName = path.substring(path.indexOf('/') +1);
+                activePolicyList(scopeName, resultList, roles, scopes, onlyFolders);
+            } catch (Exception ex) {
+                LOGGER.error("Error Occured While reading Policy Files List"+ex );
+            }
+            return new JSONObject().put(RESULT, resultList);
+        }
+
+        processRoles(scopes, roles, resultList);
+
+        return new JSONObject().put(RESULT, resultList);
+    }
+
+    private void processRoles(Set<String> scopes, List<String> roles, List<JSONObject> resultList) {
+        if(roles.contains(SUPERADMIN) || roles.contains(SUPEREDITOR) || roles.contains(SUPERGUEST)){
+            List<Object> scopesList = queryPolicyEditorScopes(null);
+            for(Object list : scopesList){
+                PolicyEditorScopes scope = (PolicyEditorScopes) list;
+                if(!(scope.getScopeName().contains(File.separator))){
+                    JSONObject el = new JSONObject();
+                    el.put(NAME, scope.getScopeName());
+                    el.put(DATE, scope.getModifiedDate());
+                    el.put(SIZE, "");
+                    el.put(TYPE, "dir");
+                    el.put(CREATED_BY, scope.getUserCreatedBy().getUserName());
+                    el.put(MODIFIED_BY, scope.getUserModifiedBy().getUserName());
+                    resultList.add(el);
+                }
+            }
+        }else if(roles.contains(ADMIN) || roles.contains(EDITOR) || roles.contains(GUEST)){
+            for(Object scope : scopes){
+                JSONObject el = new JSONObject();
+                List<Object> scopesList = queryPolicyEditorScopes(scope.toString());
+                if(!scopesList.isEmpty()){
+                    PolicyEditorScopes scopeById = (PolicyEditorScopes) scopesList.get(0);
+                    el.put(NAME, scopeById.getScopeName());
+                    el.put(DATE, scopeById.getModifiedDate());
+                    el.put(SIZE, "");
+                    el.put(TYPE, "dir");
+                    el.put(CREATED_BY, scopeById.getUserCreatedBy().getUserName());
+                    el.put(MODIFIED_BY, scopeById.getUserModifiedBy().getUserName());
+                    resultList.add(el);
+                }
+            }
         }
     }
 
@@ -693,31 +710,8 @@ public class PolicyManagerServlet extends HttpServlet {
             activePolicies = controller.getDataByQuery(query, params);
             scopesList = controller.getDataByQuery(scopeNamequery, params);
         }
-        for(Object list : scopesList){
-            PolicyEditorScopes scopeById = (PolicyEditorScopes) list;
-            String scope = scopeById.getScopeName();
-            if(scope.contains(File.separator)){
-                String checkScope = scope.substring(0, scope.lastIndexOf(File.separator));
-                if(scopeName.contains("\\\\")){
-                    scopeName = scopeName.replace("\\\\", File.separator);
-                }
-                if(scope.contains(File.separator)){
-                    scope = scope.substring(checkScope.length()+1);
-                    if(scope.contains(File.separator)){
-                        scope = scope.substring(0, scope.indexOf(File.separator));
-                    }
-                }
-                if(scopeName.equalsIgnoreCase(checkScope)){
-                    JSONObject el = new JSONObject();
-                    el.put(NAME, scope);
-                    el.put(DATE, scopeById.getModifiedDate());
-                    el.put(SIZE, "");
-                    el.put(TYPE, "dir");
-                    el.put(CREATED_BY, scopeById.getUserCreatedBy().getUserName());
-                    el.put(MODIFIED_BY, scopeById.getUserModifiedBy().getUserName());
-                    resultList.add(el);
-                }
-            }
+        for(Object list : scopesList) {
+            scopeName = checkScope(resultList, scopeName, (PolicyEditorScopes) list);
         }
         String scopeNameCheck;
         for (Object list : activePolicies) {
@@ -754,6 +748,33 @@ public class PolicyManagerServlet extends HttpServlet {
         }
     }
 
+    private String checkScope(List<JSONObject> resultList, String scopeName, PolicyEditorScopes scopeById) {
+        String scope = scopeById.getScopeName();
+        if(scope.contains(File.separator)){
+            String targetScope = scope.substring(0, scope.lastIndexOf(File.separator));
+            if(scopeName.contains("\\\\")){
+                scopeName = scopeName.replace("\\\\", File.separator);
+            }
+            if(scope.contains(File.separator)){
+                scope = scope.substring(targetScope.length()+1);
+                if(scope.contains(File.separator)){
+                    scope = scope.substring(0, scope.indexOf(File.separator));
+                }
+            }
+            if(scopeName.equalsIgnoreCase(targetScope)){
+                JSONObject el = new JSONObject();
+                el.put(NAME, scope);
+                el.put(DATE, scopeById.getModifiedDate());
+                el.put(SIZE, "");
+                el.put(TYPE, "dir");
+                el.put(CREATED_BY, scopeById.getUserCreatedBy().getUserName());
+                el.put(MODIFIED_BY, scopeById.getUserModifiedBy().getUserName());
+                resultList.add(el);
+            }
+        }
+        return scopeName;
+    }
+
     private String getUserName(String loginId){
         PolicyController controller = getPolicyControllerInstance();
         UserInfo userInfo = (UserInfo) controller.getEntityItem(UserInfo.class, "userLoginId", loginId);
@@ -766,88 +787,92 @@ public class PolicyManagerServlet extends HttpServlet {
     //Rename Policy
     private JSONObject rename(JSONObject params, HttpServletRequest request) throws ServletException {
         try {
-            boolean isActive = false;
-            List<String> policyActiveInPDP = new ArrayList<>();
-            Set<String>  scopeOfPolicyActiveInPDP = new HashSet<>();
-            String userId = UserUtils.getUserSession(request).getOrgUserId();
-            String oldPath = params.getString("path");
-            String newPath = params.getString("newPath");
-            oldPath = oldPath.substring(oldPath.indexOf('/')+1);
-            newPath = newPath.substring(newPath.indexOf('/')+1);
-            String checkValidation = null;
-            if(oldPath.endsWith(".xml")){
-                checkValidation = newPath.replace(".xml", "");
-                checkValidation = checkValidation.substring(checkValidation.indexOf('_') + 1, checkValidation.lastIndexOf("."));
-                checkValidation = checkValidation.substring(checkValidation.lastIndexOf("/")+1);
-                if(!PolicyUtils.policySpecialCharValidator(checkValidation).contains("success")){
-                    return error("Policy Rename Failed. The Name contains special characters.");
-                }
-                JSONObject result = policyRename(oldPath, newPath, userId);
-                if(!(Boolean)(result.getJSONObject("result").get("success"))){
-                    return result;
-                }
-            }else{
-                String scopeName = oldPath;
-                String newScopeName = newPath;
-                if(scopeName.contains("/")){
-                    scopeName = scopeName.replace("/", File.separator);
-                    newScopeName = newScopeName.replace("/", File.separator);
-                }
-                checkValidation = newScopeName.substring(newScopeName.lastIndexOf(File.separator)+1);
-                if(scopeName.contains("\\")){
-                    scopeName = scopeName.replace("\\", "\\\\\\\\");
-                    newScopeName = newScopeName.replace("\\", "\\\\\\\\");
-                }
-                if(!PolicyUtils.policySpecialCharValidator(checkValidation).contains("success")){
-                    return error("Scope Rename Failed. The Name contains special characters.");
-                }
-                PolicyController controller = getPolicyControllerInstance();
-                String query = "from PolicyVersion where POLICY_NAME like :scopeName";
-                String scopeNamequery = "from PolicyEditorScopes where SCOPENAME like :scopeName";
-                SimpleBindings pvParams = new SimpleBindings();
-                pvParams.put("scopeName", scopeName + "%");
-                List<Object> activePolicies = controller.getDataByQuery(query, pvParams);
-                List<Object> scopesList = controller.getDataByQuery(scopeNamequery, pvParams);
-                for(Object object : activePolicies){
-                    PolicyVersion activeVersion = (PolicyVersion) object;
-                    String policyOldPath = activeVersion.getPolicyName().replace(File.separator, "/") + "." + activeVersion.getActiveVersion() + ".xml";
-                    String policyNewPath = policyOldPath.replace(oldPath, newPath);
-                    JSONObject result = policyRename(policyOldPath, policyNewPath, userId);
-                    if(!(Boolean)(result.getJSONObject("result").get("success"))){
-                        isActive = true;
-                        policyActiveInPDP.add(policyOldPath);
-                        String scope = policyOldPath.substring(0, policyOldPath.lastIndexOf('/'));
-                        scopeOfPolicyActiveInPDP.add(scope.replace("/", File.separator));
-                    }
-                }
-                boolean rename = false;
-                if(activePolicies.size() != policyActiveInPDP.size()){
-                    rename = true;
-                }
-
-                UserInfo userInfo = new UserInfo();
-                userInfo.setUserLoginId(userId);
-                if(policyActiveInPDP.isEmpty()){
-                    renameScope(scopesList, scopeName, newScopeName, controller);
-                }else if(rename){
-                    renameScope(scopesList, scopeName, newScopeName, controller);
-                    for(String scope : scopeOfPolicyActiveInPDP){
-                        PolicyEditorScopes editorScopeEntity = new PolicyEditorScopes();
-                        editorScopeEntity.setScopeName(scope.replace("\\", "\\\\\\\\"));
-                        editorScopeEntity.setUserCreatedBy(userInfo);
-                        editorScopeEntity.setUserModifiedBy(userInfo);
-                        controller.saveData(editorScopeEntity);
-                    }
-                }
-                if(isActive){
-                    return error("The Following policies rename failed. Since they are active in PDP Groups" +policyActiveInPDP);
-                }
-            }
-            return success();
+            return handlePolicyRename(params, request);
         } catch (Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE+"Exception Occured While Renaming Policy"+e);
             return error(e.getMessage());
         }
+    }
+
+    private JSONObject handlePolicyRename(JSONObject params, HttpServletRequest request) throws ServletException {
+        boolean isActive = false;
+        List<String> policyActiveInPDP = new ArrayList<>();
+        Set<String> scopeOfPolicyActiveInPDP = new HashSet<>();
+        String userId = UserUtils.getUserSession(request).getOrgUserId();
+        String oldPath = params.getString("path");
+        String newPath = params.getString("newPath");
+        oldPath = oldPath.substring(oldPath.indexOf('/')+1);
+        newPath = newPath.substring(newPath.indexOf('/')+1);
+        String checkValidation = null;
+        if(oldPath.endsWith(".xml")){
+            checkValidation = newPath.replace(".xml", "");
+            checkValidation = checkValidation.substring(checkValidation.indexOf('_') + 1, checkValidation.lastIndexOf("."));
+            checkValidation = checkValidation.substring(checkValidation.lastIndexOf("/")+1);
+            if(!PolicyUtils.policySpecialCharValidator(checkValidation).contains("success")){
+                return error("Policy Rename Failed. The Name contains special characters.");
+            }
+            JSONObject result = policyRename(oldPath, newPath, userId);
+            if(!(Boolean)(result.getJSONObject("result").get("success"))){
+                return result;
+            }
+        }else{
+            String scopeName = oldPath;
+            String newScopeName = newPath;
+            if(scopeName.contains("/")){
+                scopeName = scopeName.replace("/", File.separator);
+                newScopeName = newScopeName.replace("/", File.separator);
+            }
+            checkValidation = newScopeName.substring(newScopeName.lastIndexOf(File.separator)+1);
+            if(scopeName.contains("\\")){
+                scopeName = scopeName.replace("\\", "\\\\\\\\");
+                newScopeName = newScopeName.replace("\\", "\\\\\\\\");
+            }
+            if(!PolicyUtils.policySpecialCharValidator(checkValidation).contains("success")){
+                return error("Scope Rename Failed. The Name contains special characters.");
+            }
+            PolicyController controller = getPolicyControllerInstance();
+            String query = "from PolicyVersion where POLICY_NAME like :scopeName";
+            String scopeNamequery = "from PolicyEditorScopes where SCOPENAME like :scopeName";
+            SimpleBindings pvParams = new SimpleBindings();
+            pvParams.put("scopeName", scopeName + "%");
+            List<Object> activePolicies = controller.getDataByQuery(query, pvParams);
+            List<Object> scopesList = controller.getDataByQuery(scopeNamequery, pvParams);
+            for(Object object : activePolicies){
+                PolicyVersion activeVersion = (PolicyVersion) object;
+                String policyOldPath = activeVersion.getPolicyName().replace(File.separator, "/") + "." + activeVersion.getActiveVersion() + ".xml";
+                String policyNewPath = policyOldPath.replace(oldPath, newPath);
+                JSONObject result = policyRename(policyOldPath, policyNewPath, userId);
+                if(!(Boolean)(result.getJSONObject("result").get("success"))){
+                    isActive = true;
+                    policyActiveInPDP.add(policyOldPath);
+                    String scope = policyOldPath.substring(0, policyOldPath.lastIndexOf('/'));
+                    scopeOfPolicyActiveInPDP.add(scope.replace("/", File.separator));
+                }
+            }
+            boolean rename = false;
+            if(activePolicies.size() != policyActiveInPDP.size()){
+                rename = true;
+            }
+
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUserLoginId(userId);
+            if(policyActiveInPDP.isEmpty()){
+                renameScope(scopesList, scopeName, newScopeName, controller);
+            }else if(rename){
+                renameScope(scopesList, scopeName, newScopeName, controller);
+                for(String scope : scopeOfPolicyActiveInPDP){
+                    PolicyEditorScopes editorScopeEntity = new PolicyEditorScopes();
+                    editorScopeEntity.setScopeName(scope.replace("\\", "\\\\\\\\"));
+                    editorScopeEntity.setUserCreatedBy(userInfo);
+                    editorScopeEntity.setUserModifiedBy(userInfo);
+                    controller.saveData(editorScopeEntity);
+                }
+            }
+            if(isActive){
+                return error("The Following policies rename failed. Since they are active in PDP Groups" +policyActiveInPDP);
+            }
+        }
+        return success();
     }
 
     private void renameScope(List<Object> scopesList, String inScopeName, String newScopeName, PolicyController controller){
