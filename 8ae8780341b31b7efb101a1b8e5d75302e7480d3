@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a6a9dd7_d11c44c4",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-07-31T14:16:21Z",
+      "side": 1,
+      "message": "Just curious what this error method does, it has to return something of type JSONObject in theory, and this is an error leg.   Not a comment (existing code).",
+      "revId": "8ae8780341b31b7efb101a1b8e5d75302e7480d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a6a9dd7_11239c06",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-07-31T14:16:21Z",
+      "side": 1,
+      "message": "interesting how this error leg is not treated with the \"error\" method as above and it is silent to the caller.  Not a comment, existing code ..",
+      "revId": "8ae8780341b31b7efb101a1b8e5d75302e7480d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
