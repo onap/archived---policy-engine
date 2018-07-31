@@ -25,35 +25,35 @@ import java.util.List;
 
 
 public class Tags {
-	String ruleName;
-	List<TagDefines> tags;
-	String tagPickerName;
-	String networkRole;
-	
-	public String getRuleName() {
-		return ruleName;
-	}
-	public void setRuleName(String ruleName) {
-		this.ruleName = ruleName;
-	}
-	public List<TagDefines> getTags() {
-		return tags;
-	}
-	public void setTags(List<TagDefines> tags) {
-		this.tags = tags;
-	}
-	public String getTagPickerName() {
-		return tagPickerName;
-	}
+    String ruleName;
+    List<TagDefines> tags;
+    String tagPickerName;
+    String networkRole;
 
-	public void setTagPickerName(String tagPickerName) {
-		this.tagPickerName = tagPickerName;
-	}
-	public String getNetworkRole() {
-		return networkRole;
-	}
-	public void setNetworkRole(String networkRole) {
-		this.networkRole = networkRole;
-	}
-	
+    public String getRuleName() {
+        return ruleName;
+    }
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
+    }
+    public List<TagDefines> getTags() {
+        return tags;
+    }
+    public void setTags(List<TagDefines> tags) {
+        this.tags = tags;
+    }
+    public String getTagPickerName() {
+        return tagPickerName;
+    }
+
+    public void setTagPickerName(String tagPickerName) {
+        this.tagPickerName = tagPickerName;
+    }
+    public String getNetworkRole() {
+        return networkRole;
+    }
+    public void setNetworkRole(String networkRole) {
+        this.networkRole = networkRole;
+    }
+
 }

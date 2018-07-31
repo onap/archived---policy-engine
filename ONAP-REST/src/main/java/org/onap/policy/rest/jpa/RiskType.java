@@ -44,101 +44,101 @@ import javax.persistence.TemporalType;
 @Table(name="RiskType")
 @NamedQuery(name="RiskType.findAll", query="SELECT e FROM RiskType e ")
 public class RiskType implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false, unique=true)
-	@OrderBy("asc")
-	private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
+    @Column(name="name", nullable=false, unique=true)
+    @OrderBy("asc")
+    private String name;
 
-	@Column(name="description", nullable=true, length=2048)
-	private String description;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
-	
-	@ManyToOne(optional = false)
-	@JoinColumn(name="created_by")
-	private UserInfo userCreatedBy;
+    @Column(name="description", nullable=true, length=2048)
+    private String description;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name="modified_by")
-	private UserInfo userModifiedBy;
-	
-	public UserInfo getUserCreatedBy() {
-		return userCreatedBy;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	public void setUserCreatedBy(UserInfo userCreatedBy) {
-		this.userCreatedBy = userCreatedBy;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="created_by")
+    private UserInfo userCreatedBy;
 
-	public UserInfo getUserModifiedBy() {
-		return userModifiedBy;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="modified_by")
+    private UserInfo userModifiedBy;
 
-	public void setUserModifiedBy(UserInfo userModifiedBy) {
-		this.userModifiedBy = userModifiedBy;
-	}
+    public UserInfo getUserCreatedBy() {
+        return userCreatedBy;
+    }
 
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
+    public void setUserCreatedBy(UserInfo userCreatedBy) {
+        this.userCreatedBy = userCreatedBy;
+    }
 
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
-	public String getRiskName() {
-		return this.name;
-	}
+    public UserInfo getUserModifiedBy() {
+        return userModifiedBy;
+    }
 
-	public void setRiskName(String riskName) {
-		this.name = riskName;
+    public void setUserModifiedBy(UserInfo userModifiedBy) {
+        this.userModifiedBy = userModifiedBy;
+    }
 
-	}
-	public int getId() {
-		return this.id;
-	}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
+    public String getRiskName() {
+        return this.name;
+    }
 
-	public Date getCreatedDate() {
-		return this.createdDate;
-	}
+    public void setRiskName(String riskName) {
+        this.name = riskName;
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+    }
+    public int getId() {
+        return this.id;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public Date getCreatedDate() {
+        return this.createdDate;
+    }
 
-	public Date getModifiedDate() {
-		return this.modifiedDate;
-	}
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getModifiedDate() {
+        return this.modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
 
 }

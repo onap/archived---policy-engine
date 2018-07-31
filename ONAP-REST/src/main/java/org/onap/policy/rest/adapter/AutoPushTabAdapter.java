@@ -25,18 +25,18 @@ import java.util.List;
 
 public class AutoPushTabAdapter {
 
-	private List<Object> pdpDatas;
-	private List<Object> policyDatas;
-	public List<Object> getPdpDatas() {
-		return pdpDatas;
-	}
-	public void setPdpDatas(List<Object> pdpDatas) {
-		this.pdpDatas = pdpDatas;
-	}
-	public List<Object> getPolicyDatas() {
-		return policyDatas;
-	}
-	public void setPolicyDatas(List<Object> policyDatas) {
-		this.policyDatas = policyDatas;
-	}
+    private List<Object> pdpDatas;
+    private List<Object> policyDatas;
+    public List<Object> getPdpDatas() {
+        return pdpDatas;
+    }
+    public void setPdpDatas(List<Object> pdpDatas) {
+        this.pdpDatas = pdpDatas;
+    }
+    public List<Object> getPolicyDatas() {
+        return policyDatas;
+    }
+    public void setPolicyDatas(List<Object> policyDatas) {
+        this.policyDatas = policyDatas;
+    }
 }

@@ -46,105 +46,105 @@ import javax.persistence.TemporalType;
 @Table(name="PolicyDBDaoEntity")
 
 @NamedQueries({
-	@NamedQuery(name="PolicyDBDaoEntity.findAll", query="SELECT e FROM PolicyDBDaoEntity e "),
-	@NamedQuery(name="PolicyDBDaoEntity.deleteAll", query="DELETE FROM PolicyDBDaoEntity WHERE 1=1")
+    @NamedQuery(name="PolicyDBDaoEntity.findAll", query="SELECT e FROM PolicyDBDaoEntity e "),
+    @NamedQuery(name="PolicyDBDaoEntity.deleteAll", query="DELETE FROM PolicyDBDaoEntity WHERE 1=1")
 })
 
 public class PolicyDBDaoEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name="policyDBDaoUrl", nullable=false, unique=true)
-	private String policyDBDaoUrl;
+    @Id
+    @Column(name="policyDBDaoUrl", nullable=false, unique=true)
+    private String policyDBDaoUrl;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
-	
-	//username for the pap server that registered this PolicyDBDaoEntity
-	@Column(name="username")
-	private String username;
-	
-	//AES encrypted password for the pap server that registered this PolicyDBDaoEntity
-	@Column(name="password")
-	private String password;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	//A column to allow some descriptive text.  For example: Atlanta data center
-	@Column(name="description", nullable=false, length=2048)
-	private String description = "NoDescription";
+    //username for the pap server that registered this PolicyDBDaoEntity
+    @Column(name="username")
+    private String username;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
+    //AES encrypted password for the pap server that registered this PolicyDBDaoEntity
+    @Column(name="password")
+    private String password;
 
-	public PolicyDBDaoEntity() {
-		super();
-	}
+    //A column to allow some descriptive text.  For example: Atlanta data center
+    @Column(name="description", nullable=false, length=2048)
+    private String description = "NoDescription";
 
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
+    public PolicyDBDaoEntity() {
+        super();
+    }
 
-	/**
-	 * @return the policyDBDaoUrl
-	 */
-	public String getPolicyDBDaoUrl() {
-		return policyDBDaoUrl;
-	}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
 
-	/**
-	 * @param url the policyDBDaoUrl to set
-	 */
-	public void setPolicyDBDaoUrl(String url) {
-		this.policyDBDaoUrl = url;
-	}
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
 
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * @return the policyDBDaoUrl
+     */
+    public String getPolicyDBDaoUrl() {
+        return policyDBDaoUrl;
+    }
 
-	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /**
+     * @param url the policyDBDaoUrl to set
+     */
+    public void setPolicyDBDaoUrl(String url) {
+        this.policyDBDaoUrl = url;
+    }
 
-	/**
-	 * @return the createdDate
-	 */
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * @return the modifiedDate
-	 */
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
-	
-	public String getUsername(){
-		return this.username;
-	}
-	public void setUsername(String username){
-		this.username = username;
-	}
-	public String getPassword(){
-		return this.password;
-	}
-	public void setPassword(String password){
-		this.password = password;
-	}
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the createdDate
+     */
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    /**
+     * @return the modifiedDate
+     */
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public String getUsername(){
+        return this.username;
+    }
+    public void setUsername(String username){
+        this.username = username;
+    }
+    public String getPassword(){
+        return this.password;
+    }
+    public void setPassword(String password){
+        this.password = password;
+    }
 }

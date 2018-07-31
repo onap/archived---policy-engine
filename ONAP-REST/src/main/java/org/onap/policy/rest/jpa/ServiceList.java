@@ -36,88 +36,88 @@ import javax.persistence.Table;
 @Table(name="servicegroup")
 @NamedQuery(name="ServiceList.findAll", query="SELECT e FROM ServiceList e ")
 public class ServiceList implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false)
-	@OrderBy("asc")
-	private String serviceName;
-	
-	@Column(name="description")
-	private String serviceDesc;
-	
-	@Column(name="type")
-	private String serviceType;
-	
-	@Column(name="transportprotocol")
-	private String serviceTrasProtocol;
-	
-	@Column(name="appprotocol ")
-	private String serviceAppProtocol;
-	
-	@Column(name="ports")
-	private String servicePorts;
-	
-	public int getId() {
-		return this.id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getServiceName() {
-		return this.serviceName;
-	}
+    @Column(name="name", nullable=false)
+    @OrderBy("asc")
+    private String serviceName;
 
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
+    @Column(name="description")
+    private String serviceDesc;
 
-	}
-	
-	public String getServiceDescription() {
-		return this.serviceDesc;
-	}
+    @Column(name="type")
+    private String serviceType;
 
-	public void setServiceDescription(String serviceDesc) {
-		this.serviceDesc = serviceDesc;
+    @Column(name="transportprotocol")
+    private String serviceTrasProtocol;
 
-	}
-	
-	public String getServiceType() {
-		return this.serviceType;
-	}
+    @Column(name="appprotocol ")
+    private String serviceAppProtocol;
 
-	public void setServiceType(String serviceType) {
-		this.serviceType = serviceType;
-	}
-	
-	public String getServiceTransProtocol() {
-		return this.serviceTrasProtocol;
-	}
+    @Column(name="ports")
+    private String servicePorts;
 
-	public void setServiceTransProtocol(String serviceTrasProtocol) {
-		this.serviceTrasProtocol = serviceTrasProtocol;
+    public int getId() {
+        return this.id;
+    }
 
-	}
-	
-	public String getServiceAppProtocol() {
-		return this.serviceAppProtocol;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getServiceName() {
+        return this.serviceName;
+    }
 
-	public void setServiceAppProtocol(String serviceAppProtocol) {
-		this.serviceAppProtocol = serviceAppProtocol;
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
 
-	}
-	public String getServicePorts() {
-		return this.servicePorts;
-	}
+    }
 
-	public void setServicePorts(String servicePorts) {
-		this.servicePorts = servicePorts;
+    public String getServiceDescription() {
+        return this.serviceDesc;
+    }
 
-	}
+    public void setServiceDescription(String serviceDesc) {
+        this.serviceDesc = serviceDesc;
+
+    }
+
+    public String getServiceType() {
+        return this.serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    public String getServiceTransProtocol() {
+        return this.serviceTrasProtocol;
+    }
+
+    public void setServiceTransProtocol(String serviceTrasProtocol) {
+        this.serviceTrasProtocol = serviceTrasProtocol;
+
+    }
+
+    public String getServiceAppProtocol() {
+        return this.serviceAppProtocol;
+    }
+
+    public void setServiceAppProtocol(String serviceAppProtocol) {
+        this.serviceAppProtocol = serviceAppProtocol;
+
+    }
+    public String getServicePorts() {
+        return this.servicePorts;
+    }
+
+    public void setServicePorts(String servicePorts) {
+        this.servicePorts = servicePorts;
+
+    }
 }

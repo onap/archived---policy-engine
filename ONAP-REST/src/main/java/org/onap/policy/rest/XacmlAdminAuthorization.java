@@ -22,22 +22,22 @@ package org.onap.policy.rest;
 
 public class XacmlAdminAuthorization {
 
-	public enum Role {
-		ROLE_GUEST("guest"),
-		ROLE_ADMIN("admin"),
-		ROLE_EDITOR("editor"),
-		ROLE_SUPERGUEST("super-guest"),
-		ROLE_SUPEREDITOR("super-editor"),
-		ROLE_SUPERADMIN("super-admin");
-		
-		String userRole;
-		
-		Role(String a) {
-			this.userRole = a;
-		}
-		@Override
-		public String toString() {
-			return this.userRole;
-		}
-	}
+    public enum Role {
+        ROLE_GUEST("guest"),
+        ROLE_ADMIN("admin"),
+        ROLE_EDITOR("editor"),
+        ROLE_SUPERGUEST("super-guest"),
+        ROLE_SUPEREDITOR("super-editor"),
+        ROLE_SUPERADMIN("super-admin");
+
+        String userRole;
+
+        Role(String a) {
+            this.userRole = a;
+        }
+        @Override
+        public String toString() {
+            return this.userRole;
+        }
+    }
 }

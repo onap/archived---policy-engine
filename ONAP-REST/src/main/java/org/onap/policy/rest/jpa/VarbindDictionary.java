@@ -42,114 +42,114 @@ import javax.persistence.TemporalType;
 @Table(name="VarbindDictionary")
 @NamedQuery(name = "VarbindDictionary.findAll", query = "Select v FROM VarbindDictionary v")
 public class VarbindDictionary implements Serializable{
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "Id")
-	private int id;
-	
-	@Column(name ="varbind_Name", nullable = false, unique = true)
-	@OrderBy("asc")
-	private String varbindName;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name = "varbind_Description", nullable = true, length = 2048)
-	private String varbindDescription;
-	
-	@Column(name = "varbind_oid", nullable = false)
-	private String varbindOID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "Id")
+    private int id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
+    @Column(name ="varbind_Name", nullable = false, unique = true)
+    @OrderBy("asc")
+    private String varbindName;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
-	
-	@ManyToOne(optional = false)
-	@JoinColumn(name="created_by")
-	private UserInfo userCreatedBy;
+    @Column(name = "varbind_Description", nullable = true, length = 2048)
+    private String varbindDescription;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name="modified_by")
-	private UserInfo userModifiedBy;
-	
-	public UserInfo getUserCreatedBy() {
-		return userCreatedBy;
-	}
+    @Column(name = "varbind_oid", nullable = false)
+    private String varbindOID;
 
-	public void setUserCreatedBy(UserInfo userCreatedBy) {
-		this.userCreatedBy = userCreatedBy;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	public UserInfo getUserModifiedBy() {
-		return userModifiedBy;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	public void setUserModifiedBy(UserInfo userModifiedBy) {
-		this.userModifiedBy = userModifiedBy;
-	}
-	
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="created_by")
+    private UserInfo userCreatedBy;
 
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
-	
-	public int getId() {
-		return this.id;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="modified_by")
+    private UserInfo userModifiedBy;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public UserInfo getUserCreatedBy() {
+        return userCreatedBy;
+    }
 
-	public String getVarbindName() {
-		return varbindName;
-	}
+    public void setUserCreatedBy(UserInfo userCreatedBy) {
+        this.userCreatedBy = userCreatedBy;
+    }
 
-	public void setVarbindName(String varbindName) {
-		this.varbindName = varbindName;
-	}
+    public UserInfo getUserModifiedBy() {
+        return userModifiedBy;
+    }
 
-	public String getVarbindDescription() {
-		return varbindDescription;
-	}
+    public void setUserModifiedBy(UserInfo userModifiedBy) {
+        this.userModifiedBy = userModifiedBy;
+    }
 
-	public void setVarbindDescription(String varbindDescription) {
-		this.varbindDescription = varbindDescription;
-	}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
 
-	public String getVarbindOID() {
-		return varbindOID;
-	}
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
 
-	public void setVarbindOID(String varbindOID) {
-		this.varbindOID = varbindOID;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
+    public String getVarbindName() {
+        return varbindName;
+    }
 
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-	
+    public void setVarbindName(String varbindName) {
+        this.varbindName = varbindName;
+    }
+
+    public String getVarbindDescription() {
+        return varbindDescription;
+    }
+
+    public void setVarbindDescription(String varbindDescription) {
+        this.varbindDescription = varbindDescription;
+    }
+
+    public String getVarbindOID() {
+        return varbindOID;
+    }
+
+    public void setVarbindOID(String varbindOID) {
+        this.varbindOID = varbindOID;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
 
 }

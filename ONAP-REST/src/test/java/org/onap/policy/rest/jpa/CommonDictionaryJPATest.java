@@ -30,117 +30,117 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
 public class CommonDictionaryJPATest {
-	
-	private static Logger logger = FlexLogger.getLogger(CommonDictionaryJPATest.class);
-	private UserInfo userInfo;
-	
-	@Before
-	public void setUp() throws Exception {
-		logger.info("setUp: Entering");
-		userInfo = new UserInfo();
-		userInfo.setUserLoginId("Test");
-		userInfo.setUserName("Test");
-		logger.info("setUp: exit");
-	}
-	
-	@Test
-	public void testAttribute(){
-		Attribute data = new Attribute();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setCategoryBean(new Category());
-		assertTrue(data.getCategoryBean()!=null);
-		data.setConstraintType(new ConstraintType());
-		assertTrue(data.getConstraintType()!=null);
-		data.setConstraintValues(new HashSet<>());
-		assertTrue(data.getConstraintValues()!=null);
-		data.addConstraintValue(new ConstraintValue());
-		data.removeConstraintValue(new ConstraintValue());
-		data.removeAllConstraintValues();
-		data.preUpdate();
-		data.prePersist();
-		new Attribute("Test");
-		new Attribute(new Attribute());
-		data.setAttributeValue("Test");
-		assertTrue("Test".equals(data.getAttributeValue()));
-		data.setDescription("Test");
-		assertTrue("Test".equals(data.getDescription()));
-		data.setXacmlId("Test");
-		assertTrue("Test".equals(data.getXacmlId()));
-		data.setDatatypeBean(new Datatype());
-		assertTrue(data.getDatatypeBean()!=null);
-		data.setIsDesignator(true);
-		assertTrue(data.isDesignator());
-		data.setIssuer("Test");
-		assertTrue("Test".equals(data.getIssuer()));
-		data.setMustBePresent(true);
-		assertTrue(data.isMustBePresent());
-		data.setPriority("Test");
-		assertTrue("Test".equals(data.getPriority()));
-		data.setSelectorPath("Test");
-		assertTrue("Test".equals(data.getSelectorPath()));
-		data.setCreatedDate(new Date());
-		assertTrue(data.getCreatedDate()!=null);
-		data.setModifiedDate(new Date());
-		assertTrue(data.getModifiedDate()!=null);
-		data.setUserCreatedBy(userInfo);
-		assertTrue(data.getUserCreatedBy()!=null);
-		data.setUserModifiedBy(userInfo);
-		assertTrue(data.getUserModifiedBy()!=null);
-	}
-	
-	@Test
-	public void testOnapName(){
-		OnapName data = new OnapName();
-		data.preUpdate();
-		data.prePersist();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setOnapName("Test");
-		assertTrue("Test".equals(data.getOnapName()));
-		data.setDescription("Test");
-		assertTrue("Test".equals(data.getDescription()));
-		data.setCreatedDate(new Date());
-		assertTrue(data.getCreatedDate()!=null);
-		data.setModifiedDate(new Date());
-		assertTrue(data.getModifiedDate()!=null);
-		data.setUserCreatedBy(userInfo);
-		assertTrue(data.getUserCreatedBy()!=null);
-		data.setUserModifiedBy(userInfo);
-		assertTrue(data.getUserModifiedBy()!=null);
-	}
-	
-	@Test
-	public void testRiskType(){
-		RiskType data = new RiskType();
-		data.preUpdate();
-		data.prePersist();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setRiskName("Test");
-		assertTrue("Test".equals(data.getRiskName()));
-		data.setDescription("Test");
-		assertTrue("Test".equals(data.getDescription()));
-		data.setCreatedDate(new Date());
-		assertTrue(data.getCreatedDate()!=null);
-		data.setModifiedDate(new Date());
-		assertTrue(data.getModifiedDate()!=null);
-		data.setUserCreatedBy(userInfo);
-		assertTrue(data.getUserCreatedBy()!=null);
-		data.setUserModifiedBy(userInfo);
-		assertTrue(data.getUserModifiedBy()!=null);
-	}
-	
-	@Test
-	public void testSafePolicyWarning(){
-		SafePolicyWarning data = new SafePolicyWarning();
-		data.setId(1);
-		assertTrue(1 == data.getId());
-		data.setName("Test");
-		assertTrue("Test".equals(data.getName()));
-		data.setMessage("Test");
-		assertTrue("Test".equals(data.getMessage()));
-		data.setRiskType("Test");
-		assertTrue("Test".equals(data.getRiskType()));
-	}
+
+    private static Logger logger = FlexLogger.getLogger(CommonDictionaryJPATest.class);
+    private UserInfo userInfo;
+
+    @Before
+    public void setUp() throws Exception {
+        logger.info("setUp: Entering");
+        userInfo = new UserInfo();
+        userInfo.setUserLoginId("Test");
+        userInfo.setUserName("Test");
+        logger.info("setUp: exit");
+    }
+
+    @Test
+    public void testAttribute(){
+        Attribute data = new Attribute();
+        data.setId(1);
+        assertTrue(1 == data.getId());
+        data.setCategoryBean(new Category());
+        assertTrue(data.getCategoryBean()!=null);
+        data.setConstraintType(new ConstraintType());
+        assertTrue(data.getConstraintType()!=null);
+        data.setConstraintValues(new HashSet<>());
+        assertTrue(data.getConstraintValues()!=null);
+        data.addConstraintValue(new ConstraintValue());
+        data.removeConstraintValue(new ConstraintValue());
+        data.removeAllConstraintValues();
+        data.preUpdate();
+        data.prePersist();
+        new Attribute("Test");
+        new Attribute(new Attribute());
+        data.setAttributeValue("Test");
+        assertTrue("Test".equals(data.getAttributeValue()));
+        data.setDescription("Test");
+        assertTrue("Test".equals(data.getDescription()));
+        data.setXacmlId("Test");
+        assertTrue("Test".equals(data.getXacmlId()));
+        data.setDatatypeBean(new Datatype());
+        assertTrue(data.getDatatypeBean()!=null);
+        data.setIsDesignator(true);
+        assertTrue(data.isDesignator());
+        data.setIssuer("Test");
+        assertTrue("Test".equals(data.getIssuer()));
+        data.setMustBePresent(true);
+        assertTrue(data.isMustBePresent());
+        data.setPriority("Test");
+        assertTrue("Test".equals(data.getPriority()));
+        data.setSelectorPath("Test");
+        assertTrue("Test".equals(data.getSelectorPath()));
+        data.setCreatedDate(new Date());
+        assertTrue(data.getCreatedDate()!=null);
+        data.setModifiedDate(new Date());
+        assertTrue(data.getModifiedDate()!=null);
+        data.setUserCreatedBy(userInfo);
+        assertTrue(data.getUserCreatedBy()!=null);
+        data.setUserModifiedBy(userInfo);
+        assertTrue(data.getUserModifiedBy()!=null);
+    }
+
+    @Test
+    public void testOnapName(){
+        OnapName data = new OnapName();
+        data.preUpdate();
+        data.prePersist();
+        data.setId(1);
+        assertTrue(1 == data.getId());
+        data.setOnapName("Test");
+        assertTrue("Test".equals(data.getOnapName()));
+        data.setDescription("Test");
+        assertTrue("Test".equals(data.getDescription()));
+        data.setCreatedDate(new Date());
+        assertTrue(data.getCreatedDate()!=null);
+        data.setModifiedDate(new Date());
+        assertTrue(data.getModifiedDate()!=null);
+        data.setUserCreatedBy(userInfo);
+        assertTrue(data.getUserCreatedBy()!=null);
+        data.setUserModifiedBy(userInfo);
+        assertTrue(data.getUserModifiedBy()!=null);
+    }
+
+    @Test
+    public void testRiskType(){
+        RiskType data = new RiskType();
+        data.preUpdate();
+        data.prePersist();
+        data.setId(1);
+        assertTrue(1 == data.getId());
+        data.setRiskName("Test");
+        assertTrue("Test".equals(data.getRiskName()));
+        data.setDescription("Test");
+        assertTrue("Test".equals(data.getDescription()));
+        data.setCreatedDate(new Date());
+        assertTrue(data.getCreatedDate()!=null);
+        data.setModifiedDate(new Date());
+        assertTrue(data.getModifiedDate()!=null);
+        data.setUserCreatedBy(userInfo);
+        assertTrue(data.getUserCreatedBy()!=null);
+        data.setUserModifiedBy(userInfo);
+        assertTrue(data.getUserModifiedBy()!=null);
+    }
+
+    @Test
+    public void testSafePolicyWarning(){
+        SafePolicyWarning data = new SafePolicyWarning();
+        data.setId(1);
+        assertTrue(1 == data.getId());
+        data.setName("Test");
+        assertTrue("Test".equals(data.getName()));
+        data.setMessage("Test");
+        assertTrue("Test".equals(data.getMessage()));
+        data.setRiskType("Test");
+        assertTrue("Test".equals(data.getRiskType()));
+    }
 }

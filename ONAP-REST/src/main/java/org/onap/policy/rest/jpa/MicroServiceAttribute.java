@@ -35,50 +35,50 @@ import javax.persistence.Table;
 @Table(name="MicroServiceAttribute")
 @NamedQuery(name="MicroServiceAttribute.findAll", query="SELECT e FROM MicroServiceAttribute e ")
 public class MicroServiceAttribute implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false)
-	@OrderBy("asc")
-	private String name;
-	
-	@Column(name="value")
-	private String value ;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="modelName")
-	private String modelName;
-	
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="name", nullable=false)
+    @OrderBy("asc")
+    private String name;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return this.name;
-	}
+    @Column(name="value")
+    private String value ;
 
-	public void setName(String name) {
-		this.name = name;
+    @Column(name="modelName")
+    private String modelName;
 
-	}
-	public String getValue() {
-		return this.value ;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setValue(String value ) {
-		this.value  = value ;
-	}
-	public String getModelName() {
-		return modelName;
-	}
-	public void setModelName(String modelName) {
-		this.modelName = modelName;
-	}
-	
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+
+    }
+    public String getValue() {
+        return this.value ;
+    }
+
+    public void setValue(String value ) {
+        this.value  = value ;
+    }
+    public String getModelName() {
+        return modelName;
+    }
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
 }

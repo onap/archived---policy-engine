@@ -40,66 +40,66 @@ import javax.persistence.Table;
 @Table(name = "WatchPolicyNotificationTable")
 @NamedQuery(name="WatchPolicyNotificationTable.findAll", query="SELECT e FROM WatchPolicyNotificationTable e ")
 public class WatchPolicyNotificationTable implements Serializable{
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="policyName", nullable=false, unique=true)
-	@OrderBy("asc")
-	private String policyName;
-	
-	@Column(name="loginIds", nullable=false, unique=true)
-	@OrderBy("asc")
-	private String loginIds;
+    private static final long serialVersionUID = 1L;
 
-	public int getId() {
-		return id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @Column(name="policyName", nullable=false, unique=true)
+    @OrderBy("asc")
+    private String policyName;
 
-	public String getPolicyName() {
-		return policyName;
-	}
+    @Column(name="loginIds", nullable=false, unique=true)
+    @OrderBy("asc")
+    private String loginIds;
 
-	public void setPolicyName(String policyName) {
-		this.policyName = policyName;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getLoginIds() {
-		return loginIds;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setLoginIds(String loginIds) {
-		this.loginIds = loginIds;
-	}
+    public String getPolicyName() {
+        return policyName;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, policyName, loginIds);
-	}
+    public void setPolicyName(String policyName) {
+        this.policyName = policyName;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if(obj == null){
-			return false;
-		}
-		if(obj == this){
-			return true;
-		}
-		if(!(obj instanceof WatchPolicyNotificationTable)){
-			return false;
-		}
-		
-		return id == ((WatchPolicyNotificationTable)obj).id &&
-		policyName.equals(((WatchPolicyNotificationTable)obj).policyName) && 
-		loginIds.equals(((WatchPolicyNotificationTable)obj).loginIds);
-	}
-	
-	
+    public String getLoginIds() {
+        return loginIds;
+    }
+
+    public void setLoginIds(String loginIds) {
+        this.loginIds = loginIds;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, policyName, loginIds);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null){
+            return false;
+        }
+        if(obj == this){
+            return true;
+        }
+        if(!(obj instanceof WatchPolicyNotificationTable)){
+            return false;
+        }
+
+        return id == ((WatchPolicyNotificationTable)obj).id &&
+        policyName.equals(((WatchPolicyNotificationTable)obj).policyName) &&
+        loginIds.equals(((WatchPolicyNotificationTable)obj).loginIds);
+    }
+
+
 }

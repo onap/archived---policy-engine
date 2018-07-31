@@ -40,79 +40,79 @@ import java.io.Serializable;
 @Table(name="RainyDayTreatments")
 @NamedQuery(name="RainyDayTreatments.findAll", query="SELECT e FROM RainyDayTreatments e")
 public class RainyDayTreatments implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2491410352490381323L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2491410352490381323L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="bbid", nullable=false, length=255)
-	@OrderBy("asc")
-	private String bbid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="workstep", nullable=true, length=255)
-	private String workstep;
-	
-	@Column(name="treatments", nullable=true, length=1028)
-	private String treatments;
-		
-	public RainyDayTreatments() {
-		// Empty constructor
-	}
+    @Column(name="bbid", nullable=false, length=255)
+    @OrderBy("asc")
+    private String bbid;
 
-	public int getId() {
-		return id;
-	}
+    @Column(name="workstep", nullable=true, length=255)
+    private String workstep;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @Column(name="treatments", nullable=true, length=1028)
+    private String treatments;
 
-	/**
-	 * @return the bbid
-	 */
-	public String getBbid() {
-		return bbid;
-	}
+    public RainyDayTreatments() {
+        // Empty constructor
+    }
 
-	/**
-	 * @param bbid the bbid to set
-	 */
-	public void setBbid(String bbid) {
-		this.bbid = bbid;
-	}
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * @return the workstep
-	 */
-	public String getWorkstep() {
-		return workstep;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	/**
-	 * @param workstep the workstep to set
-	 */
-	public void setWorkstep(String workstep) {
-		this.workstep = workstep;
-	}
+    /**
+     * @return the bbid
+     */
+    public String getBbid() {
+        return bbid;
+    }
 
-	/**
-	 * @return the treatments
-	 */
-	public String getTreatments() {
-		return treatments;
-	}
+    /**
+     * @param bbid the bbid to set
+     */
+    public void setBbid(String bbid) {
+        this.bbid = bbid;
+    }
 
-	/**
-	 * @param treatments the treatments to set
-	 */
-	public void setTreatments(String treatments) {
-		this.treatments = treatments;
-	}
+    /**
+     * @return the workstep
+     */
+    public String getWorkstep() {
+        return workstep;
+    }
 
-	
+    /**
+     * @param workstep the workstep to set
+     */
+    public void setWorkstep(String workstep) {
+        this.workstep = workstep;
+    }
+
+    /**
+     * @return the treatments
+     */
+    public String getTreatments() {
+        return treatments;
+    }
+
+    /**
+     * @param treatments the treatments to set
+     */
+    public void setTreatments(String treatments) {
+        this.treatments = treatments;
+    }
+
+
 }

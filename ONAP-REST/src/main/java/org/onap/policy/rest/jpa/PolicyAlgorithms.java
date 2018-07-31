@@ -37,80 +37,80 @@ import com.att.research.xacml.api.Identifier;
 @Table(name="PolicyAlgorithms")
 @NamedQuery(name="PolicyAlgorithms.findAll", query="SELECT d FROM PolicyAlgorithms d")
 public class PolicyAlgorithms implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	public static final char STANDARD = 'S';
-	public static final char CUSTOM = 'C';
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    public static final char STANDARD = 'S';
+    public static final char CUSTOM = 'C';
 
-	@Column(name="is_standard", nullable=false)
-	private char isStandard;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="xacml_id", nullable=false, unique=true, length=255)
-	private String xacmlId;
-	
-	@Column(name="short_name", nullable=false, length=64)
-	private String shortName;
+    @Column(name="is_standard", nullable=false)
+    private char isStandard;
 
-	public PolicyAlgorithms(Identifier identifier, char standard) {
-		this.isStandard = standard;
-		if (identifier != null) {
-			this.xacmlId = identifier.stringValue();
-		}
-	}
-	
-	public PolicyAlgorithms(Identifier identifier) {
-		this(identifier, PolicyAlgorithms.STANDARD);
-	}
+    @Column(name="xacml_id", nullable=false, unique=true, length=255)
+    private String xacmlId;
 
-	public PolicyAlgorithms() {
-		this(null, PolicyAlgorithms.STANDARD);
-	}
-	
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="short_name", nullable=false, length=64)
+    private String shortName;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public PolicyAlgorithms(Identifier identifier, char standard) {
+        this.isStandard = standard;
+        if (identifier != null) {
+            this.xacmlId = identifier.stringValue();
+        }
+    }
 
-	public char getIsStandard() {
-		return this.isStandard;
-	}
+    public PolicyAlgorithms(Identifier identifier) {
+        this(identifier, PolicyAlgorithms.STANDARD);
+    }
 
-	public void setIsStandard(char isStandard) {
-		this.isStandard = isStandard;
-	}
+    public PolicyAlgorithms() {
+        this(null, PolicyAlgorithms.STANDARD);
+    }
 
-	@Transient
-	public boolean isStandard() {
-		return this.isStandard == PolicyAlgorithms.STANDARD;
-	}
-	
-	@Transient
-	public boolean isCustom() {
-		return this.isStandard == PolicyAlgorithms.CUSTOM;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public String getXacmlId() {
-		return this.xacmlId;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setXacmlId(String xacmlId) {
-		this.xacmlId = xacmlId;
-	}
+    public char getIsStandard() {
+        return this.isStandard;
+    }
 
-	public String getShortName() {
-		return shortName;
-	}
+    public void setIsStandard(char isStandard) {
+        this.isStandard = isStandard;
+    }
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
+    @Transient
+    public boolean isStandard() {
+        return this.isStandard == PolicyAlgorithms.STANDARD;
+    }
+
+    @Transient
+    public boolean isCustom() {
+        return this.isStandard == PolicyAlgorithms.CUSTOM;
+    }
+
+    public String getXacmlId() {
+        return this.xacmlId;
+    }
+
+    public void setXacmlId(String xacmlId) {
+        this.xacmlId = xacmlId;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
 
 }

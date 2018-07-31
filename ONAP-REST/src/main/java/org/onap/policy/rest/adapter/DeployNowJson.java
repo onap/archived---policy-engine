@@ -23,14 +23,14 @@ package org.onap.policy.rest.adapter;
 
 public class DeployNowJson {
 
-	protected boolean deployNow;
-	
-	// deployNow
-	public boolean getDeployNow() {
-		return deployNow;
-	}
+    protected boolean deployNow;
 
-	public void setDeployNow(boolean value) {
-		this.deployNow = value;
-	}
+    // deployNow
+    public boolean getDeployNow() {
+        return deployNow;
+    }
+
+    public void setDeployNow(boolean value) {
+        this.deployNow = value;
+    }
 }

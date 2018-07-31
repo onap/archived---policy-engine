@@ -29,117 +29,117 @@ import java.util.Set;
 
 
 public class TermCollector {
-	private String serviceTypeId;
-	private String configName;
-	private DeployNowJson deploymentOption;
-	private String securityZoneId;
-	private String vendorServiceId;
-	private VendorSpecificData vendorSpecificData= new VendorSpecificData();
+    private String serviceTypeId;
+    private String configName;
+    private DeployNowJson deploymentOption;
+    private String securityZoneId;
+    private String vendorServiceId;
+    private VendorSpecificData vendorSpecificData= new VendorSpecificData();
 
-	protected Set<Object> serviceGroups;
-	protected Set<Object> addressGroups;
-	protected List<Term> firewallRuleList;
+    protected Set<Object> serviceGroups;
+    protected Set<Object> addressGroups;
+    protected List<Term> firewallRuleList;
 
-	protected List<Tags> ruleToTag;
+    protected List<Tags> ruleToTag;
 
-	public List<Tags> getRuleToTag() {
-		return ruleToTag;
-	}
+    public List<Tags> getRuleToTag() {
+        return ruleToTag;
+    }
 
-	public void setRuleToTag(List<Tags> ruleToTag) {
-		this.ruleToTag = ruleToTag;
-	}
+    public void setRuleToTag(List<Tags> ruleToTag) {
+        this.ruleToTag = ruleToTag;
+    }
 
-	//SecurityTypeId
-	public String getServiceTypeId() {
-		return serviceTypeId;
-	}
+    //SecurityTypeId
+    public String getServiceTypeId() {
+        return serviceTypeId;
+    }
 
-	public void setServiceTypeId(String serviceTypeId) {
-		this.serviceTypeId = serviceTypeId;
-	}
+    public void setServiceTypeId(String serviceTypeId) {
+        this.serviceTypeId = serviceTypeId;
+    }
 
-	//ConfigName
-	public String getConfigName() {
-		return configName;
-	}
+    //ConfigName
+    public String getConfigName() {
+        return configName;
+    }
 
-	public void setConfigName(String configName) {
-		this.configName = configName;
-	}
+    public void setConfigName(String configName) {
+        this.configName = configName;
+    }
 
-	//DeploymentControl
-	public DeployNowJson getDeploymentOption() {
-		return deploymentOption;
-	}
+    //DeploymentControl
+    public DeployNowJson getDeploymentOption() {
+        return deploymentOption;
+    }
 
-	public void setDeploymentOption(DeployNowJson deploymentOption) {
-		this.deploymentOption = deploymentOption;
-	}
+    public void setDeploymentOption(DeployNowJson deploymentOption) {
+        this.deploymentOption = deploymentOption;
+    }
 
-	//SecurityZoneId
-	public String getSecurityZoneId() {
-		return securityZoneId;
-	}
-	public void setSecurityZoneId(String securityZoneId) {
-		this.securityZoneId = securityZoneId;
-	}
+    //SecurityZoneId
+    public String getSecurityZoneId() {
+        return securityZoneId;
+    }
+    public void setSecurityZoneId(String securityZoneId) {
+        this.securityZoneId = securityZoneId;
+    }
 
 
-	//ServiceGroup
-	public Set<Object> getServiceGroups() {
-		if(serviceGroups==null)
-		{
-			serviceGroups= new HashSet<>();
-		}
-		return this.serviceGroups;
-	}
+    //ServiceGroup
+    public Set<Object> getServiceGroups() {
+        if(serviceGroups==null)
+        {
+            serviceGroups= new HashSet<>();
+        }
+        return this.serviceGroups;
+    }
 
-	public void setServiceGroups(Set<Object> servListArray) {
-		this.serviceGroups = servListArray;
-	}
+    public void setServiceGroups(Set<Object> servListArray) {
+        this.serviceGroups = servListArray;
+    }
 
-	//AddressGroup
-	public Set<Object> getAddressGroups() {
-		if(addressGroups==null)
-		{
-			addressGroups= new HashSet<>();
-		}
-		return this.addressGroups;
-	}
+    //AddressGroup
+    public Set<Object> getAddressGroups() {
+        if(addressGroups==null)
+        {
+            addressGroups= new HashSet<>();
+        }
+        return this.addressGroups;
+    }
 
-	public void setAddressGroups(Set<Object> addressGroups) {
-		this.addressGroups = addressGroups;
-	}
+    public void setAddressGroups(Set<Object> addressGroups) {
+        this.addressGroups = addressGroups;
+    }
 
-	//FirewallRuleList
-	public List<Term> getFirewallRuleList() {
+    //FirewallRuleList
+    public List<Term> getFirewallRuleList() {
 
-		if(firewallRuleList==null)
-		{
-			firewallRuleList= new ArrayList<>();
-		}
-		return this.firewallRuleList;
-	}
+        if(firewallRuleList==null)
+        {
+            firewallRuleList= new ArrayList<>();
+        }
+        return this.firewallRuleList;
+    }
 
-	public void setFirewallRuleList(List<Term> firewallRuleList) {
-		this.firewallRuleList = firewallRuleList;
-	}
+    public void setFirewallRuleList(List<Term> firewallRuleList) {
+        this.firewallRuleList = firewallRuleList;
+    }
 
-	//vendorServiceId
-	public String getVendorServiceId() {
-		return vendorServiceId;
-	}
+    //vendorServiceId
+    public String getVendorServiceId() {
+        return vendorServiceId;
+    }
 
-	public void setVendorServiceId(String vendorServiceId) {
-		this.vendorServiceId = vendorServiceId;
-	}
+    public void setVendorServiceId(String vendorServiceId) {
+        this.vendorServiceId = vendorServiceId;
+    }
 
-	public VendorSpecificData getVendorSpecificData() {
-		return vendorSpecificData;
-	}
+    public VendorSpecificData getVendorSpecificData() {
+        return vendorSpecificData;
+    }
 
-	public void setVendorSpecificData(VendorSpecificData vendorSpecificData) {
-		this.vendorSpecificData = vendorSpecificData;
-	}
+    public void setVendorSpecificData(VendorSpecificData vendorSpecificData) {
+        this.vendorSpecificData = vendorSpecificData;
+    }
 }

@@ -33,91 +33,91 @@ import javax.persistence.*;
 @Table(name="FunctionArguments")
 @NamedQuery(name="FunctionArgument.findAll", query="SELECT f FROM FunctionArgument f")
 public class FunctionArgument implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="is_bag", nullable=false)
-	private int isBag;
+    @Column(name="is_bag", nullable=false)
+    private int isBag;
 
-	//bi-directional many-to-one association to FunctionDefinition
-	@ManyToOne
-	@JoinColumn(name="function_id")
-	private FunctionDefinition functionDefinition;
+    //bi-directional many-to-one association to FunctionDefinition
+    @ManyToOne
+    @JoinColumn(name="function_id")
+    private FunctionDefinition functionDefinition;
 
-	@Column(name="arg_index", nullable=false)
-	private int argIndex;
+    @Column(name="arg_index", nullable=false)
+    private int argIndex;
 
-	//bi-directional many-to-one association to Datatype
-	@ManyToOne
-	@JoinColumn(name="datatype_id")
-	private Datatype datatypeBean;
+    //bi-directional many-to-one association to Datatype
+    @ManyToOne
+    @JoinColumn(name="datatype_id")
+    private Datatype datatypeBean;
 
-	public FunctionArgument() {
-		//An empty constructor
-	}
+    public FunctionArgument() {
+        //An empty constructor
+    }
 
-	public FunctionArgument(final FunctionArgument argument) {
-		this.argIndex = argument.argIndex;
-		this.datatypeBean = argument.datatypeBean;
-		this.isBag = argument.isBag;
-		this.functionDefinition = argument.functionDefinition;
-	}
+    public FunctionArgument(final FunctionArgument argument) {
+        this.argIndex = argument.argIndex;
+        this.datatypeBean = argument.datatypeBean;
+        this.isBag = argument.isBag;
+        this.functionDefinition = argument.functionDefinition;
+    }
 
-	public int getId() {
-		return this.id;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public int getArgIndex() {
-		return this.argIndex;
-	}
+    public int getArgIndex() {
+        return this.argIndex;
+    }
 
-	public void setArgIndex(int argIndex) {
-		this.argIndex = argIndex;
-	}
+    public void setArgIndex(int argIndex) {
+        this.argIndex = argIndex;
+    }
 
-	public Datatype getDatatypeBean() {
-		return this.datatypeBean;
-	}
+    public Datatype getDatatypeBean() {
+        return this.datatypeBean;
+    }
 
-	public void setDatatypeBean(Datatype datatypeBean) {
-		this.datatypeBean = datatypeBean;
-	}
+    public void setDatatypeBean(Datatype datatypeBean) {
+        this.datatypeBean = datatypeBean;
+    }
 
-	public FunctionDefinition getFunctionDefinition() {
-		return this.functionDefinition;
-	}
+    public FunctionDefinition getFunctionDefinition() {
+        return this.functionDefinition;
+    }
 
-	public int getIsBag() {
-		return isBag;
-	}
+    public int getIsBag() {
+        return isBag;
+    }
 
-	public void setIsBag(int isBag) {
-		this.isBag = isBag;
-	}
+    public void setIsBag(int isBag) {
+        this.isBag = isBag;
+    }
 
-	public void setFunctionDefinition(FunctionDefinition functionDefinition) {
-		this.functionDefinition = functionDefinition;
-	}
+    public void setFunctionDefinition(FunctionDefinition functionDefinition) {
+        this.functionDefinition = functionDefinition;
+    }
 
-	@Transient
-	@Override
-	public String toString() {
-		return "FunctionArgument [id=" + id + ", argIndex=" + argIndex
-				+ ", datatypeBean=" + datatypeBean + ", isBag=" + isBag
-				+ ", functionDefinition=" + functionDefinition + "]";
-	}
-	
-	@Transient
-	public boolean isBag() {
-		return this.isBag == 1;
-	}
+    @Transient
+    @Override
+    public String toString() {
+        return "FunctionArgument [id=" + id + ", argIndex=" + argIndex
+                + ", datatypeBean=" + datatypeBean + ", isBag=" + isBag
+                + ", functionDefinition=" + functionDefinition + "]";
+    }
+
+    @Transient
+    public boolean isBag() {
+        return this.isBag == 1;
+    }
 
 }

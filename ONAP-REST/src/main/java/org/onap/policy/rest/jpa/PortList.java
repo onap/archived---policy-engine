@@ -36,41 +36,41 @@ import javax.persistence.Table;
 @Table(name="portlist")
 @NamedQuery(name="PortList.findAll", query="SELECT e FROM PortList e ")
 public class PortList implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="portname", nullable=false)
-	@OrderBy("asc")
-	private String portName;
-	
-	@Column(name="description")
-	private String description;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="portname", nullable=false)
+    @OrderBy("asc")
+    private String portName;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getPortName() {
-		return this.portName;
-	}
+    @Column(name="description")
+    private String description;
 
-	public void setPortName(String portName) {
-		this.portName = portName;
+    public int getId() {
+        return this.id;
+    }
 
-	}
-	public String getDescription() {
-		return this.description;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getPortName() {
+        return this.portName;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
+    public void setPortName(String portName) {
+        this.portName = portName;
+
+    }
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }

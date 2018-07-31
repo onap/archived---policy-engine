@@ -43,102 +43,102 @@ import javax.persistence.TemporalType;
 @Table(name="VSCLAction")
 @NamedQuery(name="VSCLAction.findAll", query="SELECT v FROM VSCLAction v ")
 public class VSCLAction implements Serializable  {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="vscl_action", nullable=false, unique=true)
-	@OrderBy("asc")
-	private String vsclaction;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
+    @Column(name="vscl_action", nullable=false, unique=true)
+    @OrderBy("asc")
+    private String vsclaction;
 
-	@Column(name="description", nullable=true, length=2048)
-	private String description;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name="created_by")
-	private UserInfo userCreatedBy;
+    @Column(name="description", nullable=true, length=2048)
+    private String description;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name="modified_by")
-	private UserInfo userModifiedBy;
-	
-	public UserInfo getUserCreatedBy() {
-		return userCreatedBy;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	public void setUserCreatedBy(UserInfo userCreatedBy) {
-		this.userCreatedBy = userCreatedBy;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="created_by")
+    private UserInfo userCreatedBy;
 
-	public UserInfo getUserModifiedBy() {
-		return userModifiedBy;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="modified_by")
+    private UserInfo userModifiedBy;
 
-	public void setUserModifiedBy(UserInfo userModifiedBy) {
-		this.userModifiedBy = userModifiedBy;
-	}
-	
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
+    public UserInfo getUserCreatedBy() {
+        return userCreatedBy;
+    }
 
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
-	
-	public int getId() {
-		return this.id;
-	}
+    public void setUserCreatedBy(UserInfo userCreatedBy) {
+        this.userCreatedBy = userCreatedBy;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public String getVsclaction() {
-		return vsclaction;
-	}
+    public UserInfo getUserModifiedBy() {
+        return userModifiedBy;
+    }
 
-	public void setVsclaction(String vsclaction) {
-		this.vsclaction = vsclaction;
-	}
-	
+    public void setUserModifiedBy(UserInfo userModifiedBy) {
+        this.userModifiedBy = userModifiedBy;
+    }
 
-	public Date getCreatedDate() {
-		return this.createdDate;
-	}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public Date getModifiedDate() {
-		return this.modifiedDate;
-	}
+    public String getVsclaction() {
+        return vsclaction;
+    }
 
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
+    public void setVsclaction(String vsclaction) {
+        this.vsclaction = vsclaction;
+    }
+
+
+    public Date getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getModifiedDate() {
+        return this.modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
 }

@@ -44,154 +44,154 @@ import javax.persistence.Transient;
 @Table(name="DecisionSettings")
 @NamedQuery(name="DecisionSettings.findAll", query="SELECT a FROM DecisionSettings a order by  a.priority asc, a.xacmlId asc")
 public class DecisionSettings implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	@Column(name="description", nullable=true, length=2048)
-	private String description;
+    @Column(name="description", nullable=true, length=2048)
+    private String description;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	@Column(name="PRIORITY", nullable=true)
-	@OrderBy("asc")
-	private String priority;
-	
-	@Column(name="xacml_id", unique = true, nullable=false)
-	@OrderBy("asc")
-	private String xacmlId = "urn";
+    @Column(name="PRIORITY", nullable=true)
+    @OrderBy("asc")
+    private String priority;
 
-	//bi-directional many-to-one association to Datatype
-	@ManyToOne
-	@JoinColumn(name="datatype")
-	private Datatype datatypeBean;
-	
-	@Transient
-	private String issuer = null;
-	
-	@Transient
-	private boolean mustBePresent = false;
+    @Column(name="xacml_id", unique = true, nullable=false)
+    @OrderBy("asc")
+    private String xacmlId = "urn";
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name="created_by")
-	private UserInfo userCreatedBy;
+    //bi-directional many-to-one association to Datatype
+    @ManyToOne
+    @JoinColumn(name="datatype")
+    private Datatype datatypeBean;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name="modified_by")
-	private UserInfo userModifiedBy;
-	
-	public UserInfo getUserCreatedBy() {
-		return userCreatedBy;
-	}
+    @Transient
+    private String issuer = null;
 
-	public void setUserCreatedBy(UserInfo userCreatedBy) {
-		this.userCreatedBy = userCreatedBy;
-	}
+    @Transient
+    private boolean mustBePresent = false;
 
-	public UserInfo getUserModifiedBy() {
-		return userModifiedBy;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="created_by")
+    private UserInfo userCreatedBy;
 
-	public void setUserModifiedBy(UserInfo userModifiedBy) {
-		this.userModifiedBy = userModifiedBy;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="modified_by")
+    private UserInfo userModifiedBy;
 
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
-	
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
+    public UserInfo getUserCreatedBy() {
+        return userCreatedBy;
+    }
 
-	public int getId() {
-		return this.id;
-	}
+    public void setUserCreatedBy(UserInfo userCreatedBy) {
+        this.userCreatedBy = userCreatedBy;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public UserInfo getUserModifiedBy() {
+        return userModifiedBy;
+    }
 
-	
-	public Date getCreatedDate() {
-		return this.createdDate;
-	}
+    public void setUserModifiedBy(UserInfo userModifiedBy) {
+        this.userModifiedBy = userModifiedBy;
+    }
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public Date getModifiedDate() {
-		return this.modifiedDate;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
 
-	public String getXacmlId() {
-		return this.xacmlId;
-	}
+    public Date getCreatedDate() {
+        return this.createdDate;
+    }
 
-	public void setXacmlId(String xacmlId) {
-		this.xacmlId = xacmlId;
-	}
-	
-	public Datatype getDatatypeBean() {
-		return this.datatypeBean;
-	}
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	public void setDatatypeBean(Datatype datatypeBean) {
-		this.datatypeBean = datatypeBean;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	@Transient
-	public String getIssuer() {
-		return issuer;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@Transient
-	public void setIssuer(String issuer) {
-		this.issuer = issuer;
-	}
+    public Date getModifiedDate() {
+        return this.modifiedDate;
+    }
 
-	@Transient
-	public boolean isMustBePresent() {
-		return mustBePresent;
-	}
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
 
-	@Transient
-	public void setMustBePresent(boolean mustBePresent) {
-		this.mustBePresent = mustBePresent;
-	}
+    public String getXacmlId() {
+        return this.xacmlId;
+    }
 
-	public String getPriority() {
-		return priority;
-	}
+    public void setXacmlId(String xacmlId) {
+        this.xacmlId = xacmlId;
+    }
 
-	public void setPriority(String priority) {
-		this.priority = priority;
-	}
+    public Datatype getDatatypeBean() {
+        return this.datatypeBean;
+    }
+
+    public void setDatatypeBean(Datatype datatypeBean) {
+        this.datatypeBean = datatypeBean;
+    }
+
+    @Transient
+    public String getIssuer() {
+        return issuer;
+    }
+
+    @Transient
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
+    }
+
+    @Transient
+    public boolean isMustBePresent() {
+        return mustBePresent;
+    }
+
+    @Transient
+    public void setMustBePresent(boolean mustBePresent) {
+        this.mustBePresent = mustBePresent;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
 }
-	
+

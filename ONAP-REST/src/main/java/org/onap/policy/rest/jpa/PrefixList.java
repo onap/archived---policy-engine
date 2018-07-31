@@ -36,53 +36,53 @@ import javax.persistence.Table;
 @Table(name="PrefixList")
 @NamedQuery(name="PrefixList.findAll", query="SELECT e FROM PrefixList e ")
 public class PrefixList implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="pl_name", nullable=false)
-	@OrderBy("asc")
-	private String prefixListName;
-	
-	@Column(name="description", nullable=false)
-	private String description;
-	
-	@Column(name="pl_value", nullable=false)
-	private String prefixListValue;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public String getPrefixListName() {
-		return this.prefixListName;
-	}
+    @Column(name="pl_name", nullable=false)
+    @OrderBy("asc")
+    private String prefixListName;
 
-	public void setPrefixListName(String prefixListName) {
-		this.prefixListName = prefixListName;
+    @Column(name="description", nullable=false)
+    private String description;
 
-	}
-	
-	public String getDescription() {
-		return this.description;
-	}
+    @Column(name="pl_value", nullable=false)
+    private String prefixListValue;
 
-	public void setDescription(String description) {
-		this.description = description;
+    public String getPrefixListName() {
+        return this.prefixListName;
+    }
 
-	}
-	public int getId() {
-		return this.id;
-	}
+    public void setPrefixListName(String prefixListName) {
+        this.prefixListName = prefixListName;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getPrefixListValue() {
-		return this.prefixListValue;
-	}
+    }
 
-	public void setPrefixListValue(String prefixListValue) {
-		this.prefixListValue = prefixListValue;
-	}
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+
+    }
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getPrefixListValue() {
+        return this.prefixListValue;
+    }
+
+    public void setPrefixListValue(String prefixListValue) {
+        this.prefixListValue = prefixListValue;
+    }
 
 }

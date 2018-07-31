@@ -47,65 +47,65 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
 
 public class XACMLRestTest extends Mockito{
-	private static Log logger	= LogFactory.getLog(XACMLRestTest.class);
+    private static Log logger	= LogFactory.getLog(XACMLRestTest.class);
 
-	private List<String> headers = new ArrayList<>();
+    private List<String> headers = new ArrayList<>();
 
-	private HttpServletRequest httpServletRequest;
-	private HttpServletResponse httpServletResponse;
-	private ServletOutputStream mockOutput;
-	private ServletConfig servletConfig; 
+    private HttpServletRequest httpServletRequest;
+    private HttpServletResponse httpServletResponse;
+    private ServletOutputStream mockOutput;
+    private ServletConfig servletConfig;
 
 
-	@Before
-	public void setUp(){
-		httpServletRequest = Mockito.mock(HttpServletRequest.class);
-		Mockito.when(httpServletRequest.getMethod()).thenReturn("POST");
-		Mockito.when(httpServletRequest.getHeaderNames()).thenReturn(Collections.enumeration(headers));
-		Mockito.when(httpServletRequest.getAttributeNames()).thenReturn(Collections.enumeration(headers));
+    @Before
+    public void setUp(){
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        Mockito.when(httpServletRequest.getMethod()).thenReturn("POST");
+        Mockito.when(httpServletRequest.getHeaderNames()).thenReturn(Collections.enumeration(headers));
+        Mockito.when(httpServletRequest.getAttributeNames()).thenReturn(Collections.enumeration(headers));
 
-		mockOutput = Mockito.mock(ServletOutputStream.class);
+        mockOutput = Mockito.mock(ServletOutputStream.class);
 
-		httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
 
-		try {
-			Mockito.when(httpServletResponse.getOutputStream()).thenReturn(mockOutput);
-		} catch (IOException e) {
-			fail();
-		}
+        try {
+            Mockito.when(httpServletResponse.getOutputStream()).thenReturn(mockOutput);
+        } catch (IOException e) {
+            fail();
+        }
 
-		servletConfig = Mockito.mock(MockServletConfig.class);
-		Mockito.when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
-		Mockito.when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.pdp.properties");
+        servletConfig = Mockito.mock(MockServletConfig.class);
+        Mockito.when(servletConfig.getInitParameterNames()).thenReturn(Collections.enumeration(headers));
+        Mockito.when(servletConfig.getInitParameter("XACML_PROPERTIES_NAME")).thenReturn("xacml.pdp.properties");
 
-		System.setProperty("xacml.properties", "xacml.pdp.properties");
-		System.setProperty("xacml.rest.pdp.config", "config_testing");
-		System.setProperty("xacml.rest.pep.idfile", "testclient.properties"); 
-		System.setProperty("xacml.rest.pdp.webapps", "/webapps");
-		System.setProperty("xacml.rootPolicies", "test_PolicyEngine.xml");
-		System.setProperty("xacml.referencedPolicies", "test_PolicyEngine.xml");
-		System.setProperty("test_PolicyEngine.xml.file", "config_testing\\test_PolicyEngine.xml");
-		System.setProperty("xacml.rest.pdp.register", "false");
-	}
+        System.setProperty("xacml.properties", "xacml.pdp.properties");
+        System.setProperty("xacml.rest.pdp.config", "config_testing");
+        System.setProperty("xacml.rest.pep.idfile", "testclient.properties");
+        System.setProperty("xacml.rest.pdp.webapps", "/webapps");
+        System.setProperty("xacml.rootPolicies", "test_PolicyEngine.xml");
+        System.setProperty("xacml.referencedPolicies", "test_PolicyEngine.xml");
+        System.setProperty("test_PolicyEngine.xml.file", "config_testing\\test_PolicyEngine.xml");
+        System.setProperty("xacml.rest.pdp.register", "false");
+    }
 
-	@Test
-	public void testXacmlInit(){
-		logger.info("XACMLRestTest - testInit");
-		try {	
-			XACMLRest.xacmlInit(servletConfig);
-			Logger.getRootLogger().setLevel(Level.DEBUG);
-			XACMLRest.dumpRequest(httpServletRequest);
-			XACMLRest.loadXacmlProperties(null, null);
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	
-	@Test
-	public void testConstructorIsPrivate() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-		Constructor<XACMLRestProperties> constructor = XACMLRestProperties.class.getDeclaredConstructor();
-		assertTrue(Modifier.isPrivate(constructor.getModifiers()));
-		constructor.setAccessible(true);
-		constructor.newInstance();
-	}
+    @Test
+    public void testXacmlInit(){
+        logger.info("XACMLRestTest - testInit");
+        try {
+            XACMLRest.xacmlInit(servletConfig);
+            Logger.getRootLogger().setLevel(Level.DEBUG);
+            XACMLRest.dumpRequest(httpServletRequest);
+            XACMLRest.loadXacmlProperties(null, null);
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testConstructorIsPrivate() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor<XACMLRestProperties> constructor = XACMLRestProperties.class.getDeclaredConstructor();
+        assertTrue(Modifier.isPrivate(constructor.getModifiers()));
+        constructor.setAccessible(true);
+        constructor.newInstance();
+    }
 }

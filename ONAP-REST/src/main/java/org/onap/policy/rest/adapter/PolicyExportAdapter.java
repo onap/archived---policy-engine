@@ -24,13 +24,13 @@ package org.onap.policy.rest.adapter;
 import java.util.List;
 
 public class PolicyExportAdapter {
-	
-	private List<Object> policyDatas;
-	
-	public List<Object> getPolicyDatas() {
-		return policyDatas;
-	}
-	public void setPolicyDatas(List<Object> policyDatas) {
-		this.policyDatas = policyDatas;
-	}
+
+    private List<Object> policyDatas;
+
+    public List<Object> getPolicyDatas() {
+        return policyDatas;
+    }
+    public void setPolicyDatas(List<Object> policyDatas) {
+        this.policyDatas = policyDatas;
+    }
 }

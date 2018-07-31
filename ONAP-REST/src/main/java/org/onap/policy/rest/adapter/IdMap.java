@@ -23,20 +23,20 @@ package org.onap.policy.rest.adapter;
 
 public class IdMap {
 
-	protected String astraId;
-	protected String vendorId;
-	
-	public String getAstraId() {
-		return astraId;
-	}
-	public void setAstraId(String astraId) {
-		this.astraId = astraId;
-	}
-	public String getVendorId() {
-		return vendorId;
-	}
-	public void setVendorId(String vendorId) {
-		this.vendorId = vendorId;
-	}
-	
+    protected String astraId;
+    protected String vendorId;
+
+    public String getAstraId() {
+        return astraId;
+    }
+    public void setAstraId(String astraId) {
+        this.astraId = astraId;
+    }
+    public String getVendorId() {
+        return vendorId;
+    }
+    public void setVendorId(String vendorId) {
+        this.vendorId = vendorId;
+    }
+
 }

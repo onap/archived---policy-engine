@@ -35,56 +35,56 @@ import javax.persistence.Table;
 @Entity
 @Table(name="POLICYSCORE")
 @NamedQueries({
-	@NamedQuery(name="POLICYSCORE.findAll", query="SELECT p FROM PolicyScore p"),
-	@NamedQuery(name="POLICYSCORE.deleteAll", query="DELETE FROM PolicyScore WHERE 1=1"),
-	@NamedQuery(name="POLICYSCORE.findByPolicyName", query="Select p from PolicyScore p where p.PolicyName=:pname")
+    @NamedQuery(name="POLICYSCORE.findAll", query="SELECT p FROM PolicyScore p"),
+    @NamedQuery(name="POLICYSCORE.deleteAll", query="DELETE FROM PolicyScore WHERE 1=1"),
+    @NamedQuery(name="POLICYSCORE.findByPolicyName", query="Select p from PolicyScore p where p.PolicyName=:pname")
 })
 public class PolicyScore implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="POLICY_NAME", nullable=false)
-	@OrderBy("asc")
-	private String PolicyName;
-	
-	@Column(name="VERSIONEXTENSION", nullable=false)
-	@OrderBy("asc")
-	private String VersionExtension;
-	
-	@Column(name="POLICY_SCORE", nullable=true)
-	private String PolicyScore;
-	
-	public int getId() {
-		return id;
-	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getPolicyName() {
-		return PolicyName;
-	}
-	public void setPolicyName(String policyName) {
-		PolicyName = policyName;
-	}
-	public String getVersionExtension() {
-		return VersionExtension;
-	}
+    private static final long serialVersionUID = 1L;
 
-	public void setVersionExtension(String versionExtension) {
-		VersionExtension = versionExtension;
-	}
-	public String getPolicyScore() {
-		return PolicyScore;
-	}
-	public void setPolicyScore(String policyScore) {
-		PolicyScore = policyScore;
-	}
-		
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
+
+    @Column(name="POLICY_NAME", nullable=false)
+    @OrderBy("asc")
+    private String PolicyName;
+
+    @Column(name="VERSIONEXTENSION", nullable=false)
+    @OrderBy("asc")
+    private String VersionExtension;
+
+    @Column(name="POLICY_SCORE", nullable=true)
+    private String PolicyScore;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getPolicyName() {
+        return PolicyName;
+    }
+    public void setPolicyName(String policyName) {
+        PolicyName = policyName;
+    }
+    public String getVersionExtension() {
+        return VersionExtension;
+    }
+
+    public void setVersionExtension(String versionExtension) {
+        VersionExtension = versionExtension;
+    }
+    public String getPolicyScore() {
+        return PolicyScore;
+    }
+    public void setPolicyScore(String policyScore) {
+        PolicyScore = policyScore;
+    }
+
 
 }

@@ -27,22 +27,22 @@ import org.junit.Test;
 
 public class RainyDayParamsTest {
 
-	@Test
-	public void testRainyDayParams(){
-		RainyDayParams params = new RainyDayParams();
-		params.setServiceType("Test");
-		assertTrue("Test".equals(params.getServiceType()));
-		params.setVnfType("Test");
-		assertTrue("Test".equals(params.getVnfType()));
-		params.setBbid("Test");
-		assertTrue("Test".equals(params.getBbid()));
-		params.setWorkstep("Test");
-		assertTrue("Test".equals(params.getWorkstep()));
-		params.setTreatmentTableChoices(new ArrayList<>());
-		assertTrue(params.getTreatmentTableChoices() != null);
-		params.setErrorcode(new ArrayList<>());
-		assertTrue(params.getErrorcode() != null);
-		params.setTreatment(new ArrayList<>());
-		assertTrue(params.getTreatment() != null);
-	}
+    @Test
+    public void testRainyDayParams(){
+        RainyDayParams params = new RainyDayParams();
+        params.setServiceType("Test");
+        assertTrue("Test".equals(params.getServiceType()));
+        params.setVnfType("Test");
+        assertTrue("Test".equals(params.getVnfType()));
+        params.setBbid("Test");
+        assertTrue("Test".equals(params.getBbid()));
+        params.setWorkstep("Test");
+        assertTrue("Test".equals(params.getWorkstep()));
+        params.setTreatmentTableChoices(new ArrayList<>());
+        assertTrue(params.getTreatmentTableChoices() != null);
+        params.setErrorcode(new ArrayList<>());
+        assertTrue(params.getErrorcode() != null);
+        params.setTreatment(new ArrayList<>());
+        assertTrue(params.getTreatment() != null);
+    }
 }

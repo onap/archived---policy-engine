@@ -36,79 +36,79 @@ import com.att.research.xacml.api.Identifier;
 @Table(name="RuleAlgorithms")
 @NamedQuery(name="RuleAlgorithms.findAll", query="SELECT d FROM RuleAlgorithms d")
 public class RuleAlgorithms implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public static final char STANDARD = 'S';
-	public static final char CUSTOM = 'C';
+    public static final char STANDARD = 'S';
+    public static final char CUSTOM = 'C';
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="is_standard", nullable=false)
-	private char isStandard;
+    @Column(name="is_standard", nullable=false)
+    private char isStandard;
 
-	@Column(name="xacml_id", nullable=false, unique=true, length=255)
-	private String xacmlId;
-	
-	@Column(name="short_name", nullable=false, length=64)
-	private String shortName;
+    @Column(name="xacml_id", nullable=false, unique=true, length=255)
+    private String xacmlId;
 
-	public RuleAlgorithms(Identifier id, char standard) {
-		if (id != null) {
-			this.xacmlId = id.stringValue();
-		}
-		this.isStandard = standard;
-	}
-	public RuleAlgorithms(Identifier id) {
-		this(id, RuleAlgorithms.STANDARD);
-	}
+    @Column(name="short_name", nullable=false, length=64)
+    private String shortName;
 
-	public RuleAlgorithms() {
-		this(null, RuleAlgorithms.STANDARD);
-	}
+    public RuleAlgorithms(Identifier id, char standard) {
+        if (id != null) {
+            this.xacmlId = id.stringValue();
+        }
+        this.isStandard = standard;
+    }
+    public RuleAlgorithms(Identifier id) {
+        this(id, RuleAlgorithms.STANDARD);
+    }
 
-	public int getId() {
-		return this.id;
-	}
+    public RuleAlgorithms() {
+        this(null, RuleAlgorithms.STANDARD);
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public char getIsStandard() {
-		return this.isStandard;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setIsStandard(char isStandard) {
-		this.isStandard = isStandard;
-	}
-	
-	@Transient
-	public boolean isStandard() {
-		return this.isStandard == RuleAlgorithms.STANDARD;
-	}
-	
-	@Transient
-	public boolean isCustom() {
-		return this.isStandard == RuleAlgorithms.CUSTOM;
-	}
+    public char getIsStandard() {
+        return this.isStandard;
+    }
 
-	public String getXacmlId() {
-		return this.xacmlId;
-	}
+    public void setIsStandard(char isStandard) {
+        this.isStandard = isStandard;
+    }
 
-	public void setXacmlId(String xacmlId) {
-		this.xacmlId = xacmlId;
-	}
+    @Transient
+    public boolean isStandard() {
+        return this.isStandard == RuleAlgorithms.STANDARD;
+    }
 
-	public String getShortName() {
-		return shortName;
-	}
+    @Transient
+    public boolean isCustom() {
+        return this.isStandard == RuleAlgorithms.CUSTOM;
+    }
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
+    public String getXacmlId() {
+        return this.xacmlId;
+    }
+
+    public void setXacmlId(String xacmlId) {
+        this.xacmlId = xacmlId;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
 
 }

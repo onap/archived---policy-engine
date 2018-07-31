@@ -23,22 +23,22 @@ package org.onap.policy.rest.adapter;
 
 
 public class ClosedLoopFaultTriggerUISignatures {
-	
-	private String signatures;
-	
-	private String connectSignatures;
-	
-	public String getConnectSignatures() {
-		return connectSignatures;
-	}
-	public void setConnectSignatures(String connectSignatures) {
-		this.connectSignatures = connectSignatures;
-	}
-	public String getSignatures() {
-		return signatures;
-	}
-	public void setSignatures(String signatures) {
-		this.signatures = signatures;
-	}
-	
+
+    private String signatures;
+
+    private String connectSignatures;
+
+    public String getConnectSignatures() {
+        return connectSignatures;
+    }
+    public void setConnectSignatures(String connectSignatures) {
+        this.connectSignatures = connectSignatures;
+    }
+    public String getSignatures() {
+        return signatures;
+    }
+    public void setSignatures(String signatures) {
+        this.signatures = signatures;
+    }
+
 }

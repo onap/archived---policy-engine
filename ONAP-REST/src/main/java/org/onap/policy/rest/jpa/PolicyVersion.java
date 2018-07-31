@@ -41,164 +41,164 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="PolicyVersion")
 @NamedQueries({
-	@NamedQuery(name="PolicyVersion.findAll", query="SELECT p FROM PolicyVersion p"),
-	@NamedQuery(name="PolicyVersion.deleteAll", query="DELETE FROM PolicyVersion WHERE 1=1"),
-	@NamedQuery(name="PolicyVersion.findByPolicyName", query="Select p from PolicyVersion p where p.policyName=:pname"),
-	@NamedQuery(name="PolicyVersion.findAllCount", query="SELECT COUNT(p) FROM PolicyVersion p")
+    @NamedQuery(name="PolicyVersion.findAll", query="SELECT p FROM PolicyVersion p"),
+    @NamedQuery(name="PolicyVersion.deleteAll", query="DELETE FROM PolicyVersion WHERE 1=1"),
+    @NamedQuery(name="PolicyVersion.findByPolicyName", query="Select p from PolicyVersion p where p.policyName=:pname"),
+    @NamedQuery(name="PolicyVersion.findAllCount", query="SELECT COUNT(p) FROM PolicyVersion p")
 })
 public class PolicyVersion implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	
-	@Column(name="id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 
-	@Column(name="POLICY_NAME", nullable=false, length=255)
-	private String policyName;	
-	
-	@Column(name="ACTIVE_VERSION")
-	private int activeVersion;
-	
-	@Column(name="HIGHEST_VERSION")
-	private int higherVersion;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", nullable=false)
-	private Date createdDate;
-	
-	
-	public int getActiveVersion() {
-		return activeVersion;
-	}
+    @Column(name="id")
+    private int id;
 
-	public void setActiveVersion(int activeVersion) {
-		this.activeVersion = activeVersion;
-	}
+    @Column(name="POLICY_NAME", nullable=false, length=255)
+    private String policyName;
 
-	public int getHigherVersion() {
-		return higherVersion;
-	}
+    @Column(name="ACTIVE_VERSION")
+    private int activeVersion;
 
-	public void setHigherVersion(int higherVersion) {
-		this.higherVersion = higherVersion;
-	}
+    @Column(name="HIGHEST_VERSION")
+    private int higherVersion;
 
-	@Column(name="CREATED_BY", nullable=false, length=45)
-	private String createdBy;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
-	
-	
-	@Column(name="modified_by", nullable=false, length=45)
-	private String modifiedBy;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", nullable=false)
+    private Date createdDate;
 
-	public PolicyVersion(String domain, String loginUserId) {
-		this(domain);
-		this.createdBy = loginUserId;
-		this.modifiedBy = loginUserId;
-	}
-	
-	public PolicyVersion(String domain) {
-		this.policyName = domain;
-	}
-	
-	public PolicyVersion(){
-		// Empty constructor
-	}
-	
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
 
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate =  new Date();
-	}
-	
-	public int getId() {
-		return id;
-	}
+    public int getActiveVersion() {
+        return activeVersion;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setActiveVersion(int activeVersion) {
+        this.activeVersion = activeVersion;
+    }
 
-	public String getPolicyName() {
-		return policyName;
-	}
+    public int getHigherVersion() {
+        return higherVersion;
+    }
 
-	public void setPolicyName(String policyName) {
-		this.policyName = policyName;
-	}
-	
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+    public void setHigherVersion(int higherVersion) {
+        this.higherVersion = higherVersion;
+    }
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+    @Column(name="CREATED_BY", nullable=false, length=45)
+    private String createdBy;
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
 
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
+    @Column(name="modified_by", nullable=false, length=45)
+    private String modifiedBy;
 
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
+    public PolicyVersion(String domain, String loginUserId) {
+        this(domain);
+        this.createdBy = loginUserId;
+        this.modifiedBy = loginUserId;
+    }
 
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
+    public PolicyVersion(String domain) {
+        this.policyName = domain;
+    }
 
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-	
-	@Override
-	public int hashCode() {
-	return Objects.hash(id, policyName,	activeVersion, higherVersion, createdDate, 
-			createdBy, modifiedDate, modifiedBy);
-	}
+    public PolicyVersion(){
+        // Empty constructor
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if(obj == null){
-			return false;
-		}
-		if(obj == this){
-			return true;
-		}
-		if(!(obj instanceof PolicyVersion)){
-			return false;
-		}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
 
-		PolicyVersion p = (PolicyVersion) obj;
-		
-		return id == p.id &&
-				policyName.equals(p.policyName) &&
-				activeVersion == p.activeVersion &&
-				higherVersion == p.higherVersion &&
-				createdDate.equals(p.createdDate) &&
-				createdBy.equals(p.createdBy) &&
-				modifiedDate.equals(p.modifiedDate) &&
-				modifiedBy.equals(p.modifiedBy);
-	}
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate =  new Date();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPolicyName() {
+        return policyName;
+    }
+
+    public void setPolicyName(String policyName) {
+        this.policyName = policyName;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    @Override
+    public int hashCode() {
+    return Objects.hash(id, policyName,	activeVersion, higherVersion, createdDate,
+            createdBy, modifiedDate, modifiedBy);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null){
+            return false;
+        }
+        if(obj == this){
+            return true;
+        }
+        if(!(obj instanceof PolicyVersion)){
+            return false;
+        }
+
+        PolicyVersion p = (PolicyVersion) obj;
+
+        return id == p.id &&
+                policyName.equals(p.policyName) &&
+                activeVersion == p.activeVersion &&
+                higherVersion == p.higherVersion &&
+                createdDate.equals(p.createdDate) &&
+                createdBy.equals(p.createdBy) &&
+                modifiedDate.equals(p.modifiedDate) &&
+                modifiedBy.equals(p.modifiedBy);
+    }
 
 }
-	
+

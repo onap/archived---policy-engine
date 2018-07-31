@@ -37,50 +37,50 @@ import javax.persistence.Table;
 @Table(name="SafePolicyWarning")
 @NamedQuery(name="SafePolicyWarning.findAll", query="SELECT e FROM SafePolicyWarning e ")
 public class SafePolicyWarning implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false)
-	@OrderBy("asc")
-	private String name;
-	
-	@Column(name="message")
-	private String message ;
-	
-	@Column(name="riskType")
-	private String riskType ;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public String getRiskType() {
-		return riskType;
-	}
-	public void setRiskType(String riskType) {
-		this.riskType = riskType;
-	}	
-	
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="name", nullable=false)
+    @OrderBy("asc")
+    private String name;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return this.name;
-	}
+    @Column(name="message")
+    private String message ;
 
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public void setName(String name) {
-		this.name = name;
+    @Column(name="riskType")
+    private String riskType ;
 
-	}
+    public String getRiskType() {
+        return riskType;
+    }
+    public void setRiskType(String riskType) {
+        this.riskType = riskType;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getName() {
+        return this.name;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    public void setName(String name) {
+        this.name = name;
+
+    }
 
 }

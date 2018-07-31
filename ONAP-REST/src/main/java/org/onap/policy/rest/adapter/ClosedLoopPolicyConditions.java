@@ -22,18 +22,18 @@ package org.onap.policy.rest.adapter;
 
 
 public enum ClosedLoopPolicyConditions {
-	SEND("DCAE should send event notification"),
+    SEND("DCAE should send event notification"),
 
-	NOTSEND("DCAE should not send event notification");
-	private String name;
+    NOTSEND("DCAE should not send event notification");
+    private String name;
 
-	private ClosedLoopPolicyConditions(String name){
-		this.name = name;
-	}
+    private ClosedLoopPolicyConditions(String name){
+        this.name = name;
+    }
 
-	@Override
-	public String toString(){
-		return this.name;
-	}
+    @Override
+    public String toString(){
+        return this.name;
+    }
 }
 

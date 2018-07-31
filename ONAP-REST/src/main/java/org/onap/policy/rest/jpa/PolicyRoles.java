@@ -45,59 +45,59 @@ import org.onap.policy.rest.jpa.UserInfo;
 @Table(name="roles")
 @NamedQuery(name="PolicyRoles.findAll", query="SELECT r FROM PolicyRoles r ")
 public class PolicyRoles implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	
-	@Column(name="id")
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 
-	@ManyToOne
-	@JoinColumn(name="loginid")
-	@OrderBy("asc")
-	private UserInfo loginId;
+    @Column(name="id")
+    private int id;
 
-	public UserInfo getLoginId() {
-		return loginId;
-	}
+    @ManyToOne
+    @JoinColumn(name="loginid")
+    @OrderBy("asc")
+    private UserInfo loginId;
 
-	public void setLoginId(UserInfo loginId) {
-		this.loginId = loginId;
-	}
+    public UserInfo getLoginId() {
+        return loginId;
+    }
 
-	@Column(name="scope", nullable=true, length=45)
-	private String scope;
+    public void setLoginId(UserInfo loginId) {
+        this.loginId = loginId;
+    }
 
-	@Column(name="role", nullable=false, length=45)
-	private String role;
-	
-	public PolicyRoles() {
-		// Empty constructor
-	}
+    @Column(name="scope", nullable=true, length=45)
+    private String scope;
 
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="role", nullable=false, length=45)
+    private String role;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public PolicyRoles() {
+        // Empty constructor
+    }
 
-	public String getScope() {
-		return this.scope;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setScope(String scope) {
-		this.scope = scope;
-		
-	}
-	public String getRole() {
-		return this.role;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setRole(String role) {
-		this.role = role;
-	}
+    public String getScope() {
+        return this.scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+
+    }
+    public String getRole() {
+        return this.role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
 }

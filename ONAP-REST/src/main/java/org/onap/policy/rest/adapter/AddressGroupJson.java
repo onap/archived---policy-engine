@@ -26,59 +26,59 @@ import java.util.List;
 
 public class AddressGroupJson {
 
-	protected String name;
-	protected String description;
-	protected List<AddressMembersJson> members;
-	
-	// name
-	public String getName() {
-		return name;
-	}
+    protected String name;
+    protected String description;
+    protected List<AddressMembersJson> members;
 
-	public void setName(String value) {
-		this.name = value;
-	}
-	
-	@Override
-	public boolean equals(Object obj){
-		if(obj == null){
-			return false;
-		}
-		if(this.getClass() != obj.getClass()){
-			return false;
-		}
-		AddressGroupJson servGroupobj=(AddressGroupJson) obj;
-		if(this.getName().equals(servGroupobj.getName())){
-			return true;
-		}	
-		return false;
-	}
-	@Override
-	public int hashCode() {
-	    return Integer.valueOf(name.charAt(0)+(name.charAt(1)));
-	 }
-	
-	// description
-	public String getDescription() {
-		return description;
-	}
+    // name
+    public String getName() {
+        return name;
+    }
 
-	public void setDescription(String value) {
-		this.description = value;
-	}
-	
-	public List<AddressMembersJson> getMembers() 
+    public void setName(String value) {
+        this.name = value;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj == null){
+            return false;
+        }
+        if(this.getClass() != obj.getClass()){
+            return false;
+        }
+        AddressGroupJson servGroupobj=(AddressGroupJson) obj;
+        if(this.getName().equals(servGroupobj.getName())){
+            return true;
+        }
+        return false;
+    }
+    @Override
+    public int hashCode() {
+        return Integer.valueOf(name.charAt(0)+(name.charAt(1)));
+     }
+
+    // description
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String value) {
+        this.description = value;
+    }
+
+    public List<AddressMembersJson> getMembers()
     {
-    	if(members==null)
-    	{
-    		members= new ArrayList<>();
-    	}
+        if(members==null)
+        {
+            members= new ArrayList<>();
+        }
         return this.members;
     }
 
-	public void setMembers(List<AddressMembersJson> members) 
-	{
-	        this.members = members;
-	}
+    public void setMembers(List<AddressMembersJson> members)
+    {
+            this.members = members;
+    }
 
 }

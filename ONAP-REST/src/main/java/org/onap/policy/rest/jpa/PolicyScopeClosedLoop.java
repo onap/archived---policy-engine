@@ -37,41 +37,41 @@ import javax.persistence.Table;
 @Table(name="PolicyScopeClosedLoop")
 @NamedQuery(name="PolicyScopeClosedLoop.findAll", query="SELECT e FROM PolicyScopeClosedLoop e ")
 public class PolicyScopeClosedLoop implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false)
-	@OrderBy("asc")
-	private String name;
-	
-	@Column(name="description ")
-	private String description ;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public int getId() {
-		return this.id;
-	}
+    @Column(name="name", nullable=false)
+    @OrderBy("asc")
+    private String name;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return this.name;
-	}
+    @Column(name="description ")
+    private String description ;
 
-	public void setName(String name) {
-		this.name = name;
+    public int getId() {
+        return this.id;
+    }
 
-	}
-	public String getDescriptionValue() {
-		return this.description ;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getName() {
+        return this.name;
+    }
 
-	public void setDescriptionValue(String description ) {
-		this.description  = description ;
-	}
+    public void setName(String name) {
+        this.name = name;
+
+    }
+    public String getDescriptionValue() {
+        return this.description ;
+    }
+
+    public void setDescriptionValue(String description ) {
+        this.description  = description ;
+    }
 }

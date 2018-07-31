@@ -42,91 +42,91 @@ import javax.persistence.Transient;
 @Table(name="PIPType")
 @NamedQuery(name="PIPType.findAll", query="SELECT p FROM PIPType p")
 public class PIPType implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	public static final String TYPE_SQL = "SQL";
-	public static final String TYPE_LDAP = "LDAP";
-	public static final String TYPE_CSV = "CSV";
-	public static final String TYPE_HYPERCSV = "Hyper-CSV";
-	public static final String TYPE_CUSTOM = "Custom";
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    public static final String TYPE_SQL = "SQL";
+    public static final String TYPE_LDAP = "LDAP";
+    public static final String TYPE_CSV = "CSV";
+    public static final String TYPE_HYPERCSV = "Hyper-CSV";
+    public static final String TYPE_CUSTOM = "Custom";
 
-	@Column(name="type", nullable=false, length=45)
-	private String type;
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	//bi-directional many-to-one association to PIPConfiguration
-	@OneToMany(mappedBy="piptype")
-	private Set<PIPConfiguration> pipconfigurations;
+    @Column(name="type", nullable=false, length=45)
+    private String type;
 
-	public PIPType() {
-		// Empty constructor
-	}
+    //bi-directional many-to-one association to PIPConfiguration
+    @OneToMany(mappedBy="piptype")
+    private Set<PIPConfiguration> pipconfigurations;
 
-	public int getId() {
-		return this.id;
-	}
+    public PIPType() {
+        // Empty constructor
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public String getType() {
-		return this.type;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public String getType() {
+        return this.type;
+    }
 
-	public Set<PIPConfiguration> getPipconfigurations() {
-		return this.pipconfigurations;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public void setPipconfigurations(Set<PIPConfiguration> pipconfigurations) {
-		this.pipconfigurations = pipconfigurations;
-	}
+    public Set<PIPConfiguration> getPipconfigurations() {
+        return this.pipconfigurations;
+    }
 
-	public PIPConfiguration addPipconfiguration(PIPConfiguration pipconfiguration) {
-		getPipconfigurations().add(pipconfiguration);
-		pipconfiguration.setPiptype(this);
+    public void setPipconfigurations(Set<PIPConfiguration> pipconfigurations) {
+        this.pipconfigurations = pipconfigurations;
+    }
 
-		return pipconfiguration;
-	}
+    public PIPConfiguration addPipconfiguration(PIPConfiguration pipconfiguration) {
+        getPipconfigurations().add(pipconfiguration);
+        pipconfiguration.setPiptype(this);
 
-	public PIPConfiguration removePipconfiguration(PIPConfiguration pipconfiguration) {
-		getPipconfigurations().remove(pipconfiguration);
-		pipconfiguration.setPiptype(null);
+        return pipconfiguration;
+    }
 
-		return pipconfiguration;
-	}
-	
-	@Transient
-	public boolean	isSQL() {
-		return this.type.equals(TYPE_SQL);
-	}
+    public PIPConfiguration removePipconfiguration(PIPConfiguration pipconfiguration) {
+        getPipconfigurations().remove(pipconfiguration);
+        pipconfiguration.setPiptype(null);
 
-	@Transient
-	public boolean	isLDAP() {
-		return this.type.equals(TYPE_LDAP);
-	}
+        return pipconfiguration;
+    }
 
-	@Transient
-	public boolean	isCSV() {
-		return this.type.equals(TYPE_CSV);
-	}
+    @Transient
+    public boolean	isSQL() {
+        return this.type.equals(TYPE_SQL);
+    }
 
-	@Transient
-	public boolean	isHyperCSV() {
-		return this.type.equals(TYPE_HYPERCSV);
-	}
+    @Transient
+    public boolean	isLDAP() {
+        return this.type.equals(TYPE_LDAP);
+    }
 
-	@Transient
-	public boolean	isCustom() {
-		return this.type.equals(TYPE_CUSTOM);
-	}
+    @Transient
+    public boolean	isCSV() {
+        return this.type.equals(TYPE_CSV);
+    }
+
+    @Transient
+    public boolean	isHyperCSV() {
+        return this.type.equals(TYPE_HYPERCSV);
+    }
+
+    @Transient
+    public boolean	isCustom() {
+        return this.type.equals(TYPE_CUSTOM);
+    }
 
 }

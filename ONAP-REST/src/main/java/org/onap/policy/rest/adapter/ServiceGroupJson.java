@@ -26,60 +26,60 @@ import java.util.List;
 
 public class ServiceGroupJson {
 
-	protected String name;
-	protected String description;
-	protected List<ServiceMembers> members;
-	
-	// name
-	public String getName() {
-		return name;
-	}
+    protected String name;
+    protected String description;
+    protected List<ServiceMembers> members;
 
-	public void setName(String value) {
-		this.name = value;
-	}
+    // name
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public boolean equals(Object obj){
-		if(obj == null){
-			return false;
-		}
-		if(this.getClass() != obj.getClass()){
-			return false;
-		}
-		ServiceGroupJson servGroupobj=(ServiceGroupJson) obj;
-		if(this.getName().equals(servGroupobj.getName())){
-			return true;
-		}
-		return false;
-	}
+    public void setName(String value) {
+        this.name = value;
+    }
 
-	@Override
-	public int hashCode() {
-	    return Integer.valueOf(name.charAt(0)+(name.charAt(1)));
-	 }
-	
-	// description
-	public String getDescription() {
-		return description;
-	}
+    @Override
+    public boolean equals(Object obj){
+        if(obj == null){
+            return false;
+        }
+        if(this.getClass() != obj.getClass()){
+            return false;
+        }
+        ServiceGroupJson servGroupobj=(ServiceGroupJson) obj;
+        if(this.getName().equals(servGroupobj.getName())){
+            return true;
+        }
+        return false;
+    }
 
-	public void setDescription(String value) {
-		this.description = value;
-	}
-	
-	public List<ServiceMembers> getMembers() 
+    @Override
+    public int hashCode() {
+        return Integer.valueOf(name.charAt(0)+(name.charAt(1)));
+     }
+
+    // description
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String value) {
+        this.description = value;
+    }
+
+    public List<ServiceMembers> getMembers()
     {
-    	if(members==null)
-    	{
-    		members= new ArrayList<>();
-    	}
+        if(members==null)
+        {
+            members= new ArrayList<>();
+        }
         return this.members;
     }
 
-	public void setMembers(List<ServiceMembers> members) 
-	{
-	        this.members = members;
-	}
+    public void setMembers(List<ServiceMembers> members)
+    {
+            this.members = members;
+    }
 
 }

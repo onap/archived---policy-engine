@@ -32,29 +32,29 @@ import javax.persistence.Table;
 @NamedQuery(name="PolicyGroupEntity.findAll", query="SELECT p FROM PolicyGroupEntity p ")
 public class PolicyGroupEntity implements Serializable{
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name="groupKey")
-	private int groupKey;
-	
-	@Id
-	@Column(name="policyid")
-	private int policyid;
+    @Id
+    @Column(name="groupKey")
+    private int groupKey;
 
-	public int getGroupKey() {
-		return groupKey;
-	}
+    @Id
+    @Column(name="policyid")
+    private int policyid;
 
-	public void setGroupKey(int groupKey) {
-		this.groupKey = groupKey;
-	}
+    public int getGroupKey() {
+        return groupKey;
+    }
 
-	public int getPolicyid() {
-		return policyid;
-	}
+    public void setGroupKey(int groupKey) {
+        this.groupKey = groupKey;
+    }
 
-	public void setPolicyid(int policyid) {
-		this.policyid = policyid;
-	}
+    public int getPolicyid() {
+        return policyid;
+    }
+
+    public void setPolicyid(int policyid) {
+        this.policyid = policyid;
+    }
 }

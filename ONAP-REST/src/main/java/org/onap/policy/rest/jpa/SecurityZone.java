@@ -36,41 +36,41 @@ import javax.persistence.Table;
 @Table(name="securityzone")
 @NamedQuery(name="SecurityZone.findAll", query="SELECT e FROM SecurityZone e ")
 public class SecurityZone implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false)
-	@OrderBy("asc")
-	private String zoneName;
-	
-	@Column(name="value")
-	private String zoneValue;
-	
-	public int getId() {
-		return this.id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getZoneName() {
-		return this.zoneName;
-	}
+    @Column(name="name", nullable=false)
+    @OrderBy("asc")
+    private String zoneName;
 
-	public void setZoneName(String zoneName) {
-		this.zoneName = zoneName;
+    @Column(name="value")
+    private String zoneValue;
 
-	}
-	public String getZoneValue() {
-		return this.zoneValue;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setZoneValue(String zoneValue) {
-		this.zoneValue = zoneValue;
-	}
-	
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getZoneName() {
+        return this.zoneName;
+    }
+
+    public void setZoneName(String zoneName) {
+        this.zoneName = zoneName;
+
+    }
+    public String getZoneValue() {
+        return this.zoneValue;
+    }
+
+    public void setZoneValue(String zoneValue) {
+        this.zoneValue = zoneValue;
+    }
+
 }

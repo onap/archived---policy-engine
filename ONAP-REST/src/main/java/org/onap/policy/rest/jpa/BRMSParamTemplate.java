@@ -51,85 +51,85 @@ import org.onap.policy.rest.jpa.UserInfo;
 @Table(name="BRMSParamTemplate")
 @NamedQuery(name="BRMSParamTemplate.findAll", query="SELECT b FROM BRMSParamTemplate b ")
 public class BRMSParamTemplate implements Serializable{
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="param_template_name", nullable=false, unique=true)
-	@OrderBy("asc")
-	private String ruleName;
-	
-	@Lob
-	@Column(name="rule",nullable=false)
-	private String rule; 
-	
-	@Column(name="description", nullable=true, length=2048)
-	private String description;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
-	
+    private static final long serialVersionUID = 1L;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name="created_by")
-	private UserInfo userCreatedBy;
-	
-	public UserInfo getUserCreatedBy() {
-		return userCreatedBy;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public void setUserCreatedBy(UserInfo userCreatedBy) {
-		this.userCreatedBy = userCreatedBy;
-	}
-	
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-	}
-	
-	public int getId() {
-		return this.id;
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
-	
+    @Column(name="param_template_name", nullable=false, unique=true)
+    @OrderBy("asc")
+    private String ruleName;
 
-	public Date getCreatedDate() {
-		return this.createdDate;
-	}
+    @Lob
+    @Column(name="rule",nullable=false)
+    private String rule;
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+    @Column(name="description", nullable=true, length=2048)
+    private String description;
 
-	public String getDescription() {
-		return this.description;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	public String getRule(){
-		return this.rule;
-	}
-	
-	public void setRule(String rule){
-		this.rule = rule;
-	}
-	
-	public String getRuleName(){
-		return this.ruleName;
-	}
-	
-	public void setRuleName(String ruleName){
-		this.ruleName = ruleName;
-	}
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name="created_by")
+    private UserInfo userCreatedBy;
+
+    public UserInfo getUserCreatedBy() {
+        return userCreatedBy;
+    }
+
+    public void setUserCreatedBy(UserInfo userCreatedBy) {
+        this.userCreatedBy = userCreatedBy;
+    }
+
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+    public Date getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getRule(){
+        return this.rule;
+    }
+
+    public void setRule(String rule){
+        this.rule = rule;
+    }
+
+    public String getRuleName(){
+        return this.ruleName;
+    }
+
+    public void setRuleName(String ruleName){
+        this.ruleName = ruleName;
+    }
 }

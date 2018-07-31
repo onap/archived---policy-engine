@@ -26,30 +26,30 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 public class YAMLParamsTest {
-	
-	@Test
-	public void testYAMLParams(){
-		YAMLParams yamlParams = new YAMLParams();
-		yamlParams.setActor("Test");
-		assertTrue("Test".equals(yamlParams.getActor()));
-		yamlParams.setRecipe("Test");
-		assertTrue("Test".equals(yamlParams.getRecipe()));
-		yamlParams.setClname("Test");
-		assertTrue("Test".equals(yamlParams.getClname()));
-		yamlParams.setGuardActiveEnd("Test");
-		assertTrue("Test".equals(yamlParams.getGuardActiveEnd()));
-		yamlParams.setGuardActiveStart("Test");
-		assertTrue("Test".equals(yamlParams.getGuardActiveStart()));
-		yamlParams.setLimit("Test");
-		assertTrue("Test".equals(yamlParams.getLimit()));
-		yamlParams.setBlackList(new ArrayList<>());
-		assertTrue(yamlParams.getBlackList() != null);
-		yamlParams.setTargets(new ArrayList<>());
-		assertTrue(yamlParams.getTargets() != null);
-		yamlParams.setTimeUnits("Test");
-		assertTrue("Test".equals(yamlParams.getTimeUnits()));
-		yamlParams.setTimeWindow("Test");
-		assertTrue("Test".equals(yamlParams.getTimeWindow()));
-	}
+
+    @Test
+    public void testYAMLParams(){
+        YAMLParams yamlParams = new YAMLParams();
+        yamlParams.setActor("Test");
+        assertTrue("Test".equals(yamlParams.getActor()));
+        yamlParams.setRecipe("Test");
+        assertTrue("Test".equals(yamlParams.getRecipe()));
+        yamlParams.setClname("Test");
+        assertTrue("Test".equals(yamlParams.getClname()));
+        yamlParams.setGuardActiveEnd("Test");
+        assertTrue("Test".equals(yamlParams.getGuardActiveEnd()));
+        yamlParams.setGuardActiveStart("Test");
+        assertTrue("Test".equals(yamlParams.getGuardActiveStart()));
+        yamlParams.setLimit("Test");
+        assertTrue("Test".equals(yamlParams.getLimit()));
+        yamlParams.setBlackList(new ArrayList<>());
+        assertTrue(yamlParams.getBlackList() != null);
+        yamlParams.setTargets(new ArrayList<>());
+        assertTrue(yamlParams.getTargets() != null);
+        yamlParams.setTimeUnits("Test");
+        assertTrue("Test".equals(yamlParams.getTimeUnits()));
+        yamlParams.setTimeWindow("Test");
+        assertTrue("Test".equals(yamlParams.getTimeWindow()));
+    }
 
 }

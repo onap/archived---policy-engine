@@ -45,106 +45,106 @@ import javax.persistence.TemporalType;
 @Table(name = "ClosedLoopD2Services")
 @NamedQuery(name="ClosedLoopD2Services.findAll", query="SELECT c FROM ClosedLoopD2Services c ")
 public class ClosedLoopD2Services implements Serializable{
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@Column(name ="id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
-	
-	@Column(name="service_Name", nullable=false, unique=true)
-	@OrderBy("asc")
-	private String serviceName;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="description", nullable=true, length=2048)
-	private String description;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", updatable=false)
-	private Date createdDate;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
-	
-	@ManyToOne(optional = false)
-	@JoinColumn(name="created_by")
-	private UserInfo userCreatedBy;
+    @Id
+    @Column(name ="id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name="modified_by")
-	private UserInfo userModifiedBy;
-	
-	public UserInfo getUserCreatedBy() {
-		return userCreatedBy;
-	}
+    @Column(name="service_Name", nullable=false, unique=true)
+    @OrderBy("asc")
+    private String serviceName;
 
-	public void setUserCreatedBy(UserInfo userCreatedBy) {
-		this.userCreatedBy = userCreatedBy;
-	}
+    @Column(name="description", nullable=true, length=2048)
+    private String description;
 
-	public UserInfo getUserModifiedBy() {
-		return userModifiedBy;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", updatable=false)
+    private Date createdDate;
 
-	public void setUserModifiedBy(UserInfo userModifiedBy) {
-		this.userModifiedBy = userModifiedBy;
-	}
-	
-	public ClosedLoopD2Services(){
-		//An empty constructor
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="created_by")
+    private UserInfo userCreatedBy;
 
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
-	
-	public int getId() {
-		return id;
-	}
+    @ManyToOne(optional = false)
+    @JoinColumn(name="modified_by")
+    private UserInfo userModifiedBy;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public UserInfo getUserCreatedBy() {
+        return userCreatedBy;
+    }
 
-	public String getServiceName() {
-		return serviceName;
-	}
+    public void setUserCreatedBy(UserInfo userCreatedBy) {
+        this.userCreatedBy = userCreatedBy;
+    }
 
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
-	}
+    public UserInfo getUserModifiedBy() {
+        return userModifiedBy;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setUserModifiedBy(UserInfo userModifiedBy) {
+        this.userModifiedBy = userModifiedBy;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public ClosedLoopD2Services(){
+        //An empty constructor
+    }
 
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public Date getModifiedDate() {
-		return modifiedDate;
-	}
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
 
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
 
 }

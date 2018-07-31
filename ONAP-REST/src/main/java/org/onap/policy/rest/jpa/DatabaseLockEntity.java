@@ -30,18 +30,18 @@ import javax.persistence.Table;
 @Entity
 @Table(name="DatabaseLockEntity")
 public class DatabaseLockEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
-	@Id
-	@Column(name="lock_key")
-	private int lock_key = 1;
-	public DatabaseLockEntity(){
-		//An empty constructor
-	}
-	public int getKey(){
-		return lock_key;
-	}
-	public void setKey(int key){
-		this.lock_key = key;
-	}
-	
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Column(name="lock_key")
+    private int lock_key = 1;
+    public DatabaseLockEntity(){
+        //An empty constructor
+    }
+    public int getKey(){
+        return lock_key;
+    }
+    public void setKey(int key){
+        this.lock_key = key;
+    }
+
 }

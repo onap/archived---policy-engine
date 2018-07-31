@@ -22,17 +22,17 @@ package org.onap.policy.rest.adapter;
 
 
 public enum DeletePolicyCondition {
-	ONE("Are you sure you want to delete Current Version of policy"),
+    ONE("Are you sure you want to delete Current Version of policy"),
 
-	ALL("Are you sure you want to delete All Versions of policy");
-	private String name;
+    ALL("Are you sure you want to delete All Versions of policy");
+    private String name;
 
-	private DeletePolicyCondition(String name){
-		this.name = name;
-	}
+    private DeletePolicyCondition(String name){
+        this.name = name;
+    }
 
-	@Override
-	public String toString(){
-		return this.name;
-	}
+    @Override
+    public String toString(){
+        return this.name;
+    }
 }

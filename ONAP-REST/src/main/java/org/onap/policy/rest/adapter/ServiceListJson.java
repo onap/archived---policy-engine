@@ -24,90 +24,90 @@ package org.onap.policy.rest.adapter;
 
 public class ServiceListJson {
 
-	protected String name;
-	protected String description;
-	protected String type;
-	protected String transportProtocol;
-	protected String appProtocol;
-	protected String ports;
-	// name
-	public String getName() {
-		return name;
-	}
+    protected String name;
+    protected String description;
+    protected String type;
+    protected String transportProtocol;
+    protected String appProtocol;
+    protected String ports;
+    // name
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String value) {
-		this.name = value;
-	}
+    public void setName(String value) {
+        this.name = value;
+    }
 
-	@Override
-	public boolean equals(Object obj){
-		if(obj == null){
-			return false;
-		}
-		if(this.getClass() != obj.getClass()){
-			return false;
-		}
-		ServiceListJson servobj=(ServiceListJson) obj;
-		if(this.getName().equals(servobj.getName())){
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj){
+        if(obj == null){
+            return false;
+        }
+        if(this.getClass() != obj.getClass()){
+            return false;
+        }
+        ServiceListJson servobj=(ServiceListJson) obj;
+        if(this.getName().equals(servobj.getName())){
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public int hashCode() {
-		 if(name!=null){
-	        return Integer.valueOf(name.charAt(0)+(name.charAt(1)));
-		 }else{
-			 return 0;
-		 }
-	}
-	
-	
-	public String getDescription() {
-		return description;
-	}
+    @Override
+    public int hashCode() {
+         if(name!=null){
+            return Integer.valueOf(name.charAt(0)+(name.charAt(1)));
+         }else{
+             return 0;
+         }
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
-	// type
-	public String getType() {
-		return type;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setType(String value) {
-		this.type = value;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	// transportProtocol
-	public String getTransportProtocol() {
-		return transportProtocol;
-	}
+    // type
+    public String getType() {
+        return type;
+    }
 
-	public void setTransportProtocol(String value) {
-		this.transportProtocol = value;
-	}
+    public void setType(String value) {
+        this.type = value;
+    }
 
-	// appProtocol
-	public String getAppProtocol() {
-		return appProtocol;
-	}
+    // transportProtocol
+    public String getTransportProtocol() {
+        return transportProtocol;
+    }
 
-	public void setAppProtocol(String value) {
-		this.appProtocol = value;
-	}
+    public void setTransportProtocol(String value) {
+        this.transportProtocol = value;
+    }
 
-	// ports
-	public String getPorts() {
-		return ports;
-	}
+    // appProtocol
+    public String getAppProtocol() {
+        return appProtocol;
+    }
 
-	public void setPorts(String value) {
-		this.ports = value;
-	}
-	
-	
+    public void setAppProtocol(String value) {
+        this.appProtocol = value;
+    }
+
+    // ports
+    public String getPorts() {
+        return ports;
+    }
+
+    public void setPorts(String value) {
+        this.ports = value;
+    }
+
+
 
 }

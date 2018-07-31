@@ -37,41 +37,41 @@ import javax.persistence.Table;
 @Table(name="MicroServiceLocation")
 @NamedQuery(name="MicroServiceLocation.findAll", query="SELECT e FROM MicroServiceLocation e ")
 public class MicroServiceLocation implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
-	
-	@Column(name="name", nullable=false)
-	@OrderBy("asc")
-	private String name;
-	
-	@Column(name="description ")
-	private String description ;
-	
-	public int getId() {
-		return this.id;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return this.name;
-	}
+    @Column(name="name", nullable=false)
+    @OrderBy("asc")
+    private String name;
 
-	public void setName(String name) {
-		this.name = name;
+    @Column(name="description ")
+    private String description ;
 
-	}
-	public String getDescriptionValue() {
-		return this.description ;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setDescriptionValue(String description ) {
-		this.description  = description ;
-	}
-	
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+
+    }
+    public String getDescriptionValue() {
+        return this.description ;
+    }
+
+    public void setDescriptionValue(String description ) {
+        this.description  = description ;
+    }
+
 }

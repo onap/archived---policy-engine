@@ -50,179 +50,179 @@ import com.att.research.xacml.api.Identifier;
 @Table(name="Obadvice")
 @NamedQuery(name="Obadvice.findAll", query="SELECT o FROM Obadvice o")
 public class Obadvice implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public static final String OBLIGATION = "Obligation";
-	public static final String ADVICE = "Advice";
-	public static final String EFFECT_PERMIT = "Permit";
-	public static final String EFFECT_DENY = "Deny";
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+    public static final String OBLIGATION = "Obligation";
+    public static final String ADVICE = "Advice";
+    public static final String EFFECT_PERMIT = "Permit";
+    public static final String EFFECT_DENY = "Deny";
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private int id;
 
-	@Column(name="type", nullable=false)
-	private String type;
+    @Column(name="type", nullable=false)
+    private String type;
 
-	@Column(name="xacml_id", nullable=false, length=255)
-	private String xacmlId;
+    @Column(name="xacml_id", nullable=false, length=255)
+    private String xacmlId;
 
-	@Column(name="fulfill_on", nullable=true, length=32)
-	private String fulfillOn;
+    @Column(name="fulfill_on", nullable=true, length=32)
+    private String fulfillOn;
 
-	@Column(name="description", nullable=true, length=2048)
-	private String description;
+    @Column(name="description", nullable=true, length=2048)
+    private String description;
 
-	//bi-directional one-to-many association to Attribute Assignment
-	@OneToMany(mappedBy="obadvice", orphanRemoval=true, cascade=CascadeType.REMOVE)
-	private Set<ObadviceExpression> obadviceExpressions = new HashSet<>(2);
+    //bi-directional one-to-many association to Attribute Assignment
+    @OneToMany(mappedBy="obadvice", orphanRemoval=true, cascade=CascadeType.REMOVE)
+    private Set<ObadviceExpression> obadviceExpressions = new HashSet<>(2);
 
-	@Column(name="created_by", nullable=false, length=255)
-	private String createdBy;
+    @Column(name="created_by", nullable=false, length=255)
+    private String createdBy;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_date", nullable=false, updatable=false)
-	private Date createdDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="created_date", nullable=false, updatable=false)
+    private Date createdDate;
 
-	@Column(name="modified_by", nullable=false, length=255)
-	private String modifiedBy;
+    @Column(name="modified_by", nullable=false, length=255)
+    private String modifiedBy;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="modified_date", nullable=false)
-	private Date modifiedDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="modified_date", nullable=false)
+    private Date modifiedDate;
 
-	public Obadvice() {
-		this.type = Obadvice.OBLIGATION;
-		this.fulfillOn = Obadvice.EFFECT_PERMIT;
-	}
-	
-	public Obadvice(String domain, String userid) {
-		this.xacmlId = domain;
-		this.type = Obadvice.OBLIGATION;
-		this.fulfillOn = Obadvice.EFFECT_PERMIT;
-		this.createdBy = userid;
-		this.modifiedBy = userid;
-	}
+    public Obadvice() {
+        this.type = Obadvice.OBLIGATION;
+        this.fulfillOn = Obadvice.EFFECT_PERMIT;
+    }
 
-	public Obadvice(Identifier id, String userid) {
-		this(id.stringValue(), userid);
-	}
+    public Obadvice(String domain, String userid) {
+        this.xacmlId = domain;
+        this.type = Obadvice.OBLIGATION;
+        this.fulfillOn = Obadvice.EFFECT_PERMIT;
+        this.createdBy = userid;
+        this.modifiedBy = userid;
+    }
 
-	@PrePersist
-	public void	prePersist() {
-		Date date = new Date();
-		this.createdDate = date;
-		this.modifiedDate = date;
-	}
-	
-	@PreUpdate
-	public void preUpdate() {
-		this.modifiedDate = new Date();
-	}
+    public Obadvice(Identifier id, String userid) {
+        this(id.stringValue(), userid);
+    }
 
-	public int getId() {
-		return this.id;
-	}
+    @PrePersist
+    public void	prePersist() {
+        Date date = new Date();
+        this.createdDate = date;
+        this.modifiedDate = date;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    @PreUpdate
+    public void preUpdate() {
+        this.modifiedDate = new Date();
+    }
 
-	public String getCreatedBy() {
-		return this.createdBy;
-	}
+    public int getId() {
+        return this.id;
+    }
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	public String getFulfillOn() {
-		return this.fulfillOn;
-	}
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setFulfillOn(String fulfillOn) {
-		this.fulfillOn = fulfillOn;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getModifiedBy() {
-		return this.modifiedBy;
-	}
+    public String getFulfillOn() {
+        return this.fulfillOn;
+    }
 
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+    public void setFulfillOn(String fulfillOn) {
+        this.fulfillOn = fulfillOn;
+    }
 
-	public String getType() {
-		return this.type;
-	}
+    public String getModifiedBy() {
+        return this.modifiedBy;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
 
-	public String getXacmlId() {
-		return this.xacmlId;
-	}
+    public String getType() {
+        return this.type;
+    }
 
-	public void setXacmlId(String xacmlId) {
-		this.xacmlId = xacmlId;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public Set<ObadviceExpression> getObadviceExpressions() {
-		return this.obadviceExpressions;
-	}
+    public String getXacmlId() {
+        return this.xacmlId;
+    }
 
-	public void setObadviceExpressions(Set<ObadviceExpression> obadviceExpressions) {
-		this.obadviceExpressions = obadviceExpressions;
-	}
+    public void setXacmlId(String xacmlId) {
+        this.xacmlId = xacmlId;
+    }
 
-	public ObadviceExpression addObadviceExpression(ObadviceExpression obadviceExpression) {
-		this.obadviceExpressions.add(obadviceExpression);
-		obadviceExpression.setObadvice(this);
+    public Set<ObadviceExpression> getObadviceExpressions() {
+        return this.obadviceExpressions;
+    }
 
-		return obadviceExpression;
-	}
+    public void setObadviceExpressions(Set<ObadviceExpression> obadviceExpressions) {
+        this.obadviceExpressions = obadviceExpressions;
+    }
 
-	public ObadviceExpression removeObadviceExpression(ObadviceExpression obadviceExpression) {
-		this.obadviceExpressions.remove(obadviceExpression);
-		obadviceExpression.setObadvice(null);
+    public ObadviceExpression addObadviceExpression(ObadviceExpression obadviceExpression) {
+        this.obadviceExpressions.add(obadviceExpression);
+        obadviceExpression.setObadvice(this);
 
-		return obadviceExpression;
-	}
-	
-	public void removeAllExpressions() {
-		if (this.obadviceExpressions == null) {
-			return;
-		}
-		for (ObadviceExpression expression : this.obadviceExpressions) {
-			expression.setObadvice(null);
-		}
-		this.obadviceExpressions.clear();
-	}
+        return obadviceExpression;
+    }
 
-	@Transient
-	@Override
-	public Obadvice clone() {
-		Obadvice obadvice = new Obadvice();
-		
-		obadvice.type = this.type;
-		obadvice.xacmlId = this.xacmlId;
-		obadvice.fulfillOn = this.fulfillOn;
-		obadvice.description = this.description;
-		obadvice.createdBy = this.createdBy;
-		obadvice.modifiedBy = this.modifiedBy;
-		for (ObadviceExpression exp: this.obadviceExpressions) {
-			obadvice.addObadviceExpression(exp.clone());
-		}
+    public ObadviceExpression removeObadviceExpression(ObadviceExpression obadviceExpression) {
+        this.obadviceExpressions.remove(obadviceExpression);
+        obadviceExpression.setObadvice(null);
 
-		return obadvice;
-	}
+        return obadviceExpression;
+    }
+
+    public void removeAllExpressions() {
+        if (this.obadviceExpressions == null) {
+            return;
+        }
+        for (ObadviceExpression expression : this.obadviceExpressions) {
+            expression.setObadvice(null);
+        }
+        this.obadviceExpressions.clear();
+    }
+
+    @Transient
+    @Override
+    public Obadvice clone() {
+        Obadvice obadvice = new Obadvice();
+
+        obadvice.type = this.type;
+        obadvice.xacmlId = this.xacmlId;
+        obadvice.fulfillOn = this.fulfillOn;
+        obadvice.description = this.description;
+        obadvice.createdBy = this.createdBy;
+        obadvice.modifiedBy = this.modifiedBy;
+        for (ObadviceExpression exp: this.obadviceExpressions) {
+            obadvice.addObadviceExpression(exp.clone());
+        }
+
+        return obadvice;
+    }
 }
