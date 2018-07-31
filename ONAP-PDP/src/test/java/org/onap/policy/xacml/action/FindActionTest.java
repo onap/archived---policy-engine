@@ -46,7 +46,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.common.endpoints.http.server.HttpServletServer;
-import org.onap.policy.common.endpoints.http.server.impl.IndexedHttpServletServerFactory;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.xacml.custom.OnapFunctionDefinitionFactory;
 
@@ -69,8 +68,8 @@ public class FindActionTest {
     @BeforeClass
     public static void setUpServer() {
         try {
-            final HttpServletServer testServer = IndexedHttpServletServerFactory.getInstance().build("dmaapSim",
-                    "localhost", MOCK_SERVER_PORT, "/", false, true);
+            final HttpServletServer testServer =
+                    HttpServletServer.factory.build("dmaapSim", "localhost", MOCK_SERVER_PORT, "/", false, true);
             testServer.addServletClass("/*", DummyRest.class.getName());
             testServer.waitedStart(2000);
             if (!NetworkUtil.isTcpPortOpen("localhost", testServer.getPort(), 5, 10000L)) {
@@ -84,7 +83,7 @@ public class FindActionTest {
 
     @AfterClass
     public static void tearDownSimulator() {
-        IndexedHttpServletServerFactory.getInstance().destroy();
+        HttpServletServer.factory.destroy();
     }
 
     /**
