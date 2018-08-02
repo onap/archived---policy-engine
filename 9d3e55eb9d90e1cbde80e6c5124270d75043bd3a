@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_ad6b7184",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-02T09:25:05Z",
+      "side": 1,
+      "message": "this should have been after Logger.info stmt. i will change it",
+      "revId": "9d3e55eb9d90e1cbde80e6c5124270d75043bd3a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
