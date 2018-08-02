@@ -44,116 +44,116 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class ActionPolicyDictionaryController {
-	
-	private static CommonClassDao commonClassDao;
-	private static String operation = "operation";
-	private static String attributeName = "attributeName";
-	private static String actionDatas = "actionPolicyDictionaryDatas";
-	
-	@Autowired
-	public ActionPolicyDictionaryController(CommonClassDao commonClassDao){
-		ActionPolicyDictionaryController.commonClassDao = commonClassDao;
-	}
-	
-	public void setCommonClassDao(CommonClassDao commonClassDao){
-		ActionPolicyDictionaryController.commonClassDao = commonClassDao;
-	}
-		
-	public ActionPolicyDictionaryController(){
-		super();
-	}
 
-	private DictionaryUtils getDictionaryUtilsInstance(){
-		return DictionaryUtils.getDictionaryUtils();
-	}
-	
-	@RequestMapping(value={"/get_ActionPolicyDictDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getActionEntitybyName(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, actionDatas, attributeName, ActionPolicyDict.class);
-	}
+    private static CommonClassDao commonClassDao;
+    private static String operation = "operation";
+    private static String attributeName = "attributeName";
+    private static String actionDatas = "actionPolicyDictionaryDatas";
 
-	@RequestMapping(value={"/get_ActionPolicyDictData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getActionPolicyDictionaryEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getData(response, actionDatas, ActionPolicyDict.class);
-	}
+    @Autowired
+    public ActionPolicyDictionaryController(CommonClassDao commonClassDao){
+        ActionPolicyDictionaryController.commonClassDao = commonClassDao;
+    }
 
-	@RequestMapping(value={"/action_dictionary/save_ActionDict"}, method={RequestMethod.POST})
-	public ModelAndView saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		try {
-			boolean fromAPI = utils.isRequestFromAPI(request);
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			ActionPolicyDict actionPolicyDict = null;
-			ActionAdapter adapter = null;
-			String userId = null;
-			if(fromAPI){
-				actionPolicyDict = mapper.readValue(root.get("dictionaryFields").toString(), ActionPolicyDict.class);
-				adapter = mapper.readValue(root.get("dictionaryFields").toString(), ActionAdapter.class);
-				userId = "API";
-			}else{
-				actionPolicyDict = mapper.readValue(root.get("actionPolicyDictionaryData").toString(), ActionPolicyDict.class);
-				adapter = mapper.readValue(root.get("actionPolicyDictionaryData").toString(), ActionAdapter.class);
-				userId = root.get("userid").textValue();
-			}
-			UserInfo userInfo = utils.getUserInfo(userId);
-			
-			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionPolicyDict.getAttributeName(), attributeName, ActionPolicyDict.class);
-			boolean duplicateflag = false;
-			if(!duplicateData.isEmpty()){
-				ActionPolicyDict data = (ActionPolicyDict) duplicateData.get(0);
-				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
-					actionPolicyDict.setId(data.getId());
-				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
-						(request.getParameter(operation) == null && (data.getId() != actionPolicyDict.getId()))){
-					duplicateflag = true;
-				}
-			}
-			actionPolicyDict.setHeader(utils.appendKeyValue(adapter.getHeaders(), ":", "="));
-			
-			String responseString = null;
-			if(!duplicateflag){
-				actionPolicyDict.setUserModifiedBy(userInfo);
-				if(actionPolicyDict.getId() == 0){
-					actionPolicyDict.setUserCreatedBy(userInfo);
-					commonClassDao.save(actionPolicyDict);
-				}else{
-					actionPolicyDict.setModifiedDate(new Date());
-					commonClassDao.update(actionPolicyDict); 
-				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(ActionPolicyDict.class));
-			}else{
-				responseString = "Duplicate";
-			}
-			if(fromAPI){
-				return utils.getResultForApi(responseString);
-			}else{
-				utils.setResponseData(response, actionDatas, responseString);
-			}
-		}catch(Exception e){
-			utils.setErrorResponseData(response, e);
-		}
-		return null;
-	}
+    public void setCommonClassDao(CommonClassDao commonClassDao){
+        ActionPolicyDictionaryController.commonClassDao = commonClassDao;
+    }
 
-	@RequestMapping(value={"/action_dictionary/remove_actionPolicyDict"}, method={RequestMethod.POST})
-	public void removeActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.removeData(request, response, actionDatas, ActionPolicyDict.class);
-	}
+    public ActionPolicyDictionaryController(){
+        super();
+    }
+
+    private DictionaryUtils getDictionaryUtilsInstance(){
+        return DictionaryUtils.getDictionaryUtils();
+    }
+
+    @RequestMapping(value={"/get_ActionPolicyDictDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getActionEntitybyName(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getDataByEntity(response, actionDatas, attributeName, ActionPolicyDict.class);
+    }
+
+    @RequestMapping(value={"/get_ActionPolicyDictData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getActionPolicyDictionaryEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getData(response, actionDatas, ActionPolicyDict.class);
+    }
+
+    @RequestMapping(value={"/action_dictionary/save_ActionDict"}, method={RequestMethod.POST})
+    public ModelAndView saveActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        try {
+            boolean fromAPI = utils.isRequestFromAPI(request);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            JsonNode root = mapper.readTree(request.getReader());
+            ActionPolicyDict actionPolicyDict = null;
+            ActionAdapter adapter = null;
+            String userId = null;
+            if(fromAPI){
+                actionPolicyDict = mapper.readValue(root.get("dictionaryFields").toString(), ActionPolicyDict.class);
+                adapter = mapper.readValue(root.get("dictionaryFields").toString(), ActionAdapter.class);
+                userId = "API";
+            }else{
+                actionPolicyDict = mapper.readValue(root.get("actionPolicyDictionaryData").toString(), ActionPolicyDict.class);
+                adapter = mapper.readValue(root.get("actionPolicyDictionaryData").toString(), ActionAdapter.class);
+                userId = root.get("userid").textValue();
+            }
+            UserInfo userInfo = utils.getUserInfo(userId);
+
+            List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(actionPolicyDict.getAttributeName(), attributeName, ActionPolicyDict.class);
+            boolean duplicateflag = false;
+            if(!duplicateData.isEmpty()){
+                ActionPolicyDict data = (ActionPolicyDict) duplicateData.get(0);
+                if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+                    actionPolicyDict.setId(data.getId());
+                }else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) ||
+                        (request.getParameter(operation) == null && (data.getId() != actionPolicyDict.getId()))){
+                    duplicateflag = true;
+                }
+            }
+            actionPolicyDict.setHeader(utils.appendKeyValue(adapter.getHeaders(), ":", "="));
+
+            String responseString = null;
+            if(!duplicateflag){
+                actionPolicyDict.setUserModifiedBy(userInfo);
+                if(actionPolicyDict.getId() == 0){
+                    actionPolicyDict.setUserCreatedBy(userInfo);
+                    commonClassDao.save(actionPolicyDict);
+                }else{
+                    actionPolicyDict.setModifiedDate(new Date());
+                    commonClassDao.update(actionPolicyDict);
+                }
+                responseString = mapper.writeValueAsString(commonClassDao.getData(ActionPolicyDict.class));
+            }else{
+                responseString = "Duplicate";
+            }
+            if(fromAPI){
+                return utils.getResultForApi(responseString);
+            }else{
+                utils.setResponseData(response, actionDatas, responseString);
+            }
+        }catch(Exception e){
+            utils.setErrorResponseData(response, e);
+        }
+        return null;
+    }
+
+    @RequestMapping(value={"/action_dictionary/remove_actionPolicyDict"}, method={RequestMethod.POST})
+    public void removeActionPolicyDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.removeData(request, response, actionDatas, ActionPolicyDict.class);
+    }
 }
 
 class ActionAdapter{
-	private List<Object> headers;
+    private List<Object> headers;
 
-	public List<Object> getHeaders() {
-		return headers;
-	}
+    public List<Object> getHeaders() {
+        return headers;
+    }
 
-	public void setHeaders(List<Object> headers) {
-		this.headers = headers;
-	}
+    public void setHeaders(List<Object> headers) {
+        this.headers = headers;
+    }
 }

@@ -106,7 +106,7 @@ public class ActionPolicy extends Policy {
         this.commonClassDao = commonClassDao;
     }
 
-	@Override
+    @Override
     public Map<String, String> savePolicies() throws PAPException {
         
         Map<String, String> successMap = new HashMap<>();
@@ -260,7 +260,7 @@ public class ActionPolicy extends Policy {
                 policyName = policyName.replace(".xml", "");
             }
             File file = new File(ACTION_HOME+ File.separator + policyName + ".json");
-			try(BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile()))) {
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile()))) {
             bw.write(actionBodyData);
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info("Action Body is succesfully saved at " + file.getAbsolutePath());
@@ -488,11 +488,11 @@ public class ActionPolicy extends Policy {
     }
     
     public String getFunctionDefinitionId(String key){
-    	FunctionDefinition object = (FunctionDefinition) commonClassDao.getDataById(FunctionDefinition.class, "short_name", key);
-    	if(object != null){
-    		return object.getXacmlid();
-    	}
-    	return null;
+        FunctionDefinition object = (FunctionDefinition) commonClassDao.getDataById(FunctionDefinition.class, "short_name", key);
+        if(object != null){
+            return object.getXacmlid();
+        }
+        return null;
     }
 
 }

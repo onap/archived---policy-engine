@@ -64,10 +64,10 @@ import com.google.gson.Gson;
 
 @Controller
 public class MicroServiceDictionaryController {
-	private static final Logger LOGGER  = FlexLogger.getLogger(MicroServiceDictionaryController.class);
+    private static final Logger LOGGER  = FlexLogger.getLogger(MicroServiceDictionaryController.class);
 
-	private static CommonClassDao commonClassDao;
-	
+    private static CommonClassDao commonClassDao;
+
     private static String successMapKey= "successMapKey";
     private static String successMsg = "success";
     private static String operation = "operation";
@@ -77,255 +77,255 @@ public class MicroServiceDictionaryController {
     private LinkedHashMap<String,MSAttributeObject > classMap;
     private List<String> modelList = new ArrayList<>();
     private static String apiflag = "apiflag";
-	private static String dictionaryFields ="dictionaryFields";
-	private static String update = "update";
-	private static String duplicateResponseString = "Duplicate";
-	private static String microServiceModelsDictionaryDatas = "microServiceModelsDictionaryDatas";
-	private static String modelName = "modelName";
-	private static String microServiceModelsDictionaryData = "microServiceModelsDictionaryData";
-	private static String description = "description";
-	private static String version = "version";
-	private static String classMapData = "classMap";
-	private static String dcaeUUIDDatas = "dcaeUUIDDictionaryDatas";
-	private static String microServiceConfigNameDatas = "microServiceConfigNameDictionaryDatas";
-	private static String microServiceLocationDatas = "microServiceLocationDictionaryDatas";
-	private static String microServiceAttributeDatas = "microServiceAttributeDictionaryDatas";
-	private static String microServiceHeaderDefaultDatas = "microServiceHeaderDefaultDatas";
+    private static String dictionaryFields ="dictionaryFields";
+    private static String update = "update";
+    private static String duplicateResponseString = "Duplicate";
+    private static String microServiceModelsDictionaryDatas = "microServiceModelsDictionaryDatas";
+    private static String modelName = "modelName";
+    private static String microServiceModelsDictionaryData = "microServiceModelsDictionaryData";
+    private static String description = "description";
+    private static String version = "version";
+    private static String classMapData = "classMap";
+    private static String dcaeUUIDDatas = "dcaeUUIDDictionaryDatas";
+    private static String microServiceConfigNameDatas = "microServiceConfigNameDictionaryDatas";
+    private static String microServiceLocationDatas = "microServiceLocationDictionaryDatas";
+    private static String microServiceAttributeDatas = "microServiceAttributeDictionaryDatas";
+    private static String microServiceHeaderDefaultDatas = "microServiceHeaderDefaultDatas";
 
     public MicroServiceDictionaryController(){
-    	super();
+        super();
     }	
-	
+
     private DictionaryUtils getDictionaryUtilsInstance(){
-		return DictionaryUtils.getDictionaryUtils();
-	}
+        return DictionaryUtils.getDictionaryUtils();
+    }
     
-	@Autowired
-	public MicroServiceDictionaryController(CommonClassDao commonClassDao){
-		MicroServiceDictionaryController.commonClassDao = commonClassDao;
-	}
-	public static void setCommonClassDao(CommonClassDao commonClassDao) {
-		MicroServiceDictionaryController.commonClassDao = commonClassDao;
-	}
+    @Autowired
+    public MicroServiceDictionaryController(CommonClassDao commonClassDao){
+        MicroServiceDictionaryController.commonClassDao = commonClassDao;
+    }
+    public static void setCommonClassDao(CommonClassDao commonClassDao) {
+        MicroServiceDictionaryController.commonClassDao = commonClassDao;
+    }
 
-	MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
-	
-	private MicroServiceModels newModel;
-	
-	@RequestMapping(value={"/get_DCAEUUIDDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getDCAEUUIDDictionaryByNameEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, dcaeUUIDDatas, "name", DCAEuuid.class);
-	}
+    MSModelUtils utils = new MSModelUtils(XACMLPapServlet.getMsOnapName(), XACMLPapServlet.getMsPolicyName());
 
-	@RequestMapping(value={"/get_DCAEUUIDData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getDCAEUUIDDictionaryEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getData(response, dcaeUUIDDatas, DCAEuuid.class);
-	}
-	
-	@RequestMapping(value={"/ms_dictionary/save_dcaeUUID"}, method={RequestMethod.POST})
-	public ModelAndView saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		try {
-			boolean fromAPI = utils.isRequestFromAPI(request);
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
+    private MicroServiceModels newModel;
+
+    @RequestMapping(value={"/get_DCAEUUIDDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getDCAEUUIDDictionaryByNameEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getDataByEntity(response, dcaeUUIDDatas, "name", DCAEuuid.class);
+    }
+
+    @RequestMapping(value={"/get_DCAEUUIDData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getDCAEUUIDDictionaryEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getData(response, dcaeUUIDDatas, DCAEuuid.class);
+    }
+
+    @RequestMapping(value={"/ms_dictionary/save_dcaeUUID"}, method={RequestMethod.POST})
+    public ModelAndView saveDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        try {
+            boolean fromAPI = utils.isRequestFromAPI(request);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            JsonNode root = mapper.readTree(request.getReader());
             DCAEuuid dCAEuuid;
             if(fromAPI){
                 dCAEuuid = mapper.readValue(root.get(dictionaryFields).toString(), DCAEuuid.class);
             }else{
-            	dCAEuuid = mapper.readValue(root.get("dcaeUUIDDictionaryData").toString(), DCAEuuid.class);
+                dCAEuuid = mapper.readValue(root.get("dcaeUUIDDictionaryData").toString(), DCAEuuid.class);
             }
             
             List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(dCAEuuid.getName(), "name", DCAEuuid.class);
-			boolean duplicateflag = false;
-			if(duplicateData != null && !duplicateData.isEmpty()){
-				DCAEuuid data = (DCAEuuid) duplicateData.get(0);
-				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
-					dCAEuuid.setId(data.getId());
-				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
-						(request.getParameter(operation) == null && (data.getId() != dCAEuuid.getId()))){
-					duplicateflag = true;
-				}
-			}
-			String responseString = null;
-			if(!duplicateflag){
-				if(dCAEuuid.getId() == 0){
-					commonClassDao.save(dCAEuuid);
-				}else{
-					commonClassDao.update(dCAEuuid); 
-				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(DCAEuuid.class));
-			}else{
-				responseString = duplicateResponseString;
-			}
-			if(fromAPI){
-				return utils.getResultForApi(responseString);
-			}else{
-				utils.setResponseData(response, dcaeUUIDDatas, responseString);
-			}
+            boolean duplicateflag = false;
+            if(duplicateData != null && !duplicateData.isEmpty()){
+                DCAEuuid data = (DCAEuuid) duplicateData.get(0);
+                if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+                    dCAEuuid.setId(data.getId());
+                }else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) ||
+                        (request.getParameter(operation) == null && (data.getId() != dCAEuuid.getId()))){
+                    duplicateflag = true;
+                }
+            }
+            String responseString = null;
+            if(!duplicateflag){
+                if(dCAEuuid.getId() == 0){
+                    commonClassDao.save(dCAEuuid);
+                }else{
+                    commonClassDao.update(dCAEuuid);
+                }
+                responseString = mapper.writeValueAsString(commonClassDao.getData(DCAEuuid.class));
+            }else{
+                responseString = duplicateResponseString;
+            }
+            if(fromAPI){
+                return utils.getResultForApi(responseString);
+            }else{
+                utils.setResponseData(response, dcaeUUIDDatas, responseString);
+            }
         }catch (Exception e){
-        	utils.setErrorResponseData(response, e);
-		}
-		return null;
-	}
+            utils.setErrorResponseData(response, e);
+        }
+        return null;
+    }
 
-	@RequestMapping(value={"/ms_dictionary/remove_dcaeuuid"}, method={RequestMethod.POST})
-	public void removeDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.removeData(request, response, dcaeUUIDDatas, DCAEuuid.class);
-	}
-	
-	@RequestMapping(value={"/get_MicroServiceConfigNameDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceConfigNameByNameDictionaryEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, microServiceConfigNameDatas, "name", MicroServiceConfigName.class);
-	}
-	
-	@RequestMapping(value={"/get_MicroServiceConfigNameData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceConfigNameDictionaryEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getData(response, microServiceConfigNameDatas, MicroServiceConfigName.class);
-	}
-	
-	@RequestMapping(value={"/ms_dictionary/save_configName"}, method={RequestMethod.POST})
-	public ModelAndView saveMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		try {
-			boolean fromAPI = utils.isRequestFromAPI(request);
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
+    @RequestMapping(value={"/ms_dictionary/remove_dcaeuuid"}, method={RequestMethod.POST})
+    public void removeDCAEUUIDDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.removeData(request, response, dcaeUUIDDatas, DCAEuuid.class);
+    }
+
+    @RequestMapping(value={"/get_MicroServiceConfigNameDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getMicroServiceConfigNameByNameDictionaryEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getDataByEntity(response, microServiceConfigNameDatas, "name", MicroServiceConfigName.class);
+    }
+
+    @RequestMapping(value={"/get_MicroServiceConfigNameData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getMicroServiceConfigNameDictionaryEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getData(response, microServiceConfigNameDatas, MicroServiceConfigName.class);
+    }
+
+    @RequestMapping(value={"/ms_dictionary/save_configName"}, method={RequestMethod.POST})
+    public ModelAndView saveMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        try {
+            boolean fromAPI = utils.isRequestFromAPI(request);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            JsonNode root = mapper.readTree(request.getReader());
             MicroServiceConfigName microServiceConfigName;
             if(fromAPI){
                 microServiceConfigName = mapper.readValue(root.get(dictionaryFields).toString(), MicroServiceConfigName.class);
             }else{
-            	microServiceConfigName = mapper.readValue(root.get("microServiceConfigNameDictionaryData").toString(), MicroServiceConfigName.class);
+                microServiceConfigName = mapper.readValue(root.get("microServiceConfigNameDictionaryData").toString(), MicroServiceConfigName.class);
             }
             List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(microServiceConfigName.getName(), "name", MicroServiceConfigName.class);
-			boolean duplicateflag = false;
-			if(duplicateData != null && !duplicateData.isEmpty()){
-				MicroServiceConfigName data = (MicroServiceConfigName) duplicateData.get(0);
-				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
-					microServiceConfigName.setId(data.getId());
-				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
-						(request.getParameter(operation) == null && (data.getId() != microServiceConfigName.getId()))){
-					duplicateflag = true;
-				}
-			}
-			String responseString = null;
-			if(!duplicateflag){
-				if(microServiceConfigName.getId() == 0){
-					commonClassDao.save(microServiceConfigName);
-				}else{
-					commonClassDao.update(microServiceConfigName); 
-				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceConfigName.class));
-			}else{
-				responseString = duplicateResponseString;
-			}
-			if(fromAPI){
-				return utils.getResultForApi(responseString);
-			}else{
-				utils.setResponseData(response, microServiceConfigNameDatas, responseString);
-			}
+            boolean duplicateflag = false;
+            if(duplicateData != null && !duplicateData.isEmpty()){
+                MicroServiceConfigName data = (MicroServiceConfigName) duplicateData.get(0);
+                if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+                    microServiceConfigName.setId(data.getId());
+                }else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) ||
+                        (request.getParameter(operation) == null && (data.getId() != microServiceConfigName.getId()))){
+                    duplicateflag = true;
+                }
+            }
+            String responseString = null;
+            if(!duplicateflag){
+                if(microServiceConfigName.getId() == 0){
+                    commonClassDao.save(microServiceConfigName);
+                }else{
+                    commonClassDao.update(microServiceConfigName);
+                }
+                responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceConfigName.class));
+            }else{
+                responseString = duplicateResponseString;
+            }
+            if(fromAPI){
+                return utils.getResultForApi(responseString);
+            }else{
+                utils.setResponseData(response, microServiceConfigNameDatas, responseString);
+            }
         }catch (Exception e){
-        	utils.setErrorResponseData(response, e);
-		}
-		return null;
-	}
+            utils.setErrorResponseData(response, e);
+        }
+        return null;
+    }
 
-	@RequestMapping(value={"/ms_dictionary/remove_msConfigName"}, method={RequestMethod.POST})
-	public void removeMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.removeData(request, response, microServiceConfigNameDatas, MicroServiceConfigName.class);
-	}
-	
-	@RequestMapping(value={"/get_MicroServiceLocationDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceLocationByNameDictionaryEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, microServiceLocationDatas, "name", MicroServiceLocation.class);
-	}
-	
-	@RequestMapping(value={"/get_MicroServiceLocationData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceLocationDictionaryEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getData(response, microServiceLocationDatas, MicroServiceLocation.class);
-	}
-	
-	@RequestMapping(value={"/ms_dictionary/save_location"}, method={RequestMethod.POST})
-	public ModelAndView saveMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response)throws IOException{
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		try {
-			boolean fromAPI = utils.isRequestFromAPI(request);
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
+    @RequestMapping(value={"/ms_dictionary/remove_msConfigName"}, method={RequestMethod.POST})
+    public void removeMicroServiceConfigNameDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.removeData(request, response, microServiceConfigNameDatas, MicroServiceConfigName.class);
+    }
+
+    @RequestMapping(value={"/get_MicroServiceLocationDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getMicroServiceLocationByNameDictionaryEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getDataByEntity(response, microServiceLocationDatas, "name", MicroServiceLocation.class);
+    }
+
+    @RequestMapping(value={"/get_MicroServiceLocationData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getMicroServiceLocationDictionaryEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getData(response, microServiceLocationDatas, MicroServiceLocation.class);
+    }
+
+    @RequestMapping(value={"/ms_dictionary/save_location"}, method={RequestMethod.POST})
+    public ModelAndView saveMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response)throws IOException{
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        try {
+            boolean fromAPI = utils.isRequestFromAPI(request);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            JsonNode root = mapper.readTree(request.getReader());
             MicroServiceLocation microServiceLocation;
             if(fromAPI){
                 microServiceLocation = mapper.readValue(root.get(dictionaryFields).toString(), MicroServiceLocation.class);
             }else{
-            	microServiceLocation = mapper.readValue(root.get("microServiceLocationDictionaryData").toString(), MicroServiceLocation.class);
+                microServiceLocation = mapper.readValue(root.get("microServiceLocationDictionaryData").toString(), MicroServiceLocation.class);
             }
             
             List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(microServiceLocation.getName(), "name", MicroServiceLocation.class);
-			boolean duplicateflag = false;
-			if(duplicateData != null && !duplicateData.isEmpty()){
-				MicroServiceLocation data = (MicroServiceLocation) duplicateData.get(0);
-				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
-					microServiceLocation.setId(data.getId());
-				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
-						(request.getParameter(operation) == null && (data.getId() != microServiceLocation.getId()))){
-					duplicateflag = true;
-				}
-			}
-			String responseString = null;
-			if(!duplicateflag){
-				if(microServiceLocation.getId() == 0){
-					commonClassDao.save(microServiceLocation);
-				}else{
-					commonClassDao.update(microServiceLocation); 
-				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceLocation.class));
-			}else{
-				responseString = duplicateResponseString;
-			}
-			if(fromAPI){
-				return utils.getResultForApi(responseString);
-			}else{
-				utils.setResponseData(response, microServiceLocationDatas, responseString);
-			}
-		}catch (Exception e){
-			utils.setErrorResponseData(response, e);
-		}
-		return null;
-	}
+            boolean duplicateflag = false;
+            if(duplicateData != null && !duplicateData.isEmpty()){
+                MicroServiceLocation data = (MicroServiceLocation) duplicateData.get(0);
+                if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+                    microServiceLocation.setId(data.getId());
+                }else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) ||
+                        (request.getParameter(operation) == null && (data.getId() != microServiceLocation.getId()))){
+                    duplicateflag = true;
+                }
+            }
+            String responseString = null;
+            if(!duplicateflag){
+                if(microServiceLocation.getId() == 0){
+                    commonClassDao.save(microServiceLocation);
+                }else{
+                    commonClassDao.update(microServiceLocation);
+                }
+                responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceLocation.class));
+            }else{
+                responseString = duplicateResponseString;
+            }
+            if(fromAPI){
+                return utils.getResultForApi(responseString);
+            }else{
+                utils.setResponseData(response, microServiceLocationDatas, responseString);
+            }
+        }catch (Exception e){
+            utils.setErrorResponseData(response, e);
+        }
+        return null;
+    }
 
-	@RequestMapping(value={"/ms_dictionary/remove_msLocation"}, method={RequestMethod.POST})
-	public void removeMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.removeData(request, response, microServiceLocationDatas, MicroServiceLocation.class);
-	}
-	
+    @RequestMapping(value={"/ms_dictionary/remove_msLocation"}, method={RequestMethod.POST})
+    public void removeMicroServiceLocationDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.removeData(request, response, microServiceLocationDatas, MicroServiceLocation.class);
+    }
+
     @RequestMapping(value={"/get_MicroServiceAttributeDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceAttributeByNameDictionaryEntityData(HttpServletResponse response){
-    	DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, microServiceAttributeDatas, "name", MicroServiceAttribute.class);
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getDataByEntity(response, microServiceAttributeDatas, "name", MicroServiceAttribute.class);
     }
     
     @RequestMapping(value={"/get_MicroServiceAttributeData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceAttributeDictionaryEntityData(HttpServletResponse response){
-    	DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getData(response, microServiceAttributeDatas, MicroServiceAttribute.class);
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getData(response, microServiceAttributeDatas, MicroServiceAttribute.class);
     }
     
     @RequestMapping(value={"/ms_dictionary/save_modelAttribute"}, method={RequestMethod.POST})
     public ModelAndView saveMicroServiceAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-    	DictionaryUtils utils = getDictionaryUtilsInstance();
+        DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
-			boolean fromAPI = utils.isRequestFromAPI(request);
+            boolean fromAPI = utils.isRequestFromAPI(request);
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JsonNode root = mapper.readTree(request.getReader());
@@ -339,52 +339,52 @@ public class MicroServiceDictionaryController {
             }
             checkValue = microServiceAttribute.getName() + ":" + microServiceAttribute.getValue() + ":" + microServiceAttribute.getModelName();
             List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(checkValue, "name:value:modelName", MicroServiceAttribute.class);
-			boolean duplicateflag = false;
-			if(duplicateData != null && !duplicateData.isEmpty()){
-				MicroServiceAttribute data = (MicroServiceAttribute) duplicateData.get(0);
-				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
-					microServiceAttribute.setId(data.getId());
-				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
-						(request.getParameter(operation) == null && (data.getId() != microServiceAttribute.getId()))){
-					duplicateflag = true;
-				}
-			}
-			String responseString = null;
-			if(!duplicateflag){
-				if(microServiceAttribute.getId() == 0){
-					commonClassDao.save(microServiceAttribute);
-				}else{
-					commonClassDao.update(microServiceAttribute); 
-				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceAttribute.class));
-			}else{
-				responseString = duplicateResponseString;
-			}
-			if(fromAPI){
-				return utils.getResultForApi(responseString);
-			}else{
-				utils.setResponseData(response, microServiceAttributeDatas, responseString);
-			}
+            boolean duplicateflag = false;
+            if(duplicateData != null && !duplicateData.isEmpty()){
+                MicroServiceAttribute data = (MicroServiceAttribute) duplicateData.get(0);
+                if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+                    microServiceAttribute.setId(data.getId());
+                }else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) ||
+                        (request.getParameter(operation) == null && (data.getId() != microServiceAttribute.getId()))){
+                    duplicateflag = true;
+                }
+            }
+            String responseString = null;
+            if(!duplicateflag){
+                if(microServiceAttribute.getId() == 0){
+                    commonClassDao.save(microServiceAttribute);
+                }else{
+                    commonClassDao.update(microServiceAttribute);
+                }
+                responseString = mapper.writeValueAsString(commonClassDao.getData(MicroServiceAttribute.class));
+            }else{
+                responseString = duplicateResponseString;
+            }
+            if(fromAPI){
+                return utils.getResultForApi(responseString);
+            }else{
+                utils.setResponseData(response, microServiceAttributeDatas, responseString);
+            }
         }
         catch (Exception e){
-        	utils.setErrorResponseData(response, e);
+            utils.setErrorResponseData(response, e);
         }
         return null;
     }
  
     @RequestMapping(value={"/ms_dictionary/remove_modelAttribute"}, method={RequestMethod.POST})
     public void removeMicroServiceAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-    	DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.removeData(request, response, microServiceAttributeDatas, MicroServiceAttribute.class);
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.removeData(request, response, microServiceAttributeDatas, MicroServiceAttribute.class);
     }
  
-	
-	@RequestMapping(value={"/get_MicroServiceModelsDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceModelsDictionaryByNameEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, microServiceModelsDictionaryDatas, modelName, MicroServiceModels.class);
-	}
-	
+
+    @RequestMapping(value={"/get_MicroServiceModelsDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getMicroServiceModelsDictionaryByNameEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getDataByEntity(response, microServiceModelsDictionaryDatas, modelName, MicroServiceModels.class);
+    }
+
     @RequestMapping(value={"/get_MicroServiceModelsDataByVersion"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceModelsDictionaryByVersionEntityData(HttpServletRequest request, HttpServletResponse response){
         try{
@@ -409,12 +409,12 @@ public class MicroServiceDictionaryController {
         }
     }
     
-	@RequestMapping(value={"/get_MicroServiceModelsData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceModelsDictionaryEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getData(response, microServiceModelsDictionaryDatas, MicroServiceModels.class);
-	}
-	
+    @RequestMapping(value={"/get_MicroServiceModelsData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getMicroServiceModelsDictionaryEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getData(response, microServiceModelsDictionaryDatas, MicroServiceModels.class);
+    }
+
     @RequestMapping(value={"/get_MicroServiceModelsDataServiceVersion"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceModelsDictionaryEntityDataServiceVersion(HttpServletResponse response){
         try{
@@ -423,9 +423,9 @@ public class MicroServiceDictionaryController {
             List<String> data = new ArrayList<>();
             List<Object> datas = commonClassDao.getData(MicroServiceModels.class);
             for(int i = 0; i < datas.size(); i++){
-            	MicroServiceModels msmodel = (MicroServiceModels) datas.get(i);
+                MicroServiceModels msmodel = (MicroServiceModels) datas.get(i);
                 if (!data.contains(msmodel.getModelName())){
-                	data.add(msmodel.getModelName() + "-v" + msmodel.getVersion());
+                    data.add(msmodel.getModelName() + "-v" + msmodel.getVersion());
                 }
             }
             model.put(microServiceModelsDictionaryDatas, mapper.writeValueAsString(data));
@@ -463,287 +463,287 @@ public class MicroServiceDictionaryController {
         }
     }
     
-	@RequestMapping(value={"/ms_dictionary/save_model"}, method={RequestMethod.POST})
-	public ModelAndView saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		try {
-			this.newModel = new MicroServiceModels();
-			boolean fromAPI = utils.isRequestFromAPI(request);
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			MicroServiceModels microServiceModels = new MicroServiceModels();
-			String userId = null;
-			
-			String dataOrderInfo = null;
-			if(root.has("dataOrderInfo")){
-				dataOrderInfo = root.get("dataOrderInfo").toString();
-			}
+    @RequestMapping(value={"/ms_dictionary/save_model"}, method={RequestMethod.POST})
+    public ModelAndView saveMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        try {
+            this.newModel = new MicroServiceModels();
+            boolean fromAPI = utils.isRequestFromAPI(request);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            JsonNode root = mapper.readTree(request.getReader());
+            MicroServiceModels microServiceModels = new MicroServiceModels();
+            String userId = null;
 
-			if(root.has("modelType")){
-				JsonNode dataType = root.get("modelType");
-				String modelType= dataType.toString();
-				if(modelType.contains("yml")){
-					if (root.has(microServiceModelsDictionaryData)){
-						if (root.get(microServiceModelsDictionaryData).has(description)){
-							microServiceModels.setDescription(root.get(microServiceModelsDictionaryData).get(description).asText().replace("\"", ""));
-						}
-						if (root.get(microServiceModelsDictionaryData).has(modelName)){
-							microServiceModels.setModelName(root.get(microServiceModelsDictionaryData).get(modelName).asText().replace("\"", ""));
-							this.newModel.setModelName(microServiceModels.getModelName());
-						}
-						if (root.get(microServiceModelsDictionaryData).has(version)){
-							microServiceModels.setVersion(root.get(microServiceModelsDictionaryData).get(version).asText().replace("\"", ""));
-							this.newModel.setVersion(microServiceModels.getVersion());
-						}
-					}
+            String dataOrderInfo = null;
+            if(root.has("dataOrderInfo")){
+                dataOrderInfo = root.get("dataOrderInfo").toString();
+            }
 
-					classMap = new LinkedHashMap<>();
-					JsonNode data = root.get(classMapData);
-					ObjectMapper mapper1 = new ObjectMapper();
-					String data1 = data.toString().substring(1, data.toString().length()-1);
-					data1 = data1.replace("\\", "");
-					data1=data1.replace("\"{","{");
-					data1=data1.replace("}\"","}");
-					JSONObject jsonObject = new JSONObject(data1);
-					Set<String> keys = jsonObject.keySet();
-					for(String key : keys){
-						String value = jsonObject.get(key).toString();
-						MSAttributeObject msAttributeObject = mapper1.readValue(value, MSAttributeObject.class);
-						classMap.put(key, msAttributeObject);
-					}
+            if(root.has("modelType")){
+                JsonNode dataType = root.get("modelType");
+                String modelType= dataType.toString();
+                if(modelType.contains("yml")){
+                    if (root.has(microServiceModelsDictionaryData)){
+                        if (root.get(microServiceModelsDictionaryData).has(description)){
+                            microServiceModels.setDescription(root.get(microServiceModelsDictionaryData).get(description).asText().replace("\"", ""));
+                        }
+                        if (root.get(microServiceModelsDictionaryData).has(modelName)){
+                            microServiceModels.setModelName(root.get(microServiceModelsDictionaryData).get(modelName).asText().replace("\"", ""));
+                            this.newModel.setModelName(microServiceModels.getModelName());
+                        }
+                        if (root.get(microServiceModelsDictionaryData).has(version)){
+                            microServiceModels.setVersion(root.get(microServiceModelsDictionaryData).get(version).asText().replace("\"", ""));
+                            this.newModel.setVersion(microServiceModels.getVersion());
+                        }
+                    }
 
-					userId = root.get("userid").textValue();
-					MSAttributeObject mainClass = classMap.get(this.newModel.getModelName());
-					this.newModel.setDependency("[]");
-					String value = new Gson().toJson(mainClass.getSubClass());
-					this.newModel.setSub_attributes(value);
-					String attributes= mainClass.getAttribute().toString().replace("{", "").replace("}", "");
-					int equalsIndexForAttributes= attributes.indexOf('=');
-					String atttributesAfterFirstEquals= attributes.substring(equalsIndexForAttributes+1);
-					this.newModel.setAttributes(atttributesAfterFirstEquals);
-					String refAttributes= mainClass.getRefAttribute().toString().replace("{", "").replace("}", "");
-					int equalsIndex= refAttributes.indexOf("=");
-					String refAttributesAfterFirstEquals= refAttributes.substring(equalsIndex+1);
-					this.newModel.setRef_attributes(refAttributesAfterFirstEquals);
-					this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
-					this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
+                    classMap = new LinkedHashMap<>();
+                    JsonNode data = root.get(classMapData);
+                    ObjectMapper mapper1 = new ObjectMapper();
+                    String data1 = data.toString().substring(1, data.toString().length()-1);
+                    data1 = data1.replace("\\", "");
+                    data1=data1.replace("\"{","{");
+                    data1=data1.replace("}\"","}");
+                    JSONObject jsonObject = new JSONObject(data1);
+                    Set<String> keys = jsonObject.keySet();
+                    for(String key : keys){
+                        String value = jsonObject.get(key).toString();
+                        MSAttributeObject msAttributeObject = mapper1.readValue(value, MSAttributeObject.class);
+                        classMap.put(key, msAttributeObject);
+                    }
 
-				}else{
-					if (fromAPI) {
-						microServiceModels = mapper.readValue(root.get(dictionaryFields).toString(), MicroServiceModels.class);
-						userId = "API";
-					} else {
-						if (root.has(microServiceModelsDictionaryData)){
-							if (root.get(microServiceModelsDictionaryData).has(description)){
-								microServiceModels.setDescription(root.get(microServiceModelsDictionaryData).get(description).asText().replace("\"", ""));
-							}
-							if (root.get(microServiceModelsDictionaryData).has(modelName)){
-								microServiceModels.setModelName(root.get(microServiceModelsDictionaryData).get(modelName).asText().replace("\"", ""));
-								this.newModel.setModelName(microServiceModels.getModelName());
-							}
-							if (root.get(microServiceModelsDictionaryData).has(version)){
-								microServiceModels.setVersion(root.get(microServiceModelsDictionaryData).get(version).asText().replace("\"", ""));
-								this.newModel.setVersion(microServiceModels.getVersion());
-							}
-						}
-						if(root.has(classMapData)){
-							classMap = new LinkedHashMap<>();
-							JsonNode data = root.get(classMapData);
-							ObjectMapper mapper1 = new ObjectMapper();
-							String data1 = data.toString().substring(1, data.toString().length()-1);
-							data1 = data1.replace("\\", "");
-							JSONObject jsonObject = new JSONObject(data1);
-							Set<String> keys = jsonObject.keySet();
-							for(String key : keys){
-								String value = jsonObject.get(key).toString();
-								MSAttributeObject msAttributeObject = mapper1.readValue(value, MSAttributeObject.class);
-								classMap.put(key, msAttributeObject);
-							}
-						}
-						userId = root.get("userid").textValue();
-						addValuesToNewModel(classMap);
-					}
-				}		
-			}
-			microServiceModels.setAttributes(this.newModel.getAttributes());
-			microServiceModels.setRef_attributes(this.newModel.getRef_attributes());
-			microServiceModels.setDependency(this.newModel.getDependency());
-			microServiceModels.setModelName(this.newModel.getModelName());
-			microServiceModels.setSub_attributes(this.newModel.getSub_attributes());
-			microServiceModels.setVersion(this.newModel.getVersion());
-			microServiceModels.setEnumValues(this.newModel.getEnumValues());
-			microServiceModels.setAnnotation(this.newModel.getAnnotation());
-			if(dataOrderInfo != null){
-				 microServiceModels.setDataOrderInfo(dataOrderInfo);
-			}
-			String checkName = microServiceModels.getModelName() + ":" + microServiceModels.getVersion();
-			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(checkName, "modelName:version", MicroServiceModels.class);
-			boolean duplicateflag = false;
-			if(duplicateData != null && !duplicateData.isEmpty()){
-				MicroServiceModels data = (MicroServiceModels) duplicateData.get(0);
-				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
-					microServiceModels.setId(data.getId());
-				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
-						(request.getParameter(operation) == null && (data.getId() != microServiceModels.getId()))){
-					duplicateflag = true;
-				}
-			}
-			UserInfo userInfo = utils.getUserInfo(userId);
-			
-			String responseString = null;
-			if(!duplicateflag){
-				microServiceModels.setUserCreatedBy(userInfo);
-				if(microServiceModels.getId() == 0){
-					commonClassDao.save(microServiceModels);
-				}else{
-					commonClassDao.update(microServiceModels); 
-				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(PrefixList.class));
-			}else{
-				responseString = duplicateResponseString;
-			}
-			if(fromAPI){
-				return utils.getResultForApi(responseString);
-			}else{
-				utils.setResponseData(response, microServiceModelsDictionaryDatas, responseString);
-			}
-		}catch (Exception e){
-			utils.setErrorResponseData(response, e);
-		}
-		return null;
-	}
+                    userId = root.get("userid").textValue();
+                    MSAttributeObject mainClass = classMap.get(this.newModel.getModelName());
+                    this.newModel.setDependency("[]");
+                    String value = new Gson().toJson(mainClass.getSubClass());
+                    this.newModel.setSub_attributes(value);
+                    String attributes= mainClass.getAttribute().toString().replace("{", "").replace("}", "");
+                    int equalsIndexForAttributes= attributes.indexOf('=');
+                    String atttributesAfterFirstEquals= attributes.substring(equalsIndexForAttributes+1);
+                    this.newModel.setAttributes(atttributesAfterFirstEquals);
+                    String refAttributes= mainClass.getRefAttribute().toString().replace("{", "").replace("}", "");
+                    int equalsIndex= refAttributes.indexOf("=");
+                    String refAttributesAfterFirstEquals= refAttributes.substring(equalsIndex+1);
+                    this.newModel.setRef_attributes(refAttributesAfterFirstEquals);
+                    this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
+                    this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
 
-	@RequestMapping(value={"/ms_dictionary/remove_msModel"}, method={RequestMethod.POST})
-	public void removeMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.removeData(request, response, microServiceModelsDictionaryDatas, MicroServiceModels.class);
-	}
-		
-	private void addValuesToNewModel(HashMap<String,MSAttributeObject > classMap) {
-		//Loop  through the classmap and pull out the required info for the new file.
-		String subAttribute = null;
-		
-		MSAttributeObject mainClass = classMap.get(this.newModel.getModelName());
-		
-		if (mainClass !=null){
-			String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[]{"[", "]", " "}, new String[]{"", "", ""});
-			ArrayList<String> dependency = new ArrayList<>(Arrays.asList(dependTemp.split(",")));	
-			dependency = getFullDependencyList(dependency);
-			for (String element : dependency){
-				MSAttributeObject temp = classMap.get(element);
-				if (temp!=null){
-					mainClass.addAllRefAttribute(temp.getRefAttribute());
-					mainClass.addAllAttribute(temp.getAttribute());
-				}
-			}
-			subAttribute = utils.createSubAttributes(dependency, classMap, this.newModel.getModelName());
-		}else{
-			subAttribute = "{}";
-			this.newModel.setDependency("");
-		}
+                }else{
+                    if (fromAPI) {
+                        microServiceModels = mapper.readValue(root.get(dictionaryFields).toString(), MicroServiceModels.class);
+                        userId = "API";
+                    } else {
+                        if (root.has(microServiceModelsDictionaryData)){
+                            if (root.get(microServiceModelsDictionaryData).has(description)){
+                                microServiceModels.setDescription(root.get(microServiceModelsDictionaryData).get(description).asText().replace("\"", ""));
+                            }
+                            if (root.get(microServiceModelsDictionaryData).has(modelName)){
+                                microServiceModels.setModelName(root.get(microServiceModelsDictionaryData).get(modelName).asText().replace("\"", ""));
+                                this.newModel.setModelName(microServiceModels.getModelName());
+                            }
+                            if (root.get(microServiceModelsDictionaryData).has(version)){
+                                microServiceModels.setVersion(root.get(microServiceModelsDictionaryData).get(version).asText().replace("\"", ""));
+                                this.newModel.setVersion(microServiceModels.getVersion());
+                            }
+                        }
+                        if(root.has(classMapData)){
+                            classMap = new LinkedHashMap<>();
+                            JsonNode data = root.get(classMapData);
+                            ObjectMapper mapper1 = new ObjectMapper();
+                            String data1 = data.toString().substring(1, data.toString().length()-1);
+                            data1 = data1.replace("\\", "");
+                            JSONObject jsonObject = new JSONObject(data1);
+                            Set<String> keys = jsonObject.keySet();
+                            for(String key : keys){
+                                String value = jsonObject.get(key).toString();
+                                MSAttributeObject msAttributeObject = mapper1.readValue(value, MSAttributeObject.class);
+                                classMap.put(key, msAttributeObject);
+                            }
+                        }
+                        userId = root.get("userid").textValue();
+                        addValuesToNewModel(classMap);
+                    }
+                }
+            }
+            microServiceModels.setAttributes(this.newModel.getAttributes());
+            microServiceModels.setRef_attributes(this.newModel.getRef_attributes());
+            microServiceModels.setDependency(this.newModel.getDependency());
+            microServiceModels.setModelName(this.newModel.getModelName());
+            microServiceModels.setSub_attributes(this.newModel.getSub_attributes());
+            microServiceModels.setVersion(this.newModel.getVersion());
+            microServiceModels.setEnumValues(this.newModel.getEnumValues());
+            microServiceModels.setAnnotation(this.newModel.getAnnotation());
+            if(dataOrderInfo != null){
+                 microServiceModels.setDataOrderInfo(dataOrderInfo);
+            }
+            String checkName = microServiceModels.getModelName() + ":" + microServiceModels.getVersion();
+            List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(checkName, "modelName:version", MicroServiceModels.class);
+            boolean duplicateflag = false;
+            if(duplicateData != null && !duplicateData.isEmpty()){
+                MicroServiceModels data = (MicroServiceModels) duplicateData.get(0);
+                if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+                    microServiceModels.setId(data.getId());
+                }else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) ||
+                        (request.getParameter(operation) == null && (data.getId() != microServiceModels.getId()))){
+                    duplicateflag = true;
+                }
+            }
+            UserInfo userInfo = utils.getUserInfo(userId);
 
-		if (mainClass != null && mainClass.getDependency()==null){
-			mainClass.setDependency("");
-		}
-		if(mainClass != null){
-			this.newModel.setDependency(mainClass.getDependency());
-			this.newModel.setSub_attributes(subAttribute);
-			this.newModel.setAttributes(mainClass.getAttribute().toString().replace("{", "").replace("}", ""));
-			this.newModel.setRef_attributes(mainClass.getRefAttribute().toString().replace("{", "").replace("}", ""));
-			this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
-			this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
-		}
-	} 
-	
-	private ArrayList<String> getFullDependencyList(ArrayList<String> dependency) {
-		ArrayList<String> returnList = new ArrayList<>();
-		ArrayList<String> workingList = new ArrayList<>();
-		returnList.addAll(dependency);
-		for (String element : dependency ){
-			if (classMap.containsKey(element)){
-				MSAttributeObject value = classMap.get(element);			
-				String rawValue = StringUtils.replaceEach(value.getDependency(), new String[]{"[", "]"}, new String[]{"", ""});
-				workingList = new ArrayList<>(Arrays.asList(rawValue.split(",")));	
-				for(String depend : workingList){
-					if (!returnList.contains(depend) && !depend.isEmpty()){
-						returnList.add(depend.trim());
-						//getFullDepedency(workingList)
-					}
-				}
-			}
-		}
-		
-		return returnList;
-	}
-	
-	@RequestMapping(value={"/get_MicroServiceHeaderDefaultsDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getMicroServiceHeaderDefaultsEntityDataByName(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, microServiceHeaderDefaultDatas, "modelName", MicroserviceHeaderdeFaults.class);
-	}
-	
+            String responseString = null;
+            if(!duplicateflag){
+                microServiceModels.setUserCreatedBy(userInfo);
+                if(microServiceModels.getId() == 0){
+                    commonClassDao.save(microServiceModels);
+                }else{
+                    commonClassDao.update(microServiceModels);
+                }
+                responseString = mapper.writeValueAsString(commonClassDao.getData(PrefixList.class));
+            }else{
+                responseString = duplicateResponseString;
+            }
+            if(fromAPI){
+                return utils.getResultForApi(responseString);
+            }else{
+                utils.setResponseData(response, microServiceModelsDictionaryDatas, responseString);
+            }
+        }catch (Exception e){
+            utils.setErrorResponseData(response, e);
+        }
+        return null;
+    }
+
+    @RequestMapping(value={"/ms_dictionary/remove_msModel"}, method={RequestMethod.POST})
+    public void removeMicroServiceModelsDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.removeData(request, response, microServiceModelsDictionaryDatas, MicroServiceModels.class);
+    }
+
+    private void addValuesToNewModel(HashMap<String,MSAttributeObject > classMap) {
+        //Loop  through the classmap and pull out the required info for the new file.
+        String subAttribute = null;
+
+        MSAttributeObject mainClass = classMap.get(this.newModel.getModelName());
+
+        if (mainClass !=null){
+            String dependTemp = StringUtils.replaceEach(mainClass.getDependency(), new String[]{"[", "]", " "}, new String[]{"", "", ""});
+            ArrayList<String> dependency = new ArrayList<>(Arrays.asList(dependTemp.split(",")));
+            dependency = getFullDependencyList(dependency);
+            for (String element : dependency){
+                MSAttributeObject temp = classMap.get(element);
+                if (temp!=null){
+                    mainClass.addAllRefAttribute(temp.getRefAttribute());
+                    mainClass.addAllAttribute(temp.getAttribute());
+                }
+            }
+            subAttribute = utils.createSubAttributes(dependency, classMap, this.newModel.getModelName());
+        }else{
+            subAttribute = "{}";
+            this.newModel.setDependency("");
+        }
+
+        if (mainClass != null && mainClass.getDependency()==null){
+            mainClass.setDependency("");
+        }
+        if(mainClass != null){
+            this.newModel.setDependency(mainClass.getDependency());
+            this.newModel.setSub_attributes(subAttribute);
+            this.newModel.setAttributes(mainClass.getAttribute().toString().replace("{", "").replace("}", ""));
+            this.newModel.setRef_attributes(mainClass.getRefAttribute().toString().replace("{", "").replace("}", ""));
+            this.newModel.setEnumValues(mainClass.getEnumType().toString().replace("{", "").replace("}", ""));
+            this.newModel.setAnnotation(mainClass.getMatchingSet().toString().replace("{", "").replace("}", ""));
+        }
+    }
+
+    private ArrayList<String> getFullDependencyList(ArrayList<String> dependency) {
+        ArrayList<String> returnList = new ArrayList<>();
+        ArrayList<String> workingList = new ArrayList<>();
+        returnList.addAll(dependency);
+        for (String element : dependency ){
+            if (classMap.containsKey(element)){
+                MSAttributeObject value = classMap.get(element);
+                String rawValue = StringUtils.replaceEach(value.getDependency(), new String[]{"[", "]"}, new String[]{"", ""});
+                workingList = new ArrayList<>(Arrays.asList(rawValue.split(",")));
+                for(String depend : workingList){
+                    if (!returnList.contains(depend) && !depend.isEmpty()){
+                        returnList.add(depend.trim());
+                        //getFullDepedency(workingList)
+                    }
+                }
+            }
+        }
+
+        return returnList;
+    }
+
+    @RequestMapping(value={"/get_MicroServiceHeaderDefaultsDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getMicroServiceHeaderDefaultsEntityDataByName(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getDataByEntity(response, microServiceHeaderDefaultDatas, "modelName", MicroserviceHeaderdeFaults.class);
+    }
+
     @RequestMapping(value={"/get_MicroServiceHeaderDefaultsData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
     public void getMicroServiceHeaderDefaultsEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getData(response, microServiceHeaderDefaultDatas, MicroserviceHeaderdeFaults.class);
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getData(response, microServiceHeaderDefaultDatas, MicroserviceHeaderdeFaults.class);
     }
     
     
     @RequestMapping(value={"/ms_dictionary/save_headerDefaults"}, method={RequestMethod.POST})
     public ModelAndView saveMicroServiceHeaderDefaultValues(HttpServletRequest request, HttpServletResponse response) throws IOException{
-    	DictionaryUtils utils = getDictionaryUtilsInstance();
+        DictionaryUtils utils = getDictionaryUtilsInstance();
         try {
-        	boolean fromAPI = utils.isRequestFromAPI(request);
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
+            boolean fromAPI = utils.isRequestFromAPI(request);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            JsonNode root = mapper.readTree(request.getReader());
             
             MicroserviceHeaderdeFaults msHeaderdeFaults;
             if(fromAPI){
-            	msHeaderdeFaults = mapper.readValue(root.get(dictionaryFields).toString(), MicroserviceHeaderdeFaults.class);
+                msHeaderdeFaults = mapper.readValue(root.get(dictionaryFields).toString(), MicroserviceHeaderdeFaults.class);
             }else{
-            	msHeaderdeFaults = mapper.readValue(root.get("modelAttributeDictionaryData").toString(), MicroserviceHeaderdeFaults.class);
+                msHeaderdeFaults = mapper.readValue(root.get("modelAttributeDictionaryData").toString(), MicroserviceHeaderdeFaults.class);
             }
             
             List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(msHeaderdeFaults.getModelName(), "modelName", MicroserviceHeaderdeFaults.class);
-			boolean duplicateflag = false;
-			if(duplicateData != null && !duplicateData.isEmpty()){
-				MicroserviceHeaderdeFaults data = (MicroserviceHeaderdeFaults) duplicateData.get(0);
-				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
-					msHeaderdeFaults.setId(data.getId());
-				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
-						(request.getParameter(operation) == null && (data.getId() != msHeaderdeFaults.getId()))){
-					duplicateflag = true;
-				}
-			}
+            boolean duplicateflag = false;
+            if(duplicateData != null && !duplicateData.isEmpty()){
+                MicroserviceHeaderdeFaults data = (MicroserviceHeaderdeFaults) duplicateData.get(0);
+                if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+                    msHeaderdeFaults.setId(data.getId());
+                }else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) ||
+                        (request.getParameter(operation) == null && (data.getId() != msHeaderdeFaults.getId()))){
+                    duplicateflag = true;
+                }
+            }
             
-			String responseString = null;
-			if(!duplicateflag){
-				if(msHeaderdeFaults.getId() == 0){
-					commonClassDao.save(msHeaderdeFaults);
-				}else{
-					commonClassDao.update(msHeaderdeFaults); 
-				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(MicroserviceHeaderdeFaults.class));
-			}else{
-				responseString = duplicateResponseString;
-			}
-			if(fromAPI){
-				return utils.getResultForApi(responseString);
-			}else{
-				utils.setResponseData(response, microServiceHeaderDefaultDatas, responseString);
-			}
+            String responseString = null;
+            if(!duplicateflag){
+                if(msHeaderdeFaults.getId() == 0){
+                    commonClassDao.save(msHeaderdeFaults);
+                }else{
+                    commonClassDao.update(msHeaderdeFaults);
+                }
+                responseString = mapper.writeValueAsString(commonClassDao.getData(MicroserviceHeaderdeFaults.class));
+            }else{
+                responseString = duplicateResponseString;
+            }
+            if(fromAPI){
+                return utils.getResultForApi(responseString);
+            }else{
+                utils.setResponseData(response, microServiceHeaderDefaultDatas, responseString);
+            }
         }
         catch (Exception e){
-        	utils.setErrorResponseData(response, e);
+            utils.setErrorResponseData(response, e);
         }
         return null;
     }
     
     @RequestMapping(value={"/ms_dictionary/remove_headerDefaults"}, method={RequestMethod.POST})
     public void removeMicroServiceHeaderDefaults(HttpServletRequest request, HttpServletResponse response) throws IOException{
-    	DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.removeData(request, response, microServiceHeaderDefaultDatas, MicroserviceHeaderdeFaults.class);
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.removeData(request, response, microServiceHeaderDefaultDatas, MicroserviceHeaderdeFaults.class);
     }
 }

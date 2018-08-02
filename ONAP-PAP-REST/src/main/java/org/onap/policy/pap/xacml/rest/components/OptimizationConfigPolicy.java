@@ -64,114 +64,114 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType; 
 
 public class OptimizationConfigPolicy extends Policy {
-	
-	private static final Logger LOGGER = FlexLogger.getLogger(OptimizationConfigPolicy.class);
-	
+
+    private static final Logger LOGGER = FlexLogger.getLogger(OptimizationConfigPolicy.class);
+
     private static Map<String, String> mapAttribute = new HashMap<>();
     private static Map<String, String> mapMatch = new HashMap<>();
 
-	private static synchronized Map<String, String> getMatchMap () {
-		return mapMatch;
-	}
+    private static synchronized Map<String, String> getMatchMap () {
+        return mapMatch;
+    }
 
-	private static synchronized void setMatchMap(Map<String, String> mm) {
-		mapMatch = mm;
-	}
+    private static synchronized void setMatchMap(Map<String, String> mm) {
+        mapMatch = mm;
+    }
 
-	public OptimizationConfigPolicy() {
-		super();
-	}
-	
-	public OptimizationConfigPolicy(PolicyRestAdapter policyAdapter){
-		this.policyAdapter = policyAdapter;
-	}
+    public OptimizationConfigPolicy() {
+        super();
+    }
 
-	//save configuration of the policy based on the policyname
-	private void saveConfigurations(String policyName, String jsonBody) {
-		
-		if(policyName.endsWith(".xml")){
-			policyName = policyName.replace(".xml", "");
-		}
-		
-		try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName +".json");){
-			out.println(jsonBody);
-		} catch (Exception e) {
-			LOGGER.error("Exception Occured While writing Configuration data"+e);
-		} 
-	}
-	
-	
-	@Override
-	public Map<String, String> savePolicies() throws PAPException {
+    public OptimizationConfigPolicy(PolicyRestAdapter policyAdapter){
+        this.policyAdapter = policyAdapter;
+    }
 
-		Map<String, String> successMap = new HashMap<>();
-		if(isPolicyExists()){
-			successMap.put("EXISTS", "This Policy already exist on the PAP");
-			return successMap;
-		}
+    //save configuration of the policy based on the policyname
+    private void saveConfigurations(String policyName, String jsonBody) {
 
-		if(!isPreparedToSave()){
-			//Prep and configure the policy for saving
-			prepareToSave();
-		}
+        if(policyName.endsWith(".xml")){
+            policyName = policyName.replace(".xml", "");
+        }
 
-		// Until here we prepared the data and here calling the method to create xml.
-		Path newPolicyPath = null;
-		newPolicyPath = Paths.get(policyAdapter.getNewFileName());
+        try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName +".json");){
+            out.println(jsonBody);
+        } catch (Exception e) {
+            LOGGER.error("Exception Occured While writing Configuration data"+e);
+        }
+    }
 
-		successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());	
-	
-		return successMap;		
-	}
-	
-	//This is the method for preparing the policy for saving.  We have broken it out
-	//separately because the fully configured policy is used for multiple things
-	@Override
-	public boolean prepareToSave() throws PAPException{
 
-		if(isPreparedToSave()){
-			//we have already done this
-			return true;
-		}
-		
-		int version = 0;
-		String policyID = policyAdapter.getPolicyID();
-		version = policyAdapter.getHighestVersion();
-		
-		// Create the Instance for pojo, PolicyType object is used in marshalling.
-		if (policyAdapter.getPolicyType().equals("Config")) {
-			PolicyType policyConfig = new PolicyType();
+    @Override
+    public Map<String, String> savePolicies() throws PAPException {
 
-			policyConfig.setVersion(Integer.toString(version));
-			policyConfig.setPolicyId(policyID);
-			policyConfig.setTarget(new TargetType());
-			policyAdapter.setData(policyConfig);
-		}
-		policyName = policyAdapter.getNewFileName();
-		if (policyAdapter.getData() != null) {
-			// Save the Configurations file with the policy name with extention based on selection.
-			String jsonBody = policyAdapter.getJsonBody();
-			saveConfigurations(policyName, jsonBody);
-			
-			// Make sure the filename ends with an extension
-			if (!policyName.endsWith(".xml")) {
-				policyName = policyName + ".xml";
-			}
-			
-	
-			PolicyType configPolicy = (PolicyType) policyAdapter.getData();
-			
-			configPolicy.setDescription(policyAdapter.getPolicyDescription());
+        Map<String, String> successMap = new HashMap<>();
+        if(isPolicyExists()){
+            successMap.put("EXISTS", "This Policy already exist on the PAP");
+            return successMap;
+        }
 
-			configPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
-			
-			AllOfType allOfOne = new AllOfType();
-			String fileName = policyAdapter.getNewFileName();
-			String name = fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length());
-			if ((name == null) || (name.equals(""))) {
-				name = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
-			}
-			
+        if(!isPreparedToSave()){
+            //Prep and configure the policy for saving
+            prepareToSave();
+        }
+
+        // Until here we prepared the data and here calling the method to create xml.
+        Path newPolicyPath = null;
+        newPolicyPath = Paths.get(policyAdapter.getNewFileName());
+
+        successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
+
+        return successMap;
+    }
+
+    //This is the method for preparing the policy for saving.  We have broken it out
+    //separately because the fully configured policy is used for multiple things
+    @Override
+    public boolean prepareToSave() throws PAPException{
+
+        if(isPreparedToSave()){
+            //we have already done this
+            return true;
+        }
+
+        int version = 0;
+        String policyID = policyAdapter.getPolicyID();
+        version = policyAdapter.getHighestVersion();
+
+        // Create the Instance for pojo, PolicyType object is used in marshalling.
+        if (policyAdapter.getPolicyType().equals("Config")) {
+            PolicyType policyConfig = new PolicyType();
+
+            policyConfig.setVersion(Integer.toString(version));
+            policyConfig.setPolicyId(policyID);
+            policyConfig.setTarget(new TargetType());
+            policyAdapter.setData(policyConfig);
+        }
+        policyName = policyAdapter.getNewFileName();
+        if (policyAdapter.getData() != null) {
+            // Save the Configurations file with the policy name with extention based on selection.
+            String jsonBody = policyAdapter.getJsonBody();
+            saveConfigurations(policyName, jsonBody);
+
+            // Make sure the filename ends with an extension
+            if (!policyName.endsWith(".xml")) {
+                policyName = policyName + ".xml";
+            }
+
+
+            PolicyType configPolicy = (PolicyType) policyAdapter.getData();
+
+            configPolicy.setDescription(policyAdapter.getPolicyDescription());
+
+            configPolicy.setRuleCombiningAlgId(policyAdapter.getRuleCombiningAlgId());
+
+            AllOfType allOfOne = new AllOfType();
+            String fileName = policyAdapter.getNewFileName();
+            String name = fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length());
+            if ((name == null) || (name.equals(""))) {
+                name = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
+            }
+
             //setup values for pulling out matching attributes
             ObjectMapper mapper = new ObjectMapper();
             String matching = null;
@@ -198,114 +198,114 @@ public class OptimizationConfigPolicy extends Policy {
                 throw new PAPException(e1);
             }
             
-			// Match for policyName
-			allOfOne.getMatch().add(createMatch("PolicyName", name));
-			
-			AllOfType allOf = new AllOfType();
-		
-			// Adding the matches to AllOfType element Match for Onap
-			allOf.getMatch().add(createMatch("ONAPName", policyAdapter.getOnapName()));
-			if (matchMap!=null && !matchMap.isEmpty()) {
-				for (Entry<String, String> matchValue : matchMap.entrySet()){
-					String value = matchValue.getValue();
-					String key = matchValue.getKey().trim();
-					if (value.contains("matching-true") && mapAttribute.containsKey(key)){
-						allOf.getMatch().add(createDynamicMatch(key, mapAttribute.get(key)));
-					}
-				}
-			}
-			
-			// Match for riskType
-			allOf.getMatch().add(
-					createDynamicMatch("RiskType", policyAdapter.getRiskType()));
-			// Match for riskLevel
-			allOf.getMatch().add(
-					createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
-			// Match for riskguard
-			allOf.getMatch().add(
-					createDynamicMatch("guard", policyAdapter.getGuard()));
-			// Match for ttlDate
-			allOf.getMatch().add(
-					createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
+            // Match for policyName
+            allOfOne.getMatch().add(createMatch("PolicyName", name));
 
-			AnyOfType anyOf = new AnyOfType();
-			anyOf.getAllOf().add(allOfOne);
-			anyOf.getAllOf().add(allOf);
+            AllOfType allOf = new AllOfType();
 
-			TargetType target = new TargetType();
-			target.getAnyOf().add(anyOf);
-			
-			// Adding the target to the policy element
-			configPolicy.setTarget((TargetType) target);
+            // Adding the matches to AllOfType element Match for Onap
+            allOf.getMatch().add(createMatch("ONAPName", policyAdapter.getOnapName()));
+            if (matchMap!=null && !matchMap.isEmpty()) {
+                for (Entry<String, String> matchValue : matchMap.entrySet()){
+                    String value = matchValue.getValue();
+                    String key = matchValue.getKey().trim();
+                    if (value.contains("matching-true") && mapAttribute.containsKey(key)){
+                        allOf.getMatch().add(createDynamicMatch(key, mapAttribute.get(key)));
+                    }
+                }
+            }
 
-			RuleType rule = new RuleType();
-			rule.setRuleId(policyAdapter.getRuleID());
-			
-			rule.setEffect(EffectType.PERMIT);
-			
-			// Create Target in Rule
-			AllOfType allOfInRule = new AllOfType();
+            // Match for riskType
+            allOf.getMatch().add(
+                    createDynamicMatch("RiskType", policyAdapter.getRiskType()));
+            // Match for riskLevel
+            allOf.getMatch().add(
+                    createDynamicMatch("RiskLevel", String.valueOf(policyAdapter.getRiskLevel())));
+            // Match for riskguard
+            allOf.getMatch().add(
+                    createDynamicMatch("guard", policyAdapter.getGuard()));
+            // Match for ttlDate
+            allOf.getMatch().add(
+                    createDynamicMatch("TTLDate", policyAdapter.getTtlDate()));
 
-			// Creating match for ACCESS in rule target
-			MatchType accessMatch = new MatchType();
-			AttributeValueType accessAttributeValue = new AttributeValueType();
-			accessAttributeValue.setDataType(STRING_DATATYPE);
-			accessAttributeValue.getContent().add("ACCESS");
-			accessMatch.setAttributeValue(accessAttributeValue);
-			AttributeDesignatorType accessAttributeDesignator = new AttributeDesignatorType();
-			URI accessURI = null;
-			try {
-				accessURI = new URI(ACTION_ID);
-			} catch (URISyntaxException e) {
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "OptimizationConfigPolicy", "Exception creating ACCESS URI");
-			}
-			accessAttributeDesignator.setCategory(CATEGORY_ACTION);
-			accessAttributeDesignator.setDataType(STRING_DATATYPE);
-			accessAttributeDesignator.setAttributeId(new IdentifierImpl(accessURI).stringValue());
-			accessMatch.setAttributeDesignator(accessAttributeDesignator);
-			accessMatch.setMatchId(FUNCTION_STRING_EQUAL_IGNORE);
+            AnyOfType anyOf = new AnyOfType();
+            anyOf.getAllOf().add(allOfOne);
+            anyOf.getAllOf().add(allOf);
 
-			// Creating Config Match in rule Target
-			MatchType configMatch = new MatchType();
-			AttributeValueType configAttributeValue = new AttributeValueType();
-			configAttributeValue.setDataType(STRING_DATATYPE);
-			configAttributeValue.getContent().add("Config");
-			configMatch.setAttributeValue(configAttributeValue);
-			AttributeDesignatorType configAttributeDesignator = new AttributeDesignatorType();
-			URI configURI = null;
-			try {
-				configURI = new URI(RESOURCE_ID);
-			} catch (URISyntaxException e) {
-				PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "OptimizationConfigPolicy", "Exception creating Config URI");
-			}
-			configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
-			configAttributeDesignator.setDataType(STRING_DATATYPE);
-			configAttributeDesignator.setAttributeId(new IdentifierImpl(configURI).stringValue());
-			configMatch.setAttributeDesignator(configAttributeDesignator);
-			configMatch.setMatchId(FUNCTION_STRING_EQUAL_IGNORE);
+            TargetType target = new TargetType();
+            target.getAnyOf().add(anyOf);
 
-			allOfInRule.getMatch().add(accessMatch);
-			allOfInRule.getMatch().add(configMatch);
+            // Adding the target to the policy element
+            configPolicy.setTarget((TargetType) target);
 
-			AnyOfType anyOfInRule = new AnyOfType();
-			anyOfInRule.getAllOf().add(allOfInRule);
+            RuleType rule = new RuleType();
+            rule.setRuleId(policyAdapter.getRuleID());
 
-			TargetType targetInRule = new TargetType();
-			targetInRule.getAnyOf().add(anyOfInRule);
+            rule.setEffect(EffectType.PERMIT);
 
-			rule.setTarget(targetInRule);
-			rule.setAdviceExpressions(getAdviceExpressions(version, policyName));
+            // Create Target in Rule
+            AllOfType allOfInRule = new AllOfType();
 
-			configPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
-			policyAdapter.setPolicyData(configPolicy);
+            // Creating match for ACCESS in rule target
+            MatchType accessMatch = new MatchType();
+            AttributeValueType accessAttributeValue = new AttributeValueType();
+            accessAttributeValue.setDataType(STRING_DATATYPE);
+            accessAttributeValue.getContent().add("ACCESS");
+            accessMatch.setAttributeValue(accessAttributeValue);
+            AttributeDesignatorType accessAttributeDesignator = new AttributeDesignatorType();
+            URI accessURI = null;
+            try {
+                accessURI = new URI(ACTION_ID);
+            } catch (URISyntaxException e) {
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "OptimizationConfigPolicy", "Exception creating ACCESS URI");
+            }
+            accessAttributeDesignator.setCategory(CATEGORY_ACTION);
+            accessAttributeDesignator.setDataType(STRING_DATATYPE);
+            accessAttributeDesignator.setAttributeId(new IdentifierImpl(accessURI).stringValue());
+            accessMatch.setAttributeDesignator(accessAttributeDesignator);
+            accessMatch.setMatchId(FUNCTION_STRING_EQUAL_IGNORE);
 
-		} else {
-			PolicyLogger.error("Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
-		}
-		setPreparedToSave(true);
-		return true;
-	}
-	
+            // Creating Config Match in rule Target
+            MatchType configMatch = new MatchType();
+            AttributeValueType configAttributeValue = new AttributeValueType();
+            configAttributeValue.setDataType(STRING_DATATYPE);
+            configAttributeValue.getContent().add("Config");
+            configMatch.setAttributeValue(configAttributeValue);
+            AttributeDesignatorType configAttributeDesignator = new AttributeDesignatorType();
+            URI configURI = null;
+            try {
+                configURI = new URI(RESOURCE_ID);
+            } catch (URISyntaxException e) {
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "OptimizationConfigPolicy", "Exception creating Config URI");
+            }
+            configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
+            configAttributeDesignator.setDataType(STRING_DATATYPE);
+            configAttributeDesignator.setAttributeId(new IdentifierImpl(configURI).stringValue());
+            configMatch.setAttributeDesignator(configAttributeDesignator);
+            configMatch.setMatchId(FUNCTION_STRING_EQUAL_IGNORE);
+
+            allOfInRule.getMatch().add(accessMatch);
+            allOfInRule.getMatch().add(configMatch);
+
+            AnyOfType anyOfInRule = new AnyOfType();
+            anyOfInRule.getAllOf().add(allOfInRule);
+
+            TargetType targetInRule = new TargetType();
+            targetInRule.getAnyOf().add(anyOfInRule);
+
+            rule.setTarget(targetInRule);
+            rule.setAdviceExpressions(getAdviceExpressions(version, policyName));
+
+            configPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
+            policyAdapter.setPolicyData(configPolicy);
+
+        } else {
+            PolicyLogger.error("Unsupported data object." + policyAdapter.getData().getClass().getCanonicalName());
+        }
+        setPreparedToSave(true);
+        return true;
+    }
+
     private void pullMatchValue(JsonNode rootNode) {
         Iterator<Map.Entry<String, JsonNode>> fieldsIterator = rootNode.fields();
         String newValue = null;
@@ -331,97 +331,97 @@ public class OptimizationConfigPolicy extends Policy {
        CommonClassDaoImpl dbConnection = new CommonClassDaoImpl();
        List<Object> result = dbConnection.getDataById(OptimizationModels.class, "modelName:version", modelName+":"+modelVersion);
        if(result != null && !result.isEmpty()){
-    	   OptimizationModels model = (OptimizationModels) result.get(0);
-    	   ruleTemplate = model.getAnnotation();
+           OptimizationModels model = (OptimizationModels) result.get(0);
+           ruleTemplate = model.getAnnotation();
        }
        return ruleTemplate;
    }
    
-	// Data required for Advice part is setting here.
-	private AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
-		AdviceExpressionsType advices = new AdviceExpressionsType();
-		AdviceExpressionType advice = new AdviceExpressionType();
-		advice.setAdviceId("OptimizationID");
-		advice.setAppliesTo(EffectType.PERMIT);
-		
-		// For Configuration
-		AttributeAssignmentExpressionType assignment1 = new AttributeAssignmentExpressionType();
-		assignment1.setAttributeId("type");
-		assignment1.setCategory(CATEGORY_RESOURCE);
-		assignment1.setIssuer("");
+    // Data required for Advice part is setting here.
+    private AdviceExpressionsType getAdviceExpressions(int version, String fileName) {
+        AdviceExpressionsType advices = new AdviceExpressionsType();
+        AdviceExpressionType advice = new AdviceExpressionType();
+        advice.setAdviceId("OptimizationID");
+        advice.setAppliesTo(EffectType.PERMIT);
 
-		AttributeValueType configNameAttributeValue = new AttributeValueType();
-		configNameAttributeValue.setDataType(STRING_DATATYPE);
-		configNameAttributeValue.getContent().add("Configuration");
-		assignment1.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue));
+        // For Configuration
+        AttributeAssignmentExpressionType assignment1 = new AttributeAssignmentExpressionType();
+        assignment1.setAttributeId("type");
+        assignment1.setCategory(CATEGORY_RESOURCE);
+        assignment1.setIssuer("");
 
-		advice.getAttributeAssignmentExpression().add(assignment1);
-		
-		// For Config file Url if configurations are provided.
-		AttributeAssignmentExpressionType assignment2 = new AttributeAssignmentExpressionType();
-		assignment2.setAttributeId("URLID");
-		assignment2.setCategory(CATEGORY_RESOURCE);
-		assignment2.setIssuer("");
+        AttributeValueType configNameAttributeValue = new AttributeValueType();
+        configNameAttributeValue.setDataType(STRING_DATATYPE);
+        configNameAttributeValue.getContent().add("Configuration");
+        assignment1.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue));
 
-		AttributeValueType attributeValue = new AttributeValueType();
-		attributeValue.setDataType(URI_DATATYPE);
-		String configName;
-		if(policyName.endsWith(".xml")){
-			configName = policyName.replace(".xml", "");
-		}else{
-			configName = policyName;
-		}
-		String content = CONFIG_URL +"/Config/" + configName + ".json";
-		attributeValue.getContent().add(content);
-		assignment2.setExpression(new ObjectFactory().createAttributeValue(attributeValue));
+        advice.getAttributeAssignmentExpression().add(assignment1);
 
-		advice.getAttributeAssignmentExpression().add(assignment2);
-		
-		//PolicyName Attribute Assignment
-		AttributeAssignmentExpressionType assignment3 = new AttributeAssignmentExpressionType();
-		assignment3.setAttributeId("PolicyName");
-		assignment3.setCategory(CATEGORY_RESOURCE);
-		assignment3.setIssuer("");
+        // For Config file Url if configurations are provided.
+        AttributeAssignmentExpressionType assignment2 = new AttributeAssignmentExpressionType();
+        assignment2.setAttributeId("URLID");
+        assignment2.setCategory(CATEGORY_RESOURCE);
+        assignment2.setIssuer("");
 
-		AttributeValueType attributeValue3 = new AttributeValueType();
-		attributeValue3.setDataType(STRING_DATATYPE);
-		fileName = FilenameUtils.removeExtension(fileName);
-		fileName = fileName + ".xml";
-		String name = fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length());
-		if ((name == null) || (name.equals(""))) {
-			name = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
-		}
-		attributeValue3.getContent().add(name);
-		assignment3.setExpression(new ObjectFactory().createAttributeValue(attributeValue3));
-		advice.getAttributeAssignmentExpression().add(assignment3);
+        AttributeValueType attributeValue = new AttributeValueType();
+        attributeValue.setDataType(URI_DATATYPE);
+        String configName;
+        if(policyName.endsWith(".xml")){
+            configName = policyName.replace(".xml", "");
+        }else{
+            configName = policyName;
+        }
+        String content = CONFIG_URL +"/Config/" + configName + ".json";
+        attributeValue.getContent().add(content);
+        assignment2.setExpression(new ObjectFactory().createAttributeValue(attributeValue));
 
-		//VersionNumber Attribute Assignment
-		AttributeAssignmentExpressionType assignment4 = new AttributeAssignmentExpressionType();
-		assignment4.setAttributeId("VersionNumber");
-		assignment4.setCategory(CATEGORY_RESOURCE);
-		assignment4.setIssuer("");
+        advice.getAttributeAssignmentExpression().add(assignment2);
 
-		AttributeValueType configNameAttributeValue4 = new AttributeValueType();
-		configNameAttributeValue4.setDataType(STRING_DATATYPE);
-		configNameAttributeValue4.getContent().add(Integer.toString(version));
-		assignment4.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue4));
+        //PolicyName Attribute Assignment
+        AttributeAssignmentExpressionType assignment3 = new AttributeAssignmentExpressionType();
+        assignment3.setAttributeId("PolicyName");
+        assignment3.setCategory(CATEGORY_RESOURCE);
+        assignment3.setIssuer("");
 
-		advice.getAttributeAssignmentExpression().add(assignment4);
+        AttributeValueType attributeValue3 = new AttributeValueType();
+        attributeValue3.setDataType(STRING_DATATYPE);
+        fileName = FilenameUtils.removeExtension(fileName);
+        fileName = fileName + ".xml";
+        String name = fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length());
+        if ((name == null) || (name.equals(""))) {
+            name = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
+        }
+        attributeValue3.getContent().add(name);
+        assignment3.setExpression(new ObjectFactory().createAttributeValue(attributeValue3));
+        advice.getAttributeAssignmentExpression().add(assignment3);
 
-		//OnapName Attribute Assignment
-		AttributeAssignmentExpressionType assignment5 = new AttributeAssignmentExpressionType();
-		assignment5.setAttributeId("matching:" + ONAPID);
-		assignment5.setCategory(CATEGORY_RESOURCE);
-		assignment5.setIssuer("");
+        //VersionNumber Attribute Assignment
+        AttributeAssignmentExpressionType assignment4 = new AttributeAssignmentExpressionType();
+        assignment4.setAttributeId("VersionNumber");
+        assignment4.setCategory(CATEGORY_RESOURCE);
+        assignment4.setIssuer("");
 
-		AttributeValueType configNameAttributeValue5 = new AttributeValueType();
-		configNameAttributeValue5.setDataType(STRING_DATATYPE);
-		configNameAttributeValue5.getContent().add(policyAdapter.getOnapName());
-		assignment5.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue5));
+        AttributeValueType configNameAttributeValue4 = new AttributeValueType();
+        configNameAttributeValue4.setDataType(STRING_DATATYPE);
+        configNameAttributeValue4.getContent().add(Integer.toString(version));
+        assignment4.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue4));
 
-		advice.getAttributeAssignmentExpression().add(assignment5);
-		
-		//ServiceType Attribute Assignment
+        advice.getAttributeAssignmentExpression().add(assignment4);
+
+        //OnapName Attribute Assignment
+        AttributeAssignmentExpressionType assignment5 = new AttributeAssignmentExpressionType();
+        assignment5.setAttributeId("matching:" + ONAPID);
+        assignment5.setCategory(CATEGORY_RESOURCE);
+        assignment5.setIssuer("");
+
+        AttributeValueType configNameAttributeValue5 = new AttributeValueType();
+        configNameAttributeValue5.setDataType(STRING_DATATYPE);
+        configNameAttributeValue5.getContent().add(policyAdapter.getOnapName());
+        assignment5.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue5));
+
+        advice.getAttributeAssignmentExpression().add(assignment5);
+
+        //ServiceType Attribute Assignment
         AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
         assignment7.setAttributeId("matching:service");
         assignment7.setCategory(CATEGORY_RESOURCE);
@@ -437,7 +437,7 @@ public class OptimizationConfigPolicy extends Policy {
         // Add matching attribute assignments if exist
         Map<String, String> matchMap = getMatchMap();
         if (matchMap!=null && !matchMap.isEmpty()) {
-        	for (Entry<String, String> matchValue : matchMap.entrySet()){
+            for (Entry<String, String> matchValue : matchMap.entrySet()){
                 String value = matchValue.getValue();
                 String key = matchValue.getKey().trim();
                 if (value.contains("matching-true") && mapAttribute.containsKey(key)){
@@ -457,76 +457,76 @@ public class OptimizationConfigPolicy extends Policy {
         }
         
         // Priority Attribute Assignment
-		AttributeAssignmentExpressionType assignment10 = new AttributeAssignmentExpressionType();
-		assignment10.setAttributeId("Priority");
-		assignment10.setCategory(CATEGORY_RESOURCE);
-		assignment10.setIssuer("");
+        AttributeAssignmentExpressionType assignment10 = new AttributeAssignmentExpressionType();
+        assignment10.setAttributeId("Priority");
+        assignment10.setCategory(CATEGORY_RESOURCE);
+        assignment10.setIssuer("");
 
-		AttributeValueType configNameAttributeValue10 = new AttributeValueType();
-		configNameAttributeValue10.setDataType(STRING_DATATYPE);
-		configNameAttributeValue10.getContent().add(policyAdapter.getPriority());
-		assignment10.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue10));
+        AttributeValueType configNameAttributeValue10 = new AttributeValueType();
+        configNameAttributeValue10.setDataType(STRING_DATATYPE);
+        configNameAttributeValue10.getContent().add(policyAdapter.getPriority());
+        assignment10.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue10));
 
-		advice.getAttributeAssignmentExpression().add(assignment10);
-		
-		//RiskType Attribute Assignment
-		AttributeAssignmentExpressionType assignment11 = new AttributeAssignmentExpressionType();
-		assignment11.setAttributeId("RiskType");
-		assignment11.setCategory(CATEGORY_RESOURCE);
-		assignment11.setIssuer("");
+        advice.getAttributeAssignmentExpression().add(assignment10);
 
-		AttributeValueType configNameAttributeValue11 = new AttributeValueType();
-		configNameAttributeValue11.setDataType(STRING_DATATYPE);
-		configNameAttributeValue11.getContent().add(policyAdapter.getRiskType());
-		assignment11.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue11));
+        //RiskType Attribute Assignment
+        AttributeAssignmentExpressionType assignment11 = new AttributeAssignmentExpressionType();
+        assignment11.setAttributeId("RiskType");
+        assignment11.setCategory(CATEGORY_RESOURCE);
+        assignment11.setIssuer("");
 
-		advice.getAttributeAssignmentExpression().add(assignment11);
-		
-		//RiskLevel Attribute Assignment
-		AttributeAssignmentExpressionType assignment12 = new AttributeAssignmentExpressionType();
-		assignment12.setAttributeId("RiskLevel");
-		assignment12.setCategory(CATEGORY_RESOURCE);
-		assignment12.setIssuer("");
+        AttributeValueType configNameAttributeValue11 = new AttributeValueType();
+        configNameAttributeValue11.setDataType(STRING_DATATYPE);
+        configNameAttributeValue11.getContent().add(policyAdapter.getRiskType());
+        assignment11.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue11));
 
-		AttributeValueType configNameAttributeValue12 = new AttributeValueType();
-		configNameAttributeValue12.setDataType(STRING_DATATYPE);
-		configNameAttributeValue12.getContent().add(policyAdapter.getRiskLevel());
-		assignment12.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue12));
+        advice.getAttributeAssignmentExpression().add(assignment11);
 
-		advice.getAttributeAssignmentExpression().add(assignment12);	
-		
-		//Guard Attribute Assignment
-		AttributeAssignmentExpressionType assignment13 = new AttributeAssignmentExpressionType();
-		assignment13.setAttributeId("guard");
-		assignment13.setCategory(CATEGORY_RESOURCE);
-		assignment13.setIssuer("");
+        //RiskLevel Attribute Assignment
+        AttributeAssignmentExpressionType assignment12 = new AttributeAssignmentExpressionType();
+        assignment12.setAttributeId("RiskLevel");
+        assignment12.setCategory(CATEGORY_RESOURCE);
+        assignment12.setIssuer("");
 
-		AttributeValueType configNameAttributeValue13 = new AttributeValueType();
-		configNameAttributeValue13.setDataType(STRING_DATATYPE);
-		configNameAttributeValue13.getContent().add(policyAdapter.getGuard());
-		assignment13.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue13));
+        AttributeValueType configNameAttributeValue12 = new AttributeValueType();
+        configNameAttributeValue12.setDataType(STRING_DATATYPE);
+        configNameAttributeValue12.getContent().add(policyAdapter.getRiskLevel());
+        assignment12.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue12));
 
-		advice.getAttributeAssignmentExpression().add(assignment13);
-		
-		//TTLDate Attribute Assignment
-		AttributeAssignmentExpressionType assignment14 = new AttributeAssignmentExpressionType();
-		assignment14.setAttributeId("TTLDate");
-		assignment14.setCategory(CATEGORY_RESOURCE);
-		assignment14.setIssuer("");
+        advice.getAttributeAssignmentExpression().add(assignment12);
 
-		AttributeValueType configNameAttributeValue14 = new AttributeValueType();
-		configNameAttributeValue14.setDataType(STRING_DATATYPE);
-		configNameAttributeValue14.getContent().add(policyAdapter.getTtlDate());
-		assignment14.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue14));
+        //Guard Attribute Assignment
+        AttributeAssignmentExpressionType assignment13 = new AttributeAssignmentExpressionType();
+        assignment13.setAttributeId("guard");
+        assignment13.setCategory(CATEGORY_RESOURCE);
+        assignment13.setIssuer("");
 
-		advice.getAttributeAssignmentExpression().add(assignment14);
+        AttributeValueType configNameAttributeValue13 = new AttributeValueType();
+        configNameAttributeValue13.setDataType(STRING_DATATYPE);
+        configNameAttributeValue13.getContent().add(policyAdapter.getGuard());
+        assignment13.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue13));
 
-		advices.getAdviceExpression().add(advice);
-		return advices;
-	}
+        advice.getAttributeAssignmentExpression().add(assignment13);
 
-	@Override
-	public Object getCorrectPolicyDataObject() {
-		return policyAdapter.getPolicyData();
-	}	
+        //TTLDate Attribute Assignment
+        AttributeAssignmentExpressionType assignment14 = new AttributeAssignmentExpressionType();
+        assignment14.setAttributeId("TTLDate");
+        assignment14.setCategory(CATEGORY_RESOURCE);
+        assignment14.setIssuer("");
+
+        AttributeValueType configNameAttributeValue14 = new AttributeValueType();
+        configNameAttributeValue14.setDataType(STRING_DATATYPE);
+        configNameAttributeValue14.getContent().add(policyAdapter.getTtlDate());
+        assignment14.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue14));
+
+        advice.getAttributeAssignmentExpression().add(assignment14);
+
+        advices.getAdviceExpression().add(advice);
+        return advices;
+    }
+
+    @Override
+    public Object getCorrectPolicyDataObject() {
+        return policyAdapter.getPolicyData();
+    }
 }

@@ -47,201 +47,201 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class DictionaryController {
-	
-	private static final Log LOGGER	= LogFactory.getLog(DictionaryController.class);
 
-	private static CommonClassDao commonClassDao;
-	private static String xacmlId = "xacmlId";
-	private static String operation = "operation";
-	private static String dictionaryFields ="dictionaryFields";
-	private static String duplicateResponseString = "Duplicate";
-	private static String onapName = "onapName";
-	private static String attributeDatas = "attributeDictionaryDatas";
-	private static String onapNameDatas = "onapNameDictionaryDatas";
-	
-	@Autowired
-	public DictionaryController(CommonClassDao commonClassDao){
-		DictionaryController.commonClassDao = commonClassDao;
-	}
+    private static final Log LOGGER	= LogFactory.getLog(DictionaryController.class);
 
-	public DictionaryController(){
-		super();
-	}
-	
-	private DictionaryUtils getDictionaryUtilsInstance(){
-		return DictionaryUtils.getDictionaryUtils();
-	}
-	
-	@RequestMapping(value={"/get_AttributeDatabyAttributeName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getAttributeDictionaryEntityDatabyAttributeName(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, attributeDatas, xacmlId, Attribute.class);
-	}
-	
-	//Attribute Dictionary
-	@RequestMapping(value="/get_AttributeData", method= RequestMethod.GET , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getAttributeDictionaryEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getData(response, attributeDatas, Attribute.class);
-	}
-	
-	@RequestMapping(value={"/attribute_dictionary/save_attribute"}, method={RequestMethod.POST})
-	public ModelAndView saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		try {
-			boolean fromAPI = utils.isRequestFromAPI(request);
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			Attribute attributeData = null;
-			AttributeValues attributeValueData = null;
-			String userId = null;
-			if(fromAPI){
-				attributeData = mapper.readValue(root.get(dictionaryFields).toString(), Attribute.class);
-				attributeValueData = mapper.readValue(root.get(dictionaryFields).toString(), AttributeValues.class);
-				userId = "API";
-			}else{
-				attributeData = mapper.readValue(root.get("attributeDictionaryData").toString(), Attribute.class);
-				attributeValueData = mapper.readValue(root.get("attributeDictionaryData").toString(), AttributeValues.class);
-				userId = root.get("userid").textValue();
-			}
-			UserInfo userInfo = utils.getUserInfo(userId);
-			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(attributeData.getXacmlId(), xacmlId, Attribute.class);
-			boolean duplicateflag = false;
-			if(!duplicateData.isEmpty()){
-				Attribute data = (Attribute) duplicateData.get(0);
-				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
-					attributeData.setId(data.getId());
-				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
-						(request.getParameter(operation) == null && (data.getId() != attributeData.getId()))){
-					duplicateflag = true;
-				}
-			}
-			if(attributeValueData.getUserDataTypeValues() != null && !attributeValueData.getUserDataTypeValues().isEmpty()){
-				attributeData.setAttributeValue(utils.appendKey(attributeValueData.getUserDataTypeValues(), "attributeValues", ","));
-			}
-			
-			if(attributeData.getDatatypeBean().getShortName() != null){
-				String datatype = attributeData.getDatatypeBean().getShortName();	
-				attributeData.setDatatypeBean(utils.getDataType(datatype));
-			}
+    private static CommonClassDao commonClassDao;
+    private static String xacmlId = "xacmlId";
+    private static String operation = "operation";
+    private static String dictionaryFields ="dictionaryFields";
+    private static String duplicateResponseString = "Duplicate";
+    private static String onapName = "onapName";
+    private static String attributeDatas = "attributeDictionaryDatas";
+    private static String onapNameDatas = "onapNameDictionaryDatas";
 
-			String responseString = null;
-			if(!duplicateflag){
-				attributeData.setUserModifiedBy(userInfo);
-				if(attributeData.getId() == 0){
-					attributeData.setCategoryBean(utils.getCategory());
-					attributeData.setUserCreatedBy(userInfo);
-					commonClassDao.save(attributeData);
-				}else{
-					attributeData.setModifiedDate(new Date());
-					commonClassDao.update(attributeData); 
-				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(Attribute.class));
-			}else{
-				responseString = duplicateResponseString;
-			}
-			if(fromAPI){
-				return utils.getResultForApi(responseString);
-			}else{
-				utils.setResponseData(response, attributeDatas, responseString);
-			}
-		}catch (Exception e){
-			utils.setErrorResponseData(response, e);
-		}
-		return null;
-	}
+    @Autowired
+    public DictionaryController(CommonClassDao commonClassDao){
+        DictionaryController.commonClassDao = commonClassDao;
+    }
 
-	@RequestMapping(value={"/attribute_dictionary/remove_attribute"}, method={RequestMethod.POST})
-	public void removeAttributeDictionary(HttpServletRequest request, HttpServletResponse response)throws IOException {
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.removeData(request, response, attributeDatas, Attribute.class);
-	}
-	
-	//OnapName Dictionary
-	@RequestMapping(value={"/get_OnapNameDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getOnapNameDictionaryByNameEntityData(HttpServletResponse response){
-		LOGGER.info("get_OnapNameDataByName is called");
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, onapNameDatas, onapName, OnapName.class);
-	}
-	
-	@RequestMapping(value={"/get_OnapNameData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getOnapNameDictionaryEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getData(response, onapNameDatas, OnapName.class);
-	}
+    public DictionaryController(){
+        super();
+    }
 
-	@RequestMapping(value={"/onap_dictionary/save_onapName"}, method={RequestMethod.POST})
-	public ModelAndView saveOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		try {
-			boolean fromAPI = utils.isRequestFromAPI(request);
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			OnapName onapData;
-			String userId = null;
-			if(fromAPI){
-				onapData = mapper.readValue(root.get(dictionaryFields).toString(), OnapName.class);
-				userId = "API";
-			}else{
-				onapData = mapper.readValue(root.get("onapNameDictionaryData").toString(), OnapName.class);
-				userId = root.get("userid").textValue();
-			}
-			UserInfo userInfo = utils.getUserInfo(userId);
-			
-			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(onapData.getOnapName(), onapName, OnapName.class);
-			boolean duplicateflag = false;
-			if(!duplicateData.isEmpty()){
-				OnapName data = (OnapName) duplicateData.get(0);
-				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
-					onapData.setId(data.getId());
-				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
-						(request.getParameter(operation) == null && (data.getId() != onapData.getId()))){
-					duplicateflag = true;
-				}
-			}
-			String responseString = null;
-			if(!duplicateflag){
-				onapData.setUserModifiedBy(userInfo);
-				if(onapData.getId() == 0){
-					onapData.setUserCreatedBy(userInfo);
-					commonClassDao.save(onapData);
-				}else{
-					onapData.setModifiedDate(new Date());
-					commonClassDao.update(onapData); 
-				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(OnapName.class));
-			}else{
-				responseString = duplicateResponseString;
-			}
-			if(fromAPI){
-				return utils.getResultForApi(responseString);
-			}else{
-				utils.setResponseData(response, onapNameDatas, responseString);
-			}
-		}catch (Exception e){
-			utils.setErrorResponseData(response, e);
-		}
-		return null;
-	}
+    private DictionaryUtils getDictionaryUtilsInstance(){
+        return DictionaryUtils.getDictionaryUtils();
+    }
 
-	@RequestMapping(value={"/onap_dictionary/remove_onap"}, method={RequestMethod.POST})
-	public void removeOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.removeData(request, response, onapNameDatas, OnapName.class);
-	}
+    @RequestMapping(value={"/get_AttributeDatabyAttributeName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getAttributeDictionaryEntityDatabyAttributeName(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getDataByEntity(response, attributeDatas, xacmlId, Attribute.class);
+    }
+
+    //Attribute Dictionary
+    @RequestMapping(value="/get_AttributeData", method= RequestMethod.GET , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getAttributeDictionaryEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getData(response, attributeDatas, Attribute.class);
+    }
+
+    @RequestMapping(value={"/attribute_dictionary/save_attribute"}, method={RequestMethod.POST})
+    public ModelAndView saveAttributeDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        try {
+            boolean fromAPI = utils.isRequestFromAPI(request);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            JsonNode root = mapper.readTree(request.getReader());
+            Attribute attributeData = null;
+            AttributeValues attributeValueData = null;
+            String userId = null;
+            if(fromAPI){
+                attributeData = mapper.readValue(root.get(dictionaryFields).toString(), Attribute.class);
+                attributeValueData = mapper.readValue(root.get(dictionaryFields).toString(), AttributeValues.class);
+                userId = "API";
+            }else{
+                attributeData = mapper.readValue(root.get("attributeDictionaryData").toString(), Attribute.class);
+                attributeValueData = mapper.readValue(root.get("attributeDictionaryData").toString(), AttributeValues.class);
+                userId = root.get("userid").textValue();
+            }
+            UserInfo userInfo = utils.getUserInfo(userId);
+            List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(attributeData.getXacmlId(), xacmlId, Attribute.class);
+            boolean duplicateflag = false;
+            if(!duplicateData.isEmpty()){
+                Attribute data = (Attribute) duplicateData.get(0);
+                if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+                    attributeData.setId(data.getId());
+                }else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) ||
+                        (request.getParameter(operation) == null && (data.getId() != attributeData.getId()))){
+                    duplicateflag = true;
+                }
+            }
+            if(attributeValueData.getUserDataTypeValues() != null && !attributeValueData.getUserDataTypeValues().isEmpty()){
+                attributeData.setAttributeValue(utils.appendKey(attributeValueData.getUserDataTypeValues(), "attributeValues", ","));
+            }
+
+            if(attributeData.getDatatypeBean().getShortName() != null){
+                String datatype = attributeData.getDatatypeBean().getShortName();
+                attributeData.setDatatypeBean(utils.getDataType(datatype));
+            }
+
+            String responseString = null;
+            if(!duplicateflag){
+                attributeData.setUserModifiedBy(userInfo);
+                if(attributeData.getId() == 0){
+                    attributeData.setCategoryBean(utils.getCategory());
+                    attributeData.setUserCreatedBy(userInfo);
+                    commonClassDao.save(attributeData);
+                }else{
+                    attributeData.setModifiedDate(new Date());
+                    commonClassDao.update(attributeData);
+                }
+                responseString = mapper.writeValueAsString(commonClassDao.getData(Attribute.class));
+            }else{
+                responseString = duplicateResponseString;
+            }
+            if(fromAPI){
+                return utils.getResultForApi(responseString);
+            }else{
+                utils.setResponseData(response, attributeDatas, responseString);
+            }
+        }catch (Exception e){
+            utils.setErrorResponseData(response, e);
+        }
+        return null;
+    }
+
+    @RequestMapping(value={"/attribute_dictionary/remove_attribute"}, method={RequestMethod.POST})
+    public void removeAttributeDictionary(HttpServletRequest request, HttpServletResponse response)throws IOException {
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.removeData(request, response, attributeDatas, Attribute.class);
+    }
+
+    //OnapName Dictionary
+    @RequestMapping(value={"/get_OnapNameDataByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getOnapNameDictionaryByNameEntityData(HttpServletResponse response){
+        LOGGER.info("get_OnapNameDataByName is called");
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getDataByEntity(response, onapNameDatas, onapName, OnapName.class);
+    }
+
+    @RequestMapping(value={"/get_OnapNameData"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getOnapNameDictionaryEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getData(response, onapNameDatas, OnapName.class);
+    }
+
+    @RequestMapping(value={"/onap_dictionary/save_onapName"}, method={RequestMethod.POST})
+    public ModelAndView saveOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        try {
+            boolean fromAPI = utils.isRequestFromAPI(request);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            JsonNode root = mapper.readTree(request.getReader());
+            OnapName onapData;
+            String userId = null;
+            if(fromAPI){
+                onapData = mapper.readValue(root.get(dictionaryFields).toString(), OnapName.class);
+                userId = "API";
+            }else{
+                onapData = mapper.readValue(root.get("onapNameDictionaryData").toString(), OnapName.class);
+                userId = root.get("userid").textValue();
+            }
+            UserInfo userInfo = utils.getUserInfo(userId);
+
+            List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(onapData.getOnapName(), onapName, OnapName.class);
+            boolean duplicateflag = false;
+            if(!duplicateData.isEmpty()){
+                OnapName data = (OnapName) duplicateData.get(0);
+                if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+                    onapData.setId(data.getId());
+                }else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) ||
+                        (request.getParameter(operation) == null && (data.getId() != onapData.getId()))){
+                    duplicateflag = true;
+                }
+            }
+            String responseString = null;
+            if(!duplicateflag){
+                onapData.setUserModifiedBy(userInfo);
+                if(onapData.getId() == 0){
+                    onapData.setUserCreatedBy(userInfo);
+                    commonClassDao.save(onapData);
+                }else{
+                    onapData.setModifiedDate(new Date());
+                    commonClassDao.update(onapData);
+                }
+                responseString = mapper.writeValueAsString(commonClassDao.getData(OnapName.class));
+            }else{
+                responseString = duplicateResponseString;
+            }
+            if(fromAPI){
+                return utils.getResultForApi(responseString);
+            }else{
+                utils.setResponseData(response, onapNameDatas, responseString);
+            }
+        }catch (Exception e){
+            utils.setErrorResponseData(response, e);
+        }
+        return null;
+    }
+
+    @RequestMapping(value={"/onap_dictionary/remove_onap"}, method={RequestMethod.POST})
+    public void removeOnapDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.removeData(request, response, onapNameDatas, OnapName.class);
+    }
 }
 
 class AttributeValues{
-	private List<Object> userDataTypeValues;
+    private List<Object> userDataTypeValues;
 
-	public List<Object> getUserDataTypeValues() {
-		return userDataTypeValues;
-	}
+    public List<Object> getUserDataTypeValues() {
+        return userDataTypeValues;
+    }
 
-	public void setUserDataTypeValues(List<Object> userDataTypeValues) {
-		this.userDataTypeValues = userDataTypeValues;
-	}
+    public void setUserDataTypeValues(List<Object> userDataTypeValues) {
+        this.userDataTypeValues = userDataTypeValues;
+    }
 }

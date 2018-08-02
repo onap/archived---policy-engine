@@ -23,40 +23,40 @@ package org.onap.policy.pap.xacml.rest.adapters;
 import java.util.List;
 
 public class GridData {
-	private List<Object> attributes;
-	private List<Object> alAttributes;
-	private List<Object> transportProtocols;
-	private List<Object> appProtocols;
+    private List<Object> attributes;
+    private List<Object> alAttributes;
+    private List<Object> transportProtocols;
+    private List<Object> appProtocols;
 
-	public List<Object> getAttributes() {
-		return attributes;
-	}
+    public List<Object> getAttributes() {
+        return attributes;
+    }
 
-	public void setAttributes(List<Object> attributes) {
-		this.attributes = attributes;
-	}
+    public void setAttributes(List<Object> attributes) {
+        this.attributes = attributes;
+    }
 
-	public List<Object> getAlAttributes() {
-		return alAttributes;
-	}
+    public List<Object> getAlAttributes() {
+        return alAttributes;
+    }
 
-	public void setAlAttributes(List<Object> alAttributes) {
-		this.alAttributes = alAttributes;
-	}
+    public void setAlAttributes(List<Object> alAttributes) {
+        this.alAttributes = alAttributes;
+    }
 
-	public List<Object> getAppProtocols() {
-		return appProtocols;
-	}
+    public List<Object> getAppProtocols() {
+        return appProtocols;
+    }
 
-	public void setAppProtocols(List<Object> appProtocols) {
-		this.appProtocols = appProtocols;
-	}
+    public void setAppProtocols(List<Object> appProtocols) {
+        this.appProtocols = appProtocols;
+    }
 
-	public List<Object> getTransportProtocols() {
-		return transportProtocols;
-	}
+    public List<Object> getTransportProtocols() {
+        return transportProtocols;
+    }
 
-	public void setTransportProtocols(List<Object> transportProtocols) {
-		this.transportProtocols = transportProtocols;
-	}
+    public void setTransportProtocols(List<Object> transportProtocols) {
+        this.transportProtocols = transportProtocols;
+    }
 }

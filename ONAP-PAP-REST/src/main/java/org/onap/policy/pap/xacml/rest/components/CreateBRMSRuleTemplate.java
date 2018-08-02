@@ -34,50 +34,50 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CreateBRMSRuleTemplate {
-	private static final Logger LOGGER  = FlexLogger.getLogger(CreateBRMSRuleTemplate.class);
-	private static CommonClassDao commonClassDao;
-	
-	@Autowired
-	public CreateBRMSRuleTemplate(CommonClassDao commonClassDao){
-		CreateBRMSRuleTemplate.commonClassDao = commonClassDao;
-	}
-	
-	public CreateBRMSRuleTemplate() {}
+    private static final Logger LOGGER  = FlexLogger.getLogger(CreateBRMSRuleTemplate.class);
+    private static CommonClassDao commonClassDao;
 
-	public Map<String, String> addRule(String rule, String ruleName, String description, String userID) {
-		Map<String,String> responseMap = new HashMap<>();
-		if(rule!=null && !PolicyUtils.brmsRawValidate(rule).contains("[ERR")){
-			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ruleName, "ruleName", BRMSParamTemplate.class);
-			if(duplicateData!=null && !duplicateData.isEmpty()){
-				LOGGER.error("Import new service failed.  Service already exists");
-				responseMap.put("DBError", "EXISTS");
-				return responseMap;
-			}else{
-				BRMSParamTemplate brmsParamTemplate = new BRMSParamTemplate();
-				brmsParamTemplate.setDescription(description);
-				brmsParamTemplate.setRuleName(ruleName);
-				brmsParamTemplate.setRule(rule);
-				UserInfo userCreatedBy = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", userID);
-				brmsParamTemplate.setUserCreatedBy(userCreatedBy);
-				commonClassDao.save(brmsParamTemplate);
-				LOGGER.info("Template created with " + ruleName + " by " + userID);
-			}
-			responseMap.put("success", "success");
-		}else{
-			LOGGER.debug("Error during validating the rule for creating record for BRMS Param Template");
-			responseMap.put("error", "VALIDATION");
-		}
-		return responseMap;
-	}
-	
-	public static boolean validateRuleParams(String rule) {
-		CreateBrmsParamPolicy policy = new CreateBrmsParamPolicy();
-		Map<String, String> paramValues = policy.findType(rule);
-		for(String key : paramValues.keySet()) {
-			if(!PolicyUtils.SUCCESS.equals(PolicyUtils.policySpecialCharValidator(key))){
-				return false;
-			}
-		}
-		return true;
-	}
+    @Autowired
+    public CreateBRMSRuleTemplate(CommonClassDao commonClassDao){
+        CreateBRMSRuleTemplate.commonClassDao = commonClassDao;
+    }
+
+    public CreateBRMSRuleTemplate() {}
+
+    public Map<String, String> addRule(String rule, String ruleName, String description, String userID) {
+        Map<String,String> responseMap = new HashMap<>();
+        if(rule!=null && !PolicyUtils.brmsRawValidate(rule).contains("[ERR")){
+            List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(ruleName, "ruleName", BRMSParamTemplate.class);
+            if(duplicateData!=null && !duplicateData.isEmpty()){
+                LOGGER.error("Import new service failed.  Service already exists");
+                responseMap.put("DBError", "EXISTS");
+                return responseMap;
+            }else{
+                BRMSParamTemplate brmsParamTemplate = new BRMSParamTemplate();
+                brmsParamTemplate.setDescription(description);
+                brmsParamTemplate.setRuleName(ruleName);
+                brmsParamTemplate.setRule(rule);
+                UserInfo userCreatedBy = (UserInfo) commonClassDao.getEntityItem(UserInfo.class, "userLoginId", userID);
+                brmsParamTemplate.setUserCreatedBy(userCreatedBy);
+                commonClassDao.save(brmsParamTemplate);
+                LOGGER.info("Template created with " + ruleName + " by " + userID);
+            }
+            responseMap.put("success", "success");
+        }else{
+            LOGGER.debug("Error during validating the rule for creating record for BRMS Param Template");
+            responseMap.put("error", "VALIDATION");
+        }
+        return responseMap;
+    }
+
+    public static boolean validateRuleParams(String rule) {
+        CreateBrmsParamPolicy policy = new CreateBrmsParamPolicy();
+        Map<String, String> paramValues = policy.findType(rule);
+        for(String key : paramValues.keySet()) {
+            if(!PolicyUtils.SUCCESS.equals(PolicyUtils.policySpecialCharValidator(key))){
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -45,102 +45,102 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class DescriptiveDictionaryController {
-	
-	private static CommonClassDao commonClassDao;
-	private static String operation = "operation";
-	private static String dScopeName = "descriptiveScopeName";
-	private static String descriptiveDatas = "descriptiveScopeDictionaryDatas";
-	
-	@Autowired
-	public DescriptiveDictionaryController(CommonClassDao commonClassDao){
-		DescriptiveDictionaryController.commonClassDao = commonClassDao;
-	}
-	
-	public void setCommonClassDao(CommonClassDao commonClassDao){
-		DescriptiveDictionaryController.commonClassDao = commonClassDao;
-	}
-	
-	public DescriptiveDictionaryController(){
-		super();
-	}
 
-	private DictionaryUtils getDictionaryUtilsInstance(){
-		return DictionaryUtils.getDictionaryUtils();
-	}
-	
-	@RequestMapping(value={"/get_DescriptiveScopeByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getDescriptiveDictionaryByNameEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getDataByEntity(response, descriptiveDatas, dScopeName, DescriptiveScope.class);
-	}
-	
-	@RequestMapping(value={"/get_DescriptiveScope"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
-	public void getDescriptiveDictionaryEntityData(HttpServletResponse response){
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.getData(response, descriptiveDatas, DescriptiveScope.class);
-	}
-	
-	@RequestMapping(value={"/descriptive_dictionary/save_descriptive"}, method={RequestMethod.POST})
-	public ModelAndView saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response)throws IOException{
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		try {
-			boolean fromAPI = utils.isRequestFromAPI(request);
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			JsonNode root = mapper.readTree(request.getReader());
-			DescriptiveScope descriptiveScope;
-			GridData data;
-			String userId = null;
-			if(fromAPI){
-				descriptiveScope = mapper.readValue(root.get("dictionaryFields").toString(), DescriptiveScope.class);
-				data = mapper.readValue(root.get("dictionaryFields").toString(), GridData.class);
-				userId = "API";
-			}else{
-				descriptiveScope = mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(), DescriptiveScope.class);
-				data = mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(), GridData.class);
-				userId = root.get("userid").textValue();
-			}
-			descriptiveScope.setSearch(utils.appendKeyValue(data.getAttributes(), "AND", ":"));
-			UserInfo userInfo = utils.getUserInfo(userId);
-			List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(descriptiveScope.getScopeName(), dScopeName, DescriptiveScope.class);
-			boolean duplicateflag = false;
-			if(!duplicateData.isEmpty()){
-				DescriptiveScope data1 = (DescriptiveScope) duplicateData.get(0);
-				if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
-					descriptiveScope.setId(data1.getId());
-				}else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) || 
-						(request.getParameter(operation) == null && (data1.getId() != descriptiveScope.getId()))){
-					duplicateflag = true;
-				}
-			}
-			String responseString = null;
-			if(!duplicateflag){
-				descriptiveScope.setUserModifiedBy(userInfo);
-				if(descriptiveScope.getId() == 0){
-					descriptiveScope.setUserCreatedBy(userInfo);
-					commonClassDao.save(descriptiveScope);
-				}else{
-					descriptiveScope.setModifiedDate(new Date());
-					commonClassDao.update(descriptiveScope); 
-				} 
-				responseString = mapper.writeValueAsString(commonClassDao.getData(DescriptiveScope.class));
-			}else{
-				responseString = "Duplicate";
-			}
-			if(fromAPI){
-				return utils.getResultForApi(responseString);
-			}else{
-				utils.setResponseData(response, descriptiveDatas, responseString);
-			}
-		}catch (Exception e){
-			utils.setErrorResponseData(response, e);
-		}
-		return null;
-	}
+    private static CommonClassDao commonClassDao;
+    private static String operation = "operation";
+    private static String dScopeName = "descriptiveScopeName";
+    private static String descriptiveDatas = "descriptiveScopeDictionaryDatas";
 
-	@RequestMapping(value={"/descriptive_dictionary/remove_descriptiveScope"}, method={RequestMethod.POST})
-	public void removeDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		DictionaryUtils utils = getDictionaryUtilsInstance();
-		utils.removeData(request, response, descriptiveDatas, DescriptiveScope.class);
-	}
+    @Autowired
+    public DescriptiveDictionaryController(CommonClassDao commonClassDao){
+        DescriptiveDictionaryController.commonClassDao = commonClassDao;
+    }
+
+    public void setCommonClassDao(CommonClassDao commonClassDao){
+        DescriptiveDictionaryController.commonClassDao = commonClassDao;
+    }
+
+    public DescriptiveDictionaryController(){
+        super();
+    }
+
+    private DictionaryUtils getDictionaryUtilsInstance(){
+        return DictionaryUtils.getDictionaryUtils();
+    }
+
+    @RequestMapping(value={"/get_DescriptiveScopeByName"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getDescriptiveDictionaryByNameEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getDataByEntity(response, descriptiveDatas, dScopeName, DescriptiveScope.class);
+    }
+
+    @RequestMapping(value={"/get_DescriptiveScope"}, method={RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+    public void getDescriptiveDictionaryEntityData(HttpServletResponse response){
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.getData(response, descriptiveDatas, DescriptiveScope.class);
+    }
+
+    @RequestMapping(value={"/descriptive_dictionary/save_descriptive"}, method={RequestMethod.POST})
+    public ModelAndView saveDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response)throws IOException{
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        try {
+            boolean fromAPI = utils.isRequestFromAPI(request);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            JsonNode root = mapper.readTree(request.getReader());
+            DescriptiveScope descriptiveScope;
+            GridData data;
+            String userId = null;
+            if(fromAPI){
+                descriptiveScope = mapper.readValue(root.get("dictionaryFields").toString(), DescriptiveScope.class);
+                data = mapper.readValue(root.get("dictionaryFields").toString(), GridData.class);
+                userId = "API";
+            }else{
+                descriptiveScope = mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(), DescriptiveScope.class);
+                data = mapper.readValue(root.get("descriptiveScopeDictionaryData").toString(), GridData.class);
+                userId = root.get("userid").textValue();
+            }
+            descriptiveScope.setSearch(utils.appendKeyValue(data.getAttributes(), "AND", ":"));
+            UserInfo userInfo = utils.getUserInfo(userId);
+            List<Object> duplicateData =  commonClassDao.checkDuplicateEntry(descriptiveScope.getScopeName(), dScopeName, DescriptiveScope.class);
+            boolean duplicateflag = false;
+            if(!duplicateData.isEmpty()){
+                DescriptiveScope data1 = (DescriptiveScope) duplicateData.get(0);
+                if(request.getParameter(operation) != null && "update".equals(request.getParameter(operation))){
+                    descriptiveScope.setId(data1.getId());
+                }else if((request.getParameter(operation) != null && !"update".equals(request.getParameter(operation))) ||
+                        (request.getParameter(operation) == null && (data1.getId() != descriptiveScope.getId()))){
+                    duplicateflag = true;
+                }
+            }
+            String responseString = null;
+            if(!duplicateflag){
+                descriptiveScope.setUserModifiedBy(userInfo);
+                if(descriptiveScope.getId() == 0){
+                    descriptiveScope.setUserCreatedBy(userInfo);
+                    commonClassDao.save(descriptiveScope);
+                }else{
+                    descriptiveScope.setModifiedDate(new Date());
+                    commonClassDao.update(descriptiveScope);
+                }
+                responseString = mapper.writeValueAsString(commonClassDao.getData(DescriptiveScope.class));
+            }else{
+                responseString = "Duplicate";
+            }
+            if(fromAPI){
+                return utils.getResultForApi(responseString);
+            }else{
+                utils.setResponseData(response, descriptiveDatas, responseString);
+            }
+        }catch (Exception e){
+            utils.setErrorResponseData(response, e);
+        }
+        return null;
+    }
+
+    @RequestMapping(value={"/descriptive_dictionary/remove_descriptiveScope"}, method={RequestMethod.POST})
+    public void removeDescriptiveDictionary(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        DictionaryUtils utils = getDictionaryUtilsInstance();
+        utils.removeData(request, response, descriptiveDatas, DescriptiveScope.class);
+    }
 }

@@ -20,31 +20,31 @@
 package org.onap.policy.pap.xacml.rest.adapters;
 
 public class UpdateObjectData {
-	private String oldPolicyName;
-	private String newPolicyName;
-	private String action;
-	
-	public String getOldPolicyName() {
-		return oldPolicyName;
-	}
-	
-	public void setOldPolicyName(String oldPolicyName) {
-		this.oldPolicyName = oldPolicyName;
-	}
-	
-	public String getNewPolicyName() {
-		return newPolicyName;
-	}
-	
-	public void setNewPolicyName(String newPolicyName) {
-		this.newPolicyName = newPolicyName;
-	}
-	
-	public String getAction() {
-		return action;
-	}
-	
-	public void setAction(String action) {
-		this.action = action;
-	}
+    private String oldPolicyName;
+    private String newPolicyName;
+    private String action;
+
+    public String getOldPolicyName() {
+        return oldPolicyName;
+    }
+
+    public void setOldPolicyName(String oldPolicyName) {
+        this.oldPolicyName = oldPolicyName;
+    }
+
+    public String getNewPolicyName() {
+        return newPolicyName;
+    }
+
+    public void setNewPolicyName(String newPolicyName) {
+        this.newPolicyName = newPolicyName;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
 }
