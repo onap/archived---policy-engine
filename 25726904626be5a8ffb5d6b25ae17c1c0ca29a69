@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_df168ef1",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-08-02T13:34:55Z",
+      "side": 1,
+      "message": "You could out a return statement in the catch block if you like to get past that. Just a suggestion.",
+      "parentUuid": "1a76adc5_ad761105",
+      "range": {
+        "startLine": 278,
+        "startChar": 0,
+        "endLine": 284,
+        "endChar": 13
+      },
+      "revId": "25726904626be5a8ffb5d6b25ae17c1c0ca29a69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_8d947538",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
         "patchSetId": 2
@@ -60,6 +84,30 @@
       "side": 1,
       "message": "If we do that, then we have to repeat the lines 302-304 and then return from 1st catch block\nSo, i think we can keep a single catch block so that if any error occurs, it wont execute the method operateBasedOnMode",
       "parentUuid": "1a76adc5_8d947538",
+      "range": {
+        "startLine": 297,
+        "startChar": 1,
+        "endLine": 301,
+        "endChar": 1
+      },
+      "revId": "25726904626be5a8ffb5d6b25ae17c1c0ca29a69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_3fdd4243",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-08-02T13:34:55Z",
+      "side": 1,
+      "message": "On the other hand you would make the error message in the new catch block better because the error is to do with JSON processing rather than file handling and you could change the message to indicate this. The user would know that the file was read OK but its a problem with the JSON. Again, just a suggestion.",
+      "parentUuid": "1a76adc5_4d889de7",
       "range": {
         "startLine": 297,
         "startChar": 1,
