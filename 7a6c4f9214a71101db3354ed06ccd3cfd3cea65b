@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_8dcc7537",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1439,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-02T09:25:05Z",
+      "side": 0,
+      "message": "This has been extracted into new \"if\" condition",
+      "range": {
+        "startLine": 1434,
+        "startChar": 17,
+        "endLine": 1439,
+        "endChar": 29
+      },
+      "revId": "7a6c4f9214a71101db3354ed06ccd3cfd3cea65b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
