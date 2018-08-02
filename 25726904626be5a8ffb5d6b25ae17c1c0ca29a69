@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a76adc5_ad761105",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-02T09:25:05Z",
+      "side": 1,
+      "message": "If we add a catch block here, then after exception it will continue to execute further , which might not be intended. Hence to block that, we might need to repeat the lines 302-305 and return. \nSo., may be keeping one try-catch would be better i think",
+      "range": {
+        "startLine": 278,
+        "startChar": 0,
+        "endLine": 284,
+        "endChar": 13
+      },
+      "revId": "25726904626be5a8ffb5d6b25ae17c1c0ca29a69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_8d947538",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
         "patchSetId": 2
@@ -25,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_4d889de7",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-02T09:25:05Z",
+      "side": 1,
+      "message": "If we do that, then we have to repeat the lines 302-304 and then return from 1st catch block\nSo, i think we can keep a single catch block so that if any error occurs, it wont execute the method operateBasedOnMode",
+      "parentUuid": "1a76adc5_8d947538",
+      "range": {
+        "startLine": 297,
+        "startChar": 1,
+        "endLine": 301,
+        "endChar": 1
+      },
+      "revId": "25726904626be5a8ffb5d6b25ae17c1c0ca29a69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_4db5fdcb",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
         "patchSetId": 2
@@ -36,6 +83,30 @@
       "writtenOn": "2018-08-02T07:01:12Z",
       "side": 1,
       "message": "Can you check this block again, It doesn\u0027t look to me like it is equivalent to the old code. Did you intend to change the logic of the if statement? Also the contents of the old \"if\" seem to me to be outside the if statement now.",
+      "range": {
+        "startLine": 1369,
+        "startChar": 16,
+        "endLine": 1432,
+        "endChar": 29
+      },
+      "revId": "25726904626be5a8ffb5d6b25ae17c1c0ca29a69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_0d238506",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1432,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-02T09:25:05Z",
+      "side": 1,
+      "message": "Thanks for finding this, return success() is missing in the newly added if condition.\nthe earlier \"else\" is now \"if\" and there should be return stmt in the new \"if\" so that it will not execute further code.",
+      "parentUuid": "1a76adc5_4db5fdcb",
       "range": {
         "startLine": 1369,
         "startChar": 16,
