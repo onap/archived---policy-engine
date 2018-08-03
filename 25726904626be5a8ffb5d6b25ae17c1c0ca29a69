@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_f5760bd8",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-03T01:08:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a76adc5_df168ef1",
+      "range": {
+        "startLine": 278,
+        "startChar": 0,
+        "endLine": 284,
+        "endChar": 13
+      },
+      "revId": "25726904626be5a8ffb5d6b25ae17c1c0ca29a69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_8d947538",
         "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
         "patchSetId": 2
@@ -108,6 +132,30 @@
       "side": 1,
       "message": "On the other hand you would make the error message in the new catch block better because the error is to do with JSON processing rather than file handling and you could change the message to indicate this. The user would know that the file was read OK but its a problem with the JSON. Again, just a suggestion.",
       "parentUuid": "1a76adc5_4d889de7",
+      "range": {
+        "startLine": 297,
+        "startChar": 1,
+        "endLine": 301,
+        "endChar": 1
+      },
+      "revId": "25726904626be5a8ffb5d6b25ae17c1c0ca29a69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_1574e7cd",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/admin/PolicyManagerServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-03T01:08:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a76adc5_3fdd4243",
       "range": {
         "startLine": 297,
         "startChar": 1,
