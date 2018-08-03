@@ -26,27 +26,27 @@ import org.junit.Test;
 import org.onap.policy.pap.xacml.restAuth.AuthenticationService;
 
 public class AuthenticationServiceTest {
-	private final String testCred = "testpap:alpha123";
-	private final String testCredEncoded = new String(Base64.getEncoder().encode(testCred.getBytes()));
-	private final String basicCred = "Basic " + testCredEncoded;
-	
-	@Test
-	public void testAuth() throws UnsupportedEncodingException {
-		String systemKey = "xacml.properties";
+    private final String testCred = "testpap:alpha123";
+    private final String testCredEncoded = new String(Base64.getEncoder().encode(testCred.getBytes()));
+    private final String basicCred = "Basic " + testCredEncoded;
 
-		// Set the system property temporarily
-		String oldProperty = System.getProperty(systemKey);
-		System.setProperty(systemKey, "xacml.pap.properties");
-		
-		AuthenticationService service = new AuthenticationService();
-		assertEquals(service.authenticate(basicCred), true);
-		
-		// Restore the original system property
-		if (oldProperty != null) {
-			System.setProperty(systemKey, oldProperty);
-		}
-		else {
-			System.clearProperty(systemKey);
-		}
-	}
+    @Test
+    public void testAuth() throws UnsupportedEncodingException {
+        String systemKey = "xacml.properties";
+
+        // Set the system property temporarily
+        String oldProperty = System.getProperty(systemKey);
+        System.setProperty(systemKey, "xacml.pap.properties");
+
+        AuthenticationService service = new AuthenticationService();
+        assertEquals(service.authenticate(basicCred), true);
+
+        // Restore the original system property
+        if (oldProperty != null) {
+            System.setProperty(systemKey, oldProperty);
+        }
+        else {
+            System.clearProperty(systemKey);
+        }
+    }
 }

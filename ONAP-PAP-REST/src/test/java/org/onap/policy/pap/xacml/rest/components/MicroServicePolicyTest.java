@@ -41,71 +41,71 @@ import java.util.Collections;
 
 @RunWith(PowerMockRunner.class)
 public class MicroServicePolicyTest {
-	@Rule
+    @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-	@Test
-	public void testConstructor1() {
-		thrown.expect(NullPointerException.class);
-		MicroServiceConfigPolicy policy = new MicroServiceConfigPolicy();
-		policy.getCorrectPolicyDataObject();
-		fail("Expected an exception");
-	}
-	
-	@Test
-	public void testConstructor2() {
-		PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
-		MicroServiceConfigPolicy policy = new MicroServiceConfigPolicy(policyAdapter);
-		assertNull(policy.getCorrectPolicyDataObject());
-	}
-	
-	@PrepareForTest({MicroServiceConfigPolicy.class})
-	@Test
-	public void testPrepareToSave() throws Exception {
-		// Need to mock internal dictionary retrieval
-		CommonClassDaoImpl impl = Mockito.mock(CommonClassDaoImpl.class);
-		PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(impl);
-		when(impl.getDataById(any(), anyString(), anyString())).thenReturn(null);
-		
-		PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
-		MicroServiceConfigPolicy policy = new MicroServiceConfigPolicy(policyAdapter);
-		policyAdapter.setHighestVersion(1);
-		policyAdapter.setPolicyType("Config");
-		policyAdapter.setNewFileName("foo.xml");
-		policyAdapter.setJsonBody("{ \"version\": \"1.0\"}");
-		policyAdapter.setServiceType("foo");
-		policy.prepareToSave();
-		assertEquals(policy.isPreparedToSave(), true);
-	}
-	
-	@Test
-	public void testCreateConstructor1() {
-		CreateNewMicroServiceModel model = new CreateNewMicroServiceModel(null, null, null, null);
-		assertNotNull(model);
-	}
-	
-	@PrepareForTest({CreateNewMicroServiceModel.class})
-	@Test
-	public void testCreateModel() throws Exception {
-		// Mock file retrieval
-		File testFile = new File("testFile");
-		File[] testList = new File[1];
-		testList[0] = testFile;
-		File impl = Mockito.mock(File.class);
-		PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(impl);
-		when(impl.listFiles()).thenReturn(testList);
-		when(impl.isFile()).thenReturn(true);
+    @Test
+    public void testConstructor1() {
+        thrown.expect(NullPointerException.class);
+        MicroServiceConfigPolicy policy = new MicroServiceConfigPolicy();
+        policy.getCorrectPolicyDataObject();
+        fail("Expected an exception");
+    }
 
-		// Mock internal dictionary retrieval
-		CommonClassDaoImpl daoImpl = Mockito.mock(CommonClassDaoImpl.class);
-		PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(daoImpl);
-		when(daoImpl.getDataById(any(), anyString(), anyString())).thenReturn(Collections.emptyList());
+    @Test
+    public void testConstructor2() {
+        PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
+        MicroServiceConfigPolicy policy = new MicroServiceConfigPolicy(policyAdapter);
+        assertNull(policy.getCorrectPolicyDataObject());
+    }
 
-		// Test create methods
-		String testFileName = "testFile.zip";
-		String testVal = "testVal";
-		CreateNewMicroServiceModel model = new CreateNewMicroServiceModel(testFileName, testVal, testVal, testVal, testVal);
-		model.addValuesToNewModel(".xmi");
-		model.saveImportService();
-	}
+    @PrepareForTest({MicroServiceConfigPolicy.class})
+    @Test
+    public void testPrepareToSave() throws Exception {
+        // Need to mock internal dictionary retrieval
+        CommonClassDaoImpl impl = Mockito.mock(CommonClassDaoImpl.class);
+        PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(impl);
+        when(impl.getDataById(any(), anyString(), anyString())).thenReturn(null);
+
+        PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
+        MicroServiceConfigPolicy policy = new MicroServiceConfigPolicy(policyAdapter);
+        policyAdapter.setHighestVersion(1);
+        policyAdapter.setPolicyType("Config");
+        policyAdapter.setNewFileName("foo.xml");
+        policyAdapter.setJsonBody("{ \"version\": \"1.0\"}");
+        policyAdapter.setServiceType("foo");
+        policy.prepareToSave();
+        assertEquals(policy.isPreparedToSave(), true);
+    }
+
+    @Test
+    public void testCreateConstructor1() {
+        CreateNewMicroServiceModel model = new CreateNewMicroServiceModel(null, null, null, null);
+        assertNotNull(model);
+    }
+
+    @PrepareForTest({CreateNewMicroServiceModel.class})
+    @Test
+    public void testCreateModel() throws Exception {
+        // Mock file retrieval
+        File testFile = new File("testFile");
+        File[] testList = new File[1];
+        testList[0] = testFile;
+        File impl = Mockito.mock(File.class);
+        PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(impl);
+        when(impl.listFiles()).thenReturn(testList);
+        when(impl.isFile()).thenReturn(true);
+
+        // Mock internal dictionary retrieval
+        CommonClassDaoImpl daoImpl = Mockito.mock(CommonClassDaoImpl.class);
+        PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(daoImpl);
+        when(daoImpl.getDataById(any(), anyString(), anyString())).thenReturn(Collections.emptyList());
+
+        // Test create methods
+        String testFileName = "testFile.zip";
+        String testVal = "testVal";
+        CreateNewMicroServiceModel model = new CreateNewMicroServiceModel(testFileName, testVal, testVal, testVal, testVal);
+        model.addValuesToNewModel(".xmi");
+        model.saveImportService();
+    }
 }

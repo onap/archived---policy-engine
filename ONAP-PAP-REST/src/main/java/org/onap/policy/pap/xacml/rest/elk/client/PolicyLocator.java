@@ -20,32 +20,32 @@
 package org.onap.policy.pap.xacml.rest.elk.client;
 
 public class PolicyLocator {
-	public final String policyType;
-	public final String policyName;
-	public final String owner;
-	public final String scope;
-	public final String policyId;
-	public final String version;
-	
-	public PolicyLocator(String policyType, String policyName,
-			             String owner, String scope, String policyId,
-			             String version) {
-		this.policyType = policyType;
-		this.policyName= policyName;
-		this.owner = owner;
-		this.scope = scope;
-		this.policyId = policyId; 
-		this.version = version;
-	}
-	
-	public String toString() {
-		return "[" + 
-		       this.owner + "|" +
-			   this.scope + "|" +
-	           this.policyType + "|" + 
-			   this.policyName + "|" + 
-			   this.policyId + "|" +
-			   "v" + this.version + "|" + "]";
-	           
-	}
+    public final String policyType;
+    public final String policyName;
+    public final String owner;
+    public final String scope;
+    public final String policyId;
+    public final String version;
+
+    public PolicyLocator(String policyType, String policyName,
+                         String owner, String scope, String policyId,
+                         String version) {
+        this.policyType = policyType;
+        this.policyName= policyName;
+        this.owner = owner;
+        this.scope = scope;
+        this.policyId = policyId;
+        this.version = version;
+    }
+
+    public String toString() {
+        return "[" +
+               this.owner + "|" +
+               this.scope + "|" +
+               this.policyType + "|" +
+               this.policyName + "|" +
+               this.policyId + "|" +
+               "v" + this.version + "|" + "]";
+
+    }
 }

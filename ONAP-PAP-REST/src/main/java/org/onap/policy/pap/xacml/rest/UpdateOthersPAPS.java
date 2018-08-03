@@ -64,177 +64,177 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class UpdateOthersPAPS {
-	
-	private static final Logger	policyLogger	= FlexLogger.getLogger(UpdateOthersPAPS.class);
-	
-	private static CommonClassDao commonClassDao;
-	
-	private static final String contentType = "application/json";
-	private static String configType =".Config_";
-	private static String actionType =".Action_";
-	private static String error ="error";
-	public static CommonClassDao getCommonClassDao() {
-		return commonClassDao;
-	}
 
-	public static void setCommonClassDao(CommonClassDao commonClassDao) {
-		UpdateOthersPAPS.commonClassDao = commonClassDao;
-	}
+    private static final Logger	policyLogger	= FlexLogger.getLogger(UpdateOthersPAPS.class);
 
-	@Autowired
-	private UpdateOthersPAPS(CommonClassDao commonClassDao){
-		UpdateOthersPAPS.commonClassDao = commonClassDao;
-	}
-	
-	public UpdateOthersPAPS() {
-		//Empty Constructor
-	}
+    private static CommonClassDao commonClassDao;
 
-	@RequestMapping(value="/notifyOtherPAPs", method= RequestMethod.POST)
-	public void  notifyOthersPAPsToUpdateConfigurations(HttpServletRequest request, HttpServletResponse response){
-		Map<String, Object> model = new HashMap<>();
-		ObjectMapper mapper = new ObjectMapper();
-		UpdateObjectData body = new UpdateObjectData();
-		body.setAction(request.getParameter("action"));
-		body.setNewPolicyName(request.getParameter("newPolicyName"));
-		body.setOldPolicyName(request.getParameter("oldPolicyName"));
+    private static final String contentType = "application/json";
+    private static String configType =".Config_";
+    private static String actionType =".Action_";
+    private static String error ="error";
+    public static CommonClassDao getCommonClassDao() {
+        return commonClassDao;
+    }
 
-		String currentPap = XACMLRestProperties.getProperty("xacml.rest.pap.url");
-		List<Object> getPAPUrls = commonClassDao.getData(PolicyDBDaoEntity.class);
-		if(getPAPUrls != null && !getPAPUrls.isEmpty()){
-			for(int i = 0; i < getPAPUrls.size(); i++){
-				PolicyDBDaoEntity papId = (PolicyDBDaoEntity) getPAPUrls.get(i);
-				String papUrl = papId.getPolicyDBDaoUrl();
-				if(!papUrl.equals(currentPap)){
-					String userName = papId.getUsername();
-					String password = papId.getPassword();
-					Base64.Encoder encoder = Base64.getEncoder();
-					String txt;
-					try{
-						txt = new String(CryptoUtils.decryptTxt(password), StandardCharsets.UTF_8);
-					} catch(Exception e){
-						policyLogger.debug(e);
-						//if we can't decrypt, might as well try it anyway
-						txt = password;
-					}
-					String encoding = encoder.encodeToString((userName+":"+txt).getBytes(StandardCharsets.UTF_8));
-					HttpHeaders headers = new HttpHeaders();
-					headers.set("Authorization", "Basic " + encoding);
-					headers.set("Content-Type", contentType);
+    public static void setCommonClassDao(CommonClassDao commonClassDao) {
+        UpdateOthersPAPS.commonClassDao = commonClassDao;
+    }
 
-					RestTemplate restTemplate = new RestTemplate();
-					HttpEntity<?> requestEntity = new HttpEntity<>(body, headers);
-					HttpClientErrorException exception = null;
+    @Autowired
+    private UpdateOthersPAPS(CommonClassDao commonClassDao){
+        UpdateOthersPAPS.commonClassDao = commonClassDao;
+    }
 
-					try{
-						restTemplate.exchange(papUrl + "onap/updateConfiguration", HttpMethod.POST, requestEntity, String.class);
-					}catch(Exception e){
-						policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + papUrl, e);
-						exception = new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-						if("409 Conflict".equals(e.getMessage())){
-							policyLogger.error(e.getMessage());
-		                    response.addHeader(error, e.getMessage());
-						}
-					}
-					if(exception != null && exception.getStatusCode()!=null){
-						String message;
-						if(exception.getStatusCode().equals(HttpStatus.UNAUTHORIZED)){
-							message = XACMLErrorConstants.ERROR_PERMISSIONS +":"+exception.getStatusCode()+":" + "ERROR_AUTH_GET_PERM" ;
-							policyLogger.error(message);
-						}else if(exception.getStatusCode().equals(HttpStatus.BAD_REQUEST)){
-							message = XACMLErrorConstants.ERROR_DATA_ISSUE + ":"+exception.getStatusCode()+":" + exception.getResponseBodyAsString();
-							policyLogger.error(message);
-						}else if(exception.getStatusCode().equals(HttpStatus.NOT_FOUND)){
-							message = XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + papUrl + exception;
-							policyLogger.error(message);
-						}else{
-							message = XACMLErrorConstants.ERROR_PROCESS_FLOW + ":"+exception.getStatusCode()+":" + exception.getResponseBodyAsString();
-							policyLogger.error(message);
-						}
-						model.put(papUrl, message);
-					}else{
-						model.put(papUrl, "Success");
-					}
-				}
-			}
-			JsonMessage msg;
-			try {
-				msg = new JsonMessage(mapper.writeValueAsString(model));
-				JSONObject j = new JSONObject(msg);
-				response.getWriter().write(j.toString());
-			} catch (Exception e) {
-				policyLogger.error("Exception Occured"+e);
-			}
-		}
-	}
-	
-	@RequestMapping(value="/updateConfiguration", method= RequestMethod.POST)
-	@ResponseBody
-	public void updateConfiguration(@RequestBody UpdateObjectData data, HttpServletResponse response){
-		String action = data.getAction();
-		String newPolicyName = data.getNewPolicyName();
-		String oldPolicyName = data.getOldPolicyName();
-		try{
-			if("rename".equals(action)){
-				if(oldPolicyName.contains(configType) || oldPolicyName.contains(actionType)){
-					File file;
-					if(oldPolicyName.contains(configType)){
-						file = new File(Policy.getConfigHome() + File.separator + oldPolicyName);
-					}else{
-						file = new File(Policy.getActionHome() + File.separator + oldPolicyName);
-					}
-					if(file.exists()){
-						File renamefile;
-						if(oldPolicyName.contains(configType)){
-							renamefile = new File(Policy.getConfigHome() + File.separator + newPolicyName);
-						}else{
-							renamefile = new File(Policy.getActionHome() + File.separator + newPolicyName);
-						}
-						if(file.renameTo(renamefile)){
-							policyLogger.info("Policy has been renamed Successfully"+newPolicyName);
-							response.addHeader("rename", "Success");
-						}else{
-							response.addHeader("rename", "Failure");
-						}
-					}
-				}
-			}else if("delete".equals(action)){
-				if(oldPolicyName.contains(configType)){
-					Files.deleteIfExists(Paths.get(Policy.getConfigHome() + File.separator + oldPolicyName));
-				}else if(oldPolicyName.contains("Action_")){
-					Files.deleteIfExists(Paths.get(Policy.getActionHome() + File.separator + oldPolicyName));
-				}
-			}else if("clonePolicy".equals(action) || "exportPolicy".equals(action)){
-				if(newPolicyName.contains(configType)){
-					ConfigurationDataEntity configEntiy = (ConfigurationDataEntity) commonClassDao.getEntityItem(ConfigurationDataEntity.class, "configurationName", newPolicyName);
-					saveConfigurationData(configEntiy, newPolicyName);
-				}else if(newPolicyName.contains(actionType)){
-					ActionBodyEntity actionEntiy = (ActionBodyEntity) commonClassDao.getEntityItem(ActionBodyEntity.class, "actionBodyName", newPolicyName);
-					saveActionBodyData(actionEntiy, newPolicyName);
-				}
-			}
-		} catch (IOException e) {
-			policyLogger.error("Exception Occured While updating Configuration"+e);
-		}
-	}
-	
-	private void saveConfigurationData(ConfigurationDataEntity configEntiy, String newPolicyName){
-		try(FileWriter fw = new FileWriter(Policy.getConfigHome() + File.separator + newPolicyName)){
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(configEntiy.getConfigBody());
-			bw.close();
-		}catch (IOException e) {
-			policyLogger.error("Exception Occured While closing the File input stream"+e);
-		}
-	}
-	
-	private void saveActionBodyData(ActionBodyEntity actionEntiy , String newPolicyName){
-		try(FileWriter fw  = new FileWriter(Policy.getActionHome() + File.separator + newPolicyName)){
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(actionEntiy.getActionBody());
-			bw.close();
-		}catch (IOException e) {
-			policyLogger.error("Exception Occured While closing the File input stream"+e);
-		}
-	}
+    public UpdateOthersPAPS() {
+        //Empty Constructor
+    }
+
+    @RequestMapping(value="/notifyOtherPAPs", method= RequestMethod.POST)
+    public void  notifyOthersPAPsToUpdateConfigurations(HttpServletRequest request, HttpServletResponse response){
+        Map<String, Object> model = new HashMap<>();
+        ObjectMapper mapper = new ObjectMapper();
+        UpdateObjectData body = new UpdateObjectData();
+        body.setAction(request.getParameter("action"));
+        body.setNewPolicyName(request.getParameter("newPolicyName"));
+        body.setOldPolicyName(request.getParameter("oldPolicyName"));
+
+        String currentPap = XACMLRestProperties.getProperty("xacml.rest.pap.url");
+        List<Object> getPAPUrls = commonClassDao.getData(PolicyDBDaoEntity.class);
+        if(getPAPUrls != null && !getPAPUrls.isEmpty()){
+            for(int i = 0; i < getPAPUrls.size(); i++){
+                PolicyDBDaoEntity papId = (PolicyDBDaoEntity) getPAPUrls.get(i);
+                String papUrl = papId.getPolicyDBDaoUrl();
+                if(!papUrl.equals(currentPap)){
+                    String userName = papId.getUsername();
+                    String password = papId.getPassword();
+                    Base64.Encoder encoder = Base64.getEncoder();
+                    String txt;
+                    try{
+                        txt = new String(CryptoUtils.decryptTxt(password), StandardCharsets.UTF_8);
+                    } catch(Exception e){
+                        policyLogger.debug(e);
+                        //if we can't decrypt, might as well try it anyway
+                        txt = password;
+                    }
+                    String encoding = encoder.encodeToString((userName+":"+txt).getBytes(StandardCharsets.UTF_8));
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Basic " + encoding);
+                    headers.set("Content-Type", contentType);
+
+                    RestTemplate restTemplate = new RestTemplate();
+                    HttpEntity<?> requestEntity = new HttpEntity<>(body, headers);
+                    HttpClientErrorException exception = null;
+
+                    try{
+                        restTemplate.exchange(papUrl + "onap/updateConfiguration", HttpMethod.POST, requestEntity, String.class);
+                    }catch(Exception e){
+                        policyLogger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + papUrl, e);
+                        exception = new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+                        if("409 Conflict".equals(e.getMessage())){
+                            policyLogger.error(e.getMessage());
+                            response.addHeader(error, e.getMessage());
+                        }
+                    }
+                    if(exception != null && exception.getStatusCode()!=null){
+                        String message;
+                        if(exception.getStatusCode().equals(HttpStatus.UNAUTHORIZED)){
+                            message = XACMLErrorConstants.ERROR_PERMISSIONS +":"+exception.getStatusCode()+":" + "ERROR_AUTH_GET_PERM" ;
+                            policyLogger.error(message);
+                        }else if(exception.getStatusCode().equals(HttpStatus.BAD_REQUEST)){
+                            message = XACMLErrorConstants.ERROR_DATA_ISSUE + ":"+exception.getStatusCode()+":" + exception.getResponseBodyAsString();
+                            policyLogger.error(message);
+                        }else if(exception.getStatusCode().equals(HttpStatus.NOT_FOUND)){
+                            message = XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while connecting to " + papUrl + exception;
+                            policyLogger.error(message);
+                        }else{
+                            message = XACMLErrorConstants.ERROR_PROCESS_FLOW + ":"+exception.getStatusCode()+":" + exception.getResponseBodyAsString();
+                            policyLogger.error(message);
+                        }
+                        model.put(papUrl, message);
+                    }else{
+                        model.put(papUrl, "Success");
+                    }
+                }
+            }
+            JsonMessage msg;
+            try {
+                msg = new JsonMessage(mapper.writeValueAsString(model));
+                JSONObject j = new JSONObject(msg);
+                response.getWriter().write(j.toString());
+            } catch (Exception e) {
+                policyLogger.error("Exception Occured"+e);
+            }
+        }
+    }
+
+    @RequestMapping(value="/updateConfiguration", method= RequestMethod.POST)
+    @ResponseBody
+    public void updateConfiguration(@RequestBody UpdateObjectData data, HttpServletResponse response){
+        String action = data.getAction();
+        String newPolicyName = data.getNewPolicyName();
+        String oldPolicyName = data.getOldPolicyName();
+        try{
+            if("rename".equals(action)){
+                if(oldPolicyName.contains(configType) || oldPolicyName.contains(actionType)){
+                    File file;
+                    if(oldPolicyName.contains(configType)){
+                        file = new File(Policy.getConfigHome() + File.separator + oldPolicyName);
+                    }else{
+                        file = new File(Policy.getActionHome() + File.separator + oldPolicyName);
+                    }
+                    if(file.exists()){
+                        File renamefile;
+                        if(oldPolicyName.contains(configType)){
+                            renamefile = new File(Policy.getConfigHome() + File.separator + newPolicyName);
+                        }else{
+                            renamefile = new File(Policy.getActionHome() + File.separator + newPolicyName);
+                        }
+                        if(file.renameTo(renamefile)){
+                            policyLogger.info("Policy has been renamed Successfully"+newPolicyName);
+                            response.addHeader("rename", "Success");
+                        }else{
+                            response.addHeader("rename", "Failure");
+                        }
+                    }
+                }
+            }else if("delete".equals(action)){
+                if(oldPolicyName.contains(configType)){
+                    Files.deleteIfExists(Paths.get(Policy.getConfigHome() + File.separator + oldPolicyName));
+                }else if(oldPolicyName.contains("Action_")){
+                    Files.deleteIfExists(Paths.get(Policy.getActionHome() + File.separator + oldPolicyName));
+                }
+            }else if("clonePolicy".equals(action) || "exportPolicy".equals(action)){
+                if(newPolicyName.contains(configType)){
+                    ConfigurationDataEntity configEntiy = (ConfigurationDataEntity) commonClassDao.getEntityItem(ConfigurationDataEntity.class, "configurationName", newPolicyName);
+                    saveConfigurationData(configEntiy, newPolicyName);
+                }else if(newPolicyName.contains(actionType)){
+                    ActionBodyEntity actionEntiy = (ActionBodyEntity) commonClassDao.getEntityItem(ActionBodyEntity.class, "actionBodyName", newPolicyName);
+                    saveActionBodyData(actionEntiy, newPolicyName);
+                }
+            }
+        } catch (IOException e) {
+            policyLogger.error("Exception Occured While updating Configuration"+e);
+        }
+    }
+
+    private void saveConfigurationData(ConfigurationDataEntity configEntiy, String newPolicyName){
+        try(FileWriter fw = new FileWriter(Policy.getConfigHome() + File.separator + newPolicyName)){
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(configEntiy.getConfigBody());
+            bw.close();
+        }catch (IOException e) {
+            policyLogger.error("Exception Occured While closing the File input stream"+e);
+        }
+    }
+
+    private void saveActionBodyData(ActionBodyEntity actionEntiy , String newPolicyName){
+        try(FileWriter fw  = new FileWriter(Policy.getActionHome() + File.separator + newPolicyName)){
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(actionEntiy.getActionBody());
+            bw.close();
+        }catch (IOException e) {
+            policyLogger.error("Exception Occured While closing the File input stream"+e);
+        }
+    }
 }

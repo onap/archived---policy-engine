@@ -31,34 +31,34 @@ import org.onap.policy.utils.CryptoUtils;
 import com.att.research.xacml.util.XACMLProperties;
 
 public class AuthenticationService {
-	private String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
-	private String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
-	
-	public boolean authenticate(String authCredentials) {
+    private String papID = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_USERID);
+    private String papPass = CryptoUtils.decryptTxtNoExStr(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_PASS));
 
-		if (null == authCredentials)
-			return false;
-		// header value format will be "Basic encodedstring" for Basic authentication. 
-		final String encodedUserPassword = authCredentials.replaceFirst("Basic"	+ " ", "");
-		String usernameAndPassword = null;
-		try {
-			byte[] decodedBytes = Base64.getDecoder().decode(encodedUserPassword);
-			usernameAndPassword = new String(decodedBytes, "UTF-8");
-		} catch (Exception e) {
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "AuthenticationService", "Exception decoding username and password");
-			return false;
-		}
-		try {
-			final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
-			final String username = tokenizer.nextToken();
-			final String password = tokenizer.nextToken();
+    public boolean authenticate(String authCredentials) {
 
-			boolean authenticationStatus = papID.equals(username)	&& papPass.equals(password);
-			return authenticationStatus;
-		} catch (Exception e){
-			PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "AuthenticationService", "Exception authenticating user");
-			return false;
-		}
-	}
-	
+        if (null == authCredentials)
+            return false;
+        // header value format will be "Basic encodedstring" for Basic authentication.
+        final String encodedUserPassword = authCredentials.replaceFirst("Basic"	+ " ", "");
+        String usernameAndPassword = null;
+        try {
+            byte[] decodedBytes = Base64.getDecoder().decode(encodedUserPassword);
+            usernameAndPassword = new String(decodedBytes, "UTF-8");
+        } catch (Exception e) {
+            PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "AuthenticationService", "Exception decoding username and password");
+            return false;
+        }
+        try {
+            final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
+            final String username = tokenizer.nextToken();
+            final String password = tokenizer.nextToken();
+
+            boolean authenticationStatus = papID.equals(username)	&& papPass.equals(password);
+            return authenticationStatus;
+        } catch (Exception e){
+            PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, e, "AuthenticationService", "Exception authenticating user");
+            return false;
+        }
+    }
+
 }

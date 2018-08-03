@@ -32,74 +32,74 @@ import com.att.research.xacml.api.pap.PDPPolicy;
 
 public class RemoveGroupPolicy {
 
-	
-	//Container from where we are fetching the policies
-	private static PDPPolicyContainer policyContainer;
-		
-	private RemoveGroupPolicy self = this;
-	private StdPDPGroup updatedObject;
-	private final StdPDPGroup group;
-	private boolean isSaved = false;
-	
-	public RemoveGroupPolicy(StdPDPGroup group) {
-		
-		this.group = group;
-		
-	}
-	
-	public void prepareToRemove(PDPPolicy policy) {
-		
-		if (this.group == null) {
-			return;
-		}
-		setRemoveGroupPolicy(new PDPPolicyContainer(group));
 
-		RemoveGroupPolicy.policyContainer.removeItem(policy);
-									
-		self.doSave();
-		
-		self.isSaved = true;
-		
-	}
-	
-	private static void setRemoveGroupPolicy(PDPPolicyContainer pdpPolicyContainer) {
+    //Container from where we are fetching the policies
+    private static PDPPolicyContainer policyContainer;
+
+    private RemoveGroupPolicy self = this;
+    private StdPDPGroup updatedObject;
+    private final StdPDPGroup group;
+    private boolean isSaved = false;
+
+    public RemoveGroupPolicy(StdPDPGroup group) {
+
+        this.group = group;
+
+    }
+
+    public void prepareToRemove(PDPPolicy policy) {
+
+        if (this.group == null) {
+            return;
+        }
+        setRemoveGroupPolicy(new PDPPolicyContainer(group));
+
+        RemoveGroupPolicy.policyContainer.removeItem(policy);
+
+        self.doSave();
+
+        self.isSaved = true;
+
+    }
+
+    private static void setRemoveGroupPolicy(PDPPolicyContainer pdpPolicyContainer) {
         RemoveGroupPolicy.policyContainer = pdpPolicyContainer;
     }
 
     @SuppressWarnings("unchecked")
-	protected void doSave() {
-		if (this.group == null) {
-			return;
-		}
-		
-		StdPDPGroup updatedGroupObject = new StdPDPGroup(
-				group.getId(), 
-				group.isDefaultGroup(), 
-				group.getName(), 
-				group.getDescription(), 
-				null);
-		
-		// replace the original set of Policies with the set from the container (possibly modified by the user)
-		Set<PDPPolicy> changedPolicies = new HashSet<>();
-		changedPolicies.addAll((Collection<PDPPolicy>) RemoveGroupPolicy.policyContainer.getItemIds());
-		updatedGroupObject.setPolicies(changedPolicies);
-		updatedGroupObject.setOnapPdps(this.group.getOnapPdps());
-		
-		// replace the original set of PIP Configs with the set from the container
-		updatedGroupObject.setPipConfigs(this.group.getPipConfigs());
-		
-		// copy those things that the user cannot change from the original to the new object
-		updatedGroupObject.setStatus(this.group.getStatus());
-		
-		this.updatedObject = updatedGroupObject;			
-	}
-	
-	public boolean isRemoved() {
-		return this.isSaved;
-	}
-		
-	public OnapPDPGroup getUpdatedObject() {
-		return this.updatedObject;
-	}
+    protected void doSave() {
+        if (this.group == null) {
+            return;
+        }
+
+        StdPDPGroup updatedGroupObject = new StdPDPGroup(
+                group.getId(),
+                group.isDefaultGroup(),
+                group.getName(),
+                group.getDescription(),
+                null);
+
+        // replace the original set of Policies with the set from the container (possibly modified by the user)
+        Set<PDPPolicy> changedPolicies = new HashSet<>();
+        changedPolicies.addAll((Collection<PDPPolicy>) RemoveGroupPolicy.policyContainer.getItemIds());
+        updatedGroupObject.setPolicies(changedPolicies);
+        updatedGroupObject.setOnapPdps(this.group.getOnapPdps());
+
+        // replace the original set of PIP Configs with the set from the container
+        updatedGroupObject.setPipConfigs(this.group.getPipConfigs());
+
+        // copy those things that the user cannot change from the original to the new object
+        updatedGroupObject.setStatus(this.group.getStatus());
+
+        this.updatedObject = updatedGroupObject;
+    }
+
+    public boolean isRemoved() {
+        return this.isSaved;
+    }
+
+    public OnapPDPGroup getUpdatedObject() {
+        return this.updatedObject;
+    }
 
 }

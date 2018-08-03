@@ -31,38 +31,38 @@ import com.att.research.xacml.api.pap.PAPException;
 import java.nio.charset.StandardCharsets;
 
 public class ClosedLoopPolicyTest {
-	@Rule
+    @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-	@Test
-	public void testConstructor1() {
-		thrown.expect(NullPointerException.class);
-		ClosedLoopPolicy policy = new ClosedLoopPolicy();
-		policy.getCorrectPolicyDataObject();
-	}
-	
-	@Test
-	public void testConstructor2() {
-		PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
-		ClosedLoopPolicy policy = new ClosedLoopPolicy(policyAdapter);
-		assertNull(policy.getCorrectPolicyDataObject());
-	}
-	
-	@Test
-	public void testReadFile() throws IOException {
-		thrown.expect(IOException.class);
-		String read = ClosedLoopPolicy.readFile("/foo",  StandardCharsets.UTF_8);
-		fail("Expecting an exception.");
-	}
-	
-	@Test
-	public void testPrepareToSave() throws PAPException {
-		PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
-		ClosedLoopPolicy policy = new ClosedLoopPolicy(policyAdapter);
-		policyAdapter.setHighestVersion(1);
-		policyAdapter.setPolicyType("Config");
-		policyAdapter.setNewFileName("foo.xml");
-		policy.prepareToSave();
-		assertEquals(policy.isPreparedToSave(), true);
-	}
+    @Test
+    public void testConstructor1() {
+        thrown.expect(NullPointerException.class);
+        ClosedLoopPolicy policy = new ClosedLoopPolicy();
+        policy.getCorrectPolicyDataObject();
+    }
+
+    @Test
+    public void testConstructor2() {
+        PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
+        ClosedLoopPolicy policy = new ClosedLoopPolicy(policyAdapter);
+        assertNull(policy.getCorrectPolicyDataObject());
+    }
+
+    @Test
+    public void testReadFile() throws IOException {
+        thrown.expect(IOException.class);
+        String read = ClosedLoopPolicy.readFile("/foo",  StandardCharsets.UTF_8);
+        fail("Expecting an exception.");
+    }
+
+    @Test
+    public void testPrepareToSave() throws PAPException {
+        PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
+        ClosedLoopPolicy policy = new ClosedLoopPolicy(policyAdapter);
+        policyAdapter.setHighestVersion(1);
+        policyAdapter.setPolicyType("Config");
+        policyAdapter.setNewFileName("foo.xml");
+        policy.prepareToSave();
+        assertEquals(policy.isPreparedToSave(), true);
+    }
 }

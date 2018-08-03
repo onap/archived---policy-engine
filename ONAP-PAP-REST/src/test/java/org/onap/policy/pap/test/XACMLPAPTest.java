@@ -81,7 +81,7 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import com.mockrunner.mock.web.MockServletInputStream;
 
 public class XACMLPAPTest {
-	private static final Log logger = LogFactory.getLog(XACMLPAPTest.class);
+    private static final Log logger = LogFactory.getLog(XACMLPAPTest.class);
 
     private static final String ENVIRONMENT_HEADER = "Environment";
     private List<String> headers = new ArrayList<>();
@@ -93,47 +93,47 @@ public class XACMLPAPTest {
     private SessionFactory sessionFactory;
     private CommonClassDao commonClassDao;
 
-	private static final String DEFAULT_DB_DRIVER = "org.h2.Driver";
-	private static final String DEFAULT_DB_USER = "sa";
-	private static final String DEFAULT_DB_PWD = "";
+    private static final String DEFAULT_DB_DRIVER = "org.h2.Driver";
+    private static final String DEFAULT_DB_USER = "sa";
+    private static final String DEFAULT_DB_PWD = "";
 
-	@Before
-	public void setUpDB() throws Exception {
-		logger.info("setUpDB: Entering");
+    @Before
+    public void setUpDB() throws Exception {
+        logger.info("setUpDB: Entering");
 
-		Properties properties = new Properties();
-		properties.put(IntegrityAuditProperties.DB_DRIVER, XACMLPAPTest.DEFAULT_DB_DRIVER);
-		properties.put(IntegrityAuditProperties.DB_URL, "jdbc:h2:file:./sql/xacmlTest");
-		properties.put(IntegrityAuditProperties.DB_USER, XACMLPAPTest.DEFAULT_DB_USER);
-		properties.put(IntegrityAuditProperties.DB_PWD, XACMLPAPTest.DEFAULT_DB_PWD);
-		properties.put(IntegrityAuditProperties.SITE_NAME, "SiteA");
-		properties.put(IntegrityAuditProperties.NODE_TYPE, "pap");
+        Properties properties = new Properties();
+        properties.put(IntegrityAuditProperties.DB_DRIVER, XACMLPAPTest.DEFAULT_DB_DRIVER);
+        properties.put(IntegrityAuditProperties.DB_URL, "jdbc:h2:file:./sql/xacmlTest");
+        properties.put(IntegrityAuditProperties.DB_USER, XACMLPAPTest.DEFAULT_DB_USER);
+        properties.put(IntegrityAuditProperties.DB_PWD, XACMLPAPTest.DEFAULT_DB_PWD);
+        properties.put(IntegrityAuditProperties.SITE_NAME, "SiteA");
+        properties.put(IntegrityAuditProperties.NODE_TYPE, "pap");
 
-		//Clean the iaTest DB table for IntegrityAuditEntity entries
-		cleanDb("testPapPU", properties);
+        //Clean the iaTest DB table for IntegrityAuditEntity entries
+        cleanDb("testPapPU", properties);
 
-		logger.info("setUpDB: Exiting");
-	}
+        logger.info("setUpDB: Exiting");
+    }
 
-	public void cleanDb(String persistenceUnit, Properties properties){
-		logger.debug("cleanDb: enter");
+    public void cleanDb(String persistenceUnit, Properties properties){
+        logger.debug("cleanDb: enter");
 
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnit, properties);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(persistenceUnit, properties);
 
-		EntityManager em = emf.createEntityManager();
-		// Start a transaction
-		EntityTransaction et = em.getTransaction();
+        EntityManager em = emf.createEntityManager();
+        // Start a transaction
+        EntityTransaction et = em.getTransaction();
 
-		et.begin();
+        et.begin();
 
-		// Clean up the DB
-		em.createQuery("Delete from IntegrityAuditEntity").executeUpdate();
+        // Clean up the DB
+        em.createQuery("Delete from IntegrityAuditEntity").executeUpdate();
 
-		// commit transaction
-		et.commit();
-		em.close();
-		logger.debug("cleanDb: exit");
-	}
+        // commit transaction
+        et.commit();
+        em.close();
+        logger.debug("cleanDb: exit");
+    }
 
     @Before
     public void setUp() throws ServletException {
@@ -584,166 +584,166 @@ public class XACMLPAPTest {
     
     @Test
     public void testCommonCreateDictionary() throws IOException, SQLException, ServletException {
-    	new DictionaryController(commonClassDao);
-    	new ActionPolicyDictionaryController(commonClassDao);
-    	new SafePolicyController(commonClassDao);
-    	new DescriptiveDictionaryController(commonClassDao);
-    	List<Object> object = new ArrayList<>();
+        new DictionaryController(commonClassDao);
+        new ActionPolicyDictionaryController(commonClassDao);
+        new SafePolicyController(commonClassDao);
+        new DescriptiveDictionaryController(commonClassDao);
+        List<Object> object = new ArrayList<>();
         object.add(new Category());
         when(commonClassDao.getDataById(Category.class, "shortName", "resource")).thenReturn(object);
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	String json = "{\"dictionaryFields\": {\"onapName\": \"testMMRestAPI1\",\"description\": \"testing update response message\"}}";
-    	dictionaryTestSetup(false, "OnapName", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\": {\"xacmlId\": \"testMMRestAPI1\",\"datatypeBean\": {\"shortName\": \"string\"}, \"description\": \"testing update\",\"priority\": \"High\",\"userDataTypeValues\": [{\"attributeValues\": \"testAttr\"}, {\"attributeValues\": \"testAttr2\"}, {\"attributeValues\": \"testAttr3\"}]}}";
-    	dictionaryTestSetup(false, "Attribute", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"attributeName\":\"TestMMrestAPI1\",\"type\":\"REST\",\"url\":\"testsomeurl.com\",\"method\":\"GET\",\"description\":\"test create\",\"body\":\"Testing Create\",\"headers\":[{\"option\":\"test1\",\"number\":\"test\"},{\"option\":\"test2\",\"number\":\"test\"}]}}";
-    	dictionaryTestSetup(false, "Action", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"scopeName\":\"testMMRestAPI1\",\"description\":\"test\",\"attributes\":[{\"option\":\"test1\",\"number\":\"test\"},{\"option\":\"test2\",\"number\":\"test\"}]}}";
-    	dictionaryTestSetup(false, "DescriptiveScope", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"riskName\":\"testMMrestAPI1\",\"description\":\"test\"}}";
-    	dictionaryTestSetup(false, "RiskType", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"name\":\"testMMrestAPI1\",\"message\":\"test\",\"riskType\":\"testMMrestAPI1\"}}";
-    	dictionaryTestSetup(false, "SafePolicyWarning", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        String json = "{\"dictionaryFields\": {\"onapName\": \"testMMRestAPI1\",\"description\": \"testing update response message\"}}";
+        dictionaryTestSetup(false, "OnapName", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\": {\"xacmlId\": \"testMMRestAPI1\",\"datatypeBean\": {\"shortName\": \"string\"}, \"description\": \"testing update\",\"priority\": \"High\",\"userDataTypeValues\": [{\"attributeValues\": \"testAttr\"}, {\"attributeValues\": \"testAttr2\"}, {\"attributeValues\": \"testAttr3\"}]}}";
+        dictionaryTestSetup(false, "Attribute", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"attributeName\":\"TestMMrestAPI1\",\"type\":\"REST\",\"url\":\"testsomeurl.com\",\"method\":\"GET\",\"description\":\"test create\",\"body\":\"Testing Create\",\"headers\":[{\"option\":\"test1\",\"number\":\"test\"},{\"option\":\"test2\",\"number\":\"test\"}]}}";
+        dictionaryTestSetup(false, "Action", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"scopeName\":\"testMMRestAPI1\",\"description\":\"test\",\"attributes\":[{\"option\":\"test1\",\"number\":\"test\"},{\"option\":\"test2\",\"number\":\"test\"}]}}";
+        dictionaryTestSetup(false, "DescriptiveScope", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"riskName\":\"testMMrestAPI1\",\"description\":\"test\"}}";
+        dictionaryTestSetup(false, "RiskType", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"name\":\"testMMrestAPI1\",\"message\":\"test\",\"riskType\":\"testMMrestAPI1\"}}";
+        dictionaryTestSetup(false, "SafePolicyWarning", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
     }
     
     @Test
     public void testDecisionCreateDictionary() throws IOException, SQLException, ServletException {
-    	new DecisionPolicyDictionaryController(commonClassDao);
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	String json = "{\"dictionaryFields\":{\"xacmlId\":\"testMMRestAPI1\",\"datatypeBean\":{\"shortName\":\"string\"},\"description\":\"test\",\"priority\":\"High\"}}";
-    	dictionaryTestSetup(false, "Settings", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"bbid\":\"BB1\",\"workstep\":\"1\",\"treatments\":\"Manual Handling,Abort,Retry\"}}";
-    	dictionaryTestSetup(false, "RainyDayTreatments", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+        new DecisionPolicyDictionaryController(commonClassDao);
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        String json = "{\"dictionaryFields\":{\"xacmlId\":\"testMMRestAPI1\",\"datatypeBean\":{\"shortName\":\"string\"},\"description\":\"test\",\"priority\":\"High\"}}";
+        dictionaryTestSetup(false, "Settings", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"bbid\":\"BB1\",\"workstep\":\"1\",\"treatments\":\"Manual Handling,Abort,Retry\"}}";
+        dictionaryTestSetup(false, "RainyDayTreatments", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
     }
     
     @Test
     public void testMSCreateDictionary() throws IOException, SQLException, ServletException {
-    	new MicroServiceDictionaryController(commonClassDao);
-    	new PolicyScopeDictionaryController(commonClassDao);
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	String json = "{\"dictionaryFields\":{\"name\":\"testMMrestAPI1\",\"descriptionValue\":\"test\"}}";
-    	dictionaryTestSetup(false, "MicroServiceLocation", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"name\":\"testMMrestAPI1\",\"descriptionValue\":\"test\"}}";
-    	dictionaryTestSetup(false, "MicroServiceConfigName", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"name\":\"testMMrestAPI1\",\"description\":\"test\"}}";
-    	dictionaryTestSetup(false, "DCAEUUID", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"name\":\"testApiANY\",\"descriptionValue\":\"default test\"}}";
-    	dictionaryTestSetup(false, "PolicyScopeService", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"name\":\"testApiANY\",\"descriptionValue\":\"default test\"}}";
-    	dictionaryTestSetup(false, "PolicyScopeResource", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"name\":\"testApiANY\",\"descriptionValue\":\"default test\"}}";
-    	dictionaryTestSetup(false, "PolicyScopeType", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"name\":\"testApiANY\",\"descriptionValue\":\"default test\"}}";
-    	dictionaryTestSetup(false, "PolicyScopeClosedLoop", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
-    	
-    	httpServletRequest = Mockito.mock(HttpServletRequest.class);
-    	httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
-    	json = "{\"dictionaryFields\":{\"groupName\":\"testMMrestAPI1\",\"description\":\"testing\"},\"groupPolicyScopeListData1\":{\"resource\":\"ANY\",\"type\":\"ANY\",\"service\":\"ANY\",\"closedloop\":\"ANY\"}}";
-    	dictionaryTestSetup(false, "GroupPolicyScopeList", json);
-    	// send Request to PAP
-    	pap.service(httpServletRequest, httpServletResponse);
-    	// Verify 
-    	Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+        new MicroServiceDictionaryController(commonClassDao);
+        new PolicyScopeDictionaryController(commonClassDao);
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        String json = "{\"dictionaryFields\":{\"name\":\"testMMrestAPI1\",\"descriptionValue\":\"test\"}}";
+        dictionaryTestSetup(false, "MicroServiceLocation", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"name\":\"testMMrestAPI1\",\"descriptionValue\":\"test\"}}";
+        dictionaryTestSetup(false, "MicroServiceConfigName", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"name\":\"testMMrestAPI1\",\"description\":\"test\"}}";
+        dictionaryTestSetup(false, "DCAEUUID", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"name\":\"testApiANY\",\"descriptionValue\":\"default test\"}}";
+        dictionaryTestSetup(false, "PolicyScopeService", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"name\":\"testApiANY\",\"descriptionValue\":\"default test\"}}";
+        dictionaryTestSetup(false, "PolicyScopeResource", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"name\":\"testApiANY\",\"descriptionValue\":\"default test\"}}";
+        dictionaryTestSetup(false, "PolicyScopeType", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"name\":\"testApiANY\",\"descriptionValue\":\"default test\"}}";
+        dictionaryTestSetup(false, "PolicyScopeClosedLoop", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        httpServletResponse = Mockito.mock(MockHttpServletResponse.class);
+        json = "{\"dictionaryFields\":{\"groupName\":\"testMMrestAPI1\",\"description\":\"testing\"},\"groupPolicyScopeListData1\":{\"resource\":\"ANY\",\"type\":\"ANY\",\"service\":\"ANY\",\"closedloop\":\"ANY\"}}";
+        dictionaryTestSetup(false, "GroupPolicyScopeList", json);
+        // send Request to PAP
+        pap.service(httpServletRequest, httpServletResponse);
+        // Verify
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
     }
     
     private void dictionaryTestSetup(Boolean updateFlag, String dictionaryType, String json) throws IOException, SQLException {
@@ -790,23 +790,23 @@ public class XACMLPAPTest {
 
     @Test
     public void getDictionary() throws ServletException, IOException{
-    	String[] dictionarys = new String[]{"Attribute", "OnapName", "Action", "BRMSParamTemplate","VSCLAction"
-    			,"VNFType","PEPOptions","Varbind","Service","Site", "Settings", "RainyDayTreatments",
-    			"DescriptiveScope", "ActionList", "ProtocolList", "Zone", "SecurityZone",
-    			"PrefixList", "AddressGroup", "ServiceGroup", "ServiceList", "TermList",
-    			"MicroServiceLocation", "MicroServiceConfigName", "DCAEUUID", "MicroServiceModels",
-    			"PolicyScopeService", "PolicyScopeResource", "PolicyScopeType", "PolicyScopeClosedLoop",
-    			"GroupPolicyScopeList", "RiskType", "SafePolicyWarning", "MicroServiceDictionary"};
-    	for(String dictionary : dictionarys){
-    		httpServletRequest = Mockito.mock(HttpServletRequest.class);
-        	httpServletResponse = new MockHttpServletResponse();
-        	Mockito.when(httpServletRequest.getHeader(ENVIRONMENT_HEADER)).thenReturn("DEVL");
-        	Mockito.when(httpServletRequest.getMethod()).thenReturn("GET");
-        	Mockito.when(httpServletRequest.getParameter("apiflag")).thenReturn("api");
-        	Mockito.when(httpServletRequest.getParameter("dictionaryType")).thenReturn(dictionary);
-        	pap.service(httpServletRequest, httpServletResponse);
-        	assertTrue(HttpServletResponse.SC_OK == httpServletResponse.getStatus());
-    	}
+        String[] dictionarys = new String[]{"Attribute", "OnapName", "Action", "BRMSParamTemplate","VSCLAction"
+                ,"VNFType","PEPOptions","Varbind","Service","Site", "Settings", "RainyDayTreatments",
+                "DescriptiveScope", "ActionList", "ProtocolList", "Zone", "SecurityZone",
+                "PrefixList", "AddressGroup", "ServiceGroup", "ServiceList", "TermList",
+                "MicroServiceLocation", "MicroServiceConfigName", "DCAEUUID", "MicroServiceModels",
+                "PolicyScopeService", "PolicyScopeResource", "PolicyScopeType", "PolicyScopeClosedLoop",
+                "GroupPolicyScopeList", "RiskType", "SafePolicyWarning", "MicroServiceDictionary"};
+        for(String dictionary : dictionarys){
+            httpServletRequest = Mockito.mock(HttpServletRequest.class);
+            httpServletResponse = new MockHttpServletResponse();
+            Mockito.when(httpServletRequest.getHeader(ENVIRONMENT_HEADER)).thenReturn("DEVL");
+            Mockito.when(httpServletRequest.getMethod()).thenReturn("GET");
+            Mockito.when(httpServletRequest.getParameter("apiflag")).thenReturn("api");
+            Mockito.when(httpServletRequest.getParameter("dictionaryType")).thenReturn(dictionary);
+            pap.service(httpServletRequest, httpServletResponse);
+            assertTrue(HttpServletResponse.SC_OK == httpServletResponse.getStatus());
+        }
     }
     
     @Test

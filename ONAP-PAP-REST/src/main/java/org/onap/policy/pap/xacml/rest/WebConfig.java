@@ -28,16 +28,16 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 public class WebConfig implements WebApplicationInitializer {
-	
-	@Override
-	public void onStartup(ServletContext container) {
-		AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
-		ctx.register(PAPRestConfig.class);
-		ctx.setServletContext(container);
-		ctx.refresh();
-		ServletRegistration.Dynamic dispatcher = container.addServlet("dispatcher", new DispatcherServlet(ctx));
-		dispatcher.setLoadOnStartup(1);
-		dispatcher.addMapping("/onap/*");
-	}
+
+    @Override
+    public void onStartup(ServletContext container) {
+        AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
+        ctx.register(PAPRestConfig.class);
+        ctx.setServletContext(container);
+        ctx.refresh();
+        ServletRegistration.Dynamic dispatcher = container.addServlet("dispatcher", new DispatcherServlet(ctx));
+        dispatcher.setLoadOnStartup(1);
+        dispatcher.addMapping("/onap/*");
+    }
 
 }
