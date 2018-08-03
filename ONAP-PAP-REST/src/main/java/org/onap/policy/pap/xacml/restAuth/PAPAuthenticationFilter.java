@@ -41,69 +41,69 @@ import org.apache.commons.logging.LogFactory;
 @WebFilter("/*")
 public class PAPAuthenticationFilter implements Filter {
 
-	private static final Log logger	= LogFactory.getLog(PAPAuthenticationFilter.class);
-	public static final String AUTHENTICATION_HEADER = "Authorization";
+    private static final Log logger	= LogFactory.getLog(PAPAuthenticationFilter.class);
+    public static final String AUTHENTICATION_HEADER = "Authorization";
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain filter) throws IOException, ServletException {
-		
-		
-		if (request instanceof HttpServletRequest) {
-			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response,
+            FilterChain filter) throws IOException, ServletException {
 
-			String authCredentials = null;
-			String url = httpServletRequest.getRequestURI();
-			
-			logger.info("Request URI: " + url);
-			
-			//getting authentication credentials
-			authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
-			
-			// Check Authentication credentials
-			AuthenticationService authenticationService = new AuthenticationService();
-			boolean authenticationStatus = authenticationService.authenticate(authCredentials);
-			
-			if (authenticationStatus) {
-				//indicates the request comes from Traditional Admin Console or PolicyEngineAPI
-				if ("/pap/".equals(url)){
-					logger.info("Request comes from Traditional Admin Console or PolicyEngineAPI");						
-					//forward request to the XACMLPAPServlet if authenticated
-					request.getRequestDispatcher("/pap/pap/").forward(request, response);
-				}else if (url.startsWith("/pap/onap/") && response instanceof HttpServletResponse){
-					//indicates the request comes from the ONAP Portal onap-sdk-app
-					HttpServletResponse alteredResponse = ((HttpServletResponse)response);
-					addCorsHeader(alteredResponse);
-					logger.info("Request comes from Onap Portal");
-					//Spring dispatcher servlet is at the end of the filter chain at /pap/onap/ path
-					filter.doFilter(request, response);
-				}
-			} else {
-				if (response instanceof HttpServletResponse) {
-					HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-					httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				}
-			}
 
-		}
-	}
-	
-	//method to add CorsHeaders for onap portal rest call
-	private void addCorsHeader(HttpServletResponse response) {
-		logger.info("Adding Cors Response Headers!!!");
-		response.addHeader("Access-Control-Allow-Origin", "*");
+        if (request instanceof HttpServletRequest) {
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+
+            String authCredentials = null;
+            String url = httpServletRequest.getRequestURI();
+
+            logger.info("Request URI: " + url);
+
+            //getting authentication credentials
+            authCredentials = httpServletRequest.getHeader(AUTHENTICATION_HEADER);
+
+            // Check Authentication credentials
+            AuthenticationService authenticationService = new AuthenticationService();
+            boolean authenticationStatus = authenticationService.authenticate(authCredentials);
+
+            if (authenticationStatus) {
+                //indicates the request comes from Traditional Admin Console or PolicyEngineAPI
+                if ("/pap/".equals(url)){
+                    logger.info("Request comes from Traditional Admin Console or PolicyEngineAPI");
+                    //forward request to the XACMLPAPServlet if authenticated
+                    request.getRequestDispatcher("/pap/pap/").forward(request, response);
+                }else if (url.startsWith("/pap/onap/") && response instanceof HttpServletResponse){
+                    //indicates the request comes from the ONAP Portal onap-sdk-app
+                    HttpServletResponse alteredResponse = ((HttpServletResponse)response);
+                    addCorsHeader(alteredResponse);
+                    logger.info("Request comes from Onap Portal");
+                    //Spring dispatcher servlet is at the end of the filter chain at /pap/onap/ path
+                    filter.doFilter(request, response);
+                }
+            } else {
+                if (response instanceof HttpServletResponse) {
+                    HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+                    httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                }
+            }
+
+        }
+    }
+
+    //method to add CorsHeaders for onap portal rest call
+    private void addCorsHeader(HttpServletResponse response) {
+        logger.info("Adding Cors Response Headers!!!");
+        response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
         response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
         response.addHeader("Access-Control-Max-Age", "1728000");	
-	}
+    }
 
-	@Override
-	public void destroy() {
-		//Empty
-	}
+    @Override
+    public void destroy() {
+        //Empty
+    }
 
-	@Override
-	public void init(FilterConfig arg0) throws ServletException {
-		//Empty
-	}
+    @Override
+    public void init(FilterConfig arg0) throws ServletException {
+        //Empty
+    }
 }

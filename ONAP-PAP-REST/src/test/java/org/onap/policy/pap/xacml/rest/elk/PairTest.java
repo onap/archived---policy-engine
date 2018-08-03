@@ -25,20 +25,20 @@ import org.junit.Test;
 import org.onap.policy.pap.xacml.rest.elk.client.Pair;
 
 public class PairTest {
-	@Test
-	public void testPair() {
-		String testLeft = "left";
-		String testRight = "right";
-		
-		// Test constructor
-		Pair<String, String> pair = new Pair<String, String>(testLeft, testRight);
-		assertEquals(pair.left(), testLeft);
-		assertEquals(pair.right(), testRight);
-		
-		// Test setters
-		pair.left(testRight);
-		pair.right(testLeft);
-		assertEquals(pair.left(), testRight);
-		assertEquals(pair.right(), testLeft);
-	}
+    @Test
+    public void testPair() {
+        String testLeft = "left";
+        String testRight = "right";
+
+        // Test constructor
+        Pair<String, String> pair = new Pair<String, String>(testLeft, testRight);
+        assertEquals(pair.left(), testLeft);
+        assertEquals(pair.right(), testRight);
+
+        // Test setters
+        pair.left(testRight);
+        pair.right(testLeft);
+        assertEquals(pair.left(), testRight);
+        assertEquals(pair.right(), testLeft);
+    }
 }

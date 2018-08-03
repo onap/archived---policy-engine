@@ -25,19 +25,19 @@ import org.junit.Test;
 import org.onap.policy.pap.xacml.rest.elk.client.PolicyLocator;
 
 public class PolicyLocatorTest {
-	@Test
-	public void testLocator() {
-		String policyType = "type";
-		String policyName = "name";
+    @Test
+    public void testLocator() {
+        String policyType = "type";
+        String policyName = "name";
         String owner = "owner";
         String scope = "scope";
         String policyId = "id";
         String version = "1.0";
-		String testString = "[owner|scope|type|name|id|v1.0|]";
+        String testString = "[owner|scope|type|name|id|v1.0|]";
 
-		PolicyLocator locator = new PolicyLocator(policyType, policyName, owner, 
-			scope, policyId, version);
-		String locatorString = locator.toString();
-		assertEquals(locatorString, testString);
-	}
+        PolicyLocator locator = new PolicyLocator(policyType, policyName, owner,
+            scope, policyId, version);
+        String locatorString = locator.toString();
+        assertEquals(locatorString, testString);
+    }
 }

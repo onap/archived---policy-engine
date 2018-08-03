@@ -30,69 +30,69 @@ import com.google.common.base.Joiner;
 
 @Component
 public abstract class AbstractPolicyCreation {
-	
-	public static String getDomain() {
-		return XACMLProperties.getProperty(XACMLRestProperties.PROP_ADMIN_DOMAIN, "urn");
-	}
-	
-	public String newPolicyID() {
-		return Joiner.on(':').skipNulls().join((getDomain().startsWith("urn") ? null: "urn"),
-				getDomain().replaceAll("[/\\\\.]", ":"), "xacml", "policy", "id", UUID.randomUUID());
-	}
-	
-	public String convertDate(String dateTTL) {
-		String formateDate = null;
-		if(dateTTL.contains("/")){
-			formateDate = dateTTL.replace("/", "-");
-		}else {
-			formateDate = dateTTL;
-		}
-		return formateDate;
-	}
-	
 
-	
-	public void updatePolicyCreationToDatabase(){
-		// Add it into our tree
+    public static String getDomain() {
+        return XACMLProperties.getProperty(XACMLRestProperties.PROP_ADMIN_DOMAIN, "urn");
+    }
+
+    public String newPolicyID() {
+        return Joiner.on(':').skipNulls().join((getDomain().startsWith("urn") ? null: "urn"),
+                getDomain().replaceAll("[/\\\\.]", ":"), "xacml", "policy", "id", UUID.randomUUID());
+    }
+
+    public String convertDate(String dateTTL) {
+        String formateDate = null;
+        if(dateTTL.contains("/")){
+            formateDate = dateTTL.replace("/", "-");
+        }else {
+            formateDate = dateTTL;
+        }
+        return formateDate;
+    }
+
+
+
+    public void updatePolicyCreationToDatabase(){
+        // Add it into our tree
 /*		Path finalPolicyPath = null;
-		finalPolicyPath = Paths.get(successMap.get("success"));
-		PolicyElasticSearchController controller = new PolicyElasticSearchController();
-		controller.updateElk(finalPolicyPath.toString());
-		File file = finalPolicyPath.toFile();
-		if(file != null){
-			String policyName = file.toString();
-			String removePath = policyName.substring(policyName.indexOf("repository")+11);
-			String removeXml = removePath.replace(".xml", "");
-			String removeExtension = removeXml.substring(0, removeXml.indexOf("."));
-			List<Object> policyVersionList = commonClassDao.getDataById(PolicyVersion.class, "policyName", removeExtension);
-			if (policyVersionList.size() > 0) {		
-				for(int i = 0;  i < policyVersionList.size(); i++) {
-				PolicyVersion entityItem = (PolicyVersion) policyVersionList.get(i);
-					if(entityItem.getPolicyName().equals(removeExtension)){
-						version = entityItem.getHigherVersion() +1;
-						entityItem.setActiveVersion(version);
-						entityItem.setHigherVersion(version);
-						entityItem.setModifiedBy(userId);
-						commonClassDao.update(entityItem);
-						if(policyData.isEditPolicy){
-							PolicyNotificationMail email = new PolicyNotificationMail();
-							String mode = "EditPolicy";
-							String policyNameForEmail = policyData.getDomainDir() + File.separator + policyData.getOldPolicyFileName() + ".xml";
-							email.sendMail(entityItem, policyNameForEmail, mode, commonClassDao);
-						}
-					}
-				}
-			}else{
-				PolicyVersion entityItem = new PolicyVersion();
-				entityItem.setActiveVersion(version);
-				entityItem.setHigherVersion(version);
-				entityItem.setPolicyName(removeExtension);
-				entityItem.setCreatedBy(userId);
-				entityItem.setModifiedBy(userId);
-				commonClassDao.save(entityItem);
-			}	
-		}*/
-	}
+        finalPolicyPath = Paths.get(successMap.get("success"));
+        PolicyElasticSearchController controller = new PolicyElasticSearchController();
+        controller.updateElk(finalPolicyPath.toString());
+        File file = finalPolicyPath.toFile();
+        if(file != null){
+            String policyName = file.toString();
+            String removePath = policyName.substring(policyName.indexOf("repository")+11);
+            String removeXml = removePath.replace(".xml", "");
+            String removeExtension = removeXml.substring(0, removeXml.indexOf("."));
+            List<Object> policyVersionList = commonClassDao.getDataById(PolicyVersion.class, "policyName", removeExtension);
+            if (policyVersionList.size() > 0) {
+                for(int i = 0;  i < policyVersionList.size(); i++) {
+                PolicyVersion entityItem = (PolicyVersion) policyVersionList.get(i);
+                    if(entityItem.getPolicyName().equals(removeExtension)){
+                        version = entityItem.getHigherVersion() +1;
+                        entityItem.setActiveVersion(version);
+                        entityItem.setHigherVersion(version);
+                        entityItem.setModifiedBy(userId);
+                        commonClassDao.update(entityItem);
+                        if(policyData.isEditPolicy){
+                            PolicyNotificationMail email = new PolicyNotificationMail();
+                            String mode = "EditPolicy";
+                            String policyNameForEmail = policyData.getDomainDir() + File.separator + policyData.getOldPolicyFileName() + ".xml";
+                            email.sendMail(entityItem, policyNameForEmail, mode, commonClassDao);
+                        }
+                    }
+                }
+            }else{
+                PolicyVersion entityItem = new PolicyVersion();
+                entityItem.setActiveVersion(version);
+                entityItem.setHigherVersion(version);
+                entityItem.setPolicyName(removeExtension);
+                entityItem.setCreatedBy(userId);
+                entityItem.setModifiedBy(userId);
+                commonClassDao.save(entityItem);
+            }
+        }*/
+    }
 
 
 }

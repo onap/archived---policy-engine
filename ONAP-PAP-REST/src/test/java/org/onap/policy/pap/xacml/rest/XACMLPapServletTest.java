@@ -26,44 +26,44 @@ import org.junit.Test;
 import org.onap.policy.pap.xacml.rest.XACMLPapServlet;
 
 public class XACMLPapServletTest {
-	@Test
-	public void testSetAndGet() {
-		String systemKey = "xacml.properties";
-		String testVal = "testVal";
-		XACMLPapServlet servlet = new XACMLPapServlet();
-		
-		// Set the system property temporarily
-		String oldProperty = System.getProperty(systemKey);
-		System.setProperty(systemKey, "xacml.pap.properties");
-				
-		assertNotNull(XACMLPapServlet.getConfigHome());
-		assertNotNull(XACMLPapServlet.getActionHome());
-		assertEquals(XACMLPapServlet.getPersistenceUnit(), "XACML-PAP-REST");
+    @Test
+    public void testSetAndGet() {
+        String systemKey = "xacml.properties";
+        String testVal = "testVal";
+        XACMLPapServlet servlet = new XACMLPapServlet();
 
-		//assertNull(XACMLPapServlet.getEmf());
-		//assertNull(XACMLPapServlet.getPDPFile());
-		//assertNull(XACMLPapServlet.getPAPEngine());
-		//assertNull(servlet.getIa());
-		
-		XACMLPapServlet.setPapDbDriver(testVal);
-		assertEquals(XACMLPapServlet.getPapDbDriver(), testVal);
-		XACMLPapServlet.setPapDbUrl(testVal);
-		assertEquals(XACMLPapServlet.getPapDbUrl(), testVal);
-		XACMLPapServlet.setPapDbUser(testVal);
-		assertEquals(XACMLPapServlet.getPapDbUser(), testVal);
-		XACMLPapServlet.setPapDbPassword(testVal);
-		assertEquals(XACMLPapServlet.getPapDbPassword(), testVal);
-		XACMLPapServlet.setMsOnapName(testVal);
-		assertEquals(XACMLPapServlet.getMsOnapName(), testVal);
-		XACMLPapServlet.setMsPolicyName(testVal);
-		assertEquals(XACMLPapServlet.getMsPolicyName(), testVal);
-		
-		// Restore the original system property
-		if (oldProperty != null) {
-			System.setProperty(systemKey,  oldProperty);
-		}
-		else {
-			System.clearProperty(systemKey);
-		}
-	}
+        // Set the system property temporarily
+        String oldProperty = System.getProperty(systemKey);
+        System.setProperty(systemKey, "xacml.pap.properties");
+
+        assertNotNull(XACMLPapServlet.getConfigHome());
+        assertNotNull(XACMLPapServlet.getActionHome());
+        assertEquals(XACMLPapServlet.getPersistenceUnit(), "XACML-PAP-REST");
+
+        //assertNull(XACMLPapServlet.getEmf());
+        //assertNull(XACMLPapServlet.getPDPFile());
+        //assertNull(XACMLPapServlet.getPAPEngine());
+        //assertNull(servlet.getIa());
+
+        XACMLPapServlet.setPapDbDriver(testVal);
+        assertEquals(XACMLPapServlet.getPapDbDriver(), testVal);
+        XACMLPapServlet.setPapDbUrl(testVal);
+        assertEquals(XACMLPapServlet.getPapDbUrl(), testVal);
+        XACMLPapServlet.setPapDbUser(testVal);
+        assertEquals(XACMLPapServlet.getPapDbUser(), testVal);
+        XACMLPapServlet.setPapDbPassword(testVal);
+        assertEquals(XACMLPapServlet.getPapDbPassword(), testVal);
+        XACMLPapServlet.setMsOnapName(testVal);
+        assertEquals(XACMLPapServlet.getMsOnapName(), testVal);
+        XACMLPapServlet.setMsPolicyName(testVal);
+        assertEquals(XACMLPapServlet.getMsPolicyName(), testVal);
+
+        // Restore the original system property
+        if (oldProperty != null) {
+            System.setProperty(systemKey,  oldProperty);
+        }
+        else {
+            System.clearProperty(systemKey);
+        }
+    }
 }

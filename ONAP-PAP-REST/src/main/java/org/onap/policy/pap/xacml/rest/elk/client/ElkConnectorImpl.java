@@ -47,384 +47,384 @@ import io.searchbox.params.Parameters;
 
 public class ElkConnectorImpl implements ElkConnector{
 
-	private static final Logger LOGGER = FlexLogger.getLogger(ElkConnector.class);
+    private static final Logger LOGGER = FlexLogger.getLogger(ElkConnector.class);
 
-	protected final JestClientFactory jestFactory = new JestClientFactory();
-	protected final JestClient jestClient;	
-	protected static int QUERY_MAXRECORDS = 1000;
+    protected final JestClientFactory jestFactory = new JestClientFactory();
+    protected final JestClient jestClient;
+    protected static int QUERY_MAXRECORDS = 1000;
 
-	public ElkConnectorImpl() {
-		if (LOGGER.isDebugEnabled()){
-			LOGGER.debug("ENTER: -");
-		}
-		HttpClientConfig jestClientConfig = new HttpClientConfig.Builder(ELK_URL).multiThreaded(true).build();
-		jestFactory.setHttpClientConfig(jestClientConfig);
-		jestClient = jestFactory.getObject();
-	}
+    public ElkConnectorImpl() {
+        if (LOGGER.isDebugEnabled()){
+            LOGGER.debug("ENTER: -");
+        }
+        HttpClientConfig jestClientConfig = new HttpClientConfig.Builder(ELK_URL).multiThreaded(true).build();
+        jestFactory.setHttpClientConfig(jestClientConfig);
+        jestClient = jestFactory.getObject();
+    }
 
-	protected boolean isType(PolicyIndexType type) throws IOException {
-		if (LOGGER.isDebugEnabled()){
-			LOGGER.debug("ENTER: -");
-		}
+    protected boolean isType(PolicyIndexType type) throws IOException {
+        if (LOGGER.isDebugEnabled()){
+            LOGGER.debug("ENTER: -");
+        }
 
-		try {
-			Action<JestResult> typeQuery = new TypeExist.Builder(ELK_INDEX_POLICY).addType(type.toString()).build();
-			JestResult result = jestClient.execute(typeQuery);
+        try {
+            Action<JestResult> typeQuery = new TypeExist.Builder(ELK_INDEX_POLICY).addType(type.toString()).build();
+            JestResult result = jestClient.execute(typeQuery);
 
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("JSON:" + result.getJsonString());
-				LOGGER.info("ERROR:" + result.getErrorMessage());
-				LOGGER.info("PATH:" + result.getPathToResult());
-				LOGGER.info(result.getJsonObject());
-			}
-			return result.isSucceeded();	
-		} catch (IOException e) {
-			LOGGER.warn("Error checking type existance of " + type.toString() + ": " + e.getMessage(), e);
-			throw e;
-		}
-	}
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("JSON:" + result.getJsonString());
+                LOGGER.info("ERROR:" + result.getErrorMessage());
+                LOGGER.info("PATH:" + result.getPathToResult());
+                LOGGER.info(result.getJsonObject());
+            }
+            return result.isSucceeded();
+        } catch (IOException e) {
+            LOGGER.warn("Error checking type existance of " + type.toString() + ": " + e.getMessage(), e);
+            throw e;
+        }
+    }
 
-	protected boolean isIndex() throws IOException {
-		try {
-			Action<JestResult> indexQuery = new IndicesExists.Builder(ELK_INDEX_POLICY).build();
+    protected boolean isIndex() throws IOException {
+        try {
+            Action<JestResult> indexQuery = new IndicesExists.Builder(ELK_INDEX_POLICY).build();
 
-			JestResult result = jestClient.execute(indexQuery);
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("JSON:" + result.getJsonString());
-				LOGGER.info("ERROR:" + result.getErrorMessage());
-				LOGGER.info("PATH:" + result.getPathToResult());
-				LOGGER.info(result.getJsonObject());
-			}
-			return result.isSucceeded();	
-		} catch (IOException e) {
-			LOGGER.warn("Error checking index existance of " + ELK_INDEX_POLICY + ": " + e.getMessage(), e);
-			throw e;
-		}
-	}
-	private boolean isAlphaNumeric(String query){
-		return query.matches("[a-zA-Z_0-9]+");
-	}
+            JestResult result = jestClient.execute(indexQuery);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("JSON:" + result.getJsonString());
+                LOGGER.info("ERROR:" + result.getErrorMessage());
+                LOGGER.info("PATH:" + result.getPathToResult());
+                LOGGER.info(result.getJsonObject());
+            }
+            return result.isSucceeded();
+        } catch (IOException e) {
+            LOGGER.warn("Error checking index existance of " + ELK_INDEX_POLICY + ": " + e.getMessage(), e);
+            throw e;
+        }
+    }
+    private boolean isAlphaNumeric(String query){
+        return query.matches("[a-zA-Z_0-9]+");
+    }
 
-	@Override
-	public JestResult search(PolicyIndexType type, String text) throws IllegalStateException, IllegalArgumentException {
-		if (LOGGER.isTraceEnabled()){
-			LOGGER.trace("ENTER: " + text);
-		}
+    @Override
+    public JestResult search(PolicyIndexType type, String text) throws IllegalStateException, IllegalArgumentException {
+        if (LOGGER.isTraceEnabled()){
+            LOGGER.trace("ENTER: " + text);
+        }
 
-		if (text == null || text.isEmpty()) {
-			throw new IllegalArgumentException("No search string provided");
-		}
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException("No search string provided");
+        }
 
-		if(!isAlphaNumeric(text)){
-			throw new IllegalArgumentException("Search must be alpha numeric");
-		}
+        if(!isAlphaNumeric(text)){
+            throw new IllegalArgumentException("Search must be alpha numeric");
+        }
 
-		QueryStringQueryBuilder mQ = QueryBuilders.queryStringQuery("*"+text+"*");
-		SearchSourceBuilder searchSourceBuilder = 
-				new SearchSourceBuilder().query(mQ);
-		
-		Builder searchBuilder = new Search.Builder(searchSourceBuilder.toString()).
-				addIndex(ELK_INDEX_POLICY).
-				setParameter(Parameters.SIZE, ElkConnectorImpl.QUERY_MAXRECORDS);
+        QueryStringQueryBuilder mQ = QueryBuilders.queryStringQuery("*"+text+"*");
+        SearchSourceBuilder searchSourceBuilder =
+                new SearchSourceBuilder().query(mQ);
 
-		if (type == null || type == PolicyIndexType.all) {
-			for (PolicyIndexType pT: PolicyIndexType.values()) {
-				if (pT != PolicyIndexType.all) {
-					searchBuilder.addType(pT.toString());
-				}
-			}
-		} else {
-			searchBuilder.addType(type.toString());
-		}
+        Builder searchBuilder = new Search.Builder(searchSourceBuilder.toString()).
+                addIndex(ELK_INDEX_POLICY).
+                setParameter(Parameters.SIZE, ElkConnectorImpl.QUERY_MAXRECORDS);
 
-		Search search = searchBuilder.build();
-		JestResult result;
-		try {
-			result = jestClient.execute(search);
-		} catch (IOException ioe) {
-			LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ":" + 
-					search + ": " + ioe.getMessage(), ioe);
-			throw new IllegalStateException(ioe);
-		}
+        if (type == null || type == PolicyIndexType.all) {
+            for (PolicyIndexType pT: PolicyIndexType.values()) {
+                if (pT != PolicyIndexType.all) {
+                    searchBuilder.addType(pT.toString());
+                }
+            }
+        } else {
+            searchBuilder.addType(type.toString());
+        }
 
-		if (result.isSucceeded()) {
-			if (LOGGER.isInfoEnabled()){
-				LOGGER.info("OK:" + result.getResponseCode() + ":" + search + ": " + 
-						result.getPathToResult() + ":" + System.lineSeparator() +
-						result.getJsonString());
-			}
-		} else {	
-			/* Unsuccessful search */
-			if (LOGGER.isWarnEnabled()){
-				LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + ":" + 
-						result.getResponseCode() + ": " + 
-						search.getURI() + ":" +
-						result.getPathToResult() + ":" +
-						result.getJsonString() + ":" +
-						result.getErrorMessage());
-			}
+        Search search = searchBuilder.build();
+        JestResult result;
+        try {
+            result = jestClient.execute(search);
+        } catch (IOException ioe) {
+            LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ":" +
+                    search + ": " + ioe.getMessage(), ioe);
+            throw new IllegalStateException(ioe);
+        }
 
-			String errorMessage = result.getErrorMessage();
-			if (errorMessage != null && !errorMessage.isEmpty()) {
-				String xMessage;
-				if (errorMessage.contains("TokenMgrError")) {
-					int indexError = errorMessage.lastIndexOf("TokenMgrError");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
-				} else if (errorMessage.contains("QueryParsingException")) {
-					int indexError = errorMessage.lastIndexOf("QueryParsingException");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
-				} else if (errorMessage.contains("JsonParseException")) {
-					int indexError = errorMessage.lastIndexOf("JsonParseException");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
-				} else if (errorMessage.contains("Parse Failure")) {
-					int indexError = errorMessage.lastIndexOf("Parse Failure");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
-				} else if (errorMessage.contains("SearchParseException")) {
-					int indexError = errorMessage.lastIndexOf("SearchParseException");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
-				} else {
-					xMessage = result.getErrorMessage();
-				}
-				throw new IllegalStateException(xMessage);
-			}
-		}
+        if (result.isSucceeded()) {
+            if (LOGGER.isInfoEnabled()){
+                LOGGER.info("OK:" + result.getResponseCode() + ":" + search + ": " +
+                        result.getPathToResult() + ":" + System.lineSeparator() +
+                        result.getJsonString());
+            }
+        } else {
+            /* Unsuccessful search */
+            if (LOGGER.isWarnEnabled()){
+                LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + ":" +
+                        result.getResponseCode() + ": " +
+                        search.getURI() + ":" +
+                        result.getPathToResult() + ":" +
+                        result.getJsonString() + ":" +
+                        result.getErrorMessage());
+            }
 
-		return result;
-	}
+            String errorMessage = result.getErrorMessage();
+            if (errorMessage != null && !errorMessage.isEmpty()) {
+                String xMessage;
+                if (errorMessage.contains("TokenMgrError")) {
+                    int indexError = errorMessage.lastIndexOf("TokenMgrError");
+                    xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
+                } else if (errorMessage.contains("QueryParsingException")) {
+                    int indexError = errorMessage.lastIndexOf("QueryParsingException");
+                    xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
+                } else if (errorMessage.contains("JsonParseException")) {
+                    int indexError = errorMessage.lastIndexOf("JsonParseException");
+                    xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
+                } else if (errorMessage.contains("Parse Failure")) {
+                    int indexError = errorMessage.lastIndexOf("Parse Failure");
+                    xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
+                } else if (errorMessage.contains("SearchParseException")) {
+                    int indexError = errorMessage.lastIndexOf("SearchParseException");
+                    xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
+                } else {
+                    xMessage = result.getErrorMessage();
+                }
+                throw new IllegalStateException(xMessage);
+            }
+        }
+
+        return result;
+    }
 
 
-	@Override
-	public JestResult search(PolicyIndexType type, String text, 
-			Map<String, String> filter_s) 
-					throws IllegalStateException, IllegalArgumentException {
-		if (LOGGER.isTraceEnabled()){
-			LOGGER.trace("ENTER: " + text);
-		}
+    @Override
+    public JestResult search(PolicyIndexType type, String text,
+            Map<String, String> filter_s)
+                    throws IllegalStateException, IllegalArgumentException {
+        if (LOGGER.isTraceEnabled()){
+            LOGGER.trace("ENTER: " + text);
+        }
 
-		if (filter_s == null || filter_s.size() == 0) {
-			return search(type, text);
-		}
+        if (filter_s == null || filter_s.size() == 0) {
+            return search(type, text);
+        }
 
-		if(!isAlphaNumeric(text)){
-			throw new IllegalArgumentException("Search must be alpha numeric");
-		}
+        if(!isAlphaNumeric(text)){
+            throw new IllegalArgumentException("Search must be alpha numeric");
+        }
 
-		String matches_s = "";
-		matches_s = "{\n" +
-				"    \"size\" : "+ ElkConnectorImpl.QUERY_MAXRECORDS + ",\n" +
-				"    \"query\": {\n" +
-				"        \"bool\" : {\n" +
-				"            \"must\" : [";
-		
-		String match_params = "";
-		boolean first = true;
-		for(Entry<String, String> entry : filter_s.entrySet()){
-			String key = entry.getKey();
-			String value = entry.getValue();
-			if(first){
-				match_params = "\"match\" : {\""+key+"\" : \""+value+"\" }},";
-				first = false;
-			}else{
-				match_params = match_params + "{\"match\" : { \""+key+"\" : \""+value+"\" } },";
-			}
-		}
-		if(match_params.endsWith(",")){
-			match_params = match_params.substring(0, match_params.length()-2);
-		}
+        String matches_s = "";
+        matches_s = "{\n" +
+                "    \"size\" : "+ ElkConnectorImpl.QUERY_MAXRECORDS + ",\n" +
+                "    \"query\": {\n" +
+                "        \"bool\" : {\n" +
+                "            \"must\" : [";
 
-		matches_s = matches_s + "{\n" + match_params + "\n}" ;
-		
-		boolean query = false;
-		String query_String = "";
-		if(text != null){
-			query = true;
-			query_String = "{\n \"query_string\" : {\n \"query\" : \"*"+text+"*\"\n} \n}";
-		}
-		
-		if(query){
-			matches_s = matches_s + "," +  query_String + "]\n}\n}\n}";
-		}else{
-			matches_s = matches_s + "]\n}\n}\n}";
-		}
-				
-		Builder searchBuilder = new Search.Builder(matches_s).addIndex(ELK_INDEX_POLICY);
+        String match_params = "";
+        boolean first = true;
+        for(Entry<String, String> entry : filter_s.entrySet()){
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if(first){
+                match_params = "\"match\" : {\""+key+"\" : \""+value+"\" }},";
+                first = false;
+            }else{
+                match_params = match_params + "{\"match\" : { \""+key+"\" : \""+value+"\" } },";
+            }
+        }
+        if(match_params.endsWith(",")){
+            match_params = match_params.substring(0, match_params.length()-2);
+        }
 
-		if (type == null || type == PolicyIndexType.all) {
-			for (PolicyIndexType pT: PolicyIndexType.values()) {
-				if (pT != PolicyIndexType.all) {
-					searchBuilder.addType(pT.toString());
-				}
-			}
-		} else {
-			searchBuilder.addType(type.toString());
-		}
+        matches_s = matches_s + "{\n" + match_params + "\n}" ;
 
-		Search search = searchBuilder.build();
+        boolean query = false;
+        String query_String = "";
+        if(text != null){
+            query = true;
+            query_String = "{\n \"query_string\" : {\n \"query\" : \"*"+text+"*\"\n} \n}";
+        }
 
-		JestResult result;
-		try {
-			result = jestClient.execute(search);
-		} catch (IOException ioe) {
-			LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ":" + 
-					search + ": " + ioe.getMessage(), ioe);
-			throw new IllegalStateException(ioe);
-		}
+        if(query){
+            matches_s = matches_s + "," +  query_String + "]\n}\n}\n}";
+        }else{
+            matches_s = matches_s + "]\n}\n}\n}";
+        }
 
-		if (result.isSucceeded()) {
-			if (LOGGER.isInfoEnabled()){
-				LOGGER.info("OK:" + result.getResponseCode() + ":" + search + ": " + 
-						result.getPathToResult() + ":" + System.lineSeparator() +
-						result.getJsonString());	
-			}	
-		} else {	
-			/* Unsuccessful search */
-			if (LOGGER.isWarnEnabled()){
-				LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + ":" + 
-						result.getResponseCode() + ": " + 
-						search.getURI() + ":" +
-						result.getPathToResult() + ":" +
-						result.getJsonString() + ":" +
-						result.getErrorMessage());
-			}
+        Builder searchBuilder = new Search.Builder(matches_s).addIndex(ELK_INDEX_POLICY);
 
-			String errorMessage = result.getErrorMessage();
-			if (errorMessage != null && !errorMessage.isEmpty()) {
-				String xMessage = errorMessage;
-				if (errorMessage.contains("TokenMgrError")) {
-					int indexError = errorMessage.lastIndexOf("TokenMgrError");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
-				} else if (errorMessage.contains("QueryParsingException")) {
-					int indexError = errorMessage.lastIndexOf("QueryParsingException");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
-				} else if (errorMessage.contains("JsonParseException")) {
-					int indexError = errorMessage.lastIndexOf("JsonParseException");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
-				} else if (errorMessage.contains("Parse Failure")) {
-					int indexError = errorMessage.lastIndexOf("Parse Failure");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
-				} else if (errorMessage.contains("SearchParseException")) {
-					int indexError = errorMessage.lastIndexOf("SearchParseException");
-					xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);				
-				} else {
-					xMessage = result.getErrorMessage();
-				}
-				throw new IllegalStateException(xMessage);
-			}
-		}
+        if (type == null || type == PolicyIndexType.all) {
+            for (PolicyIndexType pT: PolicyIndexType.values()) {
+                if (pT != PolicyIndexType.all) {
+                    searchBuilder.addType(pT.toString());
+                }
+            }
+        } else {
+            searchBuilder.addType(type.toString());
+        }
 
-		return result;
-	}
+        Search search = searchBuilder.build();
 
-	public boolean put(PolicyRestAdapter policyData) 
-			throws IOException, IllegalStateException {
-		if (LOGGER.isTraceEnabled()) LOGGER.trace("ENTER");
+        JestResult result;
+        try {
+            result = jestClient.execute(search);
+        } catch (IOException ioe) {
+            LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ":" +
+                    search + ": " + ioe.getMessage(), ioe);
+            throw new IllegalStateException(ioe);
+        }
 
-		PolicyIndexType indexType;
-		try {
-			String policyName = policyData.getNewFileName();
-			if(policyName.contains("Config_")){
-				policyName = policyName.replace(".Config_", ":Config_");
-			}else if(policyName.contains("Action_")){
-				policyName = policyName.replace(".Action_", ":Action_");
-			}else if(policyName.contains("Decision_")){
-				policyName = policyName.replace(".Decision_", ":Decision_");
-			}
-			
-			String[] splitPolicyName = policyName.split(":");
-			indexType = ElkConnector.toPolicyIndexType(splitPolicyName[1]);
-		} catch (IllegalArgumentException e) {
-			LOGGER.error(e);
-			throw new IllegalStateException("ELK: Index: " + ELK_INDEX_POLICY + e.getMessage());			
-		}
-		PolicyElasticData elasticData = new PolicyElasticData(policyData);
-		JSONObject jsonObj = new JSONObject(elasticData);
-		Index elkPut = new Index.Builder(jsonObj.toString()).
-				index(ELK_INDEX_POLICY).
-				type(indexType.name()).
-				id(elasticData.getPolicyName()).
-				refresh(true).
-				build();
+        if (result.isSucceeded()) {
+            if (LOGGER.isInfoEnabled()){
+                LOGGER.info("OK:" + result.getResponseCode() + ":" + search + ": " +
+                        result.getPathToResult() + ":" + System.lineSeparator() +
+                        result.getJsonString());
+            }
+        } else {
+            /* Unsuccessful search */
+            if (LOGGER.isWarnEnabled()){
+                LOGGER.warn(XACMLErrorConstants.ERROR_PROCESS_FLOW + ":" +
+                        result.getResponseCode() + ": " +
+                        search.getURI() + ":" +
+                        result.getPathToResult() + ":" +
+                        result.getJsonString() + ":" +
+                        result.getErrorMessage());
+            }
 
-		JestResult result = jestClient.execute(elkPut);
+            String errorMessage = result.getErrorMessage();
+            if (errorMessage != null && !errorMessage.isEmpty()) {
+                String xMessage = errorMessage;
+                if (errorMessage.contains("TokenMgrError")) {
+                    int indexError = errorMessage.lastIndexOf("TokenMgrError");
+                    xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
+                } else if (errorMessage.contains("QueryParsingException")) {
+                    int indexError = errorMessage.lastIndexOf("QueryParsingException");
+                    xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
+                } else if (errorMessage.contains("JsonParseException")) {
+                    int indexError = errorMessage.lastIndexOf("JsonParseException");
+                    xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
+                } else if (errorMessage.contains("Parse Failure")) {
+                    int indexError = errorMessage.lastIndexOf("Parse Failure");
+                    xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
+                } else if (errorMessage.contains("SearchParseException")) {
+                    int indexError = errorMessage.lastIndexOf("SearchParseException");
+                    xMessage = "Invalid Search Expression.  Details: " + errorMessage.substring(indexError);
+                } else {
+                    xMessage = result.getErrorMessage();
+                }
+                throw new IllegalStateException(xMessage);
+            }
+        }
 
-		if (result.isSucceeded()) {
-			if (LOGGER.isInfoEnabled())
-				LOGGER.info("ElkConnector: OK: PUT operation of " + "->"  + ": " +
-						"success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
-						result.getPathToResult() + "]" + System.lineSeparator() +
-						result.getJsonString());
-		} else {
-			if (LOGGER.isWarnEnabled())
-				LOGGER.warn("ElkConnector: FAILURE: PUT operation of "+ "->" + ": " +
-						"success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
-						result.getPathToResult() + "]" + System.lineSeparator() +
-						result.getJsonString());			
+        return result;
+    }
 
-		}
+    public boolean put(PolicyRestAdapter policyData)
+            throws IOException, IllegalStateException {
+        if (LOGGER.isTraceEnabled()) LOGGER.trace("ENTER");
 
-		return result.isSucceeded();
-	}
+        PolicyIndexType indexType;
+        try {
+            String policyName = policyData.getNewFileName();
+            if(policyName.contains("Config_")){
+                policyName = policyName.replace(".Config_", ":Config_");
+            }else if(policyName.contains("Action_")){
+                policyName = policyName.replace(".Action_", ":Action_");
+            }else if(policyName.contains("Decision_")){
+                policyName = policyName.replace(".Decision_", ":Decision_");
+            }
 
-	@Override
-	public boolean delete(PolicyRestAdapter policyData) throws IllegalStateException  {
-		PolicyIndexType indexType = null;
-		JestResult result;
-		try {
-			String policyName = policyData.getNewFileName();
-			if(policyName.contains("Config_")){
-				policyName = policyName.replace(".Config_", ":Config_");
-			}else if(policyName.contains("Action_")){
-				policyName = policyName.replace(".Action_", ":Action_");
-			}else if(policyName.contains("Decision_")){
-				policyName = policyName.replace(".Decision_", ":Decision_");
-			}
-			
-			String[] splitPolicyName = policyName.split(":");
-			indexType = ElkConnector.toPolicyIndexType(splitPolicyName[1]);
-			if (!isType(indexType)) {
-				throw new IllegalStateException("ELK: Index: " + ELK_INDEX_POLICY +
-						" Type: " + indexType + 
-						" is not configured");
-			}
-			PolicyElasticData elasticData = new PolicyElasticData(policyData);
-			Delete deleteRequest = new Delete.Builder(elasticData.getPolicyName()).index(ELK_INDEX_POLICY).
-					type(indexType.name()).build();
-			result = jestClient.execute(deleteRequest);
-		} catch (IllegalArgumentException | IOException e) {
-			LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ": delete:" + 
-					indexType +  ": null" + ":" + policyData.getNewFileName() + ": " + 
-					e.getMessage(), e);
-			throw new IllegalStateException(e);
-		}
+            String[] splitPolicyName = policyName.split(":");
+            indexType = ElkConnector.toPolicyIndexType(splitPolicyName[1]);
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(e);
+            throw new IllegalStateException("ELK: Index: " + ELK_INDEX_POLICY + e.getMessage());
+        }
+        PolicyElasticData elasticData = new PolicyElasticData(policyData);
+        JSONObject jsonObj = new JSONObject(elasticData);
+        Index elkPut = new Index.Builder(jsonObj.toString()).
+                index(ELK_INDEX_POLICY).
+                type(indexType.name()).
+                id(elasticData.getPolicyName()).
+                refresh(true).
+                build();
 
-		if (result.isSucceeded()) {
-			if (LOGGER.isInfoEnabled())
-				LOGGER.info("OK: DELETE operation of " + indexType + ":" + policyData.getNewFileName() + ": " +
-						"success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
-						result.getPathToResult() + "]" + System.lineSeparator() +
-						result.getJsonString());
-		} else {
-			if (LOGGER.isWarnEnabled())
-				LOGGER.warn("FAILURE: DELETE operation of " + indexType + ":" + policyData.getNewFileName() + ": " +
-						"success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
-						result.getPathToResult() + "]" + System.lineSeparator() +
-						result.getJsonString());	
-		}
+        JestResult result = jestClient.execute(elkPut);
 
-		return result.isSucceeded();
-	}
-	
-	@Override
-	public boolean update(PolicyRestAdapter policyData) throws IllegalStateException  {	
-		if (LOGGER.isDebugEnabled()){
-			LOGGER.debug("ENTER");
-		}
-		try {
-			boolean success = put(policyData);	
-			return success; 	
-		} catch (Exception e) {
-			LOGGER.warn(XACMLErrorConstants.ERROR_UNKNOWN + ":" + "cannot test and update", e);
-			throw new IllegalStateException(e);			
-		}
-	}
+        if (result.isSucceeded()) {
+            if (LOGGER.isInfoEnabled())
+                LOGGER.info("ElkConnector: OK: PUT operation of " + "->"  + ": " +
+                        "success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
+                        result.getPathToResult() + "]" + System.lineSeparator() +
+                        result.getJsonString());
+        } else {
+            if (LOGGER.isWarnEnabled())
+                LOGGER.warn("ElkConnector: FAILURE: PUT operation of "+ "->" + ": " +
+                        "success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
+                        result.getPathToResult() + "]" + System.lineSeparator() +
+                        result.getJsonString());
+
+        }
+
+        return result.isSucceeded();
+    }
+
+    @Override
+    public boolean delete(PolicyRestAdapter policyData) throws IllegalStateException  {
+        PolicyIndexType indexType = null;
+        JestResult result;
+        try {
+            String policyName = policyData.getNewFileName();
+            if(policyName.contains("Config_")){
+                policyName = policyName.replace(".Config_", ":Config_");
+            }else if(policyName.contains("Action_")){
+                policyName = policyName.replace(".Action_", ":Action_");
+            }else if(policyName.contains("Decision_")){
+                policyName = policyName.replace(".Decision_", ":Decision_");
+            }
+
+            String[] splitPolicyName = policyName.split(":");
+            indexType = ElkConnector.toPolicyIndexType(splitPolicyName[1]);
+            if (!isType(indexType)) {
+                throw new IllegalStateException("ELK: Index: " + ELK_INDEX_POLICY +
+                        " Type: " + indexType +
+                        " is not configured");
+            }
+            PolicyElasticData elasticData = new PolicyElasticData(policyData);
+            Delete deleteRequest = new Delete.Builder(elasticData.getPolicyName()).index(ELK_INDEX_POLICY).
+                    type(indexType.name()).build();
+            result = jestClient.execute(deleteRequest);
+        } catch (IllegalArgumentException | IOException e) {
+            LOGGER.warn(XACMLErrorConstants.ERROR_SYSTEM_ERROR + ": delete:" +
+                    indexType +  ": null" + ":" + policyData.getNewFileName() + ": " +
+                    e.getMessage(), e);
+            throw new IllegalStateException(e);
+        }
+
+        if (result.isSucceeded()) {
+            if (LOGGER.isInfoEnabled())
+                LOGGER.info("OK: DELETE operation of " + indexType + ":" + policyData.getNewFileName() + ": " +
+                        "success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
+                        result.getPathToResult() + "]" + System.lineSeparator() +
+                        result.getJsonString());
+        } else {
+            if (LOGGER.isWarnEnabled())
+                LOGGER.warn("FAILURE: DELETE operation of " + indexType + ":" + policyData.getNewFileName() + ": " +
+                        "success=" + result.isSucceeded() + "[" + result.getResponseCode() + ":" +
+                        result.getPathToResult() + "]" + System.lineSeparator() +
+                        result.getJsonString());
+        }
+
+        return result.isSucceeded();
+    }
+
+    @Override
+    public boolean update(PolicyRestAdapter policyData) throws IllegalStateException  {
+        if (LOGGER.isDebugEnabled()){
+            LOGGER.debug("ENTER");
+        }
+        try {
+            boolean success = put(policyData);
+            return success;
+        } catch (Exception e) {
+            LOGGER.warn(XACMLErrorConstants.ERROR_UNKNOWN + ":" + "cannot test and update", e);
+            throw new IllegalStateException(e);
+        }
+    }
 }

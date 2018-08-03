@@ -41,65 +41,65 @@ import java.util.Collections;
 
 @RunWith(PowerMockRunner.class)
 public class OptimizationConfigPolicyTest {
-	@Rule
+    @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-	@Test
-	public void testConstructor1() {
-		thrown.expect(NullPointerException.class);
-		OptimizationConfigPolicy policy = new OptimizationConfigPolicy();
-		policy.getCorrectPolicyDataObject();
-		fail("Expected an exception");
-	}
-	
-	@Test
-	public void testConstructor2() {
-		PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
-		OptimizationConfigPolicy policy = new OptimizationConfigPolicy(policyAdapter);
-		assertNull(policy.getCorrectPolicyDataObject());
-	}
-	
-	@PrepareForTest({OptimizationConfigPolicy.class})
-	@Test
-	public void testPrepareToSave() throws Exception {
-		// Need to mock internal dictionary retrieval
-		CommonClassDaoImpl impl = Mockito.mock(CommonClassDaoImpl.class);
-		PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(impl);
-		when(impl.getDataById(any(), anyString(), anyString())).thenReturn(null);
-		
-		PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
-		OptimizationConfigPolicy policy = new OptimizationConfigPolicy(policyAdapter);
-		policyAdapter.setHighestVersion(1);
-		policyAdapter.setPolicyType("Config");
-		policyAdapter.setNewFileName("foo.xml");
-		policyAdapter.setJsonBody("{ \"version\": \"1.0\"}");
-		policyAdapter.setServiceType("foo");
-		policy.prepareToSave();
-		assertEquals(true, policy.isPreparedToSave());
-	}
-	
-	@PrepareForTest({CreateNewOptimizationModel.class})
-	@Test
-	public void testCreateModel() throws Exception {
-		// Mock file retrieval
-		File testFile = new File("testFile");
-		File[] testList = new File[1];
-		testList[0] = testFile;
-		File impl = Mockito.mock(File.class);
-		PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(impl);
-		when(impl.listFiles()).thenReturn(testList);
-		when(impl.isFile()).thenReturn(true);
+    @Test
+    public void testConstructor1() {
+        thrown.expect(NullPointerException.class);
+        OptimizationConfigPolicy policy = new OptimizationConfigPolicy();
+        policy.getCorrectPolicyDataObject();
+        fail("Expected an exception");
+    }
 
-		// Mock internal dictionary retrieval
-		CommonClassDaoImpl daoImpl = Mockito.mock(CommonClassDaoImpl.class);
-		PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(daoImpl);
-		when(daoImpl.getDataById(any(), anyString(), anyString())).thenReturn(Collections.emptyList());
+    @Test
+    public void testConstructor2() {
+        PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
+        OptimizationConfigPolicy policy = new OptimizationConfigPolicy(policyAdapter);
+        assertNull(policy.getCorrectPolicyDataObject());
+    }
 
-		// Test create methods
-		String testFileName = "testFile.zip";
-		String testVal = "testVal";
-		CreateNewOptimizationModel model = new CreateNewOptimizationModel(testFileName, testVal, testVal, testVal, testVal);
-		model.addValuesToNewModel();
-		model.saveImportService();
-	}
+    @PrepareForTest({OptimizationConfigPolicy.class})
+    @Test
+    public void testPrepareToSave() throws Exception {
+        // Need to mock internal dictionary retrieval
+        CommonClassDaoImpl impl = Mockito.mock(CommonClassDaoImpl.class);
+        PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(impl);
+        when(impl.getDataById(any(), anyString(), anyString())).thenReturn(null);
+
+        PolicyRestAdapter policyAdapter = new PolicyRestAdapter();
+        OptimizationConfigPolicy policy = new OptimizationConfigPolicy(policyAdapter);
+        policyAdapter.setHighestVersion(1);
+        policyAdapter.setPolicyType("Config");
+        policyAdapter.setNewFileName("foo.xml");
+        policyAdapter.setJsonBody("{ \"version\": \"1.0\"}");
+        policyAdapter.setServiceType("foo");
+        policy.prepareToSave();
+        assertEquals(true, policy.isPreparedToSave());
+    }
+
+    @PrepareForTest({CreateNewOptimizationModel.class})
+    @Test
+    public void testCreateModel() throws Exception {
+        // Mock file retrieval
+        File testFile = new File("testFile");
+        File[] testList = new File[1];
+        testList[0] = testFile;
+        File impl = Mockito.mock(File.class);
+        PowerMockito.whenNew(File.class).withAnyArguments().thenReturn(impl);
+        when(impl.listFiles()).thenReturn(testList);
+        when(impl.isFile()).thenReturn(true);
+
+        // Mock internal dictionary retrieval
+        CommonClassDaoImpl daoImpl = Mockito.mock(CommonClassDaoImpl.class);
+        PowerMockito.whenNew(CommonClassDaoImpl.class).withNoArguments().thenReturn(daoImpl);
+        when(daoImpl.getDataById(any(), anyString(), anyString())).thenReturn(Collections.emptyList());
+
+        // Test create methods
+        String testFileName = "testFile.zip";
+        String testVal = "testVal";
+        CreateNewOptimizationModel model = new CreateNewOptimizationModel(testFileName, testVal, testVal, testVal, testVal);
+        model.addValuesToNewModel();
+        model.saveImportService();
+    }
 }

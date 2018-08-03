@@ -28,46 +28,46 @@ import org.onap.policy.pap.xacml.rest.PAPRestConfig;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 
 public class PAPRestConfigTest {
-	@Test
-	public void testSetAndGet() {
-		String testVal = "testVal";
-				
-		PAPRestConfig.setDbDriver(testVal);
-		assertEquals(PAPRestConfig.getDbDriver(), testVal);
-		PAPRestConfig.setDbUrl(testVal);
-		assertEquals(PAPRestConfig.getDbUrl(), testVal);
-		PAPRestConfig.setDbUserName(testVal);
-		assertEquals(PAPRestConfig.getDbUserName(), testVal);
-		PAPRestConfig.setDbPassword(testVal);
-		assertEquals(PAPRestConfig.getDbPassword(), testVal);
-	}
-	
-	@Test
-	public void testInit() {
-		String driver = "org.mariadb.jdbc.Driver";
-		String url = "jdbc:mariadb://localhost:3306/onap_sdk?connectTimeout=30000&socketTimeout=60000&log=true&sessionVariables=max_statement_time=30";
-		String user = "policy_user";
-		String password = "policy_user";
-		
-		PAPRestConfig config = new PAPRestConfig();
-		config.init();
-		
-		assertEquals(PAPRestConfig.getDbDriver(), driver);
-		assertEquals(PAPRestConfig.getDbUrl(), url);
-		assertEquals(PAPRestConfig.getDbUserName(), user);
-		assertEquals(PAPRestConfig.getDbPassword(), password);
-		
-		// Test hibernate
-		BasicDataSource source = (BasicDataSource)config.getDataSource();
-	    assertEquals(source.getDriverClassName(), driver);
-	    assertEquals(source.getUrl(), url);
-	    assertEquals(source.getUsername(), user);
-	    assertEquals(source.getPassword(), password);
-	    
-	    SessionFactory factory = config.getSessionFactory(source);
-	    assertEquals(factory.isClosed(), false);
-	    
-	    HibernateTransactionManager manager = config.getTransactionManager(factory);
-	    assertEquals(manager.getSessionFactory(), factory);
-	}
+    @Test
+    public void testSetAndGet() {
+        String testVal = "testVal";
+
+        PAPRestConfig.setDbDriver(testVal);
+        assertEquals(PAPRestConfig.getDbDriver(), testVal);
+        PAPRestConfig.setDbUrl(testVal);
+        assertEquals(PAPRestConfig.getDbUrl(), testVal);
+        PAPRestConfig.setDbUserName(testVal);
+        assertEquals(PAPRestConfig.getDbUserName(), testVal);
+        PAPRestConfig.setDbPassword(testVal);
+        assertEquals(PAPRestConfig.getDbPassword(), testVal);
+    }
+
+    @Test
+    public void testInit() {
+        String driver = "org.mariadb.jdbc.Driver";
+        String url = "jdbc:mariadb://localhost:3306/onap_sdk?connectTimeout=30000&socketTimeout=60000&log=true&sessionVariables=max_statement_time=30";
+        String user = "policy_user";
+        String password = "policy_user";
+
+        PAPRestConfig config = new PAPRestConfig();
+        config.init();
+
+        assertEquals(PAPRestConfig.getDbDriver(), driver);
+        assertEquals(PAPRestConfig.getDbUrl(), url);
+        assertEquals(PAPRestConfig.getDbUserName(), user);
+        assertEquals(PAPRestConfig.getDbPassword(), password);
+
+        // Test hibernate
+        BasicDataSource source = (BasicDataSource)config.getDataSource();
+        assertEquals(source.getDriverClassName(), driver);
+        assertEquals(source.getUrl(), url);
+        assertEquals(source.getUsername(), user);
+        assertEquals(source.getPassword(), password);
+
+        SessionFactory factory = config.getSessionFactory(source);
+        assertEquals(factory.isClosed(), false);
+
+        HibernateTransactionManager manager = config.getTransactionManager(factory);
+        assertEquals(manager.getSessionFactory(), factory);
+    }
 }

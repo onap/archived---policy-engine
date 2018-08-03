@@ -51,66 +51,66 @@ import org.springframework.mock.web.MockHttpServletResponse;
 @RunWith(PowerMockRunner.class)
 public class UpdateOthersPAPSTest {
 
-	private static Logger logger = FlexLogger.getLogger(UpdateOthersPAPSTest.class);
-	private static CommonClassDao commonClassDao;
-	private HttpServletRequest request;
-	private MockHttpServletResponse response;
-	
-	@Before
-	public void setUp() throws Exception {
-		logger.info("setUp: Entering");
+    private static Logger logger = FlexLogger.getLogger(UpdateOthersPAPSTest.class);
+    private static CommonClassDao commonClassDao;
+    private HttpServletRequest request;
+    private MockHttpServletResponse response;
+
+    @Before
+    public void setUp() throws Exception {
+        logger.info("setUp: Entering");
         commonClassDao = mock(CommonClassDao.class);
         
         request = mock(HttpServletRequest.class);       
-		response =  new MockHttpServletResponse();
-		List<Object> data = new ArrayList<>();
-		PolicyDBDaoEntity entity = new PolicyDBDaoEntity();
-		entity.setPolicyDBDaoUrl("http://localhost:8070/pap");
-		entity.setUsername("test");
-		entity.setPassword("test");
-		
-		PolicyDBDaoEntity entity1 = new PolicyDBDaoEntity();
-		entity1.setPolicyDBDaoUrl("http://localhost:8071/pap");
-		entity1.setUsername("test");
-		entity1.setPassword("test");
-		
-		data.add(entity);
-		data.add(entity1);
-		System.setProperty("xacml.rest.pap.url","http://localhost:8070/pap");
-		when(commonClassDao.getData(PolicyDBDaoEntity.class)).thenReturn(data);
-	}
-	
-	@Test
-	public void testNotifyOthersPAPsToUpdateConfigurations(){
-		UpdateOthersPAPS updateOtherPaps = new UpdateOthersPAPS();
-		UpdateOthersPAPS.setCommonClassDao(commonClassDao);
-		when(request.getParameter("action")).thenReturn("rename");
-		when(request.getParameter("newPolicyName")).thenReturn("com.Config_newTest.1.json");
-		when(request.getParameter("oldPolicyName")).thenReturn("com.Config_Test.1.json");
-		updateOtherPaps.notifyOthersPAPsToUpdateConfigurations(request, response);
-		try {
-			JSONObject responseString = new JSONObject(response.getContentAsString());
-			assertTrue(responseString.get("data").toString().contains("http://localhost:8071/pap")); 
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	
-	@PrepareForTest({Policy.class})
-	@Test
-	public void testUpdateConfiguration() throws Exception{
-		UpdateOthersPAPS updateOtherPaps = new UpdateOthersPAPS();
-		UpdateObjectData data = new UpdateObjectData();
-		PowerMockito.mockStatic(Policy.class);
-		data.setNewPolicyName("com.Config_newTest.1.json");
-		data.setOldPolicyName("com.Config_Test.1.json");
-		data.setAction("rename");
-		when(Policy.getConfigHome()).thenReturn("test");
-		when(Policy.getActionHome()).thenReturn("test");
-		File mockedFile = Mockito.mock(File.class);
-		Mockito.when(mockedFile.exists()).thenReturn(true);
-		PowerMockito.whenNew(File.class).withParameterTypes(String.class).withArguments(Matchers.anyString()).thenReturn(mockedFile);
-		updateOtherPaps.updateConfiguration(data, response);
-		assertTrue(response.getStatus() == 200);
-	}
+        response =  new MockHttpServletResponse();
+        List<Object> data = new ArrayList<>();
+        PolicyDBDaoEntity entity = new PolicyDBDaoEntity();
+        entity.setPolicyDBDaoUrl("http://localhost:8070/pap");
+        entity.setUsername("test");
+        entity.setPassword("test");
+
+        PolicyDBDaoEntity entity1 = new PolicyDBDaoEntity();
+        entity1.setPolicyDBDaoUrl("http://localhost:8071/pap");
+        entity1.setUsername("test");
+        entity1.setPassword("test");
+
+        data.add(entity);
+        data.add(entity1);
+        System.setProperty("xacml.rest.pap.url","http://localhost:8070/pap");
+        when(commonClassDao.getData(PolicyDBDaoEntity.class)).thenReturn(data);
+    }
+
+    @Test
+    public void testNotifyOthersPAPsToUpdateConfigurations(){
+        UpdateOthersPAPS updateOtherPaps = new UpdateOthersPAPS();
+        UpdateOthersPAPS.setCommonClassDao(commonClassDao);
+        when(request.getParameter("action")).thenReturn("rename");
+        when(request.getParameter("newPolicyName")).thenReturn("com.Config_newTest.1.json");
+        when(request.getParameter("oldPolicyName")).thenReturn("com.Config_Test.1.json");
+        updateOtherPaps.notifyOthersPAPsToUpdateConfigurations(request, response);
+        try {
+            JSONObject responseString = new JSONObject(response.getContentAsString());
+            assertTrue(responseString.get("data").toString().contains("http://localhost:8071/pap"));
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @PrepareForTest({Policy.class})
+    @Test
+    public void testUpdateConfiguration() throws Exception{
+        UpdateOthersPAPS updateOtherPaps = new UpdateOthersPAPS();
+        UpdateObjectData data = new UpdateObjectData();
+        PowerMockito.mockStatic(Policy.class);
+        data.setNewPolicyName("com.Config_newTest.1.json");
+        data.setOldPolicyName("com.Config_Test.1.json");
+        data.setAction("rename");
+        when(Policy.getConfigHome()).thenReturn("test");
+        when(Policy.getActionHome()).thenReturn("test");
+        File mockedFile = Mockito.mock(File.class);
+        Mockito.when(mockedFile.exists()).thenReturn(true);
+        PowerMockito.whenNew(File.class).withParameterTypes(String.class).withArguments(Matchers.anyString()).thenReturn(mockedFile);
+        updateOtherPaps.updateConfiguration(data, response);
+        assertTrue(response.getStatus() == 200);
+    }
 }

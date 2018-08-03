@@ -34,16 +34,16 @@ import com.mockrunner.mock.web.MockHttpServletResponse;
 
 @RunWith(PowerMockRunner.class)
 public class MetricServiceTest {
-	@PrepareForTest({XACMLPapServlet.class})
-	@Test
-	public void testNegativeGet() {
-		// Mock pap servlet
-		PowerMockito.mockStatic(XACMLPapServlet.class);
-		when(XACMLPapServlet.getPAPEngine()).thenReturn(null);
-		when(XACMLPapServlet.getEmf()).thenReturn(null);
+    @PrepareForTest({XACMLPapServlet.class})
+    @Test
+    public void testNegativeGet() {
+        // Mock pap servlet
+        PowerMockito.mockStatic(XACMLPapServlet.class);
+        when(XACMLPapServlet.getPAPEngine()).thenReturn(null);
+        when(XACMLPapServlet.getEmf()).thenReturn(null);
 
-		MockHttpServletResponse response = new MockHttpServletResponse();
-		MetricService.doGetPolicyMetrics(response);
-		assertEquals(response.getStatusCode(), HttpServletResponse.SC_BAD_REQUEST);
-	}
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        MetricService.doGetPolicyMetrics(response);
+        assertEquals(response.getStatusCode(), HttpServletResponse.SC_BAD_REQUEST);
+    }
 }

@@ -24,33 +24,33 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class SearchDataTest {
-	
-	
-	@Test
-	public void testSearchData(){
-		String data = "Test";
-		SearchData searchData = new SearchData();
-		searchData.setQuery(data);
-		searchData.setPolicyType(data);
-		searchData.setOnapName(data);
-		searchData.setDescriptiveScope(data);
-		searchData.setClosedLooppolicyType(data);
-		searchData.setD2Service(data);
-		searchData.setVnfType(data);
-		searchData.setPolicyStatus(data);
-		searchData.setVproAction(data);
-		searchData.setServiceType(data);
-		searchData.setBindTextSearch(data);
-		assertEquals(data, searchData.getQuery());
-		assertEquals(data, searchData.getPolicyType());
-		assertEquals(data, searchData.getDescriptiveScope());
-		assertEquals(data, searchData.getClosedLooppolicyType());
-		assertEquals(data, searchData.getOnapName());
-		assertEquals(data, searchData.getD2Service());
-		assertEquals(data, searchData.getVnfType());
-		assertEquals(data, searchData.getPolicyStatus());
-		assertEquals(data, searchData.getVproAction());
-		assertEquals(data, searchData.getServiceType());
-		assertEquals(data, searchData.getBindTextSearch());
-	}
+
+
+    @Test
+    public void testSearchData(){
+        String data = "Test";
+        SearchData searchData = new SearchData();
+        searchData.setQuery(data);
+        searchData.setPolicyType(data);
+        searchData.setOnapName(data);
+        searchData.setDescriptiveScope(data);
+        searchData.setClosedLooppolicyType(data);
+        searchData.setD2Service(data);
+        searchData.setVnfType(data);
+        searchData.setPolicyStatus(data);
+        searchData.setVproAction(data);
+        searchData.setServiceType(data);
+        searchData.setBindTextSearch(data);
+        assertEquals(data, searchData.getQuery());
+        assertEquals(data, searchData.getPolicyType());
+        assertEquals(data, searchData.getDescriptiveScope());
+        assertEquals(data, searchData.getClosedLooppolicyType());
+        assertEquals(data, searchData.getOnapName());
+        assertEquals(data, searchData.getD2Service());
+        assertEquals(data, searchData.getVnfType());
+        assertEquals(data, searchData.getPolicyStatus());
+        assertEquals(data, searchData.getVproAction());
+        assertEquals(data, searchData.getServiceType());
+        assertEquals(data, searchData.getBindTextSearch());
+    }
 }

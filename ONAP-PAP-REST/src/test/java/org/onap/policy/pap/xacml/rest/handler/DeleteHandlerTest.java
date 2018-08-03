@@ -47,68 +47,68 @@ import javax.persistence.EntityManager;
 
 @RunWith(PowerMockRunner.class)
 public class DeleteHandlerTest {
-	@Test
-	public void testGets() {
-		DeleteHandler handler = new DeleteHandler();
-		assertNotNull(handler);
-		assertEquals(handler.preSafetyCheck(null), true);
-		assertNull(handler.getDeletedGroup());
-	}
-	
-	@Test
-	public void testGetInstance() {
-		DeleteHandler handler = DeleteHandler.getInstance();
-		assertNotNull(handler);
-	}
-	
-	@PrepareForTest({DeleteHandler.class, XACMLPapServlet.class})
-	@Test
-	public void testDeletes() throws Exception {
-		// Mock request
-		DeleteHandler handler = new DeleteHandler();
-		MockHttpServletRequest request = new MockHttpServletRequest();
-		request.setBodyContent("{\n\"PAPPolicyType\": \"StdPAPPolicy\"\n}\n");
-		
-		// Mock servlet
-		PAPPolicyEngine engine = Mockito.mock(StdEngine.class);
-		PowerMockito.mockStatic(XACMLPapServlet.class);
-		when(XACMLPapServlet.getPAPEngine()).thenReturn(engine);
-		when(engine.getGroup(any())).thenReturn(null);
-		
-		// Mock elastic search
-		PolicyElasticSearchController controller = Mockito.mock(PolicyElasticSearchController.class);
-		PowerMockito.whenNew(PolicyElasticSearchController.class).withNoArguments().thenReturn(controller);
-		
-		// Mock entity manager
-		EntityManager em = Mockito.mock(EntityManager.class);
-		
-		// Test deletion from PAP
-		MockHttpServletResponse response = new MockHttpServletResponse();
-		try {
-			handler.doAPIDeleteFromPAP(request, response);
-		}
-		catch (Exception ex) {
-			fail("Not expecting an exception: " + ex);
-		}
-		
-		// Test deletion from PDP
-		ONAPLoggingContext loggingContext = Mockito.mock(ONAPLoggingContext.class);
-		try {
-			handler.doAPIDeleteFromPDP(request, response, loggingContext);
-		}
-		catch (Exception ex) {
-			fail("Not expecting an exception: " + ex);
-		}
-		
-		// Test delete entity
-		PolicyEntity policyEntity = new PolicyEntity();
-		policyEntity.setPolicyName("testVal");
-		String result = DeleteHandler.deletePolicyEntityData(em, policyEntity);
-		assertEquals(result, "success");
-		
-		// Test check entity
-		Connection con = null;
-		List<?> peResult = Collections.emptyList();
-		assertEquals(DeleteHandler.checkPolicyGroupEntity(con, peResult), false);
-	}
+    @Test
+    public void testGets() {
+        DeleteHandler handler = new DeleteHandler();
+        assertNotNull(handler);
+        assertEquals(handler.preSafetyCheck(null), true);
+        assertNull(handler.getDeletedGroup());
+    }
+
+    @Test
+    public void testGetInstance() {
+        DeleteHandler handler = DeleteHandler.getInstance();
+        assertNotNull(handler);
+    }
+
+    @PrepareForTest({DeleteHandler.class, XACMLPapServlet.class})
+    @Test
+    public void testDeletes() throws Exception {
+        // Mock request
+        DeleteHandler handler = new DeleteHandler();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setBodyContent("{\n\"PAPPolicyType\": \"StdPAPPolicy\"\n}\n");
+
+        // Mock servlet
+        PAPPolicyEngine engine = Mockito.mock(StdEngine.class);
+        PowerMockito.mockStatic(XACMLPapServlet.class);
+        when(XACMLPapServlet.getPAPEngine()).thenReturn(engine);
+        when(engine.getGroup(any())).thenReturn(null);
+
+        // Mock elastic search
+        PolicyElasticSearchController controller = Mockito.mock(PolicyElasticSearchController.class);
+        PowerMockito.whenNew(PolicyElasticSearchController.class).withNoArguments().thenReturn(controller);
+
+        // Mock entity manager
+        EntityManager em = Mockito.mock(EntityManager.class);
+
+        // Test deletion from PAP
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        try {
+            handler.doAPIDeleteFromPAP(request, response);
+        }
+        catch (Exception ex) {
+            fail("Not expecting an exception: " + ex);
+        }
+
+        // Test deletion from PDP
+        ONAPLoggingContext loggingContext = Mockito.mock(ONAPLoggingContext.class);
+        try {
+            handler.doAPIDeleteFromPDP(request, response, loggingContext);
+        }
+        catch (Exception ex) {
+            fail("Not expecting an exception: " + ex);
+        }
+
+        // Test delete entity
+        PolicyEntity policyEntity = new PolicyEntity();
+        policyEntity.setPolicyName("testVal");
+        String result = DeleteHandler.deletePolicyEntityData(em, policyEntity);
+        assertEquals(result, "success");
+
+        // Test check entity
+        Connection con = null;
+        List<?> peResult = Collections.emptyList();
+        assertEquals(DeleteHandler.checkPolicyGroupEntity(con, peResult), false);
+    }
 }

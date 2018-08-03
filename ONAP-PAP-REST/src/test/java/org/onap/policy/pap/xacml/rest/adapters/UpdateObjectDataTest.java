@@ -24,16 +24,16 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class UpdateObjectDataTest {
-	
-	@Test
-	public void testClosedLoopFaultTrapDatas(){
-		UpdateObjectData updateObject = new UpdateObjectData();
-		updateObject.setAction("Rename");
-		assertTrue("Rename".equals(updateObject.getAction()));
-		updateObject.setNewPolicyName("com.Config_test1.1.json");
-		assertTrue("com.Config_test1.1.json".equals(updateObject.getNewPolicyName()));
-		updateObject.setOldPolicyName("com.Config_test.1.json");
-		assertTrue("com.Config_test.1.json".equals(updateObject.getOldPolicyName()));
-	}
-	
+
+    @Test
+    public void testClosedLoopFaultTrapDatas(){
+        UpdateObjectData updateObject = new UpdateObjectData();
+        updateObject.setAction("Rename");
+        assertTrue("Rename".equals(updateObject.getAction()));
+        updateObject.setNewPolicyName("com.Config_test1.1.json");
+        assertTrue("com.Config_test1.1.json".equals(updateObject.getNewPolicyName()));
+        updateObject.setOldPolicyName("com.Config_test.1.json");
+        assertTrue("com.Config_test.1.json".equals(updateObject.getOldPolicyName()));
+    }
+
 }

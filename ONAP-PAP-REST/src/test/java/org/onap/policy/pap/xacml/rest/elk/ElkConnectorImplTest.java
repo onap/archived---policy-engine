@@ -39,108 +39,108 @@ import org.onap.policy.rest.adapter.PolicyRestAdapter;
 
 public class ElkConnectorImplTest {
 
-	@Test
-	public void isAlphaNumericTest() {
-		try {
-			Method method = ElkConnectorImpl.class.getDeclaredMethod("isAlphaNumeric", String.class);
-			method.setAccessible(true);
-			assertTrue((boolean) method.invoke(new ElkConnectorImpl(), "abc123"));
-			assertFalse((boolean) method.invoke(new ElkConnectorImpl(), "abc123*"));
-			assertFalse((boolean) method.invoke(new ElkConnectorImpl(), "abc123{}"));
-			assertFalse((boolean) method.invoke(new ElkConnectorImpl(), "abc123\n"));
-			assertFalse((boolean) method.invoke(new ElkConnectorImpl(), "abc123<"));
-			assertFalse((boolean) method.invoke(new ElkConnectorImpl(), "abc123:"));
-		} catch (Exception e) {
-			fail();
-		}
-	}
+    @Test
+    public void isAlphaNumericTest() {
+        try {
+            Method method = ElkConnectorImpl.class.getDeclaredMethod("isAlphaNumeric", String.class);
+            method.setAccessible(true);
+            assertTrue((boolean) method.invoke(new ElkConnectorImpl(), "abc123"));
+            assertFalse((boolean) method.invoke(new ElkConnectorImpl(), "abc123*"));
+            assertFalse((boolean) method.invoke(new ElkConnectorImpl(), "abc123{}"));
+            assertFalse((boolean) method.invoke(new ElkConnectorImpl(), "abc123\n"));
+            assertFalse((boolean) method.invoke(new ElkConnectorImpl(), "abc123<"));
+            assertFalse((boolean) method.invoke(new ElkConnectorImpl(), "abc123:"));
+        } catch (Exception e) {
+            fail();
+        }
+    }
 
-	@Test
-	public void searchTest(){
-		JestResult r1=null, r2=null, r3=null, r4=null;
+    @Test
+    public void searchTest(){
+        JestResult r1=null, r2=null, r3=null, r4=null;
 
-		// Should always work if the above test passes and ELK server is up
-		try{
-			r1 = new ElkConnectorImpl().search(PolicyIndexType.decision, "abc123");
-		} catch (Exception e) {
-			// ELK server is down. Don't continue the test
-			if(e instanceof IllegalStateException){
-				return;
-			}
-			fail();
-		}
+        // Should always work if the above test passes and ELK server is up
+        try{
+            r1 = new ElkConnectorImpl().search(PolicyIndexType.decision, "abc123");
+        } catch (Exception e) {
+            // ELK server is down. Don't continue the test
+            if(e instanceof IllegalStateException){
+                return;
+            }
+            fail();
+        }
 
-		// Should always work
-		try{
-			r2 = new ElkConnectorImpl().search(PolicyIndexType.decision, "The_quick_brown_fox_jumps_over_the_lazy_dog");
-		} catch (Exception e) {
-			fail();
-		}
+        // Should always work
+        try{
+            r2 = new ElkConnectorImpl().search(PolicyIndexType.decision, "The_quick_brown_fox_jumps_over_the_lazy_dog");
+        } catch (Exception e) {
+            fail();
+        }
 
-		// Should throw exception
-		try{
-			r3 = new ElkConnectorImpl().search(PolicyIndexType.decision, "abc123{}");
-		} catch (Exception e) {
-			if(! (e instanceof IllegalArgumentException)){
-				fail();
-			}
-		}
-		
-		// Should throw exception
-		try{
-			r4 = new ElkConnectorImpl().search(PolicyIndexType.decision, "The quick brown fox jumps over the lazy dog");
-		} catch (Exception e) {
-			if(! (e instanceof IllegalArgumentException)){
-				fail();
-			}
-		}
+        // Should throw exception
+        try{
+            r3 = new ElkConnectorImpl().search(PolicyIndexType.decision, "abc123{}");
+        } catch (Exception e) {
+            if(! (e instanceof IllegalArgumentException)){
+                fail();
+            }
+        }
 
-		assertNotNull(r1);
-		assertNotNull(r2);
-		assertNull(r3);
-		assertNull(r4);
-	}
-	
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-	
-	@Test
-	public void testDelete() {
-		thrown.expect(NullPointerException.class);
+        // Should throw exception
+        try{
+            r4 = new ElkConnectorImpl().search(PolicyIndexType.decision, "The quick brown fox jumps over the lazy dog");
+        } catch (Exception e) {
+            if(! (e instanceof IllegalArgumentException)){
+                fail();
+            }
+        }
 
-		ElkConnectorImpl impl = new ElkConnectorImpl();
-		PolicyRestAdapter adapter = new PolicyRestAdapter();
-		impl.delete(adapter);
-		fail("Expected exception to be thrown");
-	}
+        assertNotNull(r1);
+        assertNotNull(r2);
+        assertNull(r3);
+        assertNull(r4);
+    }
 
-	
-	@Test
-	public void testPut() throws IOException {
-		thrown.expect(NullPointerException.class);
-		
-		ElkConnectorImpl impl = new ElkConnectorImpl();
-		PolicyRestAdapter adapter = new PolicyRestAdapter();
-		impl.put(adapter);
-		fail("Expected exception to be thrown");
-	}
-	
-	@Test
-	public void testUpdate() {
-		thrown.expect(IllegalStateException.class);
-		
-		ElkConnectorImpl impl = new ElkConnectorImpl();
-		PolicyRestAdapter adapter = new PolicyRestAdapter();
-		impl.update(adapter);
-		fail("Expected exception to be thrown");
-	}
-	
-	@Test
-	public void testSearchWithFilter() {
-		thrown.expect(IllegalStateException.class);
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
-		ElkConnectorImpl impl = new ElkConnectorImpl();
-		impl.search(PolicyIndexType.config, "search", null);
-		fail("Expected exception to be thrown");
-	}
+    @Test
+    public void testDelete() {
+        thrown.expect(NullPointerException.class);
+
+        ElkConnectorImpl impl = new ElkConnectorImpl();
+        PolicyRestAdapter adapter = new PolicyRestAdapter();
+        impl.delete(adapter);
+        fail("Expected exception to be thrown");
+    }
+
+
+    @Test
+    public void testPut() throws IOException {
+        thrown.expect(NullPointerException.class);
+
+        ElkConnectorImpl impl = new ElkConnectorImpl();
+        PolicyRestAdapter adapter = new PolicyRestAdapter();
+        impl.put(adapter);
+        fail("Expected exception to be thrown");
+    }
+
+    @Test
+    public void testUpdate() {
+        thrown.expect(IllegalStateException.class);
+
+        ElkConnectorImpl impl = new ElkConnectorImpl();
+        PolicyRestAdapter adapter = new PolicyRestAdapter();
+        impl.update(adapter);
+        fail("Expected exception to be thrown");
+    }
+
+    @Test
+    public void testSearchWithFilter() {
+        thrown.expect(IllegalStateException.class);
+
+        ElkConnectorImpl impl = new ElkConnectorImpl();
+        impl.search(PolicyIndexType.config, "search", null);
+        fail("Expected exception to be thrown");
+    }
 }

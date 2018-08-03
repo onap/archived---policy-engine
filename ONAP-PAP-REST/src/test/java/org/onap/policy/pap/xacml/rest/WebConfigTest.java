@@ -27,11 +27,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 public class WebConfigTest {
-	@Test(expected=NullPointerException.class)
-	public void testNegativeStartup() throws ServletException {
-		WebConfig init = new WebConfig();
-		ServletContext container = Mockito.mock(ServletContext.class);
-		init.onStartup(container);
-		fail("Expecting an exception.");
-	}
+    @Test(expected=NullPointerException.class)
+    public void testNegativeStartup() throws ServletException {
+        WebConfig init = new WebConfig();
+        ServletContext container = Mockito.mock(ServletContext.class);
+        init.onStartup(container);
+        fail("Expecting an exception.");
+    }
 }

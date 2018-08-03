@@ -42,44 +42,44 @@ import javax.persistence.Query;
 
 @RunWith(PowerMockRunner.class)
 public class PushPolicyHandlerTest {
-	@PrepareForTest({XACMLPapServlet.class})
-	@Test
-	public void testGetsAndChecks() {
-		// Mock servlet, entity mgr, transaction, and query
-		EntityManager em = Mockito.mock(EntityManager.class);
-		EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
-		PowerMockito.mockStatic(XACMLPapServlet.class);
-		PowerMockito.when(XACMLPapServlet.getEmf()).thenReturn(emf);
-		Mockito.when(emf.createEntityManager()).thenReturn(em);
-		EntityTransaction transaction = Mockito.mock(EntityTransaction.class);
-		Mockito.when(em.getTransaction()).thenReturn(transaction);
-		Query query = Mockito.mock(Query.class);
-		Mockito.when(em.createQuery(Mockito.anyString())).thenReturn(query);
-		
-		// Test constructor
-		PushPolicyHandler handler = new PushPolicyHandler();
-		assertNotNull(handler);
+    @PrepareForTest({XACMLPapServlet.class})
+    @Test
+    public void testGetsAndChecks() {
+        // Mock servlet, entity mgr, transaction, and query
+        EntityManager em = Mockito.mock(EntityManager.class);
+        EntityManagerFactory emf = Mockito.mock(EntityManagerFactory.class);
+        PowerMockito.mockStatic(XACMLPapServlet.class);
+        PowerMockito.when(XACMLPapServlet.getEmf()).thenReturn(emf);
+        Mockito.when(emf.createEntityManager()).thenReturn(em);
+        EntityTransaction transaction = Mockito.mock(EntityTransaction.class);
+        Mockito.when(em.getTransaction()).thenReturn(transaction);
+        Query query = Mockito.mock(Query.class);
+        Mockito.when(em.createQuery(Mockito.anyString())).thenReturn(query);
 
-		// Test gets
-		MockHttpServletRequest request = new MockHttpServletRequest();
-		MockHttpServletResponse response = new MockHttpServletResponse();
-		handler.getActiveVersion(request, response);
-		assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
-		request.setupAddParameter("gitPath", "testPath");
-		handler.getSelectedURI(request, response);
-		assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
-		
-		// Test check
-		StdPDPPolicy policy = new StdPDPPolicy();
-		OnapPDPGroup onapPolicy = new StdPDPGroup();
-		String configHome = "testVal";
-		assertEquals(handler.preSafetyCheck(policy, configHome), true);
-		assertEquals(handler.preSafetyCheck(onapPolicy, configHome), true);
-	}
-	
-	@Test
-	public void testGetInstance() {
-		PushPolicyHandler handler = PushPolicyHandler.getInstance();
-		assertNotNull(handler);
-	}
+        // Test constructor
+        PushPolicyHandler handler = new PushPolicyHandler();
+        assertNotNull(handler);
+
+        // Test gets
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        handler.getActiveVersion(request, response);
+        assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+        request.setupAddParameter("gitPath", "testPath");
+        handler.getSelectedURI(request, response);
+        assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+
+        // Test check
+        StdPDPPolicy policy = new StdPDPPolicy();
+        OnapPDPGroup onapPolicy = new StdPDPGroup();
+        String configHome = "testVal";
+        assertEquals(handler.preSafetyCheck(policy, configHome), true);
+        assertEquals(handler.preSafetyCheck(onapPolicy, configHome), true);
+    }
+
+    @Test
+    public void testGetInstance() {
+        PushPolicyHandler handler = PushPolicyHandler.getInstance();
+        assertNotNull(handler);
+    }
 }

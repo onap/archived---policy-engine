@@ -40,28 +40,28 @@ import org.onap.policy.rest.jpa.ConfigurationDataEntity;
 import org.onap.policy.rest.jpa.PolicyEntity;
 
 public class ElasticSearchPolicyUpdateTest {
-	
-	private static Logger logger = FlexLogger.getLogger(ElasticSearchPolicyUpdateTest.class);
-	private Object policyContent = "";
-	private XACMLPAPTest papTest;
-	
-	@Before
-	public void setUp() throws IOException, ServletException, SQLException{
-		// Set the system property temporarily
-		System.setProperty("PROPERTY_FILE", "src/test/resources/policyelk.properties");
+
+    private static Logger logger = FlexLogger.getLogger(ElasticSearchPolicyUpdateTest.class);
+    private Object policyContent = "";
+    private XACMLPAPTest papTest;
+
+    @Before
+    public void setUp() throws IOException, ServletException, SQLException{
+        // Set the system property temporarily
+        System.setProperty("PROPERTY_FILE", "src/test/resources/policyelk.properties");
         try {
-			ClassLoader classLoader = getClass().getClassLoader();
-			policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml"));
-		} catch (Exception e1) {
-			logger.error("Exception Occured"+e1);
-		}
+            ClassLoader classLoader = getClass().getClassLoader();
+            policyContent = IOUtils.toString(classLoader.getResourceAsStream("Config_SampleTest1206.1.xml"));
+        } catch (Exception e1) {
+            logger.error("Exception Occured"+e1);
+        }
         papTest = new XACMLPAPTest();
-		papTest.setDBDao();
-	}
-	
-	@Test
-	public void testElasticSearchMainFunction() throws SQLException{
-		ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
+        papTest.setDBDao();
+    }
+
+    @Test
+    public void testElasticSearchMainFunction() throws SQLException{
+        ConfigurationDataEntity configurationEntity = new ConfigurationDataEntity();
         configurationEntity.setConfigBody("Sample Test");
         configurationEntity.setConfigType("OTHER");
         configurationEntity.setConfigurationName("com.Config_SampleTest1206.1.txt");
@@ -70,7 +70,7 @@ public class ElasticSearchPolicyUpdateTest {
         configurationEntity.setModifiedDate(new Date());
         
         
-		PolicyEntity entity = new PolicyEntity();
+        PolicyEntity entity = new PolicyEntity();
         entity.setPolicyName("Config_SampleTest.1.xml");
         entity.setPolicyData(policyContent.toString());
         entity.setScope("com");
@@ -84,14 +84,14 @@ public class ElasticSearchPolicyUpdateTest {
         dao.save(configurationEntity);
         dao.save(entity);
         dao.delete(dao.getEntityItem(PolicyEntity.class, "policyName", "Config_SampleTest.1.xml"));
-		ElasticSearchPolicyUpdate.main(null);
-		StringBuilder policyDataString = new StringBuilder();
-		ElasticSearchPolicyUpdate.constructPolicyData(policyContent, policyDataString);
-		assertTrue(policyDataString.toString().contains("onapName"));
-	}
-	
-	@After
-	public void reset(){
-		System.clearProperty("PROPERTY_FILE");
-	}
+        ElasticSearchPolicyUpdate.main(null);
+        StringBuilder policyDataString = new StringBuilder();
+        ElasticSearchPolicyUpdate.constructPolicyData(policyContent, policyDataString);
+        assertTrue(policyDataString.toString().contains("onapName"));
+    }
+
+    @After
+    public void reset(){
+        System.clearProperty("PROPERTY_FILE");
+    }
 }
