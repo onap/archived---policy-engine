@@ -3,6 +3,7 @@
  * ONAP-XACML
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +34,7 @@ import java.util.Properties;
 import org.junit.Test;
 import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import com.att.research.xacml.api.pap.PAPException;
+import org.onap.policy.xacml.std.pap.StdPDPPolicyParams;
 
 
 public class StdPDPPolicyTest {
@@ -50,7 +52,17 @@ public class StdPDPPolicyTest {
     assertNotNull(policy2);
     StdPDPPolicy policy4 = new StdPDPPolicy();
     assertNotNull(policy4);
-    StdPDPPolicy policy5 = new StdPDPPolicy(value, true, value, uri, false, value, value, "1");
+
+    StdPDPPolicy policy5 = new StdPDPPolicy(StdPDPPolicyParams.builder()
+            .id(value)
+            .isRoot(true)
+            .name(value)
+            .location(uri)
+            .isValid(false)
+            .policyId(value)
+            .description(value)
+            .version("1")
+            .build());
     assertNotNull(policy5);
     StdPDPPolicy policy6 = new StdPDPPolicy(value, true, value, uri, false);
     assertNotNull(policy6);
@@ -112,7 +124,16 @@ public class StdPDPPolicyTest {
     // Set up test data
     String value = "testVal";
     URI uri = new URI("http://localhost:54287");
-    StdPDPPolicy policy = new StdPDPPolicy(value, true, value, uri, false, value, value, "1");
+    StdPDPPolicy policy = new StdPDPPolicy(StdPDPPolicyParams.builder()
+            .id(value)
+            .isRoot(true)
+            .name(value)
+            .location(uri)
+            .isValid(false)
+            .policyId(value)
+            .description(value)
+            .version("1")
+            .build());
 
     // Negative test stream
     policy.getStream();
