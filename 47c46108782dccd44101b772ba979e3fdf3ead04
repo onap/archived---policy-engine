@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_8720bf9c",
+        "filename": "PolicyEngineAPI/src/test/java/org/onap/policy/test/PolicyParametersTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-08-07T19:55:54Z",
+      "side": 1,
+      "message": "Pam, do you know if there could any licensing issues from using this tooling below?",
+      "revId": "47c46108782dccd44101b772ba979e3fdf3ead04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
