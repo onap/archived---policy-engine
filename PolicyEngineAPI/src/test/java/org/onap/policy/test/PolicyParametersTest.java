@@ -33,11 +33,7 @@ import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.onap.policy.api.AttributeType;
-import org.onap.policy.api.PolicyClass;
-import org.onap.policy.api.PolicyConfigType;
-import org.onap.policy.api.PolicyParameters;
-import org.onap.policy.api.PolicyType;
+import org.onap.policy.api.*;
 
 /**
  * The class <code>PolicyParametersTest</code> contains tests for the class <code>{@link PolicyParameters}</code>.
@@ -992,7 +988,17 @@ public class PolicyParametersTest {
 		String configBody = "";
 		UUID requestID = UUID.randomUUID();
 
-		fixture.setConfigPolicyParameters(policyConfigType, policyName, policyDescription, onapName, configName, attributes, configBodyType, configBody, requestID);
+		fixture.setConfigPolicyParameters(PolicyConfigParams.builder()
+				.policyConfigType(policyConfigType)
+				.policyName(policyName)
+				.policyDescription(policyDescription)
+				.onapName(onapName)
+				.configName(configName)
+				.attributes(attributes)
+				.configBodyType(configBodyType)
+				.configBody(configBody)
+				.requestID(requestID)
+				.build());
 
 		// add additional test code here
 	}

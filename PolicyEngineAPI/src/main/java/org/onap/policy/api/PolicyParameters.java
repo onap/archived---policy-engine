@@ -20,7 +20,6 @@
 
 package org.onap.policy.api;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -62,29 +61,19 @@ public class PolicyParameters {
 	
 	/**
 	 * Sets Config Policy Parameters.
-	 * 
-	 * @param policyConfigType the {@link org.onap.policy.api.PolicyConfigType} Enum format of the Config Type
-	 * @param policyName the <code>String</code> format of the Policy Name
-	 * @param policyDescription the <code>String</code> format of the Policy Description
-	 * @param onapName the <code>String</code> format of the ONAP Name
-	 * @param configName the <code>String</code> format of the Config Name
-	 * @param attributes the <code>Map</code> Attributes that must contain the AttributeType and Map of key,value pairs corresponding to it.
-	 * @param configBodyType the {@link org.onap.policy.api.PolicyType} Enum format of the config Body Type. 
-	 * @param configBody the <code>String</code> format of the Policy Body
-	 * @param requestID unique request ID which will be passed throughout the ONAP components to correlate logging messages.
-	 * A different request ID should be passed for each request.
+	 *
+	 * @param policyConfigParams
 	 */
-	public void setConfigPolicyParameters(PolicyConfigType policyConfigType, String policyName, String policyDescription, String onapName, String configName, 
-			Map<AttributeType, Map<String, String>> attributes, PolicyType configBodyType, String configBody, UUID requestID){
-		this.setPolicyConfigType(policyConfigType);
-		this.setPolicyName(policyName);
-		this.setPolicyDescription(policyDescription);
-		this.setOnapName(onapName);
-		this.setConfigName(configName);
-		this.setAttributes(attributes);
-		this.setConfigBody(configBody);
-		this.setConfigBodyType(configBodyType);
-		this.setRequestID(requestID);
+	public void setConfigPolicyParameters(PolicyConfigParams policyConfigParams){
+		this.setPolicyConfigType(policyConfigParams.getPolicyConfigType());
+		this.setPolicyName(policyConfigParams.getPolicyName());
+		this.setPolicyDescription(policyConfigParams.getPolicyDescription());
+		this.setOnapName(policyConfigParams.getOnapName());
+		this.setConfigName(policyConfigParams.getConfigName());
+		this.setAttributes(policyConfigParams.getAttributes());
+		this.setConfigBody(policyConfigParams.getConfigBody());
+		this.setConfigBodyType(policyConfigParams.getConfigBodyType());
+		this.setRequestID(policyConfigParams.getRequestID());
 	}
 	
 	/**
