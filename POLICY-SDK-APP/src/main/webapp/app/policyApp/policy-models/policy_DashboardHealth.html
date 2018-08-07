@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  */-->
 <div id="page-content" style="margin-bottom: 20px; width: 100%">
 	<div>
-		<h1 style="text-align: left; color: #157bb2">Policy Engine Health</h1>
+		<h1 style="text-align: left;font-size: 25px;color: #066090;padding-top: 15px;">Policy Engine Health</h1>
 		<div ng-show="showLoader" class="span loader-container">
 			<i class="icon-spinner" role="img"
 				aria-label="Please wait while we load your content"></i>
@@ -31,6 +31,8 @@
 					onClick="window.location='policy#/Dashboard';">Logging</button>
 				<button class="btn btn-primary" type="button"
 					onClick="window.location='policy#/Dashboard_Health';">Health</button>
+				<button class="btn btn-secondary" type="button"
+					onClick="window.location='policy#/Dashboard_crud';">CRUD Info</button>	
 		</div>
 	</div>
 	<br>
