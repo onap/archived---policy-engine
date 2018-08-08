@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
+import org.onap.policy.xacml.std.pap.StdPAPPolicyParams;
 
 public class StdPAPPolicyTest {
 
@@ -574,8 +575,8 @@ public class StdPAPPolicyTest {
     public void testConstructorStringStringStringStringStringMapStringStringStringStringBooleanStringStringStringStringString() throws URISyntaxException {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("aKey", "aValue");
-        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy("configTypePolicy", "policyName", "description", "onapName", "configName", attributes, 
-                "configType", "body", true, "domain", "riskLevel", "riskType", "guard", "ttlDate");
+        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy(
+                new StdPAPPolicyParams("configTypePolicy", "policyName", "description", "onapName", "configName", attributes, "configType", "body", true, "domain", "riskLevel", "riskType", "guard", "ttlDate"));
         assertEquals("configTypePolicy", stdPAPPolicy.getConfigPolicyType());
         assertEquals("policyName", stdPAPPolicy.getPolicyName());
         assertEquals("description", stdPAPPolicy.getPolicyDescription());

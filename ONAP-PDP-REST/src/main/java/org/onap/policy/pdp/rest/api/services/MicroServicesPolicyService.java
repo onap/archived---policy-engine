@@ -36,57 +36,57 @@ import org.onap.policy.xacml.std.pap.StdPAPPolicy;
  * @version 0.1
  */
 public class MicroServicesPolicyService{
-	private static final Logger LOGGER = FlexLogger.getLogger(MicroServicesPolicyService.class.getName());
-	
-	private PAPServices papServices = null;
-	private PolicyParameters policyParameters = null;
-	private String message = null;
-	private String policyName = null;
-	private String policyScope = null;
-	private String date = null;
-	private String onapName = null;
-	private JsonObject microServiceAttributes = null;
-	
-	public MicroServicesPolicyService(String policyName, String policyScope, PolicyParameters policyParameters, String date) {
-		this.policyParameters = policyParameters;
-		this.policyName = policyName;
-		this.policyScope = policyScope;
-		this.date = date;
-		papServices = new PAPServices();
-	}
+    private static final Logger LOGGER = FlexLogger.getLogger(MicroServicesPolicyService.class.getName());
 
-	public Boolean getValidation() {
-		if(policyParameters.getConfigBody()==null){
-			message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " No Micro Service or Attributes Config Body Present";
-			return false;
-		}
-		try{
-			microServiceAttributes = PolicyApiUtils.stringToJsonObject(policyParameters.getConfigBody());
-		} catch(JsonException| IllegalStateException e){
-			message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + policyParameters.getConfigBody();
-			LOGGER.error("Error while parsing JSON body for MicroService Policy creation. ", e);
-			return false;
-		}
-		onapName = policyParameters.getOnapName();
-		if (onapName==null||onapName.trim().isEmpty()){
-			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Onap Name given.";
-			return false;
-		}
-		boolean levelCheck = false;
-		levelCheck = PolicyApiUtils.isNumeric(policyParameters.getRiskLevel());
-		if (!levelCheck){
-			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect Risk Level given.";
-			return false;
-		}
-		return true;
-	}
+    private PAPServices papServices = null;
+    private PolicyParameters policyParameters = null;
+    private String message = null;
+    private String policyName = null;
+    private String policyScope = null;
+    private String date = null;
+    private String onapName = null;
+    private JsonObject microServiceAttributes = null;
 
-	public String getMessage() {
-		return message;
-	}
-	
-	public String getResult(boolean updateFlag) throws PolicyException{
-	    String response = null;
+    public MicroServicesPolicyService(String policyName, String policyScope, PolicyParameters policyParameters, String date) {
+        this.policyParameters = policyParameters;
+        this.policyName = policyName;
+        this.policyScope = policyScope;
+        this.date = date;
+        papServices = new PAPServices();
+    }
+
+    public Boolean getValidation() {
+        if(policyParameters.getConfigBody()==null){
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " No Micro Service or Attributes Config Body Present";
+            return false;
+        }
+        try{
+            microServiceAttributes = PolicyApiUtils.stringToJsonObject(policyParameters.getConfigBody());
+        } catch(JsonException| IllegalStateException e){
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + policyParameters.getConfigBody();
+            LOGGER.error("Error while parsing JSON body for MicroService Policy creation. ", e);
+            return false;
+        }
+        onapName = policyParameters.getOnapName();
+        if (onapName==null||onapName.trim().isEmpty()){
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Onap Name given.";
+            return false;
+        }
+        boolean levelCheck = false;
+        levelCheck = PolicyApiUtils.isNumeric(policyParameters.getRiskLevel());
+        if (!levelCheck){
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect Risk Level given.";
+            return false;
+        }
+        return true;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getResult(boolean updateFlag) throws PolicyException{
+        String response = null;
         String operation = null;
         if (updateFlag){
             operation = "update";
@@ -103,7 +103,7 @@ public class MicroServicesPolicyService{
         String version=null;
         
         if (microServiceAttributes.get("service")!=null){
-        	microService = microServiceAttributes.get("service").toString().replace("\"", "");
+            microService = microServiceAttributes.get("service").toString().replace("\"", "");
         }
         if (microServiceAttributes.get("uuid")!=null){
             uuid = microServiceAttributes.get("uuid").toString().replace("\"", "");
@@ -115,13 +115,13 @@ public class MicroServicesPolicyService{
             configName = microServiceAttributes.get("configName").toString().replace("\"", "");
         }
         if(microServiceAttributes.containsKey("description")){
-        	policyDescription = microServiceAttributes.get("description").toString().replace("\"", "");
+            policyDescription = microServiceAttributes.get("description").toString().replace("\"", "");
         }
         if(microServiceAttributes.containsKey("priority")){
-        	priority = microServiceAttributes.get("priority").toString().replace("\"", "");
+            priority = microServiceAttributes.get("priority").toString().replace("\"", "");
         }
         if(microServiceAttributes.containsKey("version")){
-        	version = microServiceAttributes.get("version").toString().replace("\"", "");
+            version = microServiceAttributes.get("version").toString().replace("\"", "");
         }
         // Create Policy. 
         StdPAPPolicy newPAPPolicy = new StdPAPPolicy("Micro Service", policyName, policyDescription, onapName, 
@@ -132,5 +132,5 @@ public class MicroServicesPolicyService{
         response = (String) papServices.callPAP(newPAPPolicy, new String[] {"operation="+operation, "apiflag=api", "policyType=Config"}, policyParameters.getRequestID(), "ConfigMS");
         LOGGER.info("Policy MS created Response: " + response);
         return response;
-	}
+    }
 }

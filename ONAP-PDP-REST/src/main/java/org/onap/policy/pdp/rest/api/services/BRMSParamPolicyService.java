@@ -36,61 +36,61 @@ import org.onap.policy.xacml.std.pap.StdPAPPolicy;
  * @version 0.1
  */
 public class BRMSParamPolicyService{
-	private static final Logger LOGGER = FlexLogger.getLogger(BRMSParamPolicyService.class.getName());
-	private PAPServices papServices = null;
-	
-	private PolicyParameters policyParameters = null;
-	private String message = null;
-	private String policyName = null;
-	private String policyScope = null;
-	private String date = null; 
-	private Map<AttributeType, Map<String, String>> drlRuleAndUIParams = null;
-	
-	public BRMSParamPolicyService(String policyName, String policyScope,
-			PolicyParameters policyParameters, String date) {
-		this.policyParameters = policyParameters;
-		this.policyName = policyName;
-		this.policyScope = policyScope;
-		this.date = date;
-		papServices = new PAPServices();
-	}
+    private static final Logger LOGGER = FlexLogger.getLogger(BRMSParamPolicyService.class.getName());
+    private PAPServices papServices = null;
 
-	public Boolean getValidation() {
-		boolean levelCheck = PolicyApiUtils.isNumeric(policyParameters.getRiskLevel());
-		if(!levelCheck){
-			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect Risk Level given.";
-			return false;
-		}
-		drlRuleAndUIParams = policyParameters.getAttributes();
-		if(drlRuleAndUIParams==null || drlRuleAndUIParams.isEmpty()){
-			message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Rule Attributes given.";
-			return false;
-		}
-		return true;
-	}
+    private PolicyParameters policyParameters = null;
+    private String message = null;
+    private String policyName = null;
+    private String policyScope = null;
+    private String date = null;
+    private Map<AttributeType, Map<String, String>> drlRuleAndUIParams = null;
 
-	public String getMessage() {
-		return message;
-	}
+    public BRMSParamPolicyService(String policyName, String policyScope,
+            PolicyParameters policyParameters, String date) {
+        this.policyParameters = policyParameters;
+        this.policyName = policyName;
+        this.policyScope = policyScope;
+        this.date = date;
+        papServices = new PAPServices();
+    }
 
-	public String getResult(boolean updateFlag) throws PolicyException {
-		String response = null;
-		String operation = null;
-		if (updateFlag){
-			operation = "update";
-		} else {
-			operation = "create";
-		}
-		// Create Policy
-		StdPAPPolicy newPAPPolicy = new StdPAPPolicy("BRMS_Param",policyName, policyParameters.getPolicyDescription(),
-				"BRMS_PARAM_RULE",updateFlag,policyScope, 
-				drlRuleAndUIParams.get(AttributeType.MATCHING), 0, "DROOLS", 
-				null, drlRuleAndUIParams.get(AttributeType.RULE), policyParameters.getRiskLevel(),
-				policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date, policyParameters.getControllerName(), policyParameters.getDependencyNames());
-		// Send JSON to PAP 
-		response = (String) papServices.callPAP(newPAPPolicy, new String[] {"operation="+operation, "apiflag=api", "policyType=Config"}, policyParameters.getRequestID(), "ConfigBrmsParam");
-		LOGGER.info(response);
-		return response;
-	}
+    public Boolean getValidation() {
+        boolean levelCheck = PolicyApiUtils.isNumeric(policyParameters.getRiskLevel());
+        if(!levelCheck){
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "Incorrect Risk Level given.";
+            return false;
+        }
+        drlRuleAndUIParams = policyParameters.getAttributes();
+        if(drlRuleAndUIParams==null || drlRuleAndUIParams.isEmpty()){
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE + "No Rule Attributes given.";
+            return false;
+        }
+        return true;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getResult(boolean updateFlag) throws PolicyException {
+        String response = null;
+        String operation = null;
+        if (updateFlag){
+            operation = "update";
+        } else {
+            operation = "create";
+        }
+        // Create Policy
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("BRMS_Param",policyName, policyParameters.getPolicyDescription(),
+                "BRMS_PARAM_RULE",updateFlag,policyScope,
+                drlRuleAndUIParams.get(AttributeType.MATCHING), 0, "DROOLS",
+                null, drlRuleAndUIParams.get(AttributeType.RULE), policyParameters.getRiskLevel(),
+                policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date, policyParameters.getControllerName(), policyParameters.getDependencyNames());
+        // Send JSON to PAP
+        response = (String) papServices.callPAP(newPAPPolicy, new String[] {"operation="+operation, "apiflag=api", "policyType=Config"}, policyParameters.getRequestID(), "ConfigBrmsParam");
+        LOGGER.info(response);
+        return response;
+    }
 
 }

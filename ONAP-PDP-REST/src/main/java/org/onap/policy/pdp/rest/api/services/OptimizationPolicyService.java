@@ -35,29 +35,29 @@ import org.onap.policy.xacml.std.pap.StdPAPPolicy;
  * @version 0.1
  */
 public class OptimizationPolicyService{
-	private static final Logger LOGGER = FlexLogger.getLogger(OptimizationPolicyService.class.getName());
-	
-	private PAPServices papServices = null;
-	private PolicyParameters policyParameters = null;
-	private String message = null;
-	private String policyName = null;
-	private String policyScope = null;
-	private String date = null;
+    private static final Logger LOGGER = FlexLogger.getLogger(OptimizationPolicyService.class.getName());
 
-	public OptimizationPolicyService(String policyName, String policyScope, PolicyParameters policyParameters, String date) {
-		this.policyParameters = policyParameters;
-		this.policyName = policyName;
-		this.policyScope = policyScope;
-		this.date = date;
-		papServices = new PAPServices();
-	}
+    private PAPServices papServices = null;
+    private PolicyParameters policyParameters = null;
+    private String message = null;
+    private String policyName = null;
+    private String policyScope = null;
+    private String date = null;
 
-	public String getMessage() {
-		return message;
-	}
-	
-	public String getResult(boolean updateFlag) throws PolicyException{
-	    String response = null;
+    public OptimizationPolicyService(String policyName, String policyScope, PolicyParameters policyParameters, String date) {
+        this.policyParameters = policyParameters;
+        this.policyName = policyName;
+        this.policyScope = policyScope;
+        this.date = date;
+        papServices = new PAPServices();
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getResult(boolean updateFlag) throws PolicyException{
+        String response = null;
         String operation = null;
         
         if (updateFlag){
@@ -72,27 +72,27 @@ public class OptimizationPolicyService{
         String priority=null;
         String version=null;
         
-		String onapName = policyParameters.getOnapName();
-		JsonObject optimizationAttributes = null;
-		try{
-			optimizationAttributes = PolicyApiUtils.stringToJsonObject(policyParameters.getConfigBody());
-		} catch(JsonException| IllegalStateException e){
-			message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + policyParameters.getConfigBody();
-			LOGGER.error("Error while parsing JSON body for MicroService Policy creation. ", e);
-			return null;
-		}
-		
+        String onapName = policyParameters.getOnapName();
+        JsonObject optimizationAttributes = null;
+        try{
+            optimizationAttributes = PolicyApiUtils.stringToJsonObject(policyParameters.getConfigBody());
+        } catch(JsonException| IllegalStateException e){
+            message = XACMLErrorConstants.ERROR_DATA_ISSUE+ " improper JSON object : " + policyParameters.getConfigBody();
+            LOGGER.error("Error while parsing JSON body for MicroService Policy creation. ", e);
+            return null;
+        }
+
         if (optimizationAttributes.get("service")!=null){
-        	servicModel = optimizationAttributes.get("service").toString().replace("\"", "");
+            servicModel = optimizationAttributes.get("service").toString().replace("\"", "");
         }
         if(optimizationAttributes.containsKey("description")){
-        	policyDescription = optimizationAttributes.get("description").toString().replace("\"", "");
+            policyDescription = optimizationAttributes.get("description").toString().replace("\"", "");
         }
         if(optimizationAttributes.containsKey("priority")){
-        	priority = optimizationAttributes.get("priority").toString().replace("\"", "");
+            priority = optimizationAttributes.get("priority").toString().replace("\"", "");
         }
         if(optimizationAttributes.containsKey("version")){
-        	version = optimizationAttributes.get("version").toString().replace("\"", "");
+            version = optimizationAttributes.get("version").toString().replace("\"", "");
         }
         
         // Create Policy Object 
@@ -103,8 +103,8 @@ public class OptimizationPolicyService{
         
         // Send JSON Object to PAP 
         response = (String) papServices.callPAP(newPAPPolicy, new String[] {"operation="+operation, "apiflag=api", "policyType=Config"}, 
-        		policyParameters.getRequestID(), "ConfigOptimization");
+                policyParameters.getRequestID(), "ConfigOptimization");
         LOGGER.info("Response: " + response);
         return response;
-	}
+    }
 }
