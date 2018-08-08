@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_3a90d994",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-08T23:03:53Z",
+      "side": 1,
+      "message": "https://sonar.onap.org/issues?myIssues\u003dtrue\u0026open\u003dAV2blN7T5bp_wwmIUQFA\u0026projectUuids\u003dAV2blNLJ5bp_wwmIUP3L\u0026resolved\u003dfalse\u0026rules\u003dsquid%3AS00107",
+      "range": {
+        "startLine": 9,
+        "startChar": 3,
+        "endLine": 9,
+        "endChar": 9
+      },
+      "revId": "81aea73bd3638b124fde721ca0c50ee64a7b64ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_da81a54b",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdPAPPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-08T23:03:53Z",
+      "side": 1,
+      "message": "modify tabs -\u003e space before actual changes",
+      "revId": "81aea73bd3638b124fde721ca0c50ee64a7b64ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
