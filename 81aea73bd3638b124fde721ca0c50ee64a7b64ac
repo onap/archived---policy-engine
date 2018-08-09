@@ -39,6 +39,29 @@
       "revId": "81aea73bd3638b124fde721ca0c50ee64a7b64ac",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_8b544155",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/std/pap/StdPAPPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-08-09T14:15:54Z",
+      "side": 1,
+      "message": "These lines seems to be over 120 characters.",
+      "range": {
+        "startLine": 685,
+        "startChar": 4,
+        "endLine": 701,
+        "endChar": 5
+      },
+      "revId": "81aea73bd3638b124fde721ca0c50ee64a7b64ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
