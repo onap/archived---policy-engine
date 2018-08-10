@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_203427dd",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/XACMLPapServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-10T11:39:04Z",
+      "side": 1,
+      "message": "Fixes\nincorrect comparison of strings, objects\npossible null pointer exceptions\nline wraps at 120 characters",
+      "revId": "18fefc6140a3be1c4ca276617b0020a62e270c41",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_00532b18",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsParamPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-10T11:39:04Z",
+      "side": 1,
+      "message": "substring dont need last attribute of length., by default its taken as until end of string",
+      "revId": "18fefc6140a3be1c4ca276617b0020a62e270c41",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_6041bf38",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/handler/APIRequestHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-10T11:39:04Z",
+      "side": 1,
+      "message": "remove unnecessary return in the methods",
+      "revId": "18fefc6140a3be1c4ca276617b0020a62e270c41",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
