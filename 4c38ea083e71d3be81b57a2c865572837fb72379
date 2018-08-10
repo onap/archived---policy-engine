@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_361a2d6f",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsRawPolicy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-10T23:41:42Z",
+      "side": 1,
+      "message": "https://sonar.onap.org/code?id\u003dorg.onap.policy.engine%3APolicyEngineSuite\u0026selected\u003dorg.onap.policy.engine%3AONAP-PAP-REST%3Asrc%2Fmain%2Fjava%2Forg%2Fonap%2Fpolicy%2Fpap%2Fxacml%2Frest%2Fcomponents%2FCreateBrmsRawPolicy.java",
+      "range": {
+        "startLine": 417,
+        "startChar": 0,
+        "endLine": 421,
+        "endChar": 9
+      },
+      "revId": "4c38ea083e71d3be81b57a2c865572837fb72379",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
