@@ -8,9 +8,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -75,20 +75,20 @@ public class ConfigPolicy extends Policy {
         super();
     }
 
-    public ConfigPolicy(PolicyRestAdapter policyAdapter){
+    public ConfigPolicy(PolicyRestAdapter policyAdapter) {
         this.policyAdapter = policyAdapter;
     }
 
     // Saving the Configurations file at server location for config policy.
     protected void saveConfigurations(String policyName) {
         String fileName = getConfigFile(policyName);
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_HOME + File.separator + fileName))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_HOME + File.separator + fileName))) {
             bw.write(configBodyData);
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Configuration is succesfully saved");
             }
         } catch (IOException e) {
-            LOGGER.error("Exception Occured while writing Configuration Data"+e);
+            LOGGER.error("Exception Occured while writing Configuration Data" + e);
         }
     }
 
@@ -144,7 +144,7 @@ public class ConfigPolicy extends Policy {
                     isValidForm = false;
                 }
             } else if (id.equals(PROPERTIES_CONFIG)) {
-                if (!PolicyUtils.isPropValid(configBodyData)||configBodyData.equals("")) {
+                if (!PolicyUtils.isPropValid(configBodyData) || configBodyData.equals("")) {
                     isValidForm = false;
                 }
             } else if (id.equals(OTHER_CONFIG)) {
@@ -161,12 +161,12 @@ public class ConfigPolicy extends Policy {
     public Map<String, String> savePolicies() throws PAPException {
 
         Map<String, String> successMap = new HashMap<>();
-        if(isPolicyExists()){
+        if (isPolicyExists()) {
             successMap.put("EXISTS", "This Policy already exist on the PAP");
             return successMap;
         }
 
-        if(!isPreparedToSave()){
+        if (!isPreparedToSave()) {
             //Prep and configure the policy for saving
             prepareToSave();
         }
@@ -174,16 +174,16 @@ public class ConfigPolicy extends Policy {
         // Until here we prepared the data and here calling the method to create xml.
         Path newPolicyPath = null;
         newPolicyPath = Paths.get(policyAdapter.getNewFileName());
-        successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
+        successMap = createPolicy(newPolicyPath, getCorrectPolicyDataObject());
         return successMap;
     }
 
     //This is the method for preparing the policy for saving.  We have broken it out
     //separately because the fully configured policy is used for multiple things
     @Override
-    public boolean prepareToSave() throws PAPException{
+    public boolean prepareToSave() throws PAPException {
 
-        if(isPreparedToSave()){
+        if (isPreparedToSave()) {
             return true;
         }
 
@@ -214,9 +214,9 @@ public class ConfigPolicy extends Policy {
             AllOfType allOfOne = new AllOfType();
 
             String fileName = policyAdapter.getNewFileName();
-            String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
+            String name = fileName.substring(fileName.lastIndexOf("\\") + 1);
             if ((name == null) || (name.equals(""))) {
-                name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
+                name = fileName.substring(fileName.lastIndexOf("/") + 1);
             }
             allOfOne.getMatch().add(createMatch("PolicyName", name));
             AllOfType allOf = new AllOfType();
@@ -269,9 +269,9 @@ public class ConfigPolicy extends Policy {
             accessMatch.setAttributeValue(accessAttributeValue);
             AttributeDesignatorType accessAttributeDesignator = new AttributeDesignatorType();
             URI accessURI = null;
-            try{
+            try {
                 accessURI = new URI(ACTION_ID);
-            }catch(URISyntaxException e){
+            } catch (URISyntaxException e) {
                 PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "ConfigPolicy", "Exception creating ACCESS URI");
             }
             accessAttributeDesignator.setCategory(CATEGORY_ACTION);
@@ -288,9 +288,9 @@ public class ConfigPolicy extends Policy {
             configMatch.setAttributeValue(configAttributeValue);
             AttributeDesignatorType configAttributeDesignator = new AttributeDesignatorType();
             URI configURI = null;
-            try{
+            try {
                 configURI = new URI(RESOURCE_ID);
-            }catch(URISyntaxException e){
+            } catch (URISyntaxException e) {
                 PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "ConfigPolicy", "Exception creating Config URI");
             }
             configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
@@ -365,9 +365,9 @@ public class ConfigPolicy extends Policy {
 
             fileName = FilenameUtils.removeExtension(fileName);
             fileName = fileName + ".xml";
-            String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
+            String name = fileName.substring(fileName.lastIndexOf("\\") + 1);
             if ((name == null) || (name.equals(""))) {
-                name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
+                name = fileName.substring(fileName.lastIndexOf("/") + 1);
             }
             attributeValue3.getContent().add(name);
             assignment3.setExpression(new ObjectFactory().createAttributeValue(attributeValue3));

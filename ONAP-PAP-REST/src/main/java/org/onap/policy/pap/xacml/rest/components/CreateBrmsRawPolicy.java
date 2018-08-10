@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -73,14 +73,15 @@ public class CreateBrmsRawPolicy extends Policy {
     // Saving the Configurations file at server location for CreateBrmsRawPolicy policy.
     protected void saveConfigurations(String policyName, String jsonBody) {
 
-            if (policyName.endsWith(".xml")) {
-                policyName = policyName.substring(0,
-                            policyName.lastIndexOf(".xml"));
-            }
-        try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName + ".txt")){
+        if (policyName.endsWith(".xml")) {
+            policyName = policyName.substring(0,
+                    policyName.lastIndexOf(".xml"));
+        }
+        try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName + ".txt")) {
             out.println(jsonBody);
         } catch (Exception e) {
-            PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "CreateBrmsRawPolicy", "Exception saving configurations file");
+            PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "CreateBrmsRawPolicy",
+                    "Exception saving configurations file");
         }
     }
 
@@ -117,7 +118,7 @@ public class CreateBrmsRawPolicy extends Policy {
     public Map<String, String> savePolicies() throws PAPException {
 
         Map<String, String> successMap = new HashMap<>();
-        if(isPolicyExists()){
+        if (isPolicyExists()) {
             successMap.put("EXISTS", "This Policy already exist on the PAP");
             return successMap;
         }
@@ -171,7 +172,7 @@ public class CreateBrmsRawPolicy extends Policy {
 
         if (policyAdapter.getData() != null) {
             //String jsonBody = policyAdapter.getJsonBody();
-            String configBody=policyAdapter.getConfigBodyData();
+            String configBody = policyAdapter.getConfigBodyData();
             saveConfigurations(policyName, configBody);
 
             // Make sure the filename ends with an extension
@@ -187,10 +188,10 @@ public class CreateBrmsRawPolicy extends Policy {
 
             AllOfType allOfOne = new AllOfType();
             String fileName = policyAdapter.getNewFileName();
-            String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
+            String name = fileName.substring(fileName.lastIndexOf("\\") + 1);
             if ((name == null) || (name.equals(""))) {
-                name = fileName.substring(fileName.lastIndexOf("/") + 1,
-                        fileName.length());
+                name = fileName.substring(fileName.lastIndexOf("/") + 1
+                );
             }
             allOfOne.getMatch().add(createMatch("PolicyName", name));
 
@@ -237,7 +238,8 @@ public class CreateBrmsRawPolicy extends Policy {
             try {
                 accessURI = new URI(ACTION_ID);
             } catch (URISyntaxException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "CreateBrmsRawPolicy", "Exception creating ACCESS URI");
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "CreateBrmsRawPolicy",
+                        "Exception creating ACCESS URI");
             }
             accessAttributeDesignator.setCategory(CATEGORY_ACTION);
             accessAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -259,7 +261,8 @@ public class CreateBrmsRawPolicy extends Policy {
             try {
                 configURI = new URI(RESOURCE_ID);
             } catch (URISyntaxException e) {
-                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "CreateBrmsRawPolicy", "Exception creating Config URI");
+                PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "CreateBrmsRawPolicy",
+                        "Exception creating Config URI");
             }
 
             configAttributeDesignator.setCategory(CATEGORY_RESOURCE);
@@ -296,7 +299,7 @@ public class CreateBrmsRawPolicy extends Policy {
 
     // Data required for Advice part is setting here.
     private AdviceExpressionsType getAdviceExpressions(int version,
-            String fileName) {
+                                                       String fileName) {
 
         // Policy Config ID Assignment
         AdviceExpressionsType advices = new AdviceExpressionsType();
@@ -341,11 +344,11 @@ public class CreateBrmsRawPolicy extends Policy {
         fileName = FilenameUtils.removeExtension(fileName);
         fileName = fileName + ".xml";
         System.out.println(fileName);
-        String name = fileName.substring(fileName.lastIndexOf("\\") + 1,
-                fileName.length());
+        String name = fileName.substring(fileName.lastIndexOf("\\") + 1
+        );
         if ((name == null) || (name.equals(""))) {
-            name = fileName.substring(fileName.lastIndexOf("/") + 1,
-                    fileName.length());
+            name = fileName.substring(fileName.lastIndexOf("/") + 1
+            );
         }
         System.out.println(name);
         attributeValue3.getContent().add(name);
@@ -390,30 +393,32 @@ public class CreateBrmsRawPolicy extends Policy {
         advice.getAttributeAssignmentExpression().add(assignment6);
 
         // Adding Controller Information. 
-        if(policyAdapter.getBrmsController()!=null){
+        if (policyAdapter.getBrmsController() != null) {
             BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
             advice.getAttributeAssignmentExpression().add(
-                    createResponseAttributes("controller:"+ policyAdapter.getBrmsController(), 
-                                brmsDicitonaryController.getControllerDataByID(policyAdapter.getBrmsController()).getController()));
+                    createResponseAttributes("controller:" + policyAdapter.getBrmsController(),
+                            brmsDicitonaryController.getControllerDataByID(policyAdapter.getBrmsController())
+                                    .getController()));
         }
-        
+
         // Adding Dependencies. 
-        if(policyAdapter.getBrmsDependency()!=null){
+        if (policyAdapter.getBrmsDependency() != null) {
             BRMSDictionaryController brmsDicitonaryController = new BRMSDictionaryController();
             ArrayList<String> dependencies = new ArrayList<>();
             StringBuilder key = new StringBuilder();
-            for(String dependencyName: policyAdapter.getBrmsDependency()){
+            for (String dependencyName : policyAdapter.getBrmsDependency()) {
                 dependencies.add(brmsDicitonaryController.getDependencyDataByID(dependencyName).getDependency());
                 key.append(dependencyName + ",");
             }
             advice.getAttributeAssignmentExpression().add(
-                        createResponseAttributes("dependencies:"+key.toString(), dependencies.toString()));
+                    createResponseAttributes("dependencies:" + key.toString(), dependencies.toString()));
         }
-        
+
         // Dynamic Field Config Attributes. 
         Map<String, String> dynamicFieldConfigAttributes = policyAdapter.getDynamicFieldConfigAttributes();
         for (String keyField : dynamicFieldConfigAttributes.keySet()) {
-            advice.getAttributeAssignmentExpression().add(createResponseAttributes("key:"+keyField, dynamicFieldConfigAttributes.get(keyField)));
+            advice.getAttributeAssignmentExpression()
+                    .add(createResponseAttributes("key:" + keyField, dynamicFieldConfigAttributes.get(keyField)));
         }
 
         //Risk Attributes
@@ -474,7 +479,7 @@ public class CreateBrmsRawPolicy extends Policy {
         return policyAdapter.getData();
     }
 
-    private AttributeAssignmentExpressionType  createResponseAttributes(String key, String value){
+    private AttributeAssignmentExpressionType createResponseAttributes(String key, String value) {
         AttributeAssignmentExpressionType assignment7 = new AttributeAssignmentExpressionType();
         assignment7.setAttributeId(key);
         assignment7.setCategory(CATEGORY_RESOURCE);
