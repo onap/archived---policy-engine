@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,7 +54,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
-import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType; 
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 public class ClosedLoopPolicy extends Policy {
 
@@ -64,24 +64,24 @@ public class ClosedLoopPolicy extends Policy {
         super();
     }
 
-    public ClosedLoopPolicy(PolicyRestAdapter policyAdapter){
+    public ClosedLoopPolicy(PolicyRestAdapter policyAdapter) {
         this.policyAdapter = policyAdapter;
     }
 
     //save configuration of the policy based on the policyname
     private void saveConfigurations(String policyName, String jsonBody) {
 
-            if(policyName.endsWith(".xml")){
-                policyName = policyName.replace(".xml", "");
-            }
-        try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator+ policyName +".json")){
+        if (policyName.endsWith(".xml")) {
+            policyName = policyName.replace(".xml", "");
+        }
+        try (PrintWriter out = new PrintWriter(CONFIG_HOME + File.separator + policyName + ".json")) {
             String body = jsonBody;
             //Remove the trapMaxAge in Verification Signature
             body = body.replace(",\"trapMaxAge\":null", "");
             this.policyAdapter.setJsonBody(body);
             out.println(body);
         } catch (Exception e) {
-            LOGGER.error("Exception Occured while writing Configuration Data"+e);
+            LOGGER.error("Exception Occured while writing Configuration Data" + e);
         }
     }
 
@@ -107,12 +107,12 @@ public class ClosedLoopPolicy extends Policy {
     public Map<String, String> savePolicies() throws PAPException {
 
         Map<String, String> successMap = new HashMap<>();
-        if(isPolicyExists()){
+        if (isPolicyExists()) {
             successMap.put("EXISTS", "This Policy already exist on the PAP");
             return successMap;
         }
 
-        if(!isPreparedToSave()){
+        if (!isPreparedToSave()) {
             prepareToSave();
         }
 
@@ -120,16 +120,16 @@ public class ClosedLoopPolicy extends Policy {
         Path newPolicyPath = null;
         newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 
-        successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
+        successMap = createPolicy(newPolicyPath, getCorrectPolicyDataObject());
         return successMap;
     }
 
     //This is the method for preparing the policy for saving.  We have broken it out
     //separately because the fully configured policy is used for multiple things
     @Override
-    public boolean prepareToSave() throws PAPException{
+    public boolean prepareToSave() throws PAPException {
 
-        if(isPreparedToSave()){
+        if (isPreparedToSave()) {
             //we have already done this
             return true;
         }
@@ -166,9 +166,9 @@ public class ClosedLoopPolicy extends Policy {
 
             AllOfType allOfOne = new AllOfType();
             String fileName = policyAdapter.getNewFileName();
-            String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
+            String name = fileName.substring(fileName.lastIndexOf("\\") + 1);
             if ((name == null) || (name.equals(""))) {
-                name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
+                name = fileName.substring(fileName.lastIndexOf("/") + 1);
             }
             allOfOne.getMatch().add(createMatch("PolicyName", name));
             AllOfType allOf = new AllOfType();
@@ -215,7 +215,8 @@ public class ClosedLoopPolicy extends Policy {
             try {
                 accessURI = new URI(ACTION_ID);
             } catch (URISyntaxException e) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "CreateClosedLoopPolicy", "Exception creating ACCESS URI");
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "CreateClosedLoopPolicy",
+                        "Exception creating ACCESS URI");
             }
             accessAttributeDesignator.setCategory(CATEGORY_ACTION);
             accessAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -234,7 +235,8 @@ public class ClosedLoopPolicy extends Policy {
             try {
                 closedURI = new URI(RESOURCE_ID);
             } catch (URISyntaxException e) {
-                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "CreateClosedLoopPolicy", "Exception creating closed URI");
+                PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, "CreateClosedLoopPolicy",
+                        "Exception creating closed URI");
             }
             closedAttributeDesignator.setCategory(CATEGORY_RESOURCE);
             closedAttributeDesignator.setDataType(STRING_DATATYPE);
@@ -291,7 +293,7 @@ public class ClosedLoopPolicy extends Policy {
 
         AttributeValueType AttributeValue = new AttributeValueType();
         AttributeValue.setDataType(URI_DATATYPE);
-        String content = CONFIG_URL +"/Config/" + getConfigFile(policyName);
+        String content = CONFIG_URL + "/Config/" + getConfigFile(policyName);
         System.out.println("URL value :" + content);
         AttributeValue.getContent().add(content);
         assignment2.setExpression(new ObjectFactory().createAttributeValue(AttributeValue));
@@ -306,9 +308,9 @@ public class ClosedLoopPolicy extends Policy {
         attributeValue3.setDataType(STRING_DATATYPE);
         fileName = FilenameUtils.removeExtension(fileName);
         fileName = fileName + ".xml";
-        String name = fileName.substring(fileName.lastIndexOf("\\") + 1, fileName.length());
+        String name = fileName.substring(fileName.lastIndexOf("\\") + 1);
         if ((name == null) || (name.equals(""))) {
-            name = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
+            name = fileName.substring(fileName.lastIndexOf("/") + 1);
         }
         attributeValue3.getContent().add(name);
         assignment3.setExpression(new ObjectFactory().createAttributeValue(attributeValue3));
@@ -386,7 +388,6 @@ public class ClosedLoopPolicy extends Policy {
         assignment9.setExpression(new ObjectFactory().createAttributeValue(configNameAttributeValue9));
 
         advice.getAttributeAssignmentExpression().add(assignment9);
-
 
 
         advices.getAdviceExpression().add(advice);

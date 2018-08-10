@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.onap.policy.common.logging.eelf.MessageCodes;
@@ -91,7 +92,7 @@ public class CheckPDP {
         // Check if File is updated recently
         else {
             newModified = pdpPath.toFile().lastModified();
-            if (newModified != oldModified) {
+            if (!Objects.equals(newModified, oldModified)) {
                 // File has been updated.
                 readProps();
             }
