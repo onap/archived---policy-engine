@@ -45,81 +45,81 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 public class ExportAndImportDecisionBlackListEntriesTest {
 
-	private HttpServletRequest request;
-	private MockHttpServletResponse response;
-	String jsonString;
-	
-	@Before
-	public void setUp() throws Exception {
-		request = mock(HttpServletRequest.class);       
-		response =  new MockHttpServletResponse();
-	}
-	
-	@Test
-	public void testExportBlackList() throws IOException{
-		ClassLoader classLoader = getClass().getClassLoader();
-		jsonString = IOUtils.toString(classLoader.getResourceAsStream("DecisionPolicyData.txt"));
-		try(BufferedReader reader = new BufferedReader(new StringReader(jsonString))){
-			Mockito.when(request.getReader()).thenReturn(reader);
-			ExportAndImportDecisionBlackListEntries controller = new ExportAndImportDecisionBlackListEntries();
-			controller.exportBlackList(request, response);
-			assertTrue("".equals(response.getContentAsString()));
-		}catch(Exception e){
-			fail("Not expecting Exception while Exporting BlackListEntries.");
-		}
-	}
-	
-	@Test
-	public void testImportBlackList() throws Exception{
-		MockHttpServletRequest request =  new MockHttpServletRequest();
-		ExportAndImportDecisionBlackListEntries controller = new ExportAndImportDecisionBlackListEntries();
-		File file = new File("src/test/resources/BlackList.xls");
-		try(FileInputStream targetStream = new FileInputStream(file)){
-			ExportAndImportDecisionBlackListEntriesTest testController = Mockito.mock(ExportAndImportDecisionBlackListEntriesTest.class);
-			ServletInputStream inputStream = testController.getInputStream(getBytes(targetStream));
-			Mockito.when(request.getInputStream()).thenReturn(inputStream);
-			String boundary = "===" + System.currentTimeMillis() + "===";
-			request.addHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
-			request.addHeader("name", "BlackList.xls");
-			controller.importBlackListFile(request, response);
-			assertTrue(response.getContentAsString().contains("data"));
-		}catch(Exception e){
-			fail("Not expecting Exception while importing BlackListEntries.");
-		}
-	}
-	
-	public static byte[] getBytes(InputStream is) throws IOException {
-		int len;
-		int size = 1024;
-		byte[] buf;
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		buf = new byte[size];
-		while ((len = is.read(buf, 0, size)) != -1)
-			bos.write(buf, 0, len);
-		buf = bos.toByteArray();
-		return buf;
-	}
-	
-	public ServletInputStream getInputStream(byte[] body) throws IOException { 
+    private HttpServletRequest request;
+    private MockHttpServletResponse response;
+    String jsonString;
+    
+    @Before
+    public void setUp() throws Exception {
+        request = mock(HttpServletRequest.class);       
+        response =  new MockHttpServletResponse();
+    }
+    
+    @Test
+    public void testExportBlackList() throws IOException{
+        ClassLoader classLoader = getClass().getClassLoader();
+        jsonString = IOUtils.toString(classLoader.getResourceAsStream("DecisionPolicyData.txt"));
+        try(BufferedReader reader = new BufferedReader(new StringReader(jsonString))){
+            Mockito.when(request.getReader()).thenReturn(reader);
+            ExportAndImportDecisionBlackListEntries controller = new ExportAndImportDecisionBlackListEntries();
+            controller.exportBlackList(request, response);
+            assertTrue("".equals(response.getContentAsString()));
+        }catch(Exception e){
+            fail("Not expecting Exception while Exporting BlackListEntries.");
+        }
+    }
+    
+    @Test
+    public void testImportBlackList() throws Exception{
+        MockHttpServletRequest request =  new MockHttpServletRequest();
+        ExportAndImportDecisionBlackListEntries controller = new ExportAndImportDecisionBlackListEntries();
+        File file = new File("src/test/resources/BlackList.xls");
+        try(FileInputStream targetStream = new FileInputStream(file)){
+            ExportAndImportDecisionBlackListEntriesTest testController = Mockito.mock(ExportAndImportDecisionBlackListEntriesTest.class);
+            ServletInputStream inputStream = testController.getInputStream(getBytes(targetStream));
+            Mockito.when(request.getInputStream()).thenReturn(inputStream);
+            String boundary = "===" + System.currentTimeMillis() + "===";
+            request.addHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
+            request.addHeader("name", "BlackList.xls");
+            controller.importBlackListFile(request, response);
+            assertTrue(response.getContentAsString().contains("data"));
+        }catch(Exception e){
+            fail("Not expecting Exception while importing BlackListEntries.");
+        }
+    }
+    
+    public static byte[] getBytes(InputStream is) throws IOException {
+        int len;
+        int size = 1024;
+        byte[] buf;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        buf = new byte[size];
+        while ((len = is.read(buf, 0, size)) != -1)
+            bos.write(buf, 0, len);
+        buf = bos.toByteArray();
+        return buf;
+    }
+    
+    public ServletInputStream getInputStream(byte[] body) throws IOException { 
         final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body); 
         ServletInputStream servletInputStream = new ServletInputStream() { 
             public int read() throws IOException { 
                 return byteArrayInputStream.read(); 
             }
 
-			@Override
-			public boolean isFinished() {
-				return false;
-			}
+            @Override
+            public boolean isFinished() {
+                return false;
+            }
 
-			@Override
-			public boolean isReady() {
-				return false;
-			}
+            @Override
+            public boolean isReady() {
+                return false;
+            }
 
-			@Override
-			public void setReadListener(ReadListener readListener) {
-			} 
+            @Override
+            public void setReadListener(ReadListener readListener) {
+            } 
         }; 
         return servletInputStream; 
     } 
