@@ -82,6 +82,30 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_5613295c",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsRawPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-10T23:41:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a76adc5_e02b8fe9",
+      "range": {
+        "startLine": 348,
+        "startChar": 8,
+        "endLine": 348,
+        "endChar": 10
+      },
+      "revId": "18fefc6140a3be1c4ca276617b0020a62e270c41",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_0031eb59",
         "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsRawPolicy.java",
         "patchSetId": 1
@@ -93,6 +117,30 @@
       "writtenOn": "2018-08-10T14:13:04Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 351,
+        "startChar": 12,
+        "endLine": 351,
+        "endChar": 14
+      },
+      "revId": "18fefc6140a3be1c4ca276617b0020a62e270c41",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_7610a54e",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/CreateBrmsRawPolicy.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 2543
+      },
+      "writtenOn": "2018-08-10T23:41:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a76adc5_0031eb59",
       "range": {
         "startLine": 351,
         "startChar": 12,
