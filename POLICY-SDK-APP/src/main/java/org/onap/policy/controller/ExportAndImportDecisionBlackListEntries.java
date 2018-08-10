@@ -21,6 +21,7 @@
 package org.onap.policy.controller;
 
 import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -66,7 +67,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
-
 /**
  * This class is used to import and export the black list entries which were used in the Decision Blacklist Guard YAML
  * Policy.
@@ -102,8 +102,8 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
             List<String> blackLists = adapter.getYamlparams().getBlackList();
             HSSFSheet sheet = workBook.createSheet("BlackList");
             HSSFRow headingRow = sheet.createRow(0);
-            headingRow.createCell(0).setCellValue("Action");
-            headingRow.createCell(1).setCellValue("BlackListEntry");
+            headingRow.createCell(0).setCellValue(ACTION);
+            headingRow.createCell(1).setCellValue(BLACKLISTENTRY);
 
             short rowNo = 1;
             for (Object object : blackLists) {
@@ -126,7 +126,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
             String formatedDate = dateFormat.format(date);
 
             String fileName = "BlackList_Scope_" + adapter.getDomainDir() + "_Name_" + adapter.getPolicyName()
-                    + "_Version_" + root.get("version").toString() + "_Date_" + formatedDate + ".xls";
+            + "_Version_" + root.get("version").toString() + "_Date_" + formatedDate + ".xls";
 
             String deleteCheckPath = tmpFile + File.separator + fileName;
             File deleteCheck = new File(deleteCheckPath);
@@ -156,7 +156,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
             out.write(jsonResposne.toString());
         } catch (Exception e) {
             policyLogger.error(
-                    XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Exception Occured while Exporting BlackList Entries" , e);
+                    XACMLErrorConstants.ERROR_SYSTEM_ERROR + "Exception Occured while Exporting BlackList Entries", e);
         }
     }
 
@@ -166,25 +166,27 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
      * 
      * @param request the HTTP request contains file upload stream form GUI.
      * @param response the response is send to the GUI after reading the file input stream.
-     * @throws FileUploadException throws fileUpload Exception.
-     * @throws IOException throws IO Exceptions.
      */
     @RequestMapping(value = {"/policycreation/importBlackListForDecisionPolicy"}, method = {RequestMethod.POST})
-    public void importBlackListFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
-        List<String> errorLogs = new ArrayList<>();
-        Gson mapper = new Gson();
-        errorLogs.add("error");
-        Map<String, Object> model = new HashMap<>();
-        if (items.isEmpty()) {
-            errorLogs.add("The File doesn't have any content and it is invalid.");
-            model.put(BLACKLISTENTRIESDATA, errorLogs);
-        } else {
-            readItems(items, errorLogs, model);
+    public void importBlackListFile(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+            List<String> errorLogs = new ArrayList<>();
+            Gson mapper = new Gson();
+            errorLogs.add("error");
+            Map<String, Object> model = new HashMap<>();
+            if (items.isEmpty()) {
+                errorLogs.add("The File doesn't have any content and it is invalid.");
+                model.put(BLACKLISTENTRIESDATA, errorLogs);
+            } else {
+                readItems(items, errorLogs, model);
+            }
+            JsonMessage msg = new JsonMessage(mapper.toJson(model));
+            JSONObject jsonResposne = new JSONObject(msg);
+            response.getWriter().write(jsonResposne.toString());
+        } catch (FileUploadException | IOException e) {
+            policyLogger.error("Exception Occured while importing the BlackListEntry", e);
         }
-        JsonMessage msg = new JsonMessage(mapper.toJson(model));
-        JSONObject jsonResposne = new JSONObject(msg);
-        response.getWriter().write(jsonResposne.toString());
     }
 
     /**
@@ -195,7 +197,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
      * @param model Map which stores key value (blacklist and append list data)
      * @throws Exception throws exception if it is not .xls format
      */
-    private void readItems(List<FileItem> items, List<String> errorLogs, Map<String, Object> model) throws Exception {
+    private void readItems(List<FileItem> items, List<String> errorLogs, Map<String, Object> model) throws IOException {
         Map<String, InputStream> files = new HashMap<>();
 
         FileItem item = items.get(0);
@@ -238,7 +240,7 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
             String error = "Error Occured While Reading File. Please check the format of the file.";
             errorLogs.add(error);
             model.put(BLACKLISTENTRIESDATA, errorLogs);
-            policyLogger.error(error , e);
+            policyLogger.error(error, e);
         }
     }
 
@@ -288,7 +290,6 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
                 ReturnBlackList returnList = readBlackListCell(cell, lineNo, errorLogs);
                 blEntry = returnList.getEntryValue();
                 blackListCheck = returnList.isEntryCheck();
-                actionEntry = returnList.getActionValue();
             }
             lineNo++;
         }
@@ -326,7 +327,6 @@ public class ExportAndImportDecisionBlackListEntries extends RestrictedBaseContr
     }
 
     /**
-     * 
      * This method is used to read the BlackList cell entry.
      * 
      * @param cell reading the blacklist entry cell.
