@@ -3,6 +3,7 @@
  * ONAP-XACML
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,16 +102,23 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.configPolicyType = configPolicyType;
     }
 
-    //Constructor for Create Config Policies from API and Admin Console
-    //Constructor for Updating Config Policies from the API
-    //convenience constructor
+    /**
+     * Constructor for
+     *  Create Config Policies from API and Admin Console
+     *  Updating Config Policies from the API
+     *  Create/Update Action Policies from API
+     *  Create/Update Decision Policies
+     * @param stdPAPPolicyParams Input params object
+     */
     public StdPAPPolicy(StdPAPPolicyParams stdPAPPolicyParams) {
         this.configPolicyType=stdPAPPolicyParams.getConfigPolicyType();
         this.policyName = stdPAPPolicyParams.getPolicyName();
         this.policyDescription = stdPAPPolicyParams.getDescription();
         this.onapName = stdPAPPolicyParams.getOnapName();
+        this.providerComboBox = stdPAPPolicyParams.getProviderComboBox();
         this.configName = stdPAPPolicyParams.getConfigName();
-        this.dyanamicFieldConfigAttributes = stdPAPPolicyParams.getAttributes();
+        this.dyanamicFieldConfigAttributes = stdPAPPolicyParams.getDyanamicFieldConfigAttributes();
+        this.dynamicSettingsMap = stdPAPPolicyParams.getDynamicSettingsMap();
         this.configType = stdPAPPolicyParams.getConfigType();
         this.configBodyData = stdPAPPolicyParams.getConfigBodyData();
         this.editPolicy = stdPAPPolicyParams.getEditPolicy();
@@ -120,55 +128,16 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.riskType = stdPAPPolicyParams.getRiskType();
         this.guard = stdPAPPolicyParams.getGuard();
         this.ttlDate = stdPAPPolicyParams.getTtlDate();
-    }
-
-    //Constructor for Create/Update Action Policies from API
-    public StdPAPPolicy(String policyName, String description, Map<String, String> attributes,
-                        List<String> dynamicRuleAlgorithmLabels, List<String> dynamicRuleAlgorithmCombo,
-                        List<String> dynamicRuleAlgorithmField1, List<String> dynamicRuleAlgorithmField2,
-                        String actionPerformer, String actionAttribute, Boolean editPolicy,
-                        String domain, int highestVersion) {
-
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.dyanamicFieldConfigAttributes = attributes;
-        this.dynamicRuleAlgorithmLabels = dynamicRuleAlgorithmLabels;
-        this.dynamicRuleAlgorithmCombo = dynamicRuleAlgorithmCombo;
-        this.dynamicRuleAlgorithmField1 = dynamicRuleAlgorithmField1;
-        this.dynamicRuleAlgorithmField2 = dynamicRuleAlgorithmField2;
-        this.actionPerformer = actionPerformer;
-        this.actionAttribute = actionAttribute;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.highestVersion = highestVersion;
-
-    }
-
-    //Constructor for Create/Update Decision Policies
-    public StdPAPPolicy(String policyName, String description, String onapName, String providerComboBox,
-                        Map<String, String> attributes, Map<String, String> settings, Map<String, String> treatments,
-                        List<String> dynamicRuleAlgorithmLabels, List<String> dynamicRuleAlgorithmCombo,
-                        List<String> dynamicRuleAlgorithmField1,
-                        List<String> dynamicRuleAlgorithmField2, Map<String, String> dropDownMap,
-                        List<Object> dynamicVariableList,
-                        List<String> dataTypeList, Boolean editPolicy, String domain, int highestVersion) {
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.onapName = onapName;
-        this.setProviderComboBox(providerComboBox);
-        this.dyanamicFieldConfigAttributes = attributes;
-        this.dynamicSettingsMap = settings;
-        this.dynamicRuleAlgorithmLabels = dynamicRuleAlgorithmLabels;
-        this.dynamicRuleAlgorithmCombo = dynamicRuleAlgorithmCombo;
-        this.dynamicRuleAlgorithmField1 = dynamicRuleAlgorithmField1;
-        this.dynamicRuleAlgorithmField2 = dynamicRuleAlgorithmField2;
-        this.dynamicVariableList = dynamicVariableList;
-        this.dataTypeList = dataTypeList;
-        this.dropDownMap = dropDownMap;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.highestVersion = highestVersion;
-        this.treatments = treatments;
+        this.dynamicRuleAlgorithmLabels = stdPAPPolicyParams.getDynamicRuleAlgorithmLabels();
+        this.dynamicRuleAlgorithmCombo = stdPAPPolicyParams.getDynamicRuleAlgorithmCombo();
+        this.dynamicRuleAlgorithmField1 = stdPAPPolicyParams.getDynamicRuleAlgorithmField1();
+        this.dynamicRuleAlgorithmField2 = stdPAPPolicyParams.getDynamicRuleAlgorithmField2();
+        this.dynamicVariableList = stdPAPPolicyParams.getDynamicVariableList();
+        this.dataTypeList = stdPAPPolicyParams.getDataTypeList();
+        this.dropDownMap = stdPAPPolicyParams.getDropDownMap();
+        this.actionPerformer = stdPAPPolicyParams.getActionPerformer();
+        this.actionAttribute = stdPAPPolicyParams.getActionAttribute();
+        this.treatments = stdPAPPolicyParams.getTreatments();
     }
 
     //convenience constructor
