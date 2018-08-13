@@ -20,15 +20,19 @@
 
 package org.onap.policy.xacml.std.pap;
 
+import java.util.List;
 import java.util.Map;
 
+/**
+ * Std PAP Policy paramters class.
+ */
 public class StdPAPPolicyParams {
     private String configPolicyType;
     private String policyName;
     private String description;
     private String onapName;
     private String configName;
-    private Map<String, String> attributes;
+    private Map<String, String> dyanamicFieldConfigAttributes;
     private String configType;
     private String configBodyData;
     private Boolean editPolicy;
@@ -38,7 +42,22 @@ public class StdPAPPolicyParams {
     private String guard;
     private String ttlDate;
     private int highestVersion;
+    private List<String> dynamicRuleAlgorithmLabels;
+    private List<String> dynamicRuleAlgorithmCombo;
+    private List<String> dynamicRuleAlgorithmField1;
+    private List<String> dynamicRuleAlgorithmField2;
+    private String actionPerformer;
+    private String actionAttribute;
+    private String providerComboBox;
+    private Map<String, String> dynamicSettingsMap;
+    private List<Object> dynamicVariableList;
+    private List<String> dataTypeList;
+    private Map<String, String> dropDownMap;
+    private Map<String,String> treatments;
 
+    /**
+     * Default constructor
+     */
     private StdPAPPolicyParams() {
         super();
     }
@@ -71,8 +90,8 @@ public class StdPAPPolicyParams {
         return configName;
     }
 
-    public Map<String, String> getAttributes() {
-        return attributes;
+    public Map<String, String> getDyanamicFieldConfigAttributes() {
+        return dyanamicFieldConfigAttributes;
     }
 
     public String getConfigType() {
@@ -107,6 +126,57 @@ public class StdPAPPolicyParams {
         return ttlDate;
     }
 
+    public List<String> getDynamicRuleAlgorithmLabels() {
+        return dynamicRuleAlgorithmLabels;
+    }
+
+    public List<String> getDynamicRuleAlgorithmCombo() {
+        return dynamicRuleAlgorithmCombo;
+    }
+
+    public List<String> getDynamicRuleAlgorithmField1() {
+        return dynamicRuleAlgorithmField1;
+    }
+
+    public List<String> getDynamicRuleAlgorithmField2() {
+        return dynamicRuleAlgorithmField2;
+    }
+
+    public String getActionPerformer() {
+        return actionPerformer;
+    }
+
+    public String getActionAttribute() {
+        return actionAttribute;
+    }
+
+    public String getProviderComboBox() {
+        return providerComboBox;
+    }
+
+    public Map<String,String> getDynamicSettingsMap() {
+        return dynamicSettingsMap;
+    }
+
+    public List<Object> getDynamicVariableList() {
+        return dynamicVariableList;
+    }
+
+    public List<String> getDataTypeList() {
+        return dataTypeList;
+    }
+
+    public Map<String,String> getDropDownMap() {
+        return dropDownMap;
+    }
+
+    public Map<String,String> getTreatments() {
+        return treatments;
+    }
+
+    /**
+     * Builder class for the Policy parameters
+     */
     public static class StdPAPPolicyParamsBuilder {
         StdPAPPolicyParams m = new StdPAPPolicyParams();
 
@@ -140,8 +210,8 @@ public class StdPAPPolicyParams {
             return this;
         }
 
-        public StdPAPPolicyParamsBuilder attributes(Map<String, String> attributes) {
-            m.attributes = attributes;
+        public StdPAPPolicyParamsBuilder dyanamicFieldConfigAttributes(Map<String, String> attributes) {
+            m.dyanamicFieldConfigAttributes = attributes;
             return this;
         }
 
@@ -187,6 +257,66 @@ public class StdPAPPolicyParams {
 
         public StdPAPPolicyParamsBuilder highestVersion(int highVer) {
             m.highestVersion = highVer;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder dynamicRuleAlgorithmLabels(List<String> dynamicRuleAlgorithmLabels) {
+            m.dynamicRuleAlgorithmLabels = dynamicRuleAlgorithmLabels;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder dynamicRuleAlgorithmCombo(List<String> dynamicRuleAlgorithmCombo) {
+            m.dynamicRuleAlgorithmCombo = dynamicRuleAlgorithmCombo;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder dynamicRuleAlgorithmField1(List<String> dynamicRuleAlgorithmField1) {
+            m.dynamicRuleAlgorithmField1 = dynamicRuleAlgorithmField1;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder dynamicRuleAlgorithmField2(List<String> dynamicRuleAlgorithmField2) {
+            m.dynamicRuleAlgorithmField2 = dynamicRuleAlgorithmField2;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder actionPerformer(String actionPerformer) {
+            m.actionPerformer = actionPerformer;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder actionAttribute(String actionAttribute) {
+            m.actionAttribute = actionAttribute;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder providerComboBox(String providerComboBox) {
+            m.providerComboBox = providerComboBox;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder dynamicVariableList(List<Object> dynamicVariableList) {
+            m.dynamicVariableList = dynamicVariableList;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder dynamicSettingsMap(Map<String, String> dynamicSettingsMap) {
+            m.dynamicSettingsMap = dynamicSettingsMap;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder dataTypeList(List<String> dataTypeList) {
+            m.dataTypeList = dataTypeList;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder dropDownMap(Map<String, String> dropDownMap){
+            m.dropDownMap = dropDownMap;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder treatments(Map<String,String> treatments) {
+            m.treatments = treatments;
             return this;
         }
     }

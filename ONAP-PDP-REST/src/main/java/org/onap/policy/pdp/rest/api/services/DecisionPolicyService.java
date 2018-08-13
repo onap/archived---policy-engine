@@ -29,6 +29,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
+import org.onap.policy.xacml.std.pap.StdPAPPolicyParams;
 
 /**
  * Decision Policy Implementation
@@ -97,12 +98,22 @@ public class DecisionPolicyService {
             matchingAttributes = policyParameters.getAttributes().get(AttributeType.MATCHING);
         }
         // Create StdPAPPolicy object used to send policy data to PAP-REST.
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(policyName, policyParameters.getPolicyDescription(), onapName,
-                ruleProvider.toString(), matchingAttributes, settingsAttributes,
-                policyParameters.getTreatments(), policyParameters.getDynamicRuleAlgorithmLabels(),
-                policyParameters.getDynamicRuleAlgorithmFunctions(),
-                policyParameters.getDynamicRuleAlgorithmField1(), policyParameters.getDynamicRuleAlgorithmField2(),
-                null, null, null, updateFlag, policyScope, 0);
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .policyName(policyName)
+                .description(policyParameters.getPolicyDescription())
+                .onapName(onapName)
+                .providerComboBox(ruleProvider.toString())
+                .dyanamicFieldConfigAttributes(matchingAttributes)
+                .dynamicSettingsMap(settingsAttributes)
+                .treatments(policyParameters.getTreatments())
+                .dynamicRuleAlgorithmLabels(policyParameters.getDynamicRuleAlgorithmLabels())
+                .dynamicRuleAlgorithmCombo(policyParameters.getDynamicRuleAlgorithmFunctions())
+                .dynamicRuleAlgorithmField1(policyParameters.getDynamicRuleAlgorithmField1())
+                .dynamicRuleAlgorithmField2(policyParameters.getDynamicRuleAlgorithmField2())
+                .editPolicy(updateFlag)
+                .domain(policyScope)
+                .highestVersion(0)
+                .build());
         // Send JSON to PAP.
         response = (String) papServices.callPAP(newPAPPolicy, new String[]{"operation=" + operation, "apiflag=api",
                 "policyType=Decision"}, policyParameters.getRequestID(), "Decision");

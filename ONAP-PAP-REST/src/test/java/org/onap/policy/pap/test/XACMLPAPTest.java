@@ -3,6 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -290,8 +291,15 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getParameter("apiflag")).thenReturn("api");
         Mockito.when(httpServletRequest.getParameter("operation")).thenReturn("create");
         Mockito.when(httpServletRequest.getParameter("policyType")).thenReturn("Decision");
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("test", "test rule", "ONAP", "AAF", null, null, null,
-                null, null, null, null, null, null, null, false, "test", 0);
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .policyName("test")
+                .description("test rule")
+                .onapName("ONAP")
+                .providerComboBox("AAF")
+                .editPolicy(false)
+                .domain("test")
+                .highestVersion(0)
+                .build());
         MockServletInputStream mockInput =
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
@@ -324,8 +332,17 @@ public class XACMLPAPTest {
         matchingAttributes.put("guardActiveStart", "05:00");
         matchingAttributes.put("guardActiveEnd", "10:00");
         StdPAPPolicy newPAPPolicy =
-                new StdPAPPolicy("testGuard", "test rule", "PDPD", "GUARD_YAML", matchingAttributes, null, null,
-                        null, null, null, null, null, null, null, false, "test", 0);
+
+                new StdPAPPolicy(StdPAPPolicyParams.builder()
+                        .policyName("testGuard")
+                        .description("test rule")
+                        .onapName("PDPD")
+                        .providerComboBox("GUARD_YAML")
+                        .dyanamicFieldConfigAttributes(matchingAttributes)
+                        .editPolicy(false)
+                        .domain("test")
+                        .highestVersion(0)
+                        .build());
         MockServletInputStream mockInput =
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
@@ -355,8 +372,16 @@ public class XACMLPAPTest {
         matchingAttributes.put("guardActiveEnd", "10:00");
         matchingAttributes.put("blackList", "bl1,bl2");
         StdPAPPolicy newPAPPolicy =
-                new StdPAPPolicy("testblGuard", "test rule", "PDPD", "GUARD_BL_YAML", matchingAttributes, null, null,
-                        null, null, null, null, null, null, null, false, "test", 0);
+                new StdPAPPolicy(StdPAPPolicyParams.builder()
+                        .policyName("testblGuard")
+                        .description("test rule")
+                        .onapName("PDPD")
+                        .providerComboBox("GUARD_BL_YAML")
+                        .dyanamicFieldConfigAttributes(matchingAttributes)
+                        .editPolicy(false)
+                        .domain("test")
+                        .highestVersion(0)
+                        .build());
         MockServletInputStream mockInput =
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
@@ -386,7 +411,7 @@ public class XACMLPAPTest {
                 .description("test rule")
                 .onapName("TEST")
                 .configName("config")
-                .attributes(configAttributes)
+                .dyanamicFieldConfigAttributes(configAttributes)
                 .configType("OTHER")
                 .configBodyData("test body")
                 .editPolicy(false)
