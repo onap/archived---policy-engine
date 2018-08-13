@@ -586,7 +586,7 @@ public class StdPAPPolicyTest {
                         .description("description")
                         .onapName("onapName")
                         .configName("configName")
-                        .attributes(attributes)
+                        .dyanamicFieldConfigAttributes(attributes)
                         .configType("configType")
                         .configBodyData("body")
                         .editPolicy(true)
@@ -624,10 +624,18 @@ public class StdPAPPolicyTest {
         dynamicRuleAlgorithmField1.add("dynamicRuleAlgorithmField1");
         List<String> dynamicRuleAlgorithmField2 = new ArrayList<>();
         dynamicRuleAlgorithmField2.add("dynamicRuleAlgorithmField2");
-        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy("policyName", "description", attributes,
-                dynamicRuleAlgorithmLabels, dynamicRuleAlgorithmCombo, dynamicRuleAlgorithmField1,
-                dynamicRuleAlgorithmField2,
-                "actionPerformer", "actionAttribute", true, "domain", 1);
+        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder().policyName("policyName").description("description")
+                .dyanamicFieldConfigAttributes(attributes)
+                .dynamicRuleAlgorithmLabels(dynamicRuleAlgorithmLabels)
+                .dynamicRuleAlgorithmCombo(dynamicRuleAlgorithmCombo)
+                .dynamicRuleAlgorithmField1(dynamicRuleAlgorithmField1)
+                .dynamicRuleAlgorithmField2(dynamicRuleAlgorithmField2)
+                .actionPerformer("actionPerformer")
+                .actionAttribute("actionAttribute")
+                .editPolicy(true)
+                .domain("domain")
+                .highestVersion(1)
+                .build());
         assertEquals("policyName", stdPAPPolicy.getPolicyName());
         assertEquals("description", stdPAPPolicy.getPolicyDescription());
         assertEquals(attributes, stdPAPPolicy.getDynamicFieldConfigAttributes());
