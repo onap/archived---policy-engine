@@ -28,6 +28,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
+import org.onap.policy.xacml.std.pap.StdPAPPolicyParams;
 
 /**
  * Action Policy Implementation.
@@ -94,11 +95,19 @@ public class ActionPolicyService {
             operation = "create";
         }
         // Create Policy
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(policyName, policyParameters.getPolicyDescription(),
-                componentAttributes, policyParameters.getDynamicRuleAlgorithmLabels(),
-                policyParameters.getDynamicRuleAlgorithmFunctions(),
-                policyParameters.getDynamicRuleAlgorithmField1(), policyParameters.getDynamicRuleAlgorithmField2(),
-                actionPerformer, actionAttribute, updateFlag, policyScope, 0);
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder().policyName(policyName)
+                .description(policyParameters.getPolicyDescription())
+                .dyanamicFieldConfigAttributes(componentAttributes)
+                .dynamicRuleAlgorithmLabels(policyParameters.getDynamicRuleAlgorithmLabels())
+                .dynamicRuleAlgorithmCombo(policyParameters.getDynamicRuleAlgorithmFunctions())
+                .dynamicRuleAlgorithmField1(policyParameters.getDynamicRuleAlgorithmField1())
+                .dynamicRuleAlgorithmField2(policyParameters.getDynamicRuleAlgorithmField2())
+                .actionPerformer(actionPerformer)
+                .actionAttribute(actionAttribute)
+                .editPolicy(updateFlag)
+                .domain(policyScope)
+                .highestVersion(0)
+                .build());
         // send Json to PAP
         response = (String) papServices.callPAP(newPAPPolicy, new String[]{"operation=" + operation, "apiflag=api",
                 "policyType=Action"}, policyParameters.getRequestID(), "Action");
