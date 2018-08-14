@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_23d744c3",
+        "filename": "POLICY-SDK-APP/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-08-14T15:48:11Z",
+      "side": 1,
+      "message": "Unfortunately we cannot use this dependency. It is out of date and full of security LCM issues. In the top level parent pom.xml v4.5.5 is declared. Please use that one.\n\n\u003cdependency\u003e\n                        \u003cgroupId\u003eorg.apache.httpcomponents\u003c/groupId\u003e\n                        \u003cartifactId\u003ehttpclient\u003c/artifactId\u003e\n                        \u003cversion\u003e${httpclient.version}\u003c/version\u003e\n                \u003c/dependency\u003e",
+      "range": {
+        "startLine": 240,
+        "startChar": 2,
+        "endLine": 246,
+        "endChar": 15
+      },
+      "revId": "819b6efca0ee49b45dbb1b8ede2b40c7ffba074c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
