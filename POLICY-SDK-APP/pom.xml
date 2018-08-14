@@ -237,6 +237,13 @@
 			<artifactId>commons-fileupload</artifactId>
 			<version>${commons.fileupload.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-httpclient/commons-httpclient -->
+		<dependency>
+		    <groupId>commons-httpclient</groupId>
+		    <artifactId>commons-httpclient</artifactId>
+		    <scope>test</scope>
+		    <version>3.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-compress</artifactId>

@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.policy.controller;
 
 import static org.junit.Assert.assertTrue;
@@ -24,103 +25,87 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
-
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.ByteArrayPartSource;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.util.FileCopyUtils;
 
 public class ExportAndImportDecisionBlackListEntriesTest {
 
     private HttpServletRequest request;
     private MockHttpServletResponse response;
     String jsonString;
-    
+
     @Before
     public void setUp() throws Exception {
-        request = mock(HttpServletRequest.class);       
-        response =  new MockHttpServletResponse();
+        request = mock(HttpServletRequest.class);
+        response = new MockHttpServletResponse();
     }
-    
+
     @Test
-    public void testExportBlackList() throws IOException{
+    public void testExportBlackList() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
         jsonString = IOUtils.toString(classLoader.getResourceAsStream("DecisionPolicyData.txt"));
-        try(BufferedReader reader = new BufferedReader(new StringReader(jsonString))){
+        try (BufferedReader reader = new BufferedReader(new StringReader(jsonString))) {
             Mockito.when(request.getReader()).thenReturn(reader);
             ExportAndImportDecisionBlackListEntries controller = new ExportAndImportDecisionBlackListEntries();
             controller.exportBlackList(request, response);
             assertTrue("".equals(response.getContentAsString()));
-        }catch(Exception e){
+        } catch (Exception e) {
             fail("Not expecting Exception while Exporting BlackListEntries.");
         }
     }
-    
+
     @Test
-    public void testImportBlackList() throws Exception{
-        MockHttpServletRequest request =  new MockHttpServletRequest();
+    public void testImportBlackList() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setMethod("POST");
+        request.addHeader("name", "BlackList.xls");
         ExportAndImportDecisionBlackListEntries controller = new ExportAndImportDecisionBlackListEntries();
-        File file = new File("src/test/resources/BlackList.xls");
-        try(FileInputStream targetStream = new FileInputStream(file)){
-            ExportAndImportDecisionBlackListEntriesTest testController = Mockito.mock(ExportAndImportDecisionBlackListEntriesTest.class);
-            ServletInputStream inputStream = testController.getInputStream(getBytes(targetStream));
-            Mockito.when(request.getInputStream()).thenReturn(inputStream);
-            String boundary = "===" + System.currentTimeMillis() + "===";
-            request.addHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
-            request.addHeader("name", "BlackList.xls");
+        try {
+            createMultipartFormDataRequest(request);
             controller.importBlackListFile(request, response);
             assertTrue(response.getContentAsString().contains("data"));
-        }catch(Exception e){
+        } catch (Exception e) {
             fail("Not expecting Exception while importing BlackListEntries.");
         }
     }
-    
-    public static byte[] getBytes(InputStream is) throws IOException {
-        int len;
-        int size = 1024;
-        byte[] buf;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        buf = new byte[size];
-        while ((len = is.read(buf, 0, size)) != -1)
-            bos.write(buf, 0, len);
-        buf = bos.toByteArray();
-        return buf;
+
+    /**
+     * Create Multi part Request for import test case.
+     * 
+     * @param request mock request to set the BlackList.xls 
+     * @throws IOException throws error if anything fails while writing request.
+     * 
+     */
+    public void createMultipartFormDataRequest(MockHttpServletRequest request) throws IOException {
+        String resourceName = "BlackList.xls";
+        String partName = "BlackList.xls";
+        // Load resource being uploaded
+        byte[] fileContent = FileCopyUtils
+                .copyToByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream("BlackList.xls"));
+        // Create part & entity from resource
+        Part[] parts = new Part[] {new FilePart(partName, new ByteArrayPartSource(resourceName, fileContent))};
+        MultipartRequestEntity multipartRequestEntity = new MultipartRequestEntity(parts, new PostMethod().getParams());
+        // Serialize request body
+        ByteArrayOutputStream requestContent = new ByteArrayOutputStream();
+        multipartRequestEntity.writeRequest(requestContent);
+        // Set request body to HTTP servlet request
+        request.setContent(requestContent.toByteArray());
+        // Set content type to HTTP servlet request (important, includes Mime boundary string)
+        request.setContentType(multipartRequestEntity.getContentType());
     }
-    
-    public ServletInputStream getInputStream(byte[] body) throws IOException { 
-        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body); 
-        ServletInputStream servletInputStream = new ServletInputStream() { 
-            public int read() throws IOException { 
-                return byteArrayInputStream.read(); 
-            }
 
-            @Override
-            public boolean isFinished() {
-                return false;
-            }
-
-            @Override
-            public boolean isReady() {
-                return false;
-            }
-
-            @Override
-            public void setReadListener(ReadListener readListener) {
-            } 
-        }; 
-        return servletInputStream; 
-    } 
 }
