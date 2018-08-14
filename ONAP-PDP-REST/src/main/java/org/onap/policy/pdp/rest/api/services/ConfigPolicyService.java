@@ -133,7 +133,7 @@ public class ConfigPolicyService {
                 .description(policyParameters.getPolicyDescription())
                 .onapName(onapName)
                 .configName(configName)
-                .dyanamicFieldConfigAttributes(configAttributes)
+                .dynamicFieldConfigAttributes(configAttributes)
                 .configType(configType)
                 .configBodyData(configBody)
                 .editPolicy(updateFlag)

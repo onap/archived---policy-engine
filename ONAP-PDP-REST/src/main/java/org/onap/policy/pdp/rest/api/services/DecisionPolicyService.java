@@ -3,6 +3,7 @@
  * ONAP-PDP-REST
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +104,7 @@ public class DecisionPolicyService {
                 .description(policyParameters.getPolicyDescription())
                 .onapName(onapName)
                 .providerComboBox(ruleProvider.toString())
-                .dyanamicFieldConfigAttributes(matchingAttributes)
+                .dynamicFieldConfigAttributes(matchingAttributes)
                 .dynamicSettingsMap(settingsAttributes)
                 .treatments(policyParameters.getTreatments())
                 .dynamicRuleAlgorithmLabels(policyParameters.getDynamicRuleAlgorithmLabels())

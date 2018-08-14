@@ -3,6 +3,7 @@
  * ONAP-PDP-REST
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +30,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.api.utils.PolicyApiUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
+import org.onap.policy.xacml.std.pap.StdPAPPolicyParams;
 
 /**
  * Firewall Policy Implementation.
@@ -104,10 +106,20 @@ public class FirewallPolicyService {
         String configDescription = "";
         String json = firewallJson.toString();
         // Create Policy.
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("Firewall Config", policyName, configDescription, configName,
-                updateFlag, policyScope, json, 0,
-                policyParameters.getRiskLevel(), policyParameters.getRiskType(),
-                String.valueOf(policyParameters.getGuard()), date);
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("Firewall Config")
+                .policyName(policyName)
+                .description(configDescription)
+                .configName(configName)
+                .editPolicy(updateFlag)
+                .domain(policyScope)
+                .jsonBody(json)
+                .highestVersion(0)
+                .riskLevel(policyParameters.getRiskLevel())
+                .riskType(policyParameters.getRiskType())
+                .guard(String.valueOf(policyParameters.getGuard()))
+                .ttlDate(date)
+                .build());
         // Send Json to PAP.
         response = (String) papServices.callPAP(newPAPPolicy, new String[]{"operation=" + operation, "apiflag=api",
                 "policyType=Config"}, policyParameters.getRequestID(), "ConfigFirewall");

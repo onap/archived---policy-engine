@@ -3,6 +3,7 @@
  * ONAP-XACML
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -586,7 +587,7 @@ public class StdPAPPolicyTest {
                         .description("description")
                         .onapName("onapName")
                         .configName("configName")
-                        .dyanamicFieldConfigAttributes(attributes)
+                        .dynamicFieldConfigAttributes(attributes)
                         .configType("configType")
                         .configBodyData("body")
                         .editPolicy(true)
@@ -625,7 +626,7 @@ public class StdPAPPolicyTest {
         List<String> dynamicRuleAlgorithmField2 = new ArrayList<>();
         dynamicRuleAlgorithmField2.add("dynamicRuleAlgorithmField2");
         StdPAPPolicy stdPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder().policyName("policyName").description("description")
-                .dyanamicFieldConfigAttributes(attributes)
+                .dynamicFieldConfigAttributes(attributes)
                 .dynamicRuleAlgorithmLabels(dynamicRuleAlgorithmLabels)
                 .dynamicRuleAlgorithmCombo(dynamicRuleAlgorithmCombo)
                 .dynamicRuleAlgorithmField1(dynamicRuleAlgorithmField1)
@@ -677,7 +678,7 @@ public class StdPAPPolicyTest {
                 .description("description")
                 .onapName("onapName")
                 .providerComboBox("providerComboBox")
-                .dyanamicFieldConfigAttributes(attributes)
+                .dynamicFieldConfigAttributes(attributes)
                 .dynamicSettingsMap(settings)
                 .treatments(treatments)
                 .dynamicRuleAlgorithmLabels(dynamicRuleAlgorithmLabels)
@@ -715,10 +716,26 @@ public class StdPAPPolicyTest {
             throws URISyntaxException {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("aKey", "aValue");
-        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy("configTypePolicy", "policyName", "description", "onapName",
-                "configName", attributes,
-                "body", "policyId", "ruleId", "configType", true, "version", "domain", 1, "riskLevel", "riskType",
-                "guard", "ttlDate");
+        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("configTypePolicy")
+                .policyName("policyName")
+                .description("description")
+                .onapName("onapName")
+                .configName("configName")
+                .dynamicFieldConfigAttributes(attributes)
+                .configBodyData("body")
+                .policyID("policyId")
+                .ruleID("ruleId")
+                .configType("configType")
+                .editPolicy(true)
+                .version("version")
+                .domain("domain")
+                .highestVersion(1)
+                .riskLevel("riskLevel")
+                .riskType("riskType")
+                .guard("guard")
+                .ttlDate("ttlDate")
+                .build());
         assertEquals("configTypePolicy", stdPAPPolicy.getConfigPolicyType());
         assertEquals("policyName", stdPAPPolicy.getPolicyName());
         assertEquals("description", stdPAPPolicy.getPolicyDescription());
@@ -742,9 +759,20 @@ public class StdPAPPolicyTest {
     @Test
     public void testConstructorStringStringStringStringBooleanStringStringIntegerStringStringStringString()
             throws URISyntaxException {
-        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy("configTypePolicy", "policyName", "description", "configName",
-                true,
-                "domain", "jasonBody", 1, "riskLevel", "riskType", "guard", "ttlDate");
+        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("configTypePolicy")
+                .policyName("policyName")
+                .description("description")
+                .configName("configName")
+                .editPolicy(true)
+                .domain("domain")
+                .jsonBody("jasonBody")
+                .highestVersion(1)
+                .riskLevel("riskLevel")
+                .riskType("riskType")
+                .guard("guard")
+                .ttlDate("ttlDate")
+                .build());
         assertEquals("configTypePolicy", stdPAPPolicy.getConfigPolicyType());
         assertEquals("policyName", stdPAPPolicy.getPolicyName());
         assertEquals("description", stdPAPPolicy.getPolicyDescription());
@@ -762,9 +790,21 @@ public class StdPAPPolicyTest {
     @Test
     public void testConstructorStringStringStringStringBooleanStringStringIntegerStringStringStringStringString()
             throws URISyntaxException {
-        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy("configTypePolicy", "policyName", "description", "configName",
-                true,
-                "domain", "jasonBody", 1, "eCompName", "riskLevel", "riskType", "guard", "ttlDate");
+        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("configTypePolicy")
+                .policyName("policyName")
+                .description("description")
+                .configName("configName")
+                .editPolicy(true)
+                .domain("domain")
+                .jsonBody("jasonBody")
+                .highestVersion(1)
+                .onapName("eCompName")
+                .riskLevel("riskLevel")
+                .riskType("riskType")
+                .guard("guard")
+                .ttlDate("ttlDate")
+                .build());
         assertEquals("configTypePolicy", stdPAPPolicy.getConfigPolicyType());
         assertEquals("policyName", stdPAPPolicy.getPolicyName());
         assertEquals("description", stdPAPPolicy.getPolicyDescription());
@@ -787,10 +827,24 @@ public class StdPAPPolicyTest {
         dyanamicFieldConfigAttributes.put("aKey", "aValue");
         ArrayList<String> brmsDependency = new ArrayList<>();
         brmsDependency.add("brmsDependency");
-        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy("configTypePolicy", "policyName", "description", "configName",
-                true,
-                "domain", dyanamicFieldConfigAttributes, 1, "eCompName", "configBodyData", "riskLevel", "riskType",
-                "guard", "ttlDate", "brmsController", brmsDependency);
+        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("configTypePolicy")
+                .policyName("policyName")
+                .description("description")
+                .configName("configName")
+                .editPolicy(true)
+                .domain("domain")
+                .dynamicFieldConfigAttributes(dyanamicFieldConfigAttributes)
+                .highestVersion(1)
+                .onapName("eCompName")
+                .configBodyData("configBodyData")
+                .riskLevel("riskLevel")
+                .riskType("riskType")
+                .guard("guard")
+                .ttlDate("ttlDate")
+                .brmsController("brmsController")
+                .brmsDependency(brmsDependency)
+                .build());
         assertEquals("configTypePolicy", stdPAPPolicy.getConfigPolicyType());
         assertEquals("policyName", stdPAPPolicy.getPolicyName());
         assertEquals("description", stdPAPPolicy.getPolicyDescription());
@@ -867,9 +921,24 @@ public class StdPAPPolicyTest {
     @Test
     public void testConstructorStringStringStringStringBooleanStringStringStringStringStringIntegerStringStringStringString()
             throws URISyntaxException {
-        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy("configTypePolicy", "policyName", "description", "configName",
-                true, "domain", "policyId", "ruleId",
-                "version", "jasonBody", 1, "riskLevel", "riskType", "guard", "ttlDate");
+        //test for Updating Config Firewall Policies from the Admin Console
+        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("configTypePolicy")
+                .policyName("policyName")
+                .description("description")
+                .configName("configName")
+                .editPolicy(true)
+                .domain("domain")
+                .policyID("policyId")
+                .ruleID("ruleId")
+                .version("version")
+                .jsonBody("jasonBody")
+                .highestVersion(1)
+                .riskLevel("riskLevel")
+                .riskType("riskType")
+                .guard("guard")
+                .ttlDate("ttlDate")
+                .build());
         assertEquals("configTypePolicy", stdPAPPolicy.getConfigPolicyType());
         assertEquals("policyName", stdPAPPolicy.getPolicyName());
         assertEquals("description", stdPAPPolicy.getPolicyDescription());
@@ -917,9 +986,25 @@ public class StdPAPPolicyTest {
     @Test
     public void testConstructorStringStringStringStringBooleanStringStringStringStringStringIntegerStringStringStringStringString()
             throws URISyntaxException {
-        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy("configTypePolicy", "policyName", "description", "configName",
-                true, "domain", "policyId", "ruleId", "version",
-                "jasonBody", 1, "ecompName", "riskLevel", "riskType", "guard", "ttlDate");
+        //test for Updating Goc Policies from the Admin Console
+        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("configTypePolicy")
+                .policyName("policyName")
+                .description("description")
+                .configName("configName")
+                .editPolicy(true)
+                .domain("domain")
+                .policyID("policyId")
+                .ruleID("ruleId")
+                .version("version")
+                .jsonBody("jasonBody")
+                .highestVersion(1)
+                .onapName("ecompName")
+                .riskLevel("riskLevel")
+                .riskType("riskType")
+                .guard("guard")
+                .ttlDate("ttlDate")
+                .build());
         assertEquals("configTypePolicy", stdPAPPolicy.getConfigPolicyType());
         assertEquals("policyName", stdPAPPolicy.getPolicyName());
         assertEquals("description", stdPAPPolicy.getPolicyDescription());
@@ -941,12 +1026,28 @@ public class StdPAPPolicyTest {
     @Test
     public void testConstructorStringStringStringStringBooleanStringStringStringStringMapStringStringIntegerStringStringStringStringString()
             throws URISyntaxException {
+        //for Updating Brms Policies from the Admin Console
         Map<String, String> dyanamicFieldConfigAttributes = new HashMap<>();
         dyanamicFieldConfigAttributes.put("aKey", "aValue");
-        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy("configTypePolicy", "policyName", "description", "configName",
-                true,
-                "domain", "policyId", "ruleId", "version", dyanamicFieldConfigAttributes, 1, "eCompName",
-                "configBodyData", "riskLevel", "riskType", "guard", "ttlDate");
+        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("configTypePolicy")
+                .policyName("policyName")
+                .description("description")
+                .configName("configName")
+                .editPolicy(true)
+                .domain("domain")
+                .policyID("policyId")
+                .ruleID("ruleId")
+                .version("version")
+                .dynamicFieldConfigAttributes(dyanamicFieldConfigAttributes)
+                .highestVersion(1)
+                .onapName("eCompName")
+                .configBodyData("configBodyData")
+                .riskLevel("riskLevel")
+                .riskType("riskType")
+                .guard("guard")
+                .ttlDate("ttlDate")
+                .build());
         assertEquals("configTypePolicy", stdPAPPolicy.getConfigPolicyType());
         assertEquals("policyName", stdPAPPolicy.getPolicyName());
         assertEquals("description", stdPAPPolicy.getPolicyDescription());
@@ -969,14 +1070,30 @@ public class StdPAPPolicyTest {
     @Test
     public void testConstructorStringStringStringStringBooleanStringStringStringStringMapStringStringIntegerStringMapStringStringStringStringStringString()
             throws URISyntaxException {
+        //for Updating Brms Param Policies from the Admin Console
         Map<String, String> dyanamicFieldConfigAttributes = new HashMap<>();
         dyanamicFieldConfigAttributes.put("aKey", "aValue");
         Map<String, String> drlRuleAndUIParams = new HashMap<>();
         drlRuleAndUIParams.put("aDrlRuleKey", "aDrlRuleValue");
-        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy("configTypePolicy", "policyName", "description", "configName",
-                true,
-                "domain", "policyId", "ruleId", "version", dyanamicFieldConfigAttributes, 1, "eCompName",
-                drlRuleAndUIParams, "riskLevel", "riskType", "guard", "ttlDate");
+        StdPAPPolicy stdPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("configTypePolicy")
+                .policyName("policyName")
+                .description("description")
+                .configName("configName")
+                .editPolicy(true)
+                .domain("domain")
+                .policyID("policyId")
+                .ruleID("ruleId")
+                .version("version")
+                .dynamicFieldConfigAttributes(dyanamicFieldConfigAttributes)
+                .highestVersion(1)
+                .onapName("eCompName")
+                .drlRuleAndUIParams(drlRuleAndUIParams)
+                .riskLevel("riskLevel")
+                .riskType("riskType")
+                .guard("guard")
+                .ttlDate("ttlDate")
+                .build());
         assertEquals("configTypePolicy", stdPAPPolicy.getConfigPolicyType());
         assertEquals("policyName", stdPAPPolicy.getPolicyName());
         assertEquals("description", stdPAPPolicy.getPolicyDescription());

@@ -32,7 +32,7 @@ public class StdPAPPolicyParams {
     private String description;
     private String onapName;
     private String configName;
-    private Map<String, String> dyanamicFieldConfigAttributes;
+    private Map<String, String> dynamicFieldConfigAttributes;
     private String configType;
     private String configBodyData;
     private Boolean editPolicy;
@@ -54,6 +54,13 @@ public class StdPAPPolicyParams {
     private List<String> dataTypeList;
     private Map<String, String> dropDownMap;
     private Map<String,String> treatments;
+    private String policyID;
+    private String ruleID;
+    private String version;
+    private String jsonBody;
+    private String brmsController;
+    private List<String> brmsDependency;
+    private Map<String,String> drlRuleAndUIParams;
 
     /**
      * Default constructor
@@ -90,8 +97,8 @@ public class StdPAPPolicyParams {
         return configName;
     }
 
-    public Map<String, String> getDyanamicFieldConfigAttributes() {
-        return dyanamicFieldConfigAttributes;
+    public Map<String, String> getDynamicFieldConfigAttributes() {
+        return dynamicFieldConfigAttributes;
     }
 
     public String getConfigType() {
@@ -174,6 +181,34 @@ public class StdPAPPolicyParams {
         return treatments;
     }
 
+    public String getPolicyID() {
+        return policyID;
+    }
+
+    public String getRuleID() {
+        return ruleID;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getJsonBody() {
+        return jsonBody;
+    }
+
+    public String getBrmsController() {
+        return brmsController;
+    }
+
+    public List<String> getBrmsDependency() {
+        return brmsDependency;
+    }
+
+    public Map<String,String> getDrlRuleAndUIParams() {
+        return drlRuleAndUIParams;
+    }
+
     /**
      * Builder class for the Policy parameters
      */
@@ -210,8 +245,8 @@ public class StdPAPPolicyParams {
             return this;
         }
 
-        public StdPAPPolicyParamsBuilder dyanamicFieldConfigAttributes(Map<String, String> attributes) {
-            m.dyanamicFieldConfigAttributes = attributes;
+        public StdPAPPolicyParamsBuilder dynamicFieldConfigAttributes(Map<String, String> attributes) {
+            m.dynamicFieldConfigAttributes = attributes;
             return this;
         }
 
@@ -317,6 +352,41 @@ public class StdPAPPolicyParams {
 
         public StdPAPPolicyParamsBuilder treatments(Map<String,String> treatments) {
             m.treatments = treatments;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder policyID(String policyID) {
+            m.policyID = policyID;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder ruleID(String ruleID) {
+            m.ruleID = ruleID;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder version(String version) {
+            m.version = version;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder jsonBody(String jsonBody) {
+            m.jsonBody = jsonBody;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder brmsController(String controllerName) {
+            m.brmsController = controllerName;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder brmsDependency(List<String> dependencyNames) {
+            m.brmsDependency = dependencyNames;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder drlRuleAndUIParams(Map<String,String> drlRuleAndUIParams) {
+            m.drlRuleAndUIParams = drlRuleAndUIParams;
             return this;
         }
     }

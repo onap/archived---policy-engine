@@ -3,6 +3,7 @@
  * ONAP-PDP-REST
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +98,7 @@ public class ActionPolicyService {
         // Create Policy
         StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder().policyName(policyName)
                 .description(policyParameters.getPolicyDescription())
-                .dyanamicFieldConfigAttributes(componentAttributes)
+                .dynamicFieldConfigAttributes(componentAttributes)
                 .dynamicRuleAlgorithmLabels(policyParameters.getDynamicRuleAlgorithmLabels())
                 .dynamicRuleAlgorithmCombo(policyParameters.getDynamicRuleAlgorithmFunctions())
                 .dynamicRuleAlgorithmField1(policyParameters.getDynamicRuleAlgorithmField1())

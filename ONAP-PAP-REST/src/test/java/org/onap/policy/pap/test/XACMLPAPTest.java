@@ -182,8 +182,20 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getParameter("operation")).thenReturn("create");
         Mockito.when(httpServletRequest.getParameter("policyType")).thenReturn("Config");
         StdPAPPolicy newPAPPolicy =
-                new StdPAPPolicy("Firewall Config", "test", "testDescription", "Test", false, "test", json, 0,
-                        "5", "default", "false", "");
+                new StdPAPPolicy(StdPAPPolicyParams.builder()
+                        .configPolicyType("Firewall Config")
+                        .policyName("test")
+                        .description("testDescription")
+                        .configName("Test")
+                        .editPolicy(false)
+                        .domain("test")
+                        .jsonBody(json)
+                        .highestVersion(0)
+                        .riskLevel("5")
+                        .riskType("default")
+                        .guard("false")
+                        .ttlDate("")
+                        .build());
         MockServletInputStream mockInput =
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
@@ -239,10 +251,21 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getParameter("policyType")).thenReturn("Config");
         Map<String, String> ruleAttributes = new HashMap<>();
         ruleAttributes.put("value", "test");
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("BRMS_Raw", "test", "testig description",
-                "BRMS_RAW_RULE", false, "test", ruleAttributes, 0, "DROOLS",
-                "test", "4",
-                "default", "false", null, null, null);
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("BRMS_Raw")
+                .policyName("test")
+                .description("testig description")
+                .configName("BRMS_RAW_RULE")
+                .editPolicy(false)
+                .domain("test")
+                .dynamicFieldConfigAttributes(ruleAttributes)
+                .highestVersion(0)
+                .onapName("DROOLS")
+                .configBodyData("test")
+                .riskLevel("4")
+                .riskType("default")
+                .guard("false")
+                .build());
         MockServletInputStream mockInput =
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
@@ -338,7 +361,7 @@ public class XACMLPAPTest {
                         .description("test rule")
                         .onapName("PDPD")
                         .providerComboBox("GUARD_YAML")
-                        .dyanamicFieldConfigAttributes(matchingAttributes)
+                        .dynamicFieldConfigAttributes(matchingAttributes)
                         .editPolicy(false)
                         .domain("test")
                         .highestVersion(0)
@@ -377,7 +400,7 @@ public class XACMLPAPTest {
                         .description("test rule")
                         .onapName("PDPD")
                         .providerComboBox("GUARD_BL_YAML")
-                        .dyanamicFieldConfigAttributes(matchingAttributes)
+                        .dynamicFieldConfigAttributes(matchingAttributes)
                         .editPolicy(false)
                         .domain("test")
                         .highestVersion(0)
@@ -411,7 +434,7 @@ public class XACMLPAPTest {
                 .description("test rule")
                 .onapName("TEST")
                 .configName("config")
-                .dyanamicFieldConfigAttributes(configAttributes)
+                .dynamicFieldConfigAttributes(configAttributes)
                 .configType("OTHER")
                 .configBodyData("test body")
                 .editPolicy(false)
