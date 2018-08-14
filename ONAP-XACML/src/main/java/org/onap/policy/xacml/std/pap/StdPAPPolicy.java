@@ -36,7 +36,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
     private String policyDescription = null;
     private String onapName = null;
     private String configName = null;
-    private Map<String, String> dyanamicFieldConfigAttributes = new HashMap<>();
+    private Map<String, String> dynamicFieldConfigAttributes = new HashMap<>();
     private Map<String, String> treatments = new HashMap<>();
     private Map<String, String> dropDownMap = new HashMap<>();
     private Map<String, String> dynamicSettingsMap = new HashMap<>();
@@ -117,7 +117,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.onapName = stdPAPPolicyParams.getOnapName();
         this.providerComboBox = stdPAPPolicyParams.getProviderComboBox();
         this.configName = stdPAPPolicyParams.getConfigName();
-        this.dyanamicFieldConfigAttributes = stdPAPPolicyParams.getDyanamicFieldConfigAttributes();
+        this.dynamicFieldConfigAttributes = stdPAPPolicyParams.getDynamicFieldConfigAttributes();
         this.dynamicSettingsMap = stdPAPPolicyParams.getDynamicSettingsMap();
         this.configType = stdPAPPolicyParams.getConfigType();
         this.configBodyData = stdPAPPolicyParams.getConfigBodyData();
@@ -138,113 +138,19 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.actionPerformer = stdPAPPolicyParams.getActionPerformer();
         this.actionAttribute = stdPAPPolicyParams.getActionAttribute();
         this.treatments = stdPAPPolicyParams.getTreatments();
-    }
-
-    //convenience constructor
-    public StdPAPPolicy(String configPolicyType, String policyName, String description, String onapName,
-                        String configName, Map<String, String> attributes, String body, String policyID,
-                        String ruleID, String configType, Boolean editPolicy, String version, String domain,
-                        String riskLevel, String riskType, String guard, String ttlDate) {
-        this(configPolicyType, policyName, description, onapName, configName, attributes, body, policyID,
-                ruleID, configType, editPolicy, version, domain, 1, riskLevel, riskType, guard, ttlDate);
-    }
-
-    //Constructor for Updating Config Policies from Admin Console
-    public StdPAPPolicy(String configPolicyType, String policyName, String description, String onapName,
-                        String configName, Map<String, String> attributes, String body, String policyID,
-                        String ruleID, String configType, Boolean editPolicy, String version, String domain,
-                        int highestVersion, String riskLevel, String riskType, String guard, String ttlDate) {
-
-        this.configPolicyType = configPolicyType;
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.onapName = onapName;
-        this.configName = configName;
-        this.dyanamicFieldConfigAttributes = attributes;
-        this.configBodyData = body;
-        this.policyID = policyID;
-        this.ruleID = ruleID;
-        this.configType = configType;
-        this.editPolicy = editPolicy;
-        this.version = version;
-        this.domain = domain;
-        this.highestVersion = highestVersion;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.guard = guard;
-        this.ttlDate = ttlDate;
-    }
-
-
-    //Constructor for Creating Config Firewall Policies
-    public StdPAPPolicy(String configPolicyType, String policyName, String description, String configName,
-                        Boolean editPolicy, String domain, String jsonBody, Integer highestVersion, String riskLevel,
-                        String riskType, String guard, String ttlDate) {
-
-        this.configPolicyType = configPolicyType;
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.configName = configName;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.jsonBody = jsonBody;
-        this.highestVersion = highestVersion;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.guard = guard;
-        this.ttlDate = ttlDate;
-
-    }
-
-    //Constructor for Creating Goc Policies
-    public StdPAPPolicy(String configPolicyType, String policyName, String description, String configName,
-                        Boolean editPolicy, String domain, String jsonBody, Integer highestVersion, String eCompName,
-                        String riskLevel, String riskType, String guard, String ttlDate) {
-
-        this.configPolicyType = configPolicyType;
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.configName = configName;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.jsonBody = jsonBody;
-        this.highestVersion = highestVersion;
-        this.onapName = eCompName;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.guard = guard;
-        this.ttlDate = ttlDate;
-    }
-
-    //Constructor for Creating BRMS Policies from the Admin Console
-    public StdPAPPolicy(String configPolicyType, String policyName, String description,
-                        String configName, Boolean editPolicy, String domain,
-                        Map<String, String> dyanamicFieldConfigAttributes, Integer highestVersion, String eCompName,
-                        String configBodyData, String riskLevel, String riskType, String guard, String ttlDate,
-                        String brmsController, List<String> brmsDependency) {
-
-        this.configPolicyType = configPolicyType;
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.configName = configName;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.dyanamicFieldConfigAttributes = dyanamicFieldConfigAttributes;
-        this.highestVersion = highestVersion;
-        this.onapName = eCompName;
-        this.configBodyData = configBodyData;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.guard = guard;
-        this.ttlDate = ttlDate;
-        this.brmsController = brmsController;
-        this.brmsDependency = brmsDependency;
+        this.policyID = stdPAPPolicyParams.getPolicyID();
+        this.ruleID = stdPAPPolicyParams.getRuleID();
+        this.version = stdPAPPolicyParams.getVersion();
+        this.jsonBody = stdPAPPolicyParams.getJsonBody();
+        this.brmsController = stdPAPPolicyParams.getBrmsController();
+        this.brmsDependency = stdPAPPolicyParams.getBrmsDependency();
+        this.drlRuleAndUIParams = stdPAPPolicyParams.getDrlRuleAndUIParams();
     }
 
     //Constructor for Creating BRMS Param Policies from the Admin Console
     public StdPAPPolicy(String configPolicyType, String policyName, String description,
                         String configName, Boolean editPolicy, String domain,
-                        Map<String, String> dyanamicFieldConfigAttributes, Integer highestVersion, String eCompName,
+                        Map<String, String> dynamicFieldConfigAttributes, Integer highestVersion, String eCompName,
                         String configBodyData, Map<String, String> drlRuleAndUIParams, String riskLevel,
                         String riskType, String guard, String ttlDate, String brmsController,
                         List<String> brmsDependency) {
@@ -255,7 +161,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.configName = configName;
         this.editPolicy = editPolicy;
         this.domain = domain;
-        this.dyanamicFieldConfigAttributes = dyanamicFieldConfigAttributes;
+        this.dynamicFieldConfigAttributes = dynamicFieldConfigAttributes;
         this.highestVersion = highestVersion;
         this.onapName = eCompName;
         this.configBodyData = configBodyData;
@@ -292,29 +198,6 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.ttlDate = ttlDate;
     }
 
-    //Constructor for Updating Config Firewall Policies from the Admin Console
-    public StdPAPPolicy(String configPolicyType, String policyName, String description, String configName,
-                        Boolean editPolicy, String domain, String policyID,
-                        String ruleID, String version, String jsonBody, Integer highestVersion, String riskLevel,
-                        String riskType, String guard, String ttlDate) {
-
-        this.configPolicyType = configPolicyType;
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.configName = configName;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.policyID = policyID;
-        this.ruleID = ruleID;
-        this.version = version;
-        this.jsonBody = jsonBody;
-        this.highestVersion = highestVersion;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.guard = guard;
-        this.ttlDate = ttlDate;
-    }
-
     //Constructor for Micro Service Creating/Updating Policies from the Admin Console
     public StdPAPPolicy(String configPolicyType, String policyName, String description, String onapName,
                         String configName, String serviceType, String uuid,
@@ -336,84 +219,6 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.editPolicy = editPolicy;
         this.domain = domain;
         this.highestVersion = highestVersion;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.guard = guard;
-        this.ttlDate = ttlDate;
-    }
-
-    //Constructor for Updating Goc Policies from the Admin Console
-    public StdPAPPolicy(String configPolicyType, String policyName, String description,
-                        String configName, Boolean editPolicy, String domain,
-                        String policyID, String ruleID, String version,
-                        String jsonBody, Integer highestVersion, String eCompName, String riskLevel, String riskType,
-                        String guard, String ttlDate) {
-
-        this.configPolicyType = configPolicyType;
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.configName = configName;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.policyID = policyID;
-        this.ruleID = ruleID;
-        this.version = version;
-        this.jsonBody = jsonBody;
-        this.highestVersion = highestVersion;
-        this.onapName = eCompName;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.guard = guard;
-        this.ttlDate = ttlDate;
-    }
-
-    //Constructor for Updating Brms Policies from the Admin Console
-    public StdPAPPolicy(String configPolicyType, String policyName, String description,
-                        String configName, Boolean editPolicy, String domain,
-                        String policyID, String ruleID, String version,
-                        Map<String, String> dyanamicFieldConfigAttributes, Integer highestVersion, String eCompName,
-                        String configBodyData, String riskLevel, String riskType, String guard, String ttlDate
-    ) {
-        this.configPolicyType = configPolicyType;
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.configName = configName;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.policyID = policyID;
-        this.ruleID = ruleID;
-        this.version = version;
-        this.dyanamicFieldConfigAttributes = dyanamicFieldConfigAttributes;
-        this.highestVersion = highestVersion;
-        this.onapName = eCompName;
-        this.configBodyData = configBodyData;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.guard = guard;
-        this.ttlDate = ttlDate;
-    }
-
-    //Constructor for Updating Brms Param Policies from the Admin Console
-    public StdPAPPolicy(String configPolicyType, String policyName, String description,
-                        String configName, Boolean editPolicy, String domain,
-                        String policyID, String ruleID, String version,
-                        Map<String, String> dyanamicFieldConfigAttributes, Integer highestVersion, String eCompName,
-                        Map<String, String> drlRuleAndUIParams, String riskLevel, String riskType, String guard,
-                        String ttlDate
-    ) {
-        this.configPolicyType = configPolicyType;
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.configName = configName;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.policyID = policyID;
-        this.ruleID = ruleID;
-        this.version = version;
-        this.dyanamicFieldConfigAttributes = dyanamicFieldConfigAttributes;
-        this.highestVersion = highestVersion;
-        this.onapName = eCompName;
-        this.drlRuleAndUIParams = drlRuleAndUIParams;
         this.riskLevel = riskLevel;
         this.riskType = riskType;
         this.guard = guard;
@@ -455,7 +260,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
 
     @Override
     public Map<String, String> getDynamicFieldConfigAttributes() {
-        return dyanamicFieldConfigAttributes;
+        return dynamicFieldConfigAttributes;
     }
 
     @Override
@@ -666,8 +471,8 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
     @Override
     public String toString() {
         return "StdPAPPolicy [policyName=" + policyName + ", policyDescription=" + policyDescription + ", onapName="
-                + onapName + ", configName=" + configName + ", dyanamicFieldConfigAttributes=" +
-                dyanamicFieldConfigAttributes + ", configBodyData=" + configBodyData
+                + onapName + ", configName=" + configName + ", dynamicFieldConfigAttributes=" +
+                dynamicFieldConfigAttributes + ", configBodyData=" + configBodyData
                 + ", policyID=" + policyID + ", ruleID=" + ruleID + ", configType=" + configType + ", editPolicy=" +
                 ", version=" + ", domain=" + domain
                 + ", configPolicyType=" + configPolicyType + ", jsonBody=" + jsonBody + ", highestVersion=" +
@@ -710,9 +515,9 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.configName = configName;
     }
 
-    public void setDyanamicFieldConfigAttributes(
-            Map<String, String> dyanamicFieldConfigAttributes) {
-        this.dyanamicFieldConfigAttributes = dyanamicFieldConfigAttributes;
+    public void setDynamicFieldConfigAttributes(
+            Map<String, String> dynamicFieldConfigAttributes) {
+        this.dynamicFieldConfigAttributes = dynamicFieldConfigAttributes;
     }
 
     public void setConfigBodyData(String configBodyData) {

@@ -30,6 +30,7 @@ import org.onap.policy.pdp.rest.api.utils.PolicyApiUtils;
 import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
+import org.onap.policy.xacml.std.pap.StdPAPPolicyParams;
 
 /**
  * BRMS RAW Policy Implementation.
@@ -93,11 +94,24 @@ public class BRMSRawPolicyService {
             ruleAttributes = policyParameters.getAttributes().get(AttributeType.RULE);
         }
         // Create Policy
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("BRMS_Raw", policyName, policyParameters.getPolicyDescription(),
-                "BRMS_RAW_RULE", updateFlag, policyScope, ruleAttributes, 0, "DROOLS",
-                brmsRawBody, policyParameters.getRiskLevel(),
-                policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date,
-                policyParameters.getControllerName(), policyParameters.getDependencyNames());
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("BRMS_Raw")
+                .policyName(policyName)
+                .description(policyParameters.getPolicyDescription())
+                .configName("BRMS_RAW_RULE")
+                .editPolicy(updateFlag)
+                .domain(policyScope)
+                .dynamicFieldConfigAttributes(ruleAttributes)
+                .highestVersion(0)
+                .onapName("DROOLS")
+                .configBodyData(brmsRawBody)
+                .riskLevel(policyParameters.getRiskLevel())
+                .riskType(policyParameters.getRiskType())
+                .guard(String.valueOf(policyParameters.getGuard()))
+                .ttlDate(date)
+                .brmsController(policyParameters.getControllerName())
+                .brmsDependency(policyParameters.getDependencyNames())
+                .build());
         // Send JSON to PAP
         response = (String) papServices.callPAP(newPAPPolicy, new String[]{"operation=" + operation, "apiflag=api",
                 "policyType=Config"}, policyParameters.getRequestID(), "ConfigBrmsRaw");

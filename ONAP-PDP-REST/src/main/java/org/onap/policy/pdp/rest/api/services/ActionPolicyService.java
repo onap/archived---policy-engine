@@ -97,7 +97,7 @@ public class ActionPolicyService {
         // Create Policy
         StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder().policyName(policyName)
                 .description(policyParameters.getPolicyDescription())
-                .dyanamicFieldConfigAttributes(componentAttributes)
+                .dynamicFieldConfigAttributes(componentAttributes)
                 .dynamicRuleAlgorithmLabels(policyParameters.getDynamicRuleAlgorithmLabels())
                 .dynamicRuleAlgorithmCombo(policyParameters.getDynamicRuleAlgorithmFunctions())
                 .dynamicRuleAlgorithmField1(policyParameters.getDynamicRuleAlgorithmField1())

@@ -103,7 +103,7 @@ public class DecisionPolicyService {
                 .description(policyParameters.getPolicyDescription())
                 .onapName(onapName)
                 .providerComboBox(ruleProvider.toString())
-                .dyanamicFieldConfigAttributes(matchingAttributes)
+                .dynamicFieldConfigAttributes(matchingAttributes)
                 .dynamicSettingsMap(settingsAttributes)
                 .treatments(policyParameters.getTreatments())
                 .dynamicRuleAlgorithmLabels(policyParameters.getDynamicRuleAlgorithmLabels())

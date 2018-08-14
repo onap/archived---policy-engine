@@ -98,15 +98,7 @@ public class BrmsRawPolicyClient {
 			
 			policyParameters.setConfigBody(readFile(rawBodyFile.toString()));		
 			policyParameters.setConfigBodyType(PolicyType.OTHER);
-			
-			/*public String createUpdateBRMSRawPolicy(String policyName, 
-					String policyDescription, 
-					Map<String,String> dyanamicFieldConfigAttributes,
-					String brmsRawBody, 
-					String policyScope, 
-					Boolean isEdit, 
-					UUID requestID) */
-	
+
 	        // API method to create Policy or update policy
 	        PolicyChangeResponse response = null;
 	        if (!isEdit) {
