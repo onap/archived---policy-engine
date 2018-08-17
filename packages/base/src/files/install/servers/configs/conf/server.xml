@@ -104,12 +104,16 @@
          OpenSSL style configuration is required as described in the APR/native
          documentation -->
 
-	<!--  
+	<!--
+	Setting the keystore and truststore in the connector, overrides the javax.net.ssl system properties
+	passed in to the tomcat JVM:
+
     <Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
                clientAuth="false" sslProtocol="TLS"
-               keystoreFile="${{POLICY_HOME}}/etc/ssl/policy-keystore" keystorePass="${{KEYSTORE_PASSWD}}"/>
-	-->         
+               keystoreFile="${{POLICY_HOME}}/etc/ssl/policy-keystore" keystorePass="${{KEYSTORE_PASSWD}}"
+               truststoreFile="${{POLICY_HOME}}/etc/ssl/policy-truststore" truststorePass="${{TRUSTSTORE_PASSWD}}"/>
+	-->
 
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->

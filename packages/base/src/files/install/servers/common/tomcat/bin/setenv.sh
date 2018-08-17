@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ###
 # ============LICENSE_START=======================================================
 # ONAP Policy Engine
@@ -24,8 +25,8 @@ CATALINA_OPTS="${CATALINA_OPTS} -Dcom.sun.management.jmxremote.ssl=false"
 CATALINA_OPTS="${CATALINA_OPTS} -Dcom.sun.management.jmxremote.authenticate=false"
 CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.keyStore=${POLICY_HOME}/etc/ssl/policy-keystore"
 CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.keyStorePassword=${KEYSTORE_PASSWD}"
-CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStore=${POLICY_HOME}/etc/ssl/policy-keystore"
-CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStorePassword=${KEYSTORE_PASSWD}"
+CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStore=${POLICY_HOME}/etc/ssl/policy-truststore"
+CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStorePassword=${TRUSTSTORE_PASSWD}"
 CATALINA_OPTS="${CATALINA_OPTS} -DPOLICY_LOGS=${POLICY_LOGS}"
 CATALINA_OPTS="${CATALINA_OPTS} -Xms${{TOMCAT_X_MS_MB}}M"
 CATALINA_OPTS="${CATALINA_OPTS} -Xmx${{TOMCAT_X_MX_MB}}M"

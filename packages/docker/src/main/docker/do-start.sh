@@ -64,9 +64,14 @@ else
 
 	. /opt/app/policy/etc/profile.d/env.sh
 
+	# override the policy keystore and truststore if present
+
 	if [[ -f config/policy-keystore ]]; then
-	    # install policy keystore
 	    cp config/policy-keystore $POLICY_HOME/etc/ssl
+	fi
+
+	if [[ -f config/policy-truststore ]]; then
+	    cp -f config/policy-trustore ${POLICY_HOME}/etc/ssl
 	fi
 
 	if [[ -f config/$container-tweaks.sh ]] ; then
