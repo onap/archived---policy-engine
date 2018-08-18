@@ -29,6 +29,10 @@ The GUARD policy can be created from the POLICY GUI as shown below.
 
 .. image:: PolicyGUI_GuardPolicy.png
 
+In a Blacklist policy, the blacklist entries can be entered either manually or imported from an excel sheet.  This import option can also be used to delete existing blacklist entries and to add new entries.
+
+.. image:: PolicyGUI_BlacklistPolicy.png
+
 
 API Method
 ----------
