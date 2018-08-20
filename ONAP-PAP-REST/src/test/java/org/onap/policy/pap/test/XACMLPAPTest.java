@@ -3,7 +3,7 @@
  * ONAP-PAP-REST
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
- * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
+ * Modifications Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -222,11 +222,26 @@ public class XACMLPAPTest {
         ruleAttributes.put("templateName", "testPolicy");
         ruleAttributes.put("samPoll", "5");
         ruleAttributes.put("value", "test");
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("BRMS_Param", "test", "testing",
-                "BRMS_PARAM_RULE", false, "test",
-                matchingAttributes, 0, "DROOLS",
-                null, ruleAttributes, "5",
-                "default", "false", "", null, null);
+        //Creating BRMS Param Policies from the Admin Console
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("BRMS_Param")
+                .policyName("test")
+                .description("testing")
+                .configName("BRMS_PARAM_RULE")
+                .editPolicy(false)
+                .domain("test")
+                .dynamicFieldConfigAttributes(matchingAttributes)
+                .highestVersion(0)
+                .onapName("DROOLS")
+                .configBodyData(null)
+                .drlRuleAndUIParams(ruleAttributes)
+                .riskLevel("5")
+                .riskType("default")
+                .guard("false")
+                .ttlDate("")
+                .brmsController(null)
+                .brmsDependency(null)
+                .build());
         MockServletInputStream mockInput =
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
@@ -289,9 +304,24 @@ public class XACMLPAPTest {
         Mockito.when(httpServletRequest.getParameter("operation")).thenReturn("create");
         Mockito.when(httpServletRequest.getParameter("policyType")).thenReturn("Config");
         String json = "{\"test\":\"java\"}";
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("ClosedLoop_PM", "test", "testing", "onap",
-                json, false, null, "Registration Failure(Trinity)", false, "test", 0, null,
-                "default", "true", "");
+        //Creating CloseLoop_Fault and Performance Metric Policies
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("ClosedLoop_PM")
+                .policyName("test")
+                .description("testing")
+                .onapName("onap")
+                .jsonBody(json)
+                .draft(false)
+                .oldPolicyFileName(null)
+                .serviceType("Registration Failure(Trinity)")
+                .editPolicy(false)
+                .domain("test")
+                .highestVersion(0)
+                .riskLevel(null)
+                .riskType("default")
+                .guard("true")
+                .ttlDate("")
+                .build());
         MockServletInputStream mockInput =
                 new MockServletInputStream(PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
         Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);

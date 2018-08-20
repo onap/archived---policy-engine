@@ -3,6 +3,7 @@
  * ONAP-PDP-REST
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +30,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.api.utils.PolicyApiUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
+import org.onap.policy.xacml.std.pap.StdPAPPolicyParams;
 
 /**
  * MicroServices Policy implementation.
@@ -126,11 +128,28 @@ public class MicroServicesPolicyService {
         if (microServiceAttributes.containsKey("version")) {
             version = microServiceAttributes.get("version").toString().replace("\"", "");
         }
-        // Create Policy. 
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("Micro Service", policyName, policyDescription, onapName,
-                configName, microService, uuid, msLocation, microServiceAttributes.toString(), priority,
-                version, updateFlag, policyScope, 0, policyParameters.getRiskLevel(),
-                policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date);
+        // Create Policy.
+        // for Micro Service Creating/Updating Policies from the Admin Console
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(
+                StdPAPPolicyParams.builder().configPolicyType("Micro Service")
+                        .policyName(policyName)
+                        .description(policyDescription)
+                        .onapName(onapName)
+                        .configName(configName)
+                        .serviceType(microService)
+                        .uuid(uuid)
+                        .msLocation(msLocation)
+                        .jsonBody(microServiceAttributes.toString())
+                        .priority(priority)
+                        .version(version)
+                        .editPolicy(updateFlag)
+                        .domain(policyScope)
+                        .highestVersion(0)
+                        .riskLevel(policyParameters.getRiskLevel())
+                        .riskType(policyParameters.getRiskType())
+                        .guard(String.valueOf(policyParameters.getGuard()))
+                        .ttlDate(date)
+                        .build());
         // Send JSON Object to PAP. 
         response = (String) papServices.callPAP(newPAPPolicy, new String[]{"operation=" + operation, "apiflag=api",
                 "policyType=Config"}, policyParameters.getRequestID(), "ConfigMS");

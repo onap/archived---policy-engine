@@ -61,12 +61,35 @@ public class StdPAPPolicyParams {
     private String brmsController;
     private List<String> brmsDependency;
     private Map<String,String> drlRuleAndUIParams;
+    private boolean draft;
+    private String oldPolicyFileName;
+    private String serviceType;
+    private String uuid;
+    private String msLocation;
+    private String priority;
+    private String deleteCondition;
+    private String dictionaryType;
+    private String dictionary;
+    private String dictionaryFields;
 
     /**
+
      * Default constructor
      */
     private StdPAPPolicyParams() {
         super();
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public String getOldPolicyFileName() {
+        return oldPolicyFileName;
+    }
+
+    public boolean isDraft() {
+        return draft;
     }
 
     public int getHighestVersion() {
@@ -207,6 +230,62 @@ public class StdPAPPolicyParams {
 
     public Map<String,String> getDrlRuleAndUIParams() {
         return drlRuleAndUIParams;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getMsLocation() {
+        return msLocation;
+    }
+
+    public void setMsLocation(String msLocation) {
+        this.msLocation = msLocation;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getDeleteCondition() {
+        return deleteCondition;
+    }
+
+    public void setDeleteCondition(String deleteCondition) {
+        this.deleteCondition = deleteCondition;
+    }
+
+    public String getDictionaryType() {
+        return dictionaryType;
+    }
+
+    public void setDictionaryType(String dictionaryType) {
+        this.dictionaryType = dictionaryType;
+    }
+
+    public String getDictionary() {
+        return dictionary;
+    }
+
+    public void setDictionary(String dictionary) {
+        this.dictionary = dictionary;
+    }
+
+    public String getDictionaryFields() {
+        return dictionaryFields;
+    }
+
+    public void setDictionaryFields(String dictionaryFields) {
+        this.dictionaryFields = dictionaryFields;
     }
 
     /**
@@ -387,6 +466,56 @@ public class StdPAPPolicyParams {
 
         public StdPAPPolicyParamsBuilder drlRuleAndUIParams(Map<String,String> drlRuleAndUIParams) {
             m.drlRuleAndUIParams = drlRuleAndUIParams;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder draft(boolean b) {
+            m.draft = b;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder oldPolicyFileName(String name) {
+            m.oldPolicyFileName = name;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder serviceType(String s) {
+            m.serviceType = s;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder uuid(String uuid) {
+            m.uuid = uuid;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder msLocation(String msLocation) {
+            m.msLocation = msLocation;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder priority(String priority) {
+            m.priority = priority;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder deleteCondition(String deleteCondition) {
+            m.deleteCondition = deleteCondition;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder dictionaryType(String dictionaryType) {
+            m.dictionaryType = dictionaryType;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder dictionary(String dictionary) {
+            m.dictionary = dictionary;
+            return this;
+        }
+
+        public StdPAPPolicyParamsBuilder dictionaryFields(String dictionaryFields) {
+            m.dictionaryFields = dictionaryFields;
             return this;
         }
     }

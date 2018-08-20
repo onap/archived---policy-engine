@@ -3,6 +3,7 @@
  * ONAP-PDP-REST
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +29,7 @@ import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
+import org.onap.policy.xacml.std.pap.StdPAPPolicyParams;
 import org.springframework.http.HttpStatus;
 
 public class DeletePolicyService {
@@ -162,9 +164,12 @@ public class DeletePolicyService {
                 LOGGER.error(message);
                 return message;
             }
-
+            // for deleting policies from the API
             final StdPAPPolicy deletePapPolicy =
-                    new StdPAPPolicy(fullPolicyName, deletePolicyParameters.getDeleteCondition().toString());
+                    new StdPAPPolicy(StdPAPPolicyParams.builder()
+                            .policyName(fullPolicyName)
+                            .deleteCondition(deletePolicyParameters.getDeleteCondition().toString())
+                            .build());
             // send JSON object to PAP
             response = (String) papServices.callPAP(deletePapPolicy,
                     new String[] {"groupId=" + pdpGroup, "apiflag=deletePapApi", "operation=delete"},
