@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,10 @@ app.config(function($routeProvider) {
 		templateUrl: 'app/policyApp/policy-models/policy_DashboardHealth.html',
 		controller : "policyDashboardHealthController"
 	})
+	.when('/Dashboard_crud', {
+		templateUrl: 'app/policyApp/policy-models/policy_DashboardCRUD.html',
+		controller : "policyDashboardCRUDDataController"
+	})	
 	.when('/policy_SearchFilter', {
 		templateUrl: 'app/policyApp/policy-models/policy_SearchFilter.html',
 		controller : "PolicySearchController"

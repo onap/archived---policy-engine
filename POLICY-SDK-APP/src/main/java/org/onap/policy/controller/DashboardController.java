@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,10 @@ package org.onap.policy.controller;
 
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +46,6 @@ import javax.management.remote.JMXServiceURL;
 import javax.script.SimpleBindings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.JSONObject;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
@@ -51,16 +53,18 @@ import org.onap.policy.dao.SystemLogDbDao;
 import org.onap.policy.model.PDPGroupContainer;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.dao.CommonClassDao;
+import org.onap.policy.rest.jpa.PolicyEntity;
+import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.api.pap.OnapPDP;
 import org.onap.policy.xacml.api.pap.OnapPDPGroup;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
-import org.onap.portalsdk.core.web.support.JsonMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.servlet.ModelAndView;
+import org.onap.portalsdk.core.web.support.JsonMessage;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDP;
 import com.att.research.xacml.api.pap.PDPGroup;
@@ -68,6 +72,7 @@ import com.att.research.xacml.api.pap.PDPPolicy;
 import com.att.research.xacml.util.XACMLProperties;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
@@ -91,7 +96,22 @@ public class DashboardController  extends RestrictedBaseController{
 	private PDPGroupContainer pdpConatiner;
 	private ArrayList<Object> pdpStatusData;
 	private ArrayList<Object> papStatusData;
+	private ArrayList<Object> policyStatusCRUDData;
+	private ArrayList<Object> pdpStatusCRUDData;
 	private ArrayList<Object> policyActivityData;
+	private static final String EXCEPTION = "Exception Occured";
+	private static final String POLICY_ID = "policyId";
+	private static final String STATUS = "status";
+	private static final String SYSTEM = "system";
+	private static final String SCOPE = "scope";
+	private static final String STAGE = "stage";
+	private static final String CREATED_DATE = "createdDate";
+	private static final String DATE = "0000-00-00";
+	private static final String MODIFIED_DATE ="modifiedDate";
+	private static final String FIRE_COUNT = "fireCount";
+	private static final String JMX_CONNCTION = " for JMX connection";
+	
+	 
 
 	private PolicyController policyController;
 	public PolicyController getPolicyController() {
@@ -117,7 +137,90 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			policyLogger.error("Exception Occured"+e);
+			policyLogger.error(EXCEPTION, e);
+		}
+	}
+	
+	@RequestMapping(value={"/get_DashboardPolicyCRUDData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	public void get_DashboardPolicyCRUDData(HttpServletRequest request, HttpServletResponse response){
+		try{
+			Map<String, Object> model = new HashMap<>();
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			addPolicyCRUDInfoToTable();
+			model.put("papStatusCRUDData", mapper.writeValueAsString(policyStatusCRUDData));
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
+			JSONObject j = new JSONObject(msg);
+			response.getWriter().write(j.toString());
+		}
+		catch (Exception e){
+			policyLogger.error(EXCEPTION, e);
+		}
+	}
+	
+	@RequestMapping(value={"/dashboardController/dashboardAdvancedSearch.htm"}, method={org.springframework.web.bind.annotation.RequestMethod.POST} )
+	public ModelAndView dashboardAdvancedSearch(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String scope = null;
+		String stage = "both";
+		String isDelected = "both";
+		String ttlDate_after = "";
+		String ttlDate_before = "";
+		try{
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			JsonNode root = mapper.readTree(request.getReader());
+			JsonNode inputData = root.get("policyData");
+			JsonNode jscope = inputData.path(SCOPE);
+			if(jscope != null){
+				scope = jscope.textValue();
+			}			
+			JsonNode jstage = inputData.path(STAGE);
+			if(jstage != null){
+				stage = jstage.textValue();
+			}
+			JsonNode jisDelected = inputData.path("isDelected");
+			if(jisDelected != null){
+				isDelected = jisDelected.textValue();
+			}
+			JsonNode jttlDate_after = inputData.path("ttlDate_after");
+			if(jttlDate_after != null){
+				ttlDate_after = jttlDate_after.textValue();
+			}
+			JsonNode jttlDate_before = inputData.path("ttlDate_before");
+			if(jttlDate_before != null){
+				ttlDate_before = jttlDate_before.textValue();
+			}
+			List<Object> policyData = queryPolicyData(scope, stage, isDelected, ttlDate_after, ttlDate_before);
+			populatePolicyData(policyData, scope, stage);
+			Map<String, Object> model = new HashMap<>();
+			model.put("policyStatusCRUDData", mapper.writeValueAsString(policyStatusCRUDData));
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
+			JSONObject j = new JSONObject(msg);
+			response.getWriter().write(j.toString());
+		}
+		catch (Exception e){
+			response.setCharacterEncoding("UTF-8");
+			request.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			out.write(PolicyUtils.CATCH_EXCEPTION);
+		}
+		
+		return null;
+	}
+	
+	@RequestMapping(value={"/get_DashboardPdpPolicyCRUDData"}, method={org.springframework.web.bind.annotation.RequestMethod.GET} , produces=MediaType.APPLICATION_JSON_VALUE)
+	public void get_DashboardPdpPolicyCRUDData(HttpServletRequest request, HttpServletResponse response){
+		try{
+			Map<String, Object> model = new HashMap<>();
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			model.put("pdpStatusCRUDData", mapper.writeValueAsString(pdpStatusCRUDData));
+			JsonMessage msg = new JsonMessage(mapper.writeValueAsString(model));
+			JSONObject j = new JSONObject(msg);
+			response.getWriter().write(j.toString());
+		}
+		catch (Exception e){
+			policyLogger.error(EXCEPTION, e);
 		}
 	}
 
@@ -132,7 +235,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			policyLogger.error("Exception Occured"+e);
+			policyLogger.error(EXCEPTION, e);
 		}
 	}
 
@@ -168,7 +271,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			policyLogger.error("Exception Occured"+e);
+			policyLogger.error(EXCEPTION+e);
 		}
 	}
 
@@ -187,7 +290,7 @@ public class DashboardController  extends RestrictedBaseController{
 			response.getWriter().write(j.toString());
 		}
 		catch (Exception e){
-			policyLogger.error("Exception Occured"+e);
+			policyLogger.error(EXCEPTION, e);
 		}
 	}
 
@@ -211,14 +314,167 @@ public class DashboardController  extends RestrictedBaseController{
 		}
 		String papURL = XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_URL);
 		JSONObject object = new JSONObject();
-		object.put("system", papURL);
-		object.put("status", papStatus);
+		object.put(SYSTEM, papURL);
+		object.put(STATUS, papStatus);
 		List<Object> data = commonClassDao.getDataByQuery("from PolicyEntity", new SimpleBindings());
 		object.put("noOfPolicy", data.size());
 		object.put("noOfConnectedTrap", pdpCount);
 		papStatusData.add(0, object);
 	}
+	
+	/*
+	 * Add the PAP Policy information to the PAP Table
+	 */
+	public void addPolicyCRUDInfoToTable(){
+		policyStatusCRUDData = new ArrayList<>();
+		LocalDate now = LocalDate.now();
+		LocalDate lastThirtyDate = now.minusDays(30);
+		policyLogger.info( "now: " + now );
+		policyLogger.info( "thirty: " + lastThirtyDate);
+		String entityquery = "from PolicyEntity where created_date >= :createdDate";
+		SimpleBindings geParams = new SimpleBindings();
+		geParams.put(CREATED_DATE, lastThirtyDate.toString());
+		List<Object> datas  = commonClassDao.getDataByQuery(entityquery, geParams);
+		if(datas != null){
+			datas.stream().forEach((data) ->{ 
+				JSONObject object = new JSONObject();
+				object.put("id", ((PolicyEntity)data).getPolicyId());
+				object.put(SCOPE, ((PolicyEntity)data).getScope());
+				object.put("policyName", ((PolicyEntity)data).getPolicyName());
+				object.put("version", ((PolicyEntity)data).getVersion());
+				if(isPushedToPDP(((PolicyEntity)data).getPolicyId())){
+					object.put(STAGE, "PDP");
+				}else{
+				    object.put(STAGE, "PAP");
+				}
+				object.put("createdBy", ((PolicyEntity)data).getCreatedBy());
+				object.put("deleted", ((PolicyEntity)data).isDeleted());
+				object.put("deleteReasonCode", ((PolicyEntity)data).getDeleteReasonCode());
+				object.put("deletedBy", ((PolicyEntity)data).getDeletedBy());
+				object.put("modifiedBy", ((PolicyEntity)data).getModifiedBy());
+				if(((PolicyEntity)data).getModifiedDate() != null){
+					Timestamp ts=new Timestamp(((PolicyEntity)data).getModifiedDate().getTime());  
+					Timestamp cts=new Timestamp(((PolicyEntity)data).getCreatedDate().getTime()); 
+					object.put(MODIFIED_DATE, ts.toString());
+					object.put(CREATED_DATE, cts.toString());
+				} else {
+					object.put(MODIFIED_DATE, DATE);
+					object.put(CREATED_DATE, DATE);
+				}
+				policyStatusCRUDData.add(object);
+			});
+		}
+	}
+	
+	/*
+	 * Add the PDP Policy information to the PDP Table
+	 */
+	private boolean isPushedToPDP(long policyId){
+		try{
+			String groupEntityquery = "from PolicyGroupEntity where policyid = :policyEntityId";
+			SimpleBindings geParams = new SimpleBindings();
+			geParams.put("policyEntityId", policyId);
+			List<Object> groupobject  = commonClassDao.getDataByQuery(groupEntityquery, geParams);
+			if(groupobject != null && groupobject.size() >0){
+				return true;
+			}
+	    }catch(Exception e){
+	    	policyLogger.error(EXCEPTION, e);
+		}
+		return false;
+	}
+	
+	/*
+	 * Add the Policy information to the policyStatusCRUDDataTable
+	 */
+	private List<Object> queryPolicyData(String scope, String stage, String isDeleted, String createdAfter, String createdBefore){
+		policyStatusCRUDData = new ArrayList<>();
+		List<Object> policyData = null;
+		SimpleBindings geParams = new SimpleBindings();
+		try{
+			//since scope is required
+			if(scope == null || scope.isEmpty()){
+				return null;
+			}else {
+				geParams.put(SCOPE, "%" + scope + "%");
+			}
+			StringBuilder entityquery = new StringBuilder("from PolicyEntity where scope like :scope ");
+			if(!"both".equalsIgnoreCase(isDeleted)){
+				entityquery.append(" and deleted = :isDeleted");
+				if("Yes".equalsIgnoreCase(isDeleted)){
+					geParams.put("isDeleted", true);
+				}else {
+					geParams.put("isDeleted", false);
+				}
+			}
+			
+			if(createdAfter != null && !createdAfter.isEmpty()){
+				entityquery.append(" and created_date >= :createdAfter");
+				geParams.put("createdAfter", createdAfter);
+			}
+			
+			if(createdBefore != null && !createdBefore.isEmpty()){
+				entityquery.append(" and created_date <= :createdBefore");
+				geParams.put("createdBefore", createdBefore);
+			}
+			
+			policyLogger.info("entityquery: " + entityquery.toString());
+			policyLogger.info("geParams: " + geParams.toString());
+			policyData  = commonClassDao.getDataByQuery(entityquery.toString(), geParams);
+			if(policyData != null){
+				policyLogger.info("getPolicyData : " + policyData.size());
+			}else{
+				policyLogger.info("getPolicyData : no data found.");
+			}
+	    }catch(Exception e){
+	    	policyLogger.error(EXCEPTION, e);
+		}	
+		return policyData;
+	}
 
+	private void populatePolicyData(List<Object> policyData, String scope, String stage){
+		if(policyData != null){
+		    policyData.stream().forEach((data) ->{ 
+			    JSONObject object = new JSONObject();
+				boolean isPDP = false;
+				object.put("id", ((PolicyEntity)data).getPolicyId());
+				object.put(SCOPE, ((PolicyEntity)data).getScope());
+				object.put("policyName", ((PolicyEntity)data).getPolicyName());
+				object.put("version", ((PolicyEntity)data).getVersion());
+				if(isPushedToPDP(((PolicyEntity)data).getPolicyId())){
+				    object.put(STAGE, "PDP");
+					isPDP = true;
+				}else{
+				    object.put(STAGE, "PAP");
+				    isPDP = false;
+				}
+				object.put("createdBy", ((PolicyEntity)data).getCreatedBy());
+				object.put("deleted", ((PolicyEntity)data).isDeleted());
+				object.put("deleteReasonCode", ((PolicyEntity)data).getDeleteReasonCode());
+				object.put("deletedBy", ((PolicyEntity)data).getDeletedBy());
+				object.put("modifiedBy", ((PolicyEntity)data).getModifiedBy());
+				if(((PolicyEntity)data).getModifiedDate() != null){
+				    Timestamp ts=new Timestamp(((PolicyEntity)data).getModifiedDate().getTime());  
+					Timestamp cts=new Timestamp(((PolicyEntity)data).getCreatedDate().getTime()); 
+					object.put(MODIFIED_DATE, ts.toString());
+				    object.put(CREATED_DATE, cts.toString());
+				} else {
+					object.put(MODIFIED_DATE, DATE);
+					object.put(CREATED_DATE, DATE);
+				}
+				if("PDP".equalsIgnoreCase(stage) && isPDP){
+				    policyStatusCRUDData.add(object);
+				}else if("PAP".equalsIgnoreCase(stage) && !isPDP){
+					policyStatusCRUDData.add(object);
+				}else if("both".equalsIgnoreCase(stage)){
+					policyStatusCRUDData.add(object);
+				}
+	
+		    });
+		}
+
+	}
+	
 	/**
 	 * Add PDP Information to the PDP Table
 	 *
@@ -226,6 +482,7 @@ public class DashboardController  extends RestrictedBaseController{
 	public void addPDPToTable(){
 		pdpCount = 0;
 		pdpStatusData = new ArrayList<>();
+		
 		long naCount;
 		long denyCount = 0;
 		long permitCount = 0;
@@ -247,7 +504,7 @@ public class DashboardController  extends RestrictedBaseController{
 					object.put("id", pdp.getId());
 					object.put("name", pdp.getName());
 					object.put("groupname", group.getName());
-					object.put("status", pdp.getStatus().getStatus().toString());
+					object.put(STATUS, pdp.getStatus().getStatus().toString());
 					object.put("description", pdp.getDescription());
 					object.put("permitCount", "NA");
 					object.put("denyCount", "NA");
@@ -258,7 +515,7 @@ public class DashboardController  extends RestrictedBaseController{
 					object.put("id", pdp.getId());
 					object.put("name", pdp.getName());
 					object.put("groupname", group.getName());
-					object.put("status", pdp.getStatus().getStatus().toString());
+					object.put(STATUS, pdp.getStatus().getStatus().toString());
 					object.put("description", pdp.getDescription());
 					object.put("permitCount", permitCount);
 					object.put("denyCount", denyCount);
@@ -298,14 +555,14 @@ public class DashboardController  extends RestrictedBaseController{
 		} catch (IOException e) {
 			policyLogger.error("Error in reteriving" + jmxAttribute + " from JMX connection", e);
 		} catch (AttributeNotFoundException e) {
-			policyLogger.error("AttributeNotFoundException  " + jmxAttribute +  " for JMX connection", e);
+			policyLogger.error("AttributeNotFoundException  " + jmxAttribute + JMX_CONNCTION, e);
 		} catch (InstanceNotFoundException e) {
-			policyLogger.error("InstanceNotFoundException " + host + " for JMX connection", e);
+			policyLogger.error("InstanceNotFoundException " + host + JMX_CONNCTION, e);
 		} catch (MalformedObjectNameException e) {
 			policyLogger.error("MalformedObjectNameException for JMX connection", e);
 		} catch (MBeanException e) {
 			policyLogger.error("MBeanException for JMX connection");
-			policyLogger.error("Exception Occured"+e);
+			policyLogger.error(EXCEPTION, e);
 		} catch (ReflectionException e) {
 			policyLogger.error("ReflectionException for JMX connection", e);
 		}
@@ -352,24 +609,24 @@ public class DashboardController  extends RestrictedBaseController{
 						policyFireCount = countPolicyID(policyKeyValue);
 						if (policyID != null && policyMap.containsKey(policyID)){
 							JSONObject object = new JSONObject();
-							object.put("policyId", policyMap.get(policyID));
-							object.put("fireCount", policyFireCount);
-							object.put("system", pdp.getId());
+							object.put(POLICY_ID, policyMap.get(policyID));
+							object.put(FIRE_COUNT, policyFireCount);
+							object.put(SYSTEM, pdp.getId());
 							policyActivityData.add(object);
 						}
 					}
 				}else {
 					if (policyList != null){
 						JSONObject object = new JSONObject();
-						object.put("policyId", "Unable to retrieve policy information");
-						object.put("fireCount", "NA");
-						object.put("system", pdp.getId());
+						object.put(POLICY_ID, "Unable to retrieve policy information");
+						object.put(FIRE_COUNT, "NA");
+						object.put(SYSTEM, pdp.getId());
 						policyActivityData.add(object);
 					}else{
 						JSONObject object = new JSONObject();
-						object.put("policyId", "Unable to access PDP JMX Server");
-						object.put("fireCount", "NA");
-						object.put("system", pdp.getId());
+						object.put(POLICY_ID, "Unable to access PDP JMX Server");
+						object.put(FIRE_COUNT, "NA");
+						object.put(SYSTEM, pdp.getId());
 						policyActivityData.add(object);
 					}
 				}
@@ -396,12 +653,12 @@ public class DashboardController  extends RestrictedBaseController{
 		} catch (AttributeNotFoundException e) {
 			policyLogger.error("AttributeNotFoundException for JMX connection", e);
 		} catch (InstanceNotFoundException e) {
-			policyLogger.error("InstanceNotFoundException " + host + " for JMX connection", e);
+			policyLogger.error("InstanceNotFoundException " + host + JMX_CONNCTION, e);
 		} catch (MalformedObjectNameException e) {
 			policyLogger.error("MalformedObjectNameException for JMX connection", e);
 		} catch (MBeanException e) {
 			policyLogger.error("MBeanException for JMX connection", e);
-			policyLogger.error("Exception Occured"+e);
+			policyLogger.error(EXCEPTION, e);
 		} catch (ReflectionException e) {
 			policyLogger.error("ReflectionException for JMX connection", e);
 		}
