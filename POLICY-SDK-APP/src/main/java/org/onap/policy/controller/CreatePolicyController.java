@@ -20,7 +20,6 @@
 
 package org.onap.policy.controller;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,27 +45,35 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
 
 @Controller
 @RequestMapping("/")
-public class CreatePolicyController extends RestrictedBaseController{
-    private static Logger policyLogger = FlexLogger.getLogger(CreatePolicyController.class);
+public class CreatePolicyController extends RestrictedBaseController {
+	private static Logger policyLogger = FlexLogger
+			.getLogger(CreatePolicyController.class);
 	protected PolicyRestAdapter policyAdapter = null;
 	private ArrayList<Object> attributeList;
 	boolean isValidForm = false;
 
-	public void prePopulateBaseConfigPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
+	public void prePopulateBaseConfigPolicyData(
+			PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		attributeList = new ArrayList<>();
 		if (policyAdapter.getPolicyData() instanceof PolicyType) {
 			Object policyData = policyAdapter.getPolicyData();
 			PolicyType policy = (PolicyType) policyData;
 			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-			policyAdapter.setConfigType(entity.getConfigurationData().getConfigType());
-			policyAdapter.setConfigBodyData(entity.getConfigurationData().getConfigBody());
-			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf('_') + 1);
+			policyAdapter.setConfigType(entity.getConfigurationData()
+					.getConfigType());
+			policyAdapter.setConfigBodyData(entity.getConfigurationData()
+					.getConfigBody());
+			String policyNameValue = policyAdapter.getPolicyName().substring(
+					policyAdapter.getPolicyName().indexOf('_') + 1);
 			policyAdapter.setPolicyName(policyNameValue);
 			String description = "";
-			try{
-				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
-			}catch(Exception e){
-			    policyLogger.error("Error while collecting the desciption tag in ActionPolicy " + policyNameValue ,e);
+			try {
+				description = policy.getDescription().substring(0,
+						policy.getDescription().indexOf("@CreatedBy:"));
+			} catch (Exception e) {
+				policyLogger.error(
+						"Error while collecting the desciption tag in ActionPolicy "
+								+ policyNameValue, e);
 				description = policy.getDescription();
 			}
 			policyAdapter.setPolicyDescription(description);
@@ -82,47 +89,60 @@ public class CreatePolicyController extends RestrictedBaseController{
 						// Under AnyOFType we have AllOFType
 						List<AllOfType> allOfList = anyOf.getAllOf();
 						if (allOfList != null) {
-							Iterator<AllOfType> iterAllOf = allOfList.iterator();
+							Iterator<AllOfType> iterAllOf = allOfList
+									.iterator();
 							int index = 0;
 							while (iterAllOf.hasNext()) {
 								AllOfType allOf = iterAllOf.next();
 								// Under AllOFType we have Match
 								List<MatchType> matchList = allOf.getMatch();
 								if (matchList != null) {
-									Iterator<MatchType> iterMatch = matchList.iterator();
+									Iterator<MatchType> iterMatch = matchList
+											.iterator();
 									while (iterMatch.hasNext()) {
 										MatchType match = iterMatch.next();
 										//
-										// Under the match we have attribute value and
-										// attributeDesignator. So,finally down to the actual attribute.
+										// Under the match we have attribute
+										// value and
+										// attributeDesignator. So,finally down
+										// to the actual attribute.
 										//
-										AttributeValueType attributeValue = match.getAttributeValue();
-										String value = (String) attributeValue.getContent().get(0);
-										AttributeDesignatorType designator = match.getAttributeDesignator();
-										String attributeId = designator.getAttributeId();
-										// First match in the target is OnapName, so set that value.
+										AttributeValueType attributeValue = match
+												.getAttributeValue();
+										String value = (String) attributeValue
+												.getContent().get(0);
+										AttributeDesignatorType designator = match
+												.getAttributeDesignator();
+										String attributeId = designator
+												.getAttributeId();
+										// First match in the target is
+										// OnapName, so set that value.
 										if ("ONAPName".equals(attributeId)) {
 											policyAdapter.setOnapName(value);
 										}
-										if ("RiskType".equals(attributeId)){
+										if ("RiskType".equals(attributeId)) {
 											policyAdapter.setRiskType(value);
 										}
-										if ("RiskLevel".equals(attributeId)){
+										if ("RiskLevel".equals(attributeId)) {
 											policyAdapter.setRiskLevel(value);
 										}
-										if ("guard".equals(attributeId)){
+										if ("guard".equals(attributeId)) {
 											policyAdapter.setGuard(value);
 										}
-										if ("TTLDate".equals(attributeId) && !value.contains("NA")){
+										if ("TTLDate".equals(attributeId)
+												&& !value.contains("NA")) {
 											PolicyController controller = new PolicyController();
-											String newDate = controller.convertDate(value);
+											String newDate = controller
+													.convertDate(value);
 											policyAdapter.setTtlDate(newDate);
 										}
-										if ("ConfigName".equals(attributeId)){
+										if ("ConfigName".equals(attributeId)) {
 											policyAdapter.setConfigName(value);
 										}
-										// After Onap and Config it is optional to have attributes, so
-										// check weather dynamic values or there or not.
+										// After Onap and Config it is optional
+										// to have attributes, so
+										// check weather dynamic values or there
+										// or not.
 										if (index >= 7) {
 											Map<String, String> attribute = new HashMap<>();
 											attribute.put("key", attributeId);
@@ -139,13 +159,15 @@ public class CreatePolicyController extends RestrictedBaseController{
 
 				policyAdapter.setAttributes(attributeList);
 			}
-			List<Object> ruleList = policy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
+			List<Object> ruleList = policy
+					.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition();
 			for (Object o : ruleList) {
 				if (o instanceof RuleType) {
-					// get the condition data under the rule for rule  Algorithms.
+					// get the condition data under the rule for rule
+					// Algorithms.
 					policyAdapter.setRuleID(((RuleType) o).getRuleId());
 				}
 			}
-		}		
+		}
 	}
 }
