@@ -3,6 +3,7 @@
  * ONAP-PDP-REST
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +30,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.api.utils.PolicyApiUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
+import org.onap.policy.xacml.std.pap.StdPAPPolicyParams;
 
 /**
  * Closed Loop Fault Policy Implementation.
@@ -114,10 +116,24 @@ public class ClosedLoopFaultPolicyService {
         }
         String jsonBody = configBody.toString();
         // Create Policy.
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("ClosedLoop_Fault", policyName,
-                policyParameters.getPolicyDescription(), onapName,
-                jsonBody, false, oldPolicyName, null, updateFlag, policyScope, 0, policyParameters.getRiskLevel(),
-                policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date);
+        // Creating CloseLoop_Fault and Performance Metric Policies
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("ClosedLoop_Fault")
+                .policyName(policyName)
+                .description(policyParameters.getPolicyDescription())
+                .onapName(onapName)
+                .jsonBody(jsonBody)
+                .draft(false)
+                .oldPolicyFileName(oldPolicyName)
+                .serviceType(null)
+                .editPolicy(updateFlag)
+                .domain(policyScope)
+                .highestVersion(0)
+                .riskLevel(policyParameters.getRiskLevel())
+                .riskType(policyParameters.getRiskType())
+                .guard(String.valueOf(policyParameters.getGuard()))
+                .ttlDate(date)
+                .build());
         //send JSON object to PAP
         response = (String) papServices.callPAP(newPAPPolicy, new String[]{"operation=" + operation, "apiflag=api",
                 "policyType=Config"}, policyParameters.getRequestID(), "ConfigClosedLoop");

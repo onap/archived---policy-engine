@@ -3,7 +3,7 @@
  * ONAP-XACML
  * ================================================================================
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
- * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
+ * Modifications Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -145,97 +145,17 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.brmsController = stdPAPPolicyParams.getBrmsController();
         this.brmsDependency = stdPAPPolicyParams.getBrmsDependency();
         this.drlRuleAndUIParams = stdPAPPolicyParams.getDrlRuleAndUIParams();
-    }
+        this.serviceType = stdPAPPolicyParams.getServiceType();
+        this.oldPolicyFileName = stdPAPPolicyParams.getOldPolicyFileName();
+        this.draft = stdPAPPolicyParams.isDraft();
+        this.uuid = stdPAPPolicyParams.getUuid();
+        this.msLocation = stdPAPPolicyParams.getMsLocation();
+        this.priority = stdPAPPolicyParams.getPriority();
+        this.deleteCondition = stdPAPPolicyParams.getDeleteCondition();
+        this.dictionaryType = stdPAPPolicyParams.getDictionaryType();
+        this.dictionary = stdPAPPolicyParams.getDictionary();
+        this.dictionaryFields = stdPAPPolicyParams.getDictionaryFields();
 
-    //Constructor for Creating BRMS Param Policies from the Admin Console
-    public StdPAPPolicy(String configPolicyType, String policyName, String description,
-                        String configName, Boolean editPolicy, String domain,
-                        Map<String, String> dynamicFieldConfigAttributes, Integer highestVersion, String eCompName,
-                        String configBodyData, Map<String, String> drlRuleAndUIParams, String riskLevel,
-                        String riskType, String guard, String ttlDate, String brmsController,
-                        List<String> brmsDependency) {
-
-        this.configPolicyType = configPolicyType;
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.configName = configName;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.dynamicFieldConfigAttributes = dynamicFieldConfigAttributes;
-        this.highestVersion = highestVersion;
-        this.onapName = eCompName;
-        this.configBodyData = configBodyData;
-        this.drlRuleAndUIParams = drlRuleAndUIParams;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.guard = guard;
-        this.ttlDate = ttlDate;
-        this.brmsController = brmsController;
-        this.brmsDependency = brmsDependency;
-    }
-
-    //Constructor for Creating CloseLoop_Fault and Performance Metric Policies
-    public StdPAPPolicy(String configPolicyType, String policyName, String description, String onapName,
-                        String jsonBody, Boolean draft, String oldPolicyFileName, String serviceType,
-                        Boolean editPolicy,
-                        String domain, Integer highestVersion, String riskLevel, String riskType, String guard,
-                        String ttlDate) {
-
-        this.configPolicyType = configPolicyType;
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.onapName = onapName;
-        this.jsonBody = jsonBody;
-        this.draft = draft;
-        this.oldPolicyFileName = oldPolicyFileName;
-        this.serviceType = serviceType;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.highestVersion = highestVersion;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.guard = guard;
-        this.ttlDate = ttlDate;
-    }
-
-    //Constructor for Micro Service Creating/Updating Policies from the Admin Console
-    public StdPAPPolicy(String configPolicyType, String policyName, String description, String onapName,
-                        String configName, String serviceType, String uuid,
-                        String msLocation, String jsonBody, String priority, String version, Boolean editPolicy,
-                        String domain, int highestVersion, String riskLevel,
-                        String riskType, String guard, String ttlDate) {
-
-        this.configPolicyType = configPolicyType;
-        this.policyName = policyName;
-        this.policyDescription = description;
-        this.onapName = onapName;
-        this.configName = configName;
-        this.serviceType = serviceType;
-        this.uuid = uuid;
-        this.msLocation = msLocation;
-        this.priority = priority;
-        this.version = version;
-        this.jsonBody = jsonBody;
-        this.editPolicy = editPolicy;
-        this.domain = domain;
-        this.highestVersion = highestVersion;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.guard = guard;
-        this.ttlDate = ttlDate;
-    }
-
-    // Constructor for deleting policies from the API
-    public StdPAPPolicy(String policyName, String deleteCondition) {
-        this.policyName = policyName;
-        this.deleteCondition = deleteCondition;
-    }
-
-    // Constructor for creating dictionary items from the API>
-    public StdPAPPolicy(String dictionaryType, String dictionary, String dictionaryFields) {
-        this.dictionaryType = dictionaryType;
-        this.dictionary = dictionary;
-        this.dictionaryFields = dictionaryFields;
     }
 
     @Override

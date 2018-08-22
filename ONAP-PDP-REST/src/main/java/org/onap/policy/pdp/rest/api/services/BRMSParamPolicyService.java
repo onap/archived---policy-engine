@@ -3,6 +3,7 @@
  * ONAP-PDP-REST
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +30,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.api.utils.PolicyApiUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
+import org.onap.policy.xacml.std.pap.StdPAPPolicyParams;
 
 /**
  * BRMS Param Policy Implementation.
@@ -82,12 +84,26 @@ public class BRMSParamPolicyService {
             operation = "create";
         }
         // Create Policy
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("BRMS_Param", policyName, policyParameters.getPolicyDescription(),
-                "BRMS_PARAM_RULE", updateFlag, policyScope,
-                drlRuleAndUIParams.get(AttributeType.MATCHING), 0, "DROOLS",
-                null, drlRuleAndUIParams.get(AttributeType.RULE), policyParameters.getRiskLevel(),
-                policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date,
-                policyParameters.getControllerName(), policyParameters.getDependencyNames());
+        // Creating BRMS Param Policies from the Admin Console
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("BRMS_Param")
+                .policyName(policyName)
+                .description(policyParameters.getPolicyDescription())
+                .configName("BRMS_PARAM_RULE")
+                .editPolicy(updateFlag)
+                .domain(policyScope)
+                .dynamicFieldConfigAttributes(drlRuleAndUIParams.get(AttributeType.MATCHING))
+                .highestVersion(0)
+                .onapName("DROOLS")
+                .configBodyData(null)
+                .drlRuleAndUIParams(drlRuleAndUIParams.get(AttributeType.RULE))
+                .riskLevel(policyParameters.getRiskLevel())
+                .riskType(policyParameters.getRiskType())
+                .guard(String.valueOf(policyParameters.getGuard()))
+                .ttlDate(date)
+                .brmsController(policyParameters.getControllerName())
+                .brmsDependency(policyParameters.getDependencyNames())
+                .build());
         // Send JSON to PAP
         response = (String) papServices.callPAP(newPAPPolicy, new String[]{"operation=" + operation, "apiflag=api",
                 "policyType=Config"}, policyParameters.getRequestID(), "ConfigBrmsParam");

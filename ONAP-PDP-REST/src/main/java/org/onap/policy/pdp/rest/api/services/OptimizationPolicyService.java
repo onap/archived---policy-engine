@@ -3,6 +3,7 @@
  * ONAP-PDP-REST
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+ * Modifications Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +30,7 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.pdp.rest.api.utils.PolicyApiUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pap.StdPAPPolicy;
+import org.onap.policy.xacml.std.pap.StdPAPPolicyParams;
 
 /**
  * Optimization Policy implementation.
@@ -100,10 +102,26 @@ public class OptimizationPolicyService {
         }
 
         // Create Policy Object 
-        StdPAPPolicy newPAPPolicy = new StdPAPPolicy("Optimization", policyName, policyDescription, onapName,
-                null, servicModel, null, null, optimizationAttributes.toString(), priority,
-                version, updateFlag, policyScope, 0, policyParameters.getRiskLevel(),
-                policyParameters.getRiskType(), String.valueOf(policyParameters.getGuard()), date);
+        StdPAPPolicy newPAPPolicy = new StdPAPPolicy(StdPAPPolicyParams.builder()
+                .configPolicyType("Optimization")
+                .policyName(policyName)
+                .description(policyDescription)
+                .onapName(onapName)
+                .configName(null)
+                .serviceType(servicModel)
+                .uuid(null)
+                .msLocation(null)
+                .jsonBody(optimizationAttributes.toString())
+                .priority(priority)
+                .version(version)
+                .editPolicy(updateFlag)
+                .domain(policyScope)
+                .highestVersion(0)
+                .riskLevel(policyParameters.getRiskLevel())
+                .riskType(policyParameters.getRiskType())
+                .guard(String.valueOf(policyParameters.getGuard()))
+                .ttlDate(date)
+                .build());
 
         // Send JSON Object to PAP 
         response = (String) papServices.callPAP(newPAPPolicy, new String[]{"operation=" + operation, "apiflag=api",
