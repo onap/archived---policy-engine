@@ -405,11 +405,10 @@ function configure_keystore() {
 		set -x
 	fi
 
-    local DEFAULT_KEYSTORE_PASSWORD="Pol1cy_0nap"
     local DEFAULT_KEYSTORE_PASSWORD='Pol1cy_0nap'
 
 	if [[ -n ${TRUSTSTORE_PASSWD} ]]; then
-	    keytool -storepasswd -storepass "${DEFAULT_TRUSTSTORE_PASSWORD}" -keystore "${POLICY_HOME}/etc/ssl/policy-truststore" -new "${TRUSTSTORE_PASSWD}"
+	    keytool -storepasswd -storepass "${DEFAULT_KEYSTORE_PASSWORD}" -keystore "${POLICY_HOME}/etc/ssl/policy-truststore" -new "${TRUSTSTORE_PASSWD}"
 	    keytool -list -keystore "${POLICY_HOME}/etc/ssl/policy-truststore" -storepass "${TRUSTSTORE_PASSWD}"
 	fi
 

@@ -107,24 +107,20 @@
 	-->
 
     <!-- ONAP portal currently using http instead of https
-
     Setting the keystore and truststore in the connector, overrides the javax.net.ssl system properties
-    passed in to the tomcat JVM:
-
+    passed in to the tomcat JVM: -->
+    
     <Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
                clientAuth="false" sslEnabledProtocols="TLSv1, TLSv1.1, TLSv1.2"
                keystoreFile="${{POLICY_HOME}}/etc/ssl/policy-keystore" keystorePass="${{KEYSTORE_PASSWD}}"
-               truststoreFile="${{POLICY_HOME}}/etc/ssl/policy-truststore" truststorePass="${{TRUSTSTORE_PASSWD}}"/>
-    -->
-    <Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="org.apache.coyote.http11.Http11NioProtocol"
-               maxThreads="150" />
-
-
+               truststoreFile="${{POLICY_HOME}}/etc/ssl/policy-truststore" truststorePass="${{TRUSTSTORE_PASSWD}}" />
+               
+<!--<Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               maxThreads="150" /> -->
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
     <Connector port="${{SSL_AJP_CONNECTOR_PORT}}" protocol="AJP/1.3" redirectPort="${{SSL_AJP_CONNECTOR_REDIRECT_PORT}}" />
-
 
     <!-- An Engine represents the entry point (within Catalina) that processes
          every request.  The Engine implementation for Tomcat stand alone

@@ -87,10 +87,11 @@
          Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
     -->
     
-    <Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="HTTP/1.1"
+    <!--     Use http instead of https -->
+<!--     <Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="HTTP/1.1"
                connectionTimeout="20000"
                redirectPort="${{SSL_HTTP_CONNECTOR_REDIRECT_PORT}}" />
-
+ -->
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"
@@ -104,23 +105,24 @@
          OpenSSL style configuration is required as described in the APR/native
          documentation -->
 
-	<!--
+	<!--Use https instead of http
 	Setting the keystore and truststore in the connector, overrides the javax.net.ssl system properties
-	passed in to the tomcat JVM:
+	passed in to the tomcat JVM: -->
 
     <Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
-               clientAuth="false" sslProtocol="TLS"
+               clientAuth="false" sslEnabledProtocols="TLSv1, TLSv1.1, TLSv1.2"
                keystoreFile="${{POLICY_HOME}}/etc/ssl/policy-keystore" keystorePass="${{KEYSTORE_PASSWD}}"
                truststoreFile="${{POLICY_HOME}}/etc/ssl/policy-truststore" truststorePass="${{TRUSTSTORE_PASSWD}}"/>
-	-->
 
-
+	<!--     Use http instead of https 
+    <Connector port="${{SSL_HTTP_CONNECTOR_PORT}}" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               maxThreads="150" /> -->
+               
     <!-- Define an AJP 1.3 Connector on port 8009 -->
 	<!--      
     <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
     -->
-
 
     <!-- An Engine represents the entry point (within Catalina) that processes
          every request.  The Engine implementation for Tomcat stand alone
