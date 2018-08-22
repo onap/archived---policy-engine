@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_cf49aed1",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/jpa/PolicyEntity.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-08-22T12:02:08Z",
+      "side": 1,
+      "message": "These changes UNDO the ONAP Java Formatting that we have worked so hard to get done. I will not accept it. NO TABS.",
+      "revId": "37ea7e317c9622cbcaa8c318b44a60dc453a7b06",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
