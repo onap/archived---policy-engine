@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_05df823c",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DashboardController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-08-23T11:22:14Z",
+      "side": 1,
+      "message": "Better code practice:\nif (datas \u003d\u003d null) {\n  return;\n}",
+      "range": {
+        "startLine": 349,
+        "startChar": 7,
+        "endLine": 349,
+        "endChar": 28
+      },
+      "revId": "c9fb6878fbc9e054daca1e9d6396d7fd2379a744",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_25e2be03",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/DashboardController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-08-23T11:22:14Z",
+      "side": 1,
+      "message": "Again, huge complexity in this whole method itself. At least here:\n\nif (policyData \u003d\u003d null) {\n    return;\n}\n\nBut overall let\u0027s try to clean this method up.",
+      "range": {
+        "startLine": 438,
+        "startChar": 12,
+        "endLine": 438,
+        "endChar": 37
+      },
+      "revId": "c9fb6878fbc9e054daca1e9d6396d7fd2379a744",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_a5ed6ef1",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/main/policyEditor.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-08-23T11:22:14Z",
+      "side": 1,
+      "message": "at the moment there is no ONAP formatting for html, nevertheless let\u0027s be consistent.",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 4
+      },
+      "revId": "c9fb6878fbc9e054daca1e9d6396d7fd2379a744",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
