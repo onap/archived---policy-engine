@@ -36,10 +36,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -61,11 +60,9 @@ import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pip.engines.aaf.AAFEngine;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
-
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.IdentifierImpl;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -78,6 +75,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
@@ -153,7 +151,27 @@ public class DecisionPolicy extends Policy {
         int version = 0;
         String policyID = policyAdapter.getPolicyID();
         version = policyAdapter.getHighestVersion();
-
+        
+        if("Raw".equals(policyAdapter.getRuleProvider())){
+            Object policy;
+            if ("API".equalsIgnoreCase(policyAdapter.getApiflag())) {
+                policy = XACMLPolicyScanner.readPolicy(new ByteArrayInputStream(StringEscapeUtils.unescapeXml(policyAdapter.getRawXacmlPolicy()).getBytes(StandardCharsets.UTF_8)));
+            } else {
+                policy = XACMLPolicyScanner.readPolicy(new ByteArrayInputStream(policyAdapter.getRawXacmlPolicy().getBytes(StandardCharsets.UTF_8)));
+            }
+            String policyRawDesc;
+            if (policy instanceof PolicySetType) {
+                policyRawDesc = ((PolicySetType) policy).getDescription() + "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
+                ((PolicySetType) policy).setDescription(policyRawDesc);
+            } else {
+                policyRawDesc = ((PolicyType) policy).getDescription() + "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
+                ((PolicyType) policy).setDescription(policyRawDesc);
+            }
+            policyAdapter.setPolicyData(policy);
+            policyAdapter.setData(policy);
+            setPreparedToSave(true);
+            return true;
+        }
         // Create the Instance for pojo, PolicyType object is used in marshalling.
         if ("Decision".equals(policyAdapter.getPolicyType())) {
             PolicyType policyConfig = new PolicyType();
