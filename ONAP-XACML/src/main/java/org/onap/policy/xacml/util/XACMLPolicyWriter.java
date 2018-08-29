@@ -151,6 +151,27 @@ public class XACMLPolicyWriter {
             throw new IllegalArgumentException("XACMLPolicyWriter writePolicyFile failed", e);
         }
     }
+    
+    /**
+	 * Helper static class that does the work to write a policy set.
+	 * 
+	 *
+	 */
+	public static InputStream getPolicySetXmlAsInputStream(PolicySetType policy) {
+		JAXBElement<PolicySetType> policyElement = new ObjectFactory().createPolicySet(policy);		
+		try {
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();			
+			JAXBContext context = JAXBContext.newInstance(PolicySetType.class);
+			Marshaller m = context.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			m.marshal(policyElement, byteArrayOutputStream);
+			return new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+		} catch (JAXBException e) {
+			PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyWriter", "writePolicyFile failed");
+			throw new IllegalArgumentException("XACMLPolicyWriter writePolicyFile failed", e);
+		}		
+	}
+	
     /**
      * Helper static class that does the work to write a policy set to an output stream.
      *

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 
 package org.onap.policy.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,12 +33,15 @@ import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.rest.adapter.RainyDayParams;
 import org.onap.policy.rest.adapter.YAMLParams;
 import org.onap.policy.rest.jpa.PolicyEntity;
+import org.onap.policy.xacml.util.XACMLPolicyWriter;
 import org.onap.portalsdk.core.controller.RestrictedBaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +55,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
@@ -72,7 +78,34 @@ public class DecisionPolicyController extends RestrictedBaseController {
 	private ArrayList<Object> treatmentList = null;
 	protected LinkedList<Integer> ruleAlgoirthmTracker;
 	public static final String FUNCTION_NOT = "urn:oasis:names:tc:xacml:1.0:function:not";
+	private static final String blEntry = "@blEntry@";
+	private static final String decisionRawType = "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
 
+	public void rawXACMLPolicy(PolicyRestAdapter policyAdapter, PolicyEntity entity){
+		InputStream policyXmlStream = null;
+		if (policyAdapter.getPolicyData() instanceof PolicySetType) {
+			policyXmlStream = XACMLPolicyWriter.getPolicySetXmlAsInputStream((PolicySetType)policyAdapter.getPolicyData());
+		} else {
+			policyXmlStream = XACMLPolicyWriter.getXmlAsInputStream((PolicyType)policyAdapter.getPolicyData());
+		}
+		String name = StringUtils.substringAfter(entity.getPolicyName(), "Decision_");
+		policyAdapter.setPolicyName(name.substring(0, name.indexOf('.')));
+		policyAdapter.setRuleProvider("Raw");
+		try {
+			policyAdapter.setRawXacmlPolicy(IOUtils.toString(policyXmlStream).replaceAll(decisionRawType, ""));
+		} catch (IOException e) {
+			policyLogger.error("Exception Occured while setting XACML Raw Object"+e);
+		} finally {
+			if(policyXmlStream != null){
+				try {
+					policyXmlStream.close();
+				} catch (IOException e) {
+					policyLogger.error("Exception Occured while closing input stream"+e);
+				}
+			}
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void prePopulateDecisionPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
 		attributeList = new ArrayList<>();
@@ -80,16 +113,31 @@ public class DecisionPolicyController extends RestrictedBaseController {
 		ruleAlgorithmList = new ArrayList<>();
 		treatmentList = new ArrayList<>();
 		
-		if (policyAdapter.getPolicyData() instanceof PolicyType) {
+		boolean rawPolicyCheck = false;
+		if (policyAdapter.getPolicyData() instanceof PolicySetType) {
+			rawPolicyCheck = ((PolicySetType)policyAdapter.getPolicyData()).getDescription().contains(decisionRawType);
+		} else {
+			rawPolicyCheck = ((PolicyType)policyAdapter.getPolicyData()).getDescription().contains(decisionRawType);
+		}
+		
+		if (rawPolicyCheck) {
+			rawXACMLPolicy(policyAdapter, entity);
+		} else {
 			RainyDayParams rainydayParams = new RainyDayParams();
 			Object policyData = policyAdapter.getPolicyData();
 			PolicyType policy = (PolicyType) policyData;
 			policyAdapter.setOldPolicyFileName(policyAdapter.getPolicyName());
-			String policyNameValue = policyAdapter.getPolicyName().substring(policyAdapter.getPolicyName().indexOf('_') + 1);
-			policyAdapter.setPolicyName(policyNameValue);
+
+			policyAdapter.setPolicyName(StringUtils.substringAfter(policyAdapter.getPolicyName(), "Decision_"));
 			String description = "";
+			String blackListEntryType = "Use Manual Entry";
 			try{
+				if(policy.getDescription().contains(blEntry)){
+					blackListEntryType = policy.getDescription().substring(policy.getDescription().indexOf(blEntry) + 9, policy.getDescription().lastIndexOf(blEntry));
+				}
+				policyAdapter.setBlackListEntryType(blackListEntryType);
 				description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
+				
 			}catch(Exception e){
 				policyLogger.info("General error", e);
 				description = policy.getDescription();
@@ -230,6 +278,9 @@ public class DecisionPolicyController extends RestrictedBaseController {
 											blackList.add(((AttributeValueType)attributes.next().getValue()).getContent().get(0).toString());
 										}
 										yamlParams.setBlackList(blackList);
+										if("Use File Upload".equals(policyAdapter.getBlackListEntryType())){
+											policyAdapter.setBlackListEntries(blackList);
+										}
 									}else{
 										ApplyType timeWindowSection = (ApplyType)((ApplyType)decisionApply.getExpression().get(0).getValue()).getExpression().get(1).getValue();
 										yamlParams.setLimit(((AttributeValueType)timeWindowSection.getExpression().get(1).getValue()).getContent().get(0).toString());
@@ -266,7 +317,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
 			
 			rainydayParams.setTreatmentTableChoices(treatmentList);
 			policyAdapter.setRainyday(rainydayParams);
-			policyAdapter.setSettings(decisionList);	
+			policyAdapter.setSettings(decisionList);
 		}	
 
 	}

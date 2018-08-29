@@ -28,7 +28,7 @@
 						ng-model="temp.policy.policyName" required pattern="\S+"
 						title="Enter Policy Name without any spaces and special characters and will accept _." />
 				</div>
-				<div class="form-group col-sm-6">
+				<div ng-show="notRawPolicy" class="form-group col-sm-6">
 					<label>Description:</label> <input type="text" class="form-control"
 						ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.policyDescription"
@@ -36,7 +36,7 @@
 				</div>
 			</div>
 			<div class="form-group row">
-				<div class="form-group col-sm-6">
+				<div ng-show="notRawPolicy" class="form-group col-sm-6">
 					<label>Onap Name:<sup><b>*</b></sup></label> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.onapName"
@@ -55,7 +55,20 @@
 						<option>Rainy_Day</option>
 						<option>GUARD_YAML</option>
 						<option>GUARD_BL_YAML</option>
+						<option>Raw</option>
 					</select>
+				</div>
+			</div>
+		</div>
+		<div ng-if="temp.policy.ruleProvider == 'Raw'">
+			<div class="well">
+				<div class="form-group row">
+					<div class="form-group col-sm-12">
+						<label>Raw Policy:<sup><b>*</b></sup></label>
+						<textarea class="form-control" ng-disabled="temp.policy.readOnly"
+							ng-model="temp.policy.rawXacmlPolicy" style="height: 400px;"
+							required title="Enter the Raw XACML Policy."></textarea>
+					</div>
 				</div>
 			</div>
 		</div>

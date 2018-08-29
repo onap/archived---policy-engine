@@ -48,8 +48,12 @@ public enum RuleProvider {
     /**
      * Indicates Guard BLACKLIST YAML
      */
-    RAINY_DAY("Rainy_Day");
-
+    RAINY_DAY("Rainy_Day"),
+    /**
+     * Indicates Raw
+     */
+    RAW("Raw");
+    
     private final String name;
 
     private RuleProvider(final String typeName) {
