@@ -114,6 +114,7 @@ public class DecisionPolicyService {
                 .editPolicy(updateFlag)
                 .domain(policyScope)
                 .highestVersion(0)
+                .rawXacmlPolicy(policyParameters.getRawXacmlPolicy())
                 .build());
         // Send JSON to PAP.
         response = (String) papServices.callPAP(newPAPPolicy, new String[]{"operation=" + operation, "apiflag=api",
