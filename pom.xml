@@ -17,326 +17,321 @@
   limitations under the License.
   ============LICENSE_END=========================================================
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.onap.oparent</groupId>
-		<artifactId>oparent</artifactId>
-		<version>1.1.0</version>
-		<relativePath/>
-	</parent>
-	<groupId>org.onap.policy.engine</groupId>
-	<artifactId>PolicyEngineSuite</artifactId>
-	<version>1.3.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>policy-engine</name>
-	<description>The ONAP Policy Engine main pom</description>
-	<properties>
-		<!-- Project common build settings -->
-		<project.source.version>1.8</project.source.version>
-		<project.target.version>1.8</project.target.version>
-		<project.encoding>UTF-8</project.encoding>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- Project path properties -->
-		<nexusproxy>https://nexus.onap.org</nexusproxy>
-		<sitePath>/content/sites/site/${project.groupId}/${project.artifactId}/${project.version}</sitePath>
-		<releases.path>content/repositories/releases/</releases.path>
-		<snapshots.path>content/repositories/snapshots/</snapshots.path>
-		<staging.path>content/repositories/staging/</staging.path>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.onap.policy.parent</groupId>
+        <artifactId>integration</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+        <relativePath />
+    </parent>
+    <groupId>org.onap.policy.engine</groupId>
+    <artifactId>PolicyEngineSuite</artifactId>
+    <version>1.3.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>policy-engine</name>
+    <description>The ONAP Policy Engine main pom</description>
+    <properties>
+        <!-- Project common build settings -->
+        <project.source.version>1.8</project.source.version>
+        <project.target.version>1.8</project.target.version>
+        <project.encoding>UTF-8</project.encoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Project path properties -->
+        <nexusproxy>https://nexus.onap.org</nexusproxy>
+        <sitePath>/content/sites/site/${project.groupId}/${project.artifactId}/${project.version}</sitePath>
+        <releases.path>content/repositories/releases/</releases.path>
+        <snapshots.path>content/repositories/snapshots/</snapshots.path>
+        <staging.path>content/repositories/staging/</staging.path>
 
-		<!-- sonar/jacoco overrides -->
-		<!-- Overriding oparent default sonar/jacoco settings Combine all our reports 
-			into one file shared across sub-modules -->
-		<sonar.jacoco.reportPath>${project.basedir}/../target/code-coverage/jacoco-ut.exec</sonar.jacoco.reportPath>
-		<sonar.jacoco.itReportPath>${project.basedir}/../target/code-coverage/jacoco-it.exec</sonar.jacoco.itReportPath>
-		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <!-- sonar/jacoco overrides -->
+        <!-- Overriding oparent default sonar/jacoco settings Combine all our reports 
+            into one file shared across sub-modules -->
+        <sonar.jacoco.reportPath>${project.basedir}/../target/code-coverage/jacoco-ut.exec</sonar.jacoco.reportPath>
+        <sonar.jacoco.itReportPath>${project.basedir}/../target/code-coverage/jacoco-it.exec</sonar.jacoco.itReportPath>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 
-		<!-- Shared between policy/* project repositories - same version -->
-		<h2.version>1.4.186</h2.version>
+        <!-- Shared between policy/* project repositories - same version -->
+        <h2.version>1.4.186</h2.version>
 
-		<!-- Shared between policy/* project repositories - different version -->
+        <!-- Shared between policy/* project repositories - different version -->
 
-		<!-- Project common dependency versions -->
-		<jetty.plugin.version>9.2.3.v20140905</jetty.plugin.version>
-		<dmaap.version>1.1.3</dmaap.version>
-		<httpclient.version>4.5.5</httpclient.version>
-		<jackson.version>2.9.4</jackson.version>
-		<commons.fileupload.version>1.3.3</commons.fileupload.version>
-	</properties>
-	<modules>
-		<module>PolicyEngineUtils</module>
-		<module>ONAP-XACML</module>
-		<module>ONAP-REST</module>
-		<module>PolicyEngineAPI</module>
-		<module>ONAP-PDP</module>
-		<module>ONAP-PDP-REST</module>
-		<module>ONAP-PAP-REST</module>
-		<module>LogParser</module>
-		<module>PolicyEngineClient</module>
-		<module>BRMSGateway</module>
-		<module>POLICY-SDK-APP</module>
-		<module>ONAP-SDK-APP</module>
-		<module>packages</module>
-	</modules>
-	<distributionManagement>
-		<repository>
-			<id>ecomp-releases</id>
-			<name>ONAP Release Repository</name>
-			<url>${nexusproxy}/${releases.path}</url>
-		</repository>
-		<snapshotRepository>
-			<id>ecomp-snapshots</id>
-			<name>ONAP Snapshot Repository</name>
-			<url>${nexusproxy}/${snapshots.path}</url>
-		</snapshotRepository>
-		<site>
-			<id>ecomp-site</id>
-			<url>dav:${nexusproxy}${sitePath}</url>
-		</site>
-	</distributionManagement>
-	<reporting>
-	  <plugins>
-	    <plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-javadoc-plugin</artifactId>
-	      <version>2.10.4</version>
-	      <configuration>
-		<failOnError>false</failOnError>
-		<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-		<docletArtifact>
-		  <groupId>org.umlgraph</groupId>
-		  <artifactId>umlgraph</artifactId>
-		  <version>5.6</version>
-		</docletArtifact>
-		<additionalparam>-views</additionalparam>
-		<useStandardDocletOptions>true</useStandardDocletOptions>
-	      </configuration>
-	    </plugin>
-	  </plugins>
-	</reporting>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.h2database</groupId>
-				<artifactId>h2</artifactId>
-				<version>${h2.version}</version>
-				<scope>test</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	<dependencies>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-		</dependency>
-		<dependency>
-			<!-- org.w3c.dom dependencies -->
-			<groupId>xml-apis</groupId>
-			<artifactId>xml-apis</artifactId>
-			<version>1.3.03</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-		<dependency>
-		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-databind</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-mock</artifactId>
-			<version>2.0.8</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.mockrunner</groupId>
-			<artifactId>mockrunner</artifactId>
-			<version>0.3.1</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito -->
-		<dependency>
-    		<groupId>org.powermock</groupId>
-    		<artifactId>powermock-api-mockito</artifactId>
-    		<version>1.7.3</version>
-    		<scope>test</scope>
-		</dependency>
-		<dependency>
+        <!-- Project common dependency versions -->
+        <jetty.plugin.version>9.2.3.v20140905</jetty.plugin.version>
+        <dmaap.version>1.1.3</dmaap.version>
+        <httpclient.version>4.5.5</httpclient.version>
+        <jackson.version>2.9.4</jackson.version>
+        <commons.fileupload.version>1.3.3</commons.fileupload.version>
+    </properties>
+    <modules>
+        <module>PolicyEngineUtils</module>
+        <module>ONAP-XACML</module>
+        <module>ONAP-REST</module>
+        <module>PolicyEngineAPI</module>
+        <module>ONAP-PDP</module>
+        <module>ONAP-PDP-REST</module>
+        <module>ONAP-PAP-REST</module>
+        <module>LogParser</module>
+        <module>PolicyEngineClient</module>
+        <module>BRMSGateway</module>
+        <module>POLICY-SDK-APP</module>
+        <module>ONAP-SDK-APP</module>
+        <module>packages</module>
+    </modules>
+    <distributionManagement>
+        <repository>
+            <id>ecomp-releases</id>
+            <name>ONAP Release Repository</name>
+            <url>${nexusproxy}/${releases.path}</url>
+        </repository>
+        <snapshotRepository>
+            <id>ecomp-snapshots</id>
+            <name>ONAP Snapshot Repository</name>
+            <url>${nexusproxy}/${snapshots.path}</url>
+        </snapshotRepository>
+        <site>
+            <id>ecomp-site</id>
+            <url>dav:${nexusproxy}${sitePath}</url>
+        </site>
+    </distributionManagement>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                    <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                    <docletArtifact>
+                        <groupId>org.umlgraph</groupId>
+                        <artifactId>umlgraph</artifactId>
+                        <version>5.6</version>
+                    </docletArtifact>
+                    <additionalparam>-views</additionalparam>
+                    <useStandardDocletOptions>true</useStandardDocletOptions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <!-- org.w3c.dom dependencies -->
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.3.03</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-mock</artifactId>
+            <version>2.0.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mockrunner</groupId>
+            <artifactId>mockrunner</artifactId>
+            <version>0.3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito -->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.7.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
             <version>1.7.3</version>
             <scope>test</scope>
         </dependency>
-		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
-		<dependency>
-		    <groupId>org.mockito</groupId>
-		    <artifactId>mockito-all</artifactId>
-		    <version>1.10.19</version>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.easymock</groupId>
-		    <artifactId>easymock</artifactId>
-		    <version>3.1</version>
-   		    <scope>test</scope>
-		</dependency>	
-	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>pre-unit-test</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<configuration>
-							<destFile>${sonar.jacoco.reportPath}</destFile>
-							<append>true</append>
-						</configuration>
-					</execution>
-					<execution>
-						<id>post-unit-test</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
-							<dataFile>${sonar.jacoco.reportPath}</dataFile>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<nexusUrl>${nexusproxy}</nexusUrl>
-					<stagingProfileId>176c31dfe190a</stagingProfileId>
-					<serverId>ecomp-staging</serverId>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<configuration>
-					<skip />
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>2.4.1</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.0</version>
-				<configuration>
-					<encoding>${project.encoding}</encoding>
-					<source>${project.source.version}</source>
-					<target>${project.target.version}</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<encoding>${project.encoding}</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>
-			<!-- The Jetty plugin allows us to easily test the development build by
-				running jetty:run on the command line. -->
-			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty.plugin.version}</version>
-				<configuration>
-					<scanIntervalSeconds>2</scanIntervalSeconds>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>com.fortify.ps.maven.plugin</groupId>
-				<artifactId>sca-maven-plugin</artifactId>
-				<version>4.20</version>
-			</plugin>
-			<plugin>
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-site-plugin</artifactId>
-			  <dependencies>
-			    <dependency>
-			      <groupId>org.apache.maven.wagon</groupId>
-			      <artifactId>wagon-webdav-jackrabbit</artifactId>
-			      <version>2.10</version>
-			    </dependency>
-			  </dependencies>
-			</plugin>
-		</plugins>
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>pre-unit-test</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${sonar.jacoco.reportPath}</destFile>
+                            <append>true</append>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${sonar.jacoco.reportPath}</dataFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <nexusUrl>${nexusproxy}</nexusUrl>
+                    <stagingProfileId>176c31dfe190a</stagingProfileId>
+                    <serverId>ecomp-staging</serverId>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip />
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.4.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <encoding>${project.encoding}</encoding>
+                    <source>${project.source.version}</source>
+                    <target>${project.target.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>${project.encoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <!-- The Jetty plugin allows us to easily test the development build by
+                running jetty:run on the command line. -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.plugin.version}</version>
+                <configuration>
+                    <scanIntervalSeconds>2</scanIntervalSeconds>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.fortify.ps.maven.plugin</groupId>
+                <artifactId>sca-maven-plugin</artifactId>
+                <version>4.20</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.wagon</groupId>
+                        <artifactId>wagon-webdav-jackrabbit</artifactId>
+                        <version>2.10</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
-				<plugin>
-					<groupId>org.jacoco</groupId>
-					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>${jacoco.version}</version>
-					<configuration>
-						<!-- Note: This exclusion list should match <sonar.exclusions> property 
-							above -->
-						<excludes>
-							<exclude>**/gen/**</exclude>
-							<exclude>**/generated-sources/**</exclude>
-							<exclude>**/yang-gen/**</exclude>
-							<exclude>**/pax/**</exclude>
-						</excludes>
-					</configuration>
-					<executions>
-						<!-- Prepares the property pointing to the JaCoCo runtime agent which 
-							is passed as VM argument when Maven the Surefire plugin is executed. -->
-						<execution>
-							<id>pre-unit-test</id>
-							<goals>
-								<goal>prepare-agent</goal>
-							</goals>
-							<configuration>
-								<destFile>${sonar.jacoco.reportPath}</destFile>
-							</configuration>
-						</execution>
-						<!-- Ensures that the code coverage report for unit tests is created 
-							after unit tests have been run. -->
-						<execution>
-							<id>post-unit-test</id>
-							<phase>test</phase>
-							<goals>
-								<goal>report</goal>
-							</goals>
-							<configuration>
-								<dataFile>${sonar.jacoco.reportPath}</dataFile>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                    <configuration>
+                         <!-- Note: This exclusion list should match <sonar.exclusions> property 
+                             above -->
+                        <excludes>
+                            <exclude>**/gen/**</exclude>
+                            <exclude>**/generated-sources/**</exclude>
+                            <exclude>**/yang-gen/**</exclude>
+                            <exclude>**/pax/**</exclude>
+                        </excludes>
+                    </configuration>
+                    <executions>
+                        <!-- Prepares the property pointing to the JaCoCo runtime agent which 
+                             is passed as VM argument when Maven the Surefire plugin is executed. -->
+                        <execution>
+                            <id>pre-unit-test</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <destFile>${sonar.jacoco.reportPath}</destFile>
+                            </configuration>
+                        </execution>
+                        <!-- Ensures that the code coverage report for unit tests is created 
+                            after unit tests have been run. -->
+                        <execution>
+                            <id>post-unit-test</id>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                            <configuration>
+                                <dataFile>${sonar.jacoco.reportPath}</dataFile>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -363,5 +358,5 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-	</build>
+    </build>
 </project>
