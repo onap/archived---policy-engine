@@ -354,4 +354,46 @@ public class ServerContextImpl implements ServletContext{
 		return null;
 	}
 
+  @Override
+  public Dynamic addJspFile(String arg0, String arg1) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String getRequestCharacterEncoding() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public String getResponseCharacterEncoding() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public int getSessionTimeout() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public void setRequestCharacterEncoding(String arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setResponseCharacterEncoding(String arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setSessionTimeout(int arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
 }
