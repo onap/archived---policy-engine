@@ -773,7 +773,6 @@ public class MSModelUtils {
         }
     }
 
-
     /*
      * For TOSCA Model
      */
