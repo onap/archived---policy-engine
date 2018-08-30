@@ -34,7 +34,6 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.1</version>
 				<configuration>
 					<attachClasses>true</attachClasses>
 					<webResources>
@@ -51,7 +50,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -61,7 +59,7 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<!-- To support integrity-audit audit of BackupMonitorEntity table -->
+            <!-- To support integrity-audit audit of BackupMonitorEntity table -->
 			<groupId>org.onap.policy.engine</groupId>
 			<artifactId>PolicyEngineUtils</artifactId>
 			<version>${project.version}</version>
@@ -112,7 +110,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -158,7 +155,6 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>14.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
@@ -199,7 +195,7 @@
 			<artifactId>policy-yaml</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- Spring -->
+        <!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
@@ -293,7 +289,7 @@
 			<artifactId>args4j</artifactId>
 			<version>2.32</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-dbcp -->
+        <!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-dbcp -->
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-dbcp</artifactId>
