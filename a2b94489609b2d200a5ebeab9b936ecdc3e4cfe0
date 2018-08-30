@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_cfd420bf",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 803
+      },
+      "writtenOn": "2018-08-30T15:53:56Z",
+      "side": 1,
+      "message": "Frank, you need to update the response in DCAEDictionaryController.java \"microServiceConfigNameDictionaryDatas\"",
+      "revId": "a2b94489609b2d200a5ebeab9b936ecdc3e4cfe0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
