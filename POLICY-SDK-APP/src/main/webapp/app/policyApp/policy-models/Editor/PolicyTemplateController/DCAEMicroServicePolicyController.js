@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$window', '$compile', 'PolicyAppService', 'policyNavigator', 'modalService', '$modal', 'Notification', function ($scope, $window, $compile, PolicyAppService, PolicyNavigator, modalService, $modal, Notification) {
     $("#dialog").hide();
     
@@ -103,7 +104,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		if($scope.data.microServiceConfigNameDictionaryDatas){
  		    $scope.microServiceCongigNameDictionaryDatas = JSON.parse($scope.data.microServiceConfigNameDictionaryDatas);
 		}
-		console.log($scope.microServiceCongigNameDictionaryDatas);
+		console.log($scope.$scope.microServiceCongigNameDictionaryDatas);
 	}, function (error) {
 		console.log("failed");
 	});
@@ -170,9 +171,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 
 	 $scope.choices = [];
 	 $scope.attributeDatas = [{"attributes" : $scope.choices}];
-	 $scope.isInitEditTemplate = true;  //just initially create the edit template, didn't click add button yet.
 	 addNewChoice = function(value) {
-		 console.log("input value : " + value);
+		 console.log("input key : " + value);
+		 var isFoundInRuleData = false;
 		 if(value != undefined){
 			if (value.startsWith('div.')){
 				value = value.replace('div.','');
@@ -188,9 +189,15 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 				clone.id = ''+value+'@'+addElement;
 				clone.value = '';
 				if($scope.temp.policy.editPolicy || $scope.temp.policy.readOnly){ //if it's view or edit
-					if($scope.temp.policy.ruleData[clone.id] || ($scope.temp.policy.editPolicy && !$scope.isInitEditTemplate)){  // Only append child if its value found in ruleData or edit mode
+					if($scope.temp.policy.ruleData[clone.id] || $scope.temp.policy.editPolicy){  // Only append child if its value found in ruleData or edit mode
 						if($scope.temp.policy.ruleData[clone.id]){
 						    clone.value = $scope.temp.policy.ruleData[clone.id];
+						    isFoundInRuleData = true;
+						}
+						console.log("  clone.value :" +  clone.value);
+						console.log(" clone.id :" + clone.id);
+						if(!isFoundInRuleData && isInitViewEdit){
+							return;
 						}
 						if(!clone.className.includes("child_single")){
 						   clone.className += ' child_single'; //here cloned is single element
@@ -246,6 +253,8 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 				for(var i=0; i<inputs.length; i++){
 					if ($scope.temp.policy.ruleData!=undefined){
 						var checkValue = $scope.temp.policy.ruleData[inputs[i].id];
+						console.log("  checkValue.value :" +  checkValue);
+						console.log(" inputs["+i+"].id :" + inputs[i].id);
 						if (checkValue!=undefined && checkValue != "undefined"){
 							document.getElementById(inputs[i].id).value = checkValue;
 								plainAttributeKeys.push(inputs[i].id);
@@ -347,6 +356,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	var enumKeyList = [];
 	var dictionaryList = [];
 	var dictionaryNameList = [];
+	var isInitViewEdit = false;
     $scope.addDataToFields = function(serviceName, version){
         if(serviceName != null && version !=null){
         	var service=serviceName+"-v"+version;
@@ -358,7 +368,11 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
             console.log("service: " +service);
             
             var dataOrderInfo = "";
+            
+            booleanTrueElements = [];
 
+            document.getElementById("msPolicyloader").style.visibility = "visible";
+            
             $.ajax({
                 type : 'POST',
                 url : uuu,
@@ -366,6 +380,9 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                 contentType: 'application/json',
                 data: JSON.stringify(postData),
                 success : function(data){
+                	
+                	document.getElementById("msPolicyloader").style.visibility = "hidden";
+                	
                     $scope.$apply(function(){
                     	var plainAttributeKeys = [];
                     	$scope.dcaeModelData = data[0].dcaeModelData;
@@ -442,14 +459,11 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                     });
                     
                     if($scope.temp.policy.editPolicy || $scope.temp.policy.readOnly){  // If it's veiw or edit
-                    	
-                    	if($scope.temp.policy.editPolicy){
-                        	$scope.isInitEditTemplate = true;
-                    	}
-                    	
+                    	isInitViewEdit = true;
                     	var checkData = [];
                     	var data = [];
                     	    // If ruleData contains extra elements created by clicked add button 
+                    	    console.log("$scope.temp.policy.ruleData:" + $scope.temp.policy.ruleData);
 	                    	if($scope.temp.policy.ruleData != null){
 	                    		var propNames = Object.getOwnPropertyNames($scope.temp.policy.ruleData);
 	                    		propNames.forEach(function(name) {
@@ -497,33 +511,44 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			                    			}
 			                    		}		                    			
 		                    		}
+		                    		
+	                    			
+		              	    		for (var i = 0; i < $scope.labelManyKeys.length; i++) {
+		              	    		    var label = $scope.labelManyKeys[i];			              	    		    
+		              	    		    if(parentLevelElements){
+		              	    		    	for (var k = 0; k < parentLevelElements.length; k++){
+		              	    		    		if(label == parentLevelElements[k]){
+		              	    		    			addNewChoice(label);
+		              	    		    		}
+		              	    		    	}				              	    		    	
+		              	    		    }				             	 	    			
+		              	    		}
+		              	    		
 		                    		//if no layout order info, keep the process as before
 		                    		if(!dataOrderInfo){
-			                    		for(var i =0; i < unique.length; i++){
-			                    			//remove @x and let addNewChoice add @1 or @2...
-			                    			//var newKey = unique[i].substring(0, unique[i].length-2);
-			                    			var index = unique[i].lastIndexOf("@");
-			                    			var newKey = unique[i].substring(0, index);
-			                    			console.log("newKey: " + newKey);	
-			                    			addNewChoice(newKey);
-			                    		}
+				                        for(var i =0; i < unique.length; i++){
+				                    		if(unique[i] != "*processed*"){
+					                    		var index = unique[i].lastIndexOf("@");
+					                    		var newKey = unique[i].substring(0, index);
+					                    		console.log("newKey: " + newKey);	
+					                    		
+					                    		var newElement = document.getElementById("div."+unique[j]);
+				                    			//check weather it has been created already
+                                                if(newElement != null){
+                                                	continue;
+                                                }else{
+                                                	newElement = document.getElementById(unique[j]);
+                                                	if(newElement != null){
+                                                		continue;
+                                                	}
+                                                } 
+                                                
+					                    		if(newKey){
+					                    			addNewChoice(newKey);
+					                    		}
+				                    		}
+				                        }
 		            		    	}else{
-
-				              	    		for (var i = 0; i < $scope.labelManyKeys.length; i++) {
-				              	    			//console.log("dataOrderInfo["+i+"]"+  dataOrderInfo[i]);
-				              	    		    var label = $scope.labelManyKeys[i];
-				              	    		    
-				              	    		    if(parentLevelElements){
-				              	    		    	for (var k = 0; k < parentLevelElements.length; k++){
-				              	    		    		if(label == parentLevelElements[k]){
-				              	    		    			addNewChoice(label);
-				              	    		    		}
-				              	    		    	}
-				              	    		    	
-				              	    		    }
-				             	 	    			
-				              	    		}
-				              	    		
 				              	    		//---reset to default
 				              	    		dataOrderInfo = [];
 				              	    		$scope.labelManyKeys = [];
@@ -561,6 +586,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
                     var ele = angular.element(document.getElementById("DynamicTemplate"));
             		$compile(ele.contents())($scope);
                     $scope.$apply();
+                    isInitViewEdit = false;                   
                     
                 },
                 error : function(data){
@@ -729,10 +755,16 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		        } else {
 		        	var attirbuteLabel = label;
 		        	var defaultValue='';
+		        	var description='';
 		        	var isRequired = false;
 		        	if (layOutData[key].includes('defaultValue-')){
 		        		defaultValue = layOutData[key].split('defaultValue-')[1];
 		        	}
+		        	
+		        	if (layOutData[key].includes('description-')){
+		        		description = layOutData[key].split('description-')[1];
+		        	}		        	
+		        	
 
 		        	if (key==="0"){
 		        		array = true;
@@ -748,7 +780,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		    		
 		    		var subAttributes = $scope.dcaeModelData.sub_attributes;
 		    		
- 		    		if(subAttributes){		    			
+		    		if(subAttributes){		    			
 		    			var jsonObject = JSON.parse(subAttributes);	
 		    			
 		    		    var lablInfo = findVal(jsonObject, attributekey);
@@ -757,6 +789,14 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			        		if(lablInfo.includes('required-true')){
 			        			isRequired = true;
 			        		}	
+			        		if(lablInfo.includes('defaultValue-')){
+			        			defaultValue = lablInfo.split('defaultValue-')[1];
+			        		}
+			        		
+			        		if(lablInfo.includes('description-')){
+			        			description = lablInfo.split('description-')[1];
+			        		}
+			        		
 			        	}else{			        	
 		    		 	   var allkeys = Object.keys(jsonObject);
 		    			   if(allkeys){
@@ -769,6 +809,15 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		    				        	 if (tempObject[key].includes('required-true')){
 		    				        		isRequired = true;
 		    				        	 }	
+		    				        	 
+		    				        	 if(tempObject[key].includes('defaultValue-')){
+		    				        		defaultValue = tempObject[key].split('defaultValue-')[1];
+		    				        	 }
+		    				        	 
+		    				        	 if(tempObject[key].includes('description-')){
+		    				        		 description = tempObject[key].split('description-')[1];
+			    				          }
+
 		    						 }
 		    					  }
 		    				   }		    				
@@ -783,7 +832,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		        		case string:
 		        			if($scope.dataOrderInfo){		        				
 				        		elementOrderNum++;
-				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue, "isRequired": isRequired, "type":"text"};
+				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue, "isRequired": isRequired, "type":"text", "description":description};
 				        		$scope.layOutElementList.push(elementObject);
 		        			}else{
 		        				$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "text");
@@ -793,7 +842,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		        		case integerValue: 
 		        			if($scope.dataOrderInfo){
 			        			elementOrderNum++;
-				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue,"isRequired": isRequired, "type":"number"};
+				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue,"isRequired": isRequired, "type":"number" , "description":description};
 				        		$scope.layOutElementList.push(elementObject);
 		        			}else{
 		        				$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "number");
@@ -802,7 +851,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		        		case double:
 		        			if($scope.dataOrderInfo){
 			        			elementOrderNum++;
-				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue,"isRequired": isRequired, "type":"double"};
+				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue,"isRequired": isRequired, "type":"double",  "description":description};
 				        		$scope.layOutElementList.push(elementObject);		        				
 		        			}else{
 		        				$scope.attributeBox(attributekey, array, attirbuteLabel, defaultValue, isRequired, "double");
@@ -811,7 +860,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		        		case boolean:
 		        			if($scope.dataOrderInfo){
 			        			elementOrderNum++;
-				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": layOutData[key], "list": getBooleanList, "isRequired": isRequired, "type":"dropBox"};
+				        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue, "isRequired": isRequired, "type":"boolean", "description":description};
 				        		$scope.layOutElementList.push(elementObject);
 		        			}else{
 		        				$scope.dropBoxLayout(attirbuteLabel, attributekey, array, layOutData[key], getBooleanList());
@@ -827,7 +876,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		        			if (list.length===0){ //not dropdown element
 		        				if($scope.dataOrderInfo){
 		        					elementOrderNum++;
-					        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue,"isRequired": isRequired, "type":"text"};
+					        		elementObject = {"id": elementOrderNum,"attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue,"isRequired": isRequired, "type":"text", "description":description};
 					        		$scope.layOutElementList.push(elementObject);
 		        					
 		        				}else{
@@ -836,7 +885,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		        			}else{
 		        				if($scope.dataOrderInfo){
 			        				elementOrderNum++;
-					        		elementObject = {"id": elementOrderNum, "attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": layOutData[key],"isRequired": isRequired, "list":list, "type":"dropBox"};
+					        		elementObject = {"id": elementOrderNum, "attributekey" : attributekey, "array": array, "attirbuteLabel" : attirbuteLabel, "defaultValue": defaultValue,"isRequired": isRequired, "list":list, "type":"dropBox", "description":description};
 					        		$scope.layOutElementList.push(elementObject);		        					
 		        				}else{
 		        					$scope.dropBoxLayout(attirbuteLabel, attributekey, array, layOutData[key], list, isRequired);
@@ -927,15 +976,16 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 
 		 	  	    		   var attirbuteLabel = layOutElementList[j].attirbuteLabel.toString().trim();
 		 	  	    		   var defaultValue = layOutElementList[j].defaultValue.toString().trim();
+		 	  	    		   var description = layOutElementList[j].description;
 		 	  	    		   var isRequired = layOutElementList[j].isRequired;
 	 	 	  	    		   
 	 	 	  	    		   console.log("layOutElementList[" +j+ "]: id:" + layOutElementList[j].id + ", attributekey:"+ layOutElementList[j].attributekey + ", attirbuteLabel:" + layOutElementList[j].attirbuteLabel);
-	 	 	  	    		console.log("layOutElementList[" +j+ "]: type:" + layOutElementList[j].type);
+	 	 	  	    		   console.log("layOutElementList[" +j+ "]: type:" + layOutElementList[j].type);
 	 	 	  	    		   if (layOutElementList[j].type == "dropBox"){ 
-	 		        				$scope.dropBoxLayout(attirbuteLabel, attributekey, layOutElementList[j].array, defaultValue, layOutElementList[j].list, isRequired);
+	 		        				$scope.dropBoxLayout(attirbuteLabel, attributekey, layOutElementList[j].array, defaultValue, layOutElementList[j].list, isRequired, description);
 	                                
 			        		   }else{
-			        			    $scope.attributeBox(attributekey, layOutElementList[j].array, attirbuteLabel, defaultValue, isRequired, layOutElementList[j].type);	
+			        			    $scope.attributeBox(attributekey, layOutElementList[j].array, attirbuteLabel, defaultValue, isRequired, layOutElementList[j].type, description);	
 	
 			        		   }
 	 	 	  	    		   
@@ -949,7 +999,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 	    }
 	    
 	    
-	    $scope.attributeBox = function(attibuteKey, attributeManyKey, labelValue, defaultValue, isRequired, dataType ){
+	    $scope.attributeBox = function(attibuteKey, attributeManyKey, labelValue, defaultValue, isRequired, dataType,  description){
 			$scope.temp.policy.ruleGridData.push(attibuteKey);			
 		var br = document.createElement("BR");
 		
@@ -986,12 +1036,59 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			   if(dataType == "double"){
 				   textField.setAttribute("type" , "number");
 				   textField.setAttribute("step" , "any");
-			   }else{
+				   
+			   }else if(dataType == "boolean"){  //gw1218 testing boolean
+					    var booleanDiv = document.createElement("div");
+						
+						booleanDiv.setAttribute("class" , "onoffswitch");
+						
+						//var checkField = document.createElement("INPUT");
+						textField.setAttribute("type" , "checkbox");
+						textField.setAttribute("name" , "onoffswitch");
+						textField.setAttribute("class" , "onoffswitch-checkbox");
+						textField.setAttribute("id" , ''+labelValue +attibuteKey+'');
+						if(defaultValue && defaultValue == "true") {
+							textField.setAttribute("checked" , "true");
+						}else{
+							textField.setAttribute("checked" , "false");
+						}
+
+						var booleanlabel = document.createElement("Label");
+						booleanlabel.setAttribute("class" , "onoffswitch-label");
+						booleanlabel.setAttribute("for" , ''+labelValue +attibuteKey+'');
+					
+						var span1 = document.createElement("span");
+						span1.setAttribute("class" , "onoffswitch-inner");
+						
+						var span2 = document.createElement("span");
+						span2.setAttribute("class" , "onoffswitch-switch"); 
+						
+						
+						booleanlabel.appendChild(span1); 	
+						booleanlabel.appendChild(span2); 	
+						booleanDiv.appendChild(textField); 	
+						booleanDiv.appendChild(booleanlabel); 	 
+						
+						document.getElementById(divID).appendChild(label);  
+						document.getElementById(divID).appendChild(booleanDiv); 	
+
+						//return;
+			   } else{
 			      textField.setAttribute("type" , dataType);
 			   }
+			   
+				
+
 		}
-		textField.setAttribute("style" , "width:300px;");
-		textField.setAttribute("ng-disabled" , "temp.policy.readOnly");
+		
+		if(dataType != "boolean"){
+			textField.setAttribute("style" , "width:300px;");
+			textField.setAttribute("ng-disabled" , "temp.policy.readOnly");
+			if(description && description != "null"){
+				textField.setAttribute("title", description);
+			}
+		}
+
 		var checkKey;
 		var id = "";
 		if(attributeManyKey){
@@ -1022,11 +1119,12 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			textField.className += ' first_child';	
 			if(isRequired){
 				textField.setAttribute("required", "true");
-			}			
+			}	
+			
 			divTag.appendChild(textField); 			
 			document.getElementById(divID).appendChild(divTag); 
 			
-		}else{
+		}else if (dataType != "boolean"){
 			checkKey = labelValue + attibuteKey;
 			textField.setAttribute("id" , ''+labelValue +attibuteKey+'');
 			if(document.getElementById(divID).hasAttribute('required') || !document.getElementById(divID).hasAttribute('data-conditional')){
@@ -1056,7 +1154,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 
 		}
 
-		if(divID.includes("@0") && divID.includes("div.")){
+		if(dataType != "boolean" && divID.includes("@0") && divID.includes("div.")){
 			var firstChild_Id = divID.split("@0")[0];
 			var firstChild_element = document.getElementById(firstChild_Id);
 			if(firstChild_element){
@@ -1073,7 +1171,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		console.log('firstChild_Id: ' + firstChild_Id);
 		console.log('divID: ' + divID);
 		
-		if (defaultValue.length > 0){	
+		if(dataType != "boolean" && defaultValue.length > 0){	
 			if(defaultValue.includes(":")){
 				defaultValue = defaultValue.split(":")[0];
 				if(defaultValue === "NA") {
@@ -1098,7 +1196,12 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 				}
 			}
 		} 
-		plainAttributeKeys.push(labelValue + attibuteKey+'*'+attributeManyKey);	
+		
+		if (dataType != "boolean"){
+		    plainAttributeKeys.push(labelValue + attibuteKey+'*'+attributeManyKey);	
+		}else{
+		    plainAttributeKeys.push(labelValue + attibuteKey+'*'+"boolean");	
+		}
     };
   
     $scope.labelManyKeys = [];
@@ -1201,7 +1304,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 		}
     };
 
-    $scope.dropBoxLayout = function(labelLevel, attributeName, many , refValue, listemunerateValues, isRequired){
+    $scope.dropBoxLayout = function(labelLevel, attributeName, many , defaultValue, listemunerateValues, isRequired, description){
 			var br = document.createElement("BR");
 		
 			if (labelLevel.length  < 1){
@@ -1259,6 +1362,10 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			listField.setAttribute("style" , "width:300px;");
 			listField.setAttribute("ng-disabled" , "temp.policy.readOnly");
 			
+			if(description && description != "null"){
+				listField.setAttribute("title", description);
+			}
+			
 			if(isRequired){
 			    if(document.getElementById(divID).hasAttribute('data-conditional')){
 			    	listField.setAttribute("data-conditional", divID);
@@ -1296,6 +1403,14 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 			}else {
 				document.getElementById(divID).appendChild(listField).multiple = false;
 				plainAttributeKeys.push(labelLevel + attributeName+'*'+false);
+				
+				if (defaultValue){
+					if(defaultValue.includes(':')){
+					   defaultValue = defaultValue.split(':')[0];
+					}
+					var location = listemunerateValues.indexOf(defaultValue);
+					document.getElementById(labelLevel +attributeName).options[location+1].selected = true;
+				}
 			}
 		
 			if($scope.temp.policy.ruleData != null){
@@ -1372,12 +1487,30 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
 							jsonPolicy[key]= multiSlect;
 						}else{
 							console.log(" searchElement.value = > " + searchElement.value);
-							jsonPolicy[key]= searchElement.value;
+							if(splitPlainAttributeKey[1]!= undefined && splitPlainAttributeKey[1] == "boolean"){
+								jsonPolicy[key]= false;
+								for(var i=0; i<booleanTrueElements.length; i++){									
+									if(booleanTrueElements[i] == key){
+										jsonPolicy[key]= true;
+									}
+								}
+
+							}else{
+								jsonPolicy[key]= searchElement.value;
+							}
 						}
     				} else {
         				if(searchElement.value != null){
+        					jsonPolicy[key]= searchElement.value;        					
 							console.log(" searchElement.value = > " + searchElement.value);
-        					jsonPolicy[key]= searchElement.value;
+							if(splitPlainAttributeKey[1] == "boolean"){
+								jsonPolicy[key]= false;
+								for(var i=0; i<booleanTrueElements.length; i++){									
+									if(booleanTrueElements[i] == key){
+										jsonPolicy[key]= true;
+									}
+								}
+							}
         				}
     				}
     			}
@@ -1418,6 +1551,7 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
         });
     };
     
+    var booleanTrueElements = [];
     $scope.validatePolicy = function(policy){
     	document.getElementById("validate").innerHTML = "";
     	var splitAt = '*';
@@ -1463,6 +1597,20 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
         				}
     				}
     			}
+    		}
+    		
+    		
+    		var checkedValue = $('.onoffswitch-checkbox:checked').val();
+    		
+    	    var x = document.getElementsByClassName("onoffswitch-checkbox");
+   	    
+    	        	     
+    		if(checkedValue){
+    			console.log("checkedValue:" + checkedValue);
+    			for(var i=0; i<x.length; x++){
+        	       console.log("checkbox id: " + x[i].id);
+       			   booleanTrueElements.push(x[i].id)
+    			}    
     		}
     	}
         var uuu = "policyController/validate_policy.htm";
@@ -1537,4 +1685,40 @@ angular.module('abs').controller('dcaeMicroServiceController', ['$scope', '$wind
         }
         return obj;
     }
+    
+	// Switch Click
+	$('.Switch').click(function() {
+			// Check If Enabled (Has 'On' Class)
+			if ($(this).hasClass('On')){
+				// Try To Find Checkbox Within Parent Div, And Check It
+				$(this).parent().find('input:checkbox').attr('checked', true);
+				// Change Button Style - Remove On Class, Add Off Class
+				$(this).removeClass('On').addClass('Off');
+			} else { // If Button Is Disabled (Has 'Off' Class)
+				// Try To Find Checkbox Within Parent Div, And Uncheck It
+				$(this).parent().find('input:checkbox').attr('checked', false);	
+				// Change Button Style - Remove Off Class, Add On Class
+				$(this).removeClass('Off').addClass('On');	
+			}	
+		});
+	 // Loops Through Each Toggle Switch On Page
+	$('.Switch').each(function() {
+			// Search of a checkbox within the parent
+			if ($(this).parent().find('input:checkbox').length){
+				
+				// If checkbox doesnt have the show class then hide it
+				if (!$(this).parent().find('input:checkbox').hasClass("show")){
+					$(this).parent().find('input:checkbox').hide(); }
+			
+				// Look at the checkbox's checkked state
+				if ($(this).parent().find('input:checkbox').is(':checked')){
+					// Checkbox is not checked, Remove the On Class and Add the Off Class
+					$(this).removeClass('On').addClass('Off');
+				} else { 			
+					// Checkbox Is Checked Remove Off Class, and Add the On Class
+					$(this).removeClass('Off').addClass('On');
+				}
+			}
+		});
+
 }]);
