@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_acdbf24d",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/Policy.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-08-31T19:46:10Z",
+      "side": 1,
+      "message": "Undoing work that removed sonar complaints about not using auto-closeables.",
+      "range": {
+        "startLine": 288,
+        "startChar": 12,
+        "endLine": 311,
+        "endChar": 17
+      },
+      "revId": "acb9e8df1e1831dc6a822d86c6bcf901f763cd79",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_6ce95ae5",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 2196,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-08-31T19:46:10Z",
+      "side": 1,
+      "message": "Same - undoing cleanup work for auto closeables.",
+      "range": {
+        "startLine": 2172,
+        "startChar": 8,
+        "endLine": 2196,
+        "endChar": 9
+      },
+      "revId": "acb9e8df1e1831dc6a822d86c6bcf901f763cd79",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_8ce63614",
+        "filename": "ONAP-PDP-REST/pom.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-08-31T19:46:10Z",
+      "side": 1,
+      "message": "Probably ok - but we should run clm job to make sure it is clear of security issues.",
+      "range": {
+        "startLine": 84,
+        "startChar": 3,
+        "endLine": 88,
+        "endChar": 14
+      },
+      "revId": "acb9e8df1e1831dc6a822d86c6bcf901f763cd79",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_6c22ba53",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-08-31T19:46:10Z",
+      "side": 1,
+      "message": "Please don\u0027t undo these auto-closeable.",
+      "range": {
+        "startLine": 447,
+        "startChar": 8,
+        "endLine": 456,
+        "endChar": 11
+      },
+      "revId": "acb9e8df1e1831dc6a822d86c6bcf901f763cd79",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_eca32ab0",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/util/XACMLPolicyWriter.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-08-31T19:46:10Z",
+      "side": 1,
+      "message": "The only difference is the parameter object type. Can we use generics? So we avoid more duplicated code and can use auto-closeable.",
+      "range": {
+        "startLine": 140,
+        "startChar": 1,
+        "endLine": 175,
+        "endChar": 2
+      },
+      "revId": "acb9e8df1e1831dc6a822d86c6bcf901f763cd79",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
