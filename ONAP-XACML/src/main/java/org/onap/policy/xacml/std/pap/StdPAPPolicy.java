@@ -81,7 +81,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
     private String guard = null;
     private String riskLevel;
     private String ttlDate = null;
-
+    private String rawXacmlPolicy = null;
 
     public StdPAPPolicy() {
         //
@@ -155,7 +155,7 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
         this.dictionaryType = stdPAPPolicyParams.getDictionaryType();
         this.dictionary = stdPAPPolicyParams.getDictionary();
         this.dictionaryFields = stdPAPPolicyParams.getDictionaryFields();
-
+        this.rawXacmlPolicy = stdPAPPolicyParams.getRawXacmlPolicy();
     }
 
     @Override
@@ -637,5 +637,13 @@ public class StdPAPPolicy implements OnapPAPPolicy, Serializable {
 
     public void setTreatments(Map<String, String> treatments) {
         this.treatments = treatments;
+    }
+    
+    public String getRawXacmlPolicy() {
+        return rawXacmlPolicy;
+    }
+
+    public void setRawXacmlPolicy(String rawXacmlPolicy) {
+        this.rawXacmlPolicy = rawXacmlPolicy;
     }
 }

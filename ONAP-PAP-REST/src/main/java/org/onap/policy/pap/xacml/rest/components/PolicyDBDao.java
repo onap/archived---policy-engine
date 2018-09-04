@@ -87,6 +87,7 @@ import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 import com.att.research.xacml.api.pap.PAPException;
@@ -2074,7 +2075,7 @@ public class PolicyDBDao {
                 //Does not need to be XACMLPolicyWriterWithPapNotify since it is already in the PAP
                 //and this transaction is intercepted up stream.
 
-                String policyDataString = getPolicyDataString((PolicyType) policy.getCorrectPolicyDataObject());
+                String policyDataString = getPolicyDataString(policy);
                 if (isJunit) {
                     //Using parentPath object to set policy data.
                     policyDataString = policy.policyAdapter.getParentPath();
@@ -2108,12 +2109,12 @@ public class PolicyDBDao {
                     prefix = "Decision_";
                 }
 
-                if (!(policy.policyAdapter.getData() instanceof PolicyType)) {
-                    PolicyLogger.error("The data field is not an instance of PolicyType");
-                    throw new IllegalArgumentException("The data field is not an instance of PolicyType");
+                if (!(policy.policyAdapter.getData() instanceof PolicyType) && !(policy.policyAdapter.getData() instanceof PolicySetType)) {
+                    PolicyLogger.error("The data field is not an instance of PolicyType or PolicySetType");
+                    throw new IllegalArgumentException("The data field is not an instance of PolicyType or PolicySetType");
                 }
                 String finalName = policyScope + "." + prefix + policy.policyAdapter.getPolicyName() + "." +
-                        ((PolicyType) policy.policyAdapter.getData()).getVersion() + ".xml";
+                        policy.policyAdapter.getHighestVersion() + ".xml";
                 if (policy.policyAdapter.getConfigType() == null || "".equals(policy.policyAdapter.getConfigType())) {
                     //get the config file extension
                     String ext = "";
@@ -2163,13 +2164,19 @@ public class PolicyDBDao {
             return "";
         }
 
-        private String getPolicyDataString(PolicyType policyType) {
-            try (InputStream policyXmlStream = XACMLPolicyWriter.getXmlAsInputStream(policyType)) {
-                return IOUtils.toString(policyXmlStream, StandardCharsets.UTF_8);
+        
+        /**
+         * @param policy input policy Object. 
+         * @return read the stream and return policy xml data.
+         */
+        private String getPolicyDataString(Policy policy) {
+            try (InputStream policyXmlStream = XACMLPolicyWriter
+                    .getXmlAsInputStream(policy.getCorrectPolicyDataObject())) {
+               return IOUtils.toString(policyXmlStream);
             } catch (IOException e) {
                 PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                        "Caught IOException on IOUtils.toString(policyXmlStream)");
-                throw new IllegalArgumentException("Cannot parse the policy xml from the PolicyRestAdapter.", e);
+                        "Caught IOException on reading Policy Data.");
+                throw new IllegalArgumentException("Cannot parse the policy xml from the PolicyRestAdapter.");
             }
         }
 

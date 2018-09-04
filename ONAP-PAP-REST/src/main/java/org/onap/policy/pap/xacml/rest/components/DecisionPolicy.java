@@ -36,10 +36,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
@@ -61,11 +60,9 @@ import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 import org.onap.policy.xacml.std.pip.engines.aaf.AAFEngine;
 import org.onap.policy.xacml.util.XACMLPolicyScanner;
-
 import com.att.research.xacml.api.XACML3;
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.IdentifierImpl;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AdviceExpressionsType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AllOfType;
@@ -78,6 +75,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.ConditionType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.EffectType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.ObjectFactory;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.RuleType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.TargetType;
@@ -86,7 +84,7 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 
 public class DecisionPolicy extends Policy {
 
-    private static final Logger LOGGER	= FlexLogger.getLogger(DecisionPolicy.class);
+    private static final Logger LOGGER = FlexLogger.getLogger(DecisionPolicy.class);
 
     public static final String FUNCTION_NOT = "urn:oasis:names:tc:xacml:1.0:function:not";
     private static final String AAFPROVIDER = "AAF";
@@ -113,7 +111,7 @@ public class DecisionPolicy extends Policy {
         super();
     }
 
-    public DecisionPolicy(PolicyRestAdapter policyAdapter, CommonClassDao commonClassDao){
+    public DecisionPolicy(PolicyRestAdapter policyAdapter, CommonClassDao commonClassDao) {
         this.policyAdapter = policyAdapter;
         this.commonClassDao = commonClassDao;
     }
@@ -122,13 +120,13 @@ public class DecisionPolicy extends Policy {
     public Map<String, String> savePolicies() throws PAPException {
 
         Map<String, String> successMap = new HashMap<>();
-        if(isPolicyExists()){
+        if (isPolicyExists()) {
             successMap.put("EXISTS", "This Policy already exist on the PAP");
             return successMap;
         }
 
-        if(!isPreparedToSave()){
-            //Prep and configure the policy for saving
+        if (!isPreparedToSave()) {
+            // Prep and configure the policy for saving
             prepareToSave();
         }
 
@@ -136,17 +134,17 @@ public class DecisionPolicy extends Policy {
         Path newPolicyPath = null;
         newPolicyPath = Paths.get(policyAdapter.getNewFileName());
 
-        successMap = createPolicy(newPolicyPath,getCorrectPolicyDataObject());
+        successMap = createPolicy(newPolicyPath, getCorrectPolicyDataObject());
         return successMap;
     }
 
-    //This is the method for preparing the policy for saving.  We have broken it out
-    //separately because the fully configured policy is used for multiple things
+    // This is the method for preparing the policy for saving. We have broken it out
+    // separately because the fully configured policy is used for multiple things
     @Override
-    public boolean prepareToSave() throws PAPException{
+    public boolean prepareToSave() throws PAPException {
 
-        if(isPreparedToSave()){
-            //we have already done this
+        if (isPreparedToSave()) {
+            // we have already done this
             return true;
         }
 
@@ -154,6 +152,29 @@ public class DecisionPolicy extends Policy {
         String policyID = policyAdapter.getPolicyID();
         version = policyAdapter.getHighestVersion();
 
+        if ("Raw".equals(policyAdapter.getRuleProvider())) {
+            Object policy;
+            if ("API".equalsIgnoreCase(policyAdapter.getApiflag())) {
+                policy = XACMLPolicyScanner.readPolicy(new ByteArrayInputStream(StringEscapeUtils
+                        .unescapeXml(policyAdapter.getRawXacmlPolicy()).getBytes(StandardCharsets.UTF_8)));
+            } else {
+                policy = XACMLPolicyScanner.readPolicy(
+                        new ByteArrayInputStream(policyAdapter.getRawXacmlPolicy().getBytes(StandardCharsets.UTF_8)));
+            }
+            String policyRawDesc;
+            if (policy instanceof PolicySetType) {
+                policyRawDesc =
+                        ((PolicySetType) policy).getDescription() + "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
+                ((PolicySetType) policy).setDescription(policyRawDesc);
+            } else {
+                policyRawDesc = ((PolicyType) policy).getDescription() + "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
+                ((PolicyType) policy).setDescription(policyRawDesc);
+            }
+            policyAdapter.setPolicyData(policy);
+            policyAdapter.setData(policy);
+            setPreparedToSave(true);
+            return true;
+        }
         // Create the Instance for pojo, PolicyType object is used in marshalling.
         if ("Decision".equals(policyAdapter.getPolicyType())) {
             PolicyType policyConfig = new PolicyType();
@@ -165,10 +186,13 @@ public class DecisionPolicy extends Policy {
         }
         policyName = policyAdapter.getNewFileName();
 
-        if(policyAdapter.getRuleProvider().equals(GUARD_YAML) || policyAdapter.getRuleProvider().equals(GUARD_BL_YAML)){
+        if (policyAdapter.getRuleProvider().equals(GUARD_YAML)
+                || policyAdapter.getRuleProvider().equals(GUARD_BL_YAML)) {
             Map<String, String> yamlParams = new HashMap<>();
-            String blackListEntryType = policyAdapter.getBlackListEntryType() !=null ? policyAdapter.getBlackListEntryType(): "Use Manual Entry";
-            String description = policyAdapter.getPolicyDescription() != null? policyAdapter.getPolicyDescription(): "YAML Guard Policy";
+            String blackListEntryType = policyAdapter.getBlackListEntryType() != null
+                    ? policyAdapter.getBlackListEntryType() : "Use Manual Entry";
+            String description = policyAdapter.getPolicyDescription() != null ? policyAdapter.getPolicyDescription()
+                    : "YAML Guard Policy";
             yamlParams.put(DESCRIPTION, description + "@blEntry@" + blackListEntryType + "@blEntry@");
             String fileName = policyAdapter.getNewFileName();
             String name = fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length());
@@ -190,8 +214,8 @@ public class DecisionPolicy extends Policy {
                 LOGGER.error(e);
                 throw new PAPException(e);
             }
-        }else if (policyAdapter.getData() != null) {
-            PolicyType decisionPolicy = (PolicyType)  policyAdapter.getData();
+        } else if (policyAdapter.getData() != null) {
+            PolicyType decisionPolicy = (PolicyType) policyAdapter.getData();
 
             decisionPolicy.setDescription(policyAdapter.getPolicyDescription());
 
@@ -210,7 +234,7 @@ public class DecisionPolicy extends Policy {
             allOf.getMatch().add(createMatch(ONAPNAME, (policyAdapter.getOnapName())));
 
             Map<String, String> dynamicFieldComponentAttributes = policyAdapter.getDynamicFieldConfigAttributes();
-            if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFPROVIDER)){
+            if (policyAdapter.getRuleProvider() != null && policyAdapter.getRuleProvider().equals(AAFPROVIDER)) {
                 dynamicFieldComponentAttributes = new HashMap<>();
             }
 
@@ -231,8 +255,8 @@ public class DecisionPolicy extends Policy {
             decisionPolicy.setTarget(target);
 
             Map<String, String> dynamicFieldDecisionSettings = policyAdapter.getDynamicSettingsMap();
-            if(policyAdapter.getRuleProvider()!=null && (policyAdapter.getRuleProvider().equals(AAFPROVIDER)||
-                    policyAdapter.getRuleProvider().equals(RAINY_DAY))){
+            if (policyAdapter.getRuleProvider() != null && (policyAdapter.getRuleProvider().equals(AAFPROVIDER)
+                    || policyAdapter.getRuleProvider().equals(RAINY_DAY))) {
                 dynamicFieldDecisionSettings = new HashMap<>();
             }
 
@@ -246,8 +270,8 @@ public class DecisionPolicy extends Policy {
             }
 
             Map<String, String> dynamicFieldTreatmentAttributes = policyAdapter.getRainydayMap();
-            if(policyAdapter.getRuleProvider().equals(RAINY_DAY)){
-                for(String keyField : dynamicFieldTreatmentAttributes.keySet()) {
+            if (policyAdapter.getRuleProvider().equals(RAINY_DAY)) {
+                for (String keyField : dynamicFieldTreatmentAttributes.keySet()) {
                     String errorcode = keyField;
                     String treatment = dynamicFieldTreatmentAttributes.get(errorcode);
                     createRainydayRule(decisionPolicy, errorcode, treatment, true);
@@ -262,47 +286,47 @@ public class DecisionPolicy extends Policy {
         return true;
     }
 
-    public PolicyType getGuardPolicy(Map<String, String> yamlParams, String ruleProvider) throws BuilderException{
+    public PolicyType getGuardPolicy(Map<String, String> yamlParams, String ruleProvider) throws BuilderException {
         try {
             ControlLoopGuardBuilder builder = ControlLoopGuardBuilder.Factory.buildControlLoopGuard(new Guard());
             MatchParameters matchParameters = new MatchParameters(yamlParams.get("actor"), yamlParams.get("recipe"));
             matchParameters.setControlLoopName(yamlParams.get("clname"));
-            if(yamlParams.containsKey("targets")){
+            if (yamlParams.containsKey("targets")) {
                 String targetString = yamlParams.get("targets");
                 List<String> targets = null;
-                if(targetString!=null && !targetString.isEmpty()){
-                    if (targetString.contains(",")){
+                if (targetString != null && !targetString.isEmpty()) {
+                    if (targetString.contains(",")) {
                         targets = Arrays.asList(targetString.split(","));
-                    }
-                    else{
+                    } else {
                         targets = new ArrayList<>();
                         targets.add(targetString);
                     }
                 }
                 matchParameters.setTargets(targets);
             }
-            GuardPolicy policy1 = new GuardPolicy((policyAdapter.getUuid()!=null? policyAdapter.getUuid(): UUID.randomUUID().toString()) ,yamlParams.get(POLICY_NAME), yamlParams.get(DESCRIPTION), matchParameters);
+            GuardPolicy policy1 = new GuardPolicy(
+                    (policyAdapter.getUuid() != null ? policyAdapter.getUuid() : UUID.randomUUID().toString()),
+                    yamlParams.get(POLICY_NAME), yamlParams.get(DESCRIPTION), matchParameters);
             builder = builder.addGuardPolicy(policy1);
             Map<String, String> activeTimeRange = new HashMap<>();
             activeTimeRange.put("start", yamlParams.get("guardActiveStart"));
             activeTimeRange.put("end", yamlParams.get("guardActiveEnd"));
             String blackListString = yamlParams.get("blackList");
             List<String> blackList = null;
-            if(blackListString!=null && !blackListString.trim().isEmpty()){
-                if (blackListString.contains(",")){
+            if (blackListString != null && !blackListString.trim().isEmpty()) {
+                if (blackListString.contains(",")) {
                     blackList = Arrays.asList(blackListString.split(","));
-                }
-                else{
+                } else {
                     blackList = new ArrayList<>();
                     blackList.add(blackListString);
                 }
             }
-            if(yamlParams.containsKey("appendBlackList")){
+            if (yamlParams.containsKey("appendBlackList")) {
                 String appendBlackListString = yamlParams.get("appendBlackList");
                 List<String> appendBlackList = null;
-                if(appendBlackListString!=null && !appendBlackListString.trim().isEmpty()){
+                if (appendBlackListString != null && !appendBlackListString.trim().isEmpty()) {
                     appendBlackList = Arrays.asList(appendBlackListString.split(","));
-                    for(int i=0; i<appendBlackList.size();i++){
+                    for (int i = 0; i < appendBlackList.size(); i++) {
                         blackList.remove(appendBlackList.get(i));
                     }
                 }
@@ -311,32 +335,34 @@ public class DecisionPolicy extends Policy {
             Path xacmlTemplatePath;
             ClassLoader classLoader = getClass().getClassLoader();
             Constraint cons = new Constraint();
-            switch (ruleProvider){
-            case GUARD_BL_YAML:
-                templateFile = new File(classLoader.getResource(XACML_BLGUARD_TEMPLATE).getFile());
-                xacmlTemplatePath = templateFile.toPath();
-                cons.setActive_time_range(activeTimeRange);
-                if(blackList==null || blackList.isEmpty()){
-                    throw new BuilderException("blackList is required");
-                }
-                cons.setBlacklist(blackList);
-                break;
-            default:
-                templateFile = new File(classLoader.getResource(XACML_GUARD_TEMPLATE).getFile());
-                xacmlTemplatePath = templateFile.toPath();
-                Map<String,String> timeWindow = new HashMap<>();
-                if(!PolicyUtils.isInteger(yamlParams.get("timeWindow"))){
-                    throw new BuilderException("time window is not in Integer format.");
-                }
-                String timeUnits = yamlParams.get("timeUnits");
-                if(timeUnits==null || !(timeUnits.equalsIgnoreCase("minute") || timeUnits.equalsIgnoreCase("hour") || timeUnits.equalsIgnoreCase("day")
-                        || timeUnits.equalsIgnoreCase("week") || timeUnits.equalsIgnoreCase("month")||timeUnits.equalsIgnoreCase("year"))){
-                    throw new BuilderException("time Units is not in proper format.");
-                }
-                timeWindow.put("value", yamlParams.get("timeWindow"));
-                timeWindow.put("units", yamlParams.get("timeUnits"));
-                cons = new Constraint(Integer.parseInt(yamlParams.get("limit")),timeWindow,activeTimeRange);
-                break;
+            switch (ruleProvider) {
+                case GUARD_BL_YAML:
+                    templateFile = new File(classLoader.getResource(XACML_BLGUARD_TEMPLATE).getFile());
+                    xacmlTemplatePath = templateFile.toPath();
+                    cons.setActive_time_range(activeTimeRange);
+                    if (blackList == null || blackList.isEmpty()) {
+                        throw new BuilderException("blackList is required");
+                    }
+                    cons.setBlacklist(blackList);
+                    break;
+                default:
+                    templateFile = new File(classLoader.getResource(XACML_GUARD_TEMPLATE).getFile());
+                    xacmlTemplatePath = templateFile.toPath();
+                    Map<String, String> timeWindow = new HashMap<>();
+                    if (!PolicyUtils.isInteger(yamlParams.get("timeWindow"))) {
+                        throw new BuilderException("time window is not in Integer format.");
+                    }
+                    String timeUnits = yamlParams.get("timeUnits");
+                    if (timeUnits == null
+                            || !(timeUnits.equalsIgnoreCase("minute") || timeUnits.equalsIgnoreCase("hour")
+                                    || timeUnits.equalsIgnoreCase("day") || timeUnits.equalsIgnoreCase("week")
+                                    || timeUnits.equalsIgnoreCase("month") || timeUnits.equalsIgnoreCase("year"))) {
+                        throw new BuilderException("time Units is not in proper format.");
+                    }
+                    timeWindow.put("value", yamlParams.get("timeWindow"));
+                    timeWindow.put("units", yamlParams.get("timeUnits"));
+                    cons = new Constraint(Integer.parseInt(yamlParams.get("limit")), timeWindow, activeTimeRange);
+                    break;
             }
             builder = builder.addLimitConstraint(policy1.getId(), cons);
             // Build the specification
@@ -352,25 +378,36 @@ public class DecisionPolicy extends Policy {
                 yamlSpecs.put(ONAPNAME, yamlParams.get(ONAPNAME));
                 yamlSpecs.put("actor", yamlGuardObject.getGuards().getFirst().getMatch_parameters().getActor());
                 yamlSpecs.put("recipe", yamlGuardObject.getGuards().getFirst().getMatch_parameters().getRecipe());
-                yamlSpecs.put("clname", yamlGuardObject.getGuards().getFirst().getMatch_parameters().getControlLoopName());
-                if(yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getFreq_limit_per_target()!=null){
-                    yamlSpecs.put("limit", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getFreq_limit_per_target().toString());
+                yamlSpecs.put("clname",
+                        yamlGuardObject.getGuards().getFirst().getMatch_parameters().getControlLoopName());
+                if (yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
+                        .getFreq_limit_per_target() != null) {
+                    yamlSpecs.put("limit", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
+                            .getFreq_limit_per_target().toString());
                 }
-                if(yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getTime_window()!=null){
-                    yamlSpecs.put("twValue", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getTime_window().get("value"));
-                    yamlSpecs.put("twUnits", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getTime_window().get("units"));
+                if (yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getTime_window() != null) {
+                    yamlSpecs.put("twValue", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
+                            .getTime_window().get("value"));
+                    yamlSpecs.put("twUnits", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
+                            .getTime_window().get("units"));
                 }
-                yamlSpecs.put("guardActiveStart", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getActive_time_range().get("start"));
-                yamlSpecs.put("guardActiveEnd", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getActive_time_range().get("end"));
-                String xacmlPolicyContent = SafePolicyBuilder.generateXacmlGuard(xacmlTemplateContent,yamlSpecs, yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getBlacklist(), yamlGuardObject.getGuards().getFirst().getMatch_parameters().getTargets());
-               // Convert the  Policy into Stream input to Policy Adapter.
-                Object policy = XACMLPolicyScanner.readPolicy(new ByteArrayInputStream(xacmlPolicyContent.getBytes(StandardCharsets.UTF_8)));
+                yamlSpecs.put("guardActiveStart", yamlGuardObject.getGuards().getFirst().getLimit_constraints()
+                        .getFirst().getActive_time_range().get("start"));
+                yamlSpecs.put("guardActiveEnd", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
+                        .getActive_time_range().get("end"));
+                String xacmlPolicyContent = SafePolicyBuilder.generateXacmlGuard(xacmlTemplateContent, yamlSpecs,
+                        yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getBlacklist(),
+                        yamlGuardObject.getGuards().getFirst().getMatch_parameters().getTargets());
+                // Convert the Policy into Stream input to Policy Adapter.
+                Object policy = XACMLPolicyScanner
+                        .readPolicy(new ByteArrayInputStream(xacmlPolicyContent.getBytes(StandardCharsets.UTF_8)));
                 return (PolicyType) policy;
             } catch (IOException e) {
-                LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage() , e);
+                LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage(),
+                        e);
             }
         } catch (BuilderException e) {
-            LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage() ,e);
+            LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage(), e);
             throw e;
         }
         return null;
@@ -431,7 +468,7 @@ public class DecisionPolicy extends Policy {
         dynamicFieldOneRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField1();
         dynamicFieldTwoRuleAlgorithms = policyAdapter.getDynamicRuleAlgorithmField2();
 
-        if(policyAdapter.getRuleProvider()!=null && policyAdapter.getRuleProvider().equals(AAFPROVIDER)){
+        if (policyAdapter.getRuleProvider() != null && policyAdapter.getRuleProvider().equals(AAFPROVIDER)) {
             // Values for AAF Provider are here for XML Creation.
             ConditionType condition = new ConditionType();
             ApplyType decisionApply = new ApplyType();
@@ -470,7 +507,7 @@ public class DecisionPolicy extends Policy {
             targetInRule.getAnyOf().add(anyOfInRule);
 
             rule.setTarget(targetInRule);
-            if(!permitRule){
+            if (!permitRule) {
                 AdviceExpressionsType adviceExpressions = new AdviceExpressionsType();
                 AdviceExpressionType adviceExpression = new AdviceExpressionType();
                 adviceExpression.setAdviceId(AAFPROVIDER);
@@ -491,7 +528,7 @@ public class DecisionPolicy extends Policy {
             decisionPolicy.getCombinerParametersOrRuleCombinerParametersOrVariableDefinition().add(rule);
             policyAdapter.setPolicyData(decisionPolicy);
 
-        }else if (dynamicLabelRuleAlgorithms != null && !dynamicLabelRuleAlgorithms.isEmpty()) {
+        } else if (dynamicLabelRuleAlgorithms != null && !dynamicLabelRuleAlgorithms.isEmpty()) {
             boolean isCompound = false;
             ConditionType condition = new ConditionType();
             int index = dynamicFieldOneRuleAlgorithms.size() - 1;
@@ -513,7 +550,8 @@ public class DecisionPolicy extends Policy {
 
                 // if rule algorithm not a compound
                 if (!isCompound) {
-                    condition.setExpression(new ObjectFactory().createApply(getInnerDecisionApply(dynamicLabelRuleAlgorithms.get(index))));
+                    condition.setExpression(new ObjectFactory()
+                            .createApply(getInnerDecisionApply(dynamicLabelRuleAlgorithms.get(index))));
                 }
             }
             if (!permitRule) {
@@ -537,7 +575,8 @@ public class DecisionPolicy extends Policy {
             policyAdapter.setPolicyData(decisionPolicy);
 
         } else {
-            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Unsupported data object."+ policyAdapter.getData().getClass().getCanonicalName());
+            PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE + "Unsupported data object."
+                    + policyAdapter.getData().getClass().getCanonicalName());
         }
 
     }
@@ -647,17 +686,17 @@ public class DecisionPolicy extends Policy {
                 // if two text field are rule attributes.
                 if ((value1.contains(RULE_VARIABLE)) && (value2.contains(RULE_VARIABLE))) {
                     ApplyType innerDecisionApply1 = new ApplyType();
-                    ApplyType	innerDecisionApply2	 = new  ApplyType();
-                    AttributeDesignatorType  attributeDesignator1	  = new AttributeDesignatorType();
-                    AttributeDesignatorType  attributeDesignator2	  = new AttributeDesignatorType();
-                    //If selected function is Integer function set integer functionID
-                    if(functionKey.toLowerCase().contains("integer")){
-                        innerDecisionApply1.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY );
+                    ApplyType innerDecisionApply2 = new ApplyType();
+                    AttributeDesignatorType attributeDesignator1 = new AttributeDesignatorType();
+                    AttributeDesignatorType attributeDesignator2 = new AttributeDesignatorType();
+                    // If selected function is Integer function set integer functionID
+                    if (functionKey.toLowerCase().contains("integer")) {
+                        innerDecisionApply1.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
                         innerDecisionApply2.setFunctionId(FUNTION_INTEGER_ONE_AND_ONLY);
                         attributeDesignator1.setDataType(INTEGER_DATATYPE);
                         attributeDesignator2.setDataType(INTEGER_DATATYPE);
-                    } else{
-                        //If selected function is not a Integer function set String functionID
+                    } else {
+                        // If selected function is not a Integer function set String functionID
                         innerDecisionApply1.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
                         innerDecisionApply2.setFunctionId(FUNCTION_STRING_ONE_AND_ONLY);
                         attributeDesignator1.setDataType(STRING_DATATYPE);
@@ -665,11 +704,15 @@ public class DecisionPolicy extends Policy {
                     }
                     attributeDesignator1.setCategory(CATEGORY_RESOURCE);
                     attributeDesignator2.setCategory(CATEGORY_RESOURCE);
-                    //Here set actual field values
-                    attributeDesignator1.setAttributeId(value1.  contains("resource:")?value1.substring( 9):value1.substring(8));
-                    attributeDesignator2.setAttributeId(value1.  contains("resource:")?value1.substring( 9):value1.substring(8));
-                    innerDecisionApply1.getExpression().add(new ObjectFactory().createAttributeDesignator( attributeDesignator1));
-                    innerDecisionApply2.getExpression().add(new ObjectFactory().createAttributeDesignator( attributeDesignator2));
+                    // Here set actual field values
+                    attributeDesignator1
+                            .setAttributeId(value1.contains("resource:") ? value1.substring(9) : value1.substring(8));
+                    attributeDesignator2
+                            .setAttributeId(value1.contains("resource:") ? value1.substring(9) : value1.substring(8));
+                    innerDecisionApply1.getExpression()
+                            .add(new ObjectFactory().createAttributeDesignator(attributeDesignator1));
+                    innerDecisionApply2.getExpression()
+                            .add(new ObjectFactory().createAttributeDesignator(attributeDesignator2));
                     decisionApply.getExpression().add(new ObjectFactory().createApply(innerDecisionApply1));
                     decisionApply.getExpression().add(new ObjectFactory().createApply(innerDecisionApply2));
                 } else {
@@ -702,8 +745,10 @@ public class DecisionPolicy extends Policy {
                             attributeDesignator.setAttributeId(attributeId);
                         }
                         decisionConditionAttributeValue.getContent().add(attributeValue);
-                        innerDecisionApply.getExpression().add(new ObjectFactory().createAttributeDesignator(attributeDesignator));
-                        decisionApply.getExpression().add(new ObjectFactory().createAttributeValue(decisionConditionAttributeValue));
+                        innerDecisionApply.getExpression()
+                                .add(new ObjectFactory().createAttributeDesignator(attributeDesignator));
+                        decisionApply.getExpression()
+                                .add(new ObjectFactory().createAttributeValue(decisionConditionAttributeValue));
                         decisionApply.getExpression().add(new ObjectFactory().createApply(innerDecisionApply));
                     } else {
                         value1 = value1.substring(2, value1.length());
@@ -715,8 +760,10 @@ public class DecisionPolicy extends Policy {
                         AttributeValueType decisionConditionAttributeValue = new AttributeValueType();
                         decisionConditionAttributeValue.setDataType(dataType);
                         decisionConditionAttributeValue.getContent().add(value2);
-                        decisionApply.getExpression().add(new ObjectFactory().createVariableReference(variableReferenceType));
-                        decisionApply.getExpression().add(new ObjectFactory().createAttributeValue(decisionConditionAttributeValue));
+                        decisionApply.getExpression()
+                                .add(new ObjectFactory().createVariableReference(variableReferenceType));
+                        decisionApply.getExpression()
+                                .add(new ObjectFactory().createAttributeValue(decisionConditionAttributeValue));
                     }
                 }
             }
@@ -753,12 +800,13 @@ public class DecisionPolicy extends Policy {
 
     private void populateDataTypeList(String value1) {
         String dataType = null;
-        if(value1.contains("S_")) {
+        if (value1.contains("S_")) {
             value1 = value1.substring(2, value1.length());
             DecisionSettings decisionSettings = findDecisionSettingsBySettingId(value1.substring(2, value1.length()));
             if (decisionSettings != null && "string".equals(decisionSettings.getDatatypeBean().getShortName())) {
                 dataType = STRING_DATATYPE;
-            } else if (decisionSettings != null && "boolean".equals(decisionSettings.getDatatypeBean().getShortName())) {
+            } else if (decisionSettings != null
+                    && "boolean".equals(decisionSettings.getDatatypeBean().getShortName())) {
                 dataType = BOOLEAN_DATATYPE;
             } else {
                 dataType = INTEGER_DATATYPE;
@@ -792,9 +840,10 @@ public class DecisionPolicy extends Policy {
         return policyAdapter.getData();
     }
 
-    public String getFunctionDefinitionId(String key){
-        FunctionDefinition object = (FunctionDefinition) commonClassDao.getDataById(FunctionDefinition.class, "shortname", key);
-        if(object != null){
+    public String getFunctionDefinitionId(String key) {
+        FunctionDefinition object =
+                (FunctionDefinition) commonClassDao.getDataById(FunctionDefinition.class, "shortname", key);
+        if (object != null) {
             return object.getXacmlid();
         }
         return null;
