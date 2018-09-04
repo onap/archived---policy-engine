@@ -3,6 +3,7 @@
  * ONAP-XACML
  * ================================================================================
  * Copyright (C) 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ * Modifications Copyright (C) 2018 AT&T Intellectual Property.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,6 +72,7 @@ public class StdPAPPolicyParams {
     private String dictionaryType;
     private String dictionary;
     private String dictionaryFields;
+    private String rawXacmlPolicy = null;
 
     /**
 
@@ -236,16 +238,8 @@ public class StdPAPPolicyParams {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
     public String getMsLocation() {
         return msLocation;
-    }
-
-    public void setMsLocation(String msLocation) {
-        this.msLocation = msLocation;
     }
 
     public String getPriority() {
@@ -260,34 +254,21 @@ public class StdPAPPolicyParams {
         return deleteCondition;
     }
 
-    public void setDeleteCondition(String deleteCondition) {
-        this.deleteCondition = deleteCondition;
-    }
-
     public String getDictionaryType() {
         return dictionaryType;
-    }
-
-    public void setDictionaryType(String dictionaryType) {
-        this.dictionaryType = dictionaryType;
     }
 
     public String getDictionary() {
         return dictionary;
     }
 
-    public void setDictionary(String dictionary) {
-        this.dictionary = dictionary;
-    }
-
     public String getDictionaryFields() {
         return dictionaryFields;
     }
 
-    public void setDictionaryFields(String dictionaryFields) {
-        this.dictionaryFields = dictionaryFields;
+    public String getRawXacmlPolicy() {
+        return rawXacmlPolicy;
     }
-
     /**
      * Builder class for the Policy parameters
      */
@@ -516,6 +497,11 @@ public class StdPAPPolicyParams {
 
         public StdPAPPolicyParamsBuilder dictionaryFields(String dictionaryFields) {
             m.dictionaryFields = dictionaryFields;
+            return this;
+        }
+        
+        public StdPAPPolicyParamsBuilder rawXacmlPolicy(String rawXacmlPolicy) {
+            m.rawXacmlPolicy = rawXacmlPolicy;
             return this;
         }
     }

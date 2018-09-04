@@ -137,11 +137,28 @@ public class XACMLPolicyWriter {
      *
      *
      */
-    public static InputStream getXmlAsInputStream(PolicyType policy) {
-        JAXBElement<PolicyType> policyElement = new ObjectFactory().createPolicy(policy);
+    public static InputStream getXmlAsInputStream(Object policy) {
+        JAXBElement<?> policyElement;
+        if (policy instanceof PolicyType) {
+            policyElement = new ObjectFactory().createPolicy((PolicyType) policy); 
+            return getByteArrayInputStream(policyElement, PolicyType.class);
+        } else if (policy instanceof PolicyType) {
+            policyElement = new ObjectFactory().createPolicySet((PolicySetType) policy); 
+            return getByteArrayInputStream(policyElement, PolicySetType.class);
+        } 
+        return null;
+    }
+    
+    /**
+     * Helper static class that reads the JAXB element and return policy input stream.
+     * @param policyElement
+     * @param className (PolicyType or PolicySetType ?).
+     * @return ByteArrayInputStream.
+     */
+    public static InputStream getByteArrayInputStream(JAXBElement<?> policyElement, Class<?> className) {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            JAXBContext context = JAXBContext.newInstance(PolicyType.class);
+            JAXBContext context = JAXBContext.newInstance(className);
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             m.marshal(policyElement, byteArrayOutputStream);
@@ -149,7 +166,7 @@ public class XACMLPolicyWriter {
         } catch (JAXBException e) {
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, e, "XACMLPolicyWriter", "writePolicyFile failed");
             throw new IllegalArgumentException("XACMLPolicyWriter writePolicyFile failed", e);
-        }
+        }  
     }
     /**
      * Helper static class that does the work to write a policy set to an output stream.

@@ -125,7 +125,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	// audit logger
 	private static final Log auditLogger = LogFactory.getLog("auditLogger");
 
-	private static final PdpRestMonitor monitor = PdpRestMonitor.getSingleton();
+	public static final PdpRestMonitor monitor = PdpRestMonitor.getSingleton();
 
 	//
 	// This thread may getting invoked on startup, to let the PAP know
@@ -1313,6 +1313,10 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
 	public static Constructor<?> getCreateUpdatePolicyConstructor(){
 		return createUpdatePolicyConstructor;
 	}
+	
+	public static Object getPDPEngineLock() {
+        return pdpEngineLock;
+    }
 	
 	private static void setCreateUpdatePolicyConstructor(String createUpdateResourceName) throws ServletException{
 		try{
