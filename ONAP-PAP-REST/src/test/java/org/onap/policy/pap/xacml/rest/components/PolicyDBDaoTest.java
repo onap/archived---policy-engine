@@ -156,6 +156,7 @@ public class PolicyDBDaoTest extends Mockito{
         policyObject.policyAdapter.setPolicyType("Config");
         policyObject.policyAdapter.setDomainDir("com");
         policyObject.policyAdapter.setVersion("1");
+        policyObject.policyAdapter.setHighestVersion(1);
         PolicyType policyTypeObject = new PolicyType();
         policyObject.policyAdapter.setPolicyData(policyTypeObject);
         ClassLoader classLoader = getClass().getClassLoader();

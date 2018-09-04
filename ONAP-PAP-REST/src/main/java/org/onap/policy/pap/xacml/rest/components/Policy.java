@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.commons.io.FilenameUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
@@ -39,22 +38,20 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.rest.XACMLRestProperties;
 import org.onap.policy.rest.adapter.PolicyRestAdapter;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
-
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.std.IdentifierImpl;
 import com.att.research.xacml.util.XACMLProperties;
 import com.att.research.xacmlatt.pdp.policy.PolicyDef;
 import com.att.research.xacmlatt.pdp.policy.dom.DOMPolicyDef;
-
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeDesignatorType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.AttributeValueType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.MatchType;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
 
 public abstract class Policy {
 
-    private static final Logger LOGGER	= FlexLogger.getLogger(Policy.class);
-
+    private static final Logger LOGGER = FlexLogger.getLogger(Policy.class);
 
     /**
      * Common Fields
@@ -89,20 +86,26 @@ public abstract class Policy {
     }
 
     // Constants Used in XML Creation
-    public static final String CATEGORY_RECIPIENT_SUBJECT = "urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject";
+    public static final String CATEGORY_RECIPIENT_SUBJECT =
+            "urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject";
     public static final String CATEGORY_RESOURCE = "urn:oasis:names:tc:xacml:3.0:attribute-category:resource";
     public static final String CATEGORY_ACTION = "urn:oasis:names:tc:xacml:3.0:attribute-category:action";
     public static final String CATEGORY_ACCESS_SUBJECT = "urn:oasis:names:tc:xacml:1.0:subject-category:access-subject";
     public static final String ACTION_ID = "urn:oasis:names:tc:xacml:1.0:action:action-id";
     public static final String SUBJECT_ID = "urn:oasis:names:tc:xacml:1.0:subject:subject-id";
     public static final String RESOURCE_ID = "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
-    public static final String FUNTION_INTEGER_ONE_AND_ONLY = "urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only";
-    public static final String FUNCTION_STRING_ONE_AND_ONLY = "urn:oasis:names:tc:xacml:1.0:function:string-one-and-only";
-    public static final String FUNCTION_BOOLEAN_ONE_AND_ONLY = "urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only";
+    public static final String FUNTION_INTEGER_ONE_AND_ONLY =
+            "urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only";
+    public static final String FUNCTION_STRING_ONE_AND_ONLY =
+            "urn:oasis:names:tc:xacml:1.0:function:string-one-and-only";
+    public static final String FUNCTION_BOOLEAN_ONE_AND_ONLY =
+            "urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only";
     public static final String FUNCTION_STRING_EQUAL = "urn:oasis:names:tc:xacml:1.0:function:string-equal";
     public static final String FUNCTION_STRING_REGEX_MATCH = "org.onap.function.regex-match";
-    public static final String FUNCTION_STRING_REGEXP_MATCH = "urn:oasis:names:tc:xacml:1.0:function:string-regexp-match";
-    public static final String FUNCTION_STRING_EQUAL_IGNORE = "urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case";
+    public static final String FUNCTION_STRING_REGEXP_MATCH =
+            "urn:oasis:names:tc:xacml:1.0:function:string-regexp-match";
+    public static final String FUNCTION_STRING_EQUAL_IGNORE =
+            "urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case";
     public static final String INTEGER_DATATYPE = "http://www.w3.org/2001/XMLSchema#integer";
     public static final String BOOLEAN_DATATYPE = "http://www.w3.org/2001/XMLSchema#boolean";
     public static final String STRING_DATATYPE = "http://www.w3.org/2001/XMLSchema#string";
@@ -130,21 +133,26 @@ public abstract class Policy {
         performer.put("PEP", "PEPAction");
     }
 
-    //Each policy type seems to either use policyData or data field policy adapter when
-    //getting the xml to save the policy. Instead of keep this hardcoded in the save method,
-    //this method makes it usable outside.
+    // Each policy type seems to either use policyData or data field policy
+    // adapter when
+    // getting the xml to save the policy. Instead of keep this hardcoded in the
+    // save method,
+    // this method makes it usable outside.
     /**
-     * Return the data field of the PolicyAdapter that will be used when saving this policy
-     * with the savePolicies method.
+     * Return the data field of the PolicyAdapter that will be used when saving this policy with the savePolicies
+     * method.
+     * 
      * @return Either the PolicyAdapter.getData() or PolicyAdapter.getPolicyData()
      */
     public abstract Object getCorrectPolicyDataObject();
-    public abstract Map<String, String>  savePolicies() throws PAPException;
 
-    //This is the method for preparing the policy for saving.  We have broken it out
-    //separately because the fully configured policy is used for multiple things
+    public abstract Map<String, String> savePolicies() throws PAPException;
+
+    // This is the method for preparing the policy for saving. We have broken it
+    // out
+    // separately because the fully configured policy is used for multiple
+    // things
     public abstract boolean prepareToSave() throws PAPException;
-
 
     // create match for onap and config name
     protected MatchType createMatch(String key, String value) {
@@ -157,9 +165,9 @@ public abstract class Policy {
         AttributeDesignatorType attributeDesignator = new AttributeDesignatorType();
         URI uri = null;
         try {
-            uri = new URI(key);
+            uri = new URI(key.replaceAll("\\s+", ""));
         } catch (URISyntaxException e) {
-            LOGGER.error("Exception Occured"+e);
+            LOGGER.error("Exception Occured" + e);
         }
         attributeDesignator.setCategory(CATEGORY_ACCESS_SUBJECT);
         attributeDesignator.setDataType(STRING_DATATYPE);
@@ -183,9 +191,9 @@ public abstract class Policy {
 
         URI dynamicURI = null;
         try {
-            dynamicURI = new URI(key);
+            dynamicURI = new URI(key.replaceAll("\\s+", ""));
         } catch (URISyntaxException e) {
-            LOGGER.error("Exception Occured"+e);// log msg
+            LOGGER.error("Exception Occured" + e);// log msg
         }
         dynamicAttributeDesignator.setCategory(CATEGORY_RESOURCE);
         dynamicAttributeDesignator.setDataType(dataType);
@@ -196,8 +204,7 @@ public abstract class Policy {
         return dynamicMatch;
     }
 
-    //  the Policy Name as Unique One throws error
-    @SuppressWarnings("static-access")
+    // the Policy Name as Unique One throws error
     protected Path getNextFilename(Path parent, String policyType, String polcyFileName, Integer version) {
         policyType = FilenameUtils.removeExtension(policyType);
         polcyFileName = FilenameUtils.removeExtension(polcyFileName);
@@ -223,7 +230,8 @@ public abstract class Policy {
         return null;
     }
 
-    protected Path getNextLoopFilename(Path parentPath, String policyType, String policyConfigType, String policyFileName, Integer version) {
+    protected Path getNextLoopFilename(Path parentPath, String policyType, String policyConfigType,
+            String policyFileName, Integer version) {
         policyType = FilenameUtils.removeExtension(policyType);
         policyConfigType = FilenameUtils.removeExtension(policyConfigType);
         policyFileName = FilenameUtils.removeExtension(policyFileName);
@@ -239,14 +247,18 @@ public abstract class Policy {
 
         String fileName = "default";
         if (!policyDir.equals(EMPTY_STRING)) {
-            if("ClosedLoop_PM".equals(policyConfigType)){
-                fileName = policyType + "_" + "PM" + "_" +java.lang.String.format(policyFileName) + "." +version +".xml";
-            }else if("ClosedLoop_Fault".equals(policyConfigType)){
-                fileName = policyType + "_" + "Fault" + "_" +java.lang.String.format(policyFileName) +  "." + version + ".xml";
-            }else if("Micro Service".equals(policyConfigType)){
-                fileName = policyType + "_" + "MS" + "_" + java.lang.String.format(policyFileName) + "." + version + ".xml";
-            }else if("Optimization".equals(policyConfigType)) {
-                fileName = policyType + "_" + "OOF" + "_" + java.lang.String.format(policyFileName) + "." + version + ".xml";
+            if ("ClosedLoop_PM".equals(policyConfigType)) {
+                fileName = policyType + "_" + "PM" + "_" + java.lang.String.format(policyFileName) + "." + version
+                        + ".xml";
+            } else if ("ClosedLoop_Fault".equals(policyConfigType)) {
+                fileName = policyType + "_" + "Fault" + "_" + java.lang.String.format(policyFileName) + "." + version
+                        + ".xml";
+            } else if ("Micro Service".equals(policyConfigType)) {
+                fileName = policyType + "_" + "MS" + "_" + java.lang.String.format(policyFileName) + "." + version
+                        + ".xml";
+            } else if ("Optimization".equals(policyConfigType)) {
+                fileName = policyType + "_" + "OOF" + "_" + java.lang.String.format(policyFileName) + "." + version
+                        + ".xml";
             }
         }
 
@@ -258,30 +270,29 @@ public abstract class Policy {
         return null;
     }
 
-
-    //create policy once all the validations are completed
+    // create policy once all the validations are completed
     protected Map<String, String> createPolicy(final Path policyPath, final Object policyData) {
         Map<String, String> success = new HashMap<>();
         //
         // Is the root a PolicySet or Policy?
         //
 
-        if (policyData instanceof PolicyType) {
+        if (policyData instanceof PolicyType || policyData instanceof PolicySetType) {
             //
             // Write it out
             //
-            //Does not need to be XACMLPolicyWriterWithPapNotify since it is already in the PAP
-            //and this transaction is intercepted up stream.
-
-            try(InputStream inputStream = XACMLPolicyWriter.getXmlAsInputStream((PolicyType) policyData)) {
+            // Does not need to be XACMLPolicyWriterWithPapNotify since it is
+            // already in the PAP
+            // and this transaction is intercepted up stream.
+            try (InputStream inputStream = XACMLPolicyWriter.getXmlAsInputStream(policyData)) {
                 PolicyDef policyDef = DOMPolicyDef.load(inputStream);
                 if (policyDef == null) {
                     success.put("validation", "PolicyDef Validation Failed");
-                }else{
+                } else {
                     success.put("success", "success");
                 }
             } catch (Exception e) {
-                LOGGER.error("PolicyDef Validation failed"+e);
+                LOGGER.error("PolicyDef Validation failed" + e);
                 success.put("error", "Validation Failed");
             }
         } else {
@@ -291,7 +302,7 @@ public abstract class Policy {
         return success;
     }
 
-    public static String getConfigHome(){
+    public static String getConfigHome() {
         try {
             loadWebapps();
         } catch (Exception e) {
@@ -301,7 +312,7 @@ public abstract class Policy {
         return configHome;
     }
 
-    public static String getActionHome(){
+    public static String getActionHome() {
         try {
             loadWebapps();
         } catch (Exception e) {
@@ -311,35 +322,38 @@ public abstract class Policy {
         return actionHome;
     }
 
-    private static void loadWebapps() throws PAPException{
-        if(actionHome == null || configHome == null){
+    private static void loadWebapps() throws PAPException {
+        if (actionHome == null || configHome == null) {
             Path webappsPath = Paths.get(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_WEBAPPS));
-            //Sanity Check
+            // Sanity Check
             if (webappsPath == null) {
                 PolicyLogger.error("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
-                throw new PAPException("Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
+                throw new PAPException(
+                        "Invalid Webapps Path Location property : " + XACMLRestProperties.PROP_PAP_WEBAPPS);
             }
             Path webappsPathConfig;
             Path webappsPathAction;
-            if(webappsPath.toString().contains("\\")){
-                webappsPathConfig = Paths.get(webappsPath.toString()+"\\Config");
-                webappsPathAction = Paths.get(webappsPath.toString()+"\\Action");
-            }else{
-                webappsPathConfig = Paths.get(webappsPath.toString()+"/Config");
-                webappsPathAction = Paths.get(webappsPath.toString()+"/Action");
+            if (webappsPath.toString().contains("\\")) {
+                webappsPathConfig = Paths.get(webappsPath.toString() + "\\Config");
+                webappsPathAction = Paths.get(webappsPath.toString() + "\\Action");
+            } else {
+                webappsPathConfig = Paths.get(webappsPath.toString() + "/Config");
+                webappsPathAction = Paths.get(webappsPath.toString() + "/Action");
             }
-            if(!webappsPathConfig.toFile().exists()){
+            if (!webappsPathConfig.toFile().exists()) {
                 try {
                     Files.createDirectories(webappsPathConfig);
                 } catch (IOException e) {
-                    PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Policy", "Failed to create config directory");
+                    PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Policy",
+                            "Failed to create config directory");
                 }
             }
-            if(!webappsPathAction.toFile().exists()){
+            if (!webappsPathAction.toFile().exists()) {
                 try {
                     Files.createDirectories(webappsPathAction);
                 } catch (IOException e) {
-                    PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Policy", "Failed to create config directory");
+                    PolicyLogger.error(MessageCodes.ERROR_PROCESS_FLOW, e, "Policy",
+                            "Failed to create config directory");
                 }
             }
             actionHome = webappsPathAction.toString();
@@ -372,6 +386,5 @@ public abstract class Policy {
     public void setPolicyExists(boolean policyExists) {
         this.policyExists = policyExists;
     }
-
 
 }

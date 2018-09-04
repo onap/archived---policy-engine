@@ -24,6 +24,7 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
     $scope.savebutton = true;
     $scope.refreshCheck = false;
     $scope.disableOnCreate = false;
+    $scope.notRawPolicy = true;
     
     if(!$scope.temp.policy.editPolicy  && !$scope.temp.policy.readOnly){
     	$scope.disableOnCreate = true;
@@ -337,6 +338,9 @@ angular.module('abs').controller('decisionPolicyController', ['$scope', 'PolicyA
     		$scope.temp.policy.settings = [];
     		$scope.temp.policy.attributes = [];
     	}
+    	if (ruleProvider === "Raw") {
+        	$scope.notRawPolicy = false;
+        }
     };
     
     $scope.importButton = true;
