@@ -138,7 +138,8 @@ public class SavePolicyHandler {
         policyAdapter.setRuleProvider(policy.getProviderComboBox());
         policyAdapter.setDomainDir(policyAdapter.getPolicyScope());
         policyAdapter.setRainydayMap(policy.getTreatments());
-
+        policyAdapter.setRawXacmlPolicy(policy.getRawXacmlPolicy());
+        
         return policyAdapter;
     }
 
