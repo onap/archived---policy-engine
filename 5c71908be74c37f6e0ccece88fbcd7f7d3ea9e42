@@ -1,0 +1,280 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_6ad5a31a",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/DecisionPolicy.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "The methods in this class are very long. I\u0027d be surprised if you don\u0027t exceed the complexity level on them have you your checkstyle plugin turned on in your IDE? I would expect the class should be refactored.\n\nIf it\u0027s too much work, perhaps we could at least put the new block of code in the prepareToSave() method in a private method that is invoked so that wt least we don\u0027t make the complexity figures worse.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 3
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_4ae0e7f9",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/PolicyDBDao.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 2112,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "\u003e 120 characters width",
+      "range": {
+        "startLine": 2112,
+        "startChar": 0,
+        "endLine": 2112,
+        "endChar": 140
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_caeb97da",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/XACMLPdpServlet.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "tabs",
+      "range": {
+        "startLine": 118,
+        "startChar": 0,
+        "endLine": 118,
+        "endChar": 1
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_cac2b752",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/XACMLPdpServlet.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 1317,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "why do you want to get a handle on the lock variable outside the class?",
+      "range": {
+        "startLine": 1317,
+        "startChar": 22,
+        "endLine": 1317,
+        "endChar": 38
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_aac5fb5c",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/XACMLPdpServlet.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "Indentation",
+      "range": {
+        "startLine": 1318,
+        "startChar": 0,
+        "endLine": 1318,
+        "endChar": 29
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_ea96934b",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/PDPServices.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "This new method is too complex. Can it be refactored to not add to complexity of class?",
+      "range": {
+        "startLine": 350,
+        "startChar": 24,
+        "endLine": 350,
+        "endChar": 45
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_4a854705",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DecisionPolicyController.js",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "Tabs",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 35
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_0a7bcf28",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplates/DecisionPolicyTemplate.html",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "Tabs",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 4
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_aa73bb4c",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/DecisionPolicyWithRawXACMLClient.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "This new class breaks the checkstyle rules on class names.",
+      "range": {
+        "startLine": 30,
+        "startChar": 13,
+        "endLine": 30,
+        "endChar": 45
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_ca707742",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/DecisionPolicyWithRawXACMLClient.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "Tabs",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 1
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_6a912346",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/DecisionPolicyWithRawXACMLClient.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "\u003e120 chars",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 134
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_eaa453a7",
+        "filename": "PolicyEngineClient/src/test/java/org/onap/policyengine/DecisionPolicyWithRawXACMLClient.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-05T16:04:01Z",
+      "side": 1,
+      "message": "\"if(\" breaks checkstyle and I think \"} else\" does too",
+      "range": {
+        "startLine": 57,
+        "startChar": 9,
+        "endLine": 62,
+        "endChar": 10
+      },
+      "revId": "5c71908be74c37f6e0ccece88fbcd7f7d3ea9e42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
