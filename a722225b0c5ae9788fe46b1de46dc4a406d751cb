@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_92495bb9",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/DecisionPolicy.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-05T01:17:47Z",
+      "side": 1,
+      "message": "Let\u0027s reverse these to clear sonar:\n\"minute\".equalsIgnoreCase(timeUnits)\netc.",
+      "range": {
+        "startLine": 357,
+        "startChar": 31,
+        "endLine": 359,
+        "endChar": 116
+      },
+      "revId": "a722225b0c5ae9788fe46b1de46dc4a406d751cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_d2da73e7",
+        "filename": "ONAP-PDP-REST/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-05T01:17:47Z",
+      "side": 1,
+      "message": "oops - let\u0027s remove the tabs :)",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 20
+      },
+      "revId": "a722225b0c5ae9788fe46b1de46dc4a406d751cb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
