@@ -22,6 +22,30 @@
       "revId": "7fd58e9a2427a215daa6b543e901534e83d3c246",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_3b561bcf",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DecisionPolicyController.js",
+        "patchSetId": 9
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-06T00:25:53Z",
+      "side": 1,
+      "message": "This is javascript, there is no ONAP requirement for those types of files (yet). So I am not requiring the team to modify these (yet). Although it seems to make sense and I don\u0027t object. I do want the pom.xml files formatted and I have been doing other xml files.",
+      "parentUuid": "1a76adc5_2de585db",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 1
+      },
+      "revId": "7fd58e9a2427a215daa6b543e901534e83d3c246",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
