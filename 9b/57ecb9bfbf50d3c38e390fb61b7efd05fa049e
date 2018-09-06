@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Ravindra Bakkamanthala <rb7147@att.com>
+Code-Review+1: Jorge Hernandez <jh1730@att.com>
+Code-Review+2: Pamela Dragosh <pdragosh@research.att.com>
+Submitted-by: Pamela Dragosh <pdragosh@research.att.com>
+Submitted-at: Thu, 06 Sep 2018 00:26:31 +0000
+Reviewed-on: https://gerrit.onap.org/r/63867
+Project: policy/engine
+Branch: refs/heads/master
