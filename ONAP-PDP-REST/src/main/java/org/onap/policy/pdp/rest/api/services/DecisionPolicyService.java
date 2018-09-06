@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -114,6 +114,7 @@ public class DecisionPolicyService {
                 .editPolicy(updateFlag)
                 .domain(policyScope)
                 .highestVersion(0)
+                .rawXacmlPolicy(policyParameters.getRawXacmlPolicy())
                 .build());
         // Send JSON to PAP.
         response = (String) papServices.callPAP(newPAPPolicy, new String[]{"operation=" + operation, "apiflag=api",

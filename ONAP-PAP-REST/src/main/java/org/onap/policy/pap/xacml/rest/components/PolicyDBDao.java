@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
@@ -60,7 +59,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.common.logging.eelf.MessageCodes;
@@ -87,8 +85,8 @@ import org.onap.policy.xacml.std.pap.StdPDPPolicy;
 import org.onap.policy.xacml.util.XACMLPolicyWriter;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicySetType;
 import oasis.names.tc.xacml._3_0.core.schema.wd_17.PolicyType;
-
 import com.att.research.xacml.api.pap.PAPException;
 import com.att.research.xacml.api.pap.PDP;
 import com.att.research.xacml.api.pap.PDPPolicy;
@@ -106,7 +104,7 @@ public class PolicyDBDao {
     private static final String PROPERTIES_CONFIG = "PROPERTIES";
     private static final String OTHER_CONFIG = "OTHER";
 
-    //Declared to static variables which were repeating multiple times across the PolicyDBDao
+    // Declared to static variables which were repeating multiple times across the PolicyDBDao
     public static final String config = "Config";
     public static final String action = "Action";
     private static final String groupIdVar = "groupId";
@@ -135,13 +133,13 @@ public class PolicyDBDao {
     }
 
     /**
-     * Get an instance of a PolicyDBDao. It creates one if it does not exist.
-     * Only one instance is allowed to be created per server.
+     * Get an instance of a PolicyDBDao. It creates one if it does not exist. Only one instance is allowed to be created
+     * per server.
      *
      * @param emf The EntityFactoryManager to be used for database connections
      * @return The new instance of PolicyDBDao or throw exception if the given emf is null.
-     * @throws IllegalStateException if a PolicyDBDao has already been constructed. Call getPolicyDBDaoInstance() to
-     * get this.
+     * @throws IllegalStateException if a PolicyDBDao has already been constructed. Call getPolicyDBDaoInstance() to get
+     *         this.
      */
     public static PolicyDBDao getPolicyDBDaoInstance(EntityManagerFactory emf) {
         logger.debug("getPolicyDBDaoInstance(EntityManagerFactory emf) as getPolicyDBDaoInstance(" + emf + ") called");
@@ -160,7 +158,7 @@ public class PolicyDBDao {
      *
      * @return The instance of PolicyDBDao or throws exception if the given instance is null.
      * @throws IllegalStateException if a PolicyDBDao instance is null. Call createPolicyDBDaoInstance
-     * (EntityManagerFactory emf) to get this.
+     *         (EntityManagerFactory emf) to get this.
      */
     public static PolicyDBDao getPolicyDBDaoInstance() {
         logger.debug("getPolicyDBDaoInstance() as getPolicyDBDaoInstance() called");
@@ -179,7 +177,7 @@ public class PolicyDBDao {
         logger.debug("PolicyDBDao(EntityManagerFactory emf) as PolicyDBDao(" + emf + ") called");
         this.emf = emf;
 
-        //not needed in this release
+        // not needed in this release
         if (!register()) {
             PolicyLogger
                     .error("This server's PolicyDBDao instance could not be registered and may not reveive updates");
@@ -194,8 +192,8 @@ public class PolicyDBDao {
         }
     }
 
-    //not static because we are going to be using the instance's emf
-    //waitTime in ms to wait for lock, or -1 to wait forever (no)
+    // not static because we are going to be using the instance's emf
+    // waitTime in ms to wait for lock, or -1 to wait forever (no)
     private void startTransactionSynced(EntityManager entityMgr, int waitTime) {
         logger.debug("\n\nstartTransactionSynced(EntityManager entityMgr,int waitTime) as "
                 + "\n   startTransactionSynced(" + entityMgr + "," + waitTime + ") called\n\n");
@@ -206,21 +204,16 @@ public class PolicyDBDao {
 
         if (logger.isDebugEnabled()) {
             Map<String, Object> properties = entityMgr.getProperties();
-            logger.debug("\n\nstartTransactionSynced():"
-                    + "\n   entityManager.getProperties() = " + properties
-                    + "\n\n");
+            logger.debug(
+                    "\n\nstartTransactionSynced():" + "\n   entityManager.getProperties() = " + properties + "\n\n");
         }
         try {
             if (logger.isDebugEnabled()) {
-                logger.debug("\n\nstartTransactionSynced():"
-                        + "\n   ATTEMPT to get the DB lock"
-                        + "\n\n");
+                logger.debug("\n\nstartTransactionSynced():" + "\n   ATTEMPT to get the DB lock" + "\n\n");
             }
             lock = entityMgr.find(DatabaseLockEntity.class, 1, LockModeType.PESSIMISTIC_WRITE);
             if (logger.isDebugEnabled()) {
-                logger.debug("\n\nstartTransactionSynced():"
-                        + "\n   GOT the DB lock"
-                        + "\n\n");
+                logger.debug("\n\nstartTransactionSynced():" + "\n   GOT the DB lock" + "\n\n");
             }
         } catch (Exception e) {
             System.out.println("Could not get lock entity");
@@ -272,16 +265,15 @@ public class PolicyDBDao {
     }
 
     /*
-     * Because the normal transactions are not used in audits, we can use the same transaction
-     * mechanism to get a transaction and obtain the emlock and the DB lock.  We just need to
-     * provide different transaction timeout values in ms because the audit will run longer
-     * than normal transactions.
+     * Because the normal transactions are not used in audits, we can use the same transaction mechanism to get a
+     * transaction and obtain the emlock and the DB lock. We just need to provide different transaction timeout values
+     * in ms because the audit will run longer than normal transactions.
      */
     public PolicyDBDaoTransaction getNewAuditTransaction() {
         logger.debug("getNewAuditTransaction() as getNewAuditTransaction() called");
-        //Use the standard transaction wait time in ms
+        // Use the standard transaction wait time in ms
         int auditWaitMs = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT));
-        //Use the (extended) audit timeout time in ms
+        // Use the (extended) audit timeout time in ms
         int auditTimeoutMs = Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_AUDIT_TIMEOUT));
         return new PolicyDBDaoTransactionInstance(auditTimeoutMs, auditWaitMs);
     }
@@ -338,7 +330,7 @@ public class PolicyDBDao {
                 urlUserPass[2] = passwordPropertyValue;
             }
         }
-        //if there is no comma, for some reason there is no username and password, so don't try to cut them off
+        // if there is no comma, for some reason there is no username and password, so don't try to cut them off
         return urlUserPass;
     }
 
@@ -350,7 +342,7 @@ public class PolicyDBDao {
     private boolean register() {
         logger.debug("register() as register() called");
         String[] url = getPapUrlUserPass();
-        //--- check URL length
+        // --- check URL length
         if (url == null || url.length < 3) {
             return false;
         }
@@ -417,7 +409,7 @@ public class PolicyDBDao {
                 }
             }
         } else {
-            //just want to update in order to change modified date
+            // just want to update in order to change modified date
             if (url[1] != null && !stringEquals(url[1], foundPolicyDBDaoEntity.getUsername())) {
                 foundPolicyDBDaoEntity.setUsername(url[1]);
             }
@@ -458,7 +450,7 @@ public class PolicyDBDao {
 
         @Override
         public void run() {
-            //naming of 'o' is for backwards compatibility with the rest of the function
+            // naming of 'o' is for backwards compatibility with the rest of the function
             PolicyDBDaoEntity dbdEntity = (PolicyDBDaoEntity) obj;
             String o = dbdEntity.getPolicyDBDaoUrl();
             String username = dbdEntity.getUsername();
@@ -467,7 +459,7 @@ public class PolicyDBDao {
                 txt = new String(CryptoUtils.decryptTxt(dbdEntity.getPassword()), StandardCharsets.UTF_8);
             } catch (Exception e) {
                 logger.debug(e);
-                //if we can't decrypt, might as well try it anyway
+                // if we can't decrypt, might as well try it anyway
                 txt = dbdEntity.getPassword();
             }
             Base64.Encoder encoder = Base64.getEncoder();
@@ -484,7 +476,7 @@ public class PolicyDBDao {
                     papUrl = papUrlUserPass[0];
                 }
                 logger.debug("We are going to try to notify " + o);
-                //is this our own url?
+                // is this our own url?
                 String ourUrl = o;
                 try {
                     ourUrl = splitPapUrlUserPass((String) o)[0];
@@ -499,11 +491,11 @@ public class PolicyDBDao {
                     return;
                 }
                 if (newGroupId == null) {
-                    url = new URL(o + "?policydbdaourl=" + papUrl + "&entityid=" + entityId + "&entitytype=" +
-                            entityType);
+                    url = new URL(
+                            o + "?policydbdaourl=" + papUrl + "&entityid=" + entityId + "&entitytype=" + entityType);
                 } else {
-                    url = new URL(o + "?policydbdaourl=" + papUrl + "&entityid=" + entityId + "&entitytype=" +
-                            entityType + "&extradata=" + newGroupId);
+                    url = new URL(o + "?policydbdaourl=" + papUrl + "&entityid=" + entityId + "&entitytype="
+                            + entityType + "&extradata=" + newGroupId);
                 }
             } catch (MalformedURLException e) {
                 logger.warn("Caught MalformedURLException on: new URL()", e);
@@ -526,7 +518,7 @@ public class PolicyDBDao {
             try {
                 connection.setRequestMethod("PUT");
             } catch (ProtocolException e) {
-                //why would this error ever occur?
+                // why would this error ever occur?
                 logger.warn("Caught ProtocolException on connection.setRequestMethod(\"PUT\");", e);
                 return;
             }
@@ -565,8 +557,8 @@ public class PolicyDBDao {
                 if (connection.getResponseCode() == 200) {
                     logger.info("PolicyDBDao: NotifyOtherThread received response 200 from pap server on notify");
                 } else {
-                    logger.warn("PolicyDBDao: NotifyOtherThread connection response code not 200, received: " +
-                            connection.getResponseCode());
+                    logger.warn("PolicyDBDao: NotifyOtherThread connection response code not 200, received: "
+                            + connection.getResponseCode());
                 }
             } catch (Exception e) {
                 logger.warn("Caught Exception on: connection.getResponseCode() ", e);
@@ -600,19 +592,19 @@ public class PolicyDBDao {
     private static final String GROUP_NOTIFICATION = "group";
 
     public void handleIncomingHttpNotification(String url, String entityId, String entityType, String extraData,
-                                               XACMLPapServlet xacmlPapServlet) {
+            XACMLPapServlet xacmlPapServlet) {
         logger.info("DBDao url: " + url + " has reported an update on " + entityType + " entity " + entityId);
         PolicyDBDaoTransaction transaction = this.getNewTransaction();
-        //although its named retries, this is the total number of tries
+        // although its named retries, this is the total number of tries
         int retries;
         try {
-            retries = Integer.parseInt(
-                    XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_INCOMINGNOTIFICATION_TRIES));
+            retries = Integer
+                    .parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_INCOMINGNOTIFICATION_TRIES));
         } catch (Exception e) {
             logger.error("xacml.rest.pap.incomingnotification.tries property not set, using a default of 3." + e);
             retries = 3;
         }
-        //if someone sets it to some dumb value, we need to make sure it will try at least once
+        // if someone sets it to some dumb value, we need to make sure it will try at least once
         if (retries < 1) {
             retries = 1;
         }
@@ -627,8 +619,8 @@ public class PolicyDBDao {
                     } catch (Exception e) {
                         logger.debug(e);
                         PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                "Caught exception on handleIncomingPolicyChange(" + url + ", " + entityId + ", " +
-                                        extraData + ")");
+                                "Caught exception on handleIncomingPolicyChange(" + url + ", " + entityId + ", "
+                                        + extraData + ")");
                     }
                     try {
                         Thread.sleep(pauseBetweenRetries);
@@ -646,8 +638,8 @@ public class PolicyDBDao {
                     } catch (Exception e) {
                         logger.debug(e);
                         PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                "Caught exception on handleIncomingPdpChange(" + url + ", " + entityId + ", " +
-                                        transaction + ")");
+                                "Caught exception on handleIncomingPdpChange(" + url + ", " + entityId + ", "
+                                        + transaction + ")");
                     }
                     try {
                         Thread.sleep(pauseBetweenRetries);
@@ -665,8 +657,8 @@ public class PolicyDBDao {
                     } catch (Exception e) {
                         logger.debug(e);
                         PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                "Caught exception on handleIncomingGroupChange(" + url + ", " + entityId + ", " +
-                                        extraData + ", " + transaction + ", " + xacmlPapServlet + ")");
+                                "Caught exception on handleIncomingGroupChange(" + url + ", " + entityId + ", "
+                                        + extraData + ", " + transaction + ", " + xacmlPapServlet + ")");
                     }
                     try {
                         Thread.sleep(pauseBetweenRetries);
@@ -677,7 +669,7 @@ public class PolicyDBDao {
                 }
                 break;
         }
-        //no changes should be being made in this function, we still need to close
+        // no changes should be being made in this function, we still need to close
         transaction.rollbackTransaction();
     }
 
@@ -700,8 +692,8 @@ public class PolicyDBDao {
         if (groupRecord == null) {
             throw new PersistenceException("The group record returned is null");
         }
-        //compare to local fs
-        //does group folder exist
+        // compare to local fs
+        // does group folder exist
         OnapPDPGroup localGroup = null;
         try {
             localGroup = papEngine.getGroup(groupRecord.getGroupId());
@@ -710,7 +702,7 @@ public class PolicyDBDao {
                     e);
         }
         if (localGroup == null && extraData != null) {
-            //here we can try to load an old group id from the extraData
+            // here we can try to load an old group id from the extraData
             try {
                 localGroup = papEngine.getGroup(extraData);
             } catch (Exception e) {
@@ -726,37 +718,37 @@ public class PolicyDBDao {
                     newLocalGroup = papEngine.getGroup(extraData);
                 } catch (PAPException e) {
                     PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                            "Caught PAPException trying to get new pdp group with papEngine.getGroup(" + extraData +
-                                    ");");
+                            "Caught PAPException trying to get new pdp group with papEngine.getGroup(" + extraData
+                                    + ");");
                 }
             }
             try {
                 papEngine.removeGroup(localGroup, newLocalGroup);
             } catch (NullPointerException | PAPException e) {
                 PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                        "Caught PAPException trying to get remove pdp group with papEngine.removeGroup(" + localGroup +
-                                ", " + newLocalGroup + ");");
+                        "Caught PAPException trying to get remove pdp group with papEngine.removeGroup(" + localGroup
+                                + ", " + newLocalGroup + ");");
                 throw new PAPException("Could not remove group " + groupId);
             }
         } else if (localGroup == null) {
-            //creating a new group
+            // creating a new group
             try {
                 papEngine.newGroup(groupRecord.getgroupName(), groupRecord.getDescription());
             } catch (NullPointerException | PAPException e) {
                 PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                        "Caught PAPException trying to create pdp group with papEngine.newGroup(groupRecord" +
-                                ".getgroupName(), groupRecord.getDescription());");
+                        "Caught PAPException trying to create pdp group with papEngine.newGroup(groupRecord"
+                                + ".getgroupName(), groupRecord.getDescription());");
                 throw new PAPException("Could not create group " + groupRecord);
             }
             try {
                 localGroup = papEngine.getGroup(groupRecord.getGroupId());
             } catch (PAPException e1) {
                 PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, policyDBDaoVar,
-                        "Caught PAPException trying to get pdp group we just created with papEngine.getGroup" +
-                                "(groupRecord.getGroupId());\nAny PDPs or policies in the new group may not have been added");
+                        "Caught PAPException trying to get pdp group we just created with papEngine.getGroup"
+                                + "(groupRecord.getGroupId());\nAny PDPs or policies in the new group may not have been added");
                 return;
             }
-            //add possible pdps to group
+            // add possible pdps to group
             List<?> pdpsInGroup = transaction.getPdpsInGroup(Long.parseLong(groupRecord.getGroupId()));
             for (Object pdpO : pdpsInGroup) {
                 PdpEntity pdp = (PdpEntity) pdpO;
@@ -765,34 +757,33 @@ public class PolicyDBDao {
                             pdp.getJmxPort());
                 } catch (NullPointerException | PAPException e) {
                     PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                            "Caught PAPException trying to get create pdp with papEngine.newPDP(pdp.getPdpId(), " +
-                                    "localGroup, pdp.getPdpName(), pdp.getDescription(), pdp.getJmxPort());");
+                            "Caught PAPException trying to get create pdp with papEngine.newPDP(pdp.getPdpId(), "
+                                    + "localGroup, pdp.getPdpName(), pdp.getDescription(), pdp.getJmxPort());");
                     throw new PAPException("Could not create pdp " + pdp);
                 }
             }
-            //add possible policies to group (filesystem only, apparently)
+            // add possible policies to group (filesystem only, apparently)
         } else {
             if (!(localGroup instanceof StdPDPGroup)) {
                 throw new PAPException("group is not a StdPDPGroup");
             }
-            //clone the object
-            //because it will be comparing the new group to its own version
-            StdPDPGroup localGroupClone =
-                    new StdPDPGroup(localGroup.getId(), localGroup.isDefaultGroup(), localGroup.getName(),
-                            localGroup.getDescription(), ((StdPDPGroup) localGroup).getDirectory());
+            // clone the object
+            // because it will be comparing the new group to its own version
+            StdPDPGroup localGroupClone = new StdPDPGroup(localGroup.getId(), localGroup.isDefaultGroup(),
+                    localGroup.getName(), localGroup.getDescription(), ((StdPDPGroup) localGroup).getDirectory());
             localGroupClone.setOnapPdps(localGroup.getOnapPdps());
             localGroupClone.setPipConfigs(localGroup.getPipConfigs());
             localGroupClone.setStatus(localGroup.getStatus());
-            //we are updating a group or adding a policy or changing default
-            //set default if it should be
+            // we are updating a group or adding a policy or changing default
+            // set default if it should be
             if (!localGroupClone.isDefaultGroup() && groupRecord.isDefaultGroup()) {
                 try {
                     papEngine.setDefaultGroup(localGroup);
                     return;
                 } catch (PAPException e) {
                     PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                            "Caught PAPException trying to set default group with papEngine.SetDefaultGroup(" +
-                                    localGroupClone + ");");
+                            "Caught PAPException trying to set default group with papEngine.SetDefaultGroup("
+                                    + localGroupClone + ");");
                     throw new PAPException("Could not set default group to " + localGroupClone);
                 }
             }
@@ -800,10 +791,10 @@ public class PolicyDBDao {
             if (updateGroupPoliciesInFileSystem(localGroupClone, localGroup, groupRecord, transaction)) {
                 needToUpdate = true;
             }
-            if (!stringEquals(localGroupClone.getId(), groupRecord.getGroupId()) ||
-                    !stringEquals(localGroupClone.getName(), groupRecord.getgroupName())) {
-                //changing ids
-                //we do not want to change the id, the papEngine will do this for us, it needs to know the old id
+            if (!stringEquals(localGroupClone.getId(), groupRecord.getGroupId())
+                    || !stringEquals(localGroupClone.getName(), groupRecord.getgroupName())) {
+                // changing ids
+                // we do not want to change the id, the papEngine will do this for us, it needs to know the old id
                 localGroupClone.setName(groupRecord.getgroupName());
                 needToUpdate = true;
             }
@@ -816,24 +807,23 @@ public class PolicyDBDao {
                     papEngine.updateGroup(localGroupClone);
                 } catch (PAPException e) {
                     PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                            "Caught PAPException trying to update group with papEngine.updateGroup(" + localGroupClone +
-                                    ");");
+                            "Caught PAPException trying to update group with papEngine.updateGroup(" + localGroupClone
+                                    + ");");
                     throw new PAPException("Could not update group " + localGroupClone);
                 }
             }
         }
     }
 
-    //this will also handle removes, since incoming pdpGroup has no policies internally, we are just going to add
+    // this will also handle removes, since incoming pdpGroup has no policies internally, we are just going to add
     // them all in from the db
     private boolean updateGroupPoliciesInFileSystem(OnapPDPGroup pdpGroup, OnapPDPGroup oldPdpGroup,
-                                                    GroupEntity groupRecord, PolicyDBDaoTransaction transaction)
-            throws PAPException, PolicyDBException {
+            GroupEntity groupRecord, PolicyDBDaoTransaction transaction) throws PAPException, PolicyDBException {
         if (!(pdpGroup instanceof StdPDPGroup)) {
             throw new PAPException("group is not a StdPDPGroup");
         }
         StdPDPGroup group = (StdPDPGroup) pdpGroup;
-        //this must always be true since we don't explicitly know when a delete is occuring
+        // this must always be true since we don't explicitly know when a delete is occuring
         boolean didUpdate = true;
         HashMap<String, PDPPolicy> currentPolicySet = new HashMap<>(oldPdpGroup.getPolicies().size());
         HashSet<PDPPolicy> newPolicySet = new HashSet<>();
@@ -871,8 +861,8 @@ public class PolicyDBDao {
     }
 
     /*
-     *  This method is called during all pushPolicy transactions and makes sure the file system
-     *  group is in sync with the database groupentity
+     * This method is called during all pushPolicy transactions and makes sure the file system group is in sync with the
+     * database groupentity
      */
     private StdPDPGroup synchronizeGroupPoliciesInFileSystem(StdPDPGroup pdpGroup, GroupEntity groupentity)
             throws PAPException, PolicyDBException {
@@ -892,7 +882,7 @@ public class PolicyDBDao {
             if (currentPolicyMap.containsKey(pdpPolicyId)) {
                 newPolicySet.add(currentPolicyMap.get(pdpPolicyId));
             } else {
-                //convert PolicyEntity object to PDPPolicy
+                // convert PolicyEntity object to PDPPolicy
                 String name = pdpPolicyId.replace(".xml", "");
                 name = name.substring(0, name.lastIndexOf('.'));
                 InputStream policyStream = new ByteArrayInputStream(policy.getPolicyData().getBytes());
@@ -900,15 +890,14 @@ public class PolicyDBDao {
                 URI location = Paths.get(pdpGroup.getDirectory().toAbsolutePath().toString(), pdpPolicyId).toUri();
                 StdPDPPolicy newPolicy = null;
                 try {
-                    newPolicy =
-                            new StdPDPPolicy(pdpPolicyId, true, removeExtensionAndVersionFromPolicyName(pdpPolicyId),
-                                    location);
+                    newPolicy = new StdPDPPolicy(pdpPolicyId, true,
+                            removeExtensionAndVersionFromPolicyName(pdpPolicyId), location);
                     newPolicySet.add(newPolicy);
                 } catch (Exception e) {
                     logger.debug(e);
                     PolicyLogger
-                            .error("PolicyDBDao: Exception occurred while creating the StdPDPPolicy newPolicy object " +
-                                    e.getMessage());
+                            .error("PolicyDBDao: Exception occurred while creating the StdPDPPolicy newPolicy object "
+                                    + e.getMessage());
                 }
             }
         }
@@ -920,9 +909,8 @@ public class PolicyDBDao {
                 } catch (Exception e) {
                     logger.debug(e);
                     PolicyLogger
-                            .error("PolicyDBDao: Exception occurred while attempting to delete the old version of the" +
-                                    " policy file from the group. " +
-                                    e.getMessage());
+                            .error("PolicyDBDao: Exception occurred while attempting to delete the old version of the"
+                                    + " policy file from the group. " + e.getMessage());
                 }
             }
         }
@@ -969,7 +957,7 @@ public class PolicyDBDao {
     }
 
     private void handleIncomingPdpChange(String pdpId, PolicyDBDaoTransaction transaction) throws PAPException {
-        //get pdp
+        // get pdp
         long pdpIdLong = -1;
         try {
             pdpIdLong = Long.parseLong(pdpId);
@@ -1002,15 +990,15 @@ public class PolicyDBDao {
                 throw new PAPException("Could not remove pdp " + pdpId);
             }
         } else if (localPdp == null) {
-            //add new pdp
-            //get group
+            // add new pdp
+            // get group
             OnapPDPGroup localGroup = null;
             try {
                 localGroup = papEngine.getGroup(pdpRecord.getGroup().getGroupId());
             } catch (PAPException e1) {
                 PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e1, policyDBDaoVar,
-                        "Caught PAPException trying to get local group to add pdp to with papEngine.getGroup" +
-                                "(pdpRecord.getGroup().getGroupId());");
+                        "Caught PAPException trying to get local group to add pdp to with papEngine.getGroup"
+                                + "(pdpRecord.getGroup().getGroupId());");
                 throw new PAPException("Could not get local group");
             }
             try {
@@ -1018,16 +1006,16 @@ public class PolicyDBDao {
                         pdpRecord.getJmxPort());
             } catch (NullPointerException | PAPException e) {
                 PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                        "Caught PAPException trying to create pdp with papEngine.newPDP(" + pdpRecord.getPdpId() +
-                                ", " + localGroup + ", " + pdpRecord.getPdpName() + ", " + pdpRecord.getDescription() +
-                                ", " + pdpRecord.getJmxPort() + ");");
+                        "Caught PAPException trying to create pdp with papEngine.newPDP(" + pdpRecord.getPdpId() + ", "
+                                + localGroup + ", " + pdpRecord.getPdpName() + ", " + pdpRecord.getDescription() + ", "
+                                + pdpRecord.getJmxPort() + ");");
                 throw new PAPException("Could not create pdp " + pdpRecord);
             }
         } else {
             boolean needToUpdate = false;
-            if (!stringEquals(localPdp.getId(), pdpRecord.getPdpId()) ||
-                    !stringEquals(localPdp.getName(), pdpRecord.getPdpName())) {
-                //again, we don't want to change the id, the papEngine will do this
+            if (!stringEquals(localPdp.getId(), pdpRecord.getPdpId())
+                    || !stringEquals(localPdp.getName(), pdpRecord.getPdpName())) {
+                // again, we don't want to change the id, the papEngine will do this
                 localPdp.setName(pdpRecord.getPdpName());
                 needToUpdate = true;
             }
@@ -1039,21 +1027,19 @@ public class PolicyDBDao {
             try {
                 localPdpGroupId = papEngine.getPDPGroup((OnapPDP) localPdp).getId();
             } catch (PAPException e) {
-                //could be null or something, just warn at this point
-                logger.warn(
-                        "Caught PAPException trying to get id of local group that pdp is in with localPdpGroupId = " +
-                                "papEngine.getPDPGroup(localPdp).getId();",
-                        e);
+                // could be null or something, just warn at this point
+                logger.warn("Caught PAPException trying to get id of local group that pdp is in with localPdpGroupId = "
+                        + "papEngine.getPDPGroup(localPdp).getId();", e);
             }
             if (!stringEquals(localPdpGroupId, pdpRecord.getGroup().getGroupId())) {
                 OnapPDPGroup newPdpGroup = null;
                 try {
                     newPdpGroup = papEngine.getGroup(pdpRecord.getGroup().getGroupId());
                 } catch (PAPException e) {
-                    //ok, now we have an issue. Time to stop things
+                    // ok, now we have an issue. Time to stop things
                     PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                            "Caught PAPException trying to get id of local group to move pdp to with papEngine" +
-                                    ".getGroup(pdpRecord.getGroup().getGroupId());");
+                            "Caught PAPException trying to get id of local group to move pdp to with papEngine"
+                                    + ".getGroup(pdpRecord.getGroup().getGroupId());");
                     throw new PAPException("Could not get local group");
                 }
                 try {
@@ -1078,8 +1064,8 @@ public class PolicyDBDao {
                 }
             }
         }
-        //compare to local situation
-        //call command to update
+        // compare to local situation
+        // call command to update
     }
 
     private void handleIncomingPolicyChange(String policyId) {
@@ -1160,8 +1146,8 @@ public class PolicyDBDao {
     }
 
     private boolean writePolicySubFile(PolicyEntity policy, String policyType) {
-        logger.info("writePolicySubFile with policyName[" + policy.getPolicyName() + "] and policyType[" + policyType +
-                "]");
+        logger.info("writePolicySubFile with policyName[" + policy.getPolicyName() + "] and policyType[" + policyType
+                + "]");
         String type = null;
         String subTypeName = null;
         String subTypeBody = null;
@@ -1361,14 +1347,13 @@ public class PolicyDBDao {
         return getConfigFile(filename, policy.getConfigType());
     }
 
-    //copied from ConfigPolicy.java and modified
+    // copied from ConfigPolicy.java and modified
     // Here we are adding the extension for the configurations file based on the
     // config type selection for saving.
     private String getConfigFile(String inputFilename, String configType) {
         String filename = inputFilename;
-        logger.debug(
-                "getConfigFile(String filename, String scope, String configType) as getConfigFile(" + filename + ", " +
-                        configType + ") called");
+        logger.debug("getConfigFile(String filename, String scope, String configType) as getConfigFile(" + filename
+                + ", " + configType + ") called");
         filename = FilenameUtils.removeExtension(filename);
         String id = configType;
 
@@ -1396,12 +1381,12 @@ public class PolicyDBDao {
         }
         String policyName = splitByDots[splitByDots.length - 3];
         String version = splitByDots[splitByDots.length - 2];
-        //policy names now include version
+        // policy names now include version
         String scope = "";
         for (int i = 0; i < splitByDots.length - 3; i++) {
             scope += ".".concat(splitByDots[i]);
         }
-        //remove the first dot
+        // remove the first dot
         if (scope.length() > 0) {
             scope = scope.substring(1);
         }
@@ -1460,18 +1445,18 @@ public class PolicyDBDao {
         private final Thread transactionTimer;
 
         private PolicyDBDaoTransactionInstance() {
-            //call the constructor with arguments
+            // call the constructor with arguments
             this(Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_TIMEOUT)),
                     Integer.parseInt(XACMLProperties.getProperty(XACMLRestProperties.PROP_PAP_TRANS_WAIT)));
         }
 
-        //timeout is how long the transaction can sit before rolling back
-        //wait time is how long to wait for the transaction to start before throwing an exception
+        // timeout is how long the transaction can sit before rolling back
+        // wait time is how long to wait for the transaction to start before throwing an exception
         private PolicyDBDaoTransactionInstance(int transactionTimeout, int transactionWaitTime) {
             if (logger.isDebugEnabled()) {
                 logger.debug("\n\nPolicyDBDaoTransactionInstance() as PolicyDBDaoTransactionInstance() called:"
-                        + "\n   transactionTimeout = " + transactionTimeout
-                        + "\n   transactionWaitTime = " + transactionWaitTime + "\n\n");
+                        + "\n   transactionTimeout = " + transactionTimeout + "\n   transactionWaitTime = "
+                        + transactionWaitTime + "\n\n");
             }
             this.em = emf.createEntityManager();
             policyId = -1;
@@ -1499,29 +1484,25 @@ public class PolicyDBDao {
                 public void run() {
                     if (logger.isDebugEnabled()) {
                         Date date = new java.util.Date();
-                        logger.debug("\n\nTransactionTimer.run() - SLEEPING: "
-                                + "\n   sleepTime (ms) = " + sleepTime
-                                + "\n   TimeStamp = " + date.getTime()
-                                + "\n\n");
+                        logger.debug("\n\nTransactionTimer.run() - SLEEPING: " + "\n   sleepTime (ms) = " + sleepTime
+                                + "\n   TimeStamp = " + date.getTime() + "\n\n");
                     }
                     try {
                         Thread.sleep(sleepTime);
                     } catch (InterruptedException e) {
-                        //probably, the transaction was completed, the last thing we want to do is roll back
+                        // probably, the transaction was completed, the last thing we want to do is roll back
                         if (logger.isDebugEnabled()) {
                             Date date = new java.util.Date();
-                            logger.debug("\n\nTransactionTimer.run() - WAKE Interrupt: "
-                                    + "\n   TimeStamp = " + date.getTime()
-                                    + "\n\n");
+                            logger.debug("\n\nTransactionTimer.run() - WAKE Interrupt: " + "\n   TimeStamp = "
+                                    + date.getTime() + "\n\n");
                         }
                         Thread.currentThread().interrupt();
                         return;
                     }
                     if (logger.isDebugEnabled()) {
                         Date date = new java.util.Date();
-                        logger.debug("\n\nTransactionTimer.run() - WAKE Timeout: "
-                                + "\n   TimeStamp = " + date.getTime()
-                                + "\n\n");
+                        logger.debug("\n\nTransactionTimer.run() - WAKE Timeout: " + "\n   TimeStamp = "
+                                + date.getTime() + "\n\n");
                     }
                     rollbackTransaction();
                 }
@@ -1544,9 +1525,8 @@ public class PolicyDBDao {
                 throw new IllegalStateException("There is no transaction currently open");
             }
             if (operationRun && !justCheckOpen) {
-                PolicyLogger
-                        .error("An operation has already been performed and the current transaction should be " +
-                                "committed");
+                PolicyLogger.error(
+                        "An operation has already been performed and the current transaction should be " + "committed");
                 throw new IllegalStateException(
                         "An operation has already been performed and the current transaction should be committed");
             }
@@ -1581,8 +1561,8 @@ public class PolicyDBDao {
                             notifyOthers(policyId, POLICY_NOTIFICATION, newGroupId);
                         } catch (Exception e) {
                             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                    "Caught Exception on notifyOthers(" + policyId + "," + POLICY_NOTIFICATION + "," +
-                                            newGroupId + ")");
+                                    "Caught Exception on notifyOthers(" + policyId + "," + POLICY_NOTIFICATION + ","
+                                            + newGroupId + ")");
                         }
                     } else {
                         try {
@@ -1594,14 +1574,14 @@ public class PolicyDBDao {
                     }
                 }
                 if (groupId >= 0) {
-                    //we don't want commit to fail just because this does
+                    // we don't want commit to fail just because this does
                     if (newGroupId != null) {
                         try {
                             notifyOthers(groupId, GROUP_NOTIFICATION, newGroupId);
                         } catch (Exception e) {
                             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                    "Caught Exception on notifyOthers(" + groupId + "," + GROUP_NOTIFICATION + "," +
-                                            newGroupId + ")");
+                                    "Caught Exception on notifyOthers(" + groupId + "," + GROUP_NOTIFICATION + ","
+                                            + newGroupId + ")");
                         }
                     } else {
                         try {
@@ -1613,7 +1593,7 @@ public class PolicyDBDao {
                     }
                 }
                 if (pdpId >= 0) {
-                    //we don't want commit to fail just because this does
+                    // we don't want commit to fail just because this does
                     try {
                         notifyOthers(pdpId, PDP_NOTIFICATION);
                     } catch (Exception e) {
@@ -1661,13 +1641,12 @@ public class PolicyDBDao {
         }
 
         private void createPolicy(PolicyRestAdapter policy, String username, String policyScope, String inputPolicyName,
-                                  String policyDataString) {
+                String policyDataString) {
             String policyName = inputPolicyName;
             logger.debug(
-                    "createPolicy(PolicyRestAdapter policy, String username, String policyScope, String policyName, " +
-                            "String policyDataString) as createPolicy(" +
-                            policy + ", " + username + ", " + policyScope + ", " + policyName + ", " +
-                            policyDataString + ") called");
+                    "createPolicy(PolicyRestAdapter policy, String username, String policyScope, String policyName, "
+                            + "String policyDataString) as createPolicy(" + policy + ", " + username + ", "
+                            + policyScope + ", " + policyName + ", " + policyDataString + ") called");
             synchronized (emLock) {
                 checkBeforeOperationRun();
                 String configName = policyName;
@@ -1679,8 +1658,8 @@ public class PolicyDBDao {
                     policyName = policyName.replace(".Decision_", ":Decision_");
                 }
                 policyName = policyName.split(":")[1];
-                Query createPolicyQuery = em.createQuery(
-                        "SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");
+                Query createPolicyQuery = em
+                        .createQuery("SELECT p FROM PolicyEntity p WHERE p.scope=:scope AND p.policyName=:policyName");
                 createPolicyQuery.setParameter(scope, policyScope);
                 createPolicyQuery.setParameter("policyName", policyName);
                 List<?> createPolicyQueryList = createPolicyQuery.getResultList();
@@ -1691,11 +1670,11 @@ public class PolicyDBDao {
                     update = false;
                 } else if (createPolicyQueryList.size() > 1) {
                     PolicyLogger
-                            .error("Somehow, more than one policy with the same scope, name, and deleted status were " +
-                                    "found in the database");
+                            .error("Somehow, more than one policy with the same scope, name, and deleted status were "
+                                    + "found in the database");
                     throw new PersistenceException(
-                            "Somehow, more than one policy with the same scope, name, and deleted status were found " +
-                                    "in the database");
+                            "Somehow, more than one policy with the same scope, name, and deleted status were found "
+                                    + "in the database");
                 } else {
                     newPolicyEntity = (PolicyEntity) createPolicyQueryList.get(0);
                     update = true;
@@ -1716,12 +1695,12 @@ public class PolicyDBDao {
                         if (!abupdate) {
                             em.persist(newActionBodyEntity);
                         }
-                        //build the file path
-                        //trim the .xml off the end
+                        // build the file path
+                        // trim the .xml off the end
                         String policyNameClean = FilenameUtils.removeExtension(configName);
                         String actionBodyName = policyNameClean + ".json";
 
-                        //get the action body
+                        // get the action body
                         String actionBodyString = policy.getActionBody();
                         if (actionBodyString == null) {
                             actionBodyString = "{}";
@@ -1734,30 +1713,26 @@ public class PolicyDBDao {
                             newActionBodyEntity.setCreatedBy("PolicyDBDao.createPolicy()");
                         }
                         if (logger.isDebugEnabled()) {
-                            logger.debug("\nPolicyDBDao.createPolicy"
-                                    + "\n   newActionBodyEntity.getActionBody() = " +
-                                    newActionBodyEntity.getActionBody()
-                                    + "\n   newActionBodyEntity.getActionBodyName() = " +
-                                    newActionBodyEntity.getActionBodyName()
-                                    + "\n   newActionBodyEntity.getModifiedBy() = " +
-                                    newActionBodyEntity.getModifiedBy()
-                                    + "\n   newActionBodyEntity.getCreatedBy() = " + newActionBodyEntity.getCreatedBy()
-                                    + "\n   newActionBodyEntity.isDeleted() = " + newActionBodyEntity.isDeleted()
-                                    + "\n   FLUSHING to DB");
+                            logger.debug("\nPolicyDBDao.createPolicy" + "\n   newActionBodyEntity.getActionBody() = "
+                                    + newActionBodyEntity.getActionBody()
+                                    + "\n   newActionBodyEntity.getActionBodyName() = "
+                                    + newActionBodyEntity.getActionBodyName()
+                                    + "\n   newActionBodyEntity.getModifiedBy() = "
+                                    + newActionBodyEntity.getModifiedBy() + "\n   newActionBodyEntity.getCreatedBy() = "
+                                    + newActionBodyEntity.getCreatedBy() + "\n   newActionBodyEntity.isDeleted() = "
+                                    + newActionBodyEntity.isDeleted() + "\n   FLUSHING to DB");
                         }
-                        //push the actionBodyEntity to the DB
+                        // push the actionBodyEntity to the DB
                         em.flush();
                     } else {
-                        //newActionBodyEntity == null
-                        //We have a actionBody in the policy but we found no actionBody in the DB
+                        // newActionBodyEntity == null
+                        // We have a actionBody in the policy but we found no actionBody in the DB
                         String msg = "\n\nPolicyDBDao.createPolicy - Incoming Action policy had an "
-                                + "actionBody, but it could not be found in the DB for update."
-                                + "\n  policyScope = " + policyScope
-                                + "\n  policyName = " + policyName + "\n\n";
+                                + "actionBody, but it could not be found in the DB for update." + "\n  policyScope = "
+                                + policyScope + "\n  policyName = " + policyName + "\n\n";
                         PolicyLogger
-                                .error("PolicyDBDao.createPolicy - Incoming Action policy had an actionBody, but it " +
-                                        "could not be found in the DB for update: policyName = " +
-                                        policyName);
+                                .error("PolicyDBDao.createPolicy - Incoming Action policy had an actionBody, but it "
+                                        + "could not be found in the DB for update: policyName = " + policyName);
                         throw new IllegalArgumentException(msg);
                     }
                 }
@@ -1782,25 +1757,25 @@ public class PolicyDBDao {
                                 getConfigFile(configName, policy))) {
                             newConfigurationDataEntity.setConfigurationName(getConfigFile(configName, policy));
                         }
-                        if (newConfigurationDataEntity.getConfigType() == null ||
-                                !newConfigurationDataEntity.getConfigType().equals(policy.getConfigType())) {
+                        if (newConfigurationDataEntity.getConfigType() == null
+                                || !newConfigurationDataEntity.getConfigType().equals(policy.getConfigType())) {
                             newConfigurationDataEntity.setConfigType(policy.getConfigType());
                         }
                         if (!configUpdate) {
                             newConfigurationDataEntity.setCreatedBy(username);
                         }
-                        if (newConfigurationDataEntity.getModifiedBy() == null ||
-                                !newConfigurationDataEntity.getModifiedBy().equals(username)) {
+                        if (newConfigurationDataEntity.getModifiedBy() == null
+                                || !newConfigurationDataEntity.getModifiedBy().equals(username)) {
                             newConfigurationDataEntity.setModifiedBy(username);
                         }
-                        if (newConfigurationDataEntity.getDescription() == null ||
-                                !newConfigurationDataEntity.getDescription().equals("")) {
+                        if (newConfigurationDataEntity.getDescription() == null
+                                || !newConfigurationDataEntity.getDescription().equals("")) {
                             newConfigurationDataEntity.setDescription("");
                         }
-                        if (newConfigurationDataEntity.getConfigBody() == null ||
-                                newConfigurationDataEntity.getConfigBody().isEmpty() ||
-                                (!newConfigurationDataEntity.getConfigBody().equals(policy.getConfigBodyData()))) {
-                            //hopefully one of these won't be null
+                        if (newConfigurationDataEntity.getConfigBody() == null
+                                || newConfigurationDataEntity.getConfigBody().isEmpty()
+                                || (!newConfigurationDataEntity.getConfigBody().equals(policy.getConfigBodyData()))) {
+                            // hopefully one of these won't be null
                             if (policy.getConfigBodyData() == null || policy.getConfigBodyData().isEmpty()) {
                                 newConfigurationDataEntity.setConfigBody(policy.getJsonBody());
                             } else {
@@ -1813,16 +1788,13 @@ public class PolicyDBDao {
 
                         em.flush();
                     } else {
-                        //We have a configurationData body in the policy but we found no configurationData body in
+                        // We have a configurationData body in the policy but we found no configurationData body in
                         // the DB
                         String msg = "\n\nPolicyDBDao.createPolicy - Incoming Config policy had a "
                                 + "configurationData body, but it could not be found in the DB for update."
-                                + "\n  policyScope = " + policyScope
-                                + "\n  policyName = " + policyName + "\n\n";
-                        PolicyLogger
-                                .error("PolicyDBDao.createPolicy - Incoming Config policy had a configurationData " +
-                                        "body, but it could not be found in the DB for update: policyName = " +
-                                        policyName);
+                                + "\n  policyScope = " + policyScope + "\n  policyName = " + policyName + "\n\n";
+                        PolicyLogger.error("PolicyDBDao.createPolicy - Incoming Config policy had a configurationData "
+                                + "body, but it could not be found in the DB for update: policyName = " + policyName);
                         throw new IllegalArgumentException(msg);
                     }
 
@@ -1874,8 +1846,8 @@ public class PolicyDBDao {
         }
 
         private PolicyEntity getPolicy(int policyID, String policyName, String scope) {
-            logger.debug("getPolicy(int policyId, String policyName) as getPolicy(" + policyID + "," + policyName +
-                    ") called");
+            logger.debug("getPolicy(int policyId, String policyName) as getPolicy(" + policyID + "," + policyName
+                    + ") called");
             if (policyID < 0 && isNullOrEmpty(policyName, scope)) {
                 throw new IllegalArgumentException(
                         "policyID must be at least 0 or policyName must be not null or blank");
@@ -1883,7 +1855,7 @@ public class PolicyDBDao {
 
             synchronized (emLock) {
                 checkBeforeOperationRun(true);
-                //check if group exists
+                // check if group exists
                 String policyId;
                 Query policyQuery;
                 if (!isNullOrEmpty(policyName, scope)) {
@@ -1924,7 +1896,7 @@ public class PolicyDBDao {
             }
             synchronized (emLock) {
                 checkBeforeOperationRun(true);
-                //check if group exists
+                // check if group exists
                 Query groupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupKey=:groupKey");
                 groupQuery.setParameter("groupKey", groupKey);
                 List<?> groupQueryList;
@@ -1955,7 +1927,7 @@ public class PolicyDBDao {
             }
             synchronized (emLock) {
                 checkBeforeOperationRun(true);
-                //check if group exists
+                // check if group exists
                 Query groupQuery = em.createQuery("SELECT g FROM GroupEntity g WHERE g.groupId=:groupId");
                 groupQuery.setParameter(groupIdVar, groupId);
                 List<?> groupQueryList;
@@ -1999,7 +1971,7 @@ public class PolicyDBDao {
             }
             synchronized (emLock) {
                 checkBeforeOperationRun(true);
-                //check if group exists
+                // check if group exists
                 Query pdpQuery = em.createQuery("SELECT p FROM PdpEntity p WHERE p.pdpKey=:pdpKey");
                 pdpQuery.setParameter("pdpKey", pdpKey);
                 List<?> pdpQueryList;
@@ -2037,7 +2009,7 @@ public class PolicyDBDao {
                 throw new IllegalArgumentException("Webapps property does not exist");
             }
             configPath = configPath.replace("$URL", webappsPath);
-            //make sure the correct slashes are in
+            // make sure the correct slashes are in
             try {
                 configPath = Paths.get(configPath).toString();
             } catch (InvalidPathException e) {
@@ -2068,37 +2040,37 @@ public class PolicyDBDao {
         public void createPolicy(Policy policy, String username) {
 
             try {
-                logger.debug("createPolicy(PolicyRestAdapter policy, String username) as createPolicy(" + policy + "," +
-                        username + ") called");
+                logger.debug("createPolicy(PolicyRestAdapter policy, String username) as createPolicy(" + policy + ","
+                        + username + ") called");
                 String policyScope = policy.policyAdapter.getDomainDir().replace(File.separator, ".");
-                //Does not need to be XACMLPolicyWriterWithPapNotify since it is already in the PAP
-                //and this transaction is intercepted up stream.
+                // Does not need to be XACMLPolicyWriterWithPapNotify since it is already in the PAP
+                // and this transaction is intercepted up stream.
 
-                String policyDataString = getPolicyDataString((PolicyType) policy.getCorrectPolicyDataObject());
+                String policyDataString = getPolicyDataString(policy);
                 if (isJunit) {
-                    //Using parentPath object to set policy data.
+                    // Using parentPath object to set policy data.
                     policyDataString = policy.policyAdapter.getParentPath();
                 }
                 String configPath = "";
                 if (policy.policyAdapter.getPolicyType().equalsIgnoreCase(config)) {
                     configPath = evaluateXPath(
-                            "/Policy/Rule/AdviceExpressions/AdviceExpression[contains(@AdviceId,'ID')" +
-                                    "]/AttributeAssignmentExpression[@AttributeId='URLID']/AttributeValue/text()",
+                            "/Policy/Rule/AdviceExpressions/AdviceExpression[contains(@AdviceId,'ID')"
+                                    + "]/AttributeAssignmentExpression[@AttributeId='URLID']/AttributeValue/text()",
                             policyDataString);
                 } else if (policy.policyAdapter.getPolicyType().equalsIgnoreCase(action)) {
                     configPath = evaluateXPath(
-                            "/Policy/Rule/ObligationExpressions/ObligationExpression[contains(@ObligationId, " +
-                                    policy.policyAdapter.getActionAttribute() +
-                                    ")]/AttributeAssignmentExpression[@AttributeId='body']/AttributeValue/text()",
+                            "/Policy/Rule/ObligationExpressions/ObligationExpression[contains(@ObligationId, "
+                                    + policy.policyAdapter.getActionAttribute()
+                                    + ")]/AttributeAssignmentExpression[@AttributeId='body']/AttributeValue/text()",
                             policyDataString);
                 }
 
                 String prefix = null;
                 if (policy.policyAdapter.getPolicyType().equalsIgnoreCase(config)) {
 
-                    prefix = configPath
-                            .substring(configPath.indexOf(policyScope + ".") + policyScope.concat(".").length(),
-                                    configPath.lastIndexOf(policy.policyAdapter.getPolicyName()));
+                    prefix = configPath.substring(
+                            configPath.indexOf(policyScope + ".") + policyScope.concat(".").length(),
+                            configPath.lastIndexOf(policy.policyAdapter.getPolicyName()));
                     if (isNullOrEmpty(policy.policyAdapter.getConfigBodyData())) {
                         policy.policyAdapter.setConfigBodyData(getConfigData(configPath));
                     }
@@ -2108,18 +2080,19 @@ public class PolicyDBDao {
                     prefix = "Decision_";
                 }
 
-                if (!(policy.policyAdapter.getData() instanceof PolicyType)) {
-                    PolicyLogger.error("The data field is not an instance of PolicyType");
-                    throw new IllegalArgumentException("The data field is not an instance of PolicyType");
+                if (!(policy.policyAdapter.getData() instanceof PolicyType)
+                        && !(policy.policyAdapter.getData() instanceof PolicySetType)) {
+                    PolicyLogger.error("The data field is not an instance of PolicyType or PolicySetType");
+                    throw new IllegalArgumentException(
+                            "The data field is not an instance of PolicyType or PolicySetType");
                 }
-                String finalName = policyScope + "." + prefix + policy.policyAdapter.getPolicyName() + "." +
-                        ((PolicyType) policy.policyAdapter.getData()).getVersion() + ".xml";
+                String finalName = policyScope + "." + prefix + policy.policyAdapter.getPolicyName() + "."
+                        + policy.policyAdapter.getHighestVersion() + ".xml";
                 if (policy.policyAdapter.getConfigType() == null || "".equals(policy.policyAdapter.getConfigType())) {
-                    //get the config file extension
+                    // get the config file extension
                     String ext = "";
                     if (configPath != null && !"".equalsIgnoreCase(configPath)) {
-                        ext = configPath.substring(configPath.lastIndexOf('.'), configPath.length());
-                        ;
+                        ext = configPath.substring(configPath.lastIndexOf('.'), configPath.length());;
                     }
 
                     if (ext.contains("txt")) {
@@ -2163,13 +2136,19 @@ public class PolicyDBDao {
             return "";
         }
 
-        private String getPolicyDataString(PolicyType policyType) {
-            try (InputStream policyXmlStream = XACMLPolicyWriter.getXmlAsInputStream(policyType)) {
-                return IOUtils.toString(policyXmlStream, StandardCharsets.UTF_8);
+
+        /**
+         * @param policy input policy Object.
+         * @return read the stream and return policy xml data.
+         */
+        private String getPolicyDataString(Policy policy) {
+            try (InputStream policyXmlStream =
+                    XACMLPolicyWriter.getXmlAsInputStream(policy.getCorrectPolicyDataObject())) {
+                return IOUtils.toString(policyXmlStream);
             } catch (IOException e) {
                 PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                        "Caught IOException on IOUtils.toString(policyXmlStream)");
-                throw new IllegalArgumentException("Cannot parse the policy xml from the PolicyRestAdapter.", e);
+                        "Caught IOException on reading Policy Data.");
+                throw new IllegalArgumentException("Cannot parse the policy xml from the PolicyRestAdapter.");
             }
         }
 
@@ -2191,8 +2170,8 @@ public class PolicyDBDao {
         @Override
         public void createGroup(String groupId, String groupName, String inputGroupDescription, String username) {
             String groupDescription = inputGroupDescription;
-            logger.debug("deletePolicy(String policyToDeletes) as createGroup(" + groupId + ", " + groupName + ", " +
-                    groupDescription + ") called");
+            logger.debug("deletePolicy(String policyToDeletes) as createGroup(" + groupId + ", " + groupName + ", "
+                    + groupDescription + ") called");
             if (isNullOrEmpty(groupId, groupName, username)) {
                 throw new IllegalArgumentException("groupId, groupName, and username must not be null or empty");
             }
@@ -2265,11 +2244,11 @@ public class PolicyDBDao {
                 if (!stringEquals(groupToUpdateInDB.getModifiedBy(), username)) {
                     groupToUpdateInDB.setModifiedBy(username);
                 }
-                if (group.getDescription() != null &&
-                        !stringEquals(group.getDescription(), groupToUpdateInDB.getDescription())) {
+                if (group.getDescription() != null
+                        && !stringEquals(group.getDescription(), groupToUpdateInDB.getDescription())) {
                     groupToUpdateInDB.setDescription(group.getDescription());
                 }
-                //let's find out what policies have been deleted
+                // let's find out what policies have been deleted
                 StdPDPGroup oldGroup = null;
                 try {
                     oldGroup = (StdPDPGroup) papEngine.getGroup(group.getId());
@@ -2281,12 +2260,12 @@ public class PolicyDBDao {
                     PolicyLogger.error("We cannot get the group from the papEngine to delete policies");
                 } else {
                     Set<String> newPolicySet = new HashSet<>(group.getPolicies().size());
-                    //a multiple of n runtime is faster than n^2, so I am using a hashset to do the comparison
+                    // a multiple of n runtime is faster than n^2, so I am using a hashset to do the comparison
                     for (PDPPolicy pol : group.getPolicies()) {
                         newPolicySet.add(pol.getId());
                     }
                     for (PDPPolicy pol : oldGroup.getPolicies()) {
-                        //should be fast since getPolicies uses a HashSet in StdPDPGroup
+                        // should be fast since getPolicies uses a HashSet in StdPDPGroup
                         if (!newPolicySet.contains(pol.getId())) {
                             String[] scopeAndName = getNameScopeAndVersionFromPdpPolicy(pol.getId());
                             deletePolicyInScope(username, groupToUpdateInDB, pol, scopeAndName);
@@ -2295,7 +2274,7 @@ public class PolicyDBDao {
                 }
 
                 if (group.getName() != null && !stringEquals(group.getName(), groupToUpdateInDB.getgroupName())) {
-                    //we need to check if the new id exists in the database
+                    // we need to check if the new id exists in the database
                     String newGroupId = createNewPDPGroupId(group.getName());
                     Query checkGroupQuery = em.createQuery(groupEntitySelectQuery);
                     checkGroupQuery.setParameter(groupIdVar, newGroupId);
@@ -2322,7 +2301,7 @@ public class PolicyDBDao {
         }
 
         private void deletePolicyInScope(String username, GroupEntity groupToUpdateInDB, PDPPolicy pol,
-                                         String[] scopeAndName) {
+                String[] scopeAndName) {
             PolicyEntity policyToDelete;
             if (scopeAndName == null) {
                 return;
@@ -2344,35 +2323,33 @@ public class PolicyDBDao {
         }
 
         private void deletePolicyFromGroupEntity(GroupEntity groupToUpdateInDB, PolicyEntity policyToDelete,
-                                                 Iterator<PolicyEntity> dbPolicyIt, String policyName) {
+                Iterator<PolicyEntity> dbPolicyIt, String policyName) {
             try {
                 while (dbPolicyIt.hasNext()) {
                     PolicyEntity dbpolicy = dbPolicyIt.next();
-                    if (policyToDelete.getScope().equals(dbpolicy.getScope()) &&
-                            getPolicyNameAndVersionFromPolicyFileName(dbpolicy.getPolicyName())[0].equals(policyName)) {
+                    if (policyToDelete.getScope().equals(dbpolicy.getScope())
+                            && getPolicyNameAndVersionFromPolicyFileName(dbpolicy.getPolicyName())[0]
+                                    .equals(policyName)) {
                         dbPolicyIt.remove();
 
-                        logger.info("PolicyDBDao: deleting policy from the existing group:\n "
-                                + "policyName is " + policyToDelete.getScope() + "." + policyToDelete.getPolicyName() +
-                                "\n"
-                                + "group is " + groupToUpdateInDB.getGroupId());
+                        logger.info("PolicyDBDao: deleting policy from the existing group:\n " + "policyName is "
+                                + policyToDelete.getScope() + "." + policyToDelete.getPolicyName() + "\n" + "group is "
+                                + groupToUpdateInDB.getGroupId());
                     }
                 }
             } catch (Exception e) {
                 logger.debug(e);
-                PolicyLogger.error("Could not delete policy with name: " + policyToDelete.getScope() + "." +
-                        policyToDelete.getPolicyName() + "\n ID: " + policyToDelete.getPolicyId());
+                PolicyLogger.error("Could not delete policy with name: " + policyToDelete.getScope() + "."
+                        + policyToDelete.getPolicyName() + "\n ID: " + policyToDelete.getPolicyId());
             }
         }
 
         @Override
         public void addPdpToGroup(String pdpID, String groupID, String pdpName, String pdpDescription, int pdpJmxPort,
-                                  String username) {
-            logger.debug(
-                    "addPdpToGroup(String pdpID, String groupID, String pdpName, String pdpDescription, int " +
-                            "pdpJmxPort, String username) as addPdpToGroup(" +
-                            pdpID + ", " + groupID + ", " + pdpName + ", " + pdpDescription + ", " + pdpJmxPort + ", " +
-                            username + ") called");
+                String username) {
+            logger.debug("addPdpToGroup(String pdpID, String groupID, String pdpName, String pdpDescription, int "
+                    + "pdpJmxPort, String username) as addPdpToGroup(" + pdpID + ", " + groupID + ", " + pdpName + ", "
+                    + pdpDescription + ", " + pdpJmxPort + ", " + username + ") called");
             if (isNullOrEmpty(pdpID, groupID, pdpName, username)) {
                 throw new IllegalArgumentException("pdpID, groupID, pdpName, and username must not be null or empty");
             }
@@ -2401,8 +2378,8 @@ public class PolicyDBDao {
                     checkDuplicateList = checkDuplicateQuery.getResultList();
                 } catch (Exception e) {
                     PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                            "Caught Exception trying to check for duplicate PDP " + pdpID +
-                                    " on checkDuplicateQuery.getResultList()");
+                            "Caught Exception trying to check for duplicate PDP " + pdpID
+                                    + " on checkDuplicateQuery.getResultList()");
                     throw new PersistenceException("Query failed trying to check for duplicate PDP " + pdpID);
                 }
                 PdpEntity newPdp;
@@ -2480,8 +2457,8 @@ public class PolicyDBDao {
 
         @Override
         public void movePdp(OnapPDP pdp, OnapPDPGroup group, String username) {
-            logger.debug("movePdp(PDP pdp, PDPGroup group, String username) as movePdp(" + pdp + "," + group + "," +
-                    username + ") called");
+            logger.debug("movePdp(PDP pdp, PDPGroup group, String username) as movePdp(" + pdp + "," + group + ","
+                    + username + ") called");
             if (pdp == null || group == null) {
                 throw new IllegalArgumentException("PDP pdp and PDPGroup group must not be null");
             }
@@ -2492,7 +2469,7 @@ public class PolicyDBDao {
 
             synchronized (emLock) {
                 checkBeforeOperationRun();
-                //check if pdp exists
+                // check if pdp exists
                 Query getPdpQuery = em.createQuery(pdpEntitySelectQuery);
                 getPdpQuery.setParameter(pdpIdVariable, pdp.getId());
                 getPdpQuery.setParameter(deletedVar, false);
@@ -2512,7 +2489,7 @@ public class PolicyDBDao {
                     throw new PersistenceException(moreThanOnePDP + pdp.getId() + deletedStatusFound);
                 }
 
-                //check if new group exists
+                // check if new group exists
                 Query checkGroupQuery = em.createQuery(groupEntitySelectQuery);
                 checkGroupQuery.setParameter(groupIdVar, group.getId());
                 checkGroupQuery.setParameter(deletedVar, false);
@@ -2542,8 +2519,8 @@ public class PolicyDBDao {
 
         @Override
         public void changeDefaultGroup(OnapPDPGroup group, String username) {
-            logger.debug("changeDefaultGroup(PDPGroup group, String username) as changeDefaultGroup(" + group + "," +
-                    username + ") called");
+            logger.debug("changeDefaultGroup(PDPGroup group, String username) as changeDefaultGroup(" + group + ","
+                    + username + ") called");
             if (group == null) {
                 throw new IllegalArgumentException("PDPGroup group must not be null");
             }
@@ -2580,9 +2557,9 @@ public class PolicyDBDao {
                 em.flush();
                 this.groupId = newDefaultGroup.getGroupKey();
                 Query setAllGroupsNotDefault = em.createQuery(
-                        "UPDATE GroupEntity g SET g.defaultGroup=:defaultGroup WHERE g.deleted=:deleted AND g" +
-                                ".groupKey<>:groupKey");
-                //not going to set modified by for all groups
+                        "UPDATE GroupEntity g SET g.defaultGroup=:defaultGroup WHERE g.deleted=:deleted AND g"
+                                + ".groupKey<>:groupKey");
+                // not going to set modified by for all groups
                 setAllGroupsNotDefault.setParameter("defaultGroup", false);
                 setAllGroupsNotDefault.setParameter(deletedVar, false);
                 setAllGroupsNotDefault.setParameter("groupKey", newDefaultGroup.getGroupKey());
@@ -2601,8 +2578,8 @@ public class PolicyDBDao {
         @Override
         public void deleteGroup(OnapPDPGroup group, OnapPDPGroup moveToGroup, String username)
                 throws PolicyDBException {
-            logger.debug("deleteGroup(PDPGroup group, PDPGroup moveToGroup, String username) as deleteGroup(" + group +
-                    ", " + moveToGroup + "," + username + ") called");
+            logger.debug("deleteGroup(PDPGroup group, PDPGroup moveToGroup, String username) as deleteGroup(" + group
+                    + ", " + moveToGroup + "," + username + ") called");
             if (group == null) {
                 throw new IllegalArgumentException("PDPGroup group cannot be null");
             }
@@ -2659,8 +2636,8 @@ public class PolicyDBDao {
                             checkMoveToGroupList = checkMoveToGroupQuery.getResultList();
                         } catch (Exception e) {
                             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                    "Caught Exception trying to check if group exists checkMoveToGroupQuery" +
-                                            ".getResultList()");
+                                    "Caught Exception trying to check if group exists checkMoveToGroupQuery"
+                                            + ".getResultList()");
                             throw new PersistenceException("Query failed trying to check if group exists");
                         }
                         if (checkMoveToGroupList.isEmpty()) {
@@ -2683,20 +2660,20 @@ public class PolicyDBDao {
                                     this.newGroupId = newGroup.getGroupId();
                                 } catch (PersistenceException e) {
                                     PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                            "Caught PersistenceException trying to set pdp group to null on em.flush" +
-                                                    "()");
+                                            "Caught PersistenceException trying to set pdp group to null on em.flush"
+                                                    + "()");
                                     throw new PersistenceException("Query failed trying to set pdp group to ");
                                 }
                             }
                         }
                     } else {
-                        PolicyLogger.error("Group " + group.getId() +
-                                " is trying to be delted with PDPs. No group was provided to move them to");
+                        PolicyLogger.error("Group " + group.getId()
+                                + " is trying to be delted with PDPs. No group was provided to move them to");
                         throw new PolicyDBException("Group has PDPs. Must provide a group for them to move to");
                     }
                 }
 
-                //delete group here
+                // delete group here
                 GroupEntity groupToDelete = (GroupEntity) deleteGroupQueryList.get(0);
                 groupToDelete.setDeleted(true);
                 if (!stringEquals(groupToDelete.getModifiedBy(), username)) {
@@ -2709,16 +2686,14 @@ public class PolicyDBDao {
 
         @Override
         public StdPDPGroup addPolicyToGroup(String groupID, String policyID, String username) throws PolicyDBException {
-            logger.info(
-                    "PolicyDBDao: addPolicyToGroup(String groupID, String policyID, String username) as " +
-                            "addPolicyToGroup(" +
-                            groupID + ", " + policyID + "," + username + ") called");
+            logger.info("PolicyDBDao: addPolicyToGroup(String groupID, String policyID, String username) as "
+                    + "addPolicyToGroup(" + groupID + ", " + policyID + "," + username + ") called");
             if (isNullOrEmpty(groupID, policyID, username)) {
                 throw new IllegalArgumentException("groupID, policyID, and username must not be null or empty");
             }
             synchronized (emLock) {
                 checkBeforeOperationRun();
-                //check if group exists
+                // check if group exists
                 Query groupQuery = em.createQuery(groupEntitySelectQuery);
                 groupQuery.setParameter(groupIdVar, groupID);
                 groupQuery.setParameter(deletedVar, false);
@@ -2738,15 +2713,15 @@ public class PolicyDBDao {
                     throw new PersistenceException(duplicateGroupId + groupID + foundInDBNotDeleted);
                 }
 
-                //we need to convert the form of the policy id that is used groups into the form that is used
-                //for the database. (com.Config_mypol.1.xml) to (Config_mypol.xml)
+                // we need to convert the form of the policy id that is used groups into the form that is used
+                // for the database. (com.Config_mypol.1.xml) to (Config_mypol.xml)
                 String[] policyNameScopeAndVersion = getNameScopeAndVersionFromPdpPolicy(policyID);
                 if (policyNameScopeAndVersion == null) {
                     throw new IllegalArgumentException("Invalid input - policyID must contain name, scope and version");
                 }
                 Query policyQuery = em.createQuery(
-                        "SELECT p FROM PolicyEntity p WHERE p.policyName=:policyName AND p.scope=:scope AND p" +
-                                ".deleted=:deleted");
+                        "SELECT p FROM PolicyEntity p WHERE p.policyName=:policyName AND p.scope=:scope AND p"
+                                + ".deleted=:deleted");
                 policyQuery.setParameter("policyName", policyNameScopeAndVersion[0]);
                 policyQuery.setParameter(scope, policyNameScopeAndVersion[1]);
                 policyQuery.setParameter(deletedVar, false);
@@ -2761,10 +2736,10 @@ public class PolicyDBDao {
                             "Query failed trying to check if policy " + policyNameScopeAndVersion[0] + " exists");
                 }
                 if (policyQueryList.isEmpty()) {
-                    PolicyLogger.error("Policy being added to the group does not exist with policy id " +
-                            policyNameScopeAndVersion[0]);
-                    throw new PersistenceException("Policy being added to the group does not exist with policy id " +
-                            policyNameScopeAndVersion[0]);
+                    PolicyLogger.error("Policy being added to the group does not exist with policy id "
+                            + policyNameScopeAndVersion[0]);
+                    throw new PersistenceException("Policy being added to the group does not exist with policy id "
+                            + policyNameScopeAndVersion[0]);
                 } else if (policyQueryList.size() > 1) {
                     PolicyLogger.error(duplicatePolicyId + policyNameScopeAndVersion[0] + foundInDBNotDeleted);
                     throw new PersistenceException(
@@ -2780,38 +2755,40 @@ public class PolicyDBDao {
                 try {
                     while (policyIt.hasNext()) {
                         PolicyEntity pol = policyIt.next();
-                        if (policy.getScope().equals(pol.getScope()) &&
-                                getPolicyNameAndVersionFromPolicyFileName(pol.getPolicyName())[0].equals(policyName)) {
+                        if (policy.getScope().equals(pol.getScope())
+                                && getPolicyNameAndVersionFromPolicyFileName(pol.getPolicyName())[0]
+                                        .equals(policyName)) {
                             policyIt.remove();
                         }
                     }
                 } catch (Exception e) {
                     logger.debug(e);
-                    PolicyLogger.error("Could not delete old versions for policy " + policy.getPolicyName() + ", ID: " +
-                            policy.getPolicyId());
+                    PolicyLogger.error("Could not delete old versions for policy " + policy.getPolicyName() + ", ID: "
+                            + policy.getPolicyId());
                 }
                 group.addPolicyToGroup(policy);
                 em.flush();
 
-                // After adding policy to the db group we need to make sure the filesytem group is in sync with the db group
+                // After adding policy to the db group we need to make sure the filesytem group is in sync with the db
+                // group
                 try {
                     StdPDPGroup pdpGroup = (StdPDPGroup) papEngine.getGroup(group.getGroupId());
                     return synchronizeGroupPoliciesInFileSystem(pdpGroup, group);
                 } catch (PAPException e) {
                     logger.debug(e);
                     PolicyLogger
-                            .error("PolicyDBDao: Could not synchronize the filesystem group with the database group. " +
-                                    e.getMessage());
+                            .error("PolicyDBDao: Could not synchronize the filesystem group with the database group. "
+                                    + e.getMessage());
                 }
                 return null;
             }
         }
 
-        //this means delete pdp not just remove from group
+        // this means delete pdp not just remove from group
         @Override
         public void removePdpFromGroup(String pdpID, String username) {
-            logger.debug("removePdpFromGroup(String pdpID, String username) as removePdpFromGroup(" + pdpID + "," +
-                    username + ") called");
+            logger.debug("removePdpFromGroup(String pdpID, String username) as removePdpFromGroup(" + pdpID + ","
+                    + username + ") called");
             if (isNullOrEmpty(pdpID, username)) {
                 throw new IllegalArgumentException("pdpID and username must not be null or empty");
             }
@@ -2853,17 +2830,18 @@ public class PolicyDBDao {
         }
 
         private void notifyOthers(long entityId, String entityType, String newGroupId) {
-            logger.debug("notifyOthers(long entityId, String entityType, long newGroupId) as notifyOthers(" + entityId +
-                    "," + entityType + "," + newGroupId + ") called");
+            logger.debug("notifyOthers(long entityId, String entityType, long newGroupId) as notifyOthers(" + entityId
+                    + "," + entityType + "," + newGroupId + ") called");
             LinkedList<Thread> notifyThreads = new LinkedList<>();
 
-            //we're going to run notifications in parallel threads to speed things up
+            // we're going to run notifications in parallel threads to speed things up
             for (Object obj : otherServers) {
                 Thread newNotifyThread = new Thread(new NotifyOtherThread(obj, entityId, entityType, newGroupId));
                 newNotifyThread.start();
                 notifyThreads.add(newNotifyThread);
             }
-            //we want to wait for all notifications to complete or timeout before we unlock the interface and allow more changes
+            // we want to wait for all notifications to complete or timeout before we unlock the interface and allow
+            // more changes
             for (Thread t : notifyThreads) {
                 try {
                     t.join();
@@ -2875,7 +2853,7 @@ public class PolicyDBDao {
     }
 
     private PolicyDBDao() {
-        //empty constructor
+        // empty constructor
     }
 
     public static PolicyDBDaoTestClass getPolicyDBDaoTestClass() {

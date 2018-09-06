@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,6 +58,7 @@ public class PolicyParameters {
     private String riskLevel = "5";
     private String riskType = "default";
     private String extendedOption;
+    private String rawXacmlPolicy;
 
     /**
      * Sets Config Policy Parameters.
@@ -574,6 +575,14 @@ public class PolicyParameters {
      */
     public void setTreatments(Map<String, String> treatments) {
         this.treatments = treatments;
+    }
+    
+    public String getRawXacmlPolicy() {
+        return rawXacmlPolicy;
+    }
+
+    public void setRawXacmlPolicy(String rawXacmlPolicy) {
+        this.rawXacmlPolicy = rawXacmlPolicy;
     }
 
     @Override
