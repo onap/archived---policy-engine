@@ -129,14 +129,6 @@ public class PolicyRestAdapter {
     private String blackListEntryType;
     private String rawXacmlPolicy;
 
-    public String getRawXacmlPolicy() {
-        return rawXacmlPolicy;
-    }
-
-    public void setRawXacmlPolicy(String rawXacmlPolicy) {
-        this.rawXacmlPolicy = rawXacmlPolicy;
-    }
-
     // Rainy Day Decision
     private RainyDayParams rainyday;
     private Map<String, String> rainydayMap;
@@ -1144,5 +1136,13 @@ public class PolicyRestAdapter {
 
     public void setBlackListEntryType(String blackListEntryType) {
         this.blackListEntryType = blackListEntryType;
+    }
+    
+    public String getRawXacmlPolicy() {
+        return rawXacmlPolicy;
+    }
+
+    public void setRawXacmlPolicy(String rawXacmlPolicy) {
+        this.rawXacmlPolicy = rawXacmlPolicy;
     }
 }

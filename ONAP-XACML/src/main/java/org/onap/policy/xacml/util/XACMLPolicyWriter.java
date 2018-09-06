@@ -142,7 +142,7 @@ public class XACMLPolicyWriter {
         if (policy instanceof PolicyType) {
             policyElement = new ObjectFactory().createPolicy((PolicyType) policy); 
             return getByteArrayInputStream(policyElement, PolicyType.class);
-        } else if (policy instanceof PolicyType) {
+        } else if (policy instanceof PolicySetType) {
             policyElement = new ObjectFactory().createPolicySet((PolicySetType) policy); 
             return getByteArrayInputStream(policyElement, PolicySetType.class);
         } 

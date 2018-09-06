@@ -63,27 +63,28 @@ import oasis.names.tc.xacml._3_0.core.schema.wd_17.VariableReferenceType;
 @RequestMapping("/")
 public class DecisionPolicyController extends RestrictedBaseController {
     private static final Logger policyLogger = FlexLogger.getLogger(DecisionPolicyController.class);
-
-    public DecisionPolicyController() {
-        // This constructor is empty
-    }
-
+    
+    public static final String FUNCTION_NOT = "urn:oasis:names:tc:xacml:1.0:function:not";
+    private static final String BLENTRY = "@blEntry@";
+    private static final String DECISIONRAWTYPE = "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
+    private static final String GUARD_YAML= "GUARD_YAML";
+    private static final String GUARD_BL_YAML= "GUARD_BL_YAML";
+   
     protected PolicyRestAdapter policyAdapter = null;
-    private ArrayList<Object> attributeList;
-    private ArrayList<Object> decisionList;
     private ArrayList<Object> ruleAlgorithmList;
     private ArrayList<Object> treatmentList = null;
     protected LinkedList<Integer> ruleAlgoirthmTracker;
-    public static final String FUNCTION_NOT = "urn:oasis:names:tc:xacml:1.0:function:not";
-    private static final String blEntry = "@blEntry@";
-    private static final String decisionRawType = "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
-
+    
+    public DecisionPolicyController() {
+        // This constructor is empty
+    }
+    
     public void rawXACMLPolicy(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
         try (InputStream policyXmlStream = XACMLPolicyWriter.getXmlAsInputStream(policyAdapter.getPolicyData())) {
             String name = StringUtils.substringAfter(entity.getPolicyName(), "Decision_");
             policyAdapter.setPolicyName(name.substring(0, name.indexOf('.')));
             policyAdapter.setRuleProvider("Raw");
-            policyAdapter.setRawXacmlPolicy(IOUtils.toString(policyXmlStream).replaceAll(decisionRawType, ""));
+            policyAdapter.setRawXacmlPolicy(IOUtils.toString(policyXmlStream).replaceAll(DECISIONRAWTYPE, ""));
         } catch (IOException e) {
             policyLogger.error("Exception Occured while setting XACML Raw Object" + e);
         }
@@ -91,16 +92,16 @@ public class DecisionPolicyController extends RestrictedBaseController {
 
     @SuppressWarnings("unchecked")
     public void prePopulateDecisionPolicyData(PolicyRestAdapter policyAdapter, PolicyEntity entity) {
-        attributeList = new ArrayList<>();
-        decisionList = new ArrayList<>();
+        List<Object> attributeList = new ArrayList<>();
+        List<Object> decisionList = new ArrayList<>();
         ruleAlgorithmList = new ArrayList<>();
         treatmentList = new ArrayList<>();
 
         boolean rawPolicyCheck = false;
         if (policyAdapter.getPolicyData() instanceof PolicySetType) {
-            rawPolicyCheck = ((PolicySetType) policyAdapter.getPolicyData()).getDescription().contains(decisionRawType);
+            rawPolicyCheck = ((PolicySetType) policyAdapter.getPolicyData()).getDescription().contains(DECISIONRAWTYPE);
         } else {
-            rawPolicyCheck = ((PolicyType) policyAdapter.getPolicyData()).getDescription().contains(decisionRawType);
+            rawPolicyCheck = ((PolicyType) policyAdapter.getPolicyData()).getDescription().contains(DECISIONRAWTYPE);
         }
 
         if (rawPolicyCheck) {
@@ -115,9 +116,9 @@ public class DecisionPolicyController extends RestrictedBaseController {
             String description = "";
             String blackListEntryType = "Use Manual Entry";
             try {
-                if (policy.getDescription().contains(blEntry)) {
-                    blackListEntryType = policy.getDescription().substring(policy.getDescription().indexOf(blEntry) + 9,
-                            policy.getDescription().lastIndexOf(blEntry));
+                if (policy.getDescription().contains(BLENTRY)) {
+                    blackListEntryType = policy.getDescription().substring(policy.getDescription().indexOf(BLENTRY) + 9,
+                            policy.getDescription().lastIndexOf(BLENTRY));
                 }
                 policyAdapter.setBlackListEntryType(blackListEntryType);
                 description = policy.getDescription().substring(0, policy.getDescription().indexOf("@CreatedBy:"));
@@ -226,12 +227,12 @@ public class DecisionPolicyController extends RestrictedBaseController {
                                         .getAdviceExpression().get(0).getAdviceId())) {
                                     policyAdapter.setRuleProvider("AAF");
                                     break;
-                                } else if ("GUARD_YAML".equalsIgnoreCase(((RuleType) object).getAdviceExpressions()
+                                } else if (GUARD_YAML.equalsIgnoreCase(((RuleType) object).getAdviceExpressions()
                                         .getAdviceExpression().get(0).getAdviceId())) {
-                                    policyAdapter.setRuleProvider("GUARD_YAML");
-                                } else if ("GUARD_BL_YAML".equalsIgnoreCase(((RuleType) object).getAdviceExpressions()
+                                    policyAdapter.setRuleProvider(GUARD_YAML);
+                                } else if (GUARD_BL_YAML.equalsIgnoreCase(((RuleType) object).getAdviceExpressions()
                                         .getAdviceExpression().get(0).getAdviceId())) {
-                                    policyAdapter.setRuleProvider("GUARD_BL_YAML");
+                                    policyAdapter.setRuleProvider(GUARD_BL_YAML);
                                 }
                             } else {
                                 policyAdapter.setRuleProvider("Custom");
@@ -242,8 +243,8 @@ public class DecisionPolicyController extends RestrictedBaseController {
                                 decisionApply = (ApplyType) decisionApply.getExpression().get(0).getValue();
                                 ruleAlgoirthmTracker = new LinkedList<>();
                                 if (policyAdapter.getRuleProvider() != null
-                                        && ("GUARD_YAML".equals(policyAdapter.getRuleProvider())
-                                                || ("GUARD_BL_YAML".equals(policyAdapter.getRuleProvider())))) {
+                                        && (GUARD_YAML.equals(policyAdapter.getRuleProvider())
+                                                || (GUARD_BL_YAML.equals(policyAdapter.getRuleProvider())))) {
                                     YAMLParams yamlParams = new YAMLParams();
                                     for (int i = 0; i < attributeList.size(); i++) {
                                         Map<String, String> map = (Map<String, String>) attributeList.get(i);
@@ -266,7 +267,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
                                     yamlParams.setGuardActiveEnd(
                                             ((AttributeValueType) apply.getExpression().get(2).getValue()).getContent()
                                                     .get(0).toString());
-                                    if ("GUARD_BL_YAML".equals(policyAdapter.getRuleProvider())) {
+                                    if (GUARD_BL_YAML.equals(policyAdapter.getRuleProvider())) {
                                         apply = (ApplyType) ((ApplyType) ((ApplyType) decisionApply.getExpression()
                                                 .get(0).getValue()).getExpression().get(1).getValue()).getExpression()
                                                         .get(2).getValue();
