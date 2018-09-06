@@ -125,6 +125,8 @@ public class PolicyDBDao {
     private static final String policyDBDaoVar = "PolicyDBDao";
     private static final String duplicatePolicyId = "Somehow, more than one policy with the id ";
     private static final String foundInDB = " were found in the database";
+    private static final String TIMESTAMP = "\n   TimeStamp = ";
+    private static final String CAUGHTEXCEPTIONONNOTIFY = "Caught Exception on notifyOthers(";
 
     private static boolean isJunit = false;
 
@@ -788,7 +790,7 @@ public class PolicyDBDao {
                 }
             }
             boolean needToUpdate = false;
-            if (updateGroupPoliciesInFileSystem(localGroupClone, localGroup, groupRecord, transaction)) {
+            if (updateGroupPoliciesInFileSystem(localGroupClone, localGroup, groupRecord)) {
                 needToUpdate = true;
             }
             if (!stringEquals(localGroupClone.getId(), groupRecord.getGroupId())
@@ -818,7 +820,7 @@ public class PolicyDBDao {
     // this will also handle removes, since incoming pdpGroup has no policies internally, we are just going to add
     // them all in from the db
     private boolean updateGroupPoliciesInFileSystem(OnapPDPGroup pdpGroup, OnapPDPGroup oldPdpGroup,
-            GroupEntity groupRecord, PolicyDBDaoTransaction transaction) throws PAPException, PolicyDBException {
+            GroupEntity groupRecord) throws PAPException, PolicyDBException {
         if (!(pdpGroup instanceof StdPDPGroup)) {
             throw new PAPException("group is not a StdPDPGroup");
         }
@@ -1485,7 +1487,7 @@ public class PolicyDBDao {
                     if (logger.isDebugEnabled()) {
                         Date date = new java.util.Date();
                         logger.debug("\n\nTransactionTimer.run() - SLEEPING: " + "\n   sleepTime (ms) = " + sleepTime
-                                + "\n   TimeStamp = " + date.getTime() + "\n\n");
+                                + TIMESTAMP + date.getTime() + "\n\n");
                     }
                     try {
                         Thread.sleep(sleepTime);
@@ -1493,7 +1495,7 @@ public class PolicyDBDao {
                         // probably, the transaction was completed, the last thing we want to do is roll back
                         if (logger.isDebugEnabled()) {
                             Date date = new java.util.Date();
-                            logger.debug("\n\nTransactionTimer.run() - WAKE Interrupt: " + "\n   TimeStamp = "
+                            logger.debug("\n\nTransactionTimer.run() - WAKE Interrupt: " + TIMESTAMP
                                     + date.getTime() + "\n\n");
                         }
                         Thread.currentThread().interrupt();
@@ -1501,7 +1503,7 @@ public class PolicyDBDao {
                     }
                     if (logger.isDebugEnabled()) {
                         Date date = new java.util.Date();
-                        logger.debug("\n\nTransactionTimer.run() - WAKE Timeout: " + "\n   TimeStamp = "
+                        logger.debug("\n\nTransactionTimer.run() - WAKE Timeout: " + TIMESTAMP
                                 + date.getTime() + "\n\n");
                     }
                     rollbackTransaction();
@@ -1561,7 +1563,7 @@ public class PolicyDBDao {
                             notifyOthers(policyId, POLICY_NOTIFICATION, newGroupId);
                         } catch (Exception e) {
                             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                    "Caught Exception on notifyOthers(" + policyId + "," + POLICY_NOTIFICATION + ","
+                                    CAUGHTEXCEPTIONONNOTIFY + policyId + "," + POLICY_NOTIFICATION + ","
                                             + newGroupId + ")");
                         }
                     } else {
@@ -1569,7 +1571,7 @@ public class PolicyDBDao {
                             notifyOthers(policyId, POLICY_NOTIFICATION);
                         } catch (Exception e) {
                             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                    "Caught Exception on notifyOthers(" + policyId + "," + POLICY_NOTIFICATION + ")");
+                                    CAUGHTEXCEPTIONONNOTIFY + policyId + "," + POLICY_NOTIFICATION + ")");
                         }
                     }
                 }
@@ -1580,7 +1582,7 @@ public class PolicyDBDao {
                             notifyOthers(groupId, GROUP_NOTIFICATION, newGroupId);
                         } catch (Exception e) {
                             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                    "Caught Exception on notifyOthers(" + groupId + "," + GROUP_NOTIFICATION + ","
+                                    CAUGHTEXCEPTIONONNOTIFY + groupId + "," + GROUP_NOTIFICATION + ","
                                             + newGroupId + ")");
                         }
                     } else {
@@ -1588,7 +1590,7 @@ public class PolicyDBDao {
                             notifyOthers(groupId, GROUP_NOTIFICATION);
                         } catch (Exception e) {
                             PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                    "Caught Exception on notifyOthers(" + groupId + "," + GROUP_NOTIFICATION + ")");
+                                    CAUGHTEXCEPTIONONNOTIFY + groupId + "," + GROUP_NOTIFICATION + ")");
                         }
                     }
                 }
@@ -1598,7 +1600,7 @@ public class PolicyDBDao {
                         notifyOthers(pdpId, PDP_NOTIFICATION);
                     } catch (Exception e) {
                         PolicyLogger.error(MessageCodes.EXCEPTION_ERROR, e, policyDBDaoVar,
-                                "Caught Exception on notifyOthers(" + pdpId + "," + PDP_NOTIFICATION + ")");
+                                CAUGHTEXCEPTIONONNOTIFY + pdpId + "," + PDP_NOTIFICATION + ")");
                     }
                 }
             }
@@ -1769,7 +1771,7 @@ public class PolicyDBDao {
                             newConfigurationDataEntity.setModifiedBy(username);
                         }
                         if (newConfigurationDataEntity.getDescription() == null
-                                || !newConfigurationDataEntity.getDescription().equals("")) {
+                                || !"".equals(newConfigurationDataEntity.getDescription())) {
                             newConfigurationDataEntity.setDescription("");
                         }
                         if (newConfigurationDataEntity.getConfigBody() == null
