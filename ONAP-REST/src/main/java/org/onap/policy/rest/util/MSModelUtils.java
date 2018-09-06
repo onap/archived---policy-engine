@@ -172,11 +172,11 @@ public class MSModelUtils {
             addEnumClassMap();
         }
         if (!matchingClass.isEmpty()){
-            CheckForMatchingClass();
+            checkForMatchingClass();
         }
     }
 
-    private void CheckForMatchingClass() {
+    private void checkForMatchingClass() {
         HashMap<String, String> tempAttribute = new HashMap<>();
 
         for (Entry<String, String> set : matchingClass.entrySet()){
@@ -194,14 +194,14 @@ public class MSModelUtils {
                 }
 
             }
-            UpdateMatching(tempAttribute, key);
+            updateMatching(tempAttribute, key);
         }
 
     }
 
 
 
-    private void UpdateMatching(HashMap<String, String> tempAttribute, String key) {
+    private void updateMatching(HashMap<String, String> tempAttribute, String key) {
         Map<String, MSAttributeObject> newClass = classMap;
 
         for (Entry<String, MSAttributeObject> updateClass :  newClass.entrySet()){
@@ -392,20 +392,14 @@ public class MSModelUtils {
     }
 
     public String checkRequiredPattern(int upper, int lower) {
-
         String pattern = XACMLProperties.getProperty(XACMLRestProperties.PROP_XCORE_REQUIRED_PATTERN);
-
-        if (pattern!=null){
-            if (upper == Integer.parseInt(pattern.split(",")[1]) && lower==Integer.parseInt(pattern.split(",")[0])){
-                return REQUIREDTRUE;
-            }
+        if (pattern!=null && upper == Integer.parseInt(pattern.split(",")[1]) && lower==Integer.parseInt(pattern.split(",")[0])){
+            return REQUIREDTRUE;
         }
-
         return REQUIREDFALSE;
     }
 
     public JSONObject buildJavaObject(Map<String, String> map){
-
         return  new JSONObject(map);
     }
 
@@ -777,7 +771,7 @@ public class MSModelUtils {
      * For TOSCA Model
      */
     public String parseTosca(String fileName) {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        Map<String, String> map = new LinkedHashMap<>();
         try {
             map = load(fileName);
             if (map != null && map.get(ERROR) != null) {
@@ -800,9 +794,9 @@ public class MSModelUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public LinkedHashMap<String, String> load(String fileName) throws IOException, ParserException {
+    public Map<String, String> load(String fileName) throws IOException, ParserException {
         File newConfiguration = new File(fileName);
-        StringBuffer orderInfo = new StringBuffer("[");
+        StringBuilder orderInfo = new StringBuilder("[");
         Yaml yaml = new Yaml();
         LinkedHashMap<Object, Object> yamlMap = null;
         try (InputStream is = new FileInputStream(newConfiguration)) {
@@ -810,6 +804,7 @@ public class MSModelUtils {
         } catch (FileNotFoundException e) {
             logger.error(e);
         } catch (Exception e) {
+            logger.error(e);
             throw new ParserException("Invalid TOSCA Model format. Please make sure it is a valid YAML file");
         }
 
@@ -828,8 +823,8 @@ public class MSModelUtils {
 
         findNode(yamlMap);
 
-        if (!isDuplicatedAttributes && orderedElements != null && orderedElements.size() > 0) {
-            orderedElements.stream().forEach((string) -> {
+        if (!isDuplicatedAttributes && orderedElements != null && !orderedElements.isEmpty()) {
+            orderedElements.stream().forEach(string -> {
                 orderInfo.append(string);
                 orderInfo.append(",");
                 logger.info("Content: " + string);
@@ -972,7 +967,7 @@ public class MSModelUtils {
     }
 
 
-    void parseDataAndPolicyNodes(LinkedHashMap<String, String> map) {
+    void parseDataAndPolicyNodes(Map<String, String> map) {
         for (String key : map.keySet()) {
             if (key.contains("policy.nodes.Root")) {
                 continue;
@@ -1061,7 +1056,7 @@ public class MSModelUtils {
         logger.info("###############################################################################");
     }
 
-    LinkedHashMap<String, String> parseDataNodes(LinkedHashMap<String, String> map) {
+    LinkedHashMap<String, String> parseDataNodes(Map<String, String> map) {
         LinkedHashMap<String, String> dataMapForJson = new LinkedHashMap<>();
         matchableValues = new HashMap<>();
         for (String uniqueDataKey : uniqueDataKeys) {
@@ -1149,7 +1144,7 @@ public class MSModelUtils {
                                 if (constraintsValue == null) {
                                     break;
                                 } else {
-                                    System.out.println("constraintsValue => " + constraintsValue);
+                                    logger.info("constraintsValue => " + constraintsValue);
                                     if (constraintsValue.contains("=")) {
                                         constraintsValue = constraintsValue.replace("=", "equal-sign");
                                     }
@@ -1170,7 +1165,6 @@ public class MSModelUtils {
                                     + ".description";
                     String userDefinedValue = map.get(findUserDefined);
                     String description = map.get(findDescription);
-                    // String requiredValue = map.get(required);
                     String trimValue = userDefinedValue.substring(userDefinedValue.lastIndexOf('.') + 1);
                     StringBuilder referenceIndividualStringBuilder = new StringBuilder();
                     referenceIndividualStringBuilder.append(trimValue + REQUIREDVALUE);
@@ -1246,9 +1240,9 @@ public class MSModelUtils {
         for (Map.Entry<String, LinkedHashMap<String, String>> entry : mapKey.entrySet()) {
             String keySetString = entry.getKey();
             LinkedHashMap<String, String> keyValues = mapKey.get(keySetString);
-            if (keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(STRING)
-                    || keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(INTEGER)
-                    || keyValues.get("type") != null && keyValues.get("type").equalsIgnoreCase(BOOLEAN)) {
+            if (keyValues.get("type") != null && (STRING.equalsIgnoreCase(keyValues.get("type"))
+                    || INTEGER.equalsIgnoreCase(keyValues.get("type"))
+                    || BOOLEAN.equalsIgnoreCase(keyValues.get("type")))) {
                 StringBuilder attributeIndividualStringBuilder = new StringBuilder();
                 attributeIndividualStringBuilder.append(keySetString + "=");
                 attributeIndividualStringBuilder.append(keyValues.get("type") + DEFAULTVALUE);
@@ -1256,15 +1250,14 @@ public class MSModelUtils {
                 attributeIndividualStringBuilder.append(keyValues.get("required") + MANYFALSE);
                 attributeIndividualStringBuilder.append(DESCRIPTION_TOKEN + keyValues.get(DESCRIPTION_KEY));
                 attributeStringBuilder.append(attributeIndividualStringBuilder + ",");
-                if (keyValues.get(MATCHABLEKEY) != null && keyValues.get(MATCHABLEKEY).equalsIgnoreCase("true")) {
+                if (keyValues.get(MATCHABLEKEY) != null && "true".equalsIgnoreCase(keyValues.get(MATCHABLEKEY))) {
                     matchableValues.put(keySetString, MATCHINGTRUE);
                 }
             } else if (LIST.equalsIgnoreCase(keyValues.get("type"))) {
-
                 if ("true".equalsIgnoreCase(keyValues.get(MATCHABLEKEY))) {
                     matchableValues.put(keySetString, MATCHINGTRUE);
                 }
-                // List Datatype
+                // List Data type
                 Set<String> keys = keyValues.keySet();
                 Iterator<String> itr = keys.iterator();
                 boolean isDefinedType = false;
@@ -1291,7 +1284,7 @@ public class MSModelUtils {
 
                 }
 
-                if (!isDefinedType && LIST.equalsIgnoreCase(keyValues.get("type"))) { 
+                if (!isDefinedType && LIST.equalsIgnoreCase(keyValues.get("type"))) {
                     if (constraints == null || constraints.isEmpty()) {
                         referenceStringBuilder.append(keySetString + "=MANY-true" + ",");
                     }
@@ -1313,7 +1306,7 @@ public class MSModelUtils {
                 }
 
             }
-            if (constraints != null && constraints.isEmpty() == false) {
+            if (constraints != null && !constraints.isEmpty()) {
                 // List handling.
                 listBuffer.append(keySetString.toUpperCase() + "=[");
                 for (String str : constraints) {
@@ -1353,16 +1346,14 @@ public class MSModelUtils {
             if (key.equals(PROPERTIES_KEY) && value instanceof Map) {
                 saveNodes((LinkedHashMap<?, ?>) value);
                 if (isDuplicatedAttributes) {
-                    orderedElements = new ArrayList<String>();
+                    orderedElements = new ArrayList<>();
                     return;
                 }
             }
 
-            if (!key.equals("policy.nodes.Root")) {
+            if (!"policy.nodes.Root".equals(key) && value instanceof Map) {
                 // value is a Map object, then make a recursive call
-                if (value instanceof Map) {
-                    findNode((LinkedHashMap<Object, Object>) value);
-                }
+                findNode((LinkedHashMap<Object, Object>) value);
             }
         });
 

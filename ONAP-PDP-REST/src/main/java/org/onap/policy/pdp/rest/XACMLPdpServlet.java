@@ -497,7 +497,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
     }
 
     protected void doPutConfig(String config, HttpServletRequest request, HttpServletResponse response,
-            ONAPLoggingContext loggingContext) throws ServletException, IOException {
+            ONAPLoggingContext loggingContext) throws IOException {
         try {
             // prevent multiple configuration changes from stacking up
             logger.info("XACMLPdpServlet: checking remainingCapacity of Queue.");
@@ -649,92 +649,63 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
         XACMLRest.dumpRequest(request);
 
         String pathInfo = request.getRequestURI();
-        if (pathInfo != null) {
+        if (pathInfo != null && "/pdp/test".equals(pathInfo)) {
             // health check from Global Site Selector (iDNS).
             // DO NOT do a im.startTransaction for the test request
-            if (pathInfo.equals("/pdp/test")) {
-                loggingContext.setServiceName("iDNS:PDP.test");
+            loggingContext.setServiceName("iDNS:PDP.test");
+            try {
+                im.evaluateSanity();
+                // If we make it this far, all is well
+                String message = "GET:/pdp/test called and PDP " + pdpResourceName + " is OK";
+                PolicyLogger.debug(message);
+                PolicyLogger.audit("Success");
+                response.setStatus(HttpServletResponse.SC_OK);
+                return;
+            } catch (ForwardProgressException | AdministrativeStateException | StandbyStatusException fpe) {
+                // No forward progress is being made
+                String message = "GET:/pdp/test called and PDP " + pdpResourceName + " is not making forward progress."
+                        + " Exception Message: " + fpe.getMessage();
+                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + fpe);
+                PolicyLogger.audit("Transaction Failed - See Error.log");
                 try {
-                    im.evaluateSanity();
-                    // If we make it this far, all is well
-                    String message = "GET:/pdp/test called and PDP " + pdpResourceName + " is OK";
-                    PolicyLogger.debug(message);
-                    loggingContext.transactionEnded();
-                    PolicyLogger.audit("Success");
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    return;
-                } catch (ForwardProgressException fpe) {
-                    // No forward progress is being made
-                    String message = "GET:/pdp/test called and PDP " + pdpResourceName
-                            + " is not making forward progress." + " Exception Message: " + fpe.getMessage();
-                    PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + fpe);
-                    loggingContext.transactionEnded();
-                    PolicyLogger.audit("Transaction Failed - See Error.log");
-                    try {
-                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-                    } catch (Exception e1) {
-                        logger.error("Exception occured while sending error in response" + e1);
-                    }
-                    return;
-                } catch (AdministrativeStateException ase) {
-                    // Administrative State is locked
-                    String message = "GET:/pdp/test called and PDP " + pdpResourceName
-                            + " Administrative State is LOCKED " + " Exception Message: " + ase.getMessage();
-                    PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + ase);
-                    loggingContext.transactionEnded();
-                    PolicyLogger.audit("Transaction Failed - See Error.log");
-                    try {
-                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-                    } catch (Exception e1) {
-                        logger.error("Exception occured while sending error in response" + e1);
-                    }
-                    return;
-                } catch (StandbyStatusException sse) {
-                    // Administrative State is locked
-                    String message = "GET:/pdp/test called and PDP " + pdpResourceName
-                            + " Standby Status is NOT PROVIDING SERVICE " + " Exception Message: " + sse.getMessage();
-                    PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message + sse);
-                    loggingContext.transactionEnded();
-                    PolicyLogger.audit("Transaction Failed - See Error.log");
-                    try {
-                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-                    } catch (Exception e1) {
-                        logger.error("Exception occured while sending error in response" + e1);
-                    }
-                    return;
-                } catch (Exception e) {
-                    // A subsystem is not making progress or is not responding
-                    String eMsg = e.getMessage();
-                    if (eMsg == null) {
-                        eMsg = "No Exception Message";
-                    }
-                    String message = "GET:/pdp/test called and PDP " + pdpResourceName + " has had a subsystem failure."
-                            + " Exception Message: " + eMsg;
-                    PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
-                    // Get the specific list of subsystems that failed
-                    String failedNodeList = null;
-                    for (String node : dependencyNodes) {
-                        if (eMsg.contains(node)) {
-                            if (failedNodeList == null) {
-                                failedNodeList = node;
-                            } else {
-                                failedNodeList = failedNodeList.concat("," + node);
-                            }
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+                } catch (Exception e1) {
+                    logger.error("Exception occured while sending error in response" + e1);
+                }
+                return;
+            } catch (Exception e) {
+                // A subsystem is not making progress or is not responding
+                String eMsg = e.getMessage();
+                if (eMsg == null) {
+                    eMsg = "No Exception Message";
+                }
+                String message = "GET:/pdp/test called and PDP " + pdpResourceName + " has had a subsystem failure."
+                        + " Exception Message: " + eMsg;
+                PolicyLogger.error(MessageCodes.ERROR_SYSTEM_ERROR, message);
+                // Get the specific list of subsystems that failed
+                String failedNodeList = null;
+                for (String node : dependencyNodes) {
+                    if (eMsg.contains(node)) {
+                        if (failedNodeList == null) {
+                            failedNodeList = node;
+                        } else {
+                            failedNodeList = failedNodeList.concat("," + node);
                         }
                     }
-                    if (failedNodeList == null) {
-                        failedNodeList = "UnknownSubSystem";
-                    }
-                    response.addHeader("X-ONAP-SubsystemFailure", failedNodeList);
-                    try {
-                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
-                    } catch (Exception e1) {
-                        logger.error("Exception occured while sending error in response" + e1);
-                    }
-                    loggingContext.transactionEnded();
-                    PolicyLogger.audit("Transaction Failed - See Error.log" + e);
-                    return;
                 }
+                if (failedNodeList == null) {
+                    failedNodeList = "UnknownSubSystem";
+                }
+                response.addHeader("X-ONAP-SubsystemFailure", failedNodeList);
+                try {
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
+                } catch (Exception e1) {
+                    logger.error("Exception occured while sending error in response" + e1);
+                }
+                PolicyLogger.audit("Transaction Failed - See Error.log" + e);
+                return;
+            } finally {
+                loggingContext.transactionEnded();
             }
         }
 
@@ -1001,7 +972,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
                 if (contentType.getMimeType().equalsIgnoreCase(ContentType.APPLICATION_JSON.getMimeType())) {
                     pdpRequest = JSONRequest.load(incomingRequestString);
                 } else if (contentType.getMimeType().equalsIgnoreCase(ContentType.APPLICATION_XML.getMimeType())
-                        || contentType.getMimeType().equalsIgnoreCase("application/xacml+xml")) {
+                        || "application/xacml+xml".equalsIgnoreCase(contentType.getMimeType())) {
                     pdpRequest = DOMRequest.load(incomingRequestString);
                 }
             } catch (Exception e) {
@@ -1035,7 +1006,7 @@ public class XACMLPdpServlet extends HttpServlet implements Runnable {
         // Did we successfully get and parse a request?
         //
         if (pdpRequest == null || pdpRequest.getRequestAttributes() == null
-                || pdpRequest.getRequestAttributes().size() <= 0) {
+                || pdpRequest.getRequestAttributes().isEmpty()) {
             String message = "Zero Attributes found in the request";
             logger.error(XACMLErrorConstants.ERROR_DATA_ISSUE + message);
             PolicyLogger.error(MessageCodes.ERROR_DATA_ISSUE, message);
