@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_554f1b6b",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/XACMLPdpServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-07T19:44:59Z",
+      "side": 1,
+      "message": "Could put this in a \"finally\"",
+      "range": {
+        "startLine": 661,
+        "startChar": 0,
+        "endLine": 661,
+        "endChar": 50
+      },
+      "revId": "5b7665ece81004bb53f8f045399265f9f889e0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_757b378c",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/XACMLPdpServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-07T19:44:59Z",
+      "side": 1,
+      "message": "While this is better than the original, the error messages are now probably less helpful, is that OK?\n\nIf not, you could write a method to hold the common code and just pass the different error messages to the common method.",
+      "range": {
+        "startLine": 667,
+        "startChar": 0,
+        "endLine": 669,
+        "endChar": 1
+      },
+      "revId": "5b7665ece81004bb53f8f045399265f9f889e0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_755497fe",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/XACMLPdpServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-07T19:44:59Z",
+      "side": 1,
+      "message": "Could put this in a \"finally\"",
+      "range": {
+        "startLine": 670,
+        "startChar": 0,
+        "endLine": 670,
+        "endChar": 50
+      },
+      "revId": "5b7665ece81004bb53f8f045399265f9f889e0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_155523f9",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/XACMLPdpServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 707,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-07T19:44:59Z",
+      "side": 1,
+      "message": "Could put this in a \"finally\"",
+      "range": {
+        "startLine": 707,
+        "startChar": 0,
+        "endLine": 707,
+        "endChar": 50
+      },
+      "revId": "5b7665ece81004bb53f8f045399265f9f889e0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_b55c6f1a",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/util/XACMLPolicyWriter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-07T19:44:59Z",
+      "side": 1,
+      "message": "This is not equivalent to the original, was there a bug in the original?",
+      "range": {
+        "startLine": 145,
+        "startChar": 37,
+        "endLine": 145,
+        "endChar": 50
+      },
+      "revId": "5b7665ece81004bb53f8f045399265f9f889e0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
