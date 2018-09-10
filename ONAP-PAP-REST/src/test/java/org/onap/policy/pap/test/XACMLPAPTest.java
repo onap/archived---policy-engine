@@ -408,6 +408,43 @@ public class XACMLPAPTest {
         Mockito.verify(httpServletResponse).addHeader("successMapKey", "success");
         Mockito.verify(httpServletResponse).addHeader("policyName", "test.Decision_testGuard.1.xml");
     }
+    
+    @Test
+    public void testDecisonGuardMinMaxPolicy() throws IOException, ServletException, SQLException {
+        httpServletRequest = Mockito.mock(HttpServletRequest.class);
+        Mockito.when(httpServletRequest.getHeader(ENVIRONMENT_HEADER)).thenReturn("DEVL");
+        Mockito.when(httpServletRequest.getMethod()).thenReturn("PUT");
+        Mockito.when(httpServletRequest.getParameter("apiflag")).thenReturn("api");
+        Mockito.when(httpServletRequest.getParameter("operation")).thenReturn("create");
+        Mockito.when(httpServletRequest.getParameter("policyType")).thenReturn("Decision");
+        Map<String, String> matchingAttributes = new HashMap<>();
+        matchingAttributes.put("actor", "test");
+        matchingAttributes.put("recipe", "scaleOut");
+        matchingAttributes.put("targets", "test,test1");
+        matchingAttributes.put("clname", "test");
+        matchingAttributes.put("min", "1");
+        matchingAttributes.put("max", "5");
+        matchingAttributes.put("guardActiveStart", "05:00");
+        matchingAttributes.put("guardActiveEnd", "10:00");
+        StdPAPPolicy newPAPPolicy =
+
+                new StdPAPPolicy(
+                        StdPAPPolicyParams.builder().policyName("testGuard").description("test rule").onapName("PDPD")
+                                .providerComboBox("GUARD_MIN_MAX").dynamicFieldConfigAttributes(matchingAttributes)
+                                .editPolicy(false).domain("test").highestVersion(0).build());
+        MockServletInputStream mockInput = new MockServletInputStream(
+                PolicyUtils.objectToJsonString(newPAPPolicy).getBytes());
+        Mockito.when(httpServletRequest.getInputStream()).thenReturn(mockInput);
+
+        // set DBDao
+        setDBDao();
+        pap.service(httpServletRequest, httpServletResponse);
+
+        Mockito.verify(httpServletResponse).setStatus(HttpServletResponse.SC_OK);
+        Mockito.verify(httpServletResponse).addHeader("successMapKey", "success");
+        Mockito.verify(httpServletResponse).addHeader("policyName", "test.Decision_testGuard.1.xml");
+    }
+
 
     @Test
     public void testDecisonBLGuardPolicy() throws IOException, ServletException, SQLException {

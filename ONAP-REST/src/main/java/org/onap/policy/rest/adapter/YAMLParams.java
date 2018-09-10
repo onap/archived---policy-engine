@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP Policy Engine
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,8 @@ public class YAMLParams {
     private String recipe;
     private String clname;
     private String limit;
+    private String min;
+    private String max;
     private String timeWindow;
     private String timeUnits;
     private String guardActiveStart;
@@ -52,6 +54,23 @@ public class YAMLParams {
     public void setLimit(String limit) {
         this.limit = limit;
     }
+
+    public String getMin() {
+        return min;
+    }
+
+    public void setMin(String min) {
+        this.min = min;
+    }
+
+    public String getMax() {
+        return max;
+    }
+
+    public void setMax(String max) {
+        this.max = max;
+    }
+
     public String getTimeWindow() {
         return timeWindow;
     }
