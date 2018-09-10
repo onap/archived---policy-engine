@@ -238,10 +238,11 @@ angular.module('abs').controller('decisionPolicyController', [ '$scope', 'Policy
 		$scope.blackListEntries = [];
 		$scope.temp.policy.appendBlackListEntries = [];
 		$scope.blackListEntries = arrayUnique($scope.temp.policy.blackListEntries.concat($scope.temp.policy.yamlparams.blackList));
-	} else if ($scope.temp.policy.ruleProvider == "GUARD_YAML") {
-		if ($scope.temp.policy.yamlparams.targets.length == 0) {
-			$scope.temp.policy.yamlparams.targets = [];
-		}
+		
+    }else if($scope.temp.policy.ruleProvider=="GUARD_YAML" || $scope.temp.policy.ruleProvider=="GUARD_MIN_MAX"){
+    	if($scope.temp.policy.yamlparams.targets.length==0){
+ 		   $scope.temp.policy.yamlparams.targets = [];
+ 	   	}
 	} else if ($scope.temp.policy.ruleProvider == "Rainy_Day") {
 		if ($scope.temp.policy.rainyday.treatmentTableChoices == null || $scope.temp.policy.rainyday.treatmentTableChoices.length == 0) {
 			$scope.temp.policy.rainyday.treatmentTableChoices = [];
@@ -286,9 +287,9 @@ angular.module('abs').controller('decisionPolicyController', [ '$scope', 'Policy
 	$scope.addNewBL = function() {
 		$scope.temp.policy.yamlparams.blackList.push('');
 	};
-
-	$scope.removeBL = function(id) {
-		$scope.temp.policy.yamlparams.blackList = $scope.temp.policy.yamlparams.blackList.filter(function(obj) {
+    
+    $scope.removeBL = function(id) {
+    	$scope.temp.policy.yamlparams.blackList = $scope.temp.policy.yamlparams.blackList.filter(function (obj){
 			return obj !== id;
 		});
 	};
@@ -296,9 +297,11 @@ angular.module('abs').controller('decisionPolicyController', [ '$scope', 'Policy
 	$scope.treatmentDatas = [ {
 		"treatmentValues" : $scope.temp.policy.rainyday.treatmentTableChoices
 	} ];
+	
 	$scope.addNewTreatment = function() {
 		$scope.temp.policy.rainyday.treatmentTableChoices.push({});
 	};
+	
 	$scope.removeTreatment = function() {
 		var lastItem = $scope.temp.policy.rainyday.treatmentTableChoices.length - 1;
 		$scope.temp.policy.rainyday.treatmentTableChoices.splice(lastItem);

@@ -66,6 +66,32 @@ The request should be in the following form for the regular guard policy:
         }
     }
 
+The request should be in the following form for the Min/Max guard policy:
+
+.. code-block:: json
+   :caption: Min/Max Guard Policy Creation
+   :linenos:
+
+    {
+        "policyClass": "Decision",
+        "policyName": "Test.TestingGUARDMinMaxtest",
+        "policyDescription": "Testing new Min/Max Guard Policy",
+        "onapName": "PDPD",
+        "ruleProvider": "GUARD_MIN_MAX",
+        "attributes": {
+            "MATCHING": {
+                "actor": "SO",
+                "recipe": "scaleOut",
+                "targets" : ".*",
+                "clname" : "test",
+                "min": "1",
+                "max": "5",
+                "guardActiveStart": "05:00:00-05:00",
+                "guardActiveEnd": "23:59:59-05:00"
+            }
+        }
+    }
+    
 The request should be in the following form for blacklist guard policy:
 
 .. code-block:: json
@@ -117,7 +143,8 @@ The guard_request.json should be in the form of the following:
             "actor": "APPC",
             "recipe": "Restart",
             "target": "test13",
-            "clname" : "piptest"
+            "clname" : "piptest",
+            "vfCount" : "4"
         },
       "onapName": "PDPD"
     }

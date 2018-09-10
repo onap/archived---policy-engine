@@ -176,7 +176,8 @@ public class PolicyValidationRequestWrapper {
                     rainyday.setTreatmentTableChoices(treatmentsTableChoices);
                     policyData.setRainyday(rainyday);
 
-                }else if("GUARD_YAML".equals(ruleProvider) || "GUARD_BL_YAML".equals(ruleProvider)) {
+                } else if ("GUARD_YAML".equals(ruleProvider) || "GUARD_BL_YAML".equals(ruleProvider)
+                        || "GUARD_MIN_MAX".equals(ruleProvider)) {
 
                     // Set Matching attributes in YAMLParams in adapter
                     YAMLParams yamlparams = new YAMLParams();
@@ -191,6 +192,9 @@ public class PolicyValidationRequestWrapper {
                             yamlparams.setLimit(matching.get("limit"));
                             yamlparams.setTimeWindow(matching.get("timeWindow"));
                             yamlparams.setTimeUnits(matching.get("timeUnits"));
+                        } else if ("GUARD_MIN_MAX".equals(ruleProvider)) {
+                            yamlparams.setMin(matching.get("min"));
+                            yamlparams.setMax(matching.get("max"));
                         }else{
 
                             List<String> blackList = new ArrayList<>();

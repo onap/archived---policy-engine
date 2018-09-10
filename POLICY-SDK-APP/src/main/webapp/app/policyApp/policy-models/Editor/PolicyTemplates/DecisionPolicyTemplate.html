@@ -55,6 +55,7 @@
 						<option>Rainy_Day</option>
 						<option>GUARD_YAML</option>
 						<option>GUARD_BL_YAML</option>
+						<option>GUARD_MIN_MAX</option>		
 						<option>Raw</option>
 					</select>
 				</div>
@@ -438,6 +439,121 @@
 			</div>
 		</div>
 
+		<div ng-if="temp.policy.ruleProvider == 'GUARD_MIN_MAX'">
+			<div class="well">
+				<div class="form-group row">
+					<div class="form-group col-sm-1">
+						<label>Guard MIN/MAX Attributes:</label><br>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> actor: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.actor" placeholder="Actor" />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> recipe: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.recipe" placeholder="Recipe" />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> CLName: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.clname" placeholder="CLName" />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> Targets: </label>
+							<button type="button" class="btn btn-default"
+								ng-disabled="temp.policy.readOnly" ng-click="addNewTarget()">
+								<i class="fa fa-plus"></i>
+							</button>
+						</div>
+						<div class="form-group col-sm-4">
+							<div
+								data-ng-repeat="choice in temp.policy.yamlparams.targets track by $index">
+								<div class="form-group row">
+									<div class="form-group col-sm-9">
+										<input type="text" class="form-control"
+											ng-disabled="temp.policy.readOnly"
+											ng-model="temp.policy.yamlparams.targets[$index]"
+											placeholder="Target" />
+									</div>
+									<div class="form-group col-sm-1">
+										<button type="button" class="btn btn-default" ng-show="$last"
+											ng-disabled="temp.policy.readOnly" ng-click="removeTarget()">
+											<i class="fa fa-minus"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> min: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.min" placeholder="Min"
+								title="Enter minimum number of VNF instances" />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> max: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.max" placeholder="Max"
+								title="Enter maximum number of VNF instances" />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> guardActiveStart: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.guardActiveStart"
+								title="Enter Guard Active Start value in following patren '00:00:00-05:00'."
+								placeholder="00:00:00-05:00" />
+						</div>
+					</div>
+					<div class="form-group row" style="margin-left: 2%">
+						<div class="form-group col-sm-3">
+							<label> guardActiveEnd: </label>
+						</div>
+						<div class="form-group col-sm-3">
+							<input type="text" class="form-control"
+								ng-disabled="temp.policy.readOnly"
+								ng-model="temp.policy.yamlparams.guardActiveEnd"
+								title="Enter Guard Active End value in following patren '00:00:00-05:00'."
+								placeholder="00:00:00-05:00" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<div ng-if="temp.policy.ruleProvider == 'Custom'">
 			<div class="well">

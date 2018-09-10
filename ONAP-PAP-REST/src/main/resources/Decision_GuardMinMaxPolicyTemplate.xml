@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  ============LICENSE_START==================================================
+  ONAP Policy Engine
+  ===========================================================================
+  Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+  ===========================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END====================================================
+  -->
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
+	PolicyId="urn:com:xacml:policy:id:d56af069-6cf1-430c-ba07-e26602e06a52"
+	Version="1"
+	RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-unless-deny">
+	<Description>${description}</Description>
+	<Target>
+		<AnyOf>
+			<AllOf>
+				<Match MatchId="org.onap.function.regex-match">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${PolicyName}
+					</AttributeValue>
+					<AttributeDesignator
+						Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+						AttributeId="PolicyName" DataType="http://www.w3.org/2001/XMLSchema#string"
+						MustBePresent="false" />
+				</Match>
+			</AllOf>
+			<AllOf>
+				<Match MatchId="org.onap.function.regex-match">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${ONAPName}
+					</AttributeValue>
+					<AttributeDesignator
+						Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
+						AttributeId="ONAPName" DataType="http://www.w3.org/2001/XMLSchema#string"
+						MustBePresent="false" />
+				</Match>
+				<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">(?i)${actor}
+					</AttributeValue>
+					<AttributeDesignator
+						Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+						AttributeId="actor" DataType="http://www.w3.org/2001/XMLSchema#string"
+						MustBePresent="false" />
+				</Match>
+				<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">(?i)${recipe}
+					</AttributeValue>
+					<AttributeDesignator
+						Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+						AttributeId="recipe" DataType="http://www.w3.org/2001/XMLSchema#string"
+						MustBePresent="false" />
+				</Match>
+				<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${targets}</AttributeValue>
+					<AttributeDesignator
+						Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+						AttributeId="target" DataType="http://www.w3.org/2001/XMLSchema#string"
+						MustBePresent="false" />
+				</Match>
+				<Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">${clname}</AttributeValue>
+					<AttributeDesignator
+						Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+						AttributeId="clname" DataType="http://www.w3.org/2001/XMLSchema#string"
+						MustBePresent="false" />
+				</Match>
+			</AllOf>
+		</AnyOf>
+	</Target>
+	<Rule RuleId="urn:com:xacml:rule:id:284d9393-f861-4250-b62d-fc36640a363a"
+		Effect="Permit">
+		<Target>
+			<AnyOf>
+				<AllOf>
+					<Match
+						MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DECIDE</AttributeValue>
+						<AttributeDesignator
+							Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+							AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+							DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false" />
+					</Match>
+				</AllOf>
+			</AnyOf>
+		</Target>
+		<Condition>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+					<Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:time-in-range">
+						<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-one-and-only">
+							<AttributeDesignator
+								AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time"
+								DataType="http://www.w3.org/2001/XMLSchema#time"
+								Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+								MustBePresent="false" />
+						</Apply>
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveStart}
+						</AttributeValue>
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveEnd}
+						</AttributeValue>
+					</Apply>
+					<Apply
+						FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than-or-equal">
+						<Apply
+							FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+							<AttributeDesignator
+								Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+								AttributeId="vfCount" DataType="http://www.w3.org/2001/XMLSchema#integer"
+								MustBePresent="false" />
+						</Apply>
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${min}</AttributeValue>
+					</Apply>
+					<Apply
+						FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-less-than-or-equal">
+						<Apply
+							FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+							<AttributeDesignator
+								Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+								AttributeId="vfCount" DataType="http://www.w3.org/2001/XMLSchema#integer"
+								MustBePresent="false" />
+						</Apply>
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${max}</AttributeValue>
+					</Apply>
+				</Apply>
+			</Apply>
+		</Condition>
+	</Rule>
+	<Rule RuleId="urn:com:xacml:rule:id:284d9393-f861-4250-b62d-fc36640a363a"
+		Effect="Deny">
+		<Target>
+			<AnyOf>
+				<AllOf>
+					<Match
+						MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DECIDE</AttributeValue>
+						<AttributeDesignator
+							Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+							AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+							DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false" />
+					</Match>
+				</AllOf>
+			</AnyOf>
+		</Target>
+		<Condition>
+			<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+				<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+					<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+						<Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:time-in-range">
+							<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-one-and-only">
+								<AttributeDesignator
+									AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time"
+									DataType="http://www.w3.org/2001/XMLSchema#time"
+									Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+									MustBePresent="false" />
+							</Apply>
+							<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveStart}
+							</AttributeValue>
+							<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveEnd}
+							</AttributeValue>
+						</Apply>
+						<Apply
+							FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than-or-equal">
+							<Apply
+								FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+								<AttributeDesignator
+									Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+									AttributeId="vfCount" DataType="http://www.w3.org/2001/XMLSchema#integer"
+									MustBePresent="false" />
+							</Apply>
+							<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${min}</AttributeValue>
+						</Apply>
+						<Apply
+							FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-less-than-or-equal">
+							<Apply
+								FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+								<AttributeDesignator
+									Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+									AttributeId="vfCount" DataType="http://www.w3.org/2001/XMLSchema#integer"
+									MustBePresent="false" />
+							</Apply>
+							<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${max}</AttributeValue>
+						</Apply>
+					</Apply>
+				</Apply>
+			</Apply>
+		</Condition>
+		<AdviceExpressions>
+			<AdviceExpression AdviceId="GUARD_MIN_MAX"
+				AppliesTo="Deny">
+				<AttributeAssignmentExpression
+					AttributeId="guard.response"
+					Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+					<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Denied By Guard
+					</AttributeValue>
+				</AttributeAssignmentExpression>
+			</AdviceExpression>
+		</AdviceExpressions>
+	</Rule>
+</Policy>
