@@ -900,48 +900,74 @@ public class PolicyValidation {
                     }
                 }
 
-                if("GUARD_YAML".equals(policyData.getRuleProvider()) || "GUARD_BL_YAML".equals(policyData.getRuleProvider())){
-                    if(policyData.getYamlparams()==null){
+                if ("GUARD_YAML".equals(policyData.getRuleProvider())
+                        || "GUARD_BL_YAML".equals(policyData.getRuleProvider())
+                        || "GUARD_MIN_MAX".equals(policyData.getRuleProvider())) {
+                    if (policyData.getYamlparams() == null) {
                         responseString.append("<b> Guard Params are Required </b>" + HTML_ITALICS_LNBREAK);
                         valid = false;
-                    }else{
-                        if(Strings.isNullOrEmpty(policyData.getYamlparams().getActor())){
+                    } else {
+                        if (Strings.isNullOrEmpty(policyData.getYamlparams().getActor())) {
                             responseString.append("Guard Params <b>Actor</b> is Required " + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
-                        if(Strings.isNullOrEmpty(policyData.getYamlparams().getRecipe())){
+                        if (Strings.isNullOrEmpty(policyData.getYamlparams().getRecipe())) {
                             responseString.append("Guard Params <b>Recipe</b> is Required " + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
-                        if(Strings.isNullOrEmpty(policyData.getYamlparams().getGuardActiveStart())){
-                            responseString.append("Guard Params <b>Guard Active Start</b> is Required " + HTML_ITALICS_LNBREAK);
+                        if (Strings.isNullOrEmpty(policyData.getYamlparams().getGuardActiveStart())) {
+                            responseString.append(
+                                    "Guard Params <b>Guard Active Start</b> is Required " + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
-                        if(Strings.isNullOrEmpty(policyData.getYamlparams().getGuardActiveEnd())){
-                            responseString.append("Guard Params <b>Guard Active End</b> is Required " + HTML_ITALICS_LNBREAK);
+                        if (Strings.isNullOrEmpty(policyData.getYamlparams().getGuardActiveEnd())) {
+                            responseString
+                                    .append("Guard Params <b>Guard Active End</b> is Required " + HTML_ITALICS_LNBREAK);
                             valid = false;
                         }
-                        if("GUARD_YAML".equals(policyData.getRuleProvider())){
-                            if(Strings.isNullOrEmpty(policyData.getYamlparams().getLimit())){
+                        if ("GUARD_YAML".equals(policyData.getRuleProvider())) {
+                            if (Strings.isNullOrEmpty(policyData.getYamlparams().getLimit())) {
                                 responseString.append(" Guard Params <b>Limit</b> is Required " + HTML_ITALICS_LNBREAK);
                                 valid = false;
-                            }else if(!PolicyUtils.isInteger(policyData.getYamlparams().getLimit())){
-                                responseString.append(" Guard Params <b>Limit</b> Should be Integer " + HTML_ITALICS_LNBREAK);
+                            } else if (!PolicyUtils.isInteger(policyData.getYamlparams().getLimit())) {
+                                responseString
+                                        .append(" Guard Params <b>Limit</b> Should be Integer " + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             }
-                            if(Strings.isNullOrEmpty(policyData.getYamlparams().getTimeWindow())){
-                                responseString.append("Guard Params <b>Time Window</b> is Required" + HTML_ITALICS_LNBREAK);
+                            if (Strings.isNullOrEmpty(policyData.getYamlparams().getTimeWindow())) {
+                                responseString
+                                        .append("Guard Params <b>Time Window</b> is Required" + HTML_ITALICS_LNBREAK);
                                 valid = false;
-                            }else if(!PolicyUtils.isInteger(policyData.getYamlparams().getTimeWindow())){
-                                responseString.append(" Guard Params <b>Time Window</b> Should be Integer " + HTML_ITALICS_LNBREAK);
+                            } else if (!PolicyUtils.isInteger(policyData.getYamlparams().getTimeWindow())) {
+                                responseString.append(
+                                        " Guard Params <b>Time Window</b> Should be Integer " + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             }
-                            if(Strings.isNullOrEmpty(policyData.getYamlparams().getTimeUnits())){
-                                responseString.append("Guard Params <b>Time Units</b> is Required" + HTML_ITALICS_LNBREAK);
+                            if (Strings.isNullOrEmpty(policyData.getYamlparams().getTimeUnits())) {
+                                responseString
+                                        .append("Guard Params <b>Time Units</b> is Required" + HTML_ITALICS_LNBREAK);
+                                valid = false;
+                            }
+                        } else if ("GUARD_MIN_MAX".equals(policyData.getRuleProvider())) {
+                            if (Strings.isNullOrEmpty(policyData.getYamlparams().getMin())) {
+                                responseString.append(" Guard Params <b>Min</b> is Required " + HTML_ITALICS_LNBREAK);
+                                valid = false;
+                            } else if (!PolicyUtils.isInteger(policyData.getYamlparams().getMin())) {
+                                responseString
+                                        .append(" Guard Params <b>Min</b> Should be Integer " + HTML_ITALICS_LNBREAK);
+                                valid = false;
+                            }
+                            if (Strings.isNullOrEmpty(policyData.getYamlparams().getMax())) {
+                                responseString.append(" Guard Params <b>Max</b> is Required " + HTML_ITALICS_LNBREAK);
+                                valid = false;
+                            } else if (!PolicyUtils.isInteger(policyData.getYamlparams().getMax())) {
+                                responseString
+                                        .append(" Guard Params <b>Max</b> Should be Integer " + HTML_ITALICS_LNBREAK);
                                 valid = false;
                             }
                         } else if ("GUARD_BL_YAML".equals(policyData.getRuleProvider())
                                 && "Use Manual Entry".equals(policyData.getBlackListEntryType())) {
+
                             if (policyData.getYamlparams().getBlackList() == null
                                     || policyData.getYamlparams().getBlackList().isEmpty()) {
                                 responseString

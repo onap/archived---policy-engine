@@ -42,15 +42,19 @@ public enum RuleProvider {
      */
     GUARD_YAML("GUARD_YAML"),
     /**
-     * Indicates Guard BLACKLIST YAML
+     * Indicates Guard MIN / MAX will be providing the Rule information.
+     */
+    GUARD_MIN_MAX("GUARD_MIN_MAX"),
+    /**
+     * Indicates Guard BLACKLIST YAML.
      */
     GUARD_BL_YAML("GUARD_BL_YAML"),
     /**
-     * Indicates Guard BLACKLIST YAML
+     * Indicates Rainy Day Decision Policy.
      */
     RAINY_DAY("Rainy_Day"),
     /**
-     * Indicates Raw
+     * Indicates Raw.
      */
     RAW("Raw");
 
