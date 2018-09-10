@@ -114,6 +114,30 @@
       "revId": "5b7665ece81004bb53f8f045399265f9f889e0a5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_2dd0131e",
+        "filename": "ONAP-XACML/src/main/java/org/onap/policy/xacml/util/XACMLPolicyWriter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-10T13:50:03Z",
+      "side": 1,
+      "message": "No they are adding new functionality to support PolicySet and Policy.",
+      "parentUuid": "1a76adc5_b55c6f1a",
+      "range": {
+        "startLine": 145,
+        "startChar": 37,
+        "endLine": 145,
+        "endChar": 50
+      },
+      "revId": "5b7665ece81004bb53f8f045399265f9f889e0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
