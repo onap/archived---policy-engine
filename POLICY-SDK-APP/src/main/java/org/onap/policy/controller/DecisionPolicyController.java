@@ -69,6 +69,7 @@ public class DecisionPolicyController extends RestrictedBaseController {
     private static final String DECISIONRAWTYPE = "@#RuleProvider@#Decision_Raw@#RuleProvider@#";
     private static final String GUARD_YAML= "GUARD_YAML";
     private static final String GUARD_BL_YAML= "GUARD_BL_YAML";
+    private static final String GUARD_MIN_MAX= "GUARD_MIN_MAX";
    
     protected PolicyRestAdapter policyAdapter = null;
     private ArrayList<Object> ruleAlgorithmList;
@@ -233,6 +234,9 @@ public class DecisionPolicyController extends RestrictedBaseController {
                                 } else if (GUARD_BL_YAML.equalsIgnoreCase(((RuleType) object).getAdviceExpressions()
                                         .getAdviceExpression().get(0).getAdviceId())) {
                                     policyAdapter.setRuleProvider(GUARD_BL_YAML);
+                                } else if (GUARD_MIN_MAX.equalsIgnoreCase(((RuleType) object).getAdviceExpressions()
+                                        .getAdviceExpression().get(0).getAdviceId())) {
+                                    policyAdapter.setRuleProvider(GUARD_MIN_MAX);
                                 }
                             } else {
                                 policyAdapter.setRuleProvider("Custom");
@@ -244,7 +248,8 @@ public class DecisionPolicyController extends RestrictedBaseController {
                                 ruleAlgoirthmTracker = new LinkedList<>();
                                 if (policyAdapter.getRuleProvider() != null
                                         && (GUARD_YAML.equals(policyAdapter.getRuleProvider())
-                                                || (GUARD_BL_YAML.equals(policyAdapter.getRuleProvider())))) {
+                                                || (GUARD_BL_YAML.equals(policyAdapter.getRuleProvider()))
+                                                || (GUARD_MIN_MAX.equals(policyAdapter.getRuleProvider())))){
                                     YAMLParams yamlParams = new YAMLParams();
                                     for (int i = 0; i < attributeList.size(); i++) {
                                         Map<String, String> map = (Map<String, String>) attributeList.get(i);
@@ -256,6 +261,10 @@ public class DecisionPolicyController extends RestrictedBaseController {
                                             yamlParams.setTargets(Arrays.asList(map.get("value").split("\\|")));
                                         } else if ("clname".equals(map.get("key"))) {
                                             yamlParams.setClname(map.get("value"));
+                                        } else if ("min".equals(map.get("key"))) {
+                                            yamlParams.setMin(map.get("value"));
+                                        } else if ("max".equals(map.get("key"))) {
+                                            yamlParams.setMax(map.get("value"));
                                         }
                                     }
                                     ApplyType apply =

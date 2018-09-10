@@ -27,6 +27,8 @@ public class YAMLParams {
     private String recipe;
     private String clname;
     private String limit;
+    private String min;
+    private String max;
     private String timeWindow;
     private String timeUnits;
     private String guardActiveStart;
@@ -52,6 +54,23 @@ public class YAMLParams {
     public void setLimit(String limit) {
         this.limit = limit;
     }
+
+    public String getMin() {
+        return min;
+    }
+
+    public void setMin(String min) {
+        this.min = min;
+    }
+
+    public String getMax() {
+        return max;
+    }
+
+    public void setMax(String max) {
+        this.max = max;
+    }
+
     public String getTimeWindow() {
         return timeWindow;
     }

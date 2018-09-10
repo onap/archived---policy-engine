@@ -90,9 +90,11 @@ public class DecisionPolicy extends Policy {
     private static final String AAFPROVIDER = "AAF";
     public static final String GUARD_YAML = "GUARD_YAML";
     public static final String GUARD_BL_YAML = "GUARD_BL_YAML";
+    public static final String GUARD_MIN_MAX = "GUARD_MIN_MAX";
     public static final String RAINY_DAY = "Rainy_Day";
     private static final String XACML_GUARD_TEMPLATE = "Decision_GuardPolicyTemplate.xml";
     private static final String XACML_BLGUARD_TEMPLATE = "Decision_GuardBLPolicyTemplate.xml";
+    private static final String XACML_GUARD_MIN_MAX_TEMPLATE = "Decision_GuardMinMaxPolicyTemplate.xml";
 
     private static final String ONAPNAME = "ONAPName";
     private static final String POLICY_NAME = "PolicyName";
@@ -194,8 +196,10 @@ public class DecisionPolicy extends Policy {
         }
         policyName = policyAdapter.getNewFileName();
 
-        if (policyAdapter.getRuleProvider().equals(GUARD_YAML)
-                || policyAdapter.getRuleProvider().equals(GUARD_BL_YAML)) {
+        if(policyAdapter.getRuleProvider().equals(GUARD_YAML) || 
+                policyAdapter.getRuleProvider().equals(GUARD_BL_YAML) || 
+                policyAdapter.getRuleProvider().equals(GUARD_MIN_MAX)){
+            
             Map<String, String> yamlParams = new HashMap<>();
             String blackListEntryType = policyAdapter.getBlackListEntryType() != null
                     ? policyAdapter.getBlackListEntryType() : "Use Manual Entry";
@@ -353,6 +357,11 @@ public class DecisionPolicy extends Policy {
                     }
                     cons.setBlacklist(blackList);
                     break;
+                case GUARD_MIN_MAX:
+                    templateFile = new File(classLoader.getResource(XACML_GUARD_MIN_MAX_TEMPLATE).getFile());
+                    xacmlTemplatePath = templateFile.toPath();
+                    cons = new Constraint(Integer.parseInt(yamlParams.get("min")), Integer.parseInt(yamlParams.get("max")), activeTimeRange);
+                    break;
                 default:
                     templateFile = new File(classLoader.getResource(XACML_GUARD_TEMPLATE).getFile());
                     xacmlTemplatePath = templateFile.toPath();
@@ -372,6 +381,7 @@ public class DecisionPolicy extends Policy {
                     cons = new Constraint(Integer.parseInt(yamlParams.get("limit")), timeWindow, activeTimeRange);
                     break;
             }
+            
             builder = builder.addLimitConstraint(policy1.getId(), cons);
             // Build the specification
             Results results = builder.buildSpecification();
@@ -399,6 +409,14 @@ public class DecisionPolicy extends Policy {
                     yamlSpecs.put("twUnits", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
                             .getTime_window().get("units"));
                 }
+                
+                if(yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getMaxVnfCount()!=null) {
+                    yamlSpecs.put("max", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getMaxVnfCount().toString());
+                }
+                if(yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getMinVnfCount()!=null) {
+                    yamlSpecs.put("min", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getMinVnfCount().toString());
+                }
+                
                 yamlSpecs.put("guardActiveStart", yamlGuardObject.getGuards().getFirst().getLimit_constraints()
                         .getFirst().getActive_time_range().get("start"));
                 yamlSpecs.put("guardActiveEnd", yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst()
@@ -406,9 +424,11 @@ public class DecisionPolicy extends Policy {
                 String xacmlPolicyContent = SafePolicyBuilder.generateXacmlGuard(xacmlTemplateContent, yamlSpecs,
                         yamlGuardObject.getGuards().getFirst().getLimit_constraints().getFirst().getBlacklist(),
                         yamlGuardObject.getGuards().getFirst().getMatch_parameters().getTargets());
+                
                 // Convert the Policy into Stream input to Policy Adapter.
                 Object policy = XACMLPolicyScanner
                         .readPolicy(new ByteArrayInputStream(xacmlPolicyContent.getBytes(StandardCharsets.UTF_8)));
+                
                 return (PolicyType) policy;
             } catch (IOException e) {
                 LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + "Error while creating the policy " + e.getMessage(),

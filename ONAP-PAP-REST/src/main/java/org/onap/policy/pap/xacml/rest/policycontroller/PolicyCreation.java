@@ -402,46 +402,56 @@ public class PolicyCreation extends AbstractPolicyCreation{
                             }
                         }
                     }
-                    if(policyData.getRuleProvider()!=null && (policyData.getRuleProvider().equals(DecisionPolicy.GUARD_YAML)|| policyData.getRuleProvider().equals(DecisionPolicy.GUARD_BL_YAML))
-                            && policyData.getYamlparams()!=null){
+                    if (policyData.getRuleProvider() != null
+                            && (policyData.getRuleProvider().equals(DecisionPolicy.GUARD_YAML)
+                                    || policyData.getRuleProvider().equals(DecisionPolicy.GUARD_BL_YAML)
+                                    || policyData.getRuleProvider().equals(DecisionPolicy.GUARD_MIN_MAX))
+                            && policyData.getYamlparams() != null) {
                         attributeMap.put("actor", policyData.getYamlparams().getActor());
                         attributeMap.put("recipe", policyData.getYamlparams().getRecipe());
                         attributeMap.put("clname", policyData.getYamlparams().getClname());
                         attributeMap.put("limit", policyData.getYamlparams().getLimit());
+                        attributeMap.put("min", policyData.getYamlparams().getMin());
+                        attributeMap.put("max", policyData.getYamlparams().getMax());
                         attributeMap.put("timeWindow", policyData.getYamlparams().getTimeWindow());
                         attributeMap.put("timeUnits", policyData.getYamlparams().getTimeUnits());
                         attributeMap.put("guardActiveStart", policyData.getYamlparams().getGuardActiveStart());
                         attributeMap.put("guardActiveEnd", policyData.getYamlparams().getGuardActiveEnd());
-                        if(policyData.getYamlparams().getBlackList()!=null){
+                        if (policyData.getYamlparams().getBlackList() != null) {
                             String blackList = StringUtils.join(policyData.getYamlparams().getBlackList(), ",");
                             attributeMap.put("blackList", blackList);
                         }
-                        if(DecisionPolicy.GUARD_BL_YAML.equals(policyData.getRuleProvider()) && "Use File Upload".equals(policyData.getBlackListEntryType())){
-                            if(policyData.getBlackListEntries() != null && !policyData.getBlackListEntries().isEmpty()){
+                        if (DecisionPolicy.GUARD_BL_YAML.equals(policyData.getRuleProvider())
+                                && "Use File Upload".equals(policyData.getBlackListEntryType())) {
+                            if (policyData.getBlackListEntries() != null
+                                    && !policyData.getBlackListEntries().isEmpty()) {
                                 String blackList = StringUtils.join(policyData.getBlackListEntries(), ",");
                                 attributeMap.put("blackList", blackList);
                             }
-                            if(policyData.getAppendBlackListEntries() != null && !policyData.getAppendBlackListEntries().isEmpty()){
+                            if (policyData.getAppendBlackListEntries() != null
+                                    && !policyData.getAppendBlackListEntries().isEmpty()) {
                                 String blackList = StringUtils.join(policyData.getAppendBlackListEntries(), ",");
                                 attributeMap.put("appendBlackList", blackList);
                             }
                         }
-                        if(policyData.getYamlparams().getTargets()!=null){
-                            String targets = StringUtils.join(policyData.getYamlparams().getTargets(),",");
+                        if (policyData.getYamlparams().getTargets() != null) {
+                            String targets = StringUtils.join(policyData.getYamlparams().getTargets(), ",");
                             attributeMap.put("targets", targets);
                         }
                     }
-                    if(policyData.getRuleProvider()!=null && policyData.getRuleProvider().equals(DecisionPolicy.RAINY_DAY)){
+                    if (policyData.getRuleProvider() != null
+                            && policyData.getRuleProvider().equals(DecisionPolicy.RAINY_DAY)) {
                         attributeMap.put("ServiceType", policyData.getRainyday().getServiceType());
                         attributeMap.put("VNFType", policyData.getRainyday().getVnfType());
                         attributeMap.put("BB_ID", policyData.getRainyday().getBbid());
                         attributeMap.put("WorkStep", policyData.getRainyday().getWorkstep());
 
-                        if(policyData.getRainyday().getTreatmentTableChoices()!=null && policyData.getRainyday().getTreatmentTableChoices().size() > 0){
-                            for (Object table : policyData.getRainyday().getTreatmentTableChoices()){
-                                if(table instanceof LinkedHashMap<?,?>){
-                                    String errorcode = ((LinkedHashMap<?,?>) table).get("errorcode").toString();
-                                    String treatment = ((LinkedHashMap<?,?>) table).get("treatment").toString();
+                        if (policyData.getRainyday().getTreatmentTableChoices() != null
+                                && policyData.getRainyday().getTreatmentTableChoices().isEmpty()) {
+                            for (Object table : policyData.getRainyday().getTreatmentTableChoices()) {
+                                if (table instanceof LinkedHashMap<?, ?>) {
+                                    String errorcode = ((LinkedHashMap<?, ?>) table).get("errorcode").toString();
+                                    String treatment = ((LinkedHashMap<?, ?>) table).get("treatment").toString();
                                     treatmentMap.put(errorcode, treatment);
                                 }
                             }
