@@ -30,7 +30,7 @@
     <packaging>war</packaging>
     <properties>
         <encoding>UTF-8</encoding>
-        <epsdk.version>2.3.1</epsdk.version>
+        <epsdk.version>2.4.0</epsdk.version>
         <springframework.version>4.2.0.RELEASE</springframework.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <!-- Skip assembling the zip; assemble via mvn -Dskipassembly=false .. -->
