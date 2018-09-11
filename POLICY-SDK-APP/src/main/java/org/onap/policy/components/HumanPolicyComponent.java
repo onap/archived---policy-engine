@@ -761,7 +761,7 @@ class HtmlProcessor extends SimpleCallback {
 			return HtmlProcessor.function2human.get(matchId);
 		}
 		
-		FunctionDefinition function = PolicyController.getFunctionIDMap().get(matchId);
+		FunctionDefinition function = PolicyController.getFunctionIdMap().get(matchId);
 		String functionName = function.getShortname();
 		
 		if (LOGGER.isDebugEnabled()) {
@@ -805,7 +805,7 @@ class HtmlProcessor extends SimpleCallback {
 	private String stringifyExpression(Object expression) {
 		if (expression instanceof ApplyType) {
 			ApplyType apply = (ApplyType) expression;
-			FunctionDefinition function = PolicyController.getFunctionIDMap().get(apply.getFunctionId());
+			FunctionDefinition function = PolicyController.getFunctionIdMap().get(apply.getFunctionId());
 			String functionName = function.getShortname();
 			
 			if (LOGGER.isDebugEnabled()) {
