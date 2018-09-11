@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_ec177443",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/DecisionPolicy.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-11T15:24:11Z",
+      "side": 1,
+      "message": "\u003e 120 characters",
+      "range": {
+        "startLine": 363,
+        "startChar": 0,
+        "endLine": 363,
+        "endChar": 141
+      },
+      "revId": "967d45aa871f3c07757431ad96b6121df8220d10",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_8c284087",
+        "filename": "ONAP-PAP-REST/src/main/java/org/onap/policy/pap/xacml/rest/components/DecisionPolicy.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2018-09-11T15:24:11Z",
+      "side": 1,
+      "message": "\u003e 120 characters",
+      "range": {
+        "startLine": 413,
+        "startChar": 16,
+        "endLine": 418,
+        "endChar": 17
+      },
+      "revId": "967d45aa871f3c07757431ad96b6121df8220d10",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
