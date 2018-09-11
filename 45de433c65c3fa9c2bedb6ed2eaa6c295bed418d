@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_b6e46be1",
+        "filename": "ONAP-PAP-REST/src/main/resources/Decision_GuardMinMaxPolicyTemplate.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-09-11T13:35:14Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces\n\nNot knowing the exact semantics, I assume this is correct, with a single \"not\", and that the \"Deny\" case is correct, having two \"not\" applications.  Seems kind of backwards to me as I\u0027d expect this \"Permit\" case to have no \"not\", and the \"Deny\" case to have a single \"not\".",
+      "revId": "45de433c65c3fa9c2bedb6ed2eaa6c295bed418d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_56e5d7d9",
+        "filename": "ONAP-PAP-REST/src/main/resources/Decision_GuardMinMaxPolicyTemplate.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-09-11T13:35:14Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces",
+      "revId": "45de433c65c3fa9c2bedb6ed2eaa6c295bed418d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_b6678b4c",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/adapter/YAMLParams.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-09-11T13:35:14Z",
+      "side": 1,
+      "message": "license date",
+      "revId": "45de433c65c3fa9c2bedb6ed2eaa6c295bed418d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_d67487ff",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/api/RuleProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-09-11T13:35:14Z",
+      "side": 1,
+      "message": "missing period",
+      "revId": "45de433c65c3fa9c2bedb6ed2eaa6c295bed418d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_f671830c",
+        "filename": "PolicyEngineAPI/src/main/java/org/onap/policy/api/RuleProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-09-11T13:35:14Z",
+      "side": 1,
+      "message": "missing period",
+      "revId": "45de433c65c3fa9c2bedb6ed2eaa6c295bed418d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
