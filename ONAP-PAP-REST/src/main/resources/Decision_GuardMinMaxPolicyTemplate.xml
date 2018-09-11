@@ -64,6 +64,41 @@
             </AnyOf>
         </Target>
         <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                <Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:time-in-range">
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-one-and-only">
+                        <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time" DataType="http://www.w3.org/2001/XMLSchema#time" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment" MustBePresent="false"/>
+                    </Apply>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveStart}</AttributeValue>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveEnd}</AttributeValue>
+                </Apply>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than-or-equal">
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="vfCount" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="false"/>
+                    </Apply>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${min}</AttributeValue>
+                </Apply>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-less-than-or-equal">
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="vfCount" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="false"/>
+                    </Apply>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${max}</AttributeValue>
+                </Apply>
+            </Apply>
+        </Condition>
+    </Rule>
+    <Rule RuleId="urn:com:xacml:rule:id:284d9393-f861-4250-b62d-fc36640a363a" Effect="Deny">
+        <Target>
+            <AnyOf>
+                <AllOf>
+                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DECIDE</AttributeValue>
+                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
+                    </Match>
+                </AllOf>
+            </AnyOf>
+        </Target>
+        <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
                     <Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:time-in-range">
@@ -84,45 +119,6 @@
                             <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="vfCount" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="false"/>
                         </Apply>
                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${max}</AttributeValue>
-                    </Apply>
-                </Apply>
-            </Apply>
-        </Condition>
-    </Rule>
-    <Rule RuleId="urn:com:xacml:rule:id:284d9393-f861-4250-b62d-fc36640a363a" Effect="Deny">
-        <Target>
-            <AnyOf>
-                <AllOf>
-                    <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case">
-                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DECIDE</AttributeValue>
-                        <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="false"/>
-                    </Match>
-                </AllOf>
-            </AnyOf>
-        </Target>
-        <Condition>
-            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
-                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
-                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
-                        <Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:time-in-range">
-                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:time-one-and-only">
-                                <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time" DataType="http://www.w3.org/2001/XMLSchema#time" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment" MustBePresent="false"/>
-                            </Apply>
-                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveStart}</AttributeValue>
-                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">${guardActiveEnd}</AttributeValue>
-                        </Apply>
-                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-greater-than-or-equal">
-                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
-                                <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="vfCount" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="false"/>
-                            </Apply>
-                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${min}</AttributeValue>
-                        </Apply>
-                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-less-than-or-equal">
-                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only">
-                                <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" AttributeId="vfCount" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="false"/>
-                            </Apply>
-                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">${max}</AttributeValue>
-                        </Apply>
                     </Apply>
                 </Apply>
             </Apply>
