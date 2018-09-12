@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_bf3f57b3",
+        "filename": "ONAP-PAP-REST/src/main/resources/Decision_GuardMinMaxPolicyTemplate.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-12T11:53:41Z",
+      "side": 1,
+      "message": "Technically, you could change the combining algorithm to deny-unless-permit. Then only have one rule that detects the permit condition. No need for 2 rules.",
+      "revId": "a290a5fedd395f075135949a7f5313ee1abffc89",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_ff706fa5",
+        "filename": "ONAP-PAP-REST/src/main/resources/Decision_GuardMinMaxPolicyTemplate.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-12T11:53:41Z",
+      "side": 1,
+      "message": "This attribute must be present.",
+      "range": {
+        "startLine": 77,
+        "startChar": 202,
+        "endLine": 77,
+        "endChar": 207
+      },
+      "revId": "a290a5fedd395f075135949a7f5313ee1abffc89",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
