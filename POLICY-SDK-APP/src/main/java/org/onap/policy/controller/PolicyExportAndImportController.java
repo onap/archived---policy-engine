@@ -21,11 +21,9 @@
 package org.onap.policy.controller;
 
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -52,6 +50,11 @@ import org.onap.policy.rest.adapter.PolicyExportAdapter;
 import org.onap.policy.rest.dao.CommonClassDao;
 import org.onap.policy.rest.jpa.ActionBodyEntity;
 import org.onap.policy.rest.jpa.ConfigurationDataEntity;
+import org.onap.policy.rest.jpa.DCAEuuid;
+import org.onap.policy.rest.jpa.GroupPolicyScopeList;
+import org.onap.policy.rest.jpa.MicroServiceConfigName;
+import org.onap.policy.rest.jpa.MicroServiceLocation;
+import org.onap.policy.rest.jpa.MicroServiceModels;
 import org.onap.policy.rest.jpa.PolicyEditorScopes;
 import org.onap.policy.rest.jpa.PolicyEntity;
 import org.onap.policy.rest.jpa.PolicyVersion;
@@ -234,6 +237,7 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 		Pair<Set<String>, List<String>> pair = org.onap.policy.utils.UserUtils.checkRoleAndScope(userRoles);
 		List<String> roles = pair.u;
 		Set<String> scopes = pair.t;
+		String errorMsg = null;
 		
 		try(FileInputStream excelFile = new FileInputStream(new File(file)); HSSFWorkbook workbook = new HSSFWorkbook(excelFile)){
 			Sheet datatypeSheet = workbook.getSheetAt(0);
@@ -307,7 +311,22 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 					}
 
 					if(finalColumn && configurationBodySet){
+					    
+					    
 						configurationDataEntity.setConfigBody(body.toString());
+						
+	                    if(policyEntity.getPolicyName().contains(CONFIG_MS)){
+	                            //validate some required values first
+	                            errorMsg = validatRequiredFields(policyEntity.getPolicyName(), body.toString());
+	                            if(errorMsg != null){
+	                                logger.error("errorMsg => " + errorMsg);
+	                                JSONObject response = new JSONObject();
+	                                if(errorMsg != null){
+	                                   response.append("error", errorMsg);
+	                                   return response;
+	                                }                           
+	                            }
+	                    }
 						scope = policyEntity.getScope().replace(".", File.separator);
 						String query = "FROM PolicyEntity where policyName = :policyName and scope = :policyScope";
 						SimpleBindings params = new SimpleBindings();
@@ -442,4 +461,99 @@ public class PolicyExportAndImportController extends RestrictedBaseController {
 	private String getCellHeaderName(Cell cell){
 		return cell.getSheet().getRow(0).getCell(cell.getColumnIndex()).getRichStringCellValue().toString();
 	}
+	
+	   private String validatRequiredFields(String policyName, String jsonString){
+	       
+	        try{
+	            
+	            JSONObject jsonObject = new JSONObject(jsonString);
+	            
+	            if(jsonObject != null){
+	                
+	                String configName = jsonObject.getString("configName");
+	                String uuid = jsonObject.getString("uuid");
+	                String location = jsonObject.getString("location");
+	                String policyScope = jsonObject.getString("policyScope");
+	                String msService = jsonObject.getString("service");
+	                String msVersion = jsonObject.getString("version");
+	                
+	                if(configName != null){
+	                    List<String> configNames = commonClassDao.getDataByColumn( MicroServiceConfigName.class, "name");
+	                    if(configNames != null){
+	                        if(!(configNames.stream().filter(o -> o.equals(configName)).findFirst().isPresent())){
+	                            return "Policy:"+ policyName+ " configName: "+configName+ " is not valid.";
+	                        }
+	                    }                   
+	                }else{
+	                    return "Policy:"+ policyName+ "configName is null";
+	                }
+	                
+	                if(uuid != null){
+	                    List<String> uuids = commonClassDao.getDataByColumn( DCAEuuid.class, "name");
+	                    if(uuids != null){
+	                        if(!(uuids.stream().filter(o -> o.equals(uuid)).findFirst().isPresent())){
+	                            return "Policy:"+ policyName+ " uuid: "+uuid+ " is not valid.";
+	                        }
+	                    }                   
+	                }else{
+	                    return "Policy:"+ policyName+ "uuid is null";
+	                }
+	                
+	                if(location != null){
+	                    List<String> locations = commonClassDao.getDataByColumn( MicroServiceLocation.class, "name");
+	                    if(locations != null){
+	                        if(!(locations.stream().filter(o -> o.equals(location)).findFirst().isPresent())){
+	                            return "Policy:"+ policyName+ " location: "+location+ " is not valid.";
+	                        }
+	                    }
+	                }else{
+	                    return "Policy:"+ policyName+ "location is null";
+	                }
+	                
+
+	                if(policyScope != null){
+	                    List<Object> foundData =  commonClassDao.checkDuplicateEntry(policyScope, "groupList", GroupPolicyScopeList.class);
+	                    if(foundData == null || foundData.isEmpty()){
+	                        return "Policy:"+ policyName+ " policyScope: "+policyScope+ " is not valid.";
+	                    }
+	                }else{
+	                    return "Policy:"+ policyName+ "policyScope is null";
+	                }   
+
+	                if(msService == null){
+	                    return "Policy:"+ policyName+ "service is null";
+	                }
+	                
+	                if(msVersion == null){
+	                    return "Policy:"+ policyName+ "version is null";
+	                }
+	                
+	                if(!isAttributeObjectFound(msService, msVersion)){
+	                    return "Policy:"+ policyName+ " MS Service: "+msService+ " and MS Version: " + msVersion + " is not valid.";
+	                }
+	            }
+	            
+	        }catch(Exception e){
+	            logger.error("Exception Occured While validating required fields",e);
+	        }
+
+	        return null;
+	    }
+	    
+	    private boolean isAttributeObjectFound(String name, String version) {   
+	        MicroServiceModels workingModel = null;
+	        List<Object> microServiceModelsData = commonClassDao.getDataById(MicroServiceModels.class, "modelName", name);
+	        if(microServiceModelsData != null){
+	            for (int i = 0; i < microServiceModelsData.size(); i++) {
+	                workingModel = (MicroServiceModels) microServiceModelsData.get(i);
+	                if(workingModel != null){
+	                    if (workingModel.getVersion()!=null && workingModel.getVersion().equals(version)){
+	                         return true; 
+	                    }               
+	                }
+	            }
+	        }
+	        return false;
+	    }
+
 }
