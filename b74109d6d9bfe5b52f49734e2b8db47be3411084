@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_ad988c78",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-13T12:42:25Z",
+      "side": 1,
+      "message": "Reducing cognitive complexity, this should just be the first simple check:\nif (jsonObject \u003d\u003d null) {\n    return null;\n}",
+      "range": {
+        "startLine": 492,
+        "startChar": 12,
+        "endLine": 494,
+        "endChar": 12
+      },
+      "revId": "b74109d6d9bfe5b52f49734e2b8db47be3411084",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_cd938859",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-13T12:42:25Z",
+      "side": 1,
+      "message": "if (configName \u003d\u003d null) {\n   return .....\n}\n\nthen the rest of the code flows",
+      "range": {
+        "startLine": 501,
+        "startChar": 16,
+        "endLine": 510,
+        "endChar": 17
+      },
+      "revId": "b74109d6d9bfe5b52f49734e2b8db47be3411084",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_6d9ef464",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-13T12:42:25Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 512,
+        "startChar": 16,
+        "endLine": 521,
+        "endChar": 17
+      },
+      "revId": "b74109d6d9bfe5b52f49734e2b8db47be3411084",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_8d99107b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-13T12:42:25Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 523,
+        "startChar": 16,
+        "endLine": 532,
+        "endChar": 17
+      },
+      "revId": "b74109d6d9bfe5b52f49734e2b8db47be3411084",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_4d8f782a",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-13T12:42:25Z",
+      "side": 1,
+      "message": "Same, let\u0027s get in the habit of ensuring we don\u0027t have way too many nested if-then-try-for-catch etc. to reduce our sonar debt.",
+      "range": {
+        "startLine": 569,
+        "startChar": 8,
+        "endLine": 569,
+        "endChar": 45
+      },
+      "revId": "b74109d6d9bfe5b52f49734e2b8db47be3411084",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
