@@ -59,6 +59,7 @@
         <!-- Shared between policy/* project repositories - different version -->
 
         <!-- Project common dependency versions -->
+        <springframework.version>4.3.18.RELEASE</springframework.version>
         <jetty.plugin.version>9.2.3.v20140905</jetty.plugin.version>
         <httpclient.version>4.5.5</httpclient.version>
         <jackson.version>2.9.4</jackson.version>

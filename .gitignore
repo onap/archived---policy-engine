@@ -63,3 +63,4 @@ PolicyEngineAPI/logs/
 PolicyEngineAPI/POLICY_LOGS_IS_UNDEFINED/
 PolicyEngineUtils/logs/
 ONAP-REST/logs/common-modules/integrity-monitor/*.log
+ONAP-SDK-APP/POLICY_LOGS_IS_UNDEFINED

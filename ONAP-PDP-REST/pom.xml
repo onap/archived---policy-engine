@@ -29,9 +29,6 @@
     </parent>
     <artifactId>ONAP-PDP-REST</artifactId>
     <description>ONAP PDP REST</description>
-    <properties>
-        <springframework.version>4.3.15.RELEASE</springframework.version>
-    </properties>
     <packaging>war</packaging>
     <build>
         <plugins>

@@ -298,7 +298,6 @@
         </dependency>
     </dependencies>
     <properties>
-        <springframework.version>4.3.15.RELEASE</springframework.version>
         <hibernate.version>4.3.10.Final</hibernate.version>
         <projectversion>2.0.2</projectversion>
     </properties>
