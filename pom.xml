@@ -65,6 +65,7 @@
         <jackson.version>2.9.4</jackson.version>
         <commons.fileupload.version>1.3.3</commons.fileupload.version>
         <commons.compress.version>1.18</commons.compress.version>
+        <elasticsearch.version>6.3.0</elasticsearch.version>
     </properties>
     <modules>
         <module>PolicyEngineUtils</module>

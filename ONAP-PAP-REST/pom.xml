@@ -160,7 +160,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>3.2.0.201312181205-r</version>
+            <version>5.0.3.201809091024-r</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
@@ -272,7 +272,7 @@
         <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
-            <version>6.2.2</version>
+            <version>${elasticsearch.version}</version>
         </dependency>
         <dependency>
             <groupId>io.searchbox</groupId>
