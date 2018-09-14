@@ -21,6 +21,7 @@ package org.onap.policy.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -104,5 +105,10 @@ public class PolicyExportAndImportControllerTest {
 		file = new File(classLoader.getResource("PolicyExport.xls").getFile()).getAbsolutePath();
 		json = controller.importRepositoryFile(file, request);
 		assertNull(json);
+		
+		// test validation 
+		String jsonString = "{ configName:\"abc\", uuid:\"someone\", location:\"somewhere\", policyScope:\"test\", service:\"sdnc\", version:\"1810\"}";
+		String errorMsg = controller.validatMatchRequiredFields("TestPolicy", jsonString);
+		assertTrue(errorMsg != null );
 	}
 }
