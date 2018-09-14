@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_83931c5a",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-14T13:11:19Z",
+      "side": 1,
+      "message": "checkstyle",
+      "range": {
+        "startLine": 504,
+        "startChar": 16,
+        "endLine": 504,
+        "endChar": 36
+      },
+      "revId": "8ba8f16ee9a237590f4c88027f8db84e55e411a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_63d12022",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-14T13:11:19Z",
+      "side": 1,
+      "message": "checkstyle",
+      "range": {
+        "startLine": 509,
+        "startChar": 16,
+        "endLine": 509,
+        "endChar": 36
+      },
+      "revId": "8ba8f16ee9a237590f4c88027f8db84e55e411a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_c3ad949c",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-14T13:11:19Z",
+      "side": 1,
+      "message": "checkstyle",
+      "range": {
+        "startLine": 513,
+        "startChar": 16,
+        "endLine": 513,
+        "endChar": 36
+      },
+      "revId": "8ba8f16ee9a237590f4c88027f8db84e55e411a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_a3b3b808",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-14T13:11:19Z",
+      "side": 1,
+      "message": "checkstyle",
+      "range": {
+        "startLine": 518,
+        "startChar": 16,
+        "endLine": 518,
+        "endChar": 36
+      },
+      "revId": "8ba8f16ee9a237590f4c88027f8db84e55e411a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_e3bd30d9",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-14T13:11:19Z",
+      "side": 1,
+      "message": "checkstyle",
+      "range": {
+        "startLine": 544,
+        "startChar": 7,
+        "endLine": 544,
+        "endChar": 14
+      },
+      "revId": "8ba8f16ee9a237590f4c88027f8db84e55e411a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_03a86c8b",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 614,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-14T13:11:19Z",
+      "side": 1,
+      "message": "Reduce nested by re-writing this:\nif (microServiceModelsData \u003d\u003d null) {\n    return false;\n}\nfor (int i \u003d 0;.....\n....",
+      "range": {
+        "startLine": 604,
+        "startChar": 8,
+        "endLine": 614,
+        "endChar": 21
+      },
+      "revId": "8ba8f16ee9a237590f4c88027f8db84e55e411a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_4370a43f",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/controller/PolicyExportAndImportControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-14T13:11:19Z",
+      "side": 1,
+      "message": "Checkstyle should have picked this up - add a space between static and non-static.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 20
+      },
+      "revId": "8ba8f16ee9a237590f4c88027f8db84e55e411a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_03962c3f",
+        "filename": "POLICY-SDK-APP/src/test/java/org/onap/policy/controller/PolicyExportAndImportControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-14T13:11:19Z",
+      "side": 1,
+      "message": "Check that this is less than 120 characters.",
+      "range": {
+        "startLine": 113,
+        "startChar": 16,
+        "endLine": 113,
+        "endChar": 140
+      },
+      "revId": "8ba8f16ee9a237590f4c88027f8db84e55e411a0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
