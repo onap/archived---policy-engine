@@ -21,6 +21,7 @@ package org.onap.policy.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -47,62 +48,70 @@ import com.mockrunner.mock.web.MockHttpServletResponse;
 
 @RunWith(PowerMockRunner.class)
 public class PolicyExportAndImportControllerTest {
-	@Test
-	public void testSetAndGet(){
-		PolicyExportAndImportController controller = new PolicyExportAndImportController();
-		PolicyController policyController = new PolicyController();
-		controller.setPolicyController(policyController);
-		assertEquals(controller.getPolicyController(), policyController);
-		CommonClassDao commonClassDao = new CommonClassDaoImpl();
-		PolicyExportAndImportController.setCommonClassDao(commonClassDao);
-		assertEquals(PolicyExportAndImportController.getCommonClassDao(), commonClassDao);
-	}
-	
-	@Test
-	public void testExport() throws IOException {
-		PolicyExportAndImportController controller = new PolicyExportAndImportController();
-		MockHttpServletRequest request = new MockHttpServletRequest();
-		request.setBodyContent("{\n\"exportData\": {}\n}\n");
-		MockHttpServletResponse response = new MockHttpServletResponse();
-		
-		// Test negative case
-		controller.exportPolicy(request, response);
-		assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
-	}
-	
-	@PrepareForTest({UserUtils.class})
-	@Test
-	public void testImport() throws IOException {
-		// Mock user utilities
-		PowerMockito.mockStatic(UserUtils.class);
-		User user = new User();
-		when(UserUtils.getUserSession(any())).thenReturn(user);
+    @Test
+    public void testSetAndGet() {
+        PolicyExportAndImportController controller = new PolicyExportAndImportController();
+        PolicyController policyController = new PolicyController();
+        controller.setPolicyController(policyController);
+        assertEquals(controller.getPolicyController(), policyController);
+        CommonClassDao commonClassDao = new CommonClassDaoImpl();
+        PolicyExportAndImportController.setCommonClassDao(commonClassDao);
+        assertEquals(PolicyExportAndImportController.getCommonClassDao(), commonClassDao);
+    }
 
-		// Mock dao
-		UserInfo info = new UserInfo();
-		ConfigurationDataEntity configEntity = new ConfigurationDataEntity();
-		CommonClassDao commonClassDao = Mockito.mock(CommonClassDaoImpl.class);
-		when(commonClassDao.getEntityItem(eq(UserInfo.class), any(), any())).thenReturn(info);
-		when(commonClassDao.getEntityItem(eq(ConfigurationDataEntity.class), any(), any())).thenReturn(configEntity);
-		when(commonClassDao.getDataById(any(), any(), any())).thenReturn(Collections.emptyList());
+    @Test
+    public void testExport() throws IOException {
+        PolicyExportAndImportController controller = new PolicyExportAndImportController();
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setBodyContent("{\n\"exportData\": {}\n}\n");
+        MockHttpServletResponse response = new MockHttpServletResponse();
 
-		// Test import
-		ClassLoader classLoader = getClass().getClassLoader();
-		PolicyController policyController = new PolicyController();
-		PolicyController.setCommonClassDao(commonClassDao);
-		PolicyExportAndImportController controller = new PolicyExportAndImportController();
-		PolicyExportAndImportController.setCommonClassDao(commonClassDao);
-		controller.setPolicyController(policyController);
-		HttpServletRequest request = new MockHttpServletRequest();
-		
-		// Test negative case
-		String file = new File(classLoader.getResource("Config_BRMS_Raw_TestBRMSRawPolicy.1.xml").getFile()).getAbsolutePath();
-		JSONObject json = controller.importRepositoryFile(file, request);
-		assertNull(json);
-		
-		// Another negative case
-		file = new File(classLoader.getResource("PolicyExport.xls").getFile()).getAbsolutePath();
-		json = controller.importRepositoryFile(file, request);
-		assertNull(json);
-	}
+        // Test negative case
+        controller.exportPolicy(request, response);
+        assertEquals(response.getStatusCode(), HttpServletResponse.SC_OK);
+    }
+
+    @PrepareForTest({UserUtils.class})
+    @Test
+    public void testImport() throws IOException {
+        // Mock user utilities
+        PowerMockito.mockStatic(UserUtils.class);
+        User user = new User();
+        when(UserUtils.getUserSession(any())).thenReturn(user);
+
+        // Mock dao
+        UserInfo info = new UserInfo();
+        ConfigurationDataEntity configEntity = new ConfigurationDataEntity();
+        CommonClassDao commonClassDao = Mockito.mock(CommonClassDaoImpl.class);
+        when(commonClassDao.getEntityItem(eq(UserInfo.class), any(), any())).thenReturn(info);
+        when(commonClassDao.getEntityItem(eq(ConfigurationDataEntity.class), any(), any())).thenReturn(configEntity);
+        when(commonClassDao.getDataById(any(), any(), any())).thenReturn(Collections.emptyList());
+
+        // Test import
+        PolicyController policyController = new PolicyController();
+        PolicyController.setCommonClassDao(commonClassDao);
+        PolicyExportAndImportController controller = new PolicyExportAndImportController();
+        PolicyExportAndImportController.setCommonClassDao(commonClassDao);
+        controller.setPolicyController(policyController);
+        HttpServletRequest request = new MockHttpServletRequest();
+        ClassLoader classLoader = getClass().getClassLoader();
+
+        // Test negative case
+        String file =
+                new File(classLoader.getResource("Config_BRMS_Raw_TestBRMSRawPolicy.1.xml").getFile())
+                        .getAbsolutePath();
+        JSONObject json = controller.importRepositoryFile(file, request);
+        assertNull(json);
+
+        // Another negative case
+        file = new File(classLoader.getResource("PolicyExport.xls").getFile()).getAbsolutePath();
+        json = controller.importRepositoryFile(file, request);
+        assertNull(json);
+
+        // test validation
+        String jsonString = "{ configName:\"abc\", uuid:\"someone\", location:\"somewhere\", policyScope:\"test\", "
+                + "service:\"sdnc\", version:\"1810\"}";
+        String errorMsg = controller.validatMatchRequiredFields("TestPolicy", jsonString);
+        assertTrue(errorMsg != null);
+    }
 }
