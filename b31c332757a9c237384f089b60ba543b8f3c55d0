@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_6b0faa37",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-17T20:51:31Z",
+      "side": 1,
+      "message": "You cannot be serious about this code.",
+      "range": {
+        "startLine": 518,
+        "startChar": 8,
+        "endLine": 518,
+        "endChar": 27
+      },
+      "revId": "b31c332757a9c237384f089b60ba543b8f3c55d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_8f0b3123",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-17T20:51:31Z",
+      "side": 1,
+      "message": "I don\u0027t even know what to say about this either",
+      "range": {
+        "startLine": 537,
+        "startChar": 8,
+        "endLine": 537,
+        "endChar": 27
+      },
+      "revId": "b31c332757a9c237384f089b60ba543b8f3c55d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_cf05a911",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-17T20:51:31Z",
+      "side": 1,
+      "message": "an outer if that isn\u0027t needed",
+      "range": {
+        "startLine": 547,
+        "startChar": 8,
+        "endLine": 564,
+        "endChar": 9
+      },
+      "revId": "b31c332757a9c237384f089b60ba543b8f3c55d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_2b053213",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/PolicyExportAndImportController.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-17T20:51:31Z",
+      "side": 1,
+      "message": "again and outer if that isn\u0027t necessary.",
+      "range": {
+        "startLine": 569,
+        "startChar": 8,
+        "endLine": 590,
+        "endChar": 9
+      },
+      "revId": "b31c332757a9c237384f089b60ba543b8f3c55d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
