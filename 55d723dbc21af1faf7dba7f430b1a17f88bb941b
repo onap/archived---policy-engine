@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_1899a0c3",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1099,
+      "author": {
+        "id": 2757
+      },
+      "writtenOn": "2018-09-18T18:12:02Z",
+      "side": 1,
+      "message": "jsonRequestMap.put(key.trim(), value.toString().trim()); is needed in this if block before the recursive",
+      "revId": "55d723dbc21af1faf7dba7f430b1a17f88bb941b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
