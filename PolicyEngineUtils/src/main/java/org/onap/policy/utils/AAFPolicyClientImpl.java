@@ -190,7 +190,11 @@ public class AAFPolicyClientImpl implements AAFPolicyClient{
             if(aafCon!=null && aafLurPerm !=null){
                 try {
                     aafCon.basicAuth(userName, pass);
-                    AAFPermission perm = new AAFPermission(type, instance, action);
+                    //
+                    // The first parameter is the namespace. At this point we will default
+                    // to null until we are given a namespace to use.
+                    //
+                    AAFPermission perm = new AAFPermission(null, type, instance, action);
                     final Principal p = new UnAuthPrincipal(userName);
                     result = aafLurPerm.fish(p, perm);
                 } catch (CadiException e) {
