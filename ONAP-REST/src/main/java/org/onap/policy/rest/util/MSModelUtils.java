@@ -93,11 +93,11 @@ public class MSModelUtils {
     private static final String TYPE = ".type";
     private static final String REQUIRED = ".required";
     private static final String MATCHABLE = ".matchable";
-    private static final String STRING = "string";
-    private static final String INTEGER = "integer";
+    public static final String  STRING = "string";
+    public static final String  INTEGER = "integer";
     private static final String BOOLEAN = "boolean";
-    private static final String LIST = "list";
-    private static final String MAP = "map";
+    public static final String  LIST = "list";
+    public static final String  MAP = "map";
     private static final String DEFAULT = ".default";
     private static final String MANYFALSE = ":MANY-false";
     private static final String DESCRIPTION = ".description";
