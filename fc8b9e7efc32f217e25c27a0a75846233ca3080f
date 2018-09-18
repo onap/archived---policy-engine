@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_987cd0ed",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 1234,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-18T19:01:01Z",
+      "side": 1,
+      "message": "Again, we have an extremely lengthy method nested immediately with an if.  It can be simplified very easily and reduce the cognitive complexity just by pulling those out. You could easily fit the rest of the code under 120 chars without wrapping.",
+      "range": {
+        "startLine": 1208,
+        "startChar": 0,
+        "endLine": 1234,
+        "endChar": 1
+      },
+      "revId": "fc8b9e7efc32f217e25c27a0a75846233ca3080f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
