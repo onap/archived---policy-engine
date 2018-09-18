@@ -48,7 +48,7 @@ public class PolicyApiUtils {
             LOGGER.error("The Value is empty.");
             return false;
         } else {
-            if (CharMatcher.ASCII.matchesAllOf((CharSequence) jsonString)) {
+            if (CharMatcher.ascii().matchesAllOf((CharSequence) jsonString)) {
                 LOGGER.info("The Value does not contain ASCII Characters");
                 isValidForm = true;
             } else {

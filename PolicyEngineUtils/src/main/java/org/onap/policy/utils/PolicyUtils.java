@@ -196,7 +196,7 @@ public class PolicyUtils {
      * @return
      */
     public static boolean containsNonAsciiEmptyChars(String value) {
-        return (value == null|| value.contains(" ") || "".equals(value.trim())|| !CharMatcher.ASCII.matchesAllOf((CharSequence) value))? true:false;
+        return (value == null || value.contains(" ") || "".equals(value.trim()) || !CharMatcher.ascii().matchesAllOf((CharSequence) value)) ? true : false;
     }
     
     /**
