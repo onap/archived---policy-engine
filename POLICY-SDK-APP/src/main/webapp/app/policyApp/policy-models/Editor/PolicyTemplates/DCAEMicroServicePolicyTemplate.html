@@ -94,7 +94,7 @@
 						title="Select the dropdown value driven from MicroService Models (MicroService Policy)Dictionary."></select>
 				</div>
 				<div class="form-group col-sm-3">
-					<label>Micro Service Version:<sup><b>*</b></sup></label> <select
+					    <label id="msVersion"><span id="msPolicyloader" class = "msloader" style="visibility:hidden;"></span>Micro Service Version: * </label> <select
 						class="form-control" ng-disabled="temp.policy.readOnly"
 						ng-model="temp.policy.version"
 						ng-options="option for option in microServiceModelsDictionaryVersionDatas track by option"
