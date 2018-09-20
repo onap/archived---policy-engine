@@ -342,7 +342,7 @@ public class BrmsPush {
             uebList = uebList.trim();
             pubTopic = pubTopic.trim();
             pubBuilder = new CambriaClientBuilders.PublisherBuilder();
-            pubBuilder.usingHosts(uebList).onTopic(pubTopic);
+            pubBuilder.usingHosts(uebList).onTopic(pubTopic).usingHttps(true);
             String apiKey = config.getProperty("UEB_API_KEY");
             String apiSecret = config.getProperty("UEB_API_SECRET");
             if (apiKey != null && !apiKey.isEmpty() && apiSecret != null && !apiSecret.isEmpty()) {
