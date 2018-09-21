@@ -27,7 +27,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -109,19 +111,19 @@ public class PDPApiAuth {
 			}
 			if(!result){
 				String aafPolicyNameSpace = XACMLProperties.getProperty("policy.aaf.namespace");
-				String aafResource = XACMLProperties.getProperty("policy.aaf.resource");
+				String aafResource = XACMLProperties.getProperty("policy.aaf.root.permission");
 				if(!userNamePass[0].contains("@") && aafPolicyNameSpace!= null){
-					userNamePass[0] = userNamePass[0] + "@" + aafPolicyNameSpace;
+				    userNamePass[0] = userNamePass[0] + "@" + reverseNS(aafPolicyNameSpace);
 				}else{
 					LOGGER.info("No AAF NameSpace specified in properties");
 				}
 				if(aafResource != null){
-					resource = aafResource + resource;
+					resource = aafResource + "." + resource;
 				}else{
 					LOGGER.info("No AAF Resource specified in properties");
 				}
 				LOGGER.info("Contacting AAF in : "  + environment);
-				result = aafClient.checkAuthPerm(userNamePass[0], userNamePass[1], resource, environment, ".*");
+				result = aafClient.checkAuthPerm(userNamePass[0], userNamePass[1], resource, environment, "*");
 			}
 			return result;
 		}catch(Exception e){
@@ -129,7 +131,7 @@ public class PDPApiAuth {
 			return false;
 		}
 	}
-
+	
 	private static Boolean clientAuth(String[] userNamePass){
 		if(clientPath==null){
 			setProperty();
@@ -148,6 +150,12 @@ public class PDPApiAuth {
 			}
 		}
 		return false;
+	}
+	
+	private static String reverseNS(String namespace) {
+	    final List<String> components = Arrays.asList(namespace.split("\\."));
+	    Collections.reverse(components);   
+	    return String.join(".", components);
 	}
 
 	private static Map<String, ArrayList<String>> readProps(Path clientPath) throws PolicyEngineException{
