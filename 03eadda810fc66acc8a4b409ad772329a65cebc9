@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_7cbe6dd6",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/AAFPolicyClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-09-21T21:59:51Z",
+      "side": 1,
+      "message": "maybe default to something other than DEBUG?",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_dccc618d",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/AAFPolicyClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-09-21T21:59:51Z",
+      "side": 1,
+      "message": "odd that your eclipse formats these on separate lines while mine does not",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_9cc6e967",
+        "filename": "packages/install/src/files/base.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-09-21T21:59:51Z",
+      "side": 1,
+      "message": "should be org.onap.policy?",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
