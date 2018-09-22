@@ -36,6 +36,74 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_9ca82922",
+        "filename": "packages/base/src/files/install/servers/pdp/bin/xacml.pdp.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-09-22T00:27:04Z",
+      "side": 1,
+      "message": "why adding \"policy.\" prefix, seems to me very redundant in this context, just an observation.",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_bca5e548",
+        "filename": "packages/base/src/files/install/servers/pdp/bin/xacml.pdp.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-09-22T00:27:04Z",
+      "side": 1,
+      "message": "not sure why policy.aaf.resource is needed",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_3c71d5e0",
+        "filename": "packages/base/src/files/install/servers/pdp/bin/xacml.pdp.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-09-22T00:27:04Z",
+      "side": 1,
+      "message": "aaf.root.permission\u003d${{AAF_NAMESPACE}}.pdpx instead",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_9c7fc9ab",
+        "filename": "packages/install/src/files/base.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-09-22T00:27:04Z",
+      "side": 1,
+      "message": "same comments and is docker and oom - although here, it is ok to use the AAF_HOST with the test instance.",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_9cc6e967",
         "filename": "packages/install/src/files/base.conf",
         "patchSetId": 1
