@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_0d2145b4",
+        "filename": "packages/base/src/files/install/servers/pdp/bin/xacml.pdp.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-09-24T13:46:12Z",
+      "side": 1,
+      "message": "Are you commenting on line 140 and 141 here?  If so, these were existing properties that are already used by the code.  Please see my explanation to Jim in his comments.  I can change it these but would require java code changes so in the interest of time I kept them the same and set default values that made sense even though I think the name of these properties is backwards.",
+      "parentUuid": "1a76adc5_9ca82922",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_bca5e548",
         "filename": "packages/base/src/files/install/servers/pdp/bin/xacml.pdp.properties",
         "patchSetId": 1
@@ -88,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_ad2db1aa",
+        "filename": "packages/base/src/files/install/servers/pdp/bin/xacml.pdp.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-09-24T13:46:12Z",
+      "side": 1,
+      "message": "see earlier comment.. we can discuss if needed.",
+      "parentUuid": "1a76adc5_bca5e548",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_3c71d5e0",
         "filename": "packages/base/src/files/install/servers/pdp/bin/xacml.pdp.properties",
         "patchSetId": 1
@@ -99,6 +135,24 @@
       "writtenOn": "2018-09-22T00:27:04Z",
       "side": 1,
       "message": "aaf.root.permission\u003d${{AAF_NAMESPACE}}.pdpx instead",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_6d179955",
+        "filename": "packages/base/src/files/install/servers/pdp/bin/xacml.pdp.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-09-24T13:46:12Z",
+      "side": 1,
+      "message": "okay.. I will make this change.",
+      "parentUuid": "1a76adc5_3c71d5e0",
       "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
