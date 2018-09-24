@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_3f25425c",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/config/PDPApiAuth.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-09-24T21:49:41Z",
+      "side": 1,
+      "message": "I don\u0027t think sonar will like the fact that \"resource\" is changed - parameters are supposed to act as if they have the \"final\" modifier",
+      "revId": "f3d8a1c2abe6306484490d5d2e9df15aea6e9c64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_7f2bba33",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/config/PDPApiAuth.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-09-24T21:49:41Z",
+      "side": 1,
+      "message": "once checkstyle is enabled, it will probably complain about \"NS\" - maybe rename this method?",
+      "revId": "f3d8a1c2abe6306484490d5d2e9df15aea6e9c64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_1f1c0613",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/AAFPolicyClientImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-09-24T21:49:41Z",
+      "side": 1,
+      "message": "mechID \u003d\u003e userName",
+      "revId": "f3d8a1c2abe6306484490d5d2e9df15aea6e9c64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
