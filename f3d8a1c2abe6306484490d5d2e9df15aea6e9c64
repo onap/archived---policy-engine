@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_7fb97aeb",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/config/PDPApiAuth.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-09-24T22:14:04Z",
+      "side": 1,
+      "message": "shouldn\u0027t this \"else\" case be an error leg, so print a \"logger.warn\" and return false?",
+      "revId": "f3d8a1c2abe6306484490d5d2e9df15aea6e9c64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_7f2bba33",
         "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/config/PDPApiAuth.java",
         "patchSetId": 2
@@ -47,6 +64,23 @@
       "writtenOn": "2018-09-24T21:49:41Z",
       "side": 1,
       "message": "mechID \u003d\u003e userName",
+      "revId": "f3d8a1c2abe6306484490d5d2e9df15aea6e9c64",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_9fbed6d3",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/AAFPolicyClientImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-09-24T22:14:04Z",
+      "side": 1,
+      "message": "adding to Jim\u0027s comment, remove references in comments to ATTID (besides MechId).",
       "revId": "f3d8a1c2abe6306484490d5d2e9df15aea6e9c64",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
