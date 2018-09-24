@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_ed8729b5",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/AAFPolicyClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-09-24T13:40:45Z",
+      "side": 1,
+      "message": "I was just taking Jorge\u0027s lead here... he used debug for the cadi_loglevel in drools pdp so I figured I would keep it consistant.",
+      "parentUuid": "1a76adc5_7cbe6dd6",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_dccc618d",
         "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/AAFPolicyClientImpl.java",
         "patchSetId": 1
@@ -115,6 +133,24 @@
       "writtenOn": "2018-09-21T21:59:51Z",
       "side": 1,
       "message": "should be org.onap.policy?",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_8dc0f5e1",
+        "filename": "packages/install/src/files/base.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-09-24T13:40:45Z",
+      "side": 1,
+      "message": "No, the way the code is setup prior to any of my changes it uses this property to structure the whole username user@policy.onap.org. If the clientAuth value does not have an \"@\" in it, the code appends \"@\" + POLICY_AAF_NAMESPACE property to before sending request to AAF.  The property names could be better named but I don\u0027t like changing code that is working.  However, if the team thinks this is a must change I can change and --amend.  Technically POLICY_AAF_RESOURCE is the namespace property and I am not sure why Tarun made it this way originally.",
+      "parentUuid": "1a76adc5_9cc6e967",
       "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
