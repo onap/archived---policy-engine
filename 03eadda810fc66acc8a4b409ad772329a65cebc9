@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_4872cbae",
+        "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/AAFPolicyClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-09-24T14:03:50Z",
+      "side": 1,
+      "message": "The reason for this to be \"debug\" is the instability of the overall AAF solution at this point in time.  So, it is mainly to feed back information to the AAF team from lab systems.   The \"debug\" level though does not seem verbose for this AAF logger.",
+      "parentUuid": "1a76adc5_c8181b78",
+      "revId": "03eadda810fc66acc8a4b409ad772329a65cebc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_dccc618d",
         "filename": "PolicyEngineUtils/src/main/java/org/onap/policy/utils/AAFPolicyClientImpl.java",
         "patchSetId": 1
