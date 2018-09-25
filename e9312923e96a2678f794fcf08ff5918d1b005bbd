@@ -22,6 +22,30 @@
       "revId": "e9312923e96a2678f794fcf08ff5918d1b005bbd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_907325b4",
+        "filename": "packages/install/src/files/base.conf",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-09-25T14:24:09Z",
+      "side": 1,
+      "message": "Or the same as simpledemo.onap.org ???",
+      "parentUuid": "1a76adc5_10407534",
+      "range": {
+        "startLine": 42,
+        "startChar": 9,
+        "endLine": 42,
+        "endChar": 32
+      },
+      "revId": "e9312923e96a2678f794fcf08ff5918d1b005bbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
