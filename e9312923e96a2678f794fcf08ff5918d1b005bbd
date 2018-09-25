@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a76adc5_d06afd80",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/config/PDPApiAuth.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-09-25T14:48:32Z",
+      "side": 1,
+      "message": "This else seems to be an error condition, should probably return false and do a LOGGER.warn.   The message should say: no AAF namespace nor User credentials.",
+      "revId": "e9312923e96a2678f794fcf08ff5918d1b005bbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_10407534",
         "filename": "packages/install/src/files/base.conf",
         "patchSetId": 4
@@ -61,6 +78,30 @@
       "side": 1,
       "message": "I took Jorge\u0027s lead on these values based on what he implemented for Drools PDP.",
       "parentUuid": "1a76adc5_907325b4",
+      "range": {
+        "startLine": 42,
+        "startChar": 9,
+        "endLine": 42,
+        "endChar": 32
+      },
+      "revId": "e9312923e96a2678f794fcf08ff5918d1b005bbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_10f875c3",
+        "filename": "packages/install/src/files/base.conf",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-09-25T14:48:32Z",
+      "side": 1,
+      "message": "This is OK, it is development installations pretty much.   The official deployment values are taken from equivalent ones in docker and oom repos.",
+      "parentUuid": "1a76adc5_705c49ee",
       "range": {
         "startLine": 42,
         "startChar": 9,
