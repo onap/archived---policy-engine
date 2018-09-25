@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_ab6274ab",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/config/PDPApiAuth.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-09-25T16:01:42Z",
+      "side": 1,
+      "message": "Actually I cannot return false here... if the username comes containing @ it seems to be assuming the dns is appended to it and will need to be able to continue through the process.  If I return false here using a username like demo@people.osaaf.org would then return false even though its a valid username.",
+      "parentUuid": "1a76adc5_d06afd80",
+      "revId": "e9312923e96a2678f794fcf08ff5918d1b005bbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_10407534",
         "filename": "packages/install/src/files/base.conf",
         "patchSetId": 4
