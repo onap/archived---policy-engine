@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_6bf77cf6",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/config/PDPApiAuth.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-09-25T15:57:47Z",
+      "side": 1,
+      "message": "I am not sure if thats a correct message Jorge.  This is not checking if the username is provided, it checks if @ is in the username so that if it is not it will append @ + aafPolicyNameSpace to the userNamePass.  If there were no username it would not even make it to this code and would log error and return false on line 132 and 133.  I can make it a warn and return false here but I would prefer to keep the log message the same or maybe we should say \"invalid username\".",
+      "parentUuid": "1a76adc5_d06afd80",
+      "revId": "e9312923e96a2678f794fcf08ff5918d1b005bbd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_10407534",
         "filename": "packages/install/src/files/base.conf",
         "patchSetId": 4
