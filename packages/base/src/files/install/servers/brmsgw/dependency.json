@@ -59,6 +59,10 @@
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
             "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
+            "artifactId": "sdnr",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications.controlloop.common.model-impl",
             "artifactId": "trafficgenerator",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
@@ -84,6 +88,10 @@
         }, {
             "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
             "artifactId": "actor.so",
+            "version": "${{BRMS_DEPENDENCY_VERSION}}"
+        }, {
+            "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
+            "artifactId": "actor.sdnr",
             "version": "${{BRMS_DEPENDENCY_VERSION}}"
         }, {
             "groupId": "org.onap.policy.drools-applications.controlloop.common.actors",
