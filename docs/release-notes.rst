@@ -23,61 +23,61 @@ Version: 1.2.3
 The Beijing release for POLICY delivered the following Epics. For a full list of stories and tasks delivered in the Beijing release, refer to `JiraPolicyBeijing`_.
 
     * [POLICY-390] - This epic covers the work to harden the Policy platform software base (incl 50% JUnit coverage)
-        - POLICY-238	policy/drools-applications: clean up maven structure
-        - POLICY-336	Address Technical Debt
-        - POLICY-338	Address JUnit Code Coverage
-        - POLICY-377	Policy Create API should validate input matches DCAE microservice template
-        - POLICY-389	Cleanup Jenkin's CI/CD process's
-        - POLICY-449	Policy API + Console : Common Policy Validation
-        - POLICY-568	Integration with org.onap AAF project
-        - POLICY-610	Support vDNS scale out for multiple times in Beijing release
+        - `POLICY-238`_	policy/drools-applications: clean up maven structure
+        - `POLICY-336`_	Address Technical Debt
+        - `POLICY-338`_	Address JUnit Code Coverage
+        - `POLICY-377`_	Policy Create API should validate input matches DCAE microservice template
+        - `POLICY-389`_	Cleanup Jenkin's CI/CD process's
+        - `POLICY-449`_	Policy API + Console : Common Policy Validation
+        - `POLICY-568`_	Integration with org.onap AAF project
+        - `POLICY-610`_ Support vDNS scale out for multiple times in Beijing release
 
-    * [POLICY-391] - This epic covers the work to support Release Planning activities
-        - POLICY-552	ONAP Licensing Scan - Use Restrictions
+    * `[POLICY-391]`_ - This epic covers the work to support Release Planning activities
+        - `POLICY-552`_	ONAP Licensing Scan - Use Restrictions
 
-    * [POLICY-392] - Platform Maturity Requirements - Performance Level 1
-        - POLICY-529	Platform Maturity Performance - Drools PDP
-        - POLICY-567	Platform Maturity Performance - PDP-X
+    * `[POLICY-392]`_ - Platform Maturity Requirements - Performance Level 1
+        - `POLICY-529`_	Platform Maturity Performance - Drools PDP
+        - `POLICY-567`_	Platform Maturity Performance - PDP-X
 
-    * [POLICY-394] - This epic covers the work required to support a Policy developer environment in which Policy Developers can create, update policy templates/rules separate from the policy Platform runtime platform.
-        - POLICY-488	pap should not add rules to official template provided in drools applications
+    * `[POLICY-394]`_ - This epic covers the work required to support a Policy developer environment in which Policy Developers can create, update policy templates/rules separate from the policy Platform runtime platform.
+        - `POLICY-488`_ pap should not add rules to official template provided in drools applications
 
-    * [POLICY-398] - This epic covers the body of work involved in supporting policy that is platform specific.
-        - POLICY-434	need PDP /getConfig to return an indicator of where to find the config data - in config.content versus config field
+    * `[POLICY-398]`_ - This epic covers the body of work involved in supporting policy that is platform specific.
+        - `POLICY-434`_	need PDP /getConfig to return an indicator of where to find the config data - in config.content versus config field
 
-    * [POLICY-399] - This epic covers the work required to policy enable Hardware Platform Enablement
-        - POLICY-622	Integrate OOF Policy Model into Policy Platform
+    * `[POLICY-399]`_ - This epic covers the work required to policy enable Hardware Platform Enablement
+        - `POLICY-622`_	Integrate OOF Policy Model into Policy Platform
 
-    * [POLICY-512] - This epic covers the work to support Platform Maturity Requirements - Stability Level 1
-        - POLICY-525	Platform Maturity Stability - Drools PDP
-        - POLICY-526	Platform Maturity Stability - XACML PDP
+    * `[POLICY-512]`_ - This epic covers the work to support Platform Maturity Requirements - Stability Level 1
+        - `POLICY-525`_	Platform Maturity Stability - Drools PDP
+        - `POLICY-526`_	Platform Maturity Stability - XACML PDP
 
-    * [POLICY-513] - Platform Maturity Requirements - Resiliency Level 2
-        - POLICY-527	Platform Maturity Resiliency - Policy Engine GUI and PAP
-        - POLICY-528	Platform Maturity Resiliency - Drools PDP
-        - POLICY-569	Platform Maturity Resiliency - BRMS Gateway
-        - POLICY-585	Platform Maturity Resiliency - XACML PDP
-        - POLICY-586	Platform Maturity Resiliency - Planning
-        - POLICY-681	Regression Test Use Cases
+    * `[POLICY-513]`_ - Platform Maturity Requirements - Resiliency Level 2
+        - `POLICY-527`_	Platform Maturity Resiliency - Policy Engine GUI and PAP
+        - `POLICY-528`_	Platform Maturity Resiliency - Drools PDP
+        - `POLICY-569`_	Platform Maturity Resiliency - BRMS Gateway
+        - `POLICY-585`_	Platform Maturity Resiliency - XACML PDP
+        - `POLICY-586`_	Platform Maturity Resiliency - Planning
+        - `POLICY-681`_	Regression Test Use Cases
 
-    * [POLICY-514] - This epic covers the work to support Platform Maturity Requirements - Security Level 1
-        - POLICY-523	Platform Maturity Security - CII Badging - Project Website
+    * `[POLICY-514]`_ - This epic covers the work to support Platform Maturity Requirements - Security Level 1
+        - `POLICY-523`_	Platform Maturity Security - CII Badging - Project Website
 
-    * [POLICY-515] - This epic covers the work to support Platform Maturity Requirements - Escalability Level 1
-        - POLICY-531	Platform Maturity Scalability - XACML PDP
-        - POLICY-532	Platform Maturity Scalability - Drools PDP
-        - POLICY-623	Docker image re-design
+    * `[POLICY-515]`_ - This epic covers the work to support Platform Maturity Requirements - Escalability Level 1
+        - `POLICY-531`_	Platform Maturity Scalability - XACML PDP
+        - `POLICY-532`_	Platform Maturity Scalability - Drools PDP
+        - `POLICY-623`_	Docker image re-design
 
-    * [POLICY-516] - This epic covers the work to support Platform Maturity Requirements - Manageability Level 1
-        - POLICY-533	Platform Maturity Manageability L1 - Logging
-        - POLICY-534	Platform Maturity Manageability - Instantiation < 1 hour
+    * `[POLICY-516]`_ - This epic covers the work to support Platform Maturity Requirements - Manageability Level 1
+        - `POLICY-533`_	Platform Maturity Manageability L1 - Logging
+        - `POLICY-534`_	Platform Maturity Manageability - Instantiation < 1 hour
 
-    * [POLICY-517] - This epic covers the work to support Platform Maturity Requirements - Usability Level 1
-        - POLICY-535	Platform Maturity Usability - User Guide
-        - POLICY-536	Platform Maturity Usability - Deployment Documentation
-        - POLICY-537	Platform Maturity Usability - API Documentation
+    * `[POLICY-517]`_ - This epic covers the work to support Platform Maturity Requirements - Usability Level 1
+        - `POLICY-535`_	Platform Maturity Usability - User Guide
+        - `POLICY-536`_	Platform Maturity Usability - Deployment Documentation
+        - `POLICY-537`_	Platform Maturity Usability - API Documentation
 
-    * [POLICY-546] - R2 Beijing - Various enhancements requested by clients to the way we handle TOSCA models.
+    * `[POLICY-546]`_ - R2 Beijing - Various enhancements requested by clients to the way we handle TOSCA models.
 
 
 **Bug Fixes**
@@ -149,53 +149,53 @@ Version: 1.1.1
 
 The Amsterdam release continued evolving the design driven architecture of and functionality for POLICY.  The following is a list of Epics delivered with the release. For a full list of stories and tasks delivered in the Amsterdam release, refer to `JiraPolicyAmsterdam`_.
 
-    * [POLICY-31] - Stabilization of Seed Code
-        - POLICY-25  Replace any remaining openecomp reference by onap
-        - POLICY-32  JUnit test code coverage
-        - POLICY-66  PDP-D Feature mechanism enhancements
-        - POLICY-67  Rainy Day Decision Policy
-        - POLICY-93  Notification API
-        - POLICY-158  policy/engine: SQL injection Mitigation
-        - POLICY-269  Policy API Support for Rainy Day Decision Policy and Dictionaries  
+    * `[POLICY-31]`_ - Stabilization of Seed Code
+        - `POLICY-25`_ - Replace any remaining openecomp reference by onap
+        - `POLICY-32`_ - JUnit test code coverage
+        - `POLICY-66`_  PDP-D Feature mechanism enhancements
+        - `POLICY-67`_  Rainy Day Decision Policy
+        - `POLICY-93`_  Notification API
+        - `POLICY-158`_  policy/engine: SQL injection Mitigation
+        - `POLICY-269`_  Policy API Support for Rainy Day Decision Policy and Dictionaries  
 
-    * [POLICY-33] - This epic covers the body of work involved in deploying the Policy Platform components
-        - POLICY-40  MSB Integration  
-        - POLICY-124  Integration with oparent  
-        - POLICY-41  OOM Integration  
-        - POLICY-119  PDP-D: noop sinks  
+    * `[POLICY-33]`_ - This epic covers the body of work involved in deploying the Policy Platform components
+        - `POLICY-40`_  MSB Integration  
+        - `POLICY-124`_ Integration with oparent  
+        - `POLICY-41`_  OOM Integration  
+        - `POLICY-119`_ PDP-D: noop sinks  
 
-    * [POLICY-34] - This epic covers the work required to support a Policy developer environment in which Policy Developers can create, update policy templates/rules separate from the policy Platform runtime platform.
-        - POLICY-57  VF-C Actor code development  
-        - POLICY-43  Amsterdam Use Case Template  
-        - POLICY-173  Deployment of Operational Policies Documentation  
+    * `[POLICY-34]`_ - This epic covers the work required to support a Policy developer environment in which Policy Developers can create, update policy templates/rules separate from the policy Platform runtime platform.
+        - `POLICY-57`_  VF-C Actor code development  
+        - `POLICY-43`_  Amsterdam Use Case Template  
+        - `POLICY-173`_  Deployment of Operational Policies Documentation  
 
-    * [POLICY-35] - This epic covers the body of work involved in supporting policy that is platform specific.
-        - POLICY-68  TOSCA Parsing for nested objects for Microservice Policies  
+    * `[POLICY-35]`_ - This epic covers the body of work involved in supporting policy that is platform specific.
+        - `POLICY-68`_  TOSCA Parsing for nested objects for Microservice Policies  
 
-    * [POLICY-36] - This epic covers the work required to capture policy during VNF on-boarding.
+    * `[POLICY-36]`_ - This epic covers the work required to capture policy during VNF on-boarding.
 
-    * [POLICY-37] - This epic covers the work required to capture, update, extend Policy(s) during Service Design.
-        - POLICY-64  CLAMP Configuration and Operation Policies for vFW Use Case  
-        - POLICY-65  CLAMP Configuration and Operation Policies for vDNS Use Case  
-        - POLICY-48  CLAMP Configuration and Operation Policies for vCPE Use Case 
-        - POLICY-63  CLAMP Configuration and Operation Policies for VOLTE Use Case  
+    * `[POLICY-37]`_ - This epic covers the work required to capture, update, extend Policy(s) during Service Design.
+        - `POLICY-64`_ CLAMP Configuration and Operation Policies for vFW Use Case  
+        - `POLICY-65`_ CLAMP Configuration and Operation Policies for vDNS Use Case  
+        - `POLICY-48`_ CLAMP Configuration and Operation Policies for vCPE Use Case 
+        - `POLICY-63`_ CLAMP Configuration and Operation Policies for VOLTE Use Case  
 
-    * [POLICY-38] - This epic covers the work required to support service distribution by SDC.
+    * `[POLICY-38]`_ - This epic covers the work required to support service distribution by SDC.
 
-    * [POLICY-39] - This epic covers the work required to support the Policy Platform during runtime.
-        - POLICY-61  vFW Use Case - Runtime  
-        - POLICY-62  vDNS Use Case - Runtime  
-        - POLICY-59  vCPE Use Case - Runtime  
-        - POLICY-60  VOLTE Use Case - Runtime  
-        - POLICY-51  Runtime Policy Update Support  
-        - POLICY-328  vDNS Use Case - Runtime Testing  
-        - POLICY-324  vFW Use Case - Runtime Testing  
-        - POLICY-320  VOLTE Use Case - Runtime Testing  
-        - POLICY-316  vCPE Use Case - Runtime Testing  
+    * `[POLICY-39]`_ - This epic covers the work required to support the Policy Platform during runtime.
+        - `POLICY-61`_  vFW Use Case - Runtime  
+        - `POLICY-62`_  vDNS Use Case - Runtime  
+        - `POLICY-59`_  vCPE Use Case - Runtime  
+        - `POLICY-60`_  VOLTE Use Case - Runtime  
+        - `POLICY-51`_  Runtime Policy Update Support  
+        - `POLICY-328`_  vDNS Use Case - Runtime Testing  
+        - `POLICY-324`_  vFW Use Case - Runtime Testing  
+        - `POLICY-320`_  VOLTE Use Case - Runtime Testing  
+        - `POLICY-316`_  vCPE Use Case - Runtime Testing  
 
-    * [POLICY-76] - This epic covers the body of work involved in supporting R1 Amsterdam Milestone Release Planning Milestone Tasks.
-        - POLICY-77  Functional Test case definition for Control Loops  
-        - POLICY-387  Deliver the released policy artifacts  
+    * `[POLICY-76]`_ - This epic covers the body of work involved in supporting R1 Amsterdam Milestone Release Planning Milestone Tasks.
+        - `POLICY-77`_  Functional Test case definition for Control Loops  
+        - `POLICY-387`_  Deliver the released policy artifacts  
 
 
 **Bug Fixes**
@@ -242,4 +242,5 @@ End of Release Notes
 ..     	For Bugs section, list bugs that are not tied to an epic.  Remove all items with "Won't Do" resolution.
 ..     	For Known issues, list bugs that are slotted for a future release.
 
+:x
 
