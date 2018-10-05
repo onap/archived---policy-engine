@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bada0100_1c416b39",
+        "filename": "ONAP-PDP-REST/src/main/java/org/onap/policy/pdp/rest/api/services/NotificationService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-10-05T17:05:46Z",
+      "side": 1,
+      "message": "This is the change that fixed the sonar bug. Everything else is just formatting.",
+      "range": {
+        "startLine": 311,
+        "startChar": 16,
+        "endLine": 311,
+        "endChar": 51
+      },
+      "revId": "0ac96dfac0d893e3819df7e30357682bbffb0d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
