@@ -275,6 +275,7 @@ public class NotificationService {
 				}
 			} catch (InterruptedException | PolicyException e) {
 				logger.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error during thread execution ", e);
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
