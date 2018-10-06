@@ -13,6 +13,175 @@ Policy Release Notes
 ..      * This note must be removed after content has been added.
 
 
+..      ==========================
+..      * * *   CASABLANCA   * * *
+..      ==========================
+
+Version: 1.3.0
+--------------
+
+:Release Date: 2018-11-15 (Casablanca Release)
+
+**New Features**
+
+The Casablanca release for POLICY delivered the following Epics. For a full list of stories and tasks delivered in the Casablanca release, refer to `JiraPolicyCasablanca`_ (Note: Jira details can also be viewed from this link).
+
+    * [POLICY-701] - This epic covers the work to integrate Policy into the SDC Service Distribution 
+        - POLICY-723	Analyze and design the Policy SDC Distribution Application
+        - POLICY-922	Create application framework for Policy Service SDC Distribution
+        - POLICY-923	Create code to generate docker images for Policy SDC Service Distribution application
+        - POLICY-924	Create CSIT test framework for Policy SDC Service Distribution application
+        - POLICY-925	Create K8S Helm Charts for deployment via OOM project
+        - POLICY-926	Create code infrastructure for automatic policy forwarding
+        - POLICY-956	Implement IConfiguration interface to initiate Distribution Client
+        - POLICY-974	Implement INotificationCallback interface
+        - POLICY-1094	Refactor reception handler configuration parameter handling
+
+    * [POLICY-715] - This epic covers work to harden the policy platform
+        - POLICY-955	Incorporate changes to amsterdam rules template into casablanca rules template
+
+    * [POLICY-718] - This epic covers the work to perform release planning activities.
+        - POLICY-875	Update Beijing Branch and master branch for Casablanca versions
+        - POLICY-1040	Copy and clean up Beijing wiki's for Casablanca
+
+    * [POLICY-719] - This epic covers the work to build the Policy Lifecycle API
+        - POLICY-724	Gather requirements and design high-level software architecture
+        - POLICY-1056	Create Policy API Infrastructure
+
+    * [POLICY-726] - This epic covers the work to distribute policy from the PAP to the PDPs into the ONAP platform
+        - POLICY-874	Spike: Interface Stubbing for Architectual Enhancements
+
+    * [POLICY-772] - Enhance casablanca testing abilities between various environments
+
+    * [POLICY-803] - All the new repositories must be initialized and setup to work under policy/parent.
+        - POLICY-804	Setup policy/parent
+        - POLICY-805	Setup policy/models
+        - POLICY-806	Setup policy/api
+        - POLICY-807	Setup policy/apex-pdp
+        - POLICY-808	Setup ci-management verify/merge jobs
+        - POLICY-845	Setup policy/core
+        - POLICY-846	Setup policy/xacml-pdp
+        - POLICY-847	Setup policy/gui
+        - POLICY-848	Setup policy/pap
+        - POLICY-849	Setup policy/pdp
+        - POLICY-871	Setup policy/distribution
+
+    * [POLICY-809] - Maintain and implement performance
+        - POLICY-888	Performance PDP-D - Policy Decision/Enforcement
+
+    * [POLICY-814] - 72 hour stability testing (component and platform)
+        - POLICY-815	Stability PDP-X
+
+    * [POLICY-819] - Maintain and implement resiliency
+    * [POLICY-824] - maintain and implement security
+        - POLICY-781	PE Support for AAF Root Certificate in HTTPS communication.
+        - POLICY-905	Fix apex-engine License and Security issues
+        - POLICY-913	policy/engine CADI (AAF) Integration
+        - POLICY-914	policy/drools-pdp CADI (AAF) Integration
+        - POLICY-918	Policy Portal GUI - upgrade to latest Portal SDK to resolve security issues
+        - POLICY-942	BRMSGW: HTTPS support for DMaaP/UEB interfaces
+        - POLICY-946	Investigate what integration of CADI (AAF) integration into the ONAP Policy Platform components really means
+        - POLICY-982	Update security issues since portal SDK was upgraded
+        - POLICY-1030	Revisit CLM reports due to new software upgrade
+        - POLICY-1059	Address the security issues with Severe (and above) Level 4-6
+
+    * [POLICY-825] - Maintain and implement scability
+    * [POLICY-829] - Maintain and implement manageability
+    * [POLICY-839] - Maintain and implement usability
+    * [POLICY-840] - Flexible control loop coordination facility. 
+        - POLICY-951	Code placement and development procedures
+        - POLICY-952	Analyze and design the control loop coordination facility
+        - POLICY-953	Configure whether a given control loop will be regulated by flexible control loop coordination.
+        - POLICY-975	Storage of abatement (and other) events in historical database
+        - POLICY-1109	Add demo code to template.demo
+
+    * [POLICY-841] - Covers the work required to support HPA
+        - POLICY-927	Develop the code that translates HPA requirements into OOF policies
+        - POLICY-989	HPA Use Case Modeling work to support optimization policies
+
+    * [POLICY-842] - This epic covers the work to support the Auto Scale Out functional requirements
+        - POLICY-962	Change SO Scale Out REST API call to new REST API version that support config parameters
+        - POLICY-963	Understand and Scope the Guard Policies for Scale Out
+        - POLICY-964	Modify drools-applications template to check is PROV_STATUS=Active before performing a Scale Out
+        - POLICY-968	Enforce guard policy for min/max instances of a VNF
+        - POLICY-1010	Enforce guard policy for waiting a period of time between Scale Outs
+        - POLICY-1011	Modify drools-applications template to make A&AI query to count number of instances of a VNF
+        - POLICY-1037	Use A&AI query for getting number of module instances to construct new module instance name
+        - POLICY-1038	Create new min/max guard policy template in policy engine
+        - POLICY-1039	Ensure Policy Integration Test wiki is up-to-date for new Scale Out APIs
+
+    * [POLICY-851] - This epic covers the work to bring in the Apex PDP code
+        - POLICY-855	Verify APEX-PDP setup in ONAP
+        - POLICY-856	Bring in the model code for APEX-PDP into ONAP
+        - POLICY-857	Bring in the context code for APEX-PDP into ONAP
+        - POLICY-858	Bring in the core code for APEX-PDP into ONAP
+        - POLICY-859	Bring in the server service code for APEX-PDP into ONAP
+        - POLICY-860	Bring in the authoring code for APEX-PDP into ONAP
+        - POLICY-861	Bring in the domain example code for APEX-PDP into ONAP
+        - POLICY-862	Bring in the plugin code for APEX-PDP into ONAP
+        - POLICY-863	Bring in the application code for APEX-PDP into ONAP
+        - POLICY-864	Bring in the client code for APEX-PDP into ONAP
+        - POLICY-865	Set up Integration Tests for APEX in ONAP
+        - POLICY-866	Set up ONAP Policy Framework compliant Docker build for APEX-PDP
+        - POLICY-867	Bring in APEX-PDP documents
+        - POLICY-954	APEX: Missing items and configuration problems
+        - POLICY-1099	Create CSIT test for policy APEX PDP
+
+    * [POLICY-876] - This epics covers the work to re-build how the PAP organizes the PDP's into groups.
+    * [POLICY-904] - This epic covers the features AT&T is submitting
+        - POLICY-900	TOSCA model enhancements
+        - POLICY-901	Guard policy UI enhancements
+        - POLICY-902	XACML platform enhancements
+        - POLICY-983	getConfig naming policy implementation
+        - POLICY-1042	Policy Dashboard Enhancment
+
+    * [POLICY-1081] - This epic covers the contribution for the 5G OOF PCI Optimization use case.
+        - POLICY-1079	Add support for VF Module Delete recipe
+        - POLICY-1086	Configuration/policies for OOF PCI use case
+        - POLICY-1089	Handle recommendation for PCI updates received from PCI-Handler MS
+    * [POLICY-1182] - Covers the work to support CCVPN use case
+
+**Bug Fixes**
+
+The following bug fixes have been deployed with this release:
+
+    * `[POLICY-484] <https://jira.onap.org/browse/POLICY-484>`_ - Extend election handler run window and clean up error messages
+
+    * `[POLICY-909] <https://jira.onap.org/browse/POLICY-909>`_ - get_ZoneDictionaryDataByName class type error
+    * `[POLICY-1085] <https://jira.onap.org/browse/POLICY-1085>`_ - Stand-alone install will not run
+    * `[POLICY-1106] <https://jira.onap.org/browse/POLICY-1106>`_ - Checkstyle fixes appear to have broken persistence
+    * `[POLICY-1117] <https://jira.onap.org/browse/POLICY-1117>`_ - Fixed a bug on import function
+    * `[POLICY-1118] <https://jira.onap.org/browse/POLICY-1118>`_ - Microservice policies failing to display dynamic fields when selecting any model from GUI
+    * `[POLICY-1154] <https://jira.onap.org/browse/POLICY-1154>`_ - PE: CONSOLE not working with latest code changes
+    * `[POLICY-1155] <https://jira.onap.org/browse/POLICY-1155>`_ - PDP-D [APPS] : DRL Templates Compilation Errors
+    * `[POLICY-1158] <https://jira.onap.org/browse/POLICY-1158>`_ - meet ASDC_AUTHORIZATION_FAILED for client setting
+    * `[POLICY-1160] <https://jira.onap.org/browse/POLICY-1160>`_ - meet nullPointer exception based on the new schema of HPA capability requirement
+
+
+
+**Security Notes**
+
+POLICY code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The POLICY open Critical security vulnerabilities and their risk assessment have been documented as part of the `project (Casablanca Release) <https://wiki.onap.org/pages/viewpage.action?pageId=36964976>`_.
+
+Quick Links:
+        - `POLICY project page <https://wiki.onap.org/display/DW/Policy+Framework+Project>`_
+
+        - `Passing Badge information for POLICY <https://bestpractices.coreinfrastructure.org/en/projects/1614>`_
+
+        - `Project Vulnerability Review Table for POLICY (Casablanca Release) <https://wiki.onap.org/pages/viewpage.action?pageId=36964976>`_
+
+**Known Issues**
+
+The following known issues will be addressed in a future release:
+    * to be determined ... 
+
+
+
+
+..      =======================
+..      * * *   BEIJING   * * *
+..      =======================
+
 Version: 1.2.3
 --------------
 
@@ -222,12 +391,15 @@ The Amsterdam release continued evolving the design driven architecture of and f
 
 .. Links to jira release notes
 
+.. _JiraPolicyCasablanca: https://jira.onap.org/secure/ReleaseNote.jspa?projectId=10106&version=10446
 .. _JiraPolicyBeijing: https://jira.onap.org/secure/ReleaseNote.jspa?projectId=10106&version=10349
 .. _JiraPolicyAmsterdam: https://jira.onap.org/secure/ReleaseNote.jspa?projectId=10106&version=10300
 
 
 .. note
 ..      CHANGE  HISTORY
+..      10/08/2018 - Initial document for Casablanca release.
+..		Per Jorge, POLICY-785 did not get done in Casablanca (removed).  
 ..      03/22/2018 - Initial document for Beijing release.
 ..      01/15/2018 - Added change for version 1.1.3 to the Amsterdam branch.  Also corrected prior version (1.2.0) to (1.1.1)
 ..		Also, Set up initial information for Beijing.
