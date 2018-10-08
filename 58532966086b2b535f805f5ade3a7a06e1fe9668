@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bada0100_4cf8a27c",
+        "filename": "docs/release-notes.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-10-08T12:11:07Z",
+      "side": 1,
+      "message": "Incorrect",
+      "range": {
+        "startLine": 181,
+        "startChar": 48,
+        "endLine": 181,
+        "endChar": 62
+      },
+      "revId": "58532966086b2b535f805f5ade3a7a06e1fe9668",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
