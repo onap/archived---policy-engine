@@ -16,6 +16,24 @@
       "revId": "95a795538f4e9f71329f097c39848f406d73ddfc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_cc032b72",
+        "filename": "packages/install/src/files/console.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-10-09T17:42:08Z",
+      "side": 1,
+      "message": "Technically I don\u0027t think this is relevant since this file is not used for deployment anymore but I will change it for consistency.",
+      "parentUuid": "bada0100_6ca31f9f",
+      "revId": "95a795538f4e9f71329f097c39848f406d73ddfc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
