@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bada0100_6ca31f9f",
+        "filename": "packages/install/src/files/console.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-10-09T17:35:50Z",
+      "side": 1,
+      "message": "I think 30225 only applies to OOM, better to use 8989 instead",
+      "revId": "95a795538f4e9f71329f097c39848f406d73ddfc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
