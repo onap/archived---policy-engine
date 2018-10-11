@@ -19,7 +19,6 @@ Policy Installation and Deployment
    installation.rst
    installationVM.rst
    installAmsterController.rst
-   installBeijingController.rst
    swarch_srm.rst
    deployment.rst
 
