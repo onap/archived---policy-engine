@@ -59,20 +59,23 @@ Here are the contents of the vDNS ONSET message. Copy/paste this into dcae.vdns.
 
     .. code-block:: json
     
-        {  "closedLoopEventClient": "DCAE_INSTANCE_ID.dcae-tca",  
-           "target_type": "VNF",  
-           "AAI": {   
-               "vserver.vserver-name": "vlb-lb-32c8",   
-               "vserver.is-closed-loop-disabled": "false"  
-           },  
-           "closedLoopAlarmStart": 1484677482204798,  
-           "closedLoopEventStatus": "ONSET",  
-           "closedLoopControlName": "ControlLoop-vDNS-6f37f56d-a87d-4b85-b6a9-cc953cf779b3",  
-           "version": "1.0.2",  
-           "target": "vserver.vserver-name",  
-           "requestID": "99999999-686e-4790-8c45-bdfa61df770f",  
-           "from": "DCAE" 
+        {
+          "closedLoopControlName": "ControlLoop-vDNS-6f37f56d-a87d-4b85-b6a9-cc953cf779b3",
+          "closedLoopAlarmStart": 1484677482204798,
+          "closedLoopEventClient": "DCAE_INSTANCE_ID.dcae-tca",
+          "closedLoopEventStatus": "ONSET",
+          "requestID": "e4f95e0c-a013-4530-8e59-c5c5f9e539b6",
+          "target_type": "VNF",
+          "target": "vserver.vserver-name",
+          "AAI": {
+            "vserver.is-closed-loop-disabled": "false",
+            "vserver.prov-status": "ACTIVE",
+            "vserver.vserver-name": "dfw1lb01lb01"
+          },
+          "from": "DCAE",
+          "version": "1.0.2"
         }
+        
 
 
 Enabling the AAI and SO Simulators
@@ -95,11 +98,11 @@ We are now ready to inject an ONSET message to trigger the vDNS flow. Simply nav
 
     .. code-block:: bash
     
-        http -a @1b3rt:31nst31n PUT :9696/policy/pdp/engine/topics/sources/ueb/unauthenticated.DCAE_CL_OUTPUT/events @dcae.vdns.onset.json Content-Type:"text/plain"
+        http --verify=no --default-scheme=https -a @1b3rt:31nst31n PUT :9696/policy/pdp/engine/topics/sources/ueb/unauthenticated.DCAE_CL_OUTPUT/events @dcae.vdns.onset.json Content-Type:"text/plain"
 
 You should see some output similar to this:
 
-.. image:: tutorial_vDNS_1.png
+    .. image:: tutorial_vDNS_1.png
 
 You can view the logs to see the network activity or find any errors that may have occurred. Logs are located in */opt/app/policy/logs*.
 
@@ -108,9 +111,9 @@ Reading the logs
 
 Once you've injected the onset message, this should appear in the network.log:
 
-.. image:: tutorial_vDNS_2.png
+    .. image:: tutorial_vDNS_2.png
 
 
 End of Document
 
-.. SSNote: Wiki page ref. https://wiki.onap.org/display/DW/Using+guard+in+the+PDP-D
+.. SSNote: Wiki page ref. https://wiki.onap.org/display/DW/Tutorial%3A+Testing+the+vDNS+Use+Case+in+a+standalone+PDP-D
