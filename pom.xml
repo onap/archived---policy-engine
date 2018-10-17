@@ -81,6 +81,7 @@
         <module>POLICY-SDK-APP</module>
         <module>ONAP-SDK-APP</module>
         <module>packages</module>
+        <module>TestSuite</module>
     </modules>
     <distributionManagement>
         <repository>
