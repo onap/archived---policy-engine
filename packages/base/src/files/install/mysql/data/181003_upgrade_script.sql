@@ -17,4 +17,9 @@
 -- ============LICENSE_END=========================================================
 use onap_sdk;
 update fn_app set APP_PASSWORD = '/xMjAl0TB1FgnHih2qA4V5gUkFQNZaK1fiNf3QlRaLI=' where app_id =1;
+
+use log;
+ALTER TABLE systemlogdb
+MODIFY remote varchar(255) null;
+
 commit;
