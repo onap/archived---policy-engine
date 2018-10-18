@@ -194,6 +194,7 @@ Responses
           "vserver-name2": "vjunos0",
           "vserver-selflink": "https://aai-ext1.test.att.com:8443/aai/v7/cloud-infrastructure/cloud-regions/cloud-region/att-aic/AAIAIC25/tenants/tenant/USMSO1SX7NJ0103UJZZ01%3A%3AuCPE-VMS/vservers/vserver/d0668d4f-c25e-4a1b-87c4-83845c01efd8",
           "in-maint": false,
+          "prov-status":"ACTIVE",
           "is-closed-loop-disabled": isDisabled, // True if the vserverName is "disableClosedLoop", false otherwise
           "resource-version": "1494001931513",
           "relationship-list": {
@@ -222,7 +223,7 @@ Responses
           }
          }]
         }
-
+        
 
     .. code-block:: bash
        :caption: vserver-GET-error
