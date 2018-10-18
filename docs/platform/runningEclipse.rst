@@ -36,7 +36,7 @@ To interact with the PDP-D, the Telemetry API can be used. A simple GET on the e
 
     .. code-block:: bash
 
-        curl --silent --user @1b3rt:31nst31n -X GET http://localhost:9696/policy/pdp/engine/ | python -m json.tool
+        curl -k --silent --user @1b3rt:31nst31n -X GET https://localhost:9696/policy/pdp/engine/ | python -m json.tool
 
     .. image:: RunEcl_telemetry.png
 

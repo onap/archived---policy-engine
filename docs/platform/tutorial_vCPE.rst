@@ -32,7 +32,7 @@ The telemetry API is used to see what is in memory. There should only be 1 fact,
 
     .. code-block:: bash
 
-        curl --silent --user @1b3rt:31nst31n -X GET http://localhost:9696/policy/pdp/engine/controllers/amsterdam/drools/facts/amsterdam | python -m json.tool
+        curl -k --silent --user @1b3rt:31nst31n -X GET https://localhost:9696/policy/pdp/engine/controllers/amsterdam/drools/facts/amsterdam | python -m json.tool
 
 
     .. image:: Tut_vCPE_get_facts.JPG
@@ -47,14 +47,13 @@ Inject the onset using the Telemetry API.
 
     .. code-block:: bash
 
-        curl --silent --user @1b3rt:31nst31n --header "Content-Type: text/plain" --data @dcae.vcpe.onset.json -X PUT http://localhost:9696/policy/pdp/engine/topics/sources/ueb/unauthenticated.DCAE_EVENT_OUTPUT/events | python -m json.tool
+        curl -k --silent --user @1b3rt:31nst31n --header "Content-Type: text/plain" --data @dcae.vcpe.onset.json -X PUT https://localhost:9696/policy/pdp/engine/topics/sources/ueb/unauthenticated.DCAE_EVENT_OUTPUT/events | python -m json.tool
 
     .. image:: Tut_vCPE_insert_onset.JPG
 
 **NOTE:** The simulated onset is enriched with A&AI data. The PDP-D will not make an A&AI query since the data needed can be extracted from the onset.
 
 Now check the facts in memory, there should be 7 objects present. Two timers exist to put a time limit on the operation and on the overall control loop (in the case of retries or policy chaining). The event and it's associated manager and operation manager are also present in memory. A lock on the target entity is inserted to ensure no other events try to take action on the VM/VNF that is currently processing.
-
 
     .. image:: Tut_vCPE_get_facts_2.JPG
 
@@ -82,7 +81,7 @@ Inject the response using the Telemetry API.
 
     .. code-block:: bash
 
-        curl --silent --user @1b3rt:31nst31n --header "Content-Type: text/plain" --data @appc.lcm.success.json -X PUT http://localhost:9696/policy/pdp/engine/topics/sources/ueb/APPC-LCM-WRITE/events | python -m json.tool
+        curl -k --silent --user @1b3rt:31nst31n --header "Content-Type: text/plain" --data @appc.lcm.success.json -X PUT https://localhost:9696/policy/pdp/engine/topics/sources/ueb/APPC-LCM-WRITE/events | python -m json.tool
 
     .. image:: Tut_vCPE_inject_appc_response.JPG
 
@@ -98,7 +97,7 @@ Inject the abatement message using the Telemetry API.
 
     .. code-block:: bash
 
-        curl --silent --user @1b3rt:31nst31n --header "Content-Type: text/plain" --data @dcae.vcpe.abatement.json -X PUT http://localhost:9696/policy/pdp/engine/topics/sources/ueb/unauthenticated.DCAE_EVENT_OUTPUT/events | python -m json.tool
+        curl -k --silent --user @1b3rt:31nst31n --header "Content-Type: text/plain" --data @dcae.vcpe.abatement.json -X PUT https://localhost:9696/policy/pdp/engine/topics/sources/ueb/unauthenticated.DCAE_EVENT_OUTPUT/events | python -m json.tool
 
     .. image:: Tut_vCPE_insert_abatement.JPG
 

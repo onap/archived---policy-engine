@@ -58,28 +58,27 @@ Next, we're going to create a file named *dcae.volte.onset.json* and edit it to 
 Here are the contents of the VOLTE ONSET message. Copy/paste this into dcae.volte.onset.json:
 
     .. code-block:: json
-    
-        {
-            "closedLoopEventClient": "DCAE.HolmesInstance",
-            "policyVersion": "1.0.0.5",
-            "policyName": "vVOLTE",
-            "policyScope": "resource=volte,service=VolteSErvice,type=SampleType,closedLoopControlName=CL-VOLTE-SIG-d925ed73-8231-4d02-9545-db4e101f88f8",
-            "target_type": "VM",
-            "AAI": {
-                "vserver.vserver-name": "dfw1lb01lb01",
-                "service-instance.service-instance-id" : "TBD",
-                "generic-vnf.vnf-id" : "TBD",
-                "generic-vnf.vnf-name" : "TBD"
-            },
-            "closedLoopAlarmStart": 1484677482204798,
-            "closedLoopEventStatus": "ONSET",
-            "closedLoopControlName": "ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b",
-            "version": "1.0.2",
-            "target": "vserver.vserver-name",
-            "requestID": "97964e10-686e-4790-8c45-bdfa61df770f",
-            "from": "DCAE"
-        }
 
+        {
+            "closedLoopControlName": "ControlLoop-VOLTE-2179b738-fd36-4843-a71a-a8c24c70c55b",
+            "closedLoopAlarmStart": 1484677482204798,
+            "closedLoopEventClient": "DCAE.HolmesInstance",
+            "closedLoopEventStatus": "ONSET",
+            "requestID": "97964e10-686e-4790-8c45-bdfa61df770f",
+            "target_type": "VM",
+            "target": "vserver.vserver-name",
+            "AAI": {
+                "vserver.is-closed-loop-disabled": "false",
+                "vserver.prov-status": "ACTIVE",
+                "vserver.vserver-name": "dfw1lb01lb01",
+                "service-instance.service-instance-id" : "vserver-name-16102016-aai3255-data-11-1",
+                "generic-vnf.vnf-id" : "vnf-id-16102016-aai3255-data-11-1",
+                "generic-vnf.vnf-name" : "vnf-name-16102016-aai3255-data-11-1"
+            },
+            "from": "DCAE",
+            "version": "1.0.2"
+        }
+        
 
 Enabling the VFC Simulator
 ^^^^^^^^^^^^^^^^^^^^^^^^^^ 
@@ -101,7 +100,7 @@ We are now ready to inject an ONSET message to trigger the VOLTE flow. Simply na
 
     .. code-block:: bash
     
-        http -a @1b3rt:31nst31n PUT :9696/policy/pdp/engine/topics/sources/ueb/unauthenticated.DCAE_CL_OUTPUT/events @dcae.volte.onset.json Content-Type:"text/plain"
+        http --verify=no --default-scheme=https -a @1b3rt:31nst31n PUT :9696/policy/pdp/engine/topics/sources/ueb/unauthenticated.DCAE_CL_OUTPUT/events @dcae.volte.onset.json Content-Type:"text/plain"
 
 You should see some output similar to this:
 
