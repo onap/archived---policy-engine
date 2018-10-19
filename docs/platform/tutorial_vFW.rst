@@ -32,7 +32,7 @@ The telemetry API is used to see what is in memory. There should only be 1 fact,
 
     .. code-block:: bash
 
-        curl --silent --user @1b3rt:31nst31n -X GET http://localhost:9696/policy/pdp/engine/controllers/amsterdam/drools/facts/amsterdam | python -m json.tool
+        curl -k --silent --user @1b3rt:31nst31n -X GET https://localhost:9696/policy/pdp/engine/controllers/amsterdam/drools/facts/amsterdam | python -m json.tool
 
     .. image:: Tut_vFW_get_facts.JPG
 
@@ -46,7 +46,7 @@ Inject the onset using the Telemetry API.
 
     .. code-block:: bash
 
-        curl --silent --user @1b3rt:31nst31n --header "Content-Type: text/plain" --data @dcae.vfw.onset.json -X PUT http://localhost:9696/policy/pdp/engine/topics/sources/ueb/unauthenticated.DCAE_EVENT_OUTPUT/events | python -m json.tool
+        curl -k --silent --user @1b3rt:31nst31n --header "Content-Type: text/plain" --data @dcae.vfw.onset.json -X PUT https://localhost:9696/policy/pdp/engine/topics/sources/ueb/unauthenticated.DCAE_EVENT_OUTPUT/events | python -m json.tool
 
     .. image:: Tut_vFW_onset_injected.JPG
 
@@ -76,7 +76,11 @@ Once the target entity is found, the PDP-D consults Guard to determine if this o
 
     .. image:: Tut_vFW_policy_guard_start.JPG
 
+|
+
     .. image:: Tut_vFW_policy_guard_result.JPG
+
+|
 
     .. image:: Tut_vFW_policy_operation_start.JPG
 
@@ -92,7 +96,7 @@ Inject the response using the Telemetry API.
 
     .. code-block:: bash
 
-        curl --silent --user @1b3rt:31nst31n --header "Content-Type: text/plain" --data @appc.legacy.success.json -X PUT http://localhost:9696/policy/pdp/engine/topics/sources/ueb/APPC-CL/events | python -m json.tool
+        curl -k --silent --user @1b3rt:31nst31n --header "Content-Type: text/plain" --data @appc.legacy.success.json -X PUT https://localhost:9696/policy/pdp/engine/topics/sources/ueb/APPC-CL/events | python -m json.tool
 
     .. image:: Tut_vFW_insert_appc_response.JPG
 
