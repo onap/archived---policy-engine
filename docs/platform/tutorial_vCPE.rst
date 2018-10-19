@@ -65,7 +65,11 @@ Once the event is in the ACTIVE state, the PDP-D consults Guard to determine if 
 
     .. image:: Tut_vCPE_guard_not_queried.JPG
 
+|
+
     .. image:: Tut_vCPE_guard_result.JPG
+
+|
 
     .. image:: Tut_vCPE_policy_operation.JPG
 
