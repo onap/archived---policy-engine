@@ -145,8 +145,6 @@ The Casablanca release for POLICY delivered the following Epics. For a full list
 
 The following bug fixes have been deployed with this release:
 
-    * `[POLICY-484] <https://jira.onap.org/browse/POLICY-484>`_ - Extend election handler run window and clean up error messages
-
     * `[POLICY-909] <https://jira.onap.org/browse/POLICY-909>`_ - get_ZoneDictionaryDataByName class type error
     * `[POLICY-1085] <https://jira.onap.org/browse/POLICY-1085>`_ - Stand-alone install will not run
     * `[POLICY-1106] <https://jira.onap.org/browse/POLICY-1106>`_ - Checkstyle fixes appear to have broken persistence
@@ -156,7 +154,13 @@ The following bug fixes have been deployed with this release:
     * `[POLICY-1155] <https://jira.onap.org/browse/POLICY-1155>`_ - PDP-D [APPS] : DRL Templates Compilation Errors
     * `[POLICY-1158] <https://jira.onap.org/browse/POLICY-1158>`_ - meet ASDC_AUTHORIZATION_FAILED for client setting
     * `[POLICY-1160] <https://jira.onap.org/browse/POLICY-1160>`_ - meet nullPointer exception based on the new schema of HPA capability requirement
-
+    * `[POLICY-1192] <https://jira.onap.org/browse/POLICY-1192>`_ - Update portal.properties in PE for AAF integration
+    * `[POLICY-1193] <https://jira.onap.org/browse/POLICY-1193>`_ - Policy: Heat Installation: policy host in certificate was generated incorrectly
+    * `[POLICY-1194] <https://jira.onap.org/browse/POLICY-1194>`_ - Policy: Heat installation: reconfigure URLs to point to a DNS hostname that matches the DMaaP certificate
+    * `[POLICY-1198] <https://jira.onap.org/browse/POLICY-1198>`_ - POLICY: OOM: PAP: cannot talk https directly to PDP-X pod bypassing service
+    * `[POLICY-1200] <https://jira.onap.org/browse/POLICY-1200>`_ - meet NullPointerException error since the PolicyScope should be set a default value
+    * `[POLICY-1201] <https://jira.onap.org/browse/POLICY-1201>`_ - Error while forwarding policy from policy-distribution to apex-pdp
+    * `[POLICY-1204] <https://jira.onap.org/browse/POLICY-1204>`_ - PAPLP: invalid schema database errors
 
 
 **Security Notes**
