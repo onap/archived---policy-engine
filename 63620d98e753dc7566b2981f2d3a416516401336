@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bada0100_636461e5",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1215,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-10-22T20:44:43Z",
+      "side": 1,
+      "message": "Here\u0027s a quick IF, that could be pulled into its own to reduce cognitive complexity:\nif (...) {\n Logger\n return false;\n}\n#\n# rest of the method\n#\n\nThe same can apply to the other outer if\u0027s that encapsulate many lines of code.",
+      "range": {
+        "startLine": 1215,
+        "startChar": 0,
+        "endLine": 1215,
+        "endChar": 66
+      },
+      "revId": "63620d98e753dc7566b2981f2d3a416516401336",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_43691dbd",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1257,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-10-22T20:44:43Z",
+      "side": 1,
+      "message": "As soon as you determine its false, you could simply return. If you get to the end of this method simply return true. Unless I misunderstand this.",
+      "range": {
+        "startLine": 1257,
+        "startChar": 0,
+        "endLine": 1257,
+        "endChar": 58
+      },
+      "revId": "63620d98e753dc7566b2981f2d3a416516401336",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
