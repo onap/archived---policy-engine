@@ -45,6 +45,47 @@
       "revId": "63620d98e753dc7566b2981f2d3a416516401336",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_43cfdd7f",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1257,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-10-22T22:21:25Z",
+      "side": 1,
+      "message": "Unless there\u0027s a desire to list all identified errors, in which case need to continue to the bottom.  Otherwise, definitely, just return immediately as soon as an error is identified.  That would remove lots of extra indentation and make things a bit more understandable.",
+      "parentUuid": "bada0100_43691dbd",
+      "range": {
+        "startLine": 1257,
+        "startChar": 0,
+        "endLine": 1257,
+        "endChar": 58
+      },
+      "revId": "63620d98e753dc7566b2981f2d3a416516401336",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_83b5c5ef",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-10-22T22:21:25Z",
+      "side": 1,
+      "message": "can use: Strings.isNullOrEmpty() or StringUtils",
+      "revId": "63620d98e753dc7566b2981f2d3a416516401336",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
