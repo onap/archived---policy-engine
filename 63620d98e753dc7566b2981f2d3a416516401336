@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bada0100_34cf6d81",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1215,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-10-23T14:14:06Z",
+      "side": 1,
+      "message": "I see your point here... I will make this change today and amend.",
+      "parentUuid": "bada0100_636461e5",
+      "range": {
+        "startLine": 1215,
+        "startChar": 0,
+        "endLine": 1215,
+        "endChar": 66
+      },
+      "revId": "63620d98e753dc7566b2981f2d3a416516401336",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bada0100_43691dbd",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
         "patchSetId": 2
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "bada0100_74273565",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1257,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-10-23T14:14:06Z",
+      "side": 1,
+      "message": "We return all the identified errors in the response... this is the practice since the beginning of validating the APIs.",
+      "parentUuid": "bada0100_43691dbd",
+      "range": {
+        "startLine": 1257,
+        "startChar": 0,
+        "endLine": 1257,
+        "endChar": 58
+      },
+      "revId": "63620d98e753dc7566b2981f2d3a416516401336",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bada0100_83b5c5ef",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
         "patchSetId": 2
@@ -83,6 +131,24 @@
       "writtenOn": "2018-10-22T22:21:25Z",
       "side": 1,
       "message": "can use: Strings.isNullOrEmpty() or StringUtils",
+      "revId": "63620d98e753dc7566b2981f2d3a416516401336",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_942ad92a",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-10-23T14:14:06Z",
+      "side": 1,
+      "message": "modelRequiredFieldsList is an ArrayList... this method does not work here.  Also, most of this code was just copy and pasted to separate it out into a new method, I was not thinking on changing anything that did not have to do with fixing the bug",
+      "parentUuid": "bada0100_83b5c5ef",
       "revId": "63620d98e753dc7566b2981f2d3a416516401336",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
