@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "bada0100_74ac15a1",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 1257,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-10-23T14:19:56Z",
+      "side": 1,
+      "message": "Ok - no problem with that practice.",
+      "parentUuid": "bada0100_74273565",
+      "range": {
+        "startLine": 1257,
+        "startChar": 0,
+        "endLine": 1257,
+        "endChar": 58
+      },
+      "revId": "63620d98e753dc7566b2981f2d3a416516401336",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bada0100_83b5c5ef",
         "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
         "patchSetId": 2
