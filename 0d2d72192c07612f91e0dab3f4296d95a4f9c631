@@ -16,6 +16,24 @@
       "revId": "0d2d72192c07612f91e0dab3f4296d95a4f9c631",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_3abaf76e",
+        "filename": "ONAP-REST/src/main/java/org/onap/policy/rest/util/PolicyValidation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1301,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-10-23T19:17:06Z",
+      "side": 1,
+      "message": "Good point Jim.. I will change this quickly",
+      "parentUuid": "bada0100_7a995f1e",
+      "revId": "0d2d72192c07612f91e0dab3f4296d95a4f9c631",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
