@@ -1212,116 +1212,117 @@ public class PolicyValidation {
     
     private boolean validateOptimization(PolicyRestAdapter policyData, StringBuilder responseString) {
         boolean valid = true;
-        if (!Strings.isNullOrEmpty(policyData.getServiceType())) {
-
-            modelRequiredFieldsList.clear();
-            pullJsonKeyPairs((JsonNode) policyData.getPolicyJSON());
-
-            String service;
-            String version;
-            if (policyData.getServiceType().contains("-v")) {
-                service = policyData.getServiceType().split("-v")[0];
-                version = policyData.getServiceType().split("-v")[1];
-            } else {
-                service = policyData.getServiceType();
-                version = policyData.getVersion();
-            }
-
-            if (!Strings.isNullOrEmpty(version)) {
-                OptimizationModels returnModel = getOptimizationModelData(service, version);
-
-                if (returnModel != null) {
-
-                    String annotation = returnModel.getAnnotation();
-                    String refAttributes = returnModel.getRefattributes();
-                    String subAttributes = returnModel.getSubattributes();
-                    String modelAttributes = returnModel.getAttributes();
-
-                    if (!Strings.isNullOrEmpty(annotation)) {
-                        Map<String, String> rangeMap = Splitter.on(",").withKeyValueSeparator("=")
-                                .split(annotation);
-                        for (Entry<String, String> rMap : rangeMap.entrySet()) {
-                            if (rMap.getValue().contains("range::")) {
-                                String value = mapAttribute.get(rMap.getKey().trim());
-                                String[] tempString = rMap.getValue().split("::")[1].split("-");
-                                int startNum = Integer.parseInt(tempString[0]);
-                                int endNum = Integer.parseInt(tempString[1]);
-                                String returnString = "InvalidreturnModel Range:" + rMap.getKey()
-                                + " must be between " + startNum + " - " + endNum + ",";
-
-                                if (value != null) {
-                                    if (PolicyUtils.isInteger(value.replace("\"", ""))) {
-                                        int result = Integer.parseInt(value.replace("\"", ""));
-                                        if (result < startNum || result > endNum) {
-                                            responseString.append(returnString);
-                                            valid = false;
-                                        }
-                                    } else {
-                                        responseString.append(returnString);
-                                        valid = false;
-                                    }
-                                } else {
-                                    responseString.append("<b>" + rMap.getKey() + "</b>:<i>" + rMap.getKey()
-                                    + " is required for the Optimization model " + service
-                                    + HTML_ITALICS_LNBREAK);
-                                    valid = false;
-                                }
-
-                            }
-                        }
-                    }
-
-                    // If request comes from the API we need to validate required fields in the Micro Service Modelvalid
-                    // GUI request are already validated from the SDK-APP
-                    if ("API".equals(policyData.getApiflag())) {
-                        // first , get the complete set of required fields
-                        populateReqFieldSet(new String[] {refAttributes, modelAttributes}, subAttributes);
-                        
-                        Iterator<String> reqTrueKeysIter = allOptReqTrueKeys.iterator();
-                        while (reqTrueKeysIter.hasNext()) {
-                            modelRequiredFieldsList.add(reqTrueKeysIter.next());
-                        }
-
-                        if (modelRequiredFieldsList != null && !modelRequiredFieldsList.isEmpty()) {
-                            
-                            // create jsonRequestMap with all json keys and values from request
-                            JsonNode rootNode = (JsonNode) policyData.getPolicyJSON();
-                            jsonRequestMap.clear();
-                            pullModelJsonKeyPairs(rootNode);
-
-                            // validate if the requiredFields are in the request
-                            for (String requiredField : modelRequiredFieldsList) {
-                                if (jsonRequestMap.containsKey(requiredField)) {
-                                    String value = jsonRequestMap.get(requiredField);
-                                    if (StringUtils.isBlank(value) || "\"\"".equals(value)) {
-                                        responseString.append("<b>Optimization Service Model</b>:<i> " 
-                                                + requiredField + ISREQUIRED + HTML_ITALICS_LNBREAK);
-                                        valid = false;
-                                    }
-                                } else {
-                                    responseString.append("<b>Optimization Service Model</b>:<i> " 
-                                            + requiredField + ISREQUIRED + HTML_ITALICS_LNBREAK);
-                                    valid = false;
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    responseString.append("<b>Optimization Service Model</b>:<i> Invalid Model. The model name, " 
-                            + service + " of version, " + version 
-                            + " was not found in the dictionary" + HTML_ITALICS_LNBREAK);
-                    valid = false;
-                }
-            } else {
-                responseString.append(
-                        "<b>Optimization Service Version</b>:<i> Optimization Service Version is required" 
-                                + HTML_ITALICS_LNBREAK);
-                valid = false;
-            }
+        
+        // Checks for required policy data in request
+        if (Strings.isNullOrEmpty(policyData.getServiceType())) {
+            responseString.append(
+                    "<b>Optimization Service</b>:<i> Optimization policy data is missing or invalid Json." 
+                            + HTML_ITALICS_LNBREAK);
+            return false;
+        }
+        
+        modelRequiredFieldsList.clear();
+        pullJsonKeyPairs((JsonNode) policyData.getPolicyJSON());
+        
+        // parse the service and version from the policy data
+        String service;
+        String version;
+        if (policyData.getServiceType().contains("-v")) {
+            service = policyData.getServiceType().split("-v")[0];
+            version = policyData.getServiceType().split("-v")[1];
         } else {
-            responseString.append("<b>Optimization Service</b>:<i> Optimization policy data is missing or invalid Json." 
-                    + HTML_ITALICS_LNBREAK);
-            valid = false;
+            service = policyData.getServiceType();
+            version = policyData.getVersion();
+        }
+        
+        // Checks for required version in policy data
+        if (Strings.isNullOrEmpty(version)) {
+            responseString.append(
+                    "<b>Optimization Service Version</b>:<i> Optimization Service Version is required" 
+                            + HTML_ITALICS_LNBREAK);
+            return false;
+        }
+            
+        OptimizationModels returnModel = getOptimizationModelData(service, version);
+        
+        // Checks if valid model exists in the database
+        if (returnModel == null) {
+            responseString.append("<b>Optimization Service Model</b>:<i> Invalid Model. The model name, " 
+                    + service + " of version, " + version 
+                    + " was not found in the dictionary" + HTML_ITALICS_LNBREAK);
+            return false;
+        }
+
+        String annotation = returnModel.getAnnotation();
+        String refAttributes = returnModel.getRefattributes();
+        String subAttributes = returnModel.getSubattributes();
+        String modelAttributes = returnModel.getAttributes();
+
+        if (!Strings.isNullOrEmpty(annotation)) {
+            Map<String, String> rangeMap = Splitter.on(",").withKeyValueSeparator("=")
+                    .split(annotation);
+            for (Entry<String, String> rMap : rangeMap.entrySet()) {
+                if (rMap.getValue().contains("range::")) {
+                    String value = mapAttribute.get(rMap.getKey().trim());
+                    String[] tempString = rMap.getValue().split("::")[1].split("-");
+                    int startNum = Integer.parseInt(tempString[0]);
+                    int endNum = Integer.parseInt(tempString[1]);
+                    String returnString = "InvalidreturnModel Range:" + rMap.getKey()
+                    + " must be between " + startNum + " - " + endNum + ",";
+
+                    if (value != null) {
+                        if (PolicyUtils.isInteger(value.replace("\"", ""))) {
+                            int result = Integer.parseInt(value.replace("\"", ""));
+                            if (result < startNum || result > endNum) {
+                                responseString.append(returnString);
+                                valid = false;
+                            }
+                        } else {
+                            responseString.append(returnString);
+                            valid = false;
+                        }
+                    } else {
+                        responseString.append("<b>" + rMap.getKey() + "</b>:<i>" + rMap.getKey()
+                        + " is required for the Optimization model " + service
+                        + HTML_ITALICS_LNBREAK);
+                        valid = false;
+                    }
+
+                }
+            }
+        }
+
+        // If request comes from the API we need to validate required fields in the Micro Service Modelvalid
+        // GUI request are already validated from the SDK-APP
+        if ("API".equals(policyData.getApiflag())) {
+            // first , get the complete set of required fields
+            populateReqFieldSet(new String[] {refAttributes, modelAttributes}, subAttributes);
+
+            modelRequiredFieldsList.addAll(allOptReqTrueKeys);
+            
+            if (modelRequiredFieldsList != null && !modelRequiredFieldsList.isEmpty()) {
+                
+                // create jsonRequestMap with all json keys and values from request
+                JsonNode rootNode = (JsonNode) policyData.getPolicyJSON();
+                jsonRequestMap.clear();
+                pullModelJsonKeyPairs(rootNode);
+
+                // validate if the requiredFields are in the request
+                for (String requiredField : modelRequiredFieldsList) {
+                    if (jsonRequestMap.containsKey(requiredField)) {
+                        String value = jsonRequestMap.get(requiredField);
+                        if (StringUtils.isBlank(value) || "\"\"".equals(value)) {
+                            responseString.append("<b>Optimization Service Model</b>:<i> " 
+                                    + requiredField + ISREQUIRED + HTML_ITALICS_LNBREAK);
+                            valid = false;
+                        }
+                    } else {
+                        responseString.append("<b>Optimization Service Model</b>:<i> " 
+                                + requiredField + ISREQUIRED + HTML_ITALICS_LNBREAK);
+                        valid = false;
+                    }
+                }
+            }
         }
 
         if (Strings.isNullOrEmpty(policyData.getPriority())) {
