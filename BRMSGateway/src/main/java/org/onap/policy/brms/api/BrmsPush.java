@@ -8,9 +8,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,7 +74,6 @@ import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.Invoker;
 import org.codehaus.plexus.util.IOUtil;
-
 import org.codehaus.plexus.util.WriterFactory;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.onap.policy.api.PEDependency;
@@ -98,9 +97,9 @@ import org.onap.policy.utils.PolicyUtils;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 /**
- * BRMSPush: Application responsible to push policies to the BRMS PDP Policy Repository (PR).
- * Mavenize and push policy to PR
- * 
+ * BRMSPush: Application responsible to push policies to the BRMS PDP Policy Repository (PR). Mavenize and push policy
+ * to PR
+ *
  * @version 1.0
  */
 
@@ -118,8 +117,8 @@ public class BrmsPush {
     private static final String RESOURCES = "resources";
     private static final Logger LOGGER = FlexLogger.getLogger(BrmsPush.class.getName());
     private static final String PROJECTSLOCATION = "RuleProjects";
-    private static final String[] GOALS = {"clean", "deploy"};
-    private static final String DEFAULT_VERSION = "1.3.0-SNAPSHOT";
+    private static final String[] GOALS = { "clean", "deploy" };
+    private static final String DEFAULT_VERSION = "1.3.1-SNAPSHOT";
     private static final String DEPENDENCY_FILE = "dependency.json";
     private static final String BRMSPERSISTENCE = "brmsEclipselink.persistencexml";
 
@@ -151,7 +150,7 @@ public class BrmsPush {
 
     /**
      * Responsible to push policies to the BRMS PDP Policy Repository (PR).
-     * 
+     *
      * @param propertiesFile the properties file
      * @param handler the {@link BackUpHandler}
      * @throws PolicyException PolicyException related to the operation
@@ -415,7 +414,7 @@ public class BrmsPush {
             final ArrayList<PEDependency> userDependencies = new ArrayList<>();
             for (final Map.Entry<String, String> entry : responseAttributes.entrySet()) {
                 final String key = entry.getKey();
-                String value = entry.getValue();
+                final String value = entry.getValue();
                 if (key.equals(policyKeyId)) {
                     selectedName = value;
                 }
@@ -462,14 +461,13 @@ public class BrmsPush {
         }
     }
 
-    private String getUserControllerName(String key, String value) {
+    private String getUserControllerName(final String key, final String value) {
         String userControllerName = null;
         // Check User Specific values.
         try {
             final PEDependency dependency = PolicyUtils.jsonStringToObject(value, PEDependency.class);
             userControllerName = key.replaceFirst("$controller:", "");
-            LOGGER.info("addRule: userControllerName - " + userControllerName + ", dependency: - "
-                    + dependency);
+            LOGGER.info("addRule: userControllerName - " + userControllerName + ", dependency: - " + dependency);
             addToGroup(userControllerName, dependency);
         } catch (final Exception e) {
             LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while resolving Controller: " + e);
@@ -477,16 +475,15 @@ public class BrmsPush {
         return userControllerName;
     }
 
-    private void updateUserDependencies(ArrayList<PEDependency> userDependencies, String value) {
-        //update the user dependencies supplied as parameter to this method
+    private void updateUserDependencies(final ArrayList<PEDependency> userDependencies, String value) {
+        // update the user dependencies supplied as parameter to this method
         value = value.substring(1, value.length() - 1).trim();
         final List<String> dependencyStrings = Arrays.asList(value.split(Pattern.quote("},{")));
         for (final String dependencyString : dependencyStrings) {
             try {
                 userDependencies.add(PolicyUtils.jsonStringToObject(dependencyString, PEDependency.class));
             } catch (final Exception e) {
-                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while resolving Dependencies: "
-                        + e);
+                LOGGER.error(XACMLErrorConstants.ERROR_PROCESS_FLOW + "Error while resolving Dependencies: " + e);
             }
         }
     }
@@ -643,13 +640,13 @@ public class BrmsPush {
         }
     }
 
-    private void parseJarContents(String artifactId, JarFile jar, Enumeration<?> enumEntries) {
+    private void parseJarContents(final String artifactId, final JarFile jar, final Enumeration<?> enumEntries) {
         final JarEntry jarEntry = (JarEntry) enumEntries.nextElement();
         File file = null;
         final String fileName = jarEntry.getName().substring(jarEntry.getName().lastIndexOf("/") + 1);
         if (jarEntry.getName().endsWith(".drl")) {
-            final String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src"
-                    + File.separator + "main" + File.separator + RESOURCES + File.separator + RULES;
+            final String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src" + File.separator
+                    + "main" + File.separator + RESOURCES + File.separator + RULES;
             new File(path).mkdirs();
             if (syncFlag && policyMap.containsKey(fileName.replace(".drl", ""))) {
                 file = new File(path + File.separator + fileName);
@@ -661,14 +658,13 @@ public class BrmsPush {
             new File(path).mkdirs();
             file = new File(path + File.separator + fileName);
         } else if (jarEntry.getName().endsWith(KMODULE_XML_FILE)) {
-            final String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src"
-                    + File.separator + "main" + File.separator + RESOURCES + File.separator + META_INF;
+            final String path = PROJECTSLOCATION + File.separator + artifactId + File.separator + "src" + File.separator
+                    + "main" + File.separator + RESOURCES + File.separator + META_INF;
             new File(path).mkdirs();
             file = new File(path + File.separator + fileName);
         }
         if (file != null) {
-            try (InputStream is = jar.getInputStream(jarEntry);
-                 FileOutputStream fos = new FileOutputStream(file)) {
+            try (InputStream is = jar.getInputStream(jarEntry); FileOutputStream fos = new FileOutputStream(file)) {
                 while (is.available() > 0) {
                     fos.write(is.read());
                 }
@@ -775,7 +771,7 @@ public class BrmsPush {
 
     /**
      * Will Push policies to the PolicyRepo.
-     * 
+     *
      * @throws PolicyException PolicyException related to the operation
      */
     public void pushRules() throws PolicyException {
@@ -1005,7 +1001,7 @@ public class BrmsPush {
 
     /**
      * Default Dependency Section. Can be changed as required.
-     * 
+     *
      * @param controllerName the controller name
      * @return changed dependency list
      */
@@ -1090,7 +1086,7 @@ public class BrmsPush {
         if (config.getProperty(GROUP_NAMES).contains(",")) {
             groupNames = config.getProperty(GROUP_NAMES).replaceAll(" ", "").split(",");
         } else {
-            groupNames = new String[] {config.getProperty(GROUP_NAMES).replaceAll(" ", "")};
+            groupNames = new String[] { config.getProperty(GROUP_NAMES).replaceAll(" ", "") };
         }
         if (groupNames == null || groupNames.length == 0) {
             LOGGER.error(XACMLErrorConstants.ERROR_DATA_ISSUE + groupNamesError);
@@ -1247,7 +1243,7 @@ public class BrmsPush {
 
     /**
      * Get URL List Size.
-     * 
+     *
      * @return URL list size
      */
     public int urlListSize() {

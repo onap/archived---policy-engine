@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.onap.policy.engine</groupId>
         <artifactId>PolicyEngineSuite</artifactId>
-        <version>1.3.0-SNAPSHOT</version>
+        <version>1.3.1-SNAPSHOT</version>
     </parent>
     <artifactId>BRMSGateway</artifactId>
     <description>This application will take in BRMS rules and acts as interface between PR and PDP XACML</description>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.onap.policy.common</groupId>
             <artifactId>integrity-monitor</artifactId>
-            <version>${project.version}</version>
+            <version>${version.policy.common}</version>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
