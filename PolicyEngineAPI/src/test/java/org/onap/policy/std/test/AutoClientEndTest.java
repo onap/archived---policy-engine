@@ -1,8 +1,8 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,13 @@
 
 package org.onap.policy.std.test;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -45,9 +46,8 @@ import org.springframework.util.SocketUtils;
 public class AutoClientEndTest {
     private static WebSocketServer ws;
 
-    private static int port = SocketUtils.findAvailableTcpPort();
-    private static CountDownLatch countServerDownLatch = null;
-    private static PDPNotification notification = null;
+    private static final int port = SocketUtils.findAvailableTcpPort();
+    private static volatile CountDownLatch countServerDownLatch = null;
 
     /**
      * Start server.
@@ -56,7 +56,6 @@ public class AutoClientEndTest {
      */
     @BeforeClass
     public static void startServer() throws Exception {
-        notification = null;
         ws = new WebSocketServer(new InetSocketAddress(port), 1) {
             @Override
             public void onOpen(WebSocket conn, ClientHandshake handshake) {
@@ -100,7 +99,6 @@ public class AutoClientEndTest {
 
             @Override
             public void notificationReceived(PDPNotification notify) {
-                notification = notify;
                 countServerDownLatch.countDown();
 
             }

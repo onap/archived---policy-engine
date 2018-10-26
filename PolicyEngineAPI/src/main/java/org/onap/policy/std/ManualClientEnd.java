@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,11 @@ import org.onap.policy.std.StdPDPNotification;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 public class ManualClientEnd extends WebSocketClient {
-    private static CountDownLatch latch;
-    private static StdPDPNotification notification = null;
-    private static String resultJson = null;
-    private static Logger logger = FlexLogger.getLogger(ManualClientEnd.class.getName());
-    private static ManualClientEnd client;
+    private static volatile CountDownLatch latch;
+    private static volatile StdPDPNotification notification = null;
+    private static volatile String resultJson = null;
+    private static final Logger logger = FlexLogger.getLogger(ManualClientEnd.class.getName());
+    private static volatile ManualClientEnd client;
 
     public ManualClientEnd(URI serverUri) {
         super(serverUri);

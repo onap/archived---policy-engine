@@ -1,8 +1,8 @@
-/*-
+/*
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@
 package org.onap.policy.std.test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -44,9 +44,9 @@ import org.springframework.util.SocketUtils;
 public class ManualClientEndTest {
     private static WebSocketServer ws;
 
-    private static int port = SocketUtils.findAvailableTcpPort();
-    private static CountDownLatch countServerDownLatch = null;
-    private static String recvMsg = null;
+    private static final int port = SocketUtils.findAvailableTcpPort();
+    private static volatile String recvMsg = null;
+    private static volatile Exception webEx = null;
 
     /**
      * Start server.
@@ -57,18 +57,17 @@ public class ManualClientEndTest {
     public static void startServer() throws Exception {
         ws = new WebSocketServer(new InetSocketAddress(port), 1) {
             @Override
-            public void onOpen(WebSocket conn, ClientHandshake handshake) {
-
-            }
+            public void onOpen(WebSocket conn, ClientHandshake handshake) {}
 
             @Override
-            public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-                countServerDownLatch.countDown();
-            }
+            public void onClose(WebSocket conn, int code, String reason, boolean remote) {}
 
             @Override
             public void onMessage(WebSocket conn, String message) {
+            	
+            	// NOTE: must copy to recvMsg BEFORE invoking conn.send()
                 recvMsg = message;
+                
                 conn.send("{\"removedPolicies\": [],\"loadedPolicies\":"
                         + "[{\"policyName\": \"Test.Config_BRMS_Param_BrmsParamTestPa.1.xml\","
                         + "\"versionNo\": \"1\",\"matches\": {\"ECOMPName\": \"DROOLS\","
@@ -79,9 +78,8 @@ public class ManualClientEndTest {
 
             @Override
             public void onError(WebSocket conn, Exception ex) {
-
+            	webEx = ex;
                 ex.printStackTrace();
-                fail("There should be no exception!");
             }
 
             @Override
@@ -95,17 +93,16 @@ public class ManualClientEndTest {
 
     @Test
     public void testManualClient() throws Exception {
-        countServerDownLatch = new CountDownLatch(1);
-
+    	
         ManualClientEnd.start("http://localhost:" + port + "/");
-        countServerDownLatch.await(45, TimeUnit.SECONDS);
 
+        assertNull(webEx);
         assertNotNull(ManualClientEnd.result(NotificationScheme.MANUAL_ALL_NOTIFICATIONS));
         assertTrue("Manual".equalsIgnoreCase(recvMsg));
     }
 
     @AfterClass
     public static void successTests() throws InterruptedException, IOException {
-        ws.stop(30000);
+        ws.stop(5000);
     }
 }
