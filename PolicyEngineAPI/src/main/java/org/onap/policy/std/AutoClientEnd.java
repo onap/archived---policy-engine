@@ -35,18 +35,18 @@ import org.onap.policy.common.logging.flexlogger.Logger;
 import org.onap.policy.xacml.api.XACMLErrorConstants;
 
 public class AutoClientEnd extends WebSocketClient {
-    private static StdPDPNotification notification = null;
-    private static StdPDPNotification oldNotification = null;
-    private static AutoClientEnd client = null;
-    private static NotificationScheme scheme = null;
-    private static NotificationHandler handler = null;
-    private static String url = null;
-    private static boolean status = false;
-    private static boolean stop = false;
-    private static boolean error = false;
-    private static boolean restartNeeded = false;
-    private static ScheduledExecutorService restartExecutorService = null;
-    private static Logger logger = FlexLogger.getLogger(AutoClientEnd.class.getName());
+    private static volatile StdPDPNotification notification = null;
+    private static volatile StdPDPNotification oldNotification = null;
+    private static volatile AutoClientEnd client = null;
+    private static volatile NotificationScheme scheme = null;
+    private static volatile NotificationHandler handler = null;
+    private static volatile String url = null;
+    private static volatile boolean status = false;
+    private static volatile boolean stop = false;
+    private static volatile boolean error = false;
+    private static volatile boolean restartNeeded = false;
+    private static volatile ScheduledExecutorService restartExecutorService = null;
+    private static final Logger logger = FlexLogger.getLogger(AutoClientEnd.class.getName());
 
     private AutoClientEnd(URI serverUri) {
         super(serverUri);

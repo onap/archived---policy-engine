@@ -45,9 +45,9 @@ import org.springframework.util.SocketUtils;
 public class AutoClientEndTest {
     private static WebSocketServer ws;
 
-    private static int port = SocketUtils.findAvailableTcpPort();
-    private static CountDownLatch countServerDownLatch = null;
-    private static PDPNotification notification = null;
+    private static final int port = SocketUtils.findAvailableTcpPort();
+    private static volatile CountDownLatch countServerDownLatch = null;
+    private static volatile PDPNotification notification = null;
 
     /**
      * Start server.
