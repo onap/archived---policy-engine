@@ -42,15 +42,14 @@ ONAP Policy requires all the *policy* modules from the ONAP repository. It also 
      
     ## the ONAP repos to clone
     onap_repos="\
-    policy/api \
+    policy/parent \
     policy/common \
     policy/docker \
     policy/drools-applications \
     policy/drools-pdp \
     policy/engine \
-    policy/gui \
-    policy/pap \
-    policy/pdp"
+    policy/apex-pdp \
+    policy/distribution"
      
     ##
     ## Help screen and exit condition (i.e. too few arguments)
@@ -135,15 +134,14 @@ Execution of the script above results in the following directory hierarchy in yo
 
     *  ~/git/onap
     *  ~/git/onap/policy
-    *  ~/git/onap/policy/api
+    *  ~/git/onap/policy/parent
     *  ~/git/onap/policy/common
     *  ~/git/onap/policy/docker
     *  ~/git/onap/policy/drools-applications
     *  ~/git/onap/policy/drools-pdp
     *  ~/git/onap/policy/engine
-    *  ~/git/onap/policy/gui
-    *  ~/git/onap/policy/pap
-    *  ~/git/onap/policy/pdp    
+    *  ~/git/onap/policy/apex-pdp
+    *  ~/git/onap/policy/distribution
 
 
 Building ONAP
@@ -177,15 +175,13 @@ Building ONAP
         </organization>
      
         <modules>
+            <module>parent</module>
             <module>common</module>
-            <module>engine</module>
-            <module>pdp</module>
-            <module>pap</module>
             <module>drools-pdp</module>
             <module>drools-applications</module>
-            <module>api</module>
-            <module>gui</module>
-            <module>docker</module>
+            <module>engine</module>
+            <module>apex-pdp</module>
+            <module>distribution</module>
         </modules>
     </project>
 
@@ -217,6 +213,20 @@ The instructions here are based on the instructions in the file *~/git/onap/poli
 
 	    cd ~/git/onap/policy/drools-pdp/packages/docker/target
 	    docker build -t onap/policy-drools policy-drools
+
+
+**Step 3:** Build the Policy SDC Distribution docker image:
+
+   .. code-block:: bash 
+
+       cd ~/git/onap/policy/distribution/
+       
+**Step 4:** Build the Apex PDP docker image:
+
+   .. code-block:: bash 
+
+       cd ~/git/onap/policy/distribution/
+       
 
 
 Starting the ONAP Policy Framework Docker Images
