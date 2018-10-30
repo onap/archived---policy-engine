@@ -85,22 +85,6 @@
         <module>packages</module>
         <module>TestSuite</module>
     </modules>
-    <distributionManagement>
-        <repository>
-            <id>ecomp-releases</id>
-            <name>ONAP Release Repository</name>
-            <url>${nexusproxy}/${releases.path}</url>
-        </repository>
-        <snapshotRepository>
-            <id>ecomp-snapshots</id>
-            <name>ONAP Snapshot Repository</name>
-            <url>${nexusproxy}/${snapshots.path}</url>
-        </snapshotRepository>
-        <site>
-            <id>ecomp-site</id>
-            <url>dav:${nexusproxy}${sitePath}</url>
-        </site>
-    </distributionManagement>
     <reporting>
         <plugins>
             <plugin>
