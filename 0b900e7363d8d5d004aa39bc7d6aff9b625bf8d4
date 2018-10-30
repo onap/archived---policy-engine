@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bada0100_185fe973",
+        "filename": "docs/platform/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-10-30T18:12:34Z",
+      "side": 1,
+      "message": "Ram, Michael - can you help me fill this in? I know it is different from drools and the pe.",
+      "range": {
+        "startLine": 218,
+        "startChar": 0,
+        "endLine": 230,
+        "endChar": 0
+      },
+      "revId": "0b900e7363d8d5d004aa39bc7d6aff9b625bf8d4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
