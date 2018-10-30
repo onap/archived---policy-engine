@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PDP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ public class PDPApiAuth {
      */
     public static boolean checkPermissions(String clientEncoding, String requestID,
             String resource) {
-        try{
+        try{            
             String[] userNamePass = PolicyUtils.decodeBasicEncoding(clientEncoding);
             if(userNamePass==null || userNamePass.length==0){
                 String usernameAndPassword = null;
@@ -105,7 +105,14 @@ public class PDPApiAuth {
             Boolean result = false;
             // Check Backward Compatibility. 
             try{
-                result = clientAuth(userNamePass);
+                /*
+                 * If AAF is NOT enabled in the properties we will allow the user to 
+                 * continue to use the client.properties file to authenticate.
+                 * Note: Disabling AAF is for testing purposes and not intended for production.
+                 */
+                if ("false".equals(XACMLProperties.getProperty("enable_aaf"))) {
+                    result = clientAuth(userNamePass);
+                }
             }catch(Exception e){
                 LOGGER.error(MessageCodes.ERROR_PERMISSIONS, e);
             }
