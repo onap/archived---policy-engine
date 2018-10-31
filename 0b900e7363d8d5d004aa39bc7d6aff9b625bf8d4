@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "bada0100_99b51b33",
+        "filename": "docs/platform/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1581
+      },
+      "writtenOn": "2018-10-31T14:19:13Z",
+      "side": 1,
+      "message": "cd ~/git/onap/policy/distribution/packages\nmvn clean install -Pdocker",
+      "range": {
+        "startLine": 222,
+        "startChar": 10,
+        "endLine": 222,
+        "endChar": 12
+      },
+      "revId": "0b900e7363d8d5d004aa39bc7d6aff9b625bf8d4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_79bf17fc",
+        "filename": "docs/platform/installation.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1581
+      },
+      "writtenOn": "2018-10-31T14:19:13Z",
+      "side": 1,
+      "message": "cd ~/git/onap/policy/apex-pdp/packages/apex-pdp-docker/target\ndocker build -t onap/policy-apex-pdp policy-apex-pdp",
+      "range": {
+        "startLine": 228,
+        "startChar": 0,
+        "endLine": 228,
+        "endChar": 41
+      },
+      "revId": "0b900e7363d8d5d004aa39bc7d6aff9b625bf8d4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bada0100_185fe973",
         "filename": "docs/platform/installation.rst",
         "patchSetId": 1
