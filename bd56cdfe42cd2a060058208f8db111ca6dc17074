@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bada0100_33076ecc",
+        "filename": "packages/base/src/files/install/servers/pdp/bin/xacml.pdp.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-10-31T04:03:20Z",
+      "side": 1,
+      "message": "This should be:  ${{TRUSTSTORE_PASSWD}}",
+      "revId": "bd56cdfe42cd2a060058208f8db111ca6dc17074",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
