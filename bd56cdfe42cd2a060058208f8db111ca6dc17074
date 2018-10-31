@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "bada0100_deace937",
+        "filename": "ONAP-PDP-REST/xacml.pdp.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-10-31T13:08:21Z",
+      "side": 1,
+      "message": "yes - where would these be setup? I don\u0027t believe that our docker images set these directories up or fill them in.",
+      "parentUuid": "bada0100_3e9735ee",
+      "revId": "bd56cdfe42cd2a060058208f8db111ca6dc17074",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bada0100_5e9a3915",
         "filename": "ONAP-PDP-REST/xacml.pdp.properties",
         "patchSetId": 2
