@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "bada0100_791e3765",
+        "filename": "ONAP-PDP-REST/xacml.pdp.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 805
+      },
+      "writtenOn": "2018-10-31T13:35:25Z",
+      "side": 1,
+      "message": "these are just for developer local environments.. I committed them so that developers have the properties in there local for setting up in eclipse.  They do not affect installed application.  The true properties that matter are in the packages directory.  The path is where my repos are setup on my machine and developers should know to change them.",
+      "parentUuid": "bada0100_deace937",
+      "revId": "bd56cdfe42cd2a060058208f8db111ca6dc17074",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bada0100_5e9a3915",
         "filename": "ONAP-PDP-REST/xacml.pdp.properties",
         "patchSetId": 2
