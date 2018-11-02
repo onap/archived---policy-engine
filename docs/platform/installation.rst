@@ -42,15 +42,14 @@ ONAP Policy requires all the *policy* modules from the ONAP repository. It also 
      
     ## the ONAP repos to clone
     onap_repos="\
-    policy/api \
+    policy/parent \
     policy/common \
     policy/docker \
     policy/drools-applications \
     policy/drools-pdp \
     policy/engine \
-    policy/gui \
-    policy/pap \
-    policy/pdp"
+    policy/apex-pdp \
+    policy/distribution"
      
     ##
     ## Help screen and exit condition (i.e. too few arguments)
@@ -135,15 +134,14 @@ Execution of the script above results in the following directory hierarchy in yo
 
     *  ~/git/onap
     *  ~/git/onap/policy
-    *  ~/git/onap/policy/api
+    *  ~/git/onap/policy/parent
     *  ~/git/onap/policy/common
     *  ~/git/onap/policy/docker
     *  ~/git/onap/policy/drools-applications
     *  ~/git/onap/policy/drools-pdp
     *  ~/git/onap/policy/engine
-    *  ~/git/onap/policy/gui
-    *  ~/git/onap/policy/pap
-    *  ~/git/onap/policy/pdp    
+    *  ~/git/onap/policy/apex-pdp
+    *  ~/git/onap/policy/distribution
 
 
 Building ONAP
@@ -177,15 +175,13 @@ Building ONAP
         </organization>
      
         <modules>
+            <module>parent</module>
             <module>common</module>
-            <module>engine</module>
-            <module>pdp</module>
-            <module>pap</module>
             <module>drools-pdp</module>
             <module>drools-applications</module>
-            <module>api</module>
-            <module>gui</module>
-            <module>docker</module>
+            <module>engine</module>
+            <module>apex-pdp</module>
+            <module>distribution</module>
         </modules>
     </project>
 
@@ -219,10 +215,25 @@ The instructions here are based on the instructions in the file *~/git/onap/poli
 	    docker build -t onap/policy-drools policy-drools
 
 
+**Step 3:** Build the Policy SDC Distribution docker image:
+
+   .. code-block:: bash 
+
+            cd ~/git/onap/policy/distribution/packages
+            mvn clean install -Pdocker
+       
+**Step 4:** Build the Apex PDP docker image:
+
+   .. code-block:: bash 
+
+            cd ~/git/onap/policy/apex-pdp/packages/apex-pdp-docker/target
+            docker build -t onap/policy-apex-pdp policy-apex-pdp
+
+
 Starting the ONAP Policy Framework Docker Images
 ------------------------------------------------
 
-In order to run the containers, you can use *docker-compose*. This uses the *docker-compose.yml* yaml file to bring up the ONAP Policy Framework.
+In order to run the containers, you can use *docker-compose*. This uses the *docker-compose.yml* yaml file to bring up the ONAP Policy Framework. This file is located in the policy/docker repository.
 
 **Step 1:** Make the file config/drools/drools-tweaks.sh executable.
 
@@ -258,13 +269,12 @@ In order to run the containers, you can use *docker-compose*. This uses the *doc
 **You now have a full standalone ONAP Policy framework up and running!**
 
 
-Installation of Controllers and Policies
-----------------------------------------
+Installation of Drools Controllers and Policies
+-----------------------------------------------
 
-You may now install a controller and policies on the ONAP Policy Framework. Follow either of the HowTos below to install either the Amsterdam or Beijing controller and policies.
+You may now install a controller and policies on the ONAP Policy Framework. Follow the HowTos below to install the Amsterdam controller and policies.
 
     * `Installation of Amsterdam Controller and vCPE Policy <installAmsterController.html>`_
-    * `Installation of Beijing Controller and Policies <installBeijingController.html>`_
 
 
 
