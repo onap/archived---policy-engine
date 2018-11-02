@@ -1214,9 +1214,7 @@ public class MSModelUtils {
                         hm = new LinkedHashMap<>();
                         String keyStr = key.substring(key.lastIndexOf('.') + 1);
                         String valueStr = map.get(key);
-                        if (key.contains(".objective.")) {
-                            throw new ParserException("Attribute objective is a key word. Please use a different name");
-                        }
+
                         if (("type").equals(keyStr)) {
                             if (!key.contains("entry_schema")) {
                                 hm.put(keyStr, valueStr);
