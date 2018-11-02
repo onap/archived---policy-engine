@@ -120,7 +120,7 @@
         }, {
             "groupId": "com.att.research.xacml",
             "artifactId": "xacml-pdp",
-            "version": "1.0.1"
+            "version": "1.0.2"
         }]
     }
 }
