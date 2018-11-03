@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Liam Fallon <liam.fallon@ericsson.com>
+Code-Review+2: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-by: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-at: Sat, 03 Nov 2018 15:06:46 +0000
+Reviewed-on: https://gerrit.onap.org/r/71756
+Project: policy/engine
+Branch: refs/heads/casablanca
