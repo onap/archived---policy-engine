@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Liam Fallon <liam.fallon@ericsson.com>
+Code-Review+1: Saryu Shah <ss3917@att.com>
+Code-Review+2: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-by: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-at: Mon, 05 Nov 2018 14:28:31 +0000
+Reviewed-on: https://gerrit.onap.org/r/71743
+Project: policy/engine
+Branch: refs/heads/master
