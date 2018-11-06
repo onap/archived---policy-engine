@@ -582,7 +582,11 @@ public class CreateDcaeMicroServiceController extends RestrictedBaseController {
 		
 		//Get element order info 
 		String dataOrderInfo = returnModel.getDataOrderInfo();
-		
+        if(dataOrderInfo != null && !dataOrderInfo.startsWith("\"")){
+            dataOrderInfo = "\"" + dataOrderInfo + "\"";
+        }
+        LOGGER.info("dataOrderInfo : " + dataOrderInfo);
+        
 		String allManyTrueKeys = "";
 		if(allkeys != null){
 			allManyTrueKeys = allkeys.toString();

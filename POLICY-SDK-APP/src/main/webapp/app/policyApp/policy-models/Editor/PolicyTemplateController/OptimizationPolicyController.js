@@ -1159,11 +1159,11 @@ angular.module('abs').controller('optimizationController', ['$scope', '$window',
 			listField.appendChild(optionFirst);	
 		}
 		
-		for (i=0; i < listemunerateValues.length; i += 1) {
-			if(listemunerateValues[i].includes("equal-sign")){
+		for (var i=0; i < listemunerateValues.length; i += 1) {
+			if(typeof listemunerateValues[i] == "string" && listemunerateValues[i].includes("equal-sign")){
 				listemunerateValues[i] = listemunerateValues[i].replace('equal-sign','=');
 			}
-		    option = document.createElement('option');
+		    var option = document.createElement('option');
 		    option.setAttribute('value', listemunerateValues[i]);
 		    option.appendChild(document.createTextNode(listemunerateValues[i]));
 		    option.setAttribute('value', listemunerateValues[i]);
