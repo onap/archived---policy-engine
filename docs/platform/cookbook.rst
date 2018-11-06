@@ -111,6 +111,26 @@ PDP-D Recipes ("drools" container)
         curl --silent --user "${HEALTHCHECK_USER}:${HEALTHCHECK_PASSWORD}" 
              -X GET http://localhost:6969/healthcheck | python -m json.tool
 
+PAP Recipes (inside the "pap" container)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    .. code-block:: bash
+       :caption: Bypass Portal Authentication with the Policy Web UI
+       :linenos:
+
+        edit: /opt/app/policy/servers/console/webapps/onap/WEB-INF/classes/portal.properties
+        comment out: #role_access_centralized = remote
+        restart pap: policy.sh stop; policy.sh start;
+
+
+    .. code-block:: bash
+       :caption: Access the Policy Web UI without going through the Portal UI
+       :linenos:
+
+       https://<pap-vm>:8443/onap/login.htm  (Heat)
+       https://<pap-vm>:30219/onap/login.htm  (Kubernetes)
+
+
 End of Document
 
 .. SSNote: Wiki page ref. https://wiki.onap.org/display/DW/Policy+Cookbook
