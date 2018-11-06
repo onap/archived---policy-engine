@@ -23,10 +23,9 @@ package org.onap.policy.utils;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Properties;
-
-import com.att.nsa.mr.client.MRClient.MRApiException;
-import com.att.nsa.mr.client.impl.MRConsumerImpl;
-import com.att.nsa.mr.test.clients.ProtocolTypeConstants;
+import org.onap.dmaap.mr.client.MRClient.MRApiException;
+import org.onap.dmaap.mr.client.impl.MRConsumerImpl;
+import org.onap.dmaap.mr.test.clients.ProtocolTypeConstants;
 
 public interface BusConsumer {
 	
