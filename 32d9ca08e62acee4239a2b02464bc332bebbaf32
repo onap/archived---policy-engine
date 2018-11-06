@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_4aac09ee",
+        "filename": "POLICY-SDK-APP/src/main/java/org/onap/policy/controller/CreateDcaeMicroServiceController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-11-06T21:25:17Z",
+      "side": 1,
+      "message": "I assume we don\u0027t have to worry about cases like: starts with double quote, but doesn\u0027t end with one, and vice versa.  Or contains an embedded quote",
+      "revId": "32d9ca08e62acee4239a2b02464bc332bebbaf32",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_aa825550",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 1383,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-11-06T21:25:17Z",
+      "side": 1,
+      "message": "need \"var\"?  (it was added in the other .js)",
+      "revId": "32d9ca08e62acee4239a2b02464bc332bebbaf32",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_eab85d2c",
+        "filename": "POLICY-SDK-APP/src/main/webapp/app/policyApp/policy-models/Editor/PolicyTemplateController/DCAEMicroServicePolicyController.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 1388,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-11-06T21:25:17Z",
+      "side": 1,
+      "message": "need \"var\"?",
+      "revId": "32d9ca08e62acee4239a2b02464bc332bebbaf32",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
