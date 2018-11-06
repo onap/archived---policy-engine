@@ -24,13 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-
+import org.onap.dmaap.mr.client.impl.MRSimplerBatchPublisher;
+import org.onap.dmaap.mr.test.clients.ProtocolTypeConstants;
 import org.onap.policy.common.logging.eelf.PolicyLogger;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
-
-import com.att.nsa.mr.client.impl.MRSimplerBatchPublisher;
-import com.att.nsa.mr.test.clients.ProtocolTypeConstants;
 
 public interface BusPublisher {
 	
