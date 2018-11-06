@@ -27,10 +27,9 @@ import java.net.MalformedURLException;
 import java.util.Arrays;
 
 import org.junit.Test;
+import org.onap.dmaap.mr.client.MRClient.MRApiException;
 import org.onap.policy.utils.BusConsumer;
 import org.onap.policy.utils.BusPublisher;
-
-import com.att.nsa.mr.client.MRClient.MRApiException;
 
 public class BusTest {
     
