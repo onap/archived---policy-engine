@@ -79,7 +79,7 @@ A policy healthcheck (with more detailed output) can be done directly by invokin
     # please modify configuration pre-installation at:
     # oom/kubernetes/policy/charts/drools/resources/config/opt/policy/config/drools/keys/feature-healthcheck.conf
      
-    curl --silent --user 'healthcheck:zb!XztG34' -X GET http://localhost:30217/healthcheck | python -m json.tool
+    curl --silent --user 'demo@people.osaaf.org:demo123456!' -X GET http://localhost:30217/healthcheck | python -m json.tool
     {
         "details": [
             {
@@ -135,7 +135,7 @@ The following command can be issued on each of the PDP-D replicas IPs:
     # oom/kubernetes/policy/charts/drools/resources/config/opt/policy/config/drools/base.conf
      
      
-    curl --silent --user '@1b3rt:31nst31n' -X GET http://<drools-replica-ip>:9696/policy/pdp/engine/controllers/amsterdam/drools | python -m json.tool
+    curl --silent --user 'demo@people.osaaf.org:demo123456!' -X GET http://<drools-replica-ip>:9696/policy/pdp/engine/controllers/amsterdam/drools | python -m json.tool
     {
         "alive": false,
         "artifactId": "NO-ARTIFACT-ID",
@@ -260,7 +260,7 @@ The following command can be used for verifying each replica:
     # please modify configuration pre-installation at:
     # oom/kubernetes/policy/charts/drools/resources/config/opt/policy/config/drools/base.conf
      
-    curl --silent --user '@1b3rt:31nst31n' -X GET http://<replica-ip>:9696/policy/pdp/engine/controllers/amsterdam/drools | python -m json.tool
+    curl --silent --user 'demo@people.osaaf.org:demo123456!' -X GET http://<replica-ip>:9696/policy/pdp/engine/controllers/amsterdam/drools | python -m json.tool
 
     {
         "alive": true,
@@ -521,7 +521,7 @@ Verification that the restarted PDP-D 0 comes up with the appropriate policy loa
 .. code-block:: bash
    :caption: Verifying restarted PDP-D points to policies pre-failure.
 
-    ubuntu@k8sx:~$ curl --silent --user '@1b3rt:31nst31n' -X GET http://10.42.10.21:9696/policy/pdp/engine/controllers/amsterdam/drools | python -m json.tool
+    ubuntu@k8sx:~$ curl --silent --user 'demo@people.osaaf.org:demo123456!' -X GET http://10.42.10.21:9696/policy/pdp/engine/controllers/amsterdam/drools | python -m json.tool
     {
         "alive": true,
         "artifactId": "policy-amsterdam-rules",
@@ -911,7 +911,7 @@ Verify that the new PDP-D comes up with the latest policy coordinates:
 .. code-block:: bash
    :caption: Verify new PDP-D 2 comes up with policies loaded
 
-    ubuntu@k8sx:~$ curl --silent --user '@1b3rt:31nst31n' -X GET http://10.42.172.88:9696/policy/pdp/engine/controllers/amsterdam/drools | python -m json.tool
+    ubuntu@k8sx:~$ curl --silent --user 'demo@people.osaaf.org:demo123456!' -X GET http://10.42.172.88:9696/policy/pdp/engine/controllers/amsterdam/drools | python -m json.tool
     {
         "alive": true,
         "artifactId": "policy-amsterdam-rules",
