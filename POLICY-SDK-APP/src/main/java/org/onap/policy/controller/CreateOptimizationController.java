@@ -234,6 +234,10 @@ public class CreateOptimizationController extends RestrictedBaseController {
 		
 		//Get element order info 
 		String dataOrderInfo = returnModel.getDataOrderInfo();
+		if(dataOrderInfo != null && !dataOrderInfo.startsWith("\"")){
+		    dataOrderInfo = "\"" + dataOrderInfo + "\"";
+		}
+		
 		String nameOfTrueKeys = "";
 		if(allkeys != null){
 			nameOfTrueKeys = allkeys.toString();
