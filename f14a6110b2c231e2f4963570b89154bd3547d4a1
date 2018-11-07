@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_2d00baa9",
+        "filename": "docs/platform/deployPDPPAP.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-11-07T23:46:11Z",
+      "side": 1,
+      "message": "policy.sh",
+      "revId": "f14a6110b2c231e2f4963570b89154bd3547d4a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_4df97ec7",
+        "filename": "docs/platform/deployPDPPAP.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-11-07T23:46:11Z",
+      "side": 1,
+      "message": "Mention that this is in the PDP-D that proxies for PAP, PDP-X, etc ..",
+      "revId": "f14a6110b2c231e2f4963570b89154bd3547d4a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_ad2b4a2f",
+        "filename": "docs/platform/deployPDPPAP.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-11-07T23:46:11Z",
+      "side": 1,
+      "message": "Change to PDP-X",
+      "revId": "f14a6110b2c231e2f4963570b89154bd3547d4a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_4d209e49",
+        "filename": "docs/platform/deployPDPPAP.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-11-07T23:46:11Z",
+      "side": 1,
+      "message": "policy.sh",
+      "revId": "f14a6110b2c231e2f4963570b89154bd3547d4a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_2d175aef",
+        "filename": "docs/platform/deployPDPPAP.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-11-07T23:46:11Z",
+      "side": 1,
+      "message": "Remove this \"Healthcheck\" section , overlaps with the previous",
+      "revId": "f14a6110b2c231e2f4963570b89154bd3547d4a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_edd87255",
+        "filename": "docs/platform/deployPDPPAP.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-11-07T23:46:11Z",
+      "side": 1,
+      "message": "Mentioned that this is only accessible in Heat installations.  It is disabled in OOM installations.",
+      "revId": "f14a6110b2c231e2f4963570b89154bd3547d4a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_4de73e13",
+        "filename": "docs/platform/deployPDPPAP.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-11-07T23:46:11Z",
+      "side": 1,
+      "message": "Would be nice to add a section about brmsgw.",
+      "revId": "f14a6110b2c231e2f4963570b89154bd3547d4a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
