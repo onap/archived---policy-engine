@@ -108,8 +108,8 @@ The Healthcheck can also be invoked manually as follows:
         # Assuming the healthcheck service credentials have not been changed
         # post-installation within the drools container
 
-        source /opt/policy/config/drools/feature-healthcheck.conf
-        curl --silent --user "${HEALTHCHECK_USER}:${HEALTHCHECK_PASSWORD}" -X GET http://localhost:6969/healthcheck | python -m json.tool
+        source /opt/app/policy/config/feature-healthcheck.conf.environment
+        curl -k --silent --user "${HEALTHCHECK_USER}:${HEALTHCHECK_PASSWORD}" -X GET https://localhost:6969/healthcheck | python -m json.tool
 
 
 End of Document
