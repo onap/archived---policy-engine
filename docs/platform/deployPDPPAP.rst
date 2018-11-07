@@ -67,21 +67,22 @@ Healthcheck
         # Assuming the healthcheck service credentials have not been changed
         # post-installation within the drools container
     
-        source /opt/policy/config/drools/feature-healthcheck.conf
+        source /opt/app/policy/config/feature-healthcheck.conf.environment
     
-        curl --silent --user "${HEALTHCHECK_USER}:${HEALTHCHECK_PASSWORD}" 
-                       -X GET http://localhost:6969/healthcheck | python -m json.tool
+        curl -k --silent --user "${HEALTHCHECK_USER}:${HEALTHCHECK_PASSWORD}" 
+                       -X GET https://localhost:6969/healthcheck | python -m json.tool
 
 - Additional information can be found in the documentation for Testing, Deploying, and debugging on a PDP-D Healthcheck. 
 
 Logs
 ----
 
-- Logs for PAP are located at *$POLICY_HOME/servers/pap/logs/* location. The main application logs can be found at *$POLICY_HOME/servers/pap/logs/Policy/ONAP-PAP-REST* location.   
+- The main application logs for PAP are located at */var/log/onap/policy/pap/* location. The catalina.out can be found at *$POLICY_HOME/servers/pap/logs/* location.   
 
 * Policy PAP uses EELF logging framework for logging and if needed to be modified can be modified at *$POLICY_HOME/servers/pap/webapps/pap/WEB-INF/classes/logback.xml*.  This change needs a restart of the PAP component in order to be in effect.  
 
 - The Logs are divided into separate files and debug logs can be found in *debug.log* and error logs in *error.log* file which are two different files under application logs directory.   
+
 
 PDP (Policy Decision Point)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
@@ -101,14 +102,30 @@ Accessing and Starting PDP
 
         policy [--debug] status|start|stop
 
-Healthcheck / Testing
----------------------
+Healthcheck
+-----------
 
 - The Policy PDP health check can be checked using the generic procedure documented above for PAP which applies to all policy components. 
 
-- Apart from the above check PDP also provides the swagger UI from which PDP REST APIs which can be tested and used, this also lets us know the PDP Status. In order to access PDP's swagger UI visit ``http://{PDP_URL}:8081/pdp/swagger-ui.html.``
+- Apart from the above check PDP also provides the swagger UI from which PDP REST APIs can be tested and used, this also lets us know the PDP Status. In order to access PDP's swagger UI visit ``https://{PDP_URL}:8081/pdp/swagger-ui.html.``
 
 - In order to test the Policy components, the swagger UI provided by PDP can be used to test PDP and PAP. 
+
+Swagger UI Testing
+------------------
+
+- The PDP provides the swagger UI from which PDP REST APIs can be tested and used, this also lets us know the PDP Status. In order to access PDP's swagger UI visit ``https://{PDP_URL}:8081/pdp/swagger-ui.html.``
+
+- In order to test the Policy components, the swagger UI provided by PDP can be used to test PDP and PAP. 
+
+Logs
+----
+
+- The main application logs for PDP are located at */var/log/onap/policy/pdpx/* location. The catalina.out can be found at *$POLICY_HOME/servers/pdp/logs/* location.   
+
+* Policy PDP uses EELF logging framework for logging and if needed to be modified can be modified at *$POLICY_HOME/servers/pap/webapps/pdp/WEB-INF/classes/logback.xml*.  This change needs a restart of the PDP component in order to be in effect.  
+
+- The Logs are divided into separate files and debug logs can be found in *debug.log* and error logs in *error.log* file which are two different files under application logs directory.   
 
 
 End of Document
