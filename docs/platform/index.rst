@@ -29,6 +29,16 @@ Policy Software Architecture
    :maxdepth: 1
 
    swarch_pdp.rst
+   swarch_pdpx.rst
+   swarch_pap.rst
+   swarch_brmsgw.rst
+
+PDP-D Features
+----------------------------
+
+.. toctree::
+   :maxdepth: 1
+
    feature_eelf.rst
    feature_testtransaction.rst
    feature_healthcheck.rst
@@ -37,9 +47,7 @@ Policy Software Architecture
    feature_activestdbymgmt.rst
    feature_locking.rst
    feature_pooling.rst
-   swarch_pdpx.rst
-   swarch_pap.rst
-   swarch_brmsgw.rst
+
 
 Policy Platform Tutorials
 -------------------------
