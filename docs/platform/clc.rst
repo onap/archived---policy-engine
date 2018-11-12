@@ -49,7 +49,12 @@ How is the CLC implemented?
     .. _ControlLoopEventManager: https://git.onap.org/policy/drools-applications/tree/controlloop/templates/template.demo.clc/src/main/resources/__closedLoopControlName__.drl#n210
     
 Example code is provided at `template.demo.clc`_.  The abstraction implemented for the initial release is simply a XACML policy (e.g., `synthetic_control_loop_one_blocks_synthetic_control_loop_two.xml`_) that matches against one CLF (e.g., `policy_ControlLoop_SyntheticOne.yaml`_) and checks the status of another CLF (e.g., `policy_ControlLoop_SyntheticTwo.yaml`_) via provided PIPs. The following release will provide a much more succinct YAML representation consisting of coordination_directive_type, control_loop_one_id, control_loop_two_id, and, optionally, one or more parameters, the semantics of which are defined by the coordination_directive_type.
- 
+
+The following figure provides a detailed overview of the call flow as implemented:
+
+ .. image:: detailed_clc_flow.PNG
+    :scale: 67
+
 
 How do you run the example?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
