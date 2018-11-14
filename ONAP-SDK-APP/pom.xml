@@ -302,6 +302,10 @@
                     <groupId>com.oracle</groupId>
                     <artifactId>ojdbc6</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.lowagie</groupId>
+                    <artifactId>itext</artifactId>
+                </exclusion>
                 <!-- Added exclusions to fix issue with duplicate jars of different versions -->
                 <exclusion>
                     <groupId>org.springframework</groupId>
