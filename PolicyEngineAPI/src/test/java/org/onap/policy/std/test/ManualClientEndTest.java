@@ -26,6 +26,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.CountDownLatch;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -55,6 +56,9 @@ public class ManualClientEndTest {
      */
     @BeforeClass
     public static void startServer() throws Exception {
+    	
+    	CountDownLatch latch = new CountDownLatch(1);
+    	
         ws = new WebSocketServer(new InetSocketAddress(port), 1) {
             @Override
             public void onOpen(WebSocket conn, ClientHandshake handshake) {}
@@ -80,23 +84,30 @@ public class ManualClientEndTest {
             public void onError(WebSocket conn, Exception ex) {
             	webEx = ex;
                 ex.printStackTrace();
+                latch.countDown();
             }
 
             @Override
-            public void onStart() {}
+            public void onStart() {
+            	latch.countDown();
+            }
         };
 
         ws.setConnectionLostTimeout(0);
         ws.setReuseAddr(true);
         ws.start();
+        
+        // ensure port connected (or error) before running the actual test
+        latch.await();
+        
+        // ensure no error during start-up
+        assertNull(webEx);
     }
 
     @Test
-    public void testManualClient() throws Exception {
-    	
+    public void testManualClient() throws Exception {        
         ManualClientEnd.start("http://localhost:" + port + "/");
 
-        assertNull(webEx);
         assertNotNull(ManualClientEnd.result(NotificationScheme.MANUAL_ALL_NOTIFICATIONS));
         assertTrue("Manual".equalsIgnoreCase(recvMsg));
     }
