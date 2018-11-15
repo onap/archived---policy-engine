@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_0cb6fdd9",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-11-15T16:53:57Z",
+      "side": 1,
+      "message": "Right here specifically.",
+      "range": {
+        "startLine": 68,
+        "startChar": 47,
+        "endLine": 68,
+        "endChar": 57
+      },
+      "revId": "6ee95c7ae7eb05103fabaa371b78998f5b87a3fa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
