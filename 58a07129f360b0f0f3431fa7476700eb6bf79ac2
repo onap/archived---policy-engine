@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_dc6e5ec9",
+        "filename": "PolicyEngineAPI/src/test/resources/logback-test.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-11-16T14:52:43Z",
+      "side": 1,
+      "message": "It would be better for less log verbose output unrelated to the test itself to remove \"scan\", \"scanPeriod\", and \"debug\" attributes in this line.",
+      "revId": "58a07129f360b0f0f3431fa7476700eb6bf79ac2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_fc7322af",
+        "filename": "PolicyEngineAPI/src/test/resources/logback-test.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-11-16T14:52:43Z",
+      "side": 1,
+      "message": "do you also need to configure the policyLogger.properties if it is using FlexLogger?",
+      "revId": "58a07129f360b0f0f3431fa7476700eb6bf79ac2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
