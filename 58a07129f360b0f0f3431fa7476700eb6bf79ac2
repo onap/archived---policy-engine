@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9adffdf1_fcaa42d3",
+        "filename": "PolicyEngineAPI/src/test/resources/logback-test.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-11-16T15:22:20Z",
+      "side": 1,
+      "message": "OK",
+      "parentUuid": "9adffdf1_dc6e5ec9",
+      "revId": "58a07129f360b0f0f3431fa7476700eb6bf79ac2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9adffdf1_fc7322af",
         "filename": "PolicyEngineAPI/src/test/resources/logback-test.xml",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2018-11-16T14:52:43Z",
       "side": 1,
       "message": "do you also need to configure the policyLogger.properties if it is using FlexLogger?",
+      "revId": "58a07129f360b0f0f3431fa7476700eb6bf79ac2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_7cb6523f",
+        "filename": "PolicyEngineAPI/src/test/resources/logback-test.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2018-11-16T15:22:20Z",
+      "side": 1,
+      "message": "Appears to be using the one from the PolicyEngineAPI/Config directory.",
+      "parentUuid": "9adffdf1_fc7322af",
       "revId": "58a07129f360b0f0f3431fa7476700eb6bf79ac2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
