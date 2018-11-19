@@ -17,7 +17,7 @@ Policy Release Notes
 ..      * * *   CASABLANCA   * * *
 ..      ==========================
 
-Version: 1.3.0
+Version: 3.0.0
 --------------
 
 :Release Date: 2018-11-15 (Casablanca Release)
@@ -87,6 +87,8 @@ The Casablanca release for POLICY delivered the following Epics. For a full list
         - POLICY-982	Update security issues since portal SDK was upgraded
         - POLICY-1030	Revisit CLM reports due to new software upgrade
         - POLICY-1059	Address the security issues with Severe (and above) Level 4-6
+
+    * [POLICY-839] - Maintain and implement usability
 
     * [POLICY-840] - Flexible control loop coordination facility. 
         - POLICY-951	Code placement and development procedures
@@ -179,7 +181,7 @@ Quick Links:
 ..      * * *   BEIJING   * * *
 ..      =======================
 
-Version: 1.2.3
+Version: 2.0.0
 --------------
 
 :Release Date: 2018-06-07 (Beijing Release)
@@ -294,7 +296,7 @@ The following known issues will be addressed in a future release:
 
 
 
-Version: 1.1.3
+Version: 1.0.2
 --------------
 
 :Release Date: 2018-01-18 (Amsterdam Maintenance Release)
@@ -306,7 +308,7 @@ The following fixes were deployed with the Amsterdam Maintenance Release:
     * `[POLICY-486] <https://jira.onap.org/browse/POLICY-486>`_ - pdp-x api pushPolicy fails to push latest version
 
 
-Version: 1.1.1
+Version: 1.0.1
 --------------
 
 :Release Date: 2017-11-16 (Amsterdam Release)
@@ -395,7 +397,8 @@ The Amsterdam release continued evolving the design driven architecture of and f
 
 .. note
 ..      CHANGE  HISTORY
-..      11/17/2018 - Updated for Casablanca.  Also, fixed bugs is a list of bugs where the "Affected Version" is Beijing.
+..      11/19/2018 - Updated for Casablanca.  Also, fixed bugs is a list of bugs where the "Affected Version" is Beijing.
+..		Changed version number to use ONAP versions.
 ..      10/08/2018 - Initial document for Casablanca release.
 ..		Per Jorge, POLICY-785 did not get done in Casablanca (removed).  
 ..	05/29/2018 - Information for Beijing release.
