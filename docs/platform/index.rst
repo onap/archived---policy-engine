@@ -21,6 +21,7 @@ Policy Installation and Deployment
    installAmsterController.rst
    swarch_srm.rst
    deployment.rst
+   aaf.rst
 
 Policy Software Architecture
 ----------------------------
