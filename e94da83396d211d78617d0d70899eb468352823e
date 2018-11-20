@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_1b270314",
+        "filename": "docs/platform/aaf.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-11-20T14:29:12Z",
+      "side": 1,
+      "message": "I would not word this and remove Beijing. Just say the following components in Policy .....\n\nDistribution is certainly a core component of Casablanca now.",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 51
+      },
+      "revId": "e94da83396d211d78617d0d70899eb468352823e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
