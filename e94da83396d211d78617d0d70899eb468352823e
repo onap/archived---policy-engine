@@ -22,6 +22,30 @@
       "revId": "e94da83396d211d78617d0d70899eb468352823e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_1b7863c3",
+        "filename": "docs/platform/aaf.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2018-11-20T15:19:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9adffdf1_1b270314",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 51
+      },
+      "revId": "e94da83396d211d78617d0d70899eb468352823e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
