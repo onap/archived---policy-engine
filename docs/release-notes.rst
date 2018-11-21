@@ -172,7 +172,7 @@ Quick Links:
 
 **Known Issues**
  
-    - None at this time
+    * `[POLICY-1277] <https://jira.onap.org/browse/POLICY-1277>`_ - policy config takes too long time to become retrievable in PDP
 
 
 
