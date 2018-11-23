@@ -46,6 +46,16 @@ The PDP-X receives deployed policies and has interfaces to handle XACML policy t
 
 When the PDP-D is notified a new policy has been deployed, it downloads it from the Maven repository and assigns it to an internal controller.  This controller provides the external Closed Loop interfaces to the DMaaP message bus over which events and messages are exchanged with external systems.  As events or messages arrive at the PDP-D, they are assigned to the appropriate controller and a Drools session is either created or retrieved from memory.  The events, messages or facts are passed to the Drools session and the corresponding rule is fired, resulting in a change of internal session state and possibly actions taken in response to the rule processing. Response messages and requests are passed by the controller back over the DMaaP message bus to the appropriate system.  The Drools session can also have timers and autonomous events. In a future release the PDP-D can enable the node state management and session persistence in the Drools DB.
 
+Casablanca Additions to Architecture
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The Casablanca Release introduced two new applications into the Architecture: The Policy SDC Distribution Application and the Apex PDP Engine. These are not depicted in the picture above.
+
+The Policy SDC Service Distribution application connects to SDC Service Distribution notification flow to automatically create policies. It is integrated with the current API. For more details on this applications documentation, please see ??
+
+The Apex PDP Engine was ingested into the platform. This integration was as is and did not formalize the Apex engine into the current policy API creation and distribution flows. For more details on the Apex PDP Engine, please see ??
+
+Further integration of these components is planned for Dublin release.
+
 
 Policy Creation
 ^^^^^^^^^^^^^^^
@@ -62,8 +72,8 @@ Some examples of types of policies are:
 * Interactions — how interactions between change management and fault/performance management are handled (for example, should closed loops be disabled during maintenance?)
 
 
-Policy Distribution
-^^^^^^^^^^^^^^^^^^^
+Policy Distribution To PDPs
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 After a policy has been initially created or an existing policy has been modified, the Policy Distribution Framework sends the policy from the repository to its points of use, which include Policy Decision Points (PDPs) and Policy enforcement points (DCAE, Controllers, etc), before the policy is actually needed.
 
