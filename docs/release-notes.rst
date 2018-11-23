@@ -20,7 +20,7 @@ Policy Release Notes
 Version: 3.0.0
 --------------
 
-:Release Date: 2018-11-15 (Casablanca Release)
+:Release Date: 2018-11-30 (Casablanca Release)
 
 **New Features**
 
@@ -130,6 +130,7 @@ The Casablanca release for POLICY delivered the following Epics. For a full list
         - POLICY-1099	Create CSIT test for policy APEX PDP
 
     * [POLICY-876] - This epics covers the work to re-build how the PAP organizes the PDP's into groups.
+    
     * [POLICY-904] - This epic covers the features AT&T is submitting
         - POLICY-900	TOSCA model enhancements
         - POLICY-901	Guard policy UI enhancements
