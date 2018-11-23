@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_d96df933",
+        "filename": "docs/platform/architecture.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-11-23T14:46:35Z",
+      "side": 1,
+      "message": "Rich/Eric,\nHow do I reference other repo\u0027s doc??\nI want to point to:\nhttps://onap.readthedocs.io/en/latest/submodules/policy/apex-pdp.git/docs/index.html",
+      "range": {
+        "startLine": 53,
+        "startChar": 239,
+        "endLine": 53,
+        "endChar": 242
+      },
+      "revId": "3a04a66e3af49dd7a502e638200f03d3915bae66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_99777102",
+        "filename": "docs/platform/architecture.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-11-23T14:46:35Z",
+      "side": 1,
+      "message": "and here I want to link to:\nhttps://onap.readthedocs.io/en/latest/submodules/policy/distribution.git/docs/index.html",
+      "range": {
+        "startLine": 55,
+        "startChar": 230,
+        "endLine": 55,
+        "endChar": 232
+      },
+      "revId": "3a04a66e3af49dd7a502e638200f03d3915bae66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
