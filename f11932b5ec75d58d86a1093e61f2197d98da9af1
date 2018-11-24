@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_5f832956",
+        "filename": "docs/platform/architecture.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 19
+      },
+      "writtenOn": "2018-11-24T13:57:58Z",
+      "side": 1,
+      "message": "The underscore _ is not needed on reference, only when defining the label.",
+      "range": {
+        "startLine": 53,
+        "startChar": 246,
+        "endLine": 53,
+        "endChar": 247
+      },
+      "revId": "f11932b5ec75d58d86a1093e61f2197d98da9af1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
