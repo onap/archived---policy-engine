@@ -20,7 +20,7 @@ Policy Release Notes
 Version: 3.0.0
 --------------
 
-:Release Date: 2018-11-15 (Casablanca Release)
+:Release Date: 2018-11-30 (Casablanca Release)
 
 **New Features**
 
