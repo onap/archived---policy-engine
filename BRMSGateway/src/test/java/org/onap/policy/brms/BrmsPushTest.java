@@ -28,15 +28,47 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import org.eclipse.persistence.config.PersistenceUnitProperties;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.api.PolicyException;
 import org.onap.policy.brms.api.BrmsHandler;
+import org.onap.policy.brms.api.BrmsPush;
 
 public class BrmsPushTest {
 
     private static final String VALID_FILE = "src/test/resources/config.properties";
     private static final String INVALID_FILE = "src/test/resources/failure.properties";
+
+    private static EntityManagerFactory emf;
+
+    /**
+     * Creates the test DB and keeps it open until all tests complete.
+     * 
+     * @throws Exception if an error occurs
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        Properties props = new Properties();
+        try (FileInputStream inp = new FileInputStream(VALID_FILE)) {
+            props.load(inp);
+        }
+        props.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML,
+                        props.getProperty(BrmsPush.BRMSPERSISTENCE));
+
+        emf = Persistence.createEntityManagerFactory("BRMSGW", props);
+    }
+
+    /**
+     * Closes the test DB.
+     */
+    @AfterClass
+    public static void tearDownAfterClass() {
+        emf.close();
+    }
 
     @Test(expected = PolicyException.class)
     public void brmsHandlerFailTest() throws PolicyException {

@@ -120,7 +120,7 @@ public class BrmsPush {
     private static final String[] GOALS = { "clean", "deploy" };
     private static final String DEFAULT_VERSION = "1.4.0-SNAPSHOT";
     private static final String DEPENDENCY_FILE = "dependency.json";
-    private static final String BRMSPERSISTENCE = "brmsEclipselink.persistencexml";
+    public static final String BRMSPERSISTENCE = "brmsEclipselink.persistencexml";
 
     private static Map<String, String> modifiedGroups = new HashMap<>();
     private static IntegrityMonitor im;
