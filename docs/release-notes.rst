@@ -27,124 +27,51 @@ Version: 3.0.0
 The Casablanca release for POLICY delivered the following Epics. For a full list of stories and tasks delivered in the Casablanca release, refer to `JiraPolicyCasablanca`_ (Note: Jira details can also be viewed from this link).
 
     * [POLICY-701] - This epic covers the work to integrate Policy into the SDC Service Distribution 
-        - POLICY-723	Analyze and design the Policy SDC Distribution Application
-        - POLICY-922	Create application framework for Policy Service SDC Distribution
-        - POLICY-923	Create code to generate docker images for Policy SDC Service Distribution application
-        - POLICY-924	Create CSIT test framework for Policy SDC Service Distribution application
-        - POLICY-925	Create K8S Helm Charts for deployment via OOM project
-        - POLICY-926	Create code infrastructure for automatic policy forwarding
-        - POLICY-956	Implement IConfiguration interface to initiate Distribution Client
-        - POLICY-974	Implement INotificationCallback interface
-        - POLICY-1094	Refactor reception handler configuration parameter handling
-
-    * [POLICY-715] - This epic covers work to harden the policy platform
-        - POLICY-955	Incorporate changes to amsterdam rules template into casablanca rules template
-        - POLICY-1128	Fix new sonar issues
-
-    * [POLICY-718] - This epic covers the work to perform release planning activities.
-        - POLICY-875	Update Beijing Branch and master branch for Casablanca versions
-        - POLICY-1040	Copy and clean up Beijing wiki's for Casablanca
-
+    
+    The policy team introduced a new application into the framework that provides integration of the Service Distribution Notifications from SDC to Policy.
+        
     * [POLICY-719] - This epic covers the work to build the Policy Lifecycle API
-        - POLICY-724	Gather requirements and design high-level software architecture
-        - POLICY-1056	Create Policy API Infrastructure
-
     * [POLICY-726] - This epic covers the work to distribute policy from the PAP to the PDPs into the ONAP platform
-        - POLICY-874	Spike: Interface Stubbing for Architectual Enhancements
-
-    * [POLICY-772] - Enhance casablanca testing abilities between various environments
-
-    * [POLICY-803] - All the new repositories must be initialized and setup to work under policy/parent.
-        - POLICY-804	Setup policy/parent
-        - POLICY-805	Setup policy/models
-        - POLICY-806	Setup policy/api
-        - POLICY-807	Setup policy/apex-pdp
-        - POLICY-808	Setup ci-management verify/merge jobs
-        - POLICY-845	Setup policy/core
-        - POLICY-846	Setup policy/xacml-pdp
-        - POLICY-847	Setup policy/gui
-        - POLICY-848	Setup policy/pap
-        - POLICY-849	Setup policy/pdp
-        - POLICY-871	Setup policy/distribution
-
-    * [POLICY-809] - Maintain and implement performance
-        - POLICY-836	Performance PSSD (Policy SDC Service Distribution)
-        - POLICY-887	Performance PDP-X - Policy Decisions
-        - POLICY-888	Performance PDP-D - Policy Decision/Enforcement
-
-    * [POLICY-814] - 72 hour stability testing (component and platform)
-        - POLICY-815	Stability PDP-X
-        - POLICY-817	Stability PDP-A
-
-    * [POLICY-824] - maintain and implement security
-        - POLICY-781	PE Support for AAF Root Certificate in HTTPS communication.
-        - POLICY-905	Fix apex-engine License and Security issues
-        - POLICY-913	policy/engine CADI (AAF) Integration
-        - POLICY-914	policy/drools-pdp CADI (AAF) Integration
-        - POLICY-918	Policy Portal GUI - upgrade to latest Portal SDK to resolve security issues
-        - POLICY-942	BRMSGW: HTTPS support for DMaaP/UEB interfaces
-        - POLICY-946	Investigate what integration of CADI (AAF) integration into the ONAP Policy Platform components really means
-        - POLICY-982	Update security issues since portal SDK was upgraded
-        - POLICY-1030	Revisit CLM reports due to new software upgrade
-        - POLICY-1059	Address the security issues with Severe (and above) Level 4-6
-
-    * [POLICY-839] - Maintain and implement usability
-
-    * [POLICY-840] - Flexible control loop coordination facility. 
-        - POLICY-951	Code placement and development procedures
-        - POLICY-952	Analyze and design the control loop coordination facility
-        - POLICY-953	Configure whether a given control loop will be regulated by flexible control loop coordination.
-        - POLICY-975	Storage of abatement (and other) events in historical database
-        - POLICY-1109	Add demo code to template.demo
-
-    * [POLICY-841] - Covers the work required to support HPA
-        - POLICY-927	Develop the code that translates HPA requirements into OOF policies
-        - POLICY-989	HPA Use Case Modeling work to support optimization policies
-
-    * [POLICY-842] - This epic covers the work to support the Auto Scale Out functional requirements
-        - POLICY-962	Change SO Scale Out REST API call to new REST API version that support config parameters
-        - POLICY-963	Understand and Scope the Guard Policies for Scale Out
-        - POLICY-964	Modify drools-applications template to check is PROV_STATUS=Active before performing a Scale Out
-        - POLICY-968	Enforce guard policy for min/max instances of a VNF
-        - POLICY-1010	Enforce guard policy for waiting a period of time between Scale Outs
-        - POLICY-1011	Modify drools-applications template to make A&AI query to count number of instances of a VNF
-        - POLICY-1037	Use A&AI query for getting number of module instances to construct new module instance name
-        - POLICY-1038	Create new min/max guard policy template in policy engine
-        - POLICY-1039	Ensure Policy Integration Test wiki is up-to-date for new Scale Out APIs
-
-    * [POLICY-851] - This epic covers the work to bring in the Apex PDP code
-        - POLICY-855	Verify APEX-PDP setup in ONAP
-        - POLICY-856	Bring in the model code for APEX-PDP into ONAP
-        - POLICY-857	Bring in the context code for APEX-PDP into ONAP
-        - POLICY-858	Bring in the core code for APEX-PDP into ONAP
-        - POLICY-859	Bring in the server service code for APEX-PDP into ONAP
-        - POLICY-860	Bring in the authoring code for APEX-PDP into ONAP
-        - POLICY-861	Bring in the domain example code for APEX-PDP into ONAP
-        - POLICY-862	Bring in the plugin code for APEX-PDP into ONAP
-        - POLICY-863	Bring in the application code for APEX-PDP into ONAP
-        - POLICY-864	Bring in the client code for APEX-PDP into ONAP
-        - POLICY-865	Set up Integration Tests for APEX in ONAP
-        - POLICY-866	Set up ONAP Policy Framework compliant Docker build for APEX-PDP
-        - POLICY-867	Bring in APEX-PDP documents
-        - POLICY-954	APEX: Missing items and configuration problems
-        - POLICY-1099	Create CSIT test for policy APEX PDP
-
     * [POLICY-876] - This epics covers the work to re-build how the PAP organizes the PDP's into groups.
     
-    * [POLICY-904] - This epic covers the features AT&T is submitting
-        - POLICY-900	TOSCA model enhancements
-        - POLICY-901	Guard policy UI enhancements
-        - POLICY-902	XACML platform enhancements
-        - POLICY-983	getConfig naming policy implementation
-        - POLICY-1042	Policy Dashboard Enhancment
+    The policy team did some forward looking spike work towards re-building the Software Architecture.
 
+    * [POLICY-809] - Maintain and implement performance
+    * [POLICY-814] - 72 hour stability testing (component and platform)
+    
+    The policy team made enhancements to the Drools PDP to further support S3P Performance.
+    For the new Policy SDC Distribution application and the newly ingested Apex PDP the team established S3P
+    performance standard and performed 72 hour stability tests.
+    
+    * [POLICY-824] - maintain and implement security
+    
+    The policy team established AAF Root Certificate for HTTPS communication and CADI/AAF integration into the
+    MVP applications. In addition, many java dependencies were upgraded to clear CLM security issues.
+    
+    * [POLICY-840] - Flexible control loop coordination facility. 
+
+    Work towards a POC for control loop coordination policies were implemented.
+
+    * [POLICY-841] - Covers the work required to support HPA
+
+    Enhancements were made to support the HPA use case through the use of the new Policy SDC Service Distribution application.
+
+    * [POLICY-842] - This epic covers the work to support the Auto Scale Out functional requirements
+    
+    Enhancements were made to support Scale Out Use Case to enforce new guard policies and updated SO and A&AI APIs.
+
+    * [POLICY-851] - This epic covers the work to bring in the Apex PDP code
+    
+    A new Apex PDP engine was ingested into the platform and work was done to ensure code cleared CLM security issues,
+    sonar issues, and checkstyle.
+    
     * [POLICY-1081] - This epic covers the contribution for the 5G OOF PCI Optimization use case.
-        - POLICY-1079	Add support for VF Module Delete recipe
-        - POLICY-1086	Configuration/policies for OOF PCI use case
-        - POLICY-1089	Handle recommendation for PCI updates received from PCI-Handler MS
+
+    Policy templates changes were submitted that supported the 5G OOF PCI optimization use case.
 
     * [POLICY-1182] - Covers the work to support CCVPN use case
-        - POLICY-1183	Create SDNC actor code
+
+    Policy templates changes were submitted that supported the CCVPN use case.
 
 **Bug Fixes**
 
@@ -174,7 +101,7 @@ Quick Links:
 **Known Issues**
  
     * `[POLICY-1277] <https://jira.onap.org/browse/POLICY-1277>`_ - policy config takes too long time to become retrievable in PDP
-
+    * `[POLICY-1282] <https://jira.onap.org/browse/POLICY-1282>'_ - Policy format with some problems
 
 
 
