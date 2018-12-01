@@ -89,19 +89,19 @@ The following bug fixes have been deployed with this release:
 
 **Security Notes**
 
-POLICY code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The POLICY open Critical security vulnerabilities and their risk assessment have been documented as part of the `project (Casablanca Release) <https://wiki.onap.org/pages/viewpage.action?pageId=36964976>`_.
+POLICY code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The POLICY open Critical security vulnerabilities and their risk assessment have been documented as part of the `project (Casablanca Release) <https://wiki.onap.org/pages/viewpage.action?pageId=45300864>`_.
 
 Quick Links:
     - `POLICY project page <https://wiki.onap.org/display/DW/Policy+Framework+Project>`_
 
     - `Passing Badge information for POLICY <https://bestpractices.coreinfrastructure.org/en/projects/1614>`_
 
-    - `Project Vulnerability Review Table for POLICY (Casablanca Release) <https://wiki.onap.org/pages/viewpage.action?pageId=36964976>`_
+    - `Project Vulnerability Review Table for POLICY (Casablanca Release) <https://wiki.onap.org/pages/viewpage.action?pageId=45300864>`_
 
 **Known Issues**
  
     * `[POLICY-1277] <https://jira.onap.org/browse/POLICY-1277>`_ - policy config takes too long time to become retrievable in PDP
-    * `[POLICY-1282] <https://jira.onap.org/browse/POLICY-1282>'_ - Policy format with some problems
+    * `[POLICY-1282] <https://jira.onap.org/browse/POLICY-1282>`_ - Policy format with some problems
 
 
 
