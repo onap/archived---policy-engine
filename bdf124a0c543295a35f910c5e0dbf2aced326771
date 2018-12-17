@@ -46,6 +46,30 @@
       "revId": "bdf124a0c543295a35f910c5e0dbf2aced326771",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_fc3e70d9",
+        "filename": "packages/install/src/files/base.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-12-17T13:40:39Z",
+      "side": 1,
+      "message": "I understand that, I\u0027m afraid of removing it and just trying to understand why its here in the first place. I don\u0027t think the drools-pdp forces the path for JVM, but I don\u0027t know for sure.",
+      "parentUuid": "9adffdf1_7c536039",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 43
+      },
+      "revId": "bdf124a0c543295a35f910c5e0dbf2aced326771",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
