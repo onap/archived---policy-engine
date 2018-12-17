@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_7ce04096",
+        "filename": "packages/install/src/files/base.conf",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2018-12-17T13:04:25Z",
+      "side": 1,
+      "message": "This is now forcing the path to JVM. Shouldn\u0027t JAVA_HOME be set via the docker image or development environment? And that be where its configurable?",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 43
+      },
+      "revId": "bdf124a0c543295a35f910c5e0dbf2aced326771",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
