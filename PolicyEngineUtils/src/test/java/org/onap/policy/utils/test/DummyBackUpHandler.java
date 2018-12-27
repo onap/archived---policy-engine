@@ -23,7 +23,7 @@ package org.onap.policy.utils.test;
 import org.onap.policy.api.PDPNotification;
 import org.onap.policy.utils.BackUpHandler;
 
-public class Handler implements BackUpHandler{
+public class DummyBackUpHandler implements BackUpHandler{
 
 	@Override
 	public void notificationReceived(PDPNotification notification) {

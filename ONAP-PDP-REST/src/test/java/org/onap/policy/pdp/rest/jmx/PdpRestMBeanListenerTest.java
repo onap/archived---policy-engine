@@ -37,7 +37,7 @@ public class PdpRestMBeanListenerTest {
 
 		try {	
 			PdpRestMBeanListener listener = new PdpRestMBeanListener();
-			ServerContextImpl source = new ServerContextImpl();
+			DummyServerContextImpl source = new DummyServerContextImpl();
 			ServletContextEvent event = new ServletContextEvent(source);
 			
 			listener.contextInitialized(event);

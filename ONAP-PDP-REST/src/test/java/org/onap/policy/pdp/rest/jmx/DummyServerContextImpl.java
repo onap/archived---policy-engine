@@ -40,7 +40,7 @@ import javax.servlet.SessionCookieConfig;
 import javax.servlet.SessionTrackingMode;
 import javax.servlet.descriptor.JspConfigDescriptor;
 
-public class ServerContextImpl implements ServletContext {
+public class DummyServerContextImpl implements ServletContext {
 
     @Override
     public String getContextPath() {

@@ -56,7 +56,7 @@ import org.onap.policy.utils.PolicyUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 
-public class testBackUpMonitor {
+public class BackUpMonitorTest {
 
 	@Test (expected = PersistenceException.class)
 	public void backUpMonitorTestFail() throws Exception{
@@ -65,7 +65,7 @@ public class testBackUpMonitor {
 		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mariadb://localhost:3306/onap_sdk");
 		properties.setProperty("javax.persistence.jdbc.user", "policy_user");
 		properties.setProperty("javax.persistence.jdbc.password", "");
-		BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
+		BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new DummyBackUpHandler());
 	}
 	
 	@Test
@@ -75,7 +75,7 @@ public class testBackUpMonitor {
 		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mariadb://localhost:3306/onap_sdk");
 		properties.setProperty("javax.persistence.jdbc.user", "");
 		properties.setProperty("javax.persistence.jdbc.password", "password");
-		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
+		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new DummyBackUpHandler());
 		assertNull(bum);
 	}
 	
@@ -87,7 +87,7 @@ public class testBackUpMonitor {
 		properties.setProperty("javax.persistence.jdbc.user", "test");
 		properties.setProperty("javax.persistence.jdbc.password", "password");
 		properties.setProperty("ping_interval", "500");
-		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
+		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new DummyBackUpHandler());
 		assertNull(bum);
 	}
 	
@@ -99,7 +99,7 @@ public class testBackUpMonitor {
 		properties.setProperty("javax.persistence.jdbc.user", "test");
 		properties.setProperty("javax.persistence.jdbc.password", "password");
 		properties.setProperty("ping_interval", "500");
-		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
+		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new DummyBackUpHandler());
 		assertNull(bum);
 	}
 	
@@ -111,7 +111,7 @@ public class testBackUpMonitor {
 		properties.setProperty("javax.persistence.jdbc.user", "test");
 		properties.setProperty("javax.persistence.jdbc.password", "password");
 		properties.setProperty("ping_interval", "");
-		BackUpMonitor bum = BackUpMonitor.getInstance(null, "brms_test" , properties, new Handler());
+		BackUpMonitor bum = BackUpMonitor.getInstance(null, "brms_test" , properties, new DummyBackUpHandler());
 		assertNull(bum);
 	}
 	
@@ -122,13 +122,13 @@ public class testBackUpMonitor {
 		properties.setProperty("javax.persistence.jdbc.url", "jdbc:mariadb://localhost:3306/onap_sdk");
 		properties.setProperty("javax.persistence.jdbc.user", "test");
 		properties.setProperty("javax.persistence.jdbc.password", "password");
-		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), null , properties, new Handler());
+		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), null , properties, new DummyBackUpHandler());
 		assertNull(bum);
 	}
 	
 	@Test
 	public void backUpMonitorTestFailNoProperties() throws Exception{
-		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , null, new Handler());
+		BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , null, new DummyBackUpHandler());
 		assertNull(bum);
 	}
 	
@@ -153,7 +153,7 @@ public class testBackUpMonitor {
         properties.setProperty("javax.persistence.jdbc.password", "");
         properties.setProperty("ping_interval", "123a");
         properties.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistencePUtest.xml");
-        BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
+        BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new DummyBackUpHandler());
         assertTrue(bum.getFlag());
 	}
 	
@@ -167,7 +167,7 @@ public class testBackUpMonitor {
         properties.setProperty("javax.persistence.jdbc.password", "");
         properties.setProperty("ping_interval", "500");
         properties.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML, "META-INF/persistencePUtest.xml");
-        BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new Handler());
+        BackUpMonitor bum = BackUpMonitor.getInstance(BackUpMonitor.ResourceNode.BRMS.toString(), "brms_test" , properties, new DummyBackUpHandler());
         createPolicyNotification();
         assertTrue(bum.getFlag());
         // Start a slave check.

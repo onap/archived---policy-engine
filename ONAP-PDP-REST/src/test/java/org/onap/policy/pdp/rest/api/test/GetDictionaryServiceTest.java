@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.onap.policy.api.DictionaryParameters;
 import org.onap.policy.pdp.rest.api.services.GetDictionaryService;
 
-public class getDictionaryTest {
+public class GetDictionaryServiceTest {
 	
 	@Test
 	public void dictionaryJsonTest() throws Exception{

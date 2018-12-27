@@ -35,9 +35,9 @@ import org.onap.policy.api.RemovedPolicy;
 import org.onap.policy.common.logging.flexlogger.FlexLogger;
 import org.onap.policy.common.logging.flexlogger.Logger;
 
-public class Handler implements NotificationHandler{
+public class DummyNotificationHandler implements NotificationHandler{
 	
-	private static final Logger LOGGER	= FlexLogger.getLogger(Handler.class);
+	private static final Logger LOGGER	= FlexLogger.getLogger(DummyNotificationHandler.class);
 	
 	@Override
 	public void notificationReceived(PDPNotification notification) {

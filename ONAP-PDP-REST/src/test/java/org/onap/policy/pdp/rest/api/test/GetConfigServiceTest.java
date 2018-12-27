@@ -35,7 +35,7 @@ import org.onap.policy.api.PolicyConfigStatus;
 import org.onap.policy.pdp.rest.api.models.PolicyConfig;
 import org.onap.policy.pdp.rest.api.services.GetConfigService;
 
-public class getConfigTest {
+public class GetConfigServiceTest {
 	private static final String TEST = "test";
 	
 	@SuppressWarnings("unchecked")
