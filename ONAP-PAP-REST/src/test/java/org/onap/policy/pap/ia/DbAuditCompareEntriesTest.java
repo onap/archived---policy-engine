@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP-PAP-REST
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.policy.common.ia.DbAudit;
-import org.onap.policy.common.ia.DbDAO;
+import org.onap.policy.common.ia.DbDao;
 import org.onap.policy.common.ia.IntegrityAuditProperties;
 import org.onap.policy.common.ia.jpa.IntegrityAuditEntity;
 import org.onap.policy.common.im.jpa.ForwardProgressEntity;
@@ -51,7 +51,7 @@ import org.onap.policy.jpa.BackUpMonitorEntity;
 public class DbAuditCompareEntriesTest {
 
     private static Log logger = LogFactory.getLog(DbAuditCompareEntriesTest.class);
-    private DbDAO dbDAO;
+    private DbDao dbDAO;
     private String persistenceUnit;
     private Properties properties;
     private String resourceName;
@@ -145,7 +145,7 @@ public class DbAuditCompareEntriesTest {
     public void testIntegrityAuditEntity() throws Exception {
         logger.info("testIntegrityAuditEntity: Entering");
 
-        dbDAO = new DbDAO(resourceName, persistenceUnit, properties);
+        dbDAO = new DbDao(resourceName, persistenceUnit, properties);
         DbAudit dbAudit = new DbAudit(dbDAO);
 
         String className = null;
@@ -223,7 +223,7 @@ public class DbAuditCompareEntriesTest {
     void testBackupMonitorEntity() throws Exception {
         logger.info("testBackupMonitorEntity: Entering");
 
-        dbDAO = new DbDAO(resourceName, persistenceUnit, properties);
+        dbDAO = new DbDao(resourceName, persistenceUnit, properties);
         DbAudit dbAudit = new DbAudit(dbDAO);
 
         BackUpMonitorEntity entry1 = new BackUpMonitorEntity();
@@ -282,7 +282,7 @@ public class DbAuditCompareEntriesTest {
     void testStateManagementEntity() throws Exception {
         logger.info("testStateManagementEntity: Entering");
 
-        dbDAO = new DbDAO(resourceName, persistenceUnit, properties);
+        dbDAO = new DbDao(resourceName, persistenceUnit, properties);
         DbAudit dbAudit = new DbAudit(dbDAO);
 
         StateManagementEntity entry1 = new StateManagementEntity();
@@ -342,7 +342,7 @@ public class DbAuditCompareEntriesTest {
     void testForwardProgressEntity() throws Exception {
         logger.info("testForwardProgressEntity: Entering");
 
-        dbDAO = new DbDAO(resourceName, persistenceUnit, properties);
+        dbDAO = new DbDao(resourceName, persistenceUnit, properties);
         DbAudit dbAudit = new DbAudit(dbDAO);
 
         ForwardProgressEntity entry1 = new ForwardProgressEntity();
@@ -397,7 +397,7 @@ public class DbAuditCompareEntriesTest {
     void testResourceRegistrationEntity() throws Exception {
         logger.info("testResourceRegistrationEntity: Entering");
 
-        dbDAO = new DbDAO(resourceName, persistenceUnit, properties);
+        dbDAO = new DbDao(resourceName, persistenceUnit, properties);
         DbAudit dbAudit = new DbAudit(dbDAO);
 
         ResourceRegistrationEntity entry1 = new ResourceRegistrationEntity();
