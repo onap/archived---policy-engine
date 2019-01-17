@@ -1743,7 +1743,9 @@ public class XACMLPapServlet extends HttpServlet implements StdItemSetChangeList
                         }
 
                         //delete temporary policy file from the bin directory
-                        Files.deleteIfExists(Paths.get(policy.getId()));
+                        if(null != policy) {
+                            Files.deleteIfExists(Paths.get(policy.getId()));
+                        }
 
                     } catch (Exception e) {
                         acPutTransaction.rollbackTransaction();
