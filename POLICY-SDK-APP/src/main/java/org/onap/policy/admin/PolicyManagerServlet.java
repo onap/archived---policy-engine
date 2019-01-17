@@ -102,6 +102,7 @@ public class PolicyManagerServlet extends HttpServlet {
     private static final String EDITOR = "editor";
     private static final String GUEST = "guest";
     private static final String RESULT = "result";
+    private static final String DELETE = "delete";
     private static final String EXCEPTION_OCCURED = "Exception Occured";
     private static final String CONFIG = ".Config_";
     private static final String CONFIG1 = ":Config_";
@@ -116,6 +117,7 @@ public class PolicyManagerServlet extends HttpServlet {
     private static final String BACKSLASH = "\\";
     private static final String ESCAPE_BACKSLASH = "\\\\";
     private static final String BACKSLASH_8TIMES = "\\\\\\\\";
+    private static final String DELETE_POLICY_VERSION_WHERE_POLICY_NAME = "delete from PolicyVersion where policy_name ='";
     private static final String UPDATE_POLICY_VERSION_SET_ACTIVE_VERSION = "update PolicyVersion set active_version='";
     private static final String SPLIT_1 = "split_1";
     private static final String SPLIT_0 = "split_0";
@@ -123,6 +125,7 @@ public class PolicyManagerServlet extends HttpServlet {
     private static final String SCOPE_NAME = "scopeName";
     private static final String SUCCESS = "success";
     private static final String SUB_SCOPENAME = "subScopename";
+    private static final String PERCENT_AND_ID_GT_0 = "%' and id >0";
     private static List<String> serviceTypeNamesList = new ArrayList<>();
     private static JsonArray policyNames;
     private static String testUserId = null;
@@ -835,7 +838,7 @@ public class PolicyManagerServlet extends HttpServlet {
                 return error("Policy Rename Failed. The Name contains special characters.");
             }
             JSONObject result = policyRename(oldPath, newPath, userId);
-            if(!(Boolean)(result.getJSONObject("result").get(SUCCESS))){
+            if(!(Boolean)(result.getJSONObject(RESULT).get(SUCCESS))){
                 return result;
             }
         }else{
@@ -1274,11 +1277,11 @@ public class PolicyManagerServlet extends HttpServlet {
                                 if(policyNamewithoutExtension.contains(CONFIG2)){
                                     Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator + policyEntity.getConfigurationData().getConfigurationName()));
                                     controller.deleteData(policyEntity.getConfigurationData());
-                                    restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getConfigurationData().getConfigurationName());
+                                    restController.notifyOtherPAPSToUpdateConfigurations(DELETE, null, policyEntity.getConfigurationData().getConfigurationName());
                                 }else if(policyNamewithoutExtension.contains(ACTION2)){
                                     Files.deleteIfExists(Paths.get(PolicyController.getActionHome() + File.separator + policyEntity.getActionBodyEntity().getActionBodyName()));
                                     controller.deleteData(policyEntity.getActionBodyEntity());
-                                    restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getActionBodyEntity().getActionBodyName());
+                                    restController.notifyOtherPAPSToUpdateConfigurations(DELETE, null, policyEntity.getActionBodyEntity().getActionBodyName());
                                 }
                             }
                         }
@@ -1297,7 +1300,7 @@ public class PolicyManagerServlet extends HttpServlet {
                         return error("Policies with Same name has been deleted. Except the Active Policy in PDP.     PolicyName: "+activePolicyName);
                     }else{
                         //No Active Policy in PDP. So, deleting all entries from policyVersion table
-                        String policyVersionQuery = "delete from PolicyVersion  where policy_name ='" +policyNamewithoutExtension.replace(BACKSLASH, ESCAPE_BACKSLASH)+"' and id >0";
+                        String policyVersionQuery = DELETE_POLICY_VERSION_WHERE_POLICY_NAME +policyNamewithoutExtension.replace(BACKSLASH, ESCAPE_BACKSLASH)+"' and id >0";
                         controller.executeQuery(policyVersionQuery);
                     }
                 }else if("CURRENT".equals(deleteVersion)){
@@ -1333,11 +1336,11 @@ public class PolicyManagerServlet extends HttpServlet {
                     if(policyNamewithoutExtension.contains(CONFIG2)){
                         Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator + policyEntity.getConfigurationData().getConfigurationName()));
                         controller.deleteData(policyEntity.getConfigurationData());
-                        restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getConfigurationData().getConfigurationName());
+                        restController.notifyOtherPAPSToUpdateConfigurations(DELETE, null, policyEntity.getConfigurationData().getConfigurationName());
                     }else if(policyNamewithoutExtension.contains(ACTION2)){
                         Files.deleteIfExists(Paths.get(PolicyController.getActionHome() + File.separator + policyEntity.getActionBodyEntity().getActionBodyName()));
                         controller.deleteData(policyEntity.getActionBodyEntity());
-                        restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getActionBodyEntity().getActionBodyName());
+                        restController.notifyOtherPAPSToUpdateConfigurations(DELETE, null, policyEntity.getActionBodyEntity().getActionBodyName());
                     }
 
                     if(version > 1){
@@ -1364,18 +1367,18 @@ public class PolicyManagerServlet extends HttpServlet {
                         if(highestVersion != 0){
                             updatequery = UPDATE_POLICY_VERSION_SET_ACTIVE_VERSION +highestVersion+"' , highest_version='"+highestVersion+"' where policy_name ='" +policyNamewithoutExtension.replace("\\", "\\\\")+"'";
                         }else{
-                            updatequery = "delete from PolicyVersion  where policy_name ='" +policyNamewithoutExtension.replace("\\", "\\\\")+"' and id >0";
+                            updatequery = DELETE_POLICY_VERSION_WHERE_POLICY_NAME +policyNamewithoutExtension.replace("\\", "\\\\")+"' and id >0";
                         }
                         controller.executeQuery(updatequery);
                     }else{
-                        String policyVersionQuery = "delete from PolicyVersion  where policy_name ='" +policyNamewithoutExtension.replace("\\", "\\\\")+"' and id >0";
+                        String policyVersionQuery = DELETE_POLICY_VERSION_WHERE_POLICY_NAME +policyNamewithoutExtension.replace("\\", "\\\\")+"' and id >0";
                         controller.executeQuery(policyVersionQuery);
                     }
                 }
             }else{
                 List<String> activePoliciesInPDP = new ArrayList<>();
                 if(policyEntityobjects.isEmpty()){
-                    String policyScopeQuery = "delete PolicyEditorScopes where SCOPENAME like '"+path.replace(BACKSLASH, ESCAPE_BACKSLASH)+"%' and id >0";
+                    String policyScopeQuery = "delete PolicyEditorScopes where SCOPENAME like '"+path.replace(BACKSLASH, ESCAPE_BACKSLASH)+PERCENT_AND_ID_GT_0;
                     controller.executeQuery(policyScopeQuery);
                     return success();
                 }
@@ -1398,16 +1401,16 @@ public class PolicyManagerServlet extends HttpServlet {
                         if(policyNamewithoutExtension.contains(CONFIG2)){
                             Files.deleteIfExists(Paths.get(PolicyController.getConfigHome() + File.separator + policyEntity.getConfigurationData().getConfigurationName()));
                             controller.deleteData(policyEntity.getConfigurationData());
-                            restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getConfigurationData().getConfigurationName());
+                            restController.notifyOtherPAPSToUpdateConfigurations(DELETE, null, policyEntity.getConfigurationData().getConfigurationName());
                         }else if(policyNamewithoutExtension.contains(ACTION2)){
                             Files.deleteIfExists(Paths.get(PolicyController.getActionHome() + File.separator + policyEntity.getActionBodyEntity().getActionBodyName()));
                             controller.deleteData(policyEntity.getActionBodyEntity());
-                            restController.notifyOtherPAPSToUpdateConfigurations("delete", null, policyEntity.getActionBodyEntity().getActionBodyName());
+                            restController.notifyOtherPAPSToUpdateConfigurations(DELETE, null, policyEntity.getActionBodyEntity().getActionBodyName());
                         }
                     }
                 }
                 //Delete from policyVersion and policyEditor Scope table
-                String policyVersionQuery = "delete PolicyVersion where POLICY_NAME like '"+path.replace(BACKSLASH, ESCAPE_BACKSLASH)+"%' and id >0";
+                String policyVersionQuery = "delete PolicyVersion where POLICY_NAME like '"+path.replace(BACKSLASH, ESCAPE_BACKSLASH)+PERCENT_AND_ID_GT_0;
                 controller.executeQuery(policyVersionQuery);
 
                 //Policy Notification
@@ -1432,14 +1435,14 @@ public class PolicyManagerServlet extends HttpServlet {
 
                     return error("All the Policies has been deleted in Scope. Except the following list of Policies:"+activePoliciesInPDP);
                 }else{
-                    String policyScopeQuery = "delete PolicyEditorScopes where SCOPENAME like '"+path.replace(BACKSLASH, ESCAPE_BACKSLASH)+"%' and id >0";
+                    String policyScopeQuery = "delete PolicyEditorScopes where SCOPENAME like '"+path.replace(BACKSLASH, ESCAPE_BACKSLASH)+PERCENT_AND_ID_GT_0;
                     controller.executeQuery(policyScopeQuery);
                 }
 
             }
             return success();
         } catch (Exception e) {
-            LOGGER.error("delete", e);
+            LOGGER.error(DELETE, e);
             return error(e.getMessage());
         }
     }
