@@ -2,15 +2,15 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * Modified Copyright (C) 2018 Samsung Electronics Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,6 +60,9 @@ import static org.onap.policy.std.utils.PolicyConfigConstants.UEB_API_SECRET_PRO
 import static org.onap.policy.std.utils.PolicyConfigConstants.UNAUTHORIZED_STATUS_CODE;
 import static org.onap.policy.std.utils.PolicyConfigConstants.UPDATE_DICTIONARY_ITEM_RESOURCE_NAME;
 import static org.onap.policy.std.utils.PolicyConfigConstants.UPDATE_POLICY_RESOURCE_NAME;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -89,6 +92,7 @@ import javax.json.JsonReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.onap.policy.api.AttributeType;
+import org.onap.policy.api.ConfigNameRequest;
 import org.onap.policy.api.ConfigRequestParameters;
 import org.onap.policy.api.DecisionRequestParameters;
 import org.onap.policy.api.DecisionResponse;
@@ -134,13 +138,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.xml.sax.InputSource;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * PolicyEngine Implementation class
- * 
+ *
  * @version 1.0
  */
 public class StdPolicyEngine {
@@ -169,6 +170,7 @@ public class StdPolicyEngine {
 
     private static final String UNIQUEID = UUID.randomUUID().toString();
     private static final Logger LOGGER = FlexLogger.getLogger(StdPolicyConfig.class.getName());
+	private static final String LIST_POLICY_RESOURCE_NAME = "listPolicy";
 
     /*
      * Taking the Property file even if it null.
@@ -176,7 +178,7 @@ public class StdPolicyEngine {
     public StdPolicyEngine(final String propertyFilePath, final String clientKey) throws PolicyEngineException {
         setProperty(propertyFilePath, clientKey);
     }
-    
+
     /*
      * Taking the Property structure even if it null.
      */
@@ -243,6 +245,14 @@ public class StdPolicyEngine {
     public Collection<String> listConfig(final ConfigRequestParameters listPolicyRequestParameters)
             throws PolicyConfigException {
         return listConfigImpl(listPolicyRequestParameters);
+    }
+
+    /*
+     * listPolicies from PDP using ConfigNameRequest Implementation
+     */
+    public Collection<String> listPolicy(final ConfigNameRequest listPolicyRequestParameters)
+            throws PolicyConfigException {
+        return listPolicyImpl(listPolicyRequestParameters);
     }
 
     /*
@@ -795,6 +805,39 @@ public class StdPolicyEngine {
         return policyList;
     }
 
+    public Collection<String> listPolicyImpl(final ConfigNameRequest listPolicyRequestParameters)
+			throws PolicyConfigException {
+		final Collection<String> policyList = new ArrayList<>();
+		if (junit) {
+			policyList.add(TEST_POLICY_NAME);
+			return policyList;
+		}
+		String body = null;
+		// Create Request.
+		try {
+			body = PolicyUtils.objectToJsonString(listPolicyRequestParameters);
+		} catch (final JsonProcessingException e) {
+			final String message = XACMLErrorConstants.ERROR_SCHEMA_INVALID + e;
+			LOGGER.error(message);
+			throw new PolicyConfigException(message, e);
+		}
+		// Get Response.
+		try {
+			final ResponseEntity<String[]> result = callNewPDP(LIST_POLICY_RESOURCE_NAME, HttpMethod.POST, body,
+					String[].class);
+			for (final String policy : result.getBody()) {
+				policyList.add(policy);
+			}
+		} catch (final Exception exception) {
+			final String defaulMessage = XACMLErrorConstants.ERROR_PROCESS_FLOW + ERROR_INVALID_PDPS + pdps;
+			final String message = getErrorMessage(exception, defaulMessage, LIST_POLICY_RESOURCE_NAME);
+			LOGGER.error(message, exception);
+			throw new PolicyConfigException(message, exception);
+		}
+
+		return policyList;
+	}
+
     private Collection<PolicyResponse> sendEventImpl(final Map<String, String> eventAttributes, final UUID requestID)
             throws PolicyEventException {
         String body = null;
@@ -853,7 +896,7 @@ public class StdPolicyEngine {
         final Properties prop = getProperties(propertyFilePath);
         setProperty(prop,clientKey);
     }
-    
+
     private void setProperty(final Properties properties, String clientKey) throws PolicyEngineException {
         if (properties == null) {
             throw new PolicyEngineException(

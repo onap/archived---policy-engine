@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * PolicyEngineAPI
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -258,8 +258,19 @@ public class PolicyEngine{
 	public Collection<String> listConfig(final ConfigRequestParameters listPolicyRequestParameters)  throws PolicyConfigException{
 		return stdPolicyEngine.listConfig(listPolicyRequestParameters);
 	}
-	
-	
+
+	/**
+	 * Requests the list of policies from PAP based on the <code>ConfigRequestParameters</code> which represents the policy request parameters
+	 * and returns the list of policies filtered by the parameters.
+	 *
+	 * @param configRequestParameters {@link org.onap.policy.api.ConfigRequestParameters} which represents the List Policy request parameters.
+	 * @return <code>Collection</code> of <code>String</code> which returns the list of policies.
+	 * @throws PolicyConfigException PolicyConfig Exception
+	 */
+	public Collection<String> listPolicy(final ConfigNameRequest listPolicyParams)  throws PolicyConfigException{
+		return stdPolicyEngine.listPolicy(listPolicyParams);
+	}
+
 	/**
 	 * Sends the Events specified to the PEP and returns back the PolicyResponse. 
 	 * 
