@@ -17,6 +17,25 @@ Policy Release Notes
 ..      * * *   CASABLANCA   * * *
 ..      ==========================
 
+
+Version: 3.0.1
+--------------
+
+:Release Date: 2019-01-31 (Casablanca Maintenance Release)
+
+The following items were deployed with the Casablanca Maintenance Release:
+
+**New Features**
+
+    * [POLICY-1221] - Policy distribution application to support HTTPS communication
+    * [POLICY-1222] - Apex policy PDP to support HTTPS Communication
+
+**Bug Fixes** 
+
+    * `[POLICY-1282] <https://jira.onap.org/browse/POLICY-1282>`_ - Policy format with some problems
+    * `[POLICY-1395] <https://jira.onap.org/browse/POLICY-1395>`_ - Apex PDP does not preserve context on model upgrade
+
+
 Version: 3.0.0
 --------------
 
@@ -325,6 +344,7 @@ The Amsterdam release continued evolving the design driven architecture of and f
 
 .. note
 ..      CHANGE  HISTORY
+..      01/17/2019 - Updated for Casablanca Maintenance Release.
 ..      11/19/2018 - Updated for Casablanca.  Also, fixed bugs is a list of bugs where the "Affected Version" is Beijing.
 ..		Changed version number to use ONAP versions.
 ..      10/08/2018 - Initial document for Casablanca release.
