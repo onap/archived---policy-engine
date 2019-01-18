@@ -418,6 +418,35 @@ Examples
                 }
             }
         }
+        
+        
+    .. code-block:: java
+       :caption: ListPolicy Example
+       :linenos:
+       
+       package org.onap.policyengine;
+
+       import java.util.Collection;
+       import org.onap.policy.api.ConfigNameRequest;
+       import org.onap.policy.api.PolicyEngine;
+
+       /**
+        * List Policy Client Code
+        * policyName : ".*" returns list of policy names from PAP.
+        * policyName : "scope + "_" + "policyType" + "_" + policyName" + ".*" returns the matching policy from pap (active version)
+        *
+        */
+        public class ListPolicyClient {
+          public static void main(String[] args) throws Exception {
+             PolicyEngine pe = new PolicyEngine("config.properties");
+             ConfigNameRequest listPolicyParams = new ConfigNameRequest();
+             listPolicyParams.setPolicyName(".*");
+             Collection<String> policies = pe.listPolicy(listPolicyParams);
+             for (String policy : policies) {
+                 System.out.println(policy);
+             }
+          }
+        }
 
 
     .. code-block:: java
